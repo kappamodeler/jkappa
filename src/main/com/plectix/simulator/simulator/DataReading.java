@@ -1,4 +1,4 @@
-package com.plectix.simulator;
+package com.plectix.simulator.simulator;
 
 import java.io.BufferedReader;
 import java.io.File;

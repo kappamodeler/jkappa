@@ -1,4 +1,4 @@
-package com.plectix.simulator;
+package com.plectix.simulator.simulator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class CommandLine {
 		FLAGTYPE_NOVALUE, FLAGTYPE_STRING, FLAGTYPE_DOUBLE, FLAGTYPE_LONG
 	};
 
-	class FlagDefinition {
+	public class FlagDefinition {
 		String inFlagName = null;
 
 		FlagType inFlagType = FlagType.FLAGTYPE_NOVALUE;

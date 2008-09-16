@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import com.plectix.simulator.DataReading;
-import com.plectix.simulator.SimulationData;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.IState;
+import com.plectix.simulator.simulator.DataReading;
+import com.plectix.simulator.simulator.SimulationData;
 
 public class Parser {
 

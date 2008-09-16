@@ -2,8 +2,10 @@ package com.plectix.simulator;
 
 import java.io.IOException;
 
-import com.plectix.simulator.CommandLine.FlagDefinition;
 import com.plectix.simulator.parser.Parser;
+import com.plectix.simulator.simulator.CommandLine;
+import com.plectix.simulator.simulator.DataReading;
+import com.plectix.simulator.simulator.SimulationData;
 
 public class SimulationMain {
 
@@ -24,7 +26,7 @@ public class SimulationMain {
 		String sim=null;
 
 		for (int i = 0; i < args.length; i++) {
-			FlagDefinition flagDef=cmdLine.checkFlag(args[i]);
+			CommandLine.FlagDefinition flagDef=cmdLine.checkFlag(args[i]);
 			
 			if (flagDef==null){
 				System.err.println("Error in command line");
