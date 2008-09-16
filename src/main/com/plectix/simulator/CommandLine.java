@@ -1,4 +1,4 @@
-package KappaSimulation;
+package com.plectix.simulator;
 
 import java.util.ArrayList;
 import java.util.List;

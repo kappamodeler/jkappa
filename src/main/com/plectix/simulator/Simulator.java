@@ -1,16 +1,16 @@
-package KappaSimulation;
+package com.plectix.simulator;
 
 import java.util.List;
 
-import KappaSimulationInterfaces.IAgent;
-import KappaSimulationInterfaces.IConnectedComponent;
-import KappaSimulationInterfaces.IInjection;
-import KappaSimulationInterfaces.IInternalState;
-import KappaSimulationInterfaces.ILift;
-import KappaSimulationInterfaces.ILinkState;
-import KappaSimulationInterfaces.IRule;
-import KappaSimulationInterfaces.ISite;
-import KappaSimulationInterfaces.IState;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.IInternalState;
+import com.plectix.simulator.interfaces.ILift;
+import com.plectix.simulator.interfaces.ILinkState;
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.interfaces.IState;
 
 public class Simulator {
 

@@ -1,12 +1,14 @@
-package KappaSimulation;
+package com.plectix.simulator.parser;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import KappaSimulationInterfaces.IAgent;
-import KappaSimulationInterfaces.ISite;
-import KappaSimulationInterfaces.IState;
+import com.plectix.simulator.DataReading;
+import com.plectix.simulator.SimulationData;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.interfaces.IState;
 
 public class Parser {
 

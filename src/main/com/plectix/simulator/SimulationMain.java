@@ -1,9 +1,9 @@
-package KappaSimulation;
+package com.plectix.simulator;
 
-import java.io.File;
 import java.io.IOException;
 
-import KappaSimulation.CommandLine.FlagDefinition;
+import com.plectix.simulator.CommandLine.FlagDefinition;
+import com.plectix.simulator.parser.Parser;
 
 public class SimulationMain {
 

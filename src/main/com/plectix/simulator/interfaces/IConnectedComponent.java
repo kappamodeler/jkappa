@@ -1,4 +1,4 @@
-package KappaSimulationInterfaces;
+package com.plectix.simulator.interfaces;
 
 import java.util.List;
 import java.util.Map;

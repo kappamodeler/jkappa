@@ -1,4 +1,4 @@
-package KappaSimulation;
+package com.plectix.simulator;
 
 import java.io.BufferedReader;
 import java.io.File;

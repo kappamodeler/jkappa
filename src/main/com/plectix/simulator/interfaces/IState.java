@@ -1,8 +1,8 @@
-package KappaSimulationInterfaces;
+package com.plectix.simulator.interfaces;
 
 import java.util.List;
 
-import KappaSimulationInterfaces.ILift.LiftElement;
+import com.plectix.simulator.interfaces.ILift.LiftElement;
 
 public interface IState {
 

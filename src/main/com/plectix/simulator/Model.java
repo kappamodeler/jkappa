@@ -1,10 +1,6 @@
-package KappaSimulation;
+package com.plectix.simulator;
 
-import java.util.List;
-
-import KappaSimulationInterfaces.IActivationMap;
-import KappaSimulationInterfaces.IInjection;
-import KappaSimulationInterfaces.ILift;
+import com.plectix.simulator.interfaces.IActivationMap;
 
 public class Model{
 

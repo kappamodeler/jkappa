@@ -1,10 +1,11 @@
-package KappaSimulation;
+package com.plectix.simulator;
 
 import java.util.List;
 
-import KappaSimulationInterfaces.IObservables;
-import KappaSimulationInterfaces.IRule;
-import KappaSimulationInterfaces.ISolution;
+import com.plectix.simulator.interfaces.IObservables;
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.interfaces.ISolution;
+
 
 public class SimulationData {
 	private List<IRule> rules;

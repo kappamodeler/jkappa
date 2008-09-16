@@ -1,6 +1,4 @@
-package KappaSimulationInterfaces;
-
-import KappaSimulationInterfaces.ILift.LiftElement;
+package com.plectix.simulator.interfaces;
 
 
 public interface IInternalState extends IState {
