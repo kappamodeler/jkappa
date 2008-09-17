@@ -70,4 +70,14 @@ public class CAgent implements IAgent{
 		
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof CAgent))
+			return false;
+		CAgent agent = (CAgent) obj;
+		if (!name.equals(agent.name))
+			return false;
+		return listSite.equals(agent.listSite);
+	}
+
 }

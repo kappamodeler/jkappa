@@ -174,7 +174,7 @@ public class Parser {
 
 	}
 
-	private List<IAgent> parceAgent(String line) throws IOException {
+	public List<IAgent> parceAgent(String line) {
 		StringTokenizer st = new StringTokenizer(line, "),");
 		Map<Integer, ISite> map = new HashMap<Integer, ISite>();
 		StringTokenizer agent;
@@ -202,7 +202,7 @@ public class Parser {
 		return listAgent;
 	}
 
-	private ISite parceSome(String site, Map<Integer, ISite> map) throws IOException {
+	private ISite parceSome(String site, Map<Integer, ISite> map) {
 		String state = null;
 		String connect = null;
 		DataString dt = null;

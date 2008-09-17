@@ -5,7 +5,7 @@ import java.util.List;
 import com.plectix.simulator.interfaces.IState;
 import com.plectix.simulator.interfaces.ILift.LiftElement;
 
-public class CState implements IState{
+public class CState implements IState {
 	private String name;
 
 	public CState(String name){
@@ -38,7 +38,13 @@ public class CState implements IState{
 	@Override
 	public void setLift(List<LiftElement> lift) {
 		// TODO Auto-generated method stub
-		
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof CState))
+			return false;
+		return name.equals(((CState)obj).name);
 	}
 
 }

@@ -85,5 +85,17 @@ public class CSite implements ISite {
 	public ISite getLink() {
 		return linkSite;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof CSite))
+			return false;
+		CSite site = (CSite) obj;
+		if (!name.equals(site.name))
+			return false;
+		if (state == null)
+			return true;
+		return state.equals(site.state);
+	}
 
 }
