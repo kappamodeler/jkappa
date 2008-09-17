@@ -1,15 +1,20 @@
 package com.plectix.simulator.interfaces;
 
-import java.util.List;
 
 public interface ISite {
 
 	//TODO specify details
-	public List<IState> getSatesList();
+	public IState getState();
 	
 	public IInternalState getInternalState();
 	
 	public ILinkState getLinkState();
 	
 	public boolean isChanged();
+	
+	public void setState(IState state);
+	
+	public void setLink(ISite site);
+	
+	public ISite getLink();
 }
