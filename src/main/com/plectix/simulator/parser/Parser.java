@@ -156,26 +156,20 @@ public class Parser {
 			count = 1;
 			result = item.split("\\*");
 			int length = result.length;
-			for (int x = 0; x < length; x++) {
-				result[x] = result[x].trim();
-				count = 1;
-				if (length != 1) {
-					try {
-						count = Long.valueOf(result[x]);
-					} catch (Exception e) {
-						throw new IOException("Error in Initial Conditions.");
-					}
-					x++;
+			result[0] = result[0].trim();
+			count = 1;
+			if (length != 1) {
+				try {
+					count = Long.valueOf(result[0]);
+				} catch (NumberFormatException e) {
+					throw new IOException("Error in Initial Conditions.");
 				}
-				System.out.println("====================");
-				System.out.println("count=" + count);
-				System.out.println("====");
-				line = result[x].trim();
-				// line = line.replace(" ", ""); // Delete all " ".
-
-				parceAgent(line);
-
 			}
+			System.out.println("====================");
+			System.out.println("count=" + count);
+			System.out.println("====");
+			line = result[length - 1].trim();
+			parceAgent(line);
 		}
 
 	}
