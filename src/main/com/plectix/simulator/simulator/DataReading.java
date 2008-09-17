@@ -1,7 +1,6 @@
 package com.plectix.simulator.simulator;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,32 +21,18 @@ public class DataReading {
 	private List<String> inits=new ArrayList<String>(); 
 	// init conditions in the input
 
-	private File file;
 
 	private String filePatch = "C:/workspace/Example.tmp";
 
-	private static final String STRING_RULES = "# Rules:";
-	private static final String STRING_INITIAL_CONDITIONS = "# Initial Conditions:";
-	private static final String STRING_SIMULATION = "# Simulation:";
+
 	private static final byte STRING_INITIAL_CONDITIONS_PREFIX =7;	// "%init: "
 	private static final byte STRING_SIMULATION_PREFIX =6; //"%obs: "
 	
-
-	private static final byte KEY_RULE = 1;
-	private static final byte KEY_INITIAL_CONDITIONS = 2;
-	private static final byte KEY_SIMULATION = 3;
-
-	private byte keyList=0;
-	public DataReading() {
-int u=0;
-u++;
-	}
-
 	public DataReading(String str) {
 		this.filePatch = str;
 	}
 
-	public void ReadData() throws IOException {
+	public void readData() throws IOException {
 		// reading of the file
 		// ....
 
@@ -59,12 +44,17 @@ u++;
 
 			while ((line = in.readLine()) != null) {
 
-				// Checking line for containt main identifier
-				// ("# Rules:","# Initial Conditions:",
-				// "# Simulation:") and definition, where add next Data.
-				if (checkType(line))
+				if (line.startsWith("#"))
 					continue;
-				addData(line);
+				
+				if(line.startsWith("%obs")) {
+					observables.add(new String(line.substring(STRING_SIMULATION_PREFIX, line.length())));
+				} else if (line.startsWith("%init")) {
+					inits.add(new String(line.substring(STRING_INITIAL_CONDITIONS_PREFIX, line.length())));
+				} else 
+					if(line.trim().length()>0)
+						rules.add(new String(line));
+	
 			}
 			in.close();
 		} catch (IOException e) {
@@ -78,45 +68,6 @@ u++;
 			throw new IOException("There are no observables in the input data");
 		else if (inits.isEmpty())
 			throw new IOException("There are no inits in the input data");
-	}
-
-	// Add lines to necessary List.
-	private void addData(String line) {
-		if ((line.contains("#")) || line.equalsIgnoreCase(""))
-			return;
-		switch (keyList) {
-		case KEY_RULE: {
-			rules.add(new String(line));
-			break;
-		}
-		case KEY_INITIAL_CONDITIONS: {
-			inits.add(new String(line.substring(STRING_INITIAL_CONDITIONS_PREFIX, line.length())));
-			break;
-		}
-		case KEY_SIMULATION: {
-			observables.add(new String(line.substring(STRING_SIMULATION_PREFIX, line.length())));
-			break;
-		}
-		}
-	}
-
-	// Checking line for containt main identifier
-	// ("# Rules:","# Initial Conditions:",
-	// "# Simulation:") and definition, where add next Data.
-	private boolean checkType(String line) {
-		if (line.equalsIgnoreCase(STRING_RULES)) {
-			keyList = KEY_RULE;
-			return true;
-		}
-		if (line.equalsIgnoreCase(STRING_INITIAL_CONDITIONS)) {
-			keyList = KEY_INITIAL_CONDITIONS;
-			return true;
-		}
-		if (line.equalsIgnoreCase(STRING_SIMULATION)) {
-			keyList = KEY_SIMULATION;
-			return true;
-		}
-		return false;
 	}
 
 	public List<String> getInits() {
