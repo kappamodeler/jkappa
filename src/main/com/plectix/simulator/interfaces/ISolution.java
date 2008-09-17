@@ -22,5 +22,7 @@ public interface ISolution {
 	
 	public void add(ISolution solution);
 	
+	public void addAgents(List<IAgent> agents);
+	
 	public void multiply(int N);
 }

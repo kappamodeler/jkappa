@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CState;
 import com.plectix.simulator.interfaces.IAgent;
@@ -34,6 +36,9 @@ public class Parser {
 	private static final byte CC_RHS = 0;
 	private static final byte CC_LHS = 1;
 	private static final byte CC_ALL = -1;
+	
+	private static final byte CREATE_INIT=0;
+	private static final byte CREATE_OBS=1;
 
 	private class DataString {
 		private String st1 = null;
@@ -76,11 +81,11 @@ public class Parser {
 
 		try {
 			System.out.println("<<<<<<INITS>>>>>>");
-			createSimData(data.getInits());
-			 System.out.println("<<<<<<RULES>>>>>>");
-			 createRules(data.getRules());
-			 System.out.println("<<<<<<OBS>>>>>>");
-			 createSimData(data.getObservables());
+			createSimData(data.getInits(),CREATE_INIT);
+//			 System.out.println("<<<<<<RULES>>>>>>");
+//			 createRules(data.getRules());
+//			 System.out.println("<<<<<<OBS>>>>>>");
+//			 createSimData(data.getObservables());
 		} catch (IOException e) {
 			throw new IOException(e.getMessage());
 		}
@@ -148,7 +153,7 @@ public class Parser {
 		}
 	}
 
-	private void createSimData(List<String> list) throws IOException {
+	private void createSimData(List<String> list, byte code) throws IOException {
 		long count;
 		String line;
 		String[] result;
@@ -165,14 +170,35 @@ public class Parser {
 					throw new IOException("Error in Initial Conditions.");
 				}
 			}
-			System.out.println("====================");
-			System.out.println("count=" + count);
-			System.out.println("====");
-			line = result[length - 1].trim();
-			parceAgent(line);
+//			System.out.println("====================");
+//			System.out.println("count=" + count);
+//			System.out.println("====");
+			line = result[length - 1].trim();		
+
+			
+			
+			//In the future will be create another addAgents to Solution, without
+			// parce "count" once "line"
+			switch (code) {
+			case CREATE_INIT:{
+				for (int i = 0; i < count; i++) 
+					simData.getSolution().addAgents(parceAgent(line));  
+				break;
+			}
+			case CREATE_OBS:{
+					CObservables obs = new CObservables(parceAgent(line));
+					simData.getObservables().add(obs);  
+				break;
+			}
+
+			}
 		}
 
 	}
+	
+	
+	
+	
 
 	public List<IAgent> parceAgent(String line) {
 		StringTokenizer st = new StringTokenizer(line, "),");
@@ -185,12 +211,12 @@ public class Parser {
 		while (st.hasMoreTokens()) {
 			ccomp = st.nextToken().trim();
 			if (ccomp.indexOf("(") != -1) {
-				System.out.print("Agent:");
+//				System.out.print("Agent:");
 				agent = new StringTokenizer(ccomp, "(");
 				ccomp = agent.nextToken(); // Agent name.
 				cagent = new CAgent(ccomp);
 				listAgent.add(cagent);
-				System.out.println(ccomp);
+//				System.out.println(ccomp);
 				while (agent.hasMoreTokens()) {
 					site = agent.nextToken().trim(); // Site name or State name.
 					cagent.addSite(parceSome(site, map)); // <-------Agent
@@ -223,25 +249,25 @@ public class Parser {
 
 		csite = new CSite(site);
 
-		System.out.println("-" + site);
+//		System.out.println("-" + site);
 		if (state != null) {
-			System.out.println("--" + state);
+//			System.out.println("--" + state);
 			csite.setState(new CState(state));
 		}
 		if (connect != null)
 			if (connect.length() == 0) {
-				System.out.println("---" + "MAY_BE");
-				csite.setStatusLink(CSite.STATUS_LINK_MAY_BE);
+//				System.out.println("---" + "MAY_BE");
+				csite.getLinkState().setStatusLink(CLinkState.STATUS_LINK_MAY_BE);
 			} else if (connect.equals(SYMBOL_CONNECTED_TRUE_VALUE)) {
-				System.out.println("---" + "CONNECT_TRUE");
-				csite.setStatusLink(CSite.STATUS_LINK_CONNECTED);
+//				System.out.println("---" + "CONNECT_TRUE");
+				csite.getLinkState().setStatusLink(CLinkState.STATUS_LINK_CONNECTED);
 			} else {
-				System.out.println("---" + connect);
+//				System.out.println("---" + connect);
 				int index = Integer.valueOf(connect);
 				ISite isite = map.get(index);
 				if(isite != null){
-					isite.setLink(csite);
-					csite.setLink(isite);
+					isite.getLinkState().setSite(csite);
+					csite.getLinkState().setSite(isite);
 					map.remove(index);
 				} else
 					map.put(Integer.valueOf(connect), csite);

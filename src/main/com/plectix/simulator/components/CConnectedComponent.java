@@ -1,5 +1,6 @@
 package com.plectix.simulator.components;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,6 +10,8 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ISolution;
 
 public class CConnectedComponent implements IConnectedComponent{
+	
+	private ArrayList<CAgentRule> agentList=new ArrayList<CAgentRule>();
 
 	@Override
 	public IInjection checkAndBuildInjection(ISolution solution, IAgent agent) {

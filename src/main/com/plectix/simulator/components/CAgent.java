@@ -71,6 +71,16 @@ public class CAgent implements IAgent{
 	}
 
 	@Override
+	public IAgent cloneAgent() {
+		CAgent agent=new CAgent(this.getName());
+		for(ISite site:listSite){
+			CSite siteAdd = new CSite(site.getName());
+		}
+		
+		return agent;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof CAgent))
 			return false;

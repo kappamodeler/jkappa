@@ -4,9 +4,11 @@ package com.plectix.simulator.interfaces;
 public interface ISite {
 
 	//TODO specify details
-	public IState getState();
+//	public IState getState();
 	
 	public IInternalState getInternalState();
+	
+	public String getName();
 	
 	public ILinkState getLinkState();
 	
@@ -14,7 +16,7 @@ public interface ISite {
 	
 	public void setState(IState state);
 	
-	public void setLink(ISite site);
+//	public void setLink(ISite site);
 	
-	public ISite getLink();
+//	public ISite getLink();
 }

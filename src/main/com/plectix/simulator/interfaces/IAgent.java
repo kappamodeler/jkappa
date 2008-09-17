@@ -12,7 +12,8 @@ public interface IAgent {
 	public List<ISite> getSites();  //Returns this Agent�s Sites
 	
 	public void addSite(ISite site);
-	
+
+	public IAgent cloneAgent();
 	
 	//TODO  it's the set of the agent's sites. maybe we don't need it.
 	public List<String> getInterface();  //Returns this Agent�s Interface which is a list of Strings.

@@ -10,31 +10,25 @@ public class CSite implements ISite {
 	private IState state = null;
 	private String name;
 	private ILinkState linkState;
-	private IInternalState internalState;
+	private IInternalState internalState=null;
 	private boolean changed;
-	private ISite linkSite = null;
 	private IAgent linkAgent = null;
-	private byte statusLink;
-	
-	public static final byte STATUS_LINK_CONNECTED = 0x01;
-	public static final byte STATUS_LINK_MAY_BE = 0x02;
-	public static final byte STATUS_LINK_FREE = 0x04;
 	
 
 	public CSite(String name) {
 		this.name = name;
-		statusLink = STATUS_LINK_FREE;
+		linkState=new CLinkState(CLinkState.STATUS_LINK_FREE);
 	}
 	
-	public void setStatusLink(byte statusLink){
-		this.statusLink=statusLink;
+	public void setLinkState(ISite site){
+		linkState.setSite(site);
 	}
 	
-	public byte getStatusLink(){
-		return statusLink;
+	@Override
+	public ILinkState getLinkState() {
+		return linkState;
 	}
 	
-
 	public void setAgentLink(IAgent agent){
 		if(agent == null)
 			return;
@@ -48,7 +42,8 @@ public class CSite implements ISite {
 	@Override
 	public void setState(IState state) {
 		if (state != null)
-			this.state = state;
+			internalState=new CInternalState(state);
+		
 
 	}
 
@@ -57,33 +52,16 @@ public class CSite implements ISite {
 		return internalState;
 	}
 
-	@Override
-	public ILinkState getLinkState() {
-		return linkState;
-	}
-
-	@Override
-	public IState getState() {
-		return state;
-	}
 
 	@Override
 	public boolean isChanged() {
 		return changed;
 	}
 
-	@Override
-	public void setLink(ISite site) {
-		if(site==null)
-			return;
-		linkSite=site;
-		statusLink=STATUS_LINK_CONNECTED;
-//		site.setLink(link);
-	}
 
 	@Override
-	public ISite getLink() {
-		return linkSite;
+	public String getName() {
+		return name;
 	}
 	
 	@Override
