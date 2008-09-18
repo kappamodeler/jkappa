@@ -10,15 +10,15 @@ import com.plectix.simulator.interfaces.ISite;
 
 public class CAgent implements IAgent{
 	private String name;
-	private Long dbId;
-	private List<ISite> listSite=new ArrayList<ISite>(1);
+	private Integer dbId;
+	private List<CSite> listSite=new ArrayList<CSite>();
 	
 	public CAgent(String name){
 		this.name=name;
 	}
 
 	@Override
-	public void addSite(ISite site){
+	public void addSite(CSite site){
 		if((site != null) && ( !listSite.contains(site) )){
 			listSite.add(site);
 			((CSite)site).setAgentLink(this);
@@ -26,7 +26,7 @@ public class CAgent implements IAgent{
 	}
 	
 	@Override
-	public Long getDBId() {
+	public Integer getDBId() {
 		return dbId;
 	}
 
@@ -54,7 +54,7 @@ public class CAgent implements IAgent{
 	}
 
 	@Override
-	public List<ISite> getSites() {
+	public List<CSite> getSites() {
 		return listSite;
 	}
 
@@ -90,4 +90,7 @@ public class CAgent implements IAgent{
 		return listSite.equals(agent.listSite);
 	}
 
+	public void setDbId(int index) {
+		dbId = index;
+	}
 }
