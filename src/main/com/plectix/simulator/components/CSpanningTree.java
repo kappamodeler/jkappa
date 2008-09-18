@@ -16,6 +16,7 @@ public class CSpanningTree {
 	public CSpanningTree() {
 	}
 
+	@SuppressWarnings("unchecked")
 	public CSpanningTree(int N, CAgent agent) {
 		this.newVertex = new boolean[N];
 		this.vertexes = new ArrayList[N];
