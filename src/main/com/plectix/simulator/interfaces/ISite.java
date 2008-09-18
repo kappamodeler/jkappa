@@ -16,6 +16,7 @@ public interface ISite {
 	
 	public void setState(IState state);
 	
+	public IAgent getAgentLink();
 //	public void setLink(ISite site);
 	
 //	public ISite getLink();

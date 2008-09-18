@@ -3,6 +3,8 @@ package com.plectix.simulator.interfaces;
 import java.util.List;
 import java.util.Map;
 
+import com.plectix.simulator.components.CAgent;
+
 public interface ISolution {
 
 	public Map<String, IAgent> getAgents();
@@ -22,7 +24,7 @@ public interface ISolution {
 	
 	public void add(ISolution solution);
 	
-	public void addAgents(List<IAgent> agents);
+	public void addAgents(List<CAgent> agents);
 	
 	public void multiply(int N);
 }

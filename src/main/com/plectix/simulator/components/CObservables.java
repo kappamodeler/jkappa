@@ -2,7 +2,6 @@ package com.plectix.simulator.components;
 
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservables;
 
@@ -13,7 +12,7 @@ public class CObservables implements IObservables{
 		
 	}
 	
-	public CObservables(List<IAgent> list){
+	public CObservables(List<CAgent> list){
 		
 	}
 

@@ -3,6 +3,8 @@ package com.plectix.simulator.interfaces;
 import java.util.List;
 import java.util.Map;
 
+import com.plectix.simulator.components.CAgent;
+
 public interface IConnectedComponent {
 
 	
@@ -21,6 +23,6 @@ public interface IConnectedComponent {
 	//TODO ???
 	public List<IInjection> pushout();
 	
-	public List<IAgent> getAgents();
+	public List<CAgent> getAgents();
 	
 }

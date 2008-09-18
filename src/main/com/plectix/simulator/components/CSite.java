@@ -7,12 +7,14 @@ import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.IState;
 
 public class CSite implements ISite {
+	public static final int NO_INDEX = -1;
 	private IState state = null;
 	private String name;
 	private ILinkState linkState;
 	private IInternalState internalState=null;
 	private boolean changed;
 	private IAgent linkAgent = null;
+	private int linkIndex = NO_INDEX;
 	
 
 	public CSite(String name) {
@@ -74,6 +76,14 @@ public class CSite implements ISite {
 		if (state == null)
 			return true;
 		return state.equals(site.state);
+	}
+
+	public void setLinkIndex(int index) {
+		this.linkIndex  = index;
+	}
+
+	public int getLinkIndex() {
+		return linkIndex;
 	}
 
 }

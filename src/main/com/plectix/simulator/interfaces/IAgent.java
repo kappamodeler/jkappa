@@ -2,16 +2,18 @@ package com.plectix.simulator.interfaces;
 
 import java.util.List;
 
+import com.plectix.simulator.components.CSite;
+
 
 public interface IAgent {
 	
 	public String getName();  //Return this Agent�s name Agent
 	
-	public Long getDBId();  //Returns the identifier of this object in the database.
+	public Integer getDBId();  //Returns the identifier of this object in the database.
 	
-	public List<ISite> getSites();  //Returns this Agent�s Sites
+	public List<CSite> getSites();  //Returns this Agent�s Sites
 	
-	public void addSite(ISite site);
+	void addSite(CSite site);
 
 	public IAgent cloneAgent();
 	
@@ -29,5 +31,6 @@ public interface IAgent {
 	
 	public void setSiteInternalState(ISite site, IInternalState internal_state);  //Sets the internal state of the given
 													//Site to the given State.
+
 	
 }

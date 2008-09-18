@@ -17,8 +17,8 @@ public class ParserTest extends TestCase {
 	@Test
 	public void testParseAgent() {
 		Parser parser = new Parser();
-		List<IAgent> actualAgentsList;
-		List<IAgent> expectedAgentsList = new ArrayList<IAgent>();
+		List<CAgent> actualAgentsList;
+		List<CAgent> expectedAgentsList = new ArrayList<CAgent>();
 		
 		actualAgentsList = parser.parceAgent("Ras(S1S2~gtp), MEK(s,S222~p,S218~p), MEK(s!1,S218~p,S222~p), ERK(Y187!1)");
 		

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CSite;
@@ -16,6 +17,7 @@ import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.SimulatorManager;
 
 public class Parser {
 
@@ -80,10 +82,12 @@ public class Parser {
 		System.out.println("Start parsing...");
 
 		try {
-			System.out.println("<<<<<<INITS>>>>>>");
+//			System.out.println("<<<<<<INITS>>>>>>");
 			createSimData(data.getInits(),CREATE_INIT);
 //			 System.out.println("<<<<<<RULES>>>>>>");
-//			 createRules(data.getRules());
+			 List<CRule> rules = createRules(data.getRules());
+			 SimulatorManager.getInstance().setRules(rules);
+			 
 //			 System.out.println("<<<<<<OBS>>>>>>");
 //			 createSimData(data.getObservables());
 		} catch (IOException e) {
@@ -92,37 +96,40 @@ public class Parser {
 
 	}
 
-	private void createRules(List<String> list) throws IOException {
+	private List<CRule> createRules(List<String> list) throws IOException {
+		
+		List<CRule> rules = new ArrayList<CRule>();
+		
 		int index;
 		String[] result;
 		String name;
 		Double activity;
 		String input;
-		for (String rules : list) {
-			input = rules;
-			rules = rules.trim();
-			rules = rules.substring(rules.indexOf("'") + 1);
-			name = rules.substring(0, rules.indexOf("'")).trim();
-			rules = rules.substring(rules.indexOf("'"), rules.length()).trim();
-			index = rules.lastIndexOf("@");
+		for (String rulesStr : list) {
+			input = rulesStr;
+			rulesStr = rulesStr.trim();
+			rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
+			name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
+			rulesStr = rulesStr.substring(rulesStr.indexOf("'"), rulesStr.length()).trim();
+			index = rulesStr.lastIndexOf("@");
 			try {
-				activity = Double.valueOf(rules.substring(index + 1).trim());
+				activity = Double.valueOf(rulesStr.substring(index + 1).trim());
 			} catch (Exception e) {
 				throw new IOException("Error in Rules: " + input);
 			}
-			rules = rules.substring(1, index).trim();
+			rulesStr = rulesStr.substring(1, index).trim();
 
 			System.out.println("-----------------------");
 			System.out.println("Name=" + name);
-			System.out.println(rules);
+			System.out.println(rulesStr);
 			System.out.println(activity);
 
 			index = -1;
-			int y = rules.indexOf("->");
+			int y = rulesStr.indexOf("->");
 			if (y == 1) {
 				index = CC_RHS;
 			}
-			if (y == rules.length() - 1) {
+			if (y == rulesStr.length() - 1) {
 				if (index == -1) {
 					index = CC_LHS;
 				} else {
@@ -130,27 +137,36 @@ public class Parser {
 				}
 			}
 
-			result = rules.split("\\->");
+			result = rulesStr.split("\\->");
+			
+			List<CAgent> left = null;
+			List<CAgent> right = null;
+			
 			switch (index) {
 				case CC_LHS: {
 					System.out.println("LHS:");
-					parceAgent(result[0].trim());
+					left = parceAgent(result[0].trim());
 					break;
 				}
 				case CC_RHS: {
 					System.out.println("RHS:");
-					parceAgent(result[1].trim());
+					right = parceAgent(result[1].trim());
 					break;
 				}
 				case CC_ALL: {
 					System.out.println("LHS:");
-					parceAgent(result[0].trim());
+					left = parceAgent(result[0].trim());
 					System.out.println("RHS:");
-					parceAgent(result[1].trim());
+					right = parceAgent(result[1].trim());
 					break;
 				}
 			}
+			
+			rules.add(SimulatorManager.getInstance().buildRule(left, right));
+			
 		}
+		
+		return rules;
 	}
 
 	private void createSimData(List<String> list, byte code) throws IOException {
@@ -200,35 +216,33 @@ public class Parser {
 	
 	
 
-	public List<IAgent> parceAgent(String line) {
+	public List<CAgent> parceAgent(String line) {
 		StringTokenizer st = new StringTokenizer(line, "),");
-		Map<Integer, ISite> map = new HashMap<Integer, ISite>();
+		Map<Integer, CSite> map = new HashMap<Integer, CSite>();
 		StringTokenizer agent;
 		String ccomp;
 		String site;
-		List<IAgent> listAgent = new ArrayList<IAgent>(1);
+		List<CAgent> listAgent = new ArrayList<CAgent>(1);
 		CAgent cagent = null;
 		while (st.hasMoreTokens()) {
 			ccomp = st.nextToken().trim();
 			if (ccomp.indexOf("(") != -1) {
-//				System.out.print("Agent:");
 				agent = new StringTokenizer(ccomp, "(");
 				ccomp = agent.nextToken(); // Agent name.
 				cagent = new CAgent(ccomp);
 				listAgent.add(cagent);
-//				System.out.println(ccomp);
 				while (agent.hasMoreTokens()) {
 					site = agent.nextToken().trim(); // Site name or State name.
-					cagent.addSite(parceSome(site, map)); // <-------Agent
+					cagent.addSite(parseSome(site, map)); // <-------Agent
 				}
 			} else {
-				cagent.addSite(parceSome(ccomp, map)); // <------Agent
+				cagent.addSite(parseSome(ccomp, map)); // <------Agent
 			}
 		}
 		return listAgent;
 	}
 
-	private ISite parceSome(String site, Map<Integer, ISite> map) {
+	private CSite parseSome(String site, Map<Integer, CSite> map) {
 		String state = null;
 		String connect = null;
 		DataString dt = null;
@@ -264,13 +278,17 @@ public class Parser {
 			} else {
 //				System.out.println("---" + connect);
 				int index = Integer.valueOf(connect);
-				ISite isite = map.get(index);
+				CSite isite = map.get(index);
 				if(isite != null){
 					isite.getLinkState().setSite(csite);
 					csite.getLinkState().setSite(isite);
+					
+					isite.setLinkIndex(index);
+					csite.setLinkIndex(index);
 					map.remove(index);
-				} else
-					map.put(Integer.valueOf(connect), csite);
+				} else {
+					map.put(index, csite);
+				}
 				
 			}
 		return csite;
