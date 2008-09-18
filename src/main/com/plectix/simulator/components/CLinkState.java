@@ -16,15 +16,6 @@ public class CLinkState implements ILinkState{
 	private byte statusLink;
 	private ISite linkSite = null;
 	
-	public CLinkState(ISite site){
-		linkSite=site;
-		statusLink=STATUS_LINK_CONNECTED;
-	}
-	public CLinkState(ISite site, byte statusLink){
-		linkSite=site;
-		this.statusLink=statusLink;
-	}
-	
 	public CLinkState(byte statusLink){
 		this.statusLink=statusLink;
 	}
