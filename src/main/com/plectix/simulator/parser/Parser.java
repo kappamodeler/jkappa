@@ -9,7 +9,6 @@ import java.util.StringTokenizer;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CLinkState;
-import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CState;
@@ -83,7 +82,7 @@ public class Parser {
 			 SimulatorManager.getInstance().setRules(rules);
 			 
 //			 System.out.println("<<<<<<OBS>>>>>>");
-//			 createSimData(data.getObservables());
+			 createSimData(data.getObservables(),CREATE_OBS);
 		} catch (IOException e) {
 			throw new IOException(e.getMessage());
 		}
@@ -113,10 +112,10 @@ public class Parser {
 			}
 			rulesStr = rulesStr.substring(1, index).trim();
 
-			System.out.println("-----------------------");
-			System.out.println("Name=" + name);
-			System.out.println(rulesStr);
-			System.out.println(activity);
+//			System.out.println("-----------------------");
+//			System.out.println("Name=" + name);
+//			System.out.println(rulesStr);
+//			System.out.println(activity);
 
 			index = -1;
 			int y = rulesStr.indexOf("->");
@@ -138,25 +137,25 @@ public class Parser {
 			
 			switch (index) {
 				case CC_LHS: {
-					System.out.println("LHS:");
+//					System.out.println("LHS:");
 					left = parceAgent(result[0].trim());
 					break;
 				}
 				case CC_RHS: {
-					System.out.println("RHS:");
+//					System.out.println("RHS:");
 					right = parceAgent(result[1].trim());
 					break;
 				}
 				case CC_ALL: {
-					System.out.println("LHS:");
+//					System.out.println("LHS:");
 					left = parceAgent(result[0].trim());
-					System.out.println("RHS:");
+//					System.out.println("RHS:");
 					right = parceAgent(result[1].trim());
 					break;
 				}
 			}
 			
-			rules.add(SimulatorManager.getInstance().buildRule(left, right));
+			rules.add(SimulatorManager.getInstance().buildRule(left, right,activity));
 			
 		}
 		
@@ -198,8 +197,9 @@ public class Parser {
 				break;
 			}
 			case CREATE_OBS:{
-					CObservables obs = new CObservables(parceAgent(line));
-					simulationData.getObservables().add(obs);  
+//					CObservables obs = new CObservables(parceAgent(line));
+					simulationData.getObservables().addConnectedComponents(SimulatorManager.getInstance().buildConnectedComponents(parceAgent(line)));
+//					simulationData.getObservables().add(obs);  
 				break;
 			}
 
@@ -218,7 +218,7 @@ public class Parser {
 		StringTokenizer agent;
 		String ccomp;
 		String site;
-		List<CAgent> listAgent = new ArrayList<CAgent>(1);
+		List<CAgent> listAgent = new ArrayList<CAgent>();
 		CAgent cagent = null;
 		while (st.hasMoreTokens()) {
 			ccomp = st.nextToken().trim();

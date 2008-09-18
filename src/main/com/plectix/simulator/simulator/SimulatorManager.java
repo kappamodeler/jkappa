@@ -72,9 +72,10 @@ public class SimulatorManager {
 		return null;
 	}
 
-	public CRule buildRule(List<CAgent> left, List<CAgent> right) {
-		return new CRule(buildConnectedComponents(left),buildConnectedComponents(right));
+	public CRule buildRule(List<CAgent> left, List<CAgent> right, Double activity) {
+		return new CRule(buildConnectedComponents(left),buildConnectedComponents(right),activity);
 	}
+	
 
 	public void setRules(List<CRule> rules) {
 		simulationData.setRules(rules);

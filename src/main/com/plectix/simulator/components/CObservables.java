@@ -1,27 +1,27 @@
 package com.plectix.simulator.components;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservables;
 
-public class CObservables implements IObservables{
-	private IConnectedComponent conComp;
-	
-	public CObservables(){
-		
-	}
-	
-	public CObservables(List<CAgent> list){
-		
+public class CObservables implements IObservables {
+	private List<CConnectedComponent> conCompList = new ArrayList<CConnectedComponent>();
+
+	public CObservables() {
 	}
 
-	public IConnectedComponent getConComp() {
-		return conComp;
+	public CObservables(List<CConnectedComponent> list) {
+		addConnectedComponents(list);
 	}
 
-	public void setConComp(IConnectedComponent conComp) {
-		this.conComp = conComp;
+	public List<CConnectedComponent> getConComp() {
+		return conCompList;
 	}
-	
+
+	public void addConnectedComponents(List<CConnectedComponent> list) {
+		conCompList.addAll(list);
+	}
+
 }

@@ -1,6 +1,5 @@
 package com.plectix.simulator.components;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +10,7 @@ import com.plectix.simulator.interfaces.ISolution;
 
 public class CConnectedComponent implements IConnectedComponent{
 	
-	private List<CAgent> agentList=new ArrayList<CAgent>();
+	private List<CAgent> agentList;
 
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
