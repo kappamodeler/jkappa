@@ -22,10 +22,6 @@ public class CSite implements ISite {
 		linkState=new CLinkState(CLinkState.STATUS_LINK_FREE);
 	}
 	
-	public void setLinkState(ISite site){
-		linkState.setSite(site);
-	}
-	
 	@Override
 	public ILinkState getLinkState() {
 		return linkState;

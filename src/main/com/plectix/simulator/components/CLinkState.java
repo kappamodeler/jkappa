@@ -28,8 +28,6 @@ public class CLinkState implements ILinkState{
 		linkSite=site;
 		if(linkSite != null)
 			statusLink=STATUS_LINK_CONNECTED;
-		else
-			statusLink=STATUS_LINK_FREE;
 	}
 	
 	
