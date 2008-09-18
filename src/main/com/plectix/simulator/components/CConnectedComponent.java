@@ -11,7 +11,11 @@ import com.plectix.simulator.interfaces.ISolution;
 
 public class CConnectedComponent implements IConnectedComponent{
 	
-	private ArrayList<CAgentRule> agentList=new ArrayList<CAgentRule>();
+	private List<CAgent> agentList=new ArrayList<CAgent>();
+
+	public CConnectedComponent(List<CAgent> connectedAgents) {
+		agentList = connectedAgents;
+	}
 
 	@Override
 	public IInjection checkAndBuildInjection(ISolution solution, IAgent agent) {
@@ -20,9 +24,8 @@ public class CConnectedComponent implements IConnectedComponent{
 	}
 
 	@Override
-	public List<IAgent> getAgents() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<CAgent> getAgents() {
+		return agentList;
 	}
 
 	@Override
