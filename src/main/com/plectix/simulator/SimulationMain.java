@@ -11,7 +11,6 @@ import org.apache.commons.cli.PosixParser;
 
 import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.simulator.DataReading;
-import com.plectix.simulator.simulator.SimulationData;
 
 public class SimulationMain {
 
@@ -21,8 +20,6 @@ public class SimulationMain {
 	private static SimulationMain instance;
 	private static Options cmdLineOptions;
 	private CommandLine cmdLineArgs;
-	private SimulationData simData;
-	
 	
 	static {
 		cmdLineOptions = new Options();
@@ -56,8 +53,7 @@ public class SimulationMain {
 		DataReading data = new DataReading(fileName);		
 		try {
 			data.readData();
-			simData = new SimulationData();
-			Parser parser = new Parser(data, simData);
+			Parser parser = new Parser(data);
 			parser.doParse();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -8,22 +8,16 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CObservables;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CState;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulatorManager;
 
 public class Parser {
-
-	private SimulationData simData = null;
-
-	private DataReading data = null;
 
 	private final static String SYMBOL_STATE = "~";
 	private final static int KEY_STATE = 1;
@@ -41,6 +35,8 @@ public class Parser {
 	
 	private static final byte CREATE_INIT=0;
 	private static final byte CREATE_OBS=1;
+	
+	private DataReading data;
 
 	private class DataString {
 		private String st1 = null;
@@ -68,13 +64,11 @@ public class Parser {
 
 	}
 
-	public Parser() {
-
+	public Parser(DataReading data) {
+		this.data = data;
 	}
 
-	public Parser(DataReading data, SimulationData simData) {
-		this.simData = simData;
-		this.data = data;
+	public Parser() {
 	}
 
 	// needs to throw our own exception of wrong strings to parse
@@ -195,15 +189,17 @@ public class Parser {
 			
 			//In the future will be create another addAgents to Solution, without
 			// parce "count" once "line"
+			SimulationData simulationData = SimulatorManager.getInstance().getSimulationData();
 			switch (code) {
 			case CREATE_INIT:{
-				for (int i = 0; i < count; i++) 
-					simData.getSolution().addAgents(parceAgent(line));  
+				for (int i = 0; i < count; i++) {
+					simulationData.getSolution().addAgents(parceAgent(line));
+				}  
 				break;
 			}
 			case CREATE_OBS:{
 					CObservables obs = new CObservables(parceAgent(line));
-					simData.getObservables().add(obs);  
+					simulationData.getObservables().add(obs);  
 				break;
 			}
 

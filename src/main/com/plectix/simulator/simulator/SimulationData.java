@@ -2,28 +2,19 @@ package com.plectix.simulator.simulator;
 
 import java.util.List;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.interfaces.IObservables;
-import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISolution;
 
 
 public class SimulationData {
-	private List<IRule> rules;
-
+	private List<CRule> rules;
 	private List<IObservables> observables;
-
-
-
 	private double intialTime;
-	
 	private double timeLength;
-	
 	private long numPoints;
-	
 	private ISolution solution=new CSolution(); // soup of initial components
-
-	
 	
 	public List<IObservables> getObservables() {
 		return observables;
@@ -47,4 +38,12 @@ public class SimulationData {
 		return solution;
 	}
 
+
+	public void setRules(List<CRule> rules) {
+		this.rules = rules;
+	}
+
+	public List<CRule> getRules() {
+		return rules;
+	}
 }

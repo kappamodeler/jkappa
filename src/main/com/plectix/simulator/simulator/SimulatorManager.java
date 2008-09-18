@@ -11,9 +11,10 @@ import com.plectix.simulator.components.CSite;
 public class SimulatorManager {
 	
 	private static SimulatorManager instance;
-	private List<CRule> rules;
 	
-	private  SimulatorManager() {
+	private SimulationData simulationData = new SimulationData();
+	
+	private SimulatorManager() {
 	}
 	
 	public static SimulatorManager getInstance() {
@@ -76,10 +77,14 @@ public class SimulatorManager {
 	}
 
 	public void setRules(List<CRule> rules) {
-		this.rules = rules;
+		simulationData.setRules(rules);
 	}
 
 	public List<CRule> getRules() {
-		return rules;
+		return simulationData.getRules();
+	}
+
+	public SimulationData getSimulationData() {
+		return simulationData;
 	}
 }
