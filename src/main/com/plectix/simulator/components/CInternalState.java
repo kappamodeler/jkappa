@@ -2,32 +2,25 @@ package com.plectix.simulator.components;
 
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IInternalState;
 import com.plectix.simulator.interfaces.IState;
 import com.plectix.simulator.interfaces.ILift.LiftElement;
 
-public class CInternalState implements IInternalState{
+public class CInternalState implements IState {
 
-	private IState state = null;
 	
+	private String state = null; 
 	
-	public CInternalState(IState state){
-		this.state=state;
+	public CInternalState(String state2) {
+		this.state = state;
 	}
-	
-	
-	@Override
-	public IState getState() {
+
+	public String getState() {
 		return state;
 	}
-	
-	
-	
-	@Override
-	public void setState(IState state) {
-		this.state=state;
-	}
 
+	public void setState(String state) {
+		this.state = state;
+	}
 
 	@Override
 	public List<LiftElement> getLift() {
@@ -35,13 +28,11 @@ public class CInternalState implements IInternalState{
 		return null;
 	}
 
-
 	@Override
 	public String getName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	@Override
 	public boolean isChanged() {
@@ -49,13 +40,11 @@ public class CInternalState implements IInternalState{
 		return false;
 	}
 
-
 	@Override
 	public void removeLiftElement(LiftElement element) {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 	@Override
 	public void setLift(List<LiftElement> lift) {
@@ -63,5 +52,4 @@ public class CInternalState implements IInternalState{
 		
 	}
 
-		
 }

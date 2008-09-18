@@ -2,12 +2,12 @@ package com.plectix.simulator.simulator;
 
 import java.util.List;
 
+import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.IInternalState;
 import com.plectix.simulator.interfaces.ILift;
-import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.IState;
@@ -61,13 +61,13 @@ public class Simulator {
 					for (IAgent agentComp : cComp.getAgents()) {
 						for (ISite chSites : agentComp.getSites()) {
 							if (chSites.isChanged()) {
-								IInternalState iState = chSites
+								CInternalState iState = chSites
 										.getInternalState();
 								if (iState.isChanged()) {
 									removeRulesInjections(iState, agentComp);
 									iState.setLift(null);
 								}
-								ILinkState lState = chSites.getLinkState();
+								CLinkState lState = chSites.getLinkState();
 								if (lState.isChanged()) {
 									removeRulesInjections(lState, agentComp);
 									lState.setLift(null);

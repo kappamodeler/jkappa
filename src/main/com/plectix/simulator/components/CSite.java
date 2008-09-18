@@ -1,16 +1,13 @@
 package com.plectix.simulator.components;
 
-import com.plectix.simulator.interfaces.IInternalState;
-import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.IState;
 
 public class CSite implements ISite {
 	public static final int NO_INDEX = -1;
-	private IState state = null;
 	private String name;
-	private ILinkState linkState;
-	private IInternalState internalState=null;
+	private CLinkState linkState;
+	private CInternalState internalState=null;
 	private boolean changed;
 	private CAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;
@@ -22,7 +19,7 @@ public class CSite implements ISite {
 	}
 	
 	@Override
-	public ILinkState getLinkState() {
+	public CLinkState getLinkState() {
 		return linkState;
 	}
 	
@@ -36,19 +33,13 @@ public class CSite implements ISite {
 		return linkAgent;
 	}
 	
-	@Override
-	public void setState(IState state) {
-		if (state != null)
-			internalState=new CInternalState(state);
-		
-
+	public void setInternalState(CInternalState internalState) {
+		this.internalState=internalState;
 	}
 
-	@Override
-	public IInternalState getInternalState() {
+	public CInternalState getInternalState() {
 		return internalState;
 	}
-
 
 	@Override
 	public boolean isChanged() {
@@ -68,9 +59,9 @@ public class CSite implements ISite {
 		CSite site = (CSite) obj;
 		if (!name.equals(site.name))
 			return false;
-		if (state == null)
+		if (internalState == null)
 			return true;
-		return state.equals(site.state);
+		return internalState.equals(site.internalState);
 	}
 
 	public void setLinkIndex(int index) {
@@ -81,4 +72,6 @@ public class CSite implements ISite {
 		return linkIndex;
 	}
 
+	
+	
 }

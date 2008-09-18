@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IInternalState;
-import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.ISite;
 
 public class CAgent implements IAgent {
@@ -25,7 +23,7 @@ public class CAgent implements IAgent {
 		if ((site != null) && (!listSite.contains(site))
 				&& (findSite(site) == null)) {
 			listSite.add(site);
-			((CSite) site).setAgentLink(this);
+			site.setAgentLink(this);
 		}
 	}
 
@@ -55,13 +53,13 @@ public class CAgent implements IAgent {
 	}
 
 	@Override
-	public IInternalState getSiteInternalState(ISite internal_state) {
+	public String getSiteInternalState(ISite internal_state) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public ILinkState getSiteLinkState(ISite site) {
+	public CLinkState getSiteLinkState(ISite site) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -72,17 +70,25 @@ public class CAgent implements IAgent {
 	}
 
 	@Override
-	public void setSiteInternalState(ISite site, IInternalState internal_state) {
+	public void setSiteInternalState(ISite site, String internal_state) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setSiteLinkState(ISite site, ILinkState link_state) {
+	public void setSiteLinkState(ISite site, CLinkState link_state) {
 		// TODO Auto-generated method stub
 
 	}
-
+//	public IAgent cloneAgent() {
+//		CAgent agent=new CAgent(this.getName());
+//		for(ISite site:listSite){
+//			CSite siteAdd = new CSite(site.getName());
+//		}
+//		
+//		return agent;
+//	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof CAgent))

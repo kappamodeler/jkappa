@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.CState;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulatorManager;
@@ -240,7 +240,7 @@ public class Parser {
 		csite = new CSite(site);
 
 		if (state != null) {
-			csite.setState(new CState(state));
+			csite.setInternalState(new CInternalState(state));
 		}
 		if (connect != null)
 			if (connect.length() == 0) {

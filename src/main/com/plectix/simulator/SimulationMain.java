@@ -1,6 +1,7 @@
 package com.plectix.simulator;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -9,8 +10,10 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.simulator.DataReading;
+import com.plectix.simulator.simulator.SimulatorManager;
 
 public class SimulationMain {
 
@@ -35,6 +38,7 @@ public class SimulationMain {
 
 
 	private void runSimulator() {
+		List<CRule> rules = SimulatorManager.getInstance().getRules();
 		// Simulator simulator = new Simulator(new Model(simData));
 		// simulator.run();
 		// simulator.outputData();		
