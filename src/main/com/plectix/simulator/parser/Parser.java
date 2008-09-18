@@ -97,6 +97,7 @@ public class Parser {
 			input = rulesStr;
 			rulesStr = rulesStr.trim();
 			rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
+			String name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
 			rulesStr = rulesStr.substring(rulesStr.indexOf("'"),
 					rulesStr.length()).trim();
 			index = rulesStr.lastIndexOf("@");
@@ -142,7 +143,7 @@ public class Parser {
 			}
 
 			rules.add(SimulatorManager.getInstance().buildRule(left, right,
-					activity));
+					name, activity));
 
 		}
 

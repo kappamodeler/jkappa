@@ -10,7 +10,7 @@ public class CInternalState implements IState {
 	
 	private String state = null; 
 	
-	public CInternalState(String state2) {
+	public CInternalState(String state) {
 		this.state = state;
 	}
 

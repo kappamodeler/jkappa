@@ -1,7 +1,6 @@
 package com.plectix.simulator.components;
 
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.interfaces.IState;
 
 public class CSite implements ISite {
 	public static final int NO_INDEX = -1;

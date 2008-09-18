@@ -8,6 +8,11 @@ public class CRule {
 	private List<CConnectedComponent> left;
 	private List<CConnectedComponent> right;
 	private Double activity;
+	private String name;
+
+	public String getName() {
+		return name;
+	}
 
 	public Double getActivity() {
 		return activity;
@@ -17,10 +22,11 @@ public class CRule {
 		this.activity = activity;
 	}
 
-	public CRule(List<CConnectedComponent> left, List<CConnectedComponent> right, Double activity) {
+	public CRule(List<CConnectedComponent> left, List<CConnectedComponent> right,String name, Double activity) {
 		this.left = left;
 		this.right = right;
 		this.activity = activity;
+		this.name=name;
 	}
 
 	public List<CConnectedComponent> getLeft() {
