@@ -8,23 +8,36 @@ import com.plectix.simulator.interfaces.IInternalState;
 import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.ISite;
 
-public class CAgent implements IAgent{
+public class CAgent implements IAgent {
 	private String name;
 	private Integer dbId;
-	private List<CSite> listSite=new ArrayList<CSite>();
-	
-	public CAgent(String name){
-		this.name=name;
+	private List<CSite> listSite = new ArrayList<CSite>();
+
+	private static int staticId = 0;
+
+	public CAgent(String name) {
+		this.name = name;
+		dbId = staticId++;
 	}
 
 	@Override
-	public void addSite(CSite site){
-		if((site != null) && ( !listSite.contains(site) )){
+	public void addSite(CSite site) {
+		if ((site != null) && (!listSite.contains(site))
+				&& (findSite(site) == null)) {
 			listSite.add(site);
-			((CSite)site).setAgentLink(this);
+			((CSite) site).setAgentLink(this);
 		}
 	}
-	
+
+	private CSite findSite(CSite site) {
+		if (site == null)
+			return null;
+		for (CSite fSite : listSite)
+			if (fSite.getName().equalsIgnoreCase(site.getName()))
+				return fSite;
+		return null;
+	}
+
 	@Override
 	public Integer getDBId() {
 		return dbId;
@@ -61,23 +74,13 @@ public class CAgent implements IAgent{
 	@Override
 	public void setSiteInternalState(ISite site, IInternalState internal_state) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void setSiteLinkState(ISite site, ILinkState link_state) {
 		// TODO Auto-generated method stub
-		
-	}
 
-	@Override
-	public IAgent cloneAgent() {
-		CAgent agent=new CAgent(this.getName());
-		for(ISite site:listSite){
-			CSite siteAdd = new CSite(site.getName());
-		}
-		
-		return agent;
 	}
 
 	@Override

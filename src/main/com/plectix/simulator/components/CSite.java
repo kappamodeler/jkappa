@@ -1,6 +1,5 @@
 package com.plectix.simulator.components;
 
-import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IInternalState;
 import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.ISite;
@@ -13,7 +12,7 @@ public class CSite implements ISite {
 	private ILinkState linkState;
 	private IInternalState internalState=null;
 	private boolean changed;
-	private IAgent linkAgent = null;
+	private CAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;
 	
 
@@ -27,13 +26,13 @@ public class CSite implements ISite {
 		return linkState;
 	}
 	
-	public void setAgentLink(IAgent agent){
+	public void setAgentLink(CAgent agent){
 		if(agent == null)
 			return;
 		this.linkAgent = agent;
 	}
 	
-	public IAgent getAgentLink(){
+	public CAgent getAgentLink(){
 		return linkAgent;
 	}
 	
