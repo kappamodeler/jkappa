@@ -36,8 +36,6 @@ public class DataReading {
 		// reading of the file
 		// ....
 
-		// FileInputStream fr=new FileInputStream("C:/workspace/Example.tmp");
-
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(filePatch));
 			String line;

@@ -31,10 +31,10 @@ public class Parser {
 	private static final byte CC_RHS = 0;
 	private static final byte CC_LHS = 1;
 	private static final byte CC_ALL = -1;
-	
-	private static final byte CREATE_INIT=0;
-	private static final byte CREATE_OBS=1;
-	
+
+	private static final byte CREATE_INIT = 0;
+	private static final byte CREATE_OBS = 1;
+
 	private DataReading data;
 
 	private class DataString {
@@ -70,19 +70,15 @@ public class Parser {
 	public Parser() {
 	}
 
-	// needs to throw our own exception of wrong strings to parse
+	// TODO needs to throw our own exception of wrong strings to parse
 	public void doParse() throws IOException {
 		System.out.println("Start parsing...");
 
 		try {
-//			System.out.println("<<<<<<INITS>>>>>>");
-			createSimData(data.getInits(),CREATE_INIT);
-//			 System.out.println("<<<<<<RULES>>>>>>");
-			 List<CRule> rules = createRules(data.getRules());
-			 SimulatorManager.getInstance().setRules(rules);
-			 
-//			 System.out.println("<<<<<<OBS>>>>>>");
-			 createSimData(data.getObservables(),CREATE_OBS);
+			createSimData(data.getInits(), CREATE_INIT);
+			List<CRule> rules = createRules(data.getRules());
+			SimulatorManager.getInstance().setRules(rules);
+			createSimData(data.getObservables(), CREATE_OBS);
 		} catch (IOException e) {
 			throw new IOException(e.getMessage());
 		}
@@ -90,20 +86,19 @@ public class Parser {
 	}
 
 	private List<CRule> createRules(List<String> list) throws IOException {
-		
+
 		List<CRule> rules = new ArrayList<CRule>();
-		
+
 		int index;
 		String[] result;
-		String name;
 		Double activity;
 		String input;
 		for (String rulesStr : list) {
 			input = rulesStr;
 			rulesStr = rulesStr.trim();
 			rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
-			name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
-			rulesStr = rulesStr.substring(rulesStr.indexOf("'"), rulesStr.length()).trim();
+			rulesStr = rulesStr.substring(rulesStr.indexOf("'"),
+					rulesStr.length()).trim();
 			index = rulesStr.lastIndexOf("@");
 			try {
 				activity = Double.valueOf(rulesStr.substring(index + 1).trim());
@@ -111,11 +106,6 @@ public class Parser {
 				throw new IOException("Error in Rules: " + input);
 			}
 			rulesStr = rulesStr.substring(1, index).trim();
-
-//			System.out.println("-----------------------");
-//			System.out.println("Name=" + name);
-//			System.out.println(rulesStr);
-//			System.out.println(activity);
 
 			index = -1;
 			int y = rulesStr.indexOf("->");
@@ -131,34 +121,31 @@ public class Parser {
 			}
 
 			result = rulesStr.split("\\->");
-			
+
 			List<CAgent> left = null;
 			List<CAgent> right = null;
-			
+
 			switch (index) {
-				case CC_LHS: {
-//					System.out.println("LHS:");
-					left = parceAgent(result[0].trim());
-					break;
-				}
-				case CC_RHS: {
-//					System.out.println("RHS:");
-					right = parceAgent(result[1].trim());
-					break;
-				}
-				case CC_ALL: {
-//					System.out.println("LHS:");
-					left = parceAgent(result[0].trim());
-//					System.out.println("RHS:");
-					right = parceAgent(result[1].trim());
-					break;
-				}
+			case CC_LHS: {
+				left = parceAgent(result[0].trim());
+				break;
 			}
-			
-			rules.add(SimulatorManager.getInstance().buildRule(left, right,activity));
-			
+			case CC_RHS: {
+				right = parceAgent(result[1].trim());
+				break;
+			}
+			case CC_ALL: {
+				left = parceAgent(result[0].trim());
+				right = parceAgent(result[1].trim());
+				break;
+			}
+			}
+
+			rules.add(SimulatorManager.getInstance().buildRule(left, right,
+					activity));
+
 		}
-		
+
 		return rules;
 	}
 
@@ -179,27 +166,24 @@ public class Parser {
 					throw new IOException("Error in Initial Conditions.");
 				}
 			}
-//			System.out.println("====================");
-//			System.out.println("count=" + count);
-//			System.out.println("====");
-			line = result[length - 1].trim();		
+			line = result[length - 1].trim();
 
-			
-			
-			//In the future will be create another addAgents to Solution, without
+			// In the future will be create another addAgents to Solution,
+			// without
 			// parce "count" once "line"
-			SimulationData simulationData = SimulatorManager.getInstance().getSimulationData();
+			SimulationData simulationData = SimulatorManager.getInstance()
+					.getSimulationData();
 			switch (code) {
-			case CREATE_INIT:{
+			case CREATE_INIT: {
 				for (int i = 0; i < count; i++) {
 					simulationData.getSolution().addAgents(parceAgent(line));
-				}  
+				}
 				break;
 			}
-			case CREATE_OBS:{
-//					CObservables obs = new CObservables(parceAgent(line));
-					simulationData.getObservables().addConnectedComponents(SimulatorManager.getInstance().buildConnectedComponents(parceAgent(line)));
-//					simulationData.getObservables().add(obs);  
+			case CREATE_OBS: {
+				simulationData.getObservables().addConnectedComponents(
+						SimulatorManager.getInstance()
+								.buildConnectedComponents(parceAgent(line)));
 				break;
 			}
 
@@ -207,10 +191,6 @@ public class Parser {
 		}
 
 	}
-	
-	
-	
-	
 
 	public List<CAgent> parceAgent(String line) {
 		StringTokenizer st = new StringTokenizer(line, "),");
@@ -259,33 +239,30 @@ public class Parser {
 
 		csite = new CSite(site);
 
-//		System.out.println("-" + site);
 		if (state != null) {
-//			System.out.println("--" + state);
 			csite.setState(new CState(state));
 		}
 		if (connect != null)
 			if (connect.length() == 0) {
-//				System.out.println("---" + "MAY_BE");
-				csite.getLinkState().setStatusLink(CLinkState.STATUS_LINK_MAY_BE);
+				csite.getLinkState().setStatusLink(
+						CLinkState.STATUS_LINK_MAY_BE);
 			} else if (connect.equals(SYMBOL_CONNECTED_TRUE_VALUE)) {
-//				System.out.println("---" + "CONNECT_TRUE");
-				csite.getLinkState().setStatusLink(CLinkState.STATUS_LINK_CONNECTED);
+				csite.getLinkState().setStatusLink(
+						CLinkState.STATUS_LINK_CONNECTED);
 			} else {
-//				System.out.println("---" + connect);
 				int index = Integer.valueOf(connect);
 				CSite isite = map.get(index);
-				if(isite != null){
+				if (isite != null) {
 					isite.getLinkState().setSite(csite);
 					csite.getLinkState().setSite(isite);
-					
+
 					isite.setLinkIndex(index);
 					csite.setLinkIndex(index);
 					map.remove(index);
 				} else {
 					map.put(index, csite);
 				}
-				
+
 			}
 		return csite;
 	}
@@ -322,7 +299,6 @@ public class Parser {
 		}
 		}
 
-		// i = st.indexOf(id);
 		if (i != -1) {
 			String content = st.substring(i + 1).trim();
 			st = st.substring(0, i).trim();
