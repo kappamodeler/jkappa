@@ -56,7 +56,7 @@ public class ParserTest extends TestCase {
 		
 		assertEquals(actualAgentsList, expectedAgentsList);
 		// let's check if there is a site link between last two agents
-		assertTrue(actualAgentsList.get(2).getSites().get(0).getLinkState().getSite() == actualAgentsList.get(3).getSites().get(0));
-		assertTrue(actualAgentsList.get(3).getSites().get(0).getLinkState().getSite() == actualAgentsList.get(2).getSites().get(0));
+		assertTrue(actualAgentsList.get(2).getSite("s").getLinkState().getSite() == actualAgentsList.get(3).getSite("Y187"));
+		assertTrue(actualAgentsList.get(3).getSite("Y187").getLinkState().getSite() == actualAgentsList.get(2).getSite("s"));
 	}
 }

@@ -1,5 +1,7 @@
 package com.plectix.simulator.interfaces;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 import com.plectix.simulator.components.CLinkState;
@@ -12,7 +14,7 @@ public interface IAgent {
 	
 	public int getIdInConnectedComponent();  //Returns the identifier of this object in the database.
 	
-	public List<CSite> getSites();  //Returns this Agent�s Sites
+	public Collection<CSite> getSites();  //Returns this Agent�s Sites
 	
 	public void addSite(CSite site);
 

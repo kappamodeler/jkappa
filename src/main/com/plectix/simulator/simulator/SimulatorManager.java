@@ -1,6 +1,7 @@
 package com.plectix.simulator.simulator;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
@@ -42,7 +43,7 @@ public class SimulatorManager {
 			
 			agent.setIdInConnectedComponent(index);
 			
-			List<CSite> sites = agent.getSites();
+			Collection<CSite> sites = agent.getSites();
 			
 			for(CSite site: sites) {
 				if(site.getLinkIndex() != CSite.NO_INDEX) {

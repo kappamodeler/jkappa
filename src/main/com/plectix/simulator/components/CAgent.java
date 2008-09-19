@@ -1,7 +1,11 @@
 package com.plectix.simulator.components;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
@@ -16,7 +20,7 @@ public class CAgent implements IAgent {
 	private int idInConnectedComponent;
 	private long id;
 
-	private List<CSite> listSite = new ArrayList<CSite>();
+	private HashMap<String,CSite> siteMap = new HashMap<String, CSite>();
 	
 
 	public CAgent(String name) {
@@ -26,20 +30,8 @@ public class CAgent implements IAgent {
 
 	@Override
 	public void addSite(CSite site) {
-		if ((site != null) && (!listSite.contains(site))
-				&& (findSite(site) == null)) {
-			listSite.add(site);
-			site.setAgentLink(this);
-		}
-	}
-
-	private CSite findSite(CSite site) {
-		if (site == null)
-			return null;
-		for (CSite fSite : listSite)
-			if (fSite.getName().equalsIgnoreCase(site.getName()))
-				return fSite;
-		return null;
+		site.setAgentLink(this);
+		siteMap.put(site.getName(),site);
 	}
 
 	@Override
@@ -75,8 +67,8 @@ public class CAgent implements IAgent {
 	}
 
 	@Override
-	public List<CSite> getSites() {
-		return listSite;
+	public Collection<CSite> getSites() {
+		return siteMap.values();
 	}
 
 	@Override
@@ -111,7 +103,11 @@ public class CAgent implements IAgent {
 		CAgent agent = (CAgent) obj;
 		if (!name.equals(agent.name))
 			return false;
-		return listSite.equals(agent.listSite);
+		return siteMap.equals(agent.siteMap);
+	}
+
+	public CSite getSite(String siteName) {
+		return siteMap.get(siteName);
 	}
 
 }
