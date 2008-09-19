@@ -8,9 +8,8 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.CState;
-import com.plectix.simulator.interfaces.IAgent;
 
 public class ParserTest extends TestCase {
 	
@@ -24,7 +23,7 @@ public class ParserTest extends TestCase {
 		
 		CAgent agent = new CAgent("Ras");
 		CSite site = new CSite("S1S2");
-		site.setState(new CState("gtp"));
+		site.setInternalState(new CInternalState("gtp"));
 		agent.addSite(site);
 		expectedAgentsList.add(agent);
 		
@@ -32,10 +31,10 @@ public class ParserTest extends TestCase {
 		site = new CSite("s");
 		agent.addSite(site);
 		site = new CSite("S222");
-		site.setState(new CState("p"));
+		site.setInternalState(new CInternalState("p"));
 		agent.addSite(site);
 		site = new CSite("S218");
-		site.setState(new CState("p"));
+		site.setInternalState(new CInternalState("p"));
 		agent.addSite(site);
 		expectedAgentsList.add(agent);
 		
@@ -43,10 +42,10 @@ public class ParserTest extends TestCase {
 		site = new CSite("s");
 		agent.addSite(site);
 		site = new CSite("S218");
-		site.setState(new CState("p"));
+		site.setInternalState(new CInternalState("p"));
 		agent.addSite(site);
 		site = new CSite("S222");
-		site.setState(new CState("p"));
+		site.setInternalState(new CInternalState("p"));
 		agent.addSite(site);
 		expectedAgentsList.add(agent);
 		
