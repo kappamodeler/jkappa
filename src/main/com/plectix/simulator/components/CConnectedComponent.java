@@ -1,22 +1,30 @@
 package com.plectix.simulator.components;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ISolution;
 
-public class CConnectedComponent implements IConnectedComponent{
-	
+public class CConnectedComponent implements IConnectedComponent {
+
 	private List<CAgent> agentList;
+
+	private List<CAgent> injectionList;
 
 	// private ArrayList<CAgentRule> agentList=new ArrayList<CAgentRule>();
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
+		injectionList = new ArrayList<CAgent>();
 		initSpanningTreeMap();
+	}
+
+	public void setInjections(ISolution solution, CAgent agent) {
+		if (unify(solution, agent))
+			injectionList.add(agent);
 	}
 
 	@Override
@@ -85,27 +93,63 @@ public class CConnectedComponent implements IConnectedComponent{
 				&& solutionState.isLeftBranchStatus())
 			return false;
 
-		if (currentState.getStatusLinkRank() <= solutionState
+		if (currentState.getStatusLinkRank() < solutionState
+				.getStatusLinkRank())
+			return true;
+
+		if (currentState.getStatusLinkRank() == solutionState
+				.getStatusLinkRank()
+				&& currentState.getStatusLinkRank() == CLinkState.STATUS_LINK_CONNECTED)
+			if (currentState.getSite().equals(solutionState.getSite()))
+				if (currentState.getSite().getAgentLink().equals(
+						solutionState.getSite().getAgentLink()))
+					return true;
+
+		if (currentState.getStatusLinkRank() == solutionState
 				.getStatusLinkRank())
 			return true;
 
 		return false;
 	}
 
+	// is there injection or not
+	private boolean spanningTreeViewer(CAgent agent, CSpanningTree spTree,
+			int rootVertex) {
+		spTree.setFalse(rootVertex);
+		for (Integer v : spTree.getVertexes()[rootVertex]) {
+			int count = 0;
+			CAgent cAgent = agentList.get(v);
+			if (count == 0 || spTree.getNewVertexElement(cAgent.getIdInConnectedComponent())) {
+				for (CSite site : cAgent.getSites()) {
+//					CSite sSite = agent.findSite(site);
+					CSite sSite = agent.getSite(site.getName());
+					if (sSite == null)
+						return false;
+					if (!compareSites(site, sSite))
+						return false;
+				}
+				if (count != 0) {
+					spanningTreeViewer(agent.findLinkAgent(cAgent), spTree, v);
+				}
+				count = 1;
+			}
+
+		}
+		return true;
+	}
+
 	@Override
-	public Map<String, IConnectedComponent> unify(ISolution solution,
-			IAgent agent) {
+	public boolean unify(ISolution solution, CAgent agent) {
 
 		if (spanningTreeMap == null)
-			return null;
-
-		if (agentList.size() == 1) {
-			// checkStates
-		}
+			return false;
 
 		CSpanningTree spTree = spanningTreeMap.get(agent);
 
-		return null;
+		if (spTree == null)
+			return false;
+
+		return spanningTreeViewer(agent, spTree, spTree.getRootIndex());
 	}
 
 	HashMap<CAgent, CSpanningTree> spanningTreeMap;
@@ -115,15 +159,10 @@ public class CConnectedComponent implements IConnectedComponent{
 		spanningTreeMap = new HashMap<CAgent, CSpanningTree>();
 		if (agentList.size() == 0)
 			return;
-
-		if (agentList.size() > 1)
-			for (CAgent agent : agentList) {
-				spTree = new CSpanningTree(agentList.size(), agent);
-				spanningTreeMap.put(agent, spTree);
-			}
-		else
-			spanningTreeMap.put(agentList.get(0), new CSpanningTree(agentList
-					.size(), agentList.get(0)));
+		for (CAgent agent : agentList) {
+			spTree = new CSpanningTree(agentList.size(), agent);
+			spanningTreeMap.put(agent, spTree);
+		}
 	}
 
 }

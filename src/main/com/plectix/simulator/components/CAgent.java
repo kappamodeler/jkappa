@@ -1,11 +1,8 @@
 package com.plectix.simulator.components;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
@@ -13,25 +10,38 @@ import com.plectix.simulator.simulator.SimulatorManager;
 
 public class CAgent implements IAgent {
 	/**
-	 * idInConnectedComponent is the unique id in ConnectedComponent
-	 * id is an unique id for agent
+	 * idInConnectedComponent is the unique id in ConnectedComponent id is an
+	 * unique id for agent
 	 */
 	private String name;
 	private int idInConnectedComponent;
 	private long id;
 
-	private HashMap<String,CSite> siteMap = new HashMap<String, CSite>();
-	
+	private HashMap<String, CSite> siteMap = new HashMap<String, CSite>();
 
 	public CAgent(String name) {
 		this.name = name;
 		id = SimulatorManager.getInstance().generateNextAgenId();
 	}
 
+	public CAgent findLinkAgent(CAgent agent) {
+		if (agent == null)
+			return null;
+		for (CSite site : siteMap.values()) {
+			CSite aSite = (CSite) site.getLinkState().getSite();
+			if (aSite != null) {
+				if (agent.equals(aSite.getAgentLink()))
+					return aSite.getAgentLink();
+			}
+		}
+		return null;
+	}
+	
+	
 	@Override
 	public void addSite(CSite site) {
 		site.setAgentLink(this);
-		siteMap.put(site.getName(),site);
+		siteMap.put(site.getName(), site);
 	}
 
 	@Override
@@ -86,16 +96,7 @@ public class CAgent implements IAgent {
 	public long getId() {
 		return id;
 	}
-	
-//	public IAgent cloneAgent() {
-//		CAgent agent=new CAgent(this.getName());
-//		for(ISite site:listSite){
-//			CSite siteAdd = new CSite(site.getName());
-//		}
-//		
-//		return agent;
-//	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof CAgent))

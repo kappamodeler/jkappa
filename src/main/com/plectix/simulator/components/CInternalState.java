@@ -21,14 +21,6 @@ public class CInternalState implements IState {
 	public void setState(String state) {
 		this.state = state;
 	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof CInternalState))
-			return false;
-		
-		return state.equals(((CInternalState)obj).state);
-	}
 
 	@Override
 	public List<LiftElement> getLift() {
