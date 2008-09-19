@@ -128,16 +128,16 @@ public class Parser {
 
 			switch (index) {
 			case CC_LHS: {
-				left = parceAgent(result[0].trim());
+				left = parseAgent(result[0].trim());
 				break;
 			}
 			case CC_RHS: {
-				right = parceAgent(result[1].trim());
+				right = parseAgent(result[1].trim());
 				break;
 			}
 			case CC_ALL: {
-				left = parceAgent(result[0].trim());
-				right = parceAgent(result[1].trim());
+				left = parseAgent(result[0].trim());
+				right = parseAgent(result[1].trim());
 				break;
 			}
 			}
@@ -177,14 +177,14 @@ public class Parser {
 			switch (code) {
 			case CREATE_INIT: {
 				for (int i = 0; i < count; i++) {
-					simulationData.getSolution().addAgents(parceAgent(line));
+					simulationData.getSolution().addAgents(parseAgent(line));
 				}
 				break;
 			}
 			case CREATE_OBS: {
 				simulationData.getObservables().addConnectedComponents(
 						SimulatorManager.getInstance()
-								.buildConnectedComponents(parceAgent(line)));
+								.buildConnectedComponents(parseAgent(line)));
 				break;
 			}
 
@@ -193,7 +193,7 @@ public class Parser {
 
 	}
 
-	public List<CAgent> parceAgent(String line) {
+	public List<CAgent> parseAgent(String line) {
 		StringTokenizer st = new StringTokenizer(line, "),");
 		Map<Integer, CSite> map = new HashMap<Integer, CSite>();
 		StringTokenizer agent;
@@ -225,15 +225,15 @@ public class Parser {
 		DataString dt = null;
 		CSite csite = null;
 
-		dt = parceLine(site, KEY_STATE);
+		dt = parseLine(site, KEY_STATE);
 		site = dt.getSt1();
 		state = dt.getSt2();
 		if (state != null) {
-			dt = parceLine(state, KEY_CONNECT);
+			dt = parseLine(state, KEY_CONNECT);
 			connect = dt.getSt2();
 			state = dt.getSt1();
 		} else {
-			dt = parceLine(site, KEY_CONNECT);
+			dt = parseLine(site, KEY_CONNECT);
 			connect = dt.getSt2();
 			site = dt.getSt1();
 		}
@@ -268,7 +268,7 @@ public class Parser {
 		return csite;
 	}
 
-	private DataString parceLine(String st, int key) {
+	private DataString parseLine(String st, int key) {
 		String id = null;
 		DataString ds = new DataString(st);
 		int i = -1;

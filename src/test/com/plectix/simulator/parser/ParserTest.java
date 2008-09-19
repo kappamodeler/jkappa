@@ -20,7 +20,7 @@ public class ParserTest extends TestCase {
 		List<CAgent> actualAgentsList;
 		List<CAgent> expectedAgentsList = new ArrayList<CAgent>();
 		
-		actualAgentsList = parser.parceAgent("Ras(S1S2~gtp), MEK(s,S222~p,S218~p), MEK(s!1,S218~p,S222~p), ERK(Y187!1)");
+		actualAgentsList = parser.parseAgent("Ras(S1S2~gtp), MEK(s,S222~p,S218~p), MEK(s!1,S218~p,S222~p), ERK(Y187!1)");
 		
 		CAgent agent = new CAgent("Ras");
 		CSite site = new CSite("S1S2");
