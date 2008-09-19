@@ -5,17 +5,23 @@ import java.util.List;
 
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.SimulatorManager;
 
 public class CAgent implements IAgent {
+	/**
+	 * idInConnectedComponent is the unique id in ConnectedComponent
+	 * id is an unique id for agent
+	 */
 	private String name;
-	private Integer dbId;
-	private List<CSite> listSite = new ArrayList<CSite>();
+	private int idInConnectedComponent;
+	private long id;
 
-	private static int staticId = 0;
+	private List<CSite> listSite = new ArrayList<CSite>();
+	
 
 	public CAgent(String name) {
 		this.name = name;
-		dbId = staticId++;
+		id = SimulatorManager.getInstance().generateNextAgenId();
 	}
 
 	@Override
@@ -37,8 +43,12 @@ public class CAgent implements IAgent {
 	}
 
 	@Override
-	public Integer getDBId() {
-		return dbId;
+	public int getIdInConnectedComponent() {
+		return idInConnectedComponent;
+	}
+
+	public void setIdInConnectedComponent(int index) {
+		idInConnectedComponent = index;
 	}
 
 	@Override
@@ -80,6 +90,11 @@ public class CAgent implements IAgent {
 		// TODO Auto-generated method stub
 
 	}
+
+	public long getId() {
+		return id;
+	}
+	
 //	public IAgent cloneAgent() {
 //		CAgent agent=new CAgent(this.getName());
 //		for(ISite site:listSite){
@@ -99,7 +114,4 @@ public class CAgent implements IAgent {
 		return listSite.equals(agent.listSite);
 	}
 
-	public void setDbId(int index) {
-		dbId = index;
-	}
 }

@@ -10,7 +10,7 @@ public interface IAgent {
 	
 	public String getName();  //Return this Agent�s name Agent
 	
-	public Integer getDBId();  //Returns the identifier of this object in the database.
+	public int getIdInConnectedComponent();  //Returns the identifier of this object in the database.
 	
 	public List<CSite> getSites();  //Returns this Agent�s Sites
 	

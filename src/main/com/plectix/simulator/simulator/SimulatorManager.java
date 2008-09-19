@@ -13,6 +13,8 @@ public class SimulatorManager {
 	private static SimulatorManager instance;
 	
 	private SimulationData simulationData = new SimulationData();
+
+	private int agentIdGenerator = 0;;
 	
 	private SimulatorManager() {
 	}
@@ -38,7 +40,7 @@ public class SimulatorManager {
 			CAgent agent = agents.remove(0);
 			connectedAgents.add(agent);
 			
-			agent.setDbId(index);
+			agent.setIdInConnectedComponent(index);
 			
 			List<CSite> sites = agent.getSites();
 			
@@ -48,7 +50,7 @@ public class SimulatorManager {
 					if(linkedAgent != null) {
 						connectedAgents.add(linkedAgent);
 						agents.remove(linkedAgent);
-						linkedAgent.setDbId(++index);
+						linkedAgent.setIdInConnectedComponent(++index);
 					}
 				}
 			}
@@ -87,5 +89,9 @@ public class SimulatorManager {
 
 	public SimulationData getSimulationData() {
 		return simulationData;
+	}
+
+	public synchronized long generateNextAgenId() {
+		return agentIdGenerator  ++;
 	}
 }

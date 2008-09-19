@@ -6,7 +6,7 @@ public class CSite implements ISite {
 	public static final int NO_INDEX = -1;
 	private String name;
 	private CLinkState linkState;
-	private CInternalState internalState=null;
+	private CInternalState internalState = null;
 	private boolean changed;
 	private CAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;

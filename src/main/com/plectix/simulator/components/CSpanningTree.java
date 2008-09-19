@@ -29,13 +29,13 @@ public class CSpanningTree {
 	}
 
 	private void WGD(CAgent rootAgent) {
-		newVertex[rootAgent.getDBId().intValue()] = false;
+		newVertex[rootAgent.getIdInConnectedComponent()] = false;
 		for (CSite site : rootAgent.getSites()) {
 			CAgent agent = site.getAgentLink();
 			if (agent != null) {
-				Integer vertexIndex = agent.getDBId();
+				Integer vertexIndex = agent.getIdInConnectedComponent();
 				if (newVertex[vertexIndex]) {
-					vertexes[rootAgent.getDBId()].add(vertexIndex);
+					vertexes[rootAgent.getIdInConnectedComponent()].add(vertexIndex);
 					WGD(agent);
 				}
 			}
