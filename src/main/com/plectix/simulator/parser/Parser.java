@@ -34,6 +34,10 @@ public class Parser {
 
 	private static final byte CREATE_INIT = 0;
 	private static final byte CREATE_OBS = 1;
+	
+	private static final String PATTERN_AGENT_SITE="^[0-9[a-zA-Z]]+[0-9[a-zA-Z]\\_\\^\\-]*";
+	private static final String PATTERN_STATE="^[0-9[a-zA-Z]]+";
+	
 
 	private DataReading data;
 
@@ -96,17 +100,20 @@ public class Parser {
 		for (String rulesStr : list) {
 			input = rulesStr;
 			rulesStr = rulesStr.trim();
-			rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
-			String name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
-			rulesStr = rulesStr.substring(rulesStr.indexOf("'"),
-					rulesStr.length()).trim();
+			String name = null;
+			if (rulesStr.indexOf("'") != -1) {
+				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
+				name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
+				rulesStr = rulesStr.substring(rulesStr.indexOf("'")+1,
+						rulesStr.length()).trim();
+			}
 			index = rulesStr.lastIndexOf("@");
 			try {
 				activity = Double.valueOf(rulesStr.substring(index + 1).trim());
 			} catch (Exception e) {
 				throw new IOException("Error in Rules: " + input);
 			}
-			rulesStr = rulesStr.substring(1, index).trim();
+			rulesStr = rulesStr.substring(0, index).trim();
 
 			index = -1;
 			int y = rulesStr.indexOf("->");
@@ -193,7 +200,7 @@ public class Parser {
 
 	}
 
-	public List<CAgent> parseAgent(String line) {
+	public List<CAgent> parseAgent(String line) throws IOException {
 		StringTokenizer st = new StringTokenizer(line, "),");
 		Map<Integer, CSite> map = new HashMap<Integer, CSite>();
 		StringTokenizer agent;
@@ -206,6 +213,9 @@ public class Parser {
 			if (ccomp.indexOf("(") != -1) {
 				agent = new StringTokenizer(ccomp, "(");
 				ccomp = agent.nextToken(); // Agent name.
+				if(!ccomp.trim().matches(PATTERN_AGENT_SITE))
+					throw new IOException("Error in 'agent' name: "+ccomp);
+				
 				cagent = new CAgent(ccomp);
 				listAgent.add(cagent);
 				while (agent.hasMoreTokens()) {
@@ -216,10 +226,13 @@ public class Parser {
 				cagent.addSite(parseSome(ccomp, map)); // <------Agent
 			}
 		}
+		if(!map.isEmpty())
+			throw new IOException("Error in 'connected': "+line);
 		return listAgent;
 	}
 
-	private CSite parseSome(String site, Map<Integer, CSite> map) {
+	private CSite parseSome(String site, Map<Integer, CSite> map)
+			throws IOException {
 		String state = null;
 		String connect = null;
 		DataString dt = null;
@@ -238,11 +251,16 @@ public class Parser {
 			site = dt.getSt1();
 		}
 
+		if(!site.trim().matches(PATTERN_AGENT_SITE))
+			throw new IOException("Error in 'site' name: "+site);
 		csite = new CSite(site);
 
-		if (state != null) {
-			csite.setInternalState(new CInternalState(state));
-		}
+		if(state != null)
+			if((state.length()!=0)&&state.trim().matches(PATTERN_STATE))
+				csite.setInternalState(new CInternalState(state));
+			else
+				throw new IOException("Error in name 'state': "+state);
+		
 		if (connect != null)
 			if (connect.length() == 0) {
 				csite.getLinkState().setStatusLink(
@@ -251,17 +269,21 @@ public class Parser {
 				csite.getLinkState().setStatusLink(
 						CLinkState.STATUS_LINK_BOUND);
 			} else {
-				int index = Integer.valueOf(connect);
-				CSite isite = map.get(index);
-				if (isite != null) {
-					isite.getLinkState().setSite(csite);
-					csite.getLinkState().setSite(isite);
+				try {
+					int index = Integer.valueOf(connect);
+					CSite isite = map.get(index);
+					if (isite != null) {
+						isite.getLinkState().setSite(csite);
+						csite.getLinkState().setSite(isite);
 
-					isite.setLinkIndex(index);
-					csite.setLinkIndex(index);
-					map.remove(index);
-				} else {
-					map.put(index, csite);
+						isite.setLinkIndex(index);
+						csite.setLinkIndex(index);
+						map.remove(index);
+					} else {
+						map.put(index, csite);
+					}
+				} catch (Exception e) {
+					throw new IOException("Error in 'connected': "+connect);
 				}
 
 			}

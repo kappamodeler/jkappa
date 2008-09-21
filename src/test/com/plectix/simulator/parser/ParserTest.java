@@ -1,5 +1,6 @@
 package com.plectix.simulator.parser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +17,15 @@ public class ParserTest extends TestCase {
 	@Test
 	public void testParseAgent() {
 		Parser parser = new Parser();
-		List<CAgent> actualAgentsList;
+		List<CAgent> actualAgentsList=null;
 		List<CAgent> expectedAgentsList = new ArrayList<CAgent>();
 		
-		actualAgentsList = parser.parseAgent("Ras(S1S2~gtp), MEK(s,S222~p,S218~p), MEK(s!1,S218~p,S222~p), ERK(Y187!1)");
+		try {
+			actualAgentsList = parser.parseAgent("Ras(S1S2~gtp), MEK(s,S222~p,S218~p), MEK(s!1,S218~p,S222~p), ERK(Y187!1)");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		CAgent agent = new CAgent("Ras");
 		CSite site = new CSite("S1S2");
