@@ -41,7 +41,7 @@ public class Simulator {
 		long clash = 0;
 		IRule rule;
 
-		while (currentTime <= model.getSimData().getTimeLength()
+		while (currentTime <= model.getSimulationData().getTimeLength()
 				|| model.getCommonActivity() != 0.0) {
 			rule = getRandomRule();
 			if (!isClash(rule)) {
@@ -52,11 +52,11 @@ public class Simulator {
 				rule.recalcultateActivity();
 				// negative update
 
-				List<IAgent> newAgentList = model.getSimData().getSolution()
+				List<IAgent> newAgentList = model.getSimulationData().getSolution()
 						.apply(rule, inj);
 
 				for (IAgent agent : inj.getAgents()) {
-					IConnectedComponent cComp = model.getSimData()
+					IConnectedComponent cComp = model.getSimulationData()
 							.getSolution().getConnectedComponent(agent);
 					for (IAgent agentComp : cComp.getAgents()) {
 						for (ISite chSites : agentComp.getSites()) {

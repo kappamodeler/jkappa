@@ -22,29 +22,29 @@ public class SimulationData {
 	}
 	
 	
-	public void initLifts() {
+	public final void initLifts() {
 		//creates lifts for all rules
 	}
 
-	public void initInjections() {
+	public final void initInjections() {
 		//creates injections for all rules
 	}
 
-	public double getTimeLength() {
+	public final double getTimeLength() {
 		// TODO Auto-generated method stub
 		return timeLength;
 	}
 
-	public ISolution getSolution() {
+	public final ISolution getSolution() {
 		return solution;
 	}
 
 
-	public void setRules(List<CRule> rules) {
+	public final void setRules(List<CRule> rules) {
 		this.rules = rules;
 	}
 
-	public List<CRule> getRules() {
+	public final List<CRule> getRules() {
 		return rules;
 	}
 }

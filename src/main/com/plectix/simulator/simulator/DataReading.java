@@ -32,7 +32,7 @@ public class DataReading {
 		this.filePatch = str;
 	}
 
-	public void readData() throws IOException {
+	public final void readData() throws IOException {
 		// reading of the file
 		// ....
 
@@ -68,15 +68,15 @@ public class DataReading {
 			throw new IOException("There are no inits in the input data");
 	}
 
-	public List<String> getInits() {
+	public final List<String> getInits() {
 		return inits;
 	}
 
-	public List<String> getObservables() {
+	public final List<String> getObservables() {
 		return observables;
 	}
 
-	public List<String> getRules() {
+	public final List<String> getRules() {
 		return rules;
 	}
 

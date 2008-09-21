@@ -5,36 +5,36 @@ import com.plectix.simulator.interfaces.IActivationMap;
 public class Model{
 
 	public Model(SimulationData simData) {
-		this.simData = simData;
+		this.simulationData = simData;
 	}
 
 	private IActivationMap activationMap;
 	
-	private SimulationData simData;
+	private SimulationData simulationData;
 	
 	private double commonActivity=0.;
 
-	public void init() {
-		simData.initLifts();
-		simData.initInjections();
+	public final void init() {
+		simulationData.initLifts();
+		simulationData.initInjections();
 		createActivationMap();
 		
 	}
 
-	private void createActivationMap() {
+	private final void createActivationMap() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public IActivationMap getActivationMap() {
+	public final IActivationMap getActivationMap() {
 		return activationMap;
 	}
 	
-	public SimulationData getSimData() {
-		return simData;
+	public final SimulationData getSimulationData() {
+		return simulationData;
 	}
 
-	public double getCommonActivity() {
+	public final double getCommonActivity() {
 		return commonActivity;
 	}
 
