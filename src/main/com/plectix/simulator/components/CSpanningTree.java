@@ -7,29 +7,10 @@ public class CSpanningTree {
 
 	private List<Integer>[] vertexes;
 
-	public List<Integer>[] getVertexes() {
-		return vertexes;
-	}
-
 	private int rootIndex;
-	
-	public int getRootIndex(){
-		return rootIndex;
-	}
-	
+
 	private boolean[] newVertex;
-
-	public void setFalse(int index){
-		newVertex[index]=false;
-	}
 	
-	public boolean getNewVertexElement(int index){
-		return newVertex[index];
-	}
-	
-	public CSpanningTree() {
-	}
-
 	@SuppressWarnings("unchecked")
 	public CSpanningTree(int N, CAgent agent) {
 		this.newVertex = new boolean[N];
@@ -43,6 +24,23 @@ public class CSpanningTree {
 			WGD(agent);
 	}
 
+	public final boolean getNewVertexElement(int index){
+		return newVertex[index];
+	}
+	
+	public final int getRootIndex(){
+		return rootIndex;
+	}
+	
+	public final List<Integer>[] getVertexes() {
+		return vertexes;
+	}
+
+	public final void setFalse(int index){
+		newVertex[index]=false;
+	}
+
+	// TODO: Document
 	private void WGD(CAgent rootAgent) {
 		newVertex[rootAgent.getIdInConnectedComponent()] = false;
 		vertexes[rootAgent.getIdInConnectedComponent()].add(rootAgent.getIdInConnectedComponent());

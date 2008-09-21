@@ -15,7 +15,7 @@ public class SimulatorManager {
 	
 	private SimulationData simulationData = new SimulationData();
 
-	private int agentIdGenerator = 0;;
+	private int agentIdGenerator = 0;
 	
 	private SimulatorManager() {
 	}
@@ -92,7 +92,7 @@ public class SimulatorManager {
 		return simulationData;
 	}
 
-	public synchronized long generateNextAgenId() {
+	public synchronized long generateNextAgentId() {
 		return agentIdGenerator  ++;
 	}
 }

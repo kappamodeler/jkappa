@@ -15,53 +15,81 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	private List<CAgent> injectionList;
 
+	private HashMap<CAgent, CSpanningTree> spanningTreeMap;
+
 	// private ArrayList<CAgentRule> agentList=new ArrayList<CAgentRule>();
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
 		injectionList = new ArrayList<CAgent>();
 		initSpanningTreeMap();
 	}
+	
+	private final void initSpanningTreeMap() {
+		CSpanningTree spTree;
+		spanningTreeMap = new HashMap<CAgent, CSpanningTree>();
+		if (agentList.size() == 0)
+			return;
+		for (CAgent agent : agentList) {
+			spTree = new CSpanningTree(agentList.size(), agent);
+			spanningTreeMap.put(agent, spTree);
+		}
+	}
 
-	public void setInjections(ISolution solution, CAgent agent) {
+	public final void setInjections(ISolution solution, CAgent agent) {
 		if (unify(solution, agent))
 			injectionList.add(agent);
 	}
 
 	@Override
-	public IInjection checkAndBuildInjection(ISolution solution, IAgent agent) {
+	public final IInjection checkAndBuildInjection(ISolution solution, IAgent agent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<CAgent> getAgents() {
+	public final List<CAgent> getAgents() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getPrecompilationAsString() {
+	public final String getPrecompilationAsString() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void precompilationToString() {
+	public final void precompilationToString() {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void precompile() {
+	public final void precompile() {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public List<IInjection> pushout() {
+	public final List<IInjection> pushout() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public final boolean unify(ISolution solution, CAgent agent) {
+
+		if (spanningTreeMap == null)
+			return false;
+
+		CSpanningTree spTree = spanningTreeMap.get(agent);
+
+		if (spTree == null)
+			return false;
+
+		return spanningTreeViewer(agent, spTree, spTree.getRootIndex());
+	}
+
 
 	private boolean compareSites(CSite currentSite, CSite solutionSite) {
 		CLinkState currentLinkState = currentSite.getLinkState();
@@ -99,7 +127,7 @@ public class CConnectedComponent implements IConnectedComponent {
 
 		if (currentState.getStatusLinkRank() == solutionState
 				.getStatusLinkRank()
-				&& currentState.getStatusLinkRank() == CLinkState.STATUS_LINK_CONNECTED)
+				&& currentState.getStatusLinkRank() == CLinkState.STATUS_LINK_BOUND)
 			if (currentState.getSite().equals(solutionState.getSite()))
 				if (currentState.getSite().getAgentLink().equals(
 						solutionState.getSite().getAgentLink()))
@@ -138,31 +166,5 @@ public class CConnectedComponent implements IConnectedComponent {
 		return true;
 	}
 
-	@Override
-	public boolean unify(ISolution solution, CAgent agent) {
-
-		if (spanningTreeMap == null)
-			return false;
-
-		CSpanningTree spTree = spanningTreeMap.get(agent);
-
-		if (spTree == null)
-			return false;
-
-		return spanningTreeViewer(agent, spTree, spTree.getRootIndex());
-	}
-
-	HashMap<CAgent, CSpanningTree> spanningTreeMap;
-
-	public void initSpanningTreeMap() {
-		CSpanningTree spTree;
-		spanningTreeMap = new HashMap<CAgent, CSpanningTree>();
-		if (agentList.size() == 0)
-			return;
-		for (CAgent agent : agentList) {
-			spTree = new CSpanningTree(agentList.size(), agent);
-			spanningTreeMap.put(agent, spTree);
-		}
-	}
 
 }

@@ -14,40 +14,40 @@ public class CInternalState implements IState {
 		this.state = state;
 	}
 
-	public String getState() {
+	public final String getState() {
 		return state;
 	}
 
-	public void setState(String state) {
+	public final void setState(String state) {
 		this.state = state;
 	}
 
 	@Override
-	public List<LiftElement> getLift() {
+	public final List<LiftElement> getLift() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getName() {
+	public final String getName() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean isChanged() {
+	public final boolean isChanged() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public void removeLiftElement(LiftElement element) {
+	public final void removeLiftElement(LiftElement element) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void setLift(List<LiftElement> lift) {
+	public final void setLift(List<LiftElement> lift) {
 		// TODO Auto-generated method stub
 		
 	}

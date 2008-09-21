@@ -21,10 +21,11 @@ public class CAgent implements IAgent {
 
 	public CAgent(String name) {
 		this.name = name;
-		id = SimulatorManager.getInstance().generateNextAgenId();
+		id = SimulatorManager.getInstance().generateNextAgentId();
 	}
 
-	public CAgent findLinkAgent(CAgent agent) {
+	// TODO: Write documentation for this method. 
+	public final CAgent findLinkAgent(CAgent agent) {
 		if (agent == null)
 			return null;
 		for (CSite site : siteMap.values()) {
@@ -39,61 +40,61 @@ public class CAgent implements IAgent {
 	
 	
 	@Override
-	public void addSite(CSite site) {
+	public final void addSite(CSite site) {
 		site.setAgentLink(this);
 		siteMap.put(site.getName(), site);
 	}
 
 	@Override
-	public int getIdInConnectedComponent() {
+	public final int getIdInConnectedComponent() {
 		return idInConnectedComponent;
 	}
 
-	public void setIdInConnectedComponent(int index) {
+	public final void setIdInConnectedComponent(int index) {
 		idInConnectedComponent = index;
 	}
 
 	@Override
-	public List<String> getInterface() {
+	public final List<String> getInterface() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public String getName() {
+	public final String getName() {
 		return name;
 	}
 
 	@Override
-	public String getSiteInternalState(ISite internal_state) {
+	public final String getSiteInternalState(ISite internal_state) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public CLinkState getSiteLinkState(ISite site) {
+	public final CLinkState getSiteLinkState(ISite site) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Collection<CSite> getSites() {
+	public final Collection<CSite> getSites() {
 		return siteMap.values();
 	}
 
 	@Override
-	public void setSiteInternalState(ISite site, String internal_state) {
+	public final void setSiteInternalState(ISite site, String internal_state) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setSiteLinkState(ISite site, CLinkState link_state) {
+	public final void setSiteLinkState(ISite site, CLinkState link_state) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public long getId() {
+	public final long getId() {
 		return id;
 	}
 

@@ -246,10 +246,10 @@ public class Parser {
 		if (connect != null)
 			if (connect.length() == 0) {
 				csite.getLinkState().setStatusLink(
-						CLinkState.STATUS_LINK_MAY_BE);
+						CLinkState.STATUS_LINK_WILDCARD);
 			} else if (connect.equals(SYMBOL_CONNECTED_TRUE_VALUE)) {
 				csite.getLinkState().setStatusLink(
-						CLinkState.STATUS_LINK_CONNECTED);
+						CLinkState.STATUS_LINK_BOUND);
 			} else {
 				int index = Integer.valueOf(connect);
 				CSite isite = map.get(index);

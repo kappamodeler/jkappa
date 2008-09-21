@@ -6,7 +6,7 @@ import java.util.List;
 import com.plectix.simulator.interfaces.IObservables;
 
 public class CObservables implements IObservables {
-	private List<CConnectedComponent> conCompList = new ArrayList<CConnectedComponent>();
+	private List<CConnectedComponent> connectedComponentList = new ArrayList<CConnectedComponent>();
 
 	public CObservables() {
 	}
@@ -15,12 +15,12 @@ public class CObservables implements IObservables {
 		addConnectedComponents(list);
 	}
 
-	public List<CConnectedComponent> getConComp() {
-		return conCompList;
+	public final List<CConnectedComponent> getConnectedComponentList() {
+		return connectedComponentList;
 	}
 
-	public void addConnectedComponents(List<CConnectedComponent> list) {
-		conCompList.addAll(list);
+	public final void addConnectedComponents(List<CConnectedComponent> list) {
+		connectedComponentList.addAll(list);
 	}
 
 }
