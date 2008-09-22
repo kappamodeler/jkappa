@@ -58,6 +58,10 @@ public class CLinkState implements IState {
 		return statusLink;
 	}
 
+	/**
+	 * Returns the rank of the status link (according to the Simulation Engine Specification part 2)
+	 * Used to compare states.
+	 */
 	public final byte getStatusLinkRank() {
 		switch (statusLink) {
 		case STATUS_LINK_BOUND:
