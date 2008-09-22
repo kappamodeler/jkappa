@@ -13,9 +13,9 @@ public class CLinkState implements IState {
 	public static final byte STATUS_LINK_FREE = 0x04;
 
 	public static final byte RANK_BOUND_OR_FREE = 0x01;
-	public static final byte RANK_FREE = 0x02;
 	public static final byte RANK_SEMI_LINK = 0x02;
 	public static final byte RANK_BOUND = 0x03;
+	public static final byte RANK_FREE = 0x04;
 
 	
 	private byte statusLink;
