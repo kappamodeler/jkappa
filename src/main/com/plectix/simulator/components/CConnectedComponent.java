@@ -16,6 +16,16 @@ public class CConnectedComponent implements IConnectedComponent {
 	private List<CAgent> injectionList;
 
 	private HashMap<CAgent, CSpanningTree> spanningTreeMap;
+	
+	private CRule rule;
+
+	public final CRule getRule() {
+		return rule;
+	}
+
+	public final void setRule(CRule rule) {
+		this.rule = rule;
+	}
 
 	// private ArrayList<CAgentRule> agentList=new ArrayList<CAgentRule>();
 	public CConnectedComponent(List<CAgent> connectedAgents) {

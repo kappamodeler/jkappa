@@ -14,8 +14,17 @@ public class CRule {
 	public CRule(List<CConnectedComponent> left, List<CConnectedComponent> right,String name, Double activity) {
 		this.leftHandSide = left;
 		this.rightHandSide = right;
+		setConnectedComponentLinkRule(left);
+		setConnectedComponentLinkRule(right);
 		this.activity = activity;
 		this.name=name;
+	}
+	
+	private final void setConnectedComponentLinkRule(List<CConnectedComponent> cList){
+		if((cList==null)||(cList.isEmpty()))
+			return;
+		for(CConnectedComponent cc:cList)
+			cc.setRule(this);
 	}
 	
 	public final String getName() {
