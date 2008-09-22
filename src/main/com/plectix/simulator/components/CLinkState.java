@@ -12,6 +12,12 @@ public class CLinkState implements IState {
 	public static final byte STATUS_LINK_WILDCARD = 0x02;
 	public static final byte STATUS_LINK_FREE = 0x04;
 
+	public static final byte RANK_BOUND_OR_FREE = 0x01;
+	public static final byte RANK_FREE = 0x02;
+	public static final byte RANK_SEMI_LINK = 0x02;
+	public static final byte RANK_BOUND = 0x03;
+
+	
 	private byte statusLink;
 	private ISite linkSite = null;
 
@@ -56,15 +62,14 @@ public class CLinkState implements IState {
 		switch (statusLink) {
 		case STATUS_LINK_BOUND:
 			if (linkSite != null)
-				return 0x03;
+				return RANK_BOUND;
 			else
-				return 0x02;
-		case STATUS_LINK_FREE:
-			return 0x02;
+				return RANK_SEMI_LINK;
 		case STATUS_LINK_WILDCARD:
-			return 0x01;
+			return RANK_BOUND_OR_FREE;
+		default: 
+			return RANK_FREE;
 		}
-		return 0x01;
 	}
 
 	@Override
