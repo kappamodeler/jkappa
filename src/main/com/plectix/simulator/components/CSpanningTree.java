@@ -10,7 +10,7 @@ public class CSpanningTree {
 	private int rootIndex;
 
 	private boolean[] newVertex;
-	
+
 	@SuppressWarnings("unchecked")
 	public CSpanningTree(int N, CAgent agent) {
 		this.newVertex = new boolean[N];
@@ -21,38 +21,44 @@ public class CSpanningTree {
 			newVertex[i] = true;
 		}
 		if (agent != null)
-			WGD(agent);
+			depthFirstSearch(agent);
 	}
 
-	public final boolean getNewVertexElement(int index){
+	public final boolean getNewVertexElement(int index) {
 		return newVertex[index];
 	}
-	
-	public final int getRootIndex(){
+
+	public final int getRootIndex() {
 		return rootIndex;
 	}
-	
+
 	public final List<Integer>[] getVertexes() {
 		return vertexes;
 	}
 
-	public final void setFalse(int index){
-		newVertex[index]=false;
+	public final void setFalse(int index) {
+		newVertex[index] = false;
 	}
 
-	// TODO: Document
-	private void WGD(CAgent rootAgent) {
+	/**
+	 * Depth-first search of connected component's graph. This search algorithm is used for
+	 * spanning tree construction. Spanning tree is storing as a linked list.
+	 * The first element of some vertexes list is always the id of this vertex (it needs in future 
+	 * tree usage). 
+	 */
+	private final void depthFirstSearch(CAgent rootAgent) {
 		newVertex[rootAgent.getIdInConnectedComponent()] = false;
-		vertexes[rootAgent.getIdInConnectedComponent()].add(rootAgent.getIdInConnectedComponent());
+		vertexes[rootAgent.getIdInConnectedComponent()].add(rootAgent
+				.getIdInConnectedComponent());
 		for (CSite site : rootAgent.getSites()) {
-			CSite linkSite = (CSite)site.getLinkState().getSite();
-			if (linkSite!=null){
-			CAgent agent = linkSite.getAgentLink();
-			//if (agent != null) {
+			CSite linkSite = (CSite) site.getLinkState().getSite();
+			if (linkSite != null) {
+				CAgent agent = linkSite.getAgentLink();
 				Integer vertexIndex = agent.getIdInConnectedComponent();
 				if (newVertex[vertexIndex]) {
-					vertexes[rootAgent.getIdInConnectedComponent()].add(vertexIndex);
-					WGD(agent);
+					vertexes[rootAgent.getIdInConnectedComponent()]
+							.add(vertexIndex);
+					depthFirstSearch(agent);
 				}
 			}
 		}
