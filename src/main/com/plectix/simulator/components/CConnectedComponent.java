@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -106,7 +107,7 @@ public class CConnectedComponent implements IConnectedComponent {
 			CInternalState solutionState) {
 		if (currentState != null && solutionState == null)
 			return false;
-		if (!(currentState.getState().equals(solutionState.getState())))
+		if (!(currentState.getStateNameId() == solutionState.getStateNameId()))
 			return false;
 
 		return true;
@@ -150,7 +151,8 @@ public class CConnectedComponent implements IConnectedComponent {
 			if (count == 0 || spTree.getNewVertexElement(cAgent.getIdInConnectedComponent())) {
 				for (CSite site : cAgent.getSites()) {
 //					CSite sSite = agent.findSite(site);
-					CSite sSite = agent.getSite(site.getName());
+					
+					CSite sSite = agent.getSite(site.getNameId());
 					if (sSite == null)
 						return false;
 					if (!compareSites(site, sSite))

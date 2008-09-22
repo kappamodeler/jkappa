@@ -23,7 +23,8 @@ public class SimulationMain {
 	private static SimulationMain instance;
 	private static Options cmdLineOptions;
 	private CommandLine cmdLineArgs;
-	
+	private static SimulatorManager simulationManager = new SimulatorManager();
+
 	static {
 		cmdLineOptions = new Options();
 		cmdLineOptions.addOption(SHORT_SIMULATIONFILE_OPTION, LONG_SIMULATIONFILE_OPTION, true, "Location for input file");
@@ -38,7 +39,6 @@ public class SimulationMain {
 
 
 	private void runSimulator() {
-		List<CRule> rules = SimulatorManager.getInstance().getRules();
 		// Simulator simulator = new Simulator(new Model(simData));
 		// simulator.run();
 		// simulator.outputData();		
@@ -77,4 +77,7 @@ public class SimulationMain {
 		}
 	}
 
+	public static SimulatorManager getSimulationManager() {
+		return simulationManager;
+	}
 }

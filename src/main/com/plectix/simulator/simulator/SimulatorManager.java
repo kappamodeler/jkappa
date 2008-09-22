@@ -8,23 +8,34 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.NameDictionary;
 
 public class SimulatorManager {
 	
 	private static SimulatorManager instance;
 	
 	private SimulationData simulationData = new SimulationData();
-
+	
 	private int agentIdGenerator = 0;
 	
-	private SimulatorManager() {
+	private NameDictionary agentNameDictionary = new NameDictionary();
+	private NameDictionary siteDictionary = new NameDictionary();
+	public NameDictionary getAgentNameDictionary() {
+		return agentNameDictionary;
 	}
+
+	public NameDictionary getSiteDictionary() {
+		return siteDictionary;
+	}
+
+	public NameDictionary getInternalStateNameDictionary() {
+		return internalStateNameDictionary;
+	}
+
+	private NameDictionary internalStateNameDictionary = new NameDictionary();
 	
-	public static SimulatorManager getInstance() {
-		if (instance == null) {
-			instance = new SimulatorManager();
-		}
-		return instance;
+	
+	public SimulatorManager() {
 	}
 	
 	public List<CConnectedComponent> buildConnectedComponents(List<CAgent> agents) {

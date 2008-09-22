@@ -10,8 +10,6 @@ import com.plectix.simulator.components.CSite;
 
 public interface IAgent {
 	
-	public String getName();  //Return this Agent�s name Agent
-	
 	public int getIdInConnectedComponent();  //Returns the identifier of this object in the database.
 	
 	public Collection<CSite> getSites();  //Returns this Agent�s Sites

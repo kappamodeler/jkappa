@@ -8,18 +8,10 @@ import com.plectix.simulator.interfaces.ILift.LiftElement;
 public class CInternalState implements IState {
 
 	
-	private String state = null; 
+	private int nameId; 
 	
-	public CInternalState(String state) {
-		this.state = state;
-	}
-
-	public final String getState() {
-		return state;
-	}
-
-	public final void setState(String state) {
-		this.state = state;
+	public CInternalState(int id) {
+		this.nameId = id;
 	}
 
 	@Override
@@ -50,6 +42,17 @@ public class CInternalState implements IState {
 	public final void setLift(List<LiftElement> lift) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public int getStateNameId() {
+		return nameId;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof CInternalState))
+			return false;
+		return ((CInternalState)obj).nameId == nameId;
 	}
 
 }

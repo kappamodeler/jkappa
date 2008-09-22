@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
@@ -81,7 +82,7 @@ public class Parser {
 		try {
 			createSimData(data.getInits(), CREATE_INIT);
 			List<CRule> rules = createRules(data.getRules());
-			SimulatorManager.getInstance().setRules(rules);
+			SimulationMain.getSimulationManager().setRules(rules);
 			createSimData(data.getObservables(), CREATE_OBS);
 		} catch (IOException e) {
 			throw new IOException(e.getMessage());
@@ -149,7 +150,7 @@ public class Parser {
 			}
 			}
 
-			rules.add(SimulatorManager.getInstance().buildRule(left, right,
+			rules.add(SimulationMain.getSimulationManager().buildRule(left, right,
 					name, activity));
 
 		}
@@ -178,8 +179,8 @@ public class Parser {
 
 			// In the future will be create another addAgents to Solution,
 			// without
-			// parce "count" once "line"
-			SimulationData simulationData = SimulatorManager.getInstance()
+			// parse "count" once "line"
+			SimulationData simulationData = SimulationMain.getSimulationManager()
 					.getSimulationData();
 			switch (code) {
 			case CREATE_INIT: {
@@ -190,7 +191,7 @@ public class Parser {
 			}
 			case CREATE_OBS: {
 				simulationData.getObservables().addConnectedComponents(
-						SimulatorManager.getInstance()
+						SimulationMain.getSimulationManager()
 								.buildConnectedComponents(parseAgent(line)));
 				break;
 			}
@@ -216,7 +217,7 @@ public class Parser {
 				if(!ccomp.trim().matches(PATTERN_AGENT_SITE))
 					throw new IOException("Error in 'agent' name: "+ccomp);
 				
-				cagent = new CAgent(ccomp);
+				cagent = new CAgent(SimulationMain.getSimulationManager().getAgentNameDictionary().addName(ccomp));
 				listAgent.add(cagent);
 				while (agent.hasMoreTokens()) {
 					site = agent.nextToken().trim(); // Site name or State name.
@@ -253,13 +254,17 @@ public class Parser {
 
 		if(!site.trim().matches(PATTERN_AGENT_SITE))
 			throw new IOException("Error in 'site' name: "+site);
-		csite = new CSite(site);
+		
+		final int siteNameId = SimulationMain.getSimulationManager().getSiteDictionary().addName(site);
+		csite = new CSite(siteNameId);
 
 		if(state != null)
-			if((state.length()!=0)&&state.trim().matches(PATTERN_STATE))
-				csite.setInternalState(new CInternalState(state));
-			else
-				throw new IOException("Error in name 'state': "+state);
+			if((state.length()!=0)&&state.trim().matches(PATTERN_STATE)) {
+				final int nameId = SimulationMain.getSimulationManager().getInternalStateNameDictionary().addName(state);
+				csite.setInternalState(new CInternalState(nameId));
+			} else {
+				throw new IOException("Error in name 'state': " + state);
+			}
 		
 		if (connect != null)
 			if (connect.length() == 0) {

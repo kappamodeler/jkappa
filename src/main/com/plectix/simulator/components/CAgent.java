@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.SimulatorManager;
@@ -13,15 +14,15 @@ public class CAgent implements IAgent {
 	 * idInConnectedComponent is the unique id in ConnectedComponent id is an
 	 * unique id for agent
 	 */
-	private String name;
 	private int idInConnectedComponent;
 	private long id;
 
-	private HashMap<String, CSite> siteMap = new HashMap<String, CSite>();
+	private HashMap<Integer, CSite> siteMap = new HashMap<Integer, CSite>();
+	private int nameId;
 
-	public CAgent(String name) {
-		this.name = name;
-		id = SimulatorManager.getInstance().generateNextAgentId();
+	public CAgent(int nameId) {
+		id = SimulationMain.getSimulationManager().generateNextAgentId();
+		this.nameId = nameId;
 	}
 
 	// TODO: Write documentation for this method. 
@@ -42,7 +43,7 @@ public class CAgent implements IAgent {
 	@Override
 	public final void addSite(CSite site) {
 		site.setAgentLink(this);
-		siteMap.put(site.getName(), site);
+		siteMap.put(site.getNameId(), site);
 	}
 
 	@Override
@@ -58,11 +59,6 @@ public class CAgent implements IAgent {
 	public final List<String> getInterface() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public final String getName() {
-		return name;
 	}
 
 	@Override
@@ -103,13 +99,17 @@ public class CAgent implements IAgent {
 		if (!(obj instanceof CAgent))
 			return false;
 		CAgent agent = (CAgent) obj;
-		if (!name.equals(agent.name))
+		if (! (nameId == agent.nameId))
 			return false;
 		return siteMap.equals(agent.siteMap);
 	}
 
-	public CSite getSite(String siteName) {
-		return siteMap.get(siteName);
+	public CSite getSite(int siteNameId) {
+		return siteMap.get(siteNameId);
+	}
+
+	public int getNameId() {
+		return nameId;
 	}
 
 }

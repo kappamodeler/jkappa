@@ -6,8 +6,6 @@ import com.plectix.simulator.components.CLinkState;
 
 public interface ISite {
 
-	public String getName();
-	
 	public CLinkState getLinkState();
 	
 	public boolean isChanged();

@@ -5,7 +5,7 @@ import com.plectix.simulator.interfaces.ISite;
 public class CSite implements ISite {
 	public static final int NO_INDEX = -1;
 	
-	private String name;
+	private int nameId;
 	private CLinkState linkState;
 	private CInternalState internalState = null;
 	private boolean changed;
@@ -13,8 +13,8 @@ public class CSite implements ISite {
 	private int linkIndex = NO_INDEX;
 	
 
-	public CSite(String name) {
-		this.name = name;
+	public CSite(int id) {
+		this.nameId = id;
 		linkState=new CLinkState(CLinkState.STATUS_LINK_FREE);
 	}
 	
@@ -46,18 +46,12 @@ public class CSite implements ISite {
 		return changed;
 	}
 
-
-	@Override
-	public final String getName() {
-		return name;
-	}
-	
 	@Override
 	public final boolean equals(Object obj) {
 		if (!(obj instanceof CSite))
 			return false;
 		CSite site = (CSite) obj;
-		if (!name.equals(site.name))
+		if (!(nameId  == site.nameId))
 			return false;
 		if (internalState == null)
 			return true;
@@ -70,6 +64,10 @@ public class CSite implements ISite {
 
 	public final int getLinkIndex() {
 		return linkIndex;
+	}
+
+	public Integer getNameId() {
+		return nameId;
 	}
 
 	

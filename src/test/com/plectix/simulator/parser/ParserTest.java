@@ -8,9 +8,11 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.NameDictionary;
 
 public class ParserTest extends TestCase {
 	
@@ -26,43 +28,46 @@ public class ParserTest extends TestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		final NameDictionary agentDictionary = SimulationMain.getSimulationManager().getAgentNameDictionary();
+		final NameDictionary siteDictionary = SimulationMain.getSimulationManager().getSiteDictionary();
+		final NameDictionary internalStateNameDictionary = SimulationMain.getSimulationManager().getInternalStateNameDictionary();
 		
-		CAgent agent = new CAgent("Ras");
-		CSite site = new CSite("S1S2");
-		site.setInternalState(new CInternalState("gtp"));
+		CAgent agent = new CAgent(agentDictionary.addName("Ras"));
+		CSite site = new CSite(siteDictionary.addName("S1S2"));
+		site.setInternalState(new CInternalState(internalStateNameDictionary.addName("gtp")));
 		agent.addSite(site);
 		expectedAgentsList.add(agent);
 		
-		agent = new CAgent("MEK");
-		site = new CSite("s");
+		agent = new CAgent(agentDictionary.addName("MEK"));
+		site = new CSite(siteDictionary.addName("s"));
 		agent.addSite(site);
-		site = new CSite("S222");
-		site.setInternalState(new CInternalState("p"));
+		site = new CSite(siteDictionary.addName("S222"));
+		site.setInternalState(new CInternalState(internalStateNameDictionary.addName("p")));
 		agent.addSite(site);
-		site = new CSite("S218");
-		site.setInternalState(new CInternalState("p"));
-		agent.addSite(site);
-		expectedAgentsList.add(agent);
-		
-		agent = new CAgent("MEK");
-		site = new CSite("s");
-		agent.addSite(site);
-		site = new CSite("S218");
-		site.setInternalState(new CInternalState("p"));
-		agent.addSite(site);
-		site = new CSite("S222");
-		site.setInternalState(new CInternalState("p"));
+		site = new CSite(siteDictionary.addName("S218"));
+		site.setInternalState(new CInternalState(internalStateNameDictionary.addName("p")));
 		agent.addSite(site);
 		expectedAgentsList.add(agent);
 		
-		agent = new CAgent("ERK");
-		site = new CSite("Y187");
+		agent = new CAgent(agentDictionary.addName("MEK"));
+		site = new CSite(siteDictionary.addName("s"));
+		agent.addSite(site);
+		site = new CSite(siteDictionary.addName("S218"));
+		site.setInternalState(new CInternalState(internalStateNameDictionary.addName("p")));
+		agent.addSite(site);
+		site = new CSite(siteDictionary.addName("S222"));
+		site.setInternalState(new CInternalState(internalStateNameDictionary.addName("p")));
 		agent.addSite(site);
 		expectedAgentsList.add(agent);
 		
-//		assertEquals(actualAgentsList, expectedAgentsList);
+		agent = new CAgent(agentDictionary.addName("ERK"));
+		site = new CSite(siteDictionary.addName("Y187"));
+		agent.addSite(site);
+		expectedAgentsList.add(agent);
+		
+		assertEquals(actualAgentsList, expectedAgentsList);
 		// let's check if there is a site link between last two agents
-		assertTrue(actualAgentsList.get(2).getSite("s").getLinkState().getSite() == actualAgentsList.get(3).getSite("Y187"));
-		assertTrue(actualAgentsList.get(3).getSite("Y187").getLinkState().getSite() == actualAgentsList.get(2).getSite("s"));
+		assertTrue(actualAgentsList.get(2).getSite(siteDictionary.addName("s")).getLinkState().getSite() == actualAgentsList.get(3).getSite(siteDictionary.addName("Y187")));
+		assertTrue(actualAgentsList.get(3).getSite(siteDictionary.addName("Y187")).getLinkState().getSite() == actualAgentsList.get(2).getSite(siteDictionary.addName("s")));
 	}
 }

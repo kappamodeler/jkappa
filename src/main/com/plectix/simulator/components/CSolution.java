@@ -14,13 +14,13 @@ import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 
 public class CSolution implements ISolution {
-	private HashMap<String, List<CAgent>> agentMap;
+	private HashMap<Integer, List<CAgent>> agentMap;
 
 	public CSolution() {
-		agentMap = new HashMap<String, List<CAgent>>();
+		agentMap = new HashMap<Integer, List<CAgent>>();
 	}
 
-	public final HashMap<String, List<CAgent>> getAgentMap() {
+	public final HashMap<Integer, List<CAgent>> getAgentMap() {
 		return agentMap;
 	}
 
@@ -28,11 +28,11 @@ public class CSolution implements ISolution {
 		if (agents.isEmpty())
 			return;
 		for (CAgent agentAdd : agents) {
-			String agentName = agentAdd.getName();
-			List<CAgent> list = agentMap.get(agentName);
+			Integer agentNameId = agentAdd.getNameId();
+			List<CAgent> list = agentMap.get(agentNameId);
 			if (list == null) {
 				list = new ArrayList<CAgent>();
-				agentMap.put(agentName, list);
+				agentMap.put(agentNameId, list);
 			}
 			list.add(agentAdd);
 		}
