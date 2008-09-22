@@ -66,7 +66,7 @@ public class CSite implements ISite {
 		return linkIndex;
 	}
 
-	public Integer getNameId() {
+	public final Integer getNameId() {
 		return nameId;
 	}
 

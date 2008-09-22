@@ -1,10 +1,9 @@
 package com.plectix.simulator.components;
 
-import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -103,7 +102,7 @@ public class CConnectedComponent implements IConnectedComponent {
 				currentInternalState, solutionInternalState));
 	}
 
-	private boolean compareInternalStates(CInternalState currentState,
+	private final boolean compareInternalStates(CInternalState currentState,
 			CInternalState solutionState) {
 		if (currentState != null && solutionState == null)
 			return false;
@@ -113,7 +112,7 @@ public class CConnectedComponent implements IConnectedComponent {
 		return true;
 	}
 
-	private boolean compareLinkStates(CLinkState currentState,
+	private final boolean compareLinkStates(CLinkState currentState,
 			CLinkState solutionState) {
 		if (currentState.isLeftBranchStatus()
 				&& solutionState.isRightBranchStatus())
@@ -142,7 +141,7 @@ public class CConnectedComponent implements IConnectedComponent {
 	}
 
 	// is there injection or not
-	private boolean spanningTreeViewer(CAgent agent, CSpanningTree spTree,
+	private final boolean spanningTreeViewer(CAgent agent, CSpanningTree spTree,
 			int rootVertex) {
 		spTree.setFalse(rootVertex);
 		for (Integer v : spTree.getVertexes()[rootVertex]) {

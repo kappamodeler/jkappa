@@ -38,14 +38,14 @@ public class SimulationMain {
 	}
 
 
-	private void runSimulator() {
+	private final void runSimulator() {
 		// Simulator simulator = new Simulator(new Model(simData));
 		// simulator.run();
 		// simulator.outputData();		
 	}
 
 
-	private void readSimulatonFile() {
+	private final void readSimulatonFile() {
 		if (!cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION)) {
 
 			HelpFormatter formatter = new HelpFormatter();
@@ -66,7 +66,7 @@ public class SimulationMain {
 	}
 
 
-	private void doParseArguments(String[] args) {
+	private final void doParseArguments(String[] args) {
 		CommandLineParser parser = new PosixParser();
 		try {
 			cmdLineArgs = parser.parse(cmdLineOptions, args);
@@ -77,7 +77,7 @@ public class SimulationMain {
 		}
 	}
 
-	public static SimulatorManager getSimulationManager() {
+	public final static SimulatorManager getSimulationManager() {
 		return simulationManager;
 	}
 }

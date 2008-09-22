@@ -44,12 +44,12 @@ public class CInternalState implements IState {
 		
 	}
 
-	public int getStateNameId() {
+	public final int getStateNameId() {
 		return nameId;
 	}
 	
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if(!(obj instanceof CInternalState))
 			return false;
 		return ((CInternalState)obj).nameId == nameId;

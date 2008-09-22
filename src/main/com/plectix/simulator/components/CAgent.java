@@ -7,7 +7,6 @@ import java.util.List;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.simulator.SimulatorManager;
 
 public class CAgent implements IAgent {
 	/**
@@ -95,7 +94,7 @@ public class CAgent implements IAgent {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public final boolean equals(Object obj) {
 		if (!(obj instanceof CAgent))
 			return false;
 		CAgent agent = (CAgent) obj;
@@ -104,11 +103,11 @@ public class CAgent implements IAgent {
 		return siteMap.equals(agent.siteMap);
 	}
 
-	public CSite getSite(int siteNameId) {
+	public final CSite getSite(int siteNameId) {
 		return siteMap.get(siteNameId);
 	}
 
-	public int getNameId() {
+	public final int getNameId() {
 		return nameId;
 	}
 

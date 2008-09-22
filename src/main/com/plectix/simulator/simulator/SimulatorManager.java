@@ -12,33 +12,19 @@ import com.plectix.simulator.components.NameDictionary;
 
 public class SimulatorManager {
 	
-	private static SimulatorManager instance;
-	
 	private SimulationData simulationData = new SimulationData();
 	
 	private int agentIdGenerator = 0;
 	
 	private NameDictionary agentNameDictionary = new NameDictionary();
 	private NameDictionary siteDictionary = new NameDictionary();
-	public NameDictionary getAgentNameDictionary() {
-		return agentNameDictionary;
-	}
-
-	public NameDictionary getSiteDictionary() {
-		return siteDictionary;
-	}
-
-	public NameDictionary getInternalStateNameDictionary() {
-		return internalStateNameDictionary;
-	}
-
 	private NameDictionary internalStateNameDictionary = new NameDictionary();
 	
 	
 	public SimulatorManager() {
 	}
 	
-	public List<CConnectedComponent> buildConnectedComponents(List<CAgent> agents) {
+	public final List<CConnectedComponent> buildConnectedComponents(List<CAgent> agents) {
 		
 		if(agents == null || agents.isEmpty())
 			return null;
@@ -75,7 +61,7 @@ public class SimulatorManager {
 	
 	
 
-	private CAgent findLink(List<CAgent> agents, int linkIndex) {
+	private final CAgent findLink(List<CAgent> agents, int linkIndex) {
 		for(CAgent tmp: agents) {
 			for (CSite s: tmp.getSites()) {
 				if (s.getLinkIndex() == linkIndex) {
@@ -86,24 +72,36 @@ public class SimulatorManager {
 		return null;
 	}
 
-	public CRule buildRule(List<CAgent> left, List<CAgent> right,String name, Double activity) {
+	public final CRule buildRule(List<CAgent> left, List<CAgent> right,String name, Double activity) {
 		return new CRule(buildConnectedComponents(left),buildConnectedComponents(right),name,activity);
 	}
 	
 
-	public void setRules(List<CRule> rules) {
+	public final void setRules(List<CRule> rules) {
 		simulationData.setRules(rules);
 	}
 
-	public List<CRule> getRules() {
+	public final List<CRule> getRules() {
 		return simulationData.getRules();
 	}
 
-	public SimulationData getSimulationData() {
+	public final SimulationData getSimulationData() {
 		return simulationData;
 	}
 
-	public synchronized long generateNextAgentId() {
+	public final synchronized long generateNextAgentId() {
 		return agentIdGenerator  ++;
+	}
+
+	public final NameDictionary getAgentNameDictionary() {
+		return agentNameDictionary;
+	}
+	
+	public final NameDictionary getSiteDictionary() {
+		return siteDictionary;
+	}
+	
+	public final NameDictionary getInternalStateNameDictionary() {
+		return internalStateNameDictionary;
 	}
 }
