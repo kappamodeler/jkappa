@@ -16,10 +16,7 @@ public class SimulatorManager {
 	
 	private int agentIdGenerator = 0;
 	
-	private NameDictionary agentNameDictionary = new NameDictionary();
-	private NameDictionary siteDictionary = new NameDictionary();
-	private NameDictionary internalStateNameDictionary = new NameDictionary();
-	
+	private NameDictionary nameDictionary = new NameDictionary();
 	
 	public SimulatorManager() {
 	}
@@ -93,15 +90,7 @@ public class SimulatorManager {
 		return agentIdGenerator  ++;
 	}
 
-	public final NameDictionary getAgentNameDictionary() {
-		return agentNameDictionary;
-	}
-	
-	public final NameDictionary getSiteDictionary() {
-		return siteDictionary;
-	}
-	
-	public final NameDictionary getInternalStateNameDictionary() {
-		return internalStateNameDictionary;
+	public final NameDictionary getNameDictionary() {
+		return nameDictionary;
 	}
 }

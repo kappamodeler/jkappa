@@ -28,46 +28,44 @@ public class ParserTest extends TestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		final NameDictionary agentDictionary = SimulationMain.getSimulationManager().getAgentNameDictionary();
-		final NameDictionary siteDictionary = SimulationMain.getSimulationManager().getSiteDictionary();
-		final NameDictionary internalStateNameDictionary = SimulationMain.getSimulationManager().getInternalStateNameDictionary();
+		final NameDictionary nameDictionary = SimulationMain.getSimulationManager().getNameDictionary();
 		
-		CAgent agent = new CAgent(agentDictionary.addName("Ras"));
-		CSite site = new CSite(siteDictionary.addName("S1S2"));
-		site.setInternalState(new CInternalState(internalStateNameDictionary.addName("gtp")));
+		CAgent agent = new CAgent(nameDictionary.addName("Ras"));
+		CSite site = new CSite(nameDictionary.addName("S1S2"));
+		site.setInternalState(new CInternalState(nameDictionary.addName("gtp")));
 		agent.addSite(site);
 		expectedAgentsList.add(agent);
 		
-		agent = new CAgent(agentDictionary.addName("MEK"));
-		site = new CSite(siteDictionary.addName("s"));
+		agent = new CAgent(nameDictionary.addName("MEK"));
+		site = new CSite(nameDictionary.addName("s"));
 		agent.addSite(site);
-		site = new CSite(siteDictionary.addName("S222"));
-		site.setInternalState(new CInternalState(internalStateNameDictionary.addName("p")));
+		site = new CSite(nameDictionary.addName("S222"));
+		site.setInternalState(new CInternalState(nameDictionary.addName("p")));
 		agent.addSite(site);
-		site = new CSite(siteDictionary.addName("S218"));
-		site.setInternalState(new CInternalState(internalStateNameDictionary.addName("p")));
-		agent.addSite(site);
-		expectedAgentsList.add(agent);
-		
-		agent = new CAgent(agentDictionary.addName("MEK"));
-		site = new CSite(siteDictionary.addName("s"));
-		agent.addSite(site);
-		site = new CSite(siteDictionary.addName("S218"));
-		site.setInternalState(new CInternalState(internalStateNameDictionary.addName("p")));
-		agent.addSite(site);
-		site = new CSite(siteDictionary.addName("S222"));
-		site.setInternalState(new CInternalState(internalStateNameDictionary.addName("p")));
+		site = new CSite(nameDictionary.addName("S218"));
+		site.setInternalState(new CInternalState(nameDictionary.addName("p")));
 		agent.addSite(site);
 		expectedAgentsList.add(agent);
 		
-		agent = new CAgent(agentDictionary.addName("ERK"));
-		site = new CSite(siteDictionary.addName("Y187"));
+		agent = new CAgent(nameDictionary.addName("MEK"));
+		site = new CSite(nameDictionary.addName("s"));
+		agent.addSite(site);
+		site = new CSite(nameDictionary.addName("S218"));
+		site.setInternalState(new CInternalState(nameDictionary.addName("p")));
+		agent.addSite(site);
+		site = new CSite(nameDictionary.addName("S222"));
+		site.setInternalState(new CInternalState(nameDictionary.addName("p")));
+		agent.addSite(site);
+		expectedAgentsList.add(agent);
+		
+		agent = new CAgent(nameDictionary.addName("ERK"));
+		site = new CSite(nameDictionary.addName("Y187"));
 		agent.addSite(site);
 		expectedAgentsList.add(agent);
 		
 		assertEquals(actualAgentsList, expectedAgentsList);
 		// let's check if there is a site link between last two agents
-		assertTrue(actualAgentsList.get(2).getSite(siteDictionary.addName("s")).getLinkState().getSite() == actualAgentsList.get(3).getSite(siteDictionary.addName("Y187")));
-		assertTrue(actualAgentsList.get(3).getSite(siteDictionary.addName("Y187")).getLinkState().getSite() == actualAgentsList.get(2).getSite(siteDictionary.addName("s")));
+		assertTrue(actualAgentsList.get(2).getSite(nameDictionary.addName("s")).getLinkState().getSite() == actualAgentsList.get(3).getSite(nameDictionary.addName("Y187")));
+		assertTrue(actualAgentsList.get(3).getSite(nameDictionary.addName("Y187")).getLinkState().getSite() == actualAgentsList.get(2).getSite(nameDictionary.addName("s")));
 	}
 }

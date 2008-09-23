@@ -217,7 +217,7 @@ public class Parser {
 				if(!ccomp.trim().matches(PATTERN_AGENT_SITE))
 					throw new IOException("Error in 'agent' name: "+ccomp);
 				
-				cagent = new CAgent(SimulationMain.getSimulationManager().getAgentNameDictionary().addName(ccomp));
+				cagent = new CAgent(SimulationMain.getSimulationManager().getNameDictionary().addName(ccomp));
 				listAgent.add(cagent);
 				while (agent.hasMoreTokens()) {
 					site = agent.nextToken().trim(); // Site name or State name.
@@ -255,12 +255,12 @@ public class Parser {
 		if(!site.trim().matches(PATTERN_AGENT_SITE))
 			throw new IOException("Error in 'site' name: "+site);
 		
-		final int siteNameId = SimulationMain.getSimulationManager().getSiteDictionary().addName(site);
+		final int siteNameId = SimulationMain.getSimulationManager().getNameDictionary().addName(site);
 		csite = new CSite(siteNameId);
 
 		if(state != null)
-			if((state.length()!=0)&&state.trim().matches(PATTERN_STATE)) {
-				final int nameId = SimulationMain.getSimulationManager().getInternalStateNameDictionary().addName(state);
+			if((state.length()!=0) && state.trim().matches(PATTERN_STATE)) {
+				final int nameId = SimulationMain.getSimulationManager().getNameDictionary().addName(state);
 				csite.setInternalState(new CInternalState(nameId));
 			} else {
 				throw new IOException("Error in name 'state': " + state);
