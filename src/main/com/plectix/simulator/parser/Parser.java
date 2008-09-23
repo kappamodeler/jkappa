@@ -1,6 +1,5 @@
 package com.plectix.simulator.parser;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,6 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulatorManager;
 
 public class Parser {
 
@@ -38,7 +36,6 @@ public class Parser {
 	
 	private static final String PATTERN_AGENT_SITE="^[0-9[a-zA-Z]]+[0-9[a-zA-Z]\\_\\^\\-]*";
 	private static final String PATTERN_STATE="^[0-9[a-zA-Z]]+";
-	
 
 	private DataReading data;
 
@@ -76,7 +73,7 @@ public class Parser {
 	}
 
 	// TODO needs to throw our own exception of wrong strings to parse
-	public void doParse() throws IOException {
+	public void doParse() throws ParseErrorException {
 		System.out.println("Start parsing...");
 
 		try {
@@ -84,13 +81,13 @@ public class Parser {
 			List<CRule> rules = createRules(data.getRules());
 			SimulationMain.getSimulationManager().setRules(rules);
 			createSimData(data.getObservables(), CREATE_OBS);
-		} catch (IOException e) {
-			throw new IOException(e.getMessage());
+		} catch (ParseErrorException e) {
+			throw new ParseErrorException(e.getMessage());
 		}
 
 	}
 
-	private List<CRule> createRules(List<String> list) throws IOException {
+	private List<CRule> createRules(List<String> list) throws ParseErrorException {
 
 		List<CRule> rules = new ArrayList<CRule>();
 
@@ -112,7 +109,7 @@ public class Parser {
 			try {
 				activity = Double.valueOf(rulesStr.substring(index + 1).trim());
 			} catch (Exception e) {
-				throw new IOException("Error in Rules: " + input);
+				throw new ParseErrorException("Error in Rules: " + input);
 			}
 			rulesStr = rulesStr.substring(0, index).trim();
 
@@ -125,7 +122,7 @@ public class Parser {
 				if (index == -1) {
 					index = CC_LHS;
 				} else {
-					throw new IOException("Error in Rules.");
+					throw new ParseErrorException("Error in Rules.");
 				}
 			}
 
@@ -158,7 +155,7 @@ public class Parser {
 		return rules;
 	}
 
-	private void createSimData(List<String> list, byte code) throws IOException {
+	private void createSimData(List<String> list, byte code) throws ParseErrorException {
 		long count;
 		String line;
 		String[] result;
@@ -172,7 +169,7 @@ public class Parser {
 				try {
 					count = Long.valueOf(result[0]);
 				} catch (NumberFormatException e) {
-					throw new IOException("Error in Initial Conditions.");
+					throw new ParseErrorException("Error in Initial Conditions.");
 				}
 			}
 			line = result[length - 1].trim();
@@ -201,7 +198,7 @@ public class Parser {
 
 	}
 
-	public List<CAgent> parseAgent(String line) throws IOException {
+	public List<CAgent> parseAgent(String line) throws ParseErrorException {
 		StringTokenizer st = new StringTokenizer(line, "),");
 		Map<Integer, CSite> map = new HashMap<Integer, CSite>();
 		StringTokenizer agent;
@@ -215,7 +212,7 @@ public class Parser {
 				agent = new StringTokenizer(ccomp, "(");
 				ccomp = agent.nextToken(); // Agent name.
 				if(!ccomp.trim().matches(PATTERN_AGENT_SITE))
-					throw new IOException("Error in 'agent' name: "+ccomp);
+					throw new ParseErrorException("Error in 'agent' name: "+ccomp);
 				
 				cagent = new CAgent(SimulationMain.getSimulationManager().getNameDictionary().addName(ccomp));
 				listAgent.add(cagent);
@@ -228,12 +225,12 @@ public class Parser {
 			}
 		}
 		if(!map.isEmpty())
-			throw new IOException("Error in 'connected': "+line);
+			throw new ParseErrorException("Error in 'connected': "+line);
 		return listAgent;
 	}
 
 	private CSite parseSome(String site, Map<Integer, CSite> map)
-			throws IOException {
+			throws ParseErrorException {
 		String state = null;
 		String connect = null;
 		DataString dt = null;
@@ -253,7 +250,7 @@ public class Parser {
 		}
 
 		if(!site.trim().matches(PATTERN_AGENT_SITE))
-			throw new IOException("Error in 'site' name: "+site);
+			throw new ParseErrorException("Error in 'site' name: "+site);
 		
 		final int siteNameId = SimulationMain.getSimulationManager().getNameDictionary().addName(site);
 		csite = new CSite(siteNameId);
@@ -263,7 +260,7 @@ public class Parser {
 				final int nameId = SimulationMain.getSimulationManager().getNameDictionary().addName(state);
 				csite.setInternalState(new CInternalState(nameId));
 			} else {
-				throw new IOException("Error in name 'state': " + state);
+				throw new ParseErrorException("Error in name 'state': " + state);
 			}
 		
 		if (connect != null)
@@ -288,7 +285,7 @@ public class Parser {
 						map.put(index, csite);
 					}
 				} catch (Exception e) {
-					throw new IOException("Error in 'connected': "+connect);
+					throw new ParseErrorException("Error in 'connected': "+connect);
 				}
 
 			}

@@ -1,6 +1,5 @@
 package com.plectix.simulator.parser;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +23,7 @@ public class ParserTest extends TestCase {
 		
 		try {
 			actualAgentsList = parser.parseAgent("Ras(S1S2~gtp), MEK(s,S222~p,S218~p), MEK(s!1,S218~p,S222~p), ERK(Y187!1)");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (ParseErrorException e) {
 			e.printStackTrace();
 		}
 		final NameDictionary nameDictionary = SimulationMain.getSimulationManager().getNameDictionary();

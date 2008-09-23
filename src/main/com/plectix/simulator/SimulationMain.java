@@ -1,7 +1,6 @@
 package com.plectix.simulator;
 
 import java.io.IOException;
-import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -10,7 +9,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
-import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulatorManager;
@@ -62,6 +61,10 @@ public class SimulationMain {
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("Cannot read file with filename " + fileName);
+			System.exit(1);
+		} catch (ParseErrorException e) {
+			e.printStackTrace();
+			System.exit(1);
 		}
 	}
 
