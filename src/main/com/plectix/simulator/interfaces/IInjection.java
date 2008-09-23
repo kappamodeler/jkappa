@@ -8,7 +8,7 @@ public interface IInjection {
 
 	public List<IAgent> getAgents();//returns list of Agents of injection.
 	// maximum number of agent = 2 (it depends of number of 
-	//conected components of some rule);
+	//connected components of some rule);
 	
 	public void setAgents(List<IAgent> agents);//returns list of Agents of injection.
 

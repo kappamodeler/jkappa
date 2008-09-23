@@ -1,6 +1,8 @@
 package com.plectix.simulator;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -8,8 +10,11 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
-
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulatorManager;
@@ -18,7 +23,7 @@ public class SimulationMain {
 
 	private final static String SHORT_SIMULATIONFILE_OPTION = "s";
 	private final static String LONG_SIMULATIONFILE_OPTION = "sim";
-	
+
 	private static SimulationMain instance;
 	private static Options cmdLineOptions;
 	private CommandLine cmdLineArgs;
@@ -26,7 +31,8 @@ public class SimulationMain {
 
 	static {
 		cmdLineOptions = new Options();
-		cmdLineOptions.addOption(SHORT_SIMULATIONFILE_OPTION, LONG_SIMULATIONFILE_OPTION, true, "Location for input file");
+		cmdLineOptions.addOption(SHORT_SIMULATIONFILE_OPTION,
+				LONG_SIMULATIONFILE_OPTION, true, "Location for input file");
 	}
 
 	public static void main(String[] args) {
@@ -36,13 +42,33 @@ public class SimulationMain {
 		instance.runSimulator();
 	}
 
-
 	private final void runSimulator() {
+
+		CSolution solution = (CSolution) simulationManager.getSimulationData()
+				.getSolution();
+		List<CRule> rules = simulationManager.getSimulationData().getRules();
+		Iterator<List<CAgent>> iterator = solution.getAgentMap().values()
+				.iterator();
+
+		while (iterator.hasNext()) {
+			for (CAgent agent : iterator.next()) {
+					for (CRule rule : rules) {
+						for (CConnectedComponent cc : rule.getLeftHandSide()) {
+							if (cc != null) {
+								if(!agent.isAgentHaveLinkToConnectedComponent(cc)){
+									cc.setInjections(solution, agent);
+								}
+							}
+						}
+					}
+					
+			}
+		}
+
 		// Simulator simulator = new Simulator(new Model(simData));
 		// simulator.run();
-		// simulator.outputData();		
+		// simulator.outputData();
 	}
-
 
 	private final void readSimulatonFile() {
 		if (!cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION)) {
@@ -52,8 +78,9 @@ public class SimulationMain {
 			System.exit(1);
 
 		}
-		String fileName = cmdLineArgs.getOptionValue(SHORT_SIMULATIONFILE_OPTION);
-		DataReading data = new DataReading(fileName);		
+		String fileName = cmdLineArgs
+				.getOptionValue(SHORT_SIMULATIONFILE_OPTION);
+		DataReading data = new DataReading(fileName);
 		try {
 			data.readData();
 			Parser parser = new Parser(data);
@@ -67,7 +94,6 @@ public class SimulationMain {
 			System.exit(1);
 		}
 	}
-
 
 	private final void doParseArguments(String[] args) {
 		CommandLineParser parser = new PosixParser();

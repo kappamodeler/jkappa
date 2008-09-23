@@ -23,8 +23,24 @@ public class CAgent implements IAgent {
 		id = SimulationMain.getSimulationManager().generateNextAgentId();
 		this.nameId = nameId;
 	}
+	
+	public boolean isAgentHaveLinkToConnectedComponent(CConnectedComponent cc){
+		
+		for(CSite site : siteMap.values()){
+			if(site.getInternalState().getLift().contains(cc))
+				return true;
+			if(site.getLinkState().getLift().contains(cc))
+				return true;
+		}
+		return false;
+	}
 
 	// TODO: Write documentation for this method. 
+	
+	/**
+	 * returns linked agent of this from solution which is equal to input parameter 
+	 */
+	
 	public final CAgent findLinkAgent(CAgent agent) {
 		if (agent == null)
 			return null;
@@ -110,5 +126,4 @@ public class CAgent implements IAgent {
 	public final int getNameId() {
 		return nameId;
 	}
-
 }

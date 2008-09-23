@@ -13,10 +13,12 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	private List<CAgent> agentList;
 
-	private List<CAgent> injectionList;
+	private HashMap<Integer, List<CSpanningTree>> spanningTreeMap;
 
-	private HashMap<CAgent, CSpanningTree> spanningTreeMap;
-	
+	private List<CState> injectedStates;
+
+	private List<CInjection> injectionsList;
+
 	private CRule rule;
 
 	public final CRule getRule() {
@@ -30,28 +32,49 @@ public class CConnectedComponent implements IConnectedComponent {
 	// private ArrayList<CAgentRule> agentList=new ArrayList<CAgentRule>();
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
-		injectionList = new ArrayList<CAgent>();
+		injectionsList = new ArrayList<CInjection>();
 		initSpanningTreeMap();
 	}
-	
+
 	private final void initSpanningTreeMap() {
 		CSpanningTree spTree;
-		spanningTreeMap = new HashMap<CAgent, CSpanningTree>();
+		spanningTreeMap = new HashMap<Integer, List<CSpanningTree>>();
 		if (agentList.size() == 0)
 			return;
-		for (CAgent agent : agentList) {
-			spTree = new CSpanningTree(agentList.size(), agent);
-			spanningTreeMap.put(agent, spTree);
+
+		for (CAgent agentAdd : agentList) {
+			spTree = new CSpanningTree(agentList.size(), agentAdd);
+			List<CSpanningTree> list = spanningTreeMap
+					.get(agentAdd.getNameId());
+			if (list == null) {
+				list = new ArrayList<CSpanningTree>();
+				spanningTreeMap.put(agentAdd.getNameId(), list);
+			}
+			list.add(spTree);
+		}
+
+	}
+
+	private final void addLiftsToCurrentChangedStates() {
+		for (CState changedState : injectedStates) {
+			// according to Jean's letter we need to add this if operator,
+			// but then we need to define codomain of injection (maybe the list)
+			// if (changedState.isRankRoot())
+			changedState.addToLift(this);
 		}
 	}
 
 	public final void setInjections(ISolution solution, CAgent agent) {
-		if (unify(solution, agent))
-			injectionList.add(agent);
+		injectedStates = new ArrayList<CState>();
+		if (unify(solution, agent)) {
+			addLiftsToCurrentChangedStates();
+			injectionsList.add(new CInjection(this, injectedStates));
+		}
 	}
 
 	@Override
-	public final IInjection checkAndBuildInjection(ISolution solution, IAgent agent) {
+	public final IInjection checkAndBuildInjection(ISolution solution,
+			IAgent agent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -91,14 +114,19 @@ public class CConnectedComponent implements IConnectedComponent {
 		if (spanningTreeMap == null)
 			return false;
 
-		CSpanningTree spTree = spanningTreeMap.get(agent);
+		List<CSpanningTree> spList = spanningTreeMap.get(agent.getNameId());
 
-		if (spTree == null)
+		if (spList == null){
 			return false;
-
-		return spanningTreeViewer(agent, spTree, spTree.getRootIndex());
+		}
+		
+		for (CSpanningTree tree : spList) {
+			if (tree != null)
+				if (spanningTreeViewer(agent, tree, tree.getRootIndex()))
+					return true;
+		}
+		return false;
 	}
-
 
 	private boolean compareSites(CSite currentSite, CSite solutionSite) {
 		CLinkState currentLinkState = currentSite.getLinkState();
@@ -149,24 +177,30 @@ public class CConnectedComponent implements IConnectedComponent {
 		return false;
 	}
 
-	// is there injection or not
-	private final boolean spanningTreeViewer(CAgent agent, CSpanningTree spTree,
-			int rootVertex) {
+	// is there injection or not and create lifts
+	private final boolean spanningTreeViewer(CAgent agent,
+			CSpanningTree spTree, int rootVertex) {
 		spTree.setFalse(rootVertex);
 		for (Integer v : spTree.getVertexes()[rootVertex]) {
 			int count = 0;
-			CAgent cAgent = agentList.get(v);
-			if (count == 0 || spTree.getNewVertexElement(cAgent.getIdInConnectedComponent())) {
+			CAgent cAgent = agentList.get(v);// get next agent from spanning
+												// tree
+			if (count == 0
+					|| spTree.getNewVertexElement(cAgent
+							.getIdInConnectedComponent())) {
 				for (CSite site : cAgent.getSites()) {
-//					CSite sSite = agent.findSite(site);
-					
-					CSite sSite = agent.getSite(site.getNameId());
-					if (sSite == null)
+
+					CSite solutionSite = agent.getSite(site.getNameId());
+					if (solutionSite == null)
 						return false;
-					if (!compareSites(site, sSite))
+					if (!compareSites(site, solutionSite))
 						return false;
+					injectedStates.add(solutionSite.getInternalState());
+					injectedStates.add(solutionSite.getLinkState());
 				}
 				if (count != 0) {
+					// findLinkAgent(cAgent) - returns agent from solution,
+					// which is equal to cAgent
 					spanningTreeViewer(agent.findLinkAgent(cAgent), spTree, v);
 				}
 				count = 1;
@@ -175,6 +209,5 @@ public class CConnectedComponent implements IConnectedComponent {
 		}
 		return true;
 	}
-
 
 }

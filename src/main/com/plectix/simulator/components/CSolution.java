@@ -20,6 +20,27 @@ public class CSolution implements ISolution {
 		agentMap = new HashMap<Integer, List<CAgent>>();
 	}
 
+	private final void depthSearch(CAgent rootAgent, List<CAgent> agentsList) {
+		for (CSite site : rootAgent.getSites()) {
+			CSite linkSite = (CSite) site.getLinkState().getSite();
+			if (linkSite != null) {
+				CAgent agent = linkSite.getAgentLink();
+				if (!(agentsList.contains(agent))) {
+					agentsList.add(agent);
+					depthSearch(agent, agentsList);
+				}
+			}
+		}
+	}
+	
+	public final List<CAgent> getConnectedAgents(CAgent inAgent){
+		List<CAgent> agentsList = new ArrayList<CAgent>();
+		agentsList.add(inAgent);
+		depthSearch(inAgent, agentsList);
+		return agentsList;
+	}
+	
+	
 	public final HashMap<Integer, List<CAgent>> getAgentMap() {
 		return agentMap;
 	}
@@ -58,8 +79,7 @@ public class CSolution implements ISolution {
 
 	@Override
 	public final IConnectedComponent getConnectedComponent(IAgent agent) {
-		// TODO Auto-generated method stub
-		return null;
+			return null;
 	}
 
 	@Override

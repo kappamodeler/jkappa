@@ -1,12 +1,9 @@
 package com.plectix.simulator.components;
 
-import java.util.List;
-
-import com.plectix.simulator.interfaces.IState;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ILift.LiftElement;
 
-public class CLinkState implements IState {
+public class CLinkState extends CState {
 
 	public static final byte STATUS_LINK_BOUND = 0x01;
 	public static final byte STATUS_LINK_WILDCARD = 0x02;
@@ -21,6 +18,8 @@ public class CLinkState implements IState {
 	private byte statusLink;
 	private ISite linkSite = null;
 
+	//private List<CConnectedComponent>
+	
 	public CLinkState(ISite site, byte statusLink) {
 		linkSite = site;
 		this.statusLink = statusLink;
@@ -30,6 +29,12 @@ public class CLinkState implements IState {
 		this.statusLink = statusLink;
 	}
 
+	public boolean isRankRoot(){
+		if (statusLink == STATUS_LINK_WILDCARD)
+			return true;
+		else return false;
+	}
+	
 	public final boolean isLeftBranchStatus() {
 		return ((statusLink == STATUS_LINK_FREE) 
 			|| (statusLink == STATUS_LINK_WILDCARD)) ? false
@@ -76,11 +81,11 @@ public class CLinkState implements IState {
 		}
 	}
 
-	@Override
-	public final List<LiftElement> getLift() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public final List<LiftElement> getLift() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
 	public final String getName() {
@@ -100,10 +105,10 @@ public class CLinkState implements IState {
 
 	}
 
-	@Override
-	public final void setLift(List<LiftElement> lift) {
-		// TODO Auto-generated method stub
-
-	}
+//	@Override
+//	public final void setLift(List<LiftElement> lift) {
+//		// TODO Auto-generated method stub
+//
+//	}
 
 }

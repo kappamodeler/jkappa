@@ -25,16 +25,16 @@ public class Simulator {
 
 	// current location of function
 	public void removeRulesInjections(IState state, IAgent agent) {
-		for (ILift.LiftElement liftElement : state.getLift()) {
-			liftElement.getRule().removeInjection(liftElement.getInjection());
-			liftElement.getRule().recalcultateActivity();
-			for (ISite chSites : agent.getSites()) {
-				chSites.getInternalState().removeLiftElement(
-						new ILift.LiftElement(liftElement.getRule(), liftElement.getInjection()));
-				chSites.getLinkState().removeLiftElement(
-						new ILift.LiftElement(liftElement.getRule(), liftElement.getInjection()));
-			}
-		}
+//		for (ILift.LiftElement liftElement : state.getLift()) {
+//			liftElement.getRule().removeInjection(liftElement.getInjection());
+//			liftElement.getRule().recalcultateActivity();
+//			for (ISite chSites : agent.getSites()) {
+//				chSites.getInternalState().removeLiftElement(
+//						new ILift.LiftElement(liftElement.getRule(), liftElement.getInjection()));
+//				chSites.getLinkState().removeLiftElement(
+//						new ILift.LiftElement(liftElement.getRule(), liftElement.getInjection()));
+//			}
+//		}
 	}
 
 	public void run() {
@@ -82,7 +82,7 @@ public class Simulator {
 				for (IRule activRule : model.getActivationMap()
 						.getActivateRules(rule)) {
 					activRule.createInjection(newAgentList);// create injection
-					// if realy
+					// if really
 					// there is injection of (some) rule's components to
 					// newAgentList,
 					// which is root agents of new (after applying rule)
