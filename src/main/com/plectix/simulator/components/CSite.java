@@ -4,10 +4,12 @@ import com.plectix.simulator.interfaces.ISite;
 
 public class CSite implements ISite {
 	public static final int NO_INDEX = -1;
+
+	private static final CInternalState EMPTY_STATE = new CInternalState(NO_INDEX);
 	
 	private int nameId;
 	private CLinkState linkState;
-	private CInternalState internalState = null;
+	private CInternalState internalState = EMPTY_STATE;
 	private boolean changed;
 	private CAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;
