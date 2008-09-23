@@ -21,7 +21,7 @@ public class CRule {
 	}
 	
 	private final void setConnectedComponentLinkRule(List<CConnectedComponent> cList){
-		if((cList==null)||(cList.isEmpty()))
+		if (cList==null)
 			return;
 		for(CConnectedComponent cc:cList)
 			cc.setRule(this);
