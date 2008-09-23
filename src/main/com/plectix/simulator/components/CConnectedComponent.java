@@ -58,8 +58,7 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	@Override
 	public final List<CAgent> getAgents() {
-		// TODO Auto-generated method stub
-		return null;
+		return agentList;
 	}
 
 	@Override

@@ -103,7 +103,7 @@ public class Parser {
 		
 
 	}
-
+	
 	public final List<CRule> createRules(List<String> list) throws ParseErrorException {
 
 		List<CRule> rules = new ArrayList<CRule>();
@@ -235,9 +235,18 @@ public class Parser {
 				break;
 			}
 			case CREATE_OBS: {
+				
+				String name = null;
+				if (line.indexOf("'") != -1) {
+					line = line.substring(line.indexOf("'") + 1);
+					name = line.substring(0, line.indexOf("'")).trim();
+					line = line.substring(line.indexOf("'") + 1,
+							line.length()).trim();
+				}
+				
 				simulationData.getObservables().addConnectedComponents(
 						SimulationMain.getSimulationManager()
-								.buildConnectedComponents(parseAgent(line)));
+								.buildConnectedComponents(parseAgent(line)),name);
 				break;
 			}
 
