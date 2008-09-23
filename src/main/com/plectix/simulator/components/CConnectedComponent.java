@@ -137,7 +137,7 @@ public class CConnectedComponent implements IConnectedComponent {
 
 		if (currentState.getStatusLinkRank() == solutionState
 				.getStatusLinkRank()
-				&& currentState.getStatusLinkRank() == CLinkState.STATUS_LINK_BOUND)
+				&& currentState.getStatusLinkRank() == CLinkState.RANK_BOUND)
 			if (currentState.getSite().equals(solutionState.getSite()))
 				if (currentState.getSite().getAgentLink().equals(
 						solutionState.getSite().getAgentLink()))
