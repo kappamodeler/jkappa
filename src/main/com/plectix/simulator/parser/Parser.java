@@ -1,5 +1,6 @@
 package com.plectix.simulator.parser;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,15 +28,34 @@ public class Parser {
 	private final static String SYMBOL_CONNECT = "!";
 	private final static int KEY_CONNECT = 4;
 
+	private final static byte RULE_TWO_WAY = 1;
+
 	private static final byte CC_RHS = 0;
 	private static final byte CC_LHS = 1;
 	private static final byte CC_ALL = -1;
 
 	private static final byte CREATE_INIT = 0;
 	private static final byte CREATE_OBS = 1;
+
+	private static final String PATTERN_AGENT_SITE = "^[0-9[a-zA-Z]]+[0-9[a-zA-Z]\\_\\^\\-]*";
+	private static final String PATTERN_STATE = "^[0-9[a-zA-Z]]+";
 	
-	private static final String PATTERN_AGENT_SITE="^[0-9[a-zA-Z]]+[0-9[a-zA-Z]\\_\\^\\-]*";
-	private static final String PATTERN_STATE="^[0-9[a-zA-Z]]+";
+	
+	private static final String PATTERN_LINE_AGENT_SITE = "([0-9[a-zA-Z]]+[0-9[a-zA-Z]*\\_\\^\\-]*)";
+	private static final String PATTERN_LINE_STATE = "([0-9[a-zA-Z]]+)";
+	private static final String PATTERN_LINE_CONNECTED = "((!_)|(![0-9]+)|(\\?))*";
+	private static final String PATTERN_LINE_SITE_STATE = "(("
+			+ PATTERN_LINE_AGENT_SITE + PATTERN_LINE_CONNECTED + ")+|("
+			+ PATTERN_LINE_AGENT_SITE + "(~)" + PATTERN_LINE_STATE
+			+ PATTERN_LINE_CONNECTED + ")+)";
+
+	private static final String PATTERN_LINE_AGENT = "(" + PATTERN_LINE_AGENT_SITE
+			+ "(\\()(" + PATTERN_LINE_SITE_STATE + "*|("
+			+ PATTERN_LINE_SITE_STATE + "((\\,)" + PATTERN_LINE_SITE_STATE
+			+ ")*)*)" + "(\\))" + ")";
+
+	public static final String PATTERN_LINE = "("+PATTERN_LINE_AGENT+"((\\,)"+PATTERN_LINE_AGENT+")*)";
+	
 
 	private DataReading data;
 
@@ -73,89 +93,117 @@ public class Parser {
 	}
 
 	// TODO needs to throw our own exception of wrong strings to parse
-	public void doParse() throws ParseErrorException {
+	public final void doParse() throws ParseErrorException {
 		System.out.println("Start parsing...");
 
-		try {
-			createSimData(data.getInits(), CREATE_INIT);
-			List<CRule> rules = createRules(data.getRules());
-			SimulationMain.getSimulationManager().setRules(rules);
+			 createSimData(data.getInits(), CREATE_INIT);
+			 List<CRule> rules = createRules(data.getRules());
+			 SimulationMain.getSimulationManager().setRules(rules);
 			createSimData(data.getObservables(), CREATE_OBS);
-		} catch (ParseErrorException e) {
-			throw new ParseErrorException(e.getMessage());
-		}
+		
 
 	}
 
-	private List<CRule> createRules(List<String> list) throws ParseErrorException {
+	public final List<CRule> createRules(List<String> list) throws ParseErrorException {
 
 		List<CRule> rules = new ArrayList<CRule>();
-
-		int index;
-		String[] result;
-		Double activity;
-		String input;
+		Double activity = null;
+		Double activity2 = null;
 		for (String rulesStr : list) {
-			input = rulesStr;
+			String input = rulesStr;
 			rulesStr = rulesStr.trim();
 			String name = null;
 			if (rulesStr.indexOf("'") != -1) {
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
 				name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
-				rulesStr = rulesStr.substring(rulesStr.indexOf("'")+1,
+				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1,
 						rulesStr.length()).trim();
 			}
-			index = rulesStr.lastIndexOf("@");
+			int index = rulesStr.lastIndexOf("@");
+			if (index == -1)
+				throw new ParseErrorException("Error in Rules: " + input);
+
 			try {
-				activity = Double.valueOf(rulesStr.substring(index + 1).trim());
+				String activStr = rulesStr.substring(index + 1).trim();
+				if (activStr.indexOf(",") != -1) {
+					activity = Double.valueOf(activStr.substring(0, activStr
+							.indexOf(",") - 1));
+					activity2 = Double.valueOf(activStr.substring(activStr
+							.indexOf(",") + 1));
+				} else
+					activity = Double.valueOf(activStr);
 			} catch (Exception e) {
 				throw new ParseErrorException("Error in Rules: " + input);
 			}
 			rulesStr = rulesStr.substring(0, index).trim();
 
 			index = -1;
+			byte typeRule = 0;
+			if (rulesStr.indexOf("<->") != -1) {
+				typeRule = RULE_TWO_WAY;
+				rulesStr = rulesStr.replace("<", "");
+				if(activity2==null)
+					throw new ParseErrorException("Error in Rules: " + input);
+			}else
+				if(activity2!=null)
+					throw new ParseErrorException("Error in Rules: " + input);
+			
+			rulesStr = rulesStr.trim();
 			int y = rulesStr.indexOf("->");
-			if (y == 1) {
+			if (y == 0) {
 				index = CC_RHS;
 			}
-			if (y == rulesStr.length() - 1) {
+			if (y == rulesStr.length() - 2) {
 				if (index == -1) {
 					index = CC_LHS;
 				} else {
-					throw new ParseErrorException("Error in Rules.");
+					throw new ParseErrorException("Error in Rules: " + input);
 				}
 			}
 
-			result = rulesStr.split("\\->");
+			String[] result = rulesStr.split("\\->");
 
 			List<CAgent> left = null;
 			List<CAgent> right = null;
 
 			switch (index) {
 			case CC_LHS: {
+				if (typeRule == RULE_TWO_WAY)
+					rules.add(SimulationMain.getSimulationManager().buildRule(
+							right, parseAgent(result[0].trim()), name,
+							activity2));
 				left = parseAgent(result[0].trim());
 				break;
 			}
 			case CC_RHS: {
+				if (typeRule == RULE_TWO_WAY)
+					rules.add(SimulationMain.getSimulationManager()
+							.buildRule(parseAgent(result[1].trim()), left,
+									name, activity2));
 				right = parseAgent(result[1].trim());
 				break;
 			}
 			case CC_ALL: {
+				if (typeRule == RULE_TWO_WAY)
+					rules.add(SimulationMain.getSimulationManager().buildRule(
+							parseAgent(result[1].trim()),
+							parseAgent(result[0].trim()), name, activity2));
 				left = parseAgent(result[0].trim());
 				right = parseAgent(result[1].trim());
 				break;
 			}
 			}
 
-			rules.add(SimulationMain.getSimulationManager().buildRule(left, right,
-					name, activity));
+			rules.add(SimulationMain.getSimulationManager().buildRule(left,
+					right, name, activity));
 
 		}
 
 		return rules;
 	}
 
-	private void createSimData(List<String> list, byte code) throws ParseErrorException {
+	private final void createSimData(List<String> list, byte code)
+			throws ParseErrorException {
 		long count;
 		String line;
 		String[] result;
@@ -177,8 +225,8 @@ public class Parser {
 			// In the future will be create another addAgents to Solution,
 			// without
 			// parse "count" once "line"
-			SimulationData simulationData = SimulationMain.getSimulationManager()
-					.getSimulationData();
+			SimulationData simulationData = SimulationMain
+					.getSimulationManager().getSimulationData();
 			switch (code) {
 			case CREATE_INIT: {
 				for (int i = 0; i < count; i++) {
@@ -197,8 +245,26 @@ public class Parser {
 		}
 
 	}
+	
+	private boolean testLine(String line){
+		line=line.replaceAll("[ 	]", "");
+		while (line.indexOf("(")==0) {
+			line=line.substring(1);
+			if(line.indexOf(")")==-1)
+				return false;
+			line=line.substring(0, line.length()-1);
+		}
+		
+		if(!line.matches(PATTERN_LINE))
+			return false;
+		return true;
+	}
 
-	public List<CAgent> parseAgent(String line) throws ParseErrorException {
+	public final List<CAgent> parseAgent(String line) throws ParseErrorException {
+			if (!testLine(line))
+				throw new ParseErrorException("Error in line: "+line);
+
+		
 		StringTokenizer st = new StringTokenizer(line, "),");
 		Map<Integer, CSite> map = new HashMap<Integer, CSite>();
 		StringTokenizer agent;
@@ -211,10 +277,11 @@ public class Parser {
 			if (ccomp.indexOf("(") != -1) {
 				agent = new StringTokenizer(ccomp, "(");
 				ccomp = agent.nextToken(); // Agent name.
-				if(!ccomp.trim().matches(PATTERN_AGENT_SITE))
-					throw new ParseErrorException("Error in 'agent' name: "+ccomp);
-				
-				cagent = new CAgent(SimulationMain.getSimulationManager().getNameDictionary().addName(ccomp));
+				if (!ccomp.trim().matches(PATTERN_AGENT_SITE))
+					throw new ParseErrorException("Error in 'agent' name: " + ccomp);
+
+				cagent = new CAgent(SimulationMain.getSimulationManager()
+						.getNameDictionary().addName(ccomp));
 				listAgent.add(cagent);
 				while (agent.hasMoreTokens()) {
 					site = agent.nextToken().trim(); // Site name or State name.
@@ -224,12 +291,12 @@ public class Parser {
 				cagent.addSite(parseSome(ccomp, map)); // <------Agent
 			}
 		}
-		if(!map.isEmpty())
-			throw new ParseErrorException("Error in 'connected': "+line);
+		if (!map.isEmpty())
+			throw new ParseErrorException("Error in 'connected': " + line);
 		return listAgent;
 	}
 
-	private CSite parseSome(String site, Map<Integer, CSite> map)
+	private final CSite parseSome(String site, Map<Integer, CSite> map)
 			throws ParseErrorException {
 		String state = null;
 		String connect = null;
@@ -249,27 +316,29 @@ public class Parser {
 			site = dt.getSt1();
 		}
 
-		if(!site.trim().matches(PATTERN_AGENT_SITE))
-			throw new ParseErrorException("Error in 'site' name: "+site);
-		
-		final int siteNameId = SimulationMain.getSimulationManager().getNameDictionary().addName(site);
+		if (!site.trim().matches(PATTERN_AGENT_SITE))
+			throw new  ParseErrorException("Error in 'site' name: " + site);
+
+		final int siteNameId = SimulationMain.getSimulationManager()
+				.getNameDictionary().addName(site);
 		csite = new CSite(siteNameId);
 
-		if(state != null)
-			if((state.length()!=0) && state.trim().matches(PATTERN_STATE)) {
-				final int nameId = SimulationMain.getSimulationManager().getNameDictionary().addName(state);
+		if (state != null)
+			if ((state.length() != 0) && state.trim().matches(PATTERN_STATE)) {
+				final int nameId = SimulationMain.getSimulationManager()
+						.getNameDictionary().addName(state);
 				csite.setInternalState(new CInternalState(nameId));
 			} else {
 				throw new ParseErrorException("Error in name 'state': " + state);
 			}
-		
+
 		if (connect != null)
 			if (connect.length() == 0) {
 				csite.getLinkState().setStatusLink(
 						CLinkState.STATUS_LINK_WILDCARD);
 			} else if (connect.equals(SYMBOL_CONNECTED_TRUE_VALUE)) {
-				csite.getLinkState().setStatusLink(
-						CLinkState.STATUS_LINK_BOUND);
+				csite.getLinkState()
+						.setStatusLink(CLinkState.STATUS_LINK_BOUND);
 			} else {
 				try {
 					int index = Integer.valueOf(connect);
@@ -285,14 +354,14 @@ public class Parser {
 						map.put(index, csite);
 					}
 				} catch (Exception e) {
-					throw new ParseErrorException("Error in 'connected': "+connect);
+					throw new ParseErrorException("Error in 'connected': " + connect);
 				}
 
 			}
 		return csite;
 	}
 
-	private DataString parseLine(String st, int key) {
+	private final DataString parseLine(String st, int key) {
 		String id = null;
 		DataString ds = new DataString(st);
 		int i = -1;
