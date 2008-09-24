@@ -15,6 +15,7 @@ public class CAgent implements IAgent {
 	 */
 	private int idInConnectedComponent;
 	private long id;
+	public final CSite EMTY_SITE = new CSite(CSite.NO_INDEX);
 
 	private HashMap<Integer, CSite> siteMap = new HashMap<Integer, CSite>();
 	private int nameId;
@@ -27,16 +28,12 @@ public class CAgent implements IAgent {
 	public boolean isAgentHaveLinkToConnectedComponent(CConnectedComponent cc){
 		
 		for(CSite site : siteMap.values()){
-			if(site.getInternalState().getLift().contains(cc))
-				return true;
-			if(site.getLinkState().getLift().contains(cc))
+			if(site.getLift().contains(cc))
 				return true;
 		}
 		return false;
 	}
 
-	// TODO: Write documentation for this method. 
-	
 	/**
 	 * returns linked agent of this from solution which is equal to input parameter 
 	 */
@@ -116,7 +113,8 @@ public class CAgent implements IAgent {
 		CAgent agent = (CAgent) obj;
 		if (! (nameId == agent.nameId))
 			return false;
-		return siteMap.equals(agent.siteMap);
+//		return siteMap.equals(agent.siteMap);
+		return true;
 	}
 
 	public final CSite getSite(int siteNameId) {

@@ -39,31 +39,15 @@ public class SimulationMain {
 		instance = new SimulationMain();
 		instance.doParseArguments(args);
 		instance.readSimulatonFile();
+		instance.initializaion();
 		instance.runSimulator();
 	}
 
+	private void initializaion() {
+		simulationManager.initialization();
+	}
+
 	private final void runSimulator() {
-
-		CSolution solution = (CSolution) simulationManager.getSimulationData()
-				.getSolution();
-		List<CRule> rules = simulationManager.getSimulationData().getRules();
-		Iterator<List<CAgent>> iterator = solution.getAgentMap().values()
-				.iterator();
-
-		while (iterator.hasNext()) {
-			for (CAgent agent : iterator.next()) {
-					for (CRule rule : rules) {
-						for (CConnectedComponent cc : rule.getLeftHandSide()) {
-							if (cc != null) {
-								if(!agent.isAgentHaveLinkToConnectedComponent(cc)){
-									cc.setInjections(solution, agent);
-								}
-							}
-						}
-					}
-					
-			}
-		}
 
 		// Simulator simulator = new Simulator(new Model(simData));
 		// simulator.run();

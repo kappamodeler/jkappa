@@ -14,12 +14,11 @@ public class CLinkState extends CState {
 	public static final byte RANK_BOUND = 0x03;
 	public static final byte RANK_FREE = 0x04;
 
-	
 	private byte statusLink;
 	private ISite linkSite = null;
 
-	//private List<CConnectedComponent>
-	
+	// private List<CConnectedComponent>
+
 	public CLinkState(ISite site, byte statusLink) {
 		linkSite = site;
 		this.statusLink = statusLink;
@@ -29,20 +28,19 @@ public class CLinkState extends CState {
 		this.statusLink = statusLink;
 	}
 
-	public boolean isRankRoot(){
+	public boolean isRankRoot() {
 		if (statusLink == STATUS_LINK_WILDCARD)
 			return true;
-		else return false;
+		else
+			return false;
 	}
-	
+
 	public final boolean isLeftBranchStatus() {
-		return ((statusLink == STATUS_LINK_FREE) 
-			|| (statusLink == STATUS_LINK_WILDCARD)) ? false
-				: true;
+		return (statusLink == STATUS_LINK_FREE) ? true : false;
 	}
 
 	public final boolean isRightBranchStatus() {
-		return (statusLink == STATUS_LINK_FREE) ? false : true;
+		return (statusLink == STATUS_LINK_BOUND) ? true : false;
 	}
 
 	public final ISite getSite() {
@@ -64,8 +62,8 @@ public class CLinkState extends CState {
 	}
 
 	/**
-	 * Returns the rank of the status link (according to the Simulation Engine Specification part 2)
-	 * Used to compare states.
+	 * Returns the rank of the status link (according to the Simulation Engine
+	 * Specification part 2) Used to compare states.
 	 */
 	public final byte getStatusLinkRank() {
 		switch (statusLink) {
@@ -76,16 +74,16 @@ public class CLinkState extends CState {
 				return RANK_SEMI_LINK;
 		case STATUS_LINK_WILDCARD:
 			return RANK_BOUND_OR_FREE;
-		default: 
+		default:
 			return RANK_FREE;
 		}
 	}
 
-//	@Override
-//	public final List<LiftElement> getLift() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	// @Override
+	// public final List<LiftElement> getLift() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
 
 	@Override
 	public final String getName() {
@@ -105,10 +103,10 @@ public class CLinkState extends CState {
 
 	}
 
-//	@Override
-//	public final void setLift(List<LiftElement> lift) {
-//		// TODO Auto-generated method stub
-//
-//	}
+	// @Override
+	// public final void setLift(List<LiftElement> lift) {
+	// // TODO Auto-generated method stub
+	//
+	// }
 
 }

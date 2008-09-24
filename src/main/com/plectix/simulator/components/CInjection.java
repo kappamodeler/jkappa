@@ -8,24 +8,24 @@ import com.plectix.simulator.interfaces.IInjection;
 
 public class CInjection implements IInjection{
 
-	private List<CState> stateList = new ArrayList<CState>();
+	private List<CSite> sitesList = new ArrayList<CSite>();
 	
 	private CConnectedComponent connectedComponent;
 	
-	public CInjection(CConnectedComponent connectedComponent, List<CState> stateList){
+	public CInjection(CConnectedComponent connectedComponent, List<CSite> sitesList){
 		this.connectedComponent = connectedComponent;
-		this.stateList = stateList;
+		this.sitesList = sitesList;
 	}
 	
 	public CInjection(){
 	}
 	
-	public List<CState> getStateList() {
-		return stateList;
+	public List<CSite> getSiteList() {
+		return sitesList;
 	}
 
-	public void setStateList(List<CState> stateList) {
-		this.stateList = stateList;
+	public void setSiteList(List<CSite> siteList) {
+		this.sitesList = siteList;
 	}
 	
 	public CConnectedComponent getConnectedComponent(){

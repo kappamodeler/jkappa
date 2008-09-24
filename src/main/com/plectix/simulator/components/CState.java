@@ -8,20 +8,6 @@ import com.plectix.simulator.interfaces.ILift.LiftElement;
 
 public abstract class CState implements IState{
 
-	private List<CConnectedComponent> lift = new ArrayList<CConnectedComponent>();
-	
-	public void setLift(List<CConnectedComponent> lift) {
-		this.lift = lift;
-	}
-
-	public void addToLift(CConnectedComponent cc) {
-		this.lift.add(cc);
-	}
-	
-	public List<CConnectedComponent> getLift() {
-		return lift;
-	}
-
 	public abstract boolean isRankRoot();
 	
 //	@Override

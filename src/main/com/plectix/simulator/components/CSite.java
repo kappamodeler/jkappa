@@ -1,5 +1,8 @@
 package com.plectix.simulator.components;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.plectix.simulator.interfaces.ISite;
 
 public class CSite implements ISite {
@@ -14,6 +17,20 @@ public class CSite implements ISite {
 	private CAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;
 	
+	private List<CConnectedComponent> lift = new ArrayList<CConnectedComponent>();
+	
+	public void setLift(List<CConnectedComponent> lift) {
+		this.lift = lift;
+	}
+
+	public void addToLift(CConnectedComponent cc) {
+		this.lift.add(cc);
+	}
+	
+	public List<CConnectedComponent> getLift() {
+		return lift;
+	}
+
 
 	public CSite(int id) {
 		this.nameId = id;
@@ -57,7 +74,8 @@ public class CSite implements ISite {
 			return false;
 		if (internalState == null)
 			return true;
-		return internalState.equals(site.internalState);
+//		return internalState.equals(site.internalState);
+		return true;
 	}
 
 	public final void setLinkIndex(int index) {

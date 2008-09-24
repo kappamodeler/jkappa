@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -24,17 +25,19 @@ public class Simulator {
 	}
 
 	// current location of function
-	public void removeRulesInjections(IState state, IAgent agent) {
-//		for (ILift.LiftElement liftElement : state.getLift()) {
-//			liftElement.getRule().removeInjection(liftElement.getInjection());
-//			liftElement.getRule().recalcultateActivity();
-//			for (ISite chSites : agent.getSites()) {
-//				chSites.getInternalState().removeLiftElement(
-//						new ILift.LiftElement(liftElement.getRule(), liftElement.getInjection()));
-//				chSites.getLinkState().removeLiftElement(
-//						new ILift.LiftElement(liftElement.getRule(), liftElement.getInjection()));
-//			}
-//		}
+	public void removeRulesInjections(ISite site, IAgent agent) {
+		// for (ILift.LiftElement liftElement : state.getLift()) {
+		// liftElement.getRule().removeInjection(liftElement.getInjection());
+		// liftElement.getRule().recalcultateActivity();
+		// for (ISite chSites : agent.getSites()) {
+		// chSites.getInternalState().removeLiftElement(
+		// new ILift.LiftElement(liftElement.getRule(),
+		// liftElement.getInjection()));
+		// chSites.getLinkState().removeLiftElement(
+		// new ILift.LiftElement(liftElement.getRule(),
+		// liftElement.getInjection()));
+		// }
+		// }
 	}
 
 	public void run() {
@@ -52,8 +55,8 @@ public class Simulator {
 				rule.recalcultateActivity();
 				// negative update
 
-				List<IAgent> newAgentList = model.getSimulationData().getSolution()
-						.apply(rule, inj);
+				List<IAgent> newAgentList = model.getSimulationData()
+						.getSolution().apply(rule, inj);
 
 				for (IAgent agent : inj.getAgents()) {
 					IConnectedComponent cComp = model.getSimulationData()
@@ -61,17 +64,8 @@ public class Simulator {
 					for (IAgent agentComp : cComp.getAgents()) {
 						for (ISite chSites : agentComp.getSites()) {
 							if (chSites.isChanged()) {
-								CInternalState iState = chSites
-										.getInternalState();
-								if (iState.isChanged()) {
-									removeRulesInjections(iState, agentComp);
-									iState.setLift(null);
-								}
-								CLinkState lState = chSites.getLinkState();
-								if (lState.isChanged()) {
-									removeRulesInjections(lState, agentComp);
-									lState.setLift(null);
-								}
+								removeRulesInjections((CSite)chSites, agentComp);
+								((CSite)chSites).setLift(null);
 							}
 						}
 

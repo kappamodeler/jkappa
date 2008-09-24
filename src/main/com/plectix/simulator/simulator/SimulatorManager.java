@@ -2,12 +2,14 @@ package com.plectix.simulator.simulator;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.NameDictionary;
 
 public class SimulatorManager {
@@ -92,5 +94,28 @@ public class SimulatorManager {
 
 	public final NameDictionary getNameDictionary() {
 		return nameDictionary;
+	}
+
+	public void initialization() {
+		CSolution solution = (CSolution)simulationData.getSolution();
+		List<CRule> rules = simulationData.getRules();
+		Iterator<List<CAgent>> iterator = solution.getAgentMap().values()
+				.iterator();
+
+		while (iterator.hasNext()) {
+			for (CAgent agent : iterator.next()) {
+				for (CRule rule : rules) {
+					for (CConnectedComponent cc : rule.getLeftHandSide()) {
+						if (cc != null) {
+							if (!agent.isAgentHaveLinkToConnectedComponent(cc)) {
+								cc.setInjections(solution, agent);
+							}
+						}
+					}
+				}
+
+			}
+		}		
+		
 	}
 }
