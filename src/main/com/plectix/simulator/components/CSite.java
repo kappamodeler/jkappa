@@ -20,6 +20,17 @@ public class CSite implements ISite {
 
 	private List<CLiftElement> liftList = new ArrayList<CLiftElement>();
 
+	public CSite(int id) {
+		this.nameId = id;
+		linkState = new CLinkState(CLinkState.STATUS_LINK_FREE);
+	}
+
+	public CSite(int id, CAgent agent) {
+		this.nameId = id;
+		linkState = new CLinkState(CLinkState.STATUS_LINK_FREE);
+		linkAgent = agent;
+	}
+	
 	public void setLift(List<CLiftElement> lift) {
 		this.liftList = lift;
 	}
@@ -30,17 +41,6 @@ public class CSite implements ISite {
 
 	public List<CLiftElement> getLift() {
 		return liftList;
-	}
-
-	public CSite(int id) {
-		this.nameId = id;
-		linkState = new CLinkState(CLinkState.STATUS_LINK_FREE);
-	}
-
-	public CSite(int id, CAgent agent) {
-		this.nameId = id;
-		linkState = new CLinkState(CLinkState.STATUS_LINK_FREE);
-		linkAgent = agent;
 	}
 
 	public boolean isConnectedComponentInLift(CConnectedComponent inCC) {

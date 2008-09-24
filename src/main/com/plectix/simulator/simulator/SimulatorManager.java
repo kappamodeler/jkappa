@@ -96,7 +96,7 @@ public class SimulatorManager {
 		return nameDictionary;
 	}
 
-	public void initialization() {
+	public void initialize() {
 		CSolution solution = (CSolution)simulationData.getSolution();
 		List<CRule> rules = simulationData.getRules();
 		Iterator<List<CAgent>> iterator = solution.getAgentMap().values()

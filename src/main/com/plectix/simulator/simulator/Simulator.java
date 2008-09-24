@@ -25,7 +25,7 @@ public class Simulator {
 
 	public Simulator(Model model) {
 		this.model = model;
-		model.init();
+		model.initialize();
 	}
 
 	public void run() {

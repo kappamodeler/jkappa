@@ -39,14 +39,14 @@ public class SimulationMain {
 
 	public static void main(String[] args) {
 		instance = new SimulationMain();
-		instance.doParseArguments(args);
+		instance.parseArguments(args);
 		instance.readSimulatonFile();
-		instance.initializaion();
+		instance.initialize();
 		instance.runSimulator();
 	}
 
-	private void initializaion() {
-		simulationManager.initialization();
+	private void initialize() {
+		simulationManager.initialize();
 	}
 
 	private final void runSimulator() {
@@ -58,19 +58,17 @@ public class SimulationMain {
 
 	private final void readSimulatonFile() {
 		if (!cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION)) {
-
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("use --sim [file]", cmdLineOptions);
 			System.exit(1);
-
 		}
-		String fileName = cmdLineArgs
-				.getOptionValue(SHORT_SIMULATIONFILE_OPTION);
+		
+		String fileName = cmdLineArgs.getOptionValue(SHORT_SIMULATIONFILE_OPTION);
 		DataReading data = new DataReading(fileName);
 		try {
 			data.readData();
 			Parser parser = new Parser(data);
-			parser.doParse();
+			parser.parse();
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.err.println("Cannot read file with filename " + fileName);
@@ -81,7 +79,7 @@ public class SimulationMain {
 		}
 	}
 
-	private final void doParseArguments(String[] args) {
+	private final void parseArguments(String[] args) {
 		CommandLineParser parser = new PosixParser();
 		try {
 			cmdLineArgs = parser.parse(cmdLineOptions, args);

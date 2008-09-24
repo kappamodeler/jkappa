@@ -30,6 +30,21 @@ public class CRule {
 			cc.setRule(this);
 	}
 	
+	
+	public List<CInjection> getSomeInjectionList(){
+		List<CInjection> list = new ArrayList<CInjection>();
+		for (CConnectedComponent cc : this.leftHandSide){
+				list.add(cc.getInjectionsList().get(0));
+			}
+		return list;
+	}
+	
+	
+	public void recalcultateActivity() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public final String getName() {
 		return name;
 	}
@@ -50,19 +65,4 @@ public class CRule {
 	public final List<CConnectedComponent> getRightHandSide() {
 		return rightHandSide;
 	}
-	
-	public List<CInjection> getSomeInjectionList(){
-		List<CInjection> list = new ArrayList<CInjection>();
-		for (CConnectedComponent cc : this.leftHandSide){
-				list.add(cc.getInjectionsList().get(0));
-			}
-		return list;
-	}
-	
-	
-	public void recalcultateActivity() {
-		// TODO Auto-generated method stub
-		
-	}
-	
 }

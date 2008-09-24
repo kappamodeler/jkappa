@@ -2,12 +2,14 @@ package com.plectix.simulator.components;
 
 public class CLiftElement {
 	
+	private CConnectedComponent connectedComponent;
+
+	private CInjection injection;
+	
 	public CLiftElement (CConnectedComponent cc, CInjection injection){
 		this.connectedComponent = cc;
 		this.injection = injection;
 	}
-	
-	private CConnectedComponent connectedComponent;
 	
 	public CConnectedComponent getConnectedComponent() {
 		return connectedComponent;
@@ -16,8 +18,6 @@ public class CLiftElement {
 	public void setConnectedComponent(CConnectedComponent connectedComponent) {
 		this.connectedComponent = connectedComponent;
 	}
-
-	private CInjection injection;
 	
 	public void setInjection(CInjection injection) {
 		this.injection = injection;

@@ -21,11 +21,11 @@ public class SimulationData {
 	}
 	
 	
-	public final void initLifts() {
+	public final void initializeLifts() {
 		//creates lifts for all rules
 	}
 
-	public final void initInjections() {
+	public final void initializeInjections() {
 		//creates injections for all rules
 	}
 

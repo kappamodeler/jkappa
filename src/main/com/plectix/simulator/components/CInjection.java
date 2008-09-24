@@ -11,13 +11,13 @@ public class CInjection implements IInjection{
 	private List<CSite> sitesList = new ArrayList<CSite>();
 	
 	private CConnectedComponent connectedComponent;
+
+	public CInjection(){
+	}
 	
 	public CInjection(CConnectedComponent connectedComponent, List<CSite> sitesList){
 		this.connectedComponent = connectedComponent;
 		this.sitesList = sitesList;
-	}
-	
-	public CInjection(){
 	}
 	
 	public List<CSite> getSiteList() {
