@@ -1,9 +1,13 @@
 package com.plectix.simulator.simulator;
 
 import java.util.List;
+import java.util.Random;
 
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -24,71 +28,50 @@ public class Simulator {
 		model.init();
 	}
 
-	// current location of function
-	public void removeRulesInjections(ISite site, IAgent agent) {
-		// for (ILift.LiftElement liftElement : state.getLift()) {
-		// liftElement.getRule().removeInjection(liftElement.getInjection());
-		// liftElement.getRule().recalcultateActivity();
-		// for (ISite chSites : agent.getSites()) {
-		// chSites.getInternalState().removeLiftElement(
-		// new ILift.LiftElement(liftElement.getRule(),
-		// liftElement.getInjection()));
-		// chSites.getLinkState().removeLiftElement(
-		// new ILift.LiftElement(liftElement.getRule(),
-		// liftElement.getInjection()));
-		// }
-		// }
-	}
-
 	public void run() {
 		long clash = 0;
-		IRule rule;
+		CRule rule;
 
 		while (currentTime <= model.getSimulationData().getTimeLength()
 				|| model.getCommonActivity() != 0.0) {
 			rule = getRandomRule();
 			if (!isClash(rule)) {
-				currentTime += getRandomTime(model.getCommonActivity(), clash);
-				IInjection inj = rule.getSomeInjection();
-				// removing of injection from current rule
-				rule.removeInjection(inj);
-				rule.recalcultateActivity();
+				//currentTime += getRandomTime(model.getCommonActivity(), clash);
+
+				List<CInjection> injectionsList = rule.getSomeInjectionList();
+
+				// rule.recalcultateActivity();
 				// negative update
 
-				List<IAgent> newAgentList = model.getSimulationData()
-						.getSolution().apply(rule, inj);
+				// List<IAgent> newAgentList = model.getSimulationData()
+				// .getSolution().apply(rule, inj);
 
-				for (IAgent agent : inj.getAgents()) {
-					IConnectedComponent cComp = model.getSimulationData()
-							.getSolution().getConnectedComponent(agent);
-					for (IAgent agentComp : cComp.getAgents()) {
-						for (ISite chSites : agentComp.getSites()) {
-							if (chSites.isChanged()) {
-								removeRulesInjections((CSite)chSites, agentComp);
-								((CSite)chSites).setLift(null);
-							}
-						}
-
+				for (CInjection injection : injectionsList) {
+					for (CSite site : injection.getSiteList()) {
+						site.removeInjectionsFromCCToSite(injection);
+						site.getLift().clear();
 					}
+					injection.getConnectedComponent().getInjectionsList()
+							.remove(injection);
 				}
 
 				// positive update
-				for (IRule activRule : model.getActivationMap()
-						.getActivateRules(rule)) {
-					activRule.createInjection(newAgentList);// create injection
-					// if really
-					// there is injection of (some) rule's components to
-					// newAgentList,
-					// which is root agents of new (after applying rule)
-					// connected components
-					// and update (or create, if component is new) lift for all
-					// agents
-					// from new connected component for rule wich has new
-					// injection
-				}
+				// for (IRule activRule : model.getActivationMap()
+				// .getActivateRules(rule)) {
+				// activRule.createInjection(newAgentList);// create
+				// injection
+				// if really
+				// there is injection of (some) rule's components to
+				// newAgentList,
+				// which is root agents of new (after applying rule)
+				// connected components
+				// and update (or create, if component is new) lift for all
+				// agents
+				// from new connected component for rule wich has new
+				// injection
+
 			} else
 				clash++;
-
 		}
 	}
 
@@ -101,14 +84,14 @@ public class Simulator {
 		return 1.;
 	}
 
-	private IRule getRandomRule() {
+	public CRule getRandomRule() {
 		double probability = equiprDistrRandValue();
-		// get random rule
-		System.out.println("Get random rule.");
-		return null;
+		Random rand = new Random(model.getSimulationData().getRules().size());
+		return model.getSimulationData().getRules().get(0);
+//		return model.getSimulationData().getRules().get(rand.nextInt(3));
 	}
 
-	private boolean isClash(IRule rule) {
+	private boolean isClash(CRule rule) {
 		// if clash return true
 		return false;
 	}

@@ -17,6 +17,8 @@ import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.simulator.DataReading;
+import com.plectix.simulator.simulator.Model;
+import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorManager;
 
 public class SimulationMain {
@@ -48,10 +50,10 @@ public class SimulationMain {
 	}
 
 	private final void runSimulator() {
-
-		// Simulator simulator = new Simulator(new Model(simData));
+		
+		 Simulator simulator = new Simulator(new Model(instance.getSimulationManager().getSimulationData()));
 		// simulator.run();
-		// simulator.outputData();
+//		 simulator.outputData();
 	}
 
 	private final void readSimulatonFile() {

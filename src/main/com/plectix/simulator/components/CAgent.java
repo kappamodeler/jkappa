@@ -15,7 +15,7 @@ public class CAgent implements IAgent {
 	 */
 	private int idInConnectedComponent;
 	private long id;
-	public final CSite EMTY_SITE = new CSite(CSite.NO_INDEX);
+	public final CSite EMTY_SITE = new CSite(CSite.NO_INDEX,this);
 
 	private HashMap<Integer, CSite> siteMap = new HashMap<Integer, CSite>();
 	private int nameId;
@@ -28,7 +28,7 @@ public class CAgent implements IAgent {
 	public boolean isAgentHaveLinkToConnectedComponent(CConnectedComponent cc){
 		
 		for(CSite site : siteMap.values()){
-			if(site.getLift().contains(cc))
+			if(site.isConnectedComponentInLift(cc))
 				return true;
 		}
 		return false;

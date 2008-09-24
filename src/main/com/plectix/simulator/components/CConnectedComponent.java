@@ -19,6 +19,10 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	private List<CInjection> injectionsList;
 
+	public List<CInjection> getInjectionsList() {
+		return injectionsList;
+	}
+
 	private CRule rule;
 
 	// private ArrayList<CAgentRule> agentList=new ArrayList<CAgentRule>();
@@ -29,6 +33,11 @@ public class CConnectedComponent implements IConnectedComponent {
 		initSpanningTreeMap();
 	}
 
+    public void removeInjection(CInjection injection){
+		injectionsList.remove(injection);
+	}
+
+	
 	private final void initSpanningTreeMap() {
 		CSpanningTree spTree;
 		spanningTreeMap = new HashMap<Integer, List<CSpanningTree>>();
@@ -48,17 +57,18 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	}
 
-	private final void addLiftsToCurrentChangedStates() {
+	private final void addLiftsToCurrentChangedStates(CInjection injection) {
 		for (CSite changedSite : injectedSites) {
-			changedSite.addToLift(this);
+			changedSite.addToLift(new CLiftElement(this, injection));
 		}
 	}
 
 	public final void setInjections(ISolution solution, CAgent agent) {
 		injectedSites = new ArrayList<CSite>();
 		if (unify(solution, agent)) {
-			addLiftsToCurrentChangedStates();
-			injectionsList.add(new CInjection(this, injectedSites));
+			CInjection injection =new CInjection(this, injectedSites); 
+			injectionsList.add(injection);
+			addLiftsToCurrentChangedStates(injection);
 		}
 	}
 

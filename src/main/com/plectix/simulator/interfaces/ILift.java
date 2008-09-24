@@ -6,7 +6,7 @@ public interface ILift {
 
 	class LiftElement{
 		
-	//	private IRule rule;
+		private IRule rule;
 		
 		private IInjection injection;
 		

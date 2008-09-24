@@ -1,6 +1,10 @@
 package com.plectix.simulator.components;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.IRule;
 
 
 public class CRule {
@@ -9,7 +13,6 @@ public class CRule {
 	private List<CConnectedComponent> rightHandSide;
 	private Double activity;
 	private String name;
-
 
 	public CRule(List<CConnectedComponent> left, List<CConnectedComponent> right,String name, Double activity) {
 		this.leftHandSide = left;
@@ -47,4 +50,19 @@ public class CRule {
 	public final List<CConnectedComponent> getRightHandSide() {
 		return rightHandSide;
 	}
+	
+	public List<CInjection> getSomeInjectionList(){
+		List<CInjection> list = new ArrayList<CInjection>();
+		for (CConnectedComponent cc : this.leftHandSide){
+				list.add(cc.getInjectionsList().get(0));
+			}
+		return list;
+	}
+	
+	
+	public void recalcultateActivity() {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

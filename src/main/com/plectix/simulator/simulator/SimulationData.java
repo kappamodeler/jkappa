@@ -12,7 +12,7 @@ public class SimulationData {
 	private List<CRule> rules;
 	private CObservables observables = new CObservables();
 	private double intialTime;
-	private double timeLength;
+	private double timeLength=10;
 	private long numPoints;
 	private ISolution solution=new CSolution(); // soup of initial components
 	
