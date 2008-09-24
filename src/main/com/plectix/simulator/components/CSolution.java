@@ -46,7 +46,7 @@ public class CSolution implements ISolution {
 	}
 
 	public final void addAgents(List<CAgent> agents) {
-		if (agents.isEmpty())
+		if (agents == null || agents.isEmpty())
 			return;
 		for (CAgent agentAdd : agents) {
 			Integer agentNameId = agentAdd.getNameId();

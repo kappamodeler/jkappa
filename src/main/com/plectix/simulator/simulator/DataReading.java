@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 // get input strings from input file (or something else)  
-// i.e. makes lists of strings with different preffics such as 
+// i.e. makes lists of strings with different prefix such as 
 // %rule, %init, %obs
 
 public class DataReading {

@@ -1,25 +1,25 @@
 package com.plectix.simulator.components;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class NameDictionary {
-	private Map<Integer, String> idToNamesMap = new HashMap<Integer, String>();
+	private List<String> idToNamesList = new ArrayList<String>();
 	private Map<String, Integer> namesToIdMap = new HashMap<String, Integer>();
-	private int nextId = 0;
 	
 	public final int addName(String name) {
 		Integer id = namesToIdMap.get(name);
-		if(id != null) {
-			return id;
+		if (id == null) {
+			id = idToNamesList.size();
+			idToNamesList.add(name);
+			namesToIdMap.put(name, id);
 		}
-		idToNamesMap.put(nextId, name);
-		namesToIdMap.put(name, nextId);
-		
-		return nextId++;
+		return id;
 	}
 	
-	public final String getName(Integer id) {
-		return idToNamesMap.get(id);
+	public final String getName(int id) {
+		return idToNamesList.get(id);
 	}
 }

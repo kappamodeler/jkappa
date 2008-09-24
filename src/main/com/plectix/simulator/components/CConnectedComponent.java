@@ -21,15 +21,8 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	private CRule rule;
 
-	public final CRule getRule() {
-		return rule;
-	}
-
-	public final void setRule(CRule rule) {
-		this.rule = rule;
-	}
-
 	// private ArrayList<CAgentRule> agentList=new ArrayList<CAgentRule>();
+	
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
 		injectionsList = new ArrayList<CInjection>();
@@ -210,4 +203,11 @@ public class CConnectedComponent implements IConnectedComponent {
 		return true;
 	}
 
+	public final CRule getRule() {
+		return rule;
+	}
+
+	public final void setRule(CRule rule) {
+		this.rule = rule;
+	}
 }
