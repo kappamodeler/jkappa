@@ -17,6 +17,10 @@ public class CRule {
 		return automorphismNumber;
 	}
 
+	public double getRuleRate() {
+		return ruleRate;
+	}
+	
 	public void setAutomorphismNumber(int automorphismNumber) {
 		this.automorphismNumber = automorphismNumber;
 	}

@@ -72,9 +72,8 @@ public class CSolution implements ISolution {
 	}
 
 	@Override
-	public final Map<String, IAgent> getAgents() {
-		// TODO Auto-generated method stub
-		return null;
+	public final HashMap<Integer, List<CAgent>> getAgents() {
+		return agentMap;
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.plectix.simulator.interfaces;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import com.plectix.simulator.components.CAgent;
 
 public interface ISolution {
 
-	public Map<String, IAgent> getAgents();
+	public HashMap<Integer, List<CAgent>> getAgents();
 	
 	public Map<ISite, IAgent> getLinks();
 	

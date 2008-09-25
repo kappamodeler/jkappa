@@ -93,7 +93,7 @@ public class Parser {
 
 	// TODO needs to throw our own exception of wrong strings to parse
 	public final void parse() throws ParseErrorException {
-		System.out.println("Start parsing...");
+//		System.out.println("Start parsing...");
 			 createSimData(data.getInits(), CREATE_INIT);
 			 List<CRule> rules = createRules(data.getRules());
 			 SimulationMain.getSimulationManager().setRules(rules);

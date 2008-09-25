@@ -45,7 +45,7 @@ public class SimulationMain {
 		instance.runSimulator();
 	}
 
-	private void initialize() {
+	public void initialize() {
 		simulationManager.initialize();
 	}
 
@@ -56,7 +56,7 @@ public class SimulationMain {
 //		 simulator.outputData();
 	}
 
-	private final void readSimulatonFile() {
+	public final void readSimulatonFile() {
 		if (!cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION)) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("use --sim [file]", cmdLineOptions);
@@ -79,7 +79,7 @@ public class SimulationMain {
 		}
 	}
 
-	private final void parseArguments(String[] args) {
+	public final void parseArguments(String[] args) {
 		CommandLineParser parser = new PosixParser();
 		try {
 			cmdLineArgs = parser.parse(cmdLineOptions, args);
