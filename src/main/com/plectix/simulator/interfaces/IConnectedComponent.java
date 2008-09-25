@@ -14,7 +14,7 @@ public interface IConnectedComponent {
 	public void precompilationToString();
 	
 	//TODO ???
-	public boolean unify(ISolution solution, CAgent agent);
+	public boolean unify(CAgent agent);
 	public IInjection checkAndBuildInjection(ISolution solution, IAgent agent);
 	
 	public String getPrecompilationAsString();

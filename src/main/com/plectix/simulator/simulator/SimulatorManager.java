@@ -108,7 +108,7 @@ public class SimulatorManager {
 					for (CConnectedComponent cc : rule.getLeftHandSide()) {
 						if (cc != null) {
 							if (!agent.isAgentHaveLinkToConnectedComponent(cc)) {
-								cc.setInjections(solution, agent);
+								cc.setInjections(agent);
 							}
 						}
 					}

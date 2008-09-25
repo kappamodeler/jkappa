@@ -59,9 +59,8 @@ public class CConnectedComponent implements IConnectedComponent {
 		}
 	}
 
-	public final void setInjections(ISolution solution, CAgent agent) {
-		injectedSites = new ArrayList<CSite>();
-		if (unify(solution, agent)) {
+	public final void setInjections(CAgent agent) {
+		if (unify(agent)) {
 			CInjection injection =new CInjection(this, injectedSites); 
 			injectionsList.add(injection);
 			addLiftsToCurrentChangedStates(injection);
@@ -105,8 +104,9 @@ public class CConnectedComponent implements IConnectedComponent {
 	}
 
 	@Override
-	public final boolean unify(ISolution solution, CAgent agent) {
-
+	public final boolean unify(CAgent agent) {
+		injectedSites = new ArrayList<CSite>();
+		
 		if (spanningTreeMap == null)
 			return false;
 

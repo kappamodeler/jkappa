@@ -52,7 +52,7 @@ public class SimulationMain {
 	private final void runSimulator() {
 		
 		 Simulator simulator = new Simulator(new Model(instance.getSimulationManager().getSimulationData()));
-		// simulator.run();
+		 simulator.run();
 //		 simulator.outputData();
 	}
 

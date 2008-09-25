@@ -7,6 +7,7 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAgent;
@@ -31,16 +32,20 @@ public class Simulator {
 	public void run() {
 		long clash = 0;
 		CRule rule;
-
+		CProbabilityCalculation ruleProbabilityCalculation = 
+			new CProbabilityCalculation(model.getSimulationData().getRules());
+		
 		while (currentTime <= model.getSimulationData().getTimeLength()
 				|| model.getCommonActivity() != 0.0) {
-			rule = getRandomRule();
-			if (!isClash(rule)) {
-				//currentTime += getRandomTime(model.getCommonActivity(), clash);
-
-				List<CInjection> injectionsList = rule.getSomeInjectionList();
-
-				// rule.recalcultateActivity();
+			rule = ruleProbabilityCalculation.getRandomRule();
+			if (rule==null){
+				System.out.println("end of simulation");
+				return;
+			}
+			List<CInjection> injectionsList = rule.getSomeInjectionList();
+			currentTime += getRandomTime(model.getCommonActivity(), clash);
+			
+			if (!isClash(injectionsList)) {
 				// negative update
 
 				// List<IAgent> newAgentList = model.getSimulationData()
@@ -56,20 +61,6 @@ public class Simulator {
 				}
 
 				// positive update
-				// for (IRule activRule : model.getActivationMap()
-				// .getActivateRules(rule)) {
-				// activRule.createInjection(newAgentList);// create
-				// injection
-				// if really
-				// there is injection of (some) rule's components to
-				// newAgentList,
-				// which is root agents of new (after applying rule)
-				// connected components
-				// and update (or create, if component is new) lift for all
-				// agents
-				// from new connected component for rule wich has new
-				// injection
-
 			} else
 				clash++;
 		}
@@ -91,8 +82,9 @@ public class Simulator {
 //		return model.getSimulationData().getRules().get(rand.nextInt(3));
 	}
 
-	private boolean isClash(CRule rule) {
-		// if clash return true
+	private boolean isClash(List<CInjection> injections) {
+		if (injections.size()==2 && injections.get(0)==injections.get(1))
+			return true;
 		return false;
 	}
 
