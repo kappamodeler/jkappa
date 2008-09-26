@@ -13,31 +13,44 @@ public class CAgent implements IAgent {
 	 * idInConnectedComponent is the unique id in ConnectedComponent id is an
 	 * unique id for agent
 	 */
+	public static final int UNMARKED = -1;
+
 	private int idInConnectedComponent;
+	private int idInRuleSide = UNMARKED;
+
 	private long id;
-	public final CSite EMTY_SITE = new CSite(CSite.NO_INDEX,this);
+	public final CSite EMTY_SITE = new CSite(CSite.NO_INDEX, this);
 
 	private HashMap<Integer, CSite> siteMap = new HashMap<Integer, CSite>();
 	private int nameId;
+
+	public int getIdInRuleSide() {
+		return idInRuleSide;
+	}
+
+	public void setIdInRuleSide(int idInRuleSide) {
+		this.idInRuleSide = idInRuleSide;
+	}
 
 	public CAgent(int nameId) {
 		id = SimulationMain.getSimulationManager().generateNextAgentId();
 		this.nameId = nameId;
 	}
-	
-	public boolean isAgentHaveLinkToConnectedComponent(CConnectedComponent cc){
-		
-		for(CSite site : siteMap.values()){
-			if(site.isConnectedComponentInLift(cc))
+
+	public boolean isAgentHaveLinkToConnectedComponent(CConnectedComponent cc) {
+
+		for (CSite site : siteMap.values()) {
+			if (site.isConnectedComponentInLift(cc))
 				return true;
 		}
 		return false;
 	}
 
 	/**
-	 * returns linked agent of this from solution which is equal to input parameter 
+	 * returns linked agent of this from solution which is equal to input
+	 * parameter
 	 */
-	
+
 	public final CAgent findLinkAgent(CAgent agent) {
 		if (agent == null)
 			return null;
@@ -50,8 +63,7 @@ public class CAgent implements IAgent {
 		}
 		return null;
 	}
-	
-	
+
 	@Override
 	public final void addSite(CSite site) {
 		site.setAgentLink(this);
@@ -111,9 +123,9 @@ public class CAgent implements IAgent {
 		if (!(obj instanceof CAgent))
 			return false;
 		CAgent agent = (CAgent) obj;
-		if (! (nameId == agent.nameId))
+		if (!(nameId == agent.nameId))
 			return false;
-//		return siteMap.equals(agent.siteMap);
+		// return siteMap.equals(agent.siteMap);
 		return true;
 	}
 
