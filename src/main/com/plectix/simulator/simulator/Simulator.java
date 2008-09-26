@@ -35,15 +35,14 @@ public class Simulator {
 		CProbabilityCalculation ruleProbabilityCalculation = 
 			new CProbabilityCalculation(model.getSimulationData().getRules());
 		
-		while (currentTime <= model.getSimulationData().getTimeLength()
-				|| model.getCommonActivity() != 0.0) {
+		while (currentTime <= model.getSimulationData().getTimeLength()) {
 			rule = ruleProbabilityCalculation.getRandomRule();
 			if (rule==null){
 				System.out.println("end of simulation");
 				return;
 			}
 			List<CInjection> injectionsList = rule.getSomeInjectionList();
-			currentTime += getRandomTime(model.getCommonActivity(), clash);
+			currentTime += ruleProbabilityCalculation.getTimeValue();
 			
 			if (!isClash(injectionsList)) {
 				// negative update
@@ -71,24 +70,9 @@ public class Simulator {
 
 	}
 
-	private double equiprDistrRandValue() {
-		return 1.;
-	}
-
-	public CRule getRandomRule() {
-		double probability = equiprDistrRandValue();
-		Random rand = new Random(model.getSimulationData().getRules().size());
-		return model.getSimulationData().getRules().get(0);
-//		return model.getSimulationData().getRules().get(rand.nextInt(3));
-	}
-
 	private boolean isClash(List<CInjection> injections) {
 		if (injections.size()==2 && injections.get(0)==injections.get(1))
 			return true;
 		return false;
-	}
-
-	private double getRandomTime(double activity, long clash) {
-		return 1.0;
 	}
 }
