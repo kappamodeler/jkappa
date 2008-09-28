@@ -38,8 +38,10 @@ public class TestHarness {
 		
 		for (Test test : tests) {
 			try {
+				System.out.println("Running test " + test.getName());
 				Process process = Runtime.getRuntime().exec(test.getCommand());
 				process.waitFor();
+				System.out.println("Test " + test.getName() + " executed");
 				BufferedReader bufferedReader;
 				if (test.getOutput().equals("console")) {
 					bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -65,11 +67,14 @@ public class TestHarness {
 				}
 			}
 		}
+		
+		System.out.println("Sending e-mails");
 		if (!message.isEmpty()) {
 			emailer.send("Some tests failed:\n" + message);
 		} else {
 			emailer.send("Tests run successfully");
 		}
+		System.out.println("E-mails sended");
 	}
 
 	private static Emailer parseEmailer(InputSource inputSource) {
