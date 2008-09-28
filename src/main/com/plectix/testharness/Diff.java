@@ -1,12 +1,11 @@
 package com.plectix.testharness;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Diff {
 
-    public static List<String> diff(List<String> x, List<String> y) {
-    	List<String> differences = new ArrayList<String>();
+    public static String diff(List<String> x, List<String> y) {
+    	String differences = new String();
         
     	// number of lines of each file
         int M = x.size();
@@ -32,14 +31,14 @@ public class Diff {
                 i++;
                 j++;
             }
-            else if (opt[i+1][j] >= opt[i][j+1]) differences.add("< " + x.get(i++));
-            else                                 differences.add("> " + y.get(j++));
+            else if (opt[i+1][j] >= opt[i][j+1]) differences += "< " + x.get(i++) + "\n";
+            else                                 differences += "> " + y.get(j++) + "\n";
         }
 
         // dump out one remainder of one string if the other is exhausted
-        while(i < M || j < N) {
-            if      (i == M) differences.add("> " + y.get(j++));
-            else if (j == N) differences.add("< " + x.get(i++));
+        while (i < M || j < N) {
+            if      (i == M) differences += "> " + y.get(j++) + "\n";
+            else if (j == N) differences += "< " + x.get(i++) + "\n";
         }
         
         return differences;

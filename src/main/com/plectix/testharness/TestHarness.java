@@ -15,42 +15,23 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 public class TestHarness {
-
-	private static class Test {
-		public String getName() {
-			return name;
-		}
-
-		private String name;
-		private String command;
-		private String output;
-
-		public Test(String command, String output, String name) {
-			this.command = command;
-			this.output = output;
-			this.name = name;
-		}
 	
-		
-		public String getCommand() {
-			return command;
-		}
-		
-		public String getOutput() {
-			return output;
-		}
-		
-	}
-	
+	private static XPath xpath = XPathFactory.newInstance().newXPath();
 	
 	public static void main(String[] args) {
 		if (args.length < 1) {
 			System.out.println("Please give the configuration file name as first argument");
 			return;
 		}
-			
-		List<Test> tests = getTests(args[0]);
+		
+		InputSource inputSource = new InputSource(args[0]);
+		
+		List<Test> tests = getTests(inputSource);
 		if (tests == null)
+			return;
+
+		Emailer emailer = parseEmailer(inputSource);
+		if (emailer == null)
 			return;
 		
 		List<List<String>> outputs = new ArrayList<List<String>>(); 
@@ -73,28 +54,45 @@ public class TestHarness {
 			}
 		}
 		
+		String message = "";
 		int size = tests.size();
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < i; j++) {
-				List<String> differences = Diff.diff(outputs.get(i),  outputs.get(j));
+				String differences = Diff.diff(outputs.get(i),  outputs.get(j));
 				if (!differences.isEmpty()) {
-					System.out.println("Differences between " + tests.get(j).getName() + " and " + tests.get(i).getName() + " tests");
-					for (String string : differences) {
-						System.out.println(string);
-					}
+					message += "Differences between " + tests.get(j).getName() + " and " + tests.get(i).getName() + " tests\n";
+					message += differences;
 				}
 			}
 		}
+		if (!message.isEmpty()) {
+			emailer.send("Some tests failed:\n" + message);
+		} else {
+			emailer.send("Tests run successfully");
+		}
 	}
 
-	private static List<Test> getTests(String xmlFileName) {
+	private static Emailer parseEmailer(InputSource inputSource) {
+		try {
+			String smtp = (String) xpath.evaluate("/testharness/emailer/@smtp", inputSource, XPathConstants.STRING);
+			String from = (String) xpath.evaluate("/testharness/emailer/@from", inputSource, XPathConstants.STRING);
+			List<String> recipients = new ArrayList<String>();
+			NodeList nodes = (NodeList) xpath.evaluate("/testharness/emailer/recipient", inputSource,
+					XPathConstants.NODESET);
+			for (int i = 0; i < nodes.getLength(); i++) {
+				recipients.add(nodes.item(i).getTextContent());
+			}
+			return new Emailer(smtp, recipients, from);
+		} catch (XPathExpressionException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private static List<Test> getTests(InputSource inputSource) {
 		List<Test> result = new ArrayList<Test>();
 		try {
-			XPath xpath = XPathFactory.newInstance().newXPath();
-			String expression = "/tests/test";
-			InputSource inputSource = new InputSource(
-					xmlFileName);
-			NodeList nodes = (NodeList) xpath.evaluate(expression, inputSource,
+			NodeList nodes = (NodeList) xpath.evaluate("/testharness/tests/test", inputSource,
 					XPathConstants.NODESET);
 			for (int i = 0; i < nodes.getLength(); i++) {
 				String command = nodes.item(i).getAttributes().getNamedItem("command").getNodeValue();
