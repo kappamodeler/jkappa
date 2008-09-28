@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
@@ -47,9 +48,7 @@ public class Simulator {
 			if (!isClash(injectionsList)) {
 				// negative update
 
-				// List<IAgent> newAgentList = model.getSimulationData()
-				// .getSolution().apply(rule, inj);
-
+				rule.applyRule(injectionsList);
 				for (CInjection injection : injectionsList) {
 					for (CSite site : injection.getSiteList()) {
 						site.removeInjectionsFromCCToSite(injection);
@@ -60,6 +59,11 @@ public class Simulator {
 				}
 
 				// positive update
+				
+				for (CRule rules : model.getSimulationData().getRules())
+					for (CConnectedComponent cc : rules.getLeftHandSide())
+						cc.doPositiveUpdate(rule.getRightHandSide());
+				
 			} else
 				clash++;
 		}

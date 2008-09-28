@@ -17,24 +17,40 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	private List<CSite> injectedSites;
 
-	private List<CInjection> injectionsList;
+	private List<CAgentLink> agentLinkList;
 
+	private List<CInjection> injectionsList;
+	
 	private CRule rule;
+	
+	private CAgent agentFromSolutionForRHS;
 
 	// private ArrayList<CAgentRule> agentList=new ArrayList<CAgentRule>();
+	public final CAgent getAgentByIdFromSolution(int id, CInjection injection){
+		for(CAgentLink agentL : injection.getAgentLinkList())
+			if(agentL.getIdAgentFrom() == id)
+				return agentL.getAgentTo();
+		return null;
+	}
 	
+	public void setAgentFromSolutionForRHS(CAgent agentFromSolutionForRHS) {
+		this.agentFromSolutionForRHS = agentFromSolutionForRHS;
+	}
+
+	public CAgent getAgentFromSolutionForRHS() {
+		return agentFromSolutionForRHS;
+	}
+
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
 		injectionsList = new ArrayList<CInjection>();
-		initSpanningTreeMap();
 	}
 
-    public void removeInjection(CInjection injection){
+	public void removeInjection(CInjection injection) {
 		injectionsList.remove(injection);
 	}
 
-	
-	private final void initSpanningTreeMap() {
+	public final void initSpanningTreeMap() {
 		CSpanningTree spTree;
 		spanningTreeMap = new HashMap<Integer, List<CSpanningTree>>();
 		if (agentList.size() == 0)
@@ -61,9 +77,18 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	public final void setInjections(CAgent agent) {
 		if (unify(agent)) {
-			CInjection injection =new CInjection(this, injectedSites); 
+			CInjection injection = new CInjection(this, injectedSites,
+					agentLinkList);
 			injectionsList.add(injection);
 			addLiftsToCurrentChangedStates(injection);
+		}
+	}
+
+	public final void doPositiveUpdate(
+			List<CConnectedComponent> connectedComponentList) {
+		for (CConnectedComponent cc : connectedComponentList) {
+			//TODO
+			//setInjections(cc.getAgents().get(0));
 		}
 	}
 
@@ -106,7 +131,8 @@ public class CConnectedComponent implements IConnectedComponent {
 	@Override
 	public final boolean unify(CAgent agent) {
 		injectedSites = new ArrayList<CSite>();
-		
+		agentLinkList = new ArrayList<CAgentLink>();
+
 		if (spanningTreeMap == null)
 			return false;
 
@@ -121,6 +147,7 @@ public class CConnectedComponent implements IConnectedComponent {
 				tree.resetNewVertex();
 				if (agentList.get(tree.getRootIndex()).getSites().isEmpty()) {
 					injectedSites.add(agent.EMTY_SITE);
+					agentLinkList.add(new CAgentLink(0, agent));
 					return true;
 				} else {
 					if (compareAgents(agentList.get(tree.getRootIndex()),
@@ -145,6 +172,8 @@ public class CConnectedComponent implements IConnectedComponent {
 			if (!compareSites(site, solutionSite))
 				return false;
 			injectedSites.add(solutionSite);
+			agentLinkList.add(new CAgentLink(currentAgent
+					.getIdInConnectedComponent(), solutionAgent));
 		}
 		return true;
 	}
@@ -204,15 +233,18 @@ public class CConnectedComponent implements IConnectedComponent {
 		spTree.setTrue(rootVertex);
 		for (Integer v : spTree.getVertexes()[rootVertex]) {
 			CAgent cAgent = agentList.get(v);// get next agent from spanning
-			if (!(spTree.getNewVertexElement(cAgent.getIdInConnectedComponent()))) {
-				for (CSite site : cAgent.getSites()) {
-					CSite solutionSite = agent.getSite(site.getNameId());
-					if (solutionSite == null)
-						return false;
-					if (!compareSites(site, solutionSite))
-						return false;
-					injectedSites.add(solutionSite);
-				}
+			if (!(spTree
+					.getNewVertexElement(cAgent.getIdInConnectedComponent()))) {
+				// for (CSite site : cAgent.getSites()) {
+				// CSite solutionSite = agent.getSite(site.getNameId());
+				// if (solutionSite == null)
+				// return false;
+				// if (!compareSites(site, solutionSite))
+				// return false;
+				// injectedSites.add(solutionSite);
+				//					
+				// }
+				compareAgents(cAgent, agent, spTree);
 				// findLinkAgent(cAgent) - returns agent from solution,
 				// which is equal to cAgent
 				spanningTreeViewer(agent.findLinkAgent(cAgent), spTree, v);

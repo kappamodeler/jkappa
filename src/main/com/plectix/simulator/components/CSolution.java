@@ -33,6 +33,16 @@ public class CSolution implements ISolution {
 		}
 	}
 	
+	public final void addAgent(CAgent agent){
+		List<CAgent> list = agentMap.get(agent.getNameId());
+		list.add(agent);
+	}
+	
+	public final void removeAgent(CAgent agent){
+		List<CAgent> list = agentMap.get(agent.getNameId());
+		list.remove(agent);
+	}
+	
 	public final List<CAgent> getConnectedAgents(CAgent inAgent){
 		List<CAgent> agentsList = new ArrayList<CAgent>();
 		agentsList.add(inAgent);

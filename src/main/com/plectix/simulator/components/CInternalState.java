@@ -22,6 +22,10 @@ public class CInternalState extends CState {
 //		return null;
 //	}
 
+	public final void setNameId(int id){
+		this.nameId=id;		
+	}
+	
 	@Override
 	public final String getName() {
 		// TODO Auto-generated method stub
