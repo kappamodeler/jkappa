@@ -1,10 +1,14 @@
 package com.plectix.testharness;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Diff {
 
-    public static void diff(List<String> x, List<String> y) {
-        // number of lines of each file
+    public static List<String> diff(List<String> x, List<String> y) {
+    	List<String> differences = new ArrayList<String>();
+        
+    	// number of lines of each file
         int M = x.size();
         int N = y.size();
 
@@ -24,19 +28,21 @@ public class Diff {
         // recover LCS itself and print out non-matching lines to standard output
         int i = 0, j = 0;
         while(i < M && j < N) {
-            if (x.get(i).equals(y.get(j))) {
+			if (x.get(i).equals(y.get(j))) {
                 i++;
                 j++;
             }
-            else if (opt[i+1][j] >= opt[i][j+1]) System.out.println("< " + x.get(i++));
-            else                                 System.out.println("> " + y.get(j++));
+            else if (opt[i+1][j] >= opt[i][j+1]) differences.add("< " + x.get(i++));
+            else                                 differences.add("> " + y.get(j++));
         }
 
         // dump out one remainder of one string if the other is exhausted
         while(i < M || j < N) {
-            if      (i == M) System.out.println("> " + y.get(j++));
-            else if (j == N) System.out.println("< " + x.get(i++));
+            if      (i == M) differences.add("> " + y.get(j++));
+            else if (j == N) differences.add("< " + x.get(i++));
         }
+        
+        return differences;
     }
 
 }

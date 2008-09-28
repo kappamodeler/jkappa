@@ -1,6 +1,7 @@
 package com.plectix.testharness;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -46,8 +47,13 @@ public class TestHarness {
 		for (Test test : tests) {
 			try {
 				Process process = Runtime.getRuntime().exec(test.getCommand());
-				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 				process.waitFor();
+				BufferedReader bufferedReader;
+				if (test.getOutput().equals("console")) {
+					bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				} else {
+					bufferedReader = new BufferedReader(new FileReader(test.getOutput()));
+				}
 				outputs.add(getFileLines(bufferedReader));
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -59,8 +65,13 @@ public class TestHarness {
 		int size = tests.size();
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < i; j++) {
-				System.out.println("Differences between " + i + " and " + j + " tests");
-				Diff.diff(outputs.get(i),  outputs.get(j));
+				List<String> differences = Diff.diff(outputs.get(i),  outputs.get(j));
+				if (!differences.isEmpty()) {
+					System.out.println("Differences between " + i + " and " + j + " tests");
+					for (String string : differences) {
+						System.out.println(string);
+					}
+				}
 			}
 		}
 	}
