@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tests>
-	<test command="echo hello" output="console"/>
-	<test command="echo hello" output="console"/>
-	<test command="echo hello2" output="console"/>
+	<test name="test1" command="echo hello" output="console"/>
+	<test name="test2" command="echo hello" output="console"/>
+	<test name="test3" command="echo hello2" output="console"/>
 </tests>

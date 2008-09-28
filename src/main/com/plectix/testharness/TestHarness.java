@@ -1,6 +1,5 @@
 package com.plectix.testharness;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,18 +14,23 @@ import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-
-
 public class TestHarness {
 
 	private static class Test {
-		public Test(String command, String output) {
-			this.command = command;
-			this.output = output;
+		public String getName() {
+			return name;
 		}
-	
+
+		private String name;
 		private String command;
 		private String output;
+
+		public Test(String command, String output, String name) {
+			this.command = command;
+			this.output = output;
+			this.name = name;
+		}
+	
 		
 		public String getCommand() {
 			return command;
@@ -40,7 +44,14 @@ public class TestHarness {
 	
 	
 	public static void main(String[] args) {
+		if (args.length < 1) {
+			System.out.println("Please give the configuration file name as first argument");
+			return;
+		}
+			
 		List<Test> tests = getTests(args[0]);
+		if (tests == null)
+			return;
 		
 		List<List<String>> outputs = new ArrayList<List<String>>(); 
 		
@@ -54,7 +65,7 @@ public class TestHarness {
 				} else {
 					bufferedReader = new BufferedReader(new FileReader(test.getOutput()));
 				}
-				outputs.add(getFileLines(bufferedReader));
+				outputs.add(getLines(bufferedReader));
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
@@ -67,7 +78,7 @@ public class TestHarness {
 			for (int j = 0; j < i; j++) {
 				List<String> differences = Diff.diff(outputs.get(i),  outputs.get(j));
 				if (!differences.isEmpty()) {
-					System.out.println("Differences between " + i + " and " + j + " tests");
+					System.out.println("Differences between " + tests.get(j).getName() + " and " + tests.get(i).getName() + " tests");
 					for (String string : differences) {
 						System.out.println(string);
 					}
@@ -88,7 +99,8 @@ public class TestHarness {
 			for (int i = 0; i < nodes.getLength(); i++) {
 				String command = nodes.item(i).getAttributes().getNamedItem("command").getNodeValue();
 				String output = nodes.item(i).getAttributes().getNamedItem("output").getNodeValue();
-				result.add(new Test(command, output));
+				String name = nodes.item(i).getAttributes().getNamedItem("name").getNodeValue();
+				result.add(new Test(command, output, name));
 			}
 			return result;
 		} catch (XPathExpressionException e) {
@@ -97,7 +109,7 @@ public class TestHarness {
 		return null;
 	}
 
-	private static List<String> getFileLines(BufferedReader bufferedReader) {
+	private static List<String> getLines(BufferedReader bufferedReader) {
 		try {
 			List<String> result = new ArrayList<String>();
 			String line;
@@ -105,8 +117,6 @@ public class TestHarness {
 				result.add(line);
 			}
 			return result;
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
