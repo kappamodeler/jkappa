@@ -32,25 +32,28 @@ public class CSolution implements ISolution {
 			}
 		}
 	}
-	
-	public final void addAgent(CAgent agent){
+
+	public final void addAgent(CAgent agent) {
 		List<CAgent> list = agentMap.get(agent.getNameId());
+		if (list == null) {
+			list = new ArrayList<CAgent>();
+			agentMap.put(agent.getNameId(), list);
+		}
 		list.add(agent);
 	}
-	
-	public final void removeAgent(CAgent agent){
+
+	public final void removeAgent(CAgent agent) {
 		List<CAgent> list = agentMap.get(agent.getNameId());
 		list.remove(agent);
 	}
-	
-	public final List<CAgent> getConnectedAgents(CAgent inAgent){
+
+	public final List<CAgent> getConnectedAgents(CAgent inAgent) {
 		List<CAgent> agentsList = new ArrayList<CAgent>();
 		agentsList.add(inAgent);
 		depthSearch(inAgent, agentsList);
 		return agentsList;
 	}
-	
-	
+
 	public final HashMap<Integer, List<CAgent>> getAgentMap() {
 		return agentMap;
 	}
@@ -88,7 +91,7 @@ public class CSolution implements ISolution {
 
 	@Override
 	public final IConnectedComponent getConnectedComponent(IAgent agent) {
-			return null;
+		return null;
 	}
 
 	@Override

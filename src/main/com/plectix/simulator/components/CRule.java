@@ -26,6 +26,8 @@ public class CRule {
 
 	private HashMap<CAgent, CAgent> agentAddList;
 
+	private List<CInjection> injList;
+
 	public final int getAutomorphismNumber() {
 		return automorphismNumber;
 	}
@@ -65,9 +67,10 @@ public class CRule {
 
 	public void applyRule(List<CInjection> injectionList) {
 		agentAddList = new HashMap<CAgent, CAgent>();
-
-		for (CConnectedComponent cc : rightHandSide)
-			cc.setAgentFromSolutionForRHS(null);
+		this.injList = injectionList;
+		if (rightHandSide != null)
+			for (CConnectedComponent cc : rightHandSide)
+				cc.setAgentFromSolutionForRHS(null);
 		// for(CConnectedComponent cc: leftHandSide)
 		// cc.set
 
@@ -319,6 +322,9 @@ public class CRule {
 
 			switch (action) {
 			case ACTION_ADD: {
+				/**
+				 * Done.
+				 */
 				CAgent agent = new CAgent(toAgent.getNameId());
 				for (CSite site : toAgent.getSites()) {
 					CSite siteAdd = new CSite(site.getNameId());
@@ -332,36 +338,57 @@ public class CRule {
 						.getSimulationData().getSolution()).addAgent(agent);
 
 				agentAddList.put(toAgent, agent);
+				toAgent.setIdInRuleSide(maxAgentID++);
+				if (rightConnectedComponent.getAgentFromSolutionForRHS() == null)
+					rightConnectedComponent.setAgentFromSolutionForRHS(agent);
 				break;
 			}
 			case ACTION_BND: {
-				CAgent agentToInSolution;
+				/**
+				 * Done.
+				 */
+				CAgent agentFromInSolution;
 				if (siteFrom.getAgentLink().getIdInRuleSide() > getAgentsFromConnectedComponent(
 						leftHandSide).size()) {
-					agentToInSolution = agentAddList.get(siteFrom.getAgentLink());
-				} else {
-					agentToInSolution = leftConnectedComponent
-							.getAgentByIdFromSolution(siteFrom.getAgentLink()
-									.getIdInConnectedComponent(), injection);
-				}
-
-				CAgent agentFromInSolution;
-				if (siteTo.getAgentLink().getIdInRuleSide() > getAgentsFromConnectedComponent(
-						leftHandSide).size()) {
-					agentFromInSolution = agentAddList.get(siteTo
+					agentFromInSolution = agentAddList.get(siteFrom
 							.getAgentLink());
 				} else {
+					int agentIdInCC = getAgentIdInCCBySideId(siteFrom
+							.getAgentLink());
 					agentFromInSolution = leftConnectedComponent
-							.getAgentByIdFromSolution(siteTo.getAgentLink()
-									.getIdInConnectedComponent(), injection);
+							.getAgentByIdFromSolution(agentIdInCC, injection);
+					// agentFromInSolution = leftConnectedComponent
+					// .getAgentByIdFromSolution(siteFrom.getAgentLink()
+					// .getIdInConnectedComponent(), injection);
 				}
+
+				CAgent agentToInSolution;
+				if (siteTo.getAgentLink().getIdInRuleSide() > getAgentsFromConnectedComponent(
+						leftHandSide).size()) {
+					agentToInSolution = agentAddList.get(siteTo.getAgentLink());
+				} else {
+					int agentIdInCC = getAgentIdInCCBySideId(siteTo
+							.getAgentLink());
+					CInjection inj = getInjectionBySiteToFromLHS(siteTo);
+					agentToInSolution = leftConnectedComponent
+							.getAgentByIdFromSolution(agentIdInCC, inj);
+					// agentToInSolution = leftConnectedComponent
+					// .getAgentByIdFromSolution(siteTo.getAgentLink()
+					// .getIdInConnectedComponent(), injection);
+				}
+
 				agentFromInSolution.getSite(siteFrom.getNameId())
 						.getLinkState().setSite(
 								agentToInSolution.getSite(siteTo.getNameId()));
+				if (rightConnectedComponent.getAgentFromSolutionForRHS() == null)
+					rightConnectedComponent
+							.setAgentFromSolutionForRHS(agentFromInSolution);
 
 				break;
 			}
 			case ACTION_BRK: {
+				
+				// TODO
 				CAgent agentFromInSolution;
 				agentFromInSolution = leftConnectedComponent
 						.getAgentByIdFromSolution(siteFrom.getAgentLink()
@@ -376,9 +403,12 @@ public class CRule {
 				break;
 			}
 			case ACTION_DEL: {
-				CAgent agent = leftConnectedComponent
-						.getAgentByIdFromSolution(fromAgent
-								.getIdInConnectedComponent(), injection);
+				/**
+				 * Done.
+				 */
+
+				CAgent agent = leftConnectedComponent.getAgentByIdFromSolution(
+						fromAgent.getIdInConnectedComponent(), injection);
 				for (CSite site : agent.getSites()) {
 					CSite solutionSite = (CSite) site.getLinkState().getSite();
 					if (solutionSite != null) {
@@ -394,14 +424,63 @@ public class CRule {
 				break;
 			}
 			case ACTION_MOD: {
-				CAgent agent = leftConnectedComponent
-						.getAgentByIdFromSolution(siteFrom.getAgentLink()
-								.getIdInConnectedComponent(), injection);
-				agent.getSite(siteFrom.getNameId()).getInternalState()
-						.setNameId(nameInternalStateId);
+				/**
+				 * Done.
+				 */
+				int agentIdInCC = getAgentIdInCCBySideId(siteTo.getAgentLink());
+				CAgent agentFromInSolution = leftConnectedComponent
+						.getAgentByIdFromSolution(agentIdInCC, injection);
+
+				// CAgent agent =
+				// leftConnectedComponent.getAgentByIdFromSolution(
+				// siteFrom.getAgentLink().getIdInConnectedComponent(),
+				// injection);
+				agentFromInSolution.getSite(siteTo.getNameId())
+						.getInternalState().setNameId(nameInternalStateId);
+				// agentFromInSolution.getSite(siteFrom.getNameId()).
+				// getInternalState()
+				// .setNameId(nameInternalStateId);
+
+				// agent.getSite(siteFrom.getNameId()).getInternalState()
+				// .setNameId(nameInternalStateId);
+				if (rightConnectedComponent.getAgentFromSolutionForRHS() == null)
+					rightConnectedComponent
+							.setAgentFromSolutionForRHS(agentFromInSolution);
 				break;
 			}
 			}
+		}
+
+		private final CInjection getInjectionBySiteToFromLHS(CSite siteTo) {
+			int sideId = siteTo.getAgentLink().getIdInRuleSide();
+			int i = 0;
+			for (CConnectedComponent cc : leftHandSide) {
+
+				for (CAgent agent : cc.getAgents())
+					if (agent.getIdInRuleSide() == sideId)
+						return injList.get(i);
+				i++;
+			}
+
+			return null;
+		}
+
+		private final int getAgentIdInCCBySideId(CAgent agent) {
+			if (leftConnectedComponent != null) {
+
+				for (CAgent agentL : leftConnectedComponent.getAgents())
+					if (agentL.getIdInRuleSide() == agent.getIdInRuleSide())
+						return agentL.getIdInConnectedComponent();
+			} else {
+				for (CConnectedComponent cc : leftHandSide)
+					for (CAgent agentL : cc.getAgents())
+						if (agentL.getIdInRuleSide() == agent.getIdInRuleSide()){
+							leftConnectedComponent = cc;
+							return agentL.getIdInConnectedComponent();
+						}
+			}
+
+			return 0;
 		}
 
 		public CConnectedComponent getRightCComponent() {
