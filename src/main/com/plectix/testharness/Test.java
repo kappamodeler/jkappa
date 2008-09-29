@@ -8,11 +8,13 @@ public class Test {
 	private String name;
 	private String command;
 	private String output;
+	private int nRuns;
 
-	public Test(String command, String output, String name) {
+	public Test(String command, String output, String name, int runs) {
 		this.command = command;
 		this.output = output;
 		this.name = name;
+		this.nRuns = runs; 
 	}
 
 	
@@ -20,6 +22,11 @@ public class Test {
 		return command;
 	}
 	
+	public int getNRuns() {
+		return nRuns;
+	}
+
+
 	public String getOutput() {
 		return output;
 	}

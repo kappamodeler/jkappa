@@ -4,7 +4,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -24,6 +26,8 @@ public class TestHarness {
 			return;
 		}
 		
+		Map<String, Long> executionTimes = new HashMap<String, Long>();
+		
 		InputSource inputSource = new InputSource(args[0]);
 		
 		List<Test> tests = getTests(inputSource);
@@ -39,15 +43,19 @@ public class TestHarness {
 		for (Test test : tests) {
 			try {
 				System.out.println("Running test " + test.getName());
-				Process process = Runtime.getRuntime().exec(test.getCommand());
-				BufferedReader bufferedReader;
-				if (test.getOutput().equals("console")) {
-					bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-				} else {
-					bufferedReader = new BufferedReader(new FileReader(test.getOutput()));
+				long startTime = System.currentTimeMillis();
+				BufferedReader bufferedReader = null;
+				for (int i = 0; i < test.getNRuns(); i++) {
+					Process process = Runtime.getRuntime().exec(test.getCommand());
+					if (test.getOutput().equals("console")) {
+						bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+					} else {
+						bufferedReader = new BufferedReader(new FileReader(test.getOutput()));
+					}
+					process.waitFor();
 				}
+				executionTimes.put(test.getName(), System.currentTimeMillis() - startTime);
 				outputs.add(getLines(bufferedReader));
-				process.waitFor();
 				System.out.println("Test " + test.getName() + " executed");
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -69,11 +77,17 @@ public class TestHarness {
 		}
 		
 		System.out.println("Sending e-mails");
+		
 		if (!message.isEmpty()) {
-			emailer.send("Some tests failed:\n" + message);
+			message = "Some tests failed:\n" + message;
 		} else {
-			emailer.send("Tests run successfully");
+			message = "Tests run successfully\n";
 		}
+		message += "Time of execution:\n";
+		for (String name: executionTimes.keySet()) {
+			message += name + " : " + executionTimes.get(name) + "ms\n"; 
+		}
+		emailer.send(message);
 		System.out.println("E-mails sent");
 	}
 
@@ -103,7 +117,8 @@ public class TestHarness {
 				String command = nodes.item(i).getAttributes().getNamedItem("command").getNodeValue();
 				String output = nodes.item(i).getAttributes().getNamedItem("output").getNodeValue();
 				String name = nodes.item(i).getAttributes().getNamedItem("name").getNodeValue();
-				result.add(new Test(command, output, name));
+				int runs = Integer.parseInt(nodes.item(i).getAttributes().getNamedItem("runs").getNodeValue());
+				result.add(new Test(command, output, name, runs));
 			}
 			return result;
 		} catch (XPathExpressionException e) {
