@@ -25,7 +25,6 @@ public class CConnectedComponent implements IConnectedComponent {
 	
 	private CAgent agentFromSolutionForRHS;
 
-	// private ArrayList<CAgentRule> agentList=new ArrayList<CAgentRule>();
 	public final CAgent getAgentByIdFromSolution(int id, CInjection injection){
 		for(CAgentLink agentL : injection.getAgentLinkList())
 			if(agentL.getIdAgentFrom() == id)
@@ -87,8 +86,7 @@ public class CConnectedComponent implements IConnectedComponent {
 	public final void doPositiveUpdate(
 			List<CConnectedComponent> connectedComponentList) {
 		for (CConnectedComponent cc : connectedComponentList) {
-			//TODO
-			//setInjections(cc.getAgents().get(0));
+			setInjections(cc.getAgentFromSolutionForRHS());
 		}
 	}
 
@@ -165,6 +163,8 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	private final boolean compareAgents(CAgent currentAgent,
 			CAgent solutionAgent, CSpanningTree tree) {
+		if (currentAgent==null || solutionAgent==null)
+			return false;
 		for (CSite site : currentAgent.getSites()) {
 			CSite solutionSite = solutionAgent.getSite(site.getNameId());
 			if (solutionSite == null)
@@ -216,13 +216,14 @@ public class CConnectedComponent implements IConnectedComponent {
 				.getStatusLinkRank()
 				&& currentState.getStatusLinkRank() == CLinkState.RANK_BOUND)
 			if (currentState.getSite().equals(solutionState.getSite()))
-				if (currentState.getSite().getAgentLink().equals(
+				if (currentState.getStatusLinkRank() == CLinkState.RANK_BOUND && currentState.getSite().getAgentLink().equals(
 						solutionState.getSite().getAgentLink()))
 					return true;
 
 		if (currentState.getStatusLinkRank() == solutionState
-				.getStatusLinkRank())
-			return true;
+				.getStatusLinkRank()
+				&& currentState.getStatusLinkRank() != CLinkState.RANK_BOUND)
+		return true;
 
 		return false;
 	}
@@ -244,7 +245,8 @@ public class CConnectedComponent implements IConnectedComponent {
 				// injectedSites.add(solutionSite);
 				//					
 				// }
-				compareAgents(cAgent, agent, spTree);
+				if (!compareAgents(cAgent, agent, spTree))
+					return false;
 				// findLinkAgent(cAgent) - returns agent from solution,
 				// which is equal to cAgent
 				spanningTreeViewer(agent.findLinkAgent(cAgent), spTree, v);

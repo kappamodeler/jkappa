@@ -16,10 +16,6 @@ public class CInjection implements IInjection {
 
 	private CConnectedComponent connectedComponent;
 
-	public List<CAgentLink> getAgentLinkList() {
-		return agentLinkList;
-	}
-	
 	public CInjection() {
 	}
 
@@ -30,6 +26,10 @@ public class CInjection implements IInjection {
 		this.agentLinkList = agentLinkList;
 	}
 
+	public List<CAgentLink> getAgentLinkList() {
+		return agentLinkList;
+	}
+	
 	public List<CSite> getSiteList() {
 		return sitesList;
 	}
