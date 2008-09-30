@@ -30,7 +30,7 @@ public class CSite implements ISite {
 		linkState = new CLinkState(CLinkState.STATUS_LINK_FREE);
 		linkAgent = agent;
 	}
-	
+
 	public void setLift(List<CLiftElement> lift) {
 		this.liftList = lift;
 	}
@@ -85,8 +85,8 @@ public class CSite implements ISite {
 		CSite site = (CSite) obj;
 		if (!(nameId == site.nameId))
 			return false;
-		if (internalState == null)
-			return true;
+		//if (internalState == null)
+		//	return true;
 		// return internalState.equals(site.internalState);
 		return true;
 	}
@@ -102,7 +102,7 @@ public class CSite implements ISite {
 	public final Integer getNameId() {
 		return nameId;
 	}
-
+	
 	public final void removeInjectionsFromCCToSite(CInjection inInjection) {
 
 		// for (CLiftElement liftElement : this.lift){
@@ -112,12 +112,22 @@ public class CSite implements ISite {
 			CInjection injection = liftElement.getInjection();
 			if (injection != inInjection) {
 				for (CSite site : injection.getSiteList()) {
-					site.getLift().remove(injection);
+					// site.getLift().remove(injection);
+					if(this!=site)
+					site.removeInjectionFromLift(injection);
 				}
 				liftElement.getConnectedComponent().getInjectionsList().remove(
 						injection);
 			}
 		}
+	}
+
+	private final void removeInjectionFromLift(CInjection injection) {
+		for (CLiftElement liftElement : this.liftList)
+			if (injection == liftElement.getInjection()) {
+				this.liftList.remove(liftElement);
+				return;
+			}
 	}
 
 }

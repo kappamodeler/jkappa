@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -23,7 +24,7 @@ public class CConnectedComponent implements IConnectedComponent {
 	
 	private CRule rule;
 	
-	private CAgent agentFromSolutionForRHS;
+	private List<CAgent> agentFromSolutionForRHS;
 
 	public final CAgent getAgentByIdFromSolution(int id, CInjection injection){
 		for(CAgentLink agentL : injection.getAgentLinkList())
@@ -32,17 +33,17 @@ public class CConnectedComponent implements IConnectedComponent {
 		return null;
 	}
 	
-	public void setAgentFromSolutionForRHS(CAgent agentFromSolutionForRHS) {
-		this.agentFromSolutionForRHS = agentFromSolutionForRHS;
+	public void addAgentFromSolutionForRHS(CAgent agentFromSolutionForRHS) {
+		this.agentFromSolutionForRHS.add(agentFromSolutionForRHS);
 	}
-
-	public CAgent getAgentFromSolutionForRHS() {
+	public List<CAgent> getAgentFromSolutionForRHS() {
 		return agentFromSolutionForRHS;
 	}
 
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
 		injectionsList = new ArrayList<CInjection>();
+		agentFromSolutionForRHS  = new ArrayList<CAgent>();
 	}
 
 	public void removeInjection(CInjection injection) {
@@ -86,7 +87,11 @@ public class CConnectedComponent implements IConnectedComponent {
 	public final void doPositiveUpdate(
 			List<CConnectedComponent> connectedComponentList) {
 		for (CConnectedComponent cc : connectedComponentList) {
-			setInjections(cc.getAgentFromSolutionForRHS());
+			for (CAgent agent : cc.agentFromSolutionForRHS)
+				if (!agent.isAgentHaveLinkToConnectedComponent(cc)) {
+					setInjections(agent);
+				}
+			//setInjections(cc.getAgentFromSolutionForRHS());
 		}
 	}
 
@@ -150,8 +155,7 @@ public class CConnectedComponent implements IConnectedComponent {
 				} else {
 					if (compareAgents(agentList.get(tree.getRootIndex()),
 							agent, tree))
-						if (spanningTreeViewer(agent.findLinkAgent(agentList
-								.get(tree.getRootIndex())), tree, tree
+						if (spanningTreeViewer(agent, tree, tree
 								.getRootIndex()))
 							return true;
 				}
@@ -191,9 +195,11 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	private final boolean compareInternalStates(CInternalState currentState,
 			CInternalState solutionState) {
-		if (currentState != null && solutionState == null)
+		if (currentState.getNameId() != CSite.NO_INDEX && solutionState.getNameId() == CSite.NO_INDEX)
 			return false;
-		if (!(currentState.getStateNameId() == solutionState.getStateNameId()))
+		if (currentState.getNameId() == CSite.NO_INDEX && solutionState.getNameId() != CSite.NO_INDEX)
+			return true;
+		if (!(currentState.getNameId() == solutionState.getNameId()))
 			return false;
 
 		return true;
@@ -245,11 +251,12 @@ public class CConnectedComponent implements IConnectedComponent {
 				// injectedSites.add(solutionSite);
 				//					
 				// }
-				if (!compareAgents(cAgent, agent, spTree))
+				CAgent sAgent = agent.findLinkAgent(cAgent);
+				if (!compareAgents(cAgent, sAgent, spTree))
 					return false;
 				// findLinkAgent(cAgent) - returns agent from solution,
 				// which is equal to cAgent
-				spanningTreeViewer(agent.findLinkAgent(cAgent), spTree, v);
+				spanningTreeViewer(sAgent, spTree, v);
 			}
 		}
 		return true;

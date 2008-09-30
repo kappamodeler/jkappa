@@ -11,6 +11,7 @@ import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -33,20 +34,28 @@ public class Simulator {
 	public void run() {
 		long clash = 0;
 		CRule rule;
-		CProbabilityCalculation ruleProbabilityCalculation = 
-			new CProbabilityCalculation(model.getSimulationData().getRules());
-		
+		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
+				model.getSimulationData().getRules());
+
+		double time = 0.;
+		model.getSimulationData().getObservables().calculateObs(currentTime);
 		while (currentTime <= model.getSimulationData().getTimeLength()) {
 			rule = ruleProbabilityCalculation.getRandomRule();
-			if (rule==null){
-				System.out.println("end of simulation");
+
+			if (rule == null) {
+				System.out
+						.println("end of simulation: there are no active rules");
 				return;
 			}
+			System.out.println("Rule: " + rule.getName());
+
 			List<CInjection> injectionsList = rule.getSomeInjectionList();
+			System.out.println("Time = " + currentTime);
 			currentTime += ruleProbabilityCalculation.getTimeValue();
-			
+
 			if (!isClash(injectionsList)) {
 				// negative update
+				System.out.println("negative update");
 
 				rule.applyRule(injectionsList);
 				for (CInjection injection : injectionsList) {
@@ -57,16 +66,33 @@ public class Simulator {
 					injection.getConnectedComponent().getInjectionsList()
 							.remove(injection);
 				}
+				model.getSimulationData().getObservables().PrintObsCount();
 
 				// positive update
-				
-				for (CRule rules : model.getSimulationData().getRules())
-					for (CConnectedComponent cc : rules.getLeftHandSide())
+				System.out.println("positive update");
+
+				for (CRule rules : model.getSimulationData().getRules()) {
+					for (CConnectedComponent cc : rules.getLeftHandSide()) {
 						cc.doPositiveUpdate(rule.getRightHandSide());
-				
-			} else
+					}
+				}
+
+				for (ObservablesConnectedComponent oCC : model
+						.getSimulationData().getObservables()
+						.getConnectedComponentList()) {
+					oCC.doPositiveUpdate(rule.getRightHandSide());
+				}
+
+				model.getSimulationData().getObservables().calculateObs(
+						currentTime);
+				model.getSimulationData().getObservables().PrintObsCount();
+			} else {
+				System.out.println("Clash");
 				clash++;
+			}
 		}
+		System.out.println("end of simulation: time");
+
 	}
 
 	public void outputData() {
@@ -75,8 +101,13 @@ public class Simulator {
 	}
 
 	private boolean isClash(List<CInjection> injections) {
-		if (injections.size()==2 && injections.get(0)==injections.get(1))
-			return true;
+		if (injections.size() == 2) {
+			for (CSite siteCC1 : injections.get(0).getSiteList())
+				for (CSite siteCC2 : injections.get(1).getSiteList())
+					if (siteCC1.getAgentLink().getId() == siteCC2
+							.getAgentLink().getId())
+						return true;
+		}
 		return false;
 	}
 }

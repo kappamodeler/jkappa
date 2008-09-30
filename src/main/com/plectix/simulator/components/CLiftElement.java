@@ -11,6 +11,7 @@ public class CLiftElement {
 		this.injection = injection;
 	}
 	
+	
 	public CConnectedComponent getConnectedComponent() {
 		return connectedComponent;
 	}

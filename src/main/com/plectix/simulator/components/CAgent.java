@@ -124,7 +124,7 @@ public class CAgent implements IAgent {
 		if (!(obj instanceof CAgent))
 			return false;
 		CAgent agent = (CAgent) obj;
-		if (!(nameId == agent.nameId))
+		if (nameId != agent.getNameId())
 			return false;
 		// return siteMap.equals(agent.siteMap);
 		return true;
