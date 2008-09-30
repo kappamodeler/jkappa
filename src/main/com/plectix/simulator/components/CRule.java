@@ -5,9 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-
 import com.plectix.simulator.SimulationMain;
-
 
 public class CRule {
 
@@ -18,6 +16,7 @@ public class CRule {
 	private double ruleRate;
 	private int automorphismNumber = 1;
 	private boolean infinityRate = false;
+
 	public boolean isInfinityRate() {
 		return infinityRate;
 	}
@@ -79,6 +78,16 @@ public class CRule {
 				cc.getAgentFromSolutionForRHS().clear();
 		// for(CConnectedComponent cc: leftHandSide)
 		// cc.set
+
+		// for (CConnectedComponent cc : rightHandSide) {
+		// for (CAgent agent : cc.getAgents()) {
+		// int agentIdInCC = getAgentIdInCCBySideId(agent);
+		// CAgent agentFromInSolution = leftConnectedComponent
+		// .getAgentByIdFromSolution(agentIdInCC, injection);
+		//
+		// }
+		//
+		// }
 
 		for (Action action : actionList) {
 			if (action.getLeftCComponent() == null)
@@ -154,8 +163,7 @@ public class CRule {
 			for (CConnectedComponent ccL : leftHandSide)
 				for (CAgent lAgent : ccL.getAgents())
 					// for (CAgent agent : leftAgentList)
-					actionList.add(new Action(lAgent, ccL,
-							Action.ACTION_DEL));
+					actionList.add(new Action(lAgent, ccL, Action.ACTION_DEL));
 			return;
 		}
 
@@ -163,8 +171,7 @@ public class CRule {
 			for (CAgent rAgent : ccR.getAgents()) {
 				// for (CAgent rAgent : rightAgentList) {
 				if (rAgent.getIdInRuleSide() == CAgent.UNMARKED) {
-					actionList.add(new Action(rAgent, ccR, 
-							Action.ACTION_ADD));
+					actionList.add(new Action(rAgent, ccR, Action.ACTION_ADD));
 					rAgent.setIdInRuleSide(CAgent.ACTION_CREATE);
 				}
 			}
@@ -172,8 +179,7 @@ public class CRule {
 		for (CConnectedComponent ccL : leftHandSide)
 			for (CAgent lAgent : ccL.getAgents()) {
 				if (!isAgentFromLHSHasFoundInRHS(lAgent, ccL))
-					actionList.add(new Action(lAgent, ccL,
-							Action.ACTION_DEL));
+					actionList.add(new Action(lAgent, ccL, Action.ACTION_DEL));
 			}
 	}
 
@@ -261,8 +267,7 @@ public class CRule {
 	public final List<CInjection> getSomeInjectionList() {
 		List<CInjection> list = new ArrayList<CInjection>();
 		Random rand = new Random();
-		
-		
+
 		for (CConnectedComponent cc : this.leftHandSide) {
 			list.add(cc.getInjectionsList().get(
 					rand.nextInt(cc.getInjectionsList().size())));
@@ -340,15 +345,25 @@ public class CRule {
 							.getInternalState().getStateNameId()));
 					agent.addSite(siteAdd);
 				}
-//				if (rightConnectedComponent.getAgentFromSolutionForRHS() == null)
-					rightConnectedComponent.addAgentFromSolutionForRHS(agent);
+				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
+				// null)
+				rightConnectedComponent.addAgentFromSolutionForRHS(agent);
 				((CSolution) SimulationMain.getSimulationManager()
 						.getSimulationData().getSolution()).addAgent(agent);
 
 				agentAddList.put(toAgent, agent);
 				toAgent.setIdInRuleSide(maxAgentID++);
-//				if (rightConnectedComponent.getAgentFromSolutionForRHS() == null)
-					rightConnectedComponent.addAgentFromSolutionForRHS(agent);
+				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
+				// null)
+				// rightConnectedComponent.addAgentFromSolutionForRHS(agent);
+				break;
+			}
+			case ACTION_NON:{
+				int agentIdInCC = getAgentIdInCCBySideId(toAgent);
+				CAgent agentFromInSolution = leftConnectedComponent
+						.getAgentByIdFromSolution(agentIdInCC, injection);
+				rightConnectedComponent
+				.addAgentFromSolutionForRHS(agentFromInSolution);
 				break;
 			}
 			case ACTION_BND: {
@@ -388,35 +403,35 @@ public class CRule {
 				agentFromInSolution.getSite(siteFrom.getNameId())
 						.getLinkState().setSite(
 								agentToInSolution.getSite(siteTo.getNameId()));
-//				if (rightConnectedComponent.getAgentFromSolutionForRHS() == null)
-					rightConnectedComponent
-							.addAgentFromSolutionForRHS(agentFromInSolution);
+				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
+				// null)
+				rightConnectedComponent
+						.addAgentFromSolutionForRHS(agentFromInSolution);
 
 				break;
 			}
 			case ACTION_BRK: {
-				
+
 				CAgent agentFromInSolution;
 				int agentIdInCC = getAgentIdInCCBySideId(siteFrom
 						.getAgentLink());
 				agentFromInSolution = leftConnectedComponent
 						.getAgentByIdFromSolution(agentIdInCC, injection);
-				
-				
-				
-//				agentFromInSolution = leftConnectedComponent
-//						.getAgentByIdFromSolution(siteFrom.getAgentLink()
-//								.getIdInConnectedComponent(), injection);
+
+				// agentFromInSolution = leftConnectedComponent
+				// .getAgentByIdFromSolution(siteFrom.getAgentLink()
+				// .getIdInConnectedComponent(), injection);
 
 				agentFromInSolution.getSite(siteFrom.getNameId())
 						.getLinkState().setSite(null);
 				agentFromInSolution.getSite(siteFrom.getNameId())
 						.getLinkState().setStatusLink(
 								CLinkState.STATUS_LINK_FREE);
-				
-//				if (rightConnectedComponent.getAgentFromSolutionForRHS() == null)
-					rightConnectedComponent
-							.addAgentFromSolutionForRHS(agentFromInSolution);
+
+				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
+				// null)
+				rightConnectedComponent
+						.addAgentFromSolutionForRHS(agentFromInSolution);
 
 				break;
 			}
@@ -435,6 +450,13 @@ public class CRule {
 								CLinkState.STATUS_LINK_FREE);
 					}
 				}
+
+				for (CSite site : injection.getSiteList()) {
+					site.removeInjectionsFromCCToSite(injection);
+					site.getLift().clear();
+				}
+				injection.getConnectedComponent().getInjectionsList().remove(
+						injection);
 
 				((CSolution) SimulationMain.getSimulationManager()
 						.getSimulationData().getSolution()).removeAgent(agent);
@@ -461,9 +483,10 @@ public class CRule {
 
 				// agent.getSite(siteFrom.getNameId()).getInternalState()
 				// .setNameId(nameInternalStateId);
-//				if (rightConnectedComponent.getAgentFromSolutionForRHS() == null)
-					rightConnectedComponent
-							.addAgentFromSolutionForRHS(agentFromInSolution);
+				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
+				// null)
+				rightConnectedComponent
+						.addAgentFromSolutionForRHS(agentFromInSolution);
 				break;
 			}
 			}
@@ -492,7 +515,7 @@ public class CRule {
 			} else {
 				for (CConnectedComponent cc : leftHandSide)
 					for (CAgent agentL : cc.getAgents())
-						if (agentL.getIdInRuleSide() == agent.getIdInRuleSide()){
+						if (agentL.getIdInRuleSide() == agent.getIdInRuleSide()) {
 							leftConnectedComponent = cc;
 							return agentL.getIdInConnectedComponent();
 						}
@@ -575,6 +598,7 @@ public class CRule {
 			this.rightConnectedComponent = ccR;
 			this.leftConnectedComponent = ccL;
 			this.action = ACTION_NON;
+			actionList.add(this);
 		}
 
 		/**
@@ -599,14 +623,13 @@ public class CRule {
 		 * @param site
 		 * @param nameInternalState
 		 */
-		/*public Action(CSite site, CConnectedComponent ccR,
-				CConnectedComponent ccL, byte action) {
-			this.siteTo = site;
-			this.action = ACTION_MOD;
-			this.rightConnectedComponent = ccR;
-			this.leftConnectedComponent = ccL;
-			this.nameInternalStateId = site.getNameId();
-		}*/
+		/*
+		 * public Action(CSite site, CConnectedComponent ccR,
+		 * CConnectedComponent ccL, byte action) { this.siteTo = site;
+		 * this.action = ACTION_MOD; this.rightConnectedComponent = ccR;
+		 * this.leftConnectedComponent = ccL; this.nameInternalStateId =
+		 * site.getNameId(); }
+		 */
 
 		/**
 		 * Constructor "ACTION_BRK" and "ACTION_MOD".
@@ -627,7 +650,7 @@ public class CRule {
 			case ACTION_MOD: {
 				this.siteTo = site;
 				this.action = ACTION_MOD;
-				this.nameInternalStateId = site.getNameId();
+				this.nameInternalStateId = site.getInternalState().getNameId();
 				break;
 			}
 			}
