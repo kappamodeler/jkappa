@@ -137,4 +137,9 @@ public class CAgent implements IAgent {
 	public final int getNameId() {
 		return nameId;
 	}
+
+	public final String getName() {
+		return SimulationMain.getSimulationManager().getNameDictionary()
+				.getName(nameId);
+	}
 }

@@ -1,39 +1,40 @@
 package com.plectix.simulator.components;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.ILift.LiftElement;
 
 public class CInternalState extends CState {
 
-	private int nameId; 
-	
+	private int nameId;
+
 	public CInternalState(int id) {
 		this.nameId = id;
 	}
 
-	public boolean isRankRoot(){
-	    if (nameId == CSite.NO_INDEX)
-	    	return true;
+	public boolean isRankRoot() {
+		if (nameId == CSite.NO_INDEX)
+			return true;
 		return false;
 	}
-	
-//	@Override
-//	public final List<LiftElement> getLift() {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 
-	public final void setNameId(int id){
-		this.nameId=id;		
+	// @Override
+	// public final List<LiftElement> getLift() {
+	// // TODO Auto-generated method stub
+	// return null;
+	// }
+
+	public final void setNameId(int id) {
+		this.nameId = id;
 	}
-	
+
 	public int getNameId() {
 		return nameId;
 	}
 
 	@Override
 	public final String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return SimulationMain.getSimulationManager().getNameDictionary()
+				.getName(nameId);
 	}
 
 	@Override
@@ -45,24 +46,24 @@ public class CInternalState extends CState {
 	@Override
 	public final void removeLiftElement(LiftElement element) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-//	@Override
-//	public final void setLift(List<LiftElement> lift) {
-//		// TODO Auto-generated method stub
-//		
-//	}
+	// @Override
+	// public final void setLift(List<LiftElement> lift) {
+	// // TODO Auto-generated method stub
+	//		
+	// }
 
 	public final int getStateNameId() {
 		return nameId;
 	}
-	
+
 	@Override
 	public final boolean equals(Object obj) {
-		if(!(obj instanceof CInternalState))
+		if (!(obj instanceof CInternalState))
 			return false;
-		return ((CInternalState)obj).nameId == nameId;
+		return ((CInternalState) obj).nameId == nameId;
 	}
 
 }

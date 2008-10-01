@@ -42,6 +42,10 @@ public class CRule {
 
 	private List<CInjection> injList;
 
+	public List<Action> getActionList() {
+		return actionList;
+	}
+
 	public final int getAutomorphismNumber() {
 		return automorphismNumber;
 	}
@@ -392,13 +396,13 @@ public class CRule {
 		return rightHandSide;
 	}
 
-	private class Action {
-		private static final byte ACTION_BRK = 0;
-		private static final byte ACTION_DEL = 1;
-		private static final byte ACTION_ADD = 2;
-		private static final byte ACTION_BND = 3;
-		private static final byte ACTION_MOD = 4;
-		private static final byte ACTION_NON = -1;
+	public class Action {
+		public static final byte ACTION_BRK = 0;
+		public static final byte ACTION_DEL = 1;
+		public static final byte ACTION_ADD = 2;
+		public static final byte ACTION_BND = 3;
+		public static final byte ACTION_MOD = 4;
+		public static final byte ACTION_NON = -1;
 
 		private byte action = ACTION_NON;
 
@@ -415,6 +419,27 @@ public class CRule {
 		private CInjection injection;
 
 		private CSite siteFrom;
+
+		public CAgent getFromAgent() {
+			return fromAgent;
+		}
+
+		public CAgent getToAgent() {
+			return toAgent;
+		}
+
+		public CSite getSiteFrom() {
+			return siteFrom;
+		}
+
+		public CSite getSiteTo() {
+			return siteTo;
+		}
+
+		public Integer getNameInternalStateId() {
+			return nameInternalStateId;
+		}
+
 		private CSite siteTo;
 		private Integer nameInternalStateId;
 
@@ -445,12 +470,12 @@ public class CRule {
 				//rightConnectedComponent.addAgentFromSolutionForRHS(agent);
 				break;
 			}
-			case ACTION_NON:{
+			case ACTION_NON: {
 				int agentIdInCC = getAgentIdInCCBySideId(toAgent);
 				CAgent agentFromInSolution = leftConnectedComponent
 						.getAgentByIdFromSolution(agentIdInCC, injection);
 				rightConnectedComponent
-				.addAgentFromSolutionForRHS(agentFromInSolution);
+						.addAgentFromSolutionForRHS(agentFromInSolution);
 				break;
 			}
 			case ACTION_BND: {
@@ -634,7 +659,7 @@ public class CRule {
 				CSite toSite = toAgent.getSite(fromSite.getNameId());
 				if (fromSite.getInternalState().getStateNameId() != toSite
 						.getInternalState().getStateNameId()){
-					list.add(new Action(toSite, rightConnectedComponent,
+					list.add(new Action(fromSite,toSite, rightConnectedComponent,
 							leftConnectedComponent, ACTION_MOD));
 					if (!changedSites.contains(toSite))
 						changedSites.add(toSite);					
@@ -646,7 +671,7 @@ public class CRule {
 
 				if ((fromSite.getLinkState().getSite() != null)
 						&& (toSite.getLinkState().getSite() == null)) {
-					list.add(new Action(toSite, rightConnectedComponent,
+					list.add(new Action(fromSite,toSite, rightConnectedComponent,
 							leftConnectedComponent, ACTION_BRK));
 					if(!changedSites.contains(toSite))
 						changedSites.add(toSite);	
@@ -668,7 +693,7 @@ public class CRule {
 				if (lConnectSite.getAgentLink().getIdInRuleSide() == rConnectSite
 						.getAgentLink().getIdInRuleSide())
 					continue;
-				list.add(new Action(toSite, rightConnectedComponent,
+				list.add(new Action(fromSite,toSite, rightConnectedComponent,
 						leftConnectedComponent, ACTION_BRK));
 				list.add(new Action(toSite, (CSite) toSite.getLinkState()
 						.getSite(), rightConnectedComponent,
@@ -731,20 +756,21 @@ public class CRule {
 		 * @param site
 		 * @param action
 		 */
-		public Action(CSite site, CConnectedComponent ccR,
+		public Action(CSite siteFrom,CSite siteTo, CConnectedComponent ccR,
 				CConnectedComponent ccL, byte action) {
 			this.rightConnectedComponent = ccR;
 			this.leftConnectedComponent = ccL;
 			switch (action) {
 			case ACTION_BRK: {
-				this.siteFrom = site;
+				this.siteFrom = siteFrom;
 				this.action = ACTION_BRK;
 				break;
 			}
 			case ACTION_MOD: {
-				this.siteTo = site;
+				this.siteFrom=siteFrom;
+				this.siteTo = siteTo;
 				this.action = ACTION_MOD;
-				this.nameInternalStateId = site.getInternalState().getNameId();
+				this.nameInternalStateId = siteTo.getInternalState().getNameId();
 				break;
 			}
 			}

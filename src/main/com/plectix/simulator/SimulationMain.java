@@ -25,6 +25,8 @@ public class SimulationMain {
 
 	private final static String SHORT_SIMULATIONFILE_OPTION = "s";
 	private final static String LONG_SIMULATIONFILE_OPTION = "sim";
+	private final static String SHORT_COMPILE_OPTION = "c";
+	private final static String LONG_COMPILE_OPTION = "compile";
 
 	private static SimulationMain instance;
 	private static Options cmdLineOptions;
@@ -35,6 +37,8 @@ public class SimulationMain {
 		cmdLineOptions = new Options();
 		cmdLineOptions.addOption(SHORT_SIMULATIONFILE_OPTION,
 				LONG_SIMULATIONFILE_OPTION, true, "Location for input file");
+		cmdLineOptions.addOption(SHORT_COMPILE_OPTION, LONG_COMPILE_OPTION,
+				true, "Location for input file");
 	}
 
 	public static void main(String[] args) {
@@ -47,23 +51,50 @@ public class SimulationMain {
 
 	public void initialize() {
 		simulationManager.initialize();
+		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
+			simulationManager.outputData();
+			System.exit(1);
+		}
+
 	}
 
 	private final void runSimulator() {
-		
-		 Simulator simulator = new Simulator(new Model(instance.getSimulationManager().getSimulationData()));
-		 simulator.run();
-//		 simulator.outputData();
+
+		Simulator simulator = new Simulator(new Model(instance
+				.getSimulationManager().getSimulationData()));
+		simulator.run();
+		// simulator.outputData();
 	}
 
 	public final void readSimulatonFile() {
-		if (!cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION)) {
+		if ((!cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION))
+				&& (!cmdLineArgs.hasOption(SHORT_COMPILE_OPTION))) {
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("use --sim [file]", cmdLineOptions);
+			// formatter.printHelp("use --compile [file]", cmdLineOptions);
+			System.exit(1);
+		}
+
+		boolean option = false;
+		String fileName = null;
+		if (cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION)) {
+			option = true;
+			fileName = cmdLineArgs.getOptionValue(SHORT_SIMULATIONFILE_OPTION);
+		}
+		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
+			if (!option) {
+				option = true;
+				fileName = cmdLineArgs.getOptionValue(SHORT_COMPILE_OPTION);
+			} else
+				option = false;
+		}
+
+		if (!option) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("use --sim [file]", cmdLineOptions);
 			System.exit(1);
 		}
-		
-		String fileName = cmdLineArgs.getOptionValue(SHORT_SIMULATIONFILE_OPTION);
+
 		DataReading data = new DataReading(fileName);
 		try {
 			data.readData();

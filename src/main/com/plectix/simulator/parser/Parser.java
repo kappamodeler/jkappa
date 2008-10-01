@@ -93,20 +93,20 @@ public class Parser {
 
 	// TODO needs to throw our own exception of wrong strings to parse
 	public final void parse() throws ParseErrorException {
-//		System.out.println("Start parsing...");
-			 createSimData(data.getInits(), CREATE_INIT);
-			 List<CRule> rules = createRules(data.getRules());
-			 SimulationMain.getSimulationManager().setRules(rules);
-			createSimData(data.getObservables(), CREATE_OBS);
+		// System.out.println("Start parsing...");
+		createSimData(data.getInits(), CREATE_INIT);
+		List<CRule> rules = createRules(data.getRules());
+		SimulationMain.getSimulationManager().setRules(rules);
+		createSimData(data.getObservables(), CREATE_OBS);
 	}
 
 	public final List<CRule> createRules(List<String> list)
 			throws ParseErrorException {
 
 		List<CRule> rules = new ArrayList<CRule>();
-		Double activity = null;
-		Double activity2 = null;
 		for (String rulesStr : list) {
+			Double activity = 1.;
+			Double activity2 = 1.;
 			String input = rulesStr;
 			rulesStr = rulesStr.trim();
 			String name = null;
@@ -117,32 +117,34 @@ public class Parser {
 						rulesStr.length()).trim();
 			}
 			int index = rulesStr.lastIndexOf("@");
-			if (index == -1)
-				throw new ParseErrorException("Error in Rules: " + input);
+			if (index != -1) {
+				// throw new ParseErrorException("Error in Rules: " + input);
 
-			try {
-				String activStr = rulesStr.substring(index + 1).trim();
-				if (activStr.indexOf(",") != -1) {
-					activity = Double.valueOf(activStr.substring(0, activStr
-							.indexOf(",") - 1));
-					activity2 = Double.valueOf(activStr.substring(activStr
-							.indexOf(",") + 1));
-				} else
-					activity = Double.valueOf(activStr);
-			} catch (Exception e) {
-				throw new ParseErrorException("Error in Rules: " + input);
+				try {
+					String activStr = rulesStr.substring(index + 1).trim();
+					if (activStr.indexOf(",") != -1) {
+						activity = Double.valueOf(activStr.substring(0,
+								activStr.indexOf(",") - 1));
+						activity2 = Double.valueOf(activStr.substring(activStr
+								.indexOf(",") + 1));
+					} else
+						activity = Double.valueOf(activStr);
+				} catch (Exception e) {
+					throw new ParseErrorException("Error in Rules: " + input);
+				}
+				rulesStr = rulesStr.substring(0, index).trim();
 			}
-			rulesStr = rulesStr.substring(0, index).trim();
 
 			index = -1;
 			byte typeRule = 0;
 			if (rulesStr.indexOf("<->") != -1) {
 				typeRule = RULE_TWO_WAY;
 				rulesStr = rulesStr.replace("<", "");
-				if (activity2 == null)
-					throw new ParseErrorException("Error in Rules: " + input);
-			} else if (activity2 != null)
-				throw new ParseErrorException("Error in Rules: " + input);
+				// if (activity2 == null)
+				// throw new ParseErrorException("Error in Rules: " + input);
+			}
+			// else if (activity2 != null)
+			// throw new ParseErrorException("Error in Rules: " + input);
 
 			rulesStr = rulesStr.trim();
 			int y = rulesStr.indexOf("->");

@@ -3,7 +3,9 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.SimulatorManager;
 
 public class CSite implements ISite {
 	public static final int NO_INDEX = -1;
@@ -104,7 +106,7 @@ public class CSite implements ISite {
 	public final Integer getNameId() {
 		return nameId;
 	}
-	
+
 	public final void removeInjectionsFromCCToSite(CInjection inInjection) {
 
 		// for (CLiftElement liftElement : this.lift){
@@ -115,8 +117,8 @@ public class CSite implements ISite {
 			if (injection != inInjection) {
 				for (CSite site : injection.getSiteList()) {
 					// site.getLift().remove(injection);
-					if(this!=site)
-					site.removeInjectionFromLift(injection);
+					if (this != site)
+						site.removeInjectionFromLift(injection);
 				}
 				liftElement.getConnectedComponent().getInjectionsList().remove(
 						injection);
@@ -130,6 +132,11 @@ public class CSite implements ISite {
 				this.liftList.remove(liftElement);
 				return;
 			}
+	}
+
+	public final String getName() {
+		return SimulationMain.getSimulationManager().getNameDictionary()
+				.getName(nameId);
 	}
 
 }

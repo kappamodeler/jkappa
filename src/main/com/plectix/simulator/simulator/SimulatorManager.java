@@ -8,6 +8,7 @@ import java.util.List;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.CRule.Action;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.NameDictionary;
@@ -131,5 +132,105 @@ public class SimulatorManager {
 			}
 		}
 
+	}
+	
+	public final void outputData() {
+		//System.out.print("Current solution: ");
+		for (List<CAgent> agentList : getSimulationData().getSolution()
+				.getAgents().values()) {
+			// TODO output Solution
+		}
+		System.out.println();
+		for (CRule rule : getRules()) {
+			
+			for (Action action : rule.getActionList()) {
+				switch (action.getAction()) {
+				case Action.ACTION_BRK: {
+					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
+							.getSite());
+					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() < siteTo
+							.getAgentLink().getIdInRuleSide()) {
+						// BRK (#0,a) (#1,x)
+						System.out.print("BRK (#");
+						System.out.print(action.getSiteFrom().getAgentLink()
+								.getIdInRuleSide() - 1);
+						System.out.print(",");
+						System.out.print(action.getSiteFrom().getName());
+						System.out.print(") ");
+						System.out.print("(#");
+						System.out.print(siteTo.getAgentLink()
+								.getIdInRuleSide() - 1);
+						System.out.print(",");
+						System.out.print(siteTo.getName());
+						System.out.print(") ");
+						System.out.println();
+					}
+					break;
+				}
+				case Action.ACTION_DEL: {
+					// DEL #0
+					System.out.print("DEL #");
+					System.out.println(action.getFromAgent().getIdInRuleSide()-1);
+					break;
+				}
+				case Action.ACTION_ADD: {
+					// ADD a#0(x)
+					System.out.print("ADD "+action.getToAgent().getName()+"#");
+					System.out.print(action.getToAgent().getIdInRuleSide()-1);
+					System.out.print("(");
+					int i=1;
+					for(CSite site : action.getToAgent().getSites()){						
+						System.out.print(site.getName());
+						if(site.getInternalState()!=null)
+							System.out.print("~"+site.getInternalState().getName());
+						if(action.getToAgent().getSites().size()<i++)
+							System.out.print(",");
+					}
+					System.out.println(") ");
+						
+					break;
+				}
+				case Action.ACTION_BND: {
+					// BND (#1,x) (#0,a)
+					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
+							.getSite());
+					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() > siteTo
+							.getAgentLink().getIdInRuleSide()) {
+						System.out.print("BND (#");
+						System.out.print(action.getSiteFrom().getAgentLink()
+								.getIdInRuleSide() - 1);
+						System.out.print(",");
+						System.out.print(action.getSiteFrom().getName());
+						System.out.print(") ");
+						System.out.print("(#");
+						System.out.print(action.getSiteTo().getAgentLink()
+								.getIdInRuleSide() - 1);
+						System.out.print(",");
+						System.out.print(siteTo.getName());
+						System.out.print(") ");
+						System.out.println();
+					}
+					break;
+				}
+				case Action.ACTION_MOD: {
+					// MOD (#1,x) with p
+					System.out.print("MOD (#");
+					System.out.print(action.getSiteFrom().getAgentLink()
+							.getIdInRuleSide() - 1);
+					System.out.print(",");
+					System.out.print(action.getSiteFrom().getName());
+					System.out.print(") with ");
+					System.out.print(action.getSiteTo().getName());
+					System.out.println();
+					break;
+				}
+				}
+
+			}
+			System.out.println("--------------------------------");
+			System.out.println(rule.getName());
+			// TODO Output alphabetic rule.
+			System.out.println("--------------------------------");
+		}
 	}
 }
