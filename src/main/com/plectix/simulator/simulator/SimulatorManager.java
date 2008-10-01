@@ -228,9 +228,49 @@ public class SimulatorManager {
 
 			}
 			System.out.println("--------------------------------");
-			System.out.println(rule.getName());
+			System.out.print(rule.getName());
+			System.out.print(" ");
+			
+			printPartRule(rule.getLeftHandSide());
+			System.out.print(" -> ");
+			printPartRule(rule.getRightHandSide());
+			
+			System.out.println();
+			
+			
 			// TODO Output alphabetic rule.
 			System.out.println("--------------------------------");
+			System.out.println();
 		}
 	}
+	
+	private final void printPartRule(List<CConnectedComponent> ccList){
+		int indexLink=0;
+		int length = 0;
+		for(CConnectedComponent cc : ccList)
+			length = length + cc.getAgents().size();
+		int j=1;
+		for(CConnectedComponent cc : ccList){
+			for(CAgent agent : cc.getAgents()){
+				System.out.print(agent.getName());
+				System.out.print("(");
+				int i=1;
+				for(CSite site : agent.getSites()){						
+					System.out.print(site.getName());
+					if((site.getInternalState()!=null)&&(site.getInternalState().getNameId()>=0))
+						System.out.print("~"+site.getInternalState().getName());
+					
+					if(agent.getSites().size()>i++)
+						System.out.print(",");
+				}
+				if(length>j)
+					System.out.print("),");
+				else
+					System.out.print(")");
+				j++;
+			}
+			
+		}
+	}
+	
 }
