@@ -16,6 +16,15 @@ public class CRule {
 	private double ruleRate;
 	private int automorphismNumber = 1;
 	private boolean infinityRate = false;
+	private List<CRule> activatedRule;
+
+	public List<CRule> getActivatedRule() {
+		return activatedRule;
+	}
+
+	public void setActivatedRule(List<CRule> activatedRule) {
+		this.activatedRule = activatedRule;
+	}
 
 	public boolean isInfinityRate() {
 		return infinityRate;
@@ -132,7 +141,7 @@ public class CRule {
 		// TODO delete excess Actions, which repeat
 
 		sortActionList();
-
+		
 	}
 
 	private final void sortActionList() {
@@ -148,8 +157,78 @@ public class CRule {
 			}
 		}
 	}
+	
+	private List<CSite> changedSites;
+	
+	
+	public List<CSite> getChangedSites() {
+		return changedSites;
+	}
 
+	private final boolean isActivated(List<CAgent> agentsFromAnotherRules){
+		int intersectionCount = 0;//intersection of agents sites
+		for (CAgent agent : agentsFromAnotherRules){
+			for(CSite site : agent.getSites())
+				for (CSite changedSite : changedSites){
+					intersectionCount++;
+					if (changedSite.equals(site)){
+						CInternalState currentInternalState = changedSite.getInternalState(); 
+						CInternalState internalState = site.getInternalState(); 
+						if (!(currentInternalState.isRankRoot())&&
+								!(internalState.isRankRoot())){
+							if (internalState.getNameId()!=currentInternalState.getNameId())
+								//return false;
+								continue;
+						}
+						
+						
+						CLinkState currentLinkState = changedSite.getLinkState(); 
+						CLinkState linkState = site.getLinkState(); 
+						
+						if (currentLinkState.isLeftBranchStatus() && linkState.isLeftBranchStatus())
+							return true;
+						
+						if (currentLinkState.isLeftBranchStatus() && (!(linkState.isLeftBranchStatus())))
+							continue;
+						
+						if ((!(currentLinkState.isLeftBranchStatus())) && linkState.isLeftBranchStatus())
+							continue;
+						
+						if (currentLinkState.getStatusLinkRank() == linkState.getStatusLinkRank() && 
+								currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
+							if(!(currentLinkState.getSite().equals(linkState.getSite())))
+								continue;
+						
+						if (currentLinkState.getStatusLinkRank() <= linkState.getStatusLinkRank())
+							return true;
+						
+						return true;	
+					}
+				}
+				
+				/*if (changedSites.contains(site))
+					return true;*/
+		}
+		if (intersectionCount==0)
+			return true;
+		return false;
+	}
+	
+	public final void createActivatedRulesList(List<CRule> rules){
+		activatedRule = new ArrayList<CRule>();
+		for (CRule rule : rules){
+			if(this!=rule)
+			for (CConnectedComponent cc : rule.getLeftHandSide()){
+				if(isActivated(cc.getAgents())){
+					activatedRule.add(rule);
+					break;
+				}
+			}
+		}
+	}
+	
 	private final void createActionList() {
+		changedSites = new ArrayList<CSite>();
 		actionList = new ArrayList<Action>();
 
 		// if (leftHandSide == null) {
@@ -173,6 +252,7 @@ public class CRule {
 				if (rAgent.getIdInRuleSide() == CAgent.UNMARKED) {
 					actionList.add(new Action(rAgent, ccR, Action.ACTION_ADD));
 					rAgent.setIdInRuleSide(CAgent.ACTION_CREATE);
+					fillChangedSites(null,rAgent);// for activation map creation
 				}
 			}
 
@@ -180,6 +260,13 @@ public class CRule {
 			for (CAgent lAgent : ccL.getAgents()) {
 				if (!isAgentFromLHSHasFoundInRHS(lAgent, ccL))
 					actionList.add(new Action(lAgent, ccL, Action.ACTION_DEL));
+			}
+	}
+	
+	private final void fillChangedSites(CAgent agentLeft, CAgent agentRight){
+		if(agentLeft ==null)
+			for (CSite site : agentRight.getSites()){
+				changedSites.add(site);
 			}
 	}
 
@@ -355,7 +442,7 @@ public class CRule {
 				toAgent.setIdInRuleSide(maxAgentID++);
 				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
 				// null)
-				// rightConnectedComponent.addAgentFromSolutionForRHS(agent);
+				//rightConnectedComponent.addAgentFromSolutionForRHS(agent);
 				break;
 			}
 			case ACTION_NON:{
@@ -405,8 +492,8 @@ public class CRule {
 								agentToInSolution.getSite(siteTo.getNameId()));
 				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
 				// null)
-				rightConnectedComponent
-						.addAgentFromSolutionForRHS(agentFromInSolution);
+				//rightConnectedComponent
+					//	.addAgentFromSolutionForRHS(agentFromInSolution);
 
 				break;
 			}
@@ -430,8 +517,8 @@ public class CRule {
 
 				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
 				// null)
-				rightConnectedComponent
-						.addAgentFromSolutionForRHS(agentFromInSolution);
+				//rightConnectedComponent
+				//		.addAgentFromSolutionForRHS(agentFromInSolution);
 
 				break;
 			}
@@ -485,8 +572,8 @@ public class CRule {
 				// .setNameId(nameInternalStateId);
 				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
 				// null)
-				rightConnectedComponent
-						.addAgentFromSolutionForRHS(agentFromInSolution);
+			//	rightConnectedComponent
+			//			.addAgentFromSolutionForRHS(agentFromInSolution);
 				break;
 			}
 			}
@@ -546,9 +633,12 @@ public class CRule {
 			for (CSite fromSite : fromAgent.getSites()) {
 				CSite toSite = toAgent.getSite(fromSite.getNameId());
 				if (fromSite.getInternalState().getStateNameId() != toSite
-						.getInternalState().getStateNameId())
+						.getInternalState().getStateNameId()){
 					list.add(new Action(toSite, rightConnectedComponent,
 							leftConnectedComponent, ACTION_MOD));
+					if (!changedSites.contains(toSite))
+						changedSites.add(toSite);					
+				}
 
 				if ((fromSite.getLinkState().getSite() == null)
 						&& (toSite.getLinkState().getSite() == null))
@@ -558,6 +648,8 @@ public class CRule {
 						&& (toSite.getLinkState().getSite() == null)) {
 					list.add(new Action(toSite, rightConnectedComponent,
 							leftConnectedComponent, ACTION_BRK));
+					if(!changedSites.contains(toSite))
+						changedSites.add(toSite);	
 					continue;
 				}
 
@@ -566,6 +658,8 @@ public class CRule {
 					list.add(new Action(toSite, (CSite) toSite.getLinkState()
 							.getSite(), rightConnectedComponent,
 							leftConnectedComponent));
+					if(!changedSites.contains(toSite))
+						changedSites.add(toSite);	
 					continue;
 				}
 
@@ -579,10 +673,10 @@ public class CRule {
 				list.add(new Action(toSite, (CSite) toSite.getLinkState()
 						.getSite(), rightConnectedComponent,
 						leftConnectedComponent));
+				if(!changedSites.contains(toSite))
+					changedSites.add(toSite);
 			}
-
 			return list;
-
 		}
 
 		/**

@@ -97,11 +97,17 @@ public class SimulatorManager {
 		return nameDictionary;
 	}
 
+	
+	
 	public void initialize() {
 		CSolution solution = (CSolution) simulationData.getSolution();
 		List<CRule> rules = simulationData.getRules();
 		Iterator<List<CAgent>> iterator = solution.getAgentMap().values()
 				.iterator();
+		for (CRule rule : rules) {
+			rule.createActivatedRulesList(rules);
+		}
+			
 
 		while (iterator.hasNext()) {
 			for (CAgent agent : iterator.next()) {

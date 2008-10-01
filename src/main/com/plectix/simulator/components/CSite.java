@@ -85,6 +85,8 @@ public class CSite implements ISite {
 		CSite site = (CSite) obj;
 		if (!(nameId == site.nameId))
 			return false;
+		if (!(this.linkAgent.equals(site.getAgentLink())))
+			return false;
 		//if (internalState == null)
 		//	return true;
 		// return internalState.equals(site.internalState);
