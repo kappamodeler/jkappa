@@ -18,6 +18,31 @@ public class CRule {
 	private boolean infinityRate = false;
 	private List<CRule> activatedRule;
 
+	private int maxAgentID = 0;
+
+	private List<Action> actionList;
+
+	private HashMap<CAgent, CAgent> agentAddList;
+
+	private List<CInjection> injList;
+
+	private List<CSite> changedSites;
+
+	public CRule(List<CConnectedComponent> left,
+			List<CConnectedComponent> right, String name, double ruleRate) {
+		this.leftHandSide = left;
+		this.rightHandSide = right;
+		setConnectedComponentLinkRule(left);
+		setConnectedComponentLinkRule(right);
+		for (CConnectedComponent cc : this.leftHandSide) {
+			cc.initSpanningTreeMap();
+		}
+		this.ruleRate = ruleRate;
+		this.name = name;
+		calculateAutomorphismsNumber();
+		indexingRHSAgents();
+	}
+	
 	public List<CRule> getActivatedRule() {
 		return activatedRule;
 	}
@@ -34,13 +59,6 @@ public class CRule {
 		this.infinityRate = infinityRate;
 	}
 
-	private int maxAgentID = 0;
-
-	private List<Action> actionList;
-
-	private HashMap<CAgent, CAgent> agentAddList;
-
-	private List<CInjection> injList;
 
 	public List<Action> getActionList() {
 		return actionList;
@@ -162,7 +180,6 @@ public class CRule {
 		}
 	}
 	
-	private List<CSite> changedSites;
 	
 	
 	public List<CSite> getChangedSites() {
@@ -321,20 +338,6 @@ public class CRule {
 		this.automorphismNumber = automorphismNumber;
 	}
 
-	public CRule(List<CConnectedComponent> left,
-			List<CConnectedComponent> right, String name, double ruleRate) {
-		this.leftHandSide = left;
-		this.rightHandSide = right;
-		setConnectedComponentLinkRule(left);
-		setConnectedComponentLinkRule(right);
-		for (CConnectedComponent cc : this.leftHandSide) {
-			cc.initSpanningTreeMap();
-		}
-		this.ruleRate = ruleRate;
-		this.name = name;
-		calculateAutomorphismsNumber();
-		indexingRHSAgents();
-	}
 
 	private final void calculateAutomorphismsNumber() {
 		if (leftHandSide != null)

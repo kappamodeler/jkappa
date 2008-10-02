@@ -20,7 +20,9 @@ public class CAgent implements IAgent {
 	private int idInRuleSide = UNMARKED;
 
 	private long id;
-	public final CSite EMTY_SITE = new CSite(CSite.NO_INDEX, this);
+	
+	// TODO: is this field static or not???
+	public final CSite EMPTY_SITE = new CSite(CSite.NO_INDEX, this);
 
 	private HashMap<Integer, CSite> siteMap = new HashMap<Integer, CSite>();
 	private int nameId;

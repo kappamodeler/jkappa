@@ -149,7 +149,7 @@ public class CConnectedComponent implements IConnectedComponent {
 			if (tree != null) {
 				tree.resetNewVertex();
 				if (agentList.get(tree.getRootIndex()).getSites().isEmpty()) {
-					injectedSites.add(agent.EMTY_SITE);
+					injectedSites.add(agent.EMPTY_SITE);
 					agentLinkList.add(new CAgentLink(0, agent));
 					return true;
 				} else {
