@@ -25,6 +25,11 @@ public class CAgent implements IAgent {
 	public final CSite EMPTY_SITE = new CSite(CSite.NO_INDEX, this);
 
 	private HashMap<Integer, CSite> siteMap = new HashMap<Integer, CSite>();
+	
+	public HashMap<Integer, CSite> getSiteMap() {
+		return siteMap;
+	}
+
 	private int nameId;
 
 	public int getIdInRuleSide() {

@@ -73,12 +73,18 @@ public class Simulator {
 				// positive update
 				if (LOGGER.isDebugEnabled()) LOGGER.debug("positive update");
 
-				for (CRule rules : model.getSimulationData().getRules()) {
+		/*		for (CRule rules : model.getSimulationData().getRules()) {
 					for (CConnectedComponent cc : rules.getLeftHandSide()) {
 						cc.doPositiveUpdate(rule.getRightHandSide());
 					}
 				}
-
+*/
+				for (CRule rules : rule.getActivatedRule()) {
+					for (CConnectedComponent cc : rules.getLeftHandSide()) {
+						cc.doPositiveUpdate(rule.getRightHandSide());
+					}
+				}
+				
 				for (ObservablesConnectedComponent oCC : model
 						.getSimulationData().getObservables()
 						.getConnectedComponentList()) {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.interfaces.IConstraint;
 
 public class CRule {
 
@@ -28,6 +29,8 @@ public class CRule {
 
 	private List<CSite> changedSites;
 
+	private IConstraint constraints;
+
 	public CRule(List<CConnectedComponent> left,
 			List<CConnectedComponent> right, String name, double ruleRate) {
 		this.leftHandSide = left;
@@ -42,7 +45,7 @@ public class CRule {
 		calculateAutomorphismsNumber();
 		indexingRHSAgents();
 	}
-	
+
 	public List<CRule> getActivatedRule() {
 		return activatedRule;
 	}
@@ -58,7 +61,6 @@ public class CRule {
 	public void setInfinityRate(boolean infinityRate) {
 		this.infinityRate = infinityRate;
 	}
-
 
 	public List<Action> getActionList() {
 		return actionList;
@@ -129,41 +131,40 @@ public class CRule {
 		}
 	}
 
-	private final void markedRHS(List<List<Score>> scoresMatrix) {
+	private final void markRHSAgents() {
+		List<CAgent> rhsAgents = new ArrayList<CAgent>();
 
-		for (List<Score> scoreList : scoresMatrix) {
-			for (Score score : scoreList) {
-				if (score.getValue() == 1
-						&& score.getRhsAgent().getIdInRuleSide() == CAgent.UNMARKED) {
-					score.getRhsAgent().setIdInRuleSide(
-							score.getLhsAgent().getIdInRuleSide());
-					break;
+		for (CConnectedComponent cc : rightHandSide) {
+			rhsAgents.addAll(cc.getAgents());
+		}
+		int index = 0;
+		for (CConnectedComponent cc : leftHandSide) {
+			for (CAgent lhsAgent : cc.getAgents()) {
+				if (rhsAgents.get(index).equals(lhsAgent)
+						&& rhsAgents.get(index).getSiteMap().equals(
+								lhsAgent.getSiteMap())) {
+					rhsAgents.get(index).setIdInRuleSide(
+							lhsAgent.getIdInRuleSide());
+				} else {
+					return;
 				}
+				index++;
 			}
 		}
+
 	}
 
 	private final void indexingRHSAgents() {
 		markedLHS();
 		HashMap<Integer, List<CAgent>> lhsAgentMap = createAgentMap(leftHandSide);
 		HashMap<Integer, List<CAgent>> rhsAgentMap = createAgentMap(rightHandSide);
-		List<List<Score>> scoresMatrix = new ArrayList<List<Score>>();
-
-		for (List<CAgent> agentList : lhsAgentMap.values()) {
-			for (CAgent agent : agentList) {
-				scoresMatrix.add(calculateScoreList(rhsAgentMap, agent));
-
-			}
-		}
-		// make list of indexes
-		markedRHS(scoresMatrix);
-		scoresMatrix.clear();
+		markRHSAgents();
 
 		createActionList();
 		// TODO delete excess Actions, which repeat
 
 		sortActionList();
-		
+
 	}
 
 	private final void sortActionList() {
@@ -179,75 +180,82 @@ public class CRule {
 			}
 		}
 	}
-	
-	
-	
+
 	public List<CSite> getChangedSites() {
 		return changedSites;
 	}
 
-	private final boolean isActivated(List<CAgent> agentsFromAnotherRules){
-		int intersectionCount = 0;//intersection of agents sites
-		for (CAgent agent : agentsFromAnotherRules){
-			for(CSite site : agent.getSites())
-				for (CSite changedSite : changedSites){
+	private final boolean isActivated(List<CAgent> agentsFromAnotherRules) {
+		int intersectionCount = 0;// intersection of agents sites
+		for (CAgent agent : agentsFromAnotherRules) {
+			for (CSite site : agent.getSites())
+				for (CSite changedSite : changedSites) {
 					intersectionCount++;
-					if (changedSite.equals(site)){
-						CInternalState currentInternalState = changedSite.getInternalState(); 
-						CInternalState internalState = site.getInternalState(); 
-						if (!(currentInternalState.isRankRoot())&&
-								!(internalState.isRankRoot())){
-							if (internalState.getNameId()!=currentInternalState.getNameId())
-								//return false;
+					if (changedSite.equals(site)) {
+						CInternalState currentInternalState = changedSite
+								.getInternalState();
+						CInternalState internalState = site.getInternalState();
+						if (!(currentInternalState.isRankRoot())
+								&& !(internalState.isRankRoot())) {
+							if (internalState.getNameId() != currentInternalState
+									.getNameId())
+								// return false;
 								continue;
 						}
-						
-						
-						CLinkState currentLinkState = changedSite.getLinkState(); 
-						CLinkState linkState = site.getLinkState(); 
-						
-						if (currentLinkState.isLeftBranchStatus() && linkState.isLeftBranchStatus())
+
+						CLinkState currentLinkState = changedSite
+								.getLinkState();
+						CLinkState linkState = site.getLinkState();
+
+						if (currentLinkState.isLeftBranchStatus()
+								&& linkState.isLeftBranchStatus())
 							return true;
-						
-						if (currentLinkState.isLeftBranchStatus() && (!(linkState.isLeftBranchStatus())))
+
+						if (currentLinkState.isLeftBranchStatus()
+								&& (!(linkState.isLeftBranchStatus())))
 							continue;
-						
-						if ((!(currentLinkState.isLeftBranchStatus())) && linkState.isLeftBranchStatus())
+
+						if ((!(currentLinkState.isLeftBranchStatus()))
+								&& linkState.isLeftBranchStatus())
 							continue;
-						
-						if (currentLinkState.getStatusLinkRank() == linkState.getStatusLinkRank() && 
-								currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
-							if(!(currentLinkState.getSite().equals(linkState.getSite())))
+
+						if (currentLinkState.getStatusLinkRank() == linkState
+								.getStatusLinkRank()
+								&& currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
+							if (!(currentLinkState.getSite().equals(linkState
+									.getSite())))
 								continue;
-						
-						if (currentLinkState.getStatusLinkRank() <= linkState.getStatusLinkRank())
+
+						if (currentLinkState.getStatusLinkRank() <= linkState
+								.getStatusLinkRank())
 							return true;
-						
-						return true;	
+
+						return true;
 					}
 				}
-				
-				/*if (changedSites.contains(site))
-					return true;*/
+
+			/*
+			 * if (changedSites.contains(site)) return true;
+			 */
 		}
-		if (intersectionCount==0)
+		if (intersectionCount == 0)
 			return true;
 		return false;
 	}
-	
-	public final void createActivatedRulesList(List<CRule> rules){
+
+	public final void createActivatedRulesList(List<CRule> rules) {
 		activatedRule = new ArrayList<CRule>();
-		for (CRule rule : rules){
-			if(this!=rule)
-			for (CConnectedComponent cc : rule.getLeftHandSide()){
-				if(isActivated(cc.getAgents())){
-					activatedRule.add(rule);
-					break;
+		for (CRule rule : rules) {
+			if (this != rule)
+				for (CConnectedComponent cc : rule.getLeftHandSide()) {
+					if (isActivated(cc.getAgents())) {
+						activatedRule.add(rule);
+						break;
+					}
 				}
-			}
 		}
 	}
-	
+
 	private final void createActionList() {
 		changedSites = new ArrayList<CSite>();
 		actionList = new ArrayList<Action>();
@@ -273,7 +281,8 @@ public class CRule {
 				if (rAgent.getIdInRuleSide() == CAgent.UNMARKED) {
 					actionList.add(new Action(rAgent, ccR, Action.ACTION_ADD));
 					rAgent.setIdInRuleSide(CAgent.ACTION_CREATE);
-					fillChangedSites(null,rAgent);// for activation map creation
+					fillChangedSites(null, rAgent);// for activation map
+					// creation
 				}
 			}
 
@@ -283,10 +292,10 @@ public class CRule {
 					actionList.add(new Action(lAgent, ccL, Action.ACTION_DEL));
 			}
 	}
-	
-	private final void fillChangedSites(CAgent agentLeft, CAgent agentRight){
-		if(agentLeft ==null)
-			for (CSite site : agentRight.getSites()){
+
+	private final void fillChangedSites(CAgent agentLeft, CAgent agentRight) {
+		if (agentLeft == null)
+			for (CSite site : agentRight.getSites()) {
 				changedSites.add(site);
 			}
 	}
@@ -323,21 +332,9 @@ public class CRule {
 		return null;
 	}
 
-	private final List<Score> calculateScoreList(
-			HashMap<Integer, List<CAgent>> rhsAgentMap, CAgent lhsAgent) {
-		List<Score> listScore = new ArrayList<Score>();
-		if (rhsAgentMap.get(lhsAgent.getNameId()) == null)
-			return listScore;
-		for (CAgent rhsAgent : rhsAgentMap.get(lhsAgent.getNameId())) {
-			listScore.add(new Score(lhsAgent, rhsAgent));
-		}
-		return listScore;
-	}
-
 	public void setAutomorphismNumber(int automorphismNumber) {
 		this.automorphismNumber = automorphismNumber;
 	}
-
 
 	private final void calculateAutomorphismsNumber() {
 		if (leftHandSide != null)
@@ -405,9 +402,9 @@ public class CRule {
 		public static final byte ACTION_ADD = 2;
 		public static final byte ACTION_BND = 3;
 		public static final byte ACTION_MOD = 4;
-		public static final byte ACTION_NON = -1;
+		public static final byte ACTION_NONE = -1;
 
-		private byte action = ACTION_NON;
+		private byte action = ACTION_NONE;
 
 		private CAgent fromAgent;
 		private CAgent toAgent;
@@ -470,10 +467,10 @@ public class CRule {
 				toAgent.setIdInRuleSide(maxAgentID++);
 				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
 				// null)
-				//rightConnectedComponent.addAgentFromSolutionForRHS(agent);
+				// rightConnectedComponent.addAgentFromSolutionForRHS(agent);
 				break;
 			}
-			case ACTION_NON: {
+			case ACTION_NONE: {
 				int agentIdInCC = getAgentIdInCCBySideId(toAgent);
 				CAgent agentFromInSolution = leftConnectedComponent
 						.getAgentByIdFromSolution(agentIdInCC, injection);
@@ -520,8 +517,8 @@ public class CRule {
 								agentToInSolution.getSite(siteTo.getNameId()));
 				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
 				// null)
-				//rightConnectedComponent
-					//	.addAgentFromSolutionForRHS(agentFromInSolution);
+				// rightConnectedComponent
+				// .addAgentFromSolutionForRHS(agentFromInSolution);
 
 				break;
 			}
@@ -545,8 +542,8 @@ public class CRule {
 
 				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
 				// null)
-				//rightConnectedComponent
-				//		.addAgentFromSolutionForRHS(agentFromInSolution);
+				// rightConnectedComponent
+				// .addAgentFromSolutionForRHS(agentFromInSolution);
 
 				break;
 			}
@@ -600,8 +597,8 @@ public class CRule {
 				// .setNameId(nameInternalStateId);
 				// if (rightConnectedComponent.getAgentFromSolutionForRHS() ==
 				// null)
-			//	rightConnectedComponent
-			//			.addAgentFromSolutionForRHS(agentFromInSolution);
+				// rightConnectedComponent
+				// .addAgentFromSolutionForRHS(agentFromInSolution);
 				break;
 			}
 			}
@@ -653,7 +650,7 @@ public class CRule {
 
 		public final List<Action> createAtomicAction() {
 			if (fromAgent.getSites() == null) {
-				this.action = ACTION_NON;
+				this.action = ACTION_NONE;
 				return null;
 			}
 			List<Action> list = new ArrayList<Action>();
@@ -661,11 +658,12 @@ public class CRule {
 			for (CSite fromSite : fromAgent.getSites()) {
 				CSite toSite = toAgent.getSite(fromSite.getNameId());
 				if (fromSite.getInternalState().getStateNameId() != toSite
-						.getInternalState().getStateNameId()){
-					list.add(new Action(fromSite,toSite, rightConnectedComponent,
-							leftConnectedComponent, ACTION_MOD));
+						.getInternalState().getStateNameId()) {
+					list.add(new Action(fromSite, toSite,
+							rightConnectedComponent, leftConnectedComponent,
+							ACTION_MOD));
 					if (!changedSites.contains(toSite))
-						changedSites.add(toSite);					
+						changedSites.add(toSite);
 				}
 
 				if ((fromSite.getLinkState().getSite() == null)
@@ -674,10 +672,11 @@ public class CRule {
 
 				if ((fromSite.getLinkState().getSite() != null)
 						&& (toSite.getLinkState().getSite() == null)) {
-					list.add(new Action(fromSite,toSite, rightConnectedComponent,
-							leftConnectedComponent, ACTION_BRK));
-					if(!changedSites.contains(toSite))
-						changedSites.add(toSite);	
+					list.add(new Action(fromSite, toSite,
+							rightConnectedComponent, leftConnectedComponent,
+							ACTION_BRK));
+					if (!changedSites.contains(toSite))
+						changedSites.add(toSite);
 					continue;
 				}
 
@@ -686,8 +685,8 @@ public class CRule {
 					list.add(new Action(toSite, (CSite) toSite.getLinkState()
 							.getSite(), rightConnectedComponent,
 							leftConnectedComponent));
-					if(!changedSites.contains(toSite))
-						changedSites.add(toSite);	
+					if (!changedSites.contains(toSite))
+						changedSites.add(toSite);
 					continue;
 				}
 
@@ -696,12 +695,12 @@ public class CRule {
 				if (lConnectSite.getAgentLink().getIdInRuleSide() == rConnectSite
 						.getAgentLink().getIdInRuleSide())
 					continue;
-				list.add(new Action(fromSite,toSite, rightConnectedComponent,
+				list.add(new Action(fromSite, toSite, rightConnectedComponent,
 						leftConnectedComponent, ACTION_BRK));
 				list.add(new Action(toSite, (CSite) toSite.getLinkState()
 						.getSite(), rightConnectedComponent,
 						leftConnectedComponent));
-				if(!changedSites.contains(toSite))
+				if (!changedSites.contains(toSite))
 					changedSites.add(toSite);
 			}
 			return list;
@@ -719,7 +718,7 @@ public class CRule {
 			this.toAgent = toAgent;
 			this.rightConnectedComponent = ccR;
 			this.leftConnectedComponent = ccL;
-			this.action = ACTION_NON;
+			this.action = ACTION_NONE;
 			actionList.add(this);
 		}
 
@@ -759,7 +758,7 @@ public class CRule {
 		 * @param site
 		 * @param action
 		 */
-		public Action(CSite siteFrom,CSite siteTo, CConnectedComponent ccR,
+		public Action(CSite siteFrom, CSite siteTo, CConnectedComponent ccR,
 				CConnectedComponent ccL, byte action) {
 			this.rightConnectedComponent = ccR;
 			this.leftConnectedComponent = ccL;
@@ -770,10 +769,11 @@ public class CRule {
 				break;
 			}
 			case ACTION_MOD: {
-				this.siteFrom=siteFrom;
+				this.siteFrom = siteFrom;
 				this.siteTo = siteTo;
 				this.action = ACTION_MOD;
-				this.nameInternalStateId = siteTo.getInternalState().getNameId();
+				this.nameInternalStateId = siteTo.getInternalState()
+						.getNameId();
 				break;
 			}
 			}
@@ -815,82 +815,5 @@ public class CRule {
 
 		}
 
-	}
-
-	private class Score {
-		private CAgent lhsAgent;
-		private CAgent rhsAgent;
-		private int value = -1;
-
-		public CAgent getLhsAgent() {
-			return lhsAgent;
-		}
-
-		public CAgent getRhsAgent() {
-			return rhsAgent;
-		}
-
-		public int getValue() {
-			return value;
-		}
-
-		public Score(CAgent lhs, CAgent rhs) {
-			this.lhsAgent = lhs;
-			this.rhsAgent = rhs;
-			initScoreValue();
-		}
-
-		public void initScoreValue() {
-			/**
-			 * Field value maybe not only 0 or 1, because we can compare link
-			 * states with bound or free status. But we are not sure if we need
-			 * such check.
-			 */
-
-			if (lhsAgent.getSites().size() != rhsAgent.getSites().size()) {
-				value = 0;
-				return;
-			}
-
-			for (CSite lhsSite : lhsAgent.getSites()) {
-				CSite rhsSite = rhsAgent.getSite(lhsSite.getNameId());
-				if ((rhsSite == null)
-						|| (!(checkInternalState(lhsSite, rhsSite)))
-				// || (!(checkLinkState(lhsSite, rhsSite)))
-				) {
-					value = 0;
-					return;
-				}
-			}
-			value = 1;
-		}
-
-		private final boolean checkInternalState(CSite lhsSite, CSite rhsSite) {
-			if ((lhsSite.getInternalState() == null)
-					&& (rhsSite.getInternalState() == null))
-				return true;
-
-			if ((lhsSite.getInternalState() != null)
-					&& (rhsSite.getInternalState() != null))
-				return true;
-			return false;
-		}
-
-		private final boolean checkLinkState(CSite lhsSite, CSite rhsSite) {
-			CLinkState lhsLinkState = lhsSite.getLinkState();
-			CLinkState rhsLinkState = rhsSite.getLinkState();
-
-			if ((lhsLinkState.getStatusLink() == CLinkState.STATUS_LINK_WILDCARD)
-					&& (rhsLinkState.getStatusLink() == CLinkState.STATUS_LINK_WILDCARD))
-				return true;
-
-			if (((lhsLinkState.getStatusLink() == CLinkState.STATUS_LINK_BOUND) && (lhsLinkState
-					.getSite() == null))
-					&& ((rhsLinkState.getStatusLink() == CLinkState.STATUS_LINK_WILDCARD) && (rhsLinkState
-							.getSite() == null)))
-				return true;
-
-			return false;
-		}
 	}
 }
