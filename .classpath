@@ -10,9 +10,9 @@
 	<classpathentry kind="lib" path="lib/xstream/xpp3_min-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="lib/mailapi.jar"/>
 	<classpathentry kind="lib" path="lib/smtp.jar"/>
-	<classpathentry kind="lib" path="lib/commons-logging-1.1.1/commons-logging-1.1.1.jar" sourcepath="lib/commons-logging-1.1.1/commons-logging-1.1.1-src.jar">
+	<classpathentry kind="lib" path="lib/commons-logging/commons-logging-1.1.1.jar" sourcepath="lib/commons-logging/commons-logging-1.1.1-src.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/simulator/lib/commons-logging-1.1.1/commons-logging-1.1.1-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/simulator/lib/commons-logging/commons-logging-1.1.1-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/log4j/log4j-1.2.15.jar" sourcepath="lib/log4j/log4j-1.2.15-src.jar"/>
