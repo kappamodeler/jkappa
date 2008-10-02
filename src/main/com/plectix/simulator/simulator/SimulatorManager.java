@@ -34,59 +34,53 @@ public class SimulatorManager {
 		List<CConnectedComponent> result = new ArrayList<CConnectedComponent>();
 
 		while (!agents.isEmpty()) {
-		//	int index = 0;
+			// int index = 0;
 
 			List<CAgent> connectedAgents = new ArrayList<CAgent>();
-			
+
 			findConnectedComponent(agents.get(0), agents, connectedAgents);
-			/*CAgent agent = agents.remove(0);
-			connectedAgents.add(agent);
-
-			agent.setIdInConnectedComponent(index);
-
-			Collection<CSite> sites = agent.getSites();
-
-			for (CSite site : sites) {
-				if (site.getLinkIndex() != CSite.NO_INDEX) {
-					CAgent linkedAgent = findLink(agents, site.getLinkIndex());
-					if (linkedAgent != null) {
-						//if (!(connectedAgents.contains(linkedAgent))) {
-							connectedAgents.add(linkedAgent);
-						//}
-						 agents.remove(linkedAgent);
-						linkedAgent.setIdInConnectedComponent(++index);
-					}
-				}
-			}*/
-			//It needs recursive tree search of connected component
-			
+			/*
+			 * CAgent agent = agents.remove(0); connectedAgents.add(agent);
+			 * 
+			 * agent.setIdInConnectedComponent(index);
+			 * 
+			 * Collection<CSite> sites = agent.getSites();
+			 * 
+			 * for (CSite site : sites) { if (site.getLinkIndex() !=
+			 * CSite.NO_INDEX) { CAgent linkedAgent = findLink(agents,
+			 * site.getLinkIndex()); if (linkedAgent != null) { //if
+			 * (!(connectedAgents.contains(linkedAgent))) {
+			 * connectedAgents.add(linkedAgent); //} agents.remove(linkedAgent);
+			 * linkedAgent.setIdInConnectedComponent(++index); } } }
+			 */
+			// It needs recursive tree search of connected component
 
 			result.add(new CConnectedComponent(connectedAgents));
 		}
 
 		return result;
 	}
-	
-	private final void findConnectedComponent(CAgent rootAgent, List<CAgent> hsRulesList,
-			List<CAgent> agentsList) {
-		//newVertex[rootAgent.getIdInConnectedComponent()] = false;
+
+	private final void findConnectedComponent(CAgent rootAgent,
+			List<CAgent> hsRulesList, List<CAgent> agentsList) {
+		// newVertex[rootAgent.getIdInConnectedComponent()] = false;
 		agentsList.add(rootAgent);
-		rootAgent.setIdInConnectedComponent(agentsList.size()-1);
+		rootAgent.setIdInConnectedComponent(agentsList.size() - 1);
 		hsRulesList.remove(rootAgent);
 		for (CSite site : rootAgent.getSites()) {
 			if (site.getLinkIndex() != CSite.NO_INDEX) {
 				CAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
 				if (linkedAgent != null) {
 					if (!(agentsList.contains(linkedAgent)))
-					findConnectedComponent(linkedAgent, hsRulesList, agentsList);
-					//connectedAgents.add(linkedAgent);
-					//agents.remove(linkedAgent);
-					//linkedAgent.setIdInConnectedComponent(++index);
+						findConnectedComponent(linkedAgent, hsRulesList,
+								agentsList);
+					// connectedAgents.add(linkedAgent);
+					// agents.remove(linkedAgent);
+					// linkedAgent.setIdInConnectedComponent(++index);
 				}
 			}
 		}
-	} 
-	
+	}
 
 	private final CAgent findLink(List<CAgent> agents, int linkIndex) {
 		for (CAgent tmp : agents) {
@@ -207,10 +201,11 @@ public class SimulatorManager {
 					int i = 1;
 					for (CSite site : action.getToAgent().getSites()) {
 						System.out.print(site.getName());
-						if (site.getInternalState() != null)
+						if ((site.getInternalState() != null)
+								&& (site.getInternalState().getNameId() >= 0))
 							System.out.print("~"
 									+ site.getInternalState().getName());
-						if (action.getToAgent().getSites().size() < i++)
+						if (action.getToAgent().getSites().size() > i++)
 							System.out.print(",");
 					}
 					System.out.println(") ");
