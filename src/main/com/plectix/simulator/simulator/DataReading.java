@@ -21,21 +21,19 @@ public class DataReading {
 	private List<String> inits=new ArrayList<String>(); 
 	// init conditions in the input
 
+	private String filePatch = null; // "C:/workspace/Example.tmp";
 
-	private String filePatch = "C:/workspace/Example.tmp";
-
-
-	private static final byte STRING_INITIAL_CONDITIONS_PREFIX =7;	// "%init: "
-	private static final byte STRING_SIMULATION_PREFIX =6; //"%obs: "
+	private static final int STRING_INITIAL_CONDITIONS_PREFIX = "%init: ".length(); // 7;	// "%init: "
+	private static final int STRING_SIMULATION_PREFIX = "%obs: ".length();           // 6;
 	
-	public DataReading(String str) {
-		this.filePatch = str;
+	public DataReading(String filename) {
+		this.filePatch = filename;
 	}
 
 	public final void readData() throws IOException {
 		// reading of the file
 		// ....
-
+		
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(filePatch));
 			String line;
@@ -56,7 +54,9 @@ public class DataReading {
 			}
 			in.close();
 		} catch (IOException e) {
-			System.err.println("File not found.");
+			// TODO: remove the try block if not doing anything here...
+			// System.err.println("File not found.");
+			throw e;
 		}
 
 		// checking of the components of data

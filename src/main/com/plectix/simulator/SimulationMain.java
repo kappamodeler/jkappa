@@ -10,6 +10,8 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.log4j.PropertyConfigurator;
+
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CRule;
@@ -27,6 +29,8 @@ public class SimulationMain {
 	private final static String LONG_SIMULATIONFILE_OPTION = "sim";
 	private final static String SHORT_COMPILE_OPTION = "c";
 	private final static String LONG_COMPILE_OPTION = "compile";
+	
+	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
 	private static SimulationMain instance;
 	private static Options cmdLineOptions;
@@ -42,6 +46,9 @@ public class SimulationMain {
 	}
 
 	public static void main(String[] args) {
+        // Initialize log4j
+		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
+		
 		instance = new SimulationMain();
 		instance.parseArguments(args);
 		instance.readSimulatonFile();

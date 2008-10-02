@@ -3,6 +3,8 @@ package com.plectix.simulator.simulator;
 import java.util.List;
 import java.util.Random;
 
+import org.apache.log4j.Logger;
+
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
@@ -21,6 +23,7 @@ import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.IState;
 
 public class Simulator {
+	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
 
 	private Model model;
 
@@ -43,11 +46,10 @@ public class Simulator {
 			rule = ruleProbabilityCalculation.getRandomRule();
 
 			if (rule == null) {
-				System.out
-						.println("end of simulation: there are no active rules");
+				LOGGER.info("end of simulation: there are no active rules");
 				return;
 			}
-			System.out.println("Rule: " + rule.getName());
+			if (LOGGER.isDebugEnabled()) LOGGER.debug("Rule: " + rule.getName());
 
 			List<CInjection> injectionsList = rule.getSomeInjectionList();
 			System.out.println("Time = " + currentTime);
@@ -55,7 +57,7 @@ public class Simulator {
 
 			if (!isClash(injectionsList)) {
 				// negative update
-				System.out.println("negative update");
+				if (LOGGER.isDebugEnabled()) LOGGER.debug("negative update");
 
 				rule.applyRule(injectionsList);
 				for (CInjection injection : injectionsList) {
@@ -69,7 +71,7 @@ public class Simulator {
 				model.getSimulationData().getObservables().PrintObsCount();
 
 				// positive update
-				System.out.println("positive update");
+				if (LOGGER.isDebugEnabled()) LOGGER.debug("positive update");
 
 				for (CRule rules : model.getSimulationData().getRules()) {
 					for (CConnectedComponent cc : rules.getLeftHandSide()) {
@@ -87,12 +89,12 @@ public class Simulator {
 						currentTime);
 				model.getSimulationData().getObservables().PrintObsCount();
 			} else {
-				System.out.println("Clash");
+				if (LOGGER.isDebugEnabled()) LOGGER.debug("Clash");
 				clash++;
 			}
 		}
-		System.out.println("end of simulation: time");
-
+		
+		LOGGER.info("end of simulation: time");
 	}
 
 	public void outputData() {
