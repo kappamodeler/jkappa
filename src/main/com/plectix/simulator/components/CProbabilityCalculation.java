@@ -67,7 +67,7 @@ public class CProbabilityCalculation {
 		while (randomValue == 0.0)
 			randomValue = rand.nextDouble();
 
-		return -1. / commonActivity * java.lang.Math.log(rand.nextDouble());
+		return -1. / commonActivity * java.lang.Math.log(randomValue);
 	}
 
 }
