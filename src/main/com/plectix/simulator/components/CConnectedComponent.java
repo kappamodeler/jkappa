@@ -21,21 +21,22 @@ public class CConnectedComponent implements IConnectedComponent {
 	private List<CAgentLink> agentLinkList;
 
 	private List<CInjection> injectionsList;
-	
+
 	private CRule rule;
-	
+
 	private List<CAgent> agentFromSolutionForRHS;
 
-	public final CAgent getAgentByIdFromSolution(int id, CInjection injection){
-		for(CAgentLink agentL : injection.getAgentLinkList())
-			if(agentL.getIdAgentFrom() == id)
+	public final CAgent getAgentByIdFromSolution(int id, CInjection injection) {
+		for (CAgentLink agentL : injection.getAgentLinkList())
+			if (agentL.getIdAgentFrom() == id)
 				return agentL.getAgentTo();
 		return null;
 	}
-	
+
 	public void addAgentFromSolutionForRHS(CAgent agentFromSolutionForRHS) {
 		this.agentFromSolutionForRHS.add(agentFromSolutionForRHS);
 	}
+
 	public List<CAgent> getAgentFromSolutionForRHS() {
 		return agentFromSolutionForRHS;
 	}
@@ -43,7 +44,7 @@ public class CConnectedComponent implements IConnectedComponent {
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
 		injectionsList = new ArrayList<CInjection>();
-		agentFromSolutionForRHS  = new ArrayList<CAgent>();
+		agentFromSolutionForRHS = new ArrayList<CAgent>();
 	}
 
 	public void removeInjection(CInjection injection) {
@@ -66,7 +67,6 @@ public class CConnectedComponent implements IConnectedComponent {
 			}
 			list.add(spTree);
 		}
-
 	}
 
 	private final void addLiftsToCurrentChangedStates(CInjection injection) {
@@ -91,7 +91,7 @@ public class CConnectedComponent implements IConnectedComponent {
 				if (!agent.isAgentHaveLinkToConnectedComponent(cc)) {
 					setInjections(agent);
 				}
-			//setInjections(cc.getAgentFromSolutionForRHS());
+			// setInjections(cc.getAgentFromSolutionForRHS());
 		}
 	}
 
@@ -153,10 +153,8 @@ public class CConnectedComponent implements IConnectedComponent {
 					agentLinkList.add(new CAgentLink(0, agent));
 					return true;
 				} else {
-					if (compareAgents(agentList.get(tree.getRootIndex()),
-							agent, tree))
-						if (spanningTreeViewer(agent, tree, tree
-								.getRootIndex()))
+					if (compareAgents(agentList.get(tree.getRootIndex()), agent))
+						if (spanningTreeViewer(agent, tree, tree.getRootIndex(), false))
 							return true;
 				}
 
@@ -165,15 +163,57 @@ public class CConnectedComponent implements IConnectedComponent {
 		return false;
 	}
 
+	public final boolean isAutomorphism(CAgent agent) {
+		if (spanningTreeMap == null)
+			return false;
+
+		List<CSpanningTree> spList = spanningTreeMap.get(agent.getNameId());
+
+		if (spList == null)
+			return false;
+
+		for (CSpanningTree tree : spList) {
+			if (tree != null) {
+				tree.resetNewVertex();
+				if (agentList.get(tree.getRootIndex()).getSites().isEmpty()
+						&& agent.getSites().isEmpty()) {
+					return true;
+				} else {
+					if (fullEqualityOfAgents(agentList.get(tree.getRootIndex()), agent))
+						if (spanningTreeViewer(agent, tree, tree.getRootIndex(),true))
+							return true;
+				}
+
+			}
+		}
+		return false;
+	}
+
+	private final boolean fullEqualityOfAgents(CAgent cc1Agent, CAgent cc2Agent) {
+		if (cc1Agent == null || cc2Agent == null)
+			return false;
+		if (cc1Agent.getSites().size() != cc2Agent.getSites().size())
+			return false;
+
+		for (CSite cc1Site : cc1Agent.getSites()) {
+			CSite cc2Site = cc2Agent.getSite(cc1Site.getNameId());
+			if (cc2Site == null)
+				return false;
+			if (!compareSites(cc1Site, cc2Site, true))
+				return false;
+		}
+		return true;
+	}
+	
 	private final boolean compareAgents(CAgent currentAgent,
-			CAgent solutionAgent, CSpanningTree tree) {
-		if (currentAgent==null || solutionAgent==null)
+			CAgent solutionAgent) {
+		if (currentAgent == null || solutionAgent == null)
 			return false;
 		for (CSite site : currentAgent.getSites()) {
 			CSite solutionSite = solutionAgent.getSite(site.getNameId());
 			if (solutionSite == null)
 				return false;
-			if (!compareSites(site, solutionSite))
+			if (!compareSites(site, solutionSite, false))
 				return false;
 			injectedSites.add(solutionSite);
 			agentLinkList.add(new CAgentLink(currentAgent
@@ -182,22 +222,28 @@ public class CConnectedComponent implements IConnectedComponent {
 		return true;
 	}
 
-	private boolean compareSites(CSite currentSite, CSite solutionSite) {
+	private boolean compareSites(CSite currentSite, CSite solutionSite, boolean fullEquality) {
 		CLinkState currentLinkState = currentSite.getLinkState();
 		CLinkState solutionLinkState = solutionSite.getLinkState();
 
 		CInternalState currentInternalState = currentSite.getInternalState();
 		CInternalState solutionInternalState = solutionSite.getInternalState();
 
+		if (!fullEquality)
 		return (compareLinkStates(currentLinkState, solutionLinkState) && compareInternalStates(
 				currentInternalState, solutionInternalState));
+		else return (fullEqualityLinkStates(currentLinkState, solutionLinkState) && fullEqualityInternalStates
+				(currentInternalState, solutionInternalState));
+		 
 	}
 
 	private final boolean compareInternalStates(CInternalState currentState,
 			CInternalState solutionState) {
-		if (currentState.getNameId() != CSite.NO_INDEX && solutionState.getNameId() == CSite.NO_INDEX)
+		if (currentState.getNameId() != CSite.NO_INDEX
+				&& solutionState.getNameId() == CSite.NO_INDEX)
 			return false;
-		if (currentState.getNameId() == CSite.NO_INDEX && solutionState.getNameId() != CSite.NO_INDEX)
+		if (currentState.getNameId() == CSite.NO_INDEX
+				&& solutionState.getNameId() != CSite.NO_INDEX)
 			return true;
 		if (!(currentState.getNameId() == solutionState.getNameId()))
 			return false;
@@ -222,41 +268,61 @@ public class CConnectedComponent implements IConnectedComponent {
 				.getStatusLinkRank()
 				&& currentState.getStatusLinkRank() == CLinkState.RANK_BOUND)
 			if (currentState.getSite().equals(solutionState.getSite()))
-				if (currentState.getStatusLinkRank() == CLinkState.RANK_BOUND && currentState.getSite().getAgentLink().equals(
-						solutionState.getSite().getAgentLink()))
+			/*	if (currentState.getStatusLinkRank() == CLinkState.RANK_BOUND
+						&& currentState.getSite().getAgentLink().equals(
+								solutionState.getSite().getAgentLink()))
+			*/		return true;
+
+		if (currentState.getStatusLinkRank() == solutionState
+				.getStatusLinkRank()
+				&& currentState.getStatusLinkRank() != CLinkState.RANK_BOUND)
+			return true;
+
+		return false;
+	}
+
+	private final boolean fullEqualityInternalStates(CInternalState currentState,
+			CInternalState solutionState) {
+		if (currentState.getNameId() == CSite.NO_INDEX
+				&& solutionState.getNameId() == CSite.NO_INDEX)
+			return true;
+		if (currentState.getNameId() == solutionState.getNameId())
+			return true;
+
+		return false;
+	}
+
+	private final boolean fullEqualityLinkStates(CLinkState currentState,
+			CLinkState solutionState) {
+		
+		if (currentState.getStatusLinkRank() == solutionState
+				.getStatusLinkRank()
+				&& currentState.getStatusLinkRank() == CLinkState.RANK_BOUND)
+			if (currentState.getSite().equals(solutionState.getSite()))
 					return true;
 
 		if (currentState.getStatusLinkRank() == solutionState
 				.getStatusLinkRank()
 				&& currentState.getStatusLinkRank() != CLinkState.RANK_BOUND)
-		return true;
+			return true;
 
 		return false;
 	}
-
+	
 	// is there injection or not and create lifts
 	private final boolean spanningTreeViewer(CAgent agent,
-			CSpanningTree spTree, int rootVertex) {
+			CSpanningTree spTree, int rootVertex, boolean fullEquality) {
 		spTree.setTrue(rootVertex);
 		for (Integer v : spTree.getVertexes()[rootVertex]) {
 			CAgent cAgent = agentList.get(v);// get next agent from spanning
 			if (!(spTree
 					.getNewVertexElement(cAgent.getIdInConnectedComponent()))) {
-				// for (CSite site : cAgent.getSites()) {
-				// CSite solutionSite = agent.getSite(site.getNameId());
-				// if (solutionSite == null)
-				// return false;
-				// if (!compareSites(site, solutionSite))
-				// return false;
-				// injectedSites.add(solutionSite);
-				//					
-				// }
 				CAgent sAgent = agent.findLinkAgent(cAgent);
-				if (!compareAgents(cAgent, sAgent, spTree))
+				if (fullEquality && !(fullEqualityOfAgents(cAgent, sAgent)))
 					return false;
-				// findLinkAgent(cAgent) - returns agent from solution,
-				// which is equal to cAgent
-				spanningTreeViewer(sAgent, spTree, v);
+				if (!fullEquality && !compareAgents(cAgent, sAgent))
+					return false;
+				spanningTreeViewer(sAgent, spTree, v, fullEquality);
 			}
 		}
 		return true;

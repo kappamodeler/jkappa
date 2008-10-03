@@ -339,10 +339,14 @@ public class CRule {
 	private final void calculateAutomorphismsNumber() {
 		if (leftHandSide != null)
 			if (this.leftHandSide.size() == 2) {
-				if (this.leftHandSide.get(0).unify(
-						this.leftHandSide.get(1).getAgents().get(0))
-						&& this.leftHandSide.get(1).unify(
-								this.leftHandSide.get(0).getAgents().get(0)))
+				/*
+				 * if (this.leftHandSide.get(0).unify(
+				 * this.leftHandSide.get(1).getAgents().get(0)) &&
+				 * this.leftHandSide.get(1).unify(
+				 * this.leftHandSide.get(0).getAgents().get(0)))
+				 */
+				if (this.leftHandSide.get(0).isAutomorphism(
+						this.leftHandSide.get(1).getAgents().get(0)))
 					automorphismNumber = 2;
 			}
 	}
