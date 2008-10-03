@@ -16,8 +16,11 @@ import com.plectix.simulator.interfaces.ISolution;
 public class CSolution implements ISolution {
 	private HashMap<Integer, List<CAgent>> agentMap;
 
+	private List<SolutionLines> solutionLines;
+
 	public CSolution() {
 		agentMap = new HashMap<Integer, List<CAgent>>();
+		solutionLines = new ArrayList<SolutionLines>();
 	}
 
 	private final void depthSearch(CAgent rootAgent, List<CAgent> agentsList) {
@@ -122,6 +125,26 @@ public class CSolution implements ISolution {
 	public final List<IConnectedComponent> split() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public List<SolutionLines> getSolutionLines() {
+		return solutionLines;
+	}
+
+	public void checkSolutionLinesAndAdd(String line, long count) {
+		line = line.replaceAll("[ 	]", "");
+		while (line.indexOf("(") == 0) {
+			line = line.substring(1);
+			line = line.substring(0, line.length() - 1);
+		}
+		for (SolutionLines sl : solutionLines) {
+			if (sl.getLine().equals(line)){
+				sl.setCount(sl.getCount() + count);
+				return;
+			}
+		}
+		solutionLines.add(new SolutionLines(line,count));
+		
 	}
 
 }

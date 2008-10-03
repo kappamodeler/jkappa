@@ -31,6 +31,12 @@ public class CRule {
 
 	private IConstraint constraints;
 
+	private int countAgentsLHS = 0;
+
+	public int getCountAgentsLHS() {
+		return countAgentsLHS;
+	}
+
 	public CRule(List<CConnectedComponent> left,
 			List<CConnectedComponent> right, String name, double ruleRate) {
 		this.leftHandSide = left;
@@ -133,24 +139,35 @@ public class CRule {
 
 	private final void markRHSAgents() {
 		List<CAgent> rhsAgents = new ArrayList<CAgent>();
+		int indexAgentRHS = 0;
+		for (CConnectedComponent cc : leftHandSide)
+			indexAgentRHS = indexAgentRHS + cc.getAgents().size();
 
 		for (CConnectedComponent cc : rightHandSide) {
 			rhsAgents.addAll(cc.getAgents());
 		}
+
+		countAgentsLHS = indexAgentRHS;
 		int index = 0;
 		for (CConnectedComponent cc : leftHandSide) {
 			for (CAgent lhsAgent : cc.getAgents()) {
-				if (rhsAgents.get(index).equals(lhsAgent)
-						&& rhsAgents.get(index).getSiteMap().equals(
-								lhsAgent.getSiteMap())) {
+				if ((index < rhsAgents.size())
+						&& (rhsAgents.get(index).equals(lhsAgent) && rhsAgents
+								.get(index).getSiteMap().equals(
+										lhsAgent.getSiteMap()))) {
 					rhsAgents.get(index).setIdInRuleSide(
 							lhsAgent.getIdInRuleSide());
 				} else {
-					return;
+					// return;
+					break;
 				}
 				index++;
 			}
 		}
+		for (CConnectedComponent cc : rightHandSide)
+			for (CAgent agent : cc.getAgents())
+				if (agent.getIdInRuleSide() == CAgent.UNMARKED)
+					agent.setIdInRuleSide(++indexAgentRHS);
 
 	}
 
@@ -278,9 +295,10 @@ public class CRule {
 		for (CConnectedComponent ccR : rightHandSide)
 			for (CAgent rAgent : ccR.getAgents()) {
 				// for (CAgent rAgent : rightAgentList) {
-				if (rAgent.getIdInRuleSide() == CAgent.UNMARKED) {
+				if (rAgent.getIdInRuleSide() > countAgentsLHS) {
+					// if (rAgent.getIdInRuleSide() == CAgent.UNMARKED) {
 					actionList.add(new Action(rAgent, ccR, Action.ACTION_ADD));
-					rAgent.setIdInRuleSide(CAgent.ACTION_CREATE);
+					// rAgent.setIdInRuleSide(CAgent.ACTION_CREATE);
 					fillChangedSites(null, rAgent);// for activation map
 					// creation
 				}
@@ -679,9 +697,10 @@ public class CRule {
 					list.add(new Action(fromSite, toSite,
 							rightConnectedComponent, leftConnectedComponent,
 							ACTION_BRK));
-//					list.add(new Action(toSite,(CSite)toSite.getLinkState().getSite(),
-//							rightConnectedComponent, leftConnectedComponent,
-//							ACTION_BRK));
+					// list.add(new
+					// Action(toSite,(CSite)toSite.getLinkState().getSite(),
+					// rightConnectedComponent, leftConnectedComponent,
+					// ACTION_BRK));
 					if (!changedSites.contains(toSite))
 						changedSites.add(toSite);
 					continue;

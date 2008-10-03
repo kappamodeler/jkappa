@@ -20,6 +20,7 @@ import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.Model;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorManager;
 
@@ -89,6 +90,7 @@ public class SimulationMain {
 			fileName = cmdLineArgs.getOptionValue(SHORT_SIMULATIONFILE_OPTION);
 		}
 		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
+			simulationManager.getSimulationData().setCompile(true);
 			if (!option) {
 				option = true;
 				fileName = cmdLineArgs.getOptionValue(SHORT_COMPILE_OPTION);
@@ -131,4 +133,5 @@ public class SimulationMain {
 	public final static SimulatorManager getSimulationManager() {
 		return simulationManager;
 	}
+	
 }

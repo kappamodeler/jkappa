@@ -13,8 +13,11 @@ import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.CSolution;
+import com.plectix.simulator.components.SolutionLines;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.SimulatorManager;
 
 public class Parser {
 
@@ -163,37 +166,46 @@ public class Parser {
 
 			List<CAgent> left = null;
 			List<CAgent> right = null;
-
+			String nameOp=null;
+			if (name != null)
+				nameOp = name + "_op";
 			switch (index) {
 			case CC_LHS: {
+				left = parseAgent(result[0].trim());
+				rules.add(SimulationMain.getSimulationManager().buildRule(left,
+						right, name, activity));
 				if (typeRule == RULE_TWO_WAY)
 					rules.add(SimulationMain.getSimulationManager().buildRule(
-							right, parseAgent(result[0].trim()), name,
+							right, parseAgent(result[0].trim()), nameOp,
 							activity2));
-				left = parseAgent(result[0].trim());
 				break;
 			}
 			case CC_RHS: {
-				if (typeRule == RULE_TWO_WAY)
-					rules.add(SimulationMain.getSimulationManager()
-							.buildRule(parseAgent(result[1].trim()), left,
-									name, activity2));
 				right = parseAgent(result[1].trim());
+				rules.add(SimulationMain.getSimulationManager().buildRule(left,
+						right, name, activity));
+				if (typeRule == RULE_TWO_WAY)
+					rules.add(SimulationMain.getSimulationManager().buildRule(
+							parseAgent(result[1].trim()), left, nameOp,
+							activity2));
 				break;
 			}
 			case CC_ALL: {
+				left = parseAgent(result[0].trim());
+				right = parseAgent(result[1].trim());
+				rules.add(SimulationMain.getSimulationManager().buildRule(left,
+						right, name, activity));
 				if (typeRule == RULE_TWO_WAY)
 					rules.add(SimulationMain.getSimulationManager().buildRule(
 							parseAgent(result[1].trim()),
-							parseAgent(result[0].trim()), name, activity2));
-				left = parseAgent(result[0].trim());
-				right = parseAgent(result[1].trim());
+							parseAgent(result[0].trim()), nameOp,
+							activity2));
 				break;
 			}
 			}
 
-			rules.add(SimulationMain.getSimulationManager().buildRule(left,
-					right, name, activity));
+			// rules.add(SimulationMain.getSimulationManager().buildRule(left,
+			// right, name, activity));
 
 		}
 
@@ -228,8 +240,16 @@ public class Parser {
 					.getSimulationManager().getSimulationData();
 			switch (code) {
 			case CREATE_INIT: {
+				line = line.replaceAll("[ 	]", "");
 				for (int i = 0; i < count; i++) {
 					simulationData.getSolution().addAgents(parseAgent(line));
+				}
+				if (SimulationMain.getSimulationManager().getSimulationData()
+						.isCompile()) {
+					((CSolution) SimulationMain.getSimulationManager()
+							.getSimulationData().getSolution())
+							.checkSolutionLinesAndAdd(line, count);
+
 				}
 				break;
 			}

@@ -15,6 +15,7 @@ public class SimulationData {
 	private double timeLength=10;
 	private long numPoints;
 	private ISolution solution=new CSolution(); // soup of initial components
+	private boolean compile = false;
 	
 	public CObservables getObservables() {
 		return observables;
@@ -45,5 +46,13 @@ public class SimulationData {
 
 	public final List<CRule> getRules() {
 		return rules;
+	}
+	
+	public boolean isCompile() {
+		return compile;
+	}
+	
+	public void setCompile(boolean compile) {
+		this.compile = compile;
 	}
 }

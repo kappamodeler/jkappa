@@ -1,5 +1,7 @@
 package com.plectix.simulator.simulator;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -7,7 +9,9 @@ import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.SolutionLines;
 import com.plectix.simulator.components.CRule.Action;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
@@ -54,7 +58,6 @@ public class SimulatorManager {
 			 * linkedAgent.setIdInConnectedComponent(++index); } } }
 			 */
 			// It needs recursive tree search of connected component
-
 			result.add(new CConnectedComponent(connectedAgents));
 		}
 
@@ -153,13 +156,99 @@ public class SimulatorManager {
 	}
 
 	public final void outputData() {
-		// System.out.print("Current solution: ");
-		for (List<CAgent> agentList : getSimulationData().getSolution()
-				.getAgents().values()) {
-			// TODO output Solution
+
+		outputRules();
+
+		outputPertubation();
+		outputSolution();
+	}
+
+	private final void outputSolution() {
+		System.out.println("INITIAL SOLUTION:");
+		for (SolutionLines sl : ((CSolution) simulationData.getSolution())
+				.getSolutionLines()) {
+			System.out.print("-");
+			System.out.print(sl.getCount());
+			System.out.print("*[");
+			System.out.print(sl.getLine());
+			System.out.println("]");
 		}
-		System.out.println();
+	}
+
+	private final void outputPertubation() {
+
+		System.out.println("PERTURBATIONS:");
+	}
+
+	private final String printPartRule(List<CConnectedComponent> ccList) {
+		String line = new String();
+		int indexLink = 0;
+		int length = 0;
+		for (CConnectedComponent cc : ccList)
+			length = length + cc.getAgents().size();
+		int j = 1;
+		for (CConnectedComponent cc : ccList) {
+			for (CAgent agent : cc.getAgents()) {
+				line = line + agent.getName();
+				// System.out.print(agent.getName());
+				line = line + "(";
+				// System.out.print("(");
+				int i = 1;
+				for (CSite site : agent.getSites()) {
+					line = line + site.getName();
+					// System.out.print(site.getName());
+					if ((site.getInternalState() != null)
+							&& (site.getInternalState().getNameId() >= 0))
+						line = line + "~" + site.getInternalState().getName();
+					// System.out.print("~"
+					// + site.getInternalState().getName());
+					switch (site.getLinkState().getStatusLink()) {
+					case CLinkState.STATUS_LINK_BOUND: {
+						if (site.getLinkState() == null)
+							line = line + "!_";
+						// System.out.print("!_");
+
+						else if (site.getAgentLink().getIdInRuleSide() < ((CSite) site
+								.getLinkState().getSite()).getAgentLink()
+								.getIdInRuleSide()) {
+							line = line + "!" + indexLink;
+							// System.out.print("!" + indexLink);
+						} else {
+							line = line + "!" + indexLink;
+							// System.out.print("!" + indexLink);
+							indexLink++;
+						}
+
+						break;
+					}
+					case CLinkState.STATUS_LINK_WILDCARD: {
+						line = line + "?";
+						// System.out.print("?");
+						break;
+					}
+					}
+
+					if (agent.getSites().size() > i++)
+						line = line + ",";
+					// System.out.print(",");
+				}
+				if (length > j)
+					line = line + "),";
+				// System.out.print("),");
+				else
+					line = line + ")";
+				// System.out.print(")");
+				j++;
+			}
+
+		}
+		return line;
+	}
+
+	private final void outputRules() {
 		for (CRule rule : getRules()) {
+			int countAgentsInLHS = rule.getCountAgentsLHS();
+			int indexNewAgent = countAgentsInLHS;
 
 			for (Action action : rule.getActionList()) {
 				switch (action.getAction()) {
@@ -196,6 +285,7 @@ public class SimulatorManager {
 					// ADD a#0(x)
 					System.out.print("ADD " + action.getToAgent().getName()
 							+ "#");
+
 					System.out.print(action.getToAgent().getIdInRuleSide() - 1);
 					System.out.print("(");
 					int i = 1;
@@ -242,57 +332,35 @@ public class SimulatorManager {
 					System.out.print(",");
 					System.out.print(action.getSiteFrom().getName());
 					System.out.print(") with ");
-					System.out.print(action.getSiteTo().getName());
+					System.out.print(action.getSiteTo().getInternalState()
+							.getName());
 					System.out.println();
 					break;
 				}
 				}
 
 			}
-			System.out.println("--------------------------------");
-			System.out.print(rule.getName());
-			System.out.print(" ");
 
-			printPartRule(rule.getLeftHandSide());
-			System.out.print(" -> ");
-			printPartRule(rule.getRightHandSide());
+			String line = printPartRule(rule.getLeftHandSide());
+			// System.out.print("->");
+			line = line + "->";
+			line = line + printPartRule(rule.getRightHandSide());
+			String ch = new String();
+			for (int j = 0; j < line.length(); j++)
+				ch = ch + "-";
 
-			System.out.println();
-
-			// TODO Output alphabetic rule.
-			System.out.println("--------------------------------");
-			System.out.println();
-		}
-	}
-
-	private final void printPartRule(List<CConnectedComponent> ccList) {
-		int indexLink = 0;
-		int length = 0;
-		for (CConnectedComponent cc : ccList)
-			length = length + cc.getAgents().size();
-		int j = 1;
-		for (CConnectedComponent cc : ccList) {
-			for (CAgent agent : cc.getAgents()) {
-				System.out.print(agent.getName());
-				System.out.print("(");
-				int i = 1;
-				for (CSite site : agent.getSites()) {
-					System.out.print(site.getName());
-					if ((site.getInternalState() != null)
-							&& (site.getInternalState().getNameId() >= 0))
-						System.out.print("~"
-								+ site.getInternalState().getName());
-
-					if (agent.getSites().size() > i++)
-						System.out.print(",");
-				}
-				if (length > j)
-					System.out.print("),");
-				else
-					System.out.print(")");
-				j++;
+			System.out.println(ch);
+			// System.out.println("--------------------------------");
+			if (rule.getName() != null) {
+				System.out.print(rule.getName());
+				System.out.print(": ");
 			}
-
+			System.out.print(line);
+			System.out.println();
+			System.out.println(ch);
+			// System.out.println("--------------------------------");
+			System.out.println();
+			System.out.println();
 		}
 	}
 
