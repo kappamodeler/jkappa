@@ -679,6 +679,9 @@ public class CRule {
 					list.add(new Action(fromSite, toSite,
 							rightConnectedComponent, leftConnectedComponent,
 							ACTION_BRK));
+//					list.add(new Action(toSite,(CSite)toSite.getLinkState().getSite(),
+//							rightConnectedComponent, leftConnectedComponent,
+//							ACTION_BRK));
 					if (!changedSites.contains(toSite))
 						changedSites.add(toSite);
 					continue;

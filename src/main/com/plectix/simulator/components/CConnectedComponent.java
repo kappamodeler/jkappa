@@ -216,9 +216,9 @@ public class CConnectedComponent implements IConnectedComponent {
 			if (!compareSites(site, solutionSite, false))
 				return false;
 			injectedSites.add(solutionSite);
-			agentLinkList.add(new CAgentLink(currentAgent
-					.getIdInConnectedComponent(), solutionAgent));
 		}
+		agentLinkList.add(new CAgentLink(currentAgent
+				.getIdInConnectedComponent(), solutionAgent));
 		return true;
 	}
 

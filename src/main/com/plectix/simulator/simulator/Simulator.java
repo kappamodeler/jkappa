@@ -41,6 +41,7 @@ public class Simulator {
 				model.getSimulationData().getRules());
 
 		double time = 0.;
+		
 		model.getSimulationData().getObservables().calculateObs(currentTime);
 		while (currentTime <= model.getSimulationData().getTimeLength()) {
 			rule = ruleProbabilityCalculation.getRandomRule();
@@ -50,7 +51,8 @@ public class Simulator {
 				return;
 			}
 			if (LOGGER.isDebugEnabled()) LOGGER.debug("Rule: " + rule.getName());
-
+			System.out.println("Rule: " + rule.getName());
+			
 			List<CInjection> injectionsList = rule.getSomeInjectionList();
 			System.out.println("Time = " + currentTime);
 			currentTime += ruleProbabilityCalculation.getTimeValue();
