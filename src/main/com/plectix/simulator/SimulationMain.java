@@ -30,6 +30,9 @@ public class SimulationMain {
 	private final static String LONG_SIMULATIONFILE_OPTION = "sim";
 	private final static String SHORT_COMPILE_OPTION = "c";
 	private final static String LONG_COMPILE_OPTION = "compile";
+	private final static String SHORT_TIME_OPTION = "t";
+	private final static String LONG_TIME_OPTION = "time";
+	
 	
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
@@ -44,6 +47,8 @@ public class SimulationMain {
 				LONG_SIMULATIONFILE_OPTION, true, "Location for input file");
 		cmdLineOptions.addOption(SHORT_COMPILE_OPTION, LONG_COMPILE_OPTION,
 				true, "Location for input file");
+		cmdLineOptions.addOption(SHORT_TIME_OPTION, LONG_TIME_OPTION,
+				true, "Time simulation count.");
 	}
 
 	public static void main(String[] args) {
@@ -85,9 +90,21 @@ public class SimulationMain {
 
 		boolean option = false;
 		String fileName = null;
+		double timeSim = 0.;
 		if (cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION)) {
 			option = true;
 			fileName = cmdLineArgs.getOptionValue(SHORT_SIMULATIONFILE_OPTION);
+			if (cmdLineArgs.hasOption(SHORT_TIME_OPTION)) {
+				option = true;
+				try {
+					timeSim= Double.valueOf(cmdLineArgs.getOptionValue(SHORT_TIME_OPTION));
+				} catch (Exception e) {
+					HelpFormatter formatter = new HelpFormatter();
+					formatter.printHelp("use --sim [file]", cmdLineOptions);
+				}
+				simulationManager.getSimulationData().setTimeLength(timeSim);
+			}else
+				System.out.println("*Warning* No time limit.");
 		}
 		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
 			simulationManager.getSimulationData().setCompile(true);
