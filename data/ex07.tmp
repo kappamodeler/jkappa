@@ -1,0 +1,44 @@
+# Rules:
+#######
+# Chapter 'Chapter 1'
+'1' Ras(s3~g),Raf(x~u) -> Ras(s3~g!1),Raf(x~u!1) @ 1.0
+'2' Ras(s3~g!1),Raf(x~u!1) -> Ras(s3~g!1),Raf(x~p!1) @ 1.0
+'3' Ras(s3~g!1),Raf(x!1) -> Ras(s3~g),Raf(x) @ 1.0
+'4' PA1(s),Raf(x~p) -> PA1(s!1),Raf(x~p!1) @ 1.0
+'5' PA1(s!1),Raf(x~p!1) -> PA1(s!1),Raf(x~u!1) @ 1.0
+'6' PA1(s!1),Raf(x!1) -> PA1(s),Raf(x) @ 1.0
+'7' Raf(x~p),MEK(s) -> Raf(x~p!1),MEK(s!1) @ 1.0
+'8' PA2(s),MEK(s1~p) -> PA2(s!1),MEK(s1~p!1) @ 1.0
+'9' PA2(s!1),MEK(s1~p!1) -> PA2(s!1),MEK(s1~u!1) @ 1.0
+'10' PA2(s!1),MEK(s1!1) -> PA2(s),MEK(s1) @ 1.0
+'11' PA2(s),MEK(s2~p) -> PA2(s!1),MEK(s2~p!1) @ 1.0
+'12' PA2(s!1),MEK(s2~p!1) -> PA2(s!1),MEK(s2~u!1) @ 1.0
+'13' PA2(s!1),MEK(s2!1) -> PA2(s),MEK(s2) @ 1.0
+'14' MEK(s,s2~p,s1~p),ERK(T185~u) -> MEK(s!1,s2~p,s1~p),ERK(t1~u!1) @ 1.0
+'15' MEK(s!1,s2~p,s1~p),ERK(t1~u!1) -> MEK(s!1,s2~p,s1~p),ERK(t1~p!1) @ 1.0
+'16' MEK(s!1,s2~p,s1~p),ERK(t1!1) -> MEK(s,s2~p,s1~p),ERK(t1) @ 1.0
+'17' MEK(s,s2~p,s1~p),ERK(Y187~u) -> MEK(s!1,s2~p,s1~p),ERK(y1~u!1) @ 1.0
+'18' MEK(s!1,s2~p,s1~p),ERK(y1~u!1) -> MEK(s!1,s2~p,s1~p),ERK(y1~p!1) @ 1.0
+'19' MEK(s!1,s2~p,s1~p),ERK(y1!1) -> MEK(s,s2~p,s1~p),ERK(y1) @ 1.0
+'20' MKP3(s),ERK(t1~p) -> MKP3(s!1),ERK(t1~p!1) @ 1.0
+'21' MKP3(s!1),ERK(t1~p!1) -> MKP3(s!1),ERK(t1~u!1) @ 1.0
+'22' MKP3(s!1),ERK(t1!1) -> MKP3(s),ERK(t1) @ 1.0
+'23' MKP3(s),ERK(y1~p) -> MKP3(s!1),ERK(y1~p!1) @ 1.0
+'24' MKP3(s!1),ERK(y1~p!1) -> MKP3(s!1),ERK(y1~u!1) @ 1.0
+'25' MKP3(s!1),ERK(y1!1) -> MKP3(s),ERK(y1) @ 1.0
+
+
+# Initial Conditions:
+%init: 3000 * (Ras(s3~g))
+%init: 1000 * (Raf(x~u))
+%init: 2000 * (PA1(s))
+%init: 2000 * (PA2(s))
+%init: 1000 * (MEK(s,s1~p,s2~p))
+%init: 1000 * (ERK(s,t1~u,y1~u))
+#%init: 200 * (MKP3(s!  1,du), A(y~	bu!	1,ku,su))
+
+# Simulation:
+%obs: Raf(x~p!_,y!_,z?)
+%obs: ERK(t1~p?,y1~p?)
+%obs: MEK(s2~p?,s1~p?)
+
