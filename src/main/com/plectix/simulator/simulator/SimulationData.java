@@ -12,6 +12,8 @@ public class SimulationData {
 	private CObservables observables = new CObservables();
 	private double intialTime;
 	private double timeLength = 0;
+	private double seed = 0;
+	private String xmlSessionName="simplx.xml";
 
 	private long numPoints;
 	private ISolution solution = new CSolution(); // soup of initial components
@@ -19,6 +21,22 @@ public class SimulationData {
 
 	public CObservables getObservables() {
 		return observables;
+	}
+
+	public String getXmlSessionName() {
+		return xmlSessionName;
+	}
+
+	public void setXmlSessionName(String xmlSessionName) {
+		this.xmlSessionName = xmlSessionName;
+	}
+
+	public double getSeed() {
+		return seed;
+	}
+
+	public void setSeed(double seed) {
+		this.seed = seed;
 	}
 
 	public void setTimeLength(double timeLength) {

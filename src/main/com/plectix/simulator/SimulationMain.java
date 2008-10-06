@@ -32,8 +32,9 @@ public class SimulationMain {
 	private final static String LONG_COMPILE_OPTION = "compile";
 	private final static String SHORT_TIME_OPTION = "t";
 	private final static String LONG_TIME_OPTION = "time";
-	
-	
+	private final static String LONG_SEED_OPTION = "seed";
+	private final static String LONG_XML_SESSION_NAME_OPTION = "xml_session_name";
+
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
 	private static SimulationMain instance;
@@ -47,14 +48,24 @@ public class SimulationMain {
 				LONG_SIMULATIONFILE_OPTION, true, "Location for input file");
 		cmdLineOptions.addOption(SHORT_COMPILE_OPTION, LONG_COMPILE_OPTION,
 				true, "Location for input file");
-		cmdLineOptions.addOption(SHORT_TIME_OPTION, LONG_TIME_OPTION,
-				true, "Time simulation count.");
+		cmdLineOptions.addOption(SHORT_TIME_OPTION, LONG_TIME_OPTION, true,
+				"Time simulation count.");
+		cmdLineOptions
+				.addOption(
+						LONG_SEED_OPTION,
+						true,
+						"Seed the random generator using given integer (same integer will generate the same random number sequence)");
+		cmdLineOptions
+				.addOption(
+						LONG_XML_SESSION_NAME_OPTION,
+						true,
+						"Name of the xml file containing results of the current session (default simplx.xml)");
 	}
 
 	public static void main(String[] args) {
-        // Initialize log4j
+		// Initialize log4j
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
-		
+
 		instance = new SimulationMain();
 		instance.parseArguments(args);
 		instance.readSimulatonFile();
@@ -94,16 +105,17 @@ public class SimulationMain {
 		if (cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION)) {
 			option = true;
 			fileName = cmdLineArgs.getOptionValue(SHORT_SIMULATIONFILE_OPTION);
-			if (cmdLineArgs.hasOption(SHORT_TIME_OPTION)) {
+			if (cmdLineArgs.hasOption(LONG_TIME_OPTION)) {
 				option = true;
 				try {
-					timeSim= Double.valueOf(cmdLineArgs.getOptionValue(SHORT_TIME_OPTION));
+					timeSim = Double.valueOf(cmdLineArgs
+							.getOptionValue(LONG_TIME_OPTION));
 				} catch (Exception e) {
 					HelpFormatter formatter = new HelpFormatter();
 					formatter.printHelp("use --sim [file]", cmdLineOptions);
 				}
 				simulationManager.getSimulationData().setTimeLength(timeSim);
-			}else
+			} else
 				System.out.println("*Warning* No time limit.");
 		}
 		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
@@ -145,10 +157,32 @@ public class SimulationMain {
 			System.err.println("Error parsing arguments");
 			System.exit(1);
 		}
+
+		if (cmdLineArgs.hasOption(LONG_XML_SESSION_NAME_OPTION)) {
+			SimulationMain
+					.getSimulationManager()
+					.getSimulationData()
+					.setXmlSessionName(
+							cmdLineArgs
+									.getOptionValue(LONG_XML_SESSION_NAME_OPTION));
+		}
+
+		if (cmdLineArgs.hasOption(LONG_SEED_OPTION)) {
+			double seed = 0.;
+			try {
+				seed = Double.valueOf(cmdLineArgs
+						.getOptionValue(LONG_SEED_OPTION));
+			} catch (Exception e) {
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp("use --sim [file]", cmdLineOptions);
+			}
+			SimulationMain.getSimulationManager().getSimulationData().setSeed(
+					seed);
+		}
 	}
 
 	public final static SimulatorManager getSimulationManager() {
 		return simulationManager;
 	}
-	
+
 }

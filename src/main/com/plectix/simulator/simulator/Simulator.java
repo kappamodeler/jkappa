@@ -113,7 +113,7 @@ public class Simulator {
 		model.getSimulationData().setTimeLength(currentTime);
 		CXMLWriter xmlWriter = new CXMLWriter();
 		try {
-			xmlWriter.writeToXML("simplx.xml");
+			xmlWriter.writeToXML(model.getSimulationData().getXmlSessionName());
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (TransformerException e) {
