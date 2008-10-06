@@ -94,7 +94,6 @@ public class Parser {
 	public Parser() {
 	}
 
-	// TODO needs to throw our own exception of wrong strings to parse
 	public final void parse() throws ParseErrorException {
 		// System.out.println("Start parsing...");
 		createSimData(data.getInits(), CREATE_INIT);
@@ -116,6 +115,7 @@ public class Parser {
 			if (rulesStr.indexOf("'") != -1) {
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
 				name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
+				//data = rulesStr.substring(beginIndex, endIndex)
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1,
 						rulesStr.length()).trim();
 			}
@@ -266,7 +266,7 @@ public class Parser {
 				simulationData.getObservables().addConnectedComponents(
 						SimulationMain.getSimulationManager()
 								.buildConnectedComponents(parseAgent(line)),
-						name);
+						name,line);
 				break;
 			}
 

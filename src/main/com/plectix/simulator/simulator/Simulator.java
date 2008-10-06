@@ -3,6 +3,9 @@ package com.plectix.simulator.simulator;
 import java.util.List;
 import java.util.Random;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import org.apache.log4j.Logger;
 
 import com.plectix.simulator.components.CAgent;
@@ -13,6 +16,7 @@ import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.CXMLWriter;
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -41,17 +45,18 @@ public class Simulator {
 				model.getSimulationData().getRules());
 
 		double time = 0.;
-		
+
 		model.getSimulationData().getObservables().calculateObs(currentTime);
 		while (currentTime <= model.getSimulationData().getTimeLength()) {
 			rule = ruleProbabilityCalculation.getRandomRule();
 
 			if (rule == null) {
 				LOGGER.info("end of simulation: there are no active rules");
+				model.getSimulationData().setTimeLength(currentTime);
 				return;
 			}
-			if (LOGGER.isDebugEnabled()) LOGGER.debug("Rule: " + rule.getName());
-			System.out.println("Rule: " + rule.getName());
+			if (LOGGER.isDebugEnabled())
+				LOGGER.debug("Rule: " + rule.getName());
 			
 			List<CInjection> injectionsList = rule.getSomeInjectionList();
 			System.out.println("Time = " + currentTime);
@@ -59,7 +64,8 @@ public class Simulator {
 
 			if (!isClash(injectionsList)) {
 				// negative update
-				if (LOGGER.isDebugEnabled()) LOGGER.debug("negative update");
+				if (LOGGER.isDebugEnabled())
+					LOGGER.debug("negative update");
 
 				rule.applyRule(injectionsList);
 				for (CInjection injection : injectionsList) {
@@ -73,20 +79,20 @@ public class Simulator {
 				model.getSimulationData().getObservables().PrintObsCount();
 
 				// positive update
-				if (LOGGER.isDebugEnabled()) LOGGER.debug("positive update");
+				if (LOGGER.isDebugEnabled())
+					LOGGER.debug("positive update");
 
-		/*		for (CRule rules : model.getSimulationData().getRules()) {
-					for (CConnectedComponent cc : rules.getLeftHandSide()) {
-						cc.doPositiveUpdate(rule.getRightHandSide());
-					}
-				}
-*/
+				/*
+				 * for (CRule rules : model.getSimulationData().getRules()) {
+				 * for (CConnectedComponent cc : rules.getLeftHandSide()) {
+				 * cc.doPositiveUpdate(rule.getRightHandSide()); } }
+				 */
 				for (CRule rules : rule.getActivatedRule()) {
 					for (CConnectedComponent cc : rules.getLeftHandSide()) {
 						cc.doPositiveUpdate(rule.getRightHandSide());
 					}
 				}
-				
+
 				for (ObservablesConnectedComponent oCC : model
 						.getSimulationData().getObservables()
 						.getConnectedComponentList()) {
@@ -97,12 +103,23 @@ public class Simulator {
 						currentTime);
 				model.getSimulationData().getObservables().PrintObsCount();
 			} else {
-				if (LOGGER.isDebugEnabled()) LOGGER.debug("Clash");
+				if (LOGGER.isDebugEnabled())
+					LOGGER.debug("Clash");
 				clash++;
 			}
 		}
-		
+
 		LOGGER.info("end of simulation: time");
+		model.getSimulationData().setTimeLength(currentTime);
+		CXMLWriter xmlWriter = new CXMLWriter();
+		try {
+			xmlWriter.writeToXML("simplx.xml");
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	public void outputData() {

@@ -180,7 +180,7 @@ public class SimulatorManager {
 		System.out.println("PERTURBATIONS:");
 	}
 
-	private final String printPartRule(List<CConnectedComponent> ccList) {
+	public static final String printPartRule(List<CConnectedComponent> ccList) {
 		String line = new String();
 		int indexLink = 0;
 		int length = 0;

@@ -14,6 +14,7 @@ public class CRule {
 	private List<CConnectedComponent> rightHandSide;
 	private double activity = 0.;
 	private String name;
+	private String data;
 	private double ruleRate;
 	private int automorphismNumber = 1;
 	private boolean infinityRate = false;
