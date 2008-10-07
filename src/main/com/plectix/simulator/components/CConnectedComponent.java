@@ -86,6 +86,8 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	public final void doPositiveUpdate(
 			List<CConnectedComponent> connectedComponentList) {
+		if (connectedComponentList == null)
+			return;
 		for (CConnectedComponent cc : connectedComponentList) {
 			for (CAgent agent : cc.agentFromSolutionForRHS)
 				if (!agent.isAgentHaveLinkToConnectedComponent(this)) {
@@ -154,7 +156,8 @@ public class CConnectedComponent implements IConnectedComponent {
 					return true;
 				} else {
 					if (compareAgents(agentList.get(tree.getRootIndex()), agent))
-						if (spanningTreeViewer(agent, tree, tree.getRootIndex(), false))
+						if (spanningTreeViewer(agent, tree,
+								tree.getRootIndex(), false))
 							return true;
 				}
 
@@ -179,8 +182,10 @@ public class CConnectedComponent implements IConnectedComponent {
 						&& agent.getSites().isEmpty()) {
 					return true;
 				} else {
-					if (fullEqualityOfAgents(agentList.get(tree.getRootIndex()), agent))
-						if (spanningTreeViewer(agent, tree, tree.getRootIndex(),true))
+					if (fullEqualityOfAgents(
+							agentList.get(tree.getRootIndex()), agent))
+						if (spanningTreeViewer(agent, tree,
+								tree.getRootIndex(), true))
 							return true;
 				}
 
@@ -204,7 +209,7 @@ public class CConnectedComponent implements IConnectedComponent {
 		}
 		return true;
 	}
-	
+
 	private final boolean compareAgents(CAgent currentAgent,
 			CAgent solutionAgent) {
 		if (currentAgent == null || solutionAgent == null)
@@ -222,7 +227,8 @@ public class CConnectedComponent implements IConnectedComponent {
 		return true;
 	}
 
-	private boolean compareSites(CSite currentSite, CSite solutionSite, boolean fullEquality) {
+	private boolean compareSites(CSite currentSite, CSite solutionSite,
+			boolean fullEquality) {
 		CLinkState currentLinkState = currentSite.getLinkState();
 		CLinkState solutionLinkState = solutionSite.getLinkState();
 
@@ -230,11 +236,12 @@ public class CConnectedComponent implements IConnectedComponent {
 		CInternalState solutionInternalState = solutionSite.getInternalState();
 
 		if (!fullEquality)
-		return (compareLinkStates(currentLinkState, solutionLinkState) && compareInternalStates(
-				currentInternalState, solutionInternalState));
-		else return (fullEqualityLinkStates(currentLinkState, solutionLinkState) && fullEqualityInternalStates
-				(currentInternalState, solutionInternalState));
-		 
+			return (compareLinkStates(currentLinkState, solutionLinkState) && compareInternalStates(
+					currentInternalState, solutionInternalState));
+		else
+			return (fullEqualityLinkStates(currentLinkState, solutionLinkState) && fullEqualityInternalStates(
+					currentInternalState, solutionInternalState));
+
 	}
 
 	private final boolean compareInternalStates(CInternalState currentState,
@@ -268,10 +275,11 @@ public class CConnectedComponent implements IConnectedComponent {
 				.getStatusLinkRank()
 				&& currentState.getStatusLinkRank() == CLinkState.RANK_BOUND)
 			if (currentState.getSite().equals(solutionState.getSite()))
-			/*	if (currentState.getStatusLinkRank() == CLinkState.RANK_BOUND
-						&& currentState.getSite().getAgentLink().equals(
-								solutionState.getSite().getAgentLink()))
-			*/		return true;
+				/*
+				 * if (currentState.getStatusLinkRank() == CLinkState.RANK_BOUND
+				 * && currentState.getSite().getAgentLink().equals(
+				 * solutionState.getSite().getAgentLink()))
+				 */return true;
 
 		if (currentState.getStatusLinkRank() == solutionState
 				.getStatusLinkRank()
@@ -281,8 +289,8 @@ public class CConnectedComponent implements IConnectedComponent {
 		return false;
 	}
 
-	private final boolean fullEqualityInternalStates(CInternalState currentState,
-			CInternalState solutionState) {
+	private final boolean fullEqualityInternalStates(
+			CInternalState currentState, CInternalState solutionState) {
 		if (currentState.getNameId() == CSite.NO_INDEX
 				&& solutionState.getNameId() == CSite.NO_INDEX)
 			return true;
@@ -294,12 +302,12 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	private final boolean fullEqualityLinkStates(CLinkState currentState,
 			CLinkState solutionState) {
-		
+
 		if (currentState.getStatusLinkRank() == solutionState
 				.getStatusLinkRank()
 				&& currentState.getStatusLinkRank() == CLinkState.RANK_BOUND)
 			if (currentState.getSite().equals(solutionState.getSite()))
-					return true;
+				return true;
 
 		if (currentState.getStatusLinkRank() == solutionState
 				.getStatusLinkRank()
@@ -308,7 +316,7 @@ public class CConnectedComponent implements IConnectedComponent {
 
 		return false;
 	}
-	
+
 	// is there injection or not and create lifts
 	private final boolean spanningTreeViewer(CAgent agent,
 			CSpanningTree spTree, int rootVertex, boolean fullEquality) {

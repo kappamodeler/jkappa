@@ -144,6 +144,8 @@ public class CRule {
 		for (CConnectedComponent cc : leftHandSide)
 			indexAgentRHS = indexAgentRHS + cc.getAgents().size();
 
+		if(rightHandSide == null)
+			return;
 		for (CConnectedComponent cc : rightHandSide) {
 			rhsAgents.addAll(cc.getAgents());
 		}
