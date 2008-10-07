@@ -88,7 +88,7 @@ public class CConnectedComponent implements IConnectedComponent {
 			List<CConnectedComponent> connectedComponentList) {
 		for (CConnectedComponent cc : connectedComponentList) {
 			for (CAgent agent : cc.agentFromSolutionForRHS)
-				if (!agent.isAgentHaveLinkToConnectedComponent(cc)) {
+				if (!agent.isAgentHaveLinkToConnectedComponent(this)) {
 					setInjections(agent);
 				}
 			// setInjections(cc.getAgentFromSolutionForRHS());
