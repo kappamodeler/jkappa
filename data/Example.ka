@@ -7,7 +7,14 @@
 'PP2A1_Raf' PP2A1(s),Raf(x~p) -> PP2A1(s!1),Raf(x~p!1) @ 1.0
 'Raf_op' PP2A1(s!1),Raf(x~p!1) -> PP2A1(s!1),Raf(x~u!1) @ 1.0
 'PP2A1_Raf_op' PP2A1(s!1),Raf(x!1) -> PP2A1(s),Raf(x) @ 1.0
+# 'Raf_MEK@222' Raf(x~p),MEK(S222~u) -> Raf(x~p!1),MEK(S222~u!1) @ 1.0 # Inactive rule
 'eg2' Raf(x~p),MEK(s) -> Raf(x~p!1),MEK(s!1) @ 1.0
+# 'MEK@222' Raf(x~p!1),MEK(S222~u!1) -> Raf(x~p!1),MEK(S222~p!1) @ 1.0 # Inactive rule
+# 'Raf_MEK@222_op' Raf(x~p!1),MEK(S222!1) -> Raf(x~p),MEK(S222) @ 1.0 # Inactive rule
+# 'Raf_MEK@218' Raf(x~p),MEK(S218~u) -> Raf(x~p!1),MEK(S218~u!1) @ 1.0 # Inactive rule
+# 'MEK@218' Raf(x~p!1),MEK(S218~u!1) -> Raf(x~p!1),MEK(S218~p!1) @ 1.0 # Inactive rule
+# 'eg1' Raf(x~p!1),MEK(s!1) -> Raf(x~p),MEK(s) @ 1.0 # Inactive rule
+# 'Raf_MEK@218_op' Raf(x~p!1),MEK(S218!1) -> Raf(x~p),MEK(S218) @ 1.0 # Inactive rule
 'PP2A2_MEK@222' PP2A2(s),MEK(S222~p) -> PP2A2(s!1),MEK(S222~p!1) @ 1.0
 'MEK@222_op' PP2A2(s!1),MEK(S222~p!1) -> PP2A2(s!1),MEK(S222~u!1) @ 1.0
 'PP2A2_MEK@222_op' PP2A2(s!1),MEK(S222!1) -> PP2A2(s),MEK(S222) @ 1.0
@@ -35,9 +42,9 @@
 %init: 200 * (PP2A2(s))
 %init: 1000 * (MEK(s,S222~p,S218~p))
 %init: 1000 * (ERK(s,T185~u,Y187~u))
+%init: 200 * (MKP3(s))
 
 # Simulation:
-%obs: Raf(x~p!_,y!_,z?)
+%obs: Raf(x~p?)
 %obs: ERK(T185~p?,Y187~p?)
 %obs: MEK(S218~p?,S222~p?)
-
