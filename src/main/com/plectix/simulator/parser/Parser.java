@@ -115,7 +115,7 @@ public class Parser {
 			if (rulesStr.indexOf("'") != -1) {
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
 				name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
-				//data = rulesStr.substring(beginIndex, endIndex)
+				// data = rulesStr.substring(beginIndex, endIndex)
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1,
 						rulesStr.length()).trim();
 			}
@@ -166,7 +166,7 @@ public class Parser {
 
 			List<CAgent> left = null;
 			List<CAgent> right = null;
-			String nameOp=null;
+			String nameOp = null;
 			if (name != null)
 				nameOp = name + "_op";
 			switch (index) {
@@ -198,8 +198,7 @@ public class Parser {
 				if (typeRule == RULE_TWO_WAY)
 					rules.add(SimulationMain.getSimulationManager().buildRule(
 							parseAgent(result[1].trim()),
-							parseAgent(result[0].trim()), nameOp,
-							activity2));
+							parseAgent(result[0].trim()), nameOp, activity2));
 				break;
 			}
 			}
@@ -241,8 +240,11 @@ public class Parser {
 			switch (code) {
 			case CREATE_INIT: {
 				line = line.replaceAll("[ 	]", "");
-				for (int i = 0; i < count; i++) {
-					simulationData.getSolution().addAgents(parseAgent(line));
+				List<CAgent> listAgent = parseAgent(line);
+				simulationData.getSolution().addAgents(listAgent);
+				for (int i = 1; i < count; i++) {
+//				simulationData.getSolution().addAgents(parseAgent(line));
+					simulationData.getSolution().addAgents(cloneAgentsList(listAgent));
 				}
 				if (SimulationMain.getSimulationManager().getSimulationData()
 						.isCompile()) {
@@ -266,7 +268,7 @@ public class Parser {
 				simulationData.getObservables().addConnectedComponents(
 						SimulationMain.getSimulationManager()
 								.buildConnectedComponents(parseAgent(line)),
-						name,line);
+						name, line);
 				break;
 			}
 
@@ -431,6 +433,39 @@ public class Parser {
 			ds.setSt2(content);
 		}
 		return ds;
+	}
+
+	private final List<CAgent> cloneAgentsList(List<CAgent> agentList) {
+		List<CAgent> newAgentsList = new ArrayList<CAgent>();
+		for (CAgent agent : agentList) {
+			CAgent newAgent = new CAgent(agent.getNameId());
+			for (CSite site : agent.getSites()) {
+				CSite newSite = new CSite(site.getNameId(), newAgent);
+				newSite.setInternalState(new CInternalState(site.getInternalState().getNameId()));
+//				newSite.getInternalState().setNameId(
+//						site.getInternalState().getNameId());
+				newAgent.addSite(newSite);
+			}
+			newAgentsList.add(newAgent);
+		}
+		for (int i = 0; i < newAgentsList.size(); i++) {
+			for (CSite siteNew : newAgentsList.get(i).getSites()) {
+				CLinkState lsNew = siteNew.getLinkState();
+				CLinkState lsOld = agentList.get(i).getSite(siteNew.getNameId())
+						.getLinkState();
+				lsNew.setStatusLink(lsOld.getStatusLink());
+				if (lsOld.getSite() != null) {
+					CSite siteOldLink = (CSite) lsOld.getSite();
+					int index = agentList.indexOf(siteOldLink.getAgentLink());
+					lsNew.setSite(newAgentsList.get(index).getSite(
+							siteOldLink.getNameId()));
+				}
+
+			}
+
+		}
+
+		return newAgentsList;
 	}
 
 }
