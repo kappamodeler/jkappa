@@ -32,7 +32,7 @@ public class Simulator {
 	private Model model;
 
 	private double currentTime = 0.;
-
+	
 	public Simulator(Model model) {
 		this.model = model;
 		model.initialize();
@@ -43,8 +43,6 @@ public class Simulator {
 		CRule rule;
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
 				model.getSimulationData().getRules());
-
-		double time = 0.;
 
 		model.getSimulationData().getObservables().calculateObs(currentTime);
 		while (currentTime <= model.getSimulationData().getTimeLength()) {
@@ -82,11 +80,6 @@ public class Simulator {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("positive update");
 
-				/*
-				 * for (CRule rules : model.getSimulationData().getRules()) {
-				 * for (CConnectedComponent cc : rules.getLeftHandSide()) {
-				 * cc.doPositiveUpdate(rule.getRightHandSide()); } }
-				 */
 				for (CRule rules : rule.getActivatedRule()) {
 					for (CConnectedComponent cc : rules.getLeftHandSide()) {
 						cc.doPositiveUpdate(rule.getRightHandSide());

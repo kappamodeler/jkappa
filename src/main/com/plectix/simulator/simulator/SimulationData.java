@@ -5,10 +5,13 @@ import java.util.List;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSolution;
+import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.interfaces.ISolution;
 
 public class SimulationData {
 	private List<CRule> rules;
+	private List<CStories> stories;
+	
 	private CObservables observables = new CObservables();
 	private double intialTime;
 	private double timeLength = 0;
@@ -23,6 +26,10 @@ public class SimulationData {
 		return observables;
 	}
 
+	public List<CStories> getStories() {
+		return stories;
+	}
+	
 	public String getXmlSessionName() {
 		return xmlSessionName;
 	}
