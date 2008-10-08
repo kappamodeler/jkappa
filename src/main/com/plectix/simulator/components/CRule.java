@@ -14,8 +14,12 @@ public class CRule {
 	private List<CConnectedComponent> rightHandSide;
 	private double activity = 0.;
 	private String name;
-	private String data;
-	private double ruleRate;
+	private double ruleRate;	
+	private long ruleID;
+	public long getRuleID() {
+		return ruleID;
+	}
+
 	private int automorphismNumber = 1;
 	private boolean infinityRate = false;
 	private List<CRule> activatedRule;
@@ -39,7 +43,7 @@ public class CRule {
 	}
 
 	public CRule(List<CConnectedComponent> left,
-			List<CConnectedComponent> right, String name, double ruleRate) {
+			List<CConnectedComponent> right, String name, double ruleRate, int ruleID) {
 		this.leftHandSide = left;
 		this.rightHandSide = right;
 		setConnectedComponentLinkRule(left);
@@ -49,6 +53,7 @@ public class CRule {
 		}
 		this.ruleRate = ruleRate;
 		this.name = name;
+		this.ruleID = ruleID;
 		calculateAutomorphismsNumber();
 		indexingRHSAgents();
 	}
@@ -441,9 +446,7 @@ public class CRule {
 			return leftConnectedComponent;
 		}
 
-		private CInjection injection;
-
-		private CSite siteFrom;
+     	private CSite siteFrom;
 
 		public CAgent getFromAgent() {
 			return fromAgent;

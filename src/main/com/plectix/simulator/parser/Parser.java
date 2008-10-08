@@ -106,7 +106,9 @@ public class Parser {
 			throws ParseErrorException {
 
 		List<CRule> rules = new ArrayList<CRule>();
+		int ruleID = 0;
 		for (String rulesStr : list) {
+
 			Double activity = 1.;
 			Double activity2 = 1.;
 			String input = rulesStr;
@@ -173,38 +175,45 @@ public class Parser {
 			case CC_LHS: {
 				left = parseAgent(result[0].trim());
 				rules.add(SimulationMain.getSimulationManager().buildRule(left,
-						right, name, activity));
-				if (typeRule == RULE_TWO_WAY)
+						right, name, activity, ruleID));
+				if (typeRule == RULE_TWO_WAY) {
+					ruleID++;
 					rules.add(SimulationMain.getSimulationManager().buildRule(
 							right, parseAgent(result[0].trim()), nameOp,
-							activity2));
+							activity2, ruleID));
+				}
 				break;
 			}
 			case CC_RHS: {
 				right = parseAgent(result[1].trim());
 				rules.add(SimulationMain.getSimulationManager().buildRule(left,
-						right, name, activity));
-				if (typeRule == RULE_TWO_WAY)
+						right, name, activity, ruleID));
+				if (typeRule == RULE_TWO_WAY) {
+					ruleID++;
 					rules.add(SimulationMain.getSimulationManager().buildRule(
 							parseAgent(result[1].trim()), left, nameOp,
-							activity2));
+							activity2, ruleID));
+				}
 				break;
 			}
 			case CC_ALL: {
 				left = parseAgent(result[0].trim());
 				right = parseAgent(result[1].trim());
 				rules.add(SimulationMain.getSimulationManager().buildRule(left,
-						right, name, activity));
-				if (typeRule == RULE_TWO_WAY)
+						right, name, activity, ruleID));
+				if (typeRule == RULE_TWO_WAY) {
+					ruleID++;
 					rules.add(SimulationMain.getSimulationManager().buildRule(
 							parseAgent(result[1].trim()),
-							parseAgent(result[0].trim()), nameOp, activity2));
+							parseAgent(result[0].trim()), nameOp, activity2, ruleID));
+				}
 				break;
 			}
 			}
 
 			// rules.add(SimulationMain.getSimulationManager().buildRule(left,
 			// right, name, activity));
+			ruleID++;
 
 		}
 
