@@ -10,13 +10,15 @@ import com.plectix.simulator.interfaces.ISolution;
 
 public class SimulationData {
 	private List<CRule> rules;
-	private CStories stories = new CStories();
+	private List<CStories> stories;
 
 	private CObservables observables = new CObservables();
 	private double intialTime;
 	private double timeLength = 0;
 	private double seed = 0;
 	private String xmlSessionName = "simplx.xml";
+
+	private long event;
 
 	private long numPoints;
 	private ISolution solution = new CSolution(); // soup of initial components
@@ -27,8 +29,27 @@ public class SimulationData {
 		return observables;
 	}
 
-	public CStories getStories() {
+	public final List<CStories> getStories() {
 		return stories;
+	}
+
+	public final void setStories(List<CStories> list) {
+		this.stories = list;
+	}
+
+	public final void addStories(String name) {
+		byte index = 0;
+		for (CRule rule : rules) {
+			if (rule.getName().startsWith(name)
+					&& ((name.length() == rule.getName().length()) || ((rule
+							.getName().startsWith(name + "_op")) && ((name
+							.length() + 3) == rule.getName().length())))) {
+				stories.add(new CStories(rule.getRuleID()));
+				index++;
+			}
+			if (index == 2)
+				return;
+		}
 	}
 
 	public boolean isStorify() {
@@ -90,5 +111,13 @@ public class SimulationData {
 
 	public void setCompile(boolean compile) {
 		this.compile = compile;
+	}
+
+	public final long getEvent() {
+		return event;
+	}
+
+	public final void setEvent(long event) {
+		this.event = event;
 	}
 }

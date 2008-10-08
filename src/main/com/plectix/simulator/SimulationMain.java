@@ -35,6 +35,7 @@ public class SimulationMain {
 	private final static String LONG_SEED_OPTION = "seed";
 	private final static String LONG_XML_SESSION_NAME_OPTION = "xml_session_name";
 	private final static String LONG_STORIFY_OPTION = "storify";
+	private final static String LONG_EVENT_OPTION = "event";
 
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
@@ -63,6 +64,9 @@ public class SimulationMain {
 						"Name of the xml file containing results of the current session (default simplx.xml)");
 		cmdLineOptions.addOption(LONG_STORIFY_OPTION, true,
 				"Name of the kappa file to storify");
+		cmdLineOptions.addOption(LONG_EVENT_OPTION, true,
+				"Number of rule applications");
+
 	}
 
 	public static void main(String[] args) {
@@ -94,13 +98,13 @@ public class SimulationMain {
 	}
 
 	public final void readSimulatonFile() {
-//		if ((!cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION))
-//				&& (!cmdLineArgs.hasOption(SHORT_COMPILE_OPTION))) {
-//			HelpFormatter formatter = new HelpFormatter();
-//			formatter.printHelp("use --sim [file]", cmdLineOptions);
-//			// formatter.printHelp("use --compile [file]", cmdLineOptions);
-//			System.exit(1);
-//		}
+		// if ((!cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION))
+		// && (!cmdLineArgs.hasOption(SHORT_COMPILE_OPTION))) {
+		// HelpFormatter formatter = new HelpFormatter();
+		// formatter.printHelp("use --sim [file]", cmdLineOptions);
+		// // formatter.printHelp("use --compile [file]", cmdLineOptions);
+		// System.exit(1);
+		// }
 
 		boolean option = false;
 		String fileName = null;
@@ -188,6 +192,19 @@ public class SimulationMain {
 			}
 			SimulationMain.getSimulationManager().getSimulationData().setSeed(
 					seed);
+		}
+
+		if (cmdLineArgs.hasOption(LONG_EVENT_OPTION)) {
+			long event = 0;
+			try {
+				event = Long.valueOf(cmdLineArgs
+						.getOptionValue(LONG_EVENT_OPTION));
+			} catch (Exception e) {
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp("use --sim [file]", cmdLineOptions);
+			}
+			SimulationMain.getSimulationManager().getSimulationData().setEvent(
+					event);
 		}
 	}
 

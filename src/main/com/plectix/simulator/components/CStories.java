@@ -2,7 +2,7 @@ package com.plectix.simulator.components;
 
 import java.util.List;
 
-public class CStories extends CObservables{
+public class CStories extends CObservables {
 
 	private int numberOfSimulations;
 
@@ -10,12 +10,16 @@ public class CStories extends CObservables{
 
 	List<Integer> ways;
 
-	public CStories(){
-		
+	public CStories() {
+
 	}
-	
+
 	public CStories(int numberOfSimulations, int ruleID) {
 		this.numberOfSimulations = numberOfSimulations;
+		this.ruleID = ruleID;
+	}
+
+	public CStories(int ruleID) {
 		this.ruleID = ruleID;
 	}
 

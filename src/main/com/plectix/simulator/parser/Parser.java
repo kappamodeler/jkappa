@@ -14,6 +14,7 @@ import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
+import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.SolutionLines;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
@@ -101,9 +102,11 @@ public class Parser {
 		List<CRule> rules = createRules(data.getRules());
 		SimulationMain.getSimulationManager().setRules(rules);
 		if (SimulationMain.getSimulationManager().getSimulationData()
-				.isStorify())
+				.isStorify()) {
+			SimulationMain.getSimulationManager().getSimulationData()
+					.setStories(new ArrayList<CStories>());
 			createSimData(data.getStory(), CREATE_STORY);
-		else
+		} else
 			createSimData(data.getObservables(), CREATE_OBS);
 	}
 
@@ -279,10 +282,7 @@ public class Parser {
 					line = line.substring(line.indexOf("'") + 1, line.length())
 							.trim();
 				}
-				simulationData.getStories().addConnectedComponents(
-						SimulationMain.getSimulationManager()
-								.buildConnectedComponents(parseAgent(line)),
-						name, line);
+				simulationData.addStories(name);
 				break;
 			}
 			case CREATE_OBS: {
