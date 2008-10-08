@@ -100,8 +100,11 @@ public class Parser {
 		createSimData(data.getInits(), CREATE_INIT);
 		List<CRule> rules = createRules(data.getRules());
 		SimulationMain.getSimulationManager().setRules(rules);
-		createSimData(data.getObservables(), CREATE_OBS);
-		createSimData(data.getStory(), CREATE_STORY);
+		if (SimulationMain.getSimulationManager().getSimulationData()
+				.isStorify())
+			createSimData(data.getStory(), CREATE_STORY);
+		else
+			createSimData(data.getObservables(), CREATE_OBS);
 	}
 
 	public final List<CRule> createRules(List<String> list)
@@ -276,14 +279,10 @@ public class Parser {
 					line = line.substring(line.indexOf("'") + 1, line.length())
 							.trim();
 				}
-				if (SimulationMain.getSimulationManager().getSimulationData()
-						.isStorify())
-					simulationData.getStories()
-							.addConnectedComponents(
-									SimulationMain.getSimulationManager()
-											.buildConnectedComponents(
-													parseAgent(line)), name,
-									line);
+				simulationData.getStories().addConnectedComponents(
+						SimulationMain.getSimulationManager()
+								.buildConnectedComponents(parseAgent(line)),
+						name, line);
 				break;
 			}
 			case CREATE_OBS: {
@@ -295,14 +294,10 @@ public class Parser {
 					line = line.substring(line.indexOf("'") + 1, line.length())
 							.trim();
 				}
-				if (!SimulationMain.getSimulationManager().getSimulationData()
-						.isStorify())
-					simulationData.getObservables()
-							.addConnectedComponents(
-									SimulationMain.getSimulationManager()
-											.buildConnectedComponents(
-													parseAgent(line)), name,
-									line);
+				simulationData.getObservables().addConnectedComponents(
+						SimulationMain.getSimulationManager()
+								.buildConnectedComponents(parseAgent(line)),
+						name, line);
 				break;
 			}
 
