@@ -34,6 +34,7 @@ public class SimulationMain {
 	private final static String LONG_TIME_OPTION = "time";
 	private final static String LONG_SEED_OPTION = "seed";
 	private final static String LONG_XML_SESSION_NAME_OPTION = "xml_session_name";
+	private final static String LONG_STORIFY_OPTION = "storify";
 
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
@@ -60,6 +61,8 @@ public class SimulationMain {
 						LONG_XML_SESSION_NAME_OPTION,
 						true,
 						"Name of the xml file containing results of the current session (default simplx.xml)");
+		cmdLineOptions.addOption(LONG_STORIFY_OPTION, true,
+				"Name of the kappa file to storify");
 	}
 
 	public static void main(String[] args) {
@@ -91,18 +94,25 @@ public class SimulationMain {
 	}
 
 	public final void readSimulatonFile() {
-		if ((!cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION))
-				&& (!cmdLineArgs.hasOption(SHORT_COMPILE_OPTION))) {
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("use --sim [file]", cmdLineOptions);
-			// formatter.printHelp("use --compile [file]", cmdLineOptions);
-			System.exit(1);
-		}
+//		if ((!cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION))
+//				&& (!cmdLineArgs.hasOption(SHORT_COMPILE_OPTION))) {
+//			HelpFormatter formatter = new HelpFormatter();
+//			formatter.printHelp("use --sim [file]", cmdLineOptions);
+//			// formatter.printHelp("use --compile [file]", cmdLineOptions);
+//			System.exit(1);
+//		}
 
 		boolean option = false;
 		String fileName = null;
 		double timeSim = 0.;
-		if (cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION)) {
+		if (cmdLineArgs.hasOption(LONG_STORIFY_OPTION)) {
+			fileName = cmdLineArgs.getOptionValue(LONG_STORIFY_OPTION);
+			SimulationMain.getSimulationManager().getSimulationData()
+					.setStorify(true);
+			option = true;
+		}
+
+		if (!option && (cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION))) {
 			option = true;
 			fileName = cmdLineArgs.getOptionValue(SHORT_SIMULATIONFILE_OPTION);
 			if (cmdLineArgs.hasOption(LONG_TIME_OPTION)) {

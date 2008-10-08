@@ -39,6 +39,7 @@ public class Parser {
 
 	private static final byte CREATE_INIT = 0;
 	private static final byte CREATE_OBS = 1;
+	private static final byte CREATE_STORY = 2;
 
 	private static final String PATTERN_AGENT_SITE = "^[0-9[a-zA-Z]]+[0-9[a-zA-Z]\\_\\^\\-]*";
 	private static final String PATTERN_STATE = "^[0-9[a-zA-Z]]+";
@@ -100,6 +101,7 @@ public class Parser {
 		List<CRule> rules = createRules(data.getRules());
 		SimulationMain.getSimulationManager().setRules(rules);
 		createSimData(data.getObservables(), CREATE_OBS);
+		createSimData(data.getStory(), CREATE_STORY);
 	}
 
 	public final List<CRule> createRules(List<String> list)
@@ -205,7 +207,8 @@ public class Parser {
 					ruleID++;
 					rules.add(SimulationMain.getSimulationManager().buildRule(
 							parseAgent(result[1].trim()),
-							parseAgent(result[0].trim()), nameOp, activity2, ruleID));
+							parseAgent(result[0].trim()), nameOp, activity2,
+							ruleID));
 				}
 				break;
 			}
@@ -252,8 +255,9 @@ public class Parser {
 				List<CAgent> listAgent = parseAgent(line);
 				simulationData.getSolution().addAgents(listAgent);
 				for (int i = 1; i < count; i++) {
-//				simulationData.getSolution().addAgents(parseAgent(line));
-					simulationData.getSolution().addAgents(cloneAgentsList(listAgent));
+					// simulationData.getSolution().addAgents(parseAgent(line));
+					simulationData.getSolution().addAgents(
+							cloneAgentsList(listAgent));
 				}
 				if (SimulationMain.getSimulationManager().getSimulationData()
 						.isCompile()) {
@@ -262,6 +266,24 @@ public class Parser {
 							.checkSolutionLinesAndAdd(line, count);
 
 				}
+				break;
+			}
+			case CREATE_STORY: {
+				String name = null;
+				if (line.indexOf("'") != -1) {
+					line = line.substring(line.indexOf("'") + 1);
+					name = line.substring(0, line.indexOf("'")).trim();
+					line = line.substring(line.indexOf("'") + 1, line.length())
+							.trim();
+				}
+				if (SimulationMain.getSimulationManager().getSimulationData()
+						.isStorify())
+					simulationData.getStories()
+							.addConnectedComponents(
+									SimulationMain.getSimulationManager()
+											.buildConnectedComponents(
+													parseAgent(line)), name,
+									line);
 				break;
 			}
 			case CREATE_OBS: {
@@ -273,11 +295,14 @@ public class Parser {
 					line = line.substring(line.indexOf("'") + 1, line.length())
 							.trim();
 				}
-
-				simulationData.getObservables().addConnectedComponents(
-						SimulationMain.getSimulationManager()
-								.buildConnectedComponents(parseAgent(line)),
-						name, line);
+				if (!SimulationMain.getSimulationManager().getSimulationData()
+						.isStorify())
+					simulationData.getObservables()
+							.addConnectedComponents(
+									SimulationMain.getSimulationManager()
+											.buildConnectedComponents(
+													parseAgent(line)), name,
+									line);
 				break;
 			}
 
@@ -450,9 +475,10 @@ public class Parser {
 			CAgent newAgent = new CAgent(agent.getNameId());
 			for (CSite site : agent.getSites()) {
 				CSite newSite = new CSite(site.getNameId(), newAgent);
-				newSite.setInternalState(new CInternalState(site.getInternalState().getNameId()));
-//				newSite.getInternalState().setNameId(
-//						site.getInternalState().getNameId());
+				newSite.setInternalState(new CInternalState(site
+						.getInternalState().getNameId()));
+				// newSite.getInternalState().setNameId(
+				// site.getInternalState().getNameId());
 				newAgent.addSite(newSite);
 			}
 			newAgentsList.add(newAgent);
@@ -460,8 +486,8 @@ public class Parser {
 		for (int i = 0; i < newAgentsList.size(); i++) {
 			for (CSite siteNew : newAgentsList.get(i).getSites()) {
 				CLinkState lsNew = siteNew.getLinkState();
-				CLinkState lsOld = agentList.get(i).getSite(siteNew.getNameId())
-						.getLinkState();
+				CLinkState lsOld = agentList.get(i)
+						.getSite(siteNew.getNameId()).getLinkState();
 				lsNew.setStatusLink(lsOld.getStatusLink());
 				if (lsOld.getSite() != null) {
 					CSite siteOldLink = (CSite) lsOld.getSite();

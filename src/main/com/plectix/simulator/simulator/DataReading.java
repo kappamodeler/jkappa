@@ -6,26 +6,33 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.plectix.simulator.SimulationMain;
+
 // get input strings from input file (or something else)  
 // i.e. makes lists of strings with different prefix such as 
 // %rule, %init, %obs
 
 public class DataReading {
 
-	private List<String> rules=new ArrayList<String>(); 
+	private List<String> rules = new ArrayList<String>();
 	// rules in the input
 
-	private List<String> observables=new ArrayList<String>(); 
+	private List<String> observables = new ArrayList<String>();
 	// observables in the input
 
-	private List<String> inits=new ArrayList<String>(); 
+	private List<String> story = new ArrayList<String>();
+	// story in the input
+
+	private List<String> inits = new ArrayList<String>();
 	// init conditions in the input
 
 	private String filePatch = null; // "C:/workspace/Example.tmp";
 
-	private static final int STRING_INITIAL_CONDITIONS_PREFIX = "%init: ".length(); // 7;	// "%init: "
-	private static final int STRING_SIMULATION_PREFIX = "%obs: ".length();           // 6;
-	
+	private static final int STRING_INITIAL_CONDITIONS_PREFIX = "%init: "
+			.length(); // 7; // "%init: "
+	private static final int STRING_SIMULATION_PREFIX = "%obs: ".length(); // 6;
+	private static final int STRING_STORIFY_PREFIX = "%story: ".length(); // 8;
+
 	public DataReading(String filename) {
 		this.filePatch = filename;
 	}
@@ -33,7 +40,7 @@ public class DataReading {
 	public final void readData() throws IOException {
 		// reading of the file
 		// ....
-		
+
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(filePatch));
 			String line;
@@ -42,15 +49,19 @@ public class DataReading {
 
 				if (line.startsWith("#"))
 					continue;
-				
-				if(line.startsWith("%obs")) {
-					observables.add(new String(line.substring(STRING_SIMULATION_PREFIX, line.length())));
-				} else if (line.startsWith("%init")) {
-					inits.add(new String(line.substring(STRING_INITIAL_CONDITIONS_PREFIX, line.length())));
-				} else 
-					if(line.trim().length()>0)
-						rules.add(new String(line));
-	
+
+				if (line.startsWith("%story"))
+					story.add(new String(line.substring(
+							STRING_STORIFY_PREFIX, line.length())));
+				else if (line.startsWith("%obs"))
+					observables.add(new String(line.substring(
+							STRING_SIMULATION_PREFIX, line.length())));
+				else if (line.startsWith("%init")) {
+					inits.add(new String(line.substring(
+							STRING_INITIAL_CONDITIONS_PREFIX, line.length())));
+				} else if (line.trim().length() > 0)
+					rules.add(new String(line));
+
 			}
 			in.close();
 		} catch (IOException e) {
@@ -78,6 +89,10 @@ public class DataReading {
 
 	public final List<String> getRules() {
 		return rules;
+	}
+
+	public List<String> getStory() {
+		return story;
 	}
 
 }

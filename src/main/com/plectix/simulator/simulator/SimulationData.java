@@ -10,26 +10,35 @@ import com.plectix.simulator.interfaces.ISolution;
 
 public class SimulationData {
 	private List<CRule> rules;
-	private List<CStories> stories;
-	
+	private CStories stories = new CStories();
+
 	private CObservables observables = new CObservables();
 	private double intialTime;
 	private double timeLength = 0;
 	private double seed = 0;
-	private String xmlSessionName="simplx.xml";
+	private String xmlSessionName = "simplx.xml";
 
 	private long numPoints;
 	private ISolution solution = new CSolution(); // soup of initial components
 	private boolean compile = false;
+	private boolean storify = false;
 
 	public CObservables getObservables() {
 		return observables;
 	}
 
-	public List<CStories> getStories() {
+	public CStories getStories() {
 		return stories;
 	}
-	
+
+	public boolean isStorify() {
+		return storify;
+	}
+
+	public void setStorify(boolean storify) {
+		this.storify = storify;
+	}
+
 	public String getXmlSessionName() {
 		return xmlSessionName;
 	}
