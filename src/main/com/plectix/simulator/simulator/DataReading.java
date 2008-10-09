@@ -73,8 +73,8 @@ public class DataReading {
 		// checking of the components of data
 		if (rules.isEmpty())
 			throw new IOException("There are no rules in the input data");
-		else if (observables.isEmpty())
-			throw new IOException("There are no observables in the input data");
+		else if ((story.isEmpty())&&(observables.isEmpty()))
+			throw new IOException("There are no observables/stories in the input data");
 		else if (inits.isEmpty())
 			throw new IOException("There are no inits in the input data");
 	}
