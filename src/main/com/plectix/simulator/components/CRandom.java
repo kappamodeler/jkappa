@@ -3,29 +3,40 @@ package com.plectix.simulator.components;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.lang.reflect.Array;
+import java.util.Scanner;
 
 public class CRandom {
 
 	public static void main(String[] args) {
-		
+
 		try {
-			Process process = Runtime.getRuntime().exec("C:\\workspace\\simulator\\data\\fib.exe 5");
-			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+			Runtime r = Runtime.getRuntime();
+
+			Process process = r
+					.exec("C:\\Documents and Settings\\prudnikova\\workspace\\simulator\\data\\rand1.exe");
+
+			InputStream inputStream = process.getInputStream();
+			Scanner scanner = new Scanner(inputStream);
+			PrintWriter writer = new PrintWriter(process.getOutputStream());
+         
+            writer.print("1");
+			writer.println();
+			writer.flush();
 			
-//			bufferedWriter.write("5");
-//			bufferedWriter.flush();
+			System.out.print(scanner.nextLine());
 			
-			System.out.println(bufferedReader.readLine());
-			
+            writer.print("3");
+            writer.println();
+			writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+
 	}
-	
-	
+
 }
