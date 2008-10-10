@@ -59,37 +59,17 @@ public class Simulator {
 					LOGGER.debug("negative update");
 
 				rule.applyRule(injectionsList);
-				for (CInjection injection : injectionsList) {
-					if (injection != CConnectedComponent.EMPTY_INJECTION) {
-						for (CSite site : injection.getSiteList()) {
-							site.removeInjectionsFromCCToSite(injection);
-							site.getLift().clear();
-						}
 
-						injection.getConnectedComponent().getInjectionsList()
-								.remove(injection);
-					}
-				}
+				doNegativeUpdate(injectionsList);
+
 				model.getSimulationData().getObservables().PrintObsCount();
 
 				// positive update
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("positive update");
 
-				for (CRule rules : rule.getActivatedRule()) {
-					for (CConnectedComponent cc : rules.getLeftHandSide()) {
-						cc.doPositiveUpdate(rule.getRightHandSide());
-					}
-				}
+				doPositiveUpdate(rule);
 
-				for (ObservablesConnectedComponent oCC : model
-						.getSimulationData().getObservables()
-						.getConnectedComponentList()) {
-					oCC.doPositiveUpdate(rule.getRightHandSide());
-				}
-
-				model.getSimulationData().getObservables().calculateObs(
-						currentTime);
 				model.getSimulationData().getObservables().PrintObsCount();
 			} else {
 				if (LOGGER.isDebugEnabled())
@@ -98,6 +78,39 @@ public class Simulator {
 			}
 		}
 
+		outputData();
+	}
+
+	public final void doPositiveUpdate(CRule rule) {
+		for (CRule rules : rule.getActivatedRule()) {
+			for (CConnectedComponent cc : rules.getLeftHandSide()) {
+				cc.doPositiveUpdate(rule.getRightHandSide());
+			}
+		}
+
+		for (ObservablesConnectedComponent oCC : model.getSimulationData()
+				.getObservables().getConnectedComponentList()) {
+			oCC.doPositiveUpdate(rule.getRightHandSide());
+		}
+
+		model.getSimulationData().getObservables().calculateObs(currentTime);
+	}
+
+	public final void doNegativeUpdate(List<CInjection> injectionsList) {
+		for (CInjection injection : injectionsList) {
+			if (injection != CConnectedComponent.EMPTY_INJECTION) {
+				for (CSite site : injection.getSiteList()) {
+					site.removeInjectionsFromCCToSite(injection);
+					site.getLift().clear();
+				}
+
+				injection.getConnectedComponent().getInjectionsList().remove(
+						injection);
+			}
+		}
+	}
+
+	public final void outputData() {
 		LOGGER.info("end of simulation: time");
 		model.getSimulationData().setTimeLength(currentTime);
 		CXMLWriter xmlWriter = new CXMLWriter();
@@ -108,12 +121,6 @@ public class Simulator {
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
-
-	}
-
-	public void outputData() {
-		// TODO Auto-generated method stub
-
 	}
 
 	private boolean isClash(List<CInjection> injections) {
