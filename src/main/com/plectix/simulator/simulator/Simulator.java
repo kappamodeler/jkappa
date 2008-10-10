@@ -21,9 +21,9 @@ public class Simulator {
 	private Model model;
 
 	private double currentTime = 0.;
-	
+
 	private int randomSeed;
-	
+
 	public Simulator(Model model) {
 		this.model = model;
 		model.initialize();
@@ -33,7 +33,8 @@ public class Simulator {
 		long clash = 0;
 		CRule rule;
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
-				model.getSimulationData().getRules(),model.getSimulationData().getSeed());
+				model.getSimulationData().getRules(), model.getSimulationData()
+						.getSeed());
 
 		model.getSimulationData().getObservables().calculateObs(currentTime);
 		while (currentTime <= model.getSimulationData().getTimeLength()) {
@@ -46,8 +47,9 @@ public class Simulator {
 			}
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("Rule: " + rule.getName());
-			
-			List<CInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
+
+			List<CInjection> injectionsList = ruleProbabilityCalculation
+					.getSomeInjectionList(rule);
 			System.out.println("Time = " + currentTime);
 			currentTime += ruleProbabilityCalculation.getTimeValue();
 
@@ -58,12 +60,15 @@ public class Simulator {
 
 				rule.applyRule(injectionsList);
 				for (CInjection injection : injectionsList) {
-					for (CSite site : injection.getSiteList()) {
-						site.removeInjectionsFromCCToSite(injection);
-						site.getLift().clear();
+					if (injection != CConnectedComponent.EMPTY_INJECTION) {
+						for (CSite site : injection.getSiteList()) {
+							site.removeInjectionsFromCCToSite(injection);
+							site.getLift().clear();
+						}
+
+						injection.getConnectedComponent().getInjectionsList()
+								.remove(injection);
 					}
-					injection.getConnectedComponent().getInjectionsList()
-							.remove(injection);
 				}
 				model.getSimulationData().getObservables().PrintObsCount();
 

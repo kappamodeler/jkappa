@@ -188,6 +188,8 @@ public class SimulatorManager {
 			length = length + cc.getAgents().size();
 		int j = 1;
 		for (CConnectedComponent cc : ccList) {
+			if (cc == CRule.EMPTY_LHS_CC)
+				return line;
 			for (CAgent agent : cc.getAgents()) {
 				line = line + agent.getName();
 				// System.out.print(agent.getName());

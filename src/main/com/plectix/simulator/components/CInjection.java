@@ -9,8 +9,6 @@ import com.plectix.simulator.interfaces.IInjection;
 public class CInjection implements IInjection {
 
 	private List<CAgentLink> agentLinkList;
-	
-	
 
 	private List<CSite> sitesList = new ArrayList<CSite>();
 
@@ -29,7 +27,7 @@ public class CInjection implements IInjection {
 	public List<CAgentLink> getAgentLinkList() {
 		return agentLinkList;
 	}
-	
+
 	public List<CSite> getSiteList() {
 		return sitesList;
 	}

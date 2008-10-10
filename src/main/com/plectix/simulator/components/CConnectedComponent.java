@@ -12,6 +12,10 @@ import com.plectix.simulator.interfaces.ISolution;
 
 public class CConnectedComponent implements IConnectedComponent {
 
+	public static final byte EMPTY = 0;
+	
+	public static final CInjection EMPTY_INJECTION = new CInjection();
+
 	private List<CAgent> agentList;
 
 	private HashMap<Integer, List<CSpanningTree>> spanningTreeMap;
@@ -39,6 +43,19 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	public List<CAgent> getAgentFromSolutionForRHS() {
 		return agentFromSolutionForRHS;
+	}
+
+	public CConnectedComponent(byte empty) {
+		switch (empty) {
+		case EMPTY: {
+			agentList = new ArrayList<CAgent>();
+			agentList.add(new CAgent(CAgent.EMPTY));
+			injectionsList = new ArrayList<CInjection>();
+			injectionsList.add(EMPTY_INJECTION);
+			agentFromSolutionForRHS = new ArrayList<CAgent>();
+			break;
+		}
+		}
 	}
 
 	public CConnectedComponent(List<CAgent> connectedAgents) {

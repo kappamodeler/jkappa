@@ -10,6 +10,8 @@ import com.plectix.simulator.interfaces.IConstraint;
 
 public class CRule {
 
+	public static final CConnectedComponent EMPTY_LHS_CC = new CConnectedComponent(
+			CConnectedComponent.EMPTY);
 	private List<CConnectedComponent> leftHandSide;
 	private List<CConnectedComponent> rightHandSide;
 	private double activity = 0.;
@@ -50,6 +52,10 @@ public class CRule {
 		this.rightHandSide = right;
 		setConnectedComponentLinkRule(left);
 		setConnectedComponentLinkRule(right);
+		if (leftHandSide == null) {
+			leftHandSide = new ArrayList<CConnectedComponent>();
+			leftHandSide.add(EMPTY_LHS_CC);
+		}
 		for (CConnectedComponent cc : this.leftHandSide) {
 			cc.initSpanningTreeMap();
 		}
@@ -90,12 +96,15 @@ public class CRule {
 
 	private final void markedLHS() {
 		int counter = 1;
-		if (leftHandSide != null)
-			for (CConnectedComponent cc : leftHandSide)
-				for (CAgent agent : cc.getAgents()) {
-					agent.setIdInRuleSide(counter);
-					counter++;
-				}
+		if (leftHandSide.get(0) == EMPTY_LHS_CC) {
+			maxAgentID=1;
+			return;
+		}
+		for (CConnectedComponent cc : leftHandSide)
+			for (CAgent agent : cc.getAgents()) {
+				agent.setIdInRuleSide(counter);
+				counter++;
+			}
 		maxAgentID = counter;
 	}
 
@@ -148,8 +157,16 @@ public class CRule {
 	private final void markRHSAgents() {
 		List<CAgent> rhsAgents = new ArrayList<CAgent>();
 		int indexAgentRHS = 0;
-		for (CConnectedComponent cc : leftHandSide)
-			indexAgentRHS = indexAgentRHS + cc.getAgents().size();
+
+		if (leftHandSide.get(0) == EMPTY_LHS_CC) {
+			countAgentsLHS = 0;
+			markRHSAgentsUnmarked(0);
+			return;
+		} else {
+			for (CConnectedComponent cc : leftHandSide)
+				indexAgentRHS = indexAgentRHS + cc.getAgents().size();
+			countAgentsLHS = indexAgentRHS;
+		}
 
 		if (rightHandSide == null)
 			return;
@@ -157,7 +174,6 @@ public class CRule {
 			rhsAgents.addAll(cc.getAgents());
 		}
 
-		countAgentsLHS = indexAgentRHS;
 		int index = 0;
 		for (CConnectedComponent cc : leftHandSide) {
 			for (CAgent lhsAgent : cc.getAgents()) {
@@ -174,11 +190,16 @@ public class CRule {
 				index++;
 			}
 		}
+
+		markRHSAgentsUnmarked(++indexAgentRHS);
+
+	}
+
+	private final void markRHSAgentsUnmarked(int indexAgentRHS) {
 		for (CConnectedComponent cc : rightHandSide)
 			for (CAgent agent : cc.getAgents())
 				if (agent.getIdInRuleSide() == CAgent.UNMARKED)
-					agent.setIdInRuleSide(++indexAgentRHS);
-
+					agent.setIdInRuleSide(indexAgentRHS++);
 	}
 
 	private final void indexingRHSAgents() {
@@ -305,7 +326,8 @@ public class CRule {
 		for (CConnectedComponent ccR : rightHandSide)
 			for (CAgent rAgent : ccR.getAgents()) {
 				// for (CAgent rAgent : rightAgentList) {
-				if (rAgent.getIdInRuleSide() > countAgentsLHS) {
+				if ((countAgentsLHS == 0)
+						|| (rAgent.getIdInRuleSide() > countAgentsLHS)) {
 					// if (rAgent.getIdInRuleSide() == CAgent.UNMARKED) {
 					actionList.add(new Action(rAgent, ccR, Action.ACTION_ADD));
 					// rAgent.setIdInRuleSide(CAgent.ACTION_CREATE);
@@ -314,6 +336,8 @@ public class CRule {
 				}
 			}
 
+		if (leftHandSide.get(0) == EMPTY_LHS_CC)
+			return;
 		for (CConnectedComponent ccL : leftHandSide)
 			for (CAgent lAgent : ccL.getAgents()) {
 				if (!isAgentFromLHSHasFoundInRHS(lAgent, ccL))
@@ -386,8 +410,6 @@ public class CRule {
 		for (CConnectedComponent cc : cList)
 			cc.setRule(this);
 	}
-
-	
 
 	public final void calcultateActivity() {
 		activity = 1.;

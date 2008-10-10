@@ -15,6 +15,7 @@ public class CAgent implements IAgent {
 	 */
 	public static final int UNMARKED = -1;
 	public static final byte ACTION_CREATE = -2;
+	public static final byte EMPTY = -1;
 
 	private int idInConnectedComponent;
 	private int idInRuleSide = UNMARKED;
