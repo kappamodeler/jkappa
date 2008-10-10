@@ -12,6 +12,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/log4j/log4j-1.2.15.jar" sourcepath="lib/log4j/log4j-1.2.15-src.jar"/>
-	<classpathentry kind="lib" path="lib/commons-cli-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli/commons-cli-1.1.jar"/>
 	<classpathentry kind="output" path="tmp/eclipse-java"/>
 </classpath>
