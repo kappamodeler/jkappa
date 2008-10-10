@@ -7,10 +7,12 @@ public class CProbabilityCalculation {
 	private List<CRule> rules;
 	private double commonActivity;
 	private double[] rulesProbability;
+	private CRandom randomOCAML;
 
-	public CProbabilityCalculation(List<CRule> rules) {
+	public CProbabilityCalculation(List<CRule> rules, int seed) {
 		this.rules = rules;
 		rulesProbability = new double[rules.size()];
+		randomOCAML = new CRandom(seed);
 	}
 
 	private void calculateRulesActivity() {
@@ -40,9 +42,10 @@ public class CProbabilityCalculation {
 				return i;
 		}
 		
-		Random rand = new Random();
+		/*Random rand = new Random();
 		double randomValue = rand.nextDouble();
-
+*/
+		double randomValue = randomOCAML.getDouble();
 		for (int i = 0; i < rulesProbability.length; i++) {
 			if (randomValue < rulesProbability[i])
 				return i;

@@ -1,30 +1,19 @@
 package com.plectix.simulator.simulator;
 
 import java.util.List;
-import java.util.Random;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.apache.log4j.Logger;
 
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
-import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CXMLWriter;
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.ILift;
-import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.interfaces.IState;
 
 public class Simulator {
 	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
@@ -32,6 +21,8 @@ public class Simulator {
 	private Model model;
 
 	private double currentTime = 0.;
+	
+	private int randomSeed;
 	
 	public Simulator(Model model) {
 		this.model = model;
@@ -42,7 +33,7 @@ public class Simulator {
 		long clash = 0;
 		CRule rule;
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
-				model.getSimulationData().getRules());
+				model.getSimulationData().getRules(),0);
 
 		model.getSimulationData().getObservables().calculateObs(currentTime);
 		while (currentTime <= model.getSimulationData().getTimeLength()) {
