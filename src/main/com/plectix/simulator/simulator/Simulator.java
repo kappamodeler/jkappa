@@ -33,7 +33,7 @@ public class Simulator {
 		long clash = 0;
 		CRule rule;
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
-				model.getSimulationData().getRules(),0);
+				model.getSimulationData().getRules(),model.getSimulationData().getSeed());
 
 		model.getSimulationData().getObservables().calculateObs(currentTime);
 		while (currentTime <= model.getSimulationData().getTimeLength()) {

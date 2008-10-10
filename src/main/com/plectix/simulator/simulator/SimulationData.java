@@ -15,7 +15,7 @@ public class SimulationData {
 	private CObservables observables = new CObservables();
 	private double intialTime;
 	private double timeLength = 0;
-	private double seed = 0;
+	private int seed = 0;
 	private String xmlSessionName = "simplx.xml";
 
 	private long event;
@@ -68,11 +68,11 @@ public class SimulationData {
 		this.xmlSessionName = xmlSessionName;
 	}
 
-	public double getSeed() {
+	public int getSeed() {
 		return seed;
 	}
 
-	public void setSeed(double seed) {
+	public void setSeed(int seed) {
 		this.seed = seed;
 	}
 

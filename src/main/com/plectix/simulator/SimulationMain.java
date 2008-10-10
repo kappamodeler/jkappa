@@ -182,11 +182,11 @@ public class SimulationMain {
 		}
 
 		if (cmdLineArgs.hasOption(LONG_SEED_OPTION)) {
-			double seed = 0.;
+			int seed = 0;
 			try {
-				seed = Double.valueOf(cmdLineArgs
+				seed = Integer.valueOf(cmdLineArgs
 						.getOptionValue(LONG_SEED_OPTION));
-			} catch (Exception e) {
+			} catch (NumberFormatException e) {
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("use --sim [file]", cmdLineOptions);
 			}
