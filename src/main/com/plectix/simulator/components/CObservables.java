@@ -3,8 +3,6 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.mail.internet.NewsAddress;
-
 public class CObservables {
 	private List<ObservablesConnectedComponent> connectedComponentList = new ArrayList<ObservablesConnectedComponent>();
 	public static List<Double> countTimeList = new ArrayList<Double>();
