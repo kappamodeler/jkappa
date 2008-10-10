@@ -1,5 +1,6 @@
 package com.plectix.simulator.components;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -28,6 +29,28 @@ public class CProbabilityCalculation {
 		}
 	}
 
+	public final List<CInjection> getSomeInjectionList(CRule rule) {
+		List<CInjection> list = new ArrayList<CInjection>();
+		
+		for (CConnectedComponent cc : rule.getLeftHandSide()) {
+			list.add(cc.getInjectionsList().get(
+					randomOCAML.getInteger(cc.getInjectionsList().size())));
+		}
+		return list;
+	}
+	
+	/*public final List<CInjection> getSomeInjectionList() {
+		List<CInjection> list = new ArrayList<CInjection>();
+		Random rand = new Random();
+
+		for (CConnectedComponent cc : this.leftHandSide) {
+			list.add(cc.getInjectionsList().get(
+					rand.nextInt(cc.getInjectionsList().size())));
+		}
+		return list;
+	}
+*/	
+	
 	private void recalculateCommonActivity() {
 		commonActivity = 0.;
 		for (CRule rule : rules) {
@@ -64,11 +87,13 @@ public class CProbabilityCalculation {
 	}
 
 	public double getTimeValue() {
-		Random rand = new Random();
+/*		Random rand = new Random();
 		double randomValue = rand.nextDouble();
+*/
+		double randomValue = randomOCAML.getDouble();
 
 		while (randomValue == 0.0)
-			randomValue = rand.nextDouble();
+			randomValue = randomOCAML.getDouble();
 
 		return -1. / commonActivity * java.lang.Math.log(randomValue);
 	}

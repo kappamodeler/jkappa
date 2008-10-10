@@ -47,7 +47,7 @@ public class Simulator {
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("Rule: " + rule.getName());
 			
-			List<CInjection> injectionsList = rule.getSomeInjectionList();
+			List<CInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
 			System.out.println("Time = " + currentTime);
 			currentTime += ruleProbabilityCalculation.getTimeValue();
 

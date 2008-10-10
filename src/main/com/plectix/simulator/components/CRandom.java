@@ -36,7 +36,7 @@ public class CRandom {
 		return randomNumber;
 	}
 
-	public final double getInteger(int limit) {
+	public final int getInteger(int limit) {
 		printToWriter("2");
 		printToWriter(String.valueOf(limit));
 		

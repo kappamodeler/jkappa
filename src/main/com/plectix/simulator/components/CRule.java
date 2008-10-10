@@ -387,16 +387,7 @@ public class CRule {
 			cc.setRule(this);
 	}
 
-	public final List<CInjection> getSomeInjectionList() {
-		List<CInjection> list = new ArrayList<CInjection>();
-		Random rand = new Random();
-
-		for (CConnectedComponent cc : this.leftHandSide) {
-			list.add(cc.getInjectionsList().get(
-					rand.nextInt(cc.getInjectionsList().size())));
-		}
-		return list;
-	}
+	
 
 	public final void calcultateActivity() {
 		activity = 1.;
