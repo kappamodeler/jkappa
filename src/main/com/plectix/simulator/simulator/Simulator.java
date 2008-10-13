@@ -90,7 +90,9 @@ public class Simulator {
 
 		for (ObservablesConnectedComponent oCC : model.getSimulationData()
 				.getObservables().getConnectedComponentList()) {
-			oCC.doPositiveUpdate(rule.getRightHandSide());
+			if (((ObservablesConnectedComponent) oCC)
+					.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
+				oCC.doPositiveUpdate(rule.getRightHandSide());
 		}
 
 		model.getSimulationData().getObservables().calculateObs(currentTime);

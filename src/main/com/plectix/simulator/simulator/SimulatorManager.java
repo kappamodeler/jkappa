@@ -130,7 +130,8 @@ public class SimulatorManager {
 		for (CRule rule : rules) {
 			rule.createActivatedRulesList(rules);
 		}
-
+		simulationData.getObservables().checkAutomorphisms();
+		
 		while (iterator.hasNext()) {
 			for (CAgent agent : iterator.next()) {
 				for (CRule rule : rules) {
@@ -147,7 +148,8 @@ public class SimulatorManager {
 						.getObservables().getConnectedComponentList())
 					if (oCC != null)
 						if (!agent.isAgentHaveLinkToConnectedComponent(oCC)) {
-							oCC.setInjections(agent);
+							if (oCC.getMainAutomorphismNumber()==ObservablesConnectedComponent.NO_INDEX)
+								oCC.setInjections(agent);
 						}
 
 			}

@@ -45,9 +45,56 @@ public class CObservables {
 		}
 	}
 
+	public final void checkAutomorphisms() {
+		for (ObservablesConnectedComponent oCC: connectedComponentList) {
+			if (!oCC.isChecked){
+				for (ObservablesConnectedComponent oCCIn: connectedComponentList) {
+					if (!(oCC==oCCIn) && !(oCCIn.isChecked)){
+						if (oCC.isAutomorphism(oCCIn.getAgents().get(0))){
+							int index = connectedComponentList.indexOf(oCC);
+							oCC.addAutomorphicObservables(index);
+							oCCIn.isChecked = true;
+							oCCIn.setMainAutomorphismNumber(index);
+						}
+					}
+				}
+			}
+			oCC.isChecked = true;
+		}
+	}
+
 	public class ObservablesConnectedComponent extends CConnectedComponent {
 		private String name;
 		private String line;
+		private List<Integer> automorphicObservables;
+		private boolean isChecked = false;
+		public static final int NO_INDEX =-1;
+		private int mainAutomorphismNumber = NO_INDEX;
+		
+		public int getMainAutomorphismNumber() {
+			return mainAutomorphismNumber;
+		}
+
+		public void setMainAutomorphismNumber(int mainAutomorphismNumber) {
+			this.mainAutomorphismNumber = mainAutomorphismNumber;
+		}
+
+		public List<Integer> getAutomorphicObservables() {
+			return automorphicObservables;
+		}
+
+		public void addAutomorphicObservables(int automorphicObservable) {
+			this.automorphicObservables.add(automorphicObservable);
+		}
+
+		public boolean isChecked() {
+			return isChecked;
+		}
+
+		public void setChecked(boolean isChecked) {
+			this.isChecked = isChecked;
+		}
+
 		public String getLine() {
 			return line;
 		}
@@ -66,6 +113,7 @@ public class CObservables {
 			super(connectedAgents);
 			this.name = name;
 			this.line=line;
+			this.automorphicObservables = new ArrayList<Integer>();
 		}
 				
 		public String getName() {
