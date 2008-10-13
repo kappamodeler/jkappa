@@ -1,9 +1,7 @@
 package com.plectix.simulator.simulator;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -366,6 +364,27 @@ public class SimulatorManager {
 			System.out.println();
 			System.out.println();
 		}
+	}
+
+	private long timeStartNano;
+	private long timeStart;
+
+	public final void startTimer() {
+		Date data = new Date();
+		timeStart = data.getTime() - data.getTime() % 1000;
+		timeStartNano = System.nanoTime();
+	}
+
+	public final String getTimer() {
+		Date data = new Date();
+		long time = data.getTime() - data.getTime() % 1000;
+		time = Math.round((time - timeStart) / 1000);
+		long nano = timeStartNano - System.nanoTime();
+		String sNano = Long.toString(Math.abs(nano));
+		while (sNano.length() < 9)
+			sNano = "0" + sNano;
+		String sTime = Long.toString(time) + "." + sNano;
+		return sTime;
 	}
 
 }

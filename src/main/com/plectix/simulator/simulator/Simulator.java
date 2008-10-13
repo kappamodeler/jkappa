@@ -7,6 +7,7 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.log4j.Logger;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CProbabilityCalculation;
@@ -30,6 +31,7 @@ public class Simulator {
 	}
 
 	public void run() {
+		SimulationMain.getSimulationManager().startTimer();
 		long clash = 0;
 		CRule rule;
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
@@ -37,20 +39,21 @@ public class Simulator {
 						.getSeed());
 
 		model.getSimulationData().getObservables().calculateObs(currentTime);
+		boolean isEndRules = false;
 		while (currentTime <= model.getSimulationData().getTimeLength()) {
 			rule = ruleProbabilityCalculation.getRandomRule();
 
 			if (rule == null) {
-				LOGGER.info("end of simulation: there are no active rules");
+				isEndRules = true;
 				model.getSimulationData().setTimeLength(currentTime);
-				return;
+				break;
 			}
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("Rule: " + rule.getName());
 
 			List<CInjection> injectionsList = ruleProbabilityCalculation
 					.getSomeInjectionList(rule);
-			System.out.println("Time = " + currentTime);
+			// System.out.println("Time = " + currentTime);
 			currentTime += ruleProbabilityCalculation.getTimeValue();
 
 			if (!isClash(injectionsList)) {
@@ -62,7 +65,7 @@ public class Simulator {
 
 				doNegativeUpdate(injectionsList);
 
-				model.getSimulationData().getObservables().PrintObsCount();
+				// model.getSimulationData().getObservables().PrintObsCount();
 
 				// positive update
 				if (LOGGER.isDebugEnabled())
@@ -70,7 +73,7 @@ public class Simulator {
 
 				doPositiveUpdate(rule);
 
-				model.getSimulationData().getObservables().PrintObsCount();
+				// model.getSimulationData().getObservables().PrintObsCount();
 			} else {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Clash");
@@ -78,7 +81,18 @@ public class Simulator {
 			}
 		}
 
+		outToLogger(isEndRules);
 		outputData();
+	}
+
+	private final void outToLogger(boolean isEndRules) {
+		System.out.println("-Simulation: "
+				+ SimulationMain.getSimulationManager().getTimer()
+				+ " sec. CPU");
+		if (!isEndRules)
+			LOGGER.info("end of simulation: time");
+		else
+			LOGGER.info("end of simulation: there are no active rules");
 	}
 
 	public final void doPositiveUpdate(CRule rule) {
@@ -113,7 +127,8 @@ public class Simulator {
 	}
 
 	public final void outputData() {
-		LOGGER.info("end of simulation: time");
+		SimulationMain.getSimulationManager().startTimer();
+
 		model.getSimulationData().setTimeLength(currentTime);
 		CXMLWriter xmlWriter = new CXMLWriter();
 		try {
@@ -123,6 +138,10 @@ public class Simulator {
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
+
+		System.out.println("-Results outputted in xml session: "
+				+ SimulationMain.getSimulationManager().getTimer()
+				+ " sec. CPU");
 	}
 
 	private boolean isClash(List<CInjection> injections) {

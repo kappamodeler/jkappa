@@ -1,8 +1,6 @@
 package com.plectix.simulator;
 
 import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -12,15 +10,10 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.PropertyConfigurator;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.parser.ParseErrorException;
-import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.Model;
-import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorManager;
 
@@ -74,6 +67,7 @@ public class SimulationMain {
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 
 		instance = new SimulationMain();
+		simulationManager.startTimer();
 		instance.parseArguments(args);
 		instance.readSimulatonFile();
 		instance.initialize();
@@ -82,6 +76,8 @@ public class SimulationMain {
 
 	public void initialize() {
 		simulationManager.initialize();
+		System.out.println("-Initialization: " + simulationManager.getTimer()
+				+ " sec. CPU");
 		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
 			simulationManager.outputData();
 			System.exit(1);
