@@ -29,6 +29,7 @@ public class SimulationMain {
 	private final static String LONG_XML_SESSION_NAME_OPTION = "xml_session_name";
 	private final static String LONG_STORIFY_OPTION = "storify";
 	private final static String LONG_EVENT_OPTION = "event";
+	private final static String LONG_RANDOMIZER_JAVA_OPTION = "randomizer";
 
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
@@ -59,6 +60,8 @@ public class SimulationMain {
 				"Name of the kappa file to storify");
 		cmdLineOptions.addOption(LONG_EVENT_OPTION, true,
 				"Number of rule applications");
+		cmdLineOptions.addOption(LONG_RANDOMIZER_JAVA_OPTION, true,
+				"Use randomizer Java");
 
 	}
 
@@ -202,6 +205,12 @@ public class SimulationMain {
 			SimulationMain.getSimulationManager().getSimulationData().setEvent(
 					event);
 		}
+
+		if (cmdLineArgs.hasOption(LONG_RANDOMIZER_JAVA_OPTION)) {
+			simulationManager.getSimulationData().setRandomizer(
+					cmdLineArgs.getOptionValue(LONG_RANDOMIZER_JAVA_OPTION));
+		}
+
 	}
 
 	public final static SimulatorManager getSimulationManager() {

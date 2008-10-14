@@ -5,17 +5,19 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-public class CRandom {
+import com.plectix.simulator.interfaces.IRandom;
+
+public class CRandomOCaml implements IRandom {
 
 	private Process process;
 	private Scanner scanner;
 	private PrintWriter writer;
 
-	public CRandom(int seed) {
+	public CRandomOCaml(String patch, int seed) {
 		Runtime runtime = Runtime.getRuntime();
 		try {
-			process = runtime
-					.exec("C:\\Documents and Settings\\prudnikova\\workspace\\simulator\\data\\rand1.exe");
+			// "C:\\workspace\\simulator\\data\\rand1.exe"
+			process = runtime.exec(patch);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -39,7 +41,7 @@ public class CRandom {
 	public final int getInteger(int limit) {
 		printToWriter("2");
 		printToWriter(String.valueOf(limit));
-		
+
 		int randomNumber;
 		try {
 			randomNumber = Integer.parseInt(scanner.nextLine());
@@ -49,21 +51,21 @@ public class CRandom {
 		return randomNumber;
 	}
 
-	private final void printToWriter(String str){
+	private final void printToWriter(String str) {
 		writer.print(str);
 		writer.println();
 		writer.flush();
 	}
-	
+
 	private final void setSeed(int seed) {
-	
+
 		if (seed != 0) {
 			printToWriter("0");
 			printToWriter(String.valueOf(seed));
 		} else {
 			printToWriter("2");
 			printToWriter("1073741823");
-			
+
 			int randomNumber;
 			try {
 				String str = scanner.next();

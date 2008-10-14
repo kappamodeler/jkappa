@@ -53,7 +53,6 @@ public class Simulator {
 
 			List<CInjection> injectionsList = ruleProbabilityCalculation
 					.getSomeInjectionList(rule);
-			// System.out.println("Time = " + currentTime);
 			currentTime += ruleProbabilityCalculation.getTimeValue();
 
 			if (!isClash(injectionsList)) {
@@ -65,15 +64,12 @@ public class Simulator {
 
 				doNegativeUpdate(injectionsList);
 
-				// model.getSimulationData().getObservables().PrintObsCount();
-
 				// positive update
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("positive update");
 
 				doPositiveUpdate(rule);
 
-				// model.getSimulationData().getObservables().PrintObsCount();
 			} else {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Clash");
