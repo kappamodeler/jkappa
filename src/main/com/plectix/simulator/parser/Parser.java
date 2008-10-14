@@ -1,6 +1,5 @@
 package com.plectix.simulator.parser;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,10 +14,8 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
-import com.plectix.simulator.components.SolutionLines;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulatorManager;
 
 public class Parser {
 
@@ -97,7 +94,6 @@ public class Parser {
 	}
 
 	public final void parse() throws ParseErrorException {
-		// System.out.println("Start parsing...");
 		createSimData(data.getInits(), CREATE_INIT);
 		List<CRule> rules = createRules(data.getRules());
 		SimulationMain.getSimulationManager().setRules(rules);
@@ -125,14 +121,11 @@ public class Parser {
 			if (rulesStr.indexOf("'") != -1) {
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
 				name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
-				// data = rulesStr.substring(beginIndex, endIndex)
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1,
 						rulesStr.length()).trim();
 			}
 			int index = rulesStr.lastIndexOf("@");
 			if (index != -1) {
-				// throw new ParseErrorException("Error in Rules: " + input);
-
 				try {
 					String activStr = rulesStr.substring(index + 1).trim();
 					if (activStr.indexOf(",") != -1) {
@@ -153,11 +146,7 @@ public class Parser {
 			if (rulesStr.indexOf("<->") != -1) {
 				typeRule = RULE_TWO_WAY;
 				rulesStr = rulesStr.replace("<", "");
-				// if (activity2 == null)
-				// throw new ParseErrorException("Error in Rules: " + input);
 			}
-			// else if (activity2 != null)
-			// throw new ParseErrorException("Error in Rules: " + input);
 
 			rulesStr = rulesStr.trim();
 			int y = rulesStr.indexOf("->");
@@ -220,8 +209,6 @@ public class Parser {
 			}
 			}
 
-			// rules.add(SimulationMain.getSimulationManager().buildRule(left,
-			// right, name, activity));
 			ruleID++;
 
 		}
@@ -261,7 +248,6 @@ public class Parser {
 				List<CAgent> listAgent = parseAgent(line);
 				simulationData.getSolution().addAgents(listAgent);
 				for (int i = 1; i < count; i++) {
-					// simulationData.getSolution().addAgents(parseAgent(line));
 					simulationData.getSolution().addAgents(
 							cloneAgentsList(listAgent));
 				}

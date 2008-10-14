@@ -36,25 +36,11 @@ public class SimulatorManager {
 		List<CConnectedComponent> result = new ArrayList<CConnectedComponent>();
 
 		while (!agents.isEmpty()) {
-			// int index = 0;
 
 			List<CAgent> connectedAgents = new ArrayList<CAgent>();
 
 			findConnectedComponent(agents.get(0), agents, connectedAgents);
-			/*
-			 * CAgent agent = agents.remove(0); connectedAgents.add(agent);
-			 * 
-			 * agent.setIdInConnectedComponent(index);
-			 * 
-			 * Collection<CSite> sites = agent.getSites();
-			 * 
-			 * for (CSite site : sites) { if (site.getLinkIndex() !=
-			 * CSite.NO_INDEX) { CAgent linkedAgent = findLink(agents,
-			 * site.getLinkIndex()); if (linkedAgent != null) { //if
-			 * (!(connectedAgents.contains(linkedAgent))) {
-			 * connectedAgents.add(linkedAgent); //} agents.remove(linkedAgent);
-			 * linkedAgent.setIdInConnectedComponent(++index); } } }
-			 */
+
 			// It needs recursive tree search of connected component
 			result.add(new CConnectedComponent(connectedAgents));
 		}
@@ -64,7 +50,6 @@ public class SimulatorManager {
 
 	private final void findConnectedComponent(CAgent rootAgent,
 			List<CAgent> hsRulesList, List<CAgent> agentsList) {
-		// newVertex[rootAgent.getIdInConnectedComponent()] = false;
 		agentsList.add(rootAgent);
 		rootAgent.setIdInConnectedComponent(agentsList.size() - 1);
 		hsRulesList.remove(rootAgent);
@@ -75,9 +60,6 @@ public class SimulatorManager {
 					if (!isAgentInList(agentsList, linkedAgent))
 						findConnectedComponent(linkedAgent, hsRulesList,
 								agentsList);
-					// connectedAgents.add(linkedAgent);
-					// agents.remove(linkedAgent);
-					// linkedAgent.setIdInConnectedComponent(++index);
 				}
 			}
 		}
@@ -200,32 +182,23 @@ public class SimulatorManager {
 				return line;
 			for (CAgent agent : cc.getAgents()) {
 				line = line + agent.getName();
-				// System.out.print(agent.getName());
 				line = line + "(";
-				// System.out.print("(");
 				int i = 1;
 				for (CSite site : agent.getSites()) {
 					line = line + site.getName();
-					// System.out.print(site.getName());
 					if ((site.getInternalState() != null)
 							&& (site.getInternalState().getNameId() >= 0))
 						line = line + "~" + site.getInternalState().getName();
-					// System.out.print("~"
-					// + site.getInternalState().getName());
 					switch (site.getLinkState().getStatusLink()) {
 					case CLinkState.STATUS_LINK_BOUND: {
 						if (site.getLinkState() == null)
 							line = line + "!_";
-						// System.out.print("!_");
-
 						else if (site.getAgentLink().getIdInRuleSide() < ((CSite) site
 								.getLinkState().getSite()).getAgentLink()
 								.getIdInRuleSide()) {
 							line = line + "!" + indexLink;
-							// System.out.print("!" + indexLink);
 						} else {
 							line = line + "!" + indexLink;
-							// System.out.print("!" + indexLink);
 							indexLink++;
 						}
 
@@ -233,21 +206,17 @@ public class SimulatorManager {
 					}
 					case CLinkState.STATUS_LINK_WILDCARD: {
 						line = line + "?";
-						// System.out.print("?");
 						break;
 					}
 					}
 
 					if (agent.getSites().size() > i++)
 						line = line + ",";
-					// System.out.print(",");
 				}
 				if (length > j)
 					line = line + "),";
-				// System.out.print("),");
 				else
 					line = line + ")";
-				// System.out.print(")");
 				j++;
 			}
 
@@ -352,7 +321,6 @@ public class SimulatorManager {
 			}
 
 			String line = printPartRule(rule.getLeftHandSide());
-			// System.out.print("->");
 			line = line + "->";
 			line = line + printPartRule(rule.getRightHandSide());
 			String ch = new String();
@@ -360,7 +328,6 @@ public class SimulatorManager {
 				ch = ch + "-";
 
 			System.out.println(ch);
-			// System.out.println("--------------------------------");
 			if (rule.getName() != null) {
 				System.out.print(rule.getName());
 				System.out.print(": ");
@@ -368,7 +335,6 @@ public class SimulatorManager {
 			System.out.print(line);
 			System.out.println();
 			System.out.println(ch);
-			// System.out.println("--------------------------------");
 			System.out.println();
 			System.out.println();
 		}

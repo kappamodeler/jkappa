@@ -17,8 +17,6 @@ public class CLinkState extends CState {
 	private byte statusLink;
 	private ISite linkSite = null;
 
-	// private List<CConnectedComponent>
-
 	public CLinkState(ISite site, byte statusLink) {
 		linkSite = site;
 		this.statusLink = statusLink;
@@ -55,19 +53,6 @@ public class CLinkState extends CState {
 
 	public final void setStatusLink(byte statusLink) {
 		this.statusLink = statusLink;
-		//ISite site = getSite();
-		
-//		if(statusLink== STATUS_LINK_FREE){
-//			if (this.linkSite != null){
-//				(this.linkSite.getLinkState().setStatusLink(STATUS_LINK_FREE);
-//			}
-//			this.linkSite = null;
-//			
-//			//setSite(null);
-//			if(site!= null)
-//				(;
-//			
-//		}
 	}
 
 	public final byte getStatusLink() {
@@ -92,12 +77,6 @@ public class CLinkState extends CState {
 		}
 	}
 
-	// @Override
-	// public final List<LiftElement> getLift() {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-
 	@Override
 	public final String getName() {
 		// TODO Auto-generated method stub
@@ -115,11 +94,5 @@ public class CLinkState extends CState {
 		// TODO Auto-generated method stub
 
 	}
-
-	// @Override
-	// public final void setLift(List<LiftElement> lift) {
-	// // TODO Auto-generated method stub
-	//
-	// }
 
 }

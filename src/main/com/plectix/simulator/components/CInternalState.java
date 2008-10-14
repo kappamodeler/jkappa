@@ -17,12 +17,6 @@ public class CInternalState extends CState {
 		return false;
 	}
 
-	// @Override
-	// public final List<LiftElement> getLift() {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
-
 	public final void setNameId(int id) {
 		this.nameId = id;
 	}
@@ -48,12 +42,6 @@ public class CInternalState extends CState {
 		// TODO Auto-generated method stub
 
 	}
-
-	// @Override
-	// public final void setLift(List<LiftElement> lift) {
-	// // TODO Auto-generated method stub
-	//		
-	// }
 
 	public final int getStateNameId() {
 		return nameId;

@@ -59,21 +59,13 @@ public class CSpanningTree {
 	 */
 	private final void depthFirstSearch(CAgent rootAgent) {
 		newVertex[rootAgent.getIdInConnectedComponent()] = false;
-		// vertexes[rootAgent.getIdInConnectedComponent()].add(rootAgent
-		// .getIdInConnectedComponent());
 		for (CSite site : rootAgent.getSites()) {
 			CSite linkSite = (CSite) site.getLinkState().getSite();
 			if (linkSite != null) {
 				CAgent agent = linkSite.getAgentLink();
 				Integer vertexIndex = agent.getIdInConnectedComponent();
-				// TODO check!!
-				// 'Test1' ErbB3(Y1241~p!1),PI3K(SH2!1,s),PI(three~u) -> ErbB3(Y1241~p!1),PI3K(SH2!1,s!2),PI(three~u!2) @1.
-				// newVertex.length < vertexIndex 
-				//
-				 if (newVertex[vertexIndex]) {
-				/*if ((newVertex.length < vertexIndex)
-						&& (newVertex[vertexIndex])) {
-			*/		vertexes[rootAgent.getIdInConnectedComponent()]
+				if (newVertex[vertexIndex]) {
+					vertexes[rootAgent.getIdInConnectedComponent()]
 							.add(vertexIndex);
 					depthFirstSearch(agent);
 				}

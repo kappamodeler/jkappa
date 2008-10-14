@@ -93,17 +93,9 @@ public class SimulationMain {
 		Simulator simulator = new Simulator(new Model(instance
 				.getSimulationManager().getSimulationData()));
 		simulator.run();
-		// simulator.outputData();
 	}
 
 	public final void readSimulatonFile() {
-		// if ((!cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION))
-		// && (!cmdLineArgs.hasOption(SHORT_COMPILE_OPTION))) {
-		// HelpFormatter formatter = new HelpFormatter();
-		// formatter.printHelp("use --sim [file]", cmdLineOptions);
-		// // formatter.printHelp("use --compile [file]", cmdLineOptions);
-		// System.exit(1);
-		// }
 
 		boolean option = false;
 		String fileName = null;

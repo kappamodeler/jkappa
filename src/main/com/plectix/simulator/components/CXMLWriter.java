@@ -1,6 +1,5 @@
 package com.plectix.simulator.components;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -15,7 +14,6 @@ import org.w3c.dom.*;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.simulator.SimulatorManager;
 
 public class CXMLWriter {
@@ -69,7 +67,6 @@ public class CXMLWriter {
 
 			String line = SimulatorManager.printPartRule(rules.get(i)
 					.getLeftHandSide());
-			// System.out.print("->");
 			line = line + "->";
 			line = line
 					+ SimulatorManager.printPartRule(rules.get(i)
@@ -104,9 +101,6 @@ public class CXMLWriter {
 		}
 		Element csv = doc.createElement("CSV");
 		CDATASection cdata = doc.createCDATASection("\n");
-		// CObservables obs =
-		// SimulationMain.getSimulationManager().getSimulationData
-		// ().getObservables();
 		double timeSampleMin = 0.01;
 
 		appendData(obs, cdata, 0);
@@ -119,15 +113,8 @@ public class CXMLWriter {
 			}
 
 		}
-		// cdata.
 		csv.appendChild(cdata);
 		simulation.appendChild(csv);
-
-		// Element Log = doc.createElement("Log");
-		// plot.setAttribute("Type", "OBSERVABLE");
-		// plot.setAttribute("Text", "text");
-		// simplxSession.appendChild(plot);
-		//		
 
 		TransformerFactory trFactory = TransformerFactory.newInstance();
 		Transformer transformer = trFactory.newTransformer();
@@ -143,7 +130,7 @@ public class CXMLWriter {
 			cdata.appendData(",");
 			ObservablesConnectedComponent oCC = obs.getConnectedComponentList()
 					.get(j);
-			if (oCC.getMainAutomorphismNumber()==ObservablesConnectedComponent.NO_INDEX)
+			if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
 				cdata.appendData(oCC.getCountList().get(index).toString());
 			else
 				cdata.appendData(obs.getConnectedComponentList().get(

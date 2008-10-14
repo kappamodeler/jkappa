@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.simulator.SimulatorManager;
 
 public class CSite implements ISite {
 	public static final int NO_INDEX = -1;
@@ -89,9 +88,6 @@ public class CSite implements ISite {
 			return false;
 		if (!(this.linkAgent.equals(site.getAgentLink())))
 			return false;
-		//if (internalState == null)
-		//	return true;
-		// return internalState.equals(site.internalState);
 		return true;
 	}
 
@@ -109,14 +105,10 @@ public class CSite implements ISite {
 
 	public final void removeInjectionsFromCCToSite(CInjection inInjection) {
 
-		// for (CLiftElement liftElement : this.lift){
-		// this.lift.remove(index);
-
 		for (CLiftElement liftElement : this.liftList) {
 			CInjection injection = liftElement.getInjection();
 			if (injection != inInjection) {
 				for (CSite site : injection.getSiteList()) {
-					// site.getLift().remove(injection);
 					if (this != site)
 						site.removeInjectionFromLift(injection);
 				}

@@ -52,15 +52,4 @@ public class CInjection implements IInjection {
 
 	}
 
-	// @Override
-	// public final boolean equals(Object obj) {
-	// if (!(obj instanceof CInjection))
-	// return false;
-	// CInjection injection = (CInjection) obj;
-	// if (! (nameId == agent.nameId))
-	// return false;
-	// // return siteMap.equals(agent.siteMap);
-	// return true;
-	// }
-
 }

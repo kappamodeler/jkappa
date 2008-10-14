@@ -48,15 +48,6 @@ public class CProbabilityCalculation {
 		return list;
 	}
 
-	/*
-	 * public final List<CInjection> getSomeInjectionList() { List<CInjection>
-	 * list = new ArrayList<CInjection>(); Random rand = new Random();
-	 * 
-	 * for (CConnectedComponent cc : this.leftHandSide) {
-	 * list.add(cc.getInjectionsList().get(
-	 * rand.nextInt(cc.getInjectionsList().size()))); } return list; }
-	 */
-
 	private void recalculateCommonActivity() {
 		commonActivity = 0.;
 		for (CRule rule : rules) {
@@ -71,9 +62,6 @@ public class CProbabilityCalculation {
 				return i;
 		}
 
-		/*
-		 * Random rand = new Random(); double randomValue = rand.nextDouble();
-		 */
 		double randomValue = random.getDouble();
 		for (int i = 0; i < rulesProbability.length; i++) {
 			if (randomValue < rulesProbability[i])
@@ -93,9 +81,7 @@ public class CProbabilityCalculation {
 	}
 
 	public double getTimeValue() {
-		/*
-		 * Random rand = new Random(); double randomValue = rand.nextDouble();
-		 */
+
 		double randomValue = random.getDouble();
 
 		while (randomValue == 0.0)

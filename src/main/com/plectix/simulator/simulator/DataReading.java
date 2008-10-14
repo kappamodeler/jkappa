@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.SimulationMain;
-
 // get input strings from input file (or something else)  
 // i.e. makes lists of strings with different prefix such as 
 // %rule, %init, %obs
@@ -38,9 +36,6 @@ public class DataReading {
 	}
 
 	public final void readData() throws IOException {
-		// reading of the file
-		// ....
-
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(filePatch));
 			String line;
@@ -51,8 +46,8 @@ public class DataReading {
 					continue;
 
 				if (line.startsWith("%story"))
-					story.add(new String(line.substring(
-							STRING_STORIFY_PREFIX, line.length())));
+					story.add(new String(line.substring(STRING_STORIFY_PREFIX,
+							line.length())));
 				else if (line.startsWith("%obs"))
 					observables.add(new String(line.substring(
 							STRING_SIMULATION_PREFIX, line.length())));
@@ -65,16 +60,15 @@ public class DataReading {
 			}
 			in.close();
 		} catch (IOException e) {
-			// TODO: remove the try block if not doing anything here...
-			// System.err.println("File not found.");
 			throw e;
 		}
 
 		// checking of the components of data
 		if (rules.isEmpty())
 			throw new IOException("There are no rules in the input data");
-		else if ((story.isEmpty())&&(observables.isEmpty()))
-			throw new IOException("There are no observables/stories in the input data");
+		else if ((story.isEmpty()) && (observables.isEmpty()))
+			throw new IOException(
+					"There are no observables/stories in the input data");
 		else if (inits.isEmpty())
 			throw new IOException("There are no inits in the input data");
 	}

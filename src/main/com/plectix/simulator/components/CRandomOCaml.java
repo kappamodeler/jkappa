@@ -16,7 +16,6 @@ public class CRandomOCaml implements IRandom {
 	public CRandomOCaml(String patch, int seed) {
 		Runtime runtime = Runtime.getRuntime();
 		try {
-			// "C:\\workspace\\simulator\\data\\rand1.exe"
 			process = runtime.exec(patch);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -81,20 +80,5 @@ public class CRandomOCaml implements IRandom {
 	public final void disableRandom() {
 		printToWriter("3");
 	}
-
-	/*
-	 * public static void main(String[] args) {
-	 * 
-	 * try {
-	 * 
-	 * 
-	 * 
-	 * System.out.print(scanner.nextLine());
-	 * 
-	 * 
-	 * } catch (IOException e) { e.printStackTrace(); }
-	 * 
-	 * }
-	 */
 
 }

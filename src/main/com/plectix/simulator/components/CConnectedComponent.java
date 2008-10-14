@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -13,7 +12,7 @@ import com.plectix.simulator.interfaces.ISolution;
 public class CConnectedComponent implements IConnectedComponent {
 
 	public static final byte EMPTY = 0;
-	
+
 	public static final CInjection EMPTY_INJECTION = new CInjection();
 
 	private List<CAgent> agentList;
@@ -110,7 +109,6 @@ public class CConnectedComponent implements IConnectedComponent {
 				if (!agent.isAgentHaveLinkToConnectedComponent(this)) {
 					setInjections(agent);
 				}
-			// setInjections(cc.getAgentFromSolutionForRHS());
 		}
 	}
 
@@ -292,11 +290,7 @@ public class CConnectedComponent implements IConnectedComponent {
 				.getStatusLinkRank()
 				&& currentState.getStatusLinkRank() == CLinkState.RANK_BOUND)
 			if (currentState.getSite().equals(solutionState.getSite()))
-				/*
-				 * if (currentState.getStatusLinkRank() == CLinkState.RANK_BOUND
-				 * && currentState.getSite().getAgentLink().equals(
-				 * solutionState.getSite().getAgentLink()))
-				 */return true;
+				return true;
 
 		if (currentState.getStatusLinkRank() == solutionState
 				.getStatusLinkRank()
