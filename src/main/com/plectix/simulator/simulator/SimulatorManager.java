@@ -72,7 +72,7 @@ public class SimulatorManager {
 			if (site.getLinkIndex() != CSite.NO_INDEX) {
 				CAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
 				if (linkedAgent != null) {
-					if (!(agentsList.contains(linkedAgent)))
+					if (!isAgentInList(agentsList, linkedAgent))
 						findConnectedComponent(linkedAgent, hsRulesList,
 								agentsList);
 					// connectedAgents.add(linkedAgent);
@@ -81,6 +81,14 @@ public class SimulatorManager {
 				}
 			}
 		}
+	}
+
+	private final boolean isAgentInList(List<CAgent> list, CAgent agent) {
+		for (CAgent lagent : list) {
+			if (lagent == agent)
+				return true;
+		}
+		return false;
 	}
 
 	private final CAgent findLink(List<CAgent> agents, int linkIndex) {
@@ -129,7 +137,7 @@ public class SimulatorManager {
 			rule.createActivatedRulesList(rules);
 		}
 		simulationData.getObservables().checkAutomorphisms();
-		
+
 		while (iterator.hasNext()) {
 			for (CAgent agent : iterator.next()) {
 				for (CRule rule : rules) {
@@ -146,7 +154,7 @@ public class SimulatorManager {
 						.getObservables().getConnectedComponentList())
 					if (oCC != null)
 						if (!agent.isAgentHaveLinkToConnectedComponent(oCC)) {
-							if (oCC.getMainAutomorphismNumber()==ObservablesConnectedComponent.NO_INDEX)
+							if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
 								oCC.setInjections(agent);
 						}
 
