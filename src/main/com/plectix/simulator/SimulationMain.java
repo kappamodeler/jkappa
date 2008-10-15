@@ -30,6 +30,7 @@ public class SimulationMain {
 	private final static String LONG_STORIFY_OPTION = "storify";
 	private final static String LONG_EVENT_OPTION = "event";
 	private final static String LONG_RANDOMIZER_JAVA_OPTION = "randomizer";
+	private final static String LONG_ITERATIONS_OPTION = "iterations";
 
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
@@ -62,6 +63,10 @@ public class SimulationMain {
 				"Number of rule applications");
 		cmdLineOptions.addOption(LONG_RANDOMIZER_JAVA_OPTION, true,
 				"Use randomizer Java");
+
+		cmdLineOptions
+				.addOption(LONG_ITERATIONS_OPTION, true,
+						"To run the same simulation given number of times and get averages");
 
 	}
 
@@ -203,6 +208,18 @@ public class SimulationMain {
 					cmdLineArgs.getOptionValue(LONG_RANDOMIZER_JAVA_OPTION));
 		}
 
+		if (cmdLineArgs.hasOption(LONG_ITERATIONS_OPTION)) {
+			int iteration = 0;
+			try {
+				iteration = Integer.valueOf(cmdLineArgs
+						.getOptionValue(LONG_ITERATIONS_OPTION));
+			} catch (Exception e) {
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp("use --sim [file]", cmdLineOptions);
+			}
+			SimulationMain.getSimulationManager().getSimulationData()
+					.setIterations(iteration);
+		}
 	}
 
 	public final static SimulatorManager getSimulationManager() {

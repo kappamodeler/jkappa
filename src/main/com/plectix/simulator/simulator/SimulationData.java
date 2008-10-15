@@ -18,6 +18,7 @@ public class SimulationData {
 	private int seed = 0;
 	private String xmlSessionName = "simplx.xml";
 	private String randomizer;
+	private int iterations = 0;
 
 	private long event;
 
@@ -128,5 +129,13 @@ public class SimulationData {
 
 	public void setRandomizer(String randomizer) {
 		this.randomizer = randomizer;
+	}
+
+	public final int getIterations() {
+		return iterations;
+	}
+
+	public final void setIterations(int iterations) {
+		this.iterations = iterations;
 	}
 }
