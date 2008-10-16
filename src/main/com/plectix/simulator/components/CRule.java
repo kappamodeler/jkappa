@@ -16,6 +16,10 @@ public class CRule {
 	private double activity = 0.;
 	private String name;
 	private double ruleRate;
+	public void setRuleRate(double ruleRate) {
+		this.ruleRate = ruleRate;
+	}
+
 	private int ruleID;
 
 	private int automorphismNumber = 1;

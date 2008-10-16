@@ -33,9 +33,10 @@ public class CObservables {
 
 	public final void addConnectedComponents(List<CConnectedComponent> list,
 			String name, String line) {
+		int id = 0;
 		for (CConnectedComponent component : list) {
 			ObservablesConnectedComponent oCC = new ObservablesConnectedComponent(
-					component.getAgents(), name, line);
+					component.getAgents(), name, line, id++);
 			oCC.initSpanningTreeMap();
 			connectedComponentList.add(oCC);
 		}
@@ -43,27 +44,31 @@ public class CObservables {
 
 	public final void checkAutomorphisms() {
 		for (ObservablesConnectedComponent oCC : connectedComponentList) {
-			if (!oCC.isChecked) {
+			if (oCC.mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
 				for (ObservablesConnectedComponent oCCIn : connectedComponentList) {
-					if (!(oCC == oCCIn) && !(oCCIn.isChecked)) {
+					if (!(oCC == oCCIn)
+							&& oCCIn.mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
 						if (oCC.isAutomorphism(oCCIn.getAgents().get(0))) {
 							int index = connectedComponentList.indexOf(oCC);
 							oCC.addAutomorphicObservables(index);
-							oCCIn.isChecked = true;
 							oCCIn.setMainAutomorphismNumber(index);
 						}
 					}
 				}
 			}
-			oCC.isChecked = true;
 		}
 	}
 
 	public class ObservablesConnectedComponent extends CConnectedComponent {
 		private String name;
 		private String line;
+		private int nameID;
+
+		public int getNameID() {
+			return nameID;
+		}
+
 		private List<Integer> automorphicObservables;
-		private boolean isChecked = false;
 		public static final int NO_INDEX = -1;
 		private int mainAutomorphismNumber = NO_INDEX;
 
@@ -83,14 +88,6 @@ public class CObservables {
 			this.automorphicObservables.add(automorphicObservable);
 		}
 
-		public boolean isChecked() {
-			return isChecked;
-		}
-
-		public void setChecked(boolean isChecked) {
-			this.isChecked = isChecked;
-		}
-
 		public String getLine() {
 			return line;
 		}
@@ -106,11 +103,12 @@ public class CObservables {
 		}
 
 		public ObservablesConnectedComponent(List<CAgent> connectedAgents,
-				String name, String line) {
+				String name, String line, int nameID) {
 			super(connectedAgents);
 			this.name = name;
 			this.line = line;
 			this.automorphicObservables = new ArrayList<Integer>();
+			this.nameID = nameID;
 		}
 
 		public String getName() {
