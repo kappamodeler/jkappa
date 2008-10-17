@@ -221,6 +221,8 @@ public class Parser {
 		long count;
 		String line;
 		String[] result;
+		
+		int obsNameID=0;
 		for (String item : list) {
 			count = 1;
 			result = item.split("\\*");
@@ -272,7 +274,6 @@ public class Parser {
 				break;
 			}
 			case CREATE_OBS: {
-
 				String name = null;
 				if (line.indexOf("'") != -1) {
 					line = line.substring(line.indexOf("'") + 1);
@@ -283,7 +284,8 @@ public class Parser {
 				simulationData.getObservables().addConnectedComponents(
 						SimulationMain.getSimulationManager()
 								.buildConnectedComponents(parseAgent(line)),
-						name, line);
+						name, line, obsNameID);
+				obsNameID++;
 				break;
 			}
 
