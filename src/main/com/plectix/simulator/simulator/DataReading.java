@@ -24,12 +24,16 @@ public class DataReading {
 	private List<String> inits = new ArrayList<String>();
 	// init conditions in the input
 
+	private List<String> mods = new ArrayList<String>();
+	// mod conditions in the input
+
 	private String filePatch = null; // "C:/workspace/Example.tmp";
 
 	private static final int STRING_INITIAL_CONDITIONS_PREFIX = "%init: "
 			.length(); // 7; // "%init: "
 	private static final int STRING_SIMULATION_PREFIX = "%obs: ".length(); // 6;
 	private static final int STRING_STORIFY_PREFIX = "%story: ".length(); // 8;
+	private static final int STRING_MOD_PREFIX = "%mod: ".length(); // 6;
 
 	public DataReading(String filename) {
 		this.filePatch = filename;
@@ -45,7 +49,10 @@ public class DataReading {
 				if (line.startsWith("#"))
 					continue;
 
-				if (line.startsWith("%story"))
+				if (line.startsWith("%mod"))
+					mods.add(new String(line.substring(STRING_MOD_PREFIX, line
+							.length())));
+				else if (line.startsWith("%story"))
 					story.add(new String(line.substring(STRING_STORIFY_PREFIX,
 							line.length())));
 				else if (line.startsWith("%obs"))
@@ -87,6 +94,10 @@ public class DataReading {
 
 	public List<String> getStory() {
 		return story;
+	}
+
+	public final List<String> getMods() {
+		return mods;
 	}
 
 }

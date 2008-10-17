@@ -3,6 +3,7 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 
 public class CPerturbation {
@@ -22,7 +23,13 @@ public class CPerturbation {
 	private double perturbationRate;
 	private double ruleRate;
 	private int ruleID;
+	private int perturbationID;
 	private boolean greater = true;
+	private boolean isDO = false;
+
+	public final boolean isDo() {
+		return this.isDO;
+	}
 
 	private class SumParameters {
 		private int observableID;
@@ -50,18 +57,41 @@ public class CPerturbation {
 		}
 	}
 
-	public CPerturbation(double time, List<Integer> obsID,
+	public CPerturbation(int perturbationID, double time, byte type,
+			double ruleRate, double perturbationRate, int ruleID,
+			boolean greater) {
+		switch (perturbationID) {
+		case TYPE_TIME: {
+			this.perturbationID = perturbationID;
+			this.timeCondition = time;
+			this.type = type;
+			this.perturbationRate = perturbationRate;
+			this.ruleRate = ruleRate;
+			this.ruleID = ruleID;
+			this.greater = greater;
+		}
+		}
+	}
+
+	public CPerturbation(int perturbationID, List<Integer> obsID,
 			List<Double> parameters, int obsNameID, byte type, double ruleRate,
-			double perturbationRate, int roolID, boolean greater,
-			CObservables obs) {
-		this.timeCondition = time;
-		this.obsNameID = obsNameID;
-		fillParameters(obsID, parameters, obs);
-		this.type = type;
-		this.perturbationRate = perturbationRate;
-		this.ruleRate = ruleRate;
-		this.ruleID = roolID;
-		this.greater = greater;
+			double perturbationRate, int ruleID, boolean greater) {
+		switch (perturbationID) {
+		case TYPE_NUMBER: {
+			this.perturbationID = perturbationID;
+			this.obsNameID = obsNameID;
+			CObservables obs = SimulationMain.getSimulationManager()
+					.getSimulationData().getObservables();
+			fillParameters(obsID, parameters, obs);
+
+			this.type = type;
+			this.perturbationRate = perturbationRate;
+			this.ruleRate = ruleRate;
+			this.ruleID = ruleID;
+			this.greater = greater;
+		}
+		}
+
 	}
 
 	private void fillParameters(List<Integer> obsID, List<Double> parameters,
@@ -85,6 +115,11 @@ public class CPerturbation {
 				}
 			}
 		}
+
+		if (obsID.size() != parameters.size()) {
+			this.sumParameters.add(new SumParameters(-1, parameters
+					.get(parameters.size() - 1)));
+		}
 	}
 
 	public boolean checkCondition(double currentTime, List<CRule> rules) {
@@ -96,9 +131,10 @@ public class CPerturbation {
 	}
 
 	public boolean checkCondition(CObservables observables, List<CRule> rules) {
-		int obsSize = observables.getConnectedComponentList().get(this.obsNameID).getInjectionsList().size(); 
-		
-		if ((greater && ( obsSize > calculateSum(observables) ))
+		int obsSize = observables.getConnectedComponentList().get(
+				this.obsNameID).getInjectionsList().size();
+
+		if ((greater && (obsSize > calculateSum(observables)))
 				|| (!(greater) && (obsSize < calculateSum(observables)))) {
 			rules.get(this.ruleID).setRuleRate(this.perturbationRate);
 			return true;

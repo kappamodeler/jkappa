@@ -3,6 +3,7 @@ package com.plectix.simulator.simulator;
 import java.util.List;
 
 import com.plectix.simulator.components.CObservables;
+import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
@@ -11,6 +12,7 @@ import com.plectix.simulator.interfaces.ISolution;
 public class SimulationData {
 	private List<CRule> rules;
 	private List<CStories> stories;
+	private List<CPerturbation> perturbations;
 
 	private CObservables observables = new CObservables();
 	private double intialTime;
@@ -137,5 +139,13 @@ public class SimulationData {
 
 	public final void setIterations(int iterations) {
 		this.iterations = iterations;
+	}
+
+	public final List<CPerturbation> getPerturbations() {
+		return perturbations;
+	}
+
+	public final void setPerturbations(List<CPerturbation> perturbations) {
+		this.perturbations = perturbations;
 	}
 }

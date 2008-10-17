@@ -8,12 +8,16 @@ import java.util.StringTokenizer;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CObservables;
+import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
+import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
 
@@ -60,6 +64,8 @@ public class Parser {
 
 	private DataReading data;
 
+	private double perturbationRate;
+
 	private class DataString {
 		private String st1 = null;
 		private String st2 = null;
@@ -104,6 +110,190 @@ public class Parser {
 			createSimData(data.getStory(), CREATE_STORY);
 		} else
 			createSimData(data.getObservables(), CREATE_OBS);
+		List<CPerturbation> perturbations = createPertubations(data.getMods());
+		SimulationMain.getSimulationManager().getSimulationData()
+				.setPerturbations(perturbations);
+	}
+
+	private final List<CPerturbation> createPertubations(List<String> mods)
+			throws ParseErrorException {
+		List<CPerturbation> perturbations = new ArrayList<CPerturbation>();
+		int pertubationID = 0;
+
+		for (String perturbationStr : mods) {
+			String st = perturbationStr;
+			st = st.trim();
+
+			if (st.indexOf("$T") == 0) {
+				st = st.substring(2).trim();
+				boolean greater = getGreater(st, perturbationStr);
+				st = st.substring(1).trim();
+
+				int index = st.indexOf("do");
+				String timeStr = st.substring(0, index).trim();
+				double time = Double.valueOf(timeStr);
+				st = st.substring(index + 2).trim();
+
+				this.perturbationRate = -1.;
+				int ruleID = -1;
+				double ruleRate = -1;
+				CRule rule = getGreaterRule(st, perturbationStr);
+				if (rule != null) {
+					ruleID = rule.getRuleID();
+					ruleRate = rule.getRuleRate();
+				}
+
+				if (ruleID == -1)
+					throw new ParseErrorException("Error in Pertubation: "
+							+ perturbationStr);
+				perturbations.add(new CPerturbation(pertubationID++, time,
+						CPerturbation.TYPE_TIME, ruleRate, perturbationRate,
+						ruleID, greater));
+			} else {
+				chechString("[", st, perturbationStr);
+
+				st = st.substring(st.indexOf("[") + 1).trim();
+				chechString("'", st, perturbationStr);
+				st = st.substring(st.indexOf("'") + 1).trim();
+				String obsName = getName(st);
+
+				chechString("]", st, perturbationStr);
+				st = st.substring(st.indexOf("]") + 1).trim();
+
+				boolean greater = getGreater(st, perturbationStr);
+				st = st.substring(1).trim();
+
+				int obsNameID = -1;
+				for (ObservablesConnectedComponent cc : SimulationMain
+						.getSimulationManager().getSimulationData()
+						.getObservables().getConnectedComponentList()) {
+					if ((cc.getName() != null)
+							&& (cc.getName().equals(obsName))) {
+						obsNameID = cc.getNameID();
+						break;
+					}
+				}
+
+				chechString("do", st, perturbationStr);
+				String pertStr = st.substring(st.indexOf("do") + 2).trim();
+				this.perturbationRate = -1.;
+				int ruleID = -1;
+				double ruleRate = -1;
+				CRule rule = getGreaterRule(pertStr, perturbationStr);
+				if (rule != null) {
+					ruleID = rule.getRuleID();
+					ruleRate = rule.getRuleRate();
+				}
+				st = st.substring(0, st.indexOf("do")).trim();
+
+				List<Double> parameters = new ArrayList<Double>();
+				List<Integer> obsID = new ArrayList<Integer>();
+				if (st.indexOf("+") == -1) {
+					parameters.add(new Double(Double.valueOf(st)));
+				} else {
+
+					StringTokenizer sTok = new StringTokenizer(st, "+");
+					while (sTok.hasMoreTokens()) {
+						String item = sTok.nextToken().trim();
+
+						if (item.indexOf("*") == -1)
+							parameters.add(new Double(Double.valueOf(item)));
+						else {
+							Double parameter = Double.valueOf(item.substring(0,
+									item.indexOf("*")).trim());
+							parameters
+									.add(new Double(Double.valueOf(parameter)));
+							item = item.substring(item.indexOf("*") + 1).trim();
+
+							chechString("[", item, perturbationStr);
+							item = item.substring(item.indexOf("[") + 1).trim();
+							chechString("'", item, perturbationStr);
+							item = item.substring(item.indexOf("'") + 1).trim();
+
+							obsName = getName(item);
+
+							int obsId = -1;
+							for (ObservablesConnectedComponent cc : SimulationMain
+									.getSimulationManager().getSimulationData()
+									.getObservables()
+									.getConnectedComponentList()) {
+								if ((cc.getName() != null)
+										&& (cc.getName().equals(obsName))) {
+									obsId = cc.getNameID();
+									break;
+								}
+							}
+							obsID.add(new Integer(obsId));
+						}
+					}
+
+				}
+				
+				CPerturbation pertubation =  new CPerturbation(pertubationID++, obsID,
+						parameters, obsNameID, CPerturbation.TYPE_NUMBER,
+						ruleRate, perturbationRate, ruleID, greater);
+				perturbations.add(pertubation);
+
+				// (int perturbationID, List<Integer> obsID,
+				// List<Double> parameters, int obsNameID, byte type, double
+				// ruleRate,
+				// double perturbationRate, int ruleID, boolean greater,
+				// CObservables obs)
+
+			}
+
+		}
+
+		return perturbations;
+	}
+
+	private final CRule getGreaterRule(String st, String perturbationStr)
+			throws ParseErrorException {
+		chechString("'", st, perturbationStr);
+		st = st.substring(st.indexOf("'") + 1).trim();
+		chechString("'", st, perturbationStr);
+		String ruleName = st.substring(0, st.indexOf("'")).trim();
+
+		st = st.replace("[ 	]", "");
+		int index = st.indexOf(":=");
+		chechString(":=", st, perturbationStr);
+		st = st.substring(index + 2);
+
+		this.perturbationRate = Double.valueOf(st);
+
+		for (CRule rule : SimulationMain.getSimulationManager().getRules())
+			if (rule.getName().equals(ruleName)) {
+				return rule;
+			}
+
+		return null;
+	}
+
+	private final boolean getGreater(String st, String perturbationStr)
+			throws ParseErrorException {
+		if (st.indexOf(">") == 0) {
+			return true;
+
+		} else if (st.indexOf("<") == 0) {
+			return false;
+		} else
+			throw new ParseErrorException("Error in Pertubation: "
+					+ perturbationStr);
+	}
+
+	private final String getName(String line) {
+		// Example: "abc']..."
+		String name = null;
+		name = line.substring(0, line.indexOf("'"));
+		return name;
+	}
+
+	private void chechString(String ch, String st, String perturbationStr)
+			throws ParseErrorException {
+		int index = st.indexOf(ch);
+		if (index == -1)
+			throw new ParseErrorException("Error in Pertubation: "
+					+ perturbationStr);
 	}
 
 	public final List<CRule> createRules(List<String> list)
@@ -221,8 +411,8 @@ public class Parser {
 		long count;
 		String line;
 		String[] result;
-		
-		int obsNameID=0;
+
+		int obsNameID = 0;
 		for (String item : list) {
 			count = 1;
 			result = item.split("\\*");
