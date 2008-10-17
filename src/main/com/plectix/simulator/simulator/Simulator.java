@@ -92,7 +92,8 @@ public class Simulator {
 	}
 
 	public final void doPositiveUpdate(CRule rule) {
-		for (CRule rules : rule.getActivatedRule()) {
+
+		for (CRule rules : model.getSimulationData().getRules()) {
 			for (CConnectedComponent cc : rules.getLeftHandSide()) {
 				cc.doPositiveUpdate(rule.getRightHandSide());
 			}
