@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IConstraint;
 
 public class CRule {
@@ -16,6 +17,7 @@ public class CRule {
 	private double activity = 0.;
 	private String name;
 	private double ruleRate;
+
 	public void setRuleRate(double ruleRate) {
 		this.ruleRate = ruleRate;
 	}
@@ -25,6 +27,16 @@ public class CRule {
 	private int automorphismNumber = 1;
 	private boolean infinityRate = false;
 	private List<CRule> activatedRule;
+	private List<ObservablesConnectedComponent> activatedObservable;
+
+	public List<ObservablesConnectedComponent> getActivatedObservable() {
+		return activatedObservable;
+	}
+
+	public void setActivatedObservable(
+			List<ObservablesConnectedComponent> activatedObservable) {
+		this.activatedObservable = activatedObservable;
+	}
 
 	private int maxAgentID = 0;
 
@@ -222,12 +234,13 @@ public class CRule {
 	}
 
 	private final boolean isActivated(List<CAgent> agentsFromAnotherRules) {
-		int intersectionCount = 0;// intersection of agents sites
+		int siteIntersection = 0;// intersection of agents sites
+		// int agentIntersection = 0;// intersection of agents sites
 		for (CAgent agent : agentsFromAnotherRules) {
-			for (CSite site : agent.getSites())
+			for (CSite site : agent.getSites()) {
 				for (CSite changedSite : changedSites) {
-					intersectionCount++;
 					if (changedSite.equals(site)) {
+						siteIntersection++;
 						CInternalState currentInternalState = changedSite
 								.getInternalState();
 						CInternalState internalState = site.getInternalState();
@@ -261,30 +274,59 @@ public class CRule {
 									.getSite())))
 								continue;
 
-						if (currentLinkState.getStatusLinkRank() <= linkState
+						if (currentLinkState.getStatusLinkRank() >= linkState
 								.getStatusLinkRank())
 							return true;
 
 						return true;
-					}
+					}/*
+					 * else if
+					 * (site.getAgentLink().equals(changedSite.getAgentLink()))
+					 * agentIntersection++;
+					 */
 				}
-
+			}
 		}
-		if (intersectionCount == 0)
-			return true;
+		if (siteIntersection == 0)
+			return hasIntersection(agentsFromAnotherRules);
+		return false;
+	}
+
+	private final boolean hasIntersection(List<CAgent> agentsFromAnotherRules) {
+		// int agentIntersection = 0;// intersection of agents
+		for (CAgent agent : agentsFromAnotherRules)
+				for (CSite changedSite : changedSites)
+					if (agent.equals(changedSite.getAgentLink())){
+						/*if (changedSite.getLinkState().getStatusLinkRank()==CLinkState.RANK_BOUND)
+							for (CSite changedSite : changedSites)
+							
+					}*/
+						return true;}
 		return false;
 	}
 
 	public final void createActivatedRulesList(List<CRule> rules) {
 		activatedRule = new ArrayList<CRule>();
 		for (CRule rule : rules) {
-			if (this != rule)
-				for (CConnectedComponent cc : rule.getLeftHandSide()) {
-					if (isActivated(cc.getAgents())) {
-						activatedRule.add(rule);
-						break;
-					}
+			// if (this != rule)
+			for (CConnectedComponent cc : rule.getLeftHandSide()) {
+				if (isActivated(cc.getAgents())) {
+					activatedRule.add(rule);
+					break;
 				}
+			}
+		}
+	}
+
+	public final void createActivatedObservablesList(CObservables observables) {
+		activatedObservable = new ArrayList<ObservablesConnectedComponent>();
+		for (ObservablesConnectedComponent obsCC : observables
+				.getConnectedComponentList()) {
+			if (// obsCC.getMainAutomorphismNumber()==
+			// ObservablesConnectedComponent.NO_INDEX &&
+			isActivated(obsCC.getAgents())) {
+				activatedObservable.add(obsCC);
+			}
 		}
 	}
 
