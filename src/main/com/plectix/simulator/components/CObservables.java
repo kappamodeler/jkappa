@@ -32,11 +32,10 @@ public class CObservables {
 	}
 
 	public final void addConnectedComponents(List<CConnectedComponent> list,
-			String name, String line) {
-		int id = 0;
+			String name, String line, int id) {
 		for (CConnectedComponent component : list) {
 			ObservablesConnectedComponent oCC = new ObservablesConnectedComponent(
-					component.getAgents(), name, line, id++);
+					component.getAgents(), name, line, id);
 			oCC.initSpanningTreeMap();
 			connectedComponentList.add(oCC);
 		}
