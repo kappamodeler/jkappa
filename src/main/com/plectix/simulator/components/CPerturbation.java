@@ -17,7 +17,7 @@ public class CPerturbation {
 	}
 
 	private double timeCondition;
-	private double numberCondition;
+	private int obsNameID;
 	private List<SumParameters> sumParameters;
 	private double perturbationRate;
 	private double ruleRate;
@@ -51,11 +51,11 @@ public class CPerturbation {
 	}
 
 	public CPerturbation(double time, List<Integer> obsID,
-			List<Double> parameters, double number, byte type, double ruleRate,
+			List<Double> parameters, int obsNameID, byte type, double ruleRate,
 			double perturbationRate, int roolID, boolean greater,
 			CObservables obs) {
 		this.timeCondition = time;
-		this.numberCondition = number;
+		this.obsNameID = obsNameID;
 		fillParameters(obsID, parameters, obs);
 		this.type = type;
 		this.perturbationRate = perturbationRate;
@@ -96,13 +96,15 @@ public class CPerturbation {
 	}
 
 	public boolean checkCondition(CObservables observables, List<CRule> rules) {
-		if ((greater && (calculateSum(observables) > this.numberCondition))
-				|| (!(greater) && (calculateSum(observables) < this.numberCondition))) {
+		int obsSize = observables.getConnectedComponentList().get(this.obsNameID).getInjectionsList().size(); 
+		
+		if ((greater && ( obsSize > calculateSum(observables) ))
+				|| (!(greater) && (obsSize < calculateSum(observables)))) {
 			rules.get(this.ruleID).setRuleRate(this.perturbationRate);
 			return true;
 		}
-		if ((greater && (calculateSum(observables) < this.numberCondition))
-				|| (!(greater) && (calculateSum(observables) > this.numberCondition))) {
+		if ((greater && (obsSize < calculateSum(observables)))
+				|| (!(greater) && (obsSize > calculateSum(observables)))) {
 			rules.get(this.ruleID).setRuleRate(this.ruleRate);
 			return true;
 		}
