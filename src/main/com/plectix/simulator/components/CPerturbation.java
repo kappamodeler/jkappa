@@ -60,7 +60,7 @@ public class CPerturbation {
 	public CPerturbation(int perturbationID, double time, byte type,
 			double ruleRate, double perturbationRate, int ruleID,
 			boolean greater) {
-		switch (perturbationID) {
+		switch (type) {
 		case TYPE_TIME: {
 			this.perturbationID = perturbationID;
 			this.timeCondition = time;
@@ -76,7 +76,7 @@ public class CPerturbation {
 	public CPerturbation(int perturbationID, List<Integer> obsID,
 			List<Double> parameters, int obsNameID, byte type, double ruleRate,
 			double perturbationRate, int ruleID, boolean greater) {
-		switch (perturbationID) {
+		switch (type) {
 		case TYPE_NUMBER: {
 			this.perturbationID = perturbationID;
 			this.obsNameID = obsNameID;

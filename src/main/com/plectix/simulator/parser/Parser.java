@@ -223,15 +223,17 @@ public class Parser {
 									break;
 								}
 							}
-							obsID.add(new Integer(obsId));
+							if (obsId != -1)
+								obsID.add(new Integer(obsId));
 						}
 					}
 
 				}
-				
-				CPerturbation pertubation =  new CPerturbation(pertubationID++, obsID,
-						parameters, obsNameID, CPerturbation.TYPE_NUMBER,
-						ruleRate, perturbationRate, ruleID, greater);
+
+				CPerturbation pertubation = new CPerturbation(pertubationID++,
+						obsID, parameters, obsNameID,
+						CPerturbation.TYPE_NUMBER, ruleRate, perturbationRate,
+						ruleID, greater);
 				perturbations.add(pertubation);
 
 				// (int perturbationID, List<Integer> obsID,
