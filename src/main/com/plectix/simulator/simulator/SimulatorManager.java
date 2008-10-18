@@ -174,6 +174,8 @@ public class SimulatorManager {
 		String line = new String();
 		int indexLink = 0;
 		int length = 0;
+		if(ccList == null)
+			return line;
 		for (CConnectedComponent cc : ccList)
 			length = length + cc.getAgents().size();
 		int j = 1;

@@ -22,7 +22,7 @@ public class CPerturbation {
 	private List<SumParameters> sumParameters;
 	private double perturbationRate;
 	private double ruleRate;
-	private int ruleID;
+	private CRule rule;
 	private int perturbationID;
 	private boolean greater = true;
 	private boolean isDO = false;
@@ -58,24 +58,23 @@ public class CPerturbation {
 	}
 
 	public CPerturbation(int perturbationID, double time, byte type,
-			double ruleRate, double perturbationRate, int ruleID,
-			boolean greater) {
+			double perturbationRate, CRule rule, boolean greater) {
 		switch (type) {
 		case TYPE_TIME: {
 			this.perturbationID = perturbationID;
 			this.timeCondition = time;
 			this.type = type;
 			this.perturbationRate = perturbationRate;
-			this.ruleRate = ruleRate;
-			this.ruleID = ruleID;
+			this.rule = rule;
+			this.ruleRate = rule.getRuleRate();
 			this.greater = greater;
 		}
 		}
 	}
 
 	public CPerturbation(int perturbationID, List<Integer> obsID,
-			List<Double> parameters, int obsNameID, byte type, double ruleRate,
-			double perturbationRate, int ruleID, boolean greater) {
+			List<Double> parameters, int obsNameID, byte type,
+			double perturbationRate, CRule rule, boolean greater) {
 		switch (type) {
 		case TYPE_NUMBER: {
 			this.perturbationID = perturbationID;
@@ -86,8 +85,8 @@ public class CPerturbation {
 
 			this.type = type;
 			this.perturbationRate = perturbationRate;
-			this.ruleRate = ruleRate;
-			this.ruleID = ruleID;
+			this.rule = rule;
+			this.ruleRate = rule.getRuleRate();
 			this.greater = greater;
 		}
 		}
@@ -122,28 +121,35 @@ public class CPerturbation {
 		}
 	}
 
-	public boolean checkCondition(double currentTime, List<CRule> rules) {
+	public boolean checkCondition(double currentTime) {
 		if (currentTime > this.timeCondition) {
-			rules.get(this.ruleID).setRuleRate(this.perturbationRate);
+			this.rule.setRuleRate(this.perturbationRate);
+			this.isDO = true;
 			return true;
 		}
 		return false;
 	}
 
-	public boolean checkCondition(CObservables observables, List<CRule> rules) {
+	public boolean checkCondition(CObservables observables) {
 		int obsSize = observables.getConnectedComponentList().get(
 				this.obsNameID).getInjectionsList().size();
 
 		if ((greater && (obsSize > calculateSum(observables)))
 				|| (!(greater) && (obsSize < calculateSum(observables)))) {
-			rules.get(this.ruleID).setRuleRate(this.perturbationRate);
+			this.rule.setRuleRate(this.perturbationRate);
 			return true;
 		}
-		if ((greater && (obsSize < calculateSum(observables)))
-				|| (!(greater) && (obsSize > calculateSum(observables)))) {
-			rules.get(this.ruleID).setRuleRate(this.ruleRate);
-			return true;
-		}
+		if (greater) {
+			if (obsSize > calculateSum(observables)) {
+				this.rule.setRuleRate(this.ruleRate);
+				return true;
+			}
+		} else {
+			if (obsSize < calculateSum(observables)) {
+				this.rule.setRuleRate(this.ruleRate);
+				return true;
+			}
+		}		
 		return false;
 	}
 

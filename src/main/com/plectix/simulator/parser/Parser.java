@@ -135,20 +135,14 @@ public class Parser {
 				st = st.substring(index + 2).trim();
 
 				this.perturbationRate = -1.;
-				int ruleID = -1;
-				double ruleRate = -1;
 				CRule rule = getGreaterRule(st, perturbationStr);
 				if (rule != null) {
-					ruleID = rule.getRuleID();
-					ruleRate = rule.getRuleRate();
-				}
-
-				if (ruleID == -1)
+					perturbations.add(new CPerturbation(pertubationID++, time,
+							CPerturbation.TYPE_TIME, perturbationRate, rule,
+							greater));
+				} else
 					throw new ParseErrorException("Error in Pertubation: "
 							+ perturbationStr);
-				perturbations.add(new CPerturbation(pertubationID++, time,
-						CPerturbation.TYPE_TIME, ruleRate, perturbationRate,
-						ruleID, greater));
 			} else {
 				chechString("[", st, perturbationStr);
 
@@ -177,13 +171,8 @@ public class Parser {
 				chechString("do", st, perturbationStr);
 				String pertStr = st.substring(st.indexOf("do") + 2).trim();
 				this.perturbationRate = -1.;
-				int ruleID = -1;
-				double ruleRate = -1;
 				CRule rule = getGreaterRule(pertStr, perturbationStr);
-				if (rule != null) {
-					ruleID = rule.getRuleID();
-					ruleRate = rule.getRuleRate();
-				}
+
 				st = st.substring(0, st.indexOf("do")).trim();
 
 				List<Double> parameters = new ArrayList<Double>();
@@ -230,18 +219,14 @@ public class Parser {
 
 				}
 
-				CPerturbation pertubation = new CPerturbation(pertubationID++,
-						obsID, parameters, obsNameID,
-						CPerturbation.TYPE_NUMBER, ruleRate, perturbationRate,
-						ruleID, greater);
-				perturbations.add(pertubation);
+				if (rule != null) {
+					CPerturbation pertubation = new CPerturbation(
+							pertubationID++, obsID, parameters, obsNameID,
+							CPerturbation.TYPE_NUMBER, perturbationRate, rule,
+							greater);
+					perturbations.add(pertubation);
 
-				// (int perturbationID, List<Integer> obsID,
-				// List<Double> parameters, int obsNameID, byte type, double
-				// ruleRate,
-				// double perturbationRate, int ruleID, boolean greater,
-				// CObservables obs)
-
+				}
 			}
 
 		}
@@ -264,7 +249,7 @@ public class Parser {
 		this.perturbationRate = Double.valueOf(st);
 
 		for (CRule rule : SimulationMain.getSimulationManager().getRules())
-			if (rule.getName().equals(ruleName)) {
+			if ((rule.getName()!=null)&&(rule.getName().equals(ruleName))) {
 				return rule;
 			}
 

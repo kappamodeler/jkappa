@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
+import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
@@ -41,6 +42,7 @@ public class Simulator {
 		model.getSimulationData().getObservables().calculateObs(currentTime);
 		boolean isEndRules = false;
 		while (currentTime <= model.getSimulationData().getTimeLength()) {
+			checkPerturbation();
 			rule = ruleProbabilityCalculation.getRandomRule();
 
 			if (rule == null) {
@@ -79,6 +81,28 @@ public class Simulator {
 
 		outToLogger(isEndRules);
 		outputData();
+	}
+
+	private final void checkPerturbation() {
+		if (model.getSimulationData().getPerturbations().size() != 0) {
+			for (CPerturbation pb : model.getSimulationData()
+					.getPerturbations()) {
+				switch (pb.getType()) {
+				case CPerturbation.TYPE_TIME: {
+					if (!pb.isDo())
+						pb.checkCondition(currentTime);
+					break;
+				}
+				case CPerturbation.TYPE_NUMBER: {
+					pb.checkCondition(model.getSimulationData()
+							.getObservables());
+					break;
+				}
+				}
+
+			}
+
+		}
 	}
 
 	private final void outToLogger(boolean isEndRules) {
