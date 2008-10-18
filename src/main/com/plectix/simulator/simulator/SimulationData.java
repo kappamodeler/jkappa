@@ -1,5 +1,6 @@
 package com.plectix.simulator.simulator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.components.CObservables;
@@ -8,8 +9,12 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.util.RunningMetric;
 
 public class SimulationData {
+	private static List<Double> timeStamps;
+	private static List<ArrayList<RunningMetric>> runningMetrics;
+
 	private List<CRule> rules;
 	private List<CStories> stories;
 	private List<CPerturbation> perturbations;
@@ -19,6 +24,8 @@ public class SimulationData {
 	private double timeLength = 0;
 	private int seed = 0;
 	private String xmlSessionName = "simplx.xml";
+	private String tmpSessionName = "simplx.tmp";
+
 	private String randomizer;
 	private int iterations = 0;
 
@@ -148,4 +155,40 @@ public class SimulationData {
 	public final void setPerturbations(List<CPerturbation> perturbations) {
 		this.perturbations = perturbations;
 	}
+
+	public final static List<Double> getTimeStamps() {
+		return timeStamps;
+	}
+
+	public final static void setTimeStamps(List<Double> timeStamps) {
+		SimulationData.timeStamps = timeStamps;
+	}
+
+	public final static List<ArrayList<RunningMetric>> getRunningMetrics() {
+		return runningMetrics;
+	}
+
+	public final static void setRunningMetrics(
+			List<ArrayList<RunningMetric>> runningMetrics) {
+		SimulationData.runningMetrics = runningMetrics;
+	}
+
+	public final void initIterations() {
+		SimulationData.timeStamps = new ArrayList<Double>();
+		SimulationData.runningMetrics = new ArrayList<ArrayList<RunningMetric>>();
+		int observable_num = observables.getConnectedComponentList().size();
+		for (int i = 0; i < observable_num; i++) {
+			runningMetrics.add(new ArrayList<RunningMetric>());
+		}
+
+	}
+
+	public final String getTmpSessionName() {
+		return tmpSessionName;
+	}
+
+	public final void setTmpSessionName(String tmpSessionName) {
+		this.tmpSessionName = tmpSessionName;
+	}
+
 }

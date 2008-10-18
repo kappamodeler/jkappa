@@ -1,5 +1,11 @@
 package com.plectix.simulator.simulator;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,8 +20,10 @@ import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CXMLWriter;
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
+import com.plectix.simulator.util.RunningMetric;
 
 public class Simulator {
 	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
@@ -26,12 +34,15 @@ public class Simulator {
 
 	private int randomSeed;
 
+	private boolean isIteration = false;
+	int timeStepCounter = 0;
+
 	public Simulator(Model model) {
 		this.model = model;
 		model.initialize();
 	}
 
-	public void run() {
+	public void run(Integer iteration_num) {
 		SimulationMain.getSimulationManager().startTimer();
 		long clash = 0;
 		CRule rule;
@@ -77,10 +88,15 @@ public class Simulator {
 					LOGGER.debug("Clash");
 				clash++;
 			}
+
+			if (isIteration)
+				addIteration(iteration_num);
+
 		}
 
 		outToLogger(isEndRules);
-		outputData();
+		if (!isIteration)
+			outputData();
 	}
 
 	private final void checkPerturbation() {
@@ -137,11 +153,12 @@ public class Simulator {
 		for (CInjection injection : injectionsList) {
 			if (injection != CConnectedComponent.EMPTY_INJECTION) {
 				for (CSite site : injection.getSiteList()) {
-					site.getAgentLink().EMPTY_SITE.removeInjectionsFromCCToSite(injection);
+					site.getAgentLink().EMPTY_SITE
+							.removeInjectionsFromCCToSite(injection);
 					site.removeInjectionsFromCCToSite(injection);
 					site.getLift().clear();
 				}
-				
+
 				injection.getConnectedComponent().getInjectionsList().remove(
 						injection);
 			}
@@ -176,4 +193,148 @@ public class Simulator {
 		}
 		return false;
 	}
+
+	public final void runIterations() {
+		isIteration = true;
+		int seed = model.getSimulationData().getSeed();
+		model.getSimulationData().initIterations();
+		for (int iteration_num = 0; iteration_num < model.getSimulationData()
+				.getIterations(); iteration_num++) {
+			// Initialize the Random Number Generator with seed = initialSeed +
+			// i
+			// We also need a new command line argument to feed the initialSeed.
+			// See --seed argument of simplx.
+			model.getSimulationData().setSeed(seed + iteration_num);
+
+			// run the simulator
+			timeStepCounter = 0;
+			// while (true) {
+			// run the simulation until the next time to dump the results
+			run(iteration_num);
+			// }
+
+			// if the simulator's initial state is cached, reload it for next
+			// run
+			resetSimulation();
+
+		}
+
+		// we are done. report the results
+		createTMPReport();
+
+	}
+
+	private final void createTMPReport() {
+		// model.getSimulationData().updateData();
+		SimulationMain.getSimulationManager().startTimer();
+
+		int number_of_observables = model.getSimulationData().getObservables()
+				.getConnectedComponentList().size();
+		List<Double> timeStamps = model.getSimulationData().getTimeStamps();
+		List<ArrayList<RunningMetric>> runningMetrics = model
+				.getSimulationData().getRunningMetrics();
+
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(new OutputStreamWriter(
+					new FileOutputStream(model.getSimulationData()
+							.getTmpSessionName()), "windows-1251"));
+
+			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
+				System.out.println("Observable " + observable_num);
+				writer.write("Observable " + observable_num + "\r\n");
+				writer.flush();
+				for (int timeStepCounter = 0; timeStepCounter < timeStamps
+						.size(); timeStepCounter++) {
+					String st = timeStamps.get(timeStepCounter)
+							+ ","
+							+ runningMetrics.get(observable_num).get(
+									timeStepCounter).getMin()
+							+ ", "
+							+ runningMetrics.get(observable_num).get(
+									timeStepCounter).getMax()
+							+ ", "
+							+ runningMetrics.get(observable_num).get(
+									timeStepCounter).getMean()
+							+ ", "
+							+ runningMetrics.get(observable_num).get(
+									timeStepCounter).getStd();
+
+					System.out.println(st);
+					writer.write(st + "\r\n");
+					writer.flush();
+				}
+			}
+
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		writer.close();
+
+		System.out.println("-Results outputted in tmp session: "
+				+ SimulationMain.getSimulationManager().getTimer()
+				+ " sec. CPU");
+
+	}
+
+	private final void resetSimulation() {
+		model.getSimulationData().getRules().clear();
+		model.getSimulationData().getObservables().getConnectedComponentList()
+				.clear();
+		model.getSimulationData().getObservables().getCountTimeList().clear();
+		((CSolution) model.getSimulationData().getSolution()).getAgentMap()
+				.clear();
+		((CSolution) model.getSimulationData().getSolution())
+				.getSolutionLines().clear();
+		if (model.getSimulationData().getPerturbations() != null)
+			model.getSimulationData().getPerturbations().clear();
+
+		currentTime = 0;
+
+		SimulationMain.getSimulationManager().startTimer();
+		SimulationMain.getInstance().readSimulatonFile();
+		SimulationMain.getInstance().initialize();
+		Model modelNew = new Model(SimulationMain.getSimulationManager()
+				.getSimulationData());
+		this.model = modelNew;
+		model.initialize();
+
+	}
+
+	private final void addIteration(Integer iteration_num) {
+
+		List<ArrayList<RunningMetric>> runningMetrics = model
+				.getSimulationData().getRunningMetrics();
+		int number_of_observables = model.getSimulationData().getObservables()
+				.getConnectedComponentList().size();
+
+		if (iteration_num == 0) {
+			model.getSimulationData().getTimeStamps().add(
+					new Double(currentTime)); // time = current
+			// simulation time
+			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
+				runningMetrics.get(observable_num).add(new RunningMetric());
+			}
+		}
+
+		for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
+			double x = 0; // x is the value for the observable_num at
+			// the current time
+			x = model.getSimulationData().getObservables()
+					.getConnectedComponentList().get(observable_num)
+					.getInjectionsList().size();
+			if (timeStepCounter >= runningMetrics.get(observable_num).size()) {
+				// model.getSimulationData().getTimeStamps().add(
+				// new Double(currentTime));
+				runningMetrics.get(observable_num).add(new RunningMetric());
+			}
+			runningMetrics.get(observable_num).get(timeStepCounter).add(x);
+		}
+
+		timeStepCounter++;
+
+	}
+
 }

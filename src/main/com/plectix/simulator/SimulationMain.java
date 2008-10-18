@@ -97,7 +97,11 @@ public class SimulationMain {
 
 		Simulator simulator = new Simulator(new Model(instance
 				.getSimulationManager().getSimulationData()));
-		simulator.run();
+
+		if (cmdLineArgs.hasOption(LONG_ITERATIONS_OPTION))
+			simulator.runIterations();
+		else
+			simulator.run(null);
 	}
 
 	public final void readSimulatonFile() {
@@ -210,12 +214,17 @@ public class SimulationMain {
 
 		if (cmdLineArgs.hasOption(LONG_ITERATIONS_OPTION)) {
 			int iteration = 0;
+			boolean exp = false;
 			try {
 				iteration = Integer.valueOf(cmdLineArgs
 						.getOptionValue(LONG_ITERATIONS_OPTION));
 			} catch (Exception e) {
+				exp = true;
+			}
+			if ((exp) || (!cmdLineArgs.hasOption(LONG_SEED_OPTION))) {
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("use --sim [file]", cmdLineOptions);
+				System.exit(1);
 			}
 			SimulationMain.getSimulationManager().getSimulationData()
 					.setIterations(iteration);
@@ -224,6 +233,10 @@ public class SimulationMain {
 
 	public final static SimulatorManager getSimulationManager() {
 		return simulationManager;
+	}
+
+	public final static SimulationMain getInstance() {
+		return instance;
 	}
 
 }

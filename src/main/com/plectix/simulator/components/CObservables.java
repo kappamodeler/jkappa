@@ -7,6 +7,10 @@ public class CObservables {
 	private List<ObservablesConnectedComponent> connectedComponentList = new ArrayList<ObservablesConnectedComponent>();
 	public static List<Double> countTimeList = new ArrayList<Double>();
 
+	public static void setCountTimeList(List<Double> countTimeList) {
+		CObservables.countTimeList = countTimeList;
+	}
+
 	public static List<Double> getCountTimeList() {
 		return countTimeList;
 	}
@@ -71,29 +75,29 @@ public class CObservables {
 		public static final int NO_INDEX = -1;
 		private int mainAutomorphismNumber = NO_INDEX;
 
-		public int getMainAutomorphismNumber() {
+		public final int getMainAutomorphismNumber() {
 			return mainAutomorphismNumber;
 		}
 
-		public void setMainAutomorphismNumber(int mainAutomorphismNumber) {
+		public final void setMainAutomorphismNumber(int mainAutomorphismNumber) {
 			this.mainAutomorphismNumber = mainAutomorphismNumber;
 		}
 
-		public List<Integer> getAutomorphicObservables() {
+		public final List<Integer> getAutomorphicObservables() {
 			return automorphicObservables;
 		}
 
-		public void addAutomorphicObservables(int automorphicObservable) {
+		public final void addAutomorphicObservables(int automorphicObservable) {
 			this.automorphicObservables.add(automorphicObservable);
 		}
 
-		public String getLine() {
+		public final String getLine() {
 			return line;
 		}
 
-		private List<Integer> countList = new ArrayList<Integer>();
+		private final List<Integer> countList = new ArrayList<Integer>();
 
-		public List<Integer> getCountList() {
+		public final List<Integer> getCountList() {
 			return countList;
 		}
 
@@ -110,7 +114,7 @@ public class CObservables {
 			this.nameID = nameID;
 		}
 
-		public String getName() {
+		public final String getName() {
 			return name;
 		}
 	}
