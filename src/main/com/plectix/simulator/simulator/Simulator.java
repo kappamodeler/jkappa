@@ -137,10 +137,11 @@ public class Simulator {
 		for (CInjection injection : injectionsList) {
 			if (injection != CConnectedComponent.EMPTY_INJECTION) {
 				for (CSite site : injection.getSiteList()) {
+					site.getAgentLink().EMPTY_SITE.removeInjectionsFromCCToSite(injection);
 					site.removeInjectionsFromCCToSite(injection);
 					site.getLift().clear();
 				}
-
+				
 				injection.getConnectedComponent().getInjectionsList().remove(
 						injection);
 			}
