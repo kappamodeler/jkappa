@@ -1,0 +1,547 @@
+# Rules:
+
+'Rule_0' A(x~q) -> A(x~q) @ 1.0
+
+###############################
+###############################
+###############################
+###############################
+
+%init: 1 * A()											
+
+%init: 1 * A(x)											
+%init: 1 * A(x~u)										
+
+%init: 1 * A(x, y)										
+%init: 1 * A(x~u, y)									
+%init: 1 * A(x~u, y~v)									
+
+#-------------------
+
+%init: 1 * A(x!1), B(k!1)								
+%init: 1 * A(x~u!1), B(k!1)								
+%init: 1 * A(x~u!1), B(k~e!1)							
+
+%init: 1 * A(x!1, y), B(k!1)							
+%init: 1 * A(x~u!1, y), B(k!1)							
+%init: 1 * A(x!1, y~v), B(k!1)							
+%init: 1 * A(x~u!1, y~v), B(k!1)						
+
+%init: 1 * A(x!1, y), B(k~e!1)							
+%init: 1 * A(x~u!1, y), B(k~e!1)						
+%init: 1 * A(x!1, y~v), B(k~e!1)						
+%init: 1 * A(x~u!1, y~v), B(k~e!1)						
+
+%init: 1 * A(x!1, y), B(k!1, l)							
+%init: 1 * A(x~u!1, y), B(k!1, l)						
+%init: 1 * A(x!1, y~v), B(k!1, l)						
+%init: 1 * A(x~u!1, y~v), B(k!1, l)						
+
+%init: 1 * A(x!1, y), B(k~e!1, l)						
+%init: 1 * A(x~u!1, y), B(k~e!1, l)						
+%init: 1 * A(x!1, y~v), B(k~e!1, l)						
+%init: 1 * A(x~u!1, y~v), B(k~e!1, l)					
+
+%init: 1 * A(x!1, y), B(k!1, l~f)						
+%init: 1 * A(x~u!1, y), B(k!1, l~f)						
+%init: 1 * A(x!1, y~v), B(k!1, l~f)						
+%init: 1 * A(x~u!1, y~v), B(k!1, l~f)					
+
+%init: 1 * A(x!1, y), B(k~e!1, l~f)						
+%init: 1 * A(x~u!1, y), B(k~e!1, l~f)				
+%init: 1 * A(x!1, y~v), B(k~e!1, l~f)				
+%init: 1 * A(x~u!1, y~v), B(k~e!1, l~f)					
+
+%init: 1 * A(x!1, y!2), B(k!1, l!2)						
+%init: 1 * A(x~u!1, y!2), B(k!1, l!2)					
+%init: 1 * A(x~u!1, y~v!2), B(k!1, l!2)					
+%init: 1 * A(x~u!1, y!2), B(k~e!1, l!2)					
+%init: 1 * A(x~u!1, y~v!2), B(k~e!1, l!2)				
+%init: 1 * A(x~u!1, y~v!2), B(k~e!1, l~f!2)				
+
+#----------------------------
+
+%init: 1 * A(x!1), A(x!1)								
+%init: 1 * A(x~u!1), A(x!1)								
+%init: 1 * A(x~u!1), A(x~u!1)							
+
+%init: 1 * A(x!1, y), A(x!1)							
+%init: 1 * A(x~u!1, y), A(x!1)							
+%init: 1 * A(x!1, y~v), A(x!1)							
+%init: 1 * A(x~u!1, y~v), A(x!1)						
+
+%init: 1 * A(x!1, y), A(x~u!1)							
+%init: 1 * A(x~u!1, y), A(x~u!1)						
+%init: 1 * A(x!1, y~v), A(x~u!1)						
+%init: 1 * A(x~u!1, y~v), A(x~u!1)						
+
+%init: 1 * A(x!1, y), A(x!1, y)							
+%init: 1 * A(x~u!1, y), A(x!1, y)						
+%init: 1 * A(x!1, y~v), A(x!1, y)						
+%init: 1 * A(x~u!1, y~v), A(x!1, y)						
+
+%init: 1 * A(x!1, y), A(x~u!1, y)						
+%init: 1 * A(x~u!1, y), A(x~u!1, y)						
+%init: 1 * A(x!1, y~v), A(x~u!1, y)						
+%init: 1 * A(x~u!1, y~v), A(x~u!1, y)					
+
+%init: 1 * A(x!1, y), A(x!1, y~v)						
+%init: 1 * A(x~u!1, y), A(x!1, y~v)						
+%init: 1 * A(x!1, y~v), A(x!1, y~v)						
+%init: 1 * A(x~u!1, y~v), A(x!1, y~v)					
+
+%init: 1 * A(x!1, y), A(x~u!1, y~v)						
+%init: 1 * A(x~u!1, y), A(x~u!1, y~v)					
+%init: 1 * A(x!1, y~v), A(x~u!1, y~v)					
+%init: 1 * A(x~u!1, y~v), A(x~u!1, y~v)					
+
+%init: 1 * A(x!1, y!2), A(x!1, y!2)						
+%init: 1 * A(x~u!1, y!2), A(x!1, y!2)					
+%init: 1 * A(x~u!1, y~v!2), A(x!1, y!2)					
+%init: 1 * A(x~u!1, y!2), A(x~u!1, y!2)					
+%init: 1 * A(x~u!1, y~v!2), A(x~u!1, y!2)				
+%init: 1 * A(x~u!1, y~v!2), A(x~u!1, y~v!2)				
+
+#--------------------------------------
+#--------------quantity----------------
+#--------------------------------------
+
+%init: 1 * (D())
+%init: 2 * (D()) 
+%init: 1 * (D(x))
+%init: 1 * (D(x, y))
+%init: 1 * (D(x, y, z))
+%init: 1 * (D(x!1), E(k!1))
+
+%init: 1 * (D(x!1), D(y!1))
+%init: 1 * (D(x!1), D(x!1))
+%init: 1 * (D(x!1, y), E(k!1))
+%init: 1 * (D(x!1, y), D(y!1))
+%init: 1 * (D(x!1, z), D(y!1))
+%init: 1 * (D(x!1, z), D(x!1, z))
+%init: 1 * (D(x!1, y), D(x!1, y))
+%init: 1 * (D(x!1, y), E(k!1, l))
+%init: 1 * (D(x!1, y), D(y!1, z))
+%init: 1 * (D(x!1, z), D(y!1, z))
+%init: 1 * (D(x!1, y!2, z), E(k!1, l!2))
+%init: 1 * (D(x!1, y!2, z), E(k!1, l!2, m))
+%init: 1 * (D(x!1, y!2, z!3), E(k!1, l!2, m!3))
+
+%init: 1 * (D(x!1), E(k!1, l!2, m) , F(p!2))
+%init: 1 * (D(x!1), E(k!1, l!2, m) , F(p!2, q))
+%init: 1 * (D(x, y!1), E(k!1, l!2) , F(p!2, q))
+%init: 1 * (D(x!1, y!3), E(k!1, l!2) , F(p!2, q!3))
+%init: 1 * (D(x!1, y!3, z), E(k!1, l!2) , F(p!2, q!3))
+%init: 1 * (D(x!1, y!3, z), E(k!1, l!2) , F(p!2, q!3, r))
+%init: 1 * (D(x!1, y!3, z), E(k!1, l!2, m) , F(p!2, q!3, r))
+%init: 1 * (D(x!1, y!3, z!4), E(k!1, l!2, m) , F(p!2, q!3, r!4))
+%init: 1 * (D(x!1, y!3, z!4), E(k!1, l!2) , F(p!2, q!3, r!4))
+
+
+
+
+
+
+
+
+
+# Simulation:
+%obs: 'q001' D()
+%obs: 'q002' D(x)
+%obs: 'q003' D(x?)
+%obs: 'q004' D(x!_)
+%obs: 'q005' D(x, y)
+%obs: 'q006' D(x?, y)
+%obs: 'q007' D(x!_, y)
+%obs: 'q008' D(x?, y?)
+%obs: 'q009' D(x!_, y?)
+%obs: 'q010' D(x!_, y!_)
+%obs: 'q011' D(x, y, z)
+%obs: 'q012' D(x, y, z!_)
+%obs: 'q013' D(x, y, z?)
+%obs: 'q014' D(x, y!_, z!_)
+%obs: 'q015' D(x, y!_, z?)
+%obs: 'q016' D(x, y?, z?)
+%obs: 'q017' D(x!_, y!_, z!_)
+%obs: 'q018' D(x!_, y!_, z?)
+%obs: 'q019' D(x!_, y?, z?)
+%obs: 'q020' D(x?, y?, z?)
+%obs: 'q021' D(x!1), E(k!1)
+%obs: 'q022' D(x!1), D(y!1)
+%obs: 'q023' D(x!1), D(x!1)
+%obs: 'q024' D(x!1, z), E(k!1)
+%obs: 'q025' D(x!1, z?), E(k!1)
+%obs: 'q026' D(x!1, z!_), E(k!1)
+
+%obs: 'q027' D(x!1, z), D(y!1)
+%obs: 'q028' D(x!1, z?), D(y!1)
+%obs: 'q029' D(x!1, z!_), D(y!1)
+%obs: 'q030' D(x!1, y), D(y!1)
+%obs: 'q031' D(x!1, y?), D(y!1)
+%obs: 'q032' D(x!1, y!_), D(y!1)
+
+%obs: 'q033' D(x!1, y), E(k!1, l)
+%obs: 'q034' D(x!1, y?), E(k!1, l)
+%obs: 'q035' D(x!1, y!_), E(k!1, l)
+%obs: 'q036' D(x!1, y), E(k!1, l?)
+
+%obs: 'q037' D(x!1, y?), E(k!1, l?)
+%obs: 'q038' D(x!1, y!_), E(k!1, l?)
+%obs: 'q039' D(x!1, y), E(k!1, l!_)
+%obs: 'q040' D(x!1, y?), E(k!1, l!_)
+%obs: 'q041' D(x!1, y!_), E(k!1, l!_)
+
+%obs: 'q042' D(x!1, y), D(y!1, z)
+%obs: 'q043' D(x!1, y?), D(y!1, z)
+%obs: 'q044' D(x!1, y!_), D(y!1, z)
+%obs: 'q045' D(x!1, y), D(y!1, z?)
+%obs: 'q046' D(x!1, y?), D(y!1, z?)
+%obs: 'q047' D(x!1, y!_), D(y!1, z?)
+%obs: 'q048' D(x!1, y), D(y!1, z!_)
+%obs: 'q049' D(x!1, y?), D(y!1, z!_)
+%obs: 'q050' D(x!1, y!_), D(y!1, z!_)
+%obs: 'q051' D(x!1, z), D(y!1, z)
+%obs: 'q052' D(x!1, z?), D(y!1, z)
+%obs: 'q053' D(x!1, z!_), D(y!1, z)
+%obs: 'q054' D(x!1, z), D(y!1, z?)
+%obs: 'q055' D(x!1, z?), D(y!1, z?)
+%obs: 'q056' D(x!1, z!_), D(y!1, z?)
+%obs: 'q057' D(x!1, z), D(y!1, z!_)
+%obs: 'q058' D(x!1, z?), D(y!1, z!_)
+%obs: 'q059' D(x!1, z!_), D(y!1, z!_)
+
+%obs: 'q060' D(x!1, y?, z), E(k!1)
+%obs: 'q061' D(x!1, y!_, z), E(k!1)
+%obs: 'q062' D(x!1, y!_, z?), E(k!1)
+%obs: 'q063' D(x!1, y, z?), E(k!1, l)
+%obs: 'q064' D(x!1, y, z!_), E(k!1, l)
+%obs: 'q065' D(x!1, y?, z!_), E(k!1, l)
+%obs: 'q066' D(x!1, y, z?), E(k!1, l!_)
+%obs: 'q067' D(x!1, y, z!_), E(k!1, l!_)
+%obs: 'q068' D(x!1, y?, z!_), E(k!1, l!_)
+%obs: 'q069' D(x!1, y, z?), E(k!1, l?)
+%obs: 'q070' D(x!1, y, z!_), E(k!1, l?)
+%obs: 'q071' D(x!1, y?, z!_), E(k!1, l?)
+%obs: 'q072' D(x!1, y!2, z), E(k!1, l!2)
+%obs: 'q073' D(x!1, y!2, z?), E(k!1, l!2)
+%obs: 'q074' D(x!1, y!2, z!_), E(k!1, l!2)
+%obs: 'q075' D(x!1, y, z!_), E(k!1, l, m!_)
+%obs: 'q076' D(x!1, y, z?), E(k!1, l, m!_)
+%obs: 'q077' D(x!1, y?, z!_), E(k!1, l, m!_)
+%obs: 'q078' D(x!1, y, z!_), E(k!1, l, m?)
+%obs: 'q079' D(x!1, y, z?), E(k!1, l, m?)
+%obs: 'q080' D(x!1, y?, z!_), E(k!1, l, m?)
+%obs: 'q081' D(x!1, y, z!_), E(k!1, l?, m!_)
+%obs: 'q082' D(x!1, y, z?), E(k!1, l?, m!_)
+%obs: 'q083' D(x!1, y?, z!_), E(k!1, l?, m!_)
+%obs: 'q084' D(x!1, y!2, z), E(k!1, l!2, m)
+%obs: 'q085' D(x!1, y!2, z?), E(k!1, l!2, m)
+%obs: 'q086' D(x!1, y!2, z!_), E(k!1, l!2, m)
+%obs: 'q087' D(x!1, y!2, z), E(k!1, l!2, m?)
+%obs: 'q088' D(x!1, y!2, z?), E(k!1, l!2, m?)
+%obs: 'q089' D(x!1, y!2, z!_), E(k!1, l!2, m?)
+%obs: 'q090' D(x!1, y!2, z), E(k!1, l!2, m!_)
+%obs: 'q091' D(x!1, y!2, z?), E(k!1, l!2, m!_)
+%obs: 'q092' D(x!1, y!2, z!_), E(k!1, l!2, m!_)
+%obs: 'q093' D(x!1, y!2, z!3), E(k!1, l!2, m!3)
+
+%obs: 'q027a' D(x!1, z), D(x!1)
+%obs: 'q028a' D(x!1, z?), D(x!1)
+%obs: 'q029a' D(x!1, z!_), D(x!1)
+%obs: 'q030a' D(x!1, y), D(x!1)
+%obs: 'q031a' D(x!1, y?), D(x!1)
+%obs: 'q032a' D(x!1, y!_), D(x!1)
+
+%obs: 'q042a' D(x!1, z), D(x!1, z)
+%obs: 'q043a' D(x!1, z?), D(x!1, z)
+%obs: 'q044a' D(x!1, z!_), D(x!1, z)
+%obs: 'q045a' D(x!1, z), D(x!1, z?)
+%obs: 'q046a' D(x!1, z?), D(x!1, z?)
+%obs: 'q047a' D(x!1, z!_), D(x!1, z?)
+%obs: 'q048a' D(x!1, z), D(x!1, z!_)
+%obs: 'q049a' D(x!1, z?), D(x!1, z!_)
+%obs: 'q050a' D(x!1, z!_), D(x!1, z!_)
+%obs: 'q051a' D(x!1, y), D(x!1, z)
+%obs: 'q052a' D(x!1, y?), D(x!1, z)
+%obs: 'q053a' D(x!1, y!_), D(x!1, z)
+%obs: 'q054a' D(x!1, y), D(x!1, z?)
+%obs: 'q055a' D(x!1, y?), D(x!1, z?)
+%obs: 'q056a' D(x!1, y!_), D(x!1, z?)
+%obs: 'q057a' D(x!1, y), D(x!1, z!_)
+%obs: 'q058a' D(x!1, y?), D(x!1, z!_)
+%obs: 'q059a' D(x!1, y!_), D(x!1, z!_)
+
+
+
+#-------------------------------------
+#--------correction again-------------
+#-------------------------------------
+
+
+
+%obs: '001' A()
+%obs: '002' A(x)
+%obs: '003' A(x?)
+%obs: '004' A(x!_)
+%obs: '005' A(x~u)
+%obs: '006' A(x~u?)
+%obs: '007' A(x~u!_)
+
+%obs: '008' A(x, y)
+%obs: '009' A(x, y?)
+%obs: '010' A(x, y!_)
+%obs: '011' A(x?, y)
+%obs: '012' A(x?, y?)
+%obs: '013' A(x?, y!_)
+%obs: '014' A(x!_, y)
+%obs: '015' A(x!_, y?)
+%obs: '016' A(x!_, y!_)
+
+%obs: '017' A(x~u, y)
+%obs: '018' A(x~u, y?)
+%obs: '019' A(x~u, y!_)
+%obs: '020' A(x~u?, y)
+%obs: '021' A(x~u?, y?)
+%obs: '022' A(x~u?, y!_)
+%obs: '023' A(x~u!_, y)
+%obs: '024' A(x~u!_, y?)
+%obs: '025' A(x~u!_, y!_)
+
+#----------------------
+
+%obs: '026' A(x!1), B(k!1)
+%obs: '027' A(x~u!1), B(k!1)
+%obs: '028' A(x~u!1), B(k~e!1)
+
+#----------------------
+
+%obs: '029' A(x!1, y), B(k!1)
+%obs: '030' A(x~u!1, y), B(k!1)
+%obs: '031' A(x!1, y~v), B(k!1)
+%obs: '032' A(x~u!1, y~v), B(k!1)
+
+%obs: '033' A(x!1, y?), B(k!1)
+%obs: '034' A(x~u!1, y?), B(k!1)
+%obs: '035' A(x!1, y~v?), B(k!1)
+%obs: '036' A(x~u!1, y~v?), B(k!1)
+
+%obs: '037' A(x!1, y!_), B(k!1)
+%obs: '038' A(x~u!1, y!_), B(k!1)
+%obs: '039' A(x!1, y~v!_), B(k!1)
+%obs: '040' A(x~u!1, y~v!_), B(k!1)
+
+#----------------------
+
+%obs: '041' A(x!1, y), B(k~e!1)
+%obs: '042' A(x~u!1, y), B(k~e!1)
+%obs: '043' A(x!1, y~v), B(k~e!1)
+%obs: '044' A(x~u!1, y~v), B(k~e!1)
+
+%obs: '045' A(x~u!1, y?), B(k~e!1)
+%obs: '046' A(x!1, y~v?), B(k~e!1)
+%obs: '047' A(x~u!1, y~v?), B(k~e!1)
+
+%obs: '048' A(x!1, y!_), B(k~e!1)
+%obs: '049' A(x~u!1, y!_), B(k~e!1)
+%obs: '050' A(x!1, y~v!_), B(k~e!1)
+%obs: '051' A(x~u!1, y~v!_), B(k~e!1)
+
+#-----------------------
+
+%obs: '052' A(x!1, y), B(k!1, l)
+%obs: '053' A(x~u!1, y), B(k!1, l)
+%obs: '054' A(x!1, y~v), B(k!1, l)
+%obs: '055' A(x~u!1, y~v), B(k!1, l)
+
+%obs: '056' A(x!1, y?), B(k!1, l)
+%obs: '057' A(x~u!1, y?), B(k!1, l)
+%obs: '058' A(x!1, y~v?), B(k!1, l)
+%obs: '059' A(x~u!1, y~v?), B(k!1, l)
+
+%obs: '060' A(x!1, y!_), B(k!1, l)
+%obs: '061' A(x~u!1, y!_), B(k!1, l)
+%obs: '062' A(x!1, y~v!_), B(k!1, l)
+%obs: '063' A(x~u!1, y~v!_), B(k!1, l)
+
+#-----------------------
+
+%obs: '064' A(x!1, y), B(k~e!1, l)
+%obs: '065' A(x~u!1, y), B(k~e!1, l)
+%obs: '066' A(x!1, y~v), B(k~e!1, l)
+%obs: '067' A(x~u!1, y~v), B(k~e!1, l)
+
+%obs: '068' A(x!1, y?), B(k~e!1, l)
+%obs: '069' A(x~u!1, y?), B(k~e!1, l)
+%obs: '070' A(x!1, y~v?), B(k~e!1, l)
+%obs: '071' A(x~u!1, y~v?), B(k~e!1, l)
+
+%obs: '072' A(x!1, y!_), B(k~e!1, l)
+%obs: '073' A(x~u!1, y!_), B(k~e!1, l)
+%obs: '074' A(x!1, y~v!_), B(k~e!1, l)
+%obs: '075' A(x~u!1, y~v!_), B(k~e!1, l)
+
+#------------------------
+
+%obs: '076' A(x!1, y), B(k!1, l~f)
+%obs: '077' A(x~u!1, y), B(k!1, l~f)
+%obs: '078' A(x!1, y~v), B(k!1, l~f)
+%obs: '079' A(x~u!1, y~v), B(k!1, l~f)
+
+%obs: '080' A(x!1, y?), B(k!1, l~f)
+%obs: '081' A(x~u!1, y?), B(k!1, l~f)
+%obs: '082' A(x!1, y~v?), B(k!1, l~f)
+%obs: '083' A(x~u!1, y~v?), B(k!1, l~f)
+
+%obs: '084' A(x!1, y!_), B(k!1, l~f)
+%obs: '085' A(x~u!1, y!_), B(k!1, l~f)
+%obs: '086' A(x!1, y~v!_), B(k!1, l~f)
+%obs: '087' A(x~u!1, y~v!_), B(k!1, l~f)
+
+#-------------------------
+
+%obs: '088' A(x!1, y), B(k~e!1, l~f)
+%obs: '089' A(x~u!1, y), B(k~e!1, l~f)
+%obs: '090' A(x!1, y~v), B(k~e!1, l~f)
+%obs: '091' A(x~u!1, y~v), B(k~e!1, l~f)
+
+%obs: '092' A(x!1, y?), B(k~e!1, l~f)
+%obs: '093' A(x~u!1, y?), B(k~e!1, l~f)
+%obs: '094' A(x!1, y~v?), B(k~e!1, l~f)
+%obs: '095' A(x~u!1, y~v?), B(k~e!1, l~f)
+
+%obs: '096' A(x!1, y!_), B(k~e!1, l~f)
+%obs: '097' A(x~u!1, y!_), B(k~e!1, l~f)
+%obs: '098' A(x!1, y~v!_), B(k~e!1, l~f)
+%obs: '099' A(x~u!1, y~v!_), B(k~e!1, l~f)
+
+#--------------------------
+
+%obs: '100' A(x!1, y!2), B(k!1, l!2)
+%obs: '101' A(x~u!1, y!2), B(k!1, l!2)
+%obs: '102' A(x~u!1, y~v!2), B(k!1, l!2)
+%obs: '103' A(x~u!1, y!2), B(k~e!1, l!2)
+%obs: '104' A(x~u!1, y~v!2), B(k~e!1, l!2)
+%obs: '105' A(x~u!1, y~v!2), B(k~e!1, l~f!2)
+
+#----------------------------
+
+#####################################
+
+#----------------------
+
+%obs: '106' A(x!1), A(x!1)
+%obs: '107' A(x~u!1), A(x!1)
+%obs: '108' A(x~u!1), A(x~u!1)
+
+#----------------------
+
+%obs: '109' A(x!1, y), A(x!1)
+%obs: '110' A(x~u!1, y), A(x!1)
+%obs: '111' A(x!1, y~v), A(x!1)
+%obs: '112' A(x~u!1, y~v), A(x!1)
+
+%obs: '113' A(x!1, y?), A(x!1)
+%obs: '114' A(x~u!1, y?), A(x!1)
+%obs: '115' A(x!1, y~v?), A(x!1)
+%obs: '116' A(x~u!1, y~v?), A(x!1)
+
+%obs: '117' A(x!1, y!_), A(x!1)
+%obs: '118' A(x~u!1, y!_), A(x!1)
+%obs: '119' A(x!1, y~v!_), A(x!1)
+%obs: '120' A(x~u!1, y~v!_), A(x!1)
+
+#----------------------
+
+%obs: '121' A(x!1, y), A(x~u!1)
+%obs: '122' A(x~u!1, y), A(x~u!1)
+%obs: '123' A(x!1, y~v), A(x~u!1)
+%obs: '124' A(x~u!1, y~v), A(x~u!1)
+
+%obs: '125' A(x!1, y?), A(x~u!1)
+%obs: '126' A(x~u!1, y?), A(x~u!1)
+%obs: '127' A(x!1, y~v?), A(x~u!1)
+%obs: '128' A(x~u!1, y~v?), A(x~u!1)
+
+%obs: '129' A(x!1, y!_), A(x~u!1)
+%obs: '130' A(x~u!1, y!_), A(x~u!1)
+%obs: '131' A(x!1, y~v!_), A(x~u!1)
+%obs: '132' A(x~u!1, y~v!_), A(x~u!1)
+
+#-----------------------
+
+%obs: '133' A(x!1, y), A(x!1, y)
+%obs: '134' A(x~u!1, y), A(x!1, y)
+%obs: '135' A(x!1, y~v), A(x!1, y)
+%obs: '136' A(x~u!1, y~v), A(x!1, y)
+
+%obs: '137' A(x!1, y?), A(x!1, y)
+%obs: '138' A(x~u!1, y?), A(x!1, y)
+%obs: '139' A(x!1, y~v?), A(x!1, y)
+%obs: '140' A(x~u!1, y~v?), A(x!1, y)
+
+%obs: '141' A(x!1, y!_), A(x!1, y)
+%obs: '142' A(x~u!1, y!_), A(x!1, y)
+%obs: '143' A(x!1, y~v!_), A(x!1, y)
+%obs: '144' A(x~u!1, y~v!_), A(x!1, y)
+
+#-----------------------
+
+%obs: '145' A(x!1, y), A(x~u!1, y)
+%obs: '146' A(x~u!1, y), A(x~u!1, y)
+%obs: '147' A(x!1, y~v), A(x~u!1, y)
+%obs: '148' A(x~u!1, y~v), A(x~u!1, y)
+
+%obs: '149' A(x!1, y?), A(x~u!1, y)
+%obs: '150' A(x~u!1, y?), A(x~u!1, y)
+%obs: '151' A(x!1, y~v?), A(x~u!1, y)
+%obs: '152' A(x~u!1, y~v?), A(x~u!1, y)
+
+%obs: '153' A(x!1, y!_), A(x~u!1, y)
+%obs: '154' A(x~u!1, y!_), A(x~u!1, y)
+%obs: '155' A(x!1, y~v!_), A(x~u!1, y)
+%obs: '156' A(x~u!1, y~v!_), A(x~u!1, y)
+
+#------------------------
+
+%obs: '157' A(x!1, y), A(x!1, y~v)
+%obs: '158' A(x~u!1, y), A(x!1, y~v)
+%obs: '159' A(x!1, y~v), A(x!1, y~v)
+%obs: '160' A(x~u!1, y~v), A(x!1, y~v)
+
+%obs: '161' A(x!1, y?), A(x!1, y~v)
+%obs: '162' A(x~u!1, y?), A(x!1, y~v)
+%obs: '163' A(x!1, y~v?), A(x!1, y~v)
+%obs: '164' A(x~u!1, y~v?), A(x!1, y~v)
+
+%obs: '165' A(x!1, y!_), A(x!1, y~v)
+%obs: '166' A(x~u!1, y!_), A(x!1, y~v)
+%obs: '167' A(x!1, y~v!_), A(x!1, y~v)
+%obs: '168' A(x~u!1, y~v!_), A(x!1, y~v)
+
+#-------------------------
+
+%obs: '169' A(x!1, y), A(x~u!1, y~v)
+%obs: '170' A(x~u!1, y), A(x~u!1, y~v)
+%obs: '171' A(x!1, y~v), A(x~u!1, y~v)
+%obs: '172' A(x~u!1, y~v), A(x~u!1, y~v)
+
+%obs: '173' A(x!1, y?), A(x~u!1, y~v)
+%obs: '174' A(x~u!1, y?), A(x~u!1, y~v)
+%obs: '175' A(x!1, y~v?), A(x~u!1, y~v)
+%obs: '176' A(x~u!1, y~v?), A(x~u!1, y~v)
+
+%obs: '177' A(x!1, y!_), A(x~u!1, y~v)
+%obs: '178' A(x~u!1, y!_), A(x~u!1, y~v)
+%obs: '179' A(x!1, y~v!_), A(x~u!1, y~v)
+%obs: '180' A(x~u!1, y~v!_), A(x~u!1, y~v)
+
+#--------------------------
+
+%obs: '181' A(x!1, y!2), A(x!1, y!2)
+%obs: '182' A(x~u!1, y!2), A(x!1, y!2)
+%obs: '183' A(x~u!1, y~v!2), A(x!1, y!2)
+%obs: '184' A(x~u!1, y!2), A(x~u!1, y!2)
+%obs: '185' A(x~u!1, y~v!2), A(x~u!1, y!2)
+%obs: '186' A(x~u!1, y~v!2), A(x~u!1, y~v!2)
+
+%obs: '187' A(x!1, y?), B(k~e!1)

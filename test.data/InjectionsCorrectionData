@@ -1,0 +1,1034 @@
+#name 001
+ALL A_
+
+#name 002
+1-5
+
+#name 003
+ALL A_
+MINUS
+0
+
+#name 004
+ALL x!
+
+#name 005
+2 4 5
+
+#name 006
+ALL x~
+
+#name 007
+ALL x~
+MINUS
+2 4 5
+
+#name 008
+3 4 5
+
+#name 009
+3 4 5
+
+#name 010
+E
+
+#name 011
+ALL y_
+
+#name 012
+ALL A_
+MINUS
+NO y
+
+#name 013
+ALL y!
+
+#name 014
+ALL x!
+MINUS
+NO y
+ALL y! 
+
+#name 015
+ALL x!
+MINUS
+NO y 
+
+#name 016
+ALL x!
+MINUS
+NO y
+NOT ALL y!
+
+#name 017
+4 5
+
+#name 018
+4 5
+
+#name 019
+E
+
+#name 020
+ALL x~ 
+MINUS
+ALL y!
+NO y 
+
+#name 021
+ALL x~ 
+MINUS
+NO y 
+
+#name 022
+ALL x~
+MINUS
+NO y
+NOT ALL y!
+
+#name 023
+ALL x~
+MINUS
+NOT ALL x!
+ALL y!
+NO y
+
+#name 024
+ALL x~
+MINUS
+NOT ALL x!
+NO y
+
+#name 025
+ALL x~
+AND ALL y!
+AND ALL x!
+
+#name 026
+ALL B_
+INCL A
+
+#name 027
+ALL x!
+AND ALL x~
+INCL B
+
+#name 028
+ALL k~
+INCL A
+MINUS 
+COMPL B NOT ALL x~
+
+#name 029
+COMPL A ALL k!
+MINUS
+COMPL B ALL y!
+COMPL B NO y!
+
+#name 030
+COMPL B ALL x~
+MINUS
+COMPL B ALL y!
+COMPL B NO y!
+
+#name 031
+COMPL B ALL y~
+MINUS
+COMPL B ALL y!
+
+#name 032
+ALL y~
+AND ALL x~
+INCL B
+MINUS
+COMPL B ALL y!
+
+#name 033
+COMPL A ALL k!
+MINUS
+COMPL B NO y
+
+#name 034
+COMPL A ALL k!
+MINUS
+COMPL B NOT ALL x~
+COMPL B NO y
+
+#name 035
+COMPL B ALL y~
+
+#name 036
+ALL y~
+AND ALL x~
+INCL B
+
+#name 037
+COMPL A ALL k!
+MINUS
+COMPL B NOT ALL y! 
+
+#name 038
+COMPL B ALL x~
+MINUS
+COMPL B NOT ALL y! 
+
+#name 039
+COMPL B ALL y~
+MINUS
+COMPL B NOT ALL y! 
+
+#name 040
+ALL y~
+AND ALL x~
+INCL B
+MINUS
+COMPL B NOT ALL y! 
+
+#name 041
+COMPL A ALL k~
+MINUS
+COMPL B NO y
+COMPL B ALL y! 
+
+#name 042
+COMPL A ALL k~
+AND ALL x~
+INCL B
+MINUS
+COMPL B NO y
+COMPL B ALL y! 
+
+#name 043
+COMPL B ALL y~
+AND ALL k~
+INCL A
+MINUS
+COMPL B ALL y! 
+
+#name 044
+ALL y~
+AND ALL x~
+INCL B
+AND ALL k~
+INCL A
+MINUS
+COMPL B ALL y!
+
+#name 045
+ALL x~
+INCL B
+AND ALL k~
+INCL A
+MINUS
+COMPL B NO y
+
+#name 046
+ALL y~
+INCL B
+AND ALL k~
+INCL A
+MINUS
+COMPL B NO y
+
+#name 047
+ALL y~
+AND ALL x~
+INCL B
+AND ALL k~
+INCL A
+
+#name 048
+COMPL B ALL y!
+AND ALL k~
+INCL A
+
+#name 049
+ALL y!
+AND ALL x~
+INCL B
+AND ALL k~
+INCL A
+
+#name 050
+ALL y!
+AND ALL y~
+INCL B
+AND ALL k~
+INCL A
+
+#name 051
+ALL y!
+AND ALL y~
+AND ALL x~
+INCL B
+AND ALL k~
+INCL A
+
+#name 051
+ALL y!
+AND ALL y~
+AND ALL x~
+INCL B
+AND ALL k~
+INCL A
+
+#name 052
+COMPL B ALL y_
+AND ALL l_
+INCL A
+
+#name 053
+ALL y_
+AND ALL x~
+INCL B
+AND ALL l_
+INCL A
+
+#name 054
+ALL y~
+INCL B
+AND ALL l_
+INCL A
+
+#name 055
+ALL y~
+AND ALL x~
+INCL B
+AND ALL l_
+INCL A
+
+#name 056
+ALL y_
+ALL y!
+INCL B
+AND ALL l_
+INCL A
+
+#name 057
+ALL y_
+ALL y!
+AND ALL x~
+INCL B
+AND ALL l_
+INCL A
+
+#name 058
+ALL y~
+INCL B
+AND ALL l_
+INCL A
+
+#name 059
+ALL y~
+AND ALL x~
+INCL B
+AND ALL l_
+INCL A
+
+#name 060
+ALL y!
+INCL B
+AND ALL l_
+INCL A
+
+#name 061
+ALL y!
+AND ALL x~
+INCL B
+AND ALL l_
+INCL A
+
+#name 062
+ALL y!
+AND ALL y~
+INCL B
+AND ALL l_
+INCL A
+
+#name 063
+ALL y!
+AND ALL y~
+AND ALL x~
+INCL B
+AND ALL l_
+INCL A
+
+#name 064
+COMPL B ALL y_
+AND ALL k~
+AND ALL l_
+INCL A
+
+#name 065
+ALL y_
+AND ALL x~
+INCL B
+AND ALL k~
+AND ALL l_
+INCL A
+
+#name 066
+ALL y~
+INCL B
+AND ALL k~
+AND ALL l_
+INCL A
+
+#name 067
+ALL y~
+AND ALL x~
+INCL B
+AND ALL k~
+AND ALL l_
+INCL A
+
+#name 068
+ALL l_
+AND ALL k~
+INCL A
+AND NOT NO y
+INCL B
+
+#name 069
+ALL l_
+AND ALL k~
+INCL A
+AND ALL x~
+AND NOT NO y
+INCL B
+
+#name 070
+ALL l_
+AND ALL k~
+INCL A
+AND ALL y~
+INCL B
+
+#name 071
+ALL l_
+AND ALL k~
+INCL A
+AND ALL x~
+AND ALL y~
+INCL B
+
+#name 072
+ALL l_
+AND ALL k~
+INCL A
+AND ALL y!
+INCL B
+
+#name 073
+ALL l_
+AND ALL k~
+INCL A
+AND ALL x~
+AND ALL y!
+INCL B
+
+#name 074
+ALL l_
+AND ALL k~
+INCL A
+AND ALL y~
+AND ALL y!
+INCL B
+
+#name 075
+ALL l_
+AND ALL k~
+INCL A
+AND ALL x~
+AND ALL y~
+AND ALL y!
+INCL B
+
+#name 076
+ALL l~
+INCL A
+AND ALL y_
+INCL B
+
+#name 077
+ALL l~
+INCL A
+AND ALL x~
+AND ALL y_
+INCL B
+
+#name 078
+ALL l~
+INCL A
+AND ALL y~
+AND ALL y_
+INCL B
+
+#name 079
+ALL l~
+INCL A
+AND ALL x~
+AND ALL y_
+AND ALL y~
+INCL B
+
+#name 080
+ALL l~
+AND NOT ALL l!
+INCL A
+AND NOT NO y
+INCL B
+
+#name 081
+ALL l~
+AND NOT ALL l!
+INCL A
+AND NOT NO y
+AND ALL x~
+INCL B
+
+#name 082
+ALL l~
+AND NOT ALL l!
+INCL A
+AND ALL y~
+INCL B
+
+#name 083
+ALL l~
+AND NOT ALL l!
+INCL A
+AND ALL x~
+AND ALL y~
+INCL B
+
+#name 084
+ALL l~
+AND NOT ALL l!
+INCL A
+AND ALL y!
+INCL B
+
+#name 085
+ALL l~
+AND NOT ALL l!
+INCL A
+AND ALL y!
+AND ALL x~
+INCL B
+
+#name 086
+ALL l~
+AND NOT ALL l!
+INCL A
+AND ALL y!
+AND ALL y~
+INCL B
+
+#name 087
+ALL l~
+AND NOT ALL l!
+INCL A
+AND ALL y!
+AND ALL y~
+AND ALL x~
+INCL B
+
+#name 088
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND ALL y_
+INCL B
+
+#name 089
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND ALL y_
+AND ALL x~
+INCL B
+
+#name 090
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND ALL y_
+AND ALL y~
+INCL B
+
+#name 091
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND ALL y_
+AND ALL y~
+AND ALL x~
+INCL B
+
+#name 092
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND NOT NO y
+INCL B
+
+#name 093
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND ALL x~
+AND NOT NO y
+INCL B
+
+#name 094
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND ALL y~
+INCL B
+
+#name 095
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND ALL y~
+AND ALL x~
+INCL B
+
+#name 096
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND ALL y!
+INCL B
+
+#name 097
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND ALL y!
+AND ALL x~
+INCL B
+
+#name 098
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND ALL y!
+AND ALL y~
+INCL B
+
+#name 099
+ALL l~
+AND NOT ALL l!
+AND ALL k~
+INCL A
+AND ALL y!
+AND ALL y~
+AND ALL x~
+INCL B
+
+#name 100
+ALL l!
+INCL A
+
+#name 101
+ALL l!
+INCL A
+AND ALL x~
+INCL B
+
+#name 102
+ALL l!
+INCL A
+AND ALL x~
+AND ALL y~
+INCL B
+
+#name 103
+ALL l!
+AND ALL k~
+INCL A
+AND ALL x~
+INCL B
+
+#name 104
+ALL l!
+AND ALL k~
+INCL A
+AND ALL x~
+AND ALL y~
+INCL B
+
+#name 105
+ALL l!
+AND ALL k~
+AND ALL l~
+INCL A
+AND ALL x~
+AND ALL y~
+INCL B
+
+#name 106
+ALL AA
+
+#name 107
+LINK A ALL x~
+
+#name 108
+LINK A ALL x~
+MINUS
+LINK A NOT ALL x~ 
+
+#name 109
+ALL AA
+AND ALL y_
+LINK ALL A
+
+#name 110
+ALL AA
+AND ALL y_
+AND ALL x~
+LINK ALL A
+
+#name 111
+ALL AA
+AND ALL y~
+AND NOT ALL y!
+LINK ALL A
+
+#name 112
+ALL AA
+AND ALL y~
+AND ALL x~
+AND NOT ALL y!
+LINK ALL A
+
+#name 113
+ALL AA
+AND NOT NO y
+LINK ALL A
+
+#name 114
+ALL AA
+AND ALL x~
+AND NOT NO y
+LINK ALL A
+
+#name 115
+ALL AA
+AND ALL y~
+LINK ALL A
+
+#name 116
+ALL AA
+AND ALL x~
+AND ALL y~
+LINK ALL A
+
+#name 117
+ALL AA
+AND ALL y!
+LINK ALL A
+
+#name 118
+ALL AA
+AND ALL x~
+AND ALL y!
+LINK ALL A
+
+#name 119
+ALL AA
+AND ALL y~
+AND ALL y!
+LINK ALL A
+
+#name 120
+#use 119
+AND ALL x~
+LINK ALL A
+
+#name 121
+ALL AA
+AND ALL y_
+LINK ALL A
+MINUS
+LINK A 78=84 94 98 110 114
+
+#name 122
+ALL AA
+AND ALL x~
+AND ALL y_
+LINK ALL A
+MINUS
+LINK A NOT ALL x~
+
+#name 123
+#use 121
+MINUS
+LINK A 86=88 96 100=104 110 114 118
+
+#name 124
+#use 123
+MINUS
+LINK A NOT ALL x~
+
+#name 125
+#use 121
+ALL A2
+MINUS 
+LINK A 126
+
+#name 126
+#use 125
+MINUS
+LINK A NOT ALL x~
+
+#name 127
+#use 123
+LINK A 134 136
+
+#name 128
+#use 127
+MINUS
+LINK A NOT ALL x~
+
+#name 129
+#use 125
+AND ALL A2 
+
+#name 130
+#use 126
+AND ALL A2 
+
+#name 131
+#use 127
+AND ALL A2
+
+#name 132
+#use 128
+AND ALL A2
+
+#name 133
+#use 109
+MINUS 
+LINK A NOT ALL y_
+
+#name 134
+#use 121
+MINUS 
+LINK A NOT ALL y_
+
+#name 135
+#use 111
+MINUS 
+LINK A NOT ALL y_
+
+#name 136
+#use 112
+MINUS 
+LINK A NOT ALL y_
+
+#name 137
+#use 133
+
+#name 138
+#use 134
+
+#name 139
+#use 135
+
+#name 140
+#use 136
+
+#name 141
+#use 129
+MINUS 
+LINK A NOT ALL y_
+
+#name 142
+#use 130
+MINUS 
+LINK A NOT ALL y_
+
+#name 143
+#use 130
+MINUS 
+LINK A NOT ALL y_
+
+#name 144
+#use 131
+MINUS 
+LINK A NOT ALL y_
+
+#name 145
+E
+
+#name 146
+#use 122
+MINUS 
+LINK A NOT ALL y_
+
+#name 147
+#use 123
+MINUS 
+LINK A NOT ALL y_
+
+#name 148
+#use 124
+MINUS 
+LINK A NOT ALL y_
+
+#name 149
+#use 110
+MINUS 
+LINK A NOT ALL y_
+
+#name 150
+#use 149
+MINUS 
+LINK A NOT ALL x~
+
+#name 151
+#use 147
+
+#name 152
+#use 148
+
+#name 153
+E
+
+#name 154
+E
+
+#name 155
+E
+
+#name 156
+E
+
+#name 157
+E
+
+#name 158
+E
+
+#name 159
+#use 135
+MINUS 
+LINK A NOT ALL y~
+
+#name 160
+#use 136
+MINUS 
+LINK A NOT ALL y~
+
+#name 161
+#use 135
+
+#name 162
+#use 147
+
+#name 163
+#use 159
+
+#name 164
+#use 160
+
+#name 165
+E
+
+#name 166
+E
+
+#name 167
+E
+
+#name 168
+E
+
+#name 169
+E
+
+#name 170
+E
+
+#name 171
+E
+
+#name 172
+#use 160
+MINUS
+LINK A NOT ALL x~ 
+
+#name 173
+#use 136
+
+#name 174
+#use 148
+
+#name 175
+#use 160
+
+#name 176
+#use 172
+
+#name 177
+E
+
+#name 178
+E
+
+#name 179
+E
+
+#name 180
+E
+
+#name 181
+ALL A2
+
+#name 182
+ALL A2
+AND #use 114
+
+#name 183
+ALL A2
+AND #use 116
+
+#name 184
+ALL A2
+MINUS
+LINK A NOT ALL x~ 
+
+#name 185
+#use 183
+MINUS
+LINK A NOT ALL x~ 
+
+#name 186
+#use 183
+MINUS
+LINK A NOT ALL x~
+LINK A NOT ALL y~ 
+ 
+#name 187
+COMPL A ALL k~
+AND NOT NO y
+INCL B 
+
+
+
+#name end

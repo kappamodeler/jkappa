@@ -23,6 +23,7 @@ public class SimulationMain {
 	private final static String LONG_SIMULATIONFILE_OPTION = "sim";
 	private final static String SHORT_COMPILE_OPTION = "c";
 	private final static String LONG_COMPILE_OPTION = "compile";
+	private final static String DEBUG_OPTION = "debug";
 	private final static String SHORT_TIME_OPTION = "t";
 	private final static String LONG_TIME_OPTION = "time";
 	private final static String LONG_SEED_OPTION = "seed";
@@ -40,6 +41,7 @@ public class SimulationMain {
 	private static Options cmdLineOptions;
 	private CommandLine cmdLineArgs;
 	private static SimulatorManager simulationManager = new SimulatorManager();
+	private static boolean myIsSimulating = false;
 
 	static {
 		cmdLineOptions = new Options();
@@ -73,6 +75,9 @@ public class SimulationMain {
 		.addOption(LONG_SNAPSHOT_TIME, true,
 				"Takes a snapshot of solution at specified time unit");
 
+		cmdLineOptions
+		.addOption(DEBUG_OPTION, false, 
+		"Program execution suspends right after initialization phase");
 	}
 
 	public static void main(String[] args) {
@@ -84,14 +89,19 @@ public class SimulationMain {
 		instance.parseArguments(args);
 		instance.readSimulatonFile();
 		instance.initialize();
-		instance.runSimulator();
+		if (myIsSimulating)
+			instance.runSimulator();
 	}
 
 	public void initialize() {
 		simulationManager.initialize();
 		System.out.println("-Initialization: " + simulationManager.getTimer()
 				+ " sec. CPU");
-		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
+		if (cmdLineArgs.hasOption(DEBUG_OPTION)) {
+			myIsSimulating = true;
+		}
+		
+		else if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
 			simulationManager.outputData();
 			System.exit(1);
 		}
