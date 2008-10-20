@@ -15,7 +15,6 @@ import org.apache.log4j.Logger;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.CDetermisticSelection;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CProbabilityCalculation;
@@ -55,7 +54,6 @@ public class Simulator {
 		model.getSimulationData().getObservables().calculateObs(currentTime);
 		boolean isEndRules = false;
 
-		CDetermisticSelection detSel = new CDetermisticSelection();
 		boolean hasSnapshot = false;
 		if (model.getSimulationData().getSnapshotTime() >= 0.0)
 			hasSnapshot = true;

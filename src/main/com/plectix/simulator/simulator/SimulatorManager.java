@@ -254,9 +254,9 @@ public class SimulatorManager {
 				case CLinkState.STATUS_LINK_BOUND: {
 					if (site.getLinkState() == null)
 						line = line + "!_";
-					else if (site.getAgentLink().getIdInRuleSide() < ((CSite) site
+					else if (site.getAgentLink().getId() < ((CSite) site
 							.getLinkState().getSite()).getAgentLink()
-							.getIdInRuleSide()) {
+							.getId()) {
 						line = line + "!" + indexLink;
 					} else {
 						line = line + "!" + indexLink;

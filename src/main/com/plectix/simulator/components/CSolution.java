@@ -100,7 +100,7 @@ public class CSolution implements ISolution {
 		agentList = getAdjacentAgents(agent, agentList);
 		int index=0;
 		for (CAgent agentIn : agentList)
-			agentIn.setIdInRuleSide(index++);
+			agentIn.setIdInConnectedComponent(index++);
 		
 		return new CConnectedComponent(agentList);
 	}
