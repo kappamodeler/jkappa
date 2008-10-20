@@ -71,13 +71,17 @@ public class CProbabilityCalculation {
 	}
 
 	public CRule getRandomRule() {
-		calculateRulesActivity();
-		recalculateCommonActivity();
-		calculateProbability();
+		calculation();
 		int index = getRandomIndex();
 		if (index == -1)
 			return null;
 		return rules.get(index);
+	}
+
+	public void calculation() {
+		calculateRulesActivity();
+		recalculateCommonActivity();
+		calculateProbability();
 	}
 
 	public double getTimeValue() {

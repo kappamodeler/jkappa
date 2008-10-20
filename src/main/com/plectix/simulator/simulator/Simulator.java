@@ -15,11 +15,13 @@ import org.apache.log4j.Logger;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.CDetermisticSelection;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CXMLWriter;
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
@@ -52,9 +54,32 @@ public class Simulator {
 
 		model.getSimulationData().getObservables().calculateObs(currentTime);
 		boolean isEndRules = false;
+
+		CDetermisticSelection detSel = new CDetermisticSelection();
+		boolean hasSnapshot = false;
+		if (model.getSimulationData().getSnapshotTime() >= 0.0)
+			hasSnapshot = true;
+
 		while (currentTime <= model.getSimulationData().getTimeLength()) {
+			if (hasSnapshot
+					&& model.getSimulationData().getSnapshotTime() <= currentTime) {
+				hasSnapshot = false;
+				model.getSimulationData().setSnapshot(
+						new CSnapshot((CSolution) model.getSimulationData()
+								.getSolution()));
+				model.getSimulationData().setSnapshotTime(currentTime);
+			}
+
 			checkPerturbation();
 			rule = ruleProbabilityCalculation.getRandomRule();
+			// ruleProbabilityCalculation.calculation();
+			// rule =
+			// model.getSimulationData().getRules().get(detSel.nextRuleID());
+
+			/*
+			 * if(detSel.getIterator()==37){
+			 * System.out.println(detSel.getIterator()); }
+			 */
 
 			if (rule == null) {
 				isEndRules = true;
@@ -67,7 +92,7 @@ public class Simulator {
 			List<CInjection> injectionsList = ruleProbabilityCalculation
 					.getSomeInjectionList(rule);
 			currentTime += ruleProbabilityCalculation.getTimeValue();
-
+			// detSel.nextTime();
 			if (!isClash(injectionsList)) {
 				// negative update
 				if (LOGGER.isDebugEnabled())
@@ -132,6 +157,11 @@ public class Simulator {
 	}
 
 	public final void doPositiveUpdate(CRule rule) {
+		/*
+		 * for (CRule rules : rule.getActivatedRule()) { for
+		 * (CConnectedComponent cc : rules.getLeftHandSide()) {
+		 * cc.doPositiveUpdate(rule.getRightHandSide()); } }
+		 */
 
 		for (CRule rules : model.getSimulationData().getRules()) {
 			for (CConnectedComponent cc : rules.getLeftHandSide()) {
@@ -145,6 +175,14 @@ public class Simulator {
 					.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
 				oCC.doPositiveUpdate(rule.getRightHandSide());
 		}
+
+		/*
+		 * for (ObservablesConnectedComponent oCC :
+		 * rule.getActivatedObservable()) { if (((ObservablesConnectedComponent)
+		 * oCC) .getMainAutomorphismNumber() ==
+		 * ObservablesConnectedComponent.NO_INDEX)
+		 * oCC.doPositiveUpdate(rule.getRightHandSide()); }
+		 */
 
 		model.getSimulationData().getObservables().calculateObs(currentTime);
 	}

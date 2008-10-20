@@ -115,10 +115,14 @@ public class SimulatorManager {
 		List<CRule> rules = simulationData.getRules();
 		Iterator<List<CAgent>> iterator = solution.getAgentMap().values()
 				.iterator();
+		simulationData.getObservables().checkAutomorphisms();
+
 		for (CRule rule : rules) {
 			rule.createActivatedRulesList(rules);
+			rule
+					.createActivatedObservablesList(simulationData
+							.getObservables());
 		}
-		simulationData.getObservables().checkAutomorphisms();
 
 		while (iterator.hasNext()) {
 			for (CAgent agent : iterator.next()) {
@@ -174,7 +178,7 @@ public class SimulatorManager {
 		String line = new String();
 		int indexLink = 0;
 		int length = 0;
-		if(ccList == null)
+		if (ccList == null)
 			return line;
 		for (CConnectedComponent cc : ccList)
 			length = length + cc.getAgents().size();
@@ -223,6 +227,60 @@ public class SimulatorManager {
 			}
 
 		}
+		return line;
+	}
+
+	public static final String printPartRule(CConnectedComponent cc) {
+		String line = new String();
+		int indexLink = 0;
+		int length = 0;
+		if (cc == null)
+			return line;
+		length = cc.getAgents().size();
+
+		int j = 1;
+		if (cc == CRule.EMPTY_LHS_CC)
+			return line;
+		for (CAgent agent : cc.getAgents()) {
+			line = line + agent.getName();
+			line = line + "(";
+			int i = 1;
+			for (CSite site : agent.getSites()) {
+				line = line + site.getName();
+				if ((site.getInternalState() != null)
+						&& (site.getInternalState().getNameId() >= 0))
+					line = line + "~" + site.getInternalState().getName();
+				switch (site.getLinkState().getStatusLink()) {
+				case CLinkState.STATUS_LINK_BOUND: {
+					if (site.getLinkState() == null)
+						line = line + "!_";
+					else if (site.getAgentLink().getIdInRuleSide() < ((CSite) site
+							.getLinkState().getSite()).getAgentLink()
+							.getIdInRuleSide()) {
+						line = line + "!" + indexLink;
+					} else {
+						line = line + "!" + indexLink;
+						indexLink++;
+					}
+
+					break;
+				}
+				case CLinkState.STATUS_LINK_WILDCARD: {
+					line = line + "?";
+					break;
+				}
+				}
+
+				if (agent.getSites().size() > i++)
+					line = line + ",";
+			}
+			if (length > j)
+				line = line + "),";
+			else
+				line = line + ")";
+			j++;
+		}
+
 		return line;
 	}
 

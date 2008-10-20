@@ -42,7 +42,9 @@ public class CXMLWriter {
 				.getSimulationData().getRules();
 		int rulesAndObsNumber = obs.getConnectedComponentList().size()
 				+ rules.size();
-
+		/**
+		 * add observables
+		 * */
 		for (int i = obs.getConnectedComponentList().size() - 1; i >= 0; i--) {
 			Element node = doc.createElement("Node");
 			node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
@@ -58,6 +60,9 @@ public class CXMLWriter {
 			node.setAttribute("Name", '[' + obsName + ']');
 			influenceMap.appendChild(node);
 		}
+		/**
+		 * add rules
+		 * */
 
 		for (int i = rules.size() - 1; i >= 0; i--) {
 			Element node = doc.createElement("Node");
@@ -77,7 +82,51 @@ public class CXMLWriter {
 			influenceMap.appendChild(node);
 		}
 
+		/**
+		 * add activation map
+		 * */
+
+		/*int lastRuleID = rules.size();
+		for (int i = rules.size() - 1; i >= 0; i--) {
+			for (int j = rules.get(i).getActivatedObservable().size() - 1; j >= 0; j--) {
+				Element node = doc.createElement("Connection");
+				node.setAttribute("FromNode", Integer.toString(rules.get(i)
+						.getRuleID() + 1));
+				node.setAttribute("ToNode", Integer.toString(rules.get(i)
+						.getActivatedObservable().get(j).getNameID()
+						+ 1 + lastRuleID));
+				node.setAttribute("Relation", "POSITIVE");
+				influenceMap.appendChild(node);
+			}
+			for (int j = rules.get(i).getActivatedRule().size() - 1; j >= 0; j--) {
+				Element node = doc.createElement("Connection");
+				node.setAttribute("FromNode", Integer.toString(rules.get(i)
+						.getRuleID() + 1));
+				node.setAttribute("ToNode", Integer.toString(rules.get(i)
+						.getActivatedRule().get(j).getRuleID() + 1));
+				node.setAttribute("Relation", "POSITIVE");
+				influenceMap.appendChild(node);
+			}
+		}*/
 		simplxSession.appendChild(influenceMap);
+
+		if (SimulationMain.getSimulationManager().getSimulationData()
+				.getSnapshotTime() >= 0.0) {
+			Element snapshot = doc.createElement("FinalState");
+			snapshot.setAttribute("Time", String.valueOf(SimulationMain
+					.getSimulationManager().getSimulationData()
+					.getSnapshotTime()));
+			List<CSnapshot.SnapshotElement> snapshotElementList =SimulationMain
+						.getSimulationManager().getSimulationData().getSnapshot().getSnapshotElements();
+			for (CSnapshot.SnapshotElement se : snapshotElementList){
+				Element species = doc.createElement("Species");
+				species.setAttribute("Kappa", se.getCcName());
+				species.setAttribute("Number", String.valueOf(se.getCount()));
+				snapshot.appendChild(species);
+			}
+			simplxSession.appendChild(snapshot);
+		}
+		
 
 		Element simulation = doc.createElement("Simulation");
 		simulation.setAttribute("TotalEvents", Integer.toString(obs

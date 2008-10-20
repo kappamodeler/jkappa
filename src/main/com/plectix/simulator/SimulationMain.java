@@ -31,6 +31,8 @@ public class SimulationMain {
 	private final static String LONG_EVENT_OPTION = "event";
 	private final static String LONG_RANDOMIZER_JAVA_OPTION = "randomizer";
 	private final static String LONG_ITERATIONS_OPTION = "iterations";
+	private final static String LONG_SNAPSHOT_TIME = "set_snapshot_time";
+	
 
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
@@ -67,6 +69,9 @@ public class SimulationMain {
 		cmdLineOptions
 				.addOption(LONG_ITERATIONS_OPTION, true,
 						"To run the same simulation given number of times and get averages");
+		cmdLineOptions
+		.addOption(LONG_SNAPSHOT_TIME, true,
+				"Takes a snapshot of solution at specified time unit");
 
 	}
 
@@ -109,6 +114,8 @@ public class SimulationMain {
 		boolean option = false;
 		String fileName = null;
 		double timeSim = 0.;
+		double snapshotTime = -1.;
+		
 		if (cmdLineArgs.hasOption(LONG_STORIFY_OPTION)) {
 			fileName = cmdLineArgs.getOptionValue(LONG_STORIFY_OPTION);
 			SimulationMain.getSimulationManager().getSimulationData()
@@ -131,6 +138,17 @@ public class SimulationMain {
 				simulationManager.getSimulationData().setTimeLength(timeSim);
 			} else
 				System.out.println("*Warning* No time limit.");
+			if (cmdLineArgs.hasOption(LONG_SNAPSHOT_TIME)) {
+				option = true;
+				try {
+					snapshotTime = Double.valueOf(cmdLineArgs
+							.getOptionValue(LONG_SNAPSHOT_TIME));
+				} catch (Exception e) {
+					HelpFormatter formatter = new HelpFormatter();
+					formatter.printHelp("use --sim [file]", cmdLineOptions);
+				}
+				simulationManager.getSimulationData().setSnapshotTime(snapshotTime);
+			} 
 		}
 		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
 			simulationManager.getSimulationData().setCompile(true);

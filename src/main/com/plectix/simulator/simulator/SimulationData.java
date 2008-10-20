@@ -6,6 +6,7 @@ import java.util.List;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.interfaces.ISolution;
@@ -26,6 +27,16 @@ public class SimulationData {
 	private String xmlSessionName = "simplx.xml";
 	private String tmpSessionName = "simplx.tmp";
 
+	private double snapshotTime = 0.;
+	
+	public double getSnapshotTime() {
+		return snapshotTime;
+	}
+
+	public void setSnapshotTime(double snapshotTime) {
+		this.snapshotTime = snapshotTime;
+	}
+
 	private String randomizer;
 	private int iterations = 0;
 
@@ -35,6 +46,16 @@ public class SimulationData {
 	private ISolution solution = new CSolution(); // soup of initial components
 	private boolean compile = false;
 	private boolean storify = false;
+	
+	private CSnapshot snapshot=null;
+
+	public CSnapshot getSnapshot() {
+		return snapshot;
+	}
+
+	public void setSnapshot(CSnapshot snapshot) {
+		this.snapshot = snapshot;
+	}
 
 	public CObservables getObservables() {
 		return observables;
