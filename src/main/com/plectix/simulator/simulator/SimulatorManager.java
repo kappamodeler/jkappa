@@ -363,4 +363,7 @@ public class SimulatorManager {
 		return sTime;
 	}
 
+	public int getAgentIdGenerator() {
+		return agentIdGenerator;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CConnectedComponent;
 
 public interface ISolution {
 
@@ -17,9 +18,9 @@ public interface ISolution {
 	public List<IAgent> apply(IRule rule, IInjection injection);
 	//returns list of root agents after applying rule - new CCs
 	
-	public IConnectedComponent getConnectedComponent (IAgent agent);
+	public CConnectedComponent getConnectedComponent (CAgent agent);
 	
-	public List<IConnectedComponent> split();
+	public List<CConnectedComponent> split();
 	
 	public boolean satisfy(IConstraint constraint, IInjection injection);
 	

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IConstraint;
@@ -93,8 +94,38 @@ public class CSolution implements ISolution {
 	}
 
 	@Override
-	public final IConnectedComponent getConnectedComponent(IAgent agent) {
-		return null;
+	public final CConnectedComponent getConnectedComponent(CAgent agent) {
+		List<CAgent> agentList = new ArrayList<CAgent>();
+		agentList.add(agent);
+		agentList = getAdjacentAgents(agent, agentList);
+		return new CConnectedComponent(agentList);
+	}
+
+	private final List<CAgent> getAdjacentAgents(CAgent agent, List<CAgent> list) {
+		List<CAgent> agentList = list;
+		List<CAgent> agentAddList = new ArrayList<CAgent>();
+
+		for (CSite site : agent.getSites()) {
+			CSite siteLink = (CSite) site.getLinkState().getSite();
+			if ((site.getLinkState().getSite() != null)
+					&& (!isAgentInList(siteLink.getAgentLink(), agentList))) {
+				agentAddList.add(siteLink.getAgentLink());
+				agentList.add(siteLink.getAgentLink());
+
+			}
+		}
+
+		for (CAgent agentFromList : agentAddList)
+			agentList = getAdjacentAgents(agentFromList, agentList);
+
+		return agentList;
+	}
+
+	private final boolean isAgentInList(CAgent agent, List<CAgent> agentList) {
+		for (CAgent agents : agentList)
+			if (agent.getId() == agents.getId())
+				return true;
+		return false;
 	}
 
 	@Override
@@ -122,9 +153,30 @@ public class CSolution implements ISolution {
 	}
 
 	@Override
-	public final List<IConnectedComponent> split() {
-		// TODO Auto-generated method stub
-		return null;
+	public final List<CConnectedComponent> split() {
+		List<Boolean> indexList = new ArrayList<Boolean>();
+
+		for (int i = 0; i < SimulationMain.getSimulationManager()
+				.getAgentIdGenerator(); i++) {
+			indexList.add(false);
+		}
+
+		List<CConnectedComponent> ccList = new ArrayList<CConnectedComponent>();
+
+		for (List<CAgent> agentList : agentMap.values()) {
+			for (CAgent agent : agentList) {
+				int index = (int) agent.getId();
+				if (!indexList.get(index)) {					
+					CConnectedComponent cc = getConnectedComponent(agent);
+					for (CAgent agentCC : cc.getAgents())
+						indexList.set((int) agentCC.getId(), true);
+					ccList.add(cc);
+
+				}
+			}
+		}
+
+		return ccList;
 	}
 
 	public List<SolutionLines> getSolutionLines() {
@@ -138,13 +190,13 @@ public class CSolution implements ISolution {
 			line = line.substring(0, line.length() - 1);
 		}
 		for (SolutionLines sl : solutionLines) {
-			if (sl.getLine().equals(line)){
+			if (sl.getLine().equals(line)) {
 				sl.setCount(sl.getCount() + count);
 				return;
 			}
 		}
-		solutionLines.add(new SolutionLines(line,count));
-		
+		solutionLines.add(new SolutionLines(line, count));
+
 	}
 
 }

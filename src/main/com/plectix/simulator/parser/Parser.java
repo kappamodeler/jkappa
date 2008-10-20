@@ -249,7 +249,7 @@ public class Parser {
 		this.perturbationRate = Double.valueOf(st);
 
 		for (CRule rule : SimulationMain.getSimulationManager().getRules())
-			if ((rule.getName()!=null)&&(rule.getName().equals(ruleName))) {
+			if ((rule.getName() != null) && (rule.getName().equals(ruleName))) {
 				return rule;
 			}
 
@@ -651,7 +651,12 @@ public class Parser {
 				lsNew.setStatusLink(lsOld.getStatusLink());
 				if (lsOld.getSite() != null) {
 					CSite siteOldLink = (CSite) lsOld.getSite();
-					int index = agentList.indexOf(siteOldLink.getAgentLink());
+					int j = 0;
+					for (j = 0; j < agentList.size(); j++) {
+						if (agentList.get(j) == siteOldLink.getAgentLink())
+							break;
+					}
+					int index = j;					
 					lsNew.setSite(newAgentsList.get(index).getSite(
 							siteOldLink.getNameId()));
 				}
