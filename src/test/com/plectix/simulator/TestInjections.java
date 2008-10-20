@@ -30,8 +30,8 @@ public class TestInjections {
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 
 		
-		String arg1 = new String("-debug");
-		String arg2 = new String("--compile");
+		String arg1 = new String("--debug");
+		String arg2 = new String("--sim");
 		String arg3 = new String("test.data/TheGreatTestFile");
 		
 		String[] args = new String[3];
