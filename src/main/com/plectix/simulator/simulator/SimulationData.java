@@ -17,7 +17,7 @@ public class SimulationData {
 	private static List<ArrayList<RunningMetric>> runningMetrics;
 
 	private List<CRule> rules;
-	private List<CStories> stories;
+	private List<CStories> stories=null;
 	private List<CPerturbation> perturbations;
 
 	private CObservables observables = new CObservables();
@@ -27,7 +27,7 @@ public class SimulationData {
 	private String xmlSessionName = "simplx.xml";
 	private String tmpSessionName = "simplx.tmp";
 
-	private double snapshotTime = 0.;
+	private double snapshotTime = -1.;
 	
 	public double getSnapshotTime() {
 		return snapshotTime;

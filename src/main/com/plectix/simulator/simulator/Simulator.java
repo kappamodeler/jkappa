@@ -22,6 +22,7 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
+import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.CXMLWriter;
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.util.RunningMetric;
@@ -34,6 +35,12 @@ public class Simulator {
 	private double currentTime = 0.;
 
 	private int randomSeed;
+
+	private boolean storyMode = false;
+
+	public boolean isStoryMode() {
+		return storyMode;
+	}
 
 	private boolean isIteration = false;
 	int timeStepCounter = 0;
@@ -67,7 +74,7 @@ public class Simulator {
 								.getSolution()));
 				model.getSimulationData().setSnapshotTime(currentTime);
 			}
-
+			// List<CConnectedComponent> model.
 			checkPerturbation();
 			rule = ruleProbabilityCalculation.getRandomRule();
 			// ruleProbabilityCalculation.calculation();
@@ -78,6 +85,10 @@ public class Simulator {
 			 * if(detSel.getIterator()==37){
 			 * System.out.println(detSel.getIterator()); }
 			 */
+
+			if (currentTime > 0.0001) {
+				int uduu = 0;
+			}
 
 			if (rule == null) {
 				isEndRules = true;
@@ -228,6 +239,46 @@ public class Simulator {
 						return true;
 		}
 		return false;
+	}
+
+	public final void runStories() {
+		for (CStories story : model.getSimulationData().getStories()) {
+			// int storiesCount = model.getSimulationData().getStories()
+			for (int i = 0; i < CStories.numberOfSimulations; i++) {
+				SimulationMain.getSimulationManager().startTimer();
+				long clash = 0;
+				CRule rule;
+				CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
+						model.getSimulationData().getRules(), model
+								.getSimulationData().getSeed());
+				while (currentTime <= model.getSimulationData().getTimeLength()) {
+					checkPerturbation();
+					rule = ruleProbabilityCalculation.getRandomRule();
+
+					if (rule == null) {
+						model.getSimulationData().setTimeLength(currentTime);
+						break;
+					}
+
+					List<CInjection> injectionsList = ruleProbabilityCalculation
+							.getSomeInjectionList(rule);
+					currentTime += ruleProbabilityCalculation.getTimeValue();
+					if (!isClash(injectionsList)) {
+						if (story.checkRule(rule.getRuleID(), i))
+							break;
+						rule.applyRule(injectionsList);
+						doNegativeUpdate(injectionsList);
+						doPositiveUpdate(rule);
+					} else {
+						clash++;
+					}
+				}
+				resetSimulation();
+			}
+			
+		}
+		
+		System.out.println();
 	}
 
 	public final void runIterations() {

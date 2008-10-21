@@ -13,9 +13,23 @@ public class CLinkState extends CState {
 	public static final byte RANK_SEMI_LINK = 0x02;
 	public static final byte RANK_BOUND = 0x03;
 	public static final byte RANK_FREE = 0x04;
+	
+	public static final byte NULL_INDEX = -1;
 
 	private byte statusLink;
 	private ISite linkSite = null;
+
+	
+	private int linkStateID = NULL_INDEX;
+
+	
+	public int getLinkStateID() {
+		return linkStateID;
+	}
+
+	public void setLinkStateID(int linkSiteID) {
+		this.linkStateID = linkSiteID;
+	}
 
 	public CLinkState(ISite site, byte statusLink) {
 		linkSite = site;

@@ -33,7 +33,6 @@ public class SimulationMain {
 	private final static String LONG_RANDOMIZER_JAVA_OPTION = "randomizer";
 	private final static String LONG_ITERATIONS_OPTION = "iterations";
 	private final static String LONG_SNAPSHOT_TIME = "set_snapshot_time";
-	
 
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
@@ -71,13 +70,11 @@ public class SimulationMain {
 		cmdLineOptions
 				.addOption(LONG_ITERATIONS_OPTION, true,
 						"To run the same simulation given number of times and get averages");
-		cmdLineOptions
-		.addOption(LONG_SNAPSHOT_TIME, true,
+		cmdLineOptions.addOption(LONG_SNAPSHOT_TIME, true,
 				"Takes a snapshot of solution at specified time unit");
 
-		cmdLineOptions
-		.addOption(DEBUG_INIT_OPTION, false, 
-		"Program execution suspends right after initialization phase");
+		cmdLineOptions.addOption(DEBUG_INIT_OPTION, false,
+				"Program execution suspends right after initialization phase");
 	}
 
 	public static void main(String[] args) {
@@ -100,7 +97,7 @@ public class SimulationMain {
 		if (!cmdLineArgs.hasOption(DEBUG_INIT_OPTION)) {
 			myIsSimulating = true;
 		}
-		
+
 		else if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
 			simulationManager.outputData();
 			System.exit(1);
@@ -115,6 +112,8 @@ public class SimulationMain {
 
 		if (cmdLineArgs.hasOption(LONG_ITERATIONS_OPTION))
 			simulator.runIterations();
+		else if (cmdLineArgs.hasOption(LONG_STORIFY_OPTION))
+			simulator.runStories();
 		else
 			simulator.run(null);
 	}
@@ -125,29 +124,28 @@ public class SimulationMain {
 		String fileName = null;
 		double timeSim = 0.;
 		double snapshotTime = -1.;
-		
+
 		if (cmdLineArgs.hasOption(LONG_STORIFY_OPTION)) {
 			fileName = cmdLineArgs.getOptionValue(LONG_STORIFY_OPTION);
 			SimulationMain.getSimulationManager().getSimulationData()
 					.setStorify(true);
 			option = true;
 		}
+		if (cmdLineArgs.hasOption(LONG_TIME_OPTION)) {
+			try {
+				timeSim = Double.valueOf(cmdLineArgs
+						.getOptionValue(LONG_TIME_OPTION));
+			} catch (Exception e) {
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp("use --sim [file]", cmdLineOptions);
+			}
+			simulationManager.getSimulationData().setTimeLength(timeSim);
+		} else
+			System.out.println("*Warning* No time limit.");
 
 		if (!option && (cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION))) {
 			option = true;
 			fileName = cmdLineArgs.getOptionValue(SHORT_SIMULATIONFILE_OPTION);
-			if (cmdLineArgs.hasOption(LONG_TIME_OPTION)) {
-				option = true;
-				try {
-					timeSim = Double.valueOf(cmdLineArgs
-							.getOptionValue(LONG_TIME_OPTION));
-				} catch (Exception e) {
-					HelpFormatter formatter = new HelpFormatter();
-					formatter.printHelp("use --sim [file]", cmdLineOptions);
-				}
-				simulationManager.getSimulationData().setTimeLength(timeSim);
-			} else
-				System.out.println("*Warning* No time limit.");
 			if (cmdLineArgs.hasOption(LONG_SNAPSHOT_TIME)) {
 				option = true;
 				try {
@@ -157,8 +155,9 @@ public class SimulationMain {
 					HelpFormatter formatter = new HelpFormatter();
 					formatter.printHelp("use --sim [file]", cmdLineOptions);
 				}
-				simulationManager.getSimulationData().setSnapshotTime(snapshotTime);
-			} 
+				simulationManager.getSimulationData().setSnapshotTime(
+						snapshotTime);
+			}
 		}
 		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
 			simulationManager.getSimulationData().setCompile(true);

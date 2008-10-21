@@ -70,13 +70,15 @@ public class CSnapshot {
 		}
 
 		private void parseCC() {
-			ccName = SimulationMain.getSimulationManager().printPartRule(cc);
+			ccName = SimulationMain.getSimulationManager().printPartRule(cc,0);
 		}
 
 		public boolean exists(CConnectedComponent ccEx) {
 			if (cc == ccEx)
 				return true;
-			if (cc.isAutomorphism(ccEx.getAgents().get(0))) {
+			ccEx.initSpanningTreeMap();
+			//if (cc.isAutomorphism(ccEx.getAgents().get(0))) {
+			if (cc.unify(ccEx.getAgents().get(0)) && ccEx.unify(cc.getAgents().get(0))) {
 				count++;
 				return true;
 			}

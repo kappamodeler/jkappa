@@ -21,12 +21,12 @@ public class CAgent implements IAgent {
 	private int idInRuleSide = UNMARKED;
 
 	private long id;
-	
+
 	// TODO: is this field static or not???
 	public final CSite EMPTY_SITE = new CSite(CSite.NO_INDEX, this);
 
 	private HashMap<Integer, CSite> siteMap = new HashMap<Integer, CSite>();
-	
+
 	public HashMap<Integer, CSite> getSiteMap() {
 		return siteMap;
 	}
@@ -60,16 +60,20 @@ public class CAgent implements IAgent {
 	 * parameter
 	 */
 
-	public final CAgent findLinkAgent(CAgent agent) {
-		if (agent == null)
+	public final CAgent findLinkAgent(CAgent agentFromCC, List<CSite> siteFromCC) {
+		if (agentFromCC == null || siteFromCC.size()==0)
 			return null;
-		for (CSite site : siteMap.values()) {
-			CSite aSite = (CSite) site.getLinkState().getSite();
-			if (aSite != null) {
-				if (agent.equals(aSite.getAgentLink()))
-					return aSite.getAgentLink();
-			}
+		CAgent agent = (CAgent) this.getSite(siteFromCC.get(0).getNameId())
+				.getLinkState().getSite().getAgentLink();
+		for (CSite siteF : siteFromCC) {
+			CAgent agent2 = (CAgent) this.getSite(siteF.getNameId())
+					.getLinkState().getSite().getAgentLink();
+			if (agent != agent2)
+				return null;
 		}
+		if (agent.equals(agentFromCC))
+			return agent;
+
 		return null;
 	}
 

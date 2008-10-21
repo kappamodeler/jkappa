@@ -48,7 +48,13 @@ public class CSolution implements ISolution {
 
 	public final void removeAgent(CAgent agent) {
 		List<CAgent> list = agentMap.get(agent.getNameId());
-		list.remove(agent);
+		
+		int i=0;
+		for (i=0;i<list.size();i++) {
+			if (list.get(i)==agent)
+				break;
+		}
+		list.remove(i);
 	}
 
 	public final List<CAgent> getConnectedAgents(CAgent inAgent) {
@@ -99,8 +105,9 @@ public class CSolution implements ISolution {
 		agentList.add(agent);
 		agentList = getAdjacentAgents(agent, agentList);
 		int index=0;
-		for (CAgent agentIn : agentList)
-			agentIn.setIdInConnectedComponent(index++);
+		for (CAgent agentIn : agentList){
+			agentIn.setIdInRuleSide(index);
+			agentIn.setIdInConnectedComponent(index++);}
 		
 		return new CConnectedComponent(agentList);
 	}

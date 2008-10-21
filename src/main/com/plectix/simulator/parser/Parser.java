@@ -103,8 +103,10 @@ public class Parser {
 		createSimData(data.getInits(), CREATE_INIT);
 		List<CRule> rules = createRules(data.getRules());
 		SimulationMain.getSimulationManager().setRules(rules);
-		if (SimulationMain.getSimulationManager().getSimulationData()
-				.isStorify()) {
+		if ((SimulationMain.getSimulationManager().getSimulationData()
+				.getStories() == null)
+				&& (SimulationMain.getSimulationManager().getSimulationData()
+						.isStorify())) {
 			SimulationMain.getSimulationManager().getSimulationData()
 					.setStories(new ArrayList<CStories>());
 			createSimData(data.getStory(), CREATE_STORY);
@@ -656,7 +658,7 @@ public class Parser {
 						if (agentList.get(j) == siteOldLink.getAgentLink())
 							break;
 					}
-					int index = j;					
+					int index = j;
 					lsNew.setSite(newAgentsList.get(index).getSite(
 							siteOldLink.getNameId()));
 				}

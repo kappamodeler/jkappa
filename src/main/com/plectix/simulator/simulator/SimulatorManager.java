@@ -52,7 +52,7 @@ public class SimulatorManager {
 			List<CAgent> hsRulesList, List<CAgent> agentsList) {
 		agentsList.add(rootAgent);
 		rootAgent.setIdInConnectedComponent(agentsList.size() - 1);
-		hsRulesList.remove(rootAgent);
+		removeAgent(hsRulesList, rootAgent);
 		for (CSite site : rootAgent.getSites()) {
 			if (site.getLinkIndex() != CSite.NO_INDEX) {
 				CAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
@@ -84,6 +84,17 @@ public class SimulatorManager {
 		return null;
 	}
 
+	private final void removeAgent(List<CAgent> agents, CAgent agent) {
+		int i=0;
+		for (i=0;i<agents.size();i++) {
+			if (agents.get(i)==agent)
+				break;
+		}
+		agents.remove(i);
+	}
+
+	
+	
 	public final CRule buildRule(List<CAgent> left, List<CAgent> right,
 			String name, Double activity, int ruleID) {
 		return new CRule(buildConnectedComponents(left),
@@ -174,65 +185,28 @@ public class SimulatorManager {
 		System.out.println("PERTURBATIONS:");
 	}
 
+	private static int indexLink = 0;
+	
 	public static final String printPartRule(List<CConnectedComponent> ccList) {
 		String line = new String();
-		int indexLink = 0;
+		indexLink = 0;
 		int length = 0;
 		if (ccList == null)
 			return line;
 		for (CConnectedComponent cc : ccList)
 			length = length + cc.getAgents().size();
-		int j = 1;
 		for (CConnectedComponent cc : ccList) {
 			if (cc == CRule.EMPTY_LHS_CC)
 				return line;
-			for (CAgent agent : cc.getAgents()) {
-				line = line + agent.getName();
-				line = line + "(";
-				int i = 1;
-				for (CSite site : agent.getSites()) {
-					line = line + site.getName();
-					if ((site.getInternalState() != null)
-							&& (site.getInternalState().getNameId() >= 0))
-						line = line + "~" + site.getInternalState().getName();
-					switch (site.getLinkState().getStatusLink()) {
-					case CLinkState.STATUS_LINK_BOUND: {
-						if (site.getLinkState() == null)
-							line = line + "!_";
-						else if (site.getAgentLink().getIdInRuleSide() < ((CSite) site
-								.getLinkState().getSite()).getAgentLink()
-								.getIdInRuleSide()) {
-							line = line + "!" + indexLink;
-						} else {
-							line = line + "!" + indexLink;
-							indexLink++;
-						}
-
-						break;
-					}
-					case CLinkState.STATUS_LINK_WILDCARD: {
-						line = line + "?";
-						break;
-					}
-					}
-
-					if (agent.getSites().size() > i++)
-						line = line + ",";
-				}
-				if (length > j)
-					line = line + "),";
-				else
-					line = line + ")";
-				j++;
-			}
+			line+=printPartRule(cc, indexLink);
 
 		}
 		return line;
 	}
 
-	public static final String printPartRule(CConnectedComponent cc) {
+	public static final String printPartRule(CConnectedComponent cc, int index) {
 		String line = new String();
-		int indexLink = 0;
+		indexLink = index;
 		int length = 0;
 		if (cc == null)
 			return line;
@@ -254,13 +228,16 @@ public class SimulatorManager {
 				case CLinkState.STATUS_LINK_BOUND: {
 					if (site.getLinkState() == null)
 						line = line + "!_";
-					else if (site.getAgentLink().getId() < ((CSite) site
+					else if (site.getAgentLink().getIdInConnectedComponent() < ((CSite) site
 							.getLinkState().getSite()).getAgentLink()
-							.getId()) {
-						line = line + "!" + indexLink;
+							.getIdInConnectedComponent()) {
+						((CSite) site.getLinkState().getSite()).getLinkState()
+								.setLinkStateID(indexLink);
+						line = line + "!" + indexLink++;
 					} else {
-						line = line + "!" + indexLink;
-						indexLink++;
+						line = line + "!"
+								+ site.getLinkState().getLinkStateID();
+						site.getLinkState().setLinkStateID(-1);
 					}
 
 					break;

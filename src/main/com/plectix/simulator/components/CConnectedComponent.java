@@ -105,7 +105,7 @@ public class CConnectedComponent implements IConnectedComponent {
 		if (connectedComponentList == null)
 			return;
 		for (CConnectedComponent cc : connectedComponentList) {
-			for (CAgent agent : cc.agentFromSolutionForRHS)
+			for (CAgent agent : cc.getAgentFromSolutionForRHS())
 				if (!agent.isAgentHaveLinkToConnectedComponent(this)) {
 					setInjections(agent);
 				}
@@ -328,6 +328,20 @@ public class CConnectedComponent implements IConnectedComponent {
 		return false;
 	}
 
+	private List<CSite> getConnectedSite(CAgent agentFrom, CAgent agentTo) {
+		List<CSite> siteList = new ArrayList<CSite>();
+
+		for (CSite sF : agentFrom.getSites()) {
+			for (CSite sT : agentTo.getSites()) {
+				if (sF == sT.getLinkState().getSite()){
+					siteList.add(sF);
+				}
+			}
+		}
+
+		return siteList;
+	}
+
 	// is there injection or not and create lifts
 	private final boolean spanningTreeViewer(CAgent agent,
 			CSpanningTree spTree, int rootVertex, boolean fullEquality) {
@@ -336,7 +350,8 @@ public class CConnectedComponent implements IConnectedComponent {
 			CAgent cAgent = agentList.get(v);// get next agent from spanning
 			if (!(spTree
 					.getNewVertexElement(cAgent.getIdInConnectedComponent()))) {
-				CAgent sAgent = agent.findLinkAgent(cAgent);
+				List<CSite> sitesFrom = getConnectedSite(agentList.get(rootVertex), agentList.get(v));
+				CAgent sAgent = agent.findLinkAgent(cAgent, sitesFrom);
 				if (fullEquality && !(fullEqualityOfAgents(cAgent, sAgent)))
 					return false;
 				if (!fullEquality && !compareAgents(cAgent, sAgent))
