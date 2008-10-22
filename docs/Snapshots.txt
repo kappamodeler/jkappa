@@ -1,0 +1,9 @@
+Jean Krivine - 9 Oct 2008
+
+Takes a snapshot of the current solution at specified time interval. A snapshot is a list of the form
+S_1,n_1
+...
+S_k,n_k
+
+where S_i is a species and n_i is the number of times species S_i can be found in the solution.
+Simplx is returning the snapshot in the simplx.xml if you use the option --set-snapshot-time (you can use it multiple times) 

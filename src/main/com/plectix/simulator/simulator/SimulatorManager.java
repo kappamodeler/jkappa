@@ -381,12 +381,17 @@ public class SimulatorManager {
 	private long timeStart;
 
 	public final void startTimer() {
+		/*
 		Date data = new Date();
 		timeStart = data.getTime() - data.getTime() % 1000;
+		timeStartNano = System.nanoTime();
+		*/
+		timeStart = System.currentTimeMillis();
 		timeStartNano = System.nanoTime();
 	}
 
 	public final String getTimer() {
+		/*
 		Date data = new Date();
 		long time = data.getTime() - data.getTime() % 1000;
 		time = Math.round((time - timeStart) / 1000);
@@ -396,6 +401,10 @@ public class SimulatorManager {
 			sNano = "0" + sNano;
 		String sTime = Long.toString(time) + "." + sNano;
 		return sTime;
+		*/
+		double wallClockTimeInSeconds = 1.0E-3 * (System.currentTimeMillis() - timeStart);
+		double nanoTimeInSeconds = 1.0E-9 * (System.nanoTime() - timeStartNano);
+		return "WallClock=" + wallClockTimeInSeconds + " NanoClock=" + nanoTimeInSeconds;
 	}
 
 	public int getAgentIdGenerator() {
