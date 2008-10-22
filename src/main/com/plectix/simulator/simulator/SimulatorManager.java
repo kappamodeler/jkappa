@@ -1,5 +1,6 @@
 package com.plectix.simulator.simulator;
 
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -379,6 +380,7 @@ public class SimulatorManager {
 
 	private long timeStartNano;
 	private long timeStart;
+	private long timeStartThread;
 
 	public final void startTimer() {
 		/*
@@ -388,6 +390,7 @@ public class SimulatorManager {
 		*/
 		timeStart = System.currentTimeMillis();
 		timeStartNano = System.nanoTime();
+		timeStartThread = ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime();
 	}
 
 	public final String getTimer() {
@@ -404,7 +407,8 @@ public class SimulatorManager {
 		*/
 		double wallClockTimeInSeconds = 1.0E-3 * (System.currentTimeMillis() - timeStart);
 		double nanoTimeInSeconds = 1.0E-9 * (System.nanoTime() - timeStartNano);
-		return "WallClock=" + wallClockTimeInSeconds + " NanoClock=" + nanoTimeInSeconds;
+		double threadTimeInSeconds = 1.0E-9 * (ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime() - timeStartThread);
+		return "WallClock=" + wallClockTimeInSeconds + " NanoClock=" + nanoTimeInSeconds + " ThreadTime=" + threadTimeInSeconds;
 	}
 
 	public int getAgentIdGenerator() {
