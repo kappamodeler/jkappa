@@ -49,7 +49,7 @@ public class CSnapshot {
 		return snapshotElements;
 	}
 
-	class SnapshotElement {
+	public class SnapshotElement {
 		private int count;
 		private CConnectedComponent cc;
 		private String ccName;

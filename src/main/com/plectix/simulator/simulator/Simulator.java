@@ -275,9 +275,9 @@ public class Simulator {
 				}
 				resetSimulation();
 			}
-			
+
 		}
-		
+
 		System.out.println();
 	}
 

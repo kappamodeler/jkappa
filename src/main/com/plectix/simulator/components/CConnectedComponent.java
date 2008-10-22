@@ -173,7 +173,12 @@ public class CConnectedComponent implements IConnectedComponent {
 					if (compareAgents(agentList.get(tree.getRootIndex()), agent))
 						if (spanningTreeViewer(agent, tree,
 								tree.getRootIndex(), false))
-							return true;
+							if (this.getAgents().size() == agentLinkList.size())
+								return true;
+							else {
+								injectedSites.clear();
+								agentLinkList.clear();
+							}
 				}
 
 			}
@@ -333,7 +338,7 @@ public class CConnectedComponent implements IConnectedComponent {
 
 		for (CSite sF : agentFrom.getSites()) {
 			for (CSite sT : agentTo.getSites()) {
-				if (sF == sT.getLinkState().getSite()){
+				if (sF == sT.getLinkState().getSite()) {
 					siteList.add(sF);
 				}
 			}
@@ -350,7 +355,8 @@ public class CConnectedComponent implements IConnectedComponent {
 			CAgent cAgent = agentList.get(v);// get next agent from spanning
 			if (!(spTree
 					.getNewVertexElement(cAgent.getIdInConnectedComponent()))) {
-				List<CSite> sitesFrom = getConnectedSite(agentList.get(rootVertex), agentList.get(v));
+				List<CSite> sitesFrom = getConnectedSite(agentList
+						.get(rootVertex), agentList.get(v));
 				CAgent sAgent = agent.findLinkAgent(cAgent, sitesFrom);
 				if (fullEquality && !(fullEqualityOfAgents(cAgent, sAgent)))
 					return false;

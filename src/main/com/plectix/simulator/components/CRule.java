@@ -295,13 +295,17 @@ public class CRule {
 	private final boolean hasIntersection(List<CAgent> agentsFromAnotherRules) {
 		// int agentIntersection = 0;// intersection of agents
 		for (CAgent agent : agentsFromAnotherRules)
-				for (CSite changedSite : changedSites)
-					if (agent.equals(changedSite.getAgentLink())){
-						/*if (changedSite.getLinkState().getStatusLinkRank()==CLinkState.RANK_BOUND)
-							for (CSite changedSite : changedSites)
-							
-					}*/
-						return true;}
+			for (CSite changedSite : changedSites)
+				if (agent.equals(changedSite.getAgentLink())) {
+					/*
+					 * if
+					 * (changedSite.getLinkState().getStatusLinkRank()==CLinkState
+					 * .RANK_BOUND) for (CSite changedSite : changedSites)
+					 * 
+					 * }
+					 */
+					return true;
+				}
 		return false;
 	}
 
@@ -705,8 +709,9 @@ public class CRule {
 
 				CSite lConnectSite = (CSite) fromSite.getLinkState().getSite();
 				CSite rConnectSite = (CSite) toSite.getLinkState().getSite();
-				if (lConnectSite.getAgentLink().getIdInRuleSide() == rConnectSite
+				if ((lConnectSite.getAgentLink().getIdInRuleSide() == rConnectSite
 						.getAgentLink().getIdInRuleSide())
+						&& (lConnectSite.equals(rConnectSite)))
 					continue;
 				list.add(new Action(fromSite, toSite, rightConnectedComponent,
 						leftConnectedComponent, ACTION_BRK));
