@@ -366,7 +366,7 @@ public class Simulator {
 
 	}
 
-	private final void resetSimulation() {
+	public final void resetSimulation() {
 		model.getSimulationData().getRules().clear();
 		model.getSimulationData().getObservables().getConnectedComponentList()
 				.clear();
