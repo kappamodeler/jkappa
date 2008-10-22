@@ -398,30 +398,25 @@ public class Simulator {
 				.getConnectedComponentList().size();
 
 		if (iteration_num == 0) {
-			model.getSimulationData().getTimeStamps().add(
-					new Double(currentTime)); // time = current
-			// simulation time
+			model.getSimulationData().getTimeStamps().add(currentTime); 
+			
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 				runningMetrics.get(observable_num).add(new RunningMetric());
 			}
 		}
 
 		for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
-			double x = 0; // x is the value for the observable_num at
-			// the current time
-			x = model.getSimulationData().getObservables()
+			double x = // x is the value for the observable_num at the current time
+		             model.getSimulationData().getObservables()
 					.getConnectedComponentList().get(observable_num)
 					.getInjectionsList().size();
 			if (timeStepCounter >= runningMetrics.get(observable_num).size()) {
-				// model.getSimulationData().getTimeStamps().add(
-				// new Double(currentTime));
 				runningMetrics.get(observable_num).add(new RunningMetric());
 			}
 			runningMetrics.get(observable_num).get(timeStepCounter).add(x);
 		}
 
 		timeStepCounter++;
-
 	}
 
 }
