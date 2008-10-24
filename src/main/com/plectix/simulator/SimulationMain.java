@@ -33,6 +33,7 @@ public class SimulationMain {
 	private final static String LONG_RANDOMIZER_JAVA_OPTION = "randomizer";
 	private final static String LONG_ITERATIONS_OPTION = "iterations";
 	private final static String LONG_SNAPSHOT_TIME = "set_snapshot_time";
+	private final static String LONG_ACTIVATION_MAP_OPTION = "no_activation_map";
 
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
@@ -75,6 +76,8 @@ public class SimulationMain {
 
 		cmdLineOptions.addOption(DEBUG_INIT_OPTION, false,
 				"Program execution suspends right after initialization phase");
+		cmdLineOptions.addOption(LONG_ACTIVATION_MAP_OPTION, false,
+				"Do not construct activation map");
 	}
 
 	public static void main(String[] args) {
@@ -237,6 +240,10 @@ public class SimulationMain {
 		if (cmdLineArgs.hasOption(LONG_RANDOMIZER_JAVA_OPTION)) {
 			simulationManager.getSimulationData().setRandomizer(
 					cmdLineArgs.getOptionValue(LONG_RANDOMIZER_JAVA_OPTION));
+		}
+		
+		if (cmdLineArgs.hasOption(LONG_ACTIVATION_MAP_OPTION)) {
+			simulationManager.getSimulationData().setActivationMap(false);
 		}
 
 		if (cmdLineArgs.hasOption(LONG_ITERATIONS_OPTION)) {

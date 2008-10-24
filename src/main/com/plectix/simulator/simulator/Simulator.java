@@ -82,7 +82,7 @@ public class Simulator {
 			}
 			checkPerturbation();
 			rule = ruleProbabilityCalculation.getRandomRule();
-				
+
 			if (rule == null) {
 				isEndRules = true;
 				model.getSimulationData().setTimeLength(currentTime);
@@ -98,7 +98,7 @@ public class Simulator {
 				// negative update
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("negative update");
-			
+
 				rule.applyRule(injectionsList);
 
 				doNegativeUpdate(injectionsList);
@@ -146,16 +146,21 @@ public class Simulator {
 
 	public final void doPositiveUpdate(CRule rule) {
 
-		 for (CRule rules : rule.getActivatedRule()) { for
-		 (CConnectedComponent cc : rules.getLeftHandSide()) {
-		 cc.doPositiveUpdate(rule.getRightHandSide()); } }
-				 
+		if (model.getSimulationData().isActivationMap()) {
+			for (CRule rules : rule.getActivatedRule()) {
+				for (CConnectedComponent cc : rules.getLeftHandSide()) {
+					cc.doPositiveUpdate(rule.getRightHandSide());
+				}
+			}
 
-//		for (CRule rules : model.getSimulationData().getRules()) {
-//			for (CConnectedComponent cc : rules.getLeftHandSide()) {
-//				cc.doPositiveUpdate(rule.getRightHandSide());
-//			}
-//		}
+		} else {
+			for (CRule rules : model.getSimulationData().getRules()) {
+				for (CConnectedComponent cc : rules.getLeftHandSide()) {
+					cc.doPositiveUpdate(rule.getRightHandSide());
+				}
+			}
+
+		}
 
 		for (ObservablesConnectedComponent oCC : model.getSimulationData()
 				.getObservables().getConnectedComponentList()) {
@@ -320,7 +325,7 @@ public class Simulator {
 		try {
 			writer = new PrintWriter(new OutputStreamWriter(
 					new FileOutputStream(model.getSimulationData()
-							.getTmpSessionName()), "windows-1251"));
+							.getTmpSessionName())));
 
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 				System.out.println("Observable " + observable_num);
@@ -348,8 +353,6 @@ public class Simulator {
 				}
 			}
 
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

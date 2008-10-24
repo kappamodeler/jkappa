@@ -17,7 +17,7 @@ public class SimulationData {
 	private static List<ArrayList<RunningMetric>> runningMetrics;
 
 	private List<CRule> rules;
-	private List<CStories> stories=null;
+	private List<CStories> stories = null;
 	private List<CPerturbation> perturbations;
 
 	private CObservables observables = new CObservables();
@@ -26,9 +26,10 @@ public class SimulationData {
 	private int seed = 0;
 	private String xmlSessionName = "simplx.xml";
 	private String tmpSessionName = "simplx.tmp";
+	private boolean activationMap = true;
 
 	private double snapshotTime = -1.;
-	
+
 	public double getSnapshotTime() {
 		return snapshotTime;
 	}
@@ -46,8 +47,8 @@ public class SimulationData {
 	private ISolution solution = new CSolution(); // soup of initial components
 	private boolean compile = false;
 	private boolean storify = false;
-	
-	private CSnapshot snapshot=null;
+
+	private CSnapshot snapshot = null;
 
 	public CSnapshot getSnapshot() {
 		return snapshot;
@@ -212,4 +213,11 @@ public class SimulationData {
 		this.tmpSessionName = tmpSessionName;
 	}
 
+	public final boolean isActivationMap() {
+		return activationMap;
+	}
+
+	public final void setActivationMap(boolean activationMap) {
+		this.activationMap = activationMap;
+	}
 }
