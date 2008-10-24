@@ -116,9 +116,20 @@ public class CSite implements ISite {
 						injection);
 			}
 		}
+		/*for (CLiftElement liftElement : this.liftList) {
+			CInjection injection = liftElement.getInjection();
+			if (injection != inInjection) {
+				for (CSite site : injection.getChangedSites()) {
+					if (this != site)
+						site.removeInjectionFromLift(injection);
+				}
+				liftElement.getConnectedComponent().getInjectionsList().remove(
+						injection);
+			}
+		}*/
 	}
 
-	private final void removeInjectionFromLift(CInjection injection) {
+	public final void removeInjectionFromLift(CInjection injection) {
 		for (CLiftElement liftElement : this.liftList)
 			if (injection == liftElement.getInjection()) {
 				this.liftList.remove(liftElement);

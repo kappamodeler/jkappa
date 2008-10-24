@@ -86,24 +86,29 @@ public class CXMLWriter {
 		 * add activation map
 		 * */
 
-		/*
-		 * int lastRuleID = rules.size(); for (int i = rules.size() - 1; i >= 0;
-		 * i--) { for (int j = rules.get(i).getActivatedObservable().size() - 1;
-		 * j >= 0; j--) { Element node = doc.createElement("Connection");
-		 * node.setAttribute("FromNode", Integer.toString(rules.get(i)
-		 * .getRuleID() + 1)); node.setAttribute("ToNode",
-		 * Integer.toString(rules.get(i)
-		 * .getActivatedObservable().get(j).getNameID() + 1 + lastRuleID));
-		 * node.setAttribute("Relation", "POSITIVE");
-		 * influenceMap.appendChild(node); } for (int j =
-		 * rules.get(i).getActivatedRule().size() - 1; j >= 0; j--) { Element
-		 * node = doc.createElement("Connection"); node.setAttribute("FromNode",
-		 * Integer.toString(rules.get(i) .getRuleID() + 1));
-		 * node.setAttribute("ToNode", Integer.toString(rules.get(i)
-		 * .getActivatedRule().get(j).getRuleID() + 1));
-		 * node.setAttribute("Relation", "POSITIVE");
-		 * influenceMap.appendChild(node); } }
-		 */
+		int lastRuleID = rules.size();
+		for (int i = rules.size() - 1; i >= 0; i--) {
+			for (int j = rules.get(i).getActivatedObservable().size() - 1; j >= 0; j--) {
+				Element node = doc.createElement("Connection");
+				node.setAttribute("FromNode", Integer.toString(rules.get(i)
+						.getRuleID() + 1));
+				node.setAttribute("ToNode", Integer.toString(rules.get(i)
+						.getActivatedObservable().get(j).getNameID()
+						+ 1 + lastRuleID));
+				node.setAttribute("Relation", "POSITIVE");
+				influenceMap.appendChild(node);
+			}
+			for (int j = rules.get(i).getActivatedRule().size() - 1; j >= 0; j--) {
+				Element node = doc.createElement("Connection");
+				node.setAttribute("FromNode", Integer.toString(rules.get(i)
+						.getRuleID() + 1));
+				node.setAttribute("ToNode", Integer.toString(rules.get(i)
+						.getActivatedRule().get(j).getRuleID() + 1));
+				node.setAttribute("Relation", "POSITIVE");
+				influenceMap.appendChild(node);
+			}
+		}
+
 		simplxSession.appendChild(influenceMap);
 
 		if (SimulationMain.getSimulationManager().getSimulationData()

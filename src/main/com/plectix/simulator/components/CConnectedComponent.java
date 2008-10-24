@@ -22,6 +22,8 @@ public class CConnectedComponent implements IConnectedComponent {
 	private List<CSite> injectedSites;
 
 	private List<CAgentLink> agentLinkList;
+	
+	private List<CSite> changedInjectionsSite;
 
 	private List<CInjection> injectionsList;
 
@@ -52,6 +54,7 @@ public class CConnectedComponent implements IConnectedComponent {
 			injectionsList = new ArrayList<CInjection>();
 			injectionsList.add(EMPTY_INJECTION);
 			agentFromSolutionForRHS = new ArrayList<CAgent>();
+			changedInjectionsSite = new ArrayList<CSite>();
 			break;
 		}
 		}
@@ -61,6 +64,7 @@ public class CConnectedComponent implements IConnectedComponent {
 		agentList = connectedAgents;
 		injectionsList = new ArrayList<CInjection>();
 		agentFromSolutionForRHS = new ArrayList<CAgent>();
+		changedInjectionsSite = new ArrayList<CSite>();
 	}
 
 	public void removeInjection(CInjection injection) {

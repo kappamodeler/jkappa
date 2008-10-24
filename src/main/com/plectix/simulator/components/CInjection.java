@@ -12,9 +12,35 @@ public class CInjection implements IInjection {
 
 	private List<CSite> sitesList = new ArrayList<CSite>();
 
+	private List<CSite> changedSites;
+
+	public List<CSite> getChangedSites() {
+		return changedSites;
+	}
+
+	public void setChangedSites(List<CSite> changedSites) {
+		this.changedSites = changedSites;
+	}
+
 	private CConnectedComponent connectedComponent;
 
 	public CInjection() {
+	}
+
+	public void addToChangedSites(CSite site) {
+		if (!(checkSiteExistanceAmongChangedSites(site)))
+			this.changedSites.add(site);
+	}
+
+	public void clearChangedSites() {
+		changedSites.clear();
+	}
+
+	public boolean checkSiteExistanceAmongChangedSites(CSite site) {
+		for (CSite chSite : this.changedSites)
+			if (chSite == site)
+				return true;
+		return false;
 	}
 
 	public CInjection(CConnectedComponent connectedComponent,
@@ -22,6 +48,7 @@ public class CInjection implements IInjection {
 		this.connectedComponent = connectedComponent;
 		this.sitesList = sitesList;
 		this.agentLinkList = agentLinkList;
+		this.changedSites = new ArrayList<CSite>();
 	}
 
 	public List<CAgentLink> getAgentLinkList() {

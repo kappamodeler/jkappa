@@ -1,7 +1,12 @@
 package com.plectix.simulator.simulator;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -16,6 +21,7 @@ import org.apache.log4j.Logger;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
+import com.plectix.simulator.components.CLiftElement;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
@@ -74,22 +80,9 @@ public class Simulator {
 								.getSolution()));
 				model.getSimulationData().setSnapshotTime(currentTime);
 			}
-			// List<CConnectedComponent> model.
 			checkPerturbation();
 			rule = ruleProbabilityCalculation.getRandomRule();
-			// ruleProbabilityCalculation.calculation();
-			// rule =
-			// model.getSimulationData().getRules().get(detSel.nextRuleID());
-
-			/*
-			 * if(detSel.getIterator()==37){
-			 * System.out.println(detSel.getIterator()); }
-			 */
-
-			if (currentTime > 0.0001) {
-				int uduu = 0;
-			}
-
+				
 			if (rule == null) {
 				isEndRules = true;
 				model.getSimulationData().setTimeLength(currentTime);
@@ -101,12 +94,11 @@ public class Simulator {
 			List<CInjection> injectionsList = ruleProbabilityCalculation
 					.getSomeInjectionList(rule);
 			currentTime += ruleProbabilityCalculation.getTimeValue();
-			// detSel.nextTime();
 			if (!isClash(injectionsList)) {
 				// negative update
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("negative update");
-
+			
 				rule.applyRule(injectionsList);
 
 				doNegativeUpdate(injectionsList);
@@ -116,7 +108,6 @@ public class Simulator {
 					LOGGER.debug("positive update");
 
 				doPositiveUpdate(rule);
-
 			} else {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Clash");
@@ -131,6 +122,57 @@ public class Simulator {
 		outToLogger(isEndRules);
 		if (!isIteration)
 			outputData();
+	}
+
+	public final void doNegativeUpdate(List<CInjection> injectionsList) {
+		for (CInjection injection : injectionsList) {
+			if (injection != CConnectedComponent.EMPTY_INJECTION) {
+				for (CSite site : injection.getChangedSites()) {
+					site.getAgentLink().EMPTY_SITE
+							.removeInjectionsFromCCToSite(injection);
+					site.removeInjectionsFromCCToSite(injection);
+					site.getLift().clear();
+				}
+				for (CSite site : injection.getSiteList()) {
+					if (!injection.checkSiteExistanceAmongChangedSites(site)) {
+						site.removeInjectionFromLift(injection);
+					}
+				}
+				injection.getConnectedComponent().getInjectionsList().remove(
+						injection);
+			}
+		}
+	}
+
+	public final void doPositiveUpdate(CRule rule) {
+
+		 for (CRule rules : rule.getActivatedRule()) { for
+		 (CConnectedComponent cc : rules.getLeftHandSide()) {
+		 cc.doPositiveUpdate(rule.getRightHandSide()); } }
+				 
+
+//		for (CRule rules : model.getSimulationData().getRules()) {
+//			for (CConnectedComponent cc : rules.getLeftHandSide()) {
+//				cc.doPositiveUpdate(rule.getRightHandSide());
+//			}
+//		}
+
+		for (ObservablesConnectedComponent oCC : model.getSimulationData()
+				.getObservables().getConnectedComponentList()) {
+			if (((ObservablesConnectedComponent) oCC)
+					.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
+				oCC.doPositiveUpdate(rule.getRightHandSide());
+		}
+
+		/*
+		 * for (ObservablesConnectedComponent oCC :
+		 * rule.getActivatedObservable()) { if (((ObservablesConnectedComponent)
+		 * oCC) .getMainAutomorphismNumber() ==
+		 * ObservablesConnectedComponent.NO_INDEX)
+		 * oCC.doPositiveUpdate(rule.getRightHandSide()); }
+		 */
+
+		model.getSimulationData().getObservables().calculateObs(currentTime);
 	}
 
 	private final void checkPerturbation() {
@@ -163,53 +205,6 @@ public class Simulator {
 			LOGGER.info("end of simulation: time");
 		else
 			LOGGER.info("end of simulation: there are no active rules");
-	}
-
-	public final void doPositiveUpdate(CRule rule) {
-		/*
-		 * for (CRule rules : rule.getActivatedRule()) { for
-		 * (CConnectedComponent cc : rules.getLeftHandSide()) {
-		 * cc.doPositiveUpdate(rule.getRightHandSide()); } }
-		 */
-
-		for (CRule rules : model.getSimulationData().getRules()) {
-			for (CConnectedComponent cc : rules.getLeftHandSide()) {
-				cc.doPositiveUpdate(rule.getRightHandSide());
-			}
-		}
-
-		for (ObservablesConnectedComponent oCC : model.getSimulationData()
-				.getObservables().getConnectedComponentList()) {
-			if (((ObservablesConnectedComponent) oCC)
-					.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
-				oCC.doPositiveUpdate(rule.getRightHandSide());
-		}
-
-		/*
-		 * for (ObservablesConnectedComponent oCC :
-		 * rule.getActivatedObservable()) { if (((ObservablesConnectedComponent)
-		 * oCC) .getMainAutomorphismNumber() ==
-		 * ObservablesConnectedComponent.NO_INDEX)
-		 * oCC.doPositiveUpdate(rule.getRightHandSide()); }
-		 */
-
-		model.getSimulationData().getObservables().calculateObs(currentTime);
-	}
-
-	public final void doNegativeUpdate(List<CInjection> injectionsList) {
-		for (CInjection injection : injectionsList) {
-			if (injection != CConnectedComponent.EMPTY_INJECTION) {
-				for (CSite site : injection.getSiteList()) {
-					site.getAgentLink().EMPTY_SITE
-							.removeInjectionsFromCCToSite(injection);
-					site.removeInjectionsFromCCToSite(injection);
-					site.getLift().clear();
-				}
-
-				injection.getConnectedComponent().getInjectionsList().remove(
-						injection);
-			}
-		}
 	}
 
 	public final void outputData() {
@@ -398,16 +393,17 @@ public class Simulator {
 				.getConnectedComponentList().size();
 
 		if (iteration_num == 0) {
-			model.getSimulationData().getTimeStamps().add(currentTime); 
-			
+			model.getSimulationData().getTimeStamps().add(currentTime);
+
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 				runningMetrics.get(observable_num).add(new RunningMetric());
 			}
 		}
 
 		for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
-			double x = // x is the value for the observable_num at the current time
-		             model.getSimulationData().getObservables()
+			double x = // x is the value for the observable_num at the current
+			// time
+			model.getSimulationData().getObservables()
 					.getConnectedComponentList().get(observable_num)
 					.getInjectionsList().size();
 			if (timeStepCounter >= runningMetrics.get(observable_num).size()) {

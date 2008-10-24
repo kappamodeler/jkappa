@@ -234,13 +234,10 @@ public class CRule {
 	}
 
 	private final boolean isActivated(List<CAgent> agentsFromAnotherRules) {
-		int siteIntersection = 0;// intersection of agents sites
-		// int agentIntersection = 0;// intersection of agents sites
 		for (CAgent agent : agentsFromAnotherRules) {
 			for (CSite site : agent.getSites()) {
 				for (CSite changedSite : changedSites) {
 					if (changedSite.equals(site)) {
-						siteIntersection++;
 						CInternalState currentInternalState = changedSite
 								.getInternalState();
 						CInternalState internalState = site.getInternalState();
@@ -279,33 +276,10 @@ public class CRule {
 							return true;
 
 						return true;
-					}/*
-					 * else if
-					 * (site.getAgentLink().equals(changedSite.getAgentLink()))
-					 * agentIntersection++;
-					 */
+					}
 				}
 			}
 		}
-		if (siteIntersection == 0)
-			return hasIntersection(agentsFromAnotherRules);
-		return false;
-	}
-
-	private final boolean hasIntersection(List<CAgent> agentsFromAnotherRules) {
-		// int agentIntersection = 0;// intersection of agents
-		for (CAgent agent : agentsFromAnotherRules)
-			for (CSite changedSite : changedSites)
-				if (agent.equals(changedSite.getAgentLink())) {
-					/*
-					 * if
-					 * (changedSite.getLinkState().getStatusLinkRank()==CLinkState
-					 * .RANK_BOUND) for (CSite changedSite : changedSites)
-					 * 
-					 * }
-					 */
-					return true;
-				}
 		return false;
 	}
 
@@ -543,6 +517,12 @@ public class CRule {
 							.getAgentLink());
 					agentFromInSolution = leftConnectedComponent
 							.getAgentByIdFromSolution(agentIdInCC, injection);
+
+					// /////////////////////////////////////////////
+					CSite injectedSite = agentFromInSolution.getSite(siteFrom
+							.getNameId());
+					injection.addToChangedSites(injectedSite);
+					// /////////////////////////////////////////////
 				}
 
 				CAgent agentToInSolution;
@@ -575,6 +555,11 @@ public class CRule {
 				agentFromInSolution.getSite(siteFrom.getNameId())
 						.getLinkState().setStatusLink(
 								CLinkState.STATUS_LINK_FREE);
+				// /////////////////////////////////////////////
+				CSite injectedSite = agentFromInSolution.getSite(siteFrom
+						.getNameId());
+				injection.addToChangedSites(injectedSite);
+				// /////////////////////////////////////////////
 
 				break;
 			}
@@ -614,8 +599,12 @@ public class CRule {
 				CAgent agentFromInSolution = leftConnectedComponent
 						.getAgentByIdFromSolution(agentIdInCC, injection);
 
-				agentFromInSolution.getSite(siteTo.getNameId())
-						.getInternalState().setNameId(nameInternalStateId);
+				// /////////////////////////////////////////////
+				CSite injectedSite = agentFromInSolution.getSite(siteTo
+						.getNameId());
+				injectedSite.getInternalState().setNameId(nameInternalStateId);
+				injection.addToChangedSites(injectedSite);
+				// /////////////////////////////////////////////
 				break;
 			}
 			}
@@ -679,7 +668,7 @@ public class CRule {
 					list.add(new Action(fromSite, toSite,
 							rightConnectedComponent, leftConnectedComponent,
 							ACTION_MOD));
-					if (!changedSites.contains(toSite))
+					if (!isChangedSiteContains(toSite))
 						changedSites.add(toSite);
 				}
 
@@ -692,7 +681,7 @@ public class CRule {
 					list.add(new Action(fromSite, toSite,
 							rightConnectedComponent, leftConnectedComponent,
 							ACTION_BRK));
-					if (!changedSites.contains(toSite))
+					if (!isChangedSiteContains(toSite))
 						changedSites.add(toSite);
 					continue;
 				}
@@ -702,7 +691,7 @@ public class CRule {
 					list.add(new Action(toSite, (CSite) toSite.getLinkState()
 							.getSite(), rightConnectedComponent,
 							leftConnectedComponent));
-					if (!changedSites.contains(toSite))
+					if (!isChangedSiteContains(toSite))
 						changedSites.add(toSite);
 					continue;
 				}
@@ -718,10 +707,17 @@ public class CRule {
 				list.add(new Action(toSite, (CSite) toSite.getLinkState()
 						.getSite(), rightConnectedComponent,
 						leftConnectedComponent));
-				if (!changedSites.contains(toSite))
+				if (!isChangedSiteContains(toSite))
 					changedSites.add(toSite);
 			}
 			return list;
+		}
+
+		private boolean isChangedSiteContains(CSite site) {
+			for (CSite siteCh : changedSites)
+				if (siteCh == site)
+					return true;
+			return false;
 		}
 
 		/**
