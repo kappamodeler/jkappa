@@ -155,18 +155,21 @@ public class CXMLWriter {
 		}
 		Element csv = doc.createElement("CSV");
 		CDATASection cdata = doc.createCDATASection("\n");
-		double timeSampleMin = 0.01;
+		double timeSampleMin = obs.getCountTimeList().get(
+				obs.getCountTimeList().size() - 1) / 1000;
 
-		appendData(obs, cdata, 0);
-		double timeLast = obs.getCountTimeList().get(0);
-
-		for (int i = 0; i < obs.getCountTimeList().size(); i++) {
-			if ((obs.getCountTimeList().get(i) - timeLast) > timeSampleMin) {
-				timeLast = obs.getCountTimeList().get(i);
+		// appendData(obs, cdata, 0);
+		double timeNext = timeSampleMin;
+		for (int i = 0; i < obs.getCountTimeList().size() - 1; i++) {
+			if (obs.getCountTimeList().get(i) > timeNext) {
+				timeNext += timeSampleMin;
 				appendData(obs, cdata, i);
 			}
 
 		}
+
+		appendData(obs, cdata, obs.getCountTimeList().size() - 1);
+
 		csv.appendChild(cdata);
 		simulation.appendChild(csv);
 
