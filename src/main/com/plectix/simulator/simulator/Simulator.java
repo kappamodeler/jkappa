@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -321,42 +322,40 @@ public class Simulator {
 		List<ArrayList<RunningMetric>> runningMetrics = model
 				.getSimulationData().getRunningMetrics();
 
-		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter(new OutputStreamWriter(
-					new FileOutputStream(model.getSimulationData()
-							.getTmpSessionName())));
-
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
-				System.out.println("Observable " + observable_num);
-				writer.write("Observable " + observable_num + "\r\n");
-				writer.flush();
+				BufferedWriter writer = new BufferedWriter(new FileWriter(model.getSimulationData()
+						.getTmpSessionName() + "-" + observable_num));
+				
+				// writer.write("Observable " + observable_num + "\r\n");
+				// writer.flush();
 				for (int timeStepCounter = 0; timeStepCounter < timeStamps
 						.size(); timeStepCounter++) {
 					String st = timeStamps.get(timeStepCounter)
-							+ ","
+							+ " "
 							+ runningMetrics.get(observable_num).get(
 									timeStepCounter).getMin()
-							+ ", "
+							+ " "
 							+ runningMetrics.get(observable_num).get(
 									timeStepCounter).getMax()
-							+ ", "
+							+ " "
 							+ runningMetrics.get(observable_num).get(
 									timeStepCounter).getMean()
-							+ ", "
+							+ " "
 							+ runningMetrics.get(observable_num).get(
 									timeStepCounter).getStd();
 
-					System.out.println(st);
-					writer.write(st + "\r\n");
-					writer.flush();
+					writer.write(st);
+					writer.newLine();
+					// writer.flush();
 				}
+				
+				writer.close();
 			}
-
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		writer.close();
 
 		System.out.println("-Results outputted in tmp session: "
 				+ SimulationMain.getSimulationManager().getTimer()
