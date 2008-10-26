@@ -11,4 +11,4 @@
 
 
 %obs: T(x~p?,y~p?)
-%init: 1 * (T(x~u,y~u),K(a),P(a))
+%init: 500 * (T(x~u,y~u),K(a),P(a))

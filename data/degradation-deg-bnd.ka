@@ -1,0 +1,16 @@
+# degradation tests
+a(x),b(x) <-> a(x!1),b(x!1) @ 1.0,10.0
+#'deg_all' a() ->
+'obs' b(x) -> b(x) @ 0.001
+
+'deg_bnd' a(x!_)->
+#'deg_unb' a(x)->
+%init: 100 * a(x)
+%init: 50 * b(x)
+%obs: a()
+%obs: a(x)
+%obs: a(x!_)
+%obs: b()
+
+%story:'obs'
+ 
