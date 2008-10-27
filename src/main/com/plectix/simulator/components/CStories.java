@@ -7,7 +7,7 @@ import com.plectix.simulator.SimulationMain;
 
 public class CStories extends CObservables {
 
-	public static int numberOfSimulations = 1;
+	public static int numberOfSimulations = 10;
 
 	private int ruleID;
 
@@ -36,42 +36,56 @@ public class CStories extends CObservables {
 			return true;
 		return false;
 	}
-	
-	public void handling(){
+
+	public void handling() {
 		List<List<Integer>> significantWays = new ArrayList<List<Integer>>();
-		for (int i=0;i<numberOfSimulations;i++){
+		for (int i = 0; i < numberOfSimulations; i++) {
 			significantWays.add(getSignificantRules(this.ways.get(i)));
 		}
-		
+		this.significantWays = significantWays;
 	}
-	
-	//private double 
-	
-	private List<Integer> getSignificantRules(List<Integer> ruleWay){
+
+	// private double
+
+	private List<Integer> getSignificantRules(List<Integer> ruleWay) {
 		List<Integer> signRules = new ArrayList<Integer>();
-		if (ruleWay.size()<=1)
+		int k = ruleWay.size();
+		int indexOfCheckingRule = ruleID;
+		signRules.add(indexOfCheckingRule);
+		if (k == 1) {
 			return signRules;
-		
-		int indexOfCheckingRule=ruleID;
+		}
+
 		int indexOfCurrentRule;
-		for(int i=ruleWay.size()-2;i>=0;i--){
-			indexOfCurrentRule = i;
-			if(isRuleActivate(indexOfCheckingRule, indexOfCurrentRule)){
-				signRules.add(indexOfCheckingRule);
-				indexOfCurrentRule = indexOfCheckingRule;
+		for (int i = k - 2; i >= 0; i--) {
+			indexOfCurrentRule = ruleWay.get(i);
+			if (isRuleActivate(indexOfCheckingRule, indexOfCurrentRule)) {
+				if (signRules.contains(indexOfCurrentRule))
+					continue;
+				signRules.add(indexOfCurrentRule);
+				// indexOfCurrentRule = indexOfCheckingRule;
+				indexOfCheckingRule = indexOfCurrentRule;
 			}
 		}
 		return signRules;
 	}
-	
-	private boolean isRuleActivate(int indexOfCheckingRule, int indexOfCurrentRule){
-		CRule currentRule = SimulationMain.getSimulationManager().getRules().get(indexOfCurrentRule);
-		List<CRule> listRules  = SimulationMain.getSimulationManager().getRules().get(indexOfCheckingRule).getActivatedRule();
-		
-		for(CRule rule : listRules)
-			if (rule==currentRule)
+
+	private boolean isRuleActivate(int indexOfCheckingRule,
+			int indexOfCurrentRule) {
+		CRule currentRule = SimulationMain.getSimulationManager().getRules()
+				.get(indexOfCurrentRule);
+		// List<CRule> listRules =
+		// SimulationMain.getSimulationManager().getRules
+		// ().get(indexOfCheckingRule).getActivatedRule();
+		List<CRule> listRules = currentRule.getActivatedRule();
+
+		// for(CRule rule : listRules)
+		// if (rule==currentRule)
+		// return true;
+		for (CRule rule : listRules)
+			if (rule.getRuleID() == indexOfCheckingRule)
 				return true;
-		
+
 		return false;
 	}
 

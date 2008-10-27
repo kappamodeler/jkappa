@@ -73,10 +73,11 @@ public class SimulationData {
 	public final void addStories(String name) {
 		byte index = 0;
 		for (CRule rule : rules) {
-			if (rule.getName().startsWith(name)
-					&& ((name.length() == rule.getName().length()) || ((rule
-							.getName().startsWith(name + "_op")) && ((name
-							.length() + 3) == rule.getName().length())))) {
+			if ((rule.getName() != null)
+					&& (rule.getName().startsWith(name) && ((name.length() == rule
+							.getName().length()) || ((rule.getName()
+							.startsWith(name + "_op")) && ((name.length() + 3) == rule
+							.getName().length()))))) {
 				stories.add(new CStories(rule.getRuleID()));
 				index++;
 			}

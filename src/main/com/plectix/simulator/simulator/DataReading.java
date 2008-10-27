@@ -29,11 +29,11 @@ public class DataReading {
 
 	private String filePatch = null; // "C:/workspace/Example.tmp";
 
-	private static final int STRING_INITIAL_CONDITIONS_PREFIX = "%init: "
+	private static final int STRING_INITIAL_CONDITIONS_PREFIX = "%init:"
 			.length(); // 7; // "%init: "
-	private static final int STRING_SIMULATION_PREFIX = "%obs: ".length(); // 6;
-	private static final int STRING_STORIFY_PREFIX = "%story: ".length(); // 8;
-	private static final int STRING_MOD_PREFIX = "%mod: ".length(); // 6;
+	private static final int STRING_SIMULATION_PREFIX = "%obs:".length(); // 6;
+	private static final int STRING_STORIFY_PREFIX = "%story:".length(); // 8;
+	private static final int STRING_MOD_PREFIX = "%mod:".length(); // 6;
 
 	public DataReading(String filename) {
 		this.filePatch = filename;

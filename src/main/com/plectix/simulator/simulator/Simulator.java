@@ -277,6 +277,8 @@ public class Simulator {
 				resetSimulation();
 			}
 
+			story.handling();
+			// outputData();
 		}
 
 		System.out.println();
@@ -324,9 +326,10 @@ public class Simulator {
 
 		try {
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
-				BufferedWriter writer = new BufferedWriter(new FileWriter(model.getSimulationData()
-						.getTmpSessionName() + "-" + observable_num));
-				
+				BufferedWriter writer = new BufferedWriter(new FileWriter(model
+						.getSimulationData().getTmpSessionName()
+						+ "-" + observable_num));
+
 				// writer.write("Observable " + observable_num + "\r\n");
 				// writer.flush();
 				for (int timeStepCounter = 0; timeStepCounter < timeStamps
@@ -349,7 +352,7 @@ public class Simulator {
 					writer.newLine();
 					// writer.flush();
 				}
-				
+
 				writer.close();
 			}
 		} catch (IOException e) {
