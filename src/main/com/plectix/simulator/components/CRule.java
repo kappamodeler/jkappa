@@ -235,6 +235,8 @@ public class CRule {
 
 	private final boolean isActivated(List<CAgent> agentsFromAnotherRules) {
 		for (CAgent agent : agentsFromAnotherRules) {
+			if (this.rightHandSide!=null && checkRulesNullAgents(agent))
+				return true;
 			for (CSite site : agent.getSites()) {
 				for (CSite changedSite : changedSites) {
 					if (changedSite.equals(site)) {
@@ -280,6 +282,14 @@ public class CRule {
 				}
 			}
 		}
+		return false;
+	}
+
+	private boolean checkRulesNullAgents(CAgent agent) {
+		for (CConnectedComponent cc : this.getRightHandSide())
+		for (CAgent agentFromRule : cc.getAgents())
+			if ((agent.equals(agentFromRule))&&(agent.getSites().size()==0) && (agentFromRule.getSites().size()==0))
+				return true;
 		return false;
 	}
 
