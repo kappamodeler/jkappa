@@ -227,7 +227,7 @@ public class SimulatorManager {
 					line = line + "~" + site.getInternalState().getName();
 				switch (site.getLinkState().getStatusLink()) {
 				case CLinkState.STATUS_LINK_BOUND: {
-					if (site.getLinkState() == null)
+					if (site.getLinkState().getStatusLinkRank() == CLinkState.RANK_SEMI_LINK)
 						line = line + "!_";
 					else if (site.getAgentLink().getIdInConnectedComponent() < ((CSite) site
 							.getLinkState().getSite()).getAgentLink()

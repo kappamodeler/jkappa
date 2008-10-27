@@ -579,7 +579,7 @@ public class CRule {
 					}
 				}
 				
-				agent.EMPTY_SITE.removeInjectionFromLift(injection);
+				agent.EMPTY_SITE.removeInjectionsFromCCToSite(injection);//removeInjectionFromLift(injection);
 				for (CSite site : agent.getSites()) {
 					site.removeInjectionsFromCCToSite(injection);
 					site.getLift().clear();
