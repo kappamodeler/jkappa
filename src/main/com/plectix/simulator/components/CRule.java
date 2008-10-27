@@ -578,12 +578,17 @@ public class CRule {
 								CLinkState.STATUS_LINK_FREE);
 					}
 				}
-
-				for (CSite site : injection.getSiteList()) {
+				
+				agent.EMPTY_SITE.removeInjectionFromLift(injection);
+				for (CSite site : agent.getSites()) {
 					site.removeInjectionsFromCCToSite(injection);
 					site.getLift().clear();
 				}
-				injection.getConnectedComponent().getInjectionsList().remove(
+/*				for (CSite site : injection.getSiteList()) {
+					site.removeInjectionsFromCCToSite(injection);
+					site.getLift().clear();
+				}
+*/				injection.getConnectedComponent().getInjectionsList().remove(
 						injection);
 
 				((CSolution) SimulationMain.getSimulationManager()
