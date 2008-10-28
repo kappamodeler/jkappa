@@ -1,0 +1,2351 @@
+1
+simplx-000.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016146 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 0
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004869 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001697 sec. CPU
+--Influence map computed
+-Initialization: 0.138390 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.301999 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0053 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017443 sec. CPU
+=========================== done with =================================
+1
+simplx-001.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015943 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 1
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004490 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001708 sec. CPU
+--Influence map computed
+-Initialization: 0.137141 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.162214 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0051 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017495 sec. CPU
+=========================== done with =================================
+1
+simplx-002.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015881 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 2
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004467 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001658 sec. CPU
+--Influence map computed
+-Initialization: 0.137104 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.365088 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0075 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.019046 sec. CPU
+=========================== done with =================================
+1
+simplx-003.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015983 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 3
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004497 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001651 sec. CPU
+--Influence map computed
+-Initialization: 0.136906 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.214410 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0059 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017995 sec. CPU
+=========================== done with =================================
+1
+simplx-004.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015892 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 4
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004427 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001692 sec. CPU
+--Influence map computed
+-Initialization: 0.138217 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.367604 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0056 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.018103 sec. CPU
+=========================== done with =================================
+1
+simplx-005.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016015 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 5
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004501 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001749 sec. CPU
+--Influence map computed
+-Initialization: 0.137585 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.282777 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0062 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.018739 sec. CPU
+=========================== done with =================================
+1
+simplx-006.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016219 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 6
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004486 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001676 sec. CPU
+--Influence map computed
+-Initialization: 0.138272 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.249886 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0051 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.016751 sec. CPU
+=========================== done with =================================
+1
+simplx-007.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015846 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 7
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004460 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001760 sec. CPU
+--Influence map computed
+-Initialization: 0.136767 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.279761 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0062 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.022402 sec. CPU
+=========================== done with =================================
+1
+simplx-008.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016043 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 8
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004468 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001641 sec. CPU
+--Influence map computed
+-Initialization: 0.136685 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.165468 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0062 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.019004 sec. CPU
+=========================== done with =================================
+1
+simplx-009.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015966 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 9
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004503 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001651 sec. CPU
+--Influence map computed
+-Initialization: 0.137318 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.187142 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0068 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017822 sec. CPU
+=========================== done with =================================
+1
+simplx-010.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016026 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 10
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004536 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001839 sec. CPU
+--Influence map computed
+-Initialization: 0.137936 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.238856 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0069 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.018924 sec. CPU
+=========================== done with =================================
+1
+simplx-011.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015841 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 11
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004467 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001647 sec. CPU
+--Influence map computed
+-Initialization: 0.136522 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.114414 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0070 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.019216 sec. CPU
+=========================== done with =================================
+1
+simplx-012.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015933 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 12
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004497 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001656 sec. CPU
+--Influence map computed
+-Initialization: 0.140095 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.344596 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0055 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.018443 sec. CPU
+=========================== done with =================================
+1
+simplx-013.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015937 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 13
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004492 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001817 sec. CPU
+--Influence map computed
+-Initialization: 0.137139 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.288247 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0062 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017548 sec. CPU
+=========================== done with =================================
+1
+simplx-014.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015980 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 14
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004447 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001574 sec. CPU
+--Influence map computed
+-Initialization: 0.136793 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.275179 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0065 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017129 sec. CPU
+=========================== done with =================================
+1
+simplx-015.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015906 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 15
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004412 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001687 sec. CPU
+--Influence map computed
+-Initialization: 0.136610 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.170417 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0058 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.019327 sec. CPU
+=========================== done with =================================
+1
+simplx-016.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015905 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 16
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004435 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001792 sec. CPU
+--Influence map computed
+-Initialization: 0.136723 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.313876 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0067 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.018463 sec. CPU
+=========================== done with =================================
+1
+simplx-017.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015852 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 17
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004513 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001761 sec. CPU
+--Influence map computed
+-Initialization: 0.137377 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.460299 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0051 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.016412 sec. CPU
+=========================== done with =================================
+1
+simplx-018.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015973 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 18
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004435 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001821 sec. CPU
+--Influence map computed
+-Initialization: 0.141665 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.372027 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0052 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.019192 sec. CPU
+=========================== done with =================================
+1
+simplx-019.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016034 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 19
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004528 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001757 sec. CPU
+--Influence map computed
+-Initialization: 0.139619 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.308078 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0075 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.018253 sec. CPU
+=========================== done with =================================
+1
+simplx-020.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016112 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 20
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004571 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001689 sec. CPU
+--Influence map computed
+-Initialization: 0.138895 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.308784 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0062 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017416 sec. CPU
+=========================== done with =================================
+1
+simplx-021.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015976 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 21
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004446 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001770 sec. CPU
+--Influence map computed
+-Initialization: 0.136612 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.247489 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0073 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.026064 sec. CPU
+=========================== done with =================================
+1
+simplx-022.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016014 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 22
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004492 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001771 sec. CPU
+--Influence map computed
+-Initialization: 0.141723 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.548139 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0056 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017246 sec. CPU
+=========================== done with =================================
+1
+simplx-023.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015890 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 23
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004485 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001777 sec. CPU
+--Influence map computed
+-Initialization: 0.138508 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.284529 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0061 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017404 sec. CPU
+=========================== done with =================================
+1
+simplx-024.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015759 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 24
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004428 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001690 sec. CPU
+--Influence map computed
+-Initialization: 0.136437 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.405322 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0058 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017695 sec. CPU
+=========================== done with =================================
+1
+simplx-025.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015989 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 25
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004504 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001782 sec. CPU
+--Influence map computed
+-Initialization: 0.136926 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.472620 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0052 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.016693 sec. CPU
+=========================== done with =================================
+1
+simplx-026.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015856 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 26
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004452 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001797 sec. CPU
+--Influence map computed
+-Initialization: 0.137180 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.270106 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0090 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.020642 sec. CPU
+=========================== done with =================================
+1
+simplx-027.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015788 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 27
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004452 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001732 sec. CPU
+--Influence map computed
+-Initialization: 0.136830 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.356448 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0064 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017667 sec. CPU
+=========================== done with =================================
+1
+simplx-028.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015924 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 28
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004442 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001803 sec. CPU
+--Influence map computed
+-Initialization: 0.137389 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.088124 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0063 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017877 sec. CPU
+=========================== done with =================================
+1
+simplx-029.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015973 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 29
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004471 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001833 sec. CPU
+--Influence map computed
+-Initialization: 0.136775 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.251088 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0056 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017537 sec. CPU
+=========================== done with =================================
+1
+simplx-030.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015960 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 30
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004464 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001767 sec. CPU
+--Influence map computed
+-Initialization: 0.138714 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.198815 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0060 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017749 sec. CPU
+=========================== done with =================================
+1
+simplx-031.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016018 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 31
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004456 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001769 sec. CPU
+--Influence map computed
+-Initialization: 0.136988 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.102598 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0058 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017828 sec. CPU
+=========================== done with =================================
+1
+simplx-032.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015938 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 32
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004456 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001744 sec. CPU
+--Influence map computed
+-Initialization: 0.136815 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.354593 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0058 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017580 sec. CPU
+=========================== done with =================================
+1
+simplx-033.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015848 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 33
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004430 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001762 sec. CPU
+--Influence map computed
+-Initialization: 0.136916 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.294484 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0081 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.022447 sec. CPU
+=========================== done with =================================
+1
+simplx-034.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016131 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 34
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004631 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001761 sec. CPU
+--Influence map computed
+-Initialization: 0.137149 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.253742 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0066 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.016930 sec. CPU
+=========================== done with =================================
+1
+simplx-035.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015916 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 35
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004596 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001654 sec. CPU
+--Influence map computed
+-Initialization: 0.139579 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.299498 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0073 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.019900 sec. CPU
+=========================== done with =================================
+1
+simplx-036.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016136 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 36
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004475 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001750 sec. CPU
+--Influence map computed
+-Initialization: 0.139073 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.303598 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0053 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017758 sec. CPU
+=========================== done with =================================
+1
+simplx-037.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015863 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 37
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004824 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001743 sec. CPU
+--Influence map computed
+-Initialization: 0.138397 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.351589 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0056 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.018617 sec. CPU
+=========================== done with =================================
+1
+simplx-038.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016008 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 38
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004565 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001663 sec. CPU
+--Influence map computed
+-Initialization: 0.138133 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.298573 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0055 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017220 sec. CPU
+=========================== done with =================================
+1
+simplx-039.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016003 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 39
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004470 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001724 sec. CPU
+--Influence map computed
+-Initialization: 0.137737 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.417566 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0064 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.018541 sec. CPU
+=========================== done with =================================
+1
+simplx-040.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015898 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 40
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004509 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001796 sec. CPU
+--Influence map computed
+-Initialization: 0.138083 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.380964 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0067 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.019828 sec. CPU
+=========================== done with =================================
+1
+simplx-041.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016052 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 41
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004483 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001816 sec. CPU
+--Influence map computed
+-Initialization: 0.138551 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.376320 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0050 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017120 sec. CPU
+=========================== done with =================================
+1
+simplx-042.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015972 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 42
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004441 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001657 sec. CPU
+--Influence map computed
+-Initialization: 0.136934 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.243049 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0056 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017980 sec. CPU
+=========================== done with =================================
+1
+simplx-043.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015895 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 43
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004480 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001754 sec. CPU
+--Influence map computed
+-Initialization: 0.137269 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.354846 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0060 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.018558 sec. CPU
+=========================== done with =================================
+1
+simplx-044.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.016066 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 44
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004564 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001849 sec. CPU
+--Influence map computed
+-Initialization: 0.138735 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.351941 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0050 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.018193 sec. CPU
+=========================== done with =================================
+1
+simplx-045.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015969 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 45
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004426 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001652 sec. CPU
+--Influence map computed
+-Initialization: 0.137533 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.396870 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0049 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017129 sec. CPU
+=========================== done with =================================
+1
+simplx-046.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015920 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 46
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004448 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001822 sec. CPU
+--Influence map computed
+-Initialization: 0.137352 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.338712 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0052 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017563 sec. CPU
+=========================== done with =================================
+1
+simplx-047.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015855 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 47
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004590 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001779 sec. CPU
+--Influence map computed
+-Initialization: 0.137745 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.226404 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0083 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.018697 sec. CPU
+=========================== done with =================================
+1
+simplx-048.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015919 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 48
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004419 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001652 sec. CPU
+--Influence map computed
+-Initialization: 0.139922 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.339502 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0060 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017672 sec. CPU
+=========================== done with =================================
+1
+simplx-049.xml
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.015993 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 49
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.004434 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 25
+-------Number of classes: 33
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+WARNING: Kappa file uses rule name MEK@222_op multiple times
+--Concretization...
+--Concretization: 0.001851 sec. CPU
+--Influence map computed
+-Initialization: 0.137263 sec. CPU
+-Simulation...
+____________________________________________________________
+############################################################
+-Simulation: 8.274458 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0068 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.017045 sec. CPU
+=========================== done with =================================
+0

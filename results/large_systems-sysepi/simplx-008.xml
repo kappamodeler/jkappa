@@ -1,0 +1,1516 @@
+<?xml version='1.0' encoding='utf-8'?><SimplxSession CommandLine = "/Users/ecemis/plectix-20080930/osx/i386/simplx --sim /Users/ecemis/eclipse-workspace/simulator/data//large_systems-sysepi.ka --xml-session-name simplx-008.xml --seed 8 --time 1000" InputFile = "/Users/ecemis/eclipse-workspace/simulator/data//large_systems-sysepi.ka" TimeStamp ="2008-10-27T20:43:42.0Z" xsi:schemaLocation="http://plectix.synthesisstudios.com SimplxSession.xsd"  xmlns="http://plectix.synthesisstudios.com/schemas/kappasession" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<InfluenceMap>
+<Node Id = "60"  Type = "OBSERVABLE" Text ="[Compact chromatin]" Data="MECP2(GmC!0),DNA(Base~mC?,chr~closed!0)" Name = "[Compact chromatin]"/>
+<Node Id = "59"  Type = "OBSERVABLE" Text ="[Correct C]" Data="DNA(Base~C?,init~C)" Name = "[Correct C]"/>
+<Node Id = "58"  Type = "OBSERVABLE" Text ="[Correct mC]" Data="DNA(Base~mC?,init~mC)" Name = "[Correct mC]"/>
+<Node Id = "57"  Type = "RULE" Text ="TDG de-acetylation" Data="TDG(rd~Ac)->TDG(rd~u)" Name = "TDG de-acetylation"/>
+<Node Id = "56"  Type = "RULE" Text ="TDG acetylation" Data="CBP(tdg!0),TDG(rd~u!0)->CBP(tdg!0),TDG(rd~Ac!0)" Name = "TDG acetylation"/>
+<Node Id = "55"  Type = "RULE" Text ="CBP+TDGac" Data="CBP(tdg!0),TDG(rd~Ac!0)->CBP(tdg),TDG(rd~Ac)" Name = "CBP+TDGac"/>
+<Node Id = "54"  Type = "RULE" Text ="CBP+TDGu" Data="CBP(tdg!0),TDG(rd~u!0)->CBP(tdg),TDG(rd~u)" Name = "CBP+TDGu"/>
+<Node Id = "53"  Type = "RULE" Text ="CBP--TDG Ref2" Data="CBP(chr!0,tdg),TDG(N140,dnmt3a,lig,rd~u),DNA(chr!0)->CBP(chr!1,tdg!0),TDG(N140,dnmt3a,lig,rd~u!0),DNA(chr!1)" Name = "CBP--TDG Ref2"/>
+<Node Id = "52"  Type = "RULE" Text ="CBP--TDG Ref1" Data="CBP(chr,tdg),TDG(rd~u)->CBP(chr,tdg!0),TDG(rd~u!0)" Name = "CBP--TDG Ref1"/>
+<Node Id = "51"  Type = "RULE" Text ="CBP--TDG" Data="CBP(tdg),TDG(rd~u)->CBP(tdg!0),TDG(rd~u!0)" Name = "CBP--TDG"/>
+<Node Id = "50"  Type = "RULE" Text ="C base remethylation" Data="Dnmt3a(dna!0),DNA(Base~C!0)=>Dnmt3a(dna),DNA(Base~mC)" Name = "C base remethylation"/>
+<Node Id = "49"  Type = "RULE" Text ="DNA(C:G)--dna.Dnmt3a via TDG" Data="Dnmt3a(dna,tdg!0),TDG(N140,dnmt3a!0,rd!1),DNA(Base~C,rd!1)->Dnmt3a(dna!1,tdg!0),TDG(N140,dnmt3a!0,rd!2),DNA(Base~C!1,rd!2)" Name = "DNA(C:G)--dna.Dnmt3a via TDG"/>
+<Node Id = "48"  Type = "RULE" Text ="Repair x" Data="APE1_PolB(CAT!0),DNA(Base~x!0,status~hole)=>APE1_PolB(CAT),DNA(Base~C,status~ok)" Name = "Repair x"/>
+<Node Id = "47"  Type = "RULE" Text ="DNA(x:G)--CAT.APE1_PolB1 Ref4" Data="TDG(N140,lig!1,rd!0),APE1_PolB(CAT,tdg!1),DNA(Base~x,chr~opened),CBP(chr,tdg!0)->TDG(N140,lig!1,rd!0),APE1_PolB(CAT!2,tdg!1),DNA(Base~x!2,chr~opened),CBP(chr,tdg!0)" Name = "DNA(x:G)--CAT.APE1_PolB1 Ref4"/>
+<Node Id = "46"  Type = "RULE" Text ="DNA(x:G)--CAT.APE1_PolB1 Ref3" Data="APE1_PolB(CAT,tdg!0),DNA(Base~x,chr~opened,rd!1),TDG(N140,lig!0,rd!1)->APE1_PolB(CAT!1,tdg!0),DNA(Base~x!1,chr~opened,rd!2),TDG(N140,lig!0,rd!2)" Name = "DNA(x:G)--CAT.APE1_PolB1 Ref3"/>
+<Node Id = "45"  Type = "RULE" Text ="DNA(x:G)--CAT.APE1_PolB1 Ref2" Data="APE1_PolB(CAT,tdg!0),DNA(Base~x,chr~opened),TDG(N140,lig!0,rd)->APE1_PolB(CAT!1,tdg!0),DNA(Base~x!1,chr~opened),TDG(N140,lig!0,rd)" Name = "DNA(x:G)--CAT.APE1_PolB1 Ref2"/>
+<Node Id = "44"  Type = "RULE" Text ="DNA(x:G)--CAT.APE1_PolB1 Ref1" Data="APE1_PolB(CAT,tdg),DNA(Base~x,chr~opened)->APE1_PolB(CAT!0,tdg),DNA(Base~x!0,chr~opened)" Name = "DNA(x:G)--CAT.APE1_PolB1 Ref1"/>
+<Node Id = "43"  Type = "RULE" Text ="DNA(x:G)--CAT.APE1_PolB1" Data="APE1_PolB(CAT),DNA(Base~x,chr~opened)->APE1_PolB(CAT!0),DNA(Base~x!0,chr~opened)" Name = "DNA(x:G)--CAT.APE1_PolB1"/>
+<Node Id = "42"  Type = "RULE" Text ="Repair U with swap" Data="DNA(Base~U!0,status~dom),TDG(N140!0,lig!1),APE1_PolB(CAT,tdg!1)=>DNA(Base~x!0,status~hole),TDG(N140,lig!1),APE1_PolB(CAT!0,tdg!1)" Name = "Repair U with swap"/>
+<Node Id = "41"  Type = "RULE" Text ="Repair U" Data="DNA(Base~U!0,status~dom),TDG(N140!0,lig)=>DNA(Base~x,status~hole),TDG(N140,lig)" Name = "Repair U"/>
+<Node Id = "40"  Type = "RULE" Text ="Repair T with swap" Data="DNA(Base~T!1,rd!0,status~dom),TDG(N140!1,lig!2,rd!0),APE1_PolB(CAT,tdg!2)=>DNA(Base~x!1,rd!0,status~hole),TDG(N140,lig!2,rd!0),APE1_PolB(CAT!1,tdg!2)" Name = "Repair T with swap"/>
+<Node Id = "39"  Type = "RULE" Text ="Repair T" Data="DNA(Base~T!1,rd!0,status~dom),TDG(N140!1,lig,rd!0)=>DNA(Base~x,rd!0,status~hole),TDG(N140,lig,rd!0)" Name = "Repair T"/>
+<Node Id = "38"  Type = "RULE" Text ="TDG.lig+tdg.APE1" Data="TDG(lig!0),APE1_PolB(tdg!0)->TDG(lig),APE1_PolB(tdg)" Name = "TDG.lig+tdg.APE1"/>
+<Node Id = "37"  Type = "RULE" Text ="TDG.lig--tdg.APE1 Ref3" Data="DNA(Base!1,rd!0),TDG(N140,lig,rd!0),APE1_PolB(CAT!1,tdg)->DNA(Base!1,rd!0),TDG(N140,lig!2,rd!0),APE1_PolB(CAT!1,tdg!2)" Name = "TDG.lig--tdg.APE1 Ref3"/>
+<Node Id = "36"  Type = "RULE" Text ="TDG.lig--tdg.APE1 Ref2" Data="TDG(N140,lig,rd),APE1_PolB(CAT!0,tdg),DNA(Base!0,rd)->TDG(N140,lig!0,rd),APE1_PolB(CAT!1,tdg!0),DNA(Base!1,rd)" Name = "TDG.lig--tdg.APE1 Ref2"/>
+<Node Id = "35"  Type = "RULE" Text ="TDG.lig--tdg.APE1 Ref1" Data="TDG(lig),APE1_PolB(CAT,tdg)->TDG(lig!0),APE1_PolB(CAT,tdg!0)" Name = "TDG.lig--tdg.APE1 Ref1"/>
+<Node Id = "34"  Type = "RULE" Text ="TDG.lig--tdg.APE1" Data="TDG(lig),APE1_PolB(tdg)->TDG(lig!0),APE1_PolB(tdg!0)" Name = "TDG.lig--tdg.APE1"/>
+<Node Id = "33"  Type = "RULE" Text ="Dnmt3a--TDG" Data="Dnmt3a(dna,tdg),TDG(dnmt3a)->Dnmt3a(dna,tdg!0),TDG(dnmt3a!0)" Name = "Dnmt3a--TDG"/>
+<Node Id = "32"  Type = "RULE" Text ="Dnmt3a+TDG Ref2" Data="Dnmt3a(tdg!0),TDG(dnmt3a!0,rd!_)->Dnmt3a(tdg),TDG(dnmt3a,rd!_)" Name = "Dnmt3a+TDG Ref2"/>
+<Node Id = "31"  Type = "RULE" Text ="Dnmt3a+TDG Ref1" Data="Dnmt3a(tdg!0),TDG(dnmt3a!0,rd)->Dnmt3a(tdg),TDG(dnmt3a,rd)" Name = "Dnmt3a+TDG Ref1"/>
+<Node Id = "30"  Type = "RULE" Text ="Dnmt3a+TDG" Data="Dnmt3a(tdg!0),TDG(dnmt3a!0)->Dnmt3a(tdg),TDG(dnmt3a)" Name = "Dnmt3a+TDG"/>
+<Node Id = "29"  Type = "RULE" Text ="DNA.rd+rd.TDG Ref3" Data="DNA(rd!0),TDG(N140,nc~act,rd!0)->DNA(rd),TDG(N140,nc~act,rd)" Name = "DNA.rd+rd.TDG Ref3"/>
+<Node Id = "28"  Type = "RULE" Text ="DNA.rd+rd.TDG Ref2" Data="DNA(Base!1,rd!0),TDG(N140!1,nc~act,rd!0)->DNA(Base!0,rd),TDG(N140!0,nc~act,rd)" Name = "DNA.rd+rd.TDG Ref2"/>
+<Node Id = "27"  Type = "RULE" Text ="DNA.rd+rd.TDG" Data="DNA(rd!0),TDG(N140,nc~act,rd!0)->DNA(rd),TDG(N140,nc~act,rd)" Name = "DNA.rd+rd.TDG"/>
+<Node Id = "26"  Type = "RULE" Text ="DNA(T:G).rd--rd.TDG" Data="DNA(Base~T!0,rd),TDG(N140!0,rd)->DNA(Base~T!1,rd!0),TDG(N140!1,rd!0)" Name = "DNA(T:G).rd--rd.TDG"/>
+<Node Id = "25"  Type = "RULE" Text ="DNA.base+N140.TDG" Data="DNA(Base!0),TDG(N140!0)->DNA(Base),TDG(N140)" Name = "DNA.base+N140.TDG"/>
+<Node Id = "24"  Type = "RULE" Text ="DNA.base--N140.TDG Ref12" Data="DNA(Base~T,chr~opened,rd!0,status~dom),Dnmt3a(dna,tdg!1),TDG(N140,dnmt3a!1,lig!2,rd!0),APE1_PolB(CAT,tdg!2)->DNA(Base~T!1,chr~opened,rd!0,status~dom),Dnmt3a(dna,tdg!2),TDG(N140!1,dnmt3a!2,lig!3,rd!0),APE1_PolB(CAT,tdg!3)" Name = "DNA.base--N140.TDG Ref12"/>
+<Node Id = "23"  Type = "RULE" Text ="DNA.base--N140.TDG Ref11" Data="DNA(Base,chr~opened,status~dom),CBP(chr,tdg!0),Dnmt3a(dna,tdg!1),TDG(N140,dnmt3a!1,lig!2,rd!0),APE1_PolB(CAT,tdg!2)->DNA(Base!0,chr~opened,status~dom),CBP(chr,tdg!1),Dnmt3a(dna,tdg!2),TDG(N140!0,dnmt3a!2,lig!3,rd!1),APE1_PolB(CAT,tdg!3)" Name = "DNA.base--N140.TDG Ref11"/>
+<Node Id = "22"  Type = "RULE" Text ="DNA.base--N140.TDG Ref10" Data="DNA(Base,chr~opened,rd,status~dom),Dnmt3a(dna,tdg!0),TDG(N140,dnmt3a!0,lig!1,rd),APE1_PolB(CAT,tdg!1)->DNA(Base!0,chr~opened,rd,status~dom),Dnmt3a(dna,tdg!1),TDG(N140!0,dnmt3a!1,lig!2,rd),APE1_PolB(CAT,tdg!2)" Name = "DNA.base--N140.TDG Ref10"/>
+<Node Id = "21"  Type = "RULE" Text ="DNA.base--N140.TDG Ref9" Data="DNA(Base~T,chr~opened,rd!0,status~dom),TDG(N140,dnmt3a,lig!1,rd!0),APE1_PolB(CAT,tdg!1)->DNA(Base~T!1,chr~opened,rd!0,status~dom),TDG(N140!1,dnmt3a,lig!2,rd!0),APE1_PolB(CAT,tdg!2)" Name = "DNA.base--N140.TDG Ref9"/>
+<Node Id = "20"  Type = "RULE" Text ="DNA.base--N140.TDG Ref8" Data="DNA(Base,chr~opened,status~dom),CBP(chr,tdg!0),TDG(N140,dnmt3a,lig!1,rd!0),APE1_PolB(CAT,tdg!1)->DNA(Base!0,chr~opened,status~dom),CBP(chr,tdg!1),TDG(N140!0,dnmt3a,lig!2,rd!1),APE1_PolB(CAT,tdg!2)" Name = "DNA.base--N140.TDG Ref8"/>
+<Node Id = "19"  Type = "RULE" Text ="DNA.base--N140.TDG Ref7" Data="DNA(Base,chr~opened,rd,status~dom),TDG(N140,dnmt3a,lig!0,rd),APE1_PolB(CAT,tdg!0)->DNA(Base!0,chr~opened,rd,status~dom),TDG(N140!0,dnmt3a,lig!1,rd),APE1_PolB(CAT,tdg!1)" Name = "DNA.base--N140.TDG Ref7"/>
+<Node Id = "18"  Type = "RULE" Text ="DNA.base--N140.TDG Ref6" Data="DNA(Base~T,chr~opened,rd!0,status~dom),TDG(N140,dnmt3a!1,lig,rd!0),Dnmt3a(dna,tdg!1)->DNA(Base~T!1,chr~opened,rd!0,status~dom),TDG(N140!1,dnmt3a!2,lig,rd!0),Dnmt3a(dna,tdg!2)" Name = "DNA.base--N140.TDG Ref6"/>
+<Node Id = "17"  Type = "RULE" Text ="DNA.base--N140.TDG Ref5" Data="DNA(Base,chr~opened,status~dom),CBP(chr,tdg!0),TDG(N140,dnmt3a!1,lig,rd!0),Dnmt3a(dna,tdg!1)->DNA(Base!0,chr~opened,status~dom),CBP(chr,tdg!1),TDG(N140!0,dnmt3a!2,lig,rd!1),Dnmt3a(dna,tdg!2)" Name = "DNA.base--N140.TDG Ref5"/>
+<Node Id = "16"  Type = "RULE" Text ="DNA.base--N140.TDG Ref4" Data="DNA(Base,chr~opened,rd,status~dom),TDG(N140,dnmt3a!0,lig,rd),Dnmt3a(dna,tdg!0)->DNA(Base!0,chr~opened,rd,status~dom),TDG(N140!0,dnmt3a!1,lig,rd),Dnmt3a(dna,tdg!1)" Name = "DNA.base--N140.TDG Ref4"/>
+<Node Id = "15"  Type = "RULE" Text ="DNA.base--N140.TDG Ref3" Data="DNA(Base~T,chr~opened,rd!0,status~dom),TDG(N140,dnmt3a,lig,rd!0)->DNA(Base~T!1,chr~opened,rd!0,status~dom),TDG(N140!1,dnmt3a,lig,rd!0)" Name = "DNA.base--N140.TDG Ref3"/>
+<Node Id = "14"  Type = "RULE" Text ="DNA.base--N140.TDG Ref2" Data="DNA(Base,chr~opened,status~dom),TDG(N140,dnmt3a,lig,rd!0),CBP(chr,tdg!0)->DNA(Base!0,chr~opened,status~dom),TDG(N140!0,dnmt3a,lig,rd!1),CBP(chr,tdg!1)" Name = "DNA.base--N140.TDG Ref2"/>
+<Node Id = "13"  Type = "RULE" Text ="DNA.base--N140.TDG Ref1" Data="DNA(Base,chr~opened,rd,status~dom),TDG(N140,dnmt3a,lig,rd)->DNA(Base!0,chr~opened,rd,status~dom),TDG(N140!0,dnmt3a,lig,rd)" Name = "DNA.base--N140.TDG Ref1"/>
+<Node Id = "12"  Type = "RULE" Text ="DNA.base--N140.TDG" Data="DNA(Base,chr~opened,status~dom),TDG(N140)->DNA(Base!0,chr~opened,status~dom),TDG(N140!0)" Name = "DNA.base--N140.TDG"/>
+<Node Id = "11"  Type = "RULE" Text ="DNA.chr+chr.CBP" Data="DNA(chr!0),CBP(chr!0)->DNA(chr),CBP(chr)" Name = "DNA.chr+chr.CBP"/>
+<Node Id = "10"  Type = "RULE" Text ="DNA.chr--chr.CBP Ref3" Data="CBP(chr,tdg!0),DNA(chr~closed),TDG(N140,dnmt3a!1,rd!0),Dnmt3a(dna,tdg!1)->CBP(chr!1,tdg!0),DNA(chr~closed!1),TDG(N140,dnmt3a!2,rd!0),Dnmt3a(dna,tdg!2)" Name = "DNA.chr--chr.CBP Ref3"/>
+<Node Id = "9"  Type = "RULE" Text ="DNA.chr--chr.CBP Ref2" Data="DNA(chr~closed),CBP(chr,tdg!0),TDG(N140,dnmt3a,rd!0)->DNA(chr~closed!0),CBP(chr!0,tdg!1),TDG(N140,dnmt3a,rd!1)" Name = "DNA.chr--chr.CBP Ref2"/>
+<Node Id = "8"  Type = "RULE" Text ="DNA.chr--chr.CBP Ref1" Data="DNA(chr~closed),CBP(chr,tdg)->DNA(chr~closed!0),CBP(chr!0,tdg)" Name = "DNA.chr--chr.CBP Ref1"/>
+<Node Id = "7"  Type = "RULE" Text ="DNA.chr--chr.CBP" Data="DNA(chr~closed),CBP(chr)->DNA(chr~closed!0),CBP(chr!0)" Name = "DNA.chr--chr.CBP"/>
+<Node Id = "6"  Type = "RULE" Text ="DNA(T:G)+MECP2" Data="MECP2(GmC!0),DNA(Base~T,chr!0)->MECP2(GmC),DNA(Base~T,chr)" Name = "DNA(T:G)+MECP2"/>
+<Node Id = "5"  Type = "RULE" Text ="DNA.chr--GmC.MECP2" Data="MECP2(GmC),DNA(Base~mC,chr~opened)->MECP2(GmC!0),DNA(Base~mC,chr~opened!0)" Name = "DNA.chr--GmC.MECP2"/>
+<Node Id = "4"  Type = "RULE" Text ="Chromatin opening" Data="DNA(chr~closed!0),CBP(chr!0)=>DNA(chr~opened),CBP(chr)" Name = "Chromatin opening"/>
+<Node Id = "3"  Type = "RULE" Text ="Chromatin compaction" Data="MECP2(GmC!0),DNA(Base~mC,chr~opened!0)->MECP2(GmC!0),DNA(Base~mC,chr~closed!0)" Name = "Chromatin compaction"/>
+<Node Id = "2"  Type = "RULE" Text ="mC base deamination" Data="DNA(Base~mC,status~ok)=>DNA(Base~T,status~dom)" Name = "mC base deamination"/>
+<Node Id = "1"  Type = "RULE" Text ="C base deamination" Data="DNA(Base~C,status~ok)=>DNA(Base~U,status~dom)" Name = "C base deamination"/>
+<Connection FromNode="57" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="57" ToNode="52" Relation="POSITIVE"/>
+<Connection FromNode="57" ToNode="51" Relation="POSITIVE"/>
+<Connection FromNode="56" ToNode="55" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="57" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="52" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="51" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="36" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="31" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="26" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="55" ToNode="8" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="52" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="51" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="36" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="31" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="26" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="54" ToNode="8" Relation="POSITIVE"/>
+<Connection FromNode="53" ToNode="56" Relation="POSITIVE"/>
+<Connection FromNode="53" ToNode="54" Relation="POSITIVE"/>
+<Connection FromNode="52" ToNode="56" Relation="POSITIVE"/>
+<Connection FromNode="52" ToNode="54" Relation="POSITIVE"/>
+<Connection FromNode="52" ToNode="47" Relation="POSITIVE"/>
+<Connection FromNode="52" ToNode="32" Relation="POSITIVE"/>
+<Connection FromNode="52" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="52" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="52" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="52" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="52" ToNode="10" Relation="POSITIVE"/>
+<Connection FromNode="52" ToNode="9" Relation="POSITIVE"/>
+<Connection FromNode="51" ToNode="56" Relation="POSITIVE"/>
+<Connection FromNode="51" ToNode="54" Relation="POSITIVE"/>
+<Connection FromNode="51" ToNode="47" Relation="POSITIVE"/>
+<Connection FromNode="51" ToNode="32" Relation="POSITIVE"/>
+<Connection FromNode="51" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="51" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="51" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="51" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="51" ToNode="10" Relation="POSITIVE"/>
+<Connection FromNode="51" ToNode="9" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="60" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="58" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="49" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="33" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="24" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="18" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="12" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="10" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="5" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="3" Relation="POSITIVE"/>
+<Connection FromNode="50" ToNode="2" Relation="POSITIVE"/>
+<Connection FromNode="49" ToNode="50" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="59" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="49" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="47" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="46" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="44" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="43" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="42" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="40" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="35" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="24" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="21" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="48" ToNode="1" Relation="POSITIVE"/>
+<Connection FromNode="47" ToNode="48" Relation="POSITIVE"/>
+<Connection FromNode="46" ToNode="48" Relation="POSITIVE"/>
+<Connection FromNode="45" ToNode="48" Relation="POSITIVE"/>
+<Connection FromNode="44" ToNode="48" Relation="POSITIVE"/>
+<Connection FromNode="44" ToNode="37" Relation="POSITIVE"/>
+<Connection FromNode="44" ToNode="36" Relation="POSITIVE"/>
+<Connection FromNode="43" ToNode="48" Relation="POSITIVE"/>
+<Connection FromNode="43" ToNode="37" Relation="POSITIVE"/>
+<Connection FromNode="43" ToNode="36" Relation="POSITIVE"/>
+<Connection FromNode="42" ToNode="49" Relation="POSITIVE"/>
+<Connection FromNode="42" ToNode="48" Relation="POSITIVE"/>
+<Connection FromNode="42" ToNode="29" Relation="POSITIVE"/>
+<Connection FromNode="42" ToNode="27" Relation="POSITIVE"/>
+<Connection FromNode="42" ToNode="12" Relation="POSITIVE"/>
+<Connection FromNode="42" ToNode="10" Relation="POSITIVE"/>
+<Connection FromNode="42" ToNode="9" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="49" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="47" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="46" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="44" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="43" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="37" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="36" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="29" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="27" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="18" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="15" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="12" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="10" Relation="POSITIVE"/>
+<Connection FromNode="41" ToNode="9" Relation="POSITIVE"/>
+<Connection FromNode="40" ToNode="48" Relation="POSITIVE"/>
+<Connection FromNode="40" ToNode="29" Relation="POSITIVE"/>
+<Connection FromNode="40" ToNode="27" Relation="POSITIVE"/>
+<Connection FromNode="40" ToNode="12" Relation="POSITIVE"/>
+<Connection FromNode="39" ToNode="47" Relation="POSITIVE"/>
+<Connection FromNode="39" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="39" ToNode="44" Relation="POSITIVE"/>
+<Connection FromNode="39" ToNode="43" Relation="POSITIVE"/>
+<Connection FromNode="39" ToNode="29" Relation="POSITIVE"/>
+<Connection FromNode="39" ToNode="27" Relation="POSITIVE"/>
+<Connection FromNode="39" ToNode="12" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="44" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="41" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="39" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="37" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="36" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="35" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="34" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="18" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="15" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="38" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="37" ToNode="38" Relation="POSITIVE"/>
+<Connection FromNode="36" ToNode="38" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="47" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="46" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="42" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="40" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="38" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="24" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="21" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="35" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="47" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="46" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="42" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="40" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="38" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="24" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="21" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="34" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="33" ToNode="49" Relation="POSITIVE"/>
+<Connection FromNode="33" ToNode="32" Relation="POSITIVE"/>
+<Connection FromNode="33" ToNode="31" Relation="POSITIVE"/>
+<Connection FromNode="33" ToNode="30" Relation="POSITIVE"/>
+<Connection FromNode="33" ToNode="24" Relation="POSITIVE"/>
+<Connection FromNode="33" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="33" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="33" ToNode="18" Relation="POSITIVE"/>
+<Connection FromNode="33" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="33" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="33" ToNode="10" Relation="POSITIVE"/>
+<Connection FromNode="32" ToNode="33" Relation="POSITIVE"/>
+<Connection FromNode="32" ToNode="21" Relation="POSITIVE"/>
+<Connection FromNode="32" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="32" ToNode="15" Relation="POSITIVE"/>
+<Connection FromNode="32" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="32" ToNode="9" Relation="POSITIVE"/>
+<Connection FromNode="31" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="31" ToNode="33" Relation="POSITIVE"/>
+<Connection FromNode="31" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="31" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="30" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="30" ToNode="33" Relation="POSITIVE"/>
+<Connection FromNode="30" ToNode="21" Relation="POSITIVE"/>
+<Connection FromNode="30" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="30" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="30" ToNode="15" Relation="POSITIVE"/>
+<Connection FromNode="30" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="30" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="30" ToNode="9" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="57" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="52" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="51" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="36" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="31" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="26" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="29" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="28" ToNode="57" Relation="POSITIVE"/>
+<Connection FromNode="28" ToNode="52" Relation="POSITIVE"/>
+<Connection FromNode="28" ToNode="51" Relation="POSITIVE"/>
+<Connection FromNode="28" ToNode="31" Relation="POSITIVE"/>
+<Connection FromNode="28" ToNode="26" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="57" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="52" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="51" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="36" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="31" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="26" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="27" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="26" ToNode="40" Relation="POSITIVE"/>
+<Connection FromNode="26" ToNode="39" Relation="POSITIVE"/>
+<Connection FromNode="26" ToNode="32" Relation="POSITIVE"/>
+<Connection FromNode="26" ToNode="28" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="49" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="47" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="46" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="44" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="43" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="37" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="36" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="29" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="27" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="24" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="21" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="18" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="15" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="12" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="10" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="9" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="6" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="5" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="3" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="2" Relation="POSITIVE"/>
+<Connection FromNode="25" ToNode="1" Relation="POSITIVE"/>
+<Connection FromNode="24" ToNode="40" Relation="POSITIVE"/>
+<Connection FromNode="24" ToNode="28" Relation="POSITIVE"/>
+<Connection FromNode="24" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="23" ToNode="42" Relation="POSITIVE"/>
+<Connection FromNode="23" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="22" ToNode="42" Relation="POSITIVE"/>
+<Connection FromNode="22" ToNode="26" Relation="POSITIVE"/>
+<Connection FromNode="22" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="21" ToNode="40" Relation="POSITIVE"/>
+<Connection FromNode="21" ToNode="28" Relation="POSITIVE"/>
+<Connection FromNode="21" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="20" ToNode="42" Relation="POSITIVE"/>
+<Connection FromNode="20" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="19" ToNode="42" Relation="POSITIVE"/>
+<Connection FromNode="19" ToNode="26" Relation="POSITIVE"/>
+<Connection FromNode="19" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="18" ToNode="39" Relation="POSITIVE"/>
+<Connection FromNode="18" ToNode="28" Relation="POSITIVE"/>
+<Connection FromNode="18" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="17" ToNode="41" Relation="POSITIVE"/>
+<Connection FromNode="17" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="16" ToNode="41" Relation="POSITIVE"/>
+<Connection FromNode="16" ToNode="26" Relation="POSITIVE"/>
+<Connection FromNode="16" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="15" ToNode="39" Relation="POSITIVE"/>
+<Connection FromNode="15" ToNode="28" Relation="POSITIVE"/>
+<Connection FromNode="15" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="14" ToNode="41" Relation="POSITIVE"/>
+<Connection FromNode="14" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="13" ToNode="41" Relation="POSITIVE"/>
+<Connection FromNode="13" ToNode="26" Relation="POSITIVE"/>
+<Connection FromNode="13" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="12" ToNode="42" Relation="POSITIVE"/>
+<Connection FromNode="12" ToNode="41" Relation="POSITIVE"/>
+<Connection FromNode="12" ToNode="40" Relation="POSITIVE"/>
+<Connection FromNode="12" ToNode="39" Relation="POSITIVE"/>
+<Connection FromNode="12" ToNode="28" Relation="POSITIVE"/>
+<Connection FromNode="12" ToNode="26" Relation="POSITIVE"/>
+<Connection FromNode="12" ToNode="25" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="52" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="47" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="46" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="44" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="43" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="24" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="21" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="18" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="15" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="12" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="10" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="9" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="8" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="7" Relation="POSITIVE"/>
+<Connection FromNode="11" ToNode="5" Relation="POSITIVE"/>
+<Connection FromNode="10" ToNode="11" Relation="POSITIVE"/>
+<Connection FromNode="10" ToNode="4" Relation="POSITIVE"/>
+<Connection FromNode="9" ToNode="11" Relation="POSITIVE"/>
+<Connection FromNode="9" ToNode="4" Relation="POSITIVE"/>
+<Connection FromNode="8" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="8" ToNode="11" Relation="POSITIVE"/>
+<Connection FromNode="8" ToNode="4" Relation="POSITIVE"/>
+<Connection FromNode="7" ToNode="53" Relation="POSITIVE"/>
+<Connection FromNode="7" ToNode="11" Relation="POSITIVE"/>
+<Connection FromNode="7" ToNode="4" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="24" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="21" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="18" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="15" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="12" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="10" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="9" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="8" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="7" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="5" Relation="POSITIVE"/>
+<Connection FromNode="5" ToNode="3" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="52" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="47" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="46" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="45" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="44" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="43" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="24" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="21" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="18" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="15" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="12" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="10" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="9" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="8" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="7" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="5" Relation="POSITIVE"/>
+<Connection FromNode="3" ToNode="60" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="24" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="21" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="18" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="15" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="12" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="6" Relation="POSITIVE"/>
+<Connection FromNode="1" ToNode="23" Relation="POSITIVE"/>
+<Connection FromNode="1" ToNode="22" Relation="POSITIVE"/>
+<Connection FromNode="1" ToNode="20" Relation="POSITIVE"/>
+<Connection FromNode="1" ToNode="19" Relation="POSITIVE"/>
+<Connection FromNode="1" ToNode="17" Relation="POSITIVE"/>
+<Connection FromNode="1" ToNode="16" Relation="POSITIVE"/>
+<Connection FromNode="1" ToNode="14" Relation="POSITIVE"/>
+<Connection FromNode="1" ToNode="13" Relation="POSITIVE"/>
+<Connection FromNode="1" ToNode="12" Relation="POSITIVE"/>
+
+</InfluenceMap>
+<Simulation TotalEvents = "906033" TotalTime = "1000" InitTime = "0" TimeSample = "1">
+<Plot  Type="OBSERVABLE" Text="[Compact chromatin]"/>
+<Plot  Type="OBSERVABLE" Text="[Correct C]"/>
+<Plot  Type="OBSERVABLE" Text="[Correct mC]"/>
+<CSV>
+<![CDATA[
+0.987775,392,19997,392
+1.99918,390,19994,390
+2.99977,382,19995,382
+3.99881,378,19995,378
+4.99883,373,19988,373
+5.9993,369,19997,369
+6.99924,365,19996,365
+7.9999,364,19994,364
+8.99988,364,19996,364
+9.99889,361,19999,361
+10.9992,357,19992,357
+11.9992,353,19998,354
+12.9998,349,19997,350
+13.9994,342,19994,343
+14.9987,340,19995,342
+16,338,19996,341
+16.999,335,19993,339
+17.9974,330,19993,334
+18.9976,328,19998,333
+19.9913,324,19997,330
+21,322,19995,327
+21.997,319,19994,324
+22.9992,318,19993,323
+23.9997,314,19995,320
+24.997,312,19997,318
+25.9988,310,19996,316
+26.9993,306,19994,312
+27.9972,304,19997,310
+28.9981,303,19996,310
+29.9937,298,19998,305
+30.9943,295,19996,302
+32,292,19993,299
+32.9973,288,19997,297
+34,281,19995,291
+34.9958,279,19998,290
+35.9989,276,19996,287
+36.9998,274,19999,285
+37.9996,271,19992,283
+38.9988,269,19993,281
+39.9998,267,19995,281
+40.9989,264,19995,278
+41.9969,261,19996,275
+42.9994,260,19993,276
+43.9999,259,19998,277
+44.9914,258,19995,277
+45.9986,257,19999,276
+46.9992,256,19996,275
+47.9911,255,19996,276
+48.9996,253,19998,274
+49.9997,252,19997,275
+50.9988,248,19992,273
+51.9999,247,19996,272
+52.9966,244,19998,270
+54,243,19996,269
+54.9977,240,19999,266
+55.9992,238,19997,264
+56.9989,235,19993,262
+57.9998,234,19995,260
+59,232,19994,260
+59.9992,227,19994,257
+60.9979,228,19997,257
+61.9977,226,19997,259
+62.9937,224,19997,258
+63.9961,221,19995,254
+64.9989,219,19996,251
+65.9993,217,19994,247
+66.9981,217,19996,247
+67.999,216,19994,245
+68.9988,213,19997,243
+69.998,209,20000,241
+70.9998,207,19998,241
+71.9999,206,19994,240
+73,204,19998,239
+73.9994,203,19994,239
+74.999,200,19996,235
+75.9973,199,19993,234
+76.9993,199,19995,234
+77.9984,194,19997,230
+78.9978,193,19997,229
+79.997,193,19998,229
+80.9979,190,19998,227
+81.9995,188,19997,229
+82.9986,185,19995,228
+83.9998,185,19993,229
+84.9965,184,19994,230
+85.9982,183,19994,230
+86.9992,181,19991,227
+87.9988,183,19994,228
+88.9999,183,19994,228
+89.9995,185,19997,229
+90.9998,182,19996,225
+91.9995,181,19996,227
+92.9996,179,19995,226
+93.9985,178,19997,225
+94.9922,176,19998,224
+95.9998,176,19998,222
+96.9993,174,19996,222
+97.9958,173,19993,222
+99,169,19993,221
+99.9984,170,19996,224
+100.994,171,19998,224
+101.999,171,19992,225
+103,172,19997,224
+104,173,19997,223
+104.999,170,19997,222
+105.997,168,19994,221
+106.997,165,19995,218
+107.999,165,19995,220
+109,162,19996,216
+109.997,161,19997,216
+110.996,160,19999,212
+112,159,19992,211
+113,159,19996,211
+113.996,158,19996,209
+114.999,157,19995,209
+115.999,154,19996,207
+116.996,154,19996,207
+117.997,154,19995,205
+118.994,150,19995,202
+119.998,149,19996,202
+120.999,147,19996,201
+121.997,147,19997,203
+123,143,19999,199
+123.999,144,19998,200
+124.997,142,19996,199
+125.998,142,19997,198
+126.998,140,19998,196
+127.998,137,19998,195
+128.999,135,19995,194
+130,135,19995,194
+130.998,135,19996,193
+131.999,135,19997,195
+132.999,133,19996,195
+133.999,133,19994,196
+134.999,131,19995,195
+136,129,19998,193
+136.996,129,19995,195
+137.999,129,19994,195
+138.995,129,19995,195
+140,129,19996,197
+140.996,130,19998,196
+142,130,19998,194
+142.997,133,19997,195
+144,133,19996,195
+144.998,132,19995,194
+145.999,130,19996,193
+146.998,128,19996,192
+147.996,126,19995,190
+148.994,125,19998,189
+150,126,19994,188
+150.997,127,19994,189
+151.995,124,19998,187
+152.999,122,19996,185
+154,122,19999,184
+154.999,120,19998,183
+155.998,119,19998,183
+156.999,119,19996,182
+158,118,19994,181
+158.999,118,19993,182
+160,118,19996,182
+160.998,117,19994,182
+161.999,118,19995,182
+162.998,118,19995,182
+163.996,116,19999,180
+164.999,117,19995,180
+165.999,115,19996,179
+166.999,115,19997,178
+168,114,19994,180
+168.995,113,19997,178
+169.998,112,19997,176
+170.998,110,19995,176
+171.999,109,19998,176
+173,109,19997,175
+173.998,110,19995,177
+175,110,19993,173
+175.999,112,19996,174
+177,110,19996,173
+178,110,19995,173
+178.997,108,19997,173
+179.994,107,19995,172
+180.995,106,19997,172
+182,106,19993,172
+182.997,106,19998,173
+184,106,19997,175
+184.999,106,19997,175
+186,106,19997,176
+186.999,102,19996,173
+187.999,103,19995,176
+188.998,103,19998,177
+189.997,102,19993,177
+190.999,100,19996,176
+192,100,19995,176
+193,100,19993,176
+193.998,100,19995,175
+194.998,101,19998,176
+195.996,99,19998,176
+196.99,100,19993,176
+197.994,100,19999,175
+198.999,100,19994,177
+199.997,99,19997,177
+200.997,95,19999,175
+202,95,19994,176
+203,95,19992,177
+204,96,19996,178
+204.999,96,19996,179
+206,96,19994,178
+207,96,19996,178
+207.993,95,19996,179
+209,95,19998,179
+209.995,95,19997,182
+211,95,19989,183
+211.999,94,19997,183
+212.996,94,19999,181
+214,94,19992,182
+214.998,96,19997,180
+216,95,19992,181
+216.996,93,19999,179
+217.999,95,19999,179
+219,96,19999,180
+220,95,19996,179
+220.998,96,19995,181
+221.999,97,19997,183
+222.993,96,19995,183
+223.999,96,19996,183
+224.999,96,19996,183
+225.997,96,19996,182
+226.996,96,19996,181
+227.999,95,19993,180
+228.999,95,19995,180
+229.998,95,19993,180
+230.999,91,19995,176
+231.998,90,19995,177
+232.998,90,19995,177
+233.995,90,19998,177
+234.998,89,19996,176
+235.998,88,19997,175
+237,87,19997,177
+238,87,19997,179
+238.995,89,19998,180
+239.998,89,19998,181
+240.998,88,19997,180
+241.997,88,19996,179
+242.998,88,19997,181
+243.999,88,19997,181
+244.999,88,19997,182
+245.998,88,19995,186
+246.997,89,19996,188
+248,89,19996,186
+249,89,19995,189
+249.989,89,19998,190
+250.997,89,19996,191
+251.999,89,19995,192
+252.996,89,19999,193
+253.999,89,19996,193
+254.998,90,19996,192
+256,93,19993,193
+256.999,93,19995,195
+257.999,96,19996,197
+258.995,96,19999,198
+259.995,95,19992,195
+260.999,95,19994,194
+261.998,96,19993,194
+262.999,96,19992,196
+263.998,96,19995,195
+264.998,97,19995,195
+265.999,97,19992,194
+267,96,19993,195
+267.997,95,19998,195
+269,95,19993,197
+269.999,95,19993,197
+270.996,95,19997,197
+271.999,94,19997,195
+273,96,19996,197
+274,94,19995,196
+274.999,94,19994,197
+276,95,19996,197
+276.999,97,19995,198
+277.999,97,19997,197
+278.999,98,19996,196
+279.999,99,19991,197
+280.997,97,19995,195
+281.998,96,19998,194
+283,96,19989,193
+283.995,98,19995,194
+285,99,19996,196
+286,98,19996,195
+286.999,97,19995,194
+287.995,96,19998,194
+288.998,96,19998,196
+289.993,96,19995,196
+290.997,97,19998,196
+291.999,94,19997,193
+292.994,92,19996,191
+294,93,19994,192
+295,94,19996,191
+295.999,96,19996,192
+296.999,95,19993,191
+297.996,93,19995,190
+299,92,19994,187
+299.999,93,19995,184
+300.999,94,19991,185
+301.999,95,19994,185
+302.999,95,19995,184
+303.996,97,19997,184
+304.996,99,19997,186
+305.998,101,19991,187
+307,101,19998,188
+307.997,101,19998,188
+309,102,19998,188
+309.999,104,19996,189
+310.991,106,19998,190
+311.999,107,19995,188
+312.999,106,19992,189
+313.998,105,19994,189
+314.998,106,19996,189
+316,105,19996,189
+316.994,107,19997,192
+317.993,106,19993,193
+319,108,19995,196
+319.998,108,19997,195
+321,107,19996,194
+322,106,19995,194
+323,103,19996,192
+323.999,104,19996,192
+324.998,102,19998,190
+325.999,101,19995,189
+326.999,101,19995,189
+327.999,100,19996,188
+328.996,98,19994,186
+329.995,98,19996,186
+330.998,98,19997,187
+331.996,97,19995,185
+332.999,98,19995,186
+333.996,100,19996,189
+334.999,100,19995,190
+335.989,100,19997,190
+336.999,101,19992,189
+337.993,101,19996,191
+339,99,19999,190
+339.998,99,19996,190
+340.999,97,19997,189
+341.999,97,19996,188
+342.996,97,19994,191
+343.999,97,19997,191
+345,98,19994,190
+345.998,98,19997,191
+346.999,98,19997,189
+347.999,100,19994,189
+349,101,19998,189
+350,102,19998,187
+350.998,102,19995,187
+351.999,101,19994,186
+352.999,99,19993,184
+353.997,99,19994,184
+355,101,19998,184
+356,100,19994,183
+356.998,102,19995,183
+357.993,103,19998,182
+358.997,103,19997,185
+360,103,19995,185
+360.996,101,19996,183
+361.999,102,19995,184
+362.997,101,19997,183
+364,100,19996,184
+364.998,100,19996,186
+365.999,99,19990,186
+366.998,101,19994,187
+367.997,101,19998,186
+368.999,100,19997,183
+370,100,19999,185
+370.999,101,19996,185
+371.987,99,19997,182
+372.999,99,19990,182
+374,98,19995,183
+374.999,98,19994,185
+375.997,98,19999,185
+376.999,99,19993,185
+378,99,19995,185
+378.999,97,19996,184
+379.997,98,19999,185
+380.999,99,19991,186
+382,99,19998,186
+382.992,102,19993,191
+383.999,99,19992,188
+384.998,99,19993,187
+386,100,19995,188
+386.998,100,19997,189
+388,99,19995,187
+388.999,101,19994,186
+389.999,103,19995,186
+390.999,103,19994,188
+391.994,101,19991,187
+392.998,102,19995,188
+393.997,102,19996,190
+395,106,19995,194
+395.999,104,19995,194
+397,103,19996,193
+397.992,102,19997,192
+399,102,19991,193
+399.997,101,19996,193
+400.999,103,19996,193
+402,105,19996,194
+402.996,105,19997,194
+404,105,19999,193
+404.997,104,19997,192
+406,106,19994,197
+406.997,109,19998,198
+407.997,106,19993,196
+408.999,104,19994,194
+409.999,103,19997,194
+410.999,104,19998,195
+412,102,19998,193
+412.999,102,19995,193
+414,103,19995,195
+415,103,19989,195
+415.999,102,19994,195
+416.992,103,19999,195
+417.998,103,19992,197
+418.999,103,19997,197
+419.999,103,19996,198
+421,104,19993,196
+422,102,19995,197
+422.998,101,19996,195
+424,99,19994,195
+424.993,98,19998,194
+425.998,97,19995,194
+426.991,96,19994,193
+427.999,97,19998,193
+429,97,19994,194
+429.999,95,19993,193
+430.999,95,20000,190
+432,97,19998,191
+433,98,19993,191
+434,99,19997,193
+435,99,19994,194
+435.998,99,19997,193
+437,101,19992,193
+438,101,19992,193
+439,101,19997,193
+439.995,102,19997,194
+441,103,19996,196
+442,104,19992,197
+443,105,19997,197
+443.996,107,19997,198
+444.997,109,19997,199
+445.999,107,19994,197
+447,106,19994,193
+447.998,106,19995,196
+448.999,105,19993,197
+449.997,107,19997,197
+450.998,109,19994,197
+451.999,111,19993,199
+452.996,111,19997,198
+453.998,107,19997,196
+454.998,106,19993,197
+455.996,105,19996,198
+456.998,105,19998,198
+457.997,106,19997,198
+458.999,105,19996,197
+459.998,105,19994,198
+460.998,106,19998,197
+462,106,19992,198
+462.999,106,20000,197
+463.999,108,19994,197
+464.999,109,19990,196
+466,108,19996,195
+467,108,19996,195
+467.998,111,19993,197
+469,113,19995,198
+470,115,19997,200
+471,115,19996,199
+471.999,116,19992,199
+473,116,19995,199
+473.998,117,19994,200
+474.998,115,19998,198
+475.999,115,19998,199
+476.998,113,19996,197
+477.998,113,19998,197
+478.999,113,19997,197
+479.999,112,19994,196
+480.999,113,19996,195
+482,113,19996,195
+483,114,19995,195
+483.998,113,19998,193
+484.997,113,19995,193
+485.999,109,19997,191
+486.999,110,19995,191
+487.999,110,19995,191
+489,109,19995,190
+489.995,108,19995,189
+490.993,110,19997,190
+491.999,109,19995,189
+492.999,109,19997,188
+494,110,19992,187
+494.999,112,19996,189
+496,112,19999,188
+496.999,110,19998,187
+497.999,107,19998,183
+499,107,19996,183
+499.998,106,19995,183
+501,106,19995,184
+501.999,107,19993,184
+502.999,105,19999,183
+503.997,102,19995,180
+504.998,102,19999,180
+505.994,103,19995,181
+506.999,103,19997,181
+508,103,19996,182
+509,104,19994,185
+510,104,19992,183
+510.998,105,19993,182
+512,105,19996,182
+512.996,105,19989,180
+513.999,107,19994,180
+515,105,19993,180
+515.998,105,19996,180
+516.997,104,19998,180
+518,104,19994,180
+518.996,102,19995,178
+520,101,19996,176
+520.999,101,19995,176
+521.999,101,19998,177
+523,98,20000,174
+523.999,96,19992,173
+524.998,96,19996,173
+525.99,96,19999,175
+526.999,96,19994,177
+527.997,97,19998,179
+528.997,97,19998,178
+530,96,19997,176
+530.998,94,19995,176
+531.999,94,19995,179
+532.999,93,19996,179
+533.999,92,19996,179
+535,90,19997,178
+535.998,91,19996,180
+537,92,19992,181
+537.997,91,19997,180
+538.998,91,19994,181
+540,90,19997,178
+540.999,93,19996,178
+541.997,92,20000,178
+542.999,91,19993,177
+544,90,19993,176
+544.999,90,19999,177
+546,90,19993,176
+547,90,19994,177
+548,90,19993,178
+549,88,19994,175
+549.998,90,19997,175
+550.996,92,19995,175
+552,94,19996,178
+552.999,91,19994,177
+553.998,90,19990,177
+555,89,19993,176
+555.998,87,19994,175
+557,88,19994,175
+558,87,19999,174
+559,86,19997,173
+559.998,86,19990,173
+560.998,86,19998,176
+561.999,85,19998,176
+563,85,19997,176
+563.997,85,19998,175
+565,86,19995,177
+565.998,84,19994,176
+566.999,83,19995,177
+568,81,19993,174
+568.996,79,19994,176
+569.999,79,19995,178
+570.999,77,19997,178
+572,75,19992,177
+572.999,76,19993,178
+574,76,20000,178
+574.999,77,19993,180
+575.999,79,19995,182
+576.999,81,19999,183
+577.998,78,19996,181
+578.999,79,19998,183
+579.999,79,19998,184
+580.997,79,19993,184
+581.997,82,19996,185
+582.995,84,19991,185
+583.999,85,19998,186
+585,87,19996,184
+586,87,19996,184
+586.993,87,19995,186
+587.999,86,19996,185
+588.999,85,19997,184
+589.997,84,19996,183
+590.988,86,19995,183
+592,86,19997,183
+592.999,87,19998,183
+593.999,87,19992,183
+594.999,88,19993,184
+595.999,87,19994,182
+596.999,86,19994,181
+597.995,86,19996,181
+598.996,88,19998,181
+599.999,87,19995,180
+600.999,90,19996,180
+601.997,92,19991,180
+602.998,92,19998,182
+604,93,19995,182
+604.998,90,19999,179
+605.989,92,19998,181
+606.996,97,19998,183
+607.999,97,19994,185
+608.998,98,19994,186
+610,98,19991,186
+610.999,97,19995,186
+611.999,93,19996,183
+613,93,19996,183
+613.997,92,19997,183
+615,91,19995,183
+615.994,92,19996,181
+617,94,19993,181
+617.998,94,19996,180
+618.999,95,19995,182
+619.998,95,19998,181
+620.999,96,19997,182
+622,96,19992,184
+623,95,19993,185
+623.997,96,19996,184
+625,96,19995,185
+625.999,97,19995,188
+626.998,95,19996,186
+627.999,95,19997,189
+629,93,19995,187
+629.999,92,19997,185
+630.999,92,19996,184
+631.999,92,19999,183
+632.999,93,19995,183
+633.997,92,19996,183
+634.998,90,19996,181
+636,93,19996,181
+636.997,91,19995,179
+637.998,92,19998,181
+639,92,19993,181
+640,92,19994,183
+640.999,91,19995,182
+642,91,19992,182
+642.999,91,19995,181
+643.998,93,19994,181
+644.998,93,19999,182
+645.998,94,19994,182
+647,95,19997,180
+647.997,95,19999,179
+648.996,96,19999,179
+649.998,95,19996,178
+650.998,95,19995,178
+651.999,94,19996,180
+652.999,95,19997,179
+653.999,95,19997,178
+655,94,19996,179
+655.997,98,19999,180
+656.999,99,19994,179
+657.998,99,19994,179
+658.999,96,19993,178
+660,95,19997,176
+660.999,94,19992,176
+661.995,93,19995,174
+662.999,93,19997,175
+663.998,94,19997,176
+664.999,93,19995,175
+665.998,91,19993,174
+666.999,91,19998,176
+667.999,91,19993,176
+669,94,19996,177
+670,94,19989,176
+671,93,19996,175
+671.999,92,19995,175
+672.999,92,19996,174
+674,91,19988,174
+675,92,19993,176
+675.994,91,19995,175
+676.998,90,19990,176
+677.997,90,19998,178
+679,91,19997,179
+679.997,92,19997,181
+681,92,19993,182
+682,88,19996,178
+682.999,88,19998,179
+683.997,91,19997,179
+684.999,90,19997,177
+685.999,90,19994,176
+687,88,19996,174
+688,87,19995,174
+688.999,87,19994,175
+689.998,87,19996,175
+690.999,88,19993,175
+691.999,87,19997,174
+693,87,19996,173
+693.997,86,19993,173
+694.999,83,19998,170
+695.997,80,19994,169
+696.998,82,19995,169
+697.998,79,19997,166
+698.999,77,19996,166
+699.999,75,19995,164
+700.999,72,19994,162
+702,73,19998,162
+702.999,75,19994,162
+703.997,74,19995,161
+704.999,73,19998,161
+706,75,19996,162
+706.998,76,19992,164
+707.998,76,19998,162
+708.998,76,19998,162
+710,76,19998,162
+710.999,74,19999,161
+711.998,74,19992,161
+712.999,77,19995,160
+713.999,78,19997,160
+714.998,79,19995,161
+716,78,19990,164
+716.992,78,19996,164
+718,79,19991,164
+719,78,19996,164
+719.992,78,19996,164
+720.995,77,19992,163
+721.999,76,19995,163
+722.997,76,19996,162
+723.996,76,19997,163
+725,77,19991,164
+725.998,77,19997,163
+727,78,19996,164
+727.999,78,19996,165
+728.997,79,19997,166
+730,79,19997,167
+730.998,81,19995,170
+731.998,82,19997,171
+733,84,19995,172
+733.997,84,19993,171
+735,87,19996,173
+735.991,87,19998,176
+736.998,86,19995,175
+737.999,87,19995,177
+738.998,88,19995,178
+739.999,88,19994,179
+740.997,88,19996,179
+741.999,88,19995,178
+742.997,86,19998,177
+743.998,85,19991,176
+744.989,87,19998,176
+746,86,19996,175
+746.999,86,19997,175
+747.996,87,19996,176
+748.997,89,19996,178
+749.999,89,19997,177
+751,89,19996,178
+751.999,88,19995,179
+752.999,87,19996,177
+754,87,20000,177
+755,87,19996,178
+755.988,87,19994,180
+756.999,87,19991,180
+758,87,19996,182
+758.999,84,19998,182
+759.995,84,19995,182
+760.999,83,19998,183
+761.998,84,19999,184
+763,84,19995,184
+763.999,81,19996,181
+764.999,81,19992,183
+765.999,82,19995,182
+766.999,83,19995,182
+767.998,81,19996,179
+769,79,19994,177
+769.999,80,19996,177
+770.999,82,19998,176
+771.999,85,19992,174
+772.999,84,19995,173
+774,84,19996,174
+775,83,19995,174
+776,84,19997,176
+776.991,85,19998,176
+777.998,86,20000,176
+778.998,87,19996,174
+779.999,87,19996,175
+781,84,19994,174
+782,84,19994,174
+782.999,85,19996,174
+783.999,86,19996,174
+784.997,87,19992,175
+786,88,19993,174
+786.999,89,19994,175
+787.999,89,19993,175
+789,87,19995,173
+790,87,19997,173
+790.996,89,20000,173
+791.998,88,19997,173
+792.994,91,19997,173
+793.999,92,19995,173
+794.999,92,19997,173
+795.992,92,19996,172
+796.994,90,19993,172
+798,89,19996,172
+799,91,19999,171
+799.997,90,19994,171
+800.996,89,19997,170
+801.992,89,19997,170
+802.998,90,19994,171
+803.996,90,19994,171
+804.997,91,19997,171
+805.999,91,19995,170
+806.996,92,19994,169
+807.999,93,19996,169
+808.997,96,19997,170
+809.999,94,19997,169
+811,95,19995,169
+811.999,96,19997,170
+812.999,95,19998,171
+814,93,19994,169
+814.999,93,19994,170
+815.999,90,19998,168
+816.999,91,19995,169
+818,91,19995,169
+818.997,92,19995,169
+820,91,19993,170
+821,91,19999,169
+821.999,92,19995,170
+822.998,91,19995,170
+823.998,93,19996,172
+825,92,19996,170
+825.999,93,19997,171
+826.998,93,19993,171
+827.999,91,19997,170
+828.999,90,19997,169
+830,91,19996,171
+831,89,19996,169
+831.999,92,19996,170
+833,91,19995,171
+833.997,91,19994,171
+834.999,93,19997,171
+835.999,93,19998,173
+836.999,93,19998,174
+837.994,93,19999,175
+839,91,19996,174
+839.998,91,19995,175
+840.997,91,19998,177
+841.988,90,19992,178
+842.999,89,19998,177
+844,89,19995,176
+844.999,86,19996,174
+845.999,86,19994,176
+846.999,85,19999,175
+847.998,87,19998,175
+848.999,84,19989,174
+850,82,19997,173
+850.999,85,19996,176
+851.996,86,19995,177
+852.997,84,19990,178
+853.997,83,19997,176
+854.998,83,19992,177
+855.997,82,19998,177
+856.997,84,19998,178
+858,82,19993,176
+858.991,84,20000,178
+859.999,86,19996,182
+860.999,86,19998,181
+861.999,86,19997,180
+862.999,85,19995,178
+863.998,83,19995,176
+864.997,82,19998,175
+865.993,82,19998,174
+866.996,81,19995,175
+868,82,19997,176
+869,81,19995,175
+870,82,19994,175
+871,82,19997,175
+872,79,19993,173
+872.998,79,19990,172
+873.999,80,19997,173
+874.997,77,19999,172
+876,77,19996,172
+876.997,78,19995,172
+877.999,77,19997,170
+878.995,77,19996,171
+880,77,19994,171
+880.992,78,19999,171
+881.998,77,19996,171
+883,77,19995,171
+883.999,77,19994,171
+884.998,78,19996,172
+886,79,19990,173
+886.997,79,19994,172
+888,80,19997,174
+888.999,80,19996,174
+889.995,80,19995,173
+890.999,81,19997,173
+891.997,82,19996,173
+892.994,82,19995,173
+894,83,19997,174
+894.999,84,19993,175
+896,84,19997,175
+896.999,85,19993,176
+897.999,84,19996,177
+899,83,19993,176
+899.997,83,19996,176
+900.998,82,19997,177
+901.999,84,19994,175
+902.996,85,19996,178
+903.999,86,19997,178
+904.996,86,20000,178
+905.999,86,19996,180
+906.999,87,19995,180
+908,87,19993,180
+908.999,85,19996,180
+910,86,19995,179
+910.998,85,19997,179
+911.999,85,19991,179
+912.998,86,19995,179
+914,86,19996,178
+914.993,86,19997,178
+915.997,89,19997,179
+917,87,19997,178
+917.997,88,19996,178
+919,89,19994,178
+919.999,90,19995,178
+921,90,19990,177
+921.999,91,19997,177
+922.999,90,19995,178
+924,93,19997,178
+925,93,19996,178
+925.999,95,19995,179
+926.992,96,19998,179
+927.999,96,19996,181
+928.998,97,19994,184
+930,96,19997,186
+931,97,19997,187
+931.999,98,19999,187
+933,99,19993,187
+933.999,98,19998,189
+934.999,99,19994,190
+936,97,19997,188
+936.993,97,19997,188
+937.999,96,19999,188
+938.999,95,19996,185
+940,95,19996,188
+940.999,95,19996,188
+941.999,95,19995,188
+942.999,95,19995,187
+943.998,95,19998,190
+944.995,96,19995,190
+946,96,19996,190
+946.999,96,19994,190
+947.998,98,19996,193
+948.999,98,19997,192
+950,96,19995,190
+951,96,19998,189
+951.99,97,19994,188
+953,98,19999,190
+954,95,19997,187
+954.998,97,19997,187
+955.999,99,19998,187
+957,101,19990,187
+957.998,101,19995,187
+958.996,101,19994,190
+959.999,98,19995,189
+961,98,19995,189
+961.999,99,19997,192
+962.998,95,19999,187
+963.999,95,19990,188
+965,97,19997,189
+965.998,98,19997,188
+966.992,96,19996,186
+967.999,96,19997,187
+968.999,96,19996,187
+970,95,19998,185
+970.996,94,19997,183
+972,93,19999,182
+972.998,93,19997,183
+973.998,96,19999,183
+974.998,94,19994,182
+975.997,95,19997,183
+976.999,96,19992,182
+978,95,19996,180
+978.999,95,19996,179
+979.999,95,19997,179
+980.999,94,19995,178
+981.997,96,19998,179
+982.999,96,19996,179
+983.997,97,19993,179
+984.998,98,19992,181
+985.998,96,19999,179
+986.998,95,19995,178
+987.999,96,19997,179
+988.998,95,19997,178
+989.999,96,19995,178
+990.998,98,19997,178
+991.998,95,19992,178
+992.999,95,19994,180
+993.996,94,19995,180
+994.998,94,19996,181
+995.997,94,19997,180
+996.998,95,19994,179
+997.998,95,19995,180
+998.992,93,19998,180
+999.992,93,19996,180
+1000,93,19995,180
+
+]]>
+</CSV>
+</Simulation>
+<Log>
+<Entry Type="INFO" Message="
+**** Simulation by Plectix v3.393..2759_32 ****
+" Count="1" Position="1225154323.348309"/>
+<Entry Type="WARNING" Message="No memory limit defined" Count="1" Position="1225154323.348341"/>
+<Entry Type="INFO" Message="-Compilation..." Count="1" Position="1225154323.348354"/>
+<Entry Type="INFO" Message="-Compilation: 0.113501 sec. CPU" Count="1" Position="1225154323.465240"/>
+<Entry Type="INFO" Message="-Initialization..." Count="1" Position="1225154323.465266"/>
+<Entry Type="INFO" Message="--Seeding random number generator with given seed 8" Count="1" Position="1225154323.465351"/>
+<Entry Type="INFO" Message="--Computing initial state" Count="1" Position="1225154323.465358"/>
+<Entry Type="INFO" Message="--Abstracting influence map..." Count="1" Position="1225154323.465456"/>
+<Entry Type="INFO" Message="--Abstraction: 0.018472 sec. CPU" Count="1" Position="1225154323.485770"/>
+<Entry Type="INFO" Message="--Concretization..." Count="1" Position="1225154325.209657"/>
+<Entry Type="INTERNAL" Message="False positive(s) detected in activation map" Count="258" Position="1225154325.225709"/>
+<Entry Type="INTERNAL" Message="False positive(s) detected in inhibition map" Count="547" Position="1225154325.235308"/>
+<Entry Type="INFO" Message="--Concretization: 0.022904 sec. CPU" Count="1" Position="1225154325.235331"/>
+<Entry Type="INFO" Message="--Influence map computed" Count="1" Position="1225154325.235359"/>
+<Entry Type="INFO" Message="-Initialization: 1.653062 sec. CPU" Count="1" Position="1225154325.235373"/>
+<Entry Type="INFO" Message="-Simulation..." Count="1" Position="1225154325.528539"/>
+<Entry Type="INFO" Message="-Simulation: 269.591773 sec. CPU" Count="1" Position="1225154622.772149"/>
+<Entry Type="INFO" Message="-Outputting influence map" Count="1" Position="1225154622.772210"/>
+<Entry Type="INFO" Message="-Sampling data..." Count="1" Position="1225154622.812249"/>
+<Entry Type="INFO" Message="-End of sampling 0.0068 s CPU" Count="1" Position="1225154622.819097"/>
+<Entry Type="INFO" Message="-Outputting results in xml session..." Count="1" Position="1225154622.819310"/>
+<Entry Type="INFO" Message="-Building xml tree for influence map (if any): 0.030247 sec. CPU" Count="1" Position="1225154622.852694"/>
+<Entry Type="INFO" Message="-Building xml tree for snapshots (if any): 0.000002 sec. CPU" Count="1" Position="1225154622.852703"/>
+<Entry Type="INFO" Message="-Building xml tree for the final state (if any): 0.000003 sec. CPU" Count="1" Position="1225154622.852710"/>
+<Entry Type="INFO" Message="-Building xml tree for stories (if any): 0.000004 sec. CPU" Count="1" Position="1225154622.852720"/>
+<Entry Type="INFO" Message="-Building xml tree for data points (if any): 0.018064 sec. CPU" Count="1" Position="1225154622.871380"/>
+<Entry Type="INFO" Message="-Results outputted in xml session: 0.048382 sec. CPU" Count="1" Position="1225154622.871388"/>
+</Log>
+</SimplxSession>

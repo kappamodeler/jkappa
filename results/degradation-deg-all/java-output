@@ -1,0 +1,156 @@
+-Initialization: WallClock=0.068 NanoClock=0.067981 ThreadTime=0.052443000000000004 sec. CPU
+-Simulation: WallClock=0.889 NanoClock=0.8895310000000001 ThreadTime=0.564081 sec. CPU
+2008-10-27 12:06:51,575 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.016 NanoClock=0.015922000000000002 ThreadTime=0.015688 sec. CPU
+-Simulation: WallClock=0.511 NanoClock=0.510528 ThreadTime=0.334407 sec. CPU
+2008-10-27 12:06:52,103 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.027 NanoClock=0.027047 ThreadTime=0.015807 sec. CPU
+-Simulation: WallClock=0.356 NanoClock=0.355841 ThreadTime=0.293619 sec. CPU
+2008-10-27 12:06:52,486 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.011 NanoClock=0.01107 ThreadTime=0.010281 sec. CPU
+-Simulation: WallClock=0.355 NanoClock=0.355563 ThreadTime=0.283081 sec. CPU
+2008-10-27 12:06:52,853 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.009000000000000001 NanoClock=0.009777000000000001 ThreadTime=0.009584 sec. CPU
+-Simulation: WallClock=0.394 NanoClock=0.39438900000000005 ThreadTime=0.297062 sec. CPU
+2008-10-27 12:06:53,258 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.01 NanoClock=0.009434000000000001 ThreadTime=0.009439000000000001 sec. CPU
+-Simulation: WallClock=0.382 NanoClock=0.382487 ThreadTime=0.289675 sec. CPU
+2008-10-27 12:06:53,651 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0080 NanoClock=0.008354 ThreadTime=0.008060000000000001 sec. CPU
+-Simulation: WallClock=0.339 NanoClock=0.33881100000000003 ThreadTime=0.289136 sec. CPU
+2008-10-27 12:06:53,998 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.011 NanoClock=0.010283 ThreadTime=0.006551 sec. CPU
+-Simulation: WallClock=0.368 NanoClock=0.36815400000000004 ThreadTime=0.296258 sec. CPU
+2008-10-27 12:06:54,377 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.009000000000000001 NanoClock=0.008896000000000001 ThreadTime=0.005341 sec. CPU
+-Simulation: WallClock=0.39 NanoClock=0.389542 ThreadTime=0.288706 sec. CPU
+2008-10-27 12:06:54,776 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0050 NanoClock=0.005118 ThreadTime=0.005109000000000001 sec. CPU
+-Simulation: WallClock=0.352 NanoClock=0.352436 ThreadTime=0.301462 sec. CPU
+2008-10-27 12:06:55,134 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0060 NanoClock=0.0051730000000000005 ThreadTime=0.00515 sec. CPU
+-Simulation: WallClock=0.37 NanoClock=0.37037000000000003 ThreadTime=0.292541 sec. CPU
+2008-10-27 12:06:55,510 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0050 NanoClock=0.004899000000000001 ThreadTime=0.0048460000000000005 sec. CPU
+-Simulation: WallClock=0.381 NanoClock=0.380284 ThreadTime=0.286907 sec. CPU
+2008-10-27 12:06:55,896 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0050 NanoClock=0.004453 ThreadTime=0.004453 sec. CPU
+-Simulation: WallClock=0.388 NanoClock=0.388315 ThreadTime=0.290271 sec. CPU
+2008-10-27 12:06:56,289 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0050 NanoClock=0.0046700000000000005 ThreadTime=0.0045720000000000005 sec. CPU
+-Simulation: WallClock=0.359 NanoClock=0.35849400000000003 ThreadTime=0.30717300000000003 sec. CPU
+2008-10-27 12:06:56,653 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.034 NanoClock=0.034105 ThreadTime=0.004907 sec. CPU
+-Simulation: WallClock=0.356 NanoClock=0.355432 ThreadTime=0.30302300000000004 sec. CPU
+2008-10-27 12:06:57,043 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0040 NanoClock=0.003945000000000001 ThreadTime=0.0039250000000000005 sec. CPU
+-Simulation: WallClock=0.372 NanoClock=0.37182800000000005 ThreadTime=0.27756200000000003 sec. CPU
+2008-10-27 12:06:57,419 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0040 NanoClock=0.0039000000000000003 ThreadTime=0.0038540000000000002 sec. CPU
+-Simulation: WallClock=0.377 NanoClock=0.37704800000000005 ThreadTime=0.28395800000000004 sec. CPU
+2008-10-27 12:06:57,800 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.003504 ThreadTime=0.003506 sec. CPU
+-Simulation: WallClock=0.34 NanoClock=0.339347 ThreadTime=0.288586 sec. CPU
+2008-10-27 12:06:58,144 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.003516 ThreadTime=0.003452 sec. CPU
+-Simulation: WallClock=0.367 NanoClock=0.36778700000000003 ThreadTime=0.28823200000000004 sec. CPU
+2008-10-27 12:06:58,516 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.0034760000000000004 ThreadTime=0.003442 sec. CPU
+-Simulation: WallClock=0.389 NanoClock=0.38858600000000004 ThreadTime=0.287507 sec. CPU
+2008-10-27 12:06:58,908 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0040 NanoClock=0.0033870000000000003 ThreadTime=0.0033880000000000004 sec. CPU
+-Simulation: WallClock=0.375 NanoClock=0.375792 ThreadTime=0.28069500000000003 sec. CPU
+2008-10-27 12:06:59,288 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0040 NanoClock=0.003575 ThreadTime=0.003576 sec. CPU
+-Simulation: WallClock=0.388 NanoClock=0.388749 ThreadTime=0.294125 sec. CPU
+2008-10-27 12:06:59,681 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.0037700000000000003 ThreadTime=0.0034630000000000004 sec. CPU
+-Simulation: WallClock=0.33 NanoClock=0.33004100000000003 ThreadTime=0.28342700000000004 sec. CPU
+2008-10-27 12:07:00,015 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.0033780000000000004 ThreadTime=0.00334 sec. CPU
+-Simulation: WallClock=0.375 NanoClock=0.375159 ThreadTime=0.29817000000000005 sec. CPU
+2008-10-27 12:07:00,394 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.009000000000000001 NanoClock=0.008755 ThreadTime=0.0036220000000000002 sec. CPU
+-Simulation: WallClock=0.401 NanoClock=0.401328 ThreadTime=0.294962 sec. CPU
+2008-10-27 12:07:00,805 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.003444 ThreadTime=0.0034130000000000002 sec. CPU
+-Simulation: WallClock=0.383 NanoClock=0.38299300000000003 ThreadTime=0.288542 sec. CPU
+2008-10-27 12:07:01,192 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.003386 ThreadTime=0.0033780000000000004 sec. CPU
+-Simulation: WallClock=0.34600000000000003 NanoClock=0.345538 ThreadTime=0.293461 sec. CPU
+2008-10-27 12:07:01,541 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.032 NanoClock=0.032143000000000005 ThreadTime=0.0035120000000000004 sec. CPU
+-Simulation: WallClock=0.334 NanoClock=0.333917 ThreadTime=0.287818 sec. CPU
+2008-10-27 12:07:01,907 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.003471 ThreadTime=0.003408 sec. CPU
+-Simulation: WallClock=0.381 NanoClock=0.380803 ThreadTime=0.285893 sec. CPU
+2008-10-27 12:07:02,292 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0080 NanoClock=0.007526000000000001 ThreadTime=0.004191 sec. CPU
+-Simulation: WallClock=0.336 NanoClock=0.33559500000000003 ThreadTime=0.28589200000000003 sec. CPU
+2008-10-27 12:07:02,636 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.0033610000000000003 ThreadTime=0.003363 sec. CPU
+-Simulation: WallClock=0.358 NanoClock=0.357709 ThreadTime=0.284849 sec. CPU
+2008-10-27 12:07:02,997 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.009000000000000001 NanoClock=0.009034 ThreadTime=0.0040680000000000004 sec. CPU
+-Simulation: WallClock=0.385 NanoClock=0.38519200000000003 ThreadTime=0.28921800000000003 sec. CPU
+2008-10-27 12:07:03,392 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0040 NanoClock=0.0033520000000000004 ThreadTime=0.003353 sec. CPU
+-Simulation: WallClock=0.377 NanoClock=0.37669800000000003 ThreadTime=0.282356 sec. CPU
+2008-10-27 12:07:03,773 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.00333 ThreadTime=0.0033260000000000004 sec. CPU
+-Simulation: WallClock=0.355 NanoClock=0.35578400000000004 ThreadTime=0.305642 sec. CPU
+2008-10-27 12:07:04,132 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.032 NanoClock=0.032613 ThreadTime=0.003553 sec. CPU
+-Simulation: WallClock=0.328 NanoClock=0.327961 ThreadTime=0.27789800000000003 sec. CPU
+2008-10-27 12:07:04,493 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0070 NanoClock=0.007495000000000001 ThreadTime=0.003514 sec. CPU
+-Simulation: WallClock=0.376 NanoClock=0.37563100000000005 ThreadTime=0.27948 sec. CPU
+2008-10-27 12:07:04,877 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.0032510000000000004 ThreadTime=0.003212 sec. CPU
+-Simulation: WallClock=0.377 NanoClock=0.376763 ThreadTime=0.281702 sec. CPU
+2008-10-27 12:07:05,257 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.003167 ThreadTime=0.003141 sec. CPU
+-Simulation: WallClock=0.388 NanoClock=0.387759 ThreadTime=0.292288 sec. CPU
+2008-10-27 12:07:05,649 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.0032540000000000004 ThreadTime=0.0032170000000000002 sec. CPU
+-Simulation: WallClock=0.336 NanoClock=0.336079 ThreadTime=0.287349 sec. CPU
+2008-10-27 12:07:05,988 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.003174 ThreadTime=0.003176 sec. CPU
+-Simulation: WallClock=0.374 NanoClock=0.37444700000000003 ThreadTime=0.300852 sec. CPU
+2008-10-27 12:07:06,366 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0060 NanoClock=0.006677000000000001 ThreadTime=0.003236 sec. CPU
+-Simulation: WallClock=0.392 NanoClock=0.391996 ThreadTime=0.289783 sec. CPU
+2008-10-27 12:07:06,765 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.0033220000000000003 ThreadTime=0.0033020000000000002 sec. CPU
+-Simulation: WallClock=0.40900000000000003 NanoClock=0.40924400000000005 ThreadTime=0.300705 sec. CPU
+2008-10-27 12:07:07,178 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.0030640000000000003 ThreadTime=0.0030080000000000003 sec. CPU
+-Simulation: WallClock=0.383 NanoClock=0.38369600000000004 ThreadTime=0.285594 sec. CPU
+2008-10-27 12:07:07,566 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0040 NanoClock=0.004178 ThreadTime=0.0030970000000000004 sec. CPU
+-Simulation: WallClock=0.406 NanoClock=0.405915 ThreadTime=0.30561 sec. CPU
+2008-10-27 12:07:07,976 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.002958 ThreadTime=0.002919 sec. CPU
+-Simulation: WallClock=0.314 NanoClock=0.31342200000000003 ThreadTime=0.270534 sec. CPU
+2008-10-27 12:07:08,293 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.034 NanoClock=0.034149 ThreadTime=0.003144 sec. CPU
+-Simulation: WallClock=0.332 NanoClock=0.331164 ThreadTime=0.282208 sec. CPU
+2008-10-27 12:07:08,659 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.002941 ThreadTime=0.0029100000000000003 sec. CPU
+-Simulation: WallClock=0.331 NanoClock=0.330863 ThreadTime=0.28117200000000003 sec. CPU
+2008-10-27 12:07:08,993 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0040 NanoClock=0.004046 ThreadTime=0.0030610000000000004 sec. CPU
+-Simulation: WallClock=0.376 NanoClock=0.375996 ThreadTime=0.297082 sec. CPU
+2008-10-27 12:07:09,373 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0020 NanoClock=0.002883 ThreadTime=0.0028750000000000004 sec. CPU
+-Simulation: WallClock=0.336 NanoClock=0.33532700000000004 ThreadTime=0.282401 sec. CPU
+2008-10-27 12:07:09,712 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0030 NanoClock=0.002794 ThreadTime=0.002797 sec. CPU
+-Simulation: WallClock=0.383 NanoClock=0.383429 ThreadTime=0.306095 sec. CPU
+2008-10-27 12:07:10,099 INFO  main            Simulator            - end of simulation: time
+-Initialization: WallClock=0.0050 NanoClock=0.005053 ThreadTime=0.0029980000000000002 sec. CPU
+-Results outputted in tmp session: WallClock=0.259 NanoClock=0.258684 ThreadTime=0.209519 sec. CPU
+
+real	0m20.515s
+user	0m20.487s
+sys	0m0.531s
