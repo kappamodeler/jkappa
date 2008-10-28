@@ -2,7 +2,6 @@ package com.plectix.simulator.simulator;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,6 +21,10 @@ public class SimulatorManager {
 	private SimulationData simulationData = new SimulationData();
 
 	private int agentIdGenerator = 0;
+
+	private long timeStart;
+	
+	private long timeStartThread;
 
 	private NameDictionary nameDictionary = new NameDictionary();
 
@@ -378,37 +381,15 @@ public class SimulatorManager {
 		}
 	}
 
-	private long timeStartNano;
-	private long timeStart;
-	private long timeStartThread;
-
 	public final void startTimer() {
-		/*
-		Date data = new Date();
-		timeStart = data.getTime() - data.getTime() % 1000;
-		timeStartNano = System.nanoTime();
-		*/
 		timeStart = System.currentTimeMillis();
-		timeStartNano = System.nanoTime();
 		timeStartThread = ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime();
 	}
 
 	public final String getTimer() {
-		/*
-		Date data = new Date();
-		long time = data.getTime() - data.getTime() % 1000;
-		time = Math.round((time - timeStart) / 1000);
-		long nano = timeStartNano - System.nanoTime();
-		String sNano = Long.toString(Math.abs(nano));
-		while (sNano.length() < 9)
-			sNano = "0" + sNano;
-		String sTime = Long.toString(time) + "." + sNano;
-		return sTime;
-		*/
 		double wallClockTimeInSeconds = 1.0E-3 * (System.currentTimeMillis() - timeStart);
-		double nanoTimeInSeconds = 1.0E-9 * (System.nanoTime() - timeStartNano);
 		double threadTimeInSeconds = 1.0E-9 * (ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime() - timeStartThread);
-		return "WallClock=" + wallClockTimeInSeconds + " NanoClock=" + nanoTimeInSeconds + " ThreadTime=" + threadTimeInSeconds;
+		return "WallClock=" + wallClockTimeInSeconds + " ThreadTime=" + threadTimeInSeconds;
 	}
 
 	public int getAgentIdGenerator() {
