@@ -288,7 +288,7 @@ public class CRule {
 	private boolean checkRulesNullAgents(CAgent agent) {
 		for (CConnectedComponent cc : this.getRightHandSide())
 		for (CAgent agentFromRule : cc.getAgents())
-			if ((agent.equals(agentFromRule))&&(agent.getSites().size()==0) && (agentFromRule.getSites().size()==0))
+			if ((agent.equals(agentFromRule))&& (agentFromRule.getSites().size()==0))
 				return true;
 		return false;
 	}
