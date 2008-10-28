@@ -1,0 +1,104 @@
+log4j:ERROR Could not read configuration file [config/log4j.properties].
+java.io.FileNotFoundException: config/log4j.properties (No such file or directory)
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:106)
+	at java.io.FileInputStream.<init>(FileInputStream.java:66)
+	at org.apache.log4j.PropertyConfigurator.doConfigure(PropertyConfigurator.java:316)
+	at org.apache.log4j.PropertyConfigurator.configure(PropertyConfigurator.java:342)
+	at com.plectix.simulator.SimulationMain.main(SimulationMain.java:85)
+log4j:ERROR Ignoring configuration file [config/log4j.properties].
+com.plectix.simulator.parser.ParseErrorException: Error in Rules: b(x!_,y),e(x) -> b(x!_,y!1),e(x!1) @ $INF
+	at com.plectix.simulator.parser.Parser.createRules(Parser.java:318)
+	at com.plectix.simulator.parser.Parser.parse(Parser.java:104)
+	at com.plectix.simulator.SimulationMain.readSimulatonFile(SimulationMain.java:184)
+	at com.plectix.simulator.SimulationMain.main(SimulationMain.java:90)
+
+real	0m0.575s
+user	0m0.539s
+sys	0m0.103s
+1
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.065771 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 0
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.001927 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 5
+-------Number of classes: 7
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+--Concretization...
+--Concretization: 0.000169 sec. CPU
+--Influence map computed
+-Initialization: 0.153580 sec. CPU
+-Simulation...
+____________________________________________________________
+*Warning* Applying infinitely fast rule r[3]
+*Warning* Applying infinitely fast rule r[4]
+############################################################
+-Simulation: 29.115092 sec. CPU
+-Outputting influence map
+-Sampling data...
+-End of sampling 0.0119 s CPU
+-Outputting results in xml session...
+-Results outputted in xml session: 0.019726 sec. CPU
+=========================== done with 0 =================================
+1
+
+**** Simulation by Plectix v3.393..2759_32 ****
+
+*Warning* No memory limit defined
+-Compilation...
+-Compilation: 0.065118 sec. CPU
+-Initialization...
+--Seeding random number generator with given seed 1
+--Computing initial state
+--Abstracting influence map...
+---Influence map 
+----Boolean encoding of the initial system
+-----Renaming
+------Translation(simplx->ckappa)
+----Quark computation
+--Abstraction: 0.001972 sec. CPU
+----compute maximal refinement relation
+-----compute refinement relation closure
+------Boolean encoding of the quotiented system
+-------Quotienting rules
+-------Translation(simplx->ckappa)
+-------Number of rules   : 5
+-------Number of classes: 7
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+----count automorphism in lhs
+-----Boolean encoding of the initial system
+------Renaming
+-------Translation(simplx->ckappa)
+--Concretization...
+--Concretization: 0.000172 sec. CPU
+--Influence map computed
+-Initialization: 0.153519 sec. CPU
+-Simulation...
+____________________________________________________________
+*Warning* Applying infinitely fast rule r[3]
+*Warning* Applying infinitely fast rule r[4]

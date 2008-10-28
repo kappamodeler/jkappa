@@ -11,7 +11,8 @@ import java.util.List;
 
 public class StatsComputer {
 
-	public static final String FILE = "results/degradation-deg-all/simplx-{0}-curves";
+	// public static final String FILE = "results/degradation-deg-all/simplx-{0}-curves";
+	public static final String FILE = "results/KPT_study/simplx-{0}-curves";
 
 
 	private static int number_of_observables = -1;

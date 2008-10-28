@@ -1,8 +1,7 @@
 Example files:
+
 	Example.ka (from KappaFactory, Model: "ras.cascade.1")
 
- 	KPT_stydy.ka (from Kappa Factory: "..\samples\kappa" )
-    
 	brightberl.ka                  copied from kappa_models/models/brightberl/brightberl.ka    
 	                               everything disappears with --time 1000
     
