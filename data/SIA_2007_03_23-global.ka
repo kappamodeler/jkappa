@@ -1,0 +1,13 @@
+#rules 
+E(l,x~u,r) -> E(l,x~p,r)
+E(x~p,r) , E(l,x~u) -> E(x~p,r!1) , E(l!1,x~u)
+E(x~p,r!1) , E(l!1,x~u) -> E(x~u,r!1) , E(l!1,x~p)
+E(x~u,r!1) , E(l!1,x~p) -> E(x~p,r!1) , E(l!1,x~u)
+
+%init: 1000 * E(l,x~u,r)
+
+%obs: E(l,x~u) 
+%obs: E(l,x~u,r)
+%obs: E(x~p,r!1) , E(l!1,x~u)
+%obs: E(x~u,r!1) , E(l!1,x~p)
+

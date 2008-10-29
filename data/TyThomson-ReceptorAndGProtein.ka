@@ -1,0 +1,109 @@
+# Rules:
+#######
+# Chapter 'New Chapter 1'
+'2.a.i Pheromone...Ste2' Ste2(pheromone!1),Pheromone(ste2!1) -> Ste2(pheromone) @ 1.0e-3
+'2.a.i Pheromone.Ste2' Ste2(pheromone),Pheromone(ste2) -> Ste2(pheromone!1),Pheromone(ste2!1),Pheromone(ste2) @ 1.09e-5
+'2.a.iii Gpa1...Ste4' Gpa1(ste4!1),Ste4(gpa1!1) -> Gpa1(ste4),Ste4(gpa1) @ 0
+'2.a.iii Gpa1...Ste4 Ref1' Ste4(gpa1!1),Gpa1(ste4!1,ste2,nuc~GDP) -> Ste4(gpa1),Gpa1(ste4,ste2,nuc~GDP) @ 5.0e-3
+'2.a.iii Gpa1...Ste4 Ref2' Ste4(gpa1!1),Gpa1(ste4!1,ste2,nuc~GTP) -> Ste4(gpa1),Gpa1(ste4,ste2,nuc~GTP) @ 5
+'2.a.iii Gpa1...Ste4 Ref3' Ste4(gpa1!1),Gpa1(ste4!1,ste2!_,nuc~GDP) -> Ste4(gpa1),Gpa1(ste4,ste2!_,nuc~GDP) @ 1.0e-3
+'2.a.iii Gpa1...Ste4 Ref4' Ste4(gpa1!1),Gpa1(ste4!1,ste2!_,nuc~GTP) -> Ste4(gpa1),Gpa1(ste4,ste2!_,nuc~GTP) @ 1
+'2.a.iii Gpa1.Ste4' Gpa1(ste4),Ste4(gpa1,ste5,ste20) -> Gpa1(ste4!1),Ste4(gpa1!1,ste5,ste20) @ 1.15e-3
+'2.a.iii Ste2...Gpa1' Ste2(gpa1!1),Gpa1(ste2!1) -> Ste2(gpa1),Gpa1(ste2) @ 0
+'2.a.iii Ste2...Gpa1 Ref1' Ste2(gpa1!1),Gpa1(ste2!1,ste4) -> Ste2(gpa1),Gpa1(ste2,ste4) @ 0.1
+'2.a.iii Ste2...Gpa1 Ref2' Ste2(gpa1!1),Gpa1(ste2!1,ste4!2),Ste4(gpa1!2) -> Ste2(gpa1),Gpa1(ste2,ste4!2),Ste4(gpa1!2) @ 0.02
+'2.a.iii Ste2.Gpa1' Ste2(gpa1),Gpa1(ste2) -> Ste2(gpa1!1),Gpa1(ste2!1) @ 1.15e-3
+'2.a.iv Gpa1@nuc_GTP' Gpa1(nuc~GDP) -> Gpa1(nuc~GTP) @ 6.2e-4
+'2.a.iv Gpa1@nuc_GTP Ref1' Pheromone(ste2!1),Ste2(pheromone!1,gpa1!2),Gpa1(nuc~GDP,ste2!2) -> Pheromone(ste2!1),Ste2(pheromone!1,gpa1!2),Gpa1(nuc~GTP,ste2!2) @ 1.5
+'2.a.v Gpa1@nuc_GDP' Gpa1(nuc~GTP) -> Gpa1(nuc~GDP) @ 0.01
+'2.a.v Gpa1@nuc_GDP Ref1' Gpa1(nuc~GTP,ste2!2),Ste2(gpa1!2,sst2!1),Sst2(ste2!1) -> Gpa1(nuc~GDP,ste2!2),Ste2(gpa1!2,sst2!1),Sst2(ste2!1) @ 1.0
+'2.a.v Sst2.Ste2' Sst2(ste2),Ste2(sst2) <-> Sst2(ste2!1),Ste2(sst2!1) @ 5.73e-5,0.1
+'2.b.i +Bar1'  -> Bar1(pheromone) @ 0
+'2.b.i +Bar1 Ref1' Ste12(dig1,dig2,mapk,dna!1),Bar1_gene(promoter!1) -> Ste12(dig1,dig2,mapk,dna!1),Bar1_gene(promoter!1),Bar1(pheromone) @ 0
+'2.b.i -Bar1' Bar1() -> @ 3.9e-4
+'2.b.i -Pheromone' Bar1(pheromone!1),Pheromone(ste2!1) -> Bar1(pheromone) @ 1
+'2.b.i Pheromone.Bar1' Bar1(pheromone),Pheromone(ste2) <-> Bar1(pheromone!1),Pheromone(ste2!1) @ 5.73e-5,0.1
+'2.b.i Ste12.Bar1_gene' Ste12(dna),Bar1_gene(promoter) <-> Ste12(dna!1),Bar1_gene(promoter!1) @ 1.43e-5,0.02
+'2.b.ii +Ste2' -> Ste2(gpa1,pheromone,sst2) @ 1.91
+'2.b.ii +Ste2 Ref1' Ste12(dig1,dig2,mapk,dna!1),Ste2_gene(promoter!1) -> Ste12(dig1,dig2,mapk,dna!1),Ste2_gene(promoter!1),Ste2(gpa1,pheromone,sst2) @ 8
+'2.b.ii -PheromoneSte2' Pheromone(ste2!1),Ste2(pheromone!1) -> @ 1.7e-3
+'2.b.ii -Ste2' Ste2(pheromone) -> @ 2.9e-4
+'2.b.ii Ste12.Ste2_gene' Ste12(dna),Ste2_gene(promoter) <-> Ste12(dna!1),Ste2_gene(promoter!1) @ 1.43e-5,0.02
+'2.b.iii +Gpa1' -> Gpa1(ste2,ste4,nuc~GDP) @ 0.33
+'2.b.iii +Gpa1 Ref1' Gpa1_gene(promoter!1),Ste12(dig1,dig2,mapk,dna!1) -> Gpa1_gene(promoter!1),Ste12(dig1,dig2,mapk,dna!1),Gpa1(ste2,ste4,nuc~GDP) @ 1
+'2.b.iii -Gpa1' Gpa1() -> @ 2.3e-4
+'2.b.iv +Sst2' -> Sst2(ste2,mapk,S539~u) @ 0.52
+'2.b.iv +Sst2 Ref1' Ste12(dig1,dig2,mapk,dna!1),Sst2_gene(promoter!1) -> Ste12(dig1,dig2,mapk,dna!1),Sst2_gene(promoter!1),Sst2(ste2,mapk,S539~u) @ 1.0
+'2.b.iv -Sst2' Sst2() -> @ 0
+'2.b.iv -Sst2 Ref1' Sst2(S539~u) -> @ 2.6e-4
+'2.b.iv -Sst2 Ref2' Sst2(S539~p) -> @ 3.9e-4
+'2.b.iv Sst2...Fus3' Fus3(dock!1),Sst2(S539,mapk!1) -> Fus3(dock),Sst2(S539,mapk) @ 0
+'2.b.iv Sst2...Fus3 Ref1' Fus3(dock!1,T180~u,Y182~u),Sst2(S539,mapk!1) -> Fus3(dock,T180~u,Y182~u),Sst2(S539,mapk) @ 1.0
+'2.b.iv Sst2...Fus3 Ref2' Fus3(dock!1,T180~p,Y182~u),Sst2(S539,mapk!1) -> Fus3(dock,T180~p,Y182~u),Sst2(S539,mapk) @ 0.5
+'2.b.iv Sst2...Fus3 Ref3' Fus3(dock!1,T180~u,Y182~p),Sst2(S539,mapk!1) -> Fus3(dock,T180~u,Y182~p),Sst2(S539,mapk) @ 0.5
+'2.b.iv Sst2...Fus3 Ref4' Fus3(dock!1,T180~p,Y182~p),Sst2(S539,mapk!1) -> Fus3(dock,T180~p,Y182~p),Sst2(S539,mapk) @ 0.25
+'2.b.iv Sst2...Kss1' Kss1(dock!1),Sst2(S539,mapk!1) -> Kss1(dock),Sst2(S539,mapk) @ 0
+'2.b.iv Sst2...Kss1 Ref1' Sst2(S539,mapk!1),Kss1(dock!1,T183~u,Y185~u) -> Sst2(S539,mapk),Kss1(dock,T183~u,Y185~u) @ 1.0
+'2.b.iv Sst2...Kss1 Ref2' Sst2(S539,mapk!1),Kss1(dock!1,T183~p,Y185~u) -> Sst2(S539,mapk),Kss1(dock,T183~p,Y185~u) @ 0.5
+'2.b.iv Sst2...Kss1 Ref3' Sst2(S539,mapk!1),Kss1(dock!1,Y185~p,T183~u) -> Sst2(S539,mapk),Kss1(dock,Y185~p,T183~u) @ 0.5
+'2.b.iv Sst2...Kss1 Ref4' Sst2(S539,mapk!1),Kss1(dock!1,T183~p,Y185~p) -> Sst2(S539,mapk),Kss1(dock,T183~p,Y185~p) @ 0.25
+'2.b.iv Sst2.Fus3' Fus3(dock),Sst2(S539,mapk) -> Fus3(dock!1),Sst2(S539,mapk!1) @ 5.73e-5
+'2.b.iv Sst2.Kss1' Kss1(dock),Sst2(mapk,S539) -> Kss1(dock!1),Sst2(mapk!1,S539) @ 5.73e-5
+'2.b.iv Sst2@S539_p...Fus3' Sst2(mapk!1,S539~u),Fus3(dock!1) -> Sst2(mapk,S539~p),Fus3(dock) @ 0
+'2.b.iv Sst2@S539_p...Fus3 Ref1' Fus3(dock!1,Y182~u,T180~u),Sst2(mapk!1,S539~u) -> Fus3(dock,Y182~u,T180~u),Sst2(mapk,S539~p) @ 1.0e-3
+'2.b.iv Sst2@S539_p...Fus3 Ref2' Fus3(dock!1,Y182~u,T180~p),Sst2(mapk!1,S539~u) -> Fus3(dock,Y182~u,T180~p),Sst2(mapk,S539~p) @ 0.1
+'2.b.iv Sst2@S539_p...Fus3 Ref3' Fus3(dock!1,Y182~p,T180~u),Sst2(mapk!1,S539~u) -> Fus3(dock,Y182~p,T180~u),Sst2(mapk,S539~p) @ 0.1
+'2.b.iv Sst2@S539_p...Fus3 Ref4' Fus3(dock!1,Y182~p,T180~p),Sst2(mapk!1,S539~u) -> Fus3(dock,Y182~p,T180~p),Sst2(mapk,S539~p) @ 1.0
+'2.b.iv Sst2@S539_p...Kss1' Sst2(mapk!1,S539~u),Kss1(dock!1) -> Sst2(mapk,S539~p),Kss1(dock) @ 0
+'2.b.iv Sst2@S539_p...Kss1 Ref1' Sst2(mapk!1,S539~u),Kss1(dock!1,Y185~u,T183~u) -> Sst2(mapk,S539~p),Kss1(dock,Y185~u,T183~u) @ 1.0e-3
+'2.b.iv Sst2@S539_p...Kss1 Ref2' Sst2(mapk!1,S539~u),Kss1(dock!1,Y185~u,T183~p) -> Sst2(mapk,S539~p),Kss1(dock,Y185~u,T183~p) @ 0.1
+'2.b.iv Sst2@S539_p...Kss1 Ref3' Sst2(mapk!1,S539~u),Kss1(dock!1,Y185~p,T183~u) -> Sst2(mapk,S539~p),Kss1(dock,Y185~p,T183~u) @ 0.1
+'2.b.iv Sst2@S539_p...Kss1 Ref4' Sst2(mapk!1,S539~u),Kss1(dock!1,T183~p,Y185~p) -> Sst2(mapk,S539~p),Kss1(dock,T183~p,Y185~p) @ 1.0
+'2.b.iv Ste12.Sst2_gene' Ste12(dna),Sst2_gene(promoter) <-> Ste12(dna!1),Sst2_gene(promoter!1) @ 1.43e-5,0.02
+'3.a.i Ste4.Ste20' Ste4(gpa1,ste20),Ste20(ste4) <-> Ste4(gpa1,ste20!1),Ste20(ste4!1) @ 5.73e-5,0.1
+'3.a.ii Ste4...Ste5' Ste5(ste4!1),Ste4(ste5!1) -> Ste5(ste4),Ste4(ste5) @ 0.05
+'3.a.ii Ste4...Ste5 Ref1' Ste4(ste5!1),Ste5(ste4!1,ste5!2),Ste5(ste5!2,ste4) -> Ste4(ste5),Ste5(ste4,ste5!2),Ste5(ste5!2,ste4) @ 0.005
+'3.a.ii Ste4...Ste5 Ref2' Ste4(ste5!1),Ste4(ste5!3),Ste5(ste5!2,ste4!3),Ste5(ste4!1,ste5!2) -> Ste4(ste5),Ste4(ste5!3),Ste5(ste5!2,ste4!3),Ste5(ste4,ste5!2) @ 0.005
+'3.a.ii Ste4.Ste5' Ste5(ste4),Ste4(ste5,gpa1) -> Ste5(ste4!1),Ste4(ste5!1,gpa1) @ 5.73e-5
+'3.a.ii Ste4.Ste5 Ref1' Ste5(ste4,ste5!1),Ste5(ste4!2,ste5!1),Ste4(ste5,gpa1),Ste4(ste5!2) -> Ste5(ste4!3,ste5!1),Ste5(ste4!2,ste5!1),Ste4(ste5!3,gpa1),Ste4(ste5!2) @ 1.15e-3
+'3.a.ii Ste5...Ste5' Ste5(ste5!1),Ste5(ste5!1) -> Ste5(ste5),Ste5(ste5) @ 0.05
+'3.a.ii Ste5...Ste5 Ref1' Ste5(ste5!1,ste4),Ste4(ste5!2),Ste5(ste5!1,ste4!2) -> Ste5(ste5,ste4),Ste4(ste5!1),Ste5(ste5,ste4!1) @ 0.005
+'3.a.ii Ste5...Ste5 Ref2' Ste5(ste5!1,ste4!3),Ste4(ste5!3),Ste5(ste5!1,ste4!2),Ste4(ste5!2) -> Ste5(ste5,ste4!3),Ste4(ste5!3),Ste5(ste5,ste4!2),Ste4(ste5!2) @ 0.0005
+'3.a.ii Ste5.Ste5' Ste5(ste5),Ste5(ste5) -> Ste5(ste5!1),Ste5(ste5!1) @ 5.73e-5
+'3.a.ii Ste5.Ste5 Ref1' Ste5(ste5,ste4!1),Ste4(ste5!1),Ste4(ste5!2),Ste5(ste5,ste4!2) -> Ste5(ste5!3,ste4!1),Ste4(ste5!1),Ste4(ste5!2),Ste5(ste5!3,ste4!2) @ 1.15e-3
+
+
+# Initial Conditions:
+%init: 1 * (Bar1_gene(promoter),Sst2_gene(promoter),Ste2_gene(promoter))
+%init: 0 * (Bar1(pheromone),Fus3(T180~u,Y182~u,dock),Kss1(Y185~u,T183~u,dock))
+%init: 1440 * (Gpa1(nuc~GDP,ste4,ste2))
+%init: 17000 * (Pheromone(ste2))
+%init: 2000 * (Sst2(S539~u,ste2,mapk))
+%init: 6600 * (Ste2(gpa1,sst2,pheromone))
+%init: 4200 * (Ste20(ste4))
+%init: 820 * (Ste4(ste5,gpa1,ste20))
+%init: 560 * (Ste5(ste5,ste4))
+%init: 0 * (Ste12(dig2,dna,mapk,dig1))
+
+# Simulation:
+%obs: 'Free-Gpa1' Gpa1(ste4)
+%obs: 'Free-Ste4' Ste4(gpa1)
+%obs: 'aF-Ste2' Pheromone(ste2!1),Ste2(pheromone!1)
+%obs: 'Ste2_tot' Ste2()
+%obs: 'Gpa1-GTP' Gpa1(nuc~GTP)
+%obs: 'Gpa1_tot' Gpa1()
+%obs: 'Pheromone_tot' Pheromone(ste2)
+%obs: 'Ste5_dimer' Ste5(ste5!1),Ste5(ste5!1)
+%obs: 'Ste4-Ste5-Ste5' Ste5(ste5!2,ste4!1),Ste5(ste5!2,ste4),Ste4(ste5!1)
+%obs: 'Ste4-Ste5' Ste4(ste5!1),Ste5(ste5,ste4!1)
+%obs: 'Ste4-Ste5-Ste5-Ste4' Ste4(ste5!1),Ste4(ste5!2),Ste5(ste4!2,ste5!3),Ste5(ste4!1,ste5!3)
+%obs: 'Ste5-alone' Ste5(ste5,ste4)
+%obs: 'Ste5 no dimer' Ste5(ste5)
+%obs: 'not good' Ste5(ste4!2),Ste4(gpa1!1,ste5!2),Gpa1(ste4!1)
+%obs: 'Ste4-Ste20' Ste4(ste20!1),Ste20(ste4!1)
+%obs: 'Ste20-Ste4-Ste5' Ste20(ste4!2),Ste5(ste4!1),Ste4(ste20!2,ste5!1)
+
+# Stories:
+%story: '2.a.iii Gpa1...Ste4 Ref2'
+%story: '2.a.iii Gpa1...Ste4 Ref4'
+
