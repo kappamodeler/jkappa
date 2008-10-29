@@ -18,7 +18,9 @@ public class StatsComputer {
 	// private static final String TEST = "degradation-deg-free";
 	// private static final String TEST = "degradation-deg-bnd";
 	// private static final String TEST = "exponentielle";
-	private static final String TEST = "brightberl";
+	// private static final String TEST = "brightberl";
+	// private static final String TEST = "calcium2";
+	private static final String TEST = "TyThomson-ReceptorAndGProtein";
 	
 	private static final int NUMBER_OF_FILES = 50;
 

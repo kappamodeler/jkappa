@@ -47,9 +47,11 @@ Example files:
 	SIA_2007_03_23-global.ka           copied from demos/SIA_2007_03_23/global.ka
 	                                   nice curve --time 20
 
-    TyThomson-ReceptorAndGProtein.ka   Part of Ty Thomson's yeast model. Manually edited
+    TyThomson-ReceptorAndGProtein.ka   part of Ty Thomson's yeast model. Manually edited
 	                                   run with --time 200
     
+	calcium2.ka                        copied from kappa_models/models/calcium2/calcium2.ka
+	                                   steady state at --time 0.5
 
 
 Options for simulator:
