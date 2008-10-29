@@ -12,8 +12,10 @@ import java.util.List;
 public class StatsComputer {
 
 	// public static final String FILE = "results/degradation-deg-all/simplx-{0}-curves";
-	public static final String FILE = "results/KPT_study/simplx-{0}-curves";
+	// public static final String FILE = "results/KPT_study/simplx-{0}-curves";
+	private static final String FILE = "results/degradation-deg-free/simplx-{0}-curves";
 
+	private static final int NUMBER_OF_FILES = 50;
 
 	private static int number_of_observables = -1;
 	private static List<Double> timeStamps = null;
@@ -68,7 +70,7 @@ public class StatsComputer {
 	
 	
 	public static void main(String[] args) throws IOException {
-		for (int fileCounter= 0; fileCounter < 50;  fileCounter++) {
+		for (int fileCounter= 0; fileCounter < NUMBER_OF_FILES;  fileCounter++) {
 			String filename = MessageFormat.format(FILE, String.format("%03d", fileCounter));
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			

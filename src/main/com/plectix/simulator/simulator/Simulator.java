@@ -325,7 +325,8 @@ public class Simulator {
 				.getSimulationData().getRunningMetrics();
 
 		try {
-			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
+			// for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {  // everything is backward with OCaml!
+			for (int observable_num = number_of_observables-1; observable_num >= 0; observable_num--) {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(model
 						.getSimulationData().getTmpSessionName()
 						+ "-" + observable_num));
