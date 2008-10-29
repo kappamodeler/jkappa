@@ -133,13 +133,37 @@ public class CXMLWriter {
 			simplxSession.appendChild(snapshot);
 		}
 
+		int obsCountTimeListSize = obs.getCountTimeList().size();
+
 		Element simulation = doc.createElement("Simulation");
-		simulation.setAttribute("TotalEvents", Integer.toString(obs
-				.getCountTimeList().size()));
+		simulation.setAttribute("TotalEvents", Integer
+				.toString(obsCountTimeListSize));
 		simulation.setAttribute("TotalTime", Double.toString(SimulationMain
 				.getSimulationManager().getSimulationData().getTimeLength()));
-		simulation.setAttribute("InitTime", "0");
-		simulation.setAttribute("TimeSample", "0.01");
+		simulation.setAttribute("InitTime", SimulationMain
+				.getSimulationManager().getSimulationData().getIntialTime()
+				.toString());
+
+		Double timeSampleMin = 0.;
+		double timeNext = 0.;
+		double fullTime = obs.getCountTimeList().get(obsCountTimeListSize - 1);
+		if (SimulationMain.getSimulationManager().getSimulationData()
+				.getIntialTime() > 0.0) {
+			timeNext = SimulationMain.getSimulationManager()
+					.getSimulationData().getIntialTime();
+			fullTime = fullTime - timeNext;
+		} else
+			timeNext = timeSampleMin;
+
+		if (SimulationMain.getSimulationManager().getSimulationData()
+				.getPoints() != -1)
+			timeSampleMin = fullTime
+					/ SimulationMain.getSimulationManager().getSimulationData()
+							.getPoints();
+		else
+			timeSampleMin = fullTime / 1000;
+
+		simulation.setAttribute("TimeSample", timeSampleMin.toString());
 		simplxSession.appendChild(simulation);
 
 		for (int i = obs.getConnectedComponentList().size() - 1; i >= 0; i--) {
@@ -155,12 +179,10 @@ public class CXMLWriter {
 		}
 		Element csv = doc.createElement("CSV");
 		CDATASection cdata = doc.createCDATASection("\n");
-		double timeSampleMin = obs.getCountTimeList().get(
-				obs.getCountTimeList().size() - 1) / 1000;
 
 		// appendData(obs, cdata, 0);
-		double timeNext = timeSampleMin;
-		for (int i = 0; i < obs.getCountTimeList().size() - 1; i++) {
+
+		for (int i = 0; i < obsCountTimeListSize - 1; i++) {
 			if (obs.getCountTimeList().get(i) > timeNext) {
 				timeNext += timeSampleMin;
 				appendData(obs, cdata, i);
@@ -168,7 +190,7 @@ public class CXMLWriter {
 
 		}
 
-		appendData(obs, cdata, obs.getCountTimeList().size() - 1);
+		appendData(obs, cdata, obsCountTimeListSize - 1);
 
 		csv.appendChild(cdata);
 		simulation.appendChild(csv);

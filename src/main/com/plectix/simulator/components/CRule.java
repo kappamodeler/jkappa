@@ -74,7 +74,12 @@ public class CRule {
 		for (CConnectedComponent cc : this.leftHandSide) {
 			cc.initSpanningTreeMap();
 		}
-		this.ruleRate = ruleRate;
+		if (ruleRate == Double.MAX_VALUE) {
+			this.infinityRate = true;
+			this.ruleRate = 1;
+		} else
+			this.ruleRate = ruleRate;
+
 		this.name = name;
 		this.ruleID = ruleID;
 		calculateAutomorphismsNumber();
@@ -235,7 +240,7 @@ public class CRule {
 
 	private final boolean isActivated(List<CAgent> agentsFromAnotherRules) {
 		for (CAgent agent : agentsFromAnotherRules) {
-			if (this.rightHandSide!=null && checkRulesNullAgents(agent))
+			if (this.rightHandSide != null && checkRulesNullAgents(agent))
 				return true;
 			for (CSite site : agent.getSites()) {
 				for (CSite changedSite : changedSites) {
@@ -287,9 +292,10 @@ public class CRule {
 
 	private boolean checkRulesNullAgents(CAgent agent) {
 		for (CConnectedComponent cc : this.getRightHandSide())
-		for (CAgent agentFromRule : cc.getAgents())
-			if ((agent.equals(agentFromRule))&& (agentFromRule.getSites().size()==0))
-				return true;
+			for (CAgent agentFromRule : cc.getAgents())
+				if ((agent.equals(agentFromRule))
+						&& (agentFromRule.getSites().size() == 0))
+					return true;
 		return false;
 	}
 
@@ -588,18 +594,18 @@ public class CRule {
 								CLinkState.STATUS_LINK_FREE);
 					}
 				}
-				
-				agent.EMPTY_SITE.removeInjectionsFromCCToSite(injection);//removeInjectionFromLift(injection);
+
+				agent.EMPTY_SITE.removeInjectionsFromCCToSite(injection);
 				for (CSite site : agent.getSites()) {
 					site.removeInjectionsFromCCToSite(injection);
 					site.getLift().clear();
 				}
-/*				for (CSite site : injection.getSiteList()) {
-					site.removeInjectionsFromCCToSite(injection);
-					site.getLift().clear();
-				}
-*/				injection.getConnectedComponent().getInjectionsList().remove(
-						injection);
+				/*
+				 * for (CSite site : injection.getSiteList()) {
+				 * site.removeInjectionsFromCCToSite(injection);
+				 * site.getLift().clear(); }
+				 */injection.getConnectedComponent().getInjectionsList()
+						.remove(injection);
 
 				((CSolution) SimulationMain.getSimulationManager()
 						.getSimulationData().getSolution()).removeAgent(agent);

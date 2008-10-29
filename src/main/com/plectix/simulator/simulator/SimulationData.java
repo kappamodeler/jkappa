@@ -21,7 +21,10 @@ public class SimulationData {
 	private List<CPerturbation> perturbations;
 
 	private CObservables observables = new CObservables();
-	private double intialTime;
+	private Double intialTime = 0.0;
+
+	private Double rescale = 1.0;
+	private Integer points = -1;
 	private double timeLength = 0;
 	private int seed = 0;
 	private String xmlSessionName = "simplx.xml";
@@ -220,5 +223,32 @@ public class SimulationData {
 
 	public final void setActivationMap(boolean activationMap) {
 		this.activationMap = activationMap;
+	}
+
+	public final Double getIntialTime() {
+		return intialTime;
+	}
+
+	public final void setIntialTime(double intialTime) {
+		this.intialTime = intialTime;
+	}
+
+	public final Double getRescale() {
+		return rescale;
+	}
+
+	public final void setRescale(double rescale) {
+		if ((rescale > 10.0) || (rescale < 0.10))
+			this.rescale = 1.0;
+		else
+			this.rescale = rescale;
+	}
+
+	public final Integer getPoints() {
+		return points;
+	}
+
+	public final void setPoints(int points) {
+		this.points = points;
 	}
 }

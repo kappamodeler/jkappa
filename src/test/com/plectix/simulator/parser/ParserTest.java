@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CDataString;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.NameDictionary;
@@ -18,8 +19,8 @@ public class ParserTest extends TestCase {
 	public void testParseRulesLine(String line) throws ParseErrorException {
 		Parser parser = new Parser();
 
-		List<String> listRules = new ArrayList<String>();
-		listRules.add(line);
+		List<CDataString> listRules = new ArrayList<CDataString>();
+		listRules.add(new CDataString(0, line));
 		parser.createRules(listRules);
 	}
 
@@ -42,67 +43,67 @@ public class ParserTest extends TestCase {
 		} catch (ParseErrorException e) {
 			fail("Should throw an exception!");
 		}
-		
+
 		try {
 			testParseRulesLine("R(l,r),E(r) <-> R(l!1,r),E(r!1) @ 1.0,3");
 		} catch (ParseErrorException e) {
 			fail("Should throw an exception!");
 		}
-		
+
 		try {
 			testParseRulesLine("R(l!_,r),R(l!_,r) -> R(l!_,r!1),R(l!_,r!1) @ 1.0");
 		} catch (ParseErrorException e) {
 			fail("Should throw an exception!");
 		}
-		
+
 		try {
 			testParseRulesLine("R(r!1),R(r!1) -> R(r),R(r) @ 1.0");
 		} catch (ParseErrorException e) {
 			fail("Should throw an exception!");
 		}
-		
+
 		try {
 			testParseRulesLine("'Grb_Shc' Sh(Y7~p),G(a) <-> Sh(Y7~p!1),G(a!1) @ 1.0,3");
 		} catch (ParseErrorException e) {
 			fail("Should throw an exception!");
 		}
-		
+
 		try {
 			testParseRulesLine("'Grb_R' R(Y68~p),G(a) <-> R(Y68~p!1),G(a!1) @ 1.0,3");
 		} catch (ParseErrorException e) {
 			fail("Should throw an exception!");
 		}
-		
+
 		try {
 			testParseRulesLine("So(d),G(b) <-> So(d!1),G(b!1) @ 1.0,3");
 		} catch (ParseErrorException e) {
 			fail("Should throw an exception!");
 		}
-		
+
 		try {
 			testParseRulesLine("'Shc_R' R(Y48~p),Sh(pi) <-> R(Y48~p!1),Sh(pi!1) @ 1.0,3");
 		} catch (ParseErrorException e) {
 			fail("Should throw an exception!");
 		}
-		
+
 		try {
 			testParseRulesLine("R(Y48~p),Sh(pi) <-> R(Y48~p?) @ 1.0,3");
 		} catch (ParseErrorException e) {
 			fail("Should throw an exception!");
 		}
-		
+
 		try {
 			testParseRulesLine("A(X,) <-> A(X) @ 1.0,3");
 			fail("Should throw an exception!");
 		} catch (ParseErrorException e) {
 		}
-		
+
 		try {
 			testParseRulesLine("A(), <-> A() @ 1.0,3");
 			fail("Should throw an exception!");
 		} catch (ParseErrorException e) {
 		}
-		
+
 		try {
 			testParseRulesLine("A(X~) <-> A() @ 1.0,3");
 			fail("Should throw an exception!");
@@ -114,25 +115,25 @@ public class ParserTest extends TestCase {
 			fail("Should throw an exception!");
 		} catch (ParseErrorException e) {
 		}
-		
+
 		try {
 			testParseRulesLine("A( <-> A() @ 1.0,3");
 			fail("Should throw an exception!");
 		} catch (ParseErrorException e) {
 		}
-		
+
 		try {
 			testParseRulesLine("A(x~u~p) <-> A() @ 1.0,3");
 			fail("Should throw an exception!");
 		} catch (ParseErrorException e) {
 		}
-		
+
 		try {
 			testParseRulesLine("A(x!1!2) <-> A() @ 1.0,3");
 			fail("Should throw an exception!");
 		} catch (ParseErrorException e) {
 		}
-		
+
 		try {
 			testParseRulesLine("A <-> A() @ 1.0,3");
 			fail("Should throw an exception!");

@@ -6,25 +6,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.plectix.simulator.components.CDataString;
+
 // get input strings from input file (or something else)  
 // i.e. makes lists of strings with different prefix such as 
 // %rule, %init, %obs
 
 public class DataReading {
 
-	private List<String> rules = new ArrayList<String>();
+	private List<CDataString> rules = new ArrayList<CDataString>();
 	// rules in the input
 
-	private List<String> observables = new ArrayList<String>();
+	private List<CDataString> observables = new ArrayList<CDataString>();
 	// observables in the input
 
-	private List<String> story = new ArrayList<String>();
+	private List<CDataString> story = new ArrayList<CDataString>();
 	// story in the input
 
-	private List<String> inits = new ArrayList<String>();
+	private List<CDataString> inits = new ArrayList<CDataString>();
 	// init conditions in the input
 
-	private List<String> mods = new ArrayList<String>();
+	private List<CDataString> mods = new ArrayList<CDataString>();
 	// mod conditions in the input
 
 	private String filePatch = null; // "C:/workspace/Example.tmp";
@@ -44,25 +46,35 @@ public class DataReading {
 			BufferedReader in = new BufferedReader(new FileReader(filePatch));
 			String line;
 
+			int index = 0;
 			while ((line = in.readLine()) != null) {
-
+				index++;
 				if (line.startsWith("#"))
 					continue;
+				if (line.indexOf("#") != -1)
+					line = line.substring(0, line.indexOf("#"));
+				String nextLine;
+				if (line.indexOf("\\") != -1) {
+					nextLine = in.readLine().trim();
+					line = line.replace("\\", "");
+					line = line + nextLine;
+				}
 
 				if (line.startsWith("%mod"))
-					mods.add(new String(line.substring(STRING_MOD_PREFIX, line
-							.length())));
+					mods.add(new CDataString(index, new String(line.substring(
+							STRING_MOD_PREFIX, line.length()))));
 				else if (line.startsWith("%story"))
-					story.add(new String(line.substring(STRING_STORIFY_PREFIX,
-							line.length())));
+					story.add(new CDataString(index, new String(line.substring(
+							STRING_STORIFY_PREFIX, line.length()))));
 				else if (line.startsWith("%obs"))
-					observables.add(new String(line.substring(
-							STRING_SIMULATION_PREFIX, line.length())));
+					observables.add(new CDataString(index,
+							new String(line.substring(STRING_SIMULATION_PREFIX,
+									line.length()))));
 				else if (line.startsWith("%init")) {
-					inits.add(new String(line.substring(
-							STRING_INITIAL_CONDITIONS_PREFIX, line.length())));
+					inits.add(new CDataString(index, new String(line.substring(
+							STRING_INITIAL_CONDITIONS_PREFIX, line.length()))));
 				} else if (line.trim().length() > 0)
-					rules.add(new String(line));
+					rules.add(new CDataString(index, new String(line)));
 
 			}
 			in.close();
@@ -77,23 +89,23 @@ public class DataReading {
 			throw new IOException("There are no inits in the input data");
 	}
 
-	public final List<String> getInits() {
+	public final List<CDataString> getInits() {
 		return inits;
 	}
 
-	public final List<String> getObservables() {
+	public final List<CDataString> getObservables() {
 		return observables;
 	}
 
-	public final List<String> getRules() {
+	public final List<CDataString> getRules() {
 		return rules;
 	}
 
-	public List<String> getStory() {
+	public List<CDataString> getStory() {
 		return story;
 	}
 
-	public final List<String> getMods() {
+	public final List<CDataString> getMods() {
 		return mods;
 	}
 

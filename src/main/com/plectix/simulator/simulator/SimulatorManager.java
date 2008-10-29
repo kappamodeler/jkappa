@@ -100,7 +100,7 @@ public class SimulatorManager {
 	
 	
 	public final CRule buildRule(List<CAgent> left, List<CAgent> right,
-			String name, Double activity, int ruleID) {
+			String name, double activity, int ruleID) {
 		return new CRule(buildConnectedComponents(left),
 				buildConnectedComponents(right), name, activity, ruleID);
 	}

@@ -6,9 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.junit.internal.runners.OldTestClassRunner;
+
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.CDataString;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CObservables;
@@ -66,6 +69,8 @@ public class Parser {
 
 	private double perturbationRate;
 
+	private ParserExceptionHandler myErrorHandler = new ParserExceptionHandler();
+
 	private class DataString {
 		private String st1 = null;
 		private String st2 = null;
@@ -117,13 +122,13 @@ public class Parser {
 				.setPerturbations(perturbations);
 	}
 
-	private final List<CPerturbation> createPertubations(List<String> mods)
+	private final List<CPerturbation> createPertubations(List<CDataString> mods)
 			throws ParseErrorException {
 		List<CPerturbation> perturbations = new ArrayList<CPerturbation>();
 		int pertubationID = 0;
 
-		for (String perturbationStr : mods) {
-			String st = perturbationStr;
+		for (CDataString perturbationStr : mods) {
+			String st = perturbationStr.getLine();
 			st = st.trim();
 
 			if (st.indexOf("$T") == 0) {
@@ -143,17 +148,17 @@ public class Parser {
 							CPerturbation.TYPE_TIME, perturbationRate, rule,
 							greater));
 				} else
-					throw new ParseErrorException("Error in Pertubation: "
-							+ perturbationStr);
+					throw new ParseErrorException(myErrorHandler
+							.formMessage(perturbationStr));
 			} else {
-				chechString("[", st, perturbationStr);
+				checkString("[", st, perturbationStr);
 
 				st = st.substring(st.indexOf("[") + 1).trim();
-				chechString("'", st, perturbationStr);
+				checkString("'", st, perturbationStr);
 				st = st.substring(st.indexOf("'") + 1).trim();
 				String obsName = getName(st);
 
-				chechString("]", st, perturbationStr);
+				checkString("]", st, perturbationStr);
 				st = st.substring(st.indexOf("]") + 1).trim();
 
 				boolean greater = getGreater(st, perturbationStr);
@@ -170,7 +175,7 @@ public class Parser {
 					}
 				}
 
-				chechString("do", st, perturbationStr);
+				checkString("do", st, perturbationStr);
 				String pertStr = st.substring(st.indexOf("do") + 2).trim();
 				this.perturbationRate = -1.;
 				CRule rule = getGreaterRule(pertStr, perturbationStr);
@@ -196,9 +201,9 @@ public class Parser {
 									.add(new Double(Double.valueOf(parameter)));
 							item = item.substring(item.indexOf("*") + 1).trim();
 
-							chechString("[", item, perturbationStr);
+							checkString("[", item, perturbationStr);
 							item = item.substring(item.indexOf("[") + 1).trim();
-							chechString("'", item, perturbationStr);
+							checkString("'", item, perturbationStr);
 							item = item.substring(item.indexOf("'") + 1).trim();
 
 							obsName = getName(item);
@@ -236,16 +241,16 @@ public class Parser {
 		return perturbations;
 	}
 
-	private final CRule getGreaterRule(String st, String perturbationStr)
+	private final CRule getGreaterRule(String st, CDataString perturbationStr)
 			throws ParseErrorException {
-		chechString("'", st, perturbationStr);
+		checkString("'", st, perturbationStr);
 		st = st.substring(st.indexOf("'") + 1).trim();
-		chechString("'", st, perturbationStr);
+		checkString("'", st, perturbationStr);
 		String ruleName = st.substring(0, st.indexOf("'")).trim();
 
 		st = st.replace("[ 	]", "");
 		int index = st.indexOf(":=");
-		chechString(":=", st, perturbationStr);
+		checkString(":=", st, perturbationStr);
 		st = st.substring(index + 2);
 
 		this.perturbationRate = Double.valueOf(st);
@@ -258,7 +263,7 @@ public class Parser {
 		return null;
 	}
 
-	private final boolean getGreater(String st, String perturbationStr)
+	private final boolean getGreater(String st, CDataString perturbationStr)
 			throws ParseErrorException {
 		if (st.indexOf(">") == 0) {
 			return true;
@@ -266,8 +271,8 @@ public class Parser {
 		} else if (st.indexOf("<") == 0) {
 			return false;
 		} else
-			throw new ParseErrorException("Error in Pertubation: "
-					+ perturbationStr);
+			throw new ParseErrorException(myErrorHandler
+					.formMessage(perturbationStr));
 	}
 
 	private final String getName(String line) {
@@ -277,45 +282,54 @@ public class Parser {
 		return name;
 	}
 
-	private void chechString(String ch, String st, String perturbationStr)
+	private void checkString(String ch, String st, CDataString perturbationStr)
 			throws ParseErrorException {
 		int index = st.indexOf(ch);
 		if (index == -1)
-			throw new ParseErrorException("Error in Pertubation: "
-					+ perturbationStr);
+			throw new ParseErrorException(myErrorHandler
+					.formMessage(perturbationStr));
 	}
 
-	public final List<CRule> createRules(List<String> list)
+	public final List<CRule> createRules(List<CDataString> list)
 			throws ParseErrorException {
 
 		List<CRule> rules = new ArrayList<CRule>();
 		int ruleID = 0;
-		for (String rulesStr : list) {
+		for (CDataString rulesDS : list) {
 
-			Double activity = 1.;
-			Double activity2 = 1.;
+			String rulesStr = rulesDS.getLine();
+			double activity = 1.;
+			double activity2 = 1.;
 			String input = rulesStr;
 			rulesStr = rulesStr.trim();
 			String name = null;
 			if (rulesStr.indexOf("'") != -1) {
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
+				if (rulesStr.indexOf("'") == -1)
+					throw new ParseErrorException(myErrorHandler
+							.formMessage(rulesDS));
 				name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1,
 						rulesStr.length()).trim();
+
 			}
 			int index = rulesStr.lastIndexOf("@");
 			if (index != -1) {
 				try {
 					String activStr = rulesStr.substring(index + 1).trim();
+					String inf = new String(new Double(Double.MAX_VALUE)
+							.toString());
+					activStr = activStr.replaceAll("\\$INF", inf);
 					if (activStr.indexOf(",") != -1) {
 						activity = Double.valueOf(activStr.substring(0,
-								activStr.indexOf(",") - 1));
+								activStr.indexOf(",")));
 						activity2 = Double.valueOf(activStr.substring(activStr
 								.indexOf(",") + 1));
 					} else
 						activity = Double.valueOf(activStr);
 				} catch (Exception e) {
-					throw new ParseErrorException("Error in Rules: " + input);
+					throw new ParseErrorException(myErrorHandler
+							.formMessage(rulesDS));
 				}
 				rulesStr = rulesStr.substring(0, index).trim();
 			}
@@ -336,7 +350,8 @@ public class Parser {
 				if (index == -1) {
 					index = CC_LHS;
 				} else {
-					throw new ParseErrorException("Error in Rules: " + input);
+					throw new ParseErrorException(myErrorHandler
+							.formMessage(rulesDS));
 				}
 			}
 
@@ -347,47 +362,51 @@ public class Parser {
 			String nameOp = null;
 			if (name != null)
 				nameOp = name + "_op";
-			switch (index) {
-			case CC_LHS: {
-				left = parseAgent(result[0].trim());
-				rules.add(SimulationMain.getSimulationManager().buildRule(left,
-						right, name, activity, ruleID));
-				if (typeRule == RULE_TWO_WAY) {
-					ruleID++;
+			try {
+				switch (index) {
+				case CC_LHS: {
+					left = parseAgent(result[0].trim());
 					rules.add(SimulationMain.getSimulationManager().buildRule(
-							right, parseAgent(result[0].trim()), nameOp,
-							activity2, ruleID));
+							left, right, name, activity, ruleID));
+					if (typeRule == RULE_TWO_WAY) {
+						ruleID++;
+						rules.add(SimulationMain.getSimulationManager()
+								.buildRule(right, parseAgent(result[0].trim()),
+										nameOp, activity2, ruleID));
+					}
+					break;
 				}
-				break;
-			}
-			case CC_RHS: {
-				right = parseAgent(result[1].trim());
-				rules.add(SimulationMain.getSimulationManager().buildRule(left,
-						right, name, activity, ruleID));
-				if (typeRule == RULE_TWO_WAY) {
-					ruleID++;
+				case CC_RHS: {
+					right = parseAgent(result[1].trim());
 					rules.add(SimulationMain.getSimulationManager().buildRule(
-							parseAgent(result[1].trim()), left, nameOp,
-							activity2, ruleID));
+							left, right, name, activity, ruleID));
+					if (typeRule == RULE_TWO_WAY) {
+						ruleID++;
+						rules.add(SimulationMain.getSimulationManager()
+								.buildRule(parseAgent(result[1].trim()), left,
+										nameOp, activity2, ruleID));
+					}
+					break;
 				}
-				break;
-			}
-			case CC_ALL: {
-				left = parseAgent(result[0].trim());
-				right = parseAgent(result[1].trim());
-				rules.add(SimulationMain.getSimulationManager().buildRule(left,
-						right, name, activity, ruleID));
-				if (typeRule == RULE_TWO_WAY) {
-					ruleID++;
+				case CC_ALL: {
+					left = parseAgent(result[0].trim());
+					right = parseAgent(result[1].trim());
 					rules.add(SimulationMain.getSimulationManager().buildRule(
-							parseAgent(result[1].trim()),
-							parseAgent(result[0].trim()), nameOp, activity2,
-							ruleID));
+							left, right, name, activity, ruleID));
+					if (typeRule == RULE_TWO_WAY) {
+						ruleID++;
+						rules.add(SimulationMain.getSimulationManager()
+								.buildRule(parseAgent(result[1].trim()),
+										parseAgent(result[0].trim()), nameOp,
+										activity2, ruleID));
+					}
+					break;
 				}
-				break;
+				}
+			} catch (ParseErrorException e) {
+				throw new ParseErrorException(myErrorHandler
+						.formMessage(rulesDS));
 			}
-			}
-
 			ruleID++;
 
 		}
@@ -395,14 +414,15 @@ public class Parser {
 		return rules;
 	}
 
-	private final void createSimData(List<String> list, byte code)
+	private final void createSimData(List<CDataString> list, byte code)
 			throws ParseErrorException {
 		long count;
 		String line;
 		String[] result;
 
 		int obsNameID = 0;
-		for (String item : list) {
+		for (CDataString itemDS : list) {
+			String item = itemDS.getLine();
 			count = 1;
 			result = item.split("\\*");
 			int length = result.length;
@@ -412,8 +432,8 @@ public class Parser {
 				try {
 					count = Long.valueOf(result[0]);
 				} catch (NumberFormatException e) {
-					throw new ParseErrorException(
-							"Error in Initial Conditions.");
+					throw new ParseErrorException(myErrorHandler
+							.formMessage(itemDS));
 				}
 			}
 			line = result[length - 1].trim();
@@ -423,51 +443,58 @@ public class Parser {
 			// parse "count" once "line"
 			SimulationData simulationData = SimulationMain
 					.getSimulationManager().getSimulationData();
-			switch (code) {
-			case CREATE_INIT: {
-				line = line.replaceAll("[ 	]", "");
-				List<CAgent> listAgent = parseAgent(line);
-				simulationData.getSolution().addAgents(listAgent);
-				for (int i = 1; i < count; i++) {
-					simulationData.getSolution().addAgents(
-							cloneAgentsList(listAgent));
+			try {
+				switch (code) {
+				case CREATE_INIT: {
+					line = line.replaceAll("[ 	]", "");
+					List<CAgent> listAgent = parseAgent(line);
+					simulationData.getSolution().addAgents(listAgent);
+					for (int i = 1; i < count; i++) {
+						simulationData.getSolution().addAgents(
+								cloneAgentsList(listAgent));
+					}
+					if (SimulationMain.getSimulationManager()
+							.getSimulationData().isCompile()) {
+						((CSolution) SimulationMain.getSimulationManager()
+								.getSimulationData().getSolution())
+								.checkSolutionLinesAndAdd(line, count);
+
+					}
+					break;
 				}
-				if (SimulationMain.getSimulationManager().getSimulationData()
-						.isCompile()) {
-					((CSolution) SimulationMain.getSimulationManager()
-							.getSimulationData().getSolution())
-							.checkSolutionLinesAndAdd(line, count);
+				case CREATE_STORY: {
+					String name = null;
+					if (line.indexOf("'") != -1) {
+						line = line.substring(line.indexOf("'") + 1);
+						name = line.substring(0, line.indexOf("'")).trim();
+						line = line.substring(line.indexOf("'") + 1,
+								line.length()).trim();
+					}
+					simulationData.addStories(name);
+					break;
+				}
+				case CREATE_OBS: {
+					String name = null;
+					if (line.indexOf("'") != -1) {
+						line = line.substring(line.indexOf("'") + 1);
+						name = line.substring(0, line.indexOf("'")).trim();
+						line = line.substring(line.indexOf("'") + 1,
+								line.length()).trim();
+					}
+					simulationData.getObservables()
+							.addConnectedComponents(
+									SimulationMain.getSimulationManager()
+											.buildConnectedComponents(
+													parseAgent(line)), name,
+									line, obsNameID);
+					obsNameID++;
+					break;
+				}
 
 				}
-				break;
-			}
-			case CREATE_STORY: {
-				String name = null;
-				if (line.indexOf("'") != -1) {
-					line = line.substring(line.indexOf("'") + 1);
-					name = line.substring(0, line.indexOf("'")).trim();
-					line = line.substring(line.indexOf("'") + 1, line.length())
-							.trim();
-				}
-				simulationData.addStories(name);
-				break;
-			}
-			case CREATE_OBS: {
-				String name = null;
-				if (line.indexOf("'") != -1) {
-					line = line.substring(line.indexOf("'") + 1);
-					name = line.substring(0, line.indexOf("'")).trim();
-					line = line.substring(line.indexOf("'") + 1, line.length())
-							.trim();
-				}
-				simulationData.getObservables().addConnectedComponents(
-						SimulationMain.getSimulationManager()
-								.buildConnectedComponents(parseAgent(line)),
-						name, line, obsNameID);
-				obsNameID++;
-				break;
-			}
-
+			} catch (ParseErrorException e) {
+				throw new ParseErrorException(myErrorHandler
+						.formMessage(itemDS));
 			}
 		}
 
@@ -490,7 +517,7 @@ public class Parser {
 	public final List<CAgent> parseAgent(String line)
 			throws ParseErrorException {
 		if (!testLine(line))
-			throw new ParseErrorException("Error in line: " + line);
+			throw new ParseErrorException();
 
 		StringTokenizer st = new StringTokenizer(line, "),");
 		Map<Integer, CSite> map = new HashMap<Integer, CSite>();
@@ -505,8 +532,7 @@ public class Parser {
 				agent = new StringTokenizer(ccomp, "(");
 				ccomp = agent.nextToken(); // Agent name.
 				if (!ccomp.trim().matches(PATTERN_AGENT_SITE))
-					throw new ParseErrorException("Error in 'agent' name: "
-							+ ccomp);
+					throw new ParseErrorException();
 
 				cagent = new CAgent(SimulationMain.getSimulationManager()
 						.getNameDictionary().addName(ccomp));
@@ -520,7 +546,7 @@ public class Parser {
 			}
 		}
 		if (!map.isEmpty())
-			throw new ParseErrorException("Error in 'connected': " + line);
+			throw new ParseErrorException();
 		return listAgent;
 	}
 
@@ -545,7 +571,7 @@ public class Parser {
 		}
 
 		if (!site.trim().matches(PATTERN_AGENT_SITE))
-			throw new ParseErrorException("Error in 'site' name: " + site);
+			throw new ParseErrorException();
 
 		final int siteNameId = SimulationMain.getSimulationManager()
 				.getNameDictionary().addName(site);
@@ -557,7 +583,7 @@ public class Parser {
 						.getNameDictionary().addName(state);
 				csite.setInternalState(new CInternalState(nameId));
 			} else {
-				throw new ParseErrorException("Error in name 'state': " + state);
+				throw new ParseErrorException();
 			}
 
 		if (connect != null)
@@ -582,8 +608,7 @@ public class Parser {
 						map.put(index, csite);
 					}
 				} catch (Exception e) {
-					throw new ParseErrorException("Error in 'connected': "
-							+ connect);
+					throw new ParseErrorException();
 				}
 
 			}
@@ -637,6 +662,7 @@ public class Parser {
 			CAgent newAgent = new CAgent(agent.getNameId());
 			for (CSite site : agent.getSites()) {
 				CSite newSite = new CSite(site.getNameId(), newAgent);
+				newSite.setLinkIndex(site.getLinkIndex());
 				newSite.setInternalState(new CInternalState(site
 						.getInternalState().getNameId()));
 				// newSite.getInternalState().setNameId(

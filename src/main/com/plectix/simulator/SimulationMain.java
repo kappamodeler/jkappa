@@ -34,6 +34,9 @@ public class SimulationMain {
 	private final static String LONG_ITERATIONS_OPTION = "iterations";
 	private final static String LONG_SNAPSHOT_TIME = "set_snapshot_time";
 	private final static String LONG_ACTIVATION_MAP_OPTION = "no_activation_map";
+	private final static String LONG_INIT_OPTION = "init";
+	private final static String LONG_POINTS_OPTION = "points";
+	private final static String LONG_RESCALE_OPTION = "rescale";
 
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
@@ -78,6 +81,13 @@ public class SimulationMain {
 				"Program execution suspends right after initialization phase");
 		cmdLineOptions.addOption(LONG_ACTIVATION_MAP_OPTION, false,
 				"Do not construct activation map");
+		cmdLineOptions.addOption(LONG_INIT_OPTION, true,
+				"Start taking measures (stories) at indicated time");
+		cmdLineOptions.addOption(LONG_RESCALE_OPTION, true,
+				"Rescaling factor (eg. '10.0' or '0.10')");
+		cmdLineOptions.addOption(LONG_POINTS_OPTION, true,
+				"Number of data points per plots");
+
 	}
 
 	public static void main(String[] args) {
@@ -187,7 +197,8 @@ public class SimulationMain {
 			System.err.println("Cannot read file with filename " + fileName);
 			System.exit(1);
 		} catch (ParseErrorException e) {
-			e.printStackTrace();
+			System.err.println("Error in file '" + fileName + "' at line "
+					+ e.getMessage());
 			System.exit(1);
 		}
 	}
@@ -211,37 +222,53 @@ public class SimulationMain {
 									.getOptionValue(LONG_XML_SESSION_NAME_OPTION));
 		}
 
-		if (cmdLineArgs.hasOption(LONG_SEED_OPTION)) {
-			int seed = 0;
-			try {
+		try {
+			if (cmdLineArgs.hasOption(LONG_INIT_OPTION)) {
+				SimulationMain.getSimulationManager().getSimulationData()
+						.setIntialTime(
+								Double.valueOf(cmdLineArgs
+										.getOptionValue(LONG_INIT_OPTION)));
+			}
+			if (cmdLineArgs.hasOption(LONG_POINTS_OPTION)) {
+				SimulationMain.getSimulationManager().getSimulationData()
+						.setPoints(
+								Integer.valueOf(cmdLineArgs
+										.getOptionValue(LONG_POINTS_OPTION)));
+			}
+			if (cmdLineArgs.hasOption(LONG_RESCALE_OPTION)) {
+				SimulationMain.getSimulationManager().getSimulationData()
+						.setRescale(
+								Double.valueOf(cmdLineArgs
+										.getOptionValue(LONG_RESCALE_OPTION)));
+			}
+
+			if (cmdLineArgs.hasOption(LONG_SEED_OPTION)) {
+				int seed = 0;
 				seed = Integer.valueOf(cmdLineArgs
 						.getOptionValue(LONG_SEED_OPTION));
-			} catch (NumberFormatException e) {
-				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp("use --sim [file]", cmdLineOptions);
+				SimulationMain.getSimulationManager().getSimulationData()
+						.setSeed(seed);
 			}
-			SimulationMain.getSimulationManager().getSimulationData().setSeed(
-					seed);
-		}
 
-		if (cmdLineArgs.hasOption(LONG_EVENT_OPTION)) {
-			long event = 0;
-			try {
+			if (cmdLineArgs.hasOption(LONG_EVENT_OPTION)) {
+				long event = 0;
 				event = Long.valueOf(cmdLineArgs
 						.getOptionValue(LONG_EVENT_OPTION));
-			} catch (Exception e) {
-				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp("use --sim [file]", cmdLineOptions);
+				SimulationMain.getSimulationManager().getSimulationData()
+						.setEvent(event);
 			}
-			SimulationMain.getSimulationManager().getSimulationData().setEvent(
-					event);
+
+		} catch (Exception e) {
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("use --sim [file]", cmdLineOptions);
+			System.exit(1);
 		}
 
 		if (cmdLineArgs.hasOption(LONG_RANDOMIZER_JAVA_OPTION)) {
 			simulationManager.getSimulationData().setRandomizer(
 					cmdLineArgs.getOptionValue(LONG_RANDOMIZER_JAVA_OPTION));
 		}
-		
+
 		if (cmdLineArgs.hasOption(LONG_ACTIVATION_MAP_OPTION)) {
 			simulationManager.getSimulationData().setActivationMap(false);
 		}
