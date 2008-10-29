@@ -32,6 +32,9 @@ Example files:
 	large_systems-sorger.ka        copied from kappa_models/models/sorger/sorger.ka     
 	                               big system, long simulation so had to give a very large time: --time 150
 
+	egfr.ka                        copied from kappa_factory/trunk/samples/kappa/egfr.ka 
+	                               steady state at  --time 10
+
 
 Options for simulator:
 	--compile name of the kappa file to compile
