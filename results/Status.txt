@@ -1,0 +1,24 @@
+
+SIA_2007_03_23-global          ????
+TyThomson-ReceptorAndGProtein  ????
+
+Example                        OK
+KPT_study                      OK
+exponentielle                  OK. Can't look at averages. Need to make sure d(ln(x))/dt = 1
+
+SIA_2007_03_23-egfr            ENG-42: Parser Error
+fgf2-fgf                       ENG-42: Parser Error
+egfr                           ENG-42: Parser Error
+contextual_rules-add_rem       ENG-45: Parser Error --> FIXED --> REOPENED
+osc                            ENG-47: Parser Error 
+
+degradation-deg-all            ENG-38: Java simulator doesn't match simplx results
+large_systems-sysepi           ENG-40: Java simulator doesn't match simplx results
+degradation-deg-free           ENG-46: Java simulator doesn't match simplx results 
+degradation-deg-bnd            ENG-46: Java simulator doesn't match simplx results
+invexp                         ENG-48: Java simulator doesn't match simplx results   Can't look at averages. Need to make sure that x = K/t where K is a constant
+brightberl.ka                  ENG-50: Java simulator doesn't match simplx results
+
+
+large_systems-sorger           Needs too much memory!!!
+
