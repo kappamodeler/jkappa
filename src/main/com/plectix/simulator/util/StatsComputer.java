@@ -13,9 +13,10 @@ public class StatsComputer {
 
 	// private static final String FILE = "results/Example/simplx-{0}-curves";
 	// public static final String FILE = "results/KPT_study/simplx-{0}-curves";
-	public static final String FILE = "results/degradation-deg-all/simplx-{0}-curves";
+	// public static final String FILE = "results/degradation-deg-all/simplx-{0}-curves";
 	// private static final String FILE = "results/degradation-deg-free/simplx-{0}-curves";
 	// private static final String FILE = "results/degradation-deg-bnd/simplx-{0}-curves";
+	public static final String FILE = "results/exponentielle/simplx-{0}-curves";
 
 	private static final int NUMBER_OF_FILES = 50;
 

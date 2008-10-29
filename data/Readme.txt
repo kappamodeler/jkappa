@@ -36,7 +36,13 @@ Example files:
 	                               steady state at  --time 10
 
 	osc.ka                         copied from kappa_models/models/oscillateurs/osc.ka
-	                               steady state at  --time 250
+	                               nice oscillations. use --time 250
+
+	exponentielle.ka               copied from kappa_models/models/exponentielle/exponentielle.ka
+	                               nice exponential curve. use --time 10
+
+	invexp.ka                      copied from kappa_models/models/invexp/invexp.ka
+	                               nice inverse curve. use --time 5
 
 
 Options for simulator:
