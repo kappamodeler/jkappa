@@ -1,0 +1,15 @@
+'KaiAC' KaiC(S1,S2~u),KaiA(S1) -> KaiC(S1!1,S2~u),KaiA(S1!1) @ 0.0000016
+'KaiAC*' KaiC(S1!1,S2~u),KaiA(S1!1) -> KaiC(S1!1,S2~p),KaiA(S1!1) @ 0.4
+'KaiAC*2' KaiC(S1,S2~u),KaiA(S1),KaiC(S1!1,S2~p),KaiA(S1!1) -> \
+KaiC(S1!2,S2~p),KaiA(S1!2),KaiC(S1!1,S2~p),KaiA(S1!1) @ 0.00000125
+'KaiAC*B' KaiC(S2~p,S1!1),KaiA(S1!1),KaiB(S1) -> KaiC(S2~p!2,S1!1),KaiA(S1!1),KaiB(S1!2) @ 0.0060
+'KaiA_KaiC*B_op' KaiC(S1!1,S2~p!2),KaiA(S1!1),KaiB(S1!2) -> KaiC(S1,S2~p!2),KaiA(S1),KaiB(S1!2) @ 4.0
+'KaiC*_B_op' KaiC(S2~p!2,S1),KaiB(S1!2) -> KaiC(S2~p,S1),KaiB(S1) @ 0.9
+'KaiC*_op' KaiC(S2~p,S1) -> KaiC(S2~u,S1) @ 0.18
+
+%init: 1800.0 * (KaiA(S1))
+%init: 600.0 * (KaiB(S1))
+%init: 2100.0 * (KaiC(S1,S2~u))
+
+%obs: KaiC(S2~u?)
+%obs: KaiC(S2~p?)

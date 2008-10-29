@@ -35,6 +35,9 @@ Example files:
 	egfr.ka                        copied from kappa_factory/trunk/samples/kappa/egfr.ka 
 	                               steady state at  --time 10
 
+	osc.ka                         copied from kappa_models/models/oscillateurs/osc.ka
+	                               steady state at  --time 250
+
 
 Options for simulator:
 	--compile name of the kappa file to compile
