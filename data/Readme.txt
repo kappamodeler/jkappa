@@ -62,6 +62,11 @@ Example files:
 	debugging-inf.ka                   copied from kappa_models/models/debugging/inf.ka
 	                                   run with --time 100
 									
+	debugging-justin-9-07-2008.ka      copied from kappa_models/models/debugging/justin-9-07-2008.ka
+	                                   long simultion... run with --time 500
+									
+	debugging-link.ka                  copied from kappa_models/models/debugging/link.ka
+	                                   2 observables are always equal... run with --time 50
 
 
 Options for simulator:
