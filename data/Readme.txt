@@ -45,6 +45,7 @@ Example files:
 	                                   nice inverse curve. use --time 5
 
 	SIA_2007_03_23-global.ka           copied from demos/SIA_2007_03_23/global.ka
+	                                   this is also the same file as kappa_models/models/unbounded_entropy/unbounded_entropy.ka
 	                                   nice curve --time 20
 
     TyThomson-ReceptorAndGProtein.ka   part of Ty Thomson's yeast model. Manually edited
@@ -79,6 +80,12 @@ Example files:
 									  
 	debugging-weird.ka                 copied from kappa_models/models/debugging/weird.ka
 	                                   run with --time 10
+
+	sfb.ka                             copied from kappa_factory/trunk/test_models/sfb.ka
+	                                   run with --time 100
+ 
+	will.ka                            copied from kappa_factory/trunk/test_models/will.ka
+	                                   long simulation. very nice oscillations. run with --time 1000
 
 
 Options for simulator:
