@@ -1,0 +1,11 @@
+a(x~u),b(x) -> a(x~p!1),b(x!1)
+a(x~p!_,y),c(x) -> a(x~pp,y!1),c(x!1)
+'end' a(x~pp) -> a(x~u)
+
+%init: 10000 * (a(x~u,y),b(x),c(x))
+
+%obs: a(x~pp?)
+%obs: a(x~p?)
+%obs: a(x~u?)
+
+%story:'end'

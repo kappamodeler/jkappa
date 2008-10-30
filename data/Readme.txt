@@ -87,6 +87,36 @@ Example files:
     will.ka                            copied from kappa_factory/trunk/test_models/will.ka
                                        long simulation. very nice oscillations with some transients. run with --time 1000
 
+    side_effect.ka                     copied from kappa_models/models/side_effect/side_effect.ka
+                                       nice decays. run with --time 10
+
+    scalability-bench-mapk1.ka         copied from research/papers/scalability/bench/mapk1.ka
+                                       run with --time 0.5
+
+    repressilator.ka                   copied from kappa_models/models/repressilator/repressilator.ka 
+                                       interesting curves! run with --time 10000
+
+    non_atomic.ka                      copied from kappa_models/models/QA/non_atomic/na.ka
+                                       run with --time 20
+
+    add_linked_species.ka              copied from kappa_models/models/add_linked_species/add_linked_species.ka 
+                                       run with --time 0.01
+
+    abc2.ka                            copied from kappa_models/models/abc2/abc2.ka
+                                       simulation with perturbation
+                                       run with --time 25 for observing perturbation effects
+                                       run with --time 0.05 for observing initial transients
+
+    MekScaf.ka                         copied from kappa_factory/trunk/samples/kappa/MekScaf.ka
+                                       run with --time 0.02
+
+    eric.ka                            copied from kappa_models/models/eric/eric.ka 
+                                       run with --time 0.002
+
+    half_binding.ka                    copied from kappa_models/models/half_binding/half_binding.ka 
+                                       run with --time 0.05 for initial changes
+                                       run with --time 10 for long term steady state
+
 
 Options for simulator:
 	--compile name of the kappa file to compile
@@ -94,3 +124,4 @@ Options for simulator:
 	--time (infinite): time units of computation
 	--seed Seed the random generator using given integer (same integer will generate the same random number sequence)
 	--xml_session_name Name of the xml file containing results of the current session (default simplx.xml)
+
