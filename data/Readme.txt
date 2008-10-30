@@ -74,6 +74,12 @@ Example files:
 	debugging-semi-link-bug.ka         copied from kappa_models/models/debugging/semi-link-bug.ka
 	                                   run with --time 25
 
+	debugging-walter-fev08.ka          copied from kappa_models/models/debugging/walter-fev08.ka
+	                                   run with --time 25
+									  
+	debugging-weird.ka                 copied from kappa_models/models/debugging/weird.ka
+	                                   run with --time 10
+
 
 Options for simulator:
 	--compile name of the kappa file to compile
