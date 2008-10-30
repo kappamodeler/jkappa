@@ -56,6 +56,13 @@ Example files:
 	debugging-bug_update.ka            copied from kappa_models/models/debugging/bug_update.ka
 	                                   run with --time 10
 
+	debugging-compression.ka           copied from kappa_models/models/debugging/compression.ka
+	                                   long simulation... run with AT LEAST --time 100
+
+	debugging-inf.ka                   copied from kappa_models/models/debugging/inf.ka
+	                                   run with --time 100
+									
+
 
 Options for simulator:
 	--compile name of the kappa file to compile
