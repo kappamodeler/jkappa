@@ -4,6 +4,17 @@ debugging-justin-9-07-2008     ???
 debugging-polymere             ???  Need to look at averages. OCaml has much higher std. Why???
 sfb                            ???
 will                           ???
+side_effect                    ???
+scalability-bench-mapk1        ???  Look at averages
+repressilator                  ???  Interesting curves, Don't know how to compare automatically!
+non_atomic                     ???  Look at averages
+add_linked_species             ???  Look at averages
+abc2                           ???  Perturbation simulation. Need to look at 2 time scales
+MekScaf                        ???  Look at averages
+eric                           ???  Look at averages
+half_binding                   ???  Look at averages AT 2 DIFFERENT TIME SCALES
+easy-egfr                      ???  Look at averages
+erasure                        ???  Look at averages
 
 Example                        OK
 KPT_study                      OK
