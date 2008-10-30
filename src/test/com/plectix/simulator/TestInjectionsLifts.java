@@ -35,7 +35,7 @@ public class TestInjectionsLifts {
 		boolean temporaryFail = false;
 		MessageConstructor mc = new MessageConstructor();
 		
-		for (ObservablesConnectedComponent c : TestInjections.getObservatory()) {
+		for (ObservablesConnectedComponent c : RunInjectionsTests.getObservatory()) {
 			List<CInjection> injectionsList = c.getInjectionsList();
 			for (CInjection injection : injectionsList) {
 				if (!testInjectionLifts(injection)) {

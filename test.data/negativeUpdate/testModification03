@@ -1,0 +1,10 @@
+# Rules:
+
+'Rule_0' A(x~p, y) -> A(x~q, y) @ 1.0
+
+%init: 2 * A(x~p, y)
+%init: 3 * A(x~p!1, y), A(x~p, y!1)
+
+# Simulation:
+
+%obs: '001' A(x~p?)

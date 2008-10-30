@@ -1,0 +1,10 @@
+# Rules:
+
+'Rule_0' A(x!1, y!_), B(k!1, l!_) -> A(x, y!_), B(k, l!_) @ 1.0
+
+%init: 4 * A(x, y!1), B(k!1, l!2), C(i!2)
+%init: 4 * A(x!1, y!2), B(k!1, l!3), C(i!2, j!3)
+
+# Simulation:
+
+%obs: '001' A(x!_)

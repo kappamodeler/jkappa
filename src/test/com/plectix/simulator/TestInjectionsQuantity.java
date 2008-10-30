@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.components.*;
-import com.plectix.simulator.util.QuantityDataParser;
+import com.plectix.simulator.util.InjectionsQuantityDataParser;
 
 import static org.junit.Assert.*;
 
@@ -26,16 +26,15 @@ public class TestInjectionsQuantity {
 	
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		myDataMap = (new QuantityDataParser(
+		myDataMap = (new InjectionsQuantityDataParser(
 			"test.data/InjectionsQuantityData")).parse();
-		Set<String> names = myDataMap.keySet();
-		Object[][] parameters = new Object[names.size()][];
+		LinkedList<Object[]> parameters = new LinkedList<Object[]>();
 		int i = 0;
 		for (String name : myDataMap.keySet()) {
-			parameters[i] = new String[] {name};
+			parameters.add( new String[] {name});
 			i++;
 		}
-		return Collections.unmodifiableList(Arrays.asList(parameters));
+		return Collections.unmodifiableList(parameters);
 	}
 	
 	private void assertWithFailMessage(Object a, Object b, String testId) {
@@ -53,7 +52,7 @@ public class TestInjectionsQuantity {
 	private void createInjectionsList(String ccName) {
 		Integer expectedQuantity = myDataMap.get(ccName);
 		boolean exists = false;
-		for (ObservablesConnectedComponent c : TestInjections.getObservatory()) {
+		for (ObservablesConnectedComponent c : RunInjectionsTests.getObservatory()) {
 			if (ccName.equals(c.getName())) {
 				myCurrentCC = c;
 				exists = true;

@@ -17,6 +17,10 @@ public class MessageConstructor {
 		myMessage.append(value);
 	}
 	
+	public void addComment(String message) {
+		myMessage.append(" (" + message + ")");
+	}
+	
 	public boolean isEmpty() {
 		return myEmpty;
 	}

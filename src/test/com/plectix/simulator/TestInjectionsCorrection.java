@@ -23,7 +23,7 @@ public class TestInjectionsCorrection {
 	@Test
 	public void test0() {
 		MessageConstructor mc = new MessageConstructor();
-		for (ObservablesConnectedComponent c : TestInjections.getObservatory()) {
+		for (ObservablesConnectedComponent c : RunInjectionsTests.getObservatory()) {
 			if (!c.getName().startsWith("q")) {
 				if (!testCC(c)) {
 					mc.addValue(c.getName());

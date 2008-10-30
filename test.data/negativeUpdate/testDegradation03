@@ -1,0 +1,9 @@
+# Rules:
+
+'Rule_0' A(x!_) -> @ 1.0
+
+%init: 5 * A(x!1), A(x, y!1)											
+
+# Simulation:
+
+%obs: '001' A(x?)

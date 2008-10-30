@@ -16,9 +16,10 @@ import com.plectix.simulator.simulator.SimulatorManager;
 @SuiteClasses(value = {
 		TestInjectionsCorrection.class, 
 		TestInjectionsLifts.class,
-		TestInjectionsQuantity.class
+		TestInjectionsQuantity.class,
+		TestInjectionsAgentLinking.class
 	})
-public class TestInjections {
+public class RunInjectionsTests {
 	private static SimulatorManager manager;
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 

@@ -90,6 +90,10 @@ public class SimulationMain {
 
 	}
 
+	public SimulationMain() {
+		instance = this;
+	}
+	
 	public static void main(String[] args) {
 		// Initialize log4j
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
