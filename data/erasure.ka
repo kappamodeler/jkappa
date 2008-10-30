@@ -1,0 +1,9 @@
+# demonstrating local semantics for erasure (as opposed to connected erasure) 
+D(x~u!1) , VIC(x~u!1) -> D(x~u) , D_VIC_deg(x~u) 
+
+%init: 1000 * (D(x~u!0) , VIC(x~u!0,y~u!1) , AUX(x~u!1))
+
+%obs: D(x!_)
+%obs: D_VIC_deg(x~u)
+%obs: VIC(x~u!_)
+%obs: AUX()

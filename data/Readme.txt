@@ -33,6 +33,7 @@ Example files:
                                        big system, long simulation so had to give a very large time: --time 150
 
     egfr.ka                            copied from kappa_factory/trunk/samples/kappa/egfr.ka 
+                                       the same ruleset as SIA_2007_03_23-egfr.ka, just different initial conditions and observables
                                        steady state at  --time 10
 
     osc.ka                             copied from kappa_models/models/oscillateurs/osc.ka
@@ -116,6 +117,12 @@ Example files:
     half_binding.ka                    copied from kappa_models/models/half_binding/half_binding.ka 
                                        run with --time 0.05 for initial changes
                                        run with --time 10 for long term steady state
+
+    easy-egfr.ka                       copied from kappa_models/models/easy/egfr.ka
+                                       run with --time 0.02
+
+    erasure.ka                         copied from kappa_models/models/erasure/erasure.ka
+                                       run with --time 10
 
 
 Options for simulator:
