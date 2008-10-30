@@ -68,6 +68,8 @@ Example files:
 	debugging-link.ka                  copied from kappa_models/models/debugging/link.ka
 	                                   2 observables are always equal... run with --time 50
 
+	debugging-polymere.ka              copied from kappa_models/models/debugging/polymere.ka
+	                                   run with --time 50
 
 Options for simulator:
 	--compile name of the kappa file to compile
