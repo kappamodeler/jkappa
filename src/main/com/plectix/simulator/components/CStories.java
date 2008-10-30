@@ -4,27 +4,57 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.interfaces.IInjection;
 
 public class CStories extends CObservables {
 
 	public static int numberOfSimulations = 10;
 
-	private int ruleID;
-
 	List<List<Integer>> ways;
 	List<List<Integer>> significantWays;
 
+	List<CStory> stories;
+
+	List<CStoryTree> storyTrees;
+	
+	class CStory {
+		private int ruleID;
+		private int frequency;
+
+		public CStory(int ruleID) {
+			this.ruleID = ruleID;
+			this.frequency = 0;
+		}
+	}
+
+	class CStoryTree {
+		private CStory story;
+		private List<List<Integer>> treeList;
+		
+		public CStoryTree(CStory story) {
+			this.story = story;
+			this.treeList = new ArrayList<List<Integer>>();
+		}
+		
+		public void addValueToTree(int indexOfVertex, int value){
+			this.treeList.get(indexOfVertex).add(value);
+		}
+		
+		public void addValueToTree(int value){
+			this.treeList.add(new ArrayList<Integer>());
+			this.treeList.get(treeList.size()-1).add(value);
+		}
+	}
+
+	public void addToStories(List<Integer> ruleIDs) {
+		for (int i = 0; i < ruleIDs.size(); i++) {
+			this.stories.add(new CStory(ruleIDs.get(i)));
+		}
+	}
+
 	public CStories() {
-
-	}
-
-	public CStories(int numberOfSimulations, int ruleID) {
-		this.numberOfSimulations = numberOfSimulations;
-		this.ruleID = ruleID;
-	}
-
-	public CStories(int ruleID) {
-		this.ruleID = ruleID;
+		this.stories = new ArrayList<CStory>();
+		this.storyTrees = new ArrayList<CStoryTree>();
 		ways = new ArrayList<List<Integer>>();
 		for (int i = 0; i < numberOfSimulations; i++)
 			ways.add(new ArrayList<Integer>());
@@ -32,39 +62,75 @@ public class CStories extends CObservables {
 
 	public boolean checkRule(int checkRuleID, int number) {
 		ways.get(number).add(checkRuleID);
-		if (this.ruleID == checkRuleID)
-			return true;
+		for (CStory story : this.stories)
+			if (story.ruleID == checkRuleID)
+				return true;
 		return false;
 	}
 
-	public void handling() {
-		List<List<Integer>> significantWays = new ArrayList<List<Integer>>();
-		for (int i = 0; i < numberOfSimulations; i++) {
-			significantWays.add(getSignificantRules(this.ways.get(i)));
+	private void mergeTrees() {
+		for (CStory story : this.stories) {
+			List<List<Integer>> listOfSWays = getListOfSignificantWaysForCurrentStory(story);
+			this.storyTrees.add(new CStoryTree(story));
 		}
-		this.significantWays = significantWays;
 	}
 
-	// private double
+	private void fillListOfStoryTree(CStoryTree storyTree, List<List<Integer>> listOfSWays){
+		
+		for(int i=0;i<listOfSWays.size();i++){
+			//listOfSWays.get(i)
+			
+		}
+		
+	}
+	
+	private List<List<Integer>> getListOfSignificantWaysForCurrentStory(
+			CStory story) {
+		List<List<Integer>> currentWays = new ArrayList<List<Integer>>();
 
-	private List<Integer> getSignificantRules(List<Integer> ruleWay) {
+		for (int i = this.significantWays.size() - 1; i >= 0; i--) {
+			List<Integer> way = this.significantWays.get(i);
+			if (way.get(way.size() - 1) == story.ruleID)
+				currentWays.add(way);
+		}
+
+		return currentWays;
+	}
+
+	public void handling() {
+		significantWays = new ArrayList<List<Integer>>();
+		for (int i = 0; i < numberOfSimulations; i++) {
+			List<Integer> pathWay = this.ways.get(i);
+			if (isEndOfSomeStory(pathWay.get(pathWay.size() - 1)))
+				significantWays.add(getSignificantRules(pathWay));
+		}
+		// this.significantWays = significantWays;
+	}
+
+	private boolean isEndOfSomeStory(int ruleID) {
+		for (CStory story : this.stories)
+			if (story.ruleID == ruleID)
+				return true;
+		return false;
+	}
+
+	private List<Integer> getSignificantRules(List<Integer> pathWay) {
 		List<Integer> signRules = new ArrayList<Integer>();
-		int k = ruleWay.size();
-		int indexOfCheckingRule = ruleID;
-		signRules.add(indexOfCheckingRule);
+		int k = pathWay.size();
+		int indexOfActivatedRule = pathWay.get(k - 1);// ruleID;
+		signRules.add(indexOfActivatedRule);
 		if (k == 1) {
 			return signRules;
 		}
 
 		int indexOfCurrentRule;
 		for (int i = k - 2; i >= 0; i--) {
-			indexOfCurrentRule = ruleWay.get(i);
-			if (isRuleActivate(indexOfCheckingRule, indexOfCurrentRule)) {
+			indexOfCurrentRule = pathWay.get(i);
+			if (isRuleActivate(indexOfActivatedRule, indexOfCurrentRule)) {
 				if (signRules.contains(indexOfCurrentRule))
-					continue;
+				 continue;
 				signRules.add(indexOfCurrentRule);
-				// indexOfCurrentRule = indexOfCheckingRule;
-				indexOfCheckingRule = indexOfCurrentRule;
+				indexOfActivatedRule = indexOfCurrentRule;
 			}
 		}
 		return signRules;

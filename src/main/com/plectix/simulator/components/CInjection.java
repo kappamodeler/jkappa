@@ -27,6 +27,13 @@ public class CInjection implements IInjection {
 	public CInjection() {
 	}
 
+	public void removeSiteFromSitesList(CSite site){
+		for (CSite siteL : this.sitesList)
+			if (site==siteL){
+				this.sitesList.remove(site);
+				return;}
+	}
+	
 	public void addToChangedSites(CSite site) {
 		if (!(checkSiteExistanceAmongChangedSites(site)))
 			this.changedSites.add(site);

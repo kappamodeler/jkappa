@@ -113,7 +113,7 @@ public class Parser {
 				&& (SimulationMain.getSimulationManager().getSimulationData()
 						.isStorify())) {
 			SimulationMain.getSimulationManager().getSimulationData()
-					.setStories(new ArrayList<CStories>());
+					.setStories(new CStories());
 			createSimData(data.getStory(), CREATE_STORY);
 		} else
 			createSimData(data.getObservables(), CREATE_OBS);
@@ -419,7 +419,6 @@ public class Parser {
 		long count;
 		String line;
 		String[] result;
-
 		int obsNameID = 0;
 		for (CDataString itemDS : list) {
 			String item = itemDS.getLine();

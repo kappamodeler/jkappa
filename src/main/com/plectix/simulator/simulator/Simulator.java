@@ -20,9 +20,11 @@ import javax.xml.transform.TransformerException;
 import org.apache.log4j.Logger;
 
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CLiftElement;
+import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
@@ -87,6 +89,7 @@ public class Simulator {
 			if (rule == null) {
 				isEndRules = true;
 				model.getSimulationData().setTimeLength(currentTime);
+				System.out.println("rule!!!!!!!!!!!");
 				break;
 			}
 			if (LOGGER.isDebugEnabled())
@@ -103,12 +106,15 @@ public class Simulator {
 				rule.applyRule(injectionsList);
 
 				doNegativeUpdate(injectionsList);
-
 				// positive update
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("positive update");
 
 				doPositiveUpdate(rule);
+
+				doPositiveUpdateForDeletedAgents(doNegativeUpdateForDeletedAgents(
+						rule, injectionsList));
+
 			} else {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Clash");
@@ -119,6 +125,7 @@ public class Simulator {
 				addIteration(iteration_num);
 
 		}
+		System.out.println("time!!!!!!!!!!!");
 
 		outToLogger(isEndRules);
 		if (!isIteration)
@@ -134,49 +141,100 @@ public class Simulator {
 					site.removeInjectionsFromCCToSite(injection);
 					site.getLift().clear();
 				}
-				for (CSite site : injection.getSiteList()) {
-					if (!injection.checkSiteExistanceAmongChangedSites(site)) {
-						site.removeInjectionFromLift(injection);
+				if (injection.getChangedSites().size() != 0) {
+					for (CSite site : injection.getSiteList()) {
+						if (!injection
+								.checkSiteExistanceAmongChangedSites(site)) {
+							site.removeInjectionFromLift(injection);
+						}
 					}
+					injection.getConnectedComponent().getInjectionsList()
+							.remove(injection);
 				}
-				injection.getConnectedComponent().getInjectionsList().remove(
-						injection);
 			}
 		}
 	}
 
-	public final void doPositiveUpdate(CRule rule) {
+	public final List<CAgent> doNegativeUpdateForDeletedAgents(CRule rule,
+			List<CInjection> injectionsList) {
+		List<CAgent> freeAgents = new ArrayList<CAgent>();
+		for (CInjection injection : injectionsList) {
+			for (CSite checkedSite : rule.getAgentsConnectedWithDeleted()) {
+				if (!injection.checkSiteExistanceAmongChangedSites(checkedSite)) {
 
-		if (model.getSimulationData().isActivationMap()) {
-			for (CRule rules : rule.getActivatedRule()) {
-				for (CConnectedComponent cc : rules.getLeftHandSide()) {
-					cc.doPositiveUpdate(rule.getRightHandSide());
+					CAgent checkedAgent = checkedSite.getAgentLink();
+					addToAgentList(freeAgents, checkedAgent);
+					for (CLiftElement lift : checkedAgent.EMPTY_SITE.getLift()) {
+						checkedAgent.EMPTY_SITE
+								.removeInjectionsFromCCToSite(lift
+										.getInjection());
+						lift.getInjection().getConnectedComponent()
+								.getInjectionsList()
+								.remove(lift.getInjection());
+					}
+
+					for (CLiftElement lift : checkedSite.getLift()) {
+						checkedSite.removeInjectionsFromCCToSite(lift
+								.getInjection());
+						lift.getInjection().getConnectedComponent()
+								.getInjectionsList()
+								.remove(lift.getInjection());
+					}
 				}
 			}
-
-		} else {
-			for (CRule rules : model.getSimulationData().getRules()) {
-				for (CConnectedComponent cc : rules.getLeftHandSide()) {
-					cc.doPositiveUpdate(rule.getRightHandSide());
-				}
-			}
-
 		}
+		return freeAgents;
+	}
 
-		for (ObservablesConnectedComponent oCC : model.getSimulationData()
-				.getObservables().getConnectedComponentList()) {
+	private final void addToAgentList(List<CAgent> list, CAgent agent) {
+		for (CAgent agentL : list)
+			if (agentL == agent)
+				return;
+		list.add(agent);
+	}
+
+	public final void doPositiveUpdateForDeletedAgents(List<CAgent> agentsList) {
+		for (CAgent agent : agentsList) {
+			for (CRule rule : model.getSimulationData().getRules()) {
+				for (CConnectedComponent cc : rule.getLeftHandSide()) {
+					if (!agent.isAgentHaveLinkToConnectedComponent(cc)) {
+						cc.setInjections(agent);
+					}
+				}
+			}
+			for (ObservablesConnectedComponent obsCC : SimulationMain
+					.getSimulationManager().getSimulationData()
+					.getObservables().getConnectedComponentList()) {
+				if (!agent.isAgentHaveLinkToConnectedComponent(obsCC)) {
+					obsCC.setInjections(agent);
+				}
+			}
+		}
+	}
+
+	private final void positiveUpdate(List<CRule> rulesList,
+			List<ObservablesConnectedComponent> obs, CRule rule) {
+		for (CRule rules : rulesList) {
+			for (CConnectedComponent cc : rules.getLeftHandSide()) {
+				cc.doPositiveUpdate(rule.getRightHandSide());
+			}
+		}
+		for (ObservablesConnectedComponent oCC : obs) {
 			if (((ObservablesConnectedComponent) oCC)
 					.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
 				oCC.doPositiveUpdate(rule.getRightHandSide());
 		}
+	}
 
-		/*
-		 * for (ObservablesConnectedComponent oCC :
-		 * rule.getActivatedObservable()) { if (((ObservablesConnectedComponent)
-		 * oCC) .getMainAutomorphismNumber() ==
-		 * ObservablesConnectedComponent.NO_INDEX)
-		 * oCC.doPositiveUpdate(rule.getRightHandSide()); }
-		 */
+	public final void doPositiveUpdate(CRule rule) {
+		if (model.getSimulationData().isActivationMap()) {
+			positiveUpdate(rule.getActivatedRule(), rule
+					.getActivatedObservable(), rule);
+		} else {
+			positiveUpdate(model.getSimulationData().getRules(), model
+					.getSimulationData().getObservables()
+					.getConnectedComponentList(), rule);
+		}
 
 		model.getSimulationData().getObservables().calculateObs(currentTime);
 	}
@@ -243,45 +301,39 @@ public class Simulator {
 	}
 
 	public final void runStories() {
-		for (CStories story : model.getSimulationData().getStories()) {
-			// int storiesCount = model.getSimulationData().getStories()
-			for (int i = 0; i < CStories.numberOfSimulations; i++) {
-				SimulationMain.getSimulationManager().startTimer();
-				long clash = 0;
-				CRule rule;
-				CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
-						model.getSimulationData().getRules(), model
-								.getSimulationData().getSeed());
-				while (currentTime <= model.getSimulationData().getTimeLength()) {
-					checkPerturbation();
-					rule = ruleProbabilityCalculation.getRandomRule();
+		CStories stories = model.getSimulationData().getStories();
+		for (int i = 0; i < CStories.numberOfSimulations; i++) {
+			SimulationMain.getSimulationManager().startTimer();
+			long clash = 0;
+			CRule rule;
+			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
+					model.getSimulationData().getRules(), model
+							.getSimulationData().getSeed());
+			while (currentTime <= model.getSimulationData().getTimeLength()) {
+				checkPerturbation();
+				rule = ruleProbabilityCalculation.getRandomRule();
 
-					if (rule == null) {
-						model.getSimulationData().setTimeLength(currentTime);
-						break;
-					}
-
-					List<CInjection> injectionsList = ruleProbabilityCalculation
-							.getSomeInjectionList(rule);
-					currentTime += ruleProbabilityCalculation.getTimeValue();
-					if (!isClash(injectionsList)) {
-						if (story.checkRule(rule.getRuleID(), i))
-							break;
-						rule.applyRule(injectionsList);
-						doNegativeUpdate(injectionsList);
-						doPositiveUpdate(rule);
-					} else {
-						clash++;
-					}
+				if (rule == null) {
+					model.getSimulationData().setTimeLength(currentTime);
+					break;
 				}
-				resetSimulation();
+
+				List<CInjection> injectionsList = ruleProbabilityCalculation
+						.getSomeInjectionList(rule);
+				currentTime += ruleProbabilityCalculation.getTimeValue();
+				if (!isClash(injectionsList)) {
+					if (stories.checkRule(rule.getRuleID(), i))
+						break;
+					rule.applyRule(injectionsList);
+					doNegativeUpdate(injectionsList);
+					doPositiveUpdate(rule);
+				} else {
+					clash++;
+				}
 			}
-
-			story.handling();
-			// outputData();
+			resetSimulation();
 		}
-
-		System.out.println();
+		stories.handling();
 	}
 
 	public final void runIterations() {
@@ -325,9 +377,11 @@ public class Simulator {
 				.getSimulationData().getRunningMetrics();
 
 		try {
-			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {  
-				int oCamlObservableNo = number_of_observables - observable_num - 1; // everything is backward with OCaml!
-				BufferedWriter writer = new BufferedWriter(new FileWriter(model.getSimulationData().getTmpSessionName()
+			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
+				int oCamlObservableNo = number_of_observables - observable_num
+						- 1; // everything is backward with OCaml!
+				BufferedWriter writer = new BufferedWriter(new FileWriter(model
+						.getSimulationData().getTmpSessionName()
 						+ "-" + oCamlObservableNo));
 
 				// writer.write("Observable " + observable_num + "\r\n");

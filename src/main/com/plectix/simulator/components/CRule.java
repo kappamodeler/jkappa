@@ -17,6 +17,12 @@ public class CRule {
 	private double activity = 0.;
 	private String name;
 	private double ruleRate;
+	private List<CSite> sitesConnectedWithDeleted;
+	
+	
+	public List<CSite> getAgentsConnectedWithDeleted() {
+		return sitesConnectedWithDeleted;
+	}
 
 	public void setRuleRate(double ruleRate) {
 		this.ruleRate = ruleRate;
@@ -147,6 +153,7 @@ public class CRule {
 
 	public void applyRule(List<CInjection> injectionList) {
 		agentAddList = new HashMap<CAgent, CAgent>();
+		sitesConnectedWithDeleted = new ArrayList<CSite>();
 		this.injList = injectionList;
 		if (rightHandSide != null)
 			for (CConnectedComponent cc : rightHandSide)
@@ -264,6 +271,10 @@ public class CRule {
 							return true;
 
 						if (currentLinkState.isLeftBranchStatus()
+								&& linkState.getStatusLinkRank() == CLinkState.RANK_BOUND_OR_FREE)
+							return true;
+
+						if (currentLinkState.isLeftBranchStatus()
 								&& (!(linkState.isLeftBranchStatus())))
 							continue;
 
@@ -292,10 +303,12 @@ public class CRule {
 
 	private boolean checkRulesNullAgents(CAgent agent) {
 		for (CConnectedComponent cc : this.getRightHandSide())
+
 			for (CAgent agentFromRule : cc.getAgents())
-				if ((agent.equals(agentFromRule))
-						&& (agentFromRule.getSites().size() == 0))
-					return true;
+				if (agent.equals(agentFromRule))
+					if (agentFromRule.getSites().size() == 0
+							|| agent.getSites().size() == 0)
+						return true;
 		return false;
 	}
 
@@ -588,24 +601,36 @@ public class CRule {
 						fromAgent.getIdInConnectedComponent(), injection);
 				for (CSite site : agent.getSites()) {
 					CSite solutionSite = (CSite) site.getLinkState().getSite();
+
 					if (solutionSite != null) {
-						solutionSite.getLinkState().setSite(null);
-						solutionSite.getLinkState().setStatusLink(
-								CLinkState.STATUS_LINK_FREE);
+						addAgentToConnectedWithDeleted(solutionSite);
+							solutionSite.getLinkState().setSite(null);
+							solutionSite.getLinkState().setStatusLink(
+									CLinkState.STATUS_LINK_FREE);
+//							solutionSite.removeInjectionsFromCCToSite(injection);
+						}
 					}
+			
+				for (CLiftElement lift : agent.EMPTY_SITE.getLift()) {
+					agent.EMPTY_SITE.removeInjectionsFromCCToSite(lift
+							.getInjection());
+					lift.getInjection().getConnectedComponent()
+							.getInjectionsList().remove(lift.getInjection());
 				}
 
-				agent.EMPTY_SITE.removeInjectionsFromCCToSite(injection);
 				for (CSite site : agent.getSites()) {
-					site.removeInjectionsFromCCToSite(injection);
+					for (CLiftElement lift : site.getLift()) {
+						site.removeInjectionsFromCCToSite(lift.getInjection());
+						lift.getInjection().getConnectedComponent()
+								.getInjectionsList()
+								.remove(lift.getInjection());
+					}
 					site.getLift().clear();
+					injection.removeSiteFromSitesList(site);
 				}
-				/*
-				 * for (CSite site : injection.getSiteList()) {
-				 * site.removeInjectionsFromCCToSite(injection);
-				 * site.getLift().clear(); }
-				 */injection.getConnectedComponent().getInjectionsList()
-						.remove(injection);
+				//injection.getConnectedComponent().getInjectionsList()
+					//	.remove(injection);
+				 
 
 				((CSolution) SimulationMain.getSimulationManager()
 						.getSimulationData().getSolution()).removeAgent(agent);
@@ -629,6 +654,13 @@ public class CRule {
 				break;
 			}
 			}
+		}
+
+		private void addAgentToConnectedWithDeleted(CSite checkedSite) {
+			for (CSite site : sitesConnectedWithDeleted)
+				if (site == checkedSite)
+					return;
+			sitesConnectedWithDeleted.add(checkedSite);
 		}
 
 		private final CInjection getInjectionBySiteToFromLHS(CSite siteTo) {

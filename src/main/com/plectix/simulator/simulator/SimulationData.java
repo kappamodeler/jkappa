@@ -17,7 +17,7 @@ public class SimulationData {
 	private static List<ArrayList<RunningMetric>> runningMetrics;
 
 	private List<CRule> rules;
-	private List<CStories> stories = null;
+	private CStories stories = null;
 	private List<CPerturbation> perturbations;
 
 	private CObservables observables = new CObservables();
@@ -65,28 +65,32 @@ public class SimulationData {
 		return observables;
 	}
 
-	public final List<CStories> getStories() {
+	public final CStories getStories() {
 		return stories;
 	}
 
-	public final void setStories(List<CStories> list) {
+	public final void setStories(CStories list) {
 		this.stories = list;
 	}
 
 	public final void addStories(String name) {
 		byte index = 0;
+		List<Integer> ruleIDs = new ArrayList<Integer>();
 		for (CRule rule : rules) {
 			if ((rule.getName() != null)
 					&& (rule.getName().startsWith(name) && ((name.length() == rule
 							.getName().length()) || ((rule.getName()
 							.startsWith(name + "_op")) && ((name.length() + 3) == rule
 							.getName().length()))))) {
-				stories.add(new CStories(rule.getRuleID()));
+				ruleIDs.add(rule.getRuleID());
 				index++;
 			}
-			if (index == 2)
+			if (index == 2){
+				this.stories.addToStories(ruleIDs);
 				return;
+			}
 		}
+		this.stories.addToStories(ruleIDs);
 	}
 
 	public boolean isStorify() {
