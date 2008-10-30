@@ -71,6 +71,10 @@ Example files:
 	debugging-polymere.ka              copied from kappa_models/models/debugging/polymere.ka
 	                                   run with --time 50
 
+	debugging-semi-link-bug.ka         copied from kappa_models/models/debugging/semi-link-bug.ka
+	                                   run with --time 25
+
+
 Options for simulator:
 	--compile name of the kappa file to compile
 	--sim name of the kappa file to simulate
