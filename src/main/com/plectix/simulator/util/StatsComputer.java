@@ -20,7 +20,12 @@ public class StatsComputer {
 	// private static final String TEST = "exponentielle";
 	// private static final String TEST = "brightberl";
 	// private static final String TEST = "calcium2";
-	private static final String TEST = "TyThomson-ReceptorAndGProtein";
+	// private static final String TEST = "TyThomson-ReceptorAndGProtein";
+	// private static final String TEST = "debugging-link"; 
+	// private static final String TEST = "debugging-polymere";
+	// private static final String TEST = "debugging-semi-link-bug";
+	// private static final String TEST = "debugging-walter-fev08";
+	private static final String TEST = "debugging-weird" ;
 	
 	private static final int NUMBER_OF_FILES = 50;
 
