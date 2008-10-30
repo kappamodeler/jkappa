@@ -22,7 +22,7 @@ degradation-deg-all            ENG-38: Java simulator doesn't match simplx resul
 large_systems-sysepi           ENG-40: Java simulator doesn't match simplx results
 degradation-deg-free           ENG-46: Java simulator doesn't match simplx results 
 degradation-deg-bnd            ENG-46: Java simulator doesn't match simplx results
-invexp                         ENG-48: Java simulator doesn't match simplx results   Can't look at averages. Need to make sure that x = K/t where K is a constant
+invexp                         ENG-48: Java simulator doesn't match simplx results   Can't look at averages. Need to make sure that x = 0.5/t for small t
 brightberl.ka                  ENG-50: Java simulator doesn't match simplx results
 calcium2                       ENG-51: Java simulator doesn't match simplx results
 TyThomson-ReceptorAndGProtein  ENG-52: Java simulator doesn't match simplx results
