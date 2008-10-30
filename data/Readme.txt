@@ -53,6 +53,9 @@ Example files:
 	calcium2.ka                        copied from kappa_models/models/calcium2/calcium2.ka
 	                                   steady state at --time 0.5
 
+	debugging-bug_update.ka            copied from kappa_models/models/debugging/bug_update.ka
+	                                   run with --time 10
+
 
 Options for simulator:
 	--compile name of the kappa file to compile

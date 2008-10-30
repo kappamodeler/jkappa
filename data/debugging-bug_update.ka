@@ -1,0 +1,7 @@
+'deg_all' a(x?) ->
+
+%init: 500 * (a(x!1), b(x!1))
+
+%obs: b(x!_)         #<-- those two observables behave well (red, green)
+%obs: b(x)
+%obs: b(x?)          #<-- this one is wrong (blue)
