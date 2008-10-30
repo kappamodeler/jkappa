@@ -1,15 +1,22 @@
 
-SIA_2007_03_23-global          ????
+debugging-compression          ???
+debugging-justin-9-07-2008     ???
+debugging-polymere             ???  Need to look at averages. OCaml has much higher std. Why???
+sfb                            ???
+will                           ???
 
 Example                        OK
 KPT_study                      OK
+debugging-walter-fev08         OK. Need to look at averages.
 exponentielle                  OK. Can't look at averages. Need to make sure d(ln(x))/dt = 1
+debugging-weird                OK. Need to look at averages. Investige: Slight difference for small t. 
 
 SIA_2007_03_23-egfr            ENG-42: Parser Error
 fgf2-fgf                       ENG-42: Parser Error
 egfr                           ENG-42: Parser Error
 contextual_rules-add_rem       ENG-45: Parser Error --> FIXED --> REOPENED
 osc                            ENG-47: Parser Error 
+SIA_2007_03_23-global          ENG-53: Parser Error
 
 degradation-deg-all            ENG-38: Java simulator doesn't match simplx results
 large_systems-sysepi           ENG-40: Java simulator doesn't match simplx results
@@ -19,7 +26,10 @@ invexp                         ENG-48: Java simulator doesn't match simplx resul
 brightberl.ka                  ENG-50: Java simulator doesn't match simplx results
 calcium2                       ENG-51: Java simulator doesn't match simplx results
 TyThomson-ReceptorAndGProtein  ENG-52: Java simulator doesn't match simplx results
-
+debugging-bug_update           ENG-54: Java simulator doesn't match simplx results
+debugging-inf                  ENG-55: Java simulator doesn't match simplx results
+debugging-link                 ENG-56: Java simulator doesn't match simplx results
+debugging-semi-link-bug        ENG-57: Java simulator doesn't match simplx results
 
 large_systems-sorger           Needs too much memory!!!
 
