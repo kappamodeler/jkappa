@@ -56,9 +56,6 @@ public class CSolution implements ISolution {
 				break;
 			}
 		}
-//		if (i>list.size()){
-//			System.out.println("00000");
-//		}
 		list.remove(index);
 	}
 

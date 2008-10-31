@@ -113,7 +113,7 @@ public class Simulator {
 
 				doPositiveUpdateForDeletedAgents(doNegativeUpdateForDeletedAgents(
 						rule, injectionsList));
-
+				model.getSimulationData().getObservables().calculateObs(currentTime);
 			} else {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Clash");
@@ -162,21 +162,13 @@ public class Simulator {
 					CAgent checkedAgent = checkedSite.getAgentLink();
 					addToAgentList(freeAgents, checkedAgent);
 					for (CLiftElement lift : checkedAgent.EMPTY_SITE.getLift()) {
-						checkedAgent.EMPTY_SITE
-								.removeInjectionsFromCCToSite(lift
-										.getInjection());
-						lift.getInjection().getConnectedComponent()
-								.getInjectionsList()
-								.remove(lift.getInjection());
+						lift.getConnectedComponent().getInjectionsList().remove(lift.getInjection());
 					}
-
+					checkedAgent.EMPTY_SITE.clearLiftList();
 					for (CLiftElement lift : checkedSite.getLift()) {
-						checkedSite.removeInjectionsFromCCToSite(lift
-								.getInjection());
-						lift.getInjection().getConnectedComponent()
-								.getInjectionsList()
-								.remove(lift.getInjection());
+						lift.getConnectedComponent().getInjectionsList().remove(lift.getInjection());
 					}
+					checkedSite.clearLiftList();
 				}
 			}
 		}
@@ -233,7 +225,7 @@ public class Simulator {
 					.getConnectedComponentList(), rule);
 		}
 
-		model.getSimulationData().getObservables().calculateObs(currentTime);
+		
 	}
 
 	private final void checkPerturbation() {

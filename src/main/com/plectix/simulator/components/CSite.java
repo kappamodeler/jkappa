@@ -102,6 +102,10 @@ public class CSite implements ISite {
 	public final Integer getNameId() {
 		return nameId;
 	}
+	
+	public final void clearLiftList(){
+		this.liftList.clear();
+	}
 
 	public final void removeInjectionsFromCCToSite(CInjection inInjection) {
 
