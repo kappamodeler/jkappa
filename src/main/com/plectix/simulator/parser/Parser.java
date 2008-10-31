@@ -500,7 +500,6 @@ public class Parser {
 	}
 
 	private boolean testLine(String line) {
-		line = line.replaceAll("[ 	]", "");
 		while (line.indexOf("(") == 0) {
 			line = line.substring(1);
 			if (line.indexOf(")") == -1)
@@ -515,6 +514,7 @@ public class Parser {
 
 	public final List<CAgent> parseAgent(String line)
 			throws ParseErrorException {
+		line = line.replaceAll("[ 	]", "");
 		if (!testLine(line))
 			throw new ParseErrorException();
 
