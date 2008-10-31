@@ -89,7 +89,6 @@ public class Simulator {
 			if (rule == null) {
 				isEndRules = true;
 				model.getSimulationData().setTimeLength(currentTime);
-				System.out.println("rule!!!!!!!!!!!");
 				break;
 			}
 			if (LOGGER.isDebugEnabled())
@@ -125,8 +124,6 @@ public class Simulator {
 				addIteration(iteration_num);
 
 		}
-		System.out.println("time!!!!!!!!!!!");
-
 		outToLogger(isEndRules);
 		if (!isIteration)
 			outputData();
