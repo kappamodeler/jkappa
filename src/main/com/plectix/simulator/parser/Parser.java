@@ -428,24 +428,18 @@ public class Parser {
 			result[0] = result[0].trim();
 			count = 1;
 			if (length != 1) {
-				try {
-					double rescale = SimulationMain.getSimulationManager()
-							.getSimulationData().getRescale();
-					if (rescale > 0) {
-						double countInFile = Double.valueOf(result[0])
-								* rescale;
-						if (countInFile - Math.floor(countInFile) < 1e-16)
-							count = (long) countInFile;
-						else
-							throw new ParseErrorException(myErrorHandler
-									.formMessage(itemDS)
-									+ " and '--rescale' option.");
-					} else
-						count = Long.valueOf(result[0]);
-				} catch (NumberFormatException e) {
+				double rescale = SimulationMain.getSimulationManager()
+						.getSimulationData().getRescale();
+				if (rescale < 0)
+					rescale = 1.;
+				double countInFile = Double.valueOf(result[0]) * rescale;
+				if (countInFile - Math.floor(countInFile) < 1e-16)
+					count = (long) countInFile;
+				else
 					throw new ParseErrorException(myErrorHandler
-							.formMessage(itemDS));
-				}
+							.formMessage(itemDS)
+							+ " use '--rescale' option.");
+
 			}
 			line = result[length - 1].trim();
 
