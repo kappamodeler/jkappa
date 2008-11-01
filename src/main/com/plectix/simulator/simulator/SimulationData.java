@@ -1,14 +1,32 @@
 package com.plectix.simulator.simulator;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
+import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.util.RunningMetric;
 
@@ -21,7 +39,7 @@ public class SimulationData {
 	private List<CPerturbation> perturbations;
 
 	private CObservables observables = new CObservables();
-	private Double intialTime = 0.0;
+	private Double initialTime = 0.0;
 
 	private double rescale = -1.;
 	private int points = -1;
@@ -213,6 +231,255 @@ public class SimulationData {
 
 	}
 
+	public void writeToXML() throws ParserConfigurationException,
+			TransformerException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.newDocument();
+
+		Element simplxSession = doc.createElement("SimplxSession");
+		simplxSession.setAttribute("CommandLine", "cmd");
+		simplxSession.setAttribute("InputFile", "file");
+		simplxSession.setAttribute("TimeStamp", "stmp");
+		doc.appendChild(simplxSession);
+
+		Element influenceMap = doc.createElement("InfluenceMap");
+
+		int rulesAndObsNumber = observables.getConnectedComponentList().size()
+				+ rules.size();
+		/**
+		 * add observables
+		 * */
+		for (int i = observables.getConnectedComponentList().size() - 1; i >= 0; i--) {
+			Element node = doc.createElement("Node");
+			node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
+			node.setAttribute("Type", "OBSERVABLE");
+			String obsName = observables.getConnectedComponentList().get(i)
+					.getName();
+
+			if (obsName == null)
+				obsName = observables.getConnectedComponentList().get(i)
+						.getLine();
+
+			node.setAttribute("Text", '[' + obsName + ']');
+			node.setAttribute("Data", observables.getConnectedComponentList()
+					.get(i).getLine());
+			node.setAttribute("Name", '[' + obsName + ']');
+			influenceMap.appendChild(node);
+		}
+		/**
+		 * add rules
+		 * */
+
+		for (int i = rules.size() - 1; i >= 0; i--) {
+			Element node = doc.createElement("Node");
+			node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
+			node.setAttribute("Type", "RULE");
+			node.setAttribute("Text", rules.get(i).getName());
+
+			String line = SimulatorManager.printPartRule(rules.get(i)
+					.getLeftHandSide());
+			line = line + "->";
+			line = line
+					+ SimulatorManager.printPartRule(rules.get(i)
+							.getRightHandSide());
+
+			node.setAttribute("Data", line);
+			node.setAttribute("Name", rules.get(i).getName());
+			influenceMap.appendChild(node);
+		}
+
+		/**
+		 * add activation map
+		 * */
+
+		int lastRuleID = rules.size();
+		for (int i = rules.size() - 1; i >= 0; i--) {
+			for (int j = rules.get(i).getActivatedObservable().size() - 1; j >= 0; j--) {
+				Element node = doc.createElement("Connection");
+				node.setAttribute("FromNode", Integer.toString(rules.get(i)
+						.getRuleID() + 1));
+				node.setAttribute("ToNode", Integer.toString(rules.get(i)
+						.getActivatedObservable().get(j).getNameID()
+						+ 1 + lastRuleID));
+				node.setAttribute("Relation", "POSITIVE");
+				influenceMap.appendChild(node);
+			}
+			for (int j = rules.get(i).getActivatedRule().size() - 1; j >= 0; j--) {
+				Element node = doc.createElement("Connection");
+				node.setAttribute("FromNode", Integer.toString(rules.get(i)
+						.getRuleID() + 1));
+				node.setAttribute("ToNode", Integer.toString(rules.get(i)
+						.getActivatedRule().get(j).getRuleID() + 1));
+				node.setAttribute("Relation", "POSITIVE");
+				influenceMap.appendChild(node);
+			}
+		}
+
+		simplxSession.appendChild(influenceMap);
+
+		if (snapshotTime >= 0.0) {
+			Element snapshotElement = doc.createElement("FinalState");
+			snapshotElement.setAttribute("Time", String.valueOf(snapshotTime));
+			if (snapshot != null) {
+				List<CSnapshot.SnapshotElement> snapshotElementList = snapshot
+						.getSnapshotElements();
+				for (CSnapshot.SnapshotElement se : snapshotElementList) {
+					Element species = doc.createElement("Species");
+					species.setAttribute("Kappa", se.getCcName());
+					species.setAttribute("Number", String
+							.valueOf(se.getCount()));
+					snapshotElement.appendChild(species);
+				}
+			}
+			simplxSession.appendChild(snapshotElement);
+		}
+
+		int obsCountTimeListSize = observables.getCountTimeList().size();
+
+		Element simulation = doc.createElement("Simulation");
+		simulation.setAttribute("TotalEvents", Integer
+				.toString(obsCountTimeListSize));
+		simulation.setAttribute("TotalTime", Double.toString(timeLength));
+		simulation.setAttribute("InitTime", Double.toString(initialTime));
+
+		Double timeSampleMin = 0.;
+		double timeNext = 0.;
+		double fullTime = observables.getCountTimeList().get(
+				obsCountTimeListSize - 1);
+		if (initialTime > 0.0) {
+			timeNext = initialTime;
+			fullTime = fullTime - timeNext;
+		} else
+			timeNext = timeSampleMin;
+
+		timeSampleMin = getTimeSampleMin(fullTime);
+
+		simulation.setAttribute("TimeSample", timeSampleMin.toString());
+		simplxSession.appendChild(simulation);
+
+		for (int i = observables.getConnectedComponentList().size() - 1; i >= 0; i--) {
+			Element node = doc.createElement("Plot");
+			node.setAttribute("Type", "OBSERVABLE");
+			String obsName = observables.getConnectedComponentList().get(i)
+					.getName();
+
+			if (obsName == null)
+				obsName = observables.getConnectedComponentList().get(i)
+						.getLine();
+
+			node.setAttribute("Text", '[' + obsName + ']');
+			simulation.appendChild(node);
+		}
+		Element csv = doc.createElement("CSV");
+		CDATASection cdata = doc.createCDATASection("\n");
+
+		// appendData(obs, cdata, 0);
+
+		for (int i = 0; i < obsCountTimeListSize - 1; i++) {
+			if (observables.getCountTimeList().get(i) > timeNext) {
+				timeNext += timeSampleMin;
+				appendData(observables, cdata, i);
+			}
+
+		}
+
+		appendData(observables, cdata, obsCountTimeListSize - 1);
+
+		csv.appendChild(cdata);
+		simulation.appendChild(csv);
+
+		TransformerFactory trFactory = TransformerFactory.newInstance();
+		Transformer transformer = trFactory.newTransformer();
+		DOMSource domSource = new DOMSource(doc);
+		StreamResult streamesult = new StreamResult(xmlSessionName);
+		transformer.transform(domSource, streamesult);
+	}
+
+	public final void createTMPReport() {
+		// model.getSimulationData().updateData();
+		SimulationMain.getSimulationManager().startTimer();
+
+		int number_of_observables = observables.getConnectedComponentList()
+				.size();
+		try {
+			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
+				int oCamlObservableNo = number_of_observables - observable_num
+						- 1; // everything is backward with OCaml!
+				BufferedWriter writer = new BufferedWriter(new FileWriter(
+						tmpSessionName + "-" + oCamlObservableNo));
+
+				Double timeSampleMin = 0.;
+				double timeNext = 0.;
+				double fullTime = timeStamps.get(timeStamps.size() - 1);
+				if (initialTime > 0.0) {
+					timeNext = initialTime;
+					fullTime = fullTime - timeNext;
+				} else
+					timeNext = timeSampleMin;
+
+				timeSampleMin = getTimeSampleMin(fullTime);
+
+				for (int timeStepCounter = 0; timeStepCounter < timeStamps
+						.size(); timeStepCounter++) {
+					if (timeStamps.get(timeStepCounter) > timeNext) {
+						timeNext += timeSampleMin;
+						String st = timeStamps.get(timeStepCounter)
+								+ " "
+								+ runningMetrics.get(observable_num).get(
+										timeStepCounter).getMin()
+								+ " "
+								+ runningMetrics.get(observable_num).get(
+										timeStepCounter).getMax()
+								+ " "
+								+ runningMetrics.get(observable_num).get(
+										timeStepCounter).getMean()
+								+ " "
+								+ runningMetrics.get(observable_num).get(
+										timeStepCounter).getStd();
+
+						writer.write(st);
+						writer.newLine();
+					}
+				}
+
+				writer.close();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("-Results outputted in tmp session: "
+				+ SimulationMain.getSimulationManager().getTimer()
+				+ " sec. CPU");
+	}
+
+	public final double getTimeSampleMin(double fullTime) {
+		double timeSampleMin;
+		if (points != -1)
+			timeSampleMin = fullTime / points;
+		else
+			timeSampleMin = fullTime / 1000;
+		return timeSampleMin;
+	}
+
+	private void appendData(CObservables obs, CDATASection cdata, int index) {
+		String enter = "\n";
+		cdata.appendData(obs.getCountTimeList().get(index).toString());
+		for (int j = obs.getConnectedComponentList().size() - 1; j >= 0; j--) {
+			cdata.appendData(",");
+			ObservablesConnectedComponent oCC = obs.getConnectedComponentList()
+					.get(j);
+			if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
+				cdata.appendData(oCC.getCountList().get(index).toString());
+			else
+				cdata.appendData(obs.getConnectedComponentList().get(
+						oCC.getMainAutomorphismNumber()).getCountList().get(
+						index).toString());
+		}
+		cdata.appendData(enter);
+	}
+
 	public final String getTmpSessionName() {
 		return tmpSessionName;
 	}
@@ -229,12 +496,12 @@ public class SimulationData {
 		this.activationMap = activationMap;
 	}
 
-	public final Double getIntialTime() {
-		return intialTime;
+	public final Double getInitialTime() {
+		return initialTime;
 	}
 
-	public final void setIntialTime(double intialTime) {
-		this.intialTime = intialTime;
+	public final void setInitialTime(double intialTime) {
+		this.initialTime = intialTime;
 	}
 
 	public final Double getRescale() {

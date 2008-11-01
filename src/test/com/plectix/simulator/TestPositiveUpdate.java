@@ -7,7 +7,6 @@ import org.junit.runners.Parameterized.Parameters;
 import org.junit.*;
 
 import com.plectix.simulator.components.*;
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.util.*;
 
 public class TestPositiveUpdate extends UpdateDirectoryTestsRunner {

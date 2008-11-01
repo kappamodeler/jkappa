@@ -20,7 +20,7 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
+import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
 

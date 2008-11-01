@@ -9,12 +9,12 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.SolutionLines;
 import com.plectix.simulator.components.CRule.Action;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.NameDictionary;
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 
 public class SimulatorManager {
 

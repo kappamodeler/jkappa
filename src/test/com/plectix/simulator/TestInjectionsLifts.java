@@ -5,7 +5,6 @@ import java.util.*;
 
 import org.junit.*;
 
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.MessageConstructor;

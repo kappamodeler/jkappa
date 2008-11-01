@@ -229,7 +229,7 @@ public class SimulationMain {
 		try {
 			if (cmdLineArgs.hasOption(LONG_INIT_OPTION)) {
 				SimulationMain.getSimulationManager().getSimulationData()
-						.setIntialTime(
+						.setInitialTime(
 								Double.valueOf(cmdLineArgs
 										.getOptionValue(LONG_INIT_OPTION)));
 			}

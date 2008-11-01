@@ -8,7 +8,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.*;
 import org.junit.runner.RunWith;
 
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.util.*;
 

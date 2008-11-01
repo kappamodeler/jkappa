@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 
 public class CPerturbation {
 

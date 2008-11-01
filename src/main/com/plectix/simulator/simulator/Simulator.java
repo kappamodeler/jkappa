@@ -1,16 +1,8 @@
 package com.plectix.simulator.simulator;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +16,6 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CLiftElement;
-import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
@@ -32,8 +23,7 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
-import com.plectix.simulator.components.CXMLWriter;
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
+import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.util.RunningMetric;
 
 public class Simulator {
@@ -269,9 +259,8 @@ public class Simulator {
 		SimulationMain.getSimulationManager().startTimer();
 
 		model.getSimulationData().setTimeLength(currentTime);
-		CXMLWriter xmlWriter = new CXMLWriter();
 		try {
-			xmlWriter.writeToXML(model.getSimulationData().getXmlSessionName());
+			model.getSimulationData().writeToXML();
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (TransformerException e) {
@@ -356,61 +345,7 @@ public class Simulator {
 		}
 
 		// we are done. report the results
-		createTMPReport();
-
-	}
-
-	private final void createTMPReport() {
-		// model.getSimulationData().updateData();
-		SimulationMain.getSimulationManager().startTimer();
-
-		int number_of_observables = model.getSimulationData().getObservables()
-				.getConnectedComponentList().size();
-		List<Double> timeStamps = model.getSimulationData().getTimeStamps();
-		List<ArrayList<RunningMetric>> runningMetrics = model
-				.getSimulationData().getRunningMetrics();
-
-		try {
-			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
-				int oCamlObservableNo = number_of_observables - observable_num
-						- 1; // everything is backward with OCaml!
-				BufferedWriter writer = new BufferedWriter(new FileWriter(model
-						.getSimulationData().getTmpSessionName()
-						+ "-" + oCamlObservableNo));
-
-				// writer.write("Observable " + observable_num + "\r\n");
-				// writer.flush();
-				for (int timeStepCounter = 0; timeStepCounter < timeStamps
-						.size(); timeStepCounter++) {
-					String st = timeStamps.get(timeStepCounter)
-							+ " "
-							+ runningMetrics.get(observable_num).get(
-									timeStepCounter).getMin()
-							+ " "
-							+ runningMetrics.get(observable_num).get(
-									timeStepCounter).getMax()
-							+ " "
-							+ runningMetrics.get(observable_num).get(
-									timeStepCounter).getMean()
-							+ " "
-							+ runningMetrics.get(observable_num).get(
-									timeStepCounter).getStd();
-
-					writer.write(st);
-					writer.newLine();
-					// writer.flush();
-				}
-
-				writer.close();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		System.out.println("-Results outputted in tmp session: "
-				+ SimulationMain.getSimulationManager().getTimer()
-				+ " sec. CPU");
+		model.getSimulationData().createTMPReport();
 
 	}
 
@@ -435,7 +370,6 @@ public class Simulator {
 				.getSimulationData());
 		this.model = modelNew;
 		model.initialize();
-
 	}
 
 	private final void addIteration(Integer iteration_num) {

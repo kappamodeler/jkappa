@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IConstraint;
 
 public class CRule {

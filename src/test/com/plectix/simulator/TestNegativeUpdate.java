@@ -9,7 +9,6 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import com.plectix.simulator.components.*;
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.util.*;
 
 public class TestNegativeUpdate extends UpdateDirectoryTestsRunner {

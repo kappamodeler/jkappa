@@ -10,7 +10,6 @@ import static org.junit.Assert.*;
 
 import com.plectix.simulator.util.*;
 import com.plectix.simulator.components.*;
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.simulator.Model;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorManager;

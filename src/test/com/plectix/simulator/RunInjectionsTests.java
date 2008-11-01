@@ -9,7 +9,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import org.junit.*;
 
-import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
+import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.simulator.SimulatorManager;
 
 @RunWith(value=Suite.class)
