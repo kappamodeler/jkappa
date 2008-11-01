@@ -96,7 +96,9 @@ public class Simulator {
 
 			List<CInjection> injectionsList = ruleProbabilityCalculation
 					.getSomeInjectionList(rule);
-			currentTime += ruleProbabilityCalculation.getTimeValue();
+			if (!rule.isInfinityRate())
+				currentTime += ruleProbabilityCalculation.getTimeValue();
+
 			if (!isClash(injectionsList)) {
 				// negative update
 				if (LOGGER.isDebugEnabled())
@@ -113,11 +115,13 @@ public class Simulator {
 
 				doPositiveUpdateForDeletedAgents(doNegativeUpdateForDeletedAgents(
 						rule, injectionsList));
-				model.getSimulationData().getObservables().calculateObs(currentTime);
+				model.getSimulationData().getObservables().calculateObs(
+						currentTime);
 			} else {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Clash");
 				clash++;
+				currentTime += ruleProbabilityCalculation.getTimeValue();
 			}
 
 			if (isIteration)
@@ -162,11 +166,13 @@ public class Simulator {
 					CAgent checkedAgent = checkedSite.getAgentLink();
 					addToAgentList(freeAgents, checkedAgent);
 					for (CLiftElement lift : checkedAgent.EMPTY_SITE.getLift()) {
-						lift.getConnectedComponent().getInjectionsList().remove(lift.getInjection());
+						lift.getConnectedComponent().getInjectionsList()
+								.remove(lift.getInjection());
 					}
 					checkedAgent.EMPTY_SITE.clearLiftList();
 					for (CLiftElement lift : checkedSite.getLift()) {
-						lift.getConnectedComponent().getInjectionsList().remove(lift.getInjection());
+						lift.getConnectedComponent().getInjectionsList()
+								.remove(lift.getInjection());
 					}
 					checkedSite.clearLiftList();
 				}
@@ -225,7 +231,6 @@ public class Simulator {
 					.getConnectedComponentList(), rule);
 		}
 
-		
 	}
 
 	private final void checkPerturbation() {
