@@ -3,7 +3,6 @@ package com.plectix.simulator;
 import java.util.*;
 
 import org.junit.*;
-import static org.junit.Assert.*;
 
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.components.*;

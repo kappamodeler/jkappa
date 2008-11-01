@@ -18,7 +18,7 @@ public class TestParseAgents extends DirectoryTestsRunner {
 	//private final MessageConstructor myMC = new MessageConstructor();
 	
 	private final Failer myFailer = new Failer() {
-		public boolean myEquals(Object a, Object b) {
+		public boolean overrideEquals(Object a, Object b) {
 			if (!(a instanceof CAgent) || !(b instanceof CAgent)) {
 				return false;
 			}

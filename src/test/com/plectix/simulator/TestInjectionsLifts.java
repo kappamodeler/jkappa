@@ -10,8 +10,6 @@ import com.plectix.simulator.components.*;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.MessageConstructor;
 
-import static org.junit.Assert.*;
-
 public class TestInjectionsLifts {
 	private Failer myFailer = new Failer();
 	

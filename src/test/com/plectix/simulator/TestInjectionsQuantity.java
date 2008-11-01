@@ -12,8 +12,6 @@ import com.plectix.simulator.components.CObservables.ObservablesConnectedCompone
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.util.*;
 
-import static org.junit.Assert.*;
-
 @RunWith(Parameterized.class)
 public class TestInjectionsQuantity {
 	private String myNameParameter;
@@ -54,7 +52,7 @@ public class TestInjectionsQuantity {
 		if (injectionsList != null) {
 			myFailer.assertEquals("failed on " + ccName, expectedQuantity, (injectionsList.size()));
 		} else {
-			myFailer.assertEquals("failed on " + ccName, 0, (injectionsList.size()));
+			myFailer.assertEquals("failed on " + ccName, expectedQuantity, 0);
 		}
 	}
 	
