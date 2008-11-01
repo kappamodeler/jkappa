@@ -12,7 +12,7 @@ import com.plectix.simulator.util.*;
 
 public class TestInjectionsCorrection {
 	private static Map<String, SortedSet<Long>> myCompareData = new HashMap<String, SortedSet<Long>>();
-
+	private Failer myFailer = new Failer();
 	private boolean antiFlag = false;
 
 	public TestInjectionsCorrection() {
@@ -31,7 +31,7 @@ public class TestInjectionsCorrection {
 			}
 		}
 		if (!mc.isEmpty()) {
-			fail(mc.toString());
+			myFailer.failOnMC(mc);
 		}
 	}
 

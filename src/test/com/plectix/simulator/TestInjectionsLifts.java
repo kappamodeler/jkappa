@@ -7,11 +7,13 @@ import org.junit.*;
 
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.MessageConstructor;
 
 import static org.junit.Assert.*;
 
 public class TestInjectionsLifts {
+	private Failer myFailer = new Failer();
 	
 	private boolean testInjectionLifts(CInjection injection) {
 			for (CSite site : injection.getSiteList()) {
@@ -53,7 +55,7 @@ public class TestInjectionsLifts {
 		}
 		
 		if (fail) {
-			fail(mc.toString());
+			myFailer.failOnMC(mc);
 		}
 	}
 }

@@ -10,7 +10,7 @@ import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.util.*;
 
-public class TestPositiveUpdate extends DirectoryTestsRunner {
+public class TestPositiveUpdate extends UpdateDirectoryTestsRunner {
 	private String myTestFileName = "";
 	private Map<String, Integer> myObsInjectionsQuantity;
 	private Map<String, Integer> myLHSInjectionsQuantity;
@@ -19,7 +19,7 @@ public class TestPositiveUpdate extends DirectoryTestsRunner {
 		
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return DirectoryTestsRunner.getAllTestFileNames(myPrefixFileName);
+		return UpdateDirectoryTestsRunner.getAllTestFileNames(myPrefixFileName);
 	}
 
 	public TestPositiveUpdate(String filePath) {

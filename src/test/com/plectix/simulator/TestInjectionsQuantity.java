@@ -10,7 +10,7 @@ import org.junit.runner.RunWith;
 
 import com.plectix.simulator.components.CObservables.ObservablesConnectedComponent;
 import com.plectix.simulator.components.*;
-import com.plectix.simulator.util.InjectionsQuantityDataParser;
+import com.plectix.simulator.util.*;
 
 import static org.junit.Assert.*;
 
@@ -19,6 +19,7 @@ public class TestInjectionsQuantity {
 	private String myNameParameter;
 	private static Map<String, Integer> myDataMap = new HashMap<String, Integer>();
 	private ObservablesConnectedComponent myCurrentCC;
+	private Failer myFailer = new Failer();
 	
 	public TestInjectionsQuantity(String name) {
 		myNameParameter = name;
@@ -37,18 +38,6 @@ public class TestInjectionsQuantity {
 		return Collections.unmodifiableList(parameters);
 	}
 	
-	private void assertWithFailMessage(Object a, Object b, String testId) {
-		boolean fail = false;
-		if (a != null) {
-			fail = !a.equals(b);
-		} else {
-			fail = (b != null);
-		}
-		if (fail) {
-		    fail(testId + " : expected " + a.toString() + ", but was " + b.toString());
-		}	
-	}
-	
 	private void createInjectionsList(String ccName) {
 		Integer expectedQuantity = myDataMap.get(ccName);
 		boolean exists = false;
@@ -59,13 +48,13 @@ public class TestInjectionsQuantity {
 			}
 		}
 		if (!exists) {
-			fail("There's no component with name " + ccName);
+			myFailer.fail("There's no component with name " + ccName);
 		}
 		List<CInjection> injectionsList = myCurrentCC.getInjectionsList();
 		if (injectionsList != null) {
-			assertWithFailMessage(expectedQuantity, (injectionsList.size()), "failed on " + ccName);
+			myFailer.assertEquals("failed on " + ccName, expectedQuantity, (injectionsList.size()));
 		} else {
-			assertWithFailMessage(expectedQuantity, 0, "failed on " + ccName);
+			myFailer.assertEquals("failed on " + ccName, 0, (injectionsList.size()));
 		}
 	}
 	

@@ -1,0 +1,235 @@
+#CORRECT
+
+aa() -> 	 a(x) 					@ 1.0
+a(x),	 b(x) 	<->    a(x!1),					b(x!1) @ 10.0,1.0
+'cy_phos' 	 a(x),	  	 c(x~p,y~u) -> a(x),c(x~p,y~p) @ 1.0
+R(l,r), 	 E(r) <-> R(l!1,r),E(r!1) @ 1.0,3
+R(l!_,r),	 	 R(l!_,r) -> R(l	 !_,r!1),	 	 R(l!_,r!1) @ 1.0
+R(r!1),R(r!1) -> R(r),		 	 R(r) @ 1.0
+'Grb_Shc' 	Sh(Y7~p),			  G(a) <-> 	 Sh(Y7~p!1),	 	G(a!1) @ 1.0,3
+'Grb_R' R(Y68~p),G(a) <-> R(Y68~p!1),G(a!1) @ 1.0,3
+So(d)	  	,	 G(b) <-> So(d!1),G(b!1) @ 1.0,3
+'Shc_R'  	 R(Y48~p),Sh(pi) <->  	 	R	 (	 Y48 ~p!1), 	 	Sh(pi!1) @ 1.0,3
+R(Y48~p),Sh(        pi) <-> R(	    Y48~	 	 p?) 	 @ 1.0,3
+'PP2A2_MEK@222'  	  	PP2A2(s),MEK(S222~p) -> PP2A2(s!1),MEK(S222~p!1) @ 1.0
+'MEK@222_op' PP2A2(s!1),MEK(S222~ 	 p!1) -> PP2A2(s!1),MEK(S222~u!1) @ 1.0
+'PP2A2_MEK@222_op' PP2A2(s!1),MEK(S222!1) -> PP2A2( 	s), 	MEK(S222) @ 1.0
+'PP2A2_MEK@218' PP2A2(s),MEK(S218~p) -> PP2A2(s!1),MEK(S218~p!1) @ 1.0
+'MEK@222_op' PP2A2(s!1), 	 	MEK(S 	 218~p!1) -> PP2A2(s!1), 	 MEK(S218~u!1) @ 1.0
+'PP2A2_MEK@218_op' PP2A2(s!1),MEK(S218!1) -> PP2A2(s),MEK(S218) @ 1.0
+'MEK_ERK@185' MEK(s,S218~ 	p,S222~p),ERK(T185~u) -> MEK(s!1,S218~p,S222~p),ERK(T185~u!1) @ 1.0
+'ERK@185' MEK(s! 	1, 	 S218~p,S222~p),ERK 	 	(T185~u!1) -> MEK(s!1,S218~p,S222~p),ERK(T185~p!1) @ 1.0
+'MEK_ERK@185_op' MEK(s!1,S218~p,S222~p),ERK(T185!1) 	 -> MEK(s,S218~p,S222~p),ERK(T185) @ 1.0
+'MEK_ERK@187' MEK(s,S218~p,	 	 S222~p),ERK(Y187~u) -> MEK(s!1,S218~p,S222~p),ERK(Y187~u!1) @ 1.0
+'ERK@187' MEK 	 	(s!1,S218~p,S222~p),ERK(Y187~u!1) ->	 	 MEK(s!1, 	 	 S218 	 ~p,S222~p),ERK(Y187~p!1) @ 1.0
+'MEK_	 	 ERK@187_op' MEK(s!1,S218~p,S222~p),ERK(Y187!1) -> MEK(s,S218~p,S222~p),ERK(Y187) @ 1.0
+'MKP3_ERK@185' MKP3(s), 	 	ERK(T185~p) -> MKP3(s!1),ERK(T185~p!1) @ 1.0
+'ERK@185_op' MKP3(s!1),ERK(T185~p!1) -> MKP3(s!1),ERK(T185~u!1) @ 1.0
+'MKP3_ERK@185_ 	 op' 	  	MKP3(	  	s!1),ERK(T185!1) -> MKP3(s), 	  	ERK(T185) @ 1.0
+'MKP3_ERK@187'  	 	MKP3(s),ERK(Y187~p) -> MKP3 	( 	 	 s!1),ERK( 	   	Y187~p!1) @ 1.0
+'ERK@187_op' MKP3(s!1),ERK(Y187~p!1) -> MKP3(s!1),ERK(Y187~u!1) @ 1.0
+'MKP3_ERK@187_op' 	 	 	MKP3(s!1),ERK(Y187!1) -> MKP3(s) 	 	 ,ERK(Y187) @ 1.0
+'Rule1' E() -> EGF(r~ext) @ 1.0
+'Rule2' H() -> HRG(r) @ 1.0
+'EGF_EGFRe' EGF(r~ext),EGFR(L~ext,CR) -> EGF(r~ext!1),EGFR(L~ext!1,CR) @ 1.0
+'EGF_EGFRi' EGF(r~int),EGFR(L~int,CR) -> EGF(r~int!1),EGFR(L~int!1,CR) @ 1.0
+'HRG_HER3' HRG(r),HER3(L,CR) -> HRG(r!1),HER3(L!1,CR) @ 1.0
+'HRG_HER4' HRG(r),HER4(L,CR) -> HRG(r!1),HER4(L!1,CR) @ 1.0
+'EGF_EGFR_op' EGF(r!1),EGFR(L!1) -> EGF(r),EGFR(L) @ 1.0
+'HRG_HER3_op' HRG(r!1),HER3(L!1) -> HRG(r),HER3(L) @ 1.0
+'HRG_HER4_op' HRG(r!1),HER4(L!1) -> HRG(r),HER4(L) @ 1.0
+'EGFR_EGFRe' EGFR(L~ext!_,CR,N,C),EGFR(L~ext!_,CR,N,C) -> EGFR(L~ext!_,CR!1,N,C),EGFR(L~ext!_,CR!1,N,C) @ 1.0
+'EGFR_EGFRi' EGFR(L~int!_,CR,N,C),EGFR(L~int!_,CR,N,C) -> EGFR(L~int!_,CR!1,N,C),EGFR(L~int!_,CR!1,N,C) @ 1.0
+'EGFR_HER2' EGFR(L~ext!_,CR,N,C),HER2(CR,N,C) -> EGFR(L~ext!_,CR!1,N,C),HER2(CR!1,N,C) @ 1.0
+'EGFR_HER3' EGFR(L~ext!_,CR,N,C),HER3(L~ext!_,CR,C) -> EGFR(L~ext!_,CR!1,N,C),HER3(L~ext!_,CR!1,C) @ 1.0
+'EGFR_HER4' EGFR(L~ext!_,CR,N,C),HER4(L~ext!_,CR,N,C) -> EGFR(L~ext!_,CR!1,N,C),HER4(L~ext!_,CR!1,N,C) @ 1.0
+'HER2_HER3' HER2(CR,N,C),HER3(L~ext!_,CR,C) -> HER2(CR!1,N,C),HER3(L~ext!_,CR!1,C) @ 1.0
+'HER2_HER4' HER2(CR,N,C),HER4(L~ext!_,CR,N,C) -> HER2(CR!1,N,C),HER4(L~ext!_,CR!1,N,C) @ 1.0
+'HER3_HER3' HER3(L~ext!_,CR,C),HER3(L~ext!_,CR,C) -> HER3(L~ext!_,CR!1,C),HER3(L~ext!_,CR!1,C) @ 1.0
+'HER3_HER4' HER3(L~ext!_,CR,C),HER4(L~ext!_,CR,N,C) -> HER3(L~ext!_,CR!1,C),HER4(L~ext!_,CR!1,N,C) @ 1.0
+'HER4_HER4' HER4(L~ext!_,CR,N,C),HER4(L~ext!_,CR,N,C) -> HER4(L~ext!_,CR!1,N,C),HER4(L~ext!_,CR!1,N,C) @ 1.0
+'EGFR_EGFR_op' EGFR(CR!1,N,C),EGFR(CR!1,N,C) -> EGFR(CR,N,C),EGFR(CR,N,C) @ 1.0
+'EGFR_HER2_op' EGFR(CR!1,N,C),HER2(CR!1,N,C) -> EGFR(CR,N,C),HER2(CR,N,C) @ 1.0
+'EGFR_HER3_op' EGFR(CR!1,N,C),HER3(CR!1,C) -> EGFR(CR,N,C),HER3(CR,C) @ 1.0
+'EGFR_HER4_op' EGFR(CR!1,N,C),HER4(CR!1,N,C) -> EGFR(CR,N,C),HER4(CR,N,C) @ 1.0
+'HER2_HER2_op' HER2(CR!1,N,C),HER2(CR!1,N,C) -> HER2(CR,N,C),HER2(CR,N,C) @ 1.0
+'HER2_HER3_op' HER2(CR!1,N,C),HER3(CR!1,C) -> HER2(CR,N,C),HER3(CR,C) @ 1.0
+'HER2_HER4_op' HER2(CR!1,N,C),HER4(CR!1,N,C) -> HER2(CR,N,C),HER4(CR,N,C) @ 1.0
+'HER3_HER3_op' HER3(CR!1,C),HER3(CR!1,C) -> HER3(CR,C),HER3(CR,C) @ 1.0
+'HER3_HER4_op' HER3(CR!1,C),HER4(CR!1,N,C) -> HER3(CR,C),HER4(CR,N,C) @ 1.0
+'HER4_HER4_op' HER4(CR!1,N,C),HER4(CR!1,N,C) -> HER4(CR,N,C),HER4(CR,N,C) @ 1.0
+'11 dimer' EGFR(CR!1,N,C),EGFR(CR!1,N,C) <-> EGFR(CR!1,N!2,C),EGFR(CR!1,N,C!2) @ 1.0,1.0
+'21 dimer' HER2(CR!1,N,C),EGFR(CR!1,N,C) <-> HER2(CR!1,N!2,C),EGFR(CR!1,N,C!2) @ 1.0,1.0
+'41 dimer' HER4(CR!1,N,C),EGFR(CR!1,N,C) <-> HER4(CR!1,N!2,C),EGFR(CR!1,N,C!2) @ 1.0,1.0
+'12 dimer' EGFR(CR!1,N,C),HER2(CR!1,N,C) <-> EGFR(CR!1,N!2,C),HER2(CR!1,N,C!2) @ 1.0,1.0
+'22 dimer' HER2(CR!1,N,C),HER2(CR!1,N,C) <-> HER2(CR!1,N!2,C),HER2(CR!1,N,C!2) @ 1.0,1.0
+'42 dimer' HER4(CR!1,N,C),HER2(CR!1,N,C) <-> HER4(CR!1,N!2,C),HER2(CR!1,N,C!2) @ 1.0,1.0
+'13 dimer' EGFR(CR!1,N,C),HER3(CR!1,C) <-> EGFR(CR!1,N!2,C),HER3(CR!1,C!2) @ 1.0,1.0
+'23 dimer' HER2(CR!1,N,C),HER3(CR!1,C) <-> HER2(CR!1,N!2,C),HER3(CR!1,C!2) @ 1.0,1.0
+'43 dimer' HER4(CR!1,N,C),HER3(CR!1,C) <-> HER4(CR!1,N!2,C),HER3(CR!1,C!2) @ 1.0,1.0
+'14 dimer' EGFR(CR!1,N,C),HER4(CR!1,N,C) <-> EGFR(CR!1,N!2,C),HER4(CR!1,N,C!2) @ 1.0,1.0
+'24 dimer' HER2(CR!1,N,C),HER4(CR!1,N,C) <-> HER2(CR!1,N!2,C),HER4(CR!1,N,C!2) @ 1.0,1.0
+'44 dimer' HER4(CR!1,N,C),HER4(CR!1,N,C) <-> HER4(CR!1,N!2,C),HER4(CR!1,N,C!2) @ 1.0,1.0
+'EGFR_Inh' EGFR(N!_,bp),Inh1(s) -> EGFR(N!_,bp!1),Inh1(s!1) @ 1.0
+'HER2_Inh' HER2(N!_,bp),Inh2(s) -> HER2(N!_,bp!1),Inh2(s!1) @ 1.0
+'HER4_Inh' HER4(N!_,bp),Inh4(s) -> HER4(N!_,bp!1),Inh4(s!1) @ 1.0
+'EGFR_Inh_op' EGFR(bp!1),Inh1(s!1) -> EGFR(bp),Inh1(s) @ 1.0
+'HER2_Inh_op' HER2(bp!1),Inh2(s!1) -> HER2(bp),Inh2(s) @ 1.0
+'HER4_Inh_op' HER4(bp!1),Inh4(s!1) -> HER4(bp),Inh4(s) @ 1.0
+'EGF_mono' EGF(r~ext!1),EGFR(L~ext!1,CR) -> EGF(r~int!1),EGFR(L~int!1,CR) @ 0.1
+'EGF_di' EGF(r~ext!1),EGFR(L~ext!1,CR!2),EGF(r~ext!3),EGFR(L~ext!3,CR!2) -> EGF(r~int!1),EGFR(L~int!1,CR!2),EGF(r~int!3),EGFR(L~int!3,CR!2) @ 0.1
+'Rule47' HER4(N!1,bp),HER4(C!1,Y2~u) -> HER4(N!1,bp),HER4(C!1,Y2~p) @ 1.0
+'Rule48' EGFR(N!1,bp),HER4(C!1,Y3~u) -> EGFR(N!1,bp),HER4(C!1,Y3~p) @ 1.0
+'Rule49' HER2(N!1,bp),HER4(C!1,Y3~u) -> HER2(N!1,bp),HER4(C!1,Y3~p) @ 1.0
+'Rule50' HER4(N!1,bp),HER4(C!1,Y3~u) -> HER4(N!1,bp),HER4(C!1,Y3~p) @ 1.0
+'Rule51' EGFR(Y1016~p),PTP(s) -> EGFR(Y1016~p!1),PTP(s!1) @ 1.0
+'Rule63' HER3(Y1309~p),PTP(s) -> HER3(Y1309~p!1),PTP(s!1) @ 1.0
+'Rule64' HER4(Y1~p),PTP(s) -> HER4(Y1~p!1),PTP(s!1) @ 1.0
+'Rule65' HER4(Y2~p),PTP(s) -> HER4(Y2~p!1),PTP(s!1) @ 1.0
+'Rule66' HER4(Y3~p),PTP(s) -> HER4(Y3~p!1),PTP(s!1) @ 1.0
+'Rule67' EGFR(Y1016!1),PTP(s!1) -> EGFR(Y1016),PTP(s) @ 1.0
+'Rule82' HER4(Y3!1),PTP(s!1) -> HER4(Y3),PTP(s) @ 1.0
+'Rule83' EGFR(Y1016~p!1),PTP(s!1) -> EGFR(Y1016~u!1),PTP(s!1) @ 1.0
+'Rule97' HER4(Y2~p!1),PTP(s!1) -> HER4(Y2~u!1),PTP(s!1) @ 1.0
+'Rule98' HER4(Y3~p!1),PTP(s!1) -> HER4(Y3~u!1),PTP(s!1) @ 1.0
+'deg_EGF' EGF(r~int) -> @ 1.0
+'deg_EGFR' EGFR(L~int,CR) -> @ 1.0
+'EGFR_RasGAP' EGFR(Y1016~p),RasGAP(SH2~u) <-> EGFR(Y1016~p!1),RasGAP(SH2~rec!1) @ 1.0,1.0
+'EGFR_Grb2' EGFR(Y1092~p),Grb2(SH2~u) <-> EGFR(Y1092~p!1),Grb2(SH2~rec!1) @ 1.0,1.0
+'EGFR_Shc' EGFR(Y1172~p),Shc(PTB~u) <-> EGFR(Y1172~p!1),Shc(PTB~rec!1) @ 1.0,1.0
+'HER2_Grb2' HER2(Y1139~p),Grb2(SH2~u) <-> HER2(Y1139~p!1),Grb2(SH2~rec!1) @ 1.0,1.0
+'HER2_Shc#2' HER2(Y1221~p),Shc(PTB~u) <-> HER2(Y1221~p!1),Shc(PTB~rec!1) @ 1.0,1.0
+'HER3_PI3K#1' HER3(Y1035~p),PI3K(SH2~u) <-> HER3(Y1035~p!1),PI3K(SH2~rec!1) @ 1.0,1.0
+'HER3_Shc' HER3(Y1309~p),Shc(PTB~u) <-> HER3(Y1309~p!1),Shc(PTB~rec!1) @ 1.0,1.0
+'HER4_Grb2' HER4(Y2~p),Grb2(SH2~u) <-> HER4(Y2~p!1),Grb2(SH2~rec!1) @ 1.0,1.0
+'HER4_Shc' HER4(Y3~p),Shc(PTB~u) <-> HER4(Y3~p!1),Shc(PTB~rec!1) @ 1.0,1.0
+'Grb2_Gab1' Grb2(SH3c),Gab1(PR) <-> Grb2(SH3c!1),Gab1(PR!1) @ 1.0,1.0
+'Grb2_SoS' Grb2(SH3n),SoS(PR,S~u) -> Grb2(SH3n!1),SoS(PR!1,S~u) @ 1.0
+'Grb2_SoS_op' Grb2(SH3n!1),SoS(PR!1) -> Grb2(SH3n),SoS(PR) @ 1.0
+'Shc@Y' Shc(PTB~rec!_,Y~u) -> Shc(PTB~rec!_,Y~p) @ 1.0
+'Shc@Y_op' Shc(Y~p) -> Shc(Y~u) @ 1.0
+'Gab1@48' Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y48~u) -> Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y48~p) @ 1.0
+'Gab1@317' Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y317~u) -> Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y317~p) @ 1.0
+'Gab1@48_op' Gab1(Y48~p) -> Gab1(Y48~u) @ 1.0
+'Gab1_PI3K@447_op' Gab1(Y447!1),PI3K(SH2!1) -> Gab1(Y447),PI3K(SH2) @ 1.0
+'Gab1_Shp2#1' Gab1(Y689~p),Shp2(SH2c) -> Gab1(Y689~p!1),Shp2(SH2c!1) @ 1.0
+'Gab1_Shp2#2' Gab1(Y657~p,Y689!1),Shp2(SH2n,SH2c!1) -> Gab1(Y657~p!2,Y689!1),Shp2(SH2n!2,SH2c!1) @ 1.0
+'Gab1_Shp2_op#1' Gab1(Y657!1),Shp2(SH2n!1) -> Gab1(Y657),Shp2(SH2n) @ 1.0
+'Rule102' Gab1(Y619~p,Y657!1,Y689!2),Shp2(SH2n!1,SH2c!2) -> Gab1(Y619~u,Y657!1,Y689!2),Shp2(SH2n!1,SH2c!2) @ 1.0
+'SoS short arm' Grb2(SH2~rec!_,SH3n!1),SoS(PR!1,GEF),Ras(s~gdp) -> Grb2(SH2~rec!_,SH3n!1),SoS(PR!1,GEF!2),Ras(s~gdp!2) @ 1.0
+'SoS long arm' Shc(PTB~rec!_,Y!1),Grb2(SH2!1,SH3n!2),SoS(PR!2,GEF),Ras(s~gdp) -> Shc(PTB~rec!_,Y!1),Grb2(SH2!1,SH3n!2),SoS(PR!2,GEF!3),Ras(s~gdp!3) @ 1.0
+'SoS vlong arm' Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y48!2),Grb2(SH2!2,SH3n!3),SoS(PR!3,GEF),Ras(s~gdp) -> Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y48!2),Grb2(SH2!2,SH3n!3),SoS(PR!3,GEF!4),Ras(s~gdp!4) @ 1.0
+'SoS_Ras_op' SoS(GEF!1),Ras(s!1) -> SoS(GEF),Ras(s) @ 1.0
+'RasGAP no arm' RasGAP(SH2~rec!_,GAP),Ras(s~gtp) -> RasGAP(SH2~rec!_,GAP!1),Ras(s~gtp!1) @ 1.0
+'RasGAP long arm' Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y317!2),RasGAP(SH2!2,GAP),Ras(s~gtp) -> Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y317!2),RasGAP(SH2!2,GAP!3),Ras(s~gtp!3) @ 1.0
+'RasGAP_Ras_op' RasGAP(GAP!1),Ras(s!1) -> RasGAP(GAP),Ras(s) @ 1.0
+'PI3K no arm' PI3K(SH2~rec!_,s),PI(three~u,four~p,five~p) -> PI3K(SH2~rec!_,s!1),PI(three~u!1,four~p,five~p) @ 1.0
+'PI3K long arm #1' Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y447!2),PI3K(SH2!2,s),PI(three~u,four~p,five~p) -> Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y447!2),PI3K(SH2!2,s!3),PI(three~u!3,four~p,five~p) @ 1.0
+'PI3K_PI_op' PI3K(s!1),PI(three!1) -> PI3K(s),PI(three) @ 1.0
+'PTEN_PI' PTEN(s),PI(three~p) -> PTEN(s!1),PI(three~p!1) @ 1.0
+'PTEN_PI_op' PTEN(s!1),PI(three!1) -> PTEN(s),PI(three) @ 1.0
+'Ras GTP' SoS(GEF!1),Ras(s~gdp!1) -> SoS(GEF!1),Ras(s~gtp!1) @ 1.0
+'Ras GDP' RasGAP(GAP!1),Ras(s~gtp!1) -> RasGAP(GAP!1),Ras(s~gdp!1) @ 1.0
+'intrinsic GDP' Ras(s~gtp) -> Ras(s~gdp) @ 0.01
+'PI@three' PI3K(s!1),PI(three~u!1) -> PI3K(s!1),PI(three~p!1) @ 1.0
+'PI@three_op' PTEN(s!1),PI(three~p!1) -> PTEN(s!1),PI(three~u!1) @ 1.0
+'Ras_PI3K no arm' Ras(s~gtp),PI3K(SH2~rec!_,RBD) -> Ras(s~gtp!1),PI3K(SH2~rec!_,RBD!1) @ 1.0
+'Ras_PI3K long arm #3' Ras(s~gtp),Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y619!2),PI3K(SH2!2,RBD) -> Ras(s~gtp!3),Grb2(SH2~rec!_,SH3c!1),Gab1(PR!1,Y619!2),PI3K(SH2!2,RBD!3) @ 1.0
+'Ras_PI3K_op' Ras(s!1),PI3K(RBD!1) -> Ras(s),PI3K(RBD) @ 1.0
+'PIP3_Gab1' PI(three~p,four~p,five~p),Grb2(SH2~rec!_,SH3c!1),Gab1(PH,PR!1) -> PI(three~p!2,four~p,five~p),Grb2(SH2~rec!_,SH3c!1),Gab1(PH!2,PR!1) @ 1.0
+'PIP3_Gab1_op' PI(three!1),Gab1(PH!1) -> PI(three),Gab1(PH) @ 1.0
+'RasGAP Gab arm' Gab1(PH!_,Y317~p!1),RasGAP(SH2!1,GAP),Ras(s~gtp) -> Gab1(PH!_,Y317~p!1),RasGAP(SH2!1,GAP!2),Ras(s~gtp!2) @ 1.0
+'SoS Gab arm #1' Gab1(PH!_,Y48~p!1),Grb2(SH2!1,SH3n!2),SoS(PR!2,GEF),Ras(s~gdp) -> Gab1(PH!_,Y48~p!1),Grb2(SH2!1,SH3n!2),SoS(PR!2,GEF!3),Ras(s~gdp!3) @ 1.0
+'SoS Gab arm #2' Gab1(PH!_,PR!1),Grb2(SH3c!1,SH3n!2),SoS(PR!2,GEF),Ras(s~gdp) -> Gab1(PH!_,PR!1),Grb2(SH3c!1,SH3n!2),SoS(PR!2,GEF!3),Ras(s~gdp!3) @ 1.0
+'PI3K Ras arm' PI3K(RBD!_,s),PI(three~u,four~p,five~p) -> PI3K(RBD!_,s!1),PI(three~u!1,four~p,five~p) @ 1.0
+'PI3K Gab arm #1' Gab1(PH!_,Y447!1),PI3K(SH2!1,s),PI(three~u,four~p,five~p) -> Gab1(PH!_,Y447!1),PI3K(SH2!1,s!2),PI(three~u!2,four~p,five~p) @ 1.0
+'Ras_Raf' Ras(s~gtp),Raf(RBD,S~p) -> Ras(s~gtp!1),Raf(RBD!1,S~p) @ 1.0
+'Ras_Raf_op' Ras(s!1),Raf(RBD!1) -> Ras(s),Raf(RBD) @ 1.0
+'Raf_RafK' Raf(RBD,S~u),RafK(s) -> Raf(RBD,S~u!1),RafK(s!1) @ 1.0
+'Raf_RafK_op' Raf(S!1),RafK(s!1) -> Raf(S),RafK(s) @ 1.0
+'Raf@S_op' Raf(RBD!_,S~p) -> Raf(RBD!_,S~u) @ 1.0
+'Raf@S#1' Raf(S~u!1),RafK(s!1) -> Raf(S~p!1),RafK(s!1) @ 1.0
+'Raf_MEK@S1' Raf(RBD,S~u),MEK(s,S1~u,S2) -> Raf(RBD,S~u!1),MEK(s,S1~u!1,S2) @ 1.0
+'Raf_MEK@S2' Raf(RBD,S~u),MEK(s,S1,S2~u) -> Raf(RBD,S~u!1),MEK(s,S1,S2~u!1) @ 1.0
+'M2KP_MEK@S1' M2KP(s),MEK(s,S1~p,S2) -> M2KP(s!1),MEK(s,S1~p!1,S2) @ 1.0
+'M2KP_MEK@S2' M2KP(s),MEK(s,S1,S2~p) -> M2KP(s!1),MEK(s,S1,S2~p!1) @ 1.0
+'Raf_MEK@S1_op' Raf(S!1),MEK(S1!1) -> Raf(S),MEK(S1) @ 1.0
+'M2KP_MEK@S2_op' M2KP(s!1),MEK(S2!1) -> M2KP(s),MEK(S2) @ 1.0
+'MEK@S1' Raf(S!1),MEK(S1~u!1) -> Raf(S!1),MEK(S1~p!1) @ 1.0
+'MEK@S2' Raf(S!1),MEK(S2~u!1) -> Raf(S!1),MEK(S2~p!1) @ 1.0
+'MEK@S1_op' M2KP(s!1),MEK(S1~p!1) -> M2KP(s!1),MEK(S1~u!1) @ 1.0
+'MEK_ERK@T' MEK(s,S1~p,S2~p),ERK(s,T~u,Y) -> MEK(s!1,S1~p,S2~p),ERK(s,T~u!1,Y) @ 1.0
+'MEK_ERK@Y' MEK(s,S1~p,S2~p),ERK(s,T,Y~u) -> MEK(s!1,S1~p,S2~p),ERK(s,T,Y~u!1) @ 1.0
+'MKP_ERK@Y_op' MKP(s!1),ERK(Y!1) -> MKP(s),ERK(Y) @ 1.0
+'ERK@T' MEK(s!1),ERK(T~u!1) -> MEK(s!1),ERK(T~p!1) @ 1.0
+'ERK@Y' MEK(s!1),ERK(Y~u!1) -> MEK(s!1),ERK(Y~p!1) @ 1.0
+'ERK@T_op' MKP(s!1),ERK(T~p!1) -> MKP(s!1),ERK(T~u!1) @ 1.0
+'ERK@Y_op' MKP(s!1),ERK(Y~p!1) -> MKP(s!1),ERK(Y~u!1) @ 1.0
+'ERK_SoS_op' ERK(s!1),SoS(S!1) -> ERK(s),SoS(S) @ 1.0
+'ERK_Gab1#1_op' ERK(s!1),Gab1(S454!1) -> ERK(s),Gab1(S454) @ 1.0
+'ERK_Gab1#2_op' ERK(s!1),Gab1(T476!1) -> ERK(s),Gab1(T476) @ 1.0
+'SoS@S' ERK(s!1),SoS(S~u!1) -> ERK(s!1),SoS(S~p!1) @ 1.0
+'SoS@S_op' SoS(S~p) -> SoS(S~u) @ 0.1
+'Gab1@597' ERK(s!1),Gab1(S597~u!1) -> ERK(s!1),Gab1(S597~p!1) @ 1.0
+'Gab1@454_op' Gab1(S454~p) -> Gab1(S454~u) @ 0.1
+'Gab1@476_op' Gab1(T476~p) -> Gab1(T476~u) @ 0.1
+'TF1@s' ERK(s!1),TF1(s~u!1) -> ERK(s!1),TF1(s~p!1) @ 1.0
+'TF1@s_op' TF1(s~p) -> TF1(s~u) @ 1.0
+'PIP3_PDK1' PI(three~p,four~p,five~p),PDK1(PH) -> PI(three~p!1,four~p,five~p),PDK1(PH!1) @ 1.0
+'PIP3_PDK1_op' PI(three!1),PDK1(PH!1) -> PI(three),PDK1(PH) @ 1.0
+'PDK1@241' PDK1(PH!_,S~u) -> PDK1(PH!_,S~p) @ 1.0
+'PDK1@241_op' PDK1(S~p) -> PDK1(S~u) @ 1.0
+'PDK1_AKT' PDK1(S~p),AKT(s,S,T~u) -> PDK1(S~p!1),AKT(s,S,T~u!1) @ 1.0
+'PDK1_AKT_op' PDK1(S!1),AKT(T!1) -> PDK1(S),AKT(T) @ 1.0
+'AKTP_AKT@T' AKTP(s),AKT(s,S,T~p) -> AKTP(s!1),AKT(s,S,T~p!1) @ 1.0
+'AKTP_AKT@S_op' AKTP(s!1),AKT(S!1) -> AKTP(s),AKT(S) @ 1.0
+'AKT@T' PDK1(S!1),AKT(T~u!1) -> PDK1(S!1),AKT(T~p!1) @ 1.0
+'AKT@S' AKT(S~u,T~p?) -> AKT(S~p,T~p?) @ 1.0
+'AKT@T_op' AKTP(s!1),AKT(T~p!1) -> AKTP(s!1),AKT(T~u!1) @ 1.0
+'AKT@S_op' AKTP(s!1),AKT(S~p!1) -> AKTP(s!1),AKT(S~u!1) @ 1.0
+'AKT_Raf' AKT(s,S~p,T~p),Raf(RBD,S~u) -> AKT(s!1,S~p,T~p),Raf(RBD,S~u!1) @ 1.0
+'AKT_Raf_op' AKT(s!1),Raf(S!1) -> AKT(s),Raf(S) @ 1.0
+'AKT_Bad' AKT(s,S~p,T~p),Bad(s~u) -> AKT(s!1,S~p,T~p),Bad(s~u!1) @ 1.0
+'AKT_Bad_op' AKT(s!1),Bad(s!1) -> AKT(s),Bad(s) @ 1.0
+'Raf@S#2' AKT(s!1),Raf(S~u!1) -> AKT(s!1),Raf(S~p!1) @ 1.0
+'Bad@s' AKT(s!1),Bad(s~u!1) -> AKT(s!1),Bad(s~p!1) @ 1.0
+'Bad@s_op' Bad(s~p) -> Bad(s~u) @ 1.0
+
+#INCORRECT
+
+A(X,)  	 	< 	 ->  	 	   A(X) @ 1.0,3
+A(), <-> A() @ 1.0,3
+A(X~) <->  	 	A() @ 1.0,3
+A() <-> A( @ 1.0,3
+A() 		() <->  	 	 A() @ 1.0,3
+A( <-> A() @ 1.0,3
+A(x~u~p) <-> A() @ 1.0,3
+A(x!1!2) 	 	 	<-> A() @ 1.0,3
+A(x!_1) 	 	 	<-> A() @ 1.0,3
+A <-> A() @ 1.0,3
+A(x) <-> A() @@ 1.0,3
+A( <-> A() @ 1.0,3
+A() <-> A() @ ..1
+A() <-_> A() @ 1.0
+A() <--> A() @ 1.0
+A(x) - > A() @ 1.0
+A() <> A() @ 1.0
+A() <-> A) @ 1.0,3
+A(()) <-> A() @ 1.0,3
+A(x ->) A() @ 1.0,3
+A()x <-> A() @ 1.0,3
+A() <-> (A() @) 1.0,3
+'PDK1_AKT' PDK1(S~p)er,AKT(s,S,T~u) ->  rPDK1(S~pt!1),AKT(s,S,T~u!1) @ 1.0
+'PDK1_AKT_op' PDK1(rteS!e1),rtAKT(T!1) -> r PDKtr1(S),retAKT(T) @ 1.0
+'AKTP_AKT@T'ert AKertTP(s),AKT(s,S,T~p) -r> AKTPt(s!1),AKT(s,S,T~p!1) @ 1.0
+'AKTP_AKT@S_op' AKerTP(s!1e),AKT(S!1) -> AKTP(s),AKT(S) @ 1.0
+'AKT@T' PDK1(Se!1),,AKT(T~u!1) -> PDK1e(S!1),AKT(T~p!1) @ 1.0
+'AKT@S' AKT(S~u,T~p?) -> AKT(S~p,T~p?)  er@ 1.0
+'AKT@T_op' AKTP(s!1),retAKT(T~p!1) -> AKTP(s!1),AKT(T~u! t1) @ 1.0
+'AKT@S_op' AKTP er(s!1),AKT(rS~p!1) +> AKTP(s!1),AKT(S~u!1) @ 1.0
+'AKT_Raf ' AKT(s,S~~p,T~p),Raf(RBD,S~u) -> AKT(s!1,S~p,T~p),Raf(RBD,S~u!1) @ 1.0
+'AKT_Raf_op' AKT(s!1 ),Raf(S!1)  -> AKT(s),Raf(S) @t 1.0
+'AKT_Bad' AKT(s,S~p,T~p r)t,Bad(s~u er> AKT(s!1),Raf(S~p!1) @ 1.0
+'Bad@s' AKT(s!1),Br  rad(s r~u!e1t ) -> AKT(s!1),Bad(s~p!1) @ 1.0
+'Bad@s_op' Bad(s~! rp) -> Bad(s~u) @ 1.0
+

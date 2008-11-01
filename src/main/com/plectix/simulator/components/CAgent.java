@@ -154,4 +154,22 @@ public class CAgent implements IAgent {
 		return SimulationMain.getSimulationManager().getNameDictionary()
 				.getName(nameId);
 	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer(getName() + "(");
+		boolean first = true;
+		for (CSite site : siteMap.values()) {
+			if (!first) {
+				sb.append(", ");
+			} else {
+				first = false;
+			}
+			sb.append(site.getName());
+			if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
+				sb.append("~" + site.getInternalState().getName());
+			}
+		}
+		sb.append(")");
+		return sb.toString();
+	}
 }

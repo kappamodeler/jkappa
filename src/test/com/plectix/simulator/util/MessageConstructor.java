@@ -25,7 +25,7 @@ public class MessageConstructor {
 		return myEmpty;
 	}
 	
-	public String toString() {
+	public String getMessage() {
 		return myMessage.toString();
 	}
 }

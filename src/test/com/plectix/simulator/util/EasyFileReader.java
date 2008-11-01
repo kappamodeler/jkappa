@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-/*package*/ class EasyFileReader {
+public class EasyFileReader {
 	private BufferedReader myReader;
 	private String myDataFilePath;
 	
