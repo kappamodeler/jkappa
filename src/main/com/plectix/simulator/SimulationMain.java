@@ -93,7 +93,7 @@ public class SimulationMain {
 	public SimulationMain() {
 		instance = this;
 	}
-	
+
 	public static void main(String[] args) {
 		// Initialize log4j
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
@@ -240,10 +240,13 @@ public class SimulationMain {
 										.getOptionValue(LONG_POINTS_OPTION)));
 			}
 			if (cmdLineArgs.hasOption(LONG_RESCALE_OPTION)) {
-				SimulationMain.getSimulationManager().getSimulationData()
-						.setRescale(
-								Double.valueOf(cmdLineArgs
-										.getOptionValue(LONG_RESCALE_OPTION)));
+				double rescale = Double.valueOf(cmdLineArgs
+						.getOptionValue(LONG_RESCALE_OPTION));
+				if(rescale>0)
+					SimulationMain.getSimulationManager().getSimulationData()
+						.setRescale(rescale);
+				else
+					throw new Exception();
 			}
 
 			if (cmdLineArgs.hasOption(LONG_SEED_OPTION)) {

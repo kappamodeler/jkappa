@@ -429,7 +429,19 @@ public class Parser {
 			count = 1;
 			if (length != 1) {
 				try {
-					count = Long.valueOf(result[0]);
+					double rescale = SimulationMain.getSimulationManager()
+							.getSimulationData().getRescale();
+					if (rescale > 0) {
+						double countInFile = Double.valueOf(result[0])
+								* rescale;
+						if (countInFile - Math.floor(countInFile) < 1e-16)
+							count = (long) countInFile;
+						else
+							throw new ParseErrorException(myErrorHandler
+									.formMessage(itemDS)
+									+ " and '--rescale' option.");
+					} else
+						count = Long.valueOf(result[0]);
 				} catch (NumberFormatException e) {
 					throw new ParseErrorException(myErrorHandler
 							.formMessage(itemDS));
