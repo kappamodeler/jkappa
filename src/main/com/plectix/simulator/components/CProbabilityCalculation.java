@@ -58,7 +58,7 @@ public class CProbabilityCalculation {
 	private int getRandomIndex() {
 
 		for (int i = 0; i < rulesProbability.length; i++) {
-			if (rules.get(i).isInfinityRate() && rulesProbability[i] != 0)
+			if (rules.get(i).isInfinityRate() && rulesProbability[i] != 0 && (!(rules.get(i).isClashForInfiniteRule())))
 				return i;
 		}
 

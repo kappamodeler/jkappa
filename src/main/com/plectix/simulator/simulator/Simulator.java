@@ -64,7 +64,11 @@ public class Simulator {
 		if (model.getSimulationData().getSnapshotTime() >= 0.0)
 			hasSnapshot = true;
 
-		while (currentTime <= model.getSimulationData().getTimeLength()) {
+		int count = 0;
+		
+		long max_clash = 0;
+		while (currentTime <= model.getSimulationData().getTimeLength() && max_clash<=
+			model.getSimulationData().getMaxClashes()) {
 			if (hasSnapshot
 					&& model.getSimulationData().getSnapshotTime() <= currentTime) {
 				hasSnapshot = false;
@@ -89,8 +93,9 @@ public class Simulator {
 			if (!rule.isInfinityRate())
 				currentTime += ruleProbabilityCalculation.getTimeValue();
 
-			if (!isClash(injectionsList)) {
+			if (!rule.isClash(injectionsList)) {
 				// negative update
+				max_clash = 0;
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("negative update");
 
@@ -111,12 +116,12 @@ public class Simulator {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Clash");
 				clash++;
-				currentTime += ruleProbabilityCalculation.getTimeValue();
+				max_clash++;
 			}
 
 			if (isIteration)
 				addIteration(iteration_num);
-
+			count++;
 		}
 		outToLogger(isEndRules);
 		if (!isIteration)
@@ -272,16 +277,7 @@ public class Simulator {
 				+ " sec. CPU");
 	}
 
-	private boolean isClash(List<CInjection> injections) {
-		if (injections.size() == 2) {
-			for (CSite siteCC1 : injections.get(0).getSiteList())
-				for (CSite siteCC2 : injections.get(1).getSiteList())
-					if (siteCC1.getAgentLink().getId() == siteCC2
-							.getAgentLink().getId())
-						return true;
-		}
-		return false;
-	}
+	
 
 	public final void runStories() {
 		CStories stories = model.getSimulationData().getStories();
@@ -304,7 +300,7 @@ public class Simulator {
 				List<CInjection> injectionsList = ruleProbabilityCalculation
 						.getSomeInjectionList(rule);
 				currentTime += ruleProbabilityCalculation.getTimeValue();
-				if (!isClash(injectionsList)) {
+				if (!rule.isClash(injectionsList)) {
 					if (stories.checkRule(rule.getRuleID(), i))
 						break;
 					rule.applyRule(injectionsList);

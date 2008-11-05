@@ -37,7 +37,7 @@ public class SimulationMain {
 	private final static String LONG_INIT_OPTION = "init";
 	private final static String LONG_POINTS_OPTION = "points";
 	private final static String LONG_RESCALE_OPTION = "rescale";
-
+	private final static String LONG_MAX_CLASHES_OPTION = "max_clashes";
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
 	private static SimulationMain instance;
@@ -87,7 +87,8 @@ public class SimulationMain {
 				"Rescaling factor (eg. '10.0' or '0.10')");
 		cmdLineOptions.addOption(LONG_POINTS_OPTION, true,
 				"Number of data points per plots");
-
+		cmdLineOptions.addOption(LONG_MAX_CLASHES_OPTION, true,
+		"Max number of consequtive clashes before aborting (default 100, 0=infinite)");
 	}
 
 	public SimulationMain() {
@@ -256,6 +257,15 @@ public class SimulationMain {
 				SimulationMain.getSimulationManager().getSimulationData()
 						.setSeed(seed);
 			}
+			
+			if (cmdLineArgs.hasOption(LONG_MAX_CLASHES_OPTION)) {
+				int max_clashes = 0;
+				max_clashes = Integer.valueOf(cmdLineArgs
+						.getOptionValue(LONG_MAX_CLASHES_OPTION));
+				SimulationMain.getSimulationManager().getSimulationData()
+						.setMaxClashes(max_clashes);
+			}
+
 
 			if (cmdLineArgs.hasOption(LONG_EVENT_OPTION)) {
 				long event = 0;

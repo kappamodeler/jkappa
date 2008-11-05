@@ -48,6 +48,16 @@ public class SimulationData {
 	private String xmlSessionName = "simplx.xml";
 	private String tmpSessionName = "simplx.tmp";
 	private boolean activationMap = true;
+	private long maxClashes = Integer.MAX_VALUE;
+
+	public long getMaxClashes() {
+		return maxClashes;
+	}
+
+	public void setMaxClashes(long max_clashes) {
+		if (max_clashes>0)
+			this.maxClashes = max_clashes;
+	}
 
 	private double snapshotTime = -1.;
 

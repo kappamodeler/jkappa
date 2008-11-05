@@ -17,8 +17,7 @@ public class CRule {
 	private String name;
 	private double ruleRate;
 	private List<CSite> sitesConnectedWithDeleted;
-	
-	
+
 	public List<CSite> getAgentsConnectedWithDeleted() {
 		return sitesConnectedWithDeleted;
 	}
@@ -456,6 +455,17 @@ public class CRule {
 		return rightHandSide;
 	}
 
+	public boolean isClash(List<CInjection> injections) {
+		if (injections.size() == 2) {
+			for (CSite siteCC1 : injections.get(0).getSiteList())
+				for (CSite siteCC2 : injections.get(1).getSiteList())
+					if (siteCC1.getAgentLink().getId() == siteCC2
+							.getAgentLink().getId())
+						return true;
+		}
+		return false;
+	}
+
 	public class Action {
 		public static final byte ACTION_BRK = 0;
 		public static final byte ACTION_DEL = 1;
@@ -603,13 +613,13 @@ public class CRule {
 
 					if (solutionSite != null) {
 						addAgentToConnectedWithDeleted(solutionSite);
-							solutionSite.getLinkState().setSite(null);
-							solutionSite.getLinkState().setStatusLink(
-									CLinkState.STATUS_LINK_FREE);
-//							solutionSite.removeInjectionsFromCCToSite(injection);
-						}
+						solutionSite.getLinkState().setSite(null);
+						solutionSite.getLinkState().setStatusLink(
+								CLinkState.STATUS_LINK_FREE);
+						// solutionSite.removeInjectionsFromCCToSite(injection);
 					}
-			
+				}
+
 				for (CLiftElement lift : agent.EMPTY_SITE.getLift()) {
 					agent.EMPTY_SITE.removeInjectionsFromCCToSite(lift
 							.getInjection());
@@ -627,9 +637,8 @@ public class CRule {
 					site.getLift().clear();
 					injection.removeSiteFromSitesList(site);
 				}
-				//injection.getConnectedComponent().getInjectionsList()
-					//	.remove(injection);
-				 
+				// injection.getConnectedComponent().getInjectionsList()
+				// .remove(injection);
 
 				((CSolution) SimulationMain.getSimulationManager()
 						.getSimulationData().getSolution()).removeAgent(agent);
@@ -867,5 +876,22 @@ public class CRule {
 
 		}
 
+	}
+
+	public boolean isClashForInfiniteRule() {
+		if (this.leftHandSide.size() == 2) {
+			if (this.leftHandSide.get(0).getInjectionsList().size() == 1
+					&& this.leftHandSide.get(1).getInjectionsList().size() == 1) {
+				List<CInjection> injList = new ArrayList<CInjection>();
+				injList
+						.add(this.leftHandSide.get(0).getInjectionsList()
+								.get(0));
+				injList
+						.add(this.leftHandSide.get(1).getInjectionsList()
+								.get(0));
+				return isClash(injList);
+			}
+		}
+		return false;
 	}
 }
