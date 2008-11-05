@@ -1,4 +1,4 @@
-package com.plectix.simulator;
+package com.plectix.simulator.injections;
 
 import java.util.*;
 
@@ -9,16 +9,17 @@ import static org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.*;
 import org.junit.runners.Parameterized.Parameters;
+
 import com.plectix.simulator.components.*;
 
 @RunWith(value = Parameterized.class)
-public class TestInjectionsAgentLinking {
+public class TestInjectionsAgentLinking extends TestInjections {
 	private static int myNumber = 0;
 	private static int[] myObsAgentsOrder;
 	private static final int myScaryQuantity = 3;
 	private static final int myHalfInitPower = 199;
 	private static final int myInitPower = myScaryQuantity * 100 + 28 + myHalfInitPower + 3;
-
+		
 	private static int[] shift(int[] a) {
 		for (int i = 0; i < a.length; i++) {
 			a[i] += myInitPower;
@@ -54,7 +55,7 @@ public class TestInjectionsAgentLinking {
 	@Test
 	public void testScaryAgentLinking() {
 
-		for (ObservablesConnectedComponent c : RunInjectionsTests.getObservatory()) {
+		for (ObservablesConnectedComponent c : getInitializator().getObservables()) {
 			StringBuffer name = new StringBuffer("scary");
 			if (myNumber < 10) {
 				name.append(0);

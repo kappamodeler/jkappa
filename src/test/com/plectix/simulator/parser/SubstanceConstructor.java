@@ -3,10 +3,7 @@ package com.plectix.simulator.parser;
 import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.NameDictionary;
+import com.plectix.simulator.components.*;
 
 /*package*/ class SubstanceConstructor {
 	private final NameDictionary myNameDictionary = SimulationMain
@@ -35,5 +32,9 @@ import com.plectix.simulator.components.NameDictionary;
 			agent.addSite(site);
 		}
 		return agent;
+	}
+	
+	public CConnectedComponent createCC(List<CAgent> list) {
+		return new CConnectedComponent(list);
 	}
 }

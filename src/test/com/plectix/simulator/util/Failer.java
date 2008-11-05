@@ -53,47 +53,21 @@ public class Failer {
 		}
 	}
 
-	// may be overrided for some needs, such as.. =)
-	public boolean overrideEquals(Object a, Object b) {
-		return a.equals(b);
+	public boolean collectionElementEquals(Object a, Object b) {
+		if (a != null) {
+			return a.equals(b);
+		} else {
+			return b == null;
+		}
 	}
 	
-	public <E> boolean expandedEquals(Collection<E> a, Collection<E> b) {
-		Stack<E> bStack = new Stack<E>();
-		bStack.addAll(b);
-		
-		Collection<E> aCollection = new ArrayList<E>();
-		aCollection.addAll(a);
-				
-		E aElement = null;
-		E bElement;
-		
-		while (!bStack.isEmpty()) {
-			boolean contains = false;
-			bElement = bStack.pop();
-			for (E elementA : aCollection) {
-				if (elementA != null) {
-					if (overrideEquals(elementA, bElement)) {
-						aElement = elementA;
-						contains = true;
-						break;
-					}
-				} else {
-					contains = (bElement == null);
-				}
+	public <E> boolean collectionsEquals(Collection<E> a, Collection<E> b) {
+		CollectionsComparator cc = new CollectionsComparator() {
+			public boolean equals(Object a, Object b) {
+				return collectionElementEquals(a, b);
 			}
-			if (!contains) {
-				return false;
-			} else {
-				aCollection.remove(aElement);
-			}
-		}
-		
-		if (!aCollection.isEmpty()) {
-			return false;
-		} else {
-			return true;
-		}
+		};
+		return cc.areEqual(a, b);
 	}
 
 	public <E> void assertEquals(String message, Collection<E> a,
@@ -106,7 +80,7 @@ public class Failer {
 			if (b == null) {
 				myFail(newMessage);
 			} else {
-				assertTrue(newMessage, expandedEquals(a, b));
+				assertTrue(newMessage, collectionsEquals(a, b));
 			}
 		}
 	}

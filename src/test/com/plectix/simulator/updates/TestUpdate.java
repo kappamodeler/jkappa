@@ -1,4 +1,4 @@
-package com.plectix.simulator;
+package com.plectix.simulator.updates;
 
 import java.util.*;
 
@@ -8,28 +8,28 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-import com.plectix.simulator.util.*;
+import com.plectix.simulator.DirectoryTestsRunner;
+import com.plectix.simulator.Initializator;
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.simulator.Model;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorManager;
 
-public abstract class UpdateDirectoryTestsRunner extends DirectoryTestsRunner {
+public abstract class TestUpdate extends DirectoryTestsRunner {
 
-	private static Model myModel;
-	private static Simulator mySimulator;
-	private static SimulatorManager myManager;
+	private Model myModel;
+	private Simulator mySimulator;
+	private SimulatorManager myManager;
 	private final Logger LOGGER = Logger.getLogger(Simulator.class);
 	private double currentTime = 0.;
 	private CRule myActiveRule;
-	private static int myRunQuant = 0;
-
+	
 	private String myTestFileName = "";
-	private List<ObservablesConnectedComponent> myObsComponents;
 
 	private List<CInjection> myCurrentInjectionsList;
 
-	protected UpdateDirectoryTestsRunner(String fileName) {
+	protected TestUpdate (String fileName) {
 		super();
 		myTestFileName = fileName;
 	}
@@ -38,29 +38,17 @@ public abstract class UpdateDirectoryTestsRunner extends DirectoryTestsRunner {
 	public abstract String getPrefixFileName();
 	public abstract boolean isDoingPositive();
 	
-
 	@Before
 	public void setup() {
 		String fullTestFilePath = getPrefixFileName() + myTestFileName;
-
-		if (myRunQuant == 0) {
-			RunUpdateTests.init(fullTestFilePath);
-			mySimulator = RunUpdateTests.getSimulator();
-			myModel = RunUpdateTests.getModel();
-			myManager = RunUpdateTests.getManager();
-		} else {
-			RunUpdateTests.reset(fullTestFilePath);
-		}
-		myRunQuant++;
+		Initializator initializator = getInitializator();
+		
+		initializator.init(fullTestFilePath);
+		mySimulator = initializator.getSimulator();
+		myModel = initializator.getModel();
+		myManager = initializator.getManager();
 		run();
-		myObsComponents = myManager.getSimulationData().getObservables()
-				.getConnectedComponentList();
-
 		init();
-	}
-
-	public List<ObservablesConnectedComponent> getObservables() {
-		return myObsComponents;
 	}
 
 	public CRule getActiveRule() {
@@ -75,6 +63,17 @@ public abstract class UpdateDirectoryTestsRunner extends DirectoryTestsRunner {
 		return myCurrentInjectionsList;
 	}
 
+	private boolean isClash(List<CInjection> injections) {
+		if (injections.size() == 2) {
+			for (CSite siteCC1 : injections.get(0).getSiteList())
+				for (CSite siteCC2 : injections.get(1).getSiteList())
+					if (siteCC1.getAgentLink().getId() == siteCC2
+							.getAgentLink().getId())
+						return true;
+		}
+		return false;
+	}
+	
 	private void run() {
 		SimulationMain.getSimulationManager().startTimer();
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
@@ -96,7 +95,7 @@ public abstract class UpdateDirectoryTestsRunner extends DirectoryTestsRunner {
 				.getSomeInjectionList(myActiveRule);
 		currentTime += ruleProbabilityCalculation.getTimeValue();
 
-		if (!RunUpdateTests.isClash(myCurrentInjectionsList)) {
+		if (!isClash(myCurrentInjectionsList)) {
 			// negative update
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("negative update");
@@ -111,5 +110,9 @@ public abstract class UpdateDirectoryTestsRunner extends DirectoryTestsRunner {
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("Clash");
 		}
+	}
+
+	public static boolean lhsIsEmpty(List<CConnectedComponent> lh) {
+		return (lh.size() == 1) && (lh.contains(CRule.EMPTY_LHS_CC));
 	}
 }

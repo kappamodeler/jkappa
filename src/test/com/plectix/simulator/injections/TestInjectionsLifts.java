@@ -1,4 +1,4 @@
-package com.plectix.simulator;
+package com.plectix.simulator.injections;
 
 
 import java.util.*;
@@ -9,7 +9,7 @@ import com.plectix.simulator.components.*;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.MessageConstructor;
 
-public class TestInjectionsLifts {
+public class TestInjectionsLifts extends TestInjections  {
 	private Failer myFailer = new Failer();
 	
 	private boolean testInjectionLifts(CInjection injection) {
@@ -34,7 +34,7 @@ public class TestInjectionsLifts {
 		boolean temporaryFail = false;
 		MessageConstructor mc = new MessageConstructor();
 		
-		for (ObservablesConnectedComponent c : RunInjectionsTests.getObservatory()) {
+		for (ObservablesConnectedComponent c : getInitializator().getObservables()) {
 			List<CInjection> injectionsList = c.getInjectionsList();
 			for (CInjection injection : injectionsList) {
 				if (!testInjectionLifts(injection)) {

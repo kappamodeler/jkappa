@@ -7,6 +7,8 @@ import org.junit.*;
 import org.junit.runner.*;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.*;
+
+import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.util.*;
 import com.plectix.simulator.components.*;
@@ -15,57 +17,53 @@ import com.plectix.simulator.components.*;
 public class TestParseAgents extends DirectoryTestsRunner {
 	private static final String myTestFileNamePrefix = RunParserTests.getFileNamePrefix() + "agents/";
 	private Parser myParser;
-	//private final MessageConstructor myMC = new MessageConstructor();
+	private final SubstanceConstructor mySubstanceConstructor = new SubstanceConstructor();
+	private String myTestFileName;
+	private EasyFileReader myReader;
+	private List<CAgent> myExpectedAgent = new ArrayList<CAgent>();
+	private List<CAgent> myActualAgent = new ArrayList<CAgent>();
+	private CConnectedComponent myCC;
+	private String myExpectedCC;
+	
+	private class SiteCollectionsComparator extends CollectionsComparator {
+		public boolean equals(Object a, Object b) {
+			if (a == b) {
+				return true;
+			}
+			
+			if (!(a instanceof CSite) || !(b instanceof CSite)) {
+				return false;
+			}
+			
+			CSite aa = (CSite)a;
+			CSite bb = (CSite)b;
+			
+			return (aa.getName().equals(bb.getName())
+					&& aa.getInternalState().equals(bb.getInternalState())
+					&& (aa.getLinkIndex() == bb.getLinkIndex()));
+		}
+	}
 	
 	private final Failer myFailer = new Failer() {
-		public boolean overrideEquals(Object a, Object b) {
+		public boolean collectionElementEquals(Object a, Object b) {
+			if (a == b) {
+				return true;
+			}
+			
 			if (!(a instanceof CAgent) || !(b instanceof CAgent)) {
 				return false;
 			}
 			CAgent aa = (CAgent)a;
 			CAgent bb = (CAgent)b;
-			
+
 			if (!(aa.equals(bb))) {
 				return false;
 			}
-			
-			for (CSite site : aa.getSiteMap().values()) {
-				boolean contains = false;
-				for (CSite site2 : bb.getSiteMap().values()) {
-					if (site.getName().equals(site2.getName())
-							&& site.getInternalState().equals(site2.getInternalState())) {
-						contains = true;
-						break;
-					}
-				}
-				if (!contains) {
-					return false;
-				}
-			}
-			
-			for (CSite site : bb.getSiteMap().values()) {
-				boolean contains = false;
-				for (CSite site2 : aa.getSiteMap().values()) {
-					if (site.getName().equals(site2.getName())
-							&& site.getInternalState().equals(site2.getInternalState())) {
-						contains = true;
-						break;
-					}
-				}
-				if (!contains) {
-					return false;
-				}
-			}
-			
-			return true;
+
+			return (new SiteCollectionsComparator()).areEqual(aa.getSiteMap().values(), 
+					bb.getSiteMap().values());
 		}
 	};
-	private final SubstanceConstructor mySubstanceConstructor = new SubstanceConstructor();
-	
-	private String myTestFileName;
-	private EasyFileReader myReader;
-	private Set<CAgent> myExpectedAgent = new HashSet<CAgent>();
-	private Set<CAgent> myActualAgent = new HashSet<CAgent>();
 	
 	
 	public TestParseAgents(String fileName) {
@@ -97,6 +95,7 @@ public class TestParseAgents extends DirectoryTestsRunner {
 			if (!"".equals(line)) {
 				if (line.startsWith("#substance")) {
 					line = line.substring(11);
+					myExpectedCC = line;
 					try {
 						myExpectedAgent.addAll(myParser.parseAgent(line));
 					} catch(ParseErrorException e) {
@@ -105,10 +104,20 @@ public class TestParseAgents extends DirectoryTestsRunner {
 				} else if (line.startsWith("#site")) {
 					line = line.substring(6);
 					String[] split = line.split("~");
+					CSite site;
+					String[] linkSplit;
 					if (split.length > 1) {
-						currentSites.add(mySubstanceConstructor.createSite(split[0], split[1]));
+						linkSplit =  split[1].split("!");
+						site = mySubstanceConstructor.createSite(split[0], linkSplit[0]);
 					} else {
-						currentSites.add(mySubstanceConstructor.createSite(split[0], null));
+						linkSplit =  split[0].split("!");
+						site = mySubstanceConstructor.createSite(linkSplit[0], null);
+					}
+					
+					currentSites.add(site);
+					
+					if (linkSplit.length > 1) {
+						site.setLinkIndex(Integer.parseInt(linkSplit[1]));
 					}
 				} else if (line.startsWith("#agent")) {
 					line = line.substring(7);
@@ -124,6 +133,7 @@ public class TestParseAgents extends DirectoryTestsRunner {
 		}
 		currentAgent = mySubstanceConstructor.createAgent(agentName, currentSites);
 		myActualAgent.add(currentAgent);
+		myCC = mySubstanceConstructor.createCC(new LinkedList<CAgent>(myActualAgent));
 	}
 	
 	@After
@@ -136,6 +146,12 @@ public class TestParseAgents extends DirectoryTestsRunner {
 	public void testParseAgent() {
 		myFailer.loadTestFile(myTestFileName);
 		myFailer.assertEquals("", myExpectedAgent, myActualAgent);
+	}
+	
+	@Test
+	public void testCCCorrection() {
+		myFailer.loadTestFile(myTestFileName);
+		myFailer.assertEquals("", Converter.toString(myCC), myExpectedCC);
 	}
 	
 	public String getPrefixFileName() {

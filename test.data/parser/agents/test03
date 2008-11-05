@@ -1,4 +1,4 @@
-#substance ERK(Y187!1), MEK(S218~p, S222~p, s), MEK2(S218~p, S222~p, s!1), Ras(S1S2~gtp)
+#substance ERK(Y187!1), MEK(S218~p, S222~p, s!1), MEK(S218~p, S222~p, s), Ras(S1S2~gtp)
 
 #agent Ras
 #site S1S2~gtp
@@ -8,7 +8,7 @@
 #site S222~p
 #site S218~p
 
-#agent MEK2
+#agent MEK
 #site s!1
 #site S222~p
 #site S218~p

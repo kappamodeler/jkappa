@@ -1,0 +1,9 @@
+#substance MXA(u~w!0), MXAT(u~w, w~u, x!0)
+
+#agent MXAT
+#site u~w
+#site w~u
+#site x!0
+
+#agent MXA
+#site u~w!0

@@ -4,10 +4,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class InjectionsQuantityDataParser extends Parser<Map<String, Integer>> {
+public class QuantityDataParser extends Parser<Map<String, Integer>> {
 	private EasyFileReader myReader = getFileReader();
 
-	public InjectionsQuantityDataParser(String path) {
+	public QuantityDataParser(String path) {
 		super(path);
 	}
 

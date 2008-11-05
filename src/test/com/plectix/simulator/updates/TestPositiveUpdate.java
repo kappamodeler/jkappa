@@ -1,4 +1,4 @@
-package com.plectix.simulator;
+package com.plectix.simulator.updates;
 
 import java.util.*;
 
@@ -9,7 +9,7 @@ import org.junit.*;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.util.*;
 
-public class TestPositiveUpdate extends UpdateDirectoryTestsRunner {
+public class TestPositiveUpdate extends TestUpdate {
 	private String myTestFileName = "";
 	private Map<String, Integer> myObsInjectionsQuantity;
 	private Map<String, Integer> myLHSInjectionsQuantity;
@@ -18,7 +18,7 @@ public class TestPositiveUpdate extends UpdateDirectoryTestsRunner {
 		
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return UpdateDirectoryTestsRunner.getAllTestFileNames(myPrefixFileName);
+		return TestUpdate.getAllTestFileNames(myPrefixFileName);
 	}
 
 	public TestPositiveUpdate(String filePath) {
@@ -32,7 +32,7 @@ public class TestPositiveUpdate extends UpdateDirectoryTestsRunner {
 	public void testObs() {
 		SortedSet<Long> solutionLinkingForCurrentObs = new TreeSet<Long>();
 
-		for (ObservablesConnectedComponent cc : getObservables()) {
+		for (ObservablesConnectedComponent cc : getInitializator().getObservables()) {
 			for (CInjection injection : cc.getInjectionsList()) {
 				for (CAgentLink agentLink : injection.getAgentLinkList()) {
 					solutionLinkingForCurrentObs.add(agentLink.getAgentTo()
@@ -51,7 +51,7 @@ public class TestPositiveUpdate extends UpdateDirectoryTestsRunner {
 		List<CConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
 		for (CConnectedComponent cc : leftHand) {
 			List<CInjection> componentInjections = cc.getInjectionsList();
-			if (!RunUpdateTests.lhsIsEmpty(leftHand)) {
+			if (!lhsIsEmpty(leftHand)) {
 				myFailer.assertSizeEquality("LHS injections", componentInjections,
 						myLHSInjectionsQuantity.get(myTestFileName));
 			} else {
@@ -70,9 +70,9 @@ public class TestPositiveUpdate extends UpdateDirectoryTestsRunner {
 	}
 	
 	public void init() {
-		myObsInjectionsQuantity = (new InjectionsQuantityDataParser (myPrefixFileName 
+		myObsInjectionsQuantity = (new QuantityDataParser (myPrefixFileName 
 				+ "ObsInjectionsData")).parse(); 
-		myLHSInjectionsQuantity = (new InjectionsQuantityDataParser (myPrefixFileName 
+		myLHSInjectionsQuantity = (new QuantityDataParser (myPrefixFileName 
 				+ "LHSInjectionsData")).parse();
 	}
 }

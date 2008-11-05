@@ -168,6 +168,9 @@ public class CAgent implements IAgent {
 			if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
 				sb.append("~" + site.getInternalState().getName());
 			}
+			if (site.getLinkIndex() != -1) {
+				sb.append("!" + site.getLinkIndex());
+			}
 		}
 		sb.append(")");
 		return sb.toString();

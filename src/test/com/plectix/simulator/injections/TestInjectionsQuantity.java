@@ -1,4 +1,4 @@
-package com.plectix.simulator;
+package com.plectix.simulator.injections;
 
 
 import java.util.*;
@@ -12,7 +12,7 @@ import com.plectix.simulator.components.*;
 import com.plectix.simulator.util.*;
 
 @RunWith(Parameterized.class)
-public class TestInjectionsQuantity {
+public class TestInjectionsQuantity extends TestInjections  {
 	private String myNameParameter;
 	private static Map<String, Integer> myDataMap = new HashMap<String, Integer>();
 	private ObservablesConnectedComponent myCurrentCC;
@@ -24,7 +24,7 @@ public class TestInjectionsQuantity {
 	
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		myDataMap = (new InjectionsQuantityDataParser(
+		myDataMap = (new QuantityDataParser(
 			"test.data/InjectionsQuantityData")).parse();
 		LinkedList<Object[]> parameters = new LinkedList<Object[]>();
 		int i = 0;
@@ -38,7 +38,7 @@ public class TestInjectionsQuantity {
 	private void createInjectionsList(String ccName) {
 		Integer expectedQuantity = myDataMap.get(ccName);
 		boolean exists = false;
-		for (ObservablesConnectedComponent c : RunInjectionsTests.getObservatory()) {
+		for (ObservablesConnectedComponent c : getInitializator().getObservables()) {
 			if (ccName.equals(c.getName())) {
 				myCurrentCC = c;
 				exists = true;

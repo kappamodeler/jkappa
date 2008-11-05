@@ -1,4 +1,4 @@
-package com.plectix.simulator;
+package com.plectix.simulator.updates;
 
 import java.util.*;
 
@@ -11,7 +11,7 @@ import static org.junit.Assert.*;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.util.*;
 
-public class TestNegativeUpdate extends UpdateDirectoryTestsRunner {
+public class TestNegativeUpdate extends TestUpdate {
 
 	private String myTestFileName = "";
 	private Map<String, Integer> myObsInjectionsQuantity;
@@ -27,7 +27,7 @@ public class TestNegativeUpdate extends UpdateDirectoryTestsRunner {
 	
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return UpdateDirectoryTestsRunner.getAllTestFileNames(myPrefixFileName);
+		return TestUpdate.getAllTestFileNames(myPrefixFileName);
 	}
 	
 	@Test
@@ -35,7 +35,7 @@ public class TestNegativeUpdate extends UpdateDirectoryTestsRunner {
 		List<CConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
 		for (CConnectedComponent cc : leftHand) {
 			List<CInjection> componentInjections = cc.getInjectionsList();
-			if (!RunUpdateTests.lhsIsEmpty(leftHand)) {
+			if (!lhsIsEmpty(leftHand)) {
 			
 				myFailer.assertSizeEquality("LHS injections", componentInjections,
 						myLHSInjectionsQuantity.get(myTestFileName));
@@ -56,7 +56,7 @@ public class TestNegativeUpdate extends UpdateDirectoryTestsRunner {
 	
 	@Test
 	public void testObs() {
-		for (ObservablesConnectedComponent cc : getObservables()) {
+		for (ObservablesConnectedComponent cc : getInitializator().getObservables()) {
 			List<CInjection> componentInjections = cc.getInjectionsList();
 			
 			myFailer.assertSizeEquality("Observables injections",
@@ -73,9 +73,9 @@ public class TestNegativeUpdate extends UpdateDirectoryTestsRunner {
 	}
 	
 	public void init() {
-		myObsInjectionsQuantity = (new InjectionsQuantityDataParser (myPrefixFileName 
+		myObsInjectionsQuantity = (new QuantityDataParser (myPrefixFileName 
 				+ "ObsInjectionsData")).parse(); 
-		myLHSInjectionsQuantity = (new InjectionsQuantityDataParser (myPrefixFileName 
+		myLHSInjectionsQuantity = (new QuantityDataParser (myPrefixFileName 
 				+ "LHSInjectionsData")).parse();
 	}
 }

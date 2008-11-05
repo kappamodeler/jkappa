@@ -1,4 +1,4 @@
-package com.plectix.simulator;
+package com.plectix.simulator.injections;
 
 import java.util.*;
 
@@ -8,7 +8,7 @@ import com.plectix.simulator.components.*;
 
 import com.plectix.simulator.util.*;
 
-public class TestInjectionsCorrection {
+public class TestInjectionsCorrection extends TestInjections {
 	private static Map<String, SortedSet<Long>> myCompareData = new HashMap<String, SortedSet<Long>>();
 	private Failer myFailer = new Failer();
 	private boolean antiFlag = false;
@@ -21,7 +21,7 @@ public class TestInjectionsCorrection {
 	@Test
 	public void test0() {
 		MessageConstructor mc = new MessageConstructor();
-		for (ObservablesConnectedComponent c : RunInjectionsTests.getObservatory()) {
+		for (ObservablesConnectedComponent c : getInitializator().getObservables()) {
 			if (!c.getName().startsWith("q")) {
 				if (!testCC(c)) {
 					mc.addValue(c.getName());
