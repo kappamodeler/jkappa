@@ -6,18 +6,21 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ObservablesConnectedComponent extends CConnectedComponent {
+import com.plectix.simulator.interfaces.IObservablesComponent;
+
+public class ObservablesConnectedComponent extends CConnectedComponent
+		implements IObservablesComponent {
 	private String name;
 	private String line;
 	private int nameID;
-
-	public int getNameID() {
-		return nameID;
-	}
-
 	private List<Integer> automorphicObservables;
 	public static final int NO_INDEX = -1;
 	int mainAutomorphismNumber = NO_INDEX;
+	private final List<Integer> countList = new ArrayList<Integer>();
+
+	public final int getNameID() {
+		return nameID;
+	}
 
 	public final int getMainAutomorphismNumber() {
 		return mainAutomorphismNumber;
@@ -39,13 +42,12 @@ public class ObservablesConnectedComponent extends CConnectedComponent {
 		return line;
 	}
 
-	private final List<Integer> countList = new ArrayList<Integer>();
-
 	public final List<Integer> getCountList() {
 		return countList;
 	}
 
-	public final void calculateInjection() {
+	@Override
+	public final void calculate() {
 		countList.add(getInjectionsList().size());
 	}
 
@@ -60,5 +62,24 @@ public class ObservablesConnectedComponent extends CConnectedComponent {
 
 	public final String getName() {
 		return name;
+	}
+
+	@Override
+	public byte getType() {
+		return IObservablesComponent.TYPE_CONNECTED_COMPONENT;
+	}
+
+	@Override
+	public double getSize() {
+		return getInjectionsList().size();
+	}
+
+	@Override
+	public String getItem(int index, CObservables obs) {
+		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX)
+			return countList.get(index).toString();
+		else
+			return obs.getComponentList().get(mainAutomorphismNumber).getItem(
+					index, obs);
 	}
 }

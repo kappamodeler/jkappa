@@ -24,6 +24,7 @@ import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.util.RunningMetric;
 
 public class Simulator {
@@ -65,10 +66,10 @@ public class Simulator {
 			hasSnapshot = true;
 
 		int count = 0;
-		
+
 		long max_clash = 0;
-		while (currentTime <= model.getSimulationData().getTimeLength() && max_clash<=
-			model.getSimulationData().getMaxClashes()) {
+		while (currentTime <= model.getSimulationData().getTimeLength()
+				&& max_clash <= model.getSimulationData().getMaxClashes()) {
 			if (hasSnapshot
 					&& model.getSimulationData().getSnapshotTime() <= currentTime) {
 				hasSnapshot = false;
@@ -210,8 +211,7 @@ public class Simulator {
 			}
 		}
 		for (ObservablesConnectedComponent oCC : obs) {
-			if (((ObservablesConnectedComponent) oCC)
-					.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
+			if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
 				oCC.doPositiveUpdate(rule.getRightHandSide());
 		}
 	}
@@ -276,8 +276,6 @@ public class Simulator {
 				+ SimulationMain.getSimulationManager().getTimer()
 				+ " sec. CPU");
 	}
-
-	
 
 	public final void runStories() {
 		CStories stories = model.getSimulationData().getStories();
@@ -350,6 +348,7 @@ public class Simulator {
 		model.getSimulationData().getObservables().getConnectedComponentList()
 				.clear();
 		model.getSimulationData().getObservables().getCountTimeList().clear();
+		model.getSimulationData().getObservables().getComponentList().clear();
 		((CSolution) model.getSimulationData().getSolution()).getAgentMap()
 				.clear();
 		((CSolution) model.getSimulationData().getSolution())
@@ -373,7 +372,7 @@ public class Simulator {
 		List<ArrayList<RunningMetric>> runningMetrics = model
 				.getSimulationData().getRunningMetrics();
 		int number_of_observables = model.getSimulationData().getObservables()
-				.getConnectedComponentList().size();
+				.getComponentList().size();
 
 		if (iteration_num == 0) {
 			model.getSimulationData().getTimeStamps().add(currentTime);
@@ -386,9 +385,8 @@ public class Simulator {
 		for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 			double x = // x is the value for the observable_num at the current
 			// time
-			model.getSimulationData().getObservables()
-					.getConnectedComponentList().get(observable_num)
-					.getInjectionsList().size();
+			model.getSimulationData().getObservables().getComponentList().get(
+					observable_num).getSize();
 			if (timeStepCounter >= runningMetrics.get(observable_num).size()) {
 				runningMetrics.get(observable_num).add(new RunningMetric());
 			}

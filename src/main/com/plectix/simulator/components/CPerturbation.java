@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.interfaces.IObservablesComponent;
 
 public class CPerturbation {
 
@@ -30,32 +31,6 @@ public class CPerturbation {
 		return this.isDO;
 	}
 
-	private class SumParameters {
-		private int observableID;
-		private double parameter;
-
-		public SumParameters(int observableID, double parameter) {
-			this.observableID = observableID;
-			this.parameter = parameter;
-		}
-
-		public double getMultiply(CObservables observables) {
-			return observables.getConnectedComponentList().get(
-					this.observableID).getInjectionsList().size()
-					* this.parameter;
-		}
-
-		@Override
-		public final boolean equals(Object obj) {
-			if (!(obj instanceof SumParameters))
-				return false;
-			SumParameters sp = (SumParameters) obj;
-			if (observableID != sp.observableID)
-				return false;
-			return true;
-		}
-	}
-
 	public CPerturbation(int perturbationID, double time, byte type,
 			double perturbationRate, CRule rule, boolean greater) {
 		switch (type) {
@@ -71,7 +46,7 @@ public class CPerturbation {
 		}
 	}
 
-	public CPerturbation(int perturbationID, List<Integer> obsID,
+	public CPerturbation(int perturbationID, List<IObservablesComponent> obsID,
 			List<Double> parameters, int obsNameID, byte type,
 			double perturbationRate, CRule rule, boolean greater) {
 		switch (type) {
@@ -92,14 +67,22 @@ public class CPerturbation {
 
 	}
 
-	private void fillParameters(List<Integer> obsID, List<Double> parameters,
-			CObservables obs) {
+	private void fillParameters(List<IObservablesComponent> obsID,
+			List<Double> parameters, CObservables obs) {
 		this.sumParameters = new ArrayList<SumParameters>();
 		for (int i = 0; i < obsID.size(); i++) {
-			int mainAmNumber = obs.getConnectedComponentList()
-					.get(obsID.get(i)).getMainAutomorphismNumber();
 
-			if (mainAmNumber == ObservablesConnectedComponent.NO_INDEX)
+			IObservablesComponent mainAmNumber = null;
+			if (obsID.get(i) instanceof ObservablesConnectedComponent) {
+				int index = ((ObservablesConnectedComponent) obsID.get(i))
+						.getMainAutomorphismNumber();
+				if (index != ObservablesConnectedComponent.NO_INDEX)
+					mainAmNumber = obs.getComponentList().get(
+							((ObservablesConnectedComponent) obsID.get(i))
+									.getMainAutomorphismNumber());
+			}
+
+			if (mainAmNumber == null)
 				this.sumParameters.add(new SumParameters(obsID.get(i),
 						parameters.get(i)));
 			else {
@@ -115,7 +98,7 @@ public class CPerturbation {
 		}
 
 		if (obsID.size() != parameters.size()) {
-			this.sumParameters.add(new SumParameters(-1, parameters
+			this.sumParameters.add(new SumParameters(null, parameters
 					.get(parameters.size() - 1)));
 		}
 	}
@@ -130,8 +113,8 @@ public class CPerturbation {
 	}
 
 	public boolean checkCondition(CObservables observables) {
-		int obsSize = observables.getConnectedComponentList().get(
-				this.obsNameID).getInjectionsList().size();
+		double obsSize = observables.getComponentList().get(obsNameID)
+				.getSize();
 
 		if ((greater && (obsSize > calculateSum(observables)))
 				|| (!(greater) && (obsSize < calculateSum(observables)))) {
@@ -148,7 +131,7 @@ public class CPerturbation {
 				this.rule.setRuleRate(this.ruleRate);
 				return true;
 			}
-		}		
+		}
 		return false;
 	}
 

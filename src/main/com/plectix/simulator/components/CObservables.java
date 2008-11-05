@@ -3,9 +3,19 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.plectix.simulator.interfaces.IObservablesComponent;
+
 public class CObservables {
 	private List<ObservablesConnectedComponent> connectedComponentList = new ArrayList<ObservablesConnectedComponent>();
+	private List<IObservablesComponent> componentList = new ArrayList<IObservablesComponent>();
 	public static List<Double> countTimeList = new ArrayList<Double>();
+
+	private double timeNext;
+	private double timeSampleMin;
+
+	public final double getTimeSampleMin() {
+		return timeSampleMin;
+	}
 
 	public static void setCountTimeList(List<Double> countTimeList) {
 		CObservables.countTimeList = countTimeList;
@@ -15,20 +25,57 @@ public class CObservables {
 		return countTimeList;
 	}
 
-	public final void PrintObsCount() {
-		for (ObservablesConnectedComponent cc : connectedComponentList) {
-			System.out.println(cc.getInjectionsList().size());
+	public final boolean addRulesName(String name, int obsRuleNameID,
+			List<CRule> rules) {
+		for (CRule rule : rules) {
+			if (rule.getName().equals(name)) {
+				ObservablesRuleComponent obsRC = new ObservablesRuleComponent(
+						rule, obsRuleNameID);
+				componentList.add(obsRC);
+				return true;
+			}
 		}
+
+		return false;
+	}
+
+	private final double getTimeSampleMin(double fullTime, int points) {
+		double timeSampleMin;
+		if (points != -1)
+			timeSampleMin = fullTime / points;
+		else
+			timeSampleMin = fullTime / 1000;
+		return timeSampleMin;
 	}
 
 	public final void calculateObs(Double time) {
-		countTimeList.add(time);
-		for (ObservablesConnectedComponent cc : connectedComponentList) {
-			cc.calculateInjection();
+
+		if (time > timeNext) {
+			timeNext += timeSampleMin;
+			countTimeList.add(time);
+			for (IObservablesComponent cc : componentList) {
+				cc.calculate();
+			}
 		}
 	}
 
 	public CObservables() {
+	}
+
+	public final void init(double fullTime, double initialTime, int points) {
+		timeSampleMin = 0.;
+		timeNext = 0.;
+		if (initialTime > 0.0) {
+			timeNext = initialTime;
+			fullTime = fullTime - timeNext;
+		} else
+			timeNext = timeSampleMin;
+
+		timeSampleMin = getTimeSampleMin(fullTime, points);
+	}
+
+	public final List<IObservablesComponent> getComponentList() {
+		return componentList;
 	}
 
 	public final List<ObservablesConnectedComponent> getConnectedComponentList() {
@@ -42,15 +89,16 @@ public class CObservables {
 					component.getAgents(), name, line, id);
 			oCC.initSpanningTreeMap();
 			connectedComponentList.add(oCC);
+			componentList.add(oCC);
 		}
 	}
 
 	public final void checkAutomorphisms() {
 		for (ObservablesConnectedComponent oCC : connectedComponentList) {
-			if (oCC.mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
+			if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
 				for (ObservablesConnectedComponent oCCIn : connectedComponentList) {
 					if (!(oCC == oCCIn)
-							&& oCCIn.mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
+							&& oCCIn.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
 						if (oCC.isAutomorphism(oCCIn.getAgents().get(0))) {
 							int index = connectedComponentList.indexOf(oCC);
 							oCC.addAutomorphicObservables(index);
@@ -61,5 +109,4 @@ public class CObservables {
 			}
 		}
 	}
-
 }

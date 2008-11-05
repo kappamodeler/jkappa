@@ -22,7 +22,7 @@ public class CConnectedComponent implements IConnectedComponent {
 	private List<CSite> injectedSites;
 
 	private List<CAgentLink> agentLinkList;
-	
+
 	private List<CSite> changedInjectionsSite;
 
 	private List<CInjection> injectionsList;

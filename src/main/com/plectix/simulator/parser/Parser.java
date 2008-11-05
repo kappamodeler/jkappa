@@ -6,21 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.junit.internal.runners.OldTestClassRunner;
-
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CDataString;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
-import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
-import com.plectix.simulator.components.ObservablesConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
 
@@ -165,9 +161,9 @@ public class Parser {
 				st = st.substring(1).trim();
 
 				int obsNameID = -1;
-				for (ObservablesConnectedComponent cc : SimulationMain
+				for (IObservablesComponent cc : SimulationMain
 						.getSimulationManager().getSimulationData()
-						.getObservables().getConnectedComponentList()) {
+						.getObservables().getComponentList()) {
 					if ((cc.getName() != null)
 							&& (cc.getName().equals(obsName))) {
 						obsNameID = cc.getNameID();
@@ -183,7 +179,7 @@ public class Parser {
 				st = st.substring(0, st.indexOf("do")).trim();
 
 				List<Double> parameters = new ArrayList<Double>();
-				List<Integer> obsID = new ArrayList<Integer>();
+				List<IObservablesComponent> obsID = new ArrayList<IObservablesComponent>();
 				if (st.indexOf("+") == -1) {
 					parameters.add(new Double(Double.valueOf(st)));
 				} else {
@@ -208,19 +204,18 @@ public class Parser {
 
 							obsName = getName(item);
 
-							int obsId = -1;
-							for (ObservablesConnectedComponent cc : SimulationMain
+							IObservablesComponent obsId = null;
+							for (IObservablesComponent cc : SimulationMain
 									.getSimulationManager().getSimulationData()
-									.getObservables()
-									.getConnectedComponentList()) {
+									.getObservables().getComponentList()) {
 								if ((cc.getName() != null)
 										&& (cc.getName().equals(obsName))) {
-									obsId = cc.getNameID();
+									obsId = cc;
 									break;
 								}
 							}
-							if (obsId != -1)
-								obsID.add(new Integer(obsId));
+							if (obsId != null)
+								obsID.add(obsId);
 						}
 					}
 
@@ -486,12 +481,19 @@ public class Parser {
 						line = line.substring(line.indexOf("'") + 1,
 								line.length()).trim();
 					}
-					simulationData.getObservables()
-							.addConnectedComponents(
-									SimulationMain.getSimulationManager()
-											.buildConnectedComponents(
-													parseAgent(line)), name,
-									line, obsNameID);
+
+					if (line.length() == 0) {
+						simulationData.getObservables().addRulesName(
+								name,
+								obsNameID,
+								SimulationMain.getSimulationManager()
+										.getRules());
+					} else
+						simulationData.getObservables().addConnectedComponents(
+								SimulationMain.getSimulationManager()
+										.buildConnectedComponents(
+												parseAgent(line)), name, line,
+								obsNameID);
 					obsNameID++;
 					break;
 				}

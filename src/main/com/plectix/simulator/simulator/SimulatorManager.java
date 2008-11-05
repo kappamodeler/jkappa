@@ -15,6 +15,7 @@ import com.plectix.simulator.components.CRule.Action;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.NameDictionary;
+import com.plectix.simulator.interfaces.IObservablesComponent;
 
 public class SimulatorManager {
 
@@ -23,7 +24,7 @@ public class SimulatorManager {
 	private int agentIdGenerator = 0;
 
 	private long timeStart;
-	
+
 	private long timeStartThread;
 
 	private NameDictionary nameDictionary = new NameDictionary();
@@ -89,16 +90,14 @@ public class SimulatorManager {
 	}
 
 	private final void removeAgent(List<CAgent> agents, CAgent agent) {
-		int i=0;
-		for (i=0;i<agents.size();i++) {
-			if (agents.get(i)==agent)
+		int i = 0;
+		for (i = 0; i < agents.size(); i++) {
+			if (agents.get(i) == agent)
 				break;
 		}
 		agents.remove(i);
 	}
 
-	
-	
 	public final CRule buildRule(List<CAgent> left, List<CAgent> right,
 			String name, double activity, int ruleID) {
 		return new CRule(buildConnectedComponents(left),
@@ -126,6 +125,8 @@ public class SimulatorManager {
 	}
 
 	public void initialize() {
+		simulationData.getObservables().init(simulationData.getTimeLength(),
+				simulationData.getInitialTime(), simulationData.getPoints());
 		CSolution solution = (CSolution) simulationData.getSolution();
 		List<CRule> rules = simulationData.getRules();
 		Iterator<List<CAgent>> iterator = solution.getAgentMap().values()
@@ -190,7 +191,7 @@ public class SimulatorManager {
 	}
 
 	private static int indexLink = 0;
-	
+
 	public static final String printPartRule(List<CConnectedComponent> ccList) {
 		String line = new String();
 		indexLink = 0;
@@ -202,7 +203,7 @@ public class SimulatorManager {
 		for (CConnectedComponent cc : ccList) {
 			if (cc == CRule.EMPTY_LHS_CC)
 				return line;
-			line+=printPartRule(cc, indexLink);
+			line += printPartRule(cc, indexLink);
 
 		}
 		return line;
@@ -383,13 +384,16 @@ public class SimulatorManager {
 
 	public final void startTimer() {
 		timeStart = System.currentTimeMillis();
-		timeStartThread = ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime();
+		timeStartThread = ManagementFactory.getThreadMXBean()
+				.getCurrentThreadCpuTime();
 	}
 
 	public final String getTimer() {
 		double wallClockTimeInSeconds = 1.0E-3 * (System.currentTimeMillis() - timeStart);
-		double threadTimeInSeconds = 1.0E-9 * (ManagementFactory.getThreadMXBean().getCurrentThreadCpuTime() - timeStartThread);
-		return "WallClock=" + wallClockTimeInSeconds + " ThreadTime=" + threadTimeInSeconds;
+		double threadTimeInSeconds = 1.0E-9 * (ManagementFactory
+				.getThreadMXBean().getCurrentThreadCpuTime() - timeStartThread);
+		return "WallClock=" + wallClockTimeInSeconds + " ThreadTime="
+				+ threadTimeInSeconds;
 	}
 
 	public int getAgentIdGenerator() {

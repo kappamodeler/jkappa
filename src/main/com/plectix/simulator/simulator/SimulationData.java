@@ -27,6 +27,8 @@ import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
+import com.plectix.simulator.components.ObservablesRuleComponent;
+import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.util.RunningMetric;
 
@@ -55,7 +57,7 @@ public class SimulationData {
 	}
 
 	public void setMaxClashes(long max_clashes) {
-		if (max_clashes>0)
+		if (max_clashes > 0)
 			this.maxClashes = max_clashes;
 	}
 
@@ -158,7 +160,6 @@ public class SimulationData {
 	}
 
 	public final double getTimeLength() {
-		// TODO Auto-generated method stub
 		return timeLength;
 	}
 
@@ -234,7 +235,7 @@ public class SimulationData {
 	public final void initIterations() {
 		SimulationData.timeStamps = new ArrayList<Double>();
 		SimulationData.runningMetrics = new ArrayList<ArrayList<RunningMetric>>();
-		int observable_num = observables.getConnectedComponentList().size();
+		int observable_num = observables.getComponentList().size();
 		for (int i = 0; i < observable_num; i++) {
 			runningMetrics.add(new ArrayList<RunningMetric>());
 		}
@@ -353,48 +354,22 @@ public class SimulationData {
 		simulation.setAttribute("TotalTime", Double.toString(timeLength));
 		simulation.setAttribute("InitTime", Double.toString(initialTime));
 
-		Double timeSampleMin = 0.;
-		double timeNext = 0.;
-		double fullTime = observables.getCountTimeList().get(
-				obsCountTimeListSize - 1);
-		if (initialTime > 0.0) {
-			timeNext = initialTime;
-			fullTime = fullTime - timeNext;
-		} else
-			timeNext = timeSampleMin;
-
-		timeSampleMin = getTimeSampleMin(fullTime);
-
-		simulation.setAttribute("TimeSample", timeSampleMin.toString());
+		simulation.setAttribute("TimeSample", Double.valueOf(
+				observables.getTimeSampleMin()).toString());
 		simplxSession.appendChild(simulation);
 
-		for (int i = observables.getConnectedComponentList().size() - 1; i >= 0; i--) {
-			Element node = doc.createElement("Plot");
-			node.setAttribute("Type", "OBSERVABLE");
-			String obsName = observables.getConnectedComponentList().get(i)
-					.getName();
-
-			if (obsName == null)
-				obsName = observables.getConnectedComponentList().get(i)
-						.getLine();
-
-			node.setAttribute("Text", '[' + obsName + ']');
+		for (int i = observables.getComponentList().size() - 1; i >= 0; i--) {
+			Element node = createElement(observables.getComponentList().get(i),
+					doc);
 			simulation.appendChild(node);
 		}
+
 		Element csv = doc.createElement("CSV");
 		CDATASection cdata = doc.createCDATASection("\n");
 
-		// appendData(obs, cdata, 0);
-
-		for (int i = 0; i < obsCountTimeListSize - 1; i++) {
-			if (observables.getCountTimeList().get(i) > timeNext) {
-				timeNext += timeSampleMin;
-				appendData(observables, cdata, i);
-			}
-
+		for (int i = 0; i < obsCountTimeListSize; i++) {
+			appendData(observables, cdata, i);
 		}
-
-		appendData(observables, cdata, obsCountTimeListSize - 1);
 
 		csv.appendChild(cdata);
 		simulation.appendChild(csv);
@@ -406,12 +381,31 @@ public class SimulationData {
 		transformer.transform(domSource, streamesult);
 	}
 
+	private final Element createElement(IObservablesComponent obs, Document doc) {
+		Element node = doc.createElement("Plot");
+		String obsName = obs.getName();
+		if (obsName == null)
+			obsName = obs.getLine();
+		switch (obs.getType()) {
+		case IObservablesComponent.TYPE_CONNECTED_COMPONENT: {
+			node.setAttribute("Type", "OBSERVABLE");
+			node.setAttribute("Text", '[' + obsName + ']');
+			break;
+		}
+		case IObservablesComponent.TYPE_RULE_COMPONENT: {
+			node.setAttribute("Type", "RULE");
+			node.setAttribute("Text", obsName);
+			break;
+		}
+		}
+		return node;
+	}
+
 	public final void createTMPReport() {
 		// model.getSimulationData().updateData();
 		SimulationMain.getSimulationManager().startTimer();
 
-		int number_of_observables = observables.getConnectedComponentList()
-				.size();
+		int number_of_observables = observables.getComponentList().size();
 		try {
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 				int oCamlObservableNo = number_of_observables - observable_num
@@ -476,17 +470,12 @@ public class SimulationData {
 	private void appendData(CObservables obs, CDATASection cdata, int index) {
 		String enter = "\n";
 		cdata.appendData(obs.getCountTimeList().get(index).toString());
-		for (int j = obs.getConnectedComponentList().size() - 1; j >= 0; j--) {
+		for (int j = obs.getComponentList().size() - 1; j >= 0; j--) {
 			cdata.appendData(",");
-			ObservablesConnectedComponent oCC = obs.getConnectedComponentList()
-					.get(j);
-			if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
-				cdata.appendData(oCC.getCountList().get(index).toString());
-			else
-				cdata.appendData(obs.getConnectedComponentList().get(
-						oCC.getMainAutomorphismNumber()).getCountList().get(
-						index).toString());
+			IObservablesComponent oCC = obs.getComponentList().get(j);
+			cdata.appendData(oCC.getItem(index, obs));
 		}
+
 		cdata.appendData(enter);
 	}
 
