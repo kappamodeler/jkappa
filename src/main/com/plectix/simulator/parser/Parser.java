@@ -16,6 +16,7 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
+import com.plectix.simulator.RateExpression;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
@@ -127,6 +128,8 @@ public class Parser {
 			String st = perturbationStr.getLine();
 			st = st.trim();
 
+			List<RateExpression> rateExpression = new ArrayList<RateExpression>();
+
 			if (st.indexOf("$T") == 0) {
 				st = st.substring(2).trim();
 				boolean greater = getGreater(st, perturbationStr);
@@ -138,11 +141,11 @@ public class Parser {
 				st = st.substring(index + 2).trim();
 
 				this.perturbationRate = -1.;
-				CRule rule = getGreaterRule(st, perturbationStr);
+				CRule rule = getGreaterRule(st, perturbationStr, rateExpression);
 				if (rule != null) {
 					perturbations.add(new CPerturbation(pertubationID++, time,
 							CPerturbation.TYPE_TIME, perturbationRate, rule,
-							greater));
+							greater, rateExpression));
 				} else
 					throw new ParseErrorException(myErrorHandler
 							.formMessage(perturbationStr));
@@ -174,7 +177,8 @@ public class Parser {
 				checkString("do", st, perturbationStr);
 				String pertStr = st.substring(st.indexOf("do") + 2).trim();
 				this.perturbationRate = -1.;
-				CRule rule = getGreaterRule(pertStr, perturbationStr);
+				CRule rule = getGreaterRule(pertStr, perturbationStr,
+						rateExpression);
 
 				st = st.substring(0, st.indexOf("do")).trim();
 
@@ -222,10 +226,11 @@ public class Parser {
 				}
 
 				if (rule != null) {
+
 					CPerturbation pertubation = new CPerturbation(
 							pertubationID++, obsID, parameters, obsNameID,
 							CPerturbation.TYPE_NUMBER, perturbationRate, rule,
-							greater);
+							greater, rateExpression);
 					perturbations.add(pertubation);
 
 				}
@@ -236,20 +241,84 @@ public class Parser {
 		return perturbations;
 	}
 
-	private final CRule getGreaterRule(String st, CDataString perturbationStr)
-			throws ParseErrorException {
+	private final CRule getGreaterRule(String st, CDataString perturbationStr,
+			List<RateExpression> rateExpression) throws ParseErrorException {
 		checkString("'", st, perturbationStr);
 		st = st.substring(st.indexOf("'") + 1).trim();
 		checkString("'", st, perturbationStr);
 		String ruleName = st.substring(0, st.indexOf("'")).trim();
 
-		st = st.replace("[ 	]", "");
+		// st = st.replace("[ 	]", "");
 		int index = st.indexOf(":=");
 		checkString(":=", st, perturbationStr);
 		st = st.substring(index + 2);
 
-		this.perturbationRate = Double.valueOf(st);
+		double freeTerm = 0;
 
+		if (st.indexOf("+") == -1) {
+			try {
+				rateExpression
+						.add(new RateExpression(null, Double.valueOf(st)));
+			} catch (NumberFormatException e) {
+				addFreeRule(rateExpression, st);
+			}
+		} else {
+			StringTokenizer sTok = new StringTokenizer(st, "+");
+			while (sTok.hasMoreTokens()) {
+				String item = sTok.nextToken().trim();
+
+				if (item.indexOf("*") == -1) {
+					// free term as double
+					try {
+						freeTerm += Double.valueOf(item);
+					} catch (NumberFormatException e) {
+
+						checkString("'", item, perturbationStr);
+						addFreeRule(rateExpression, item);
+						/*
+						 * item = item.substring(item.indexOf("'") + 1).trim();
+						 * CRule curRule = getRuleWithEqualName(getName(item));
+						 * if (curRule == null) return null;
+						 * rateExpression.add(new RateExpression(curRule, 1.0));
+						 */
+					}
+				} else {
+					double curValue = 0;
+					try {
+						curValue = Double.valueOf(item.substring(0,
+								item.indexOf("*")).trim());
+					} catch (NumberFormatException e) {
+						throw new ParseErrorException(
+								"Perturbations sum parse error: value parameter needs to be before rule name");
+					}
+					item = item.substring(item.indexOf("*") + 1).trim();
+
+					checkString("'", item, perturbationStr);
+					item = item.substring(item.indexOf("'") + 1).trim();
+
+					CRule curRule = getRuleWithEqualName(getName(item));
+
+					if (curRule == null)
+						return null;
+					rateExpression.add(new RateExpression(curRule, curValue));
+				}
+			}
+		}
+		if (freeTerm > 0.0)
+			rateExpression.add(new RateExpression(null, freeTerm));
+
+		return getRuleWithEqualName(ruleName);
+	}
+
+	private final void addFreeRule(List<RateExpression> rateExpression,
+			String item) {
+		item = item.substring(item.indexOf("'") + 1).trim();
+		CRule curRule = getRuleWithEqualName(getName(item));
+		if (curRule != null)
+			rateExpression.add(new RateExpression(curRule, 1.0));
+	}
+
+	private final CRule getRuleWithEqualName(String ruleName) {
 		for (CRule rule : SimulationMain.getSimulationManager().getRules())
 			if ((rule.getName() != null) && (rule.getName().equals(ruleName))) {
 				return rule;
