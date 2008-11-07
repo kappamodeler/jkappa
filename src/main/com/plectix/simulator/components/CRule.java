@@ -588,14 +588,27 @@ public class CRule {
 				agentFromInSolution = leftConnectedComponent
 						.getAgentByIdFromSolution(agentIdInCC, injection);
 
+				CSite injectedSite = agentFromInSolution.getSite(siteFrom
+						.getNameId());
+
+				CSite linkSite = (CSite) injectedSite.getLinkState().getSite();
+				if ((siteFrom.getLinkState().getSite() == null)
+						&& (linkSite != null)) {
+					linkSite.getLinkState().setSite(null);
+					linkSite.getLinkState().setStatusLink(
+							CLinkState.STATUS_LINK_FREE);
+					injection.addToChangedSites(linkSite);
+					rightConnectedComponent.addAgentFromSolutionForRHS(linkSite
+							.getAgentLink());
+				}
+
 				agentFromInSolution.getSite(siteFrom.getNameId())
 						.getLinkState().setSite(null);
 				agentFromInSolution.getSite(siteFrom.getNameId())
 						.getLinkState().setStatusLink(
 								CLinkState.STATUS_LINK_FREE);
 				// /////////////////////////////////////////////
-				CSite injectedSite = agentFromInSolution.getSite(siteFrom
-						.getNameId());
+
 				injection.addToChangedSites(injectedSite);
 				// /////////////////////////////////////////////
 
@@ -733,12 +746,17 @@ public class CRule {
 						changedSites.add(toSite);
 				}
 
-				if ((fromSite.getLinkState().getSite() == null)
-						&& (toSite.getLinkState().getSite() == null))
+				// if ((fromSite.getLinkState().getSite() == null)
+				// && (toSite.getLinkState().getSite() == null))
+				// continue;
+				if ((fromSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_FREE)
+						&& (toSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_FREE))
 					continue;
 
-				if ((fromSite.getLinkState().getSite() != null)
-						&& (toSite.getLinkState().getSite() == null)) {
+				// if ((fromSite.getLinkState().getSite() != null)
+				// && (toSite.getLinkState().getSite() == null)) {
+				if ((fromSite.getLinkState().getStatusLink() != CLinkState.STATUS_LINK_FREE)
+						&& (toSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_FREE)) {
 					list.add(new Action(fromSite, toSite,
 							rightConnectedComponent, leftConnectedComponent,
 							ACTION_BRK));
@@ -747,8 +765,10 @@ public class CRule {
 					continue;
 				}
 
-				if ((fromSite.getLinkState().getSite() == null)
-						&& (toSite.getLinkState().getSite() != null)) {
+				// if ((fromSite.getLinkState().getSite() == null)
+				// && (toSite.getLinkState().getSite() != null)) {
+				if ((fromSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_FREE)
+						&& (toSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_BOUND)) {
 					list.add(new Action(toSite, (CSite) toSite.getLinkState()
 							.getSite(), rightConnectedComponent,
 							leftConnectedComponent));
@@ -759,6 +779,8 @@ public class CRule {
 
 				CSite lConnectSite = (CSite) fromSite.getLinkState().getSite();
 				CSite rConnectSite = (CSite) toSite.getLinkState().getSite();
+				if (lConnectSite == null && rConnectSite == null)
+					continue;
 				if ((lConnectSite.getAgentLink().getIdInRuleSide() == rConnectSite
 						.getAgentLink().getIdInRuleSide())
 						&& (lConnectSite.equals(rConnectSite)))
