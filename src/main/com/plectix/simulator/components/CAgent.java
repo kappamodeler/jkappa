@@ -49,6 +49,8 @@ public class CAgent implements IAgent {
 	public boolean isAgentHaveLinkToConnectedComponent(CConnectedComponent cc) {
 
 		for (CSite site : siteMap.values()) {
+			if(site.getAgentLink().EMPTY_SITE.isConnectedComponentInLift(cc))
+				return true;
 			if (site.isConnectedComponentInLift(cc))
 				return true;
 		}
