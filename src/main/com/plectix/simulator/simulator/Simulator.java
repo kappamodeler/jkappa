@@ -107,10 +107,8 @@ public class Simulator {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("positive update");
 
-				doPositiveUpdate(rule);
+				doPositiveUpdate(rule,injectionsList);
 
-				doPositiveUpdateForDeletedAgents(doNegativeUpdateForDeletedAgents(
-						rule, injectionsList));
 				model.getSimulationData().getObservables().calculateObs(
 						currentTime);
 			} else {
@@ -216,7 +214,7 @@ public class Simulator {
 		}
 	}
 
-	public final void doPositiveUpdate(CRule rule) {
+	public final void doPositiveUpdate(CRule rule,List<CInjection> injectionsList) {
 		if (model.getSimulationData().isActivationMap()) {
 			positiveUpdate(rule.getActivatedRule(), rule
 					.getActivatedObservable(), rule);
@@ -225,6 +223,9 @@ public class Simulator {
 					.getSimulationData().getObservables()
 					.getConnectedComponentList(), rule);
 		}
+		
+		doPositiveUpdateForDeletedAgents(doNegativeUpdateForDeletedAgents(
+				rule, injectionsList));
 
 	}
 
@@ -303,7 +304,7 @@ public class Simulator {
 						break;
 					rule.applyRule(injectionsList);
 					doNegativeUpdate(injectionsList);
-					doPositiveUpdate(rule);
+					doPositiveUpdate(rule,injectionsList);
 				} else {
 					clash++;
 				}

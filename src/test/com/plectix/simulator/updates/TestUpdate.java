@@ -103,7 +103,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 			myActiveRule.applyRule(myCurrentInjectionsList);
 			mySimulator.doNegativeUpdate(myCurrentInjectionsList);
 			if (isDoingPositive()) {
-				mySimulator.doPositiveUpdate(myActiveRule);
+				mySimulator.doPositiveUpdate(myActiveRule,myCurrentInjectionsList);
 			}
 
 		} else {
