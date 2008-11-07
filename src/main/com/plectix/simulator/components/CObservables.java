@@ -28,7 +28,7 @@ public class CObservables {
 	public final boolean addRulesName(String name, int obsRuleNameID,
 			List<CRule> rules) {
 		for (CRule rule : rules) {
-			if (rule.getName().equals(name)) {
+			if ((rule.getName() != null) && (rule.getName().equals(name))) {
 				ObservablesRuleComponent obsRC = new ObservablesRuleComponent(
 						rule, obsRuleNameID);
 				componentList.add(obsRC);
