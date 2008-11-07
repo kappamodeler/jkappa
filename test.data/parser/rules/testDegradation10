@@ -1,0 +1,9 @@
+# Rules:
+
+'Rule_0' A(x!1, y), B(k!1, l) -> @ 1.0
+
+%init: 1.00 * A()										
+
+# Simulation:
+
+%obs: '001' B(k!_, l)

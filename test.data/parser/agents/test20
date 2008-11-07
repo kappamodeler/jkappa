@@ -1,0 +1,9 @@
+#substance A(x~u!1, y~v), A(x~u!1, y~v?)
+
+#agent A
+#site x~u!1
+#site y~v?
+
+#agent A
+#site x~u!1
+#site y~v

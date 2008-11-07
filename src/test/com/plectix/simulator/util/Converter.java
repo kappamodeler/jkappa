@@ -10,8 +10,12 @@ public class Converter {
 		if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
 			sb.append("~" + site.getInternalState().getName());
 		}
-		if (site.getLinkIndex() != -1) {
+		if (site.getLinkState().getStatusLinkRank() == CLinkState.RANK_SEMI_LINK) {
+			sb.append("!_");
+		} else if (site.getLinkIndex() != -1) {
 			sb.append("!" + site.getLinkIndex());
+		} else if (site.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_WILDCARD) {
+			sb.append("?");
 		}
 		return sb.toString();
 	}

@@ -8,6 +8,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(value = Suite.class)
 @SuiteClasses(value = { 
 		TestParseRuleCorrection.class,
+		TestParseAgentCorrection.class,
 		TestParseAgents.class,
 		TestParseResult.class,
 		})

@@ -9,151 +9,163 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.*;
 
 import com.plectix.simulator.DirectoryTestsRunner;
-import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.util.*;
 import com.plectix.simulator.components.*;
 
 @RunWith(Parameterized.class)
 public class TestParseAgents extends DirectoryTestsRunner {
-	private static final String myTestFileNamePrefix = RunParserTests.getFileNamePrefix() + "agents/";
-	private Parser myParser;
+	private static final String myTestFileNamePrefix = RunParserTests
+			.getFileNamePrefix()
+			+ "agents/";
 	private final SubstanceConstructor mySubstanceConstructor = new SubstanceConstructor();
 	private String myTestFileName;
 	private EasyFileReader myReader;
-	private List<CAgent> myExpectedAgent = new ArrayList<CAgent>();
-	private List<CAgent> myActualAgent = new ArrayList<CAgent>();
+	private List<CAgent> myActualAgents = new ArrayList<CAgent>();
 	private CConnectedComponent myCC;
 	private String myExpectedCC;
-	
+
 	private class SiteCollectionsComparator extends CollectionsComparator {
 		public boolean equals(Object a, Object b) {
 			if (a == b) {
 				return true;
 			}
-			
+
 			if (!(a instanceof CSite) || !(b instanceof CSite)) {
 				return false;
 			}
-			
-			CSite aa = (CSite)a;
-			CSite bb = (CSite)b;
-			
+
+			CSite aa = (CSite) a;
+			CSite bb = (CSite) b;
+
 			return (aa.getName().equals(bb.getName())
-					&& aa.getInternalState().equals(bb.getInternalState())
-					&& (aa.getLinkIndex() == bb.getLinkIndex()));
+					&& aa.getInternalState().equals(bb.getInternalState()) && (aa
+					.getLinkIndex() == bb.getLinkIndex()));
 		}
 	}
-	
+
 	private final Failer myFailer = new Failer() {
 		public boolean collectionElementEquals(Object a, Object b) {
 			if (a == b) {
 				return true;
 			}
-			
+
 			if (!(a instanceof CAgent) || !(b instanceof CAgent)) {
 				return false;
 			}
-			CAgent aa = (CAgent)a;
-			CAgent bb = (CAgent)b;
+			CAgent aa = (CAgent) a;
+			CAgent bb = (CAgent) b;
 
 			if (!(aa.equals(bb))) {
 				return false;
 			}
 
-			return (new SiteCollectionsComparator()).areEqual(aa.getSiteMap().values(), 
-					bb.getSiteMap().values());
+			return (new SiteCollectionsComparator()).areEqual(aa.getSiteMap()
+					.values(), bb.getSiteMap().values());
 		}
 	};
-	
-	
+
 	public TestParseAgents(String fileName) {
 		super();
+		clear();
 		myTestFileName = fileName;
 		myFailer.loadTestFile(myTestFileName);
 		try {
 			myReader = new EasyFileReader(myTestFileNamePrefix + myTestFileName);
-		} catch(FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			System.err.println(e.getMessage());
 		}
+		readData();
 	}
-	
+
 	@Parameters
 	public static Collection<Object[]> regExValues() {
 		return DirectoryTestsRunner.getAllTestFileNames(myTestFileNamePrefix);
 	}
-	
-	@Before
-	public void readData() {
-		myParser = new Parser(new DataReading(myTestFileName));
+
+	private CSite parseSite(String line) {
+		boolean wildcard = line.endsWith("?");
+		boolean bounded = line.contains("!");
+		boolean internal = line.contains("~");
+
+		String siteName = "";
+		String internalStateName = null;
+		String linkIndex = null;
+
+		String[] boundSplit = line.split("!");
 		
+		if (internal) {
+			String[] split = line.split("~");
+			siteName = split[0];
+			if (wildcard) {
+				int length = split[1].length();
+				internalStateName = split[1].substring(0, length - 1);
+			} else {
+				internalStateName = split[1].split("!")[0];
+			}
+		} else {
+			if (wildcard) {
+				int length = line.length();
+				siteName = line.substring(0, length - 1);
+			} else {
+				siteName = boundSplit[0];
+			}
+		}
+		
+		if (wildcard) {
+			linkIndex = "?"; 
+		} else if (bounded) {
+			linkIndex = boundSplit[1];
+		}
+		
+		return mySubstanceConstructor.createSite(siteName, internalStateName,
+				linkIndex);
+
+	}
+
+	private void readData() {
+		myFailer.loadTestFile(myTestFileName);
+
 		String line = "";
 		CAgent currentAgent;
-		List<CSite> currentSites  = new ArrayList<CSite>(); 
+		List<CSite> currentSites = new ArrayList<CSite>();
 		String agentName = "";
-		
+
 		while (line != null) {
 			if (!"".equals(line)) {
 				if (line.startsWith("#substance")) {
 					line = line.substring(11);
 					myExpectedCC = line;
-					try {
-						myExpectedAgent.addAll(myParser.parseAgent(line));
-					} catch(ParseErrorException e) {
-						myFailer.fail(e.getMessage());
-					}
 				} else if (line.startsWith("#site")) {
 					line = line.substring(6);
-					String[] split = line.split("~");
-					CSite site;
-					String[] linkSplit;
-					if (split.length > 1) {
-						linkSplit =  split[1].split("!");
-						site = mySubstanceConstructor.createSite(split[0], linkSplit[0]);
-					} else {
-						linkSplit =  split[0].split("!");
-						site = mySubstanceConstructor.createSite(linkSplit[0], null);
-					}
-					
-					currentSites.add(site);
-					
-					if (linkSplit.length > 1) {
-						site.setLinkIndex(Integer.parseInt(linkSplit[1]));
-					}
+					currentSites.add(parseSite(line));
 				} else if (line.startsWith("#agent")) {
 					line = line.substring(7);
 					if (!"".equals(agentName)) {
-						currentAgent = mySubstanceConstructor.createAgent(agentName, currentSites);
-						myActualAgent.add(currentAgent);
+						currentAgent = mySubstanceConstructor.createAgent(
+								agentName, currentSites);
+						myActualAgents.add(currentAgent);
 						currentSites.clear();
 					}
 					agentName = line;
 				}
-			} 
+			}
 			line = myReader.getStringFromFile();
 		}
-		currentAgent = mySubstanceConstructor.createAgent(agentName, currentSites);
-		myActualAgent.add(currentAgent);
-		myCC = mySubstanceConstructor.createCC(new LinkedList<CAgent>(myActualAgent));
+		currentAgent = mySubstanceConstructor.createAgent(agentName,
+				currentSites);
+		myActualAgents.add(currentAgent);
+		myCC = mySubstanceConstructor.createCC(myActualAgents);
 	}
-	
-	@After
-	public void clear() {
-		myExpectedAgent.clear();
-		myActualAgent.clear();
+
+	private void clear() {
+		myActualAgents.clear();
 	}
-	
-	@Test
-	public void testParseAgent() {
-		myFailer.loadTestFile(myTestFileName);
-		myFailer.assertEquals("", myExpectedAgent, myActualAgent);
-	}
-	
+
 	@Test
 	public void testCCCorrection() {
-		myFailer.loadTestFile(myTestFileName);
 		myFailer.assertEquals("", Converter.toString(myCC), myExpectedCC);
 	}
-	
+
 	public String getPrefixFileName() {
 		return myTestFileNamePrefix;
 	}

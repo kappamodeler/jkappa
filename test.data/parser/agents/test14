@@ -1,0 +1,72 @@
+#substance A(x!1, y!0, z), A(x!1, y!4, z!3), A(x!12, y!13, z!10), A(x!12, y!17, z!11), A(x!14, y!13, z), A(x!14, y!15, z), A(x!16, y!15, z), A(x!16, y!17, z), A(x!2, y!0, z), A(x!2, y!5, z!3), A(x!6, y!4, z!7), A(x!6, y!5, z!11), A(x!8, y!9, z!10), A(x!8, y!9, z!7)
+
+#agent A
+#site x!1
+#site y!0
+#site z
+
+#agent A
+#site x!2
+#site y!0
+#site z
+
+#agent A
+#site x!2
+#site y!5
+#site z!3
+
+#agent A
+#site x!1
+#site y!4
+#site z!3
+
+#agent A
+#site x!6
+#site y!5
+#site z!11
+
+#agent A
+#site x!16
+#site y!15
+#site z
+
+#agent A
+#site x!6
+#site y!4
+#site z!7
+
+#agent A
+#site x!8
+#site y!9
+#site z!10
+
+#agent A
+#site x!12
+#site y!13
+#site z!10
+
+#agent A
+#site x!8
+#site y!9
+#site z!7
+
+#agent A
+#site x!12
+#site y!17
+#site z!11
+
+#agent A
+#site x!16
+#site y!17
+#site z
+
+#agent A
+#site x!14
+#site y!13
+#site z
+
+#agent A
+#site x!14
+#site y!15
+#site z
+

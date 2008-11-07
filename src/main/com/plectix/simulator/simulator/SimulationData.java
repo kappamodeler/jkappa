@@ -503,7 +503,7 @@ public class SimulationData {
 		this.initialTime = intialTime;
 	}
 
-	public final Double getRescale() {
+	public final double getRescale() {
 		return rescale;
 	}
 

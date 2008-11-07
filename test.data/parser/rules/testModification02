@@ -1,0 +1,10 @@
+# Rules:
+
+'Rule_0' A(x~p!_) -> A(x~q!_) @ 1.0
+
+%init: 3 * A(x~p)
+
+
+# Simulation:
+
+%obs: '001' A(x~q!_)

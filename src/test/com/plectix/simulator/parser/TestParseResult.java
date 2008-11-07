@@ -30,6 +30,11 @@ public class TestParseResult extends DirectoryTestsRunner {
 		super();
 		myTestFileName = fileName;
 		myFailer.loadTestFile(fileName);
+		String fullTestFilePath = getPrefixFileName() + myTestFileName;
+		Initializator initializator = getInitializator();
+		initializator.init(fullTestFilePath);
+		myManager = initializator.getManager();
+		myRule = myManager.getSimulationData().getRules().get(0);
 	}
 
 	@Parameters
@@ -45,15 +50,6 @@ public class TestParseResult extends DirectoryTestsRunner {
 	@AfterClass
 	public static void removeRescale() {
 		getInitializator().setRescale(1.0);
-	}
-
-	@Before
-	public void setup() {
-		String fullTestFilePath = getPrefixFileName() + myTestFileName;
-		Initializator initializator = getInitializator();
-		initializator.init(fullTestFilePath);
-		myManager = initializator.getManager();
-		myRule = myManager.getSimulationData().getRules().get(0);
 	}
 
 	private RuleStructure getRuleStructure() {

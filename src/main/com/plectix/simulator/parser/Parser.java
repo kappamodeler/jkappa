@@ -497,9 +497,14 @@ public class Parser {
 				if (rescale < 0)
 					rescale = 1.;
 				double countInFile = Double.valueOf(result[0]) * rescale;
-				if (countInFile - Math.floor(countInFile) < 1e-16)
-					count = (long) countInFile;
-				else
+				
+				//if (countInFile - Math.floor(countInFile) < 1e-16)
+				long round = Math.round(countInFile);
+				if (Math.abs(countInFile - round) < 1e-12)
+				
+					//count = (long) countInFile;
+					count = round;
+				else 
 					throw new ParseErrorException(myErrorHandler
 							.formMessage(itemDS)
 							+ " use '--rescale' option.");
@@ -584,8 +589,9 @@ public class Parser {
 			line = line.substring(0, line.length() - 1);
 		}
 
-		if (!line.matches(PATTERN_LINE))
+		if (!line.matches(PATTERN_LINE)) {
 			return false;
+		}
 		return true;
 	}
 
