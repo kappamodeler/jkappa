@@ -206,7 +206,7 @@ public class CRule {
 		}
 		
 		for (int i=index; i< rhsAgents.size();i++){
-			rhsAgents.get(i).setIdInRuleSide(lhsAgents.size()+i-1);
+			rhsAgents.get(i).setIdInRuleSide(lhsAgents.size()+i);
 		}
 		
 			
