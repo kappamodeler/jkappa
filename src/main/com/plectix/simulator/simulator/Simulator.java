@@ -133,8 +133,9 @@ public class Simulator {
 				for (CSite site : injection.getChangedSites()) {
 					site.getAgentLink().EMPTY_SITE
 							.removeInjectionsFromCCToSite(injection);
+					site.getAgentLink().EMPTY_SITE.clearLiftList();
 					site.removeInjectionsFromCCToSite(injection);
-					site.getLift().clear();
+					site.clearLiftList();
 				}
 				if (injection.getChangedSites().size() != 0) {
 					for (CSite site : injection.getSiteList()) {
