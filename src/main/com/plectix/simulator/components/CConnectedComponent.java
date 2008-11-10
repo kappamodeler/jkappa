@@ -32,6 +32,8 @@ public class CConnectedComponent implements IConnectedComponent {
 	private List<CAgent> agentFromSolutionForRHS;
 
 	public final CAgent getAgentByIdFromSolution(int id, CInjection injection) {
+		if(injection.getAgentLinkList().size()==0)
+			System.out.println();
 		for (CAgentLink agentL : injection.getAgentLinkList())
 			if (agentL.getIdAgentFrom() == id)
 				return agentL.getAgentTo();

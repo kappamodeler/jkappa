@@ -40,6 +40,10 @@ public class SimulatorManager {
 
 		List<CConnectedComponent> result = new ArrayList<CConnectedComponent>();
 
+		int index=1;
+		for (CAgent agent : agents)
+			agent.setIdInRuleSide(index++);
+		
 		while (!agents.isEmpty()) {
 
 			List<CAgent> connectedAgents = new ArrayList<CAgent>();

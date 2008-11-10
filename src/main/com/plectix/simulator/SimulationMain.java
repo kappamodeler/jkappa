@@ -116,7 +116,7 @@ public class SimulationMain {
 			myIsSimulating = true;
 		}
 
-		else if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
+		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
 			simulationManager.outputData();
 			System.exit(1);
 		}
