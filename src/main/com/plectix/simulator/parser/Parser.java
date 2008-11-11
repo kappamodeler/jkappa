@@ -16,7 +16,7 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
-import com.plectix.simulator.RateExpression;
+import com.plectix.simulator.components.RateExpression;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
