@@ -40,10 +40,10 @@ public class SimulatorManager {
 
 		List<CConnectedComponent> result = new ArrayList<CConnectedComponent>();
 
-		int index=1;
+		int index = 1;
 		for (CAgent agent : agents)
 			agent.setIdInRuleSide(index++);
-		
+
 		while (!agents.isEmpty()) {
 
 			List<CAgent> connectedAgents = new ArrayList<CAgent>();
@@ -204,10 +204,14 @@ public class SimulatorManager {
 			return line;
 		for (CConnectedComponent cc : ccList)
 			length = length + cc.getAgents().size();
+		int index=1;
 		for (CConnectedComponent cc : ccList) {
 			if (cc == CRule.EMPTY_LHS_CC)
 				return line;
 			line += printPartRule(cc, indexLink);
+			if(index<ccList.size())
+				line+=",";
+			index++;
 
 		}
 		return line;
@@ -224,6 +228,8 @@ public class SimulatorManager {
 		int j = 1;
 		if (cc == CRule.EMPTY_LHS_CC)
 			return line;
+
+		CRule.sortAgentsByRuleSide(cc.getAgents());
 		for (CAgent agent : cc.getAgents()) {
 			line = line + agent.getName();
 			line = line + "(";
@@ -237,9 +243,9 @@ public class SimulatorManager {
 				case CLinkState.STATUS_LINK_BOUND: {
 					if (site.getLinkState().getStatusLinkRank() == CLinkState.RANK_SEMI_LINK)
 						line = line + "!_";
-					else if (site.getAgentLink().getIdInConnectedComponent() < ((CSite) site
+					else if (site.getAgentLink().getIdInRuleSide() < ((CSite) site
 							.getLinkState().getSite()).getAgentLink()
-							.getIdInConnectedComponent()) {
+							.getIdInRuleSide()) {
 						((CSite) site.getLinkState().getSite()).getLinkState()
 								.setLinkStateID(indexLink);
 						line = line + "!" + indexLink++;

@@ -194,23 +194,22 @@ public class CRule {
 		int index = 0;
 		for (CAgent lhsAgent : lhsAgents) {
 			if ((index < rhsAgents.size())
-					&& !(rhsAgents.get(index).equals(lhsAgent) && rhsAgents.get(
-							index).getSiteMap().equals(lhsAgent.getSiteMap()))) {
-//				rhsAgents.get(index)
-//						.setIdInRuleSide(lhsAgent.getIdInRuleSide());
-//			} else {
+					&& !(rhsAgents.get(index).equals(lhsAgent) && rhsAgents
+							.get(index).getSiteMap().equals(
+									lhsAgent.getSiteMap()))) {
+				// rhsAgents.get(index)
+				// .setIdInRuleSide(lhsAgent.getIdInRuleSide());
+				// } else {
 				break;
 			}
 			index++;
 
 		}
-		
-		for (int i=index; i< rhsAgents.size();i++){
-			rhsAgents.get(i).setIdInRuleSide(lhsAgents.size()+i);
+
+		for (int i = index; i < rhsAgents.size(); i++) {
+			rhsAgents.get(i).setIdInRuleSide(lhsAgents.size() + i);
 		}
-		
-			
-		
+
 		// for (CConnectedComponent cc : leftHandSide) {
 		// for (CAgent lhsAgent : cc.getAgents()) {
 		// if ((index < rhsAgents.size())
@@ -226,12 +225,11 @@ public class CRule {
 		// }
 		// }
 
-//		markRHSAgentsUnmarked(++indexAgentRHS);
+		// markRHSAgentsUnmarked(++indexAgentRHS);
 
 	}
 
-	private final void sortAgentsByRuleSide(List<CAgent> list) {
-		CAgent r = null;
+	public static final void sortAgentsByRuleSide(List<CAgent> list) {
 		CAgent left;
 		CAgent right;
 		for (int i = 0; i < list.size() - 1; i++) {
@@ -571,7 +569,7 @@ public class CRule {
 						.getSimulationData().getSolution()).addAgent(agent);
 
 				agentAddList.put(toAgent, agent);
-//				toAgent.setIdInRuleSide(maxAgentID++);
+				// toAgent.setIdInRuleSide(maxAgentID++);
 				break;
 			}
 			case ACTION_NONE: {
@@ -720,11 +718,11 @@ public class CRule {
 		}
 
 		private void removeAgentToConnectedWithDeleted(CSite checkedSite) {
-			for (int i=0;i<sitesConnectedWithDeleted.size();i++){
-					if (sitesConnectedWithDeleted.get(i) == checkedSite){
-						sitesConnectedWithDeleted.remove(i);
-						return;
-					}
+			for (int i = 0; i < sitesConnectedWithDeleted.size(); i++) {
+				if (sitesConnectedWithDeleted.get(i) == checkedSite) {
+					sitesConnectedWithDeleted.remove(i);
+					return;
+				}
 			}
 		}
 
@@ -926,7 +924,7 @@ public class CRule {
 			case ACTION_ADD: {
 				this.action = ACTION_ADD;
 				this.toAgent = agent;
-//				agent.setIdInRuleSide(maxAgentID++);
+				// agent.setIdInRuleSide(maxAgentID++);
 				this.rightConnectedComponent = cc;
 				createBound();
 				break;
