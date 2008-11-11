@@ -8,13 +8,13 @@ import com.plectix.simulator.interfaces.IObservablesComponent;
 public class ObservablesRuleComponent implements IObservablesComponent {
 	private CRule rule;
 	private int nameID;
-	private final List<Double> countList = new ArrayList<Double>();
+	private final List<Long> countList = new ArrayList<Long>();
 
 	public final CRule getRule() {
 		return rule;
 	}
 
-	public final List<Double> getCountList() {
+	public final List<Long> getCountList() {
 		return countList;
 	}
 
@@ -25,7 +25,12 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 
 	@Override
 	public void calculate() {
-		countList.add(rule.getActivity());
+		long count =1;
+		
+		for (CConnectedComponent cc : rule.getLeftHandSide())
+			count*=cc.getInjectionsList().size();
+		
+		countList.add(count);
 	}
 
 	@Override
@@ -53,7 +58,7 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 		return rule.getRuleRate();
 	}
 
-	public List<Double> getDoubleCountList() {
+	public List<Long> getDoubleCountList() {
 		return countList;
 	}
 
