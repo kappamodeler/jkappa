@@ -3,7 +3,6 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.RateExpression;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 
