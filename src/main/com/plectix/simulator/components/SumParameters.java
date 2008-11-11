@@ -4,23 +4,22 @@
 package com.plectix.simulator.components;
 
 import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.IPerturbationExpression;
 
-class SumParameters {
+public class SumParameters implements IPerturbationExpression {
 	/**
 	 * 
 	 */
 	private IObservablesComponent observableID;
 	double parameter;
 
+	public final IObservablesComponent getObservablesComponent() {
+		return this.observableID;
+	}
+
 	public SumParameters(IObservablesComponent observableID, double parameter) {
 		this.observableID = observableID;
 		this.parameter = parameter;
-	}
-
-	public double getMultiply(CObservables observables) {
-		double multiply = 0.;
-		multiply = this.observableID.getSize();
-		return multiply * this.parameter;
 	}
 
 	@Override
@@ -31,5 +30,40 @@ class SumParameters {
 		if (observableID != sp.observableID)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String getName() {
+		if (observableID != null)
+			return observableID.getName();
+		return null;
+	}
+
+	@Override
+	public String getValueToString() {
+		return Double.valueOf(parameter).toString();
+	}
+
+	// public double getMultiply(CObservables observables) {
+	// double multiply = 0.;
+	// multiply = this.observableID.getSize();
+	// return multiply * this.parameter;
+	// }
+
+	@Override
+	public double getMultiplication() {
+		double multiply = 0.;
+		multiply = this.observableID.getSize();
+		return multiply * this.parameter;
+	}
+
+	@Override
+	public double getValue() {
+		return parameter;
+	}
+
+	@Override
+	public void setValue(double value) {
+		this.parameter = value;
 	}
 }

@@ -18,6 +18,7 @@ import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.RateExpression;
 import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.IPerturbationExpression;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
 
@@ -128,7 +129,7 @@ public class Parser {
 			String st = perturbationStr.getLine();
 			st = st.trim();
 
-			List<RateExpression> rateExpression = new ArrayList<RateExpression>();
+			List<IPerturbationExpression> rateExpression = new ArrayList<IPerturbationExpression>();
 
 			if (st.indexOf("$T") == 0) {
 				st = st.substring(2).trim();
@@ -242,7 +243,7 @@ public class Parser {
 	}
 
 	private final CRule getGreaterRule(String st, CDataString perturbationStr,
-			List<RateExpression> rateExpression) throws ParseErrorException {
+			List<IPerturbationExpression> rateExpression) throws ParseErrorException {
 		checkString("'", st, perturbationStr);
 		st = st.substring(st.indexOf("'") + 1).trim();
 		checkString("'", st, perturbationStr);
@@ -310,7 +311,7 @@ public class Parser {
 		return getRuleWithEqualName(ruleName);
 	}
 
-	private final void addFreeRule(List<RateExpression> rateExpression,
+	private final void addFreeRule(List<IPerturbationExpression> rateExpression,
 			String item) {
 		item = item.substring(item.indexOf("'") + 1).trim();
 		CRule curRule = getRuleWithEqualName(getName(item));
@@ -497,14 +498,14 @@ public class Parser {
 				if (rescale < 0)
 					rescale = 1.;
 				double countInFile = Double.valueOf(result[0]) * rescale;
-				
-				//if (countInFile - Math.floor(countInFile) < 1e-16)
+
+				// if (countInFile - Math.floor(countInFile) < 1e-16)
 				long round = Math.round(countInFile);
 				if (Math.abs(countInFile - round) < 1e-12)
-				
-					//count = (long) countInFile;
+
+					// count = (long) countInFile;
 					count = round;
-				else 
+				else
 					throw new ParseErrorException(myErrorHandler
 							.formMessage(itemDS)
 							+ " use '--rescale' option.");

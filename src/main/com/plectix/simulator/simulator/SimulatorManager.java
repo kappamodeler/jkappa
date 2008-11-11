@@ -8,14 +8,18 @@ import java.util.List;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
+import com.plectix.simulator.components.RateExpression;
 import com.plectix.simulator.components.SolutionLines;
+import com.plectix.simulator.components.SumParameters;
 import com.plectix.simulator.components.CRule.Action;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.NameDictionary;
 import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.IPerturbationExpression;
 
 public class SimulatorManager {
 
@@ -192,6 +196,65 @@ public class SimulatorManager {
 	private final void outputPertubation() {
 
 		System.out.println("PERTURBATIONS:");
+
+		for (CPerturbation perturbation : simulationData.getPerturbations()) {
+			System.out.println(perturbationToString(perturbation));
+		}
+
+	}
+
+	private final String perturbationToString(CPerturbation perturbation) {
+		String st = "-";
+		String greater;
+		if (perturbation.getGreater())
+			greater = "> ";
+		else
+			greater = "< ";
+
+		switch (perturbation.getType()) {
+		case CPerturbation.TYPE_TIME: {
+			st += "Whenever current time ";
+			st += greater;
+			st += perturbation.getTimeCondition();
+			break;
+		}
+		case CPerturbation.TYPE_NUMBER: {
+			st += "Whenever [";
+			st += simulationData.getObservables().getComponentList().get(
+					perturbation.getObsNameID()).getName();
+			st += "] ";
+			st += greater;
+			st += perturbationParametersToString(perturbation
+					.getLHSParametersList());
+			break;
+		}
+		}
+		st += " do kin(";
+		st += perturbation.getPerturbationRule().getName();
+		st += "):=";
+		st += perturbationParametersToString(perturbation.getRHSParametersList());
+
+		return st;
+	}
+
+	private final String perturbationParametersToString(
+			List<IPerturbationExpression> sumParameters) {
+		String st = new String();
+
+		int index = 1;
+		for (IPerturbationExpression parameters : sumParameters) {
+			st += parameters.getValueToString();
+			if (parameters.getName() != null) {
+				st += "*[";
+				st += parameters.getName();
+				st += "]";
+			}
+			if (index < sumParameters.size())
+				st += " + ";
+			index++;
+		}
+
+		return st;
 	}
 
 	private static int indexLink = 0;
@@ -204,13 +267,13 @@ public class SimulatorManager {
 			return line;
 		for (CConnectedComponent cc : ccList)
 			length = length + cc.getAgents().size();
-		int index=1;
+		int index = 1;
 		for (CConnectedComponent cc : ccList) {
 			if (cc == CRule.EMPTY_LHS_CC)
 				return line;
 			line += printPartRule(cc, indexLink);
-			if(index<ccList.size())
-				line+=",";
+			if (index < ccList.size())
+				line += ",";
 			index++;
 
 		}
