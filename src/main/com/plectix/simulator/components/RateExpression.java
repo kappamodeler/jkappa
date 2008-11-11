@@ -1,6 +1,5 @@
-package com.plectix.simulator;
+package com.plectix.simulator.components;
 
-import com.plectix.simulator.components.CRule;
 
 public class RateExpression {
 	private CRule rule;
