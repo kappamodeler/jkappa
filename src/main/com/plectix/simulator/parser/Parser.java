@@ -19,6 +19,16 @@ import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.RateExpression;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
+import com.plectix.simulator.parser.Exeptions.ParseErrorExeptionInternalState;
+import com.plectix.simulator.parser.Exeptions.ParseErrorExceptionLine;
+import com.plectix.simulator.parser.Exeptions.ParseErrorExeptionAgent;
+import com.plectix.simulator.parser.Exeptions.ParseErrorExeptionLinkState;
+import com.plectix.simulator.parser.Exeptions.ParseErrorExeptionRuleName;
+import com.plectix.simulator.parser.Exeptions.ParseErrorExeptionRuleRate;
+import com.plectix.simulator.parser.Exeptions.ParseErrorExeptionSite;
+import com.plectix.simulator.parser.Exeptions.ParseExeptionInternalState;
+import com.plectix.simulator.parser.Exeptions.ParseErrorException;
+import com.plectix.simulator.parser.Exeptions.ParserExceptionHandler;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.SimulationData;
 
@@ -243,7 +253,8 @@ public class Parser {
 	}
 
 	private final CRule getGreaterRule(String st, CDataString perturbationStr,
-			List<IPerturbationExpression> rateExpression) throws ParseErrorException {
+			List<IPerturbationExpression> rateExpression)
+			throws ParseErrorException {
 		checkString("'", st, perturbationStr);
 		st = st.substring(st.indexOf("'") + 1).trim();
 		checkString("'", st, perturbationStr);
@@ -311,8 +322,8 @@ public class Parser {
 		return getRuleWithEqualName(ruleName);
 	}
 
-	private final void addFreeRule(List<IPerturbationExpression> rateExpression,
-			String item) {
+	private final void addFreeRule(
+			List<IPerturbationExpression> rateExpression, String item) {
 		item = item.substring(item.indexOf("'") + 1).trim();
 		CRule curRule = getRuleWithEqualName(getName(item));
 		if (curRule != null)
@@ -371,8 +382,8 @@ public class Parser {
 			if (rulesStr.indexOf("'") != -1) {
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
 				if (rulesStr.indexOf("'") == -1)
-					throw new ParseErrorException(myErrorHandler
-							.formMessage(rulesDS));
+					throw new ParseErrorExeptionRuleName(myErrorHandler
+							.formMessage(rulesDS), rulesStr);
 				name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1,
 						rulesStr.length()).trim();
@@ -393,8 +404,9 @@ public class Parser {
 					} else
 						activity = Double.valueOf(activStr);
 				} catch (Exception e) {
-					throw new ParseErrorException(myErrorHandler
-							.formMessage(rulesDS));
+					throw new ParseErrorExeptionRuleRate(myErrorHandler
+							.formMessage(rulesDS), rulesStr.substring(index)
+							.trim());
 				}
 				rulesStr = rulesStr.substring(0, index).trim();
 			}
@@ -469,8 +481,9 @@ public class Parser {
 				}
 				}
 			} catch (ParseErrorException e) {
-				throw new ParseErrorException(myErrorHandler
-						.formMessage(rulesDS));
+				e.setMessage(myErrorHandler.formMessage(rulesDS)
+						+ e.getMyMessage());
+				throw e;
 			}
 			ruleID++;
 
@@ -575,8 +588,9 @@ public class Parser {
 
 				}
 			} catch (ParseErrorException e) {
-				throw new ParseErrorException(myErrorHandler
-						.formMessage(itemDS));
+				e.setMessage(myErrorHandler.formMessage(itemDS)
+						+ e.getMyMessage());
+				throw e;
 			}
 		}
 
@@ -599,8 +613,8 @@ public class Parser {
 	public final List<CAgent> parseAgent(String line)
 			throws ParseErrorException {
 		line = line.replaceAll("[ 	]", "");
-		if (!testLine(line))
-			throw new ParseErrorException();
+		// if (!testLine(line))
+		// throw new ParseErrorException();
 
 		StringTokenizer st = new StringTokenizer(line, "),");
 		Map<Integer, CSite> map = new HashMap<Integer, CSite>();
@@ -613,9 +627,11 @@ public class Parser {
 			ccomp = st.nextToken().trim();
 			if (ccomp.indexOf("(") != -1) {
 				agent = new StringTokenizer(ccomp, "(");
+				if (agent.countTokens() == 0)
+					throw new ParseErrorExceptionLine(line);
 				ccomp = agent.nextToken(); // Agent name.
 				if (!ccomp.trim().matches(PATTERN_AGENT_SITE))
-					throw new ParseErrorException();
+					throw new ParseErrorExeptionAgent(ccomp);
 
 				cagent = new CAgent(SimulationMain.getSimulationManager()
 						.getNameDictionary().addName(ccomp));
@@ -625,16 +641,22 @@ public class Parser {
 					cagent.addSite(parseSome(site, map)); // <-------Agent
 				}
 			} else {
+				if (cagent == null)
+					throw new ParseErrorExeptionAgent(ccomp);
 				cagent.addSite(parseSome(ccomp, map)); // <------Agent
 			}
 		}
 		if (!map.isEmpty())
-			throw new ParseErrorException();
+			throw new ParseErrorExeptionLinkState((CSite) map.values()
+					.toArray()[0]);
+		if (!testLine(line))
+			throw new ParseErrorExceptionLine(line);
 		return listAgent;
 	}
 
 	private final CSite parseSome(String site, Map<Integer, CSite> map)
 			throws ParseErrorException {
+		String line = site;
 		String state = null;
 		String connect = null;
 		DataString dt = null;
@@ -645,16 +667,16 @@ public class Parser {
 		state = dt.getSt2();
 		if (state != null) {
 			dt = parseLine(state, KEY_CONNECT);
-			connect = dt.getSt2();
 			state = dt.getSt1();
+			if (!state.matches(PATTERN_LINE_SITE_STATE))
+				throw new ParseErrorExeptionInternalState(line);
 		} else {
 			dt = parseLine(site, KEY_CONNECT);
-			connect = dt.getSt2();
 			site = dt.getSt1();
 		}
-
+		connect = dt.getSt2();
 		if (!site.trim().matches(PATTERN_AGENT_SITE))
-			throw new ParseErrorException();
+			throw new ParseErrorExeptionSite(line);
 
 		final int siteNameId = SimulationMain.getSimulationManager()
 				.getNameDictionary().addName(site);
@@ -666,7 +688,7 @@ public class Parser {
 						.getNameDictionary().addName(state);
 				csite.setInternalState(new CInternalState(nameId));
 			} else {
-				throw new ParseErrorException();
+				throw new ParseExeptionInternalState(line);
 			}
 
 		if (connect != null)
@@ -691,14 +713,18 @@ public class Parser {
 						map.put(index, csite);
 					}
 				} catch (Exception e) {
-					throw new ParseErrorException();
+					throw new ParseErrorExeptionLinkState(line);
 				}
 
 			}
+		if (csite == null)
+			throw new ParseErrorExceptionLine(line);
 		return csite;
 	}
 
-	private final DataString parseLine(String st, int key) {
+	private final DataString parseLine(String st, int key)
+			throws ParseErrorException {
+		String line = new String(st);
 		String id = null;
 		DataString ds = new DataString(st);
 		int i = -1;
@@ -716,8 +742,13 @@ public class Parser {
 			if (i != -1) {
 				id = SYMBOL_CONNECTED;
 				i = st.indexOf(id);
-				if (i == -1)
+				if (i == -1) {
 					i = st.indexOf(SYMBOL_CONNECT);
+					String test = new String(st);
+					test = test.substring(i + 1);
+					if (test.length() == 0)
+						throw new ParseErrorExeptionLinkState(st);
+				}
 				break;
 			}
 		}

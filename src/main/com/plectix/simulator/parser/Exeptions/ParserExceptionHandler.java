@@ -1,4 +1,4 @@
-package com.plectix.simulator.parser;
+package com.plectix.simulator.parser.Exeptions;
 
 import com.plectix.simulator.components.CDataString;
 

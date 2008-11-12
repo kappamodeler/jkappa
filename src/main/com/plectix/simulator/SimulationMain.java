@@ -10,8 +10,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.PropertyConfigurator;
 
-import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.Parser;
+import com.plectix.simulator.parser.Exeptions.ParseErrorException;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.Model;
 import com.plectix.simulator.simulator.Simulator;
@@ -203,7 +203,7 @@ public class SimulationMain {
 			System.exit(1);
 		} catch (ParseErrorException e) {
 			System.err.println("Error in file '" + fileName + "' at line "
-					+ e.getMessage());
+					+ e.getMyMessage());
 			System.exit(1);
 		}
 	}

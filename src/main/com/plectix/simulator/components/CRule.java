@@ -207,26 +207,11 @@ public class CRule {
 		}
 
 		for (int i = index; i < rhsAgents.size(); i++) {
-			rhsAgents.get(i).setIdInRuleSide(lhsAgents.size() + i);
+			if (rhsAgents.size() == 1)
+				rhsAgents.get(i).setIdInRuleSide(lhsAgents.size() + i + 1);
+			else
+				rhsAgents.get(i).setIdInRuleSide(lhsAgents.size() + i);
 		}
-
-		// for (CConnectedComponent cc : leftHandSide) {
-		// for (CAgent lhsAgent : cc.getAgents()) {
-		// if ((index < rhsAgents.size())
-		// && (rhsAgents.get(index).equals(lhsAgent) && rhsAgents
-		// .get(index).getSiteMap().equals(
-		// lhsAgent.getSiteMap()))) {
-		// rhsAgents.get(index).setIdInRuleSide(
-		// lhsAgent.getIdInRuleSide());
-		// } else {
-		// break;
-		// }
-		// index++;
-		// }
-		// }
-
-		// markRHSAgentsUnmarked(++indexAgentRHS);
-
 	}
 
 	public static final void sortAgentsByRuleSide(List<CAgent> list) {
@@ -953,10 +938,8 @@ public class CRule {
 			if (this.leftHandSide.get(0).getInjectionsQuantity() == 1
 					&& this.leftHandSide.get(1).getInjectionsQuantity() == 1) {
 				List<CInjection> injList = new ArrayList<CInjection>();
-				injList
-						.add(this.leftHandSide.get(0).getFirstInjection());
-				injList
-						.add(this.leftHandSide.get(1).getFirstInjection());
+				injList.add(this.leftHandSide.get(0).getFirstInjection());
+				injList.add(this.leftHandSide.get(1).getFirstInjection());
 				return isClash(injList);
 			}
 		}

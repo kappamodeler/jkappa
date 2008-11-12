@@ -7,6 +7,7 @@ import java.io.*;
 import org.junit.Test;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.parser.Exeptions.ParseErrorException;
 import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.util.*;
 
