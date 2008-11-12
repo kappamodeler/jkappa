@@ -144,8 +144,7 @@ public class Simulator {
 							site.removeInjectionFromLift(injection);
 						}
 					}
-					injection.getConnectedComponent().getInjectionsList()
-							.remove(injection);
+					injection.getConnectedComponent().removeInjection(injection);
 				}
 			}
 		}
@@ -161,13 +160,13 @@ public class Simulator {
 					CAgent checkedAgent = checkedSite.getAgentLink();
 					addToAgentList(freeAgents, checkedAgent);
 					for (CLiftElement lift : checkedAgent.EMPTY_SITE.getLift()) {
-						lift.getConnectedComponent().getInjectionsList()
-								.remove(lift.getInjection());
+						lift.getConnectedComponent()
+								.removeInjection(lift.getInjection());
 					}
 					checkedAgent.EMPTY_SITE.clearLiftList();
 					for (CLiftElement lift : checkedSite.getLift()) {
-						lift.getConnectedComponent().getInjectionsList()
-								.remove(lift.getInjection());
+						lift.getConnectedComponent()
+								.removeInjection(lift.getInjection());
 					}
 					checkedSite.clearLiftList();
 				}

@@ -116,7 +116,7 @@ public class CSite implements ISite {
 					if (this != site)
 						site.removeInjectionFromLift(injection);
 				}
-				liftElement.getConnectedComponent().getInjectionsList().remove(
+				liftElement.getConnectedComponent().removeInjection(
 						injection);
 			}
 		}

@@ -1,13 +1,10 @@
 package com.plectix.simulator.components;
 
-import java.util.ArrayList;
+import java.util.*;
 import java.util.HashMap;
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.interfaces.*;
 
 public class CConnectedComponent implements IConnectedComponent {
 
@@ -23,14 +20,27 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	private List<CAgentLink> agentLinkList;
 
-	private List<CSite> changedInjectionsSite;
-
-	private List<CInjection> injectionsList;
+	private TreeMap<Integer, CInjection> injectionsList;
+	
+	private CInjection first;
+	
+	private int maxId = 0;
 
 	private CRule rule;
 
 	private List<CAgent> agentFromSolutionForRHS;
 
+	private void addInjection(CInjection inj, int id) {
+		if (inj != null) {
+			maxId = Math.max(maxId, id);
+			inj.setId(id);
+			injectionsList.put(id, inj);
+			if (first == null) {
+				first = inj;
+			}
+		}
+	}
+	
 	public final CAgent getAgentByIdFromSolution(int id, CInjection injection) {
 		if(injection.getAgentLinkList().size()==0)
 			System.out.println();
@@ -53,10 +63,10 @@ public class CConnectedComponent implements IConnectedComponent {
 		case EMPTY: {
 			agentList = new ArrayList<CAgent>();
 			agentList.add(new CAgent(CAgent.EMPTY));
-			injectionsList = new ArrayList<CInjection>();
-			injectionsList.add(EMPTY_INJECTION);
+			injectionsList = new TreeMap<Integer, CInjection>();
+			addInjection(EMPTY_INJECTION, 0);
+			first = EMPTY_INJECTION;
 			agentFromSolutionForRHS = new ArrayList<CAgent>();
-			changedInjectionsSite = new ArrayList<CSite>();
 			break;
 		}
 		}
@@ -64,13 +74,23 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
-		injectionsList = new ArrayList<CInjection>();
+		injectionsList = new TreeMap<Integer, CInjection>();
 		agentFromSolutionForRHS = new ArrayList<CAgent>();
-		changedInjectionsSite = new ArrayList<CSite>();
 	}
 
+	private CInjection getFirstNotNull() {
+		if (injectionsList.isEmpty()) {
+			return null;
+		} else {
+			return injectionsList.get(maxId);
+		}
+	}
+	
 	public void removeInjection(CInjection injection) {
-		injectionsList.remove(injection);
+		injectionsList.remove(injection.getId());
+		if (first == injection) {
+			first = getFirstNotNull();
+		}
 	}
 
 	public final void initSpanningTreeMap() {
@@ -101,7 +121,7 @@ public class CConnectedComponent implements IConnectedComponent {
 		if (unify(agent)) {
 			CInjection injection = new CInjection(this, injectedSites,
 					agentLinkList);
-			injectionsList.add(injection);
+			addInjection(injection, maxId + 1);
 			addLiftsToCurrentChangedStates(injection);
 		}
 	}
@@ -382,7 +402,25 @@ public class CConnectedComponent implements IConnectedComponent {
 		this.rule = rule;
 	}
 
-	public List<CInjection> getInjectionsList() {
-		return injectionsList;
+	public Collection<CInjection> getInjectionsList() {
+		return Collections.unmodifiableCollection(injectionsList.values());
+	}
+	
+	public CInjection getRandomInjection(IRandom random) {
+		int index;
+		CInjection inj = null;
+		while (inj == null) {
+			index = random.getInteger(maxId + 1);
+			inj = injectionsList.get(index);
+		}
+		return inj;
+	}
+	
+	public CInjection getFirstInjection() {
+		return first;
+	}
+	
+	public int getInjectionsQuantity() {
+		return injectionsList.size();
 	}
 }

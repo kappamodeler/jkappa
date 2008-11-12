@@ -40,10 +40,8 @@ public class CProbabilityCalculation {
 
 	public final List<CInjection> getSomeInjectionList(CRule rule) {
 		List<CInjection> list = new ArrayList<CInjection>();
-
 		for (CConnectedComponent cc : rule.getLeftHandSide()) {
-			list.add(cc.getInjectionsList().get(
-					random.getInteger(cc.getInjectionsList().size())));
+			list.add(cc.getRandomInjection(random));
 		}
 		return list;
 	}

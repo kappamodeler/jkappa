@@ -28,7 +28,7 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 		long count =1;
 		
 		for (CConnectedComponent cc : rule.getLeftHandSide())
-			count*=cc.getInjectionsList().size();
+			count*=cc.getInjectionsQuantity();
 		
 		countList.add(count);
 	}

@@ -50,7 +50,7 @@ public class TestPositiveUpdate extends TestUpdate {
 	public void testLHS() {
 		List<CConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
 		for (CConnectedComponent cc : leftHand) {
-			List<CInjection> componentInjections = cc.getInjectionsList();
+			Collection<CInjection> componentInjections = cc.getInjectionsList();
 			if (!lhsIsEmpty(leftHand)) {
 				myFailer.assertSizeEquality("LHS injections", componentInjections,
 						myLHSInjectionsQuantity.get(myTestFileName));

@@ -62,7 +62,7 @@ public class TestInjectionsAgentLinking extends TestInjections {
 			}
 			name.append(myNumber);
 			if (name.toString().equals(c.getName())) {
-				List<CInjection> injectionsList = c.getInjectionsList();
+				Collection<CInjection> injectionsList = c.getInjectionsList();
 
 				int run = 0;
 				for (CInjection injection : injectionsList) {

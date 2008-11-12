@@ -467,7 +467,7 @@ public class CRule {
 	public final void calcultateActivity() {
 		activity = 1.;
 		for (CConnectedComponent cc : this.leftHandSide) {
-			activity *= cc.getInjectionsList().size();
+			activity *= cc.getInjectionsQuantity();
 		}
 		activity *= ruleRate;
 		activity /= automorphismNumber;
@@ -677,15 +677,14 @@ public class CRule {
 					agent.EMPTY_SITE.removeInjectionsFromCCToSite(lift
 							.getInjection());
 					lift.getInjection().getConnectedComponent()
-							.getInjectionsList().remove(lift.getInjection());
+							.removeInjection(lift.getInjection());
 				}
 
 				for (CSite site : agent.getSites()) {
 					for (CLiftElement lift : site.getLift()) {
 						site.removeInjectionsFromCCToSite(lift.getInjection());
 						lift.getInjection().getConnectedComponent()
-								.getInjectionsList()
-								.remove(lift.getInjection());
+								.removeInjection(lift.getInjection());
 					}
 					site.getLift().clear();
 					injection.removeSiteFromSitesList(site);
@@ -951,15 +950,13 @@ public class CRule {
 
 	public boolean isClashForInfiniteRule() {
 		if (this.leftHandSide.size() == 2) {
-			if (this.leftHandSide.get(0).getInjectionsList().size() == 1
-					&& this.leftHandSide.get(1).getInjectionsList().size() == 1) {
+			if (this.leftHandSide.get(0).getInjectionsQuantity() == 1
+					&& this.leftHandSide.get(1).getInjectionsQuantity() == 1) {
 				List<CInjection> injList = new ArrayList<CInjection>();
 				injList
-						.add(this.leftHandSide.get(0).getInjectionsList()
-								.get(0));
+						.add(this.leftHandSide.get(0).getFirstInjection());
 				injList
-						.add(this.leftHandSide.get(1).getInjectionsList()
-								.get(0));
+						.add(this.leftHandSide.get(1).getFirstInjection());
 				return isClash(injList);
 			}
 		}

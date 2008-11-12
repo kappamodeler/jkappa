@@ -34,7 +34,7 @@ public class TestNegativeUpdate extends TestUpdate {
 	public void testLHS() {
 		List<CConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
 		for (CConnectedComponent cc : leftHand) {
-			List<CInjection> componentInjections = cc.getInjectionsList();
+			Collection<CInjection> componentInjections = cc.getInjectionsList();
 			if (!lhsIsEmpty(leftHand)) {
 			
 				myFailer.assertSizeEquality("LHS injections", componentInjections,
@@ -57,7 +57,7 @@ public class TestNegativeUpdate extends TestUpdate {
 	@Test
 	public void testObs() {
 		for (ObservablesConnectedComponent cc : getInitializator().getObservables()) {
-			List<CInjection> componentInjections = cc.getInjectionsList();
+			Collection<CInjection> componentInjections = cc.getInjectionsList();
 			
 			myFailer.assertSizeEquality("Observables injections",
 					componentInjections, myObsInjectionsQuantity.get(myTestFileName));

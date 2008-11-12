@@ -37,7 +37,7 @@ public class TestInjectionsCorrection extends TestInjections {
 		
 		SortedSet<Long> solutionLinkingForCurrentObs = new TreeSet<Long>();
 
-		List<CInjection> injectionsList = c.getInjectionsList();
+		Collection<CInjection> injectionsList = c.getInjectionsList();
 		for (CInjection injection : injectionsList) {
 			for (CAgentLink agentLink : injection.getAgentLinkList()) {
 				solutionLinkingForCurrentObs

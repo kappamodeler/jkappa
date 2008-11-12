@@ -35,7 +35,7 @@ public class TestInjectionsLifts extends TestInjections  {
 		MessageConstructor mc = new MessageConstructor();
 		
 		for (ObservablesConnectedComponent c : getInitializator().getObservables()) {
-			List<CInjection> injectionsList = c.getInjectionsList();
+			Collection<CInjection> injectionsList = c.getInjectionsList();
 			for (CInjection injection : injectionsList) {
 				if (!testInjectionLifts(injection)) {
 					temporaryFail = true;

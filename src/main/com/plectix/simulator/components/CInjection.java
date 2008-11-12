@@ -14,6 +14,8 @@ public class CInjection implements IInjection {
 
 	private List<CSite> changedSites;
 
+	private int myId = 0;
+	
 	public List<CSite> getChangedSites() {
 		return changedSites;
 	}
@@ -57,7 +59,15 @@ public class CInjection implements IInjection {
 		this.agentLinkList = agentLinkList;
 		this.changedSites = new ArrayList<CSite>();
 	}
-
+	
+	public void setId(int id) {
+		myId = id;
+	}
+	
+	public int getId() {
+		return myId;
+	}
+	
 	public List<CAgentLink> getAgentLinkList() {
 		return agentLinkList;
 	}

@@ -47,7 +47,7 @@ public class TestInjectionsQuantity extends TestInjections  {
 		if (!exists) {
 			myFailer.fail("There's no component with name " + ccName);
 		}
-		List<CInjection> injectionsList = myCurrentCC.getInjectionsList();
+		Collection<CInjection> injectionsList = myCurrentCC.getInjectionsList();
 		if (injectionsList != null) {
 			myFailer.assertEquals("failed on " + ccName, expectedQuantity, (injectionsList.size()));
 		} else {
