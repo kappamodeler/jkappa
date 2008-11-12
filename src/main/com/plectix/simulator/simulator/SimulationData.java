@@ -46,6 +46,7 @@ public class SimulationData {
 	private double rescale = -1.;
 	private int points = -1;
 	private double timeLength = 0;
+	private boolean isTime = false;
 	private int seed = 0;
 	private String xmlSessionName = "simplx.xml";
 	private String tmpSessionName = "simplx.tmp";
@@ -59,6 +60,18 @@ public class SimulationData {
 	public void setMaxClashes(long max_clashes) {
 		if (max_clashes > 0)
 			this.maxClashes = max_clashes;
+	}
+
+	public final boolean isEndSimulation(double currentTime, long count) {
+		if (isTime)
+			if (currentTime <= timeLength)
+				return false;
+			else
+				return true;
+		else if (count <= event)
+			return false;
+		else
+			return true;
 	}
 
 	private double snapshotTime = -1.;
@@ -149,6 +162,7 @@ public class SimulationData {
 
 	public void setTimeLength(double timeLength) {
 		this.timeLength = timeLength;
+		this.isTime = true;
 	}
 
 	public final void initializeLifts() {
@@ -349,8 +363,7 @@ public class SimulationData {
 		int obsCountTimeListSize = observables.getCountTimeList().size();
 
 		Element simulation = doc.createElement("Simulation");
-		simulation.setAttribute("TotalEvents", Integer
-				.toString(obsCountTimeListSize));
+		simulation.setAttribute("TotalEvents", Long.toString(event));
 		simulation.setAttribute("TotalTime", Double.toString(timeLength));
 		simulation.setAttribute("InitTime", Double.toString(initialTime));
 

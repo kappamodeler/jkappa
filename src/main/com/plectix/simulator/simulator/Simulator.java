@@ -65,10 +65,10 @@ public class Simulator {
 		if (model.getSimulationData().getSnapshotTime() >= 0.0)
 			hasSnapshot = true;
 
-		int count = 0;
+		long count = 0;
 
 		long max_clash = 0;
-		while (currentTime <= model.getSimulationData().getTimeLength()
+		while (!model.getSimulationData().isEndSimulation(currentTime, count)
 				&& max_clash <= model.getSimulationData().getMaxClashes()) {
 			if (hasSnapshot
 					&& model.getSimulationData().getSnapshotTime() <= currentTime) {
@@ -107,7 +107,7 @@ public class Simulator {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("positive update");
 
-				doPositiveUpdate(rule,injectionsList);
+				doPositiveUpdate(rule, injectionsList);
 
 				model.getSimulationData().getObservables().calculateObs(
 						currentTime);
@@ -124,7 +124,7 @@ public class Simulator {
 		}
 		outToLogger(isEndRules);
 		if (!isIteration)
-			outputData();
+			outputData(count);
 	}
 
 	public final void doNegativeUpdate(List<CInjection> injectionsList) {
@@ -144,7 +144,8 @@ public class Simulator {
 							site.removeInjectionFromLift(injection);
 						}
 					}
-					injection.getConnectedComponent().removeInjection(injection);
+					injection.getConnectedComponent()
+							.removeInjection(injection);
 				}
 			}
 		}
@@ -160,13 +161,13 @@ public class Simulator {
 					CAgent checkedAgent = checkedSite.getAgentLink();
 					addToAgentList(freeAgents, checkedAgent);
 					for (CLiftElement lift : checkedAgent.EMPTY_SITE.getLift()) {
-						lift.getConnectedComponent()
-								.removeInjection(lift.getInjection());
+						lift.getConnectedComponent().removeInjection(
+								lift.getInjection());
 					}
 					checkedAgent.EMPTY_SITE.clearLiftList();
 					for (CLiftElement lift : checkedSite.getLift()) {
-						lift.getConnectedComponent()
-								.removeInjection(lift.getInjection());
+						lift.getConnectedComponent().removeInjection(
+								lift.getInjection());
 					}
 					checkedSite.clearLiftList();
 				}
@@ -214,7 +215,8 @@ public class Simulator {
 		}
 	}
 
-	public final void doPositiveUpdate(CRule rule,List<CInjection> injectionsList) {
+	public final void doPositiveUpdate(CRule rule,
+			List<CInjection> injectionsList) {
 		if (model.getSimulationData().isActivationMap()) {
 			positiveUpdate(rule.getActivatedRule(), rule
 					.getActivatedObservable(), rule);
@@ -223,9 +225,9 @@ public class Simulator {
 					.getSimulationData().getObservables()
 					.getConnectedComponentList(), rule);
 		}
-		
-		doPositiveUpdateForDeletedAgents(doNegativeUpdateForDeletedAgents(
-				rule, injectionsList));
+
+		doPositiveUpdateForDeletedAgents(doNegativeUpdateForDeletedAgents(rule,
+				injectionsList));
 
 	}
 
@@ -261,10 +263,11 @@ public class Simulator {
 			LOGGER.info("end of simulation: there are no active rules");
 	}
 
-	public final void outputData() {
+	public final void outputData(long count) {
 		SimulationMain.getSimulationManager().startTimer();
 
 		model.getSimulationData().setTimeLength(currentTime);
+		model.getSimulationData().setEvent(count);
 		try {
 			model.getSimulationData().writeToXML();
 		} catch (ParserConfigurationException e) {
@@ -304,7 +307,7 @@ public class Simulator {
 						break;
 					rule.applyRule(injectionsList);
 					doNegativeUpdate(injectionsList);
-					doPositiveUpdate(rule,injectionsList);
+					doPositiveUpdate(rule, injectionsList);
 				} else {
 					clash++;
 				}
