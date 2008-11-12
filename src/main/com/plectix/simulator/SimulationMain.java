@@ -192,6 +192,7 @@ public class SimulationMain {
 			System.exit(1);
 		}
 
+		simulationManager.getSimulationData().setInputFile(fileName);
 		DataReading data = new DataReading(fileName);
 		try {
 			data.readData();
@@ -307,6 +308,8 @@ public class SimulationMain {
 			SimulationMain.getSimulationManager().getSimulationData()
 					.setIterations(iteration);
 		}
+		
+		simulationManager.getSimulationData().setCommandLine(args);
 	}
 
 	public final static SimulatorManager getSimulationManager() {

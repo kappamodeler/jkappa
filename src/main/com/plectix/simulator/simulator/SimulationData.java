@@ -26,8 +26,6 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
-import com.plectix.simulator.components.ObservablesConnectedComponent;
-import com.plectix.simulator.components.ObservablesRuleComponent;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.util.RunningMetric;
@@ -39,9 +37,20 @@ public class SimulationData {
 	private List<CRule> rules;
 	private CStories stories = null;
 	private List<CPerturbation> perturbations;
-
 	private CObservables observables = new CObservables();
+	private CSnapshot snapshot = null;
+	private ISolution solution = new CSolution(); // soup of initial components
+
 	private Double initialTime = 0.0;
+
+	private String randomizer;
+	private int iterations = 0;
+
+	private long event;
+
+	private long numPoints;
+	private boolean compile = false;
+	private boolean storify = false;
 
 	private double rescale = -1.;
 	private int points = -1;
@@ -50,8 +59,24 @@ public class SimulationData {
 	private int seed = 0;
 	private String xmlSessionName = "simplx.xml";
 	private String tmpSessionName = "simplx.tmp";
+	private String commandLine;
+	private String inputFile;
+
 	private boolean activationMap = true;
 	private long maxClashes = Integer.MAX_VALUE;
+	private double snapshotTime = -1.;
+
+	public final void setInputFile(String inputFile) {
+		this.inputFile = inputFile;
+	}
+
+	public final void setCommandLine(String[] args) {
+		String st = new String();
+		for (int i = 0; i < args.length; i++) {
+			st += args[i] + " ";
+		}
+		this.commandLine = st;
+	}
 
 	public long getMaxClashes() {
 		return maxClashes;
@@ -74,8 +99,6 @@ public class SimulationData {
 			return true;
 	}
 
-	private double snapshotTime = -1.;
-
 	public double getSnapshotTime() {
 		return snapshotTime;
 	}
@@ -83,18 +106,6 @@ public class SimulationData {
 	public void setSnapshotTime(double snapshotTime) {
 		this.snapshotTime = snapshotTime;
 	}
-
-	private String randomizer;
-	private int iterations = 0;
-
-	private long event;
-
-	private long numPoints;
-	private ISolution solution = new CSolution(); // soup of initial components
-	private boolean compile = false;
-	private boolean storify = false;
-
-	private CSnapshot snapshot = null;
 
 	public CSnapshot getSnapshot() {
 		return snapshot;
@@ -263,8 +274,8 @@ public class SimulationData {
 		Document doc = db.newDocument();
 
 		Element simplxSession = doc.createElement("SimplxSession");
-		simplxSession.setAttribute("CommandLine", "cmd");
-		simplxSession.setAttribute("InputFile", "file");
+		simplxSession.setAttribute("CommandLine", commandLine);
+		simplxSession.setAttribute("InputFile", inputFile);
 		simplxSession.setAttribute("TimeStamp", "stmp");
 		doc.appendChild(simplxSession);
 
