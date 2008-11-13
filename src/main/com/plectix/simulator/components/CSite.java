@@ -51,6 +51,13 @@ public class CSite implements ISite {
 		return false;
 	}
 
+	public CInjection getInjectionFromLift(CConnectedComponent inCC) {
+		for (CLiftElement liftElement : this.liftList)
+			if (liftElement.getConnectedComponent() == inCC)
+				return liftElement.getInjection();
+		return null;
+	}
+	
 	@Override
 	public final CLinkState getLinkState() {
 		return linkState;

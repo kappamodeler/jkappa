@@ -187,16 +187,21 @@ public class Simulator {
 		for (CAgent agent : agentsList) {
 			for (CRule rule : model.getSimulationData().getRules()) {
 				for (CConnectedComponent cc : rule.getLeftHandSide()) {
-					if (!agent.isAgentHaveLinkToConnectedComponent(cc)) {
-						cc.setInjections(agent);
+					CInjection inj = cc.getInjection(agent);
+					if (inj != null) {
+						if (!agent
+								.isAgentHaveLinkToConnectedComponent(cc, inj))
+							cc.setInjection(inj);
 					}
 				}
 			}
 			for (ObservablesConnectedComponent obsCC : SimulationMain
 					.getSimulationManager().getSimulationData()
 					.getObservables().getConnectedComponentList()) {
-				if (!agent.isAgentHaveLinkToConnectedComponent(obsCC)) {
-					obsCC.setInjections(agent);
+				CInjection inj = obsCC.getInjection(agent);
+				if (inj != null) {
+					if (!agent.isAgentHaveLinkToConnectedComponent(obsCC, inj))
+						obsCC.setInjection(inj);
 				}
 			}
 		}

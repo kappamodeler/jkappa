@@ -1,8 +1,6 @@
 package com.plectix.simulator.components;
 
 import java.util.*;
-import java.util.HashMap;
-import java.util.List;
 
 import com.plectix.simulator.interfaces.*;
 
@@ -21,9 +19,9 @@ public class CConnectedComponent implements IConnectedComponent {
 	private List<CAgentLink> agentLinkList;
 
 	private TreeMap<Integer, CInjection> injectionsList;
-	
+
 	private CInjection first;
-	
+
 	private int maxId = 0;
 
 	private CRule rule;
@@ -40,9 +38,9 @@ public class CConnectedComponent implements IConnectedComponent {
 			}
 		}
 	}
-	
+
 	public final CAgent getAgentByIdFromSolution(int id, CInjection injection) {
-		if(injection.getAgentLinkList().size()==0)
+		if (injection.getAgentLinkList().size() == 0)
 			System.out.println();
 		for (CAgentLink agentL : injection.getAgentLinkList())
 			if (agentL.getIdAgentFrom() == id)
@@ -85,7 +83,7 @@ public class CConnectedComponent implements IConnectedComponent {
 			return injectionsList.get(maxId);
 		}
 	}
-	
+
 	public void removeInjection(CInjection injection) {
 		injectionsList.remove(injection.getId());
 		if (first == injection) {
@@ -126,15 +124,33 @@ public class CConnectedComponent implements IConnectedComponent {
 		}
 	}
 
+	public final void setInjection(CInjection inj) {
+		addInjection(inj, maxId + 1);
+		addLiftsToCurrentChangedStates(inj);
+	}
+
+	public final CInjection getInjection(CAgent agent) {
+		if (unify(agent)) {
+			CInjection injection = new CInjection(this, injectedSites,
+					agentLinkList);
+			return injection;
+		}
+		return null;
+	}
+
 	public final void doPositiveUpdate(
 			List<CConnectedComponent> connectedComponentList) {
 		if (connectedComponentList == null)
 			return;
 		for (CConnectedComponent cc : connectedComponentList) {
-			for (CAgent agent : cc.getAgentFromSolutionForRHS())
-				if (!agent.isAgentHaveLinkToConnectedComponent(this)) {
-					setInjections(agent);
+			for (CAgent agent : cc.getAgentFromSolutionForRHS()) {
+				CInjection inj = getInjection(agent);
+				if (inj != null) {
+					if (!agent.isAgentHaveLinkToConnectedComponent(this, inj))
+						setInjection(inj);
 				}
+			}
+
 		}
 	}
 
@@ -405,7 +421,7 @@ public class CConnectedComponent implements IConnectedComponent {
 	public Collection<CInjection> getInjectionsList() {
 		return Collections.unmodifiableCollection(injectionsList.values());
 	}
-	
+
 	public CInjection getRandomInjection(IRandom random) {
 		int index;
 		CInjection inj = null;
@@ -415,11 +431,11 @@ public class CConnectedComponent implements IConnectedComponent {
 		}
 		return inj;
 	}
-	
+
 	public CInjection getFirstInjection() {
 		return first;
 	}
-	
+
 	public int getInjectionsQuantity() {
 		return injectionsList.size();
 	}

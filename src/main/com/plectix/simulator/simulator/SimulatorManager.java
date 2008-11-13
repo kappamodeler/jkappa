@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
@@ -153,8 +154,11 @@ public class SimulatorManager {
 				for (CRule rule : rules) {
 					for (CConnectedComponent cc : rule.getLeftHandSide()) {
 						if (cc != null) {
-							if (!agent.isAgentHaveLinkToConnectedComponent(cc)) {
-								cc.setInjections(agent);
+							CInjection inj = cc.getInjection(agent);
+							if (inj != null) {
+								if (!agent.isAgentHaveLinkToConnectedComponent(
+										cc, inj))
+									cc.setInjection(inj);
 							}
 						}
 					}
@@ -163,11 +167,14 @@ public class SimulatorManager {
 				for (ObservablesConnectedComponent oCC : simulationData
 						.getObservables().getConnectedComponentList())
 					if (oCC != null)
-						if (!agent.isAgentHaveLinkToConnectedComponent(oCC)) {
-							if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
-								oCC.setInjections(agent);
+						if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
+							CInjection inj = oCC.getInjection(agent);
+							if (inj != null) {
+								if (!agent.isAgentHaveLinkToConnectedComponent(
+										oCC, inj))
+									oCC.setInjection(inj);
+							}
 						}
-
 			}
 		}
 
@@ -232,7 +239,8 @@ public class SimulatorManager {
 		st += " do kin(";
 		st += perturbation.getPerturbationRule().getName();
 		st += "):=";
-		st += perturbationParametersToString(perturbation.getRHSParametersList());
+		st += perturbationParametersToString(perturbation
+				.getRHSParametersList());
 
 		return st;
 	}

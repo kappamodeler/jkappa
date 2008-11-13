@@ -3,6 +3,7 @@ package com.plectix.simulator.components;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.TreeMap;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IAgent;
@@ -25,9 +26,9 @@ public class CAgent implements IAgent {
 	// TODO: is this field static or not???
 	public final CSite EMPTY_SITE = new CSite(CSite.NO_INDEX, this);
 
-	private HashMap<Integer, CSite> siteMap = new HashMap<Integer, CSite>();
+	private TreeMap<Integer, CSite> siteMap = new TreeMap<Integer, CSite>();
 
-	public HashMap<Integer, CSite> getSiteMap() {
+	public TreeMap<Integer, CSite> getSiteMap() {
 		return siteMap;
 	}
 
@@ -49,12 +50,53 @@ public class CAgent implements IAgent {
 	public boolean isAgentHaveLinkToConnectedComponent(CConnectedComponent cc) {
 
 		for (CSite site : siteMap.values()) {
-			if(site.getAgentLink().EMPTY_SITE.isConnectedComponentInLift(cc))
+			if (site.getAgentLink().EMPTY_SITE.isConnectedComponentInLift(cc))
 				return true;
 			if (site.isConnectedComponentInLift(cc))
 				return true;
 		}
 		return false;
+	}
+
+	public boolean isAgentHaveLinkToConnectedComponent(CConnectedComponent cc,
+			CInjection injection) {
+
+		for (CSite site : siteMap.values()) {
+			if (checkSites(site.getAgentLink().EMPTY_SITE, injection, cc))
+				return true;
+			if (checkSites(site, injection, cc))
+				return true;
+		}
+		return false;
+	}
+
+	private boolean checkSites(CSite site, CInjection injection, CConnectedComponent cc) {
+		CInjection sitesInjection = site.getInjectionFromLift(cc);
+		if (sitesInjection != null) {
+			if (compareInjectedLists(sitesInjection, injection))
+				return true;
+		}
+		return false;
+	}
+
+	private boolean isSiteInList(List<CSite> sitesList, CSite site) {
+		for (CSite siteList : sitesList) {
+			if (site == siteList && site.getInternalState().equals(siteList.getInternalState())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean compareInjectedLists(CInjection one, CInjection two) {
+		if (one.getSiteList().size() == two.getSiteList().size()) {
+			for (CSite siteOne : one.getSiteList()) {
+				if (!isSiteInList(two.getSiteList(), siteOne))
+					return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -63,7 +105,7 @@ public class CAgent implements IAgent {
 	 */
 
 	public final CAgent findLinkAgent(CAgent agentFromCC, List<CSite> siteFromCC) {
-		if (agentFromCC == null || siteFromCC.size()==0)
+		if (agentFromCC == null || siteFromCC.size() == 0)
 			return null;
 		CAgent agent = (CAgent) this.getSite(siteFromCC.get(0).getNameId())
 				.getLinkState().getSite().getAgentLink();
@@ -156,7 +198,7 @@ public class CAgent implements IAgent {
 		return SimulationMain.getSimulationManager().getNameDictionary()
 				.getName(nameId);
 	}
-	
+
 	public String toString() {
 		StringBuffer sb = new StringBuffer(getName() + "(");
 		boolean first = true;
