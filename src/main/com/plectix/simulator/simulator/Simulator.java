@@ -94,6 +94,9 @@ public class Simulator {
 			if (!rule.isInfinityRate())
 				currentTime += ruleProbabilityCalculation.getTimeValue();
 
+			if (count == 4)
+				System.out.println();
+
 			if (!rule.isClash(injectionsList)) {
 				// negative update
 				max_clash = 0;
@@ -155,7 +158,7 @@ public class Simulator {
 			List<CInjection> injectionsList) {
 		List<CAgent> freeAgents = new ArrayList<CAgent>();
 		for (CInjection injection : injectionsList) {
-			for (CSite checkedSite : rule.getAgentsConnectedWithDeleted()) {
+			for (CSite checkedSite : rule.getSitesConnectedWithDeleted()) {
 				if (!injection.checkSiteExistanceAmongChangedSites(checkedSite)) {
 
 					CAgent checkedAgent = checkedSite.getAgentLink();
@@ -173,6 +176,10 @@ public class Simulator {
 				}
 			}
 		}
+		for (CSite checkedSite : rule.getSitesConnectedWithBroken()) {
+			CAgent checkedAgent = checkedSite.getAgentLink();
+			addToAgentList(freeAgents, checkedAgent);
+		}
 		return freeAgents;
 	}
 
@@ -189,8 +196,7 @@ public class Simulator {
 				for (CConnectedComponent cc : rule.getLeftHandSide()) {
 					CInjection inj = cc.getInjection(agent);
 					if (inj != null) {
-						if (!agent
-								.isAgentHaveLinkToConnectedComponent(cc, inj))
+						if (!agent.isAgentHaveLinkToConnectedComponent(cc, inj))
 							cc.setInjection(inj);
 					}
 				}

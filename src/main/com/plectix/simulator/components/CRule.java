@@ -17,8 +17,9 @@ public class CRule {
 	private String name;
 	private double ruleRate;
 	private List<CSite> sitesConnectedWithDeleted;
+	private List<CSite> sitesConnectedWithBroken;
 
-	public List<CSite> getAgentsConnectedWithDeleted() {
+	public List<CSite> getSitesConnectedWithDeleted() {
 		return sitesConnectedWithDeleted;
 	}
 
@@ -152,6 +153,7 @@ public class CRule {
 	public void applyRule(List<CInjection> injectionList) {
 		agentAddList = new HashMap<CAgent, CAgent>();
 		sitesConnectedWithDeleted = new ArrayList<CSite>();
+		sitesConnectedWithBroken = new ArrayList<CSite>();
 		this.injList = injectionList;
 		if (rightHandSide != null)
 			for (CConnectedComponent cc : rightHandSide)
@@ -634,6 +636,13 @@ public class CRule {
 				// /////////////////////////////////////////////
 
 				injection.addToChangedSites(injectedSite);
+
+				/**
+				 * Break a bond for this rules: A(x!_)->A(x)
+				 */
+				if (siteFrom.getLinkState().getSite() == null
+						&& linkSite != null)
+					addSiteToConnectedWithBroken(linkSite);
 				// /////////////////////////////////////////////
 
 				break;
@@ -646,11 +655,11 @@ public class CRule {
 				CAgent agent = leftConnectedComponent.getAgentByIdFromSolution(
 						fromAgent.getIdInConnectedComponent(), injection);
 				for (CSite site : agent.getSites()) {
-					removeAgentToConnectedWithDeleted(site);
+					removeSiteToConnectedWithDeleted(site);
 					CSite solutionSite = (CSite) site.getLinkState().getSite();
 
 					if (solutionSite != null) {
-						addAgentToConnectedWithDeleted(solutionSite);
+						addSiteToConnectedWithDeleted(solutionSite);
 						solutionSite.getLinkState().setSite(null);
 						solutionSite.getLinkState().setStatusLink(
 								CLinkState.STATUS_LINK_FREE);
@@ -701,7 +710,7 @@ public class CRule {
 			}
 		}
 
-		private void removeAgentToConnectedWithDeleted(CSite checkedSite) {
+		private void removeSiteToConnectedWithDeleted(CSite checkedSite) {
 			for (int i = 0; i < sitesConnectedWithDeleted.size(); i++) {
 				if (sitesConnectedWithDeleted.get(i) == checkedSite) {
 					sitesConnectedWithDeleted.remove(i);
@@ -710,11 +719,18 @@ public class CRule {
 			}
 		}
 
-		private void addAgentToConnectedWithDeleted(CSite checkedSite) {
+		private void addSiteToConnectedWithDeleted(CSite checkedSite) {
 			for (CSite site : sitesConnectedWithDeleted)
 				if (site == checkedSite)
 					return;
 			sitesConnectedWithDeleted.add(checkedSite);
+		}
+		
+		private void addSiteToConnectedWithBroken(CSite checkedSite) {
+			for (CSite site : sitesConnectedWithBroken)
+				if (site == checkedSite)
+					return;
+			sitesConnectedWithBroken.add(checkedSite);
 		}
 
 		private final CInjection getInjectionBySiteToFromLHS(CSite siteTo) {
@@ -944,5 +960,9 @@ public class CRule {
 			}
 		}
 		return false;
+	}
+
+	public List<CSite> getSitesConnectedWithBroken() {
+		return this.sitesConnectedWithBroken;
 	}
 }
