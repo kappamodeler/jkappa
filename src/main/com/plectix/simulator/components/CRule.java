@@ -579,6 +579,7 @@ public class CRule {
 				} else {
 					int agentIdInCC = getAgentIdInCCBySideId(siteFrom
 							.getAgentLink());
+
 					agentFromInSolution = leftConnectedComponent
 							.getAgentByIdFromSolution(agentIdInCC, injection);
 
@@ -725,7 +726,7 @@ public class CRule {
 					return;
 			sitesConnectedWithDeleted.add(checkedSite);
 		}
-		
+
 		private void addSiteToConnectedWithBroken(CSite checkedSite) {
 			for (CSite site : sitesConnectedWithBroken)
 				if (site == checkedSite)
@@ -748,21 +749,14 @@ public class CRule {
 		}
 
 		private final int getAgentIdInCCBySideId(CAgent agent) {
-			if (leftConnectedComponent != null) {
-
-				for (CAgent agentL : leftConnectedComponent.getAgents())
-					if (agentL.getIdInRuleSide() == agent.getIdInRuleSide())
-						return agentL.getIdInConnectedComponent();
-			} else {
-				for (CConnectedComponent cc : leftHandSide)
-					for (CAgent agentL : cc.getAgents())
-						if (agentL.getIdInRuleSide() == agent.getIdInRuleSide()) {
+			for (CConnectedComponent cc : leftHandSide)
+				for (CAgent agentL : cc.getAgents())
+					if (agentL.getIdInRuleSide() == agent.getIdInRuleSide()) {
+						if (leftConnectedComponent == null)
 							leftConnectedComponent = cc;
-							return agentL.getIdInConnectedComponent();
-						}
-			}
-
-			return 0;
+						return agentL.getIdInConnectedComponent();
+					}
+			return -1;
 		}
 
 		public CConnectedComponent getRightCComponent() {

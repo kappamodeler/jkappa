@@ -94,9 +94,6 @@ public class Simulator {
 			if (!rule.isInfinityRate())
 				currentTime += ruleProbabilityCalculation.getTimeValue();
 
-			if (count == 4)
-				System.out.println();
-
 			if (!rule.isClash(injectionsList)) {
 				// negative update
 				max_clash = 0;
