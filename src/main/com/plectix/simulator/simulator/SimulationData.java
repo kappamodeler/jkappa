@@ -28,6 +28,7 @@ import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.simulator.graphs.GraphDrawer;
 import com.plectix.simulator.util.RunningMetric;
 
 public class SimulationData {
@@ -403,6 +404,9 @@ public class SimulationData {
 		DOMSource domSource = new DOMSource(doc);
 		StreamResult streamesult = new StreamResult(xmlSessionName);
 		transformer.transform(domSource, streamesult);
+
+		GraphDrawer gd = new GraphDrawer();
+		gd.createGraphs(observables,initialTime,timeLength);
 	}
 
 	private final Element createElement(IObservablesComponent obs, Document doc) {
