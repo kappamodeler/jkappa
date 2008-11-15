@@ -25,11 +25,11 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 
 	@Override
 	public void calculate() {
-		long count =1;
-		
+		long count = 1;
+
 		for (CConnectedComponent cc : rule.getLeftHandSide())
-			count*=cc.getInjectionsQuantity();
-		
+			count *= cc.getInjectionsQuantity();
+
 		countList.add(count);
 	}
 
@@ -56,10 +56,6 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 	@Override
 	public double getSize() {
 		return rule.getRuleRate();
-	}
-
-	public List<Long> getDoubleCountList() {
-		return countList;
 	}
 
 	@Override
