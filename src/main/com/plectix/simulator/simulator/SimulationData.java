@@ -66,7 +66,7 @@ public class SimulationData {
 	private String inputFile;
 
 	private boolean activationMap = true;
-	private long maxClashes = Integer.MAX_VALUE;
+	private long maxClashes = 100;
 	private double snapshotTime = -1.;
 
 	public final void setInputFile(String inputFile) {

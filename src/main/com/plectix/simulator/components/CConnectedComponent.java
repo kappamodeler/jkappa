@@ -18,7 +18,7 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	private List<CAgentLink> agentLinkList;
 
-	private TreeMap<Integer, CInjection> injectionsList;
+	private HashMap<Integer, CInjection> injectionsList;
 
 	private CInjection first;
 
@@ -61,7 +61,7 @@ public class CConnectedComponent implements IConnectedComponent {
 		case EMPTY: {
 			agentList = new ArrayList<CAgent>();
 			agentList.add(new CAgent(CAgent.EMPTY));
-			injectionsList = new TreeMap<Integer, CInjection>();
+			injectionsList = new HashMap<Integer, CInjection>();
 			addInjection(EMPTY_INJECTION, 0);
 			first = EMPTY_INJECTION;
 			agentFromSolutionForRHS = new ArrayList<CAgent>();
@@ -72,20 +72,29 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
-		injectionsList = new TreeMap<Integer, CInjection>();
+		injectionsList = new HashMap<Integer, CInjection>();
 		agentFromSolutionForRHS = new ArrayList<CAgent>();
 	}
 
 	private CInjection getFirstNotNull() {
-		if (injectionsList.isEmpty()) {
-			return null;
-		} else {
-			return injectionsList.get(maxId);
+		for (Integer key : injectionsList.keySet()) {
+			return injectionsList.get(key);
 		}
+		return null;
 	}
 
 	public void removeInjection(CInjection injection) {
 		injectionsList.remove(injection.getId());
+
+		// if (injection.getId() == maxId) {
+		// Collection<CInjection> inj = injectionsList.values();
+		//
+		// if (inj.size() > 0) {
+		// CInjection[] array = new CInjection[inj.size()];
+		// inj.toArray(array);
+		// maxId = array[array.length - 1].getId();
+		// }
+		// }else
 		if (first == injection) {
 			first = getFirstNotNull();
 		}
@@ -433,6 +442,7 @@ public class CConnectedComponent implements IConnectedComponent {
 	}
 
 	public CInjection getFirstInjection() {
+		// return injectionsList.
 		return first;
 	}
 
