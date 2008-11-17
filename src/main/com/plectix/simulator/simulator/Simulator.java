@@ -58,7 +58,8 @@ public class Simulator {
 				model.getSimulationData().getRules(), model.getSimulationData()
 						.getSeed());
 
-		model.getSimulationData().getObservables().calculateObs(currentTime);
+		model.getSimulationData().getObservables().calculateObs(currentTime,
+				model.getSimulationData().isTime());
 		boolean isEndRules = false;
 
 		boolean hasSnapshot = false;
@@ -110,7 +111,7 @@ public class Simulator {
 				doPositiveUpdate(rule, injectionsList);
 
 				model.getSimulationData().getObservables().calculateObs(
-						currentTime);
+						currentTime, model.getSimulationData().isTime());
 			} else {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Clash");

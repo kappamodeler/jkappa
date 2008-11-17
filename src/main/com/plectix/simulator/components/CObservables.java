@@ -48,14 +48,27 @@ public class CObservables {
 		return timeSampleMin;
 	}
 
-	public final void calculateObs(Double time) {
+	public final void calculateObs(Double time, boolean isTime) {
 
 		if (time > timeNext) {
 			timeNext += timeSampleMin;
-			countTimeList.add(time);
-			for (IObservablesComponent cc : componentList) {
-				cc.calculate();
+			if (isTime) {
+				int size = countTimeList.size();
+				if ((size > 0)
+						&& (Math.abs(countTimeList.get(size - 1) - time) < 1e-7)) {
+					calculateAll(IObservablesComponent.CALCULATE_WITH_REPLASE_LAST);
+					return;
+				}
 			}
+
+			countTimeList.add(time);
+			calculateAll(IObservablesComponent.CALCULATE_WITH_NOT_REPLASE_LAST);
+		}
+	}
+
+	private final void calculateAll(boolean replaceLast) {
+		for (IObservablesComponent cc : componentList) {
+			cc.calculate(replaceLast);
 		}
 	}
 

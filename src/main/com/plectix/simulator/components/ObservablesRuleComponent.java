@@ -24,13 +24,17 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 	}
 
 	@Override
-	public void calculate() {
+	public void calculate(boolean replaceLast) {
 		long count = 1;
 
 		for (CConnectedComponent cc : rule.getLeftHandSide())
 			count *= cc.getInjectionsQuantity();
 
-		countList.add(count);
+		if (replaceLast)
+			countList.set(countList.size() - 1, count);
+		else
+			countList.add(count);
+
 	}
 
 	@Override

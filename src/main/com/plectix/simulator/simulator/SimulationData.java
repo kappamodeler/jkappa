@@ -73,6 +73,10 @@ public class SimulationData {
 		this.inputFile = inputFile;
 	}
 
+	public final boolean isTime() {
+		return this.isTime;
+	}
+
 	public final void setCommandLine(String[] args) {
 		String st = new String();
 		for (int i = 0; i < args.length; i++) {

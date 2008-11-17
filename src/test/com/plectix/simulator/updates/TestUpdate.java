@@ -24,25 +24,27 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	private final Logger LOGGER = Logger.getLogger(Simulator.class);
 	private double currentTime = 0.;
 	private CRule myActiveRule;
-	
+
 	private String myTestFileName = "";
 
 	private List<CInjection> myCurrentInjectionsList;
 
-	protected TestUpdate (String fileName) {
+	protected TestUpdate(String fileName) {
 		super();
 		myTestFileName = fileName;
 	}
 
 	public abstract void init();
+
 	public abstract String getPrefixFileName();
+
 	public abstract boolean isDoingPositive();
-	
+
 	@Before
 	public void setup() {
 		String fullTestFilePath = getPrefixFileName() + myTestFileName;
 		Initializator initializator = getInitializator();
-		
+
 		initializator.init(fullTestFilePath);
 		mySimulator = initializator.getSimulator();
 		myModel = initializator.getModel();
@@ -73,14 +75,15 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		}
 		return false;
 	}
-	
+
 	private void run() {
 		SimulationMain.getSimulationManager().startTimer();
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
 				myModel.getSimulationData().getRules(), myModel
 						.getSimulationData().getSeed());
 
-		myModel.getSimulationData().getObservables().calculateObs(currentTime);
+		myModel.getSimulationData().getObservables().calculateObs(currentTime,
+				myModel.getSimulationData().isTime());
 		myActiveRule = ruleProbabilityCalculation.getRandomRule();
 
 		if (myActiveRule == null) {
@@ -103,7 +106,8 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 			myActiveRule.applyRule(myCurrentInjectionsList);
 			mySimulator.doNegativeUpdate(myCurrentInjectionsList);
 			if (isDoingPositive()) {
-				mySimulator.doPositiveUpdate(myActiveRule,myCurrentInjectionsList);
+				mySimulator.doPositiveUpdate(myActiveRule,
+						myCurrentInjectionsList);
 			}
 
 		} else {

@@ -47,8 +47,11 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 	}
 
 	@Override
-	public final void calculate() {
-		countList.add(getInjectionsQuantity());
+	public final void calculate(boolean replaceLast) {
+		if (replaceLast)
+			countList.set(countList.size() - 1, getInjectionsQuantity());
+		else
+			countList.add(getInjectionsQuantity());
 	}
 
 	public ObservablesConnectedComponent(List<CAgent> connectedAgents,

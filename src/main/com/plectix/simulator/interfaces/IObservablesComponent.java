@@ -7,7 +7,10 @@ public interface IObservablesComponent {
 	public final static byte TYPE_CONNECTED_COMPONENT = 0;
 	public final static byte TYPE_RULE_COMPONENT = 1;
 
-	public void calculate();
+	public final static boolean CALCULATE_WITH_REPLASE_LAST = true;
+	public final static boolean CALCULATE_WITH_NOT_REPLASE_LAST = false;
+
+	public void calculate(boolean replaceLast);
 
 	public String getName();
 
@@ -18,7 +21,7 @@ public interface IObservablesComponent {
 	public byte getType();
 
 	public double getSize();
-	
-	public String getItem(int index,CObservables obs);
-	
+
+	public String getItem(int index, CObservables obs);
+
 }
