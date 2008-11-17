@@ -55,7 +55,7 @@ public class CObservables {
 			if (isTime) {
 				int size = countTimeList.size();
 				if ((size > 0)
-						&& (Math.abs(countTimeList.get(size - 1) - time) < 1e-7)) {
+						&& (Math.abs(countTimeList.get(size - 1) - time) < 1e-16)) {
 					calculateAll(IObservablesComponent.CALCULATE_WITH_REPLASE_LAST);
 					return;
 				}
