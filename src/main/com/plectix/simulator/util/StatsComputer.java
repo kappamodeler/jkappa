@@ -14,7 +14,7 @@ public class StatsComputer {
 
 	// private static final String TEST = "Example";
 	// private static final String TEST = "KPT_study";
-	// private static final String TEST = "degradation-deg-all";
+	private static final String TEST = "degradation-deg-all";
 	// private static final String TEST = "degradation-deg-free";
 	// private static final String TEST = "degradation-deg-bnd";
 	// private static final String TEST = "exponentielle";
@@ -25,7 +25,7 @@ public class StatsComputer {
 	// private static final String TEST = "debugging-polymere";
 	// private static final String TEST = "debugging-semi-link-bug";
 	// private static final String TEST = "debugging-walter-fev08";
-	private static final String TEST = "debugging-weird" ;
+	// private static final String TEST = "debugging-weird" ;
 	
 	private static final int NUMBER_OF_FILES = 50;
 

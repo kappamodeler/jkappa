@@ -405,8 +405,8 @@ public class SimulationData {
 		StreamResult streamesult = new StreamResult(xmlSessionName);
 		transformer.transform(domSource, streamesult);
 
-		GraphDrawer gd = new GraphDrawer();
-		gd.createGraphs(observables,initialTime,timeLength);
+		// GraphDrawer gd = new GraphDrawer();
+		// gd.createGraphs(observables,initialTime,timeLength);
 	}
 
 	private final Element createElement(IObservablesComponent obs, Document doc) {
