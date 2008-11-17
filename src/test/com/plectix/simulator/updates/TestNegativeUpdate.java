@@ -27,7 +27,7 @@ public class TestNegativeUpdate extends TestUpdate {
 	
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return TestUpdate.getAllTestFileNames(myPrefixFileName);
+		return getAllTestFileNames(myPrefixFileName);
 	}
 	
 	@Test

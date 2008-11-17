@@ -31,17 +31,19 @@ public class Initializator {
 		boolean rescale = (myRescale != null);
 		String[] args;
 		if (!rescale) {
-			args = new String[5];
-		} else {
 			args = new String[7];
-			args[5] = "-rescale";
-			args[6] = "" + myRescale;
+		} else {
+			args = new String[9];
+			args[7] = "-rescale";
+			args[8] = "" + myRescale;
 		}
 		args[0] = "--debug";
 		args[1] = "--sim";
 		args[2] = filePath;
 		args[3] = "--time";
 		args[4] = "15";
+		args[5] = "--seed";
+		args[6] = "10";
 		instance.parseArguments(args);
 	}
 

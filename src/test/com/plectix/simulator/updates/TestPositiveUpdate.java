@@ -18,7 +18,7 @@ public class TestPositiveUpdate extends TestUpdate {
 		
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return TestUpdate.getAllTestFileNames(myPrefixFileName);
+		return getAllTestFileNames(myPrefixFileName);
 	}
 
 	public TestPositiveUpdate(String filePath) {

@@ -17,5 +17,9 @@ public class CDataString{
 		this.lineNumber=lineNumber;
 	}
 	
+	public String toString() {
+		return "line " + lineNumber + " : [" + line + "]";
+	}
+	
 
 }

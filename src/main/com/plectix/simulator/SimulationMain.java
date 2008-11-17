@@ -10,9 +10,10 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.PropertyConfigurator;
 
+import com.plectix.simulator.parser.DataReading;
+import com.plectix.simulator.parser.FileReadingException;
+import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.Parser;
-import com.plectix.simulator.parser.Exeptions.ParseErrorException;
-import com.plectix.simulator.simulator.DataReading;
 import com.plectix.simulator.simulator.Model;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorManager;
@@ -198,13 +199,16 @@ public class SimulationMain {
 			data.readData();
 			Parser parser = new Parser(data);
 			parser.parse();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.err.println("Cannot read file with filename " + fileName);
+		} catch (FileReadingException e) {
+			System.err.println("Error in file \"" + fileName + "\" :\n\t" + e.getMessage());
 			System.exit(1);
 		} catch (ParseErrorException e) {
-			System.err.println("Error in file '" + fileName + "' at line "
-					+ e.getMyMessage());
+			System.err.println("Error in file \"" + fileName + "\"\n\tin " + e.getMessage());
+			System.exit(1);
+		} catch (Exception e) {
+			System.err.println("Error encountered while reading file \"" 
+					+ fileName + "\" : \n\t");
+			e.printStackTrace();
 			System.exit(1);
 		}
 	}
