@@ -434,10 +434,11 @@ public class CConnectedComponent implements IConnectedComponent {
 	public CInjection getRandomInjection(IRandom random) {
 		int index;
 		CInjection inj = null;
-		while (inj == null) {
-			index = random.getInteger(maxId + 1);
-			inj = injectionsList.get(index);
-		}
+		if (injectionsList.size() != 0)
+			while (inj == null) {
+				index = random.getInteger(maxId + 1);
+				inj = injectionsList.get(index);
+			}
 		return inj;
 	}
 
