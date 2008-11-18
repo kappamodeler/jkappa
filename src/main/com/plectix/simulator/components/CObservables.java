@@ -12,6 +12,9 @@ public class CObservables {
 
 	private double timeNext;
 	private double timeSampleMin;
+	private double initialTime = 0.0;
+	private long events = -1;
+	private int points = -1;
 
 	public final double getTimeSampleMin() {
 		return timeSampleMin;
@@ -48,8 +51,9 @@ public class CObservables {
 		return timeSampleMin;
 	}
 
-	public final void calculateObs(double time, boolean isTime) {
+	public final void calculateObs(double time, long count, boolean isTime) {
 		int size = countTimeList.size();
+
 		if ((size > 0)
 				&& (Math.abs(countTimeList.get(size - 1) - time) < 1e-16)) {
 			if (isTime) {
@@ -58,12 +62,13 @@ public class CObservables {
 				updateLastValueAll(time);
 				calculateAll(IObservablesComponent.CALCULATE_WITH_NOT_REPLASE_LAST);
 				countTimeList.add(time);
-				changeLastTime=false;
+				changeLastTime = false;
 			}
 			return;
 		}
 
-		if (time >= timeNext) {
+		if (isCalculateNow(time, count, isTime)) {
+			// if (time >= timeNext) {
 			timeNext += timeSampleMin;
 			if (!changeLastTime) {
 				updateLastValueAll(time);
@@ -75,6 +80,37 @@ public class CObservables {
 			return;
 		}
 		updateLastValueAll(time);
+	}
+
+	private boolean changeTimeNext = false;
+
+	private boolean isCalculateNow(double time, long count, boolean isTime) {
+		if (isTime) {
+			if (initialTime > 0)
+				if ((!changeTimeNext) && (initialTime < time)) {
+					changeTimeNext = true;
+					updateLastValueAll(time);
+				}
+			if (time >= timeNext)
+				return true;
+		} else {
+			if (initialTime > 0)
+				if ((!changeTimeNext) && (initialTime < time)) {
+					long fullTime = events - count;
+					timeSampleMin = getTimeSampleMin(fullTime, points);
+					timeNext = count + timeSampleMin;
+					updateLastValueAll(time);
+					countTimeList.add(time);
+					calculateAll(IObservablesComponent.CALCULATE_WITH_NOT_REPLASE_LAST);
+					changeTimeNext = true;
+				}
+			if (time < initialTime)
+				return false;
+			if (count >= timeNext)
+				return true;
+		}
+
+		return false;
 	}
 
 	private final void calculateAll(boolean replaceLast) {
@@ -106,17 +142,29 @@ public class CObservables {
 	public CObservables() {
 	}
 
-	public final void init(double fullTime, double initialTime, int points) {
+	public final void init(double fullTime, double initialTime, long events,
+			int points, boolean isTime) {
 		timeSampleMin = 0.;
 		timeNext = 0.;
-		if (initialTime > 0.0) {
-			timeNext = initialTime;
-			fullTime = fullTime - timeNext;
-		} else
-			timeNext = timeSampleMin;
+		this.initialTime = initialTime;
+		this.events = events;
+		this.points = points;
 
-		timeSampleMin = getTimeSampleMin(fullTime, points);
-		timeNext += timeSampleMin;
+		if (isTime) {
+			if (initialTime > 0.0) {
+				timeNext = initialTime;
+				fullTime = fullTime - timeNext;
+			} else
+				timeNext = timeSampleMin;
+
+			timeSampleMin = getTimeSampleMin(fullTime, points);
+			timeNext += timeSampleMin;
+		} else {
+			timeSampleMin = getTimeSampleMin(events, points);
+			if (initialTime <= 0.0)
+				timeNext = timeSampleMin;
+		}
+
 	}
 
 	public final List<IObservablesComponent> getComponentList() {

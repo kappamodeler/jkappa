@@ -110,7 +110,7 @@ public class Simulator {
 				doPositiveUpdate(rule, injectionsList);
 
 				model.getSimulationData().getObservables().calculateObs(
-						currentTime, model.getSimulationData().isTime());
+						currentTime, count, model.getSimulationData().isTime());
 			} else {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Clash");

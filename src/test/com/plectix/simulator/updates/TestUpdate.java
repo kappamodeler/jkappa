@@ -83,7 +83,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 						.getSimulationData().getSeed());
 
 		myModel.getSimulationData().getObservables().calculateObs(currentTime,
-				myModel.getSimulationData().isTime());
+				1, myModel.getSimulationData().isTime());
 		myActiveRule = ruleProbabilityCalculation.getRandomRule();
 
 		if (myActiveRule == null) {

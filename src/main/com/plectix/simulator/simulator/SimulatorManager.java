@@ -135,7 +135,8 @@ public class SimulatorManager {
 
 	public void initialize() {
 		simulationData.getObservables().init(simulationData.getTimeLength(),
-				simulationData.getInitialTime(), simulationData.getPoints());
+				simulationData.getInitialTime(), simulationData.getEvent(),
+				simulationData.getPoints(), simulationData.isTime());
 		CSolution solution = (CSolution) simulationData.getSolution();
 		List<CRule> rules = simulationData.getRules();
 		Iterator<List<CAgent>> iterator = solution.getAgentMap().values()
