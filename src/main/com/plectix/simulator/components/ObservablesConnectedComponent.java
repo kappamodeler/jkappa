@@ -40,10 +40,10 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 	}
 
 	public final String getLine() {
-		String ccName = SimulationMain.getSimulationManager().printPartRule(
-				this, 0);
-		return ccName;
-		// return line;
+		// String ccName = SimulationMain.getSimulationManager().printPartRule(
+		// this, 0);
+		// return ccName;
+		return line;
 	}
 
 	public final List<Integer> getCountList() {
@@ -69,7 +69,9 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 			String name, String line, int nameID) {
 		super(connectedAgents);
 		this.name = name;
-		this.line = line;
+		this.line = SimulationMain.getSimulationManager()
+				.printPartRule(this, 0);
+		// this.line = line;
 		this.automorphicObservables = new ArrayList<Integer>();
 		this.nameID = nameID;
 	}
