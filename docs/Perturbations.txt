@@ -1,50 +1,117 @@
-Jean Krivine -  9 Oct 2008 
+--------------------------------------------------------------------------------
+              Perturbations as implemented in simplx
+                   Jean Krivine -  9 Oct 2008 
+--------------------------------------------------------------------------------
+
+LABEL (for rule names) is any sequence of characters.
+OP (for perturbation expressions) is in {+,-,\,*}
+
+%mod:   modif_expr
+
+modif_expr:    
+| time_ineq do assignement NEWLINE
+| concentration_ineq do assignement NEWLINE
+
+time_ineq: $T > FLOAT
+
+assignement:
+| LABEL := assign_expr
+
+assign_expr:
+| ( assign_expr )
+| assign_val OP assign_expr
+| assign_val
+
+assign_val: FLOAT | INT | LABEL
+
+concentration_ineq:
+| conc_expr > conc_expr
+| conc_expr < conc_expr
+
+conc_expr:
+| ( conc_expr )
+| conc_val OP conc_expr
+| conc_val
+
+conc_val: FLOAT | INT | [ LABEL ]
+
+--------------------------------------------------------------------------------
 
 Perturbations are instructions you put on the kappa file to modify kinetic rates of rule during simulation at specified time points or when certain numbers of agents are reached.
 
-The perturbation language is quite geekish for the moment so here is a short note to help people using it.
-A perturbation is a sentence of the form
-CONDITION do MODIFICATION
+The perturbation language is quite geekish for the moment so here is a short note to help people using it. A perturbation is a sentence of the form:
+
+     CONDITION do MODIFICATION
+
 where a CONDITION is an inequality on time (to trigger a modification after a certain time) or number of species (to trigger a modification when a certain number of an agent is reached).
+
+
 The syntax is:
 
-**CONDITION**:
-$T > n
+*) CONDITION:
+
+   $T > n
+
 where $T is the symbol for time and n is any floating number.
+
 or
-['specie_j'] (> or <) a_1*['specie_1'] + ... + a_n*['specie_n'] + K
+   
+   ['specie_j'] (> or <) a_1*['specie_1'] + ... + a_n*['specie_n'] + K
+
 where 'specie_i' must be any named kappa observable which must appear in the kappa file as
-%obs: 'specie_i' kappa_expression
+
+   %obs: 'specie_i' kappa_expression
+
 and a_i,K are any floating number.
 
-**MODIFICATION**:
-'rule_i':=a_1*'rule_1' + a_n*'rule_n' + K
+
+*) MODIFICATION:
+
+   'rule_i':=a_1*'rule_1' + a_n*'rule_n' + K
+
 where 'rule_j' is any named rule which must appear in the kappa file as
-'rule_j' kappa_expression -> kappa_expression [rate]
+
+   'rule_j' kappa_expression -> kappa_expression [rate]
+
 and a_i,K are any floating number.
+
+
+*) EXAMPLES:
 
 The most common use of perturbation is to introduce a signal during the simulation. One defines a rule for introducing the signal (say A(x) here):
-'intro_signal' -> A(x) @ 0.0
-%obs: 'signal' A(x)
+
+   'intro_signal' -> A(x) @ 0.0
+    %obs: 'signal' A(x)
+
+
 Note the rule has a kinetic rate of 0,0 which makes it inactive at the beginning. We also add the named observable 'signal'.
+
 Then one adds a perturbation after 1.0 time unit of simulation:
-%mod: $T>1.0 do 'intro_signal':=1000000
+
+    %mod: $T>1.0 do 'intro_signal':=1000000
+
 which will introduce A(x) at high speed.
+
+
 One adds the following perturbation to end the signal:
-%mod: ['signal'] > 10000 do 'intro_signal':=0.0
+
+    %mod: ['signal'] > 10000 do 'intro_signal':=0.0
+
 
 Note that perturbation entered in the Kappa Factory (in the perturbation box in the simulation panel) do not require the keyword %mod: which is automatically added in the kappa file (see kappa file tab).
 
-As a more complete example here is a simple kappa file containing a perturbation. The corresponding output is attached to this post.
-a(x),b(x) <-> a(x!1),b(x!1)
-'intro a' -> a(x) @ 0.0
-'deg a' a(x?) -> @ 0.0
 
-%obs: 'ab' a(x!1),b(x!1)
-%obs: 'a' a()
-%init: 10*(a(x),b(x))
+As a more complete example here is a simple kappa file containing a perturbation:
 
-%mod: $T>0.5 do 'intro a':=100000
-%mod: ['a'] > 100.0 do 'intro a':= 0.0
-%mod: ['a'] > 100.0 do 'deg a':= 1.0 
+   a(x),b(x) <-> a(x!1),b(x!1)
+   'intro a' -> a(x) @ 0.0
+   'deg a' a(x?) -> @ 0.0
+   
+   %obs: 'ab' a(x!1),b(x!1)
+   %obs: 'a' a()
+   %init: 10*(a(x),b(x))
+
+   %mod: $T>0.5 do 'intro a':=100000
+   %mod: ['a'] > 100.0 do 'intro a':= 0.0
+   %mod: ['a'] > 100.0 do 'deg a':= 1.0 
 

@@ -1,4 +1,6 @@
-
+-------------------------------------------------------------------------------------
+                  new tests
+-------------------------------------------------------------------------------------
 debugging-compression          ???
 debugging-justin-9-07-2008     ???
 debugging-polymere             ???  Need to look at averages. OCaml has much higher std. Why???
@@ -15,32 +17,40 @@ eric                           ???  Look at averages
 half_binding                   ???  Look at averages AT 2 DIFFERENT TIME SCALES
 easy-egfr                      ???  Look at averages
 erasure                        ???  Look at averages
+-------------------------------------------------------------------------------------
+                  current tests using harness
+-------------------------------------------------------------------------------------
+Example                        OK. Can look at averages.
+KPT_study                      OK. Can look at averages.
+calcium2                       OK. Can look at averages.
+debugging-walter-fev08         OK. Can look at averages.
+large_systems-sysepi           OK. Can look at averages. --> BUT TOO SLOW! --> ENG-76
+brightberl.ka                  OK. Can look at averages. --> BUT TOO SLOW! --> ENG-81   
+debugging-bug_update           OK. Can look at averages.
+debugging-link                 OK. Can look at averages.
+debugging-semi-link-bug        OK. Can look at averages.
+debugging-weird                OK. Can look at averages. 
+degradation-deg-all            OK. Can look at averages. 
+degradation-deg-free           OK. Can look at averages. 
+degradation-deg-bnd            OK. Can look at averages.
+SIA_2007_03_23-egfr            OK. Can look at averages.
+SIA_2007_03_23-global          OK. Can look at averages.
+egfr                           OK. Can look at averages.
+fgf2-fgf                       OK. Can look at averages.
+-------------------------------------------------------------------------------------
+debugging-inf                  OK. But can't look at the averages! Need to use --events option...
+invexp                         OK. But can't look at the averages! --> BUT TOO SLOW! --> ENG-68
+                               Need to make sure that x = 0.5/t for small t. Plot 1/x vs t.  
+exponentielle                  OK. Can't look at averages. 
+                               Need to make sure d(ln(x))/dt = 1
+-------------------------------------------------------------------------------------
+                  previous tests
+-------------------------------------------------------------------------------------
 
-Example                        OK
-KPT_study                      OK
-debugging-walter-fev08         OK. Need to look at averages.
-exponentielle                  OK. Can't look at averages. Need to make sure d(ln(x))/dt = 1
-debugging-weird                OK. Need to look at averages. Investige: Slight difference for small t. 
+osc                            SIMPLX BUG --> ENG-80
 
-SIA_2007_03_23-egfr            ENG-42: Parser Error
-fgf2-fgf                       ENG-42: Parser Error
-egfr                           ENG-42: Parser Error
-contextual_rules-add_rem       ENG-45: Parser Error --> FIXED --> REOPENED
-osc                            ENG-47: Parser Error 
-SIA_2007_03_23-global          ENG-53: Parser Error
-
-degradation-deg-all            ENG-38: Java simulator doesn't match simplx results
-large_systems-sysepi           ENG-40: Java simulator doesn't match simplx results
-degradation-deg-free           ENG-46: Java simulator doesn't match simplx results 
-degradation-deg-bnd            ENG-46: Java simulator doesn't match simplx results
-invexp                         ENG-48: Java simulator doesn't match simplx results   Can't look at averages. Need to make sure that x = 0.5/t for small t
-brightberl.ka                  ENG-50: Java simulator doesn't match simplx results
-calcium2                       ENG-51: Java simulator doesn't match simplx results
-TyThomson-ReceptorAndGProtein  ENG-52: Java simulator doesn't match simplx results
-debugging-bug_update           ENG-54: Java simulator doesn't match simplx results
-debugging-inf                  ENG-55: Java simulator doesn't match simplx results
-debugging-link                 ENG-56: Java simulator doesn't match simplx results
-debugging-semi-link-bug        ENG-57: Java simulator doesn't match simplx results
+contextual_rules-add_rem       ENG-85: results don't match
+TyThomson-ReceptorAndGProtein  ENG-87: results don't match
 
 large_systems-sorger           Needs too much memory!!!
 

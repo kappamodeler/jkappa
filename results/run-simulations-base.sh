@@ -3,10 +3,13 @@
 ######################  Global Variables  #################################################
 
 export JAR_FILE=/tmp/simjav.jar
-export SIMPLX=/Users/ecemis/plectix-20080930/osx/i386/simplx
+export SIMPLX=/Users/ecemis/plectix-20081117/osx/simplx
 export DATA_DIR=/Users/ecemis/eclipse-workspace/simulator/data/
 export ITERATIONS=50
 
+# old version of simplx (buggy):
+# export SIMPLX=/Users/ecemis/plectix-20080930/osx/i386/simplx
+# export SIMPLX=/Users/ecemis/plectix-20081107/osx/simplx
 
 ############################################################################################
 #
@@ -21,6 +24,17 @@ function checkVariable () {
     fi 
 }
 
+function runCommand () {
+    echo Running $1
+	$1
+	result=$?
+    if [ $result != 0 ]; then
+       echo "Command failed. Return: " $result
+	   echo "Command: " $1
+       echo "Aborting..."
+       exit 1
+    fi
+}
 
 
 ############################################################################################
@@ -37,14 +51,24 @@ checkVariable x$RUN_JAVA_ITERATIONS RUN_JAVA_ITERATIONS
 
 KAPPA_FILE=${DATA_DIR}/${KAPPA_FILE}
 
+if [ x$OCAML_XML_FILE_PREFIX == 'x' ] ; then
+    export OCAML_XML_FILE_PREFIX="simplx-ocaml"
+fi
+
+if [ x$JAVA_XML_FILE_PREFIX == 'x' ] ; then
+    export JAVA_XML_FILE_PREFIX="simplx-java"
+fi
 
 ############################################################################################
 
+JAVA_COMMAND_PREFIX="time java -Xmx1G -classpath $JAR_FILE com.plectix.simulator.SimulationMain --sim $KAPPA_FILE --time $TIME "
+SIMPLX_COMMAND_PREFIX="$SIMPLX --sim $KAPPA_FILE --time $TIME "
+echo JAVA_COMMAND_PREFIX: $JAVA_COMMAND_PREFIX
+echo SIMPLX_COMMAND_PREFIX: $SIMPLX_COMMAND_PREFIX
 
-COMMAND="time java -Xmx1G -classpath $JAR_FILE com.plectix.simulator.SimulationMain --sim $KAPPA_FILE --seed 1 --time $TIME --iterations $ITERATIONS"
 if [ $RUN_JAVA_ITERATIONS == true ] ; then
-   echo Running $COMMAND
-   $COMMAND
+   COMMAND=${JAVA_COMMAND_PREFIX}"--seed 1 --iterations $ITERATIONS"
+   runCommand "$COMMAND"
    echo =========================== done with RUN_JAVA_ITERATIONS ========================
 fi
 
@@ -53,20 +77,20 @@ I=1
 ITERATIONS=`expr $ITERATIONS + $I`;
 
 while expr $I != $ITERATIONS ; do 
-    XML_FILE=simplx-ocaml-`printf %03d $I`.xml
-    COMMAND="$SIMPLX --sim $KAPPA_FILE --xml-session-name $XML_FILE --seed $I --time $TIME"
-	echo Running $COMMAND
-	$COMMAND
-	grep , $XML_FILE | grep -v "<" | sed s/,/" "/g > simplx-ocaml-`printf %03d $I`-curves
+    XML_FILE=${OCAML_XML_FILE_PREFIX}-`printf %03d $I`.xml
+    COMMAND=${SIMPLX_COMMAND_PREFIX}"--xml-session-name $XML_FILE --seed $I"
+    runCommand "$COMMAND"
+
+	grep , $XML_FILE | grep -v "<" | sed s/,/" "/g > ${OCAML_XML_FILE_PREFIX}-`printf %03d $I`-curves
     echo =========================== done with simplx =============================
 
     if [ $RUN_JAVA_ITERATIONS != true ] ; then
-        XML_FILE=simplx-java-`printf %03d $I`.xml
-        COMMAND="time java -Xmx1G -classpath $JAR_FILE com.plectix.simulator.SimulationMain --sim $KAPPA_FILE --seed $I --time $TIME"
-	    echo Running $COMMAND
-	    $COMMAND
+		COMMAND=${JAVA_COMMAND_PREFIX}"--seed $I"
+        runCommand "$COMMAND"
+
+        XML_FILE=${JAVA_XML_FILE_PREFIX}-`printf %03d $I`.xml
 	    mv simplx.xml $XML_FILE
-	    grep , $XML_FILE | grep -v "<" | sed s/,/" "/g > simplx-java-`printf %03d $I`-curves
+	    grep , $XML_FILE | grep -v "<" | sed s/,/" "/g > ${JAVA_XML_FILE_PREFIX}-`printf %03d $I`-curves
         echo =========================== done with java =============================
     fi
 
