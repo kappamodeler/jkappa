@@ -132,6 +132,8 @@ public class CObservables {
 
 	public final void calculateObsLast(double time) {
 		int size = countTimeList.size();
+		if (size == 0)
+			return;
 		if (Math.abs(countTimeList.get(size - 1) - time) < 1e-16)
 			return;
 		updateLastValueAll(time);
