@@ -2,6 +2,7 @@ package com.plectix.simulator.components;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,17 +47,37 @@ public class CSolution implements ISolution {
 		list.add(agent);
 	}
 
+	// wrapping class, use when we want to use default equals for CAgent
+	private class SimpleAgent {
+		private CAgent myAgent;
+		
+		public SimpleAgent(CAgent agent) {
+			myAgent = agent;
+		}
+		
+		public boolean equals(Object o) {
+			if (!(o instanceof CAgent)) {
+				return false;
+			}
+			CAgent agent = (CAgent)o;
+			return agent == myAgent;
+		}
+	};
+	
+	//TODO check
 	public final void removeAgent(CAgent agent) {
 		List<CAgent> list = agentMap.get(agent.getNameId());
 		
-		int index=0;
-		for (int i=0;i<list.size();i++) {
-			if (list.get(i)==agent){
-				index = i;
-				break;
-			}
-		}
-		list.remove(index);
+		SimpleAgent sagent = new SimpleAgent(agent);
+//		int index=0;
+//		for (int i=0;i<list.size();i++) {
+//			if (list.get(i)==agent){
+//				index = i;
+//				break;
+//			}
+//		}
+//		list.remove(index);
+		list.remove(sagent);
 	}
 
 	public final List<CAgent> getConnectedAgents(CAgent inAgent) {
