@@ -28,6 +28,7 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
+import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.graphs.GraphDrawer;
@@ -71,6 +72,10 @@ public class SimulationData {
 
 	public final void setInputFile(String inputFile) {
 		this.inputFile = inputFile;
+	}
+
+	public final void setOcamlStyleObsName(boolean ocamlStyleObsName) {
+		ObservablesConnectedComponent.setOcamlStyleObsName(ocamlStyleObsName);
 	}
 
 	public final boolean isTime() {

@@ -11,6 +11,8 @@ import com.plectix.simulator.interfaces.IObservablesComponent;
 
 public class ObservablesConnectedComponent extends CConnectedComponent
 		implements IObservablesComponent {
+	private static boolean ocamlStyleObsName = false;
+
 	private String name;
 	private String line;
 	private int nameID;
@@ -21,6 +23,14 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 
 	public final int getNameID() {
 		return nameID;
+	}
+
+	public final static void setOcamlStyleObsName(boolean ocamlStyleObsName) {
+		ObservablesConnectedComponent.ocamlStyleObsName = ocamlStyleObsName;
+	}
+
+	public final static boolean isOcamlStyleObsName() {
+		return ocamlStyleObsName;
 	}
 
 	public final int getMainAutomorphismNumber() {
@@ -40,9 +50,6 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 	}
 
 	public final String getLine() {
-		// String ccName = SimulationMain.getSimulationManager().printPartRule(
-		// this, 0);
-		// return ccName;
 		return line;
 	}
 
@@ -69,9 +76,11 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 			String name, String line, int nameID) {
 		super(connectedAgents);
 		this.name = name;
-		this.line = SimulationMain.getSimulationManager()
-				.printPartRule(this, 0);
-		// this.line = line;
+		if (ocamlStyleObsName)
+			this.line = SimulationMain.getSimulationManager().printPartRule(
+					this, 0);
+		else
+			this.line = line;
 		this.automorphicObservables = new ArrayList<Integer>();
 		this.nameID = nameID;
 	}

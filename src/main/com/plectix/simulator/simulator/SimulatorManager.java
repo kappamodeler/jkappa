@@ -377,6 +377,9 @@ public class SimulatorManager {
 	private final static List<String> sortSitesStr(List<String> list) {
 		String r;
 
+		if (!ObservablesConnectedComponent.isOcamlStyleObsName())
+			return list;
+
 		for (int i = 0; i < list.size() - 1; i++) {
 			for (int j = i + 1; j < list.size(); j++) {
 				if (compareStr(list.get(i), list.get(j))) {

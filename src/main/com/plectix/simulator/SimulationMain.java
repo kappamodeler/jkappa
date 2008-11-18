@@ -39,6 +39,7 @@ public class SimulationMain {
 	private final static String LONG_POINTS_OPTION = "points";
 	private final static String LONG_RESCALE_OPTION = "rescale";
 	private final static String LONG_MAX_CLASHES_OPTION = "max_clashes";
+	private final static String LONG_OCAML_STYLE_OBS_NAME_OPTION = "ocaml_style_obs_name";
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
 	private static SimulationMain instance;
@@ -88,8 +89,11 @@ public class SimulationMain {
 				"Rescaling factor (eg. '10.0' or '0.10')");
 		cmdLineOptions.addOption(LONG_POINTS_OPTION, true,
 				"Number of data points per plots");
-		cmdLineOptions.addOption(LONG_MAX_CLASHES_OPTION, true,
-		"Max number of consequtive clashes before aborting (default 100, 0=infinite)");
+		cmdLineOptions
+				.addOption(LONG_MAX_CLASHES_OPTION, true,
+						"Max number of consequtive clashes before aborting (default 100, 0=infinite)");
+		cmdLineOptions.addOption(LONG_OCAML_STYLE_OBS_NAME_OPTION, false,
+				"convert Obs names to simpx");
 	}
 
 	public SimulationMain() {
@@ -200,13 +204,15 @@ public class SimulationMain {
 			Parser parser = new Parser(data);
 			parser.parse();
 		} catch (FileReadingException e) {
-			System.err.println("Error in file \"" + fileName + "\" :\n\t" + e.getMessage());
+			System.err.println("Error in file \"" + fileName + "\" :\n\t"
+					+ e.getMessage());
 			System.exit(1);
 		} catch (ParseErrorException e) {
-			System.err.println("Error in file \"" + fileName + "\"\n\tin " + e.getMessage());
+			System.err.println("Error in file \"" + fileName + "\"\n\tin "
+					+ e.getMessage());
 			System.exit(1);
 		} catch (Exception e) {
-			System.err.println("Error encountered while reading file \"" 
+			System.err.println("Error encountered while reading file \""
 					+ fileName + "\" : \n\t");
 			e.printStackTrace();
 			System.exit(1);
@@ -248,9 +254,9 @@ public class SimulationMain {
 			if (cmdLineArgs.hasOption(LONG_RESCALE_OPTION)) {
 				double rescale = Double.valueOf(cmdLineArgs
 						.getOptionValue(LONG_RESCALE_OPTION));
-				if(rescale>0)
+				if (rescale > 0)
 					SimulationMain.getSimulationManager().getSimulationData()
-						.setRescale(rescale);
+							.setRescale(rescale);
 				else
 					throw new Exception();
 			}
@@ -262,7 +268,7 @@ public class SimulationMain {
 				SimulationMain.getSimulationManager().getSimulationData()
 						.setSeed(seed);
 			}
-			
+
 			if (cmdLineArgs.hasOption(LONG_MAX_CLASHES_OPTION)) {
 				int max_clashes = 0;
 				max_clashes = Integer.valueOf(cmdLineArgs
@@ -270,7 +276,6 @@ public class SimulationMain {
 				SimulationMain.getSimulationManager().getSimulationData()
 						.setMaxClashes(max_clashes);
 			}
-
 
 			if (cmdLineArgs.hasOption(LONG_EVENT_OPTION)) {
 				long event = 0;
@@ -295,6 +300,10 @@ public class SimulationMain {
 			simulationManager.getSimulationData().setActivationMap(false);
 		}
 
+		if (cmdLineArgs.hasOption(LONG_OCAML_STYLE_OBS_NAME_OPTION)) {
+			simulationManager.getSimulationData().setOcamlStyleObsName(true);
+		}
+
 		if (cmdLineArgs.hasOption(LONG_ITERATIONS_OPTION)) {
 			int iteration = 0;
 			boolean exp = false;
@@ -312,7 +321,7 @@ public class SimulationMain {
 			SimulationMain.getSimulationManager().getSimulationData()
 					.setIterations(iteration);
 		}
-		
+
 		simulationManager.getSimulationData().setCommandLine(args);
 	}
 
