@@ -12,14 +12,11 @@ import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
-import com.plectix.simulator.components.RateExpression;
 import com.plectix.simulator.components.SolutionLines;
-import com.plectix.simulator.components.SumParameters;
 import com.plectix.simulator.components.CRule.Action;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.NameDictionary;
-import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
 
 public class SimulatorManager {
@@ -305,47 +302,114 @@ public class SimulatorManager {
 		for (CAgent agent : cc.getAgents()) {
 			line = line + agent.getName();
 			line = line + "(";
+
+			List<String> sitesList = new ArrayList<String>();
+
 			int i = 1;
 			for (CSite site : agent.getSites()) {
-				line = line + site.getName();
+				String siteStr = new String(site.getName());
+				// line = line + site.getName();
 				if ((site.getInternalState() != null)
-						&& (site.getInternalState().getNameId() >= 0))
-					line = line + "~" + site.getInternalState().getName();
+						&& (site.getInternalState().getNameId() >= 0)) {
+					siteStr = siteStr + "~" + site.getInternalState().getName();
+					// line = line + "~" + site.getInternalState().getName();
+				}
 				switch (site.getLinkState().getStatusLink()) {
 				case CLinkState.STATUS_LINK_BOUND: {
-					if (site.getLinkState().getStatusLinkRank() == CLinkState.RANK_SEMI_LINK)
-						line = line + "!_";
-					else if (site.getAgentLink().getIdInRuleSide() < ((CSite) site
+					if (site.getLinkState().getStatusLinkRank() == CLinkState.RANK_SEMI_LINK) {
+						siteStr = siteStr + "!_";
+						// line = line + "!_";
+					} else if (site.getAgentLink().getIdInRuleSide() < ((CSite) site
 							.getLinkState().getSite()).getAgentLink()
 							.getIdInRuleSide()) {
 						((CSite) site.getLinkState().getSite()).getLinkState()
 								.setLinkStateID(indexLink);
-						line = line + "!" + indexLink++;
+						siteStr = siteStr + "!" + indexLink;
+						indexLink++;
+						// line = line + "!" + indexLink++;
 					} else {
-						line = line + "!"
+						siteStr = siteStr + "!"
 								+ site.getLinkState().getLinkStateID();
+						// line = line + "!"
+						// + site.getLinkState().getLinkStateID();
 						site.getLinkState().setLinkStateID(-1);
 					}
 
 					break;
 				}
 				case CLinkState.STATUS_LINK_WILDCARD: {
-					line = line + "?";
+					siteStr = siteStr + "?";
+					// line = line + "?";
 					break;
 				}
 				}
 
-				if (agent.getSites().size() > i++)
-					line = line + ",";
+				// if (agent.getSites().size() > i++)
+				// line = line + ",";
+				sitesList.add(siteStr);
 			}
-			if (length > j)
+
+			line = line + getSitesLine(sortSitesStr(sitesList));
+			if (length > j) {
 				line = line + "),";
-			else
+			} else {
 				line = line + ")";
+			}
+			sitesList.clear();
 			j++;
 		}
 
 		return line;
+	}
+
+	private final static String getSitesLine(List<String> list) {
+		String line = new String("");
+		if (list.size() == 0)
+			return line;
+		for (int i = 0; i < list.size() - 1; i++) {
+			line = line + list.get(i) + ",";
+		}
+		line = line + list.get(list.size() - 1);
+
+		return line;
+	}
+
+	private final static List<String> sortSitesStr(List<String> list) {
+		String r;
+
+		for (int i = 0; i < list.size() - 1; i++) {
+			for (int j = i + 1; j < list.size(); j++) {
+				if (compareStr(list.get(i), list.get(j))) {
+					r = new String(list.get(i));
+					list.set(i, list.get(j));
+					list.set(j, r);
+				}
+
+			}
+		}
+
+		return list;
+	}
+
+	private final static boolean compareStr(String s1, String s2) {
+
+		// true: s1>s2
+		int q = 0;
+		char[] ch2 = s2.toCharArray();
+		for (char ch1 : s1.toCharArray()) {
+			if (q > ch2.length)
+				return true;
+			if (ch1 == ch2[q]) {
+				q++;
+				continue;
+			}
+			if (ch1 > ch2[q])
+				return true;
+			else
+				return false;
+		}
+
+		return false;
 	}
 
 	private final void outputRules() {

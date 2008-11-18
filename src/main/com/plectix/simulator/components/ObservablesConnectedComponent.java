@@ -6,6 +6,7 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 
 public class ObservablesConnectedComponent extends CConnectedComponent
@@ -39,7 +40,10 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 	}
 
 	public final String getLine() {
-		return line;
+		String ccName = SimulationMain.getSimulationManager().printPartRule(
+				this, 0);
+		return ccName;
+		// return line;
 	}
 
 	public final List<Integer> getCountList() {
