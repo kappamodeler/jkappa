@@ -48,30 +48,59 @@ public class CObservables {
 		return timeSampleMin;
 	}
 
-	public final void calculateObs(Double time, boolean isTime) {
+	public final void calculateObs(double time, boolean isTime) {
 		int size = countTimeList.size();
 		if ((size > 0)
 				&& (Math.abs(countTimeList.get(size - 1) - time) < 1e-16)) {
 			if (isTime) {
 				calculateAll(IObservablesComponent.CALCULATE_WITH_REPLASE_LAST);
 			} else {
+				updateLastValueAll(time);
 				calculateAll(IObservablesComponent.CALCULATE_WITH_NOT_REPLASE_LAST);
 				countTimeList.add(time);
+				changeLastTime=false;
 			}
 			return;
 		}
 
 		if (time >= timeNext) {
 			timeNext += timeSampleMin;
-			countTimeList.add(time);
+			if (!changeLastTime) {
+				updateLastValueAll(time);
+			}
+			countTimeList.add(lastTime);
 			calculateAll(IObservablesComponent.CALCULATE_WITH_NOT_REPLASE_LAST);
+			lastTime = time;
+			changeLastTime = false;
+			return;
 		}
+		updateLastValueAll(time);
 	}
 
 	private final void calculateAll(boolean replaceLast) {
 		for (IObservablesComponent cc : componentList) {
 			cc.calculate(replaceLast);
 		}
+	}
+
+	private double lastTime;
+	private boolean changeLastTime = false;
+
+	private final void updateLastValueAll(double time) {
+		for (IObservablesComponent cc : componentList) {
+			cc.updateLastValue();
+		}
+		lastTime = time;
+		changeLastTime = true;
+	}
+
+	public final void calculateObsLast(double time) {
+		int size = countTimeList.size();
+		if (Math.abs(countTimeList.get(size - 1) - time) < 1e-16)
+			return;
+		updateLastValueAll(time);
+		countTimeList.add(time);
+		calculateAll(IObservablesComponent.CALCULATE_WITH_NOT_REPLASE_LAST);
 	}
 
 	public CObservables() {
@@ -87,6 +116,7 @@ public class CObservables {
 			timeNext = timeSampleMin;
 
 		timeSampleMin = getTimeSampleMin(fullTime, points);
+		timeNext += timeSampleMin;
 	}
 
 	public final List<IObservablesComponent> getComponentList() {

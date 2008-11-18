@@ -23,18 +23,28 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 		this.nameID = nameID;
 	}
 
+	private long lastInjectionsQuantity = -1;
+
 	@Override
-	public void calculate(boolean replaceLast) {
+	public void updateLastValue() {
+		lastInjectionsQuantity = getCount();
+	}
+
+	private final long getCount() {
 		long count = 1;
 
 		for (CConnectedComponent cc : rule.getLeftHandSide())
 			count *= cc.getInjectionsQuantity();
+		return count;
+	}
+
+	@Override
+	public void calculate(boolean replaceLast) {
 
 		if (replaceLast)
-			countList.set(countList.size() - 1, count);
+			countList.set(countList.size() - 1, getCount());
 		else
-			countList.add(count);
-
+			countList.add(lastInjectionsQuantity);
 	}
 
 	@Override

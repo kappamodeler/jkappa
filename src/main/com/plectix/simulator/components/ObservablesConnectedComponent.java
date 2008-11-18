@@ -46,12 +46,19 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 		return countList;
 	}
 
+	private int lastInjectionsQuantity = -1;
+
+	@Override
+	public void updateLastValue() {
+		lastInjectionsQuantity = getInjectionsQuantity();
+	}
+
 	@Override
 	public final void calculate(boolean replaceLast) {
 		if (replaceLast)
 			countList.set(countList.size() - 1, getInjectionsQuantity());
 		else
-			countList.add(getInjectionsQuantity());
+			countList.add(lastInjectionsQuantity);
 	}
 
 	public ObservablesConnectedComponent(List<CAgent> connectedAgents,

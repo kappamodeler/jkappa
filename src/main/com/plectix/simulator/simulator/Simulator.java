@@ -58,8 +58,6 @@ public class Simulator {
 				model.getSimulationData().getRules(), model.getSimulationData()
 						.getSeed());
 
-		model.getSimulationData().getObservables().calculateObs(currentTime,
-				model.getSimulationData().isTime());
 		boolean isEndRules = false;
 
 		boolean hasSnapshot = false;
@@ -101,6 +99,7 @@ public class Simulator {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("negative update");
 
+				count++;
 				rule.applyRule(injectionsList);
 
 				doNegativeUpdate(injectionsList);
@@ -121,8 +120,9 @@ public class Simulator {
 
 			if (isIteration)
 				addIteration(iteration_num);
-			count++;
 		}
+		model.getSimulationData().getObservables()
+				.calculateObsLast(currentTime);
 		outToLogger(isEndRules);
 		if (!isIteration)
 			outputData(count);

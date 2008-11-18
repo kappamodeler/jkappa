@@ -24,4 +24,6 @@ public interface IObservablesComponent {
 
 	public String getItem(int index, CObservables obs);
 
+	public void updateLastValue();
+
 }
