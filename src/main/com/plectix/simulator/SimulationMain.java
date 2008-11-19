@@ -32,7 +32,7 @@ public class SimulationMain {
 	private final static String LONG_STORIFY_OPTION = "storify";
 	private final static String LONG_EVENT_OPTION = "event";
 	private final static String LONG_RANDOMIZER_JAVA_OPTION = "randomizer";
-	private final static String LONG_ITERATIONS_OPTION = "iterations";
+	private final static String LONG_NUMBER_OF_RUNS_OPTION = "number_of_runs";
 	private final static String LONG_SNAPSHOT_TIME = "set_snapshot_time";
 	private final static String LONG_ACTIVATION_MAP_OPTION = "no_activation_map";
 	private final static String LONG_INIT_OPTION = "init";
@@ -74,8 +74,8 @@ public class SimulationMain {
 				"Use randomizer Java");
 
 		cmdLineOptions
-				.addOption(LONG_ITERATIONS_OPTION, true,
-						"To run the same simulation given number of times and get averages");
+				.addOption(LONG_NUMBER_OF_RUNS_OPTION, true,
+						"Number of runs, generates tmp file");
 		cmdLineOptions.addOption(LONG_SNAPSHOT_TIME, true,
 				"Takes a snapshot of solution at specified time unit");
 
@@ -133,7 +133,7 @@ public class SimulationMain {
 		Simulator simulator = new Simulator(new Model(instance
 				.getSimulationManager().getSimulationData()));
 
-		if (cmdLineArgs.hasOption(LONG_ITERATIONS_OPTION))
+		if (cmdLineArgs.hasOption(LONG_NUMBER_OF_RUNS_OPTION))
 			simulator.runIterations();
 		else if (cmdLineArgs.hasOption(LONG_STORIFY_OPTION))
 			simulator.runStories();
@@ -304,12 +304,12 @@ public class SimulationMain {
 			simulationManager.getSimulationData().setOcamlStyleObsName(true);
 		}
 
-		if (cmdLineArgs.hasOption(LONG_ITERATIONS_OPTION)) {
+		if (cmdLineArgs.hasOption(LONG_NUMBER_OF_RUNS_OPTION)) {
 			int iteration = 0;
 			boolean exp = false;
 			try {
 				iteration = Integer.valueOf(cmdLineArgs
-						.getOptionValue(LONG_ITERATIONS_OPTION));
+						.getOptionValue(LONG_NUMBER_OF_RUNS_OPTION));
 			} catch (Exception e) {
 				exp = true;
 			}
