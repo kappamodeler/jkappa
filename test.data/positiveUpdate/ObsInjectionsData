@@ -3,7 +3,7 @@ testDegradation02 - 0
 testDegradation03 - 4
 testDegradation04 - 2
 testDegradation05 - 5
-testDegradation06 - 3
+testDegradation06 - 2
 testDegradation07 - 4
 testDegradation08 - 8
 testDegradation09 - 4
@@ -41,7 +41,7 @@ testModification09 - 7
 testModification10 - 1
 testModification11 - 2
 testBlindUnbound01 - 2
-testBlindUnbound02 - 2
+testBlindUnbound02 - 0
 testBlindUnbound03 - 2
 testBlindUnbound04 - 4
 testBlindUnbound05 - 2
