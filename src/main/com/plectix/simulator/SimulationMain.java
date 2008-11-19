@@ -28,18 +28,23 @@ public class SimulationMain {
 	private final static String SHORT_TIME_OPTION = "t";
 	private final static String LONG_TIME_OPTION = "time";
 	private final static String LONG_SEED_OPTION = "seed";
+	private final static String LONG_NO_SEED_OPTION = "no_seed";
 	private final static String LONG_XML_SESSION_NAME_OPTION = "xml_session_name";
 	private final static String LONG_STORIFY_OPTION = "storify";
 	private final static String LONG_EVENT_OPTION = "event";
 	private final static String LONG_RANDOMIZER_JAVA_OPTION = "randomizer";
 	private final static String LONG_NUMBER_OF_RUNS_OPTION = "number_of_runs";
 	private final static String LONG_SNAPSHOT_TIME = "set_snapshot_time";
-	private final static String LONG_ACTIVATION_MAP_OPTION = "no_activation_map";
+	private final static String LONG_NO_ACTIVATION_MAP_OPTION = "no_activation_map";
+	private final static String LONG_NO_MAPS_OPTION = "no_maps";
+	private final static String LONG_NO_BUILD_INFLUENCE_MAP_OPTION = "no_build_influence_map";
+	private final static String LONG_BUILD_INFLUENCE_MAP_OPTION = "build_influence_map";
 	private final static String LONG_INIT_OPTION = "init";
 	private final static String LONG_POINTS_OPTION = "points";
 	private final static String LONG_RESCALE_OPTION = "rescale";
 	private final static String LONG_MAX_CLASHES_OPTION = "max_clashes";
 	private final static String LONG_OCAML_STYLE_OBS_NAME_OPTION = "ocaml_style_obs_name";
+	private final static String LONG_GENERATE_MAP_OPTION = "generate_map";
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
 	private static SimulationMain instance;
@@ -73,15 +78,14 @@ public class SimulationMain {
 		cmdLineOptions.addOption(LONG_RANDOMIZER_JAVA_OPTION, true,
 				"Use randomizer Java");
 
-		cmdLineOptions
-				.addOption(LONG_NUMBER_OF_RUNS_OPTION, true,
-						"Number of runs, generates tmp file");
+		cmdLineOptions.addOption(LONG_NUMBER_OF_RUNS_OPTION, true,
+				"Number of runs, generates tmp file");
 		cmdLineOptions.addOption(LONG_SNAPSHOT_TIME, true,
 				"Takes a snapshot of solution at specified time unit");
 
 		cmdLineOptions.addOption(DEBUG_INIT_OPTION, false,
 				"Program execution suspends right after initialization phase");
-		cmdLineOptions.addOption(LONG_ACTIVATION_MAP_OPTION, false,
+		cmdLineOptions.addOption(LONG_NO_ACTIVATION_MAP_OPTION, false,
 				"Do not construct activation map");
 		cmdLineOptions.addOption(LONG_INIT_OPTION, true,
 				"Start taking measures (stories) at indicated time");
@@ -94,6 +98,17 @@ public class SimulationMain {
 						"Max number of consequtive clashes before aborting (default 100, 0=infinite)");
 		cmdLineOptions.addOption(LONG_OCAML_STYLE_OBS_NAME_OPTION, false,
 				"convert Obs names to simpx");
+		cmdLineOptions
+				.addOption(LONG_GENERATE_MAP_OPTION, true,
+						"Name of the kappa file for which the influence map should be computed");
+		cmdLineOptions.addOption(LONG_NO_SEED_OPTION, false,
+				"Equivalent to --seed 0. Kept for compatibilty issue");
+		cmdLineOptions.addOption(LONG_NO_MAPS_OPTION, false,
+				"Do not construct inhibition/activation maps");
+		cmdLineOptions.addOption(LONG_NO_BUILD_INFLUENCE_MAP_OPTION, false,
+				"Do not construct influence map");
+		cmdLineOptions.addOption(LONG_BUILD_INFLUENCE_MAP_OPTION, false,
+				"Construct influence map");
 	}
 
 	public SimulationMain() {
@@ -114,6 +129,7 @@ public class SimulationMain {
 	}
 
 	public void initialize() {
+		printToConsole();
 		simulationManager.initialize();
 		System.out.println("-Initialization: " + simulationManager.getTimer()
 				+ " sec. CPU");
@@ -133,7 +149,9 @@ public class SimulationMain {
 		Simulator simulator = new Simulator(new Model(instance
 				.getSimulationManager().getSimulationData()));
 
-		if (cmdLineArgs.hasOption(LONG_NUMBER_OF_RUNS_OPTION))
+		if (cmdLineArgs.hasOption(LONG_GENERATE_MAP_OPTION))
+			simulator.outputData(0);
+		else if (cmdLineArgs.hasOption(LONG_NUMBER_OF_RUNS_OPTION))
 			simulator.runIterations();
 		else if (cmdLineArgs.hasOption(LONG_STORIFY_OPTION))
 			simulator.runStories();
@@ -187,6 +205,14 @@ public class SimulationMain {
 			if (!option) {
 				option = true;
 				fileName = cmdLineArgs.getOptionValue(SHORT_COMPILE_OPTION);
+			} else
+				option = false;
+		}
+
+		if (cmdLineArgs.hasOption(LONG_GENERATE_MAP_OPTION)) {
+			if (!option) {
+				option = true;
+				fileName = cmdLineArgs.getOptionValue(LONG_GENERATE_MAP_OPTION);
 			} else
 				option = false;
 		}
@@ -296,7 +322,9 @@ public class SimulationMain {
 					cmdLineArgs.getOptionValue(LONG_RANDOMIZER_JAVA_OPTION));
 		}
 
-		if (cmdLineArgs.hasOption(LONG_ACTIVATION_MAP_OPTION)) {
+		if (cmdLineArgs.hasOption(LONG_NO_ACTIVATION_MAP_OPTION)
+				|| (cmdLineArgs.hasOption(LONG_NO_MAPS_OPTION))
+				|| (cmdLineArgs.hasOption(LONG_NO_BUILD_INFLUENCE_MAP_OPTION))) {
 			simulationManager.getSimulationData().setActivationMap(false);
 		}
 
@@ -331,6 +359,11 @@ public class SimulationMain {
 
 	public final static SimulationMain getInstance() {
 		return instance;
+	}
+
+	private final static void printToConsole() {
+		System.out.println("Java "
+				+ simulationManager.getSimulationData().getCommandLine());
 	}
 
 }

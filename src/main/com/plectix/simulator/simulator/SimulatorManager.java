@@ -140,11 +140,12 @@ public class SimulatorManager {
 				.iterator();
 		simulationData.getObservables().checkAutomorphisms();
 
-		for (CRule rule : rules) {
-			rule.createActivatedRulesList(rules);
-			rule
-					.createActivatedObservablesList(simulationData
-							.getObservables());
+		if (simulationData.isActivationMap()) {
+			for (CRule rule : rules) {
+				rule.createActivatedRulesList(rules);
+				rule.createActivatedObservablesList(simulationData
+						.getObservables());
+			}
 		}
 
 		while (iterator.hasNext()) {
