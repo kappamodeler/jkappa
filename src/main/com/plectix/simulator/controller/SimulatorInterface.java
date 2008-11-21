@@ -14,10 +14,9 @@ public interface SimulatorInterface extends Cloneable {
     public SimulatorInterface clone();
 
     /**
-     * 
-     * @throws InterruptedException
+     * @throws Exception 
      */
-    public void run(SimulatorInputData simulatorInputData);
+    public void run(SimulatorInputData simulatorInputData) throws Exception;
 
     /**
      * 

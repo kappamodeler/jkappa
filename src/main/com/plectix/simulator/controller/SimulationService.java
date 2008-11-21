@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * @author ecemis
  */
 public class SimulationService {
-	private static final int NUMBER_OF_THREADS = 1;
+	private static final int NUMBER_OF_THREADS = 4;
 	private static ExecutorService EXECUTOR_SERVICE = null;
 
 	private SimulatorInterface simulator = null;
@@ -23,7 +23,7 @@ public class SimulationService {
 	 * 
 	 * @param simulatorInterface
 	 */
-	private SimulationService(SimulatorInterface simulatorInterface) {
+	public SimulationService(SimulatorInterface simulatorInterface) {
 		if (simulatorInterface == null) {
 			throw new RuntimeException("We need a simulator!");
 		}
