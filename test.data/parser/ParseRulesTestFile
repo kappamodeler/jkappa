@@ -13,7 +13,7 @@ So(d)	  	,	 G(b) <-> So(d!1),G(b!1) @ 1.0,3
 R(Y48~p),Sh(        pi) <-> R(	    Y48~	 	 p?) 	 @ 1.0,3
 'PP2A2_MEK@222'  	  	PP2A2(s),MEK(S222~p) -> PP2A2(s!1),MEK(S222~p!1) @ 1.0
 'MEK@222_op' PP2A2(s!1),MEK(S222~ 	 p!1) -> PP2A2(s!1),MEK(S222~u!1) @ 1.0
-'PP2A2_MEK@222_op' PP2A2(s!1),MEK(S222!1) -> PP2A2( 	s), 	MEK(S222) @ 1.0
+'PP2A#2_MEK@222_op' PP2A2(s!1),MEK(S222!1) -> PP2A2( 	s), 	MEK(S222) @ 1.0
 'PP2A2_MEK@218' PP2A2(s),MEK(S218~p) -> PP2A2(s!1),MEK(S218~p!1) @ 1.0
 'MEK@222_op' PP2A2(s!1), 	 	MEK(S 	 218~p!1) -> PP2A2(s!1), 	 MEK(S218~u!1) @ 1.0
 'PP2A2_MEK@218_op' PP2A2(s!1),MEK(S218!1) -> PP2A2(s),MEK(S218) @ 1.0
@@ -21,14 +21,14 @@ R(Y48~p),Sh(        pi) <-> R(	    Y48~	 	 p?) 	 @ 1.0,3
 'ERK@185' MEK(s! 	1, 	 S218~p,S222~p),ERK 	 	(T185~u!1) -> MEK(s!1,S218~p,S222~p),ERK(T185~p!1) @ 1.0
 'MEK_ERK@185_op' MEK(s!1,S218~p,S222~p),ERK(T185!1) 	 -> MEK(s,S218~p,S222~p),ERK(T185) @ 1.0
 'MEK_ERK@187' MEK(s,S218~p,	 	 S222~p),ERK(Y187~u) -> MEK(s!1,S218~p,S222~p),ERK(Y187~u!1) @ 1.0
-'ERK@187' MEK 	 	(s!1,S218~p,S222~p),ERK(Y187~u!1) ->	 	 MEK(s!1, 	 	 S218 	 ~p,S222~p),ERK(Y187~p!1) @ 1.0
+'ERK@1#87' MEK 	 	(s!1,S218~p,S222~p),ERK(Y187~u!1) ->	 	 MEK(s!1, 	 	 S218 	 ~p,S222~p),ERK(Y187~p!1) @ 1.0
 'MEK_	 	 ERK@187_op' MEK(s!1,S218~p,S222~p),ERK(Y187!1) -> MEK(s,S218~p,S222~p),ERK(Y187) @ 1.0
 'MKP3_ERK@185' MKP3(s), 	 	ERK(T185~p) -> MKP3(s!1),ERK(T185~p!1) @ 1.0
 'ERK@185_op' MKP3(s!1),ERK(T185~p!1) -> MKP3(s!1),ERK(T185~u!1) @ 1.0
-'MKP3_ERK@185_ 	 op' 	  	MKP3(	  	s!1),ERK(T185!1) -> MKP3(s), 	  	ERK(T185) @ 1.0
+'MKP3_E#RK@185_ 	 op' 	  	MKP3(	  	s!1),ERK(T185!1) -> MKP3(s), 	  	ERK(T185) @ 1.0
 'MKP3_ERK@187'  	 	MKP3(s),ERK(Y187~p) -> MKP3 	( 	 	 s!1),ERK( 	   	Y187~p!1) @ 1.0
-'ERK@187_op' MKP3(s!1),ERK(Y187~p!1) -> MKP3(s!1),ERK(Y187~u!1) @ 1.0
-'MKP3_ERK@187_op' 	 	 	MKP3(s!1),ERK(Y187!1) -> MKP3(s) 	 	 ,ERK(Y187) @ 1.0
+'ERK@1#87_op' MKP3(s!1),ERK(Y187~p!1) -> MKP3(s!1),ERK(Y187~u!1) @ 1.0
+'MKP3#_ERK@187_op' 	 	 	MKP3(s!1),ERK(Y187!1) -> MKP3(s) 	 	 ,ERK(Y187) @ 1.0
 'Rule1' E() -> EGF(r~ext) @ 1.0
 'Rule2' H() -> HRG(r) @ 1.0
 'EGF_EGFRe' EGF(r~ext),EGFR(L~ext,CR) -> EGF(r~ext!1),EGFR(L~ext!1,CR) @ 1.0
@@ -102,7 +102,7 @@ R(Y48~p),Sh(        pi) <-> R(	    Y48~	 	 p?) 	 @ 1.0,3
 'HER3_PI3K#1' HER3(Y1035~p),PI3K(SH2~u) <-> HER3(Y1035~p!1),PI3K(SH2~rec!1) @ 1.0,1.0
 'HER3_Shc' HER3(Y1309~p),Shc(PTB~u) <-> HER3(Y1309~p!1),Shc(PTB~rec!1) @ 1.0,1.0
 'HER4_Grb2' HER4(Y2~p),Grb2(SH2~u) <-> HER4(Y2~p!1),Grb2(SH2~rec!1) @ 1.0,1.0
-'HER4_Shc' HER4(Y3~p),Shc(PTB~u) <-> HER4(Y3~p!1),Shc(PTB~rec!1) @ 1.0,1.0
+'HER4_Shc' HER4(Y3~p),Shc(PTB~u) <-> HER4(Y3~p!1),Shc(PTB~rec!1) @ 1.0
 'Grb2_Gab1' Grb2(SH3c),Gab1(PR) <-> Grb2(SH3c!1),Gab1(PR!1) @ 1.0,1.0
 'Grb2_SoS' Grb2(SH3n),SoS(PR,S~u) -> Grb2(SH3n!1),SoS(PR!1,S~u) @ 1.0
 'Grb2_SoS_op' Grb2(SH3n!1),SoS(PR!1) -> Grb2(SH3n),SoS(PR) @ 1.0

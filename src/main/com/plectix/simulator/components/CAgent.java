@@ -208,6 +208,11 @@ public class CAgent implements IAgent {
 				.getName(nameId);
 	}
 
+	
+	public long getHash() {
+		return id;
+	}
+	
 	public String toString() {
 		StringBuffer sb = new StringBuffer(getName() + "(");
 		boolean first = true;

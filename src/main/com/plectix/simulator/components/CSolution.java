@@ -1,6 +1,7 @@
 package com.plectix.simulator.components;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,12 +17,12 @@ import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 
 public class CSolution implements ISolution {
-	private HashMap<Integer, List<CAgent>> agentMap;
+	private HashMap<Long, List<CAgent>> agentMap;
 
 	private List<SolutionLines> solutionLines;
 
 	public CSolution() {
-		agentMap = new HashMap<Integer, List<CAgent>>();
+		agentMap = new HashMap<Long, List<CAgent>>();
 		solutionLines = new ArrayList<SolutionLines>();
 	}
 
@@ -37,47 +38,56 @@ public class CSolution implements ISolution {
 			}
 		}
 	}
-
-	public final void addAgent(CAgent agent) {
-		List<CAgent> list = agentMap.get(agent.getNameId());
-		if (list == null) {
-			list = new ArrayList<CAgent>();
-			agentMap.put(agent.getNameId(), list);
-		}
-		list.add(agent);
-	}
-
+	
 	// wrapping class, use when we want to use default equals for CAgent
 	private class SimpleAgent {
 		private CAgent myAgent;
-		
+
 		public SimpleAgent(CAgent agent) {
 			myAgent = agent;
 		}
-		
+
 		public boolean equals(Object o) {
 			if (!(o instanceof CAgent)) {
 				return false;
 			}
-			CAgent agent = (CAgent)o;
+			CAgent agent = (CAgent) o;
 			return agent == myAgent;
 		}
 	};
-	
-	//TODO check
+
+	// TODO check
 	public final void removeAgent(CAgent agent) {
-		List<CAgent> list = agentMap.get(agent.getNameId());
+		if (agent == null) {
+			return;
+		}
 		
-		SimpleAgent sagent = new SimpleAgent(agent);
-//		int index=0;
-//		for (int i=0;i<list.size();i++) {
-//			if (list.get(i)==agent){
-//				index = i;
-//				break;
-//			}
-//		}
-//		list.remove(index);
-		list.remove(sagent);
+		List<CAgent> list = agentMap.get(agent.getHash());
+
+		if (list != null) {
+			SimpleAgent sagent = new SimpleAgent(agent);
+			list.remove(sagent);
+		}
+	}
+	
+	public final void addAgent(CAgent agent) {
+		if (agent != null) {
+			long key = agent.getHash();
+			List<CAgent> list = agentMap.get(key);
+			if (list == null) {
+				list = new ArrayList<CAgent>();
+				agentMap.put(key, list);
+			}
+			list.add(agent);
+		}
+	}
+
+	public final void addAgents(List<CAgent> agents) {
+		if (agents == null || agents.isEmpty())
+			return;
+		for (CAgent agentAdd : agents) {
+			addAgent(agentAdd);
+		}
 	}
 
 	public final List<CAgent> getConnectedAgents(CAgent inAgent) {
@@ -87,22 +97,12 @@ public class CSolution implements ISolution {
 		return agentsList;
 	}
 
-	public final HashMap<Integer, List<CAgent>> getAgentMap() {
-		return agentMap;
+	public final Map<Long, List<CAgent>> getAgents() {
+		return Collections.unmodifiableMap(agentMap);
 	}
 
-	public final void addAgents(List<CAgent> agents) {
-		if (agents == null || agents.isEmpty())
-			return;
-		for (CAgent agentAdd : agents) {
-			Integer agentNameId = agentAdd.getNameId();
-			List<CAgent> list = agentMap.get(agentNameId);
-			if (list == null) {
-				list = new ArrayList<CAgent>();
-				agentMap.put(agentNameId, list);
-			}
-			list.add(agentAdd);
-		}
+	public void clearAgents() {
+		agentMap.clear();
 	}
 
 	@Override
@@ -118,20 +118,16 @@ public class CSolution implements ISolution {
 	}
 
 	@Override
-	public final HashMap<Integer, List<CAgent>> getAgents() {
-		return agentMap;
-	}
-
-	@Override
 	public final CConnectedComponent getConnectedComponent(CAgent agent) {
 		List<CAgent> agentList = new ArrayList<CAgent>();
 		agentList.add(agent);
 		agentList = getAdjacentAgents(agent, agentList);
-		int index=0;
-		for (CAgent agentIn : agentList){
+		int index = 0;
+		for (CAgent agentIn : agentList) {
 			agentIn.setIdInRuleSide(index);
-			agentIn.setIdInConnectedComponent(index++);}
-		
+			agentIn.setIdInConnectedComponent(index++);
+		}
+
 		return new CConnectedComponent(agentList);
 	}
 
@@ -200,12 +196,12 @@ public class CSolution implements ISolution {
 		for (List<CAgent> agentList : agentMap.values()) {
 			for (CAgent agent : agentList) {
 				int index = (int) agent.getId();
-				if (!indexList.get(index)) {					
+				if (!indexList.get(index)) {
 					CConnectedComponent cc = getConnectedComponent(agent);
-					for (CAgent agentCC : cc.getAgents())
+					for (CAgent agentCC : cc.getAgents()) {
 						indexList.set((int) agentCC.getId(), true);
+					}
 					ccList.add(cc);
-
 				}
 			}
 		}

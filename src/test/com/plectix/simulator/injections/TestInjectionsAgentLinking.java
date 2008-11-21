@@ -52,6 +52,24 @@ public class TestInjectionsAgentLinking extends TestInjections {
 		return null;
 	}
 
+	private int trimInteger(int arg, int trimTo) {
+		int value = arg;
+		int sign = 0;
+		
+		if (value >= trimTo) {
+			sign = 1;
+		} else if (value <= 0) {
+			sign = -1;
+		} else {
+			return arg;
+		}
+
+		while((value >= trimTo) || (value < 0)) {
+			value = value - sign*trimTo;
+		}
+		return value;
+	}
+	
 	@Test
 	public void testScaryAgentLinking() {
 
@@ -64,20 +82,19 @@ public class TestInjectionsAgentLinking extends TestInjections {
 			if (name.toString().equals(c.getName())) {
 				Collection<CInjection> injectionsList = c.getInjectionsList();
 
-				int run = 0;
 				for (CInjection injection : injectionsList) {
 					CConnectedComponent cc = injection.getConnectedComponent();
 					for (CAgentLink link : injection.getAgentLinkList()) {
 						int from = link.getIdAgentFrom();
 						CAgent agentFrom = getAgentFromCCById(cc, from);
 						int to = (int) link.getAgentTo().getId();
-						int index = to - myObsAgentsOrder.length * run - myHalfInitPower
-								- 100 * (myNumber - 1);
+						int index = to - myHalfInitPower - 100 * (myNumber - 1);
 
+						index = trimInteger(index, myObsAgentsOrder.length);
+						
 						assertEquals(myObsAgentsOrder[index] + (myNumber - 1) * 10, 
 								agentFrom.getId());
 					}
-					run++;
 				}
 
 				break;

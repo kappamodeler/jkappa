@@ -135,7 +135,7 @@ public class SimulatorManager {
 				simulationData.getPoints(), simulationData.isTime());
 		CSolution solution = (CSolution) simulationData.getSolution();
 		List<CRule> rules = simulationData.getRules();
-		Iterator<List<CAgent>> iterator = solution.getAgentMap().values()
+		Iterator<List<CAgent>> iterator = solution.getAgents().values()
 				.iterator();
 		simulationData.getObservables().checkAutomorphisms();
 

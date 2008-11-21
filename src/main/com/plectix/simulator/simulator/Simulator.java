@@ -374,8 +374,7 @@ public class Simulator {
 				.clear();
 		model.getSimulationData().getObservables().getCountTimeList().clear();
 		model.getSimulationData().getObservables().getComponentList().clear();
-		((CSolution) model.getSimulationData().getSolution()).getAgentMap()
-				.clear();
+		((CSolution) model.getSimulationData().getSolution()).clearAgents();
 		((CSolution) model.getSimulationData().getSolution())
 				.getSolutionLines().clear();
 		if (model.getSimulationData().getPerturbations() != null)

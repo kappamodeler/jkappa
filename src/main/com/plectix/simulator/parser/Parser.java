@@ -271,7 +271,12 @@ public class Parser {
 	private final CRule getGreaterRule(String st, CDataString perturbationStr,
 			List<IPerturbationExpression> rateExpression)
 			throws ParseErrorException {
-		boolean fail = Character.isLetter(st.charAt(0));
+		boolean fail = false;
+		if (st.length() > 0) {
+			fail = Character.isLetter(st.charAt(0));
+		} else {
+			throw new ParseErrorException(perturbationStr, "perturbation expected after 'do'");
+		}
 		checkString("'", st, perturbationStr);
 		st = st.substring(st.indexOf("'") + 1).trim();
 		if (fail) {

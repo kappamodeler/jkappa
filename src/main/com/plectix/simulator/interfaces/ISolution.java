@@ -9,7 +9,7 @@ import com.plectix.simulator.components.CConnectedComponent;
 
 public interface ISolution {
 
-	public HashMap<Integer, List<CAgent>> getAgents();
+	public Map<Long, List<CAgent>> getAgents();
 	
 	public Map<ISite, IAgent> getLinks();
 	
