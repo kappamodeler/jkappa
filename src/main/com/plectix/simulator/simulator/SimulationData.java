@@ -85,6 +85,10 @@ public class SimulationData {
 	public final boolean isTime() {
 		return this.isTime;
 	}
+	
+	public final void addInfo(Info info){
+		infoList.add(info);
+	}
 
 	public final void setCommandLine(String[] args) {
 		String st = new String();
@@ -430,6 +434,8 @@ public class SimulationData {
 
 		stopTimer(timerOutput, "-Results outputted in xml session:");
 
+		appendInfo(simplxSession, doc);
+
 		TransformerFactory trFactory = TransformerFactory.newInstance();
 		Transformer transformer = trFactory.newTransformer();
 		DOMSource domSource = new DOMSource(doc);
@@ -444,6 +450,22 @@ public class SimulationData {
 
 		// System.out.println("-Results outputted in xml session: "
 		// + timerOutput.getTimer() + " sec. CPU");
+	}
+
+	private final void appendInfo(Element simplxSession, Document doc) {
+
+		Element log = doc.createElement("Log");
+
+		for (Info info : infoList) {
+			Element node = doc.createElement("Entry");
+			node.setAttribute("Position", info.getPosition());
+			node.setAttribute("Count", info.getCount());
+			node.setAttribute("Message", info.getMessage());
+			node.setAttribute("Type", info.getType());
+			log.appendChild(node);
+		}
+
+		simplxSession.appendChild(log);
 	}
 
 	private final Element createElement(IObservablesComponent obs, Document doc) {
@@ -467,12 +489,13 @@ public class SimulationData {
 	}
 
 	public final void stopTimer(TimerSimulation timer, String mess) {
-		if(timer==null)
+		if (timer == null)
 			return;
 		mess += " ";
-		System.out.println(mess + timer.getTimerMess()+" sec. CPU");
+		System.out.println(mess + timer.getTimerMess() + " sec. CPU");
 		// timer.getTimer();
-		infoList.add(new Info(mess + timer.getThreadTimeInSeconds(), 1, 0));
+		infoList.add(new Info(Info.TYPE_INFO, mess
+				+ timer.getThreadTimeInSeconds(), 1, 0));
 	}
 
 	public final void createTMPReport() {
