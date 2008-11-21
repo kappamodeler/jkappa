@@ -6,9 +6,9 @@ import java.util.List;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 
 public class CObservables {
-	private List<ObservablesConnectedComponent> connectedComponentList = new ArrayList<ObservablesConnectedComponent>();
-	private List<IObservablesComponent> componentList = new ArrayList<IObservablesComponent>();
-	public static List<Double> countTimeList = new ArrayList<Double>();
+	private List<ObservablesConnectedComponent> connectedComponentList;
+	private List<IObservablesComponent> componentList;
+	public static List<Double> countTimeList;
 
 	private double timeNext;
 	private double timeSampleMin;
@@ -16,6 +16,7 @@ public class CObservables {
 	private long events = -1;
 	private int points = -1;
 
+		
 	public final double getTimeSampleMin() {
 		return timeSampleMin;
 	}
@@ -142,6 +143,9 @@ public class CObservables {
 	}
 
 	public CObservables() {
+		connectedComponentList = new ArrayList<ObservablesConnectedComponent>();
+		componentList = new ArrayList<IObservablesComponent>();
+		countTimeList = new ArrayList<Double>();
 	}
 
 	public final void init(double fullTime, double initialTime, long events,
