@@ -302,6 +302,7 @@ public class Simulator {
 
 	public final void runStories() {
 		CStories stories = model.getSimulationData().getStories();
+		int count=0;
 		for (int i = 0; i < CStories.numberOfSimulations; i++) {
 			SimulationMain.getSimulationManager().startTimer();
 			long clash = 0;
@@ -322,19 +323,27 @@ public class Simulator {
 						.getSomeInjectionList(rule);
 				currentTime += ruleProbabilityCalculation.getTimeValue();
 				if (!rule.isClash(injectionsList)) {
-					stories.addToNetworkNotationStory(i, new CNetworkNotation(
-							rule, injectionsList));
+					CNetworkNotation netNotation = new CNetworkNotation(count,
+							rule);
+					rule.applyRuleForStories(injectionsList, netNotation);
+					
+					stories.addToNetworkNotationStory(i, netNotation);
+					
 					if (stories.checkRule(rule.getRuleID(), i))
 						break;
-					rule.applyRule(injectionsList);
+					count++;
+				
+					
 					doNegativeUpdate(injectionsList);
 					doPositiveUpdate(rule, injectionsList);
 				} else {
 					clash++;
 				}
 			}
+			count=0;
 			resetSimulation();
 		}
+		System.out.println("");
 		// stories.handling();
 	}
 

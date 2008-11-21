@@ -150,7 +150,17 @@ public class CRule {
 		return map;
 	}
 
+	public void applyRuleForStories(List<CInjection> injectionList,
+			CNetworkNotation netNotation) {
+		apply(injectionList, netNotation);
+	}
+
 	public void applyRule(List<CInjection> injectionList) {
+		apply(injectionList, null);
+	}
+
+	private void apply(List<CInjection> injectionList,
+			CNetworkNotation netNotation) {
 		agentAddList = new HashMap<CAgent, CAgent>();
 		sitesConnectedWithDeleted = new ArrayList<CSite>();
 		sitesConnectedWithBroken = new ArrayList<CSite>();
@@ -161,11 +171,12 @@ public class CRule {
 
 		for (Action action : actionList) {
 			if (action.getLeftCComponent() == null)
-				action.doAction(null);
+				action.doAction(null, netNotation);
 			else
 				action.doAction(injectionList.get(leftHandSide.indexOf(action
-						.getLeftCComponent())));
+						.getLeftCComponent())), netNotation);
 		}
+
 	}
 
 	private final void markRHSAgents() {
@@ -537,7 +548,44 @@ public class CRule {
 		private CSite siteTo;
 		private Integer nameInternalStateId;
 
-		public final void doAction(CInjection injection) {
+		private final void addToNetworkNotation(int index, CNetworkNotation nn,
+				CSite site) {
+			if (nn != null)
+				switch (action) {
+				case ACTION_BRK:
+					nn
+							.addToAgents(site, new CStoriesSiteStates(index,
+									site.getAgentLink().getHash(), site
+											.getNameId()), index);
+					break;
+				case ACTION_DEL:
+					nn
+							.addToAgents(site, new CStoriesSiteStates(index,
+									site.getInternalState().getNameId(), site
+											.getAgentLink().getHash(), site
+											.getNameId()), index);
+
+					break;
+				case ACTION_ADD:
+					nn.addToAgents(site, new CStoriesSiteStates(index, site
+							.getInternalState().getNameId()), index);
+					break;
+				case ACTION_BND:
+					nn
+							.addToAgents(site, new CStoriesSiteStates(index,
+									site.getAgentLink().getHash(), site
+											.getNameId()), index);
+					break;
+				case ACTION_MOD:
+					nn.addToAgents(site, new CStoriesSiteStates(index, site
+							.getInternalState().getNameId()), index);
+
+					break;
+				}
+		}
+
+		public final void doAction(CInjection injection,
+				CNetworkNotation netNotation) {
 
 			switch (action) {
 			case ACTION_ADD: {
@@ -550,6 +598,8 @@ public class CRule {
 					siteAdd.setInternalState(new CInternalState(site
 							.getInternalState().getStateNameId()));
 					agent.addSite(siteAdd);
+					addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+							netNotation, siteAdd);
 				}
 				rightConnectedComponent.addAgentFromSolutionForRHS(agent);
 				((CSolution) SimulationMain.getSimulationManager()
@@ -587,6 +637,9 @@ public class CRule {
 					CSite injectedSite = agentFromInSolution.getSite(siteFrom
 							.getNameId());
 					injection.addToChangedSites(injectedSite);
+
+					addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+							netNotation, injectedSite);
 					// /////////////////////////////////////////////
 				}
 
@@ -605,6 +658,11 @@ public class CRule {
 				agentFromInSolution.getSite(siteFrom.getNameId())
 						.getLinkState().setSite(
 								agentToInSolution.getSite(siteTo.getNameId()));
+
+				addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+						netNotation, agentFromInSolution.getSite(siteFrom
+								.getNameId()));
+
 				break;
 			}
 			case ACTION_BRK: {
@@ -618,15 +676,24 @@ public class CRule {
 				CSite injectedSite = agentFromInSolution.getSite(siteFrom
 						.getNameId());
 
+				addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+						netNotation, injectedSite);
+
 				CSite linkSite = (CSite) injectedSite.getLinkState().getSite();
 				if ((siteFrom.getLinkState().getSite() == null)
 						&& (linkSite != null)) {
+					addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+							netNotation, linkSite);
+
 					linkSite.getLinkState().setSite(null);
 					linkSite.getLinkState().setStatusLink(
 							CLinkState.STATUS_LINK_FREE);
 					injection.addToChangedSites(linkSite);
 					rightConnectedComponent.addAgentFromSolutionForRHS(linkSite
 							.getAgentLink());
+					addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+							netNotation, linkSite);
+
 				}
 
 				agentFromInSolution.getSite(siteFrom.getNameId())
@@ -638,6 +705,8 @@ public class CRule {
 
 				injection.addToChangedSites(injectedSite);
 
+				addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+						netNotation, injectedSite);
 				/**
 				 * Break a bond for this rules: A(x!_)->A(x)
 				 */
@@ -660,10 +729,17 @@ public class CRule {
 					CSite solutionSite = (CSite) site.getLinkState().getSite();
 
 					if (solutionSite != null) {
+						addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+								netNotation, solutionSite);
+
 						addSiteToConnectedWithDeleted(solutionSite);
 						solutionSite.getLinkState().setSite(null);
 						solutionSite.getLinkState().setStatusLink(
 								CLinkState.STATUS_LINK_FREE);
+
+						addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+								netNotation, solutionSite);
+
 						// solutionSite.removeInjectionsFromCCToSite(injection);
 					}
 				}
@@ -676,6 +752,9 @@ public class CRule {
 				}
 
 				for (CSite site : agent.getSites()) {
+					addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+							netNotation, site);
+
 					for (CLiftElement lift : site.getLift()) {
 						site.removeInjectionsFromCCToSite(lift.getInjection());
 						lift.getInjection().getConnectedComponent()
@@ -703,8 +782,15 @@ public class CRule {
 				// /////////////////////////////////////////////
 				CSite injectedSite = agentFromInSolution.getSite(siteTo
 						.getNameId());
+				addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+						netNotation, injectedSite);
+
 				injectedSite.getInternalState().setNameId(nameInternalStateId);
 				injection.addToChangedSites(injectedSite);
+
+				addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+						netNotation, injectedSite);
+
 				// /////////////////////////////////////////////
 				break;
 			}
