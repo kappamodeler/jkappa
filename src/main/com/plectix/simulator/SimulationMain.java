@@ -50,7 +50,7 @@ public class SimulationMain {
 	private static SimulationMain instance;
 	private static Options cmdLineOptions;
 	private CommandLine cmdLineArgs;
-	private static SimulatorManager simulationManager;
+	private static SimulatorManager simulationManager = new SimulatorManager();
 	private static boolean myIsSimulating = false;
 
 	static {
@@ -120,7 +120,7 @@ public class SimulationMain {
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 
 		instance = new SimulationMain();
-		simulationManager = new SimulatorManager();
+//		simulationManager = new SimulatorManager();
 		simulationManager.startTimer();
 		instance.parseArguments(args);
 		instance.readSimulatonFile();
