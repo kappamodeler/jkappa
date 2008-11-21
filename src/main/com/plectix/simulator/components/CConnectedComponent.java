@@ -36,7 +36,7 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	public final CAgent getAgentByIdFromSolution(int id, CInjection injection) {
 		if (injection.getAgentLinkList().size() == 0)
-			System.out.println();
+			System.out.println("e");
 		for (CAgentLink agentL : injection.getAgentLinkList())
 			if (agentL.getIdAgentFrom() == id)
 				return agentL.getAgentTo();
@@ -203,6 +203,8 @@ public class CConnectedComponent implements IConnectedComponent {
 		}
 
 		for (CSpanningTree tree : spList) {
+			injectedSites.clear();
+			agentLinkList.clear();
 			if (tree != null) {
 				tree.resetNewVertex();
 				if (agentList.get(tree.getRootIndex()).getSites().isEmpty()) {

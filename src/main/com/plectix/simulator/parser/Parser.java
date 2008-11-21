@@ -103,15 +103,12 @@ public class Parser {
 				.setPerturbations(perturbations);
 	}
 
-	private IObservablesComponent checkInObservables(String obsName) 
-					throws ParseErrorException { 
+	private IObservablesComponent checkInObservables(String obsName)
+			throws ParseErrorException {
 		IObservablesComponent obsId = null;
-		for (IObservablesComponent cc : SimulationMain
-				.getSimulationManager()
-				.getSimulationData().getObservables()
-				.getComponentList()) {
-			if ((cc.getName() != null)
-					&& (cc.getName().equals(obsName))) {
+		for (IObservablesComponent cc : SimulationMain.getSimulationManager()
+				.getSimulationData().getObservables().getComponentList()) {
+			if ((cc.getName() != null) && (cc.getName().equals(obsName))) {
 				obsId = cc;
 				break;
 			}
@@ -119,10 +116,11 @@ public class Parser {
 		if (obsId != null) {
 			return obsId;
 		} else {
-			throw new ParseErrorException("Rule '" + obsName + "' must be in observables!");
+			throw new ParseErrorException("Rule '" + obsName
+					+ "' must be in observables!");
 		}
 	}
-	
+
 	private final List<CPerturbation> createPertubations(List<CDataString> mods)
 			throws ParseErrorException {
 		List<CPerturbation> perturbations = new ArrayList<CPerturbation>();
@@ -144,17 +142,19 @@ public class Parser {
 					if (index != -1) {
 						timeStr = st.substring(0, index).trim();
 					} else {
-						throw new ParseErrorException(perturbationStr, "'do' expected : " + st);
+						throw new ParseErrorException(perturbationStr,
+								"'do' expected : " + st);
 					}
 					double time = 0;
-					
+
 					try {
 						time = Double.valueOf(timeStr);
 					} catch (NumberFormatException e) {
-						throw new ParseErrorException(perturbationStr, 
-								"Wrong 'time' modifier (real number expected) : " + timeStr);
+						throw new ParseErrorException(perturbationStr,
+								"Wrong 'time' modifier (real number expected) : "
+										+ timeStr);
 					}
-					
+
 					st = st.substring(index + 2).trim();
 
 					this.perturbationRate = -1.;
@@ -197,7 +197,7 @@ public class Parser {
 						try {
 							parameters.add(new Double(Double.valueOf(st)));
 						} catch (NumberFormatException e) {
-							throw new ParseErrorException(perturbationStr, 
+							throw new ParseErrorException(perturbationStr,
 									"'do' expected before [" + pertStr + "]");
 						}
 					} else {
@@ -208,22 +208,25 @@ public class Parser {
 
 							if (item.indexOf("*") == -1) {
 								try {
-									parameters
-										.add(new Double(Double.valueOf(item)));
+									parameters.add(new Double(Double
+											.valueOf(item)));
 								} catch (NumberFormatException e) {
-									throw new ParseErrorException(perturbationStr,
-											"Real number expected indtead of '" + item + "'");
+									throw new ParseErrorException(
+											perturbationStr,
+											"Real number expected indtead of '"
+													+ item + "'");
 								}
 							} else {
 								Double parameter = 0.0;
 								String number = item.substring(0,
 										item.indexOf("*")).trim();
 								try {
-									parameter = Double
-										.valueOf(number);
+									parameter = Double.valueOf(number);
 								} catch (NumberFormatException e) {
-									throw new ParseErrorException(perturbationStr,
-											"Real number expected indtead of '" + number + "'");
+									throw new ParseErrorException(
+											perturbationStr,
+											"Real number expected indtead of '"
+													+ number + "'");
 								}
 								parameters.add(parameter);
 								item = item.substring(item.indexOf("*") + 1)
@@ -272,7 +275,8 @@ public class Parser {
 		checkString("'", st, perturbationStr);
 		st = st.substring(st.indexOf("'") + 1).trim();
 		if (fail) {
-			throw new ParseErrorException(perturbationStr, "'do' expected before [" + st + "]");
+			throw new ParseErrorException(perturbationStr,
+					"'do' expected before [" + st + "]");
 		}
 		checkString("'", st, perturbationStr);
 		String ruleName = st.substring(0, st.indexOf("'")).trim();
@@ -337,8 +341,9 @@ public class Parser {
 		return getRuleWithEqualName(ruleName);
 	}
 
-	private final void addFreeRule (List<IPerturbationExpression> rateExpression, 
-			String item) throws ParseErrorException {
+	private final void addFreeRule(
+			List<IPerturbationExpression> rateExpression, String item)
+			throws ParseErrorException {
 		item = item.substring(item.indexOf("'") + 1).trim();
 		CRule curRule = getRuleWithEqualName(getName(item));
 		if (curRule != null) {
@@ -346,27 +351,28 @@ public class Parser {
 		}
 	}
 
-	private final CRule getRuleWithEqualName(String ruleName) throws ParseErrorException {
+	private final CRule getRuleWithEqualName(String ruleName)
+			throws ParseErrorException {
 		for (CRule rule : SimulationMain.getSimulationManager().getRules())
 			if ((rule.getName() != null) && (rule.getName().equals(ruleName))) {
 				return rule;
 			}
-		
-		
-		//TODO decide if error message is not necessary
+
+		// TODO decide if error message is not necessary
 		throw new ParseErrorException("No such rule : " + ruleName);
-//		return null;
+		// return null;
 	}
 
-	private final boolean getGreater(String st, int index) throws ParseErrorException {
+	private final boolean getGreater(String st, int index)
+			throws ParseErrorException {
 		if (st.indexOf(">") == index) {
 			return true;
 
 		} else if (st.indexOf("<") == index) {
 			return false;
 		} else
-			throw new ParseErrorException("Expected '>' or '<' (after '" + st.substring(0, index)
-					+ "') in [" + st + "]");
+			throw new ParseErrorException("Expected '>' or '<' (after '"
+					+ st.substring(0, index) + "') in [" + st + "]");
 	}
 
 	private final String getName(String line) throws ParseErrorException {
@@ -376,7 +382,8 @@ public class Parser {
 		if (index != -1) {
 			name = line.substring(0, line.indexOf("'"));
 		} else {
-			throw new ParseErrorException("Rule name or number expected : " + line);
+			throw new ParseErrorException("Rule name or number expected : "
+					+ line);
 		}
 		return name;
 	}
@@ -389,8 +396,8 @@ public class Parser {
 			if ("'".equals(ch)) {
 				quote = "\"";
 			}
-			throw new ParseErrorException(perturbationStr, quote + ch
-					+ quote + " expected : " + st + "");
+			throw new ParseErrorException(perturbationStr, quote + ch + quote
+					+ " expected : " + st + "");
 		}
 	}
 
@@ -409,8 +416,9 @@ public class Parser {
 			if (rulesStr.indexOf("'") != -1) {
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
 				if (rulesStr.indexOf("'") == -1)
-					throw new ParseErrorException(rulesDS, 
-							"Unexpected rule name (please use apostrophes) : " + rulesStr);
+					throw new ParseErrorException(rulesDS,
+							"Unexpected rule name (please use apostrophes) : "
+									+ rulesStr);
 				name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1,
 						rulesStr.length()).trim();
@@ -432,7 +440,8 @@ public class Parser {
 						activity = Double.valueOf(activStr);
 				} catch (Exception e) {
 					String details = rulesStr.substring(index).trim();
-					throw new ParseErrorException(rulesDS, "Unexpected rule rate : " + details);
+					throw new ParseErrorException(rulesDS,
+							"Unexpected rule rate : " + details);
 				}
 				rulesStr = rulesStr.substring(0, index).trim();
 			}
@@ -453,7 +462,8 @@ public class Parser {
 				if (index == -1) {
 					index = CC_LHS;
 				} else {
-					throw new ParseErrorException(rulesDS, "Unexpected line : " + rulesDS.getLine());
+					throw new ParseErrorException(rulesDS, "Unexpected line : "
+							+ rulesDS.getLine());
 				}
 			}
 
@@ -461,18 +471,17 @@ public class Parser {
 				throw new ParseErrorException(rulesDS,
 						"Rule should have '->' as separator");
 			}
-			
+
 			String[] result = rulesStr.split("\\->");
-			
+
 			String lhs = result[0];
 			String rhs;
-			
+
 			if (result.length < 2) {
 				rhs = "";
 			} else {
 				rhs = result[1];
 			}
-			
 
 			List<CAgent> left = null;
 			List<CAgent> right = null;
@@ -544,19 +553,20 @@ public class Parser {
 			int length = result.length;
 			result[0] = result[0].trim();
 			count = 1;
+			double countInFile = 0;
 			if (length != 1) {
 				double rescale = SimulationMain.getSimulationManager()
 						.getSimulationData().getRescale();
 				if (rescale < 0)
 					rescale = 1.;
-				double countInFile = 0;
+
 				try {
 					countInFile = Double.valueOf(result[0]) * rescale;
 				} catch (NumberFormatException e) {
-					throw new ParseErrorException(itemDS, 
+					throw new ParseErrorException(itemDS,
 							"Quantity must have numerical format: " + result[0]);
 				}
-				
+
 				// if (countInFile - Math.floor(countInFile) < 1e-16)
 				long round = Math.round(countInFile);
 				if (Math.abs(countInFile - round) < 1e-12) {
@@ -577,19 +587,21 @@ public class Parser {
 			try {
 				switch (code) {
 				case CREATE_INIT: {
-					line = line.replaceAll("[ 	]", "");
-					List<CAgent> listAgent = parseAgent(line);
-					simulationData.getSolution().addAgents(listAgent);
-					for (int i = 1; i < count; i++) {
-						simulationData.getSolution().addAgents(
-								cloneAgentsList(listAgent));
-					}
-					if (SimulationMain.getSimulationManager()
-							.getSimulationData().isCompile()) {
-						((CSolution) SimulationMain.getSimulationManager()
-								.getSimulationData().getSolution())
-								.checkSolutionLinesAndAdd(line, count);
+					if (countInFile > 0) {
+						line = line.replaceAll("[ 	]", "");
+						List<CAgent> listAgent = parseAgent(line);
+						simulationData.getSolution().addAgents(listAgent);
+						for (int i = 1; i < count; i++) {
+							simulationData.getSolution().addAgents(
+									cloneAgentsList(listAgent));
+						}
+						if (SimulationMain.getSimulationManager()
+								.getSimulationData().isCompile()) {
+							((CSolution) SimulationMain.getSimulationManager()
+									.getSimulationData().getSolution())
+									.checkSolutionLinesAndAdd(line, count);
 
+						}
 					}
 					break;
 				}
@@ -611,8 +623,8 @@ public class Parser {
 						int index = line.indexOf("'");
 						if (index != -1) {
 							name = line.substring(0, index).trim();
-							line = line.substring(index + 1,
-								line.length()).trim();
+							line = line.substring(index + 1, line.length())
+									.trim();
 						}
 					}
 
@@ -676,7 +688,8 @@ public class Parser {
 					throw new ParseErrorException("Unexpected line : " + line);
 				ccomp = agent.nextToken(); // Agent name.
 				if (!ccomp.trim().matches(PATTERN_AGENT_SITE))
-					throw new ParseErrorException("Unexpected agent name : " + ccomp);
+					throw new ParseErrorException("Unexpected agent name : "
+							+ ccomp);
 
 				cagent = new CAgent(SimulationMain.getSimulationManager()
 						.getNameDictionary().addName(ccomp));
@@ -687,7 +700,8 @@ public class Parser {
 				}
 			} else {
 				if (cagent == null)
-					throw new ParseErrorException("Unexpected agent name : " + ccomp);
+					throw new ParseErrorException("Unexpected agent name : "
+							+ ccomp);
 				cagent.addSite(parseSome(ccomp, map)); // <------Agent
 			}
 		}
@@ -717,7 +731,8 @@ public class Parser {
 			dt = parseLine(state, KEY_CONNECT);
 			state = dt.getSt1();
 			if (!state.matches(PATTERN_LINE_SITE_STATE))
-				throw new ParseErrorException("Unexpected internal state name : " + line);
+				throw new ParseErrorException(
+						"Unexpected internal state name : " + line);
 		} else {
 			dt = parseLine(site, KEY_CONNECT);
 			site = dt.getSt1();
@@ -736,7 +751,8 @@ public class Parser {
 						.getNameDictionary().addName(state);
 				csite.setInternalState(new CInternalState(nameId));
 			} else {
-				throw new ParseErrorException("Unexpected internal state name : " + line);
+				throw new ParseErrorException(
+						"Unexpected internal state name : " + line);
 			}
 
 		if (connect != null)
@@ -761,7 +777,8 @@ public class Parser {
 						map.put(index, csite);
 					}
 				} catch (Exception e) {
-					throw new ParseErrorException("Unexpected link state : " + line);
+					throw new ParseErrorException("Unexpected link state : "
+							+ line);
 				}
 
 			}
@@ -794,7 +811,8 @@ public class Parser {
 					String test = new String(st);
 					test = test.substring(i + 1);
 					if (test.length() == 0)
-						throw new ParseErrorException("Unexpected link state : " + st);
+						throw new ParseErrorException(
+								"Unexpected link state : " + st);
 				}
 				break;
 			}

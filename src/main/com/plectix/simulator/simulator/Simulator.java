@@ -16,6 +16,7 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CLiftElement;
+import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
@@ -65,7 +66,7 @@ public class Simulator {
 			hasSnapshot = true;
 
 		long count = 0;
-
+	
 		long max_clash = 0;
 		while (!model.getSimulationData().isEndSimulation(currentTime, count)
 				&& max_clash <= model.getSimulationData().getMaxClashes()) {
@@ -167,6 +168,13 @@ public class Simulator {
 					}
 					checkedAgent.EMPTY_SITE.clearLiftList();
 					for (CLiftElement lift : checkedSite.getLift()) {
+
+						for (CSite site : lift.getInjection().getSiteList()) {
+							if (site != checkedSite)
+								site.removeInjectionFromLift(lift
+										.getInjection());
+						}
+
 						lift.getConnectedComponent().removeInjection(
 								lift.getInjection());
 					}
@@ -312,6 +320,8 @@ public class Simulator {
 						.getSomeInjectionList(rule);
 				currentTime += ruleProbabilityCalculation.getTimeValue();
 				if (!rule.isClash(injectionsList)) {
+					stories.addToNetworkNotationStory(i, new CNetworkNotation(
+							rule, injectionsList));
 					if (stories.checkRule(rule.getRuleID(), i))
 						break;
 					rule.applyRule(injectionsList);
@@ -323,7 +333,7 @@ public class Simulator {
 			}
 			resetSimulation();
 		}
-		stories.handling();
+		// stories.handling();
 	}
 
 	public final void runIterations() {

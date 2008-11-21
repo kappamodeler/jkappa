@@ -51,11 +51,12 @@ public class CSite implements ISite {
 		return false;
 	}
 
-	public CInjection getInjectionFromLift(CConnectedComponent inCC) {
+	public List<CInjection> getInjectionFromLift(CConnectedComponent inCC) {
+		List<CInjection> list = new ArrayList<CInjection>();
 		for (CLiftElement liftElement : this.liftList)
 			if (liftElement.getConnectedComponent() == inCC)
-				return liftElement.getInjection();
-		return null;
+				list.add(liftElement.getInjection());
+		return list;
 	}
 	
 	@Override

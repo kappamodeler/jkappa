@@ -71,9 +71,9 @@ public class CAgent implements IAgent {
 	}
 
 	private boolean checkSites(CSite site, CInjection injection, CConnectedComponent cc) {
-		CInjection sitesInjection = site.getInjectionFromLift(cc);
-		if (sitesInjection != null) {
-			if (compareInjectedLists(sitesInjection, injection))
+		List<CInjection> sitesInjections = site.getInjectionFromLift(cc);
+		if (sitesInjections.size() != 0) {
+			if (compareInjectedLists(sitesInjections, injection))
 				return true;
 		}
 		return false;
@@ -88,15 +88,24 @@ public class CAgent implements IAgent {
 		return false;
 	}
 
-	private boolean compareInjectedLists(CInjection one, CInjection two) {
-		if (one.getSiteList().size() == two.getSiteList().size()) {
-			for (CSite siteOne : one.getSiteList()) {
-				if (!isSiteInList(two.getSiteList(), siteOne))
-					return false;
+	private boolean compareInjectedLists(List<CInjection> list, CInjection two) {
+		int counter = 0;
+		for (CInjection one : list) {
+			if (one.getSiteList().size() == two.getSiteList().size()) {
+				for (CSite siteOne : one.getSiteList()) {
+					if (isSiteInList(two.getSiteList(), siteOne))
+						counter++;
+					else {
+						counter = 0;
+						break;
+					}
+				}
+				if (counter == one.getSiteList().size())
+					return true;
+				counter = 0;
 			}
 		}
-
-		return true;
+		return false;
 	}
 
 	/**
