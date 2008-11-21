@@ -27,6 +27,7 @@ import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.util.RunningMetric;
+import com.plectix.simulator.util.TimerSimulation;
 
 public class Simulator {
 	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
@@ -52,7 +53,8 @@ public class Simulator {
 	}
 
 	public void run(Integer iteration_num) {
-		SimulationMain.getSimulationManager().startTimer();
+		TimerSimulation timer = new TimerSimulation();
+		timer.startTimer();
 		long clash = 0;
 		CRule rule;
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
@@ -66,7 +68,7 @@ public class Simulator {
 			hasSnapshot = true;
 
 		long count = 0;
-	
+
 		long max_clash = 0;
 		while (!model.getSimulationData().isEndSimulation(currentTime, count)
 				&& max_clash <= model.getSimulationData().getMaxClashes()) {
@@ -124,7 +126,7 @@ public class Simulator {
 		}
 		model.getSimulationData().getObservables()
 				.calculateObsLast(currentTime);
-		outToLogger(isEndRules);
+		outToLogger(isEndRules, timer);
 		if (!isIteration)
 			outputData(count);
 	}
@@ -270,10 +272,9 @@ public class Simulator {
 		}
 	}
 
-	private final void outToLogger(boolean isEndRules) {
-		System.out.println("-Simulation: "
-				+ SimulationMain.getSimulationManager().getTimer()
-				+ " sec. CPU");
+	private final void outToLogger(boolean isEndRules, TimerSimulation timer) {
+		model.getSimulationData().stopTimer(timer, "-Simulation:");
+		// System.out.println("-Simulation: " + timer.getTimer() + " sec. CPU");
 		if (!isEndRules)
 			LOGGER.info("end of simulation: time");
 		else
@@ -281,21 +282,22 @@ public class Simulator {
 	}
 
 	public final void outputData(long count) {
-		SimulationMain.getSimulationManager().startTimer();
+		TimerSimulation timerOutput = new TimerSimulation();
+		timerOutput.startTimer();
 
 		model.getSimulationData().setTimeLength(currentTime);
 		model.getSimulationData().setEvent(count);
 		try {
-			model.getSimulationData().writeToXML();
+			model.getSimulationData().writeToXML(timerOutput);
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
 
-		System.out.println("-Results outputted in xml session: "
-				+ SimulationMain.getSimulationManager().getTimer()
-				+ " sec. CPU");
+		// System.out.println("-Results outputted in xml session: "
+		// + SimulationMain.getSimulationManager().getTimer()
+		// + " sec. CPU");
 	}
 
 	public final void runStories() {

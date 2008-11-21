@@ -32,7 +32,9 @@ import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.graphs.GraphDrawer;
+import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.RunningMetric;
+import com.plectix.simulator.util.TimerSimulation;
 
 public class SimulationData {
 	private static List<Double> timeStamps;
@@ -44,6 +46,8 @@ public class SimulationData {
 	private CObservables observables = new CObservables();
 	private CSnapshot snapshot = null;
 	private ISolution solution = new CSolution(); // soup of initial components
+
+	private List<Info> infoList = new ArrayList<Info>();
 
 	private Double initialTime = 0.0;
 
@@ -283,11 +287,12 @@ public class SimulationData {
 
 	}
 
-	public void writeToXML() throws ParserConfigurationException,
-			TransformerException {
+	public void writeToXML(TimerSimulation timerOutput)
+			throws ParserConfigurationException, TransformerException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.newDocument();
+		TimerSimulation timer = new TimerSimulation();
 
 		Element simplxSession = doc.createElement("SimplxSession");
 		simplxSession.setAttribute("CommandLine", commandLine);
@@ -295,57 +300,59 @@ public class SimulationData {
 		simplxSession.setAttribute("TimeStamp", "stmp");
 		doc.appendChild(simplxSession);
 
-		Element influenceMap = doc.createElement("InfluenceMap");
-
-		int rulesAndObsNumber = observables.getConnectedComponentList().size()
-				+ rules.size();
-		/**
-		 * add observables
-		 * */
-		for (int i = observables.getConnectedComponentList().size() - 1; i >= 0; i--) {
-			Element node = doc.createElement("Node");
-			node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
-			node.setAttribute("Type", "OBSERVABLE");
-			String obsName = observables.getConnectedComponentList().get(i)
-					.getName();
-
-			if (obsName == null)
-				obsName = observables.getConnectedComponentList().get(i)
-						.getLine();
-
-			node.setAttribute("Text", '[' + obsName + ']');
-			node.setAttribute("Data", observables.getConnectedComponentList()
-					.get(i).getLine());
-			node.setAttribute("Name", '[' + obsName + ']');
-			influenceMap.appendChild(node);
-		}
-		/**
-		 * add rules
-		 * */
-
-		for (int i = rules.size() - 1; i >= 0; i--) {
-			Element node = doc.createElement("Node");
-			node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
-			node.setAttribute("Type", "RULE");
-			node.setAttribute("Text", rules.get(i).getName());
-
-			String line = SimulatorManager.printPartRule(rules.get(i)
-					.getLeftHandSide());
-			line = line + "->";
-			line = line
-					+ SimulatorManager.printPartRule(rules.get(i)
-							.getRightHandSide());
-
-			node.setAttribute("Data", line);
-			node.setAttribute("Name", rules.get(i).getName());
-			influenceMap.appendChild(node);
-		}
-
-		/**
-		 * add activation map
-		 * */
-
+		timer.startTimer();
 		if (activationMap) {
+			Element influenceMap = doc.createElement("InfluenceMap");
+
+			int rulesAndObsNumber = observables.getConnectedComponentList()
+					.size()
+					+ rules.size();
+			/**
+			 * add observables
+			 * */
+			for (int i = observables.getConnectedComponentList().size() - 1; i >= 0; i--) {
+				Element node = doc.createElement("Node");
+				node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
+				node.setAttribute("Type", "OBSERVABLE");
+				String obsName = observables.getConnectedComponentList().get(i)
+						.getName();
+
+				if (obsName == null)
+					obsName = observables.getConnectedComponentList().get(i)
+							.getLine();
+
+				node.setAttribute("Text", '[' + obsName + ']');
+				node.setAttribute("Data", observables
+						.getConnectedComponentList().get(i).getLine());
+				node.setAttribute("Name", '[' + obsName + ']');
+				influenceMap.appendChild(node);
+			}
+			/**
+			 * add rules
+			 * */
+
+			for (int i = rules.size() - 1; i >= 0; i--) {
+				Element node = doc.createElement("Node");
+				node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
+				node.setAttribute("Type", "RULE");
+				node.setAttribute("Text", rules.get(i).getName());
+
+				String line = SimulatorManager.printPartRule(rules.get(i)
+						.getLeftHandSide());
+				line = line + "->";
+				line = line
+						+ SimulatorManager.printPartRule(rules.get(i)
+								.getRightHandSide());
+
+				node.setAttribute("Data", line);
+				node.setAttribute("Name", rules.get(i).getName());
+				influenceMap.appendChild(node);
+			}
+
+			/**
+			 * add activation map
+			 * */
+
 			int lastRuleID = rules.size();
 			for (int i = rules.size() - 1; i >= 0; i--) {
 				for (int j = rules.get(i).getActivatedObservable().size() - 1; j >= 0; j--) {
@@ -368,10 +375,13 @@ public class SimulationData {
 					influenceMap.appendChild(node);
 				}
 			}
+
+			simplxSession.appendChild(influenceMap);
+			stopTimer(timer, "-Building xml tree for influence map:");
 		}
-		simplxSession.appendChild(influenceMap);
 
 		if (snapshotTime >= 0.0) {
+			timer.startTimer();
 			Element snapshotElement = doc.createElement("FinalState");
 			snapshotElement.setAttribute("Time", String.valueOf(snapshotTime));
 			if (snapshot != null) {
@@ -386,6 +396,7 @@ public class SimulationData {
 				}
 			}
 			simplxSession.appendChild(snapshotElement);
+			stopTimer(timer, "-Building xml tree for snapshots:");
 		}
 
 		int obsCountTimeListSize = observables.getCountTimeList().size();
@@ -405,6 +416,7 @@ public class SimulationData {
 			simulation.appendChild(node);
 		}
 
+		timer.startTimer();
 		Element csv = doc.createElement("CSV");
 		CDATASection cdata = doc.createCDATASection("\n");
 
@@ -414,6 +426,9 @@ public class SimulationData {
 
 		csv.appendChild(cdata);
 		simulation.appendChild(csv);
+		stopTimer(timer, "-Building xml tree for data points:");
+
+		stopTimer(timerOutput, "-Results outputted in xml session:");
 
 		TransformerFactory trFactory = TransformerFactory.newInstance();
 		Transformer transformer = trFactory.newTransformer();
@@ -426,6 +441,9 @@ public class SimulationData {
 
 		// GraphDrawer gd = new GraphDrawer();
 		// gd.createGraphs(observables,initialTime,timeLength);
+
+		// System.out.println("-Results outputted in xml session: "
+		// + timerOutput.getTimer() + " sec. CPU");
 	}
 
 	private final Element createElement(IObservablesComponent obs, Document doc) {
@@ -448,9 +466,19 @@ public class SimulationData {
 		return node;
 	}
 
+	public final void stopTimer(TimerSimulation timer, String mess) {
+		if(timer==null)
+			return;
+		mess += " ";
+		System.out.println(mess + timer.getTimerMess()+" sec. CPU");
+		// timer.getTimer();
+		infoList.add(new Info(mess + timer.getThreadTimeInSeconds(), 1, 0));
+	}
+
 	public final void createTMPReport() {
 		// model.getSimulationData().updateData();
-		SimulationMain.getSimulationManager().startTimer();
+		TimerSimulation timer = new TimerSimulation();
+		timer.startTimer();
 
 		int number_of_observables = observables.getComponentList().size();
 		try {
@@ -501,8 +529,7 @@ public class SimulationData {
 		}
 
 		System.out.println("-Results outputted in tmp session: "
-				+ SimulationMain.getSimulationManager().getTimer()
-				+ " sec. CPU");
+				+ timer.getTimerMess() + " sec. CPU");
 	}
 
 	public final double getTimeSampleMin(double fullTime) {
@@ -565,4 +592,5 @@ public class SimulationData {
 	public final void setPoints(int points) {
 		this.points = points;
 	}
+
 }

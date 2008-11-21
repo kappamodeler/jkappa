@@ -18,16 +18,15 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.NameDictionary;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
+import com.plectix.simulator.util.TimerSimulation;
 
 public class SimulatorManager {
 
 	private SimulationData simulationData = new SimulationData();
 
+	private TimerSimulation timer;
+
 	private int agentIdGenerator = 0;
-
-	private long timeStart;
-
-	private long timeStartThread;
 
 	private NameDictionary nameDictionary = new NameDictionary();
 
@@ -533,17 +532,16 @@ public class SimulatorManager {
 	}
 
 	public final void startTimer() {
-		timeStart = System.currentTimeMillis();
-		timeStartThread = ManagementFactory.getThreadMXBean()
-				.getCurrentThreadCpuTime();
+		timer = new TimerSimulation();
+		timer.startTimer();
 	}
 
-	public final String getTimer() {
-		double wallClockTimeInSeconds = 1.0E-3 * (System.currentTimeMillis() - timeStart);
-		double threadTimeInSeconds = 1.0E-9 * (ManagementFactory
-				.getThreadMXBean().getCurrentThreadCpuTime() - timeStartThread);
-		return "WallClock=" + wallClockTimeInSeconds + " ThreadTime="
-				+ threadTimeInSeconds;
+	public final String getTimerMess() {
+		return timer.getTimerMess();
+	}
+	
+	public final TimerSimulation getTimer(){
+		return timer;
 	}
 
 	public int getAgentIdGenerator() {

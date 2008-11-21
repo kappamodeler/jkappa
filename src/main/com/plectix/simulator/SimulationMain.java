@@ -131,8 +131,10 @@ public class SimulationMain {
 	public void initialize() {
 		printToConsole();
 		simulationManager.initialize();
-		System.out.println("-Initialization: " + simulationManager.getTimer()
-				+ " sec. CPU");
+		simulationManager.getSimulationData().stopTimer(
+				simulationManager.getTimer(), "-Initialization:");
+		// System.out.println("-Initialization: " + simulationManager.getTimer()
+		// + " sec. CPU");
 		if (!cmdLineArgs.hasOption(DEBUG_INIT_OPTION)) {
 			myIsSimulating = true;
 		}
