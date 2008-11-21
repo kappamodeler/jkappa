@@ -9,7 +9,7 @@ import com.plectix.simulator.components.CConnectedComponent;
 
 public interface ISolution {
 
-	public Map<Long, List<CAgent>> getAgents();
+	public Map<Long, CAgent> getAgents();
 	
 	public Map<ISite, IAgent> getLinks();
 	

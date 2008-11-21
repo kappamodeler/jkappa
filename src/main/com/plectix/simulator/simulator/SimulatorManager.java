@@ -135,8 +135,7 @@ public class SimulatorManager {
 				simulationData.getPoints(), simulationData.isTime());
 		CSolution solution = (CSolution) simulationData.getSolution();
 		List<CRule> rules = simulationData.getRules();
-		Iterator<List<CAgent>> iterator = solution.getAgents().values()
-				.iterator();
+		Iterator<CAgent> iterator = solution.getAgents().values().iterator();
 		simulationData.getObservables().checkAutomorphisms();
 
 		if (simulationData.isActivationMap()) {
@@ -148,32 +147,31 @@ public class SimulatorManager {
 		}
 
 		while (iterator.hasNext()) {
-			for (CAgent agent : iterator.next()) {
-				for (CRule rule : rules) {
-					for (CConnectedComponent cc : rule.getLeftHandSide()) {
-						if (cc != null) {
-							CInjection inj = cc.getInjection(agent);
-							if (inj != null) {
-								if (!agent.isAgentHaveLinkToConnectedComponent(
-										cc, inj))
-									cc.setInjection(inj);
-							}
+			CAgent agent = iterator.next();
+			for (CRule rule : rules) {
+				for (CConnectedComponent cc : rule.getLeftHandSide()) {
+					if (cc != null) {
+						CInjection inj = cc.getInjection(agent);
+						if (inj != null) {
+							if (!agent.isAgentHaveLinkToConnectedComponent(cc,
+									inj))
+								cc.setInjection(inj);
 						}
 					}
 				}
-
-				for (ObservablesConnectedComponent oCC : simulationData
-						.getObservables().getConnectedComponentList())
-					if (oCC != null)
-						if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
-							CInjection inj = oCC.getInjection(agent);
-							if (inj != null) {
-								if (!agent.isAgentHaveLinkToConnectedComponent(
-										oCC, inj))
-									oCC.setInjection(inj);
-							}
-						}
 			}
+
+			for (ObservablesConnectedComponent oCC : simulationData
+					.getObservables().getConnectedComponentList())
+				if (oCC != null)
+					if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
+						CInjection inj = oCC.getInjection(agent);
+						if (inj != null) {
+							if (!agent.isAgentHaveLinkToConnectedComponent(oCC,
+									inj))
+								oCC.setInjection(inj);
+						}
+					}
 		}
 
 	}
@@ -539,8 +537,8 @@ public class SimulatorManager {
 	public final String getTimerMess() {
 		return timer.getTimerMess();
 	}
-	
-	public final TimerSimulation getTimer(){
+
+	public final TimerSimulation getTimer() {
 		return timer;
 	}
 
