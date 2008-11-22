@@ -265,6 +265,11 @@ public class Simulator {
 							.getObservables());
 					break;
 				}
+				case CPerturbation.TYPE_ONCE: {
+					if (!pb.isDo())
+						pb.checkConditionOnce(currentTime);
+					break;
+				}
 				}
 
 			}
@@ -302,7 +307,7 @@ public class Simulator {
 
 	public final void runStories() {
 		CStories stories = model.getSimulationData().getStories();
-		int count=0;
+		int count = 0;
 		for (int i = 0; i < CStories.numberOfSimulations; i++) {
 			SimulationMain.getSimulationManager().startTimer();
 			long clash = 0;
@@ -326,21 +331,20 @@ public class Simulator {
 					CNetworkNotation netNotation = new CNetworkNotation(count,
 							rule);
 					rule.applyRuleForStories(injectionsList, netNotation);
-					
+
 					stories.addToNetworkNotationStory(i, netNotation);
-					
+
 					if (stories.checkRule(rule.getRuleID(), i))
 						break;
 					count++;
-				
-					
+
 					doNegativeUpdate(injectionsList);
 					doPositiveUpdate(rule, injectionsList);
 				} else {
 					clash++;
 				}
 			}
-			count=0;
+			count = 0;
 			resetSimulation();
 		}
 		System.out.println("");

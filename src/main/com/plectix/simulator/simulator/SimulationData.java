@@ -85,8 +85,8 @@ public class SimulationData {
 	public final boolean isTime() {
 		return this.isTime;
 	}
-	
-	public final void addInfo(Info info){
+
+	public final void addInfo(Info info) {
 		infoList.add(info);
 	}
 
@@ -218,6 +218,10 @@ public class SimulationData {
 
 	public final void setRules(List<CRule> rules) {
 		this.rules = rules;
+	}
+
+	public final void addRule(CRule rule) {
+		rules.add(rule);
 	}
 
 	public final List<CRule> getRules() {

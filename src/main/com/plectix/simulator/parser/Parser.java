@@ -158,14 +158,17 @@ public class Parser {
 					st = st.substring(index + 2).trim();
 
 					this.perturbationRate = -1.;
-					CRule rule = getGreaterRule(st, perturbationStr,
-							rateExpression);
-					if (rule != null) {
-						perturbations
-								.add(new CPerturbation(pertubationID++, time,
-										CPerturbation.TYPE_TIME,
-										perturbationRate, rule, greater,
-										rateExpression));
+					CRule rule = null;
+					if (!checkOnce(st, perturbationStr, perturbations,
+							pertubationID, time, greater)) {
+						rule = getGreaterRule(st, perturbationStr,
+								rateExpression);
+						if (rule != null) {
+							perturbations.add(new CPerturbation(
+									pertubationID++, time,
+									CPerturbation.TYPE_TIME, perturbationRate,
+									rule, greater, rateExpression));
+						}
 					}
 				} else {
 					checkString("[", st, perturbationStr);
@@ -268,6 +271,65 @@ public class Parser {
 		return perturbations;
 	}
 
+	private final boolean checkOnce(String st, CDataString perturbationStr,
+			List<CPerturbation> perturbations, int pertubationID, double time,
+			boolean greater) throws ParseErrorException {
+		int indexAdd = st.indexOf("$ADDONCE");
+		int indexDel = st.indexOf("$DELETEONCE");
+		if (indexAdd == -1 && indexDel == -1)
+			return false;
+		if (indexAdd != -1 && indexDel != -1)
+			throw new ParseErrorException(perturbationStr,
+					"perturbation expected after 'do'");
+		String line = new String(st);
+		if (indexAdd != -1)
+			line = line.substring(indexAdd + 8);
+		else
+			line = line.substring(indexDel + 11);
+
+		int indexCount = line.indexOf("*");
+		String strCount = line.substring(0, indexCount).trim();
+		double countToFile;
+		String inf = new String(new Double(Double.MAX_VALUE).toString());
+		strCount = strCount.replaceAll("\\$INF", inf);
+		try {
+			countToFile = Double.valueOf(strCount);
+		} catch (NumberFormatException e) {
+			throw new ParseErrorException(perturbationStr,
+					"Quantity must have numerical format: " + strCount);
+		}
+		line = line.substring(indexCount + 1);
+
+		String strRule;
+
+		if (indexAdd != -1)
+			strRule = " ->" + line;
+		else
+			strRule = line + "-> ";
+		strRule += "@0.0";
+
+		List<CDataString> cd = new ArrayList<CDataString>();
+		cd.add(new CDataString(perturbationStr.getLineNumber(), strRule));
+
+		List<CRule> listRules;
+		listRules = createRules(cd);
+		if (!listRules.isEmpty()) {
+			CRulePerturbation rule = new CRulePerturbation(listRules.get(0));
+			rule.setRuleID(SimulationMain.getSimulationManager()
+					.getSimulationData().getRules().size());
+			rule.setCount(countToFile);
+			SimulationMain.getSimulationManager().getSimulationData().addRule(
+					rule);
+
+			
+			CPerturbation perturbation = new CPerturbation(pertubationID, time,
+					CPerturbation.TYPE_ONCE, rule, greater);
+			perturbations.add(perturbation);
+		}
+
+		return true;
+	}
+
 	private final CRule getGreaterRule(String st, CDataString perturbationStr,
 			List<IPerturbationExpression> rateExpression)
 			throws ParseErrorException {
@@ -275,7 +337,8 @@ public class Parser {
 		if (st.length() > 0) {
 			fail = Character.isLetter(st.charAt(0));
 		} else {
-			throw new ParseErrorException(perturbationStr, "perturbation expected after 'do'");
+			throw new ParseErrorException(perturbationStr,
+					"perturbation expected after 'do'");
 		}
 		checkString("'", st, perturbationStr);
 		st = st.substring(st.indexOf("'") + 1).trim();

@@ -11,6 +11,7 @@ public class CPerturbation {
 
 	public final static byte TYPE_TIME = 0;
 	public final static byte TYPE_NUMBER = 1;
+	public final static byte TYPE_ONCE = 2;
 
 	private byte type;
 
@@ -78,6 +79,16 @@ public class CPerturbation {
 		this.parametersRHS = rateParameters;
 	}
 
+	public CPerturbation(int perturbationID, double time, byte type,
+			CRulePerturbation rule, boolean greater) {
+		this.perturbationID = perturbationID;
+		this.timeCondition = time;
+		this.type = type;
+		this.rule = rule;
+		this.ruleRate = rule.getRuleRate();
+		this.greater = greater;
+	}
+
 	public CPerturbation(int perturbationID, List<IObservablesComponent> obsID,
 			List<Double> parameters, int obsNameID, byte type,
 			double perturbationRate, CRule rule, boolean greater,
@@ -93,6 +104,14 @@ public class CPerturbation {
 		this.ruleRate = rule.getRuleRate();
 		this.greater = greater;
 		this.parametersRHS = rateParameters;
+	}
+
+	public final void checkConditionOnce(double currentTime) {
+		if (currentTime > this.timeCondition) {
+			rule.setInfinityRate(true);
+			isDO = true;
+			rule.setRuleRate(1.0);
+		}
 	}
 
 	private void fillParameters(List<IObservablesComponent> obsID,

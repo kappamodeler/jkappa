@@ -65,6 +65,10 @@ public class CRule {
 		return ruleID;
 	}
 
+	public final void setRuleID(int id) {
+		this.ruleID = id;
+	}
+
 	public CRule(List<CConnectedComponent> left,
 			List<CConnectedComponent> right, String name, double ruleRate,
 			int ruleID) {
@@ -159,7 +163,7 @@ public class CRule {
 		apply(injectionList, null);
 	}
 
-	private void apply(List<CInjection> injectionList,
+	protected void apply(List<CInjection> injectionList,
 			CNetworkNotation netNotation) {
 		agentAddList = new HashMap<CAgent, CAgent>();
 		sitesConnectedWithDeleted = new ArrayList<CSite>();
