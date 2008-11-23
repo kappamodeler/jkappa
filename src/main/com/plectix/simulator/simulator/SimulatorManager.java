@@ -2,6 +2,9 @@ package com.plectix.simulator.simulator;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -372,12 +375,31 @@ public class SimulatorManager {
 		return line;
 	}
 
+	private static final Comparator<String> STRING_COMPARATOR = new Comparator<String>() {
+		@Override
+		public int compare(String o1, String o2) {
+			return o1.compareTo(o2);
+		} };
+
+	private final static List<String> sortSitesStr(List<String> list) {
+		if (ObservablesConnectedComponent.isOcamlStyleObsName()) {
+			Collections.sort(list, STRING_COMPARATOR);
+		}
+		
+		return list;
+	}
+
+	/* 
+	 * 
+	 * OLD CODE: Was throwing ArrayIndexOutOfBoundsException:
+	 * 
+	 * 
 	private final static List<String> sortSitesStr(List<String> list) {
 		String r;
 
 		if (!ObservablesConnectedComponent.isOcamlStyleObsName())
 			return list;
-
+		
 		for (int i = 0; i < list.size() - 1; i++) {
 			for (int j = i + 1; j < list.size(); j++) {
 				if (compareStr(list.get(i), list.get(j))) {
@@ -412,6 +434,9 @@ public class SimulatorManager {
 
 		return false;
 	}
+	*
+	*  END OF OLD CODE
+	*/
 
 	private final void outputRules() {
 		for (CRule rule : getRules()) {

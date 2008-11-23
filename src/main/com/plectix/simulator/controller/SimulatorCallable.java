@@ -77,6 +77,10 @@ public class SimulatorCallable implements Callable<SimulatorResultsData> {
     public final SimulatorResultsData getSimulatorResultsData() {
         return simulator.getSimulatorResultsData();
     }
+    
+    public final SimulatorCallableExitReport getSimulatorExitReport() {
+    	return simulator.getSimulatorResultsData().getSimulatorExitReport();
+    }
 
 
 }
