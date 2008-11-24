@@ -296,8 +296,9 @@ public class SimulatorManager {
 		if (cc == CRule.EMPTY_LHS_CC)
 			return line;
 
-		CRule.sortAgentsByRuleSide(cc.getAgents());
-		for (CAgent agent : cc.getAgents()) {
+		List<CAgent> sortedAgents = cc.getAgentsSortedByIdInRule();
+		
+		for (CAgent agent : sortedAgents) {
 			line = line + agent.getName();
 			line = line + "(";
 

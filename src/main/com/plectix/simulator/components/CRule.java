@@ -242,7 +242,7 @@ public class CRule {
 		}
 	}
 
-	public static final void sortAgentsByRuleSide(List<CAgent> list) {
+	private final void sortAgentsByRuleSide(List<CAgent> list) {
 		CAgent left;
 		CAgent right;
 		for (int i = 0; i < list.size() - 1; i++) {
@@ -255,7 +255,6 @@ public class CRule {
 				}
 			}
 		}
-
 	}
 
 	private final void markRHSAgentsUnmarked(int indexAgentRHS) {

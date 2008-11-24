@@ -92,7 +92,7 @@ public class CConnectedComponent implements IConnectedComponent {
 	public final void initSpanningTreeMap() {
 		CSpanningTree spTree;
 		spanningTreeMap = new HashMap<Integer, List<CSpanningTree>>();
-		if (agentList.size() == 0)
+		if (agentList.isEmpty())
 			return;
 
 		for (CAgent agentAdd : agentList) {
@@ -161,7 +161,7 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	
 	public final List<CAgent> getAgents() {
-		return agentList;
+		return Collections.unmodifiableList(agentList);
 	}
 
 	
@@ -436,5 +436,12 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	public int getInjectionsQuantity() {
 		return injectionsList.size();
+	}
+
+	public List<CAgent> getAgentsSortedByIdInRule() {
+		List<CAgent> temp = new ArrayList<CAgent>();
+		temp.addAll(agentList);
+		Collections.sort(temp);
+		return Collections.unmodifiableList(temp);
 	}
 }

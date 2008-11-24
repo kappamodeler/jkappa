@@ -6,7 +6,7 @@ import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
 
-public class CAgent implements IAgent {
+public class CAgent implements IAgent, Comparable<CAgent> {
 	/**
 	 * idInConnectedComponent is the unique id in ConnectedComponent id is an
 	 * unique id for agent
@@ -233,5 +233,10 @@ public class CAgent implements IAgent {
 		}
 		sb.append(")");
 		return sb.toString();
+	}
+
+	@Override
+	public int compareTo(CAgent o) {
+		return idInRuleSide - o.idInRuleSide;
 	}
 }

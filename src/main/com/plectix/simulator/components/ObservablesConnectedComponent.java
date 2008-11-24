@@ -13,6 +13,7 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 		implements IObservablesComponent {
 	private static boolean ocamlStyleObsName = false;
 
+	public static int COUNTER = 0;
 	private String name;
 	private String line;
 	private int nameID;
@@ -76,11 +77,12 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 			String name, String line, int nameID) {
 		super(connectedAgents);
 		this.name = name;
-		if (ocamlStyleObsName)
+		if (ocamlStyleObsName) {
 			this.line = SimulationMain.getSimulationManager().printPartRule(
 					this, 0);
-		else
+		} else {
 			this.line = line;
+		}
 		this.automorphicObservables = new ArrayList<Integer>();
 		this.nameID = nameID;
 	}
@@ -101,9 +103,12 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 
 	
 	public String getItem(int index, CObservables obs) {
-		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX)
+		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
+			if (countList.get(index) == 0) {
+				COUNTER++;
+			}
 			return countList.get(index).toString();
-		else
+		} else
 			return obs.getComponentList().get(mainAutomorphismNumber).getItem(
 					index, obs);
 	}
