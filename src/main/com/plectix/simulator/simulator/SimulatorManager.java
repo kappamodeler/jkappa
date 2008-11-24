@@ -1,10 +1,7 @@
 package com.plectix.simulator.simulator;
 
-import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,12 +11,12 @@ import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.ObservablesConnectedComponent;
-import com.plectix.simulator.components.SolutionLines;
-import com.plectix.simulator.components.CRule.Action;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.NameDictionary;
+import com.plectix.simulator.components.ObservablesConnectedComponent;
+import com.plectix.simulator.components.SolutionLines;
+import com.plectix.simulator.components.CRule.Action;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
 import com.plectix.simulator.util.TimerSimulation;
 
@@ -375,67 +372,14 @@ public class SimulatorManager {
 		return line;
 	}
 
-	private static final Comparator<String> STRING_COMPARATOR = new Comparator<String>() {
-		public int compare(String o1, String o2) {
-			return o1.compareTo(o2);
-		} };
-
 	private final static List<String> sortSitesStr(List<String> list) {
 		if (ObservablesConnectedComponent.isOcamlStyleObsName()) {
-			Collections.sort(list, STRING_COMPARATOR);
+			Collections.sort(list);
 		}
 		
 		return list;
 	}
 
-	/* 
-	 * 
-	 * OLD CODE: Was throwing ArrayIndexOutOfBoundsException:
-	 * 
-	 * 
-	private final static List<String> sortSitesStr(List<String> list) {
-		String r;
-
-		if (!ObservablesConnectedComponent.isOcamlStyleObsName())
-			return list;
-		
-		for (int i = 0; i < list.size() - 1; i++) {
-			for (int j = i + 1; j < list.size(); j++) {
-				if (compareStr(list.get(i), list.get(j))) {
-					r = new String(list.get(i));
-					list.set(i, list.get(j));
-					list.set(j, r);
-				}
-
-			}
-		}
-
-		return list;
-	}
-
-	private final static boolean compareStr(String s1, String s2) {
-
-		// true: s1>s2
-		int q = 0;
-		char[] ch2 = s2.toCharArray();
-		for (char ch1 : s1.toCharArray()) {
-			if (q > ch2.length)
-				return true;
-			if (ch1 == ch2[q]) {
-				q++;
-				continue;
-			}
-			if (ch1 > ch2[q])
-				return true;
-			else
-				return false;
-		}
-
-		return false;
-	}
-	*
-	*  END OF OLD CODE
-	*/
 
 	private final void outputRules() {
 		for (CRule rule : getRules()) {
