@@ -107,4 +107,18 @@ class CStoriesSiteStates {
 		}
 	}
 
+	public final static boolean isEqual(States ss1, States ss2) {
+		if (ss1==null || ss2==null)
+			return false;
+		
+		if (ss1.idInternalState != ss2.idInternalState)
+			return false;
+		if (ss1.idLinkAgent != ss2.idLinkAgent)
+			return false;
+		if (ss1.idLinkSite != ss2.idLinkSite)
+			return false;
+
+		return true;
+	}
+
 }

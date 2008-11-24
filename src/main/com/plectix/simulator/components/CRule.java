@@ -1,5 +1,6 @@
 package com.plectix.simulator.components;
 
+import java.security.CodeSigner;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -562,38 +563,28 @@ public class CRule {
 		private CSite siteTo;
 		private Integer nameInternalStateId;
 
+		
+
 		private final void addToNetworkNotation(int index, CNetworkNotation nn,
 				CSite site) {
 			if (nn != null)
 				switch (action) {
 				case ACTION_BRK:
-					nn
-							.addToAgents(site, new CStoriesSiteStates(index,
-									site.getAgentLink().getHash(), site
-											.getNameId()), index);
+					nn.checkLinkForNetworkNotation(index, site);
 					break;
 				case ACTION_DEL:
-					nn
-							.addToAgents(site, new CStoriesSiteStates(index,
-									site.getInternalState().getNameId(), site
-											.getAgentLink().getHash(), site
-											.getNameId()), index);
-
+					nn.checkLinkForNetworkNotationDel(index, site);
 					break;
 				case ACTION_ADD:
 					nn.addToAgents(site, new CStoriesSiteStates(index, site
 							.getInternalState().getNameId()), index);
 					break;
 				case ACTION_BND:
-					nn
-							.addToAgents(site, new CStoriesSiteStates(index,
-									site.getAgentLink().getHash(), site
-											.getNameId()), index);
+					nn.checkLinkForNetworkNotation(index, site);
 					break;
 				case ACTION_MOD:
 					nn.addToAgents(site, new CStoriesSiteStates(index, site
 							.getInternalState().getNameId()), index);
-
 					break;
 				}
 		}
@@ -629,6 +620,8 @@ public class CRule {
 						.getAgentByIdFromSolution(agentIdInCC, injection);
 				rightConnectedComponent
 						.addAgentFromSolutionForRHS(agentFromInSolution);
+				
+				
 				break;
 			}
 			case ACTION_BND: {
@@ -1058,5 +1051,13 @@ public class CRule {
 
 	public List<CSite> getSitesConnectedWithBroken() {
 		return this.sitesConnectedWithBroken;
+	}
+
+	public void applyLastRuleForStories(List<CInjection> injectionsList,
+			CNetworkNotation netNotation) {
+		for(CInjection inj : injectionsList){
+			for (CSite site : inj.getSiteList())
+				netNotation.checkLinkForNetworkNotationDel(CStoriesSiteStates.LAST_STATE, site);
+		}
 	}
 }

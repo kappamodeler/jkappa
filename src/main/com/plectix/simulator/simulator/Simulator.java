@@ -330,12 +330,14 @@ public class Simulator {
 				if (!rule.isClash(injectionsList)) {
 					CNetworkNotation netNotation = new CNetworkNotation(count,
 							rule);
-					rule.applyRuleForStories(injectionsList, netNotation);
-
-					stories.addToNetworkNotationStory(i, netNotation);
-
-					if (stories.checkRule(rule.getRuleID(), i))
+					
+					if (stories.checkRule(rule.getRuleID(), i)){
+						rule.applyLastRuleForStories(injectionsList, netNotation);
+						stories.addToNetworkNotationStory(i, netNotation);
 						break;
+					}
+					rule.applyRuleForStories(injectionsList, netNotation);
+					stories.addToNetworkNotationStory(i, netNotation);
 					count++;
 
 					doNegativeUpdate(injectionsList);
@@ -345,10 +347,11 @@ public class Simulator {
 				}
 			}
 			count = 0;
+			stories.handling(i);
 			resetSimulation();
 		}
+		stories.merge();
 		System.out.println("");
-		// stories.handling();
 	}
 
 	public final void runIterations() {
