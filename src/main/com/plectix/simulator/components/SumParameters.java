@@ -32,14 +32,12 @@ public class SumParameters implements IPerturbationExpression {
 		return true;
 	}
 
-	@Override
 	public String getName() {
 		if (observableID != null)
 			return observableID.getName();
 		return null;
 	}
 
-	@Override
 	public String getValueToString() {
 		return Double.valueOf(parameter).toString();
 	}
@@ -50,19 +48,16 @@ public class SumParameters implements IPerturbationExpression {
 	// return multiply * this.parameter;
 	// }
 
-	@Override
 	public double getMultiplication() {
 		double multiply = 0.;
 		multiply = this.observableID.getSize();
 		return multiply * this.parameter;
 	}
 
-	@Override
 	public double getValue() {
 		return parameter;
 	}
 
-	@Override
 	public void setValue(double value) {
 		this.parameter = value;
 	}

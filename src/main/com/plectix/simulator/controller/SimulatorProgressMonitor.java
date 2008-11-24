@@ -134,7 +134,6 @@ public class SimulatorProgressMonitor implements SimulatorCallableListener {
     /**
      * 
      */
-	@Override
 	public void finished(SimulatorCallable simulatorCallable) {
         synchronized (exponentialMovingAverage) {
             doneCount++;

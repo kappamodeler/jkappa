@@ -11,14 +11,12 @@ public class RateExpression implements IPerturbationExpression {
 		this.value = value;
 	}
 
-	@Override
 	public String getName() {
 		if (rule != null)
 			return rule.getName();
 		return null;
 	}
 
-	@Override
 	public String getValueToString() {
 		return Double.valueOf(value).toString();
 	}
@@ -29,19 +27,16 @@ public class RateExpression implements IPerturbationExpression {
 	// return this.rule.getRuleRate() * this.value;
 	// }
 
-	@Override
 	public double getMultiplication() {
 		if (this.rule == null)
 			return this.value;
 		return this.rule.getRuleRate() * this.value;
 	}
 
-	@Override
 	public double getValue() {
 		return value;
 	}
 
-	@Override
 	public void setValue(double value) {
 		this.value = value;
 	}

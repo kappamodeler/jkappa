@@ -40,7 +40,6 @@ public class SimulatorCallable implements Callable<SimulatorResultsData> {
     /**
      * 
      */
-	@Override
 	public SimulatorResultsData call() throws Exception {
         try {
             simulator.getSimulatorResultsData().getSimulatorExitReport().setStartTimestamp(System.currentTimeMillis());
