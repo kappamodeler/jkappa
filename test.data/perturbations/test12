@@ -4,4 +4,4 @@
 
 %obs: 'a' a()
 
-%mod: $T>0.0005 do 'rule':=100
+%mod: ['a'] > 0 do 'rule' := -1

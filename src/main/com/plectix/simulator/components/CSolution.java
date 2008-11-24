@@ -39,23 +39,6 @@ public class CSolution implements ISolution {
 		}
 	}
 
-	// wrapping class, use when we want to use default equals for CAgent
-	private class SimpleAgent {
-		private CAgent myAgent;
-
-		public SimpleAgent(CAgent agent) {
-			myAgent = agent;
-		}
-
-		public boolean equals(Object o) {
-			if (!(o instanceof CAgent)) {
-				return false;
-			}
-			CAgent agent = (CAgent) o;
-			return agent == myAgent;
-		}
-	};
-
 	// TODO check
 	public final void removeAgent(CAgent agent) {
 		if (agent == null) {
@@ -63,23 +46,12 @@ public class CSolution implements ISolution {
 		}
 
 		agentMap.remove(agent.getHash());
-
-		// if (agent != null) {
-		// SimpleAgent sagent = new SimpleAgent(agent);
-		// list.remove(sagent);
-		// }
 	}
 
 	public final void addAgent(CAgent agent) {
 		if (agent != null) {
 			long key = agent.getHash();
 			agentMap.put(key, agent);
-			// List<CAgent> list = agentMap.get(key);
-			// if (list == null) {
-			// list = new ArrayList<CAgent>();
-			// agentMap.put(key, list);
-			// }
-			// list.add(agent);
 		}
 	}
 

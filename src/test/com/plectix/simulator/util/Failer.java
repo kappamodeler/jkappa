@@ -47,12 +47,21 @@ public class Failer {
 	public void assertEquals(String message, Object a, Object b) {
 		String newMessage = message + " " + failedEquals(a, b);
 		if (a == null) {
-			assertTrue(newMessage + failedEquals(a, b), b == null);
+			assertTrue(newMessage, b == null);
 		} else {
 			assertTrue(newMessage, a.equals(b));
 		}
 	}
 
+	private boolean close(double a, double b) {
+		return (Math.abs(a - b) < 1e-10);
+	}
+	
+	public void assertDoubleEquals(String message, double a, double b) {
+		String newMessage = message + " " + failedEquals(a, b);
+		assertTrue(newMessage, close(a, b));
+	}
+	
 	public boolean collectionElementEquals(Object a, Object b) {
 		if (a != null) {
 			return a.equals(b);

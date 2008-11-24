@@ -1,9 +1,6 @@
 package com.plectix.simulator.components;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IAgent;
@@ -28,8 +25,8 @@ public class CAgent implements IAgent {
 
 	private TreeMap<Integer, CSite> siteMap = new TreeMap<Integer, CSite>();
 
-	public TreeMap<Integer, CSite> getSiteMap() {
-		return siteMap;
+	public Map<Integer, CSite> getSiteMap() {
+		return Collections.unmodifiableMap(siteMap);
 	}
 
 	private int nameId;

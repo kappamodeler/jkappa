@@ -41,7 +41,7 @@ public class Initializator {
 		args[1] = "--sim";
 		args[2] = filePath;
 		args[3] = "--time";
-		args[4] = "15";
+		args[4] = "5";
 		args[5] = "--seed";
 		args[6] = "10";
 		instance.parseArguments(args);

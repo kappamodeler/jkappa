@@ -1,0 +1,8 @@
+'rule' -> a(x) @ 1.0
+'another rule' -> a(x) @ 4.4
+
+%init: a(x)
+
+%obs: 'a' a()
+
+%mod: $T>0.0005 do 'rule' := 'rule' + 'rule' + 5 * 'another rule' + 'rule'

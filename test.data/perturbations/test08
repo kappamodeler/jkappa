@@ -1,0 +1,8 @@
+'rule' -> a(x) @ 1.0
+'another rule' -> a(x) @ 4.4
+
+%init: 10 * a(x)
+
+%obs: 'a' a()
+
+%mod: ['a'] > 30 do 'rule' := 5

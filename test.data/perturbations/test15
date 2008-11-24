@@ -1,0 +1,10 @@
+'rule' -> a(x) @ 1.0
+'another rule 1' a(x) -> a(x) @ 2.0
+'another rule 2' a(x) -> a(x) @ 3.0
+
+%init: a(x)
+
+%obs: 'a' a()
+%obs: 'agent' w()
+
+%mod: ['a'] > 1 * ['agent'] do 'rule' := 4 * 'another rule 1' + 5 * 'another rule 2'

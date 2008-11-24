@@ -30,7 +30,7 @@ public class QuantityDataParser extends Parser<Map<String, Integer>> {
 					System.out.println(ne.getMessage() + " at " + line);
 				}
 
-				map.put(currentName, value);
+				map.put(currentName.intern(), value);
 			}
 			line = myReader.getStringFromFile();
 		}

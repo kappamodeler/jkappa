@@ -1,0 +1,8 @@
+'rule' -> a(x) @ 1.0
+'another rule' a(x) -> a(x) @ 4.0
+
+%init: a(x)
+
+%obs: 'a' a()
+
+%mod: ['a'] > 0 do 'rule' := 'another rule'

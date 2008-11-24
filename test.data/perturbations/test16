@@ -1,0 +1,12 @@
+'rule' -> a(x) @ 10.0
+'another rule 1' a(x) -> a(x) @ 1.0
+'another rule 2' a(x) -> a(x) @ 0.0
+
+%init: a(x)
+
+%obs: 'a' a(x)
+%obs: 'rule'
+%obs: 'another1' f()
+%obs: 'another'  k()
+
+%mod: ['a'] > 10 * ['another1'] + 10 * ['another'] do 'rule' := 78

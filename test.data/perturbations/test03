@@ -4,4 +4,4 @@
 
 %obs: 'a' a()
 
-%mod: $T>0.0005 do 'rule':=100
+%mod: $T>0.0005 do 'rule' := 3 * 'rule'

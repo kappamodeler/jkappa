@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IConstraint;
+import com.plectix.simulator.simulator.Simulator;
 
 public class CRule {
 
@@ -19,30 +22,13 @@ public class CRule {
 	private List<CSite> sitesConnectedWithDeleted;
 	private List<CSite> sitesConnectedWithBroken;
 
-	public List<CSite> getSitesConnectedWithDeleted() {
-		return sitesConnectedWithDeleted;
-	}
-
-	public void setRuleRate(double ruleRate) {
-		this.ruleRate = ruleRate;
-	}
-
-	private int ruleID;
-
 	private int automorphismNumber = 1;
 	private boolean infinityRate = false;
 	private List<CRule> activatedRule;
 	private List<ObservablesConnectedComponent> activatedObservable;
 
-	public List<ObservablesConnectedComponent> getActivatedObservable() {
-		return activatedObservable;
-	}
-
-	public void setActivatedObservable(
-			List<ObservablesConnectedComponent> activatedObservable) {
-		this.activatedObservable = activatedObservable;
-	}
-
+	private int ruleID;
+	
 	private int maxAgentID = 0;
 
 	private List<Action> actionList;
@@ -93,6 +79,30 @@ public class CRule {
 		this.ruleID = ruleID;
 		calculateAutomorphismsNumber();
 		indexingRHSAgents();
+	}
+
+	public List<CSite> getSitesConnectedWithDeleted() {
+		return sitesConnectedWithDeleted;
+	}
+
+	public void setRuleRate(double ruleRate) {
+		if (ruleRate >= 0) {
+			this.ruleRate = ruleRate;
+		} else {
+			Logger logger = Logger.getLogger(this.getClass());
+			logger.info("warning : rate of the rule '" 
+					+ name + "' was attempted to be set as negative");
+			this.ruleRate = 0;
+		}
+	}
+
+	public List<ObservablesConnectedComponent> getActivatedObservable() {
+		return activatedObservable;
+	}
+
+	public void setActivatedObservable(
+			List<ObservablesConnectedComponent> activatedObservable) {
+		this.activatedObservable = activatedObservable;
 	}
 
 	public List<CRule> getActivatedRule() {

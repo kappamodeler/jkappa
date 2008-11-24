@@ -121,6 +121,42 @@ public class Parser {
 		}
 	}
 
+	private final void parseExpressionMonomeBeforeDo(String arg,
+			CDataString perturbationStr, List<Double> parameters,
+			List<IObservablesComponent> obsID) throws ParseErrorException {
+
+		String item = arg;
+		if (item.indexOf("*") == -1) {
+			try {
+				parameters.add(new Double(Double.valueOf(item)));
+			} catch (NumberFormatException e) {
+				throw new ParseErrorException(perturbationStr,
+						"Real number expected instead of '" + item + "'");
+			}
+		} else {
+			Double parameter = 0.0;
+			String number = item.substring(0, item.indexOf("*")).trim();
+			try {
+				parameter = Double.valueOf(number);
+			} catch (NumberFormatException e) {
+				throw new ParseErrorException(perturbationStr,
+						"Real number expected instead of '" + number + "'");
+			}
+			parameters.add(parameter);
+			item = item.substring(item.indexOf("*") + 1).trim();
+
+			checkString("[", item, perturbationStr);
+			item = item.substring(item.indexOf("[") + 1).trim();
+			checkString("'", item, perturbationStr);
+			item = item.substring(item.indexOf("'") + 1).trim();
+
+			String obsName = getName(item);
+
+			IObservablesComponent obsId = checkInObservables(obsName);
+			obsID.add(obsId);
+		}
+	}
+
 	private final List<CPerturbation> createPertubations(List<CDataString> mods)
 			throws ParseErrorException {
 		List<CPerturbation> perturbations = new ArrayList<CPerturbation>();
@@ -197,56 +233,13 @@ public class Parser {
 					List<Double> parameters = new ArrayList<Double>();
 					List<IObservablesComponent> obsID = new ArrayList<IObservablesComponent>();
 					if (st.indexOf("+") == -1) {
-						try {
-							parameters.add(new Double(Double.valueOf(st)));
-						} catch (NumberFormatException e) {
-							throw new ParseErrorException(perturbationStr,
-									"'do' expected before [" + pertStr + "]");
-						}
+						parseExpressionMonomeBeforeDo(st, perturbationStr, parameters, obsID);
 					} else {
 
 						StringTokenizer sTok = new StringTokenizer(st, "+");
 						while (sTok.hasMoreTokens()) {
 							String item = sTok.nextToken().trim();
-
-							if (item.indexOf("*") == -1) {
-								try {
-									parameters.add(new Double(Double
-											.valueOf(item)));
-								} catch (NumberFormatException e) {
-									throw new ParseErrorException(
-											perturbationStr,
-											"Real number expected indtead of '"
-													+ item + "'");
-								}
-							} else {
-								Double parameter = 0.0;
-								String number = item.substring(0,
-										item.indexOf("*")).trim();
-								try {
-									parameter = Double.valueOf(number);
-								} catch (NumberFormatException e) {
-									throw new ParseErrorException(
-											perturbationStr,
-											"Real number expected indtead of '"
-													+ number + "'");
-								}
-								parameters.add(parameter);
-								item = item.substring(item.indexOf("*") + 1)
-										.trim();
-
-								checkString("[", item, perturbationStr);
-								item = item.substring(item.indexOf("[") + 1)
-										.trim();
-								checkString("'", item, perturbationStr);
-								item = item.substring(item.indexOf("'") + 1)
-										.trim();
-
-								obsName = getName(item);
-
-								IObservablesComponent obsId = checkInObservables(obsName);
-								obsID.add(obsId);
-							}
+							parseExpressionMonomeBeforeDo(item, perturbationStr, parameters, obsID);
 						}
 
 					}
@@ -321,7 +314,6 @@ public class Parser {
 			SimulationMain.getSimulationManager().getSimulationData().addRule(
 					rule);
 
-			
 			CPerturbation perturbation = new CPerturbation(pertubationID, time,
 					CPerturbation.TYPE_ONCE, rule, greater);
 			perturbations.add(perturbation);
@@ -330,6 +322,40 @@ public class Parser {
 		return true;
 	}
 
+	private final double parseExpressionMonomeAfterDo(String arg, CDataString perturbationStr, 
+			List<IPerturbationExpression> rateExpression) throws ParseErrorException {
+		String item = arg;
+		double freeTerm = 0;
+		if (item.indexOf("*") == -1) {
+			// free term as double
+			try {
+				freeTerm += Double.valueOf(item);
+			} catch (NumberFormatException e) {
+
+				checkString("'", item, perturbationStr);
+				addFreeRule(rateExpression, item);
+			}
+		} else {
+			double curValue = 0;
+			try {
+				curValue = Double.valueOf(item.substring(0,
+						item.indexOf("*")).trim());
+			} catch (NumberFormatException e) {
+				throw new ParseErrorException(perturbationStr,
+						"Perturbations sum parse error: value parameter expected before rule name");
+			}
+			item = item.substring(item.indexOf("*") + 1).trim();
+
+			checkString("'", item, perturbationStr);
+			item = item.substring(item.indexOf("'") + 1).trim();
+
+			CRule curRule = getRuleWithEqualName(getName(item));
+
+			rateExpression.add(new RateExpression(curRule, curValue));
+		}
+		return freeTerm;
+	}
+	
 	private final CRule getGreaterRule(String st, CDataString perturbationStr,
 			List<IPerturbationExpression> rateExpression)
 			throws ParseErrorException {
@@ -357,50 +383,12 @@ public class Parser {
 		double freeTerm = 0;
 
 		if (st.indexOf("+") == -1) {
-			try {
-				rateExpression
-						.add(new RateExpression(null, Double.valueOf(st)));
-			} catch (NumberFormatException e) {
-				addFreeRule(rateExpression, st);
-			}
+			freeTerm += parseExpressionMonomeAfterDo(st, perturbationStr, rateExpression);
 		} else {
 			StringTokenizer sTok = new StringTokenizer(st, "+");
 			while (sTok.hasMoreTokens()) {
 				String item = sTok.nextToken().trim();
-
-				if (item.indexOf("*") == -1) {
-					// free term as double
-					try {
-						freeTerm += Double.valueOf(item);
-					} catch (NumberFormatException e) {
-
-						checkString("'", item, perturbationStr);
-						addFreeRule(rateExpression, item);
-						/*
-						 * item = item.substring(item.indexOf("'") + 1).trim();
-						 * CRule curRule = getRuleWithEqualName(getName(item));
-						 * if (curRule == null) return null;
-						 * rateExpression.add(new RateExpression(curRule, 1.0));
-						 */
-					}
-				} else {
-					double curValue = 0;
-					try {
-						curValue = Double.valueOf(item.substring(0,
-								item.indexOf("*")).trim());
-					} catch (NumberFormatException e) {
-						throw new ParseErrorException(perturbationStr,
-								"Perturbations sum parse error: value parameter expected before rule name");
-					}
-					item = item.substring(item.indexOf("*") + 1).trim();
-
-					checkString("'", item, perturbationStr);
-					item = item.substring(item.indexOf("'") + 1).trim();
-
-					CRule curRule = getRuleWithEqualName(getName(item));
-
-					rateExpression.add(new RateExpression(curRule, curValue));
-				}
+				freeTerm += parseExpressionMonomeAfterDo(item, perturbationStr, rateExpression);
 			}
 		}
 		if (freeTerm > 0.0)

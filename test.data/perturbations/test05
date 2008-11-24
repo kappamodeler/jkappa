@@ -1,0 +1,8 @@
+'rule' -> a(x) @ 1.0
+'another rule' -> a(x) @ 4.3
+
+%init: a(x)
+
+%obs: 'a' a()
+
+%mod: $T>0.0005 do 'rule' := 180 * 'another rule' + -70 * 'rule'
