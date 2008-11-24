@@ -59,12 +59,12 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 
 	private int lastInjectionsQuantity = -1;
 
-	@Override
+	
 	public void updateLastValue() {
 		lastInjectionsQuantity = getInjectionsQuantity();
 	}
 
-	@Override
+	
 	public final void calculate(boolean replaceLast) {
 		if (replaceLast)
 			countList.set(countList.size() - 1, getInjectionsQuantity());
@@ -89,17 +89,17 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 		return name;
 	}
 
-	@Override
+	
 	public byte getType() {
 		return IObservablesComponent.TYPE_CONNECTED_COMPONENT;
 	}
 
-	@Override
+	
 	public double getSize() {
 		return getInjectionsQuantity();
 	}
 
-	@Override
+	
 	public String getItem(int index, CObservables obs) {
 		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX)
 			return countList.get(index).toString();

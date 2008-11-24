@@ -59,7 +59,6 @@ public class CSite implements ISite {
 		return list;
 	}
 	
-	@Override
 	public final CLinkState getLinkState() {
 		return linkState;
 	}
@@ -82,7 +81,6 @@ public class CSite implements ISite {
 		return internalState;
 	}
 
-	@Override
 	public final boolean isChanged() {
 		return changed;
 	}

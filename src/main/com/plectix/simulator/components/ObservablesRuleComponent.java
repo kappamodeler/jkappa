@@ -25,7 +25,6 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 
 	private long lastInjectionsQuantity = -1;
 
-	@Override
 	public void updateLastValue() {
 		lastInjectionsQuantity = getCount();
 	}
@@ -38,7 +37,6 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 		return count;
 	}
 
-	@Override
 	public void calculate(boolean replaceLast) {
 
 		if (replaceLast)
@@ -47,32 +45,26 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 			countList.add(lastInjectionsQuantity);
 	}
 
-	@Override
 	public String getLine() {
 		return rule.getName();
 	}
 
-	@Override
 	public String getName() {
 		return rule.getName();
 	}
 
-	@Override
 	public int getNameID() {
 		return nameID;
 	}
 
-	@Override
 	public byte getType() {
 		return IObservablesComponent.TYPE_RULE_COMPONENT;
 	}
 
-	@Override
 	public double getSize() {
 		return rule.getRuleRate();
 	}
 
-	@Override
 	public String getItem(int index, CObservables obs) {
 		return countList.get(index).toString();
 	}

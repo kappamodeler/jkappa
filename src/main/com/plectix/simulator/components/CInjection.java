@@ -84,13 +84,13 @@ public class CInjection implements IInjection {
 		return connectedComponent;
 	}
 
-	@Override
+	
 	public List<IAgent> getAgents() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public void setAgents(List<IAgent> agents) {
 		// TODO Auto-generated method stub
 

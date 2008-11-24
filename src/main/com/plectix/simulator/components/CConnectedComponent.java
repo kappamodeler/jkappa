@@ -152,43 +152,43 @@ public class CConnectedComponent implements IConnectedComponent {
 		}
 	}
 
-	@Override
+	
 	public final IInjection checkAndBuildInjection(ISolution solution,
 			IAgent agent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public final List<CAgent> getAgents() {
 		return agentList;
 	}
 
-	@Override
+	
 	public final String getPrecompilationAsString() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public final void precompilationToString() {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public final void precompile() {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public final List<IInjection> pushout() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public final boolean unify(CAgent agent) {
 		injectedSites = new ArrayList<CSite>();
 		agentLinkList = new ArrayList<CAgentLink>();

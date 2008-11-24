@@ -15,12 +15,12 @@ public class CRandomJava implements IRandom {
 			rand = new Random();
 	}
 
-	@Override
+	
 	public double getDouble() {
 		return rand.nextDouble();
 	}
 
-	@Override
+	
 	public int getInteger(int limit) {
 		return rand.nextInt(limit);
 	}

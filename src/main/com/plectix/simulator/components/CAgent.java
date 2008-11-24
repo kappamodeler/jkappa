@@ -130,13 +130,13 @@ public class CAgent implements IAgent {
 		return null;
 	}
 
-	@Override
+	
 	public final void addSite(CSite site) {
 		site.setAgentLink(this);
 		siteMap.put(site.getNameId(), site);
 	}
 
-	@Override
+	
 	public final int getIdInConnectedComponent() {
 		return idInConnectedComponent;
 	}
@@ -145,36 +145,36 @@ public class CAgent implements IAgent {
 		idInConnectedComponent = index;
 	}
 
-	@Override
+	
 	public final List<String> getInterface() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public final String getSiteInternalState(ISite internal_state) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public final CLinkState getSiteLinkState(ISite site) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public final Collection<CSite> getSites() {
 		return siteMap.values();
 	}
 
-	@Override
+	
 	public final void setSiteInternalState(ISite site, String internal_state) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public final void setSiteLinkState(ISite site, CLinkState link_state) {
 		// TODO Auto-generated method stub
 

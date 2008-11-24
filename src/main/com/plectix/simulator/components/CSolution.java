@@ -106,19 +106,19 @@ public class CSolution implements ISolution {
 		agentMap.clear();
 	}
 
-	@Override
+	
 	public final void add(ISolution solution) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public final List<IAgent> apply(IRule rule, IInjection injection) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public final CConnectedComponent getConnectedComponent(CAgent agent) {
 		List<CAgent> agentList = new ArrayList<CAgent>();
 		agentList.add(agent);
@@ -159,31 +159,31 @@ public class CSolution implements ISolution {
 		return false;
 	}
 
-	@Override
+	
 	public final Map<ISite, IAgent> getLinks() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public final boolean isFullyInstatiated() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+	
 	public final void multiply(int N) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	
 	public final boolean satisfy(IConstraint constraint, IInjection injection) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+	
 	public final List<CConnectedComponent> split() {
 		List<Boolean> indexList = new ArrayList<Boolean>();
 
