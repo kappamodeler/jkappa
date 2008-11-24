@@ -1,6 +1,7 @@
 package com.plectix.simulator.components;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,46 +19,8 @@ public class CStories extends CObservables {
 
 	HashMap<Integer, CStoryTrees> trees;
 
-	class CStoryTrees {
-		HashMap<Integer, List<Integer>> contiguityList;
-
-		public CStoryTrees(List<CNetworkNotation> commonList) {
-			contiguityList = new HashMap<Integer, List<Integer>>();
-
-			for (int i = 0; i < commonList.size(); i++) {
-				CNetworkNotation nnCurrent = commonList.get(i);
-				int key = nnCurrent.getRule().getRuleID();
-				List<Integer> list = contiguityList.get(key);
-
-				if (list == null) {
-					list = new ArrayList<Integer>();
-					contiguityList.put(key, list);
-				}
-				if (i > 0)
-					list.add(commonList.get(i + 1).getRule().getRuleID());
-			}
-		}
-
-		public void addListToTree(List<CNetworkNotation> commonList) {
-			for (int i = 0; i < commonList.size(); i++) {
-				CNetworkNotation nnCurrent = commonList.get(i);
-				int key = nnCurrent.getRule().getRuleID();
-				List<Integer> list = contiguityList.get(key);
-
-				if (list == null) {
-					list = new ArrayList<Integer>();
-					contiguityList.put(key, list);
-				}
-				if (i > 0)
-					addToList(list, commonList.get(i + 1).getRule().getRuleID());
-			}
-		}
-
-		private void addToList(List<Integer> list, int index) {
-			if (!list.contains(index))
-				list.add(index);
-		}
-
+	public final Collection<CStoryTrees> getTrees() {
+		return this.trees.values();
 	}
 
 	class NetworkNotationForCurrentStory {
@@ -153,17 +116,26 @@ public class CStories extends CObservables {
 	}
 
 	public void merge() {
-		
-		/*for (int i = 0; i < networkNotationForCurrentStory.size(); i++) {
-			int key = networkNotationForCurrentStory.get(i) CStoryTrees .getRuleID();
-			List<Integer> list = contiguityList.get(key);
 
-			if (list == null) {
-				list = new ArrayList<Integer>();
-				contiguityList.put(key, list);
+		for (int i = 0; i < stories.size(); i++) {
+			int key = stories.get(i).ruleID;
+			CStoryTrees tree = trees.get(key);
+
+			if (tree == null) {
+				for (NetworkNotationForCurrentStory nnCS : networkNotationForCurrentStory) {
+					if (nnCS.networkNotationList.get(0).rule.getRuleID() == key) {
+						if (tree == null)
+							tree = new CStoryTrees(nnCS.networkNotationList,key);
+						else
+							tree.addListToTree(nnCS.networkNotationList);
+					}
+				}
+				if (tree != null)
+					trees.put(key, tree);
+
 			}
-			if (i > 0)
-				list.add(commonList.get(i + 1).getRule().getRuleID());
+			// if (i > 0)
+			// list.add(commonList.get(i + 1).getRule().getRuleID());
 		}
-*/	}
+	}
 }

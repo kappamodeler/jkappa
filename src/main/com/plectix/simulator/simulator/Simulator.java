@@ -351,7 +351,8 @@ public class Simulator {
 			resetSimulation();
 		}
 		stories.merge();
-		System.out.println("");
+		outputData(count);
+		//System.out.println("");
 	}
 
 	public final void runIterations() {
