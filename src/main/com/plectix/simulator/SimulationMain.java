@@ -121,8 +121,8 @@ public class SimulationMain {
 	public static void main(String[] args) {
 		// Initialize log4j
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
-		LOGGER.info("Date: " + BuildConstants.BUILD_DATE);
-		LOGGER.info("OS: " + BuildConstants.BUILD_OS_NAME);
+		LOGGER.info("Build Date: " + BuildConstants.BUILD_DATE);
+		LOGGER.info("Build OS: " + BuildConstants.BUILD_OS_NAME);
 		LOGGER.info("SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
 		LOGGER.info("Ant Java Version: " + BuildConstants.ANT_JAVA_VERSION);
 
