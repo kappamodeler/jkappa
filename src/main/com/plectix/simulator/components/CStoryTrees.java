@@ -29,6 +29,8 @@ public class CStoryTrees {
 		int index = 0;
 		CNetworkNotation newNN = commonList.get(index);
 		sSites = new HashMap<Long, HashMap<Integer, StorySites>>();
+		addToStorySites(newNN, index);
+		
 		getTree(index, 1, newNN, commonList);
 	}
 
@@ -36,7 +38,6 @@ public class CStoryTrees {
 			List<CNetworkNotation> commonList) {
 		List<Integer> list = new ArrayList<Integer>();
 		int begInd = begin;
-		addToStorySites(newNN, index);
 		index++;
 		boolean isTrue = false;
 		if (!contiguityList.keySet().contains(newNN.rule.getRuleID())) {
@@ -44,19 +45,20 @@ public class CStoryTrees {
 				CNetworkNotation nn = commonList.get(i);
 				addToStorySites(nn, index);
 				if (!list.contains(nn.rule.getRuleID()))
+					if(nn.rule.getRuleID()!=newNN.rule.getRuleID())
 					list.add(nn.rule.getRuleID());
 				if (fullCover(index)) {
 					begInd = i + 1;
 					isTrue = true;
 					break;
 				}
-			}
-			addToConList(newNN, list);
-			if (isTrue)
+			}addToConList(newNN, list);
+			if (isTrue) {
 				for (int i = begin; i < commonList.size(); i++) {
 					CNetworkNotation nn = commonList.get(i);
 					getTree(index, begInd, nn, commonList);
 				}
+			}
 		}
 	}
 
@@ -98,14 +100,18 @@ public class CStoryTrees {
 	public void merge(HashMap<Integer, List<Integer>> conList, int ruleID) {
 		List<Integer> list = this.contiguityList.get(ruleID);
 		List<Integer> inList = conList.get(ruleID);
+		List<Integer> newList = new ArrayList<Integer>();
+		newList.addAll(list);
 
-		for (Integer id : inList) {
-			if (!list.contains(id)) {
-				list.add(id);
-			} else {
-				merge(conList, id);
+		if (list != null && inList != null)
+			for (Integer id : inList) {
+				if (!list.contains(id)) {
+					newList.add(id);
+				} else {
+					merge(conList, id);
+				}
 			}
-		}
+		list = newList;
 	}
 
 	private void addToStorySites(CNetworkNotation nn, int index) {
