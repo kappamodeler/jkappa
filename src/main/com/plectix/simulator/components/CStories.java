@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import com.plectix.simulator.components.CNetworkNotation.AgentSites;
 
 public class CStories extends CObservables {
 
@@ -34,18 +35,30 @@ public class CStories extends CObservables {
 				networkNotationList.add(networkNotation);
 		}
 
+		class CStoryVertexes {
+			AgentSites aSites;
+
+		}
+
 		public void handling() {
 			List<CNetworkNotation> nnList = new ArrayList<CNetworkNotation>();
 			nnList.add(networkNotationList.get(networkNotationList.size() - 1));
-
 			for (int i = networkNotationList.size() - 2; i >= 0; i--) {
 				CNetworkNotation nn = networkNotationList.get(i);
 				if (isIntersects(nn, nnList)) {
 					nnList.add(nn);
 				}
-
 			}
 			this.networkNotationList = nnList;
+		}
+
+		private boolean isCover(List<CNetworkNotation> coverList,
+				List<CNetworkNotation> needToCoverList) {
+			for (CNetworkNotation nn : needToCoverList) {
+
+			}
+
+			return false;
 		}
 
 		private final boolean isIntersects(CNetworkNotation nn,
@@ -121,18 +134,18 @@ public class CStories extends CObservables {
 			if (tree == null) {
 				for (NetworkNotationForCurrentStory nnCS : networkNotationForCurrentStory) {
 					if (nnCS.networkNotationList.get(0).rule.getRuleID() == key) {
-						if (tree == null)
-							tree = new CStoryTrees(nnCS.networkNotationList,key);
-						else
-							tree.addListToTree(nnCS.networkNotationList);
+						if (trees.get(key) == null) {
+							tree = new CStoryTrees(key);
+							tree.getTreeFromList(nnCS.networkNotationList);
+							trees.put(key, tree);
+						} else {
+							CStoryTrees newTree = new CStoryTrees(key);
+							newTree.getTreeFromList(nnCS.networkNotationList);
+							tree.merge(newTree.getMap(), key);
+						}
 					}
 				}
-				if (tree != null)
-					trees.put(key, tree);
-
 			}
-			// if (i > 0)
-			// list.add(commonList.get(i + 1).getRule().getRuleID());
 		}
 	}
 }

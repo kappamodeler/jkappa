@@ -76,8 +76,6 @@ public class CNetworkNotation {
 		this.rule = rule;
 		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();
 	}
-
-	
 	
 	public final boolean isOpposite(List<CNetworkNotation> networkNotationList) {
 		for (int i = networkNotationList.size() - 1; i >= 0; i--) {
