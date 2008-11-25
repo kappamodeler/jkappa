@@ -8,6 +8,7 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.parser.DataReading;
@@ -53,6 +54,8 @@ public class SimulationMain {
 	private static SimulatorManager simulationManager = new SimulatorManager();
 	private static boolean myIsSimulating = false;
 
+	private static Logger LOGGER = Logger.getLogger(SimulationMain.class);
+	
 	static {
 		cmdLineOptions = new Options();
 		cmdLineOptions.addOption(SHORT_SIMULATIONFILE_OPTION,
@@ -118,6 +121,10 @@ public class SimulationMain {
 	public static void main(String[] args) {
 		// Initialize log4j
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
+		LOGGER.info("Date: " + BuildConstants.BUILD_DATE);
+		LOGGER.info("OS: " + BuildConstants.BUILD_OS_NAME);
+		LOGGER.info("SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
+		LOGGER.info("Ant Java Version: " + BuildConstants.ANT_JAVA_VERSION);
 
 		instance = new SimulationMain();
 //		simulationManager = new SimulatorManager();
