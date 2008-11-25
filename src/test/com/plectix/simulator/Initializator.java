@@ -7,6 +7,8 @@ import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.simulator.Model;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorManager;
@@ -15,7 +17,7 @@ public class Initializator {
 	private SimulatorManager myManager;
 	private Model myModel;
 	private Simulator mySimulator;
-	private List<ObservablesConnectedComponent> myObsComponents;
+	private List<IObservablesConnectedComponent> myObsComponents;
 	private SimulationMain instance;
 	private Double myRescale = null;
 	
@@ -89,7 +91,7 @@ public class Initializator {
 		return mySimulator;
 	}
 	
-	public List<ObservablesConnectedComponent> getObservables() {
+	public List<IObservablesConnectedComponent> getObservables() {
 		return Collections.unmodifiableList(myObsComponents);
 	}
 

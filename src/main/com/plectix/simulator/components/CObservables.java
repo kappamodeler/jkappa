@@ -3,10 +3,11 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IRule;
 
 public class CObservables {
-	private List<ObservablesConnectedComponent> connectedComponentList;
+	private List<IObservablesConnectedComponent> connectedComponentList;
 	private List<IObservablesComponent> componentList;
 	public static List<Double> countTimeList;
 
@@ -30,8 +31,8 @@ public class CObservables {
 	}
 
 	public final boolean addRulesName(String name, int obsRuleNameID,
-			List<CRule> rules) {
-		for (CRule rule : rules) {
+			List<IRule> rules) {
+		for (IRule rule : rules) {
 			if ((rule.getName() != null) && (rule.getName().equals(name))) {
 				ObservablesRuleComponent obsRC = new ObservablesRuleComponent(
 						rule, obsRuleNameID);
@@ -143,7 +144,7 @@ public class CObservables {
 	}
 
 	public CObservables() {
-		connectedComponentList = new ArrayList<ObservablesConnectedComponent>();
+		connectedComponentList = new ArrayList<IObservablesConnectedComponent>();
 		componentList = new ArrayList<IObservablesComponent>();
 		countTimeList = new ArrayList<Double>();
 	}
@@ -177,14 +178,14 @@ public class CObservables {
 		return componentList;
 	}
 
-	public final List<ObservablesConnectedComponent> getConnectedComponentList() {
+	public final List<IObservablesConnectedComponent> getConnectedComponentList() {
 		return connectedComponentList;
 	}
 
-	public final void addConnectedComponents(List<CConnectedComponent> list,
+	public final void addConnectedComponents(List<IConnectedComponent> list,
 			String name, String line, int id) {
-		for (CConnectedComponent component : list) {
-			ObservablesConnectedComponent oCC = new ObservablesConnectedComponent(
+		for (IConnectedComponent component : list) {
+			IObservablesConnectedComponent oCC = new ObservablesConnectedComponent(
 					component.getAgents(), name, line, id);
 			oCC.initSpanningTreeMap();
 			connectedComponentList.add(oCC);
@@ -193,9 +194,9 @@ public class CObservables {
 	}
 
 	public final void checkAutomorphisms() {
-		for (ObservablesConnectedComponent oCC : connectedComponentList) {
+		for (IObservablesConnectedComponent oCC : connectedComponentList) {
 			if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
-				for (ObservablesConnectedComponent oCCIn : connectedComponentList) {
+				for (IObservablesConnectedComponent oCCIn : connectedComponentList) {
 					if (!(oCC == oCCIn)
 							&& oCCIn.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
 						if (oCC.isAutomorphism(oCCIn.getAgents().get(0))) {

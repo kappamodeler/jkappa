@@ -17,7 +17,7 @@ import com.plectix.simulator.components.NameDictionary;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.SolutionLines;
 import com.plectix.simulator.components.CRule.Action;
-import com.plectix.simulator.interfaces.IPerturbationExpression;
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.TimerSimulation;
 
 public class SimulatorManager {
@@ -33,21 +33,21 @@ public class SimulatorManager {
 	public SimulatorManager() {
 	}
 
-	public final List<CConnectedComponent> buildConnectedComponents(
-			List<CAgent> agents) {
+	public final List<IConnectedComponent> buildConnectedComponents(
+			List<IAgent> agents) {
 
 		if (agents == null || agents.isEmpty())
 			return null;
 
-		List<CConnectedComponent> result = new ArrayList<CConnectedComponent>();
+		List<IConnectedComponent> result = new ArrayList<IConnectedComponent>();
 
 		int index = 1;
-		for (CAgent agent : agents)
+		for (IAgent agent : agents)
 			agent.setIdInRuleSide(index++);
 
 		while (!agents.isEmpty()) {
 
-			List<CAgent> connectedAgents = new ArrayList<CAgent>();
+			List<IAgent> connectedAgents = new ArrayList<IAgent>();
 
 			findConnectedComponent(agents.get(0), agents, connectedAgents);
 
@@ -58,14 +58,14 @@ public class SimulatorManager {
 		return result;
 	}
 
-	private final void findConnectedComponent(CAgent rootAgent,
-			List<CAgent> hsRulesList, List<CAgent> agentsList) {
+	private final void findConnectedComponent(IAgent rootAgent,
+			List<IAgent> hsRulesList, List<IAgent> agentsList) {
 		agentsList.add(rootAgent);
 		rootAgent.setIdInConnectedComponent(agentsList.size() - 1);
 		removeAgent(hsRulesList, rootAgent);
-		for (CSite site : rootAgent.getSites()) {
+		for (ISite site : rootAgent.getSites()) {
 			if (site.getLinkIndex() != CSite.NO_INDEX) {
-				CAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
+				IAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
 				if (linkedAgent != null) {
 					if (!isAgentInList(agentsList, linkedAgent))
 						findConnectedComponent(linkedAgent, hsRulesList,
@@ -75,17 +75,17 @@ public class SimulatorManager {
 		}
 	}
 
-	private final boolean isAgentInList(List<CAgent> list, CAgent agent) {
-		for (CAgent lagent : list) {
+	private final boolean isAgentInList(List<IAgent> list, IAgent agent) {
+		for (IAgent lagent : list) {
 			if (lagent == agent)
 				return true;
 		}
 		return false;
 	}
 
-	private final CAgent findLink(List<CAgent> agents, int linkIndex) {
-		for (CAgent tmp : agents) {
-			for (CSite s : tmp.getSites()) {
+	private final IAgent findLink(List<IAgent> agents, int linkIndex) {
+		for (IAgent tmp : agents) {
+			for (ISite s : tmp.getSites()) {
 				if (s.getLinkIndex() == linkIndex) {
 					return tmp;
 				}
@@ -94,7 +94,7 @@ public class SimulatorManager {
 		return null;
 	}
 
-	private final void removeAgent(List<CAgent> agents, CAgent agent) {
+	private final void removeAgent(List<IAgent> agents, IAgent agent) {
 		int i = 0;
 		for (i = 0; i < agents.size(); i++) {
 			if (agents.get(i) == agent)
@@ -103,17 +103,17 @@ public class SimulatorManager {
 		agents.remove(i);
 	}
 
-	public final CRule buildRule(List<CAgent> left, List<CAgent> right,
+	public final IRule buildRule(List<IAgent> left, List<IAgent> right,
 			String name, double activity, int ruleID) {
 		return new CRule(buildConnectedComponents(left),
 				buildConnectedComponents(right), name, activity, ruleID);
 	}
 
-	public final void setRules(List<CRule> rules) {
+	public final void setRules(List<IRule> rules) {
 		simulationData.setRules(rules);
 	}
 
-	public final List<CRule> getRules() {
+	public final List<IRule> getRules() {
 		return simulationData.getRules();
 	}
 
@@ -134,12 +134,12 @@ public class SimulatorManager {
 				simulationData.getInitialTime(), simulationData.getEvent(),
 				simulationData.getPoints(), simulationData.isTime());
 		CSolution solution = (CSolution) simulationData.getSolution();
-		List<CRule> rules = simulationData.getRules();
-		Iterator<CAgent> iterator = solution.getAgents().values().iterator();
+		List<IRule> rules = simulationData.getRules();
+		Iterator<IAgent> iterator = solution.getAgents().values().iterator();
 		simulationData.getObservables().checkAutomorphisms();
 
 		if (simulationData.isActivationMap()) {
-			for (CRule rule : rules) {
+			for (IRule rule : rules) {
 				rule.createActivatedRulesList(rules);
 				rule.createActivatedObservablesList(simulationData
 						.getObservables());
@@ -147,11 +147,11 @@ public class SimulatorManager {
 		}
 
 		while (iterator.hasNext()) {
-			CAgent agent = iterator.next();
-			for (CRule rule : rules) {
-				for (CConnectedComponent cc : rule.getLeftHandSide()) {
+			IAgent agent = iterator.next();
+			for (IRule rule : rules) {
+				for (IConnectedComponent cc : rule.getLeftHandSide()) {
 					if (cc != null) {
-						CInjection inj = cc.getInjection(agent);
+						IInjection inj = cc.getInjection(agent);
 						if (inj != null) {
 							if (!agent.isAgentHaveLinkToConnectedComponent(cc,
 									inj))
@@ -161,11 +161,11 @@ public class SimulatorManager {
 				}
 			}
 
-			for (ObservablesConnectedComponent oCC : simulationData
+			for (IObservablesConnectedComponent oCC : simulationData
 					.getObservables().getConnectedComponentList())
 				if (oCC != null)
 					if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
-						CInjection inj = oCC.getInjection(agent);
+						IInjection inj = oCC.getInjection(agent);
 						if (inj != null) {
 							if (!agent.isAgentHaveLinkToConnectedComponent(oCC,
 									inj))
@@ -263,16 +263,16 @@ public class SimulatorManager {
 
 	private static int indexLink = 0;
 
-	public static final String printPartRule(List<CConnectedComponent> ccList) {
+	public static final String printPartRule(List<IConnectedComponent> ccList) {
 		String line = new String();
 		indexLink = 0;
 		int length = 0;
 		if (ccList == null)
 			return line;
-		for (CConnectedComponent cc : ccList)
+		for (IConnectedComponent cc : ccList)
 			length = length + cc.getAgents().size();
 		int index = 1;
-		for (CConnectedComponent cc : ccList) {
+		for (IConnectedComponent cc : ccList) {
 			if (cc == CRule.EMPTY_LHS_CC)
 				return line;
 			line += printPartRule(cc, indexLink);
@@ -284,7 +284,7 @@ public class SimulatorManager {
 		return line;
 	}
 
-	public static final String printPartRule(CConnectedComponent cc, int index) {
+	public static final String printPartRule(IConnectedComponent cc, int index) {
 		String line = new String();
 		indexLink = index;
 		int length = 0;
@@ -296,16 +296,16 @@ public class SimulatorManager {
 		if (cc == CRule.EMPTY_LHS_CC)
 			return line;
 
-		List<CAgent> sortedAgents = cc.getAgentsSortedByIdInRule();
+		List<IAgent> sortedAgents = cc.getAgentsSortedByIdInRule();
 		
-		for (CAgent agent : sortedAgents) {
+		for (IAgent agent : sortedAgents) {
 			line = line + agent.getName();
 			line = line + "(";
 
 			List<String> sitesList = new ArrayList<String>();
 
 			int i = 1;
-			for (CSite site : agent.getSites()) {
+			for (ISite site : agent.getSites()) {
 				String siteStr = new String(site.getName());
 				// line = line + site.getName();
 				if ((site.getInternalState() != null)
@@ -318,10 +318,10 @@ public class SimulatorManager {
 					if (site.getLinkState().getStatusLinkRank() == CLinkState.RANK_SEMI_LINK) {
 						siteStr = siteStr + "!_";
 						// line = line + "!_";
-					} else if (site.getAgentLink().getIdInRuleSide() < ((CSite) site
+					} else if (site.getAgentLink().getIdInRuleSide() < ((ISite) site
 							.getLinkState().getSite()).getAgentLink()
 							.getIdInRuleSide()) {
-						((CSite) site.getLinkState().getSite()).getLinkState()
+						((ISite) site.getLinkState().getSite()).getLinkState()
 								.setLinkStateID(indexLink);
 						siteStr = siteStr + "!" + indexLink;
 						indexLink++;
@@ -383,14 +383,14 @@ public class SimulatorManager {
 
 
 	private final void outputRules() {
-		for (CRule rule : getRules()) {
+		for (IRule rule : getRules()) {
 			int countAgentsInLHS = rule.getCountAgentsLHS();
 			int indexNewAgent = countAgentsInLHS;
 
-			for (Action action : rule.getActionList()) {
+			for (IAction action : rule.getActionList()) {
 				switch (action.getAction()) {
 				case Action.ACTION_BRK: {
-					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
+					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
 							.getSite());
 					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() < siteTo
 							.getAgentLink().getIdInRuleSide()) {
@@ -426,7 +426,7 @@ public class SimulatorManager {
 					System.out.print(action.getToAgent().getIdInRuleSide() - 1);
 					System.out.print("(");
 					int i = 1;
-					for (CSite site : action.getToAgent().getSites()) {
+					for (ISite site : action.getToAgent().getSites()) {
 						System.out.print(site.getName());
 						if ((site.getInternalState() != null)
 								&& (site.getInternalState().getNameId() >= 0))
@@ -441,7 +441,7 @@ public class SimulatorManager {
 				}
 				case Action.ACTION_BND: {
 					// BND (#1,x) (#0,a)
-					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
+					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
 							.getSite());
 					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() > siteTo
 							.getAgentLink().getIdInRuleSide()) {

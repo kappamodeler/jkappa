@@ -10,6 +10,7 @@ import com.plectix.simulator.util.*;
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulatorManager;
 
 public class TestParseResult extends DirectoryTestsRunner {
@@ -18,7 +19,7 @@ public class TestParseResult extends DirectoryTestsRunner {
 			+ "rules/";
 	private String myTestFileName;
 	private SimulatorManager myManager;
-	private CRule myRule;
+	private IRule myRule;
 	private static final Map<String, RuleStructure> myRulesCCData = (new RuleCCDataParser(
 			myTestFileNamePrefix + "RulesCCData")).parse();
 	private static final Map<String, Integer> myInitQuantData = (new QuantityDataParser(
@@ -54,7 +55,7 @@ public class TestParseResult extends DirectoryTestsRunner {
 
 	private RuleStructure getRuleStructure() {
 		List<String> myLeftCCLines = new ArrayList<String>();
-		for (CConnectedComponent cc : myRule.getLeftHandSide()) {
+		for (IConnectedComponent cc : myRule.getLeftHandSide()) {
 			myLeftCCLines.add(Converter.toString(cc));
 		}
 		
@@ -62,7 +63,7 @@ public class TestParseResult extends DirectoryTestsRunner {
 		if (myRule.getRightHandSide() == null) {
 			myRightCCLines.add("");
 		} else {
-			for (CConnectedComponent cc : myRule.getRightHandSide()) {
+			for (IConnectedComponent cc : myRule.getRightHandSide()) {
 				myRightCCLines.add(Converter.toString(cc));
 			}
 		}
@@ -91,6 +92,7 @@ public class TestParseResult extends DirectoryTestsRunner {
 		myFailer.assertEquals("Init quantity", expected, size);
 	}
 
+	@Override
 	public String getPrefixFileName() {
 		return myTestFileNamePrefix;
 	}

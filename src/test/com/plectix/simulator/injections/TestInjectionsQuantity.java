@@ -9,13 +9,14 @@ import org.junit.runners.Parameterized.*;
 import org.junit.runner.RunWith;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
 @RunWith(Parameterized.class)
 public class TestInjectionsQuantity extends TestInjections  {
 	private String myNameParameter;
 	private static Map<String, Integer> myDataMap = new HashMap<String, Integer>();
-	private ObservablesConnectedComponent myCurrentCC;
+	private IObservablesConnectedComponent myCurrentCC;
 	private Failer myFailer = new Failer();
 	
 	public TestInjectionsQuantity(String name) {
@@ -38,7 +39,7 @@ public class TestInjectionsQuantity extends TestInjections  {
 	private void createInjectionsList(String ccName) {
 		Integer expectedQuantity = myDataMap.get(ccName);
 		boolean exists = false;
-		for (ObservablesConnectedComponent c : getInitializator().getObservables()) {
+		for (IObservablesConnectedComponent c : getInitializator().getObservables()) {
 			if (ccName.equals(c.getName())) {
 				myCurrentCC = c;
 				exists = true;
@@ -47,7 +48,7 @@ public class TestInjectionsQuantity extends TestInjections  {
 		if (!exists) {
 			myFailer.fail("There's no component with name " + ccName);
 		}
-		Collection<CInjection> injectionsList = myCurrentCC.getInjectionsList();
+		Collection<IInjection> injectionsList = myCurrentCC.getInjectionsList();
 		if (injectionsList != null) {
 			myFailer.assertEquals("failed on " + ccName, expectedQuantity, (injectionsList.size()));
 		} else {

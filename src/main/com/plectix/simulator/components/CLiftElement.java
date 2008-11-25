@@ -1,30 +1,22 @@
 package com.plectix.simulator.components;
 
-public class CLiftElement {
-	
-	private CConnectedComponent connectedComponent;
+import com.plectix.simulator.interfaces.*;
 
-	private CInjection injection;
+public final class CLiftElement implements ILiftElement {
 	
-	public CLiftElement (CConnectedComponent cc, CInjection injection){
+	private final CConnectedComponent connectedComponent;
+	private final IInjection injection;
+	
+	public CLiftElement (CConnectedComponent cc, IInjection injection){
 		this.connectedComponent = cc;
 		this.injection = injection;
 	}
-	
 	
 	public CConnectedComponent getConnectedComponent() {
 		return connectedComponent;
 	}
 
-	public void setConnectedComponent(CConnectedComponent connectedComponent) {
-		this.connectedComponent = connectedComponent;
-	}
-	
-	public void setInjection(CInjection injection) {
-		this.injection = injection;
-	}
-
-	public CInjection getInjection(){
+	public IInjection getInjection(){
 		return injection;
 	}
 	

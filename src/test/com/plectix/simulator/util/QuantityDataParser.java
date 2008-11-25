@@ -11,6 +11,7 @@ public class QuantityDataParser extends Parser<Map<String, Integer>> {
 		super(path);
 	}
 
+	@Override
 	protected Map<String, Integer> unsafeParse() {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 

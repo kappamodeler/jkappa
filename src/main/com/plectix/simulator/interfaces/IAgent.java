@@ -1,35 +1,38 @@
 package com.plectix.simulator.interfaces;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 
-import com.plectix.simulator.components.CLinkState;
-import com.plectix.simulator.components.CSite;
-
-
-public interface IAgent {
+public interface IAgent extends Comparable<IAgent> {
 	
 	public int getIdInConnectedComponent();  //Returns the identifier of this object in the database.
 	
-	public Collection<CSite> getSites();  //Returns this Agent�s Sites
+	public Collection<ISite> getSites();  //Returns this Agent�s Sites
 	
-	public void addSite(CSite site);
+	public void addSite(ISite siteAdd);
 
-	//TODO  it's the set of the agent's sites. maybe we don't need it.
-	public List<String> getInterface();  //Returns this Agent�s Interface which is a list of Strings.
+	public ISite getSite(int nameId);
 	
-	public CLinkState getSiteLinkState(ISite site);  //Returns the links state of the given Site. The
-										 //Link state can be Free, Bound, or Wildcard.
+	public long getId();
 	
-	public void setSiteLinkState(ISite site, CLinkState link_state);  //Sets the links state of the given Site to
-												//the given State.
+	public long getHash();
 	
-	public String getSiteInternalState(ISite internal_state);    //Returns the internal state of the given Site.
-												//The Internal state can be a String or Wildcard.
-	
-	public void setSiteInternalState(ISite site, String internal_state);  //Sets the internal state of the given
-													//Site to the given State.
+	public IAgent findLinkAgent(IAgent agent, List<ISite> sitesFrom);
 
-	
+	public int getNameId();
+
+	public boolean isAgentHaveLinkToConnectedComponent(
+			IConnectedComponent connectedComponent, IInjection inj);
+
+	public ISite getEmptySite();
+
+	public int getIdInRuleSide();
+
+	public void setIdInRuleSide(int counter);
+
+	public Object getSiteMap();
+
+	public void setIdInConnectedComponent(int i);
+
+	public String getName();
 }

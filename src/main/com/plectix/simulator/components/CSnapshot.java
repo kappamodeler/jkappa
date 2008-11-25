@@ -3,9 +3,9 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.simulator.SimulatorManager;
 
 public class CSnapshot {
 
@@ -41,7 +41,7 @@ public class CSnapshot {
 
 	private int uniqueConnectedComponent;
 
-	private List<CConnectedComponent> ccList;
+	private List<IConnectedComponent> ccList;
 
 	private List<SnapshotElement> snapshotElements;
 
@@ -51,7 +51,7 @@ public class CSnapshot {
 
 	public class SnapshotElement {
 		private int count;
-		private CConnectedComponent cc;
+		private IConnectedComponent cc;
 		private String ccName;
 
 		public int getCount() {
@@ -62,9 +62,9 @@ public class CSnapshot {
 			return ccName;
 		}
 
-		public SnapshotElement(CConnectedComponent cc) {
+		public SnapshotElement(IConnectedComponent cc2) {
 			count = 1;
-			this.cc = cc;
+			this.cc = cc2;
 			this.cc.initSpanningTreeMap();
 			parseCC();
 		}
@@ -73,7 +73,7 @@ public class CSnapshot {
 			ccName = SimulationMain.getSimulationManager().printPartRule(cc,0);
 		}
 
-		public boolean exists(CConnectedComponent ccEx) {
+		public boolean exists(IConnectedComponent ccEx) {
 			if (cc == ccEx)
 				return true;
 			ccEx.initSpanningTreeMap();
@@ -110,7 +110,7 @@ public class CSnapshot {
 
 		snapshotElements = new ArrayList<SnapshotElement>();
 
-		for (CConnectedComponent cc : ccList) {
+		for (IConnectedComponent cc : ccList) {
 			int ccSize = cc.getAgents().size();
 			totalAgents += cc.getAgents().size();
 			if (largestConnectedComponent < ccSize)

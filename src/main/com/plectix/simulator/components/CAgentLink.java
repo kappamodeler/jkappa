@@ -1,27 +1,21 @@
 package com.plectix.simulator.components;
 
-public class CAgentLink {
-	public CAgentLink(int idAgentFrom, CAgent agentTo) {
+import com.plectix.simulator.interfaces.*;
+
+public final class CAgentLink implements IAgentLink {
+	private final int idAgentFrom;
+	private final IAgent agentTo;
+	
+	public CAgentLink(int idAgentFrom, IAgent agentTo) {
 		this.idAgentFrom = idAgentFrom;
 		this.agentTo = agentTo;
 	}
-
-	int idAgentFrom;
-	CAgent agentTo;
-
+	
 	public int getIdAgentFrom() {
 		return idAgentFrom;
 	}
 
-	public void setIdAgentFrom(int idAgentFrom) {
-		this.idAgentFrom = idAgentFrom;
-	}
-
-	public CAgent getAgentTo() {
+	public IAgent getAgentTo() {
 		return agentTo;
-	}
-
-	public void setAgentTo(CAgent agentTo) {
-		this.agentTo = agentTo;
 	}
 }

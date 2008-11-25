@@ -6,6 +6,7 @@ import java.util.List;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
+import com.plectix.simulator.interfaces.IRule;
 
 public class CPerturbation {
 
@@ -24,7 +25,7 @@ public class CPerturbation {
 	private List<IPerturbationExpression> parametersLHS;
 	private double perturbationRate;
 	private double ruleRate;
-	private CRule rule;
+	private IRule rule;
 	private int perturbationID;
 	private boolean greater = true;
 	private boolean isDO = false;
@@ -38,7 +39,7 @@ public class CPerturbation {
 		return this.parametersLHS;
 	}
 
-	public final CRule getPerturbationRule() {
+	public final IRule getPerturbationRule() {
 		return this.rule;
 	}
 
@@ -67,7 +68,7 @@ public class CPerturbation {
 	}
 
 	public CPerturbation(int perturbationID, double time, byte type,
-			double perturbationRate, CRule rule, boolean greater,
+			double perturbationRate, IRule rule, boolean greater,
 			List<IPerturbationExpression> rateParameters) {
 		this.perturbationID = perturbationID;
 		this.timeCondition = time;
@@ -91,7 +92,7 @@ public class CPerturbation {
 
 	public CPerturbation(int perturbationID, List<IObservablesComponent> obsID,
 			List<Double> parameters, int obsNameID, byte type,
-			double perturbationRate, CRule rule, boolean greater,
+			double perturbationRate, IRule rule, boolean greater,
 			List<IPerturbationExpression> rateParameters) {
 		this.perturbationID = perturbationID;
 		this.obsNameID = obsNameID;

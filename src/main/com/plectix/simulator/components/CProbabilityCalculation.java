@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRandom;
+import com.plectix.simulator.interfaces.IRule;
 
 public class CProbabilityCalculation {
-	private List<CRule> rules;
+	private List<IRule> rules;
 	private double commonActivity;
 	private double[] rulesProbability;
 	private IRandom random;
 
-	public CProbabilityCalculation(List<CRule> rules, int seed) {
-		this.rules = rules;
-		rulesProbability = new double[rules.size()];
+	public CProbabilityCalculation(List<IRule> list, int seed) {
+		this.rules = list;
+		rulesProbability = new double[list.size()];
 
 		String randomizerPatch = SimulationMain.getSimulationManager()
 				.getSimulationData().getRandomizer();
@@ -26,7 +29,7 @@ public class CProbabilityCalculation {
 	}
 
 	private void calculateRulesActivity() {
-		for (CRule rule : rules)
+		for (IRule rule : rules)
 			rule.calcultateActivity();
 	}
 
@@ -38,9 +41,9 @@ public class CProbabilityCalculation {
 		}
 	}
 
-	public final List<CInjection> getSomeInjectionList(CRule rule) {
-		List<CInjection> list = new ArrayList<CInjection>();
-		for (CConnectedComponent cc : rule.getLeftHandSide()) {
+	public final List<IInjection> getSomeInjectionList(IRule rule) {
+		List<IInjection> list = new ArrayList<IInjection>();
+		for (IConnectedComponent cc : rule.getLeftHandSide()) {
 			list.add(cc.getRandomInjection(random));
 		}
 		return list;
@@ -48,7 +51,7 @@ public class CProbabilityCalculation {
 
 	private void recalculateCommonActivity() {
 		commonActivity = 0.;
-		for (CRule rule : rules) {
+		for (IRule rule : rules) {
 			commonActivity += rule.getActivity();
 		}
 	}
@@ -56,7 +59,8 @@ public class CProbabilityCalculation {
 	private int getRandomIndex() {
 
 		for (int i = 0; i < rulesProbability.length; i++) {
-			if (rules.get(i).isInfinityRate() && (rules.get(i).getActivity()>0.0) && (!(rules.get(i).isClashForInfiniteRule())))
+			if (rules.get(i).isInfinityRate() && (rules.get(i).getActivity()>0.0) 
+					&& (!(rules.get(i).isClashForInfiniteRule())))
 				return i;
 		}
 
@@ -68,7 +72,7 @@ public class CProbabilityCalculation {
 		return -1;
 	}
 
-	public CRule getRandomRule() {
+	public IRule getRandomRule() {
 		calculation();
 		int index = getRandomIndex();
 		if (index == -1)

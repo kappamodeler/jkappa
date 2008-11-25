@@ -1,15 +1,24 @@
 package com.plectix.simulator.interfaces;
 
-import java.util.List;
+import java.util.*;
 
 public interface IInjection {
 	
-	//TODO specify details
-
-	public List<IAgent> getAgents();//returns list of Agents of injection.
-	// maximum number of agent = 2 (it depends of number of 
-	//connected components of some rule);
+	public List<ISite> getSiteList();
 	
-	public void setAgents(List<IAgent> agents);//returns list of Agents of injection.
+	public int getId();
+	
+	public void setId(int id);
 
+	public List<IAgentLink> getAgentLinkList();
+
+	public IConnectedComponent getConnectedComponent();
+
+	public void addToChangedSites(ISite injectedSite);
+
+	public void removeSiteFromSitesList(ISite site);
+
+	public Collection<ISite> getChangedSites();
+
+	public boolean checkSiteExistanceAmongChangedSites(ISite site);
 }

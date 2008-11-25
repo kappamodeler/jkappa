@@ -1,36 +1,25 @@
 package com.plectix.simulator.components;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IConstraint;
-import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.interfaces.*;
 
 public class CSolution implements ISolution {
-	private HashMap<Long, CAgent> agentMap;
+	private HashMap<Long, IAgent> agentMap;
 
 	private List<SolutionLines> solutionLines;
 
 	public CSolution() {
-		agentMap = new HashMap<Long, CAgent>();
+		agentMap = new HashMap<Long, IAgent>();
 		solutionLines = new ArrayList<SolutionLines>();
 	}
 
-	private final void depthSearch(CAgent rootAgent, List<CAgent> agentsList) {
-		for (CSite site : rootAgent.getSites()) {
-			CSite linkSite = (CSite) site.getLinkState().getSite();
+	private final void depthSearch(IAgent agent2, List<IAgent> agentsList) {
+		for (ISite site : agent2.getSites()) {
+			ISite linkSite = site.getLinkState().getSite();
 			if (linkSite != null) {
-				CAgent agent = linkSite.getAgentLink();
+				IAgent agent = linkSite.getAgentLink();
 				if (!(agentsList.contains(agent))) {
 					agentsList.add(agent);
 					depthSearch(agent, agentsList);
@@ -40,7 +29,7 @@ public class CSolution implements ISolution {
 	}
 
 	// TODO check
-	public final void removeAgent(CAgent agent) {
+	public final void removeAgent(IAgent agent) {
 		if (agent == null) {
 			return;
 		}
@@ -48,29 +37,29 @@ public class CSolution implements ISolution {
 		agentMap.remove(agent.getHash());
 	}
 
-	public final void addAgent(CAgent agent) {
+	public final void addAgent(IAgent agent) {
 		if (agent != null) {
 			long key = agent.getHash();
 			agentMap.put(key, agent);
 		}
 	}
 
-	public final void addAgents(List<CAgent> agents) {
+	public final void addAgents(List<IAgent> agents) {
 		if (agents == null || agents.isEmpty())
 			return;
-		for (CAgent agentAdd : agents) {
+		for (IAgent agentAdd : agents) {
 			addAgent(agentAdd);
 		}
 	}
 
-	public final List<CAgent> getConnectedAgents(CAgent inAgent) {
-		List<CAgent> agentsList = new ArrayList<CAgent>();
+	public final List<IAgent> getConnectedAgents(IAgent inAgent) {
+		List<IAgent> agentsList = new ArrayList<IAgent>();
 		agentsList.add(inAgent);
 		depthSearch(inAgent, agentsList);
 		return agentsList;
 	}
 
-	public final Map<Long, CAgent> getAgents() {
+	public final Map<Long, IAgent> getAgents() {
 		return Collections.unmodifiableMap(agentMap);
 	}
 
@@ -91,12 +80,12 @@ public class CSolution implements ISolution {
 	}
 
 	
-	public final CConnectedComponent getConnectedComponent(CAgent agent) {
-		List<CAgent> agentList = new ArrayList<CAgent>();
+	public final IConnectedComponent getConnectedComponent(IAgent agent) {
+		List<IAgent> agentList = new ArrayList<IAgent>();
 		agentList.add(agent);
 		agentList = getAdjacentAgents(agent, agentList);
 		int index = 0;
-		for (CAgent agentIn : agentList) {
+		for (IAgent agentIn : agentList) {
 			agentIn.setIdInRuleSide(index);
 			agentIn.setIdInConnectedComponent(index++);
 		}
@@ -104,12 +93,12 @@ public class CSolution implements ISolution {
 		return new CConnectedComponent(agentList);
 	}
 
-	private final List<CAgent> getAdjacentAgents(CAgent agent, List<CAgent> list) {
-		List<CAgent> agentList = list;
-		List<CAgent> agentAddList = new ArrayList<CAgent>();
+	private final List<IAgent> getAdjacentAgents(IAgent agent, List<IAgent> agentList2) {
+		List<IAgent> agentList = agentList2;
+		List<IAgent> agentAddList = new ArrayList<IAgent>();
 
-		for (CSite site : agent.getSites()) {
-			CSite siteLink = (CSite) site.getLinkState().getSite();
+		for (ISite site : agent.getSites()) {
+			ISite siteLink = site.getLinkState().getSite();
 			if ((site.getLinkState().getSite() != null)
 					&& (!isAgentInList(siteLink.getAgentLink(), agentList))) {
 				agentAddList.add(siteLink.getAgentLink());
@@ -118,45 +107,21 @@ public class CSolution implements ISolution {
 			}
 		}
 
-		for (CAgent agentFromList : agentAddList)
+		for (IAgent agentFromList : agentAddList)
 			agentList = getAdjacentAgents(agentFromList, agentList);
 
 		return agentList;
 	}
 
-	private final boolean isAgentInList(CAgent agent, List<CAgent> agentList) {
-		for (CAgent agents : agentList)
+	private final boolean isAgentInList(IAgent agent, List<IAgent> agentList) {
+		for (IAgent agents : agentList)
 			if (agent.getId() == agents.getId())
 				return true;
 		return false;
 	}
 
 	
-	public final Map<ISite, IAgent> getLinks() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public final boolean isFullyInstatiated() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
-	public final void multiply(int N) {
-		// TODO Auto-generated method stub
-
-	}
-
-	
-	public final boolean satisfy(IConstraint constraint, IInjection injection) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	
-	public final List<CConnectedComponent> split() {
+	public final List<IConnectedComponent> split() {
 		List<Boolean> indexList = new ArrayList<Boolean>();
 
 		for (int i = 0; i < SimulationMain.getSimulationManager()
@@ -164,13 +129,13 @@ public class CSolution implements ISolution {
 			indexList.add(false);
 		}
 
-		List<CConnectedComponent> ccList = new ArrayList<CConnectedComponent>();
+		List<IConnectedComponent> ccList = new ArrayList<IConnectedComponent>();
 
-		for (CAgent agent : agentMap.values()) {
+		for (IAgent agent : agentMap.values()) {
 			int index = (int) agent.getId();
 			if (!indexList.get(index)) {
-				CConnectedComponent cc = getConnectedComponent(agent);
-				for (CAgent agentCC : cc.getAgents()) {
+				IConnectedComponent cc = getConnectedComponent(agent);
+				for (IAgent agentCC : cc.getAgents()) {
 					indexList.set((int) agentCC.getId(), true);
 				}
 				ccList.add(cc);

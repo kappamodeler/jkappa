@@ -1,8 +1,5 @@
 package com.plectix.simulator.simulator;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,20 +9,16 @@ import javax.xml.transform.TransformerException;
 import org.apache.log4j.Logger;
 
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
-import com.plectix.simulator.components.CLiftElement;
 import com.plectix.simulator.components.CNetworkNotation;
+import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CProbabilityCalculation;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.TimerSimulation;
 
@@ -35,8 +28,6 @@ public class Simulator {
 	private Model model;
 
 	private double currentTime = 0.;
-
-	private int randomSeed;
 
 	private boolean storyMode = false;
 
@@ -56,7 +47,7 @@ public class Simulator {
 		TimerSimulation timer = new TimerSimulation();
 		timer.startTimer();
 		long clash = 0;
-		CRule rule;
+		IRule rule;
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
 				model.getSimulationData().getRules(), model.getSimulationData()
 						.getSeed());
@@ -91,7 +82,7 @@ public class Simulator {
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("Rule: " + rule.getName());
 
-			List<CInjection> injectionsList = ruleProbabilityCalculation
+			List<IInjection> injectionsList = ruleProbabilityCalculation
 					.getSomeInjectionList(rule);
 			if (!rule.isInfinityRate())
 				currentTime += ruleProbabilityCalculation.getTimeValue();
@@ -131,18 +122,18 @@ public class Simulator {
 			outputData(count);
 	}
 
-	public final void doNegativeUpdate(List<CInjection> injectionsList) {
-		for (CInjection injection : injectionsList) {
-			if (injection != CConnectedComponent.EMPTY_INJECTION) {
-				for (CSite site : injection.getChangedSites()) {
-					site.getAgentLink().EMPTY_SITE
+	public final void doNegativeUpdate(List<IInjection> injectionsList) {
+		for (IInjection injection : injectionsList) {
+			if (injection != CInjection.EMPTY_INJECTION) {
+				for (ISite site : injection.getChangedSites()) {
+					site.getAgentLink().getEmptySite()
 							.removeInjectionsFromCCToSite(injection);
-					site.getAgentLink().EMPTY_SITE.clearLiftList();
+					site.getAgentLink().getEmptySite().clearLiftList();
 					site.removeInjectionsFromCCToSite(injection);
 					site.clearLiftList();
 				}
 				if (injection.getChangedSites().size() != 0) {
-					for (CSite site : injection.getSiteList()) {
+					for (ISite site : injection.getSiteList()) {
 						if (!injection
 								.checkSiteExistanceAmongChangedSites(site)) {
 							site.removeInjectionFromLift(injection);
@@ -155,23 +146,23 @@ public class Simulator {
 		}
 	}
 
-	public final List<CAgent> doNegativeUpdateForDeletedAgents(CRule rule,
-			List<CInjection> injectionsList) {
-		List<CAgent> freeAgents = new ArrayList<CAgent>();
-		for (CInjection injection : injectionsList) {
-			for (CSite checkedSite : rule.getSitesConnectedWithDeleted()) {
+	public final List<IAgent> doNegativeUpdateForDeletedAgents(IRule rule,
+			List<IInjection> injectionsList) {
+		List<IAgent> freeAgents = new ArrayList<IAgent>();
+		for (IInjection injection : injectionsList) {
+			for (ISite checkedSite : rule.getSitesConnectedWithDeleted()) {
 				if (!injection.checkSiteExistanceAmongChangedSites(checkedSite)) {
 
-					CAgent checkedAgent = checkedSite.getAgentLink();
+					IAgent checkedAgent = checkedSite.getAgentLink();
 					addToAgentList(freeAgents, checkedAgent);
-					for (CLiftElement lift : checkedAgent.EMPTY_SITE.getLift()) {
+					for (ILiftElement lift : checkedAgent.getEmptySite().getLift()) {
 						lift.getConnectedComponent().removeInjection(
 								lift.getInjection());
 					}
-					checkedAgent.EMPTY_SITE.clearLiftList();
-					for (CLiftElement lift : checkedSite.getLift()) {
+					checkedAgent.getEmptySite().clearLiftList();
+					for (ILiftElement lift : checkedSite.getLift()) {
 
-						for (CSite site : lift.getInjection().getSiteList()) {
+						for (ISite site : lift.getInjection().getSiteList()) {
 							if (site != checkedSite)
 								site.removeInjectionFromLift(lift
 										.getInjection());
@@ -184,35 +175,35 @@ public class Simulator {
 				}
 			}
 		}
-		for (CSite checkedSite : rule.getSitesConnectedWithBroken()) {
-			CAgent checkedAgent = checkedSite.getAgentLink();
+		for (ISite checkedSite : rule.getSitesConnectedWithBroken()) {
+			IAgent checkedAgent = checkedSite.getAgentLink();
 			addToAgentList(freeAgents, checkedAgent);
 		}
 		return freeAgents;
 	}
 
-	private final void addToAgentList(List<CAgent> list, CAgent agent) {
-		for (CAgent agentL : list)
+	private final void addToAgentList(List<IAgent> list, IAgent agent) {
+		for (IAgent agentL : list)
 			if (agentL == agent)
 				return;
 		list.add(agent);
 	}
 
-	public final void doPositiveUpdateForDeletedAgents(List<CAgent> agentsList) {
-		for (CAgent agent : agentsList) {
-			for (CRule rule : model.getSimulationData().getRules()) {
-				for (CConnectedComponent cc : rule.getLeftHandSide()) {
-					CInjection inj = cc.getInjection(agent);
+	public final void doPositiveUpdateForDeletedAgents(List<IAgent> agentsList) {
+		for (IAgent agent : agentsList) {
+			for (IRule rule : model.getSimulationData().getRules()) {
+				for (IConnectedComponent cc : rule.getLeftHandSide()) {
+					IInjection inj = cc.getInjection(agent);
 					if (inj != null) {
 						if (!agent.isAgentHaveLinkToConnectedComponent(cc, inj))
 							cc.setInjection(inj);
 					}
 				}
 			}
-			for (ObservablesConnectedComponent obsCC : SimulationMain
+			for (IObservablesConnectedComponent obsCC : SimulationMain
 					.getSimulationManager().getSimulationData()
 					.getObservables().getConnectedComponentList()) {
-				CInjection inj = obsCC.getInjection(agent);
+				IInjection inj = obsCC.getInjection(agent);
 				if (inj != null) {
 					if (!agent.isAgentHaveLinkToConnectedComponent(obsCC, inj))
 						obsCC.setInjection(inj);
@@ -221,21 +212,21 @@ public class Simulator {
 		}
 	}
 
-	private final void positiveUpdate(List<CRule> rulesList,
-			List<ObservablesConnectedComponent> obs, CRule rule) {
-		for (CRule rules : rulesList) {
-			for (CConnectedComponent cc : rules.getLeftHandSide()) {
+	private final void positiveUpdate(List<IRule> rulesList,
+			List<IObservablesConnectedComponent> list, IRule rule) {
+		for (IRule rules : rulesList) {
+			for (IConnectedComponent cc : rules.getLeftHandSide()) {
 				cc.doPositiveUpdate(rule.getRightHandSide());
 			}
 		}
-		for (ObservablesConnectedComponent oCC : obs) {
+		for (IObservablesConnectedComponent oCC : list) {
 			if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
 				oCC.doPositiveUpdate(rule.getRightHandSide());
 		}
 	}
 
-	public final void doPositiveUpdate(CRule rule,
-			List<CInjection> injectionsList) {
+	public final void doPositiveUpdate(IRule rule,
+			List<IInjection> myCurrentInjectionsList) {
 		if (model.getSimulationData().isActivationMap()) {
 			positiveUpdate(rule.getActivatedRule(), rule
 					.getActivatedObservable(), rule);
@@ -246,7 +237,7 @@ public class Simulator {
 		}
 
 		doPositiveUpdateForDeletedAgents(doNegativeUpdateForDeletedAgents(rule,
-				injectionsList));
+				myCurrentInjectionsList));
 
 	}
 
@@ -311,7 +302,7 @@ public class Simulator {
 		for (int i = 0; i < CStories.numberOfSimulations; i++) {
 			SimulationMain.getSimulationManager().startTimer();
 			long clash = 0;
-			CRule rule;
+			IRule rule;
 			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
 					model.getSimulationData().getRules(), model
 							.getSimulationData().getSeed());
@@ -324,7 +315,7 @@ public class Simulator {
 					break;
 				}
 
-				List<CInjection> injectionsList = ruleProbabilityCalculation
+				List<IInjection> injectionsList = ruleProbabilityCalculation
 						.getSomeInjectionList(rule);
 				currentTime += ruleProbabilityCalculation.getTimeValue();
 				if (!rule.isClash(injectionsList)) {
@@ -389,7 +380,7 @@ public class Simulator {
 		model.getSimulationData().getRules().clear();
 		model.getSimulationData().getObservables().getConnectedComponentList()
 				.clear();
-		model.getSimulationData().getObservables().getCountTimeList().clear();
+		CObservables.getCountTimeList().clear();
 		model.getSimulationData().getObservables().getComponentList().clear();
 		((CSolution) model.getSimulationData().getSolution()).clearAgents();
 		((CSolution) model.getSimulationData().getSolution())

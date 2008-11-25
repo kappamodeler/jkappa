@@ -1,9 +1,8 @@
 package com.plectix.simulator.components;
 
-import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.interfaces.ILift.LiftElement;
+import com.plectix.simulator.interfaces.*;
 
-public class CLinkState extends CState {
+public final class CLinkState extends CState implements ILinkState {
 
 	public static final byte STATUS_LINK_BOUND = 0x01;
 	public static final byte STATUS_LINK_WILDCARD = 0x02;
@@ -18,10 +17,16 @@ public class CLinkState extends CState {
 
 	private byte statusLink;
 	private ISite linkSite = null;
-
-	
 	private int linkStateID = NULL_INDEX;
+	
+	public CLinkState(ISite site, byte statusLink) {
+		linkSite = site;
+		this.statusLink = statusLink;
+	}
 
+	public CLinkState(byte statusLink) {
+		this.statusLink = statusLink;
+	}
 	
 	public int getLinkStateID() {
 		return linkStateID;
@@ -31,15 +36,7 @@ public class CLinkState extends CState {
 		this.linkStateID = linkSiteID;
 	}
 
-	public CLinkState(ISite site, byte statusLink) {
-		linkSite = site;
-		this.statusLink = statusLink;
-	}
-
-	public CLinkState(byte statusLink) {
-		this.statusLink = statusLink;
-	}
-
+	@Override
 	public boolean isRankRoot() {
 		if (statusLink == STATUS_LINK_WILDCARD)
 			return true;
@@ -102,11 +99,4 @@ public class CLinkState extends CState {
 		// TODO Auto-generated method stub
 		return false;
 	}
-
-	@Override
-	public final void removeLiftElement(LiftElement element) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

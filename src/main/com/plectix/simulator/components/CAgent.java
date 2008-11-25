@@ -4,32 +4,46 @@ import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ISite;
 
-public class CAgent implements IAgent, Comparable<CAgent> {
+public final class CAgent implements IAgent {
 	/**
 	 * idInConnectedComponent is the unique id in ConnectedComponent id is an
 	 * unique id for agent
 	 */
 	public static final int UNMARKED = -1;
+	
 	public static final byte ACTION_CREATE = -2;
+	
 	public static final byte EMPTY = -1;
-
+	
 	private int idInConnectedComponent;
+	
 	private int idInRuleSide = UNMARKED;
-
-	private long id;
-
+	
+	private int nameId = -1;
+	
+	private long id = -1;
+	
 	// TODO: is this field static or not???
-	public final CSite EMPTY_SITE = new CSite(CSite.NO_INDEX, this);
+	private final ISite myEmptySite = new CSite(CSite.NO_INDEX, this);
+	
+	private TreeMap<Integer, ISite> siteMap = new TreeMap<Integer, ISite>();
 
-	private TreeMap<Integer, CSite> siteMap = new TreeMap<Integer, CSite>();
-
-	public Map<Integer, CSite> getSiteMap() {
-		return Collections.unmodifiableMap(siteMap);
+	public CAgent(int nameId) {
+		id = SimulationMain.getSimulationManager().generateNextAgentId();
+		this.nameId = nameId;
 	}
 
-	private int nameId;
+	public ISite getEmptySite() {
+		return myEmptySite;
+	}
+	
+	public Map<Integer, ISite> getSiteMap() {
+		return Collections.unmodifiableMap(siteMap);
+	}
 
 	public int getIdInRuleSide() {
 		return idInRuleSide;
@@ -39,15 +53,9 @@ public class CAgent implements IAgent, Comparable<CAgent> {
 		this.idInRuleSide = idInRuleSide;
 	}
 
-	public CAgent(int nameId) {
-		id = SimulationMain.getSimulationManager().generateNextAgentId();
-		this.nameId = nameId;
-	}
-
-	public boolean isAgentHaveLinkToConnectedComponent(CConnectedComponent cc) {
-
-		for (CSite site : siteMap.values()) {
-			if (site.getAgentLink().EMPTY_SITE.isConnectedComponentInLift(cc))
+	public boolean isAgentHaveLinkToConnectedComponent(IConnectedComponent cc) {
+		for (ISite site : siteMap.values()) {
+			if (site.getAgentLink().getEmptySite().isConnectedComponentInLift(cc))
 				return true;
 			if (site.isConnectedComponentInLift(cc))
 				return true;
@@ -55,11 +63,11 @@ public class CAgent implements IAgent, Comparable<CAgent> {
 		return false;
 	}
 
-	public boolean isAgentHaveLinkToConnectedComponent(CConnectedComponent cc,
-			CInjection injection) {
+	public boolean isAgentHaveLinkToConnectedComponent(IConnectedComponent cc,
+			IInjection injection) {
 
-		for (CSite site : siteMap.values()) {
-			if (checkSites(site.getAgentLink().EMPTY_SITE, injection, cc))
+		for (ISite site : siteMap.values()) {
+			if (checkSites(site.getAgentLink().getEmptySite(), injection, cc))
 				return true;
 			if (checkSites(site, injection, cc))
 				return true;
@@ -67,8 +75,9 @@ public class CAgent implements IAgent, Comparable<CAgent> {
 		return false;
 	}
 
-	private boolean checkSites(CSite site, CInjection injection, CConnectedComponent cc) {
-		List<CInjection> sitesInjections = site.getInjectionFromLift(cc);
+	private boolean checkSites(ISite site, IInjection injection,
+			IConnectedComponent cc) {
+		List<IInjection> sitesInjections = site.getInjectionFromLift(cc);
 		if (sitesInjections.size() != 0) {
 			if (compareInjectedLists(sitesInjections, injection))
 				return true;
@@ -76,20 +85,22 @@ public class CAgent implements IAgent, Comparable<CAgent> {
 		return false;
 	}
 
-	private boolean isSiteInList(List<CSite> sitesList, CSite site) {
-		for (CSite siteList : sitesList) {
-			if (site == siteList && site.getInternalState().equals(siteList.getInternalState())) {
+	private boolean isSiteInList(List<ISite> sitesList, ISite site) {
+		for (ISite siteList : sitesList) {
+			if (site == siteList
+					&& site.getInternalState().equals(
+							siteList.getInternalState())) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	private boolean compareInjectedLists(List<CInjection> list, CInjection two) {
+	private boolean compareInjectedLists(List<IInjection> list, IInjection two) {
 		int counter = 0;
-		for (CInjection one : list) {
+		for (IInjection one : list) {
 			if (one.getSiteList().size() == two.getSiteList().size()) {
-				for (CSite siteOne : one.getSiteList()) {
+				for (ISite siteOne : one.getSiteList()) {
 					if (isSiteInList(two.getSiteList(), siteOne))
 						counter++;
 					else {
@@ -110,13 +121,13 @@ public class CAgent implements IAgent, Comparable<CAgent> {
 	 * parameter
 	 */
 
-	public final CAgent findLinkAgent(CAgent agentFromCC, List<CSite> siteFromCC) {
+	public final IAgent findLinkAgent(IAgent agentFromCC, List<ISite> siteFromCC) {
 		if (agentFromCC == null || siteFromCC.size() == 0)
 			return null;
-		CAgent agent = (CAgent) this.getSite(siteFromCC.get(0).getNameId())
+		IAgent agent = (CAgent) this.getSite(siteFromCC.get(0).getNameId())
 				.getLinkState().getSite().getAgentLink();
-		for (CSite siteF : siteFromCC) {
-			CAgent agent2 = (CAgent) this.getSite(siteF.getNameId())
+		for (ISite siteF : siteFromCC) {
+			IAgent agent2 = (CAgent) this.getSite(siteF.getNameId())
 					.getLinkState().getSite().getAgentLink();
 			if (agent != agent2)
 				return null;
@@ -127,13 +138,11 @@ public class CAgent implements IAgent, Comparable<CAgent> {
 		return null;
 	}
 
-	
-	public final void addSite(CSite site) {
+	public final void addSite(ISite site) {
 		site.setAgentLink(this);
 		siteMap.put(site.getNameId(), site);
 	}
 
-	
 	public final int getIdInConnectedComponent() {
 		return idInConnectedComponent;
 	}
@@ -142,39 +151,8 @@ public class CAgent implements IAgent, Comparable<CAgent> {
 		idInConnectedComponent = index;
 	}
 
-	
-	public final List<String> getInterface() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public final String getSiteInternalState(ISite internal_state) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public final CLinkState getSiteLinkState(ISite site) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public final Collection<CSite> getSites() {
-		return siteMap.values();
-	}
-
-	
-	public final void setSiteInternalState(ISite site, String internal_state) {
-		// TODO Auto-generated method stub
-
-	}
-
-	
-	public final void setSiteLinkState(ISite site, CLinkState link_state) {
-		// TODO Auto-generated method stub
-
+	public final Collection<ISite> getSites() {
+		return Collections.unmodifiableCollection(siteMap.values());
 	}
 
 	public final long getId() {
@@ -183,16 +161,22 @@ public class CAgent implements IAgent, Comparable<CAgent> {
 
 	@Override
 	public final boolean equals(Object obj) {
-		if (!(obj instanceof CAgent))
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof CAgent)) {
 			return false;
+		}
+
 		CAgent agent = (CAgent) obj;
-		if (nameId != agent.getNameId())
+
+		if (nameId != agent.getNameId()) {
 			return false;
-		// return siteMap.equals(agent.siteMap);
+		}
 		return true;
 	}
 
-	public final CSite getSite(int siteNameId) {
+	public final ISite getSite(int siteNameId) {
 		return siteMap.get(siteNameId);
 	}
 
@@ -205,15 +189,15 @@ public class CAgent implements IAgent, Comparable<CAgent> {
 				.getName(nameId);
 	}
 
-	
 	public long getHash() {
 		return id;
 	}
-	
+
+	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer(getName() + "(");
 		boolean first = true;
-		for (CSite site : siteMap.values()) {
+		for (ISite site : siteMap.values()) {
 			if (!first) {
 				sb.append(", ");
 			} else {
@@ -235,7 +219,7 @@ public class CAgent implements IAgent, Comparable<CAgent> {
 		return sb.toString();
 	}
 
-	public int compareTo(CAgent o) {
-		return idInRuleSide - o.idInRuleSide;
+	public int compareTo(IAgent o) {
+		return idInRuleSide - o.getIdInRuleSide();
 	}
 }

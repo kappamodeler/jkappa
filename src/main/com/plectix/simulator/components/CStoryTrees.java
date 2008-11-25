@@ -40,13 +40,13 @@ public class CStoryTrees {
 		int begInd = begin;
 		index++;
 		boolean isTrue = false;
-		if (!contiguityList.keySet().contains(newNN.rule.getRuleID())) {
+		if (!contiguityList.keySet().contains(newNN.getRule().getRuleID())) {
 			for (int i = begin; i < commonList.size(); i++) {
 				CNetworkNotation nn = commonList.get(i);
 				addToStorySites(nn, index);
-				if (!list.contains(nn.rule.getRuleID()))
-					if(nn.rule.getRuleID()!=newNN.rule.getRuleID())
-					list.add(nn.rule.getRuleID());
+				if (!list.contains(nn.getRule().getRuleID()))
+					if(nn.getRule().getRuleID()!=newNN.getRule().getRuleID())
+					list.add(nn.getRule().getRuleID());
 				if (fullCover(index)) {
 					begInd = i + 1;
 					isTrue = true;
@@ -64,7 +64,7 @@ public class CStoryTrees {
 
 	private void addToConList(CNetworkNotation nn, List<Integer> list) {
 
-		Integer key = nn.rule.getRuleID();
+		Integer key = nn.getRule().getRuleID();
 		List<Integer> cList = contiguityList.get(key);
 
 		if (cList == null) {

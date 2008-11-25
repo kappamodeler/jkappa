@@ -87,7 +87,7 @@ public class Parser {
 
 	public final void parse() throws ParseErrorException {
 		createSimData(data.getInits(), CREATE_INIT);
-		List<CRule> rules = createRules(data.getRules());
+		List<IRule> rules = createRules(data.getRules());
 		SimulationMain.getSimulationManager().setRules(rules);
 		if ((SimulationMain.getSimulationManager().getSimulationData()
 				.getStories() == null)
@@ -194,7 +194,7 @@ public class Parser {
 					st = st.substring(index + 2).trim();
 
 					this.perturbationRate = -1.;
-					CRule rule = null;
+					IRule rule = null;
 					if (!checkOnce(st, perturbationStr, perturbations,
 							pertubationID, time, greater)) {
 						rule = getGreaterRule(st, perturbationStr,
@@ -225,7 +225,7 @@ public class Parser {
 					checkString("do", st, perturbationStr);
 					String pertStr = st.substring(st.indexOf("do") + 2);
 					this.perturbationRate = -1.;
-					CRule rule = getGreaterRule(pertStr, perturbationStr,
+					IRule rule = getGreaterRule(pertStr, perturbationStr,
 							rateExpression);
 
 					st = st.substring(0, st.indexOf("do")).trim();
@@ -304,7 +304,7 @@ public class Parser {
 		List<CDataString> cd = new ArrayList<CDataString>();
 		cd.add(new CDataString(perturbationStr.getLineNumber(), strRule));
 
-		List<CRule> listRules;
+		List<IRule> listRules;
 		listRules = createRules(cd);
 		if (!listRules.isEmpty()) {
 			CRulePerturbation rule = new CRulePerturbation(listRules.get(0));
@@ -349,14 +349,14 @@ public class Parser {
 			checkString("'", item, perturbationStr);
 			item = item.substring(item.indexOf("'") + 1).trim();
 
-			CRule curRule = getRuleWithEqualName(getName(item));
+			IRule curRule = getRuleWithEqualName(getName(item));
 
 			rateExpression.add(new RateExpression(curRule, curValue));
 		}
 		return freeTerm;
 	}
 	
-	private final CRule getGreaterRule(String st, CDataString perturbationStr,
+	private final IRule getGreaterRule(String st, CDataString perturbationStr,
 			List<IPerturbationExpression> rateExpression)
 			throws ParseErrorException {
 		boolean fail = false;
@@ -401,15 +401,15 @@ public class Parser {
 			List<IPerturbationExpression> rateExpression, String item)
 			throws ParseErrorException {
 		item = item.substring(item.indexOf("'") + 1).trim();
-		CRule curRule = getRuleWithEqualName(getName(item));
+		IRule curRule = getRuleWithEqualName(getName(item));
 		if (curRule != null) {
 			rateExpression.add(new RateExpression(curRule, 1.0));
 		}
 	}
 
-	private final CRule getRuleWithEqualName(String ruleName)
+	private final IRule getRuleWithEqualName(String ruleName)
 			throws ParseErrorException {
-		for (CRule rule : SimulationMain.getSimulationManager().getRules())
+		for (IRule rule : SimulationMain.getSimulationManager().getRules())
 			if ((rule.getName() != null) && (rule.getName().equals(ruleName))) {
 				return rule;
 			}
@@ -457,10 +457,10 @@ public class Parser {
 		}
 	}
 
-	public final List<CRule> createRules(List<CDataString> list)
+	public final List<IRule> createRules(List<CDataString> list)
 			throws ParseErrorException {
 
-		List<CRule> rules = new ArrayList<CRule>();
+		List<IRule> rules = new ArrayList<IRule>();
 		int ruleID = 0;
 		for (CDataString rulesDS : list) {
 
@@ -539,8 +539,8 @@ public class Parser {
 				rhs = result[1];
 			}
 
-			List<CAgent> left = null;
-			List<CAgent> right = null;
+			List<IAgent> left = null;
+			List<IAgent> right = null;
 			String nameOp = null;
 			if (name != null)
 				nameOp = name + "_op";
@@ -645,7 +645,7 @@ public class Parser {
 				case CREATE_INIT: {
 					if (countInFile > 0) {
 						line = line.replaceAll("[ 	]", "");
-						List<CAgent> listAgent = parseAgent(line);
+						List<IAgent> listAgent = parseAgent(line);
 						simulationData.getSolution().addAgents(listAgent);
 						for (int i = 1; i < count; i++) {
 							simulationData.getSolution().addAgents(
@@ -723,7 +723,7 @@ public class Parser {
 		return true;
 	}
 
-	public final List<CAgent> parseAgent(String line)
+	public final List<IAgent> parseAgent(String line)
 			throws ParseErrorException {
 		line = line.replaceAll("[ 	]", "");
 		// if (!testLine(line))
@@ -734,7 +734,7 @@ public class Parser {
 		StringTokenizer agent;
 		String ccomp;
 		String site;
-		List<CAgent> listAgent = new ArrayList<CAgent>();
+		List<IAgent> listAgent = new ArrayList<IAgent>();
 		CAgent cagent = null;
 		while (st.hasMoreTokens()) {
 			ccomp = st.nextToken().trim();
@@ -891,11 +891,11 @@ public class Parser {
 		return ds;
 	}
 
-	private final List<CAgent> cloneAgentsList(List<CAgent> agentList) {
-		List<CAgent> newAgentsList = new ArrayList<CAgent>();
-		for (CAgent agent : agentList) {
-			CAgent newAgent = new CAgent(agent.getNameId());
-			for (CSite site : agent.getSites()) {
+	private final List<IAgent> cloneAgentsList(List<IAgent> agentList) {
+		List<IAgent> newAgentsList = new ArrayList<IAgent>();
+		for (IAgent agent : agentList) {
+			IAgent newAgent = new CAgent(agent.getNameId());
+			for (ISite site : agent.getSites()) {
 				CSite newSite = new CSite(site.getNameId(), newAgent);
 				newSite.setLinkIndex(site.getLinkIndex());
 				newSite.setInternalState(new CInternalState(site
@@ -907,9 +907,9 @@ public class Parser {
 			newAgentsList.add(newAgent);
 		}
 		for (int i = 0; i < newAgentsList.size(); i++) {
-			for (CSite siteNew : newAgentsList.get(i).getSites()) {
-				CLinkState lsNew = siteNew.getLinkState();
-				CLinkState lsOld = agentList.get(i)
+			for (ISite siteNew : newAgentsList.get(i).getSites()) {
+				ILinkState lsNew = siteNew.getLinkState();
+				ILinkState lsOld = agentList.get(i)
 						.getSite(siteNew.getNameId()).getLinkState();
 				lsNew.setStatusLink(lsOld.getStatusLink());
 				if (lsOld.getSite() != null) {

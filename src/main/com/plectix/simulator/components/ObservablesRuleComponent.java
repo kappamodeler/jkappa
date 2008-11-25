@@ -1,16 +1,17 @@
 package com.plectix.simulator.components;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.*;
 
-public class ObservablesRuleComponent implements IObservablesComponent {
-	private CRule rule;
+public class ObservablesRuleComponent implements IObservablesRuleComponent {
+	private IRule rule;
 	private int nameID;
 	private final List<Long> countList = new ArrayList<Long>();
 
-	public final CRule getRule() {
+	public final IRule getRule() {
 		return rule;
 	}
 
@@ -18,7 +19,7 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 		return countList;
 	}
 
-	public ObservablesRuleComponent(CRule rule, int nameID) {
+	public ObservablesRuleComponent(IRule rule, int nameID) {
 		this.rule = rule;
 		this.nameID = nameID;
 	}
@@ -32,8 +33,8 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 	private final long getCount() {
 		long count = 1;
 
-		for (CConnectedComponent cc : rule.getLeftHandSide())
-			count *= cc.getInjectionsQuantity();
+		for (IConnectedComponent cc : rule.getLeftHandSide())
+			count *= cc.getInjectionsList().size();
 		return count;
 	}
 
@@ -57,9 +58,9 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 		return nameID;
 	}
 
-	public byte getType() {
-		return IObservablesComponent.TYPE_RULE_COMPONENT;
-	}
+//	public byte getType() {
+//		return IObservablesComponent.TYPE_RULE_COMPONENT;
+//	}
 
 	public double getSize() {
 		return rule.getRuleRate();
@@ -67,6 +68,24 @@ public class ObservablesRuleComponent implements IObservablesComponent {
 
 	public String getItem(int index, CObservables obs) {
 		return countList.get(index).toString();
+	}
+
+	@Override
+	public void addAutomorphicObservables(int index) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getMainAutomorphismNumber() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setMainAutomorphismNumber(int index) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

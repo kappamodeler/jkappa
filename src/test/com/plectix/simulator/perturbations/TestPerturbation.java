@@ -5,6 +5,7 @@ import org.junit.Before;
 
 import com.plectix.simulator.*;
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.simulator.*;
 
 public abstract class TestPerturbation extends DirectoryTestsRunner implements Test {
@@ -29,11 +30,12 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements T
 		init();
 	}
 	
+	@Override
 	public abstract String getPrefixFileName();
 	public abstract void init();
 	
-	public CRule getRuleByName(String name) {
-		for (CRule rule : myManager.getRules()) {
+	public IRule getRuleByName(String name) {
+		for (IRule rule : myManager.getRules()) {
 			if (name.equals(rule.getName())) {
 				return rule;
 			}

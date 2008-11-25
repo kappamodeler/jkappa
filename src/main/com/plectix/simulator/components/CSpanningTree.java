@@ -3,6 +3,9 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.ISite;
+
 public class CSpanningTree {
 
 	private List<Integer>[] vertexes;
@@ -12,7 +15,7 @@ public class CSpanningTree {
 	private boolean[] newVertex;
 
 	@SuppressWarnings("unchecked")
-	public CSpanningTree(int N, CAgent agent) {
+	public CSpanningTree(int N, IAgent agent) {
 		this.newVertex = new boolean[N];
 		this.vertexes = new ArrayList[N];
 		rootIndex = agent.getIdInConnectedComponent();
@@ -57,12 +60,12 @@ public class CSpanningTree {
 	 * linked list. The first element of some vertexes list is always the id of
 	 * this vertex (it needs in future tree usage).
 	 */
-	private final void depthFirstSearch(CAgent rootAgent) {
+	private final void depthFirstSearch(IAgent rootAgent) {
 		newVertex[rootAgent.getIdInConnectedComponent()] = false;
-		for (CSite site : rootAgent.getSites()) {
-			CSite linkSite = (CSite) site.getLinkState().getSite();
+		for (ISite site : rootAgent.getSites()) {
+			ISite linkSite = (CSite) site.getLinkState().getSite();
 			if (linkSite != null) {
-				CAgent agent = linkSite.getAgentLink();
+				IAgent agent = linkSite.getAgentLink();
 				Integer vertexIndex = agent.getIdInConnectedComponent();
 				if (newVertex[vertexIndex]) {
 					vertexes[rootAgent.getIdInConnectedComponent()]

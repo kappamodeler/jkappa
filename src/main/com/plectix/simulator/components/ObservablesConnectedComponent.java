@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.*;
 
 public class ObservablesConnectedComponent extends CConnectedComponent
-		implements IObservablesComponent {
+		implements IObservablesConnectedComponent {
 	private static boolean ocamlStyleObsName = false;
 
 	public static int COUNTER = 0;
@@ -22,6 +23,20 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 	int mainAutomorphismNumber = NO_INDEX;
 	private final List<Integer> countList = new ArrayList<Integer>();
 
+	public ObservablesConnectedComponent(List<IAgent> connectedAgents,
+			String name, String line, int nameID) {
+		super(connectedAgents);
+		this.name = name;
+		if (ocamlStyleObsName) {
+			this.line = SimulationMain.getSimulationManager().printPartRule(
+					this, 0);
+		} else {
+			this.line = line;
+		}
+		this.automorphicObservables = new ArrayList<Integer>();
+		this.nameID = nameID;
+	}
+	
 	public final int getNameID() {
 		return nameID;
 	}
@@ -62,43 +77,27 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 
 	
 	public void updateLastValue() {
-		lastInjectionsQuantity = getInjectionsQuantity();
+		lastInjectionsQuantity = getInjectionsList().size();
 	}
 
 	
 	public final void calculate(boolean replaceLast) {
 		if (replaceLast)
-			countList.set(countList.size() - 1, getInjectionsQuantity());
+			countList.set(countList.size() - 1, getInjectionsList().size());
 		else
 			countList.add(lastInjectionsQuantity);
-	}
-
-	public ObservablesConnectedComponent(List<CAgent> connectedAgents,
-			String name, String line, int nameID) {
-		super(connectedAgents);
-		this.name = name;
-		if (ocamlStyleObsName) {
-			this.line = SimulationMain.getSimulationManager().printPartRule(
-					this, 0);
-		} else {
-			this.line = line;
-		}
-		this.automorphicObservables = new ArrayList<Integer>();
-		this.nameID = nameID;
 	}
 
 	public final String getName() {
 		return name;
 	}
 
-	
-	public byte getType() {
-		return IObservablesComponent.TYPE_CONNECTED_COMPONENT;
-	}
+//	public byte getType() {
+//		return IObservablesComponent.TYPE_CONNECTED_COMPONENT;
+//	}
 
-	
 	public double getSize() {
-		return getInjectionsQuantity();
+		return getInjectionsList().size();
 	}
 
 	

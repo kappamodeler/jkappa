@@ -1,10 +1,11 @@
 package com.plectix.simulator.util;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 import java.util.*;
 
 public class Converter {
-	public static String toString(CSite site) {
+	public static String toString(ISite site) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(site.getName());
 		if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
@@ -20,14 +21,14 @@ public class Converter {
 		return sb.toString();
 	}
 	
-	public static String toString(CAgent agent) {
+	public static String toString(IAgent agent) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(agent.getName());
 		sb.append("(");
 		boolean first = true;
 		
-		TreeMap<String, CSite> sites = new TreeMap<String, CSite>();
-		for (CSite site : agent.getSites()) {
+		TreeMap<String, ISite> sites = new TreeMap<String, ISite>();
+		for (ISite site : agent.getSites()) {
 			sites.put(site.getName(), site);
 		}
 		
@@ -43,14 +44,14 @@ public class Converter {
 		return sb.toString();
 	}
 	
-	public static String toString(CConnectedComponent c) {
+	public static String toString(IConnectedComponent c) {
 		StringBuffer sb = new StringBuffer();
 		boolean first = true;
-		TreeMap<String, List<CAgent>> agents = new TreeMap<String, List<CAgent>>();
-		CAgent empty = new CAgent(CAgent.EMPTY);
-		List<CAgent> list;
+		TreeMap<String, List<IAgent>> agents = new TreeMap<String, List<IAgent>>();
+		IAgent empty = new CAgent(CAgent.EMPTY);
+		List<IAgent> list;
 		String agentString; 
-		for (CAgent agent : c.getAgents()) {
+		for (IAgent agent : c.getAgents()) {
 			if (empty.equals(agent)) {
 				return "";
 			}
@@ -59,7 +60,7 @@ public class Converter {
 			
 			list = agents.get(agentString);
 			if (list == null) {
-				list = new ArrayList<CAgent>();
+				list = new ArrayList<IAgent>();
 				agents.put(agentString, list);
 			}
 			list.add(agent);
@@ -67,7 +68,7 @@ public class Converter {
 		}
 		
 		for (String name : agents.keySet()) {
-			for (CAgent agent : agents.get(name)) {
+			for (IAgent agent : agents.get(name)) {
 				if (!first) {
 					sb.append(", ");
 				} else {

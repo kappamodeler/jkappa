@@ -9,6 +9,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
 public class TestNegativeUpdate extends TestUpdate {
@@ -32,46 +33,49 @@ public class TestNegativeUpdate extends TestUpdate {
 	
 	@Test
 	public void testLHS() {
-		List<CConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
-		for (CConnectedComponent cc : leftHand) {
-			Collection<CInjection> componentInjections = cc.getInjectionsList();
+		List<IConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
+		for (IConnectedComponent cc : leftHand) {
+			Collection<IInjection> componentInjections = cc.getInjectionsList();
 			if (!lhsIsEmpty(leftHand)) {
 			
 				myFailer.assertSizeEquality("LHS injections", componentInjections,
 						myLHSInjectionsQuantity.get(myTestFileName));
-				for (CInjection injection : getCurrentInjectionsList()) {
+				for (IInjection injection : getCurrentInjectionsList()) {
 				
 					assertFalse(cc.getInjectionsList().contains(injection));
-					for (CSite site : injection.getChangedSites()) {
+					for (ISite site : injection.getChangedSites()) {
 						
 						myFailer.assertEmpty("LHS lifts", site.getLift());
 					}
 				}
 			} else {
 				myFailer.assertTrue("LHS injections", (componentInjections.size() == 1)
-						&& (componentInjections.contains(CConnectedComponent.EMPTY_INJECTION)));
+						&& (componentInjections.contains(CInjection.EMPTY_INJECTION)));
 			}
 		}
 	}
 	
 	@Test
 	public void testObs() {
-		for (ObservablesConnectedComponent cc : getInitializator().getObservables()) {
-			Collection<CInjection> componentInjections = cc.getInjectionsList();
+		for (IObservablesConnectedComponent cc : getInitializator().getObservables()) {
+			Collection<IInjection> componentInjections = cc.getInjectionsList();
 			
 			myFailer.assertSizeEquality("Observables injections",
 					componentInjections, myObsInjectionsQuantity.get(myTestFileName));
 		}			
 	}
 	
+	@Override
 	public boolean isDoingPositive() {
 		return false;
 	}
 	
+	@Override
 	public String getPrefixFileName() {
 		return myPrefixFileName;
 	}
 	
+	@Override
 	public void init() {
 		myObsInjectionsQuantity = (new QuantityDataParser (myPrefixFileName 
 				+ "ObsInjectionsData")).parse(); 

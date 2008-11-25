@@ -1,9 +1,9 @@
 package com.plectix.simulator.components;
 
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.interfaces.ILift.LiftElement;
+import com.plectix.simulator.interfaces.IInternalState;
 
-public class CInternalState extends CState {
+public class CInternalState extends CState implements IInternalState {
 
 	private int nameId;
 
@@ -11,17 +11,15 @@ public class CInternalState extends CState {
 		this.nameId = id;
 	}
 
-	public boolean isRankRoot() {
-		if (nameId == CSite.NO_INDEX)
-			return true;
-		return false;
+	public final boolean isRankRoot() {
+		return nameId == CSite.NO_INDEX;
 	}
 
 	public final void setNameId(int id) {
 		this.nameId = id;
 	}
 
-	public int getNameId() {
+	public final int getNameId() {
 		return nameId;
 	}
 
@@ -31,26 +29,18 @@ public class CInternalState extends CState {
 				.getName(nameId);
 	}
 
-	@Override
-	public final boolean isChanged() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public final void removeLiftElement(LiftElement element) {
-		// TODO Auto-generated method stub
-
-	}
-
 	public final int getStateNameId() {
 		return nameId;
 	}
 
 	@Override
 	public final boolean equals(Object obj) {
-		if (!(obj instanceof CInternalState))
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof CInternalState)) {
 			return false;
+		}
 		return ((CInternalState) obj).nameId == nameId;
 	}
 

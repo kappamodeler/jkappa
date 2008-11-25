@@ -72,6 +72,7 @@ public class Failer {
 	
 	public <E> boolean collectionsEquals(Collection<E> a, Collection<E> b) {
 		CollectionsComparator cc = new CollectionsComparator() {
+			@Override
 			public boolean equals(Object a, Object b) {
 				return collectionElementEquals(a, b);
 			}

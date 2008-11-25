@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.interfaces.*;
 
 public class CSite implements ISite {
 	public static final int NO_INDEX = -1;
@@ -13,71 +13,72 @@ public class CSite implements ISite {
 			NO_INDEX);
 
 	private int nameId;
-	private CLinkState linkState;
-	private CInternalState internalState = EMPTY_STATE;
+	private ILinkState linkState;
+	private IInternalState internalState = EMPTY_STATE;
 	private boolean changed;
-	private CAgent linkAgent = null;
+	private IAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;
 
-	private List<CLiftElement> liftList = new ArrayList<CLiftElement>();
+	private List<ILiftElement> liftList = new ArrayList<ILiftElement>();
 
 	public CSite(int id) {
 		this.nameId = id;
 		linkState = new CLinkState(CLinkState.STATUS_LINK_FREE);
 	}
 
-	public CSite(int id, CAgent agent) {
+	public CSite(int id, IAgent agent) {
 		this.nameId = id;
 		linkState = new CLinkState(CLinkState.STATUS_LINK_FREE);
 		linkAgent = agent;
 	}
 
-	public void setLift(List<CLiftElement> lift) {
+	public void setLift(List<ILiftElement> lift) {
 		this.liftList = lift;
 	}
 
-	public void addToLift(CLiftElement liftElement) {
+	//TODO
+	public void addToLift(ILiftElement liftElement) {
 		this.liftList.add(liftElement);
 	}
 
-	public List<CLiftElement> getLift() {
+	public List<ILiftElement> getLift() {
 		return liftList;
 	}
 
-	public boolean isConnectedComponentInLift(CConnectedComponent inCC) {
-		for (CLiftElement liftElement : this.liftList)
+	public boolean isConnectedComponentInLift(IConnectedComponent inCC) {
+		for (ILiftElement liftElement : this.liftList)
 			if (liftElement.getConnectedComponent() == inCC)
 				return true;
 		return false;
 	}
 
-	public List<CInjection> getInjectionFromLift(CConnectedComponent inCC) {
-		List<CInjection> list = new ArrayList<CInjection>();
-		for (CLiftElement liftElement : this.liftList)
+	public List<IInjection> getInjectionFromLift(IConnectedComponent inCC) {
+		List<IInjection> list = new ArrayList<IInjection>();
+		for (ILiftElement liftElement : this.liftList)
 			if (liftElement.getConnectedComponent() == inCC)
 				list.add(liftElement.getInjection());
 		return list;
 	}
 	
-	public final CLinkState getLinkState() {
+	public final ILinkState getLinkState() {
 		return linkState;
 	}
 
-	public final void setAgentLink(CAgent agent) {
+	public final void setAgentLink(IAgent agent) {
 		if (agent == null)
 			return;
 		this.linkAgent = agent;
 	}
 
-	public final CAgent getAgentLink() {
+	public final IAgent getAgentLink() {
 		return linkAgent;
 	}
 
-	public final void setInternalState(CInternalState internalState) {
+	public final void setInternalState(IInternalState internalState) {
 		this.internalState = internalState;
 	}
 
-	public final CInternalState getInternalState() {
+	public final IInternalState getInternalState() {
 		return internalState;
 	}
 
@@ -105,7 +106,7 @@ public class CSite implements ISite {
 		return linkIndex;
 	}
 
-	public final Integer getNameId() {
+	public final int getNameId() {
 		return nameId;
 	}
 	
@@ -113,12 +114,12 @@ public class CSite implements ISite {
 		this.liftList.clear();
 	}
 
-	public final void removeInjectionsFromCCToSite(CInjection inInjection) {
+	public final void removeInjectionsFromCCToSite(IInjection inInjection) {
 
-		for (CLiftElement liftElement : this.liftList) {
-			CInjection injection = liftElement.getInjection();
+		for (ILiftElement liftElement : this.liftList) {
+			IInjection injection = liftElement.getInjection();
 			if (injection != inInjection) {
-				for (CSite site : injection.getSiteList()) {
+				for (ISite site : injection.getSiteList()) {
 					if (this != site)
 						site.removeInjectionFromLift(injection);
 				}
@@ -139,8 +140,8 @@ public class CSite implements ISite {
 		}*/
 	}
 
-	public final void removeInjectionFromLift(CInjection injection) {
-		for (CLiftElement liftElement : this.liftList)
+	public final void removeInjectionFromLift(IInjection injection) {
+		for (ILiftElement liftElement : this.liftList)
 			if (injection == liftElement.getInjection()) {
 				this.liftList.remove(liftElement);
 				return;
@@ -151,5 +152,4 @@ public class CSite implements ISite {
 		return SimulationMain.getSimulationManager().getNameDictionary()
 				.getName(nameId);
 	}
-
 }

@@ -4,33 +4,41 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-public class CNetworkNotation {
+import com.plectix.simulator.interfaces.*;
 
-	int step;
+public class CNetworkNotation implements INetworkNotation {
 
-	CRule rule;
+	private int step;
+
+	private IRule rule;
 
 	HashMap<Long, AgentSites> changedAgentsFromSolution;
 
 	class AgentSites {
-		HashMap<Integer, CStoriesSiteStates> sites;
+		HashMap<Integer, IStoriesSiteStates> sites;
 
 		public AgentSites() {
-			sites = new HashMap<Integer, CStoriesSiteStates>();
+			sites = new HashMap<Integer, IStoriesSiteStates>();
 		}
 
-		public void addToSites(int idSite, CStoriesSiteStates siteStates,
+		public void addToSites(int idSite, IStoriesSiteStates siteStates,
 				int index) {
-			CStoriesSiteStates ss = sites.get(idSite);
+			IStoriesSiteStates ss = sites.get(idSite);
 			if (ss == null)
 				sites.put(idSite, siteStates);
 			else
 				ss.addInformation(index, siteStates);
 		}
+
+		public void addToSites(int nameId, CStoriesSiteStates siteStates,
+				int index) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 
 	public final void checkLinkForNetworkNotation(int index,
-			CSite site) {
+			ISite site) {
 		if (site.getLinkState().getSite() == null)
 			this.addToAgents(site, new CStoriesSiteStates(index, -1, -1),
 					index);
@@ -43,7 +51,7 @@ public class CNetworkNotation {
 	}
 
 	public final void checkLinkForNetworkNotationDel(int index,
-			CSite site) {
+			ISite site) {
 		if (site.getLinkState().getSite() == null)
 			this.addToAgents(site, new CStoriesSiteStates(index, site
 					.getInternalState().getNameId(), -1, -1), index);
@@ -55,7 +63,7 @@ public class CNetworkNotation {
 					index);
 	}
 	
-	public void addToAgents(CSite site, CStoriesSiteStates siteStates, int index) {
+	public void addToAgents(ISite site, IStoriesSiteStates siteStates, int index) {
 		if (site != null) {
 			long key = site.getAgentLink().getHash();
 			AgentSites as = changedAgentsFromSolution.get(key);
@@ -67,11 +75,11 @@ public class CNetworkNotation {
 		}
 	}
 
-	public CRule getRule() {
+	public IRule getRule() {
 		return rule;
 	}
 
-	public CNetworkNotation(int step, CRule rule) {
+	public CNetworkNotation(int step, IRule rule) {
 		this.step = step;
 		this.rule = rule;
 		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();

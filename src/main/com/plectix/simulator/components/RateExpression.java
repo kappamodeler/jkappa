@@ -1,12 +1,12 @@
 package com.plectix.simulator.components;
 
-import com.plectix.simulator.interfaces.IPerturbationExpression;
+import com.plectix.simulator.interfaces.*;
 
 public class RateExpression implements IPerturbationExpression {
-	private CRule rule;
+	private IRule rule;
 	double value;
 
-	public RateExpression(CRule rule, double value) {
+	public RateExpression(IRule rule, double value) {
 		this.rule = rule;
 		this.value = value;
 	}

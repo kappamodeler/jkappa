@@ -19,6 +19,7 @@ public class RuleStructure {
 		return myRHS;
 	}
 	
+	@Override
 	public boolean equals(Object a) {
 		if (a == this) {
 			return true;
@@ -30,6 +31,7 @@ public class RuleStructure {
 		
 		RuleStructure aa = (RuleStructure)a;
 		CollectionsComparator comparator = new CollectionsComparator() {
+			@Override
 			public boolean equals(Object a, Object b) {
 				if (a != null) {
 					return a.equals(b);
@@ -43,6 +45,7 @@ public class RuleStructure {
 		return comparator.areEqual(myLHS, aa.myLHS) && comparator.areEqual(myRHS, aa.myRHS);
 	}
 	
+	@Override
 	public String toString() {
 		return myLHS.toString() + " -> " + myRHS.toString();
 	}

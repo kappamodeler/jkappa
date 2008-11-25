@@ -1,42 +1,43 @@
 package com.plectix.simulator.components;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.*;
 
-public class CInjection implements IInjection {
+public final class CInjection implements IInjection {
 
-	private List<CAgentLink> agentLinkList;
+	private List<IAgentLink> agentLinkList;
 
-	private List<CSite> sitesList = new ArrayList<CSite>();
+	public static IInjection EMPTY_INJECTION = new CInjection();
+	
+	private List<ISite> sitesList = new ArrayList<ISite>();
 
-	private List<CSite> changedSites;
+	private List<ISite> changedSites;
 
 	private int myId = 0;
 	
-	public List<CSite> getChangedSites() {
-		return changedSites;
-	}
-
-	public void setChangedSites(List<CSite> changedSites) {
-		this.changedSites = changedSites;
-	}
-
 	private CConnectedComponent connectedComponent;
 
-	public CInjection() {
+	private CInjection() {
+		
+	}
+	
+	public CInjection(CConnectedComponent connectedComponent,
+			List<ISite> sitesList, List<IAgentLink> agentLinkList) {
+		this.connectedComponent = connectedComponent;
+		this.sitesList = sitesList;
+		this.agentLinkList = agentLinkList;
+		this.changedSites = new ArrayList<ISite>();
 	}
 
-	public void removeSiteFromSitesList(CSite site){
-		for (CSite siteL : this.sitesList)
+	public void removeSiteFromSitesList(ISite site){
+		for (ISite siteL : this.sitesList)
 			if (site==siteL){
 				this.sitesList.remove(site);
 				return;}
 	}
 	
-	public void addToChangedSites(CSite site) {
+	public void addToChangedSites(ISite site) {
 		if (!(checkSiteExistanceAmongChangedSites(site)))
 			this.changedSites.add(site);
 	}
@@ -45,19 +46,11 @@ public class CInjection implements IInjection {
 		changedSites.clear();
 	}
 
-	public boolean checkSiteExistanceAmongChangedSites(CSite site) {
-		for (CSite chSite : this.changedSites)
+	public boolean checkSiteExistanceAmongChangedSites(ISite site) {
+		for (ISite chSite : this.changedSites)
 			if (chSite == site)
 				return true;
 		return false;
-	}
-
-	public CInjection(CConnectedComponent connectedComponent,
-			List<CSite> sitesList, List<CAgentLink> agentLinkList) {
-		this.connectedComponent = connectedComponent;
-		this.sitesList = sitesList;
-		this.agentLinkList = agentLinkList;
-		this.changedSites = new ArrayList<CSite>();
 	}
 	
 	public void setId(int id) {
@@ -68,32 +61,27 @@ public class CInjection implements IInjection {
 		return myId;
 	}
 	
-	public List<CAgentLink> getAgentLinkList() {
-		return agentLinkList;
+	public List<ISite> getChangedSites() {
+		return Collections.unmodifiableList(changedSites);
 	}
 
-	public List<CSite> getSiteList() {
-		return sitesList;
+	public void setChangedSites(List<ISite> changedSites) {
+		this.changedSites = changedSites;
 	}
 
-	public void setSiteList(List<CSite> siteList) {
+	public List<IAgentLink> getAgentLinkList() {
+		return Collections.unmodifiableList(agentLinkList);
+	}
+
+	public List<ISite> getSiteList() {
+		return Collections.unmodifiableList(sitesList);
+	}
+
+	public void setSiteList(List<ISite> siteList) {
 		this.sitesList = siteList;
 	}
 
 	public CConnectedComponent getConnectedComponent() {
 		return connectedComponent;
 	}
-
-	
-	public List<IAgent> getAgents() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public void setAgents(List<IAgent> agents) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

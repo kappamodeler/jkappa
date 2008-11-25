@@ -25,6 +25,7 @@ public class ParseErrorException extends Exception {
 		}
 	}
 	
+	@Override
 	public String getMessage(){
 		if (myLine != null) {
 			return myLine + "\n" + myMessage;

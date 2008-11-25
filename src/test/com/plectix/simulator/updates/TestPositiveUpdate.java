@@ -7,6 +7,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.junit.*;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
 public class TestPositiveUpdate extends TestUpdate {
@@ -32,9 +33,9 @@ public class TestPositiveUpdate extends TestUpdate {
 	public void testObs() {
 		SortedSet<Long> solutionLinkingForCurrentObs = new TreeSet<Long>();
 
-		for (ObservablesConnectedComponent cc : getInitializator().getObservables()) {
-			for (CInjection injection : cc.getInjectionsList()) {
-				for (CAgentLink agentLink : injection.getAgentLinkList()) {
+		for (IObservablesConnectedComponent cc : getInitializator().getObservables()) {
+			for (IInjection injection : cc.getInjectionsList()) {
+				for (IAgentLink agentLink : injection.getAgentLinkList()) {
 					solutionLinkingForCurrentObs.add(agentLink.getAgentTo()
 							.getId());
 				}
@@ -48,27 +49,30 @@ public class TestPositiveUpdate extends TestUpdate {
 	@Test
 	// the same way, we're checking common injections quantity for all the cc from lhs
 	public void testLHS() {
-		List<CConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
-		for (CConnectedComponent cc : leftHand) {
-			Collection<CInjection> componentInjections = cc.getInjectionsList();
+		List<IConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
+		for (IConnectedComponent cc : leftHand) {
+			Collection<IInjection> componentInjections = cc.getInjectionsList();
 			if (!lhsIsEmpty(leftHand)) {
 				myFailer.assertSizeEquality("LHS injections", componentInjections,
 						myLHSInjectionsQuantity.get(myTestFileName));
 			} else {
 				myFailer.assertTrue("LHS injections", (componentInjections.size() == 1)
-						&& (componentInjections.contains(CConnectedComponent.EMPTY_INJECTION)));
+						&& (componentInjections.contains(CInjection.EMPTY_INJECTION)));
 			}
 		}
 	}
 	
+	@Override
 	public boolean isDoingPositive() {
 		return true;
 	}
 	
+	@Override
 	public String getPrefixFileName() {
 		return myPrefixFileName;
 	}
 	
+	@Override
 	public void init() {
 		myObsInjectionsQuantity = (new QuantityDataParser (myPrefixFileName 
 				+ "ObsInjectionsData")).parse(); 

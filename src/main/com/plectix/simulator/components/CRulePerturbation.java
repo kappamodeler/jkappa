@@ -2,18 +2,20 @@ package com.plectix.simulator.components;
 
 import java.util.List;
 
+import com.plectix.simulator.interfaces.*;
+
 public class CRulePerturbation extends CRule {
 
 	private int count;
 	private boolean inf = false;
 
-	public CRulePerturbation(CRule rule) {
+	public CRulePerturbation(IRule rule) {
 		super(rule.getLeftHandSide(), rule.getRightHandSide(), rule.getName(),
 				rule.getRuleRate(), rule.getRuleID());
 	}
 
-	public CRulePerturbation(List<CConnectedComponent> left,
-			List<CConnectedComponent> right, String name, double ruleRate,
+	public CRulePerturbation(List<IConnectedComponent> left,
+			List<IConnectedComponent> right, String name, double ruleRate,
 			int ruleID) {
 		super(left, right, name, ruleRate, ruleID);
 	}
@@ -26,16 +28,14 @@ public class CRulePerturbation extends CRule {
 			this.count = (int) count;
 	}
 
-	@Override
-	public void applyRuleForStories(List<CInjection> injectionList,
+	public void applyRuleForStories(List<IInjection> injectionList,
 			CNetworkNotation netNotation) {
 		check();
 		apply(injectionList, netNotation);
 		count--;
 	}
 
-	@Override
-	public void applyRule(List<CInjection> injectionList) {
+	public void applyRule(List<IInjection> injectionList) {
 		check();
 		apply(injectionList, null);
 		count--;

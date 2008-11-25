@@ -199,7 +199,7 @@ public class GraphDrawer {
 				: (int) ((double) (gp.axisWidth - 2 * gp.firstStripeGap) / (xIndicesValues.indicesCount - 1));
 		double scaleMarkUnit = (xIndicesValues.indicesCount - 1 == 0) ? 0
 				: (xIndicesValues.endIndexValue - xIndicesValues.startIndexValue)
-						/ (double) (xIndicesValues.indicesCount - 1);
+						/ (xIndicesValues.indicesCount - 1);
 
 		int lastIndexRightBorder = 0;
 		for (int i = 0; i < xIndicesValues.indicesCount; i++) {
@@ -339,7 +339,7 @@ public class GraphDrawer {
 		if (maxValueX == minValueX) {
 			normX = 0;
 		} else {
-			normX = (double) (gp.axisWidth - 2 * gp.firstStripeGap)
+			normX = (gp.axisWidth - 2 * gp.firstStripeGap)
 					/ (maxValueX - minValueX);
 		}
 		double normY = (double) (gp.axisHeight - 2 * gp.firstStripeGap)
@@ -355,7 +355,7 @@ public class GraphDrawer {
 			double pointY = 0;
 
 			double prevPointX = gp.minX
-					+ (observables.getCountTimeList().get(0) - minValueX)
+					+ (CObservables.getCountTimeList().get(0) - minValueX)
 					* normX + gp.axisFromLeftBound + gp.firstStripeGap;
 			double prevPointY = gp.axisFromUpperBound + gp.axisHeight
 					- gp.firstStripeGap;
@@ -368,7 +368,7 @@ public class GraphDrawer {
 					for (Integer dt : obsCC.getCountList()) {
 
 						pointX = gp.minX
-								+ (observables.getCountTimeList().get(i) - minValueX)
+								+ (CObservables.getCountTimeList().get(i) - minValueX)
 								* normX + gp.axisFromLeftBound
 								+ gp.firstStripeGap;
 						pointY = gp.axisFromUpperBound + gp.axisHeight - dt
@@ -393,7 +393,7 @@ public class GraphDrawer {
 					for (Long dt : obsR.getCountList()) {
 
 						pointX = gp.minX
-								+ (observables.getCountTimeList().get(i) - minValueX)
+								+ (CObservables.getCountTimeList().get(i) - minValueX)
 								* normX + gp.axisFromLeftBound
 								+ gp.firstStripeGap;
 						pointY = gp.axisFromUpperBound + gp.axisHeight - dt

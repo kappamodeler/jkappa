@@ -5,7 +5,7 @@ import java.util.*;
 import org.junit.*;
 
 import com.plectix.simulator.components.*;
-
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
 public class TestInjectionsCorrection extends TestInjections {
@@ -21,7 +21,7 @@ public class TestInjectionsCorrection extends TestInjections {
 	@Test
 	public void test0() {
 		MessageConstructor mc = new MessageConstructor();
-		for (ObservablesConnectedComponent c : getInitializator().getObservables()) {
+		for (IObservablesConnectedComponent c : getInitializator().getObservables()) {
 			if (!c.getName().startsWith("q")) {
 				if (!testCC(c)) {
 					mc.addValue(c.getName());
@@ -33,13 +33,13 @@ public class TestInjectionsCorrection extends TestInjections {
 		}
 	}
 
-	public boolean testCC(ObservablesConnectedComponent c) {
+	public boolean testCC(IObservablesConnectedComponent c) {
 		
 		SortedSet<Long> solutionLinkingForCurrentObs = new TreeSet<Long>();
 
-		Collection<CInjection> injectionsList = c.getInjectionsList();
-		for (CInjection injection : injectionsList) {
-			for (CAgentLink agentLink : injection.getAgentLinkList()) {
+		Collection<IInjection> injectionsList = c.getInjectionsList();
+		for (IInjection injection : injectionsList) {
+			for (IAgentLink agentLink : injection.getAgentLinkList()) {
 				solutionLinkingForCurrentObs
 						.add(agentLink.getAgentTo().getId());
 			}

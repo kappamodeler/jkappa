@@ -12,6 +12,7 @@ import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.Model;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorManager;
@@ -23,11 +24,11 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	private SimulatorManager myManager;
 	private final Logger LOGGER = Logger.getLogger(Simulator.class);
 	private double currentTime = 0.;
-	private CRule myActiveRule;
+	private IRule myActiveRule;
 
 	private String myTestFileName = "";
 
-	private List<CInjection> myCurrentInjectionsList;
+	private List<IInjection> myCurrentInjectionsList;
 
 	protected TestUpdate(String fileName) {
 		super();
@@ -36,6 +37,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 
 	public abstract void init();
 
+	@Override
 	public abstract String getPrefixFileName();
 
 	public abstract boolean isDoingPositive();
@@ -53,22 +55,22 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		init();
 	}
 
-	public CRule getActiveRule() {
+	public IRule getActiveRule() {
 		return myActiveRule;
 	}
 
-	public List<CRule> getRules() {
+	public List<IRule> getRules() {
 		return myManager.getRules();
 	}
 
-	public List<CInjection> getCurrentInjectionsList() {
+	public List<IInjection> getCurrentInjectionsList() {
 		return myCurrentInjectionsList;
 	}
 
-	private boolean isClash(List<CInjection> injections) {
+	private boolean isClash(List<IInjection> injections) {
 		if (injections.size() == 2) {
-			for (CSite siteCC1 : injections.get(0).getSiteList())
-				for (CSite siteCC2 : injections.get(1).getSiteList())
+			for (ISite siteCC1 : injections.get(0).getSiteList())
+				for (ISite siteCC2 : injections.get(1).getSiteList())
 					if (siteCC1.getAgentLink().getId() == siteCC2
 							.getAgentLink().getId())
 						return true;
@@ -116,7 +118,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		}
 	}
 
-	public static boolean lhsIsEmpty(List<CConnectedComponent> lh) {
+	public static boolean lhsIsEmpty(List<IConnectedComponent> lh) {
 		return (lh.size() == 1) && (lh.contains(CRule.EMPTY_LHS_CC));
 	}
 }

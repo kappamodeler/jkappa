@@ -22,7 +22,6 @@ import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
@@ -32,8 +31,9 @@ import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.CStoryTrees;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISolution;
-import com.plectix.simulator.simulator.graphs.GraphDrawer;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.TimerSimulation;
@@ -42,7 +42,7 @@ public class SimulationData {
 	private static List<Double> timeStamps;
 	private static List<ArrayList<RunningMetric>> runningMetrics;
 
-	private List<CRule> rules;
+	private List<IRule> rules;
 	private CStories stories = null;
 	private List<CPerturbation> perturbations;
 	private CObservables observables = new CObservables();
@@ -58,7 +58,6 @@ public class SimulationData {
 
 	private long event;
 
-	private long numPoints;
 	private boolean compile = false;
 	private boolean storify = false;
 
@@ -156,7 +155,7 @@ public class SimulationData {
 	public final void addStories(String name) {
 		byte index = 0;
 		List<Integer> ruleIDs = new ArrayList<Integer>();
-		for (CRule rule : rules) {
+		for (IRule rule : rules) {
 			if ((rule.getName() != null)
 					&& (rule.getName().startsWith(name) && ((name.length() == rule
 							.getName().length()) || ((rule.getName()
@@ -218,7 +217,7 @@ public class SimulationData {
 		return solution;
 	}
 
-	public final void setRules(List<CRule> rules) {
+	public final void setRules(List<IRule> rules) {
 		this.rules = rules;
 	}
 
@@ -226,7 +225,7 @@ public class SimulationData {
 		rules.add(rule);
 	}
 
-	public final List<CRule> getRules() {
+	public final List<IRule> getRules() {
 		return rules;
 	}
 
@@ -530,17 +529,14 @@ public class SimulationData {
 		String obsName = obs.getName();
 		if (obsName == null)
 			obsName = obs.getLine();
-		switch (obs.getType()) {
-		case IObservablesComponent.TYPE_CONNECTED_COMPONENT: {
+		
+		//TODO do otherway
+		if (obs instanceof IObservablesConnectedComponent) {
 			node.setAttribute("Type", "OBSERVABLE");
 			node.setAttribute("Text", '[' + obsName + ']');
-			break;
-		}
-		case IObservablesComponent.TYPE_RULE_COMPONENT: {
+		} else {
 			node.setAttribute("Type", "RULE");
 			node.setAttribute("Text", obsName);
-			break;
-		}
 		}
 		return node;
 	}

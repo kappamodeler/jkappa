@@ -1,28 +1,29 @@
 package com.plectix.simulator.components;
 
-class CStoriesSiteStates {
+import com.plectix.simulator.interfaces.*;
+
+class CStoriesSiteStates implements IStoriesSiteStates {
 	public final static byte LAST_STATE = 0;
 	public final static byte CURRENT_STATE = 1;
 
-	States currentState;
-
-	public States getCurrentState() {
+	private IStates currentState;
+	private IStates lastState;
+	
+	public IStates getCurrentState() {
 		return currentState;
 	}
 
-	public void setCurrentState(States currentState) {
+	public void setCurrentState(IStates currentState) {
 		this.currentState = currentState;
 	}
 
-	public States getLastState() {
+	public IStates getLastState() {
 		return lastState;
 	}
 
-	public void setLastState(States lastState) {
+	public void setLastState(IStates lastState) {
 		this.lastState = lastState;
 	}
-
-	States lastState;
 
 	public CStoriesSiteStates(int index, long idLinkAgent, int idLinkSite) {
 		switch (index) {
@@ -58,27 +59,39 @@ class CStoriesSiteStates {
 		}
 	}
 
-	public void addInformation(int index, CStoriesSiteStates siteStates) {
+	public void addInformation(int index, IStoriesSiteStates siteStates) {
 		switch (index) {
 		case CURRENT_STATE:
-			currentState = siteStates.currentState;
+			currentState = siteStates.getCurrentState();
 			break;
 		case LAST_STATE:
 			if (lastState != null)
 				lastState.addInformation(
-						siteStates.getLastState().idInternalState, siteStates
-								.getLastState().idLinkAgent, siteStates
-								.getLastState().idLinkSite);
+						siteStates.getLastState().getIdInternalState(), siteStates
+								.getLastState().getIdLinkAgent(), siteStates
+								.getLastState().getIdLinkSite());
 			break;
 		}
 	}
 
-	class States {
-		int idInternalState = -1;
+	class States implements IStates {
+		private int idInternalState = -1;
 
-		long idLinkAgent = -1;
+		public int getIdInternalState() {
+			return idInternalState;
+		}
 
-		int idLinkSite = -1;
+		public long getIdLinkAgent() {
+			return idLinkAgent;
+		}
+
+		public int getIdLinkSite() {
+			return idLinkSite;
+		}
+
+		private long idLinkAgent = -1;
+
+		private int idLinkSite = -1;
 
 		public States(int idInternalState, long idLinkAgent, int idLinkSite) {
 			this.idInternalState = idInternalState;
@@ -107,15 +120,15 @@ class CStoriesSiteStates {
 		}
 	}
 
-	public final static boolean isEqual(States ss1, States ss2) {
-		if (ss1==null || ss2==null)
+	public final static boolean isEqual(IStates states, IStates states2) {
+		if (states==null || states2==null)
 			return false;
 		
-		if (ss1.idInternalState != ss2.idInternalState)
+		if (states.getIdInternalState() != states2.getIdInternalState())
 			return false;
-		if (ss1.idLinkAgent != ss2.idLinkAgent)
+		if (states.getIdLinkAgent() != states2.getIdLinkAgent())
 			return false;
-		if (ss1.idLinkSite != ss2.idLinkSite)
+		if (states.getIdLinkSite() != states2.getIdLinkSite())
 			return false;
 
 		return true;

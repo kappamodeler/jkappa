@@ -1,7 +1,7 @@
 package com.plectix.simulator.components;
 
+import com.plectix.simulator.interfaces.ILiftElement;
 import com.plectix.simulator.interfaces.IState;
-import com.plectix.simulator.interfaces.ILift.LiftElement;
 
 public abstract class CState implements IState {
 
@@ -20,7 +20,7 @@ public abstract class CState implements IState {
 	}
 
 	
-	public void removeLiftElement(LiftElement element) {
+	public void removeLiftElement(ILiftElement element) {
 		// TODO Auto-generated method stub
 	}
 

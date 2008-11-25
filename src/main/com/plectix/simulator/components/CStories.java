@@ -133,7 +133,7 @@ public class CStories extends CObservables {
 
 			if (tree == null) {
 				for (NetworkNotationForCurrentStory nnCS : networkNotationForCurrentStory) {
-					if (nnCS.networkNotationList.get(0).rule.getRuleID() == key) {
+					if (nnCS.networkNotationList.get(0).getRule().getRuleID() == key) {
 						if (trees.get(key) == null) {
 							tree = new CStoryTrees(key);
 							tree.getTreeFromList(nnCS.networkNotationList);

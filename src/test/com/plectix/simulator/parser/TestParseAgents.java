@@ -11,6 +11,7 @@ import org.junit.runners.Parameterized.*;
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.util.*;
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 
 @RunWith(Parameterized.class)
 public class TestParseAgents extends DirectoryTestsRunner {
@@ -20,11 +21,12 @@ public class TestParseAgents extends DirectoryTestsRunner {
 	private final SubstanceConstructor mySubstanceConstructor = new SubstanceConstructor();
 	private String myTestFileName;
 	private EasyFileReader myReader;
-	private List<CAgent> myActualAgents = new ArrayList<CAgent>();
-	private CConnectedComponent myCC;
+	private List<IAgent> myActualAgents = new ArrayList<IAgent>();
+	private IConnectedComponent myCC;
 	private String myExpectedCC;
 
 	private class SiteCollectionsComparator extends CollectionsComparator {
+		@Override
 		public boolean equals(Object a, Object b) {
 			if (a == b) {
 				return true;
@@ -44,6 +46,7 @@ public class TestParseAgents extends DirectoryTestsRunner {
 	}
 
 	private final Failer myFailer = new Failer() {
+		@Override
 		public boolean collectionElementEquals(Object a, Object b) {
 			if (a == b) {
 				return true;
@@ -82,7 +85,7 @@ public class TestParseAgents extends DirectoryTestsRunner {
 		return DirectoryTestsRunner.getAllTestFileNames(myTestFileNamePrefix);
 	}
 
-	private CSite parseSite(String line) {
+	private ISite parseSite(String line) {
 		boolean wildcard = line.endsWith("?");
 		boolean bounded = line.contains("!");
 		boolean internal = line.contains("~");
@@ -126,8 +129,8 @@ public class TestParseAgents extends DirectoryTestsRunner {
 		myFailer.loadTestFile(myTestFileName);
 
 		String line = "";
-		CAgent currentAgent;
-		List<CSite> currentSites = new ArrayList<CSite>();
+		IAgent currentAgent;
+		List<ISite> currentSites = new ArrayList<ISite>();
 		String agentName = "";
 
 		while (line != null) {
@@ -166,6 +169,7 @@ public class TestParseAgents extends DirectoryTestsRunner {
 		myFailer.assertEquals("", Converter.toString(myCC), myExpectedCC);
 	}
 
+	@Override
 	public String getPrefixFileName() {
 		return myTestFileNamePrefix;
 	}

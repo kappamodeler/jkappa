@@ -1,27 +1,41 @@
 package com.plectix.simulator.interfaces;
 
-import java.util.List;
-import java.util.Map;
-
-import com.plectix.simulator.components.CAgent;
+import java.util.*;
 
 public interface IConnectedComponent {
+	//TODO ???
+	public boolean unify(IAgent agent);
+	
+	public List<IAgent> getAgents();
 
+	public void removeInjection(IInjection injection);
+
+	public void addAgentFromSolutionForRHS(IAgent agent);
+
+	public IInjection getFirstInjection();
+
+	public Collection<IInjection> getInjectionsList();
+
+	public void setRule(IRule rule);
+
+	public boolean isAutomorphism(IAgent agent);
+
+	public void initSpanningTreeMap();
+
+	public IInjection getRandomInjection(IRandom random);
+
+	public void clearAgentsFromSolutionForRHS();
+
+	public IAgent getAgentByIdFromSolution(int agentIdInCC, IInjection injection);
+
+	public IInjection getInjection(IAgent agent);
+
+	public void doPositiveUpdate(List<IConnectedComponent> rightHandSide);
+
+	public void setInjection(IInjection inj);
 	
-	//TODO creating spanning tree and stuff
-	public void precompile();
-	
-	public void precompilationToString();
-	
-	//TODO ???
-	public boolean unify(CAgent agent);
-	public IInjection checkAndBuildInjection(ISolution solution, IAgent agent);
-	
-	public String getPrecompilationAsString();
-	
-	//TODO ???
-	public List<IInjection> pushout();
-	
-	public List<CAgent> getAgents();
+	public List<IAgent> getAgentFromSolutionForRHS();
+
+	public List<IAgent> getAgentsSortedByIdInRule();
 	
 }

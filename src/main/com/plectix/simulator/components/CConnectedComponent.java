@@ -8,25 +8,23 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	public static final byte EMPTY = 0;
 
-	public static final CInjection EMPTY_INJECTION = new CInjection();
-
-	private List<CAgent> agentList;
+	private List<IAgent> agentList;
 
 	private HashMap<Integer, List<CSpanningTree>> spanningTreeMap;
 
-	private List<CSite> injectedSites;
+	private List<IAgent> agentFromSolutionForRHS;
+	
+	private List<ISite> injectedSites;
 
-	private List<CAgentLink> agentLinkList;
+	private List<IAgentLink> agentLinkList;
 
-	private TreeMap<Integer, CInjection> injectionsList;
+	private TreeMap<Integer, IInjection> injectionsList;
 
 	private int maxId = -1;
 
-	private CRule rule;
+	private IRule rule;
 
-	private List<CAgent> agentFromSolutionForRHS;
-
-	private void addInjection(CInjection inj, int id) {
+	private void addInjection(IInjection inj, int id) {
 		if (inj != null) {
 			maxId = Math.max(maxId, id);
 			inj.setId(id);
@@ -34,54 +32,56 @@ public class CConnectedComponent implements IConnectedComponent {
 		}
 	}
 
-	public final CAgent getAgentByIdFromSolution(int id, CInjection injection) {
-		if (injection.getAgentLinkList().size() == 0)
-			System.out.println("e");
-		for (CAgentLink agentL : injection.getAgentLinkList())
+	public final IAgent getAgentByIdFromSolution(int id, IInjection injection) {
+		for (IAgentLink agentL : injection.getAgentLinkList())
 			if (agentL.getIdAgentFrom() == id)
 				return agentL.getAgentTo();
 		return null;
 	}
 
-	public void addAgentFromSolutionForRHS(CAgent agentFromSolutionForRHS) {
+	public void addAgentFromSolutionForRHS(IAgent agentFromSolutionForRHS) {
 		this.agentFromSolutionForRHS.add(agentFromSolutionForRHS);
 	}
 
-	public List<CAgent> getAgentFromSolutionForRHS() {
-		return agentFromSolutionForRHS;
+	public final void clearAgentsFromSolutionForRHS() { 
+		agentFromSolutionForRHS.clear();
+	}
+	
+	public List<IAgent> getAgentFromSolutionForRHS() {
+		return Collections.unmodifiableList(agentFromSolutionForRHS);
 	}
 
 	public CConnectedComponent(byte empty) {
 		switch (empty) {
 		case EMPTY: {
-			agentList = new ArrayList<CAgent>();
+			agentList = new ArrayList<IAgent>();
 			agentList.add(new CAgent(CAgent.EMPTY));
-			injectionsList = new TreeMap<Integer, CInjection>();
-			addInjection(EMPTY_INJECTION, 0);
-			agentFromSolutionForRHS = new ArrayList<CAgent>();
+			injectionsList = new TreeMap<Integer, IInjection>();
+			addInjection(CInjection.EMPTY_INJECTION, 0);
+			agentFromSolutionForRHS = new ArrayList<IAgent>();
 			break;
 		}
 		}
 	}
 
-	public CConnectedComponent(List<CAgent> connectedAgents) {
+	public CConnectedComponent(List<IAgent> connectedAgents) {
 		agentList = connectedAgents;
-		injectionsList = new TreeMap<Integer, CInjection>();
-		agentFromSolutionForRHS = new ArrayList<CAgent>();
+		injectionsList = new TreeMap<Integer, IInjection>();
+		agentFromSolutionForRHS = new ArrayList<IAgent>();
 	}
 
-	public void removeInjection(CInjection injection) {
+	public void removeInjection(IInjection injection) {
 		if (injection == null) {
 			return;
 		}
-		
+
 		int id = injection.getId();
-		
+
 		if (injectionsList.get(id) != null) {
 			if (injection != injectionsList.get(id)) {
 				return;
 			}
-			CInjection inj = injectionsList.remove(maxId);
+			IInjection inj = injectionsList.remove(maxId);
 			if (id != maxId) {
 				addInjection(inj, id);
 			}
@@ -95,7 +95,7 @@ public class CConnectedComponent implements IConnectedComponent {
 		if (agentList.isEmpty())
 			return;
 
-		for (CAgent agentAdd : agentList) {
+		for (IAgent agentAdd : agentList) {
 			spTree = new CSpanningTree(agentList.size(), agentAdd);
 			List<CSpanningTree> list = spanningTreeMap
 					.get(agentAdd.getNameId());
@@ -107,27 +107,27 @@ public class CConnectedComponent implements IConnectedComponent {
 		}
 	}
 
-	private final void addLiftsToCurrentChangedStates(CInjection injection) {
-		for (CSite changedSite : injectedSites) {
+	private final void addLiftsToCurrentChangedStates(IInjection injection) {
+		for (ISite changedSite : injectedSites) {
 			changedSite.addToLift(new CLiftElement(this, injection));
 		}
 	}
 
-	public final void setInjections(CAgent agent) {
+	public final void setInjections(IAgent agent) {
 		if (unify(agent)) {
-			CInjection injection = new CInjection(this, injectedSites,
+			IInjection injection = new CInjection(this, injectedSites,
 					agentLinkList);
 			addInjection(injection, maxId + 1);
 			addLiftsToCurrentChangedStates(injection);
 		}
 	}
 
-	public final void setInjection(CInjection inj) {
+	public final void setInjection(IInjection inj) {
 		addInjection(inj, maxId + 1);
 		addLiftsToCurrentChangedStates(inj);
 	}
 
-	public final CInjection getInjection(CAgent agent) {
+	public final IInjection getInjection(IAgent agent) {
 		if (unify(agent)) {
 			CInjection injection = new CInjection(this, injectedSites,
 					agentLinkList);
@@ -137,12 +137,12 @@ public class CConnectedComponent implements IConnectedComponent {
 	}
 
 	public final void doPositiveUpdate(
-			List<CConnectedComponent> connectedComponentList) {
+			List<IConnectedComponent> connectedComponentList) {
 		if (connectedComponentList == null)
 			return;
-		for (CConnectedComponent cc : connectedComponentList) {
-			for (CAgent agent : cc.getAgentFromSolutionForRHS()) {
-				CInjection inj = getInjection(agent);
+		for (IConnectedComponent cc : connectedComponentList) {
+			for (IAgent agent : cc.getAgentFromSolutionForRHS()) {
+				IInjection inj = getInjection(agent);
 				if (inj != null) {
 					if (!agent.isAgentHaveLinkToConnectedComponent(this, inj))
 						setInjection(inj);
@@ -152,46 +152,13 @@ public class CConnectedComponent implements IConnectedComponent {
 		}
 	}
 
-	
-	public final IInjection checkAndBuildInjection(ISolution solution,
-			IAgent agent) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public final List<CAgent> getAgents() {
+	public final List<IAgent> getAgents() {
 		return Collections.unmodifiableList(agentList);
 	}
 
-	
-	public final String getPrecompilationAsString() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public final void precompilationToString() {
-		// TODO Auto-generated method stub
-
-	}
-
-	
-	public final void precompile() {
-		// TODO Auto-generated method stub
-
-	}
-
-	
-	public final List<IInjection> pushout() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public final boolean unify(CAgent agent) {
-		injectedSites = new ArrayList<CSite>();
-		agentLinkList = new ArrayList<CAgentLink>();
+	public final boolean unify(IAgent agent) {
+		injectedSites = new ArrayList<ISite>();
+		agentLinkList = new ArrayList<IAgentLink>();
 
 		if (spanningTreeMap == null)
 			return false;
@@ -208,7 +175,7 @@ public class CConnectedComponent implements IConnectedComponent {
 			if (tree != null) {
 				tree.resetNewVertex();
 				if (agentList.get(tree.getRootIndex()).getSites().isEmpty()) {
-					injectedSites.add(agent.EMPTY_SITE);
+					injectedSites.add(agent.getEmptySite());
 					agentLinkList.add(new CAgentLink(0, agent));
 					return true;
 				} else {
@@ -228,7 +195,7 @@ public class CConnectedComponent implements IConnectedComponent {
 		return false;
 	}
 
-	public final boolean isAutomorphism(CAgent agent) {
+	public final boolean isAutomorphism(IAgent agent) {
 		if (spanningTreeMap == null)
 			return false;
 
@@ -256,14 +223,14 @@ public class CConnectedComponent implements IConnectedComponent {
 		return false;
 	}
 
-	private final boolean fullEqualityOfAgents(CAgent cc1Agent, CAgent cc2Agent) {
+	private final boolean fullEqualityOfAgents(IAgent cc1Agent, IAgent cc2Agent) {
 		if (cc1Agent == null || cc2Agent == null)
 			return false;
 		if (cc1Agent.getSites().size() != cc2Agent.getSites().size())
 			return false;
 
-		for (CSite cc1Site : cc1Agent.getSites()) {
-			CSite cc2Site = cc2Agent.getSite(cc1Site.getNameId());
+		for (ISite cc1Site : cc1Agent.getSites()) {
+			ISite cc2Site = cc2Agent.getSite(cc1Site.getNameId());
 			if (cc2Site == null)
 				return false;
 			if (!compareSites(cc1Site, cc2Site, true))
@@ -272,12 +239,12 @@ public class CConnectedComponent implements IConnectedComponent {
 		return true;
 	}
 
-	private final boolean compareAgents(CAgent currentAgent,
-			CAgent solutionAgent) {
+	private final boolean compareAgents(IAgent currentAgent,
+			IAgent solutionAgent) {
 		if (currentAgent == null || solutionAgent == null)
 			return false;
-		for (CSite site : currentAgent.getSites()) {
-			CSite solutionSite = solutionAgent.getSite(site.getNameId());
+		for (ISite site : currentAgent.getSites()) {
+			ISite solutionSite = solutionAgent.getSite(site.getNameId());
 			if (solutionSite == null)
 				return false;
 			if (!compareSites(site, solutionSite, false))
@@ -289,13 +256,13 @@ public class CConnectedComponent implements IConnectedComponent {
 		return true;
 	}
 
-	private boolean compareSites(CSite currentSite, CSite solutionSite,
+	private boolean compareSites(ISite currentSite, ISite solutionSite,
 			boolean fullEquality) {
-		CLinkState currentLinkState = currentSite.getLinkState();
-		CLinkState solutionLinkState = solutionSite.getLinkState();
+		ILinkState currentLinkState = currentSite.getLinkState();
+		ILinkState solutionLinkState = solutionSite.getLinkState();
 
-		CInternalState currentInternalState = currentSite.getInternalState();
-		CInternalState solutionInternalState = solutionSite.getInternalState();
+		IInternalState currentInternalState = currentSite.getInternalState();
+		IInternalState solutionInternalState = solutionSite.getInternalState();
 
 		if (!fullEquality)
 			return (compareLinkStates(currentLinkState, solutionLinkState) && compareInternalStates(
@@ -306,40 +273,40 @@ public class CConnectedComponent implements IConnectedComponent {
 
 	}
 
-	private final boolean compareInternalStates(CInternalState currentState,
-			CInternalState solutionState) {
-		if (currentState.getNameId() != CSite.NO_INDEX
-				&& solutionState.getNameId() == CSite.NO_INDEX)
+	private final boolean compareInternalStates(IInternalState currentInternalState,
+			IInternalState solutionInternalState) {
+		if (currentInternalState.getNameId() != CSite.NO_INDEX
+				&& solutionInternalState.getNameId() == CSite.NO_INDEX)
 			return false;
-		if (currentState.getNameId() == CSite.NO_INDEX
-				&& solutionState.getNameId() != CSite.NO_INDEX)
+		if (currentInternalState.getNameId() == CSite.NO_INDEX
+				&& solutionInternalState.getNameId() != CSite.NO_INDEX)
 			return true;
-		if (!(currentState.getNameId() == solutionState.getNameId()))
+		if (!(currentInternalState.getNameId() == solutionInternalState.getNameId()))
 			return false;
 
 		return true;
 	}
 
-	private final boolean compareLinkStates(CLinkState currentState,
-			CLinkState solutionState) {
+	private final boolean compareLinkStates(ILinkState currentState,
+			ILinkState solutionLinkState) {
 		if (currentState.isLeftBranchStatus()
-				&& solutionState.isRightBranchStatus())
+				&& solutionLinkState.isRightBranchStatus())
 			return false;
 		if (currentState.isRightBranchStatus()
-				&& solutionState.isLeftBranchStatus())
+				&& solutionLinkState.isLeftBranchStatus())
 			return false;
 
-		if (currentState.getStatusLinkRank() < solutionState
+		if (currentState.getStatusLinkRank() < solutionLinkState
 				.getStatusLinkRank())
 			return true;
 
-		if (currentState.getStatusLinkRank() == solutionState
+		if (currentState.getStatusLinkRank() == solutionLinkState
 				.getStatusLinkRank()
 				&& currentState.getStatusLinkRank() == CLinkState.RANK_BOUND)
-			if (currentState.getSite().equals(solutionState.getSite()))
+			if (currentState.getSite().equals(solutionLinkState.getSite()))
 				return true;
 
-		if (currentState.getStatusLinkRank() == solutionState
+		if (currentState.getStatusLinkRank() == solutionLinkState
 				.getStatusLinkRank()
 				&& currentState.getStatusLinkRank() != CLinkState.RANK_BOUND)
 			return true;
@@ -348,38 +315,38 @@ public class CConnectedComponent implements IConnectedComponent {
 	}
 
 	private final boolean fullEqualityInternalStates(
-			CInternalState currentState, CInternalState solutionState) {
-		if (currentState.getNameId() == CSite.NO_INDEX
-				&& solutionState.getNameId() == CSite.NO_INDEX)
+			IInternalState currentInternalState, IInternalState solutionInternalState) {
+		if (currentInternalState.getNameId() == CSite.NO_INDEX
+				&& solutionInternalState.getNameId() == CSite.NO_INDEX)
 			return true;
-		if (currentState.getNameId() == solutionState.getNameId())
+		if (currentInternalState.getNameId() == solutionInternalState.getNameId())
 			return true;
 
 		return false;
 	}
 
-	private final boolean fullEqualityLinkStates(CLinkState currentState,
-			CLinkState solutionState) {
+	private final boolean fullEqualityLinkStates(ILinkState currentLinkState,
+			ILinkState solutionLinkState) {
 
-		if (currentState.getStatusLinkRank() == solutionState
+		if (currentLinkState.getStatusLinkRank() == solutionLinkState
 				.getStatusLinkRank()
-				&& currentState.getStatusLinkRank() == CLinkState.RANK_BOUND)
-			if (currentState.getSite().equals(solutionState.getSite()))
+				&& currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
+			if (currentLinkState.getSite().equals(solutionLinkState.getSite()))
 				return true;
 
-		if (currentState.getStatusLinkRank() == solutionState
+		if (currentLinkState.getStatusLinkRank() == solutionLinkState
 				.getStatusLinkRank()
-				&& currentState.getStatusLinkRank() != CLinkState.RANK_BOUND)
+				&& currentLinkState.getStatusLinkRank() != CLinkState.RANK_BOUND)
 			return true;
 
 		return false;
 	}
 
-	private List<CSite> getConnectedSite(CAgent agentFrom, CAgent agentTo) {
-		List<CSite> siteList = new ArrayList<CSite>();
+	private List<ISite> getConnectedSite(IAgent agentFrom, IAgent agentTo) {
+		List<ISite> siteList = new ArrayList<ISite>();
 
-		for (CSite sF : agentFrom.getSites()) {
-			for (CSite sT : agentTo.getSites()) {
+		for (ISite sF : agentFrom.getSites()) {
+			for (ISite sT : agentTo.getSites()) {
 				if (sF == sT.getLinkState().getSite()) {
 					siteList.add(sF);
 				}
@@ -390,16 +357,16 @@ public class CConnectedComponent implements IConnectedComponent {
 	}
 
 	// is there injection or not and create lifts
-	private final boolean spanningTreeViewer(CAgent agent,
+	private final boolean spanningTreeViewer(IAgent agent,
 			CSpanningTree spTree, int rootVertex, boolean fullEquality) {
 		spTree.setTrue(rootVertex);
 		for (Integer v : spTree.getVertexes()[rootVertex]) {
-			CAgent cAgent = agentList.get(v);// get next agent from spanning
+			IAgent cAgent = agentList.get(v);// get next agent from spanning
 			if (!(spTree
 					.getNewVertexElement(cAgent.getIdInConnectedComponent()))) {
-				List<CSite> sitesFrom = getConnectedSite(agentList
+				List<ISite> sitesFrom = getConnectedSite(agentList
 						.get(rootVertex), agentList.get(v));
-				CAgent sAgent = agent.findLinkAgent(cAgent, sitesFrom);
+				IAgent sAgent = agent.findLinkAgent(cAgent, sitesFrom);
 				if (fullEquality && !(fullEqualityOfAgents(cAgent, sAgent)))
 					return false;
 				if (!fullEquality && !compareAgents(cAgent, sAgent))
@@ -410,36 +377,32 @@ public class CConnectedComponent implements IConnectedComponent {
 		return true;
 	}
 
-	public final CRule getRule() {
+	public final IRule getRule() {
 		return rule;
 	}
 
-	public final void setRule(CRule rule) {
+	public final void setRule(IRule rule) {
 		this.rule = rule;
 	}
 
-	public Collection<CInjection> getInjectionsList() {
+	public Collection<IInjection> getInjectionsList() {
 		return Collections.unmodifiableCollection(injectionsList.values());
 	}
 
-	public CInjection getRandomInjection(IRandom random) {
+	public IInjection getRandomInjection(IRandom random) {
 		int index;
-		CInjection inj = null;
+		IInjection inj = null;
 		index = random.getInteger(maxId + 1);
 		inj = injectionsList.get(index);
 		return inj;
 	}
 
-	public CInjection getFirstInjection() {
+	public IInjection getFirstInjection() {
 		return injectionsList.get(0);
 	}
 
-	public int getInjectionsQuantity() {
-		return injectionsList.size();
-	}
-
-	public List<CAgent> getAgentsSortedByIdInRule() {
-		List<CAgent> temp = new ArrayList<CAgent>();
+	public List<IAgent> getAgentsSortedByIdInRule() {
+		List<IAgent> temp = new ArrayList<IAgent>();
 		temp.addAll(agentList);
 		Collections.sort(temp);
 		return Collections.unmodifiableList(temp);

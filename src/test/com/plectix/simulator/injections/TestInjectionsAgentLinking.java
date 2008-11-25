@@ -11,6 +11,7 @@ import org.junit.runners.*;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 
 @RunWith(value = Parameterized.class)
 public class TestInjectionsAgentLinking extends TestInjections {
@@ -43,8 +44,8 @@ public class TestInjectionsAgentLinking extends TestInjections {
 		myObsAgentsOrder = obsAgentsOrder;
 	}
 
-	private CAgent getAgentFromCCById(CConnectedComponent cc, int id) {
-		for (CAgent agent : cc.getAgents()) {
+	private IAgent getAgentFromCCById(IConnectedComponent cc, int id) {
+		for (IAgent agent : cc.getAgents()) {
 			if (agent.getIdInConnectedComponent() == id) {
 				return agent;
 			}
@@ -73,20 +74,20 @@ public class TestInjectionsAgentLinking extends TestInjections {
 	@Test
 	public void testScaryAgentLinking() {
 
-		for (ObservablesConnectedComponent c : getInitializator().getObservables()) {
+		for (IObservablesConnectedComponent c : getInitializator().getObservables()) {
 			StringBuffer name = new StringBuffer("scary");
 			if (myNumber < 10) {
 				name.append(0);
 			}
 			name.append(myNumber);
 			if (name.toString().equals(c.getName())) {
-				Collection<CInjection> injectionsList = c.getInjectionsList();
+				Collection<IInjection> injectionsList = c.getInjectionsList();
 
-				for (CInjection injection : injectionsList) {
-					CConnectedComponent cc = injection.getConnectedComponent();
-					for (CAgentLink link : injection.getAgentLinkList()) {
+				for (IInjection injection : injectionsList) {
+					IConnectedComponent cc = injection.getConnectedComponent();
+					for (IAgentLink link : injection.getAgentLinkList()) {
 						int from = link.getIdAgentFrom();
-						CAgent agentFrom = getAgentFromCCById(cc, from);
+						IAgent agentFrom = getAgentFromCCById(cc, from);
 						int to = (int) link.getAgentTo().getId();
 						int index = to - myHalfInitPower - 100 * (myNumber - 1);
 
