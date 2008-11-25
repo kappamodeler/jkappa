@@ -36,8 +36,7 @@
 	
 	<!-- ################################### Misc Targets ################################### -->
 
-<!-- depends="clean,build,package,doc,test" -->
-    <target name="all" 
+    <target name="all" depends="cleanall,build,deploy,doc,test" 
 	        description="Cleanly build, package and test everything (does not update database)"/>
 
     <target name="clean" description="Clean up build directories">
@@ -50,14 +49,15 @@
 		<delete dir="${deploy.dir}"/>
 	</target>
  
-	<target name="build" depends="build-subprojects,build-project"/>
+	<target name="build" depends="build-subprojects,set-svn-revision,filter-tpl,build-project"/>
     
 	<target name="build-subprojects"/>
      
     <target name="init">
+		<tstamp/>
         <mkdir dir="${build.dir}"/>
         <copy includeemptydirs="false" todir="${build.dir}">
-            <fileset dir="${src.dir}" excludes="**/*.launch, **/*.java"/>
+            <fileset dir="${src.dir}" excludes="**/*.launch, **/*.java, **/*.tpl"/>
         </copy>
     </target>
 
@@ -79,9 +79,8 @@
 		</jar>
 	</target>
 	
-	<target name="deploy" depends="build-project,package,createPaths" description="Deploying the package">
+	<target name="deploy" depends="build,package,createPaths" description="Deploying the package">
 		<mkdir dir="${deploy.dir}"/>
-		<tstamp/>
 		<property name="deploy-dest" value="Plectix-Simulator-${DSTAMP}"/>
 		<property name="deploy-zip.dir" value="${deploy.dir}/${deploy-dest}"/>
 		<delete dir="${deploy-zip.dir}"/>
@@ -159,31 +158,70 @@
 		<echo message="The value of export.classpath.unix is ${export.classpath.unix}"/>
 	</target>
 
+
+   <!-- for xpath task below -->
+    <taskdef resource="net/uworks/andariel/andariel.properties">
+        <classpath>
+                <pathelement location="${lib.dir}/ant/andariel-1.2.3.jar"/>
+	    </classpath>
+	</taskdef>
+
   <!-- Set version -->
-    <target name="set-version">
+    <target name="set-svn-revision">
+		<echo message="${lib.dir}/ant/andariel-1.2.3.jar"/>
 	    <property name="svn.info" value="svn.info" />
 
         <!-- Get last SVN revision. -->
         <exec executable="svn" output="${svn.info}">
              <arg value="info" />
-             <arg value="--revision=HEAD" />
              <arg value="--xml" />
         </exec>
 
         <!-- Query revision. -->
-		<!--
         <xpath file="${svn.info}"
              expression="//entry/@revision"
-             outputproperty="build.revision" />
-			 -->
+             outputproperty="build.svn.revision" />
 
         <!-- Delete temp revision file. -->
-		<!--
         <delete file="${svn.info}" />
-		-->
 
-        <!-- Show version -->
-        <echo message="SVN revision ${build.reversion}" />
+		<!-- Show version -->
+		<echo message="SVN Revision ${build.svn.revision}" />
     </target>
+
+    <target name="filter-tpl">
+        <echo message="Processing the templates. ${ant.build.javac.source}" />
+	    <tstamp>
+	          <format property="build.date" pattern="yyyy-MM-dd HH:mm:ss z" />
+		</tstamp>
+        <copy todir="${src.dir}" overwrite="true" verbose="true">
+            <fileset dir="${src.dir}">
+                <include name="**/*.tpl" />
+            </fileset>
+            <filterset>
+	            <filter token="build.svn.revision" value="${build.svn.revision}" />
+	            <filter token="build.date" value="${build.date}" />
+	            <filter token="build.os.name" value="${os.name}" />
+	            <filter token="ant.java.version" value="${ant.java.version}" />
+            </filterset>
+            <globmapper from="*.tpl" to="*.java" />
+        </copy>
+    </target>
+
+	
+	<!-- ################################### Javadoc Targets ################################### -->
+	
+	<target name="doc" description="Create all Javadoc documentation">
+		<mkdir dir="${javadoc.dir}"/>
+		<javadoc destdir="${javadoc.dir}" windowtitle="Plectix Simulator" source="1.6" author="true" version="true" use="true">
+			<doctitle><![CDATA[<h1>Plectix Simulator</h1>]]></doctitle>
+			<bottom><![CDATA[<i>(c) 2008 Plectix BioSystems Inc.</i>]]></bottom>
+			<classpath refid="simulator.classpath"/>
+		    <group title="All Packages" packages="com.plectix.simulator*"/>
+		    <packageset dir="${src.dir}" defaultexcludes="yes">
+				<include name="com/plectix/simulator/**"/>
+		    </packageset>
+		</javadoc>
+	</target>
 
 </project>
