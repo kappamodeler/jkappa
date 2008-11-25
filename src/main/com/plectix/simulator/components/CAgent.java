@@ -235,7 +235,6 @@ public class CAgent implements IAgent, Comparable<CAgent> {
 		return sb.toString();
 	}
 
-	@Override
 	public int compareTo(CAgent o) {
 		return idInRuleSide - o.idInRuleSide;
 	}

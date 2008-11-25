@@ -5,9 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.junit.runner.notification.StoppedByUserException;
-
-import com.plectix.simulator.components.CNetworkNotation.AgentSites;
 
 public class CStories extends CObservables {
 
