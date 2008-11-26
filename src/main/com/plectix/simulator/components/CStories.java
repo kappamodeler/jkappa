@@ -52,19 +52,9 @@ public class CStories extends CObservables {
 			this.networkNotationList = nnList;
 		}
 
-		private boolean isCover(List<CNetworkNotation> coverList,
-				List<CNetworkNotation> needToCoverList) {
-			for (CNetworkNotation nn : needToCoverList) {
-
-			}
-
-			return false;
-		}
-
 		private final boolean isIntersects(CNetworkNotation nn,
 				List<CNetworkNotation> nnList) {
 
-			boolean is = false;
 			for (CNetworkNotation nnFromList : nnList) {
 				if (!((nnFromList.isIntersects(nn) == CNetworkNotation.HAS_NO_INTERSECTION) && (nn
 						.isIntersects(nnFromList) == CNetworkNotation.HAS_NO_INTERSECTION)))
@@ -134,6 +124,8 @@ public class CStories extends CObservables {
 			if (tree == null) {
 				for (NetworkNotationForCurrentStory nnCS : networkNotationForCurrentStory) {
 					if (nnCS.networkNotationList.get(0).getRule().getRuleID() == key) {
+						if (nnCS.networkNotationList.size()==2)
+						System.out.println();
 						if (trees.get(key) == null) {
 							tree = new CStoryTrees(key);
 							tree.getTreeFromList(nnCS.networkNotationList);
