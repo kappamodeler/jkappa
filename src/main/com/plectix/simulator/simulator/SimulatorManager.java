@@ -5,10 +5,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
@@ -297,7 +296,7 @@ public class SimulatorManager {
 			return line;
 
 		List<IAgent> sortedAgents = cc.getAgentsSortedByIdInRule();
-		
+
 		for (IAgent agent : sortedAgents) {
 			line = line + agent.getName();
 			line = line + "(";
@@ -374,13 +373,12 @@ public class SimulatorManager {
 	}
 
 	private final static List<String> sortSitesStr(List<String> list) {
-		if (ObservablesConnectedComponent.isOcamlStyleObsName()) {
+		if (CObservables.isOcamlStyleObsName()) {
 			Collections.sort(list);
 		}
-		
+
 		return list;
 	}
-
 
 	private final void outputRules() {
 		for (IRule rule : getRules()) {

@@ -58,10 +58,6 @@ public class ObservablesRuleComponent implements IObservablesRuleComponent {
 		return nameID;
 	}
 
-//	public byte getType() {
-//		return IObservablesComponent.TYPE_RULE_COMPONENT;
-//	}
-
 	public double getSize() {
 		return rule.getRuleRate();
 	}
@@ -73,7 +69,7 @@ public class ObservablesRuleComponent implements IObservablesRuleComponent {
 	@Override
 	public void addAutomorphicObservables(int index) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -85,7 +81,17 @@ public class ObservablesRuleComponent implements IObservablesRuleComponent {
 	@Override
 	public void setMainAutomorphismNumber(int index) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public boolean isUnique() {
+		return true;
+	}
+
+	@Override
+	public long getValue(int index, CObservables obs) {
+		return countList.get(index);
 	}
 
 }

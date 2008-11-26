@@ -3,10 +3,12 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.interfaces.IRule;
 
 public class CObservables {
+	private static boolean ocamlStyleObsName = false;
+
 	private List<IObservablesConnectedComponent> connectedComponentList;
 	private List<IObservablesComponent> componentList;
 	public static List<Double> countTimeList;
@@ -177,19 +179,52 @@ public class CObservables {
 		return componentList;
 	}
 
+	public final List<IObservablesComponent> getComponentListForXMLOutput() {
+		List<Integer> map = new ArrayList<Integer>();
+		List<IObservablesComponent> list = new ArrayList<IObservablesComponent>();
+		for (IObservablesComponent cc : componentList) {
+			if (!map.contains(cc.getNameID())) {
+				map.add(cc.getNameID());
+				list.add(cc);
+			}
+		}
+		return list;
+	}
+
 	public final List<IObservablesConnectedComponent> getConnectedComponentList() {
 		return connectedComponentList;
 	}
 
 	public final void addConnectedComponents(List<IConnectedComponent> list,
-			String name, String line, int id) {
+			String name, String line, int nameID) {
+		boolean unique;
+		if (list.size() > 1)
+			unique = false;
+		else
+			unique = true;
+		if (ocamlStyleObsName) {
+			line = SimulationMain.getSimulationManager().printPartRule(list);
+		}
+
 		for (IConnectedComponent component : list) {
 			IObservablesConnectedComponent oCC = new ObservablesConnectedComponent(
-					component.getAgents(), name, line, id);
+					component.getAgents(), name, line, nameID, unique);
 			oCC.initSpanningTreeMap();
 			connectedComponentList.add(oCC);
 			componentList.add(oCC);
 		}
+	}
+
+	public final List<IObservablesConnectedComponent> getConnectedComponentListForXMLOutput() {
+		List<Integer> map = new ArrayList<Integer>();
+		List<IObservablesConnectedComponent> list = new ArrayList<IObservablesConnectedComponent>();
+		for (IObservablesConnectedComponent cc : connectedComponentList) {
+			if (!map.contains(cc.getNameID())) {
+				map.add(cc.getNameID());
+				list.add(cc);
+			}
+		}
+		return list;
 	}
 
 	public final void checkAutomorphisms() {
@@ -208,5 +243,13 @@ public class CObservables {
 				}
 			}
 		}
+	}
+
+	public final static void setOcamlStyleObsName(boolean ocamlStyleObsName) {
+		CObservables.ocamlStyleObsName = ocamlStyleObsName;
+	}
+
+	public final static boolean isOcamlStyleObsName() {
+		return ocamlStyleObsName;
 	}
 }

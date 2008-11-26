@@ -80,7 +80,7 @@ public class SimulationData {
 	}
 
 	public final void setOcamlStyleObsName(boolean ocamlStyleObsName) {
-		ObservablesConnectedComponent.setOcamlStyleObsName(ocamlStyleObsName);
+		CObservables.setOcamlStyleObsName(ocamlStyleObsName);
 	}
 
 	public final boolean isTime() {
@@ -313,29 +313,29 @@ public class SimulationData {
 		if (activationMap) {
 			Element influenceMap = doc.createElement("InfluenceMap");
 
-			int rulesAndObsNumber = observables.getConnectedComponentList()
-					.size()
-					+ rules.size();
+			List<IObservablesConnectedComponent> obsCCList = observables
+					.getConnectedComponentListForXMLOutput();
+			int rulesAndObsNumber = obsCCList.size() + rules.size();
 			/**
 			 * add observables
 			 * */
-			for (int i = observables.getConnectedComponentList().size() - 1; i >= 0; i--) {
+			for (int i = obsCCList.size() - 1; i >= 0; i--) {
+				IObservablesConnectedComponent obsCC = obsCCList.get(i);
 				Element node = doc.createElement("Node");
 				node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
 				node.setAttribute("Type", "OBSERVABLE");
-				String obsName = observables.getConnectedComponentList().get(i)
-						.getName();
+
+				String obsName = obsCC.getName();
 
 				if (obsName == null)
-					obsName = observables.getConnectedComponentList().get(i)
-							.getLine();
+					obsName = obsCC.getLine();
 
 				node.setAttribute("Text", '[' + obsName + ']');
-				node.setAttribute("Data", observables
-						.getConnectedComponentList().get(i).getLine());
+				node.setAttribute("Data", obsCC.getLine());
 				node.setAttribute("Name", '[' + obsName + ']');
 				influenceMap.appendChild(node);
 			}
+
 			/**
 			 * add rules
 			 * */
@@ -433,9 +433,10 @@ public class SimulationData {
 				observables.getTimeSampleMin()).toString());
 		simplxSession.appendChild(simulation);
 
-		for (int i = observables.getComponentList().size() - 1; i >= 0; i--) {
-			Element node = createElement(observables.getComponentList().get(i),
-					doc);
+		List<IObservablesComponent> list = observables
+				.getComponentListForXMLOutput();
+		for (int i = list.size() - 1; i >= 0; i--) {
+			Element node = createElement(list.get(i), doc);
 			simulation.appendChild(node);
 		}
 
@@ -444,7 +445,7 @@ public class SimulationData {
 		CDATASection cdata = doc.createCDATASection("\n");
 
 		for (int i = 0; i < obsCountTimeListSize; i++) {
-			appendData(observables, cdata, i);
+			appendData(observables, list, cdata, i);
 		}
 
 		csv.appendChild(cdata);
@@ -487,7 +488,7 @@ public class SimulationData {
 			node.setAttribute("ToNode", map.get(i).toString());
 			node.setAttribute("Relation", "STRONG");
 			story.appendChild(node);
-			addConnection(story, st, doc, i,depth, map);
+			addConnection(story, st, doc, i, depth, map);
 		}
 		Element node = doc.createElement("Node");
 		node.setAttribute("Id", map.get(item).toString());
@@ -529,8 +530,8 @@ public class SimulationData {
 		String obsName = obs.getName();
 		if (obsName == null)
 			obsName = obs.getLine();
-		
-		//TODO do otherway
+
+		// TODO do otherway
 		if (obs instanceof IObservablesConnectedComponent) {
 			node.setAttribute("Type", "OBSERVABLE");
 			node.setAttribute("Text", '[' + obsName + ']');
@@ -617,16 +618,29 @@ public class SimulationData {
 		return timeSampleMin;
 	}
 
-	private void appendData(CObservables obs, CDATASection cdata, int index) {
+	private void appendData(CObservables obs, List<IObservablesComponent> list,
+			CDATASection cdata, int index) {
 		String enter = "\n";
 		cdata.appendData(obs.getCountTimeList().get(index).toString());
-		for (int j = obs.getComponentList().size() - 1; j >= 0; j--) {
+		for (int j = list.size() - 1; j >= 0; j--) {
 			cdata.appendData(",");
-			IObservablesComponent oCC = obs.getComponentList().get(j);
-			cdata.appendData(oCC.getItem(index, obs));
+			IObservablesComponent oCC = list.get(j);
+			cdata.appendData(getItem(obs, index, oCC));
 		}
-
 		cdata.appendData(enter);
+	}
+
+	private final String getItem(CObservables obs, int index,
+			IObservablesComponent oCC) {
+		if (oCC.isUnique())
+			return oCC.getItem(index, obs);
+		long value = 1;
+		for (IObservablesConnectedComponent cc : obs
+				.getConnectedComponentList())
+			if (cc.getNameID() == oCC.getNameID())
+				value *= cc.getValue(index, obs);
+
+		return Long.valueOf(value).toString();
 	}
 
 	public final String getTmpSessionName() {

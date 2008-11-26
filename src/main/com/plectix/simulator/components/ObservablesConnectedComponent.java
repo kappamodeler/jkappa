@@ -7,13 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.*;
 
 public class ObservablesConnectedComponent extends CConnectedComponent
 		implements IObservablesConnectedComponent {
-	private static boolean ocamlStyleObsName = false;
-
 	public static int COUNTER = 0;
 	private String name;
 	private String line;
@@ -22,31 +19,20 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 	public static final int NO_INDEX = -1;
 	int mainAutomorphismNumber = NO_INDEX;
 	private final List<Integer> countList = new ArrayList<Integer>();
+	private boolean unique = true;
 
 	public ObservablesConnectedComponent(List<IAgent> connectedAgents,
-			String name, String line, int nameID) {
+			String name, String line, int nameID, boolean unique) {
 		super(connectedAgents);
+		this.unique = unique;
 		this.name = name;
-		if (ocamlStyleObsName) {
-			this.line = SimulationMain.getSimulationManager().printPartRule(
-					this, 0);
-		} else {
-			this.line = line;
-		}
+		this.line = line;
 		this.automorphicObservables = new ArrayList<Integer>();
 		this.nameID = nameID;
 	}
-	
+
 	public final int getNameID() {
 		return nameID;
-	}
-
-	public final static void setOcamlStyleObsName(boolean ocamlStyleObsName) {
-		ObservablesConnectedComponent.ocamlStyleObsName = ocamlStyleObsName;
-	}
-
-	public final static boolean isOcamlStyleObsName() {
-		return ocamlStyleObsName;
 	}
 
 	public final int getMainAutomorphismNumber() {
@@ -75,12 +61,10 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 
 	private int lastInjectionsQuantity = -1;
 
-	
 	public void updateLastValue() {
 		lastInjectionsQuantity = getInjectionsList().size();
 	}
 
-	
 	public final void calculate(boolean replaceLast) {
 		if (replaceLast)
 			countList.set(countList.size() - 1, getInjectionsList().size());
@@ -92,15 +76,10 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 		return name;
 	}
 
-//	public byte getType() {
-//		return IObservablesComponent.TYPE_CONNECTED_COMPONENT;
-//	}
-
 	public double getSize() {
 		return getInjectionsList().size();
 	}
 
-	
 	public String getItem(int index, CObservables obs) {
 		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
 			if (countList.get(index) == 0) {
@@ -109,6 +88,23 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 			return countList.get(index).toString();
 		} else
 			return obs.getComponentList().get(mainAutomorphismNumber).getItem(
+					index, obs);
+	}
+
+	@Override
+	public boolean isUnique() {
+		return unique;
+	}
+
+	@Override
+	public long getValue(int index, CObservables obs) {
+		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
+			if (countList.get(index) == 0) {
+				COUNTER++;
+			}
+			return countList.get(index);
+		} else
+			return obs.getComponentList().get(mainAutomorphismNumber).getValue(
 					index, obs);
 	}
 }

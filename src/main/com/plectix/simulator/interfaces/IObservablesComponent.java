@@ -23,6 +23,8 @@ public interface IObservablesComponent {
 
 	public String getItem(int index, CObservables obs);
 
+	public long getValue(int index, CObservables obs);
+
 	public void updateLastValue();
 	
 	public int getMainAutomorphismNumber();
@@ -30,4 +32,6 @@ public interface IObservablesComponent {
 	public void setMainAutomorphismNumber(int index);
 
 	public void addAutomorphicObservables(int index);
+	
+	public boolean isUnique();
 }
