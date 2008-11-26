@@ -123,19 +123,20 @@ public class CStories extends CObservables {
 
 			if (tree == null) {
 				for (NetworkNotationForCurrentStory nnCS : networkNotationForCurrentStory) {
-					if (nnCS.networkNotationList.get(0).getRule().getRuleID() == key) {
-						if (nnCS.networkNotationList.size()==2)
-						System.out.println();
-						if (trees.get(key) == null) {
-							tree = new CStoryTrees(key);
-							tree.getTreeFromList(nnCS.networkNotationList);
-							trees.put(key, tree);
-						} else {
-							CStoryTrees newTree = new CStoryTrees(key);
-							newTree.getTreeFromList(nnCS.networkNotationList);
-							tree.merge(newTree.getMap(), key);
+					if (nnCS.networkNotationList.size() != 0)
+						if (nnCS.networkNotationList.get(0).getRule()
+								.getRuleID() == key) {
+							if (trees.get(key) == null) {
+								tree = new CStoryTrees(key);
+								tree.getTreeFromList(nnCS.networkNotationList);
+								trees.put(key, tree);
+							} else {
+								CStoryTrees newTree = new CStoryTrees(key);
+								newTree
+										.getTreeFromList(nnCS.networkNotationList);
+								tree.merge(newTree.getMap(), key);
+							}
 						}
-					}
 				}
 			}
 		}

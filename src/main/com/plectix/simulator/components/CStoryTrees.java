@@ -44,8 +44,8 @@ public class CStoryTrees {
 			for (int i = begin; i < commonList.size(); i++) {
 				CNetworkNotation nn = commonList.get(i);
 				addToStorySites(nn, index, commonList, i + 1);
-				if (!list.contains(nn.getRule().getRuleID()))
-					if (nn.getRule().getRuleID() != newNN.getRule().getRuleID())
+				//if (!list.contains(nn.getRule().getRuleID()))
+					//if (nn.getRule().getRuleID() != newNN.getRule().getRuleID())
 						list.add(nn.getRule().getRuleID());
 				if (fullCover(index)) {
 					begInd = i + 1;
