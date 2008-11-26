@@ -17,7 +17,6 @@ public class CObservables {
 	private long events = -1;
 	private int points = -1;
 
-		
 	public final double getTimeSampleMin() {
 		return timeSampleMin;
 	}
@@ -199,11 +198,12 @@ public class CObservables {
 				for (IObservablesConnectedComponent oCCIn : connectedComponentList) {
 					if (!(oCC == oCCIn)
 							&& oCCIn.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
-						if (oCC.isAutomorphism(oCCIn.getAgents().get(0))) {
-							int index = connectedComponentList.indexOf(oCC);
-							oCC.addAutomorphicObservables(index);
-							oCCIn.setMainAutomorphismNumber(index);
-						}
+						if (oCC.getAgents().size() == oCCIn.getAgents().size())
+							if (oCC.isAutomorphism(oCCIn.getAgents().get(0))) {
+								int index = connectedComponentList.indexOf(oCC);
+								oCC.addAutomorphicObservables(index);
+								oCCIn.setMainAutomorphismNumber(index);
+							}
 					}
 				}
 			}

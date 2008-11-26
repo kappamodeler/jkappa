@@ -27,7 +27,7 @@ public class CRule implements IRule {
 	private List<IObservablesConnectedComponent> activatedObservable;
 
 	private int ruleID;
-	
+
 	private List<IAction> actionList;
 
 	private HashMap<IAgent, IAgent> agentAddList;
@@ -87,8 +87,8 @@ public class CRule implements IRule {
 			this.ruleRate = ruleRate;
 		} else {
 			Logger logger = Logger.getLogger(this.getClass());
-			logger.info("warning : rate of the rule '" 
-					+ name + "' was attempted to be set as negative");
+			logger.info("warning : rate of the rule '" + name
+					+ "' was attempted to be set as negative");
 			this.ruleRate = 0;
 		}
 	}
@@ -130,19 +130,19 @@ public class CRule implements IRule {
 		return ruleRate;
 	}
 
-//	private final void markedLHS() {
-//		int counter = 1;
-//		if (leftHandSide.get(0) == EMPTY_LHS_CC) {
-//			maxAgentID = 1;
-//			return;
-//		}
-//		for (IConnectedComponent cc : leftHandSide)
-//			for (IAgent agent : cc.getAgents()) {
-//				agent.setIdInRuleSide(counter);
-//				counter++;
-//			}
-//		maxAgentID = counter;
-//	}
+	// private final void markedLHS() {
+	// int counter = 1;
+	// if (leftHandSide.get(0) == EMPTY_LHS_CC) {
+	// maxAgentID = 1;
+	// return;
+	// }
+	// for (IConnectedComponent cc : leftHandSide)
+	// for (IAgent agent : cc.getAgents()) {
+	// agent.setIdInRuleSide(counter);
+	// counter++;
+	// }
+	// maxAgentID = counter;
+	// }
 
 	private final HashMap<Integer, List<IAgent>> createAgentMap(
 			List<IConnectedComponent> ccList) {
@@ -374,9 +374,8 @@ public class CRule implements IRule {
 		activatedObservable = new ArrayList<IObservablesConnectedComponent>();
 		for (IObservablesConnectedComponent obsCC : observables
 				.getConnectedComponentList()) {
-			if (// obsCC.getMainAutomorphismNumber()==
-			// ObservablesConnectedComponent.NO_INDEX &&
-			isActivated(obsCC.getAgents())) {
+			if (obsCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX
+					&& isActivated(obsCC.getAgents())) {
 				activatedObservable.add(obsCC);
 			}
 		}
@@ -458,9 +457,11 @@ public class CRule implements IRule {
 	private final void calculateAutomorphismsNumber() {
 		if (leftHandSide != null)
 			if (this.leftHandSide.size() == 2) {
-				if (this.leftHandSide.get(0).isAutomorphism(
-						this.leftHandSide.get(1).getAgents().get(0)))
-					automorphismNumber = 2;
+				if (this.leftHandSide.get(0).getAgents().size() == this.leftHandSide
+						.get(1).getAgents().size())
+					if (this.leftHandSide.get(0).isAutomorphism(
+							this.leftHandSide.get(1).getAgents().get(0)))
+						automorphismNumber = 2;
 			}
 	}
 
@@ -613,7 +614,7 @@ public class CRule implements IRule {
 			}
 			}
 		}
-		
+
 		public IConnectedComponent getCLeftComponent() {
 			return leftConnectedComponent;
 		}
@@ -643,10 +644,8 @@ public class CRule implements IRule {
 		private ISite siteTo;
 		private Integer nameInternalStateId;
 
-		
-
-		private final void addToNetworkNotation(int index, INetworkNotation netNotation,
-				ISite site) {
+		private final void addToNetworkNotation(int index,
+				INetworkNotation netNotation, ISite site) {
 			if (netNotation != null)
 				switch (action) {
 				case ACTION_BRK:
@@ -656,15 +655,15 @@ public class CRule implements IRule {
 					netNotation.checkLinkForNetworkNotationDel(index, site);
 					break;
 				case ACTION_ADD:
-					netNotation.addToAgents(site, new CStoriesSiteStates(index, site
-							.getInternalState().getNameId()), index);
+					netNotation.addToAgents(site, new CStoriesSiteStates(index,
+							site.getInternalState().getNameId()), index);
 					break;
 				case ACTION_BND:
 					netNotation.checkLinkForNetworkNotation(index, site);
 					break;
 				case ACTION_MOD:
-					netNotation.addToAgents(site, new CStoriesSiteStates(index, site
-							.getInternalState().getNameId()), index);
+					netNotation.addToAgents(site, new CStoriesSiteStates(index,
+							site.getInternalState().getNameId()), index);
 					break;
 				}
 		}
@@ -700,8 +699,7 @@ public class CRule implements IRule {
 						.getAgentByIdFromSolution(agentIdInCC, injection);
 				rightConnectedComponent
 						.addAgentFromSolutionForRHS(agentFromInSolution);
-				
-				
+
 				break;
 			}
 			case ACTION_BND: {
@@ -832,8 +830,8 @@ public class CRule implements IRule {
 				}
 
 				for (ILiftElement lift : agent.getEmptySite().getLift()) {
-					agent.getEmptySite().removeInjectionsFromCCToSite(lift
-							.getInjection());
+					agent.getEmptySite().removeInjectionsFromCCToSite(
+							lift.getInjection());
 					lift.getInjection().getConnectedComponent()
 							.removeInjection(lift.getInjection());
 				}
@@ -1022,9 +1020,8 @@ public class CRule implements IRule {
 		private final void createBound() {
 			for (ISite site : toAgent.getSites())
 				if (site.getLinkState().getSite() != null)
-					actionList.add(new Action(site, (site
-							.getLinkState().getSite()),
-							rightConnectedComponent, null));
+					actionList.add(new Action(site, (site.getLinkState()
+							.getSite()), rightConnectedComponent, null));
 
 		}
 
@@ -1049,9 +1046,10 @@ public class CRule implements IRule {
 
 	public void applyLastRuleForStories(List<IInjection> injectionsList,
 			INetworkNotation netNotation) {
-		for(IInjection inj : injectionsList){
+		for (IInjection inj : injectionsList) {
 			for (ISite site : inj.getSiteList())
-				netNotation.checkLinkForNetworkNotationDel(CStoriesSiteStates.LAST_STATE, site);
+				netNotation.checkLinkForNetworkNotationDel(
+						CStoriesSiteStates.LAST_STATE, site);
 		}
 	}
 }
