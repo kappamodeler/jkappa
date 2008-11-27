@@ -65,7 +65,8 @@ public final class CAgent implements IAgent {
 
 	public boolean isAgentHaveLinkToConnectedComponent(IConnectedComponent cc,
 			IInjection injection) {
-
+		if (checkSites(this.getEmptySite(), injection, cc))
+			return true;
 		for (ISite site : siteMap.values()) {
 			if (checkSites(site.getAgentLink().getEmptySite(), injection, cc))
 				return true;
