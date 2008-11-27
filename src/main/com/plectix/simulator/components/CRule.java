@@ -231,7 +231,7 @@ public class CRule implements IRule {
 		}
 
 		for (int i = index; i < rhsAgents.size(); i++) {
-			if (rhsAgents.size() == 1)
+			if (index==0)
 				rhsAgents.get(i).setIdInRuleSide(lhsAgents.size() + i + 1);
 			else
 				rhsAgents.get(i).setIdInRuleSide(lhsAgents.size() + i);
