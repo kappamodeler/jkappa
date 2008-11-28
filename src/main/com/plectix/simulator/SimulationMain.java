@@ -56,7 +56,7 @@ public class SimulationMain {
 	private static boolean myIsSimulating = false;
 
 	private static Logger LOGGER = Logger.getLogger(SimulationMain.class);
-	
+
 	static {
 		cmdLineOptions = new Options();
 		cmdLineOptions.addOption(SHORT_SIMULATIONFILE_OPTION,
@@ -134,13 +134,25 @@ public class SimulationMain {
 		LOGGER.info("Ant Java Version: " + BuildConstants.ANT_JAVA_VERSION);
 
 		instance = new SimulationMain();
-//		simulationManager = new SimulatorManager();
+		// simulationManager = new SimulatorManager();
 		simulationManager.startTimer();
 		instance.parseArguments(args);
 		instance.readSimulatonFile();
 		instance.initialize();
 		if (myIsSimulating)
 			instance.runSimulator();
+	}
+	
+	private final static String[] changeArgs(String[] args){
+		String[] argsNew = new String[args.length];
+		int i = 0;
+		for (String st : args)
+			if (st.startsWith("-"))
+				argsNew[i++] = st.substring(0, 2)
+						+ st.substring(2).replaceAll("-", "_");
+			else
+				argsNew[i++] = st;
+		return argsNew;
 	}
 
 	public void initialize() {
@@ -159,7 +171,7 @@ public class SimulationMain {
 			System.exit(1);
 		}
 		SimulationMain.getSimulationManager().getSimulationData()
-		.setClockStamp(System.currentTimeMillis());
+				.setClockStamp(System.currentTimeMillis());
 
 	}
 
@@ -180,7 +192,7 @@ public class SimulationMain {
 
 	public final void readSimulatonFile() {
 
- 		boolean option = false;
+		boolean option = false;
 		String fileName = null;
 		double timeSim = 0.;
 		double snapshotTime = -1.;
@@ -236,9 +248,9 @@ public class SimulationMain {
 				option = false;
 		}
 		if (cmdLineArgs.hasOption(LONG_FORWARD_OPTION)) {
-			isForwarding  = true;
+			isForwarding = true;
 		}
-		
+
 		if (!option) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("use --sim [file]", cmdLineOptions);
@@ -269,6 +281,8 @@ public class SimulationMain {
 	}
 
 	public final void parseArguments(String[] args) {
+		simulationManager.getSimulationData().setCommandLine(args);
+		args = changeArgs(args);
 		CommandLineParser parser = new PosixParser();
 		try {
 			cmdLineArgs = parser.parse(cmdLineOptions, args);
@@ -372,16 +386,16 @@ public class SimulationMain {
 			SimulationMain.getSimulationManager().getSimulationData()
 					.setIterations(iteration);
 		}
-		
-		if (cmdLineArgs.hasOption(LONG_CLOCK_PRECISION_OPTION)){
+
+		if (cmdLineArgs.hasOption(LONG_CLOCK_PRECISION_OPTION)) {
 			long clockPrecision = 0;
 			clockPrecision = Long.valueOf(cmdLineArgs
 					.getOptionValue(LONG_CLOCK_PRECISION_OPTION));
 			clockPrecision *= 60000;
-			SimulationMain
-				.getSimulationManager().getSimulationData()
+			SimulationMain.getSimulationManager().getSimulationData()
 					.setClockPrecision(clockPrecision);
 		}
+
 		
 		if (cmdLineArgs.hasOption(LONG_OUTPUT_SCHEME_OPTION)){
 			SimulationMain
@@ -389,7 +403,6 @@ public class SimulationMain {
 					.setXmlSessionPath(cmdLineArgs
 							.getOptionValue(LONG_OUTPUT_SCHEME_OPTION));
 		}
-		simulationManager.getSimulationData().setCommandLine(args);
 	}
 
 	public final static SimulatorManager getSimulationManager() {
