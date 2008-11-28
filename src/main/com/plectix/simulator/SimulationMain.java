@@ -47,6 +47,7 @@ public class SimulationMain {
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 	private static final String LONG_CLOCK_PRECISION_OPTION = "clock_precision";
 	private static final String LONG_FORWARD_OPTION = "forward";
+	private static final String LONG_OUTPUT_SCHEME_OPTION = "output_scheme";
 	private static SimulationMain instance;
 	private static Options cmdLineOptions;
 	private CommandLine cmdLineArgs;
@@ -116,6 +117,8 @@ public class SimulationMain {
 				"(default: 60)clock precision (number of ticks per run)");
 		cmdLineOptions.addOption(LONG_FORWARD_OPTION, false,
 				"do not consider backward rules");
+		cmdLineOptions.addOption(LONG_OUTPUT_SCHEME_OPTION, true,
+		"(def: current dir) directory on which to put computed data");
 	}
 
 	public SimulationMain() {
@@ -379,7 +382,13 @@ public class SimulationMain {
 				.getSimulationManager().getSimulationData()
 					.setClockPrecision(clockPrecision);
 		}
-
+		
+		if (cmdLineArgs.hasOption(LONG_OUTPUT_SCHEME_OPTION)){
+			SimulationMain
+				.getSimulationManager().getSimulationData()
+					.setXmlSessionPath(cmdLineArgs
+							.getOptionValue(LONG_OUTPUT_SCHEME_OPTION));
+		}
 		simulationManager.getSimulationData().setCommandLine(args);
 	}
 

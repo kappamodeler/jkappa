@@ -67,6 +67,7 @@ public class SimulationData {
 	private boolean isTime = false;
 	private int seed = 0;
 	private String xmlSessionName = "simplx.xml";
+	private String xmlSessionPath = "";
 	private String tmpSessionName = "simplx.tmp";
 	private String commandLine;
 	private String inputFile;
@@ -466,7 +467,7 @@ public class SimulationData {
 		TransformerFactory trFactory = TransformerFactory.newInstance();
 		Transformer transformer = trFactory.newTransformer();
 		DOMSource domSource = new DOMSource(doc);
-		StreamResult streamesult = new StreamResult(xmlSessionName);
+		StreamResult streamesult = new StreamResult(getXmlSessionPath());
 		Properties pr = new Properties();
 		pr.setProperty(OutputKeys.METHOD, "html");
 		transformer.setOutputProperties(pr);
@@ -706,6 +707,13 @@ public class SimulationData {
 		return clockStamp;
 	}
 	
+	public void setXmlSessionPath(String path){
+		this.xmlSessionPath = path;
+	}
+	
+	public String getXmlSessionPath(){
+		return xmlSessionPath + "\\" + xmlSessionName;
+	}
 	
 
 }
