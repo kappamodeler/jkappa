@@ -134,7 +134,7 @@ public class CStories extends CObservables {
 								CStoryTrees newTree = new CStoryTrees(key);
 								newTree
 										.getTreeFromList(nnCS.networkNotationList);
-								tree.merge(newTree.getMap(), key);
+								//tree.merge(newTree.getMap(), key);
 							}
 						}
 				}

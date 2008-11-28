@@ -474,39 +474,39 @@ public class SimulationData {
 
 	private final void addConnection(Element story, CStoryTrees st,
 			Document doc, int item, int depth, HashMap<Integer, Integer> map) {
-		depth++;
-
-		if (map.get(item) == null)
-			map.put(item, map.size());
-		if (st.getList(item) == null)
-			return;
-		for (Integer i : st.getList(item)) {
-			if (map.get(i) == null)
-				map.put(i, map.size());
-			Element node = doc.createElement("Connection");
-			node.setAttribute("FromNode", map.get(item).toString());
-			node.setAttribute("ToNode", map.get(i).toString());
-			node.setAttribute("Relation", "STRONG");
-			story.appendChild(node);
-			addConnection(story, st, doc, i, depth, map);
-		}
-		Element node = doc.createElement("Node");
-		node.setAttribute("Id", map.get(item).toString());
-		if (item == st.getRuleID())
-			node.setAttribute("Type", "OBSERVABLE");
-		else
-			node.setAttribute("Type", "RULE");
-		node.setAttribute("Text", rules.get(item).getName());
-		String line = SimulatorManager.printPartRule(rules.get(item)
-				.getLeftHandSide());
-		line = line + "->";
-		line = line
-				+ SimulatorManager.printPartRule(rules.get(item)
-						.getRightHandSide());
-
-		node.setAttribute("Data", line);
-		node.setAttribute("Depth", Integer.valueOf(depth).toString());
-		story.appendChild(node);
+//		depth++;
+//
+//		if (map.get(item) == null)
+//			map.put(item, map.size());
+//		if (st.getList(item) == null)
+//			return;
+//		for (Integer i : st.getList(item)) {
+//			if (map.get(i) == null)
+//				map.put(i, map.size());
+//			Element node = doc.createElement("Connection");
+//			node.setAttribute("FromNode", map.get(item).toString());
+//			node.setAttribute("ToNode", map.get(i).toString());
+//			node.setAttribute("Relation", "STRONG");
+//			story.appendChild(node);
+//			addConnection(story, st, doc, i, depth, map);
+//		}
+//		Element node = doc.createElement("Node");
+//		node.setAttribute("Id", map.get(item).toString());
+//		if (item == st.getRuleID())
+//			node.setAttribute("Type", "OBSERVABLE");
+//		else
+//			node.setAttribute("Type", "RULE");
+//		node.setAttribute("Text", rules.get(item).getName());
+//		String line = SimulatorManager.printPartRule(rules.get(item)
+//				.getLeftHandSide());
+//		line = line + "->";
+//		line = line
+//				+ SimulatorManager.printPartRule(rules.get(item)
+//						.getRightHandSide());
+//
+//		node.setAttribute("Data", line);
+//		node.setAttribute("Depth", Integer.valueOf(depth).toString());
+//		story.appendChild(node);
 	}
 
 	private final void appendInfo(Element simplxSession, Document doc) {

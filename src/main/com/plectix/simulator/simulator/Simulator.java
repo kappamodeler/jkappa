@@ -155,7 +155,8 @@ public class Simulator {
 
 					IAgent checkedAgent = checkedSite.getAgentLink();
 					addToAgentList(freeAgents, checkedAgent);
-					for (ILiftElement lift : checkedAgent.getEmptySite().getLift()) {
+					for (ILiftElement lift : checkedAgent.getEmptySite()
+							.getLift()) {
 						lift.getConnectedComponent().removeInjection(
 								lift.getInjection());
 					}
@@ -321,9 +322,10 @@ public class Simulator {
 				if (!rule.isClash(injectionsList)) {
 					CNetworkNotation netNotation = new CNetworkNotation(count,
 							rule);
-					
-					if (stories.checkRule(rule.getRuleID(), i)){
-						rule.applyLastRuleForStories(injectionsList, netNotation);
+
+					if (stories.checkRule(rule.getRuleID(), i)) {
+						rule.applyLastRuleForStories(injectionsList,
+								netNotation);
 						stories.addToNetworkNotationStory(i, netNotation);
 						break;
 					}
@@ -343,7 +345,6 @@ public class Simulator {
 		}
 		stories.merge();
 		outputData(count);
-		//System.out.println("");
 	}
 
 	public final void runIterations() {

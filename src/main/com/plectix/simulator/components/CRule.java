@@ -2,12 +2,15 @@ package com.plectix.simulator.components;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.SimulatorManager;
 
 public class CRule implements IRule {
 
@@ -35,6 +38,8 @@ public class CRule implements IRule {
 	private List<IInjection> injList;
 
 	private List<ISite> changedSites;
+
+	private List<FixedSite> fixedSites;
 
 	private IConstraint constraints;
 
@@ -76,6 +81,26 @@ public class CRule implements IRule {
 		this.ruleID = ruleID;
 		calculateAutomorphismsNumber();
 		indexingRHSAgents();
+	}
+
+	class FixedSite {
+		ISite site;
+		boolean linkState;
+		boolean internalState;
+
+		public void setLinkState(boolean linkState) {
+			this.linkState = linkState;
+		}
+
+		public void setInternalState(boolean internalState) {
+			this.internalState = internalState;
+		}
+
+		public FixedSite(ISite site) {
+			this.site = site;
+			boolean linkState = false;
+			boolean internalState = false;
+		}
 	}
 
 	public List<ISite> getSitesConnectedWithDeleted() {
@@ -188,6 +213,23 @@ public class CRule implements IRule {
 						.getLeftCComponent())), netNotation);
 		}
 
+		if (netNotation != null)
+			addFixedSitesToNN(netNotation);
+	}
+
+	private void addFixedSitesToNN(INetworkNotation netNotation) {
+		for (FixedSite fs : fixedSites) {
+			CSite siteFromRule = (CSite) fs.site;
+			IInjection inj = getInjectionBySiteToFromLHS(siteFromRule);
+			IAgent agentToInSolution = inj.getConnectedComponent()
+					.getAgentByIdFromSolution(
+							siteFromRule.getAgentLink()
+									.getIdInConnectedComponent(), inj);
+			ISite site = agentToInSolution.getSite(siteFromRule.getNameId());
+			// add fixed agents
+			netNotation.addFixedSitesFromRules(site,
+					CNetworkNotation.MODE_TEST, fs.internalState, fs.linkState);
+		}
 	}
 
 	private final void markRHSAgents() {
@@ -216,6 +258,7 @@ public class CRule implements IRule {
 		sortAgentsByRuleSide(lhsAgents);
 
 		int index = 0;
+		fixedSites = new ArrayList<FixedSite>();
 		for (IAgent lhsAgent : lhsAgents) {
 			if ((index < rhsAgents.size())
 					&& !(rhsAgents.get(index).equals(lhsAgent) && rhsAgents
@@ -226,15 +269,45 @@ public class CRule implements IRule {
 				// } else {
 				break;
 			}
+			// filling of fixed agents
+			if (SimulationMain.getSimulationManager().getSimulationData()
+					.isStorify())
+				fillFixedSites(lhsAgent, rhsAgents.get(index));
 			index++;
-
 		}
 
 		for (int i = index; i < rhsAgents.size(); i++) {
-			if (index==0)
+			if (index == 0)
 				rhsAgents.get(i).setIdInRuleSide(lhsAgents.size() + i + 1);
 			else
 				rhsAgents.get(i).setIdInRuleSide(lhsAgents.size() + i);
+		}
+	}
+
+	public final void fillFixedSites(IAgent lhsAgent, IAgent rhsAgent) {
+		for (ISite lhsSite : lhsAgent.getSites()) {
+			ISite rhsSite = rhsAgent.getSite(lhsSite.getNameId());
+			FixedSite fixedSite = new FixedSite(lhsSite);
+			if (lhsSite.getInternalState().equals(rhsSite.getInternalState())
+					&& lhsSite.getInternalState().getNameId() != CSite.NO_INDEX) {
+				fixedSite.setInternalState(true);
+			}
+			if (lhsSite.getLinkState().getSite() == null
+					&& rhsSite.getLinkState().getSite() == null) {
+				fixedSite.setLinkState(true);
+			}
+			if (lhsSite.getLinkState().getSite() != null
+					&& rhsSite.getLinkState().getSite() != null) {
+				if (lhsSite.getLinkState().getSite().equals(
+						rhsSite.getLinkState().getSite())
+						&& lhsSite.getLinkState().getSite().getAgentLink()
+								.getIdInRuleSide() == rhsSite.getLinkState()
+								.getSite().getAgentLink().getIdInRuleSide())
+					fixedSite.setInternalState(true);
+			}
+			if (fixedSite.linkState != false
+					|| fixedSite.internalState != false)
+				fixedSites.add(fixedSite);
 		}
 	}
 
@@ -513,6 +586,20 @@ public class CRule implements IRule {
 		return false;
 	}
 
+	private final IInjection getInjectionBySiteToFromLHS(ISite siteTo) {
+		int sideId = siteTo.getAgentLink().getIdInRuleSide();
+		int i = 0;
+		for (IConnectedComponent cc : leftHandSide) {
+
+			for (IAgent agent : cc.getAgents())
+				if (agent.getIdInRuleSide() == sideId)
+					return injList.get(i);
+			i++;
+		}
+
+		return null;
+	}
+
 	public class Action implements IAction {
 		public static final byte ACTION_BRK = 0;
 		public static final byte ACTION_DEL = 1;
@@ -668,6 +755,54 @@ public class CRule implements IRule {
 				}
 		}
 
+		private final void addRuleSitesToNetworkNotation(boolean existInRule,
+				INetworkNotation netNotation, ISite site) {
+			if (netNotation != null) {
+				byte agentMode = CNetworkNotation.MODE_NONE;
+				byte linkStateMode = CNetworkNotation.MODE_NONE;
+				byte internalStateMode = CNetworkNotation.MODE_NONE;
+
+				switch (action) {
+				case ACTION_BRK:
+					if (existInRule) {
+						agentMode = CNetworkNotation.MODE_TEST;
+						linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+					} else
+						linkStateMode = CNetworkNotation.MODE_MODIFY;
+					break;
+				case ACTION_DEL:
+					if (existInRule) {
+						agentMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+						linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+						if (site.getInternalState().getNameId() != CSite.NO_INDEX)
+							internalStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+						else
+							internalStateMode = CNetworkNotation.MODE_MODIFY;
+					} else
+						linkStateMode = CNetworkNotation.MODE_MODIFY;
+					break;
+				case ACTION_ADD:
+					agentMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+					if (site.getInternalState().getNameId() != CSite.NO_INDEX)
+						internalStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+					if (site.getLinkState().getStatusLinkRank() != CLinkState.RANK_SEMI_LINK)
+						linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+					break;
+				case ACTION_BND:
+					agentMode = CNetworkNotation.MODE_TEST;
+					linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+					break;
+				case ACTION_MOD:
+					agentMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+					internalStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+					break;
+
+				}
+				netNotation.addToAgentsFromRules(site, agentMode,
+						internalStateMode, linkStateMode);
+			}
+		}
+
 		public final void doAction(IInjection injection,
 				INetworkNotation netNotation) {
 
@@ -684,6 +819,7 @@ public class CRule implements IRule {
 					agent.addSite(siteAdd);
 					addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
 							netNotation, siteAdd);
+					addRuleSitesToNetworkNotation(false, netNotation, siteAdd);
 				}
 				rightConnectedComponent.addAgentFromSolutionForRHS(agent);
 				((CSolution) SimulationMain.getSimulationManager()
@@ -725,6 +861,8 @@ public class CRule implements IRule {
 
 					addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
 							netNotation, injectedSite);
+					addRuleSitesToNetworkNotation(false, netNotation,
+							injectedSite);
 					// /////////////////////////////////////////////
 				}
 
@@ -763,6 +901,7 @@ public class CRule implements IRule {
 
 				addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
 						netNotation, injectedSite);
+				addRuleSitesToNetworkNotation(true, netNotation, injectedSite);
 
 				ISite linkSite = (ISite) injectedSite.getLinkState().getSite();
 				if ((siteFrom.getLinkState().getSite() == null)
@@ -796,8 +935,10 @@ public class CRule implements IRule {
 				 * Break a bond for this rules: A(x!_)->A(x)
 				 */
 				if (siteFrom.getLinkState().getSite() == null
-						&& linkSite != null)
+						&& linkSite != null) {
 					addSiteToConnectedWithBroken(linkSite);
+					addRuleSitesToNetworkNotation(false, netNotation, linkSite);
+				}
 				// /////////////////////////////////////////////
 
 				break;
@@ -824,7 +965,8 @@ public class CRule implements IRule {
 
 						addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
 								netNotation, solutionSite);
-
+						addRuleSitesToNetworkNotation(false, netNotation,
+								solutionSite);
 						// solutionSite.removeInjectionsFromCCToSite(injection);
 					}
 				}
@@ -839,7 +981,7 @@ public class CRule implements IRule {
 				for (ISite site : agent.getSites()) {
 					addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
 							netNotation, site);
-
+					addRuleSitesToNetworkNotation(true, netNotation, site);
 					for (ILiftElement lift : site.getLift()) {
 						site.removeInjectionsFromCCToSite(lift.getInjection());
 						lift.getInjection().getConnectedComponent()
@@ -869,6 +1011,7 @@ public class CRule implements IRule {
 						.getNameId());
 				addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
 						netNotation, injectedSite);
+				addRuleSitesToNetworkNotation(false, netNotation, injectedSite);
 
 				injectedSite.getInternalState().setNameId(nameInternalStateId);
 				injection.addToChangedSites(injectedSite);
@@ -903,20 +1046,6 @@ public class CRule implements IRule {
 				if (site == checkedSite)
 					return;
 			sitesConnectedWithBroken.add(checkedSite);
-		}
-
-		private final IInjection getInjectionBySiteToFromLHS(ISite siteTo) {
-			int sideId = siteTo.getAgentLink().getIdInRuleSide();
-			int i = 0;
-			for (IConnectedComponent cc : leftHandSide) {
-
-				for (IAgent agent : cc.getAgents())
-					if (agent.getIdInRuleSide() == sideId)
-						return injList.get(i);
-				i++;
-			}
-
-			return null;
 		}
 
 		private final int getAgentIdInCCBySideId(IAgent toAgent2) {
@@ -1052,4 +1181,5 @@ public class CRule implements IRule {
 						CStoriesSiteStates.LAST_STATE, site);
 		}
 	}
+
 }

@@ -13,7 +13,7 @@ public class CConnectedComponent implements IConnectedComponent {
 	private HashMap<Integer, List<CSpanningTree>> spanningTreeMap;
 
 	private List<IAgent> agentFromSolutionForRHS;
-	
+
 	private List<ISite> injectedSites;
 
 	private List<IAgentLink> agentLinkList;
@@ -281,7 +281,8 @@ public class CConnectedComponent implements IConnectedComponent {
 		if (currentInternalState.getNameId() == CSite.NO_INDEX
 				&& solutionInternalState.getNameId() != CSite.NO_INDEX)
 			return true;
-		if (!(currentInternalState.getNameId() == solutionInternalState.getNameId()))
+		if (!(currentInternalState.getNameId() == solutionInternalState
+				.getNameId()))
 			return false;
 
 		return true;
@@ -315,11 +316,13 @@ public class CConnectedComponent implements IConnectedComponent {
 	}
 
 	private final boolean fullEqualityInternalStates(
-			IInternalState currentInternalState, IInternalState solutionInternalState) {
+			IInternalState currentInternalState,
+			IInternalState solutionInternalState) {
 		if (currentInternalState.getNameId() == CSite.NO_INDEX
 				&& solutionInternalState.getNameId() == CSite.NO_INDEX)
 			return true;
-		if (currentInternalState.getNameId() == solutionInternalState.getNameId())
+		if (currentInternalState.getNameId() == solutionInternalState
+				.getNameId())
 			return true;
 
 		return false;
