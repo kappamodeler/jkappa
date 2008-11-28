@@ -11,7 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
 		TestParseAgentCorrection.class,
 		TestParseAgents.class,
 		TestParseResult.class,
-		TestSuccessParsing.class,
+		TestSuccessParsing.class
 		})
 public class RunParserTests extends TestRunner {
 	private static final String myTestFileNamePrefix = "test.data/parser/";

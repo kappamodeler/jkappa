@@ -14,7 +14,7 @@ import com.plectix.simulator.perturbations.*;
 		RunInjectionsTests.class, 
 		RunUpdateTests.class,
 		RunParserTests.class,
-		RunPerturbationsTests.class,
+		RunPerturbationsTests.class
 	})
 public class RunAllTests {
 

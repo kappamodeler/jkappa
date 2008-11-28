@@ -8,7 +8,7 @@ import com.plectix.simulator.TestRunner;
 
 @RunWith(value=Suite.class)
 @SuiteClasses(value = {
-		TestTimeCondition.class, 
+		TestTimeCondition.class
 	})
 public class RunPerturbationsTests extends TestRunner {
 

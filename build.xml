@@ -26,9 +26,16 @@
 	</fileset>
 
 	<fileset id="test.jars" dir="${lib.dir}">
-		<!-- Put here all jars that are needed for running tests -->
+		<include name="log4j/log4j-1.2.15.jar"/>
+		<include name="commons-cli/commons-cli-1.1.jar"/>
+		<include name="junit/junit.jar"/>
    	</fileset>
 
+	<path id="test.classpath">
+		<pathelement path="${build.dir}\test"/>
+		<fileset refid="test.jars"/>
+	</path>
+	
 	<path id="simulator.classpath">
 		<pathelement path="${build.dir}"/>
 		<fileset refid="external.jars"/>
@@ -118,13 +125,6 @@
 		</zip>
 	</target>
 
-	<target name="test" description="Run JUnit tests">
-		<echo message="Running tests"/>
-		<java classname="com.plectix.simulator.test.AllTests" fork="true" failonerror="true" classpathref="simulator.classpath">
-		</java>
-		<echo message="Tests complete - check log for errors"/>
-	</target>
-	
 	<target name="SimulationMain">
         <java classname="com.plectix.simulator.SimulationMain" failonerror="true" fork="yes">
             <arg line="--sim data/Example.ka --time 10"/>
@@ -223,5 +223,26 @@
 		    </packageset>
 		</javadoc>
 	</target>
-
+	
+	<!-- ################################### Test Targets ################################### -->
+	
+	<target name="build-tests" depends="init" description="Building tests">
+		<mkdir dir="${build.dir}/test"/>
+	    <echo message="OS: ${os.name} "/>
+	    <echo message="Java: ${ant.java.version} "/>
+	    <echo message="${ant.project.name}: ${ant.file} "/>
+		<javac srcdir="${test.dir};${src.dir}" destdir="${build.dir}\test" debug="true" failonerror="true">
+			<classpath refid="test.classpath"/>
+		</javac>
+	</target>
+	
+	<target name="test" description="Run JUnit tests" depends="build-tests">
+		<echo>Running JUnit Tests</echo>
+		<junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="no">
+			<classpath refid="test.classpath" />
+	       	<formatter type="plain"/>
+			<test name="com.plectix.simulator.RunAllTests"/>
+		</junit>
+		<echo message="Tests complete - check log for errors"/>
+	</target>
 </project>
