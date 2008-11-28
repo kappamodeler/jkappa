@@ -179,7 +179,18 @@ public class CObservables {
 		return componentList;
 	}
 
+	private List<IObservablesComponent> componentListForXMLOutput = null;
+
+	public final void resetLists() {
+		countTimeList.clear();
+		componentListForXMLOutput = null;
+		componentList.clear();
+		connectedComponentList.clear();
+	}
+
 	public final List<IObservablesComponent> getComponentListForXMLOutput() {
+		if (componentListForXMLOutput != null)
+			return componentListForXMLOutput;
 		List<Integer> map = new ArrayList<Integer>();
 		List<IObservablesComponent> list = new ArrayList<IObservablesComponent>();
 		for (IObservablesComponent cc : componentList) {
@@ -188,6 +199,7 @@ public class CObservables {
 				list.add(cc);
 			}
 		}
+		componentListForXMLOutput = list;
 		return list;
 	}
 

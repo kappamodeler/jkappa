@@ -19,7 +19,7 @@ public interface IObservablesComponent {
 
 //	public byte getType();
 
-	public double getSize();
+	public double getSize(CObservables obs);
 
 	public String getItem(int index, CObservables obs);
 

@@ -77,7 +77,7 @@ public class SimulationData {
 	private double snapshotTime = -1.;
 	private long clockPrecision = 3600000;
 	private long clockStamp;
-	
+
 	public final void setInputFile(String inputFile) {
 		this.inputFile = inputFile;
 	}
@@ -115,10 +115,11 @@ public class SimulationData {
 			this.maxClashes = max_clashes;
 	}
 
-	public final boolean isEndSimulation(double currentTime, long count ) {
+	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
-		if (curClockTime - clockStamp > clockPrecision){
-			System.out.println("simulation interrupted because the clock time has expired");
+		if (curClockTime - clockStamp > clockPrecision) {
+			System.out
+					.println("simulation interrupted because the clock time has expired");
 			return true;
 		}
 		if (isTime)
@@ -297,7 +298,8 @@ public class SimulationData {
 	public final void initIterations() {
 		SimulationData.timeStamps = new ArrayList<Double>();
 		SimulationData.runningMetrics = new ArrayList<ArrayList<RunningMetric>>();
-		int observable_num = observables.getComponentList().size();
+		int observable_num = observables.getComponentListForXMLOutput().size();
+		// int observable_num = observables.getComponentList().size();
 		for (int i = 0; i < observable_num; i++) {
 			runningMetrics.add(new ArrayList<RunningMetric>());
 		}
@@ -482,39 +484,39 @@ public class SimulationData {
 
 	private final void addConnection(Element story, CStoryTrees st,
 			Document doc, int item, int depth, HashMap<Integer, Integer> map) {
-//		depth++;
-//
-//		if (map.get(item) == null)
-//			map.put(item, map.size());
-//		if (st.getList(item) == null)
-//			return;
-//		for (Integer i : st.getList(item)) {
-//			if (map.get(i) == null)
-//				map.put(i, map.size());
-//			Element node = doc.createElement("Connection");
-//			node.setAttribute("FromNode", map.get(item).toString());
-//			node.setAttribute("ToNode", map.get(i).toString());
-//			node.setAttribute("Relation", "STRONG");
-//			story.appendChild(node);
-//			addConnection(story, st, doc, i, depth, map);
-//		}
-//		Element node = doc.createElement("Node");
-//		node.setAttribute("Id", map.get(item).toString());
-//		if (item == st.getRuleID())
-//			node.setAttribute("Type", "OBSERVABLE");
-//		else
-//			node.setAttribute("Type", "RULE");
-//		node.setAttribute("Text", rules.get(item).getName());
-//		String line = SimulatorManager.printPartRule(rules.get(item)
-//				.getLeftHandSide());
-//		line = line + "->";
-//		line = line
-//				+ SimulatorManager.printPartRule(rules.get(item)
-//						.getRightHandSide());
-//
-//		node.setAttribute("Data", line);
-//		node.setAttribute("Depth", Integer.valueOf(depth).toString());
-//		story.appendChild(node);
+		// depth++;
+		//
+		// if (map.get(item) == null)
+		// map.put(item, map.size());
+		// if (st.getList(item) == null)
+		// return;
+		// for (Integer i : st.getList(item)) {
+		// if (map.get(i) == null)
+		// map.put(i, map.size());
+		// Element node = doc.createElement("Connection");
+		// node.setAttribute("FromNode", map.get(item).toString());
+		// node.setAttribute("ToNode", map.get(i).toString());
+		// node.setAttribute("Relation", "STRONG");
+		// story.appendChild(node);
+		// addConnection(story, st, doc, i, depth, map);
+		// }
+		// Element node = doc.createElement("Node");
+		// node.setAttribute("Id", map.get(item).toString());
+		// if (item == st.getRuleID())
+		// node.setAttribute("Type", "OBSERVABLE");
+		// else
+		// node.setAttribute("Type", "RULE");
+		// node.setAttribute("Text", rules.get(item).getName());
+		// String line = SimulatorManager.printPartRule(rules.get(item)
+		// .getLeftHandSide());
+		// line = line + "->";
+		// line = line
+		// + SimulatorManager.printPartRule(rules.get(item)
+		// .getRightHandSide());
+		//
+		// node.setAttribute("Data", line);
+		// node.setAttribute("Depth", Integer.valueOf(depth).toString());
+		// story.appendChild(node);
 	}
 
 	private final void appendInfo(Element simplxSession, Document doc) {
@@ -565,7 +567,8 @@ public class SimulationData {
 		TimerSimulation timer = new TimerSimulation();
 		timer.startTimer();
 
-		int number_of_observables = observables.getComponentList().size();
+		int number_of_observables = observables.getComponentListForXMLOutput()
+				.size();
 		try {
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 				int oCamlObservableNo = number_of_observables - observable_num
@@ -706,14 +709,16 @@ public class SimulationData {
 	public long getClockStamp() {
 		return clockStamp;
 	}
-	
-	public void setXmlSessionPath(String path){
+
+	public void setXmlSessionPath(String path) {
 		this.xmlSessionPath = path;
 	}
-	
-	public String getXmlSessionPath(){
+
+	public String getXmlSessionPath() {
+		if(xmlSessionPath.length()>0)
 		return xmlSessionPath + "\\" + xmlSessionName;
+		else
+			return xmlSessionName;
 	}
-	
 
 }

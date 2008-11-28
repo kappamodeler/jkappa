@@ -58,7 +58,7 @@ public class ObservablesRuleComponent implements IObservablesRuleComponent {
 		return nameID;
 	}
 
-	public double getSize() {
+	public double getSize(CObservables obs) {
 		return rule.getRuleRate();
 	}
 

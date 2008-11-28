@@ -76,11 +76,20 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 		return name;
 	}
 
-	public double getSize() {
-		return getInjectionsList().size();
+	public double getSize(CObservables obs) {
+		if (this.isUnique())
+			return getInjectionsList().size();
+		long value = 1;
+		for (IObservablesConnectedComponent cc : obs
+				.getConnectedComponentList())
+			if (cc.getNameID() == this.getNameID())
+				value *= cc.getInjectionsList().size();
+		return value;
 	}
 
 	public String getItem(int index, CObservables obs) {
+		if (index >= countList.size())
+			index = countList.size() - 1;
 		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
 			if (countList.get(index) == 0) {
 				COUNTER++;

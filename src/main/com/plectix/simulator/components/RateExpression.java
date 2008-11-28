@@ -27,7 +27,7 @@ public class RateExpression implements IPerturbationExpression {
 	// return this.rule.getRuleRate() * this.value;
 	// }
 
-	public double getMultiplication() {
+	public double getMultiplication(CObservables obs) {
 		if (this.rule == null)
 			return this.value;
 		return this.rule.getRuleRate() * this.value;

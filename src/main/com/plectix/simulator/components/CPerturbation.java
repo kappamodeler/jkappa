@@ -167,13 +167,13 @@ public class CPerturbation {
 	private final void fillPerturbationRate() {
 		this.perturbationRate = 0;
 		for (IPerturbationExpression re : this.parametersRHS) {
-			this.perturbationRate += re.getMultiplication();
+			this.perturbationRate += re.getMultiplication(null);
 		}
 	}
 
 	public boolean checkCondition(CObservables observables) {
 		double obsSize = observables.getComponentList().get(obsNameID)
-				.getSize();
+				.getSize(observables);
 
 		if ((greater && (obsSize > calculateSum(observables)))
 				|| (!(greater) && (obsSize < calculateSum(observables)))) {
@@ -198,7 +198,7 @@ public class CPerturbation {
 	private double calculateSum(CObservables observables) {
 		double sum = 0.0;
 		for (int i = 0; i < this.parametersLHS.size() - 1; i++) {
-			sum += this.parametersLHS.get(i).getMultiplication();
+			sum += this.parametersLHS.get(i).getMultiplication(observables);
 			// sum += this.sumParameters.get(i).getMultiply(observables);
 		}
 		sum += this.parametersLHS.get(this.parametersLHS.size() - 1).getValue();

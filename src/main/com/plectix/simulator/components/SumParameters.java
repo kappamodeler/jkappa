@@ -48,9 +48,9 @@ public class SumParameters implements IPerturbationExpression {
 	// return multiply * this.parameter;
 	// }
 
-	public double getMultiplication() {
+	public double getMultiplication(CObservables obs) {
 		double multiply = 0.;
-		multiply = this.observableID.getSize();
+		multiply = this.observableID.getSize(obs);
 		return multiply * this.parameter;
 	}
 

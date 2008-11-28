@@ -379,10 +379,7 @@ public class Simulator {
 
 	public final void resetSimulation() {
 		model.getSimulationData().getRules().clear();
-		model.getSimulationData().getObservables().getConnectedComponentList()
-				.clear();
-		CObservables.getCountTimeList().clear();
-		model.getSimulationData().getObservables().getComponentList().clear();
+		model.getSimulationData().getObservables().resetLists();
 		((CSolution) model.getSimulationData().getSolution()).clearAgents();
 		((CSolution) model.getSimulationData().getSolution())
 				.getSolutionLines().clear();
@@ -405,7 +402,8 @@ public class Simulator {
 		List<ArrayList<RunningMetric>> runningMetrics = model
 				.getSimulationData().getRunningMetrics();
 		int number_of_observables = model.getSimulationData().getObservables()
-				.getComponentList().size();
+				.getComponentListForXMLOutput().size();
+		// .getComponentList().size();
 
 		if (iteration_num == 0) {
 			model.getSimulationData().getTimeStamps().add(currentTime);
@@ -418,8 +416,9 @@ public class Simulator {
 		for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 			double x = // x is the value for the observable_num at the current
 			// time
-			model.getSimulationData().getObservables().getComponentList().get(
-					observable_num).getSize();
+			model.getSimulationData().getObservables()
+					.getComponentListForXMLOutput().get(observable_num)
+					.getSize(model.getSimulationData().getObservables());
 			if (timeStepCounter >= runningMetrics.get(observable_num).size()) {
 				runningMetrics.get(observable_num).add(new RunningMetric());
 			}
