@@ -918,7 +918,9 @@ public class CRule implements IRule {
 					linkSite.getLinkState().setSite(null);
 					linkSite.getLinkState().setStatusLink(
 							CLinkState.STATUS_LINK_FREE);
-					linkSite.setLinkIndex(siteTo.getLinkIndex());
+					if (siteTo != null) {
+						linkSite.setLinkIndex(siteTo.getLinkIndex());
+					}
 					injection.addToChangedSites(linkSite);
 					rightConnectedComponent.addAgentFromSolutionForRHS(linkSite
 							.getAgentLink());

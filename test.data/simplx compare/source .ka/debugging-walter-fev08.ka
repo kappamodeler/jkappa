@@ -1,0 +1,63 @@
+# Rules:
+#######
+# Chapter 'New Chapter 1'
+# 'l' R(a),L(l) <-> R(a!1),L(l!1) @ 1.0,1.0 # Inactive rule
+'l Ref1' R(b!1,a),L(q!1,l) <-> R(b!2,a!1),L(q!2,l!1) @ 3.0,1.0
+'l Ref2' L(l,p!1),R(b!1,a) <-> L(l!2,p!1),R(b!1,a!2) @ 3.0,1.0
+'l Ref3' R(a,b),L(l) <-> R(a!1,b),L(l!1) @ 1.0,1.0
+'l Ref4' L(l),R(a,b!1),L(l!1) <-> L(l!1),R(a!1,b!2),L(l!2) @ 1.0,1.0
+'l Ref5' L(l),R(a,b!1),L(p!1) <-> L(l!1),R(a!1,b!2),L(p!2) @ 1.0,1.0
+'l Ref6' L(l),R(a,b!1),L(q!1) <-> L(l!1),R(a!1,b!2),L(q!2) @ 1.0,1.0
+# 'l2' R(b),L(l) <-> R(b!1),L(l!1) @ 1.0,1.0 # Inactive rule
+'l2 Ref1' R(a!1,b),L(q!1,l) <-> R(a!2,b!1),L(q!2,l!1) @ 3.0,1.0
+'l2 Ref2' L(l,p!1),R(a!1,b) <-> L(l!2,p!1),R(a!1,b!2) @ 3.0,1.0
+'l2 Ref3' R(b,a),L(l) <-> R(b!1,a),L(l!1) @ 1.0,1.0
+'l2 Ref4' L(l),R(a!1,b),L(l!1) <-> L(l!1),R(a!2,b!1),L(l!2) @ 1.0,1.0
+'l2 Ref5' L(l),R(a!1,b),L(p!1) <-> L(l!1),R(a!2,b!1),L(p!2) @ 1.0,1.0
+'l2 Ref6' L(l),R(a!1,b),L(q!1) <-> L(l!1),R(a!2,b!1),L(q!2) @ 1.0,1.0
+# 'p' R(a),L(p) <-> R(a!1),L(p!1) @ 1.0,1.0 # Inactive rule
+'p Ref1' R(b!1,a),L(q!1,p) <-> R(b!2,a!1),L(q!2,p!1) @ 3.0,1.0
+'p Ref2' L(l!1,p),R(b!1,a) <-> L(l!1,p!2),R(b!1,a!2) @ 3.0,1.0
+'p Ref3' R(a,b),L(p) <-> R(a!1,b),L(p!1) @ 1.0,1.0
+'p Ref4' L(p),R(a,b!1),L(l!1) <-> L(p!1),R(a!1,b!2),L(l!2) @ 1.0,1.0
+'p Ref5' L(p),R(a,b!1),L(p!1) <-> L(p!1),R(a!1,b!2),L(p!2) @ 1.0,1.0
+'p Ref6' L(p),R(a,b!1),L(q!1) <-> L(p!1),R(a!1,b!2),L(q!2) @ 1.0,1.0
+# 'p2' R(b),L(p) <-> R(b!1),L(p!1) @ 1.0,1.0 # Inactive rule
+'p2 Ref1' R(a!1,b),L(q!1,p) <-> R(a!2,b!1),L(q!2,p!1) @ 3.0,1.0
+'p2 Ref2' L(l!1,p),R(a!1,b) <-> L(l!1,p!2),R(a!1,b!2) @ 3.0,1.0
+'p2 Ref3' R(a,b),L(p) <-> R(a,b!1),L(p!1) @ 1.0,1.0
+'p2 Ref4' L(p),R(a!1,b),L(l!1) <-> L(p!1),R(a!2,b!1),L(l!2) @ 1.0,1.0
+'p2 Ref5' L(p),R(a!1,b),L(p!1) <-> L(p!1),R(a!2,b!1),L(p!2) @ 1.0,1.0
+'p2 Ref6' L(p),R(a!1,b),L(q!1) <-> L(p!1),R(a!2,b!1),L(q!2) @ 1.0,1.0
+# 'q' R(a),L(q) <-> R(a!1),L(q!1) @ 1.0,1.0 # Inactive rule
+'q Ref1' R(b!1,a),L(p!1,q) <-> R(b!2,a!1),L(p!2,q!1) @ 3.0,1.0
+'q Ref2' L(l!1,q),R(b!1,a) <-> L(l!1,q!2),R(b!1,a!2) @ 3.0,1.0
+'q Ref3' R(a,b),L(q) <-> R(a!1,b),L(q!1) @ 1.0,1.0
+'q Ref4' L(q),R(a,b!1),L(l!1) <-> L(q!1),R(a!1,b!2),L(l!2) @ 1.0,1.0
+'q Ref5' L(q),R(a,b!1),L(p!1) <-> L(q!1),R(a!1,b!2),L(p!2) @ 1.0,1.0
+'q Ref6' L(q),R(a,b!1),L(q!1) <-> L(q!1),R(a!1,b!2),L(q!2) @ 1.0,1.0
+# 'q2' R(b),L(q) <-> R(b!1),L(q!1) @ 1.0,1.0 # Inactive rule
+'q2 Ref1' R(a!1,b),L(p!1,q) <-> R(a!2,b!1),L(p!2,q!1) @ 3.0,1.0
+'q2 Ref2' L(l!1,q),R(a!1,b) <-> L(l!1,q!2),R(a!1,b!2) @ 3.0,1.0
+'q2 Ref3' R(a,b),L(q) <-> R(a,b!1),L(q!1) @ 1.0,1.0
+'q2 Ref4' L(q),R(a!1,b),L(l!1) <-> L(q!1),R(a!2,b!1),L(l!2) @ 1.0,1.0
+'q2 Ref5' L(q),R(a!1,b),L(p!1) <-> L(q!1),R(a!2,b!1),L(p!2) @ 1.0,1.0
+'q2 Ref6' L(q),R(a!1,b),L(q!1) <-> L(q!1),R(a!2,b!1),L(q!2) @ 1.0,1.0
+
+
+# Initial Conditions:
+%init: 100 * (L(l,q,p))
+%init: 100 * (R(a,b))
+
+# Simulation:
+%obs: L(l!_,p!_,q!_)
+# %obs: L(q,l!_,p!_)
+# %obs: L(p,l!_,q!_)
+# %obs: L(l,p!_,q!_)
+# %obs: L(p,q,l!_)
+# %obs: L(l,q,p!_)
+# %obs: L(p,l,q!_)
+%obs: L(p,l,q)
+
+# Stories:
+

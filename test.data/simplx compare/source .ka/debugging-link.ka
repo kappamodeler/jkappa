@@ -1,0 +1,7 @@
+A(r), A(l) -> A(r!1), A(l!1) @ 1
+A(r!1), A(l!1) -> A(r), A(l) @ 5
+
+%init: 30 * (A(l,r))
+%obs: A(r)
+%obs: A(l)
+%obs: A(r!1), A(l!1)
