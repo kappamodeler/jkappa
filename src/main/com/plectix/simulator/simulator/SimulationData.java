@@ -74,7 +74,9 @@ public class SimulationData {
 	private boolean activationMap = true;
 	private long maxClashes = 100;
 	private double snapshotTime = -1.;
-
+	private long clockPrecision = 3600000;
+	private long clockStamp;
+	
 	public final void setInputFile(String inputFile) {
 		this.inputFile = inputFile;
 	}
@@ -112,7 +114,12 @@ public class SimulationData {
 			this.maxClashes = max_clashes;
 	}
 
-	public final boolean isEndSimulation(double currentTime, long count) {
+	public final boolean isEndSimulation(double currentTime, long count ) {
+		long curClockTime = System.currentTimeMillis();
+		if (curClockTime - clockStamp > clockPrecision){
+			System.out.println("simulation interrupted because the clock time has expired");
+			return true;
+		}
 		if (isTime)
 			if (currentTime <= timeLength)
 				return false;
@@ -682,5 +689,23 @@ public class SimulationData {
 	public final void setPoints(int points) {
 		this.points = points;
 	}
+
+	public void setClockPrecision(long clockPrecision) {
+		this.clockPrecision = clockPrecision;
+	}
+
+	public long getClockPrecision() {
+		return clockPrecision;
+	}
+
+	public void setClockStamp(long clockStamp) {
+		this.clockStamp = clockStamp;
+	}
+
+	public long getClockStamp() {
+		return clockStamp;
+	}
+	
+	
 
 }

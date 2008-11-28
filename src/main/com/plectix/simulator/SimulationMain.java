@@ -45,10 +45,12 @@ public class SimulationMain {
 	private final static String LONG_OCAML_STYLE_OBS_NAME_OPTION = "ocaml_style_obs_name";
 	private final static String LONG_GENERATE_MAP_OPTION = "generate_map";
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
-
+	private static final String LONG_CLOCK_PRECISION_OPTION = "clock_precision";
+	private static final String LONG_FORWARD_OPTION = "forward";
 	private static SimulationMain instance;
 	private static Options cmdLineOptions;
 	private CommandLine cmdLineArgs;
+	private boolean isForwarding = false;
 	private static SimulatorManager simulationManager = new SimulatorManager();
 	private static boolean myIsSimulating = false;
 
@@ -110,6 +112,10 @@ public class SimulationMain {
 				"Do not construct influence map");
 		cmdLineOptions.addOption(LONG_BUILD_INFLUENCE_MAP_OPTION, false,
 				"Construct influence map");
+		cmdLineOptions.addOption(LONG_CLOCK_PRECISION_OPTION, true,
+				"(default: 60)clock precision (number of ticks per run)");
+		cmdLineOptions.addOption(LONG_FORWARD_OPTION, false,
+				"do not consider backward rules");
 	}
 
 	public SimulationMain() {
@@ -149,6 +155,8 @@ public class SimulationMain {
 			simulationManager.outputData();
 			System.exit(1);
 		}
+		SimulationMain.getSimulationManager().getSimulationData()
+		.setClockStamp(System.currentTimeMillis());
 
 	}
 
@@ -169,7 +177,7 @@ public class SimulationMain {
 
 	public final void readSimulatonFile() {
 
-		boolean option = false;
+ 		boolean option = false;
 		String fileName = null;
 		double timeSim = 0.;
 		double snapshotTime = -1.;
@@ -224,7 +232,10 @@ public class SimulationMain {
 			} else
 				option = false;
 		}
-
+		if (cmdLineArgs.hasOption(LONG_FORWARD_OPTION)) {
+			isForwarding  = true;
+		}
+		
 		if (!option) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("use --sim [file]", cmdLineOptions);
@@ -236,6 +247,7 @@ public class SimulationMain {
 		try {
 			data.readData();
 			Parser parser = new Parser(data);
+			parser.setForwarding(isForwarding);
 			parser.parse();
 		} catch (FileReadingException e) {
 			System.err.println("Error in file \"" + fileName + "\" :\n\t"
@@ -356,6 +368,16 @@ public class SimulationMain {
 			}
 			SimulationMain.getSimulationManager().getSimulationData()
 					.setIterations(iteration);
+		}
+		
+		if (cmdLineArgs.hasOption(LONG_CLOCK_PRECISION_OPTION)){
+			long clockPrecision = 0;
+			clockPrecision = Long.valueOf(cmdLineArgs
+					.getOptionValue(LONG_CLOCK_PRECISION_OPTION));
+			clockPrecision *= 60000;
+			SimulationMain
+				.getSimulationManager().getSimulationData()
+					.setClockPrecision(clockPrecision);
 		}
 
 		simulationManager.getSimulationData().setCommandLine(args);

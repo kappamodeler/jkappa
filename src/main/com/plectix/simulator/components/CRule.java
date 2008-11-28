@@ -886,6 +886,12 @@ public class CRule implements IRule {
 						netNotation, agentFromInSolution.getSite(siteFrom
 								.getNameId()));
 
+				agentFromInSolution.getSite(siteFrom.getNameId())
+						.setLinkIndex(siteFrom.getLinkIndex());
+				agentToInSolution.getSite(siteTo.getNameId())
+					.setLinkIndex(siteTo.getLinkIndex());
+				
+				
 				break;
 			}
 			case ACTION_BRK: {
@@ -912,6 +918,7 @@ public class CRule implements IRule {
 					linkSite.getLinkState().setSite(null);
 					linkSite.getLinkState().setStatusLink(
 							CLinkState.STATUS_LINK_FREE);
+					linkSite.setLinkIndex(siteTo.getLinkIndex());
 					injection.addToChangedSites(linkSite);
 					rightConnectedComponent.addAgentFromSolutionForRHS(linkSite
 							.getAgentLink());
@@ -940,7 +947,8 @@ public class CRule implements IRule {
 					addRuleSitesToNetworkNotation(false, netNotation, linkSite);
 				}
 				// /////////////////////////////////////////////
-
+				agentFromInSolution.getSite(siteFrom.getNameId())
+						.setLinkIndex(siteFrom.getLinkIndex());
 				break;
 			}
 			case ACTION_DEL: {
@@ -962,7 +970,7 @@ public class CRule implements IRule {
 						solutionSite.getLinkState().setSite(null);
 						solutionSite.getLinkState().setStatusLink(
 								CLinkState.STATUS_LINK_FREE);
-
+						solutionSite.setLinkIndex(-1);
 						addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
 								netNotation, solutionSite);
 						addRuleSitesToNetworkNotation(false, netNotation,

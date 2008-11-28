@@ -51,6 +51,7 @@ public class Parser {
 	private DataReading data;
 
 	private double perturbationRate;
+	private boolean isForwarding;
 
 	private class DataString {
 		private String st1 = null;
@@ -467,6 +468,7 @@ public class Parser {
 			String rulesStr = rulesDS.getLine();
 			double activity = 1.;
 			double activity2 = 1.;
+			
 			rulesStr = rulesStr.trim();
 			String name = null;
 			if (rulesStr.indexOf("'") != -1) {
@@ -507,6 +509,7 @@ public class Parser {
 			if (rulesStr.indexOf("<->") != -1) {
 				typeRule = RULE_TWO_WAY;
 				rulesStr = rulesStr.replace("<", "");
+				activity2 =  isForwarding() ? 0. : activity2;
 			}
 
 			rulesStr = rulesStr.trim();
@@ -555,7 +558,7 @@ public class Parser {
 						rules.add(SimulationMain.getSimulationManager()
 								.buildRule(right, parseAgent(lhs.trim()),
 										nameOp, activity2, ruleID));
-					}
+						}
 					break;
 				}
 				case CC_RHS: {
@@ -929,6 +932,14 @@ public class Parser {
 		}
 
 		return newAgentsList;
+	}
+
+	public void setForwarding(boolean isForwarding) {
+		this.isForwarding = isForwarding;
+	}
+
+	public boolean isForwarding() {
+		return isForwarding;
 	}
 
 }
