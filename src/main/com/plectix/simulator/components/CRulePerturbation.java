@@ -42,12 +42,19 @@ public class CRulePerturbation extends CRule {
 	}
 
 	private void check() {
-		if (!inf)
-			if (count <= 1) {
-				setRuleRate(0.0);
-				setInfinityRate(false);
-				setActivity(0.0);
-			}
+		if (!inf) {
+			if (count <= 1)
+				downRule();
+		} else {
+			if (getLeftHandSide().get(0).getInjectionsList().size() == 1)
+				downRule();
+		}
+	}
+
+	private final void downRule() {
+		setRuleRate(0.0);
+		setInfinityRate(false);
+		setActivity(0.0);
 	}
 
 }
