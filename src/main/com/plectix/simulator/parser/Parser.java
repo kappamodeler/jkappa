@@ -107,7 +107,7 @@ public class Parser {
 				.setPerturbations(perturbations);
 	}
 
-	private IObservablesComponent checkInObservables(String obsName)
+	private final IObservablesComponent checkInObservables(String obsName)
 			throws ParseErrorException {
 		IObservablesComponent obsId = null;
 		for (IObservablesComponent cc : SimulationMain.getSimulationManager()
@@ -266,8 +266,7 @@ public class Parser {
 			}
 
 		}
-
-		return perturbations;
+		return perturbations; 
 	}
 
 	private final boolean checkOnce(String st, CDataString perturbationStr,
@@ -310,8 +309,7 @@ public class Parser {
 		List<CDataString> cd = new ArrayList<CDataString>();
 		cd.add(new CDataString(perturbationStr.getLineNumber(), strRule));
 
-		List<IRule> listRules;
-		listRules = createRules(cd);
+		List<IRule> listRules = createRules(cd);
 		if (!listRules.isEmpty()) {
 			CRulePerturbation rule = new CRulePerturbation(listRules.get(0));
 			rule.setRuleID(SimulationMain.getSimulationManager()
@@ -605,6 +603,7 @@ public class Parser {
 
 		}
 
+		//return Collections.unmodifiableList(rules);
 		return rules;
 	}
 
@@ -782,6 +781,7 @@ public class Parser {
 		if (!testLine(line))
 			throw new ParseErrorException("Unexpected line : " + line);
 		return listAgent;
+		//return Collections.unmodifiableList(listAgent);
 	}
 
 	private final CSite parseSome(String site, Map<Integer, CSite> map)
@@ -940,7 +940,7 @@ public class Parser {
 
 		}
 
-		return newAgentsList;
+		return Collections.unmodifiableList(newAgentsList);
 	}
 
 	public void setForwarding(boolean isForwarding) {

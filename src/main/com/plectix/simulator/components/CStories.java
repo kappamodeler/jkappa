@@ -1,27 +1,18 @@
 package com.plectix.simulator.components;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
-import com.plectix.simulator.components.CNetworkNotation.AgentSites;
+public final class CStories extends CObservables {
 
-public class CStories extends CObservables {
-
+	//TODO PUBLIC FIELD!!
 	public static int numberOfSimulations = 10;
 
-	List<CStory> stories;
+	private final List<CStory> stories;
+	private final List<NetworkNotationForCurrentStory> networkNotationForCurrentStory;
+	private final Map<Integer, CStoryTrees> trees;
 
-	List<NetworkNotationForCurrentStory> networkNotationForCurrentStory;
-
-	HashMap<Integer, CStoryTrees> trees;
-
-	public final Collection<CStoryTrees> getTrees() {
-		return this.trees.values();
-	}
-
-	class NetworkNotationForCurrentStory {
+	//TODO separate
+	private class NetworkNotationForCurrentStory {
 		List<CNetworkNotation> networkNotationList;
 		private boolean isEndOfStory;
 
@@ -35,9 +26,9 @@ public class CStories extends CObservables {
 				networkNotationList.add(networkNotation);
 		}
 
-		class CStoryVertexes {
+		//TODO separate
+		private class CStoryVertexes {
 			AgentSites aSites;
-
 		}
 
 		public void handling() {
@@ -70,33 +61,14 @@ public class CStories extends CObservables {
 
 	}
 
-	public final void handling(int index) {
-		if (networkNotationForCurrentStory.get(index).isEndOfStory)
-			networkNotationForCurrentStory.get(index).handling();
-		else
-			networkNotationForCurrentStory.get(index).clearList();
-	}
-
-	class CStory {
+	//TODO separate
+	private class CStory {
 		private int ruleID;
-
 		public CStory(int ruleID) {
 			this.ruleID = ruleID;
 		}
 	}
-
-	public void addToStories(List<Integer> ruleIDs) {
-		for (int i = 0; i < ruleIDs.size(); i++) {
-			this.stories.add(new CStory(ruleIDs.get(i)));
-		}
-	}
-
-	public void addToNetworkNotationStory(int index,
-			CNetworkNotation networkNotation) {
-		this.networkNotationForCurrentStory.get(index)
-				.addToNetworkNotationList(networkNotation);
-	}
-
+	
 	public CStories() {
 		this.stories = new ArrayList<CStory>();
 		this.trees = new HashMap<Integer, CStoryTrees>();
@@ -106,7 +78,31 @@ public class CStories extends CObservables {
 					.add(new NetworkNotationForCurrentStory());
 	}
 
-	public boolean checkRule(int checkRuleID, int index) {
+	public final Collection<CStoryTrees> getTrees() {
+		return Collections.unmodifiableCollection(trees.values());
+	}
+
+	public final void handling(int index) {
+		if (networkNotationForCurrentStory.get(index).isEndOfStory)
+			networkNotationForCurrentStory.get(index).handling();
+		else
+			networkNotationForCurrentStory.get(index).clearList();
+	}
+
+
+	public final void addToStories(List<Integer> ruleIDs) {
+		for (int i = 0; i < ruleIDs.size(); i++) {
+			this.stories.add(new CStory(ruleIDs.get(i)));
+		}
+	}
+
+	public final void addToNetworkNotationStory(int index,
+			CNetworkNotation networkNotation) {
+		this.networkNotationForCurrentStory.get(index)
+				.addToNetworkNotationList(networkNotation);
+	}
+
+	public final boolean checkRule(int checkRuleID, int index) {
 		for (CStory story : this.stories)
 			if (story.ruleID == checkRuleID) {
 				this.networkNotationForCurrentStory.get(index).isEndOfStory = true;
@@ -115,12 +111,10 @@ public class CStories extends CObservables {
 		return false;
 	}
 
-	public void merge() {
-
+	public final void merge() {
 		for (int i = 0; i < stories.size(); i++) {
 			int key = stories.get(i).ruleID;
 			CStoryTrees tree = trees.get(key);
-
 			if (tree == null) {
 				for (NetworkNotationForCurrentStory nnCS : networkNotationForCurrentStory) {
 					if (nnCS.networkNotationList.size() != 0)

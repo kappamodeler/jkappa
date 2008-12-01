@@ -2,23 +2,24 @@ package com.plectix.simulator.components;
 
 import com.plectix.simulator.interfaces.*;
 
-public class RateExpression implements IPerturbationExpression {
-	private IRule rule;
-	double value;
+public final class RateExpression implements IPerturbationExpression {
+	private final IRule rule;
+	private double value;
 
 	public RateExpression(IRule rule, double value) {
 		this.rule = rule;
 		this.value = value;
 	}
 
-	public String getName() {
+	public final String getName() {
 		if (rule != null)
 			return rule.getName();
 		return null;
 	}
 
-	public String getValueToString() {
-		return Double.valueOf(value).toString();
+	public final String getValueToString() {
+		//return Double.valueOf(value).toString();
+		return value + "";
 	}
 
 	// public double getMultiplication() {
@@ -27,17 +28,17 @@ public class RateExpression implements IPerturbationExpression {
 	// return this.rule.getRuleRate() * this.value;
 	// }
 
-	public double getMultiplication(CObservables obs) {
+	public final double getMultiplication(IObservables obs) {
 		if (this.rule == null)
 			return this.value;
 		return this.rule.getRuleRate() * this.value;
 	}
 
-	public double getValue() {
+	public final double getValue() {
 		return value;
 	}
 
-	public void setValue(double value) {
+	public final void setValue(double value) {
 		this.value = value;
 	}
 }

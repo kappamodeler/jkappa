@@ -1,22 +1,20 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.actions;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import com.plectix.simulator.components.actions.*;
+import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
 
-public abstract class CAction implements IAction {
-	private IAgent fromAgent;
-	private IAgent toAgent;
-	private CRule myRule;
+/*package*/ abstract class CAction implements IAction {
+	private final IAgent fromAgent;
+	private final IAgent toAgent;
+	private final CRule myRule;
 	private final IConnectedComponent rightConnectedComponent;
 	private IConnectedComponent leftConnectedComponent;
-	private ISite siteFrom = null;
 	private CActionType myType;
 	private ISite siteTo = null;
-	private Integer nameInternalStateId;
+	private ISite siteFrom = null;
+	private int nameInternalStateId;
 
 	/**
 	 * Default constructor, create AtomicCAction and add to "actionList".
@@ -34,43 +32,43 @@ public abstract class CAction implements IAction {
 		this.myRule = rule;
 	}
 	
-	protected void setSiteSet(ISite from, ISite to) {
+	protected final void setSiteSet(ISite from, ISite to) {
 		siteTo = to;
 		siteFrom = from;
 	}
 	
-	public ISite getSiteFrom() {
-		return siteFrom;
-	}
-
-	public ISite getSiteTo() {
-		return siteTo;
-	}
-	
-	public void setType(CActionType type) {
+	protected final void setType(CActionType type) {
 		myType = type;
 	}
 	
-	public int getTypeId() {
+	public final ISite getSiteFrom() {
+		return siteFrom;
+	}
+
+	public final ISite getSiteTo() {
+		return siteTo;
+	}
+	
+	public final int getTypeId() {
 		return myType.getId();
 	}
 	
-	public IAgent getFromAgent() {
+	public final IAgent getAgentFrom() {
 		return fromAgent;
 	}
 
-	public IAgent getToAgent() {
+	public final IAgent getAgentTo() {
 		return toAgent;
 	}
 
-	public Integer getNameInternalStateId() {
+	public final Integer getNameInternalStateId() {
 		return nameInternalStateId;
 	}
 
 	protected abstract void addToNetworkNotation(int index,
 			INetworkNotation netNotation, ISite site);
 
-	public abstract void addRuleSitesToNetworkNotation(boolean existInRule,
+	protected abstract void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site);
 	
 	protected final int getAgentIdInCCBySideId(IAgent toAgent2) {
@@ -84,11 +82,11 @@ public abstract class CAction implements IAction {
 		return -1;
 	}
 
-	public IConnectedComponent getRightCComponent() {
+	public final IConnectedComponent getRightCComponent() {
 		return rightConnectedComponent;
 	}
 
-	public IConnectedComponent getLeftCComponent() {
+	public final IConnectedComponent getLeftCComponent() {
 		return leftConnectedComponent;
 	}
 
@@ -158,7 +156,7 @@ public abstract class CAction implements IAction {
 		return Collections.unmodifiableList(list);
 	}
 
-	private boolean isChangedSiteContains(ISite site) {
+	private final boolean isChangedSiteContains(ISite site) {
 		for (ISite siteCh : myRule.getChangedSites()) {
 			if (siteCh == site) {
 				return true;

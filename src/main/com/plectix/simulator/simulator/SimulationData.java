@@ -4,39 +4,21 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.CDATASection;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import org.w3c.dom.*;
 
-import com.plectix.simulator.components.CObservables;
-import com.plectix.simulator.components.CPerturbation;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CSnapshot;
-import com.plectix.simulator.components.CSolution;
-import com.plectix.simulator.components.CStories;
-import com.plectix.simulator.components.CStoryTrees;
-import com.plectix.simulator.components.ObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IObservablesComponent;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.interfaces.ISolution;
-import com.plectix.simulator.util.Info;
-import com.plectix.simulator.util.RunningMetric;
-import com.plectix.simulator.util.TimerSimulation;
+import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.util.*;
 
 public class SimulationData {
 	private static List<Double> timeStamps;
@@ -45,7 +27,7 @@ public class SimulationData {
 	private List<IRule> rules;
 	private CStories stories = null;
 	private List<CPerturbation> perturbations;
-	private CObservables observables = new CObservables();
+	private IObservables observables = new CObservables();
 	private CSnapshot snapshot = null;
 	private ISolution solution = new CSolution(); // soup of initial components
 
@@ -177,7 +159,7 @@ public class SimulationData {
 		this.snapshot = snapshot;
 	}
 
-	public CObservables getObservables() {
+	public IObservables getObservables() {
 		return observables;
 	}
 
@@ -265,7 +247,7 @@ public class SimulationData {
 	}
 
 	public final List<IRule> getRules() {
-		return rules;
+		return Collections.unmodifiableList(rules);
 	}
 
 	public boolean isCompile() {
@@ -454,9 +436,9 @@ public class SimulationData {
 			Element snapshotElement = doc.createElement("FinalState");
 			snapshotElement.setAttribute("Time", String.valueOf(snapshotTime));
 			if (snapshot != null) {
-				List<CSnapshot.SnapshotElement> snapshotElementList = snapshot
+				List<SnapshotElement> snapshotElementList = snapshot
 						.getSnapshotElements();
-				for (CSnapshot.SnapshotElement se : snapshotElementList) {
+				for (SnapshotElement se : snapshotElementList) {
 					Element species = doc.createElement("Species");
 					species.setAttribute("Kappa", se.getCcName());
 					species.setAttribute("Number", String
@@ -468,7 +450,7 @@ public class SimulationData {
 			stopTimer(timer, "-Building xml tree for snapshots:");
 		}
 
-		int obsCountTimeListSize = observables.getCountTimeList().size();
+		int obsCountTimeListSize = CObservables.getCountTimeList().size();
 
 		Element simulation = doc.createElement("Simulation");
 		simulation.setAttribute("TotalEvents", Long.toString(event));
@@ -665,10 +647,10 @@ public class SimulationData {
 		return timeSampleMin;
 	}
 
-	private void appendData(CObservables obs, List<IObservablesComponent> list,
+	private void appendData(IObservables obs, List<IObservablesComponent> list,
 			CDATASection cdata, int index) {
 		String enter = "\n";
-		cdata.appendData(obs.getCountTimeList().get(index).toString());
+		cdata.appendData(CObservables.getCountTimeList().get(index).toString());
 		for (int j = list.size() - 1; j >= 0; j--) {
 			cdata.appendData(",");
 			IObservablesComponent oCC = list.get(j);
@@ -677,7 +659,7 @@ public class SimulationData {
 		cdata.appendData(enter);
 	}
 
-	private final String getItem(CObservables obs, int index,
+	private final String getItem(IObservables obs, int index,
 			IObservablesComponent oCC) {
 		if (oCC.isUnique())
 			return oCC.getItem(index, obs);
@@ -750,6 +732,14 @@ public class SimulationData {
 		this.xmlSessionPath = path;
 	}
 
+	public final void clearRules() {
+		rules.clear();
+	}
+	
+	public final void clearPerturbations() {
+		perturbations.clear();
+	}
+	
 	public String getXmlSessionPath() {
 		if (xmlSessionPath.length() > 0)
 			return xmlSessionPath + "\\" + xmlSessionName;

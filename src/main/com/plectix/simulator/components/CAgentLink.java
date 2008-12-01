@@ -2,7 +2,7 @@ package com.plectix.simulator.components;
 
 import com.plectix.simulator.interfaces.*;
 
-public final class CAgentLink implements IAgentLink {
+/*package*/ final class CAgentLink implements IAgentLink {
 	private final int idAgentFrom;
 	private final IAgent agentTo;
 	
@@ -11,11 +11,11 @@ public final class CAgentLink implements IAgentLink {
 		this.agentTo = agentTo;
 	}
 	
-	public int getIdAgentFrom() {
+	public final int getIdAgentFrom() {
 		return idAgentFrom;
 	}
 
-	public IAgent getAgentTo() {
+	public final IAgent getAgentTo() {
 		return agentTo;
 	}
 }

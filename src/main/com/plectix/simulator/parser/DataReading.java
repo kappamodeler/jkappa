@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.plectix.simulator.components.CDataString;
@@ -12,8 +13,14 @@ import com.plectix.simulator.components.CDataString;
 // i.e. makes lists of strings with different prefix such as 
 // %rule, %init, %obs
 
-public class DataReading {
+public final class DataReading {
 
+	private static final String STRING_INITIAL_CONDITIONS_PREFIX = "%init"; //7;
+	private static final String STRING_SIMULATION_PREFIX = "%obs"; // 6;
+	private static final String STRING_STORIFY_PREFIX = "%story"; // 8;
+	private static final String STRING_MOD_PREFIX = "%mod"; // 6;
+
+	
 	private List<CDataString> rules = new ArrayList<CDataString>();
 	// rules in the input
 
@@ -31,16 +38,11 @@ public class DataReading {
 
 	private String filePatch = null; // "C:/workspace/Example.tmp";
 
-	private static final String STRING_INITIAL_CONDITIONS_PREFIX = "%init"; //7;
-	private static final String STRING_SIMULATION_PREFIX = "%obs"; // 6;
-	private static final String STRING_STORIFY_PREFIX = "%story"; // 8;
-	private static final String STRING_MOD_PREFIX = "%mod"; // 6;
-
 	public DataReading(String filename) {
 		this.filePatch = filename;
 	}
 
-	private boolean startsWithWhiteSpace(String str) {
+	private final boolean startsWithWhiteSpace(String str) {
 		return str.startsWith(" ") || str.startsWith("\t");
 	}
 
@@ -160,23 +162,23 @@ public class DataReading {
 	}
 
 	public final List<CDataString> getInits() {
-		return inits;
+		return Collections.unmodifiableList(inits);
 	}
 
 	public final List<CDataString> getObservables() {
-		return observables;
+		return Collections.unmodifiableList(observables);
 	}
 
 	public final List<CDataString> getRules() {
-		return rules;
+		return Collections.unmodifiableList(rules);
 	}
 
 	public List<CDataString> getStory() {
-		return story;
+		return Collections.unmodifiableList(story);
 	}
 
 	public final List<CDataString> getMods() {
-		return mods;
+		return Collections.unmodifiableList(mods);
 	}
 
 }

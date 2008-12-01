@@ -1,8 +1,8 @@
 package com.plectix.simulator.interfaces;
 
-public interface IAction {
+import java.util.Collection;
 
-//	public byte getAction();
+public interface IAction {
 
 	public IConnectedComponent getLeftCComponent();
 
@@ -10,11 +10,13 @@ public interface IAction {
 
 	public ISite getSiteFrom();
 
-	public IAgent getFromAgent();
+	public IAgent getAgentFrom();
 
-	public IAgent getToAgent();
+	public IAgent getAgentTo();
 
 	public ISite getSiteTo();
 
 	public int getTypeId();
+
+	public Collection<IAction> createAtomicActions();
 }

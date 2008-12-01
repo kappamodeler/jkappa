@@ -1,19 +1,21 @@
 package com.plectix.simulator.components;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
 
-public class CSite implements ISite {
+public final class CSite implements ISite {
 	public static final int NO_INDEX = -1;
 
+	//TODO move to CInternalState?
 	private static final CInternalState EMPTY_STATE = new CInternalState(
 			NO_INDEX);
 
-	private int nameId;
-	private ILinkState linkState;
+	private final int nameId;
+	private final ILinkState linkState;
 	private IInternalState internalState = EMPTY_STATE;
 	private boolean changed;
 	private IAgent linkAgent = null;
@@ -32,32 +34,36 @@ public class CSite implements ISite {
 		linkAgent = agent;
 	}
 
-	public void setLift(List<ILiftElement> lift) {
+	public final void setLift(List<ILiftElement> lift) {
 		this.liftList = lift;
 	}
 
 	//TODO
-	public void addToLift(ILiftElement liftElement) {
+	public final void addToLift(ILiftElement liftElement) {
 		this.liftList.add(liftElement);
 	}
 
-	public List<ILiftElement> getLift() {
-		return liftList;
+	public final List<ILiftElement> getLift() {
+		return Collections.unmodifiableList(liftList);
+	}
+	
+	public final void clearLift() {
+		liftList.clear();
 	}
 
-	public boolean isConnectedComponentInLift(IConnectedComponent inCC) {
+	public final boolean isConnectedComponentInLift(IConnectedComponent inCC) {
 		for (ILiftElement liftElement : this.liftList)
 			if (liftElement.getConnectedComponent() == inCC)
 				return true;
 		return false;
 	}
 
-	public List<IInjection> getInjectionFromLift(IConnectedComponent inCC) {
+	public final List<IInjection> getInjectionFromLift(IConnectedComponent inCC) {
 		List<IInjection> list = new ArrayList<IInjection>();
 		for (ILiftElement liftElement : this.liftList)
 			if (liftElement.getConnectedComponent() == inCC)
 				list.add(liftElement.getInjection());
-		return list;
+		return Collections.unmodifiableList(list);
 	}
 	
 	public final ILinkState getLinkState() {

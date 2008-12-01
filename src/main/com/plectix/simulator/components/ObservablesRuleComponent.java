@@ -1,32 +1,29 @@
 package com.plectix.simulator.components;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.interfaces.*;
 
-public class ObservablesRuleComponent implements IObservablesRuleComponent {
-	private IRule rule;
-	private int nameID;
+public final class ObservablesRuleComponent implements IObservablesRuleComponent {
+	private final IRule rule;
+	private final int nameID;
 	private final List<Long> countList = new ArrayList<Long>();
-
+	private long lastInjectionsQuantity = -1;
+	
+	public ObservablesRuleComponent(IRule rule, int nameID) {
+		this.rule = rule;
+		this.nameID = nameID;
+	}
+	
 	public final IRule getRule() {
 		return rule;
 	}
 
 	public final List<Long> getCountList() {
-		return countList;
+		return Collections.unmodifiableList(countList);
 	}
 
-	public ObservablesRuleComponent(IRule rule, int nameID) {
-		this.rule = rule;
-		this.nameID = nameID;
-	}
-
-	private long lastInjectionsQuantity = -1;
-
-	public void updateLastValue() {
+	public final void updateLastValue() {
 		lastInjectionsQuantity = getCount();
 	}
 
@@ -38,31 +35,30 @@ public class ObservablesRuleComponent implements IObservablesRuleComponent {
 		return count;
 	}
 
-	public void calculate(boolean replaceLast) {
-
+	public final void calculate(boolean replaceLast) {
 		if (replaceLast)
 			countList.set(countList.size() - 1, getCount());
 		else
 			countList.add(lastInjectionsQuantity);
 	}
 
-	public String getLine() {
+	public final String getLine() {
 		return rule.getName();
 	}
 
-	public String getName() {
+	public final String getName() {
 		return rule.getName();
 	}
 
-	public int getNameID() {
+	public final int getNameID() {
 		return nameID;
 	}
 
-	public double getSize(CObservables obs) {
+	public double getSize(IObservables obs) {
 		return rule.getRuleRate();
 	}
 
-	public String getItem(int index, CObservables obs) {
+	public String getItem(int index, IObservables obs) {
 		return countList.get(index).toString();
 	}
 
@@ -90,7 +86,7 @@ public class ObservablesRuleComponent implements IObservablesRuleComponent {
 	}
 
 	@Override
-	public long getValue(int index, CObservables obs) {
+	public long getValue(int index, IObservables obs) {
 		return countList.get(index);
 	}
 

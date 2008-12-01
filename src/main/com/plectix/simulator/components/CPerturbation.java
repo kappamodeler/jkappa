@@ -1,14 +1,11 @@
 package com.plectix.simulator.components;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.interfaces.IObservablesComponent;
-import com.plectix.simulator.interfaces.IPerturbationExpression;
-import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.interfaces.*;
 
-public class CPerturbation {
+public final class CPerturbation {
 
 	public final static byte TYPE_TIME = 0;
 	public final static byte TYPE_NUMBER = 1;
@@ -30,42 +27,6 @@ public class CPerturbation {
 	private boolean greater = true;
 	private boolean isDO = false;
 	private List<IPerturbationExpression> parametersRHS;
-
-	public int getObsNameID() {
-		return this.obsNameID;
-	}
-
-	public final List<IPerturbationExpression> getLHSParametersList() {
-		return this.parametersLHS;
-	}
-
-	public final IRule getPerturbationRule() {
-		return this.rule;
-	}
-
-	public final double getPerturbationRate() {
-		return this.perturbationRate;
-	}
-
-	public boolean getGreater() {
-		return this.greater;
-	}
-
-	public final double getTimeCondition() {
-		return this.timeCondition;
-	}
-
-	public List<IPerturbationExpression> getRHSParametersList() {
-		return parametersRHS;
-	}
-
-	// public void setRHSParameters(List<RateExpression> rateParameters) {
-	// this.RHSParameters = rateParameters;
-	// }
-
-	public final boolean isDo() {
-		return this.isDO;
-	}
 
 	public CPerturbation(int perturbationID, double time, byte type,
 			double perturbationRate, IRule rule, boolean greater,
@@ -96,7 +57,7 @@ public class CPerturbation {
 			List<IPerturbationExpression> rateParameters) {
 		this.perturbationID = perturbationID;
 		this.obsNameID = obsNameID;
-		CObservables obs = SimulationMain.getSimulationManager()
+		IObservables obs = SimulationMain.getSimulationManager()
 				.getSimulationData().getObservables();
 		fillParameters(obsID, parameters, obs);
 		this.type = type;
@@ -105,6 +66,42 @@ public class CPerturbation {
 		this.ruleRate = rule.getRuleRate();
 		this.greater = greater;
 		this.parametersRHS = rateParameters;
+	}
+	
+	public final int getObsNameID() {
+		return this.obsNameID;
+	}
+
+	public final List<IPerturbationExpression> getLHSParametersList() {
+		return this.parametersLHS;
+	}
+
+	public final IRule getPerturbationRule() {
+		return this.rule;
+	}
+
+	public final double getPerturbationRate() {
+		return this.perturbationRate;
+	}
+
+	public final boolean getGreater() {
+		return this.greater;
+	}
+
+	public final double getTimeCondition() {
+		return this.timeCondition;
+	}
+
+	public final List<IPerturbationExpression> getRHSParametersList() {
+		return Collections.unmodifiableList(parametersRHS);
+	}
+
+	// public void setRHSParameters(List<RateExpression> rateParameters) {
+	// this.RHSParameters = rateParameters;
+	// }
+
+	public final boolean isDo() {
+		return this.isDO;
 	}
 
 	public final void checkConditionOnce(double currentTime) {
@@ -115,8 +112,8 @@ public class CPerturbation {
 		}
 	}
 
-	private void fillParameters(List<IObservablesComponent> obsID,
-			List<Double> parameters, CObservables obs) {
+	private final void fillParameters(List<IObservablesComponent> obsID,
+			List<Double> parameters, IObservables obs) {
 		this.parametersLHS = new ArrayList<IPerturbationExpression>();
 		for (int i = 0; i < obsID.size(); i++) {
 
@@ -142,7 +139,7 @@ public class CPerturbation {
 				else {
 
 					this.parametersLHS.get(index).setValue(
-							parametersLHS.get(index).getValue() + sp.parameter);
+							parametersLHS.get(index).getValue() + sp.getValue());
 					// this.LHSParameters.get(index).parameter += sp.parameter;
 				}
 			}
@@ -154,7 +151,7 @@ public class CPerturbation {
 		}
 	}
 
-	public boolean checkCondition(double currentTime) {
+	public final boolean checkCondition(double currentTime) {
 		if (currentTime > this.timeCondition) {
 			fillPerturbationRate();
 			this.rule.setRuleRate(this.perturbationRate);
@@ -171,7 +168,7 @@ public class CPerturbation {
 		}
 	}
 
-	public boolean checkCondition(CObservables observables) {
+	public final boolean checkCondition(IObservables observables) {
 		double obsSize = observables.getComponentList().get(obsNameID)
 				.getSize(observables);
 
@@ -195,7 +192,7 @@ public class CPerturbation {
 		return false;
 	}
 
-	private double calculateSum(CObservables observables) {
+	private final double calculateSum(IObservables observables) {
 		double sum = 0.0;
 		for (int i = 0; i < this.parametersLHS.size() - 1; i++) {
 			sum += this.parametersLHS.get(i).getMultiplication(observables);

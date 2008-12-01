@@ -411,24 +411,24 @@ public class SimulatorManager {
 					// DEL #0
 					System.out.print("DEL #");
 					System.out
-							.println(action.getFromAgent().getIdInRuleSide() - 1);
+							.println(action.getAgentFrom().getIdInRuleSide() - 1);
 					break;
 				}
 				case ADD: {
 					// ADD a#0(x)
-					System.out.print("ADD " + action.getToAgent().getName()
+					System.out.print("ADD " + action.getAgentTo().getName()
 							+ "#");
 
-					System.out.print(action.getToAgent().getIdInRuleSide() - 1);
+					System.out.print(action.getAgentTo().getIdInRuleSide() - 1);
 					System.out.print("(");
 					int i = 1;
-					for (ISite site : action.getToAgent().getSites()) {
+					for (ISite site : action.getAgentTo().getSites()) {
 						System.out.print(site.getName());
 						if ((site.getInternalState() != null)
 								&& (site.getInternalState().getNameId() >= 0))
 							System.out.print("~"
 									+ site.getInternalState().getName());
-						if (action.getToAgent().getSites().size() > i++)
+						if (action.getAgentTo().getSites().size() > i++)
 							System.out.print(",");
 					}
 					System.out.println(") ");

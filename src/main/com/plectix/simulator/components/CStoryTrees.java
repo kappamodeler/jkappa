@@ -1,18 +1,71 @@
 package com.plectix.simulator.components;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-import com.plectix.simulator.components.CNetworkNotation.AgentSites;
-import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules;
+import com.plectix.simulator.components.CNetworkNotation.*;
 import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules.SitesFromRules;
 
-public class CStoryTrees {
-	private HashMap<Integer, List<RuleIDs>> contiguityList;
+public final class CStoryTrees {
+	private Map<Integer, List<RuleIDs>> contiguityList;
 	private int ruleId;
+	private Map<Long, HashMap<Integer, StorySites>> sSites;
+	
 
+	//TODO
+	private class StorySites {
+		boolean isLeaf;
+		int level = 0;
+		int siteID;
+
+		public StorySites(int level, int siteID, boolean isLeaf) {
+			this.level = level;
+			this.siteID = siteID;
+			this.isLeaf = isLeaf;
+		}
+
+		public void checkLeaf(List<CNetworkNotation> commonList, int begin,
+				long key) {
+			for (int i = begin; i < commonList.size(); i++) {
+				CNetworkNotation nn = commonList.get(i);
+				AgentSites as = nn.changedAgentsFromSolution.get(key);
+				if (as != null) {
+					CStoriesSiteStates sss = (CStoriesSiteStates) as.sites
+							.get(this.siteID);
+					if (sss != null)
+						return;
+				}
+			}
+			this.isLeaf = true;
+		}
+	}
+	
+	//TODO separate
+	private class RuleIDs {
+		int ruleID;
+		int indexInTrace;
+		boolean isLeaf;
+
+		public RuleIDs(int ruleID, int indexInTrace) {
+			this.ruleID = ruleID;
+			this.indexInTrace = indexInTrace;
+			this.isLeaf = false;
+		}
+
+		public final boolean equals(Object obj) {
+			if (!(obj instanceof RuleIDs))
+				return false;
+			RuleIDs ruleID = (RuleIDs) obj;
+			if (indexInTrace != ruleID.indexInTrace)
+				return false;
+			return true;
+		}
+	}
+
+	public CStoryTrees(int ruleId) {
+	//	contiguityList = new HashMap<Integer, List<Integer>>();
+		this.ruleId = ruleId;
+	}
+	
 	public final int getRuleID() {
 		return this.ruleId;
 	}
@@ -21,11 +74,9 @@ public class CStoryTrees {
 		return contiguityList.get(i);
 	}
 
-	public final HashMap<Integer, List<RuleIDs>> getMap() {
-		return contiguityList;
+	public final Map<Integer, List<RuleIDs>> getMap() {
+		return Collections.unmodifiableMap(contiguityList);
 	}
-
-	HashMap<Long, HashMap<Integer, StorySites>> sSites;
 
 	public final void getTreeFromList(List<CNetworkNotation> commonList) {
 		int index = 0;
@@ -159,27 +210,6 @@ public class CStoryTrees {
 	// cList.addAll(list);
 	// }
 
-	class RuleIDs {
-		int ruleID;
-		int indexInTrace;
-		boolean isLeaf;
-
-		public RuleIDs(int ruleID, int indexInTrace) {
-			this.ruleID = ruleID;
-			this.indexInTrace = indexInTrace;
-			this.isLeaf = false;
-		}
-
-		public final boolean equals(Object obj) {
-			if (!(obj instanceof RuleIDs))
-				return false;
-			RuleIDs ruleID = (RuleIDs) obj;
-			if (indexInTrace != ruleID.indexInTrace)
-				return false;
-			return true;
-		}
-	}
-
 	private void addToConList(CNetworkNotation nn, int index) {
 		Integer key = nn.getRule().getRuleID();
 		List<RuleIDs> cList = contiguityList.get(key);
@@ -232,7 +262,7 @@ public class CStoryTrees {
 
 	private void addToStorySites(CNetworkNotation nn, int index,
 			List<CNetworkNotation> commonList, int begin) {
-		HashMap<Long, AgentSites> chAFS = nn.changedAgentsFromSolution;
+		Map<Long, AgentSites> chAFS = nn.changedAgentsFromSolution;
 		Iterator<Long> iterator = chAFS.keySet().iterator();
 
 		while (iterator.hasNext()) {
@@ -260,37 +290,5 @@ public class CStoryTrees {
 				}
 			}
 		}
-	}
-
-	class StorySites {
-		boolean isLeaf;
-		int level = 0;
-		int siteID;
-
-		public StorySites(int level, int siteID, boolean isLeaf) {
-			this.level = level;
-			this.siteID = siteID;
-			this.isLeaf = isLeaf;
-		}
-
-		public void checkLeaf(List<CNetworkNotation> commonList, int begin,
-				long key) {
-			for (int i = begin; i < commonList.size(); i++) {
-				CNetworkNotation nn = commonList.get(i);
-				AgentSites as = nn.changedAgentsFromSolution.get(key);
-				if (as != null) {
-					CStoriesSiteStates sss = (CStoriesSiteStates) as.sites
-							.get(this.siteID);
-					if (sss != null)
-						return;
-				}
-			}
-			this.isLeaf = true;
-		}
-	}
-
-	public CStoryTrees(int ruleId) {
-	//	contiguityList = new HashMap<Integer, List<Integer>>();
-		this.ruleId = ruleId;
 	}
 }

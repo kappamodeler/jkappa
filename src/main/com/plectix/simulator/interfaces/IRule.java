@@ -2,8 +2,6 @@ package com.plectix.simulator.interfaces;
 
 import java.util.*;
 
-import com.plectix.simulator.components.CObservables;
-
 public interface IRule {
 
 	public int getRuleID();
@@ -46,7 +44,7 @@ public interface IRule {
 
 	public void createActivatedRulesList(List<IRule> rules);
 
-	public void createActivatedObservablesList(CObservables observables);
+	public void createActivatedObservablesList(IObservables observables);
 
 	public double getRuleRate();
 

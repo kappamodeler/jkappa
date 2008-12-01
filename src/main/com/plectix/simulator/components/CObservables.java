@@ -1,33 +1,43 @@
 package com.plectix.simulator.components;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
 
-public class CObservables {
+public class CObservables implements IObservables {
 	private static boolean ocamlStyleObsName = false;
-
-	private List<IObservablesConnectedComponent> connectedComponentList;
-	private List<IObservablesComponent> componentList;
 	public static List<Double> countTimeList;
 
+	private final List<IObservablesConnectedComponent> connectedComponentList;
+	private final List<IObservablesComponent> componentList;
 	private double timeNext;
 	private double timeSampleMin;
 	private double initialTime = 0.0;
 	private long events = -1;
 	private int points = -1;
+	private double lastTime;
+	private boolean changeLastTime = false;
+	private boolean changeTimeNext = false;
+	private List<IObservablesComponent> componentListForXMLOutput = null;
+
+	public CObservables() {
+		connectedComponentList = new ArrayList<IObservablesConnectedComponent>();
+		componentList = new ArrayList<IObservablesComponent>();
+		countTimeList = new ArrayList<Double>();
+	}
 
 	public final double getTimeSampleMin() {
 		return timeSampleMin;
 	}
 
-	public static void setCountTimeList(List<Double> countTimeList) {
+	public static final void setCountTimeList(List<Double> countTimeList) {
 		CObservables.countTimeList = countTimeList;
 	}
 
-	public static List<Double> getCountTimeList() {
+	public static final List<Double> getCountTimeList() {
 		return countTimeList;
 	}
 
@@ -85,9 +95,7 @@ public class CObservables {
 		updateLastValueAll(time);
 	}
 
-	private boolean changeTimeNext = false;
-
-	private boolean isCalculateNow(double time, long count, boolean isTime) {
+	private final boolean isCalculateNow(double time, long count, boolean isTime) {
 		if (isTime) {
 			if (initialTime > 0)
 				if ((!changeTimeNext) && (initialTime < time)) {
@@ -122,9 +130,6 @@ public class CObservables {
 		}
 	}
 
-	private double lastTime;
-	private boolean changeLastTime = false;
-
 	private final void updateLastValueAll(double time) {
 		for (IObservablesComponent cc : componentList) {
 			cc.updateLastValue();
@@ -142,12 +147,6 @@ public class CObservables {
 		updateLastValueAll(time);
 		countTimeList.add(time);
 		calculateAll(IObservablesComponent.CALCULATE_WITH_NOT_REPLASE_LAST);
-	}
-
-	public CObservables() {
-		connectedComponentList = new ArrayList<IObservablesConnectedComponent>();
-		componentList = new ArrayList<IObservablesComponent>();
-		countTimeList = new ArrayList<Double>();
 	}
 
 	public final void init(double fullTime, double initialTime, long events,
@@ -176,10 +175,8 @@ public class CObservables {
 	}
 
 	public final List<IObservablesComponent> getComponentList() {
-		return componentList;
+		return Collections.unmodifiableList(componentList);
 	}
-
-	private List<IObservablesComponent> componentListForXMLOutput = null;
 
 	public final void resetLists() {
 		countTimeList.clear();
@@ -204,7 +201,7 @@ public class CObservables {
 	}
 
 	public final List<IObservablesConnectedComponent> getConnectedComponentList() {
-		return connectedComponentList;
+		return Collections.unmodifiableList(connectedComponentList);
 	}
 
 	public final void addConnectedComponents(List<IConnectedComponent> list,

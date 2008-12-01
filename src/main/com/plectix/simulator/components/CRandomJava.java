@@ -6,9 +6,9 @@ import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.util.Info;
 
-public class CRandomJava implements IRandom {
+/*package*/ final class CRandomJava implements IRandom {
 
-	private Random rand;
+	private final Random rand;
 
 	public CRandomJava(int seed) {
 		if (seed != 0) {
@@ -21,11 +21,11 @@ public class CRandomJava implements IRandom {
 			rand = new Random();
 	}
 
-	public double getDouble() {
+	public final double getDouble() {
 		return rand.nextDouble();
 	}
 
-	public int getInteger(int limit) {
+	public final int getInteger(int limit) {
 		return rand.nextInt(limit);
 	}
 

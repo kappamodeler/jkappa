@@ -7,9 +7,6 @@ import org.apache.log4j.Logger;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.actions.*;
 import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulatorManager;
-import com.plectix.simulator.util.Converter;
 
 public class CRule implements IRule {
 
@@ -18,7 +15,7 @@ public class CRule implements IRule {
 	private List<IConnectedComponent> leftHandSide;
 	private List<IConnectedComponent> rightHandSide;
 	private double activity = 0.;
-	private String name;
+	private final String name;
 	private double ruleRate;
 	private List<ISite> sitesConnectedWithDeleted;
 	private List<ISite> sitesConnectedWithBroken;
@@ -29,33 +26,35 @@ public class CRule implements IRule {
 	private List<IObservablesConnectedComponent> activatedObservable;
 
 	private int ruleID;
-
 	private List<IAction> actionList;
-
 	private Map<IAgent, IAgent> agentAddList;
-
 	private List<IInjection> injList;
-
 	private List<ISite> changedSites;
-
 	private List<FixedSite> fixedSites;
-
 	private IConstraint constraints;
-
 	private int countAgentsLHS = 0;
 
-	public int getCountAgentsLHS() {
-		return countAgentsLHS;
-	}
+	//TODO fields of this class is never read locally 
+	private class FixedSite {
+		private final ISite site;
+		private boolean linkState;
+		private boolean internalState;
 
-	public final int getRuleID() {
-		return ruleID;
-	}
+		public final void setLinkState(boolean linkState) {
+			this.linkState = linkState;
+		}
 
-	public final void setRuleID(int id) {
-		this.ruleID = id;
-	}
+		public final void setInternalState(boolean internalState) {
+			this.internalState = internalState;
+		}
 
+		public FixedSite(ISite site) {
+			this.site = site;
+			boolean linkState = false;
+			boolean internalState = false;
+		}
+	}
+	
 	public CRule(List<IConnectedComponent> left,
 			List<IConnectedComponent> right, String name, double ruleRate,
 			int ruleID) {
@@ -81,28 +80,20 @@ public class CRule implements IRule {
 		calculateAutomorphismsNumber();
 		indexingRHSAgents();
 	}
-
-	class FixedSite {
-		ISite site;
-		boolean linkState;
-		boolean internalState;
-
-		public void setLinkState(boolean linkState) {
-			this.linkState = linkState;
-		}
-
-		public void setInternalState(boolean internalState) {
-			this.internalState = internalState;
-		}
-
-		public FixedSite(ISite site) {
-			this.site = site;
-			boolean linkState = false;
-			boolean internalState = false;
-		}
+	
+	public final int getCountAgentsLHS() {
+		return countAgentsLHS;
 	}
 
-	public void setRuleRate(double ruleRate) {
+	public final int getRuleID() {
+		return ruleID;
+	}
+
+	public final void setRuleID(int id) {
+		this.ruleID = id;
+	}
+
+	public final void setRuleRate(double ruleRate) {
 		if (ruleRate >= 0) {
 			this.ruleRate = ruleRate;
 		} else {
@@ -113,33 +104,37 @@ public class CRule implements IRule {
 		}
 	}
 
-	public List<IObservablesConnectedComponent> getActivatedObservable() {
-		return activatedObservable;
+	public final List<IObservablesConnectedComponent> getActivatedObservable() {
+		return Collections.unmodifiableList(activatedObservable);
+	}
+	
+	public final List<IRule> getActivatedRule() {
+		return Collections.unmodifiableList(activatedRule);
+	}
+	
+	public final List<ISite> getChangedSites() {
+		return Collections.unmodifiableList(changedSites);
 	}
 
-	public void setActivatedObservable(
+	public final List<IAction> getActionList() {
+		return Collections.unmodifiableList(actionList);
+	}
+
+	public final void setActivatedObservable(
 			List<IObservablesConnectedComponent> activatedObservable) {
 		this.activatedObservable = activatedObservable;
 	}
-
-	public List<IRule> getActivatedRule() {
-		return activatedRule;
-	}
-
-	public void setActivatedRule(List<IRule> activatedRule) {
+	
+	public final void setActivatedRule(List<IRule> activatedRule) {
 		this.activatedRule = activatedRule;
 	}
 
-	public boolean isInfinityRate() {
+	public final boolean isInfinityRate() {
 		return infinityRate;
 	}
 
-	public void setInfinityRate(boolean infinityRate) {
+	public final void setInfinityRate(boolean infinityRate) {
 		this.infinityRate = infinityRate;
-	}
-
-	public List<IAction> getActionList() {
-		return Collections.unmodifiableList(actionList);
 	}
 
 	public final int getAutomorphismNumber() {
@@ -164,7 +159,7 @@ public class CRule implements IRule {
 	// maxAgentID = counter;
 	// }
 
-	private final HashMap<Integer, List<IAgent>> createAgentMap(
+	private final Map<Integer, List<IAgent>> createAgentMap(
 			List<IConnectedComponent> ccList) {
 		HashMap<Integer, List<IAgent>> map = new HashMap<Integer, List<IAgent>>();
 		if (ccList == null)
@@ -181,7 +176,7 @@ public class CRule implements IRule {
 		return map;
 	}
 
-	public void applyRuleForStories(List<IInjection> injectionList,
+	public final void applyRuleForStories(List<IInjection> injectionList,
 			INetworkNotation netNotation) {
 		apply(injectionList, netNotation);
 	}
@@ -190,15 +185,15 @@ public class CRule implements IRule {
 		apply(injectionList, null);
 	}
 
-	public IAgent getAgentAdd(IAgent key) {
+	public final IAgent getAgentAdd(IAgent key) {
 		return agentAddList.get(key);
 	}
 	
-	public void putAgentAdd(IAgent key, IAgent value) {
+	public final void putAgentAdd(IAgent key, IAgent value) {
 		agentAddList.put(key, value);
 	}
 	
-	protected void apply(List<IInjection> injectionList,
+	protected final void apply(List<IInjection> injectionList,
 			INetworkNotation netNotation) {
 		agentAddList = new HashMap<IAgent, IAgent>();
 		sitesConnectedWithDeleted = new ArrayList<ISite>();
@@ -224,7 +219,7 @@ public class CRule implements IRule {
 		}
 	}
 
-	private void addFixedSitesToNN(INetworkNotation netNotation) {
+	private final void addFixedSitesToNN(INetworkNotation netNotation) {
 		for (FixedSite fs : fixedSites) {
 			CSite siteFromRule = (CSite) fs.site;
 			IInjection inj = getInjectionBySiteToFromLHS(siteFromRule);
@@ -291,7 +286,7 @@ public class CRule implements IRule {
 		}
 	}
 
-	public final void fillFixedSites(IAgent lhsAgent, IAgent rhsAgent) {
+	private final void fillFixedSites(IAgent lhsAgent, IAgent rhsAgent) {
 		for (ISite lhsSite : lhsAgent.getSites()) {
 			ISite rhsSite = rhsAgent.getSite(lhsSite.getNameId());
 			FixedSite fixedSite = new FixedSite(lhsSite);
@@ -342,8 +337,8 @@ public class CRule implements IRule {
 
 	private final void indexingRHSAgents() {
 		// markedLHS();
-		HashMap<Integer, List<IAgent>> lhsAgentMap = createAgentMap(leftHandSide);
-		HashMap<Integer, List<IAgent>> rhsAgentMap = createAgentMap(rightHandSide);
+		Map<Integer, List<IAgent>> lhsAgentMap = createAgentMap(leftHandSide);
+		Map<Integer, List<IAgent>> rhsAgentMap = createAgentMap(rightHandSide);
 		markRHSAgents();
 
 		createActionList();
@@ -364,10 +359,6 @@ public class CRule implements IRule {
 				}
 			}
 		}
-	}
-
-	public List<ISite> getChangedSites() {
-		return Collections.unmodifiableList(changedSites);
 	}
 
 	private final boolean isActivated(List<IAgent> agentsFromAnotherRules) {
@@ -426,7 +417,7 @@ public class CRule implements IRule {
 		return false;
 	}
 
-	private boolean checkRulesNullAgents(IAgent agent) {
+	private final boolean checkRulesNullAgents(IAgent agent) {
 		for (IConnectedComponent cc : this.getRightHandSide())
 
 			for (IAgent agentFromRule : cc.getAgents())
@@ -450,7 +441,7 @@ public class CRule implements IRule {
 		}
 	}
 
-	public final void createActivatedObservablesList(CObservables observables) {
+	public final void createActivatedObservablesList(IObservables observables) {
 		activatedObservable = new ArrayList<IObservablesConnectedComponent>();
 		for (IObservablesConnectedComponent obsCC : observables
 				.getConnectedComponentList()) {
@@ -504,7 +495,7 @@ public class CRule implements IRule {
 		for (IConnectedComponent ccR : rightHandSide)
 			for (IAgent rAgent : ccR.getAgents()) {
 				if (lAgent.getIdInRuleSide() == rAgent.getIdInRuleSide()) {
-					CAction newAction = new CDefaultAction(this, lAgent, rAgent, ccL, ccR);
+					IAction newAction = new CDefaultAction(this, lAgent, rAgent, ccL, ccR);
 					actionList.add(newAction);
 					actionList.addAll(newAction.createAtomicActions());
 					return true;
@@ -526,6 +517,7 @@ public class CRule implements IRule {
 		return Collections.unmodifiableList(agentList);
 	}
 
+	//TODO is this necessary?
 	private final IAgent getAgentByIdInRuleFromLHS(Integer id) {
 		for (IAgent agent : getAgentsFromConnectedComponent(leftHandSide))
 			if (agent.getIdInRuleSide() == id)
@@ -533,7 +525,7 @@ public class CRule implements IRule {
 		return null;
 	}
 
-	public void setAutomorphismNumber(int automorphismNumber) {
+	public final void setAutomorphismNumber(int automorphismNumber) {
 		this.automorphismNumber = automorphismNumber;
 	}
 
@@ -578,14 +570,22 @@ public class CRule implements IRule {
 	}
 
 	public final List<IConnectedComponent> getLeftHandSide() {
-		return leftHandSide;
+		if (leftHandSide == null) {
+			return null;
+		} else {
+			return Collections.unmodifiableList(leftHandSide);
+		}
 	}
 
 	public final List<IConnectedComponent> getRightHandSide() {
-		return rightHandSide;
+		if (rightHandSide == null) {
+			return null;
+		} else {
+			return Collections.unmodifiableList(rightHandSide);
+		}
 	}
 
-	public boolean isClash(List<IInjection> injections) {
+	public final boolean isClash(List<IInjection> injections) {
 		if (injections.size() == 2) {
 			for (ISite siteCC1 : injections.get(0).getSiteList())
 				for (ISite siteCC2 : injections.get(1).getSiteList())
@@ -608,7 +608,7 @@ public class CRule implements IRule {
 		return null;
 	}
 
-	public boolean isClashForInfiniteRule() {
+	public final boolean isClashForInfiniteRule() {
 		if (this.leftHandSide.size() == 2) {
 			if (this.leftHandSide.get(0).getInjectionsList().size() == 1
 					&& this.leftHandSide.get(1).getInjectionsList().size() == 1) {
@@ -621,31 +621,31 @@ public class CRule implements IRule {
 		return false;
 	}
 
-	public List<ISite> getSitesConnectedWithBroken() {
-		return this.sitesConnectedWithBroken;
+	public final List<ISite> getSitesConnectedWithBroken() {
+		return Collections.unmodifiableList(sitesConnectedWithBroken);
 	}
 	
-	public void addSiteConnectedWithBroken(ISite site) {
+	public final void addSiteConnectedWithBroken(ISite site) {
 		sitesConnectedWithBroken.add(site);
 	}
 	
-	public List<ISite> getSitesConnectedWithDeleted() {
-		return this.sitesConnectedWithDeleted;
+	public final List<ISite> getSitesConnectedWithDeleted() {
+		return Collections.unmodifiableList(sitesConnectedWithDeleted);
 	}
 	
-	public void addSiteConnectedWithDeleted(ISite site) {
+	public final void addSiteConnectedWithDeleted(ISite site) {
 		sitesConnectedWithDeleted.add(site);
 	}
 	
-	public ISite getSiteConnectedWithDeleted(int index) {
+	public final ISite getSiteConnectedWithDeleted(int index) {
 		return sitesConnectedWithDeleted.get(index);
 	}
 	
-	public void removeSiteConnectedWithDeleted(int index) {
+	public final void removeSiteConnectedWithDeleted(int index) {
 		sitesConnectedWithDeleted.remove(index);
 	}
 
-	public void applyLastRuleForStories(List<IInjection> injectionsList,
+	public final void applyLastRuleForStories(List<IInjection> injectionsList,
 			INetworkNotation netNotation) {
 		for (IInjection inj : injectionsList) {
 			for (ISite site : inj.getSiteList())
@@ -654,11 +654,11 @@ public class CRule implements IRule {
 		}
 	}
 
-	public void addAction(IAction action) {
+	public final void addAction(IAction action) {
 		actionList.add(action);
 	}
 
-	public void addChangedSite(ISite toSite) {
+	public final void addChangedSite(ISite toSite) {
 		changedSites.add(toSite);
 	}
 }

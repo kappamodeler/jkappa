@@ -38,4 +38,6 @@ public interface ISite {
 
 	//TODO test only
 	public void setLinkIndex(int valueOf);
+
+	public void clearLift();
 }

@@ -6,18 +6,15 @@ import com.plectix.simulator.interfaces.*;
 
 public final class CInjection implements IInjection {
 
-	private List<IAgentLink> agentLinkList;
-
 	public static IInjection EMPTY_INJECTION = new CInjection();
-	
+
+	private List<IAgentLink> agentLinkList;
 	private List<ISite> sitesList = new ArrayList<ISite>();
-
 	private List<ISite> changedSites;
-
 	private int myId = 0;
-	
 	private CConnectedComponent connectedComponent;
-
+	
+	
 	private CInjection() {
 		
 	}
@@ -30,58 +27,58 @@ public final class CInjection implements IInjection {
 		this.changedSites = new ArrayList<ISite>();
 	}
 
-	public void removeSiteFromSitesList(ISite site){
+	public final void removeSiteFromSitesList(ISite site){
 		for (ISite siteL : this.sitesList)
 			if (site==siteL){
 				this.sitesList.remove(site);
 				return;}
 	}
 	
-	public void addToChangedSites(ISite site) {
+	public final void addToChangedSites(ISite site) {
 		if (!(checkSiteExistanceAmongChangedSites(site)))
 			this.changedSites.add(site);
 	}
 
-	public void clearChangedSites() {
+	public final void clearChangedSites() {
 		changedSites.clear();
 	}
 
-	public boolean checkSiteExistanceAmongChangedSites(ISite site) {
+	public final boolean checkSiteExistanceAmongChangedSites(ISite site) {
 		for (ISite chSite : this.changedSites)
 			if (chSite == site)
 				return true;
 		return false;
 	}
 	
-	public void setId(int id) {
+	public final void setId(int id) {
 		myId = id;
 	}
 	
-	public int getId() {
+	public final int getId() {
 		return myId;
 	}
 	
-	public List<ISite> getChangedSites() {
+	public final List<ISite> getChangedSites() {
 		return Collections.unmodifiableList(changedSites);
 	}
 
-	public void setChangedSites(List<ISite> changedSites) {
+	public final void setChangedSites(List<ISite> changedSites) {
 		this.changedSites = changedSites;
 	}
 
-	public List<IAgentLink> getAgentLinkList() {
+	public final List<IAgentLink> getAgentLinkList() {
 		return Collections.unmodifiableList(agentLinkList);
 	}
 
-	public List<ISite> getSiteList() {
+	public final List<ISite> getSiteList() {
 		return Collections.unmodifiableList(sitesList);
 	}
 
-	public void setSiteList(List<ISite> siteList) {
+	public final void setSiteList(List<ISite> siteList) {
 		this.sitesList = siteList;
 	}
 
-	public CConnectedComponent getConnectedComponent() {
+	public final CConnectedComponent getConnectedComponent() {
 		return connectedComponent;
 	}
 }

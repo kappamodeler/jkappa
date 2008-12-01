@@ -5,10 +5,9 @@ import java.util.*;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
 
-public class CSolution implements ISolution {
-	private HashMap<Long, IAgent> agentMap;
-
-	private List<SolutionLines> solutionLines;
+public final class CSolution implements ISolution {
+	private final HashMap<Long, IAgent> agentMap;
+	private final List<SolutionLines> solutionLines;
 
 	public CSolution() {
 		agentMap = new HashMap<Long, IAgent>();
@@ -28,12 +27,10 @@ public class CSolution implements ISolution {
 		}
 	}
 
-	// TODO check
 	public final void removeAgent(IAgent agent) {
 		if (agent == null) {
 			return;
 		}
-
 		agentMap.remove(agent.getHash());
 	}
 
@@ -63,22 +60,9 @@ public class CSolution implements ISolution {
 		return Collections.unmodifiableMap(agentMap);
 	}
 
-	public void clearAgents() {
+	public final void clearAgents() {
 		agentMap.clear();
 	}
-
-	
-	public final void add(ISolution solution) {
-		// TODO Auto-generated method stub
-
-	}
-
-	
-	public final List<IAgent> apply(IRule rule, IInjection injection) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	
 	public final IConnectedComponent getConnectedComponent(IAgent agent) {
 		List<IAgent> agentList = new ArrayList<IAgent>();
@@ -145,11 +129,11 @@ public class CSolution implements ISolution {
 		return ccList;
 	}
 
-	public List<SolutionLines> getSolutionLines() {
-		return solutionLines;
+	public final List<SolutionLines> getSolutionLines() {
+		return Collections.unmodifiableList(solutionLines);
 	}
 
-	public void checkSolutionLinesAndAdd(String line, long count) {
+	public final void checkSolutionLinesAndAdd(String line, long count) {
 		line = line.replaceAll("[ 	]", "");
 		while (line.indexOf("(") == 0) {
 			line = line.substring(1);
@@ -163,6 +147,10 @@ public class CSolution implements ISolution {
 		}
 		solutionLines.add(new SolutionLines(line, count));
 
+	}
+
+	public final void clearSolutionLines() {
+		solutionLines.clear();
 	}
 
 }

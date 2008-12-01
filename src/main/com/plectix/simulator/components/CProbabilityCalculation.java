@@ -9,11 +9,11 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.interfaces.IRule;
 
-public class CProbabilityCalculation {
-	private List<IRule> rules;
+public final class CProbabilityCalculation {
+	private final List<IRule> rules;
+	private final double[] rulesProbability;
+	private final IRandom random;
 	private double commonActivity;
-	private double[] rulesProbability;
-	private IRandom random;
 
 	public CProbabilityCalculation(List<IRule> list, int seed) {
 		this.rules = list;
@@ -28,12 +28,12 @@ public class CProbabilityCalculation {
 
 	}
 
-	private void calculateRulesActivity() {
+	private final void calculateRulesActivity() {
 		for (IRule rule : rules)
 			rule.calcultateActivity();
 	}
 
-	private void calculateProbability() {
+	private final void calculateProbability() {
 		rulesProbability[0] = rules.get(0).getActivity() / commonActivity;
 		for (int i = 1; i < rulesProbability.length; i++) {
 			rulesProbability[i] = rulesProbability[i - 1]
@@ -49,14 +49,14 @@ public class CProbabilityCalculation {
 		return list;
 	}
 
-	private void recalculateCommonActivity() {
+	private final void recalculateCommonActivity() {
 		commonActivity = 0.;
 		for (IRule rule : rules) {
 			commonActivity += rule.getActivity();
 		}
 	}
 
-	private int getRandomIndex() {
+	private final int getRandomIndex() {
 
 		for (int i = 0; i < rulesProbability.length; i++) {
 			if (rules.get(i).isInfinityRate() && (rules.get(i).getActivity()>0.0) 
@@ -72,7 +72,7 @@ public class CProbabilityCalculation {
 		return -1;
 	}
 
-	public IRule getRandomRule() {
+	public final IRule getRandomRule() {
 		calculation();
 		int index = getRandomIndex();
 		if (index == -1)
@@ -80,14 +80,13 @@ public class CProbabilityCalculation {
 		return rules.get(index);
 	}
 
-	public void calculation() {
+	public final void calculation() {
 		calculateRulesActivity();
 		recalculateCommonActivity();
 		calculateProbability();
 	}
 
-	public double getTimeValue() {
-
+	public final double getTimeValue() {
 		double randomValue = random.getDouble();
 
 		while (randomValue == 0.0)

@@ -19,14 +19,14 @@ public class ParseErrorException extends Exception {
 		myMessage = message;
 	}
 	
-	public void setLineDescription(CDataString line) {
+	public final void setLineDescription(CDataString line) {
 		if (myLine == null) {
 			myLine = line.toString();
 		}
 	}
 	
 	@Override
-	public String getMessage(){
+	public final String getMessage(){
 		if (myLine != null) {
 			return myLine + "\n" + myMessage;
 		} else {

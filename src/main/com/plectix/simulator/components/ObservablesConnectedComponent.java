@@ -4,23 +4,24 @@
 package com.plectix.simulator.components;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
 
-public class ObservablesConnectedComponent extends CConnectedComponent
+public final class ObservablesConnectedComponent extends CConnectedComponent
 		implements IObservablesConnectedComponent {
-	public static int COUNTER = 0;
-	private String name;
-	private String line;
-	private int nameID;
-	private List<Integer> automorphicObservables;
 	public static final int NO_INDEX = -1;
-	int mainAutomorphismNumber = NO_INDEX;
+	
+	private int mainAutomorphismNumber = NO_INDEX;
+	private final String name;
+	private final String line;
+	private final int nameID;
+	private final List<Integer> automorphicObservables;
 	private final List<Integer> countList = new ArrayList<Integer>();
-	private boolean unique = true;
-
+	private final boolean unique;
+	private int lastInjectionsQuantity = -1;
+	
 	public ObservablesConnectedComponent(List<IAgent> connectedAgents,
 			String name, String line, int nameID, boolean unique) {
 		super(connectedAgents);
@@ -44,7 +45,7 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 	}
 
 	public final List<Integer> getAutomorphicObservables() {
-		return automorphicObservables;
+		return Collections.unmodifiableList(automorphicObservables);
 	}
 
 	public final void addAutomorphicObservables(int automorphicObservable) {
@@ -56,12 +57,10 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 	}
 
 	public final List<Integer> getCountList() {
-		return countList;
+		return Collections.unmodifiableList(countList);
 	}
 
-	private int lastInjectionsQuantity = -1;
-
-	public void updateLastValue() {
+	public final void updateLastValue() {
 		lastInjectionsQuantity = getInjectionsList().size();
 	}
 
@@ -76,7 +75,7 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 		return name;
 	}
 
-	public double getSize(CObservables obs) {
+	public final double getSize(IObservables obs) {
 		if (this.isUnique())
 			return getInjectionsList().size();
 		long value = 1;
@@ -87,13 +86,10 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 		return value;
 	}
 
-	public String getItem(int index, CObservables obs) {
+	public final String getItem(int index, IObservables obs) {
 		if (index >= countList.size())
 			index = countList.size() - 1;
 		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
-			if (countList.get(index) == 0) {
-				COUNTER++;
-			}
 			return countList.get(index).toString();
 		} else
 			return obs.getComponentList().get(mainAutomorphismNumber).getItem(
@@ -101,16 +97,13 @@ public class ObservablesConnectedComponent extends CConnectedComponent
 	}
 
 	@Override
-	public boolean isUnique() {
+	public final boolean isUnique() {
 		return unique;
 	}
 
 	@Override
-	public long getValue(int index, CObservables obs) {
+	public final long getValue(int index, IObservables obs) {
 		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
-			if (countList.get(index) == 0) {
-				COUNTER++;
-			}
 			return countList.get(index);
 		} else
 			return obs.getComponentList().get(mainAutomorphismNumber).getValue(

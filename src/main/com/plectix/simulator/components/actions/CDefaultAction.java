@@ -17,14 +17,14 @@ public class CDefaultAction extends CAction {
 		setType(CActionType.NONE);
 	}
 	
-	public void doAction(IInjection injection, INetworkNotation netNotation) {
+	public final void doAction(IInjection injection, INetworkNotation netNotation) {
 		int agentIdInCC = getAgentIdInCCBySideId(myToAgent);
 		IAgent agentFromInSolution = getLeftCComponent()
 				.getAgentByIdFromSolution(agentIdInCC, injection);
 		getRightCComponent().addAgentFromSolutionForRHS(agentFromInSolution);
 	}
 	
-	public void addRuleSitesToNetworkNotation(boolean existInRule,
+	public final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			byte agentMode = CNetworkNotation.MODE_NONE;

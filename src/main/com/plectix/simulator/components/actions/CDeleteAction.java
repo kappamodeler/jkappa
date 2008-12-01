@@ -1,7 +1,5 @@
 package com.plectix.simulator.components.actions;
 
-import java.util.List;
-
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
@@ -17,12 +15,10 @@ public class CDeleteAction extends CAction {
 		setType(CActionType.DELETE);
 	}
 
-	public void doAction(IInjection injection, INetworkNotation netNotation) {
-
+	public final void doAction(IInjection injection, INetworkNotation netNotation) {
 		/**
 		 * Done.
 		 */
-
 		IAgent agent = getLeftCComponent().getAgentByIdFromSolution(
 				myFromAgent.getIdInConnectedComponent(), injection);
 		for (ISite site : agent.getSites()) {
@@ -61,7 +57,7 @@ public class CDeleteAction extends CAction {
 				lift.getInjection().getConnectedComponent().removeInjection(
 						lift.getInjection());
 			}
-			site.getLift().clear();
+			site.clearLift();
 			injection.removeSiteFromSitesList(site);
 		}
 		// injection.getConnectedComponent().getInjectionsList()
@@ -72,7 +68,7 @@ public class CDeleteAction extends CAction {
 
 	}
 
-	public void addRuleSitesToNetworkNotation(boolean existInRule,
+	public final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			byte agentMode = CNetworkNotation.MODE_NONE;
@@ -102,7 +98,7 @@ public class CDeleteAction extends CAction {
 		}
 	}
 	
-	private void addSiteToConnectedWithDeleted(ISite checkedSite) {
+	private final void addSiteToConnectedWithDeleted(ISite checkedSite) {
 		for (ISite site : myRule.getSitesConnectedWithDeleted()) {
 			if (site == checkedSite) {
 				return;
@@ -111,7 +107,7 @@ public class CDeleteAction extends CAction {
 		myRule.addSiteConnectedWithDeleted(checkedSite);
 	}
 	
-	private void removeSiteToConnectedWithDeleted(ISite checkedSite) {
+	private final void removeSiteToConnectedWithDeleted(ISite checkedSite) {
 		int size = myRule.getSitesConnectedWithDeleted().size();
 		for (int i = 0; i < size; i++) {
 			if (myRule.getSiteConnectedWithDeleted(i) == checkedSite) {

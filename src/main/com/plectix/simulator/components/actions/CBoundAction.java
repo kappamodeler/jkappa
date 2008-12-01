@@ -1,7 +1,5 @@
 package com.plectix.simulator.components.actions;
 
-import java.util.List;
-
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
 
@@ -20,7 +18,7 @@ public class CBoundAction extends CAction {
 		setType(CActionType.BOUND);
 	}
 
-	public void doAction(IInjection injection, INetworkNotation netNotation) {
+	public final void doAction(IInjection injection, INetworkNotation netNotation) {
 		//	TODO remove copypaste
 		/**
 		 * Done.
@@ -71,7 +69,7 @@ public class CBoundAction extends CAction {
 
 	}
 
-	public void addRuleSitesToNetworkNotation(boolean existInRule,
+	public final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			byte agentMode = CNetworkNotation.MODE_NONE;

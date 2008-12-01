@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import com.plectix.simulator.interfaces.IRandom;
 
-public class CRandomOCaml implements IRandom {
+/*package*/ final class CRandomOCaml implements IRandom {
 
 	private Process process;
 	private Scanner scanner;

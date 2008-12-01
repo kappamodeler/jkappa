@@ -6,13 +6,11 @@ import java.util.List;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
 
-public class CSpanningTree {
+/*package*/ final class CSpanningTree {
 
-	private List<Integer>[] vertexes;
-
-	private int rootIndex;
-
-	private boolean[] newVertex;
+	private final List<Integer>[] vertexes;
+	private final int rootIndex;
+	private final boolean[] newVertex;
 
 	@SuppressWarnings("unchecked")
 	public CSpanningTree(int N, IAgent agent) {

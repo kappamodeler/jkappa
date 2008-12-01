@@ -90,13 +90,6 @@ public final class CLinkState extends CState implements ILinkState {
 
 	@Override
 	public final String getName() {
-		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public final boolean isChanged() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

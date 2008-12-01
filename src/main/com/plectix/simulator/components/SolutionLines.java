@@ -1,8 +1,7 @@
 package com.plectix.simulator.components;
 
-public class SolutionLines {
-	private String line;
-
+public final class SolutionLines {
+	private final String line;
 	private long count;
 
 	public SolutionLines(String line, long count) {
@@ -10,7 +9,7 @@ public class SolutionLines {
 		this.count = count;
 	}
 
-	public String getLine() {
+	public final String getLine() {
 		return line;
 	}
 

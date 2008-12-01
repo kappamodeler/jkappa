@@ -14,22 +14,16 @@ public final class CAgent implements IAgent {
 	 * unique id for agent
 	 */
 	public static final int UNMARKED = -1;
-	
 	public static final byte ACTION_CREATE = -2;
-	
 	public static final byte EMPTY = -1;
 	
 	private int idInConnectedComponent;
-	
 	private int idInRuleSide = UNMARKED;
-	
 	private int nameId = -1;
-	
 	private long id = -1;
 	
 	// TODO: is this field static or not???
 	private final ISite myEmptySite = new CSite(CSite.NO_INDEX, this);
-	
 	private TreeMap<Integer, ISite> siteMap = new TreeMap<Integer, ISite>();
 
 	public CAgent(int nameId) {

@@ -402,13 +402,12 @@ public class Simulator {
 		model.getSimulationData().addInfo(
 				new Info(Info.TYPE_INFO, "-Initialization..."));
 		SimulationMain.getSimulationManager().startTimer();
-		model.getSimulationData().getRules().clear();
+		model.getSimulationData().clearRules();
 		model.getSimulationData().getObservables().resetLists();
-		((CSolution) model.getSimulationData().getSolution()).clearAgents();
-		((CSolution) model.getSimulationData().getSolution())
-				.getSolutionLines().clear();
+		model.getSimulationData().getSolution().clearAgents();
+		model.getSimulationData().getSolution().clearSolutionLines();
 		if (model.getSimulationData().getPerturbations() != null)
-			model.getSimulationData().getPerturbations().clear();
+			model.getSimulationData().clearPerturbations();
 
 		currentTime = 0;
 

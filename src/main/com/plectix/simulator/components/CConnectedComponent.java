@@ -9,47 +9,13 @@ public class CConnectedComponent implements IConnectedComponent {
 	public static final byte EMPTY = 0;
 
 	private List<IAgent> agentList;
-
-	private HashMap<Integer, List<CSpanningTree>> spanningTreeMap;
-
+	private Map<Integer, List<CSpanningTree>> spanningTreeMap;
 	private List<IAgent> agentFromSolutionForRHS;
-
-	private List<ISite> injectedSites;
-
 	private List<IAgentLink> agentLinkList;
-
-	private TreeMap<Integer, IInjection> injectionsList;
-
+	private Map<Integer, IInjection> injectionsList;
+	private List<ISite> injectedSites;
 	private int maxId = -1;
-
 	private IRule rule;
-
-	private void addInjection(IInjection inj, int id) {
-		if (inj != null) {
-			maxId = Math.max(maxId, id);
-			inj.setId(id);
-			injectionsList.put(id, inj);
-		}
-	}
-
-	public final IAgent getAgentByIdFromSolution(int id, IInjection injection) {
-		for (IAgentLink agentL : injection.getAgentLinkList())
-			if (agentL.getIdAgentFrom() == id)
-				return agentL.getAgentTo();
-		return null;
-	}
-
-	public void addAgentFromSolutionForRHS(IAgent agentFromSolutionForRHS) {
-		this.agentFromSolutionForRHS.add(agentFromSolutionForRHS);
-	}
-
-	public final void clearAgentsFromSolutionForRHS() { 
-		agentFromSolutionForRHS.clear();
-	}
-	
-	public List<IAgent> getAgentFromSolutionForRHS() {
-		return Collections.unmodifiableList(agentFromSolutionForRHS);
-	}
 
 	public CConnectedComponent(byte empty) {
 		switch (empty) {
@@ -69,8 +35,35 @@ public class CConnectedComponent implements IConnectedComponent {
 		injectionsList = new TreeMap<Integer, IInjection>();
 		agentFromSolutionForRHS = new ArrayList<IAgent>();
 	}
+	
+	private final void addInjection(IInjection inj, int id) {
+		if (inj != null) {
+			maxId = Math.max(maxId, id);
+			inj.setId(id);
+			injectionsList.put(id, inj);
+		}
+	}
 
-	public void removeInjection(IInjection injection) {
+	public final IAgent getAgentByIdFromSolution(int id, IInjection injection) {
+		for (IAgentLink agentL : injection.getAgentLinkList())
+			if (agentL.getIdAgentFrom() == id)
+				return agentL.getAgentTo();
+		return null;
+	}
+
+	public final void addAgentFromSolutionForRHS(IAgent agentFromSolutionForRHS) {
+		this.agentFromSolutionForRHS.add(agentFromSolutionForRHS);
+	}
+
+	public final void clearAgentsFromSolutionForRHS() { 
+		agentFromSolutionForRHS.clear();
+	}
+	
+	public final List<IAgent> getAgentFromSolutionForRHS() {
+		return Collections.unmodifiableList(agentFromSolutionForRHS);
+	}
+
+	public final void removeInjection(IInjection injection) {
 		if (injection == null) {
 			return;
 		}
@@ -256,7 +249,7 @@ public class CConnectedComponent implements IConnectedComponent {
 		return true;
 	}
 
-	private boolean compareSites(ISite currentSite, ISite solutionSite,
+	private final boolean compareSites(ISite currentSite, ISite solutionSite,
 			boolean fullEquality) {
 		ILinkState currentLinkState = currentSite.getLinkState();
 		ILinkState solutionLinkState = solutionSite.getLinkState();
@@ -345,7 +338,7 @@ public class CConnectedComponent implements IConnectedComponent {
 		return false;
 	}
 
-	private List<ISite> getConnectedSite(IAgent agentFrom, IAgent agentTo) {
+	private final List<ISite> getConnectedSite(IAgent agentFrom, IAgent agentTo) {
 		List<ISite> siteList = new ArrayList<ISite>();
 
 		for (ISite sF : agentFrom.getSites()) {
@@ -388,11 +381,11 @@ public class CConnectedComponent implements IConnectedComponent {
 		this.rule = rule;
 	}
 
-	public Collection<IInjection> getInjectionsList() {
+	public final Collection<IInjection> getInjectionsList() {
 		return Collections.unmodifiableCollection(injectionsList.values());
 	}
 
-	public IInjection getRandomInjection(IRandom random) {
+	public final IInjection getRandomInjection(IRandom random) {
 		int index;
 		IInjection inj = null;
 		index = random.getInteger(maxId + 1);
@@ -400,11 +393,11 @@ public class CConnectedComponent implements IConnectedComponent {
 		return inj;
 	}
 
-	public IInjection getFirstInjection() {
+	public final IInjection getFirstInjection() {
 		return injectionsList.get(0);
 	}
 
-	public List<IAgent> getAgentsSortedByIdInRule() {
+	public final List<IAgent> getAgentsSortedByIdInRule() {
 		List<IAgent> temp = new ArrayList<IAgent>();
 		temp.addAll(agentList);
 		Collections.sort(temp);

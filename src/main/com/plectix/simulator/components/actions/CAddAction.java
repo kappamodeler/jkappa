@@ -1,7 +1,5 @@
 package com.plectix.simulator.components.actions;
 
-import java.util.List;
-
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
@@ -40,7 +38,7 @@ public class CAddAction extends CAction {
 		// toAgent.setIdInRuleSide(maxAgentID++);
 	}
 
-	public void addRuleSitesToNetworkNotation(boolean existInRule,
+	public final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			byte agentMode = CNetworkNotation.MODE_NONE;

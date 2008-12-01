@@ -16,7 +16,7 @@ public class CModifyAction extends CAction {
 		setType(CActionType.MODIFY);
 	}
 	
-	public void doAction(IInjection injection,
+	public final void doAction(IInjection injection,
 			INetworkNotation netNotation) {
 		/**
 		 * Done.
@@ -41,7 +41,7 @@ public class CModifyAction extends CAction {
 		// /////////////////////////////////////////////
 	}
 	
-	public void addRuleSitesToNetworkNotation(boolean existInRule,
+	public final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			byte agentMode = CNetworkNotation.MODE_NONE;

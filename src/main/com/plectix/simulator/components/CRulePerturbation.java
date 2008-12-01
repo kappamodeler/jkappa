@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.plectix.simulator.interfaces.*;
 
-public class CRulePerturbation extends CRule {
+public final class CRulePerturbation extends CRule {
 
 	private int count;
 	private boolean inf = false;
@@ -28,20 +28,20 @@ public class CRulePerturbation extends CRule {
 			this.count = (int) count;
 	}
 
-	public void applyRuleForStories(List<IInjection> injectionList,
+	public final void applyRuleForStories(List<IInjection> injectionList,
 			CNetworkNotation netNotation) {
 		check();
 		apply(injectionList, netNotation);
 		count--;
 	}
 
-	public void applyRule(List<IInjection> injectionList) {
+	public final void applyRule(List<IInjection> injectionList) {
 		check();
 		apply(injectionList, null);
 		count--;
 	}
 
-	private void check() {
+	private final void check() {
 		if (!inf) {
 			if (count <= 1)
 				downRule();

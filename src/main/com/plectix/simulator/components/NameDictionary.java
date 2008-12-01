@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class NameDictionary {
-	private List<String> idToNamesList = new ArrayList<String>();
-	private Map<String, Integer> namesToIdMap = new HashMap<String, Integer>();
+public final class NameDictionary {
+	private final List<String> idToNamesList = new ArrayList<String>();
+	private final Map<String, Integer> namesToIdMap = new HashMap<String, Integer>();
 	
 	public final int addName(String name) {
 		Integer id = namesToIdMap.get(name);

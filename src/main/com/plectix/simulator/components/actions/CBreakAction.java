@@ -1,18 +1,7 @@
 package com.plectix.simulator.components.actions;
 
-import java.util.List;
-
-import com.plectix.simulator.components.CAction;
-import com.plectix.simulator.components.CLinkState;
-import com.plectix.simulator.components.CNetworkNotation;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CStoriesSiteStates;
-import com.plectix.simulator.interfaces.IAction;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.INetworkNotation;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 
 public class CBreakAction extends CAction {
 	private final ISite mySiteFrom;
@@ -29,7 +18,7 @@ public class CBreakAction extends CAction {
 		setType(CActionType.BREAK);
 	}
 
-	public void doAction(IInjection injection, INetworkNotation netNotation) {
+	public final void doAction(IInjection injection, INetworkNotation netNotation) {
 		IAgent agentFromInSolution;
 		int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getAgentLink());
 		agentFromInSolution = getLeftCComponent().getAgentByIdFromSolution(
@@ -81,7 +70,7 @@ public class CBreakAction extends CAction {
 				mySiteFrom.getLinkIndex());
 	}
 
-	private void addSiteToConnectedWithBroken(ISite checkedSite) {
+	private final void addSiteToConnectedWithBroken(ISite checkedSite) {
 		for (ISite site : myRule.getSitesConnectedWithBroken()) {
 			if (site == checkedSite) {
 				return;
@@ -90,7 +79,7 @@ public class CBreakAction extends CAction {
 		myRule.addSiteConnectedWithBroken(checkedSite);
 	}
 
-	public void addRuleSitesToNetworkNotation(boolean existInRule,
+	public final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			byte agentMode = CNetworkNotation.MODE_NONE;
