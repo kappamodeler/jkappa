@@ -6,6 +6,7 @@ import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.util.Info;
 
 public class Parser {
 
@@ -87,6 +88,8 @@ public class Parser {
 	}
 
 	public final void parse() throws ParseErrorException {
+		SimulationMain.getSimulationManager().getSimulationData().addInfo(
+				new Info(Info.TYPE_INFO, "--Computing initial state"));
 		createSimData(data.getInits(), CREATE_INIT);
 		List<IRule> rules = createRules(data.getRules());
 		SimulationMain.getSimulationManager().setRules(rules);
@@ -234,13 +237,15 @@ public class Parser {
 					List<Double> parameters = new ArrayList<Double>();
 					List<IObservablesComponent> obsID = new ArrayList<IObservablesComponent>();
 					if (st.indexOf("+") == -1) {
-						parseExpressionMonomeBeforeDo(st, perturbationStr, parameters, obsID);
+						parseExpressionMonomeBeforeDo(st, perturbationStr,
+								parameters, obsID);
 					} else {
 
 						StringTokenizer sTok = new StringTokenizer(st, "+");
 						while (sTok.hasMoreTokens()) {
 							String item = sTok.nextToken().trim();
-							parseExpressionMonomeBeforeDo(item, perturbationStr, parameters, obsID);
+							parseExpressionMonomeBeforeDo(item,
+									perturbationStr, parameters, obsID);
 						}
 
 					}
@@ -323,8 +328,10 @@ public class Parser {
 		return true;
 	}
 
-	private final double parseExpressionMonomeAfterDo(String arg, CDataString perturbationStr, 
-			List<IPerturbationExpression> rateExpression) throws ParseErrorException {
+	private final double parseExpressionMonomeAfterDo(String arg,
+			CDataString perturbationStr,
+			List<IPerturbationExpression> rateExpression)
+			throws ParseErrorException {
 		String item = arg;
 		double freeTerm = 0;
 		if (item.indexOf("*") == -1) {
@@ -339,8 +346,8 @@ public class Parser {
 		} else {
 			double curValue = 0;
 			try {
-				curValue = Double.valueOf(item.substring(0,
-						item.indexOf("*")).trim());
+				curValue = Double.valueOf(item.substring(0, item.indexOf("*"))
+						.trim());
 			} catch (NumberFormatException e) {
 				throw new ParseErrorException(perturbationStr,
 						"Perturbations sum parse error: value parameter expected before rule name");
@@ -356,7 +363,7 @@ public class Parser {
 		}
 		return freeTerm;
 	}
-	
+
 	private final IRule getGreaterRule(String st, CDataString perturbationStr,
 			List<IPerturbationExpression> rateExpression)
 			throws ParseErrorException {
@@ -384,12 +391,14 @@ public class Parser {
 		double freeTerm = 0;
 
 		if (st.indexOf("+") == -1) {
-			freeTerm += parseExpressionMonomeAfterDo(st, perturbationStr, rateExpression);
+			freeTerm += parseExpressionMonomeAfterDo(st, perturbationStr,
+					rateExpression);
 		} else {
 			StringTokenizer sTok = new StringTokenizer(st, "+");
 			while (sTok.hasMoreTokens()) {
 				String item = sTok.nextToken().trim();
-				freeTerm += parseExpressionMonomeAfterDo(item, perturbationStr, rateExpression);
+				freeTerm += parseExpressionMonomeAfterDo(item, perturbationStr,
+						rateExpression);
 			}
 		}
 		if (freeTerm > 0.0)
@@ -468,7 +477,7 @@ public class Parser {
 			String rulesStr = rulesDS.getLine();
 			double activity = 1.;
 			double activity2 = 1.;
-			
+
 			rulesStr = rulesStr.trim();
 			String name = null;
 			if (rulesStr.indexOf("'") != -1) {
@@ -509,7 +518,7 @@ public class Parser {
 			if (rulesStr.indexOf("<->") != -1) {
 				typeRule = RULE_TWO_WAY;
 				rulesStr = rulesStr.replace("<", "");
-				activity2 =  isForwarding() ? 0. : activity2;
+				activity2 = isForwarding() ? 0. : activity2;
 			}
 
 			rulesStr = rulesStr.trim();
@@ -558,7 +567,7 @@ public class Parser {
 						rules.add(SimulationMain.getSimulationManager()
 								.buildRule(right, parseAgent(lhs.trim()),
 										nameOp, activity2, ruleID));
-						}
+					}
 					break;
 				}
 				case CC_RHS: {

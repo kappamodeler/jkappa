@@ -17,6 +17,7 @@ import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.SolutionLines;
 import com.plectix.simulator.components.CRule.Action;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.TimerSimulation;
 
 public class SimulatorManager {
@@ -138,11 +139,17 @@ public class SimulatorManager {
 		simulationData.getObservables().checkAutomorphisms();
 
 		if (simulationData.isActivationMap()) {
+			TimerSimulation timer = new TimerSimulation(true);
+			simulationData.addInfo(new Info(Info.TYPE_INFO,
+					"--Abstracting influence map..."));
 			for (IRule rule : rules) {
 				rule.createActivatedRulesList(rules);
 				rule.createActivatedObservablesList(simulationData
 						.getObservables());
 			}
+			simulationData.stopTimer(timer, "--Abstraction:");
+			simulationData.addInfo(new Info(Info.TYPE_INFO,
+					"--Influence map computed"));
 		}
 
 		while (iterator.hasNext()) {

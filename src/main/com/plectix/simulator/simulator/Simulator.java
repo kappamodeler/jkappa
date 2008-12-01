@@ -19,6 +19,7 @@ import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.TimerSimulation;
 
@@ -44,8 +45,9 @@ public class Simulator {
 	}
 
 	public void run(Integer iteration_num) {
-		TimerSimulation timer = new TimerSimulation();
-		timer.startTimer();
+		model.getSimulationData().addInfo(
+				new Info(Info.TYPE_INFO, "-Simulation..."));
+		TimerSimulation timer = new TimerSimulation(true);
 		long clash = 0;
 		IRule rule;
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
@@ -61,7 +63,8 @@ public class Simulator {
 		long count = 0;
 
 		long max_clash = 0;
-		while (!model.getSimulationData().isEndSimulation(currentTime, count)
+		while (!model.getSimulationData().isEndSimulation(currentTime, count,
+				iteration_num)
 				&& max_clash <= model.getSimulationData().getMaxClashes()) {
 			if (hasSnapshot
 					&& model.getSimulationData().getSnapshotTime() <= currentTime) {
@@ -77,6 +80,7 @@ public class Simulator {
 			if (rule == null) {
 				isEndRules = true;
 				model.getSimulationData().setTimeLength(currentTime);
+				System.out.println("#");
 				break;
 			}
 			if (LOGGER.isDebugEnabled())
@@ -301,18 +305,27 @@ public class Simulator {
 		CStories stories = model.getSimulationData().getStories();
 		int count = 0;
 		for (int i = 0; i < CStories.numberOfSimulations; i++) {
+			model.getSimulationData().addInfo(
+					new Info(Info.TYPE_INFO, "-Simulation..."));
 			SimulationMain.getSimulationManager().startTimer();
+			TimerSimulation timer = new TimerSimulation(true);
+			boolean isEndRules = false;
 			long clash = 0;
 			IRule rule;
 			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
 					model.getSimulationData().getRules(), model
 							.getSimulationData().getSeed());
-			while (currentTime <= model.getSimulationData().getTimeLength()) {
+			long max_clash = 0;
+			model.getSimulationData().resetBar();
+			while (!model.getSimulationData().isEndSimulation(currentTime,
+					count, null)
+					&& max_clash <= model.getSimulationData().getMaxClashes()) {
 				checkPerturbation();
 				rule = ruleProbabilityCalculation.getRandomRule();
 
 				if (rule == null) {
 					model.getSimulationData().setTimeLength(currentTime);
+					System.out.println("#");
 					break;
 				}
 
@@ -322,11 +335,13 @@ public class Simulator {
 				if (!rule.isClash(injectionsList)) {
 					CNetworkNotation netNotation = new CNetworkNotation(count,
 							rule);
-
+					max_clash = 0;
 					if (stories.checkRule(rule.getRuleID(), i)) {
 						rule.applyLastRuleForStories(injectionsList,
 								netNotation);
 						stories.addToNetworkNotationStory(i, netNotation);
+						isEndRules = true;
+						System.out.println("#");
 						break;
 					}
 					rule.applyRuleForStories(injectionsList, netNotation);
@@ -337,11 +352,14 @@ public class Simulator {
 					doPositiveUpdate(rule, injectionsList);
 				} else {
 					clash++;
+					max_clash++;
 				}
 			}
 			count = 0;
+			outToLogger(isEndRules, timer);
 			stories.handling(i);
-			resetSimulation();
+			if (i < CStories.numberOfSimulations - 1)
+				resetSimulation();
 		}
 		stories.merge();
 		outputData(count);
@@ -368,7 +386,8 @@ public class Simulator {
 
 			// if the simulator's initial state is cached, reload it for next
 			// run
-			resetSimulation();
+			if (iteration_num < model.getSimulationData().getIterations() - 1)
+				resetSimulation();
 
 		}
 
@@ -378,6 +397,11 @@ public class Simulator {
 	}
 
 	public final void resetSimulation() {
+		model.getSimulationData().addInfo(
+				new Info(Info.TYPE_INFO, "-Reset simulation data."));
+		model.getSimulationData().addInfo(
+				new Info(Info.TYPE_INFO, "-Initialization..."));
+		SimulationMain.getSimulationManager().startTimer();
 		model.getSimulationData().getRules().clear();
 		model.getSimulationData().getObservables().resetLists();
 		((CSolution) model.getSimulationData().getSolution()).clearAgents();
@@ -388,7 +412,6 @@ public class Simulator {
 
 		currentTime = 0;
 
-		SimulationMain.getSimulationManager().startTimer();
 		SimulationMain.getInstance().readSimulatonFile();
 		SimulationMain.getInstance().initialize();
 		Model modelNew = new Model(SimulationMain.getSimulationManager()

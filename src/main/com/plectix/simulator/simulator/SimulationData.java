@@ -91,7 +91,19 @@ public class SimulationData {
 	}
 
 	public final void addInfo(Info info) {
+		for (Info inf : infoList) {
+			if (inf.getMessageWithoutTime()
+					.equals(info.getMessageWithoutTime())) {
+				inf.upCount(info.getTime());
+				return;
+			}
+		}
+
 		infoList.add(info);
+	}
+
+	public final List<Info> getInfoList() {
+		return infoList;
 	}
 
 	public final void setCommandLine(String[] args) {
@@ -115,7 +127,11 @@ public class SimulationData {
 			this.maxClashes = max_clashes;
 	}
 
-	public final boolean isEndSimulation(double currentTime, long count) {
+	private double step;
+	private double nextStep;
+
+	public final boolean isEndSimulation(double currentTime, long count,
+			Integer iteration_num) {
 		long curClockTime = System.currentTimeMillis();
 		if (curClockTime - clockStamp > clockPrecision) {
 			System.out
@@ -123,14 +139,26 @@ public class SimulationData {
 			return true;
 		}
 		if (isTime)
-			if (currentTime <= timeLength)
+			if (currentTime <= timeLength) {
+				if (currentTime >= nextStep) {
+					System.out.print("#");
+					nextStep += step;
+				}
 				return false;
-			else
+			} else {
+				System.out.println("#");
 				return true;
-		else if (count <= event)
+			}
+		else if (count <= event) {
+			if (count >= nextStep) {
+				System.out.print("#");
+				nextStep += step;
+			}
 			return false;
-		else
+		} else {
+			System.out.println("#");
 			return true;
+		}
 	}
 
 	public double getSnapshotTime() {
@@ -207,6 +235,8 @@ public class SimulationData {
 
 	public void setTimeLength(double timeLength) {
 		this.timeLength = timeLength;
+		step = timeLength / 100;
+		nextStep = step;
 		this.isTime = true;
 	}
 
@@ -250,7 +280,13 @@ public class SimulationData {
 		return event;
 	}
 
+	public final void resetBar() {
+		nextStep = step;
+	}
+
 	public final void setEvent(long event) {
+		step = event / 100;
+		nextStep = step;
 		this.event = event;
 	}
 
@@ -558,8 +594,8 @@ public class SimulationData {
 		mess += " ";
 		System.out.println(mess + timer.getTimerMess() + " sec. CPU");
 		// timer.getTimer();
-		infoList.add(new Info(Info.TYPE_INFO, mess
-				+ timer.getThreadTimeInSeconds(), 1, 0));
+		addInfo(new Info(Info.TYPE_INFO, mess, timer.getThreadTimeInSeconds(),
+				1));
 	}
 
 	public final void createTMPReport() {
@@ -715,8 +751,8 @@ public class SimulationData {
 	}
 
 	public String getXmlSessionPath() {
-		if(xmlSessionPath.length()>0)
-		return xmlSessionPath + "\\" + xmlSessionName;
+		if (xmlSessionPath.length() > 0)
+			return xmlSessionPath + "\\" + xmlSessionName;
 		else
 			return xmlSessionName;
 	}

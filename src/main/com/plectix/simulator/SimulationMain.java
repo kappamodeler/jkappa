@@ -16,6 +16,7 @@ import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.simulator.Model;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorManager;
+import com.plectix.simulator.util.Info;
 
 public class SimulationMain {
 
@@ -118,7 +119,7 @@ public class SimulationMain {
 		cmdLineOptions.addOption(LONG_FORWARD_OPTION, false,
 				"do not consider backward rules");
 		cmdLineOptions.addOption(LONG_OUTPUT_SCHEME_OPTION, true,
-		"(def: current dir) directory on which to put computed data");
+				"(def: current dir) directory on which to put computed data");
 	}
 
 	public SimulationMain() {
@@ -136,14 +137,15 @@ public class SimulationMain {
 		instance = new SimulationMain();
 		// simulationManager = new SimulatorManager();
 		simulationManager.startTimer();
+		printToConsole(args);
 		instance.parseArguments(args);
 		instance.readSimulatonFile();
 		instance.initialize();
 		if (myIsSimulating)
 			instance.runSimulator();
 	}
-	
-	private final static String[] changeArgs(String[] args){
+
+	private final static String[] changeArgs(String[] args) {
 		String[] argsNew = new String[args.length];
 		int i = 0;
 		for (String st : args)
@@ -156,7 +158,6 @@ public class SimulationMain {
 	}
 
 	public void initialize() {
-		printToConsole();
 		simulationManager.initialize();
 		simulationManager.getSimulationData().stopTimer(
 				simulationManager.getTimer(), "-Initialization:");
@@ -281,7 +282,8 @@ public class SimulationMain {
 	}
 
 	public final void parseArguments(String[] args) {
-		simulationManager.getSimulationData().setCommandLine(args);
+		simulationManager.getSimulationData().addInfo(
+				new Info(Info.TYPE_INFO, "-Initialization..."));
 		args = changeArgs(args);
 		CommandLineParser parser = new PosixParser();
 		try {
@@ -396,12 +398,11 @@ public class SimulationMain {
 					.setClockPrecision(clockPrecision);
 		}
 
-		
-		if (cmdLineArgs.hasOption(LONG_OUTPUT_SCHEME_OPTION)){
-			SimulationMain
-				.getSimulationManager().getSimulationData()
-					.setXmlSessionPath(cmdLineArgs
-							.getOptionValue(LONG_OUTPUT_SCHEME_OPTION));
+		if (cmdLineArgs.hasOption(LONG_OUTPUT_SCHEME_OPTION)) {
+			SimulationMain.getSimulationManager().getSimulationData()
+					.setXmlSessionPath(
+							cmdLineArgs
+									.getOptionValue(LONG_OUTPUT_SCHEME_OPTION));
 		}
 	}
 
@@ -413,7 +414,8 @@ public class SimulationMain {
 		return instance;
 	}
 
-	private final static void printToConsole() {
+	private final static void printToConsole(String[] args) {
+		simulationManager.getSimulationData().setCommandLine(args);
 		System.out.println("Java "
 				+ simulationManager.getSimulationData().getCommandLine());
 	}

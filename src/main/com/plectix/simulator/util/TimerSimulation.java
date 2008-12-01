@@ -9,6 +9,15 @@ public class TimerSimulation {
 	private long timeStartThread;
 	private double threadTimeInSeconds = -1;
 
+	public TimerSimulation(boolean isStart) {
+		if (isStart)
+			startTimer();
+	}
+
+	public TimerSimulation() {
+
+	}
+
 	public final void startTimer() {
 		timeStart = System.currentTimeMillis();
 		timeStartThread = ManagementFactory.getThreadMXBean()
