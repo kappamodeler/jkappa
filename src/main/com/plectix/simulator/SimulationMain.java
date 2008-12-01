@@ -1,5 +1,6 @@
 package com.plectix.simulator;
 
+import java.io.InputStream;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -49,6 +50,7 @@ public class SimulationMain {
 	private static final String LONG_CLOCK_PRECISION_OPTION = "clock_precision";
 	private static final String LONG_FORWARD_OPTION = "forward";
 	private static final String LONG_OUTPUT_SCHEME_OPTION = "output_scheme";
+	private static final String LONG_KEY_OPTION = "key";
 	private static SimulationMain instance;
 	private static Options cmdLineOptions;
 	private CommandLine cmdLineArgs;
@@ -120,6 +122,8 @@ public class SimulationMain {
 				"do not consider backward rules");
 		cmdLineOptions.addOption(LONG_OUTPUT_SCHEME_OPTION, true,
 				"(def: current dir) directory on which to put computed data");
+		cmdLineOptions.addOption(LONG_KEY_OPTION, true,
+				"Name of the file containing the key for the crypted version");
 	}
 
 	public SimulationMain() {
@@ -418,6 +422,10 @@ public class SimulationMain {
 		simulationManager.getSimulationData().setCommandLine(args);
 		System.out.println("Java "
 				+ simulationManager.getSimulationData().getCommandLine());
+	}
+
+	public final InputStream getInputStream() {
+		return System.in;
 	}
 
 }
