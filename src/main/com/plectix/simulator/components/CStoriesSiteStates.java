@@ -2,7 +2,7 @@ package com.plectix.simulator.components;
 
 import com.plectix.simulator.interfaces.*;
 
-class CStoriesSiteStates implements IStoriesSiteStates {
+public class CStoriesSiteStates implements IStoriesSiteStates {
 	public final static byte LAST_STATE = 0;
 	public final static byte CURRENT_STATE = 1;
 

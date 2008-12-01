@@ -5,17 +5,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.CLinkState;
-import com.plectix.simulator.components.CObservables;
-import com.plectix.simulator.components.CPerturbation;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.CSolution;
-import com.plectix.simulator.components.NameDictionary;
-import com.plectix.simulator.components.ObservablesConnectedComponent;
-import com.plectix.simulator.components.SolutionLines;
-import com.plectix.simulator.components.CRule.Action;
+import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.actions.CActionType;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.TimerSimulation;
@@ -393,8 +384,8 @@ public class SimulatorManager {
 			int indexNewAgent = countAgentsInLHS;
 
 			for (IAction action : rule.getActionList()) {
-				switch (action.getAction()) {
-				case Action.ACTION_BRK: {
+				switch (CActionType.getById(action.getTypeId())) {
+				case BREAK: {
 					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
 							.getSite());
 					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() < siteTo
@@ -416,14 +407,14 @@ public class SimulatorManager {
 					}
 					break;
 				}
-				case Action.ACTION_DEL: {
+				case DELETE: {
 					// DEL #0
 					System.out.print("DEL #");
 					System.out
 							.println(action.getFromAgent().getIdInRuleSide() - 1);
 					break;
 				}
-				case Action.ACTION_ADD: {
+				case ADD: {
 					// ADD a#0(x)
 					System.out.print("ADD " + action.getToAgent().getName()
 							+ "#");
@@ -444,7 +435,7 @@ public class SimulatorManager {
 
 					break;
 				}
-				case Action.ACTION_BND: {
+				case BOUND: {
 					// BND (#1,x) (#0,a)
 					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
 							.getSite());
@@ -466,7 +457,7 @@ public class SimulatorManager {
 					}
 					break;
 				}
-				case Action.ACTION_MOD: {
+				case MODIFY: {
 					// MOD (#1,x) with p
 					System.out.print("MOD (#");
 					System.out.print(action.getSiteFrom().getAgentLink()

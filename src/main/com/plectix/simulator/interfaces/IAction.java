@@ -2,7 +2,7 @@ package com.plectix.simulator.interfaces;
 
 public interface IAction {
 
-	public byte getAction();
+//	public byte getAction();
 
 	public IConnectedComponent getLeftCComponent();
 
@@ -15,4 +15,6 @@ public interface IAction {
 	public IAgent getToAgent();
 
 	public ISite getSiteTo();
+
+	public int getTypeId();
 }
