@@ -16,25 +16,35 @@ public final class CAgent implements IAgent {
 	public static final int UNMARKED = -1;
 	public static final byte ACTION_CREATE = -2;
 	public static final byte EMPTY = -1;
-	
+
 	private int idInConnectedComponent;
 	private int idInRuleSide = UNMARKED;
 	private int nameId = -1;
 	private long id = -1;
-	
+	private boolean storify;
+
 	// TODO: is this field static or not???
 	private final ISite myEmptySite = new CSite(CSite.NO_INDEX, this);
 	private TreeMap<Integer, ISite> siteMap = new TreeMap<Integer, ISite>();
 
+	public final boolean isStorify() {
+		return storify;
+	}
+
+	public final void storifyAgent() {
+		this.storify = true;
+	}
+
 	public CAgent(int nameId) {
 		id = SimulationMain.getSimulationManager().generateNextAgentId();
+		storify = false;
 		this.nameId = nameId;
 	}
 
 	public ISite getEmptySite() {
 		return myEmptySite;
 	}
-	
+
 	public Map<Integer, ISite> getSiteMap() {
 		return Collections.unmodifiableMap(siteMap);
 	}
@@ -49,7 +59,8 @@ public final class CAgent implements IAgent {
 
 	public boolean isAgentHaveLinkToConnectedComponent(IConnectedComponent cc) {
 		for (ISite site : siteMap.values()) {
-			if (site.getAgentLink().getEmptySite().isConnectedComponentInLift(cc))
+			if (site.getAgentLink().getEmptySite().isConnectedComponentInLift(
+					cc))
 				return true;
 			if (site.isConnectedComponentInLift(cc))
 				return true;

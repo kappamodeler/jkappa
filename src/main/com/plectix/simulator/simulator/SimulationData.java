@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
@@ -373,15 +374,7 @@ public class SimulationData {
 				node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
 				node.setAttribute("Type", "RULE");
 				node.setAttribute("Text", rules.get(i).getName());
-
-				String line = SimulatorManager.printPartRule(rules.get(i)
-						.getLeftHandSide());
-				line = line + "->";
-				line = line
-						+ SimulatorManager.printPartRule(rules.get(i)
-								.getRightHandSide());
-
-				node.setAttribute("Data", line);
+				node.setAttribute("Data", rules.get(i).getData());
 				node.setAttribute("Name", rules.get(i).getName());
 				influenceMap.appendChild(node);
 			}
@@ -418,17 +411,18 @@ public class SimulationData {
 		}
 
 		if (storify) {
-			Element story = doc.createElement("Story");
 
-			for (CStoryTrees st : stories.getTrees()) {
-				story.setAttribute("Observable", rules.get(st.getRuleID())
-						.getName());
-				int depth = 0;
-				HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-				addConnection(story, st, doc, st.getRuleID(), depth, map);
+			for (List<CStoryTrees> stList : stories.getTrees()) {
+				for (CStoryTrees st : stList) {
+					Element story = doc.createElement("Story");
+					story.setAttribute("Observable", rules.get(st.getRuleID())
+							.getName());
+					int depth = 0;
+					addConnection(story, st, doc, st.getRuleID());
+					simplxSession.appendChild(story);
+				}
 			}
 
-			simplxSession.appendChild(story);
 		}
 
 		if (snapshotTime >= 0.0) {
@@ -500,10 +494,157 @@ public class SimulationData {
 		// + timerOutput.getTimer() + " sec. CPU");
 	}
 
+	class StoryType {
+		public static final byte TYPE_INTRO = 0;
+		public static final byte TYPE_RULE = 1;
+
+		public static final String STRING_INTRO = "INTRO";
+		public static final String STRING_RULE = "RULE";
+		public static final String STRING_OBS = "OBSERVABLE";
+		private byte type;
+		private String text;
+
+		public String getText() {
+			return text;
+		}
+
+		public String getData() {
+			return data;
+		}
+
+		private String data;
+
+		public byte getType() {
+			return type;
+		}
+
+		public int getTraceID() {
+			return traceID;
+		}
+
+		public int getId() {
+			return id;
+		}
+
+		private int traceID;
+		private int id;
+		private int depth;
+
+		public StoryType(byte type, int traceID, int id, String text,
+				String data, int depth) {
+			this.traceID = traceID;
+			this.id = id;
+			this.type = type;
+			this.text = text;
+			this.data = data;
+			this.depth = depth;
+		}
+
+		public void fillNode(Element node, String strType) {
+			node.setAttribute("Id", Integer.toString(id));
+			node.setAttribute("Type", strType);
+			node.setAttribute("Text", text);
+			node.setAttribute("Data", data);
+			node.setAttribute("Depth", Integer.toString(depth));
+		}
+
+		public void fillConnection(Element node, int toNode) {
+			node.setAttribute("FromNode", Integer.toString(this.id));
+			node.setAttribute("ToNode", Integer.toString(toNode));
+			node.setAttribute("Relation", "STRONG");
+		}
+
+	}
+
 	private final void addConnection(Element story, CStoryTrees st,
-			Document doc, int item, int depth, HashMap<Integer, Integer> map) {
-		// depth++;
-		//
+			Document doc, int item) {
+
+		HashMap<Integer, List<Integer>> levelToTraceID = new HashMap<Integer, List<Integer>>();
+		HashMap<Integer, List<String>> traceIDToIntroString = new HashMap<Integer, List<String>>();
+		HashMap<Integer, String> traceIDToData = new HashMap<Integer, String>();
+		HashMap<Integer, String> traceIDToText = new HashMap<Integer, String>();
+		st.getLevelToTraceID(levelToTraceID, traceIDToIntroString,
+				traceIDToData, traceIDToText);
+
+		HashMap<Integer, Integer> mapIndex = new HashMap<Integer, Integer>();
+		HashMap<Integer, List<StoryType>> allLevels = new HashMap<Integer, List<StoryType>>();
+
+		HashMap<Integer, List<StoryType>> traceIdToStoryType = new HashMap<Integer, List<StoryType>>();
+
+		int counter = 0;
+
+		Iterator<Integer> iterator = levelToTraceID.keySet().iterator();
+		int depth = levelToTraceID.size();
+		while (iterator.hasNext()) {
+			int level = iterator.next();
+			List<Integer> list = levelToTraceID.get(level);
+			List<StoryType> listST = new ArrayList<StoryType>();
+			allLevels.put(level, listST);
+			for (Integer traceID : list) {
+				mapIndex.put(traceID, counter);
+				listST.add(new StoryType(StoryType.TYPE_RULE, traceID, counter,
+						traceIDToText.get(traceID), traceIDToData.get(traceID),
+						depth - level));
+				counter++;
+				List<String> introStringList = traceIDToIntroString
+						.get(traceID);
+				
+				List<StoryType> introList = traceIdToStoryType.get(traceID);
+				
+				if (introStringList != null){
+					if(introList==null){
+						introList = new ArrayList<StoryType>();
+						traceIdToStoryType.put(traceID,introList);
+					}
+					for (String str : introStringList) {
+						StoryType stT = new StoryType(StoryType.TYPE_INTRO, traceID,
+								counter++, "intro:" + str, "", depth - level
+										- 1);
+						listST.add(stT);
+						introList.add(stT);
+					}
+					}
+			}
+		}
+
+		List<Element> nodes = new ArrayList<Element>();
+		List<Element> connections = new ArrayList<Element>();
+
+		iterator = allLevels.keySet().iterator();
+		iterator.next();
+
+		Element node = doc.createElement("Node");
+		StoryType stFirst = allLevels.get(0).get(0);
+		stFirst.fillNode(node, StoryType.STRING_OBS);
+		nodes.add(node);
+
+		List<StoryType> introList = traceIdToStoryType.get(stFirst.getTraceID());
+		if (introList!=null)
+		for (StoryType stT : introList){
+			node = doc.createElement("Connection");
+			stT.fillConnection(node, stFirst.getId());
+			connections.add(node);
+		}
+				
+		while (iterator.hasNext()) {
+			int level = iterator.next();
+			List<StoryType> listST = allLevels.get(level);
+			for (StoryType stT : listST) {
+				node = doc.createElement("Node");
+				if (stT.getType() == StoryType.TYPE_RULE)
+					stT.fillNode(node, StoryType.STRING_RULE);
+				else
+					stT.fillNode(node, StoryType.STRING_INTRO);
+				nodes.add(node);
+				
+//				node = doc.createElement("Connection");
+//				node.setAttribute("FromNode", Integer.toString(i));
+//				node.setAttribute("ToNode", map.get(i).toString());
+//				node.setAttribute("Relation", "STRONG");
+
+			}
+		}
+
 		// if (map.get(item) == null)
 		// map.put(item, map.size());
 		// if (st.getList(item) == null)
@@ -534,7 +675,10 @@ public class SimulationData {
 		//
 		// node.setAttribute("Data", line);
 		// node.setAttribute("Depth", Integer.valueOf(depth).toString());
-		// story.appendChild(node);
+		for (Element el : nodes)
+			story.appendChild(el);
+		for (Element el : connections)
+			story.appendChild(el);
 	}
 
 	private final void appendInfo(Element simplxSession, Document doc) {
@@ -735,11 +879,11 @@ public class SimulationData {
 	public final void clearRules() {
 		rules.clear();
 	}
-	
+
 	public final void clearPerturbations() {
 		perturbations.clear();
 	}
-	
+
 	public String getXmlSessionPath() {
 		if (xmlSessionPath.length() > 0)
 			return xmlSessionPath + "\\" + xmlSessionName;

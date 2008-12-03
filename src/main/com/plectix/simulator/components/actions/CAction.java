@@ -5,7 +5,7 @@ import java.util.*;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
 
-/*package*/ abstract class CAction implements IAction {
+/*package*/abstract class CAction implements IAction {
 	private final IAgent fromAgent;
 	private final IAgent toAgent;
 	private final CRule myRule;
@@ -22,7 +22,7 @@ import com.plectix.simulator.interfaces.*;
 	 * @param fromAgent
 	 * @param toAgent
 	 */
-	
+
 	protected CAction(CRule rule, IAgent fromAgent, IAgent toAgent,
 			IConnectedComponent ccL, IConnectedComponent ccR) {
 		this.fromAgent = fromAgent;
@@ -31,16 +31,16 @@ import com.plectix.simulator.interfaces.*;
 		this.leftConnectedComponent = ccL;
 		this.myRule = rule;
 	}
-	
+
 	protected final void setSiteSet(ISite from, ISite to) {
 		siteTo = to;
 		siteFrom = from;
 	}
-	
+
 	protected final void setType(CActionType type) {
 		myType = type;
 	}
-	
+
 	public final ISite getSiteFrom() {
 		return siteFrom;
 	}
@@ -48,11 +48,11 @@ import com.plectix.simulator.interfaces.*;
 	public final ISite getSiteTo() {
 		return siteTo;
 	}
-	
+
 	public final int getTypeId() {
 		return myType.getId();
 	}
-	
+
 	public final IAgent getAgentFrom() {
 		return fromAgent;
 	}
@@ -70,7 +70,7 @@ import com.plectix.simulator.interfaces.*;
 
 	protected abstract void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site);
-	
+
 	protected final int getAgentIdInCCBySideId(IAgent toAgent2) {
 		for (IConnectedComponent cc : myRule.getLeftHandSide())
 			for (IAgent agentL : cc.getAgents())
@@ -91,14 +91,15 @@ import com.plectix.simulator.interfaces.*;
 	}
 
 	public final List<IAction> createAtomicActions() {
-		//TODO it is very strange place. is there any case, where fromAgent.getSites() == null ???
+		// TODO it is very strange place. is there any case, where
+		// fromAgent.getSites() == null ???
 		if (fromAgent.getSites() == null) {
 			myType = CActionType.NONE;
 			return null;
 		}
 
 		List<IAction> list = new ArrayList<IAction>();
-		
+
 		for (ISite fromSite : fromAgent.getSites()) {
 			ISite toSite = toAgent.getSite(fromSite.getNameId());
 			if (fromSite.getInternalState().getStateNameId() != toSite
@@ -131,8 +132,9 @@ import com.plectix.simulator.interfaces.*;
 			// && (toSite.getLinkState().getSite() != null)) {
 			if ((fromSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_FREE)
 					&& (toSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_BOUND)) {
-				list.add(new CBoundAction(myRule, toSite, toSite.getLinkState().getSite(),  
-						leftConnectedComponent, rightConnectedComponent));
+				list.add(new CBoundAction(myRule, toSite, toSite.getLinkState()
+						.getSite(), leftConnectedComponent,
+						rightConnectedComponent));
 				if (!isChangedSiteContains(toSite))
 					myRule.addChangedSite(toSite);
 				continue;
@@ -146,10 +148,11 @@ import com.plectix.simulator.interfaces.*;
 					.getAgentLink().getIdInRuleSide())
 					&& (lConnectSite.equals(rConnectSite)))
 				continue;
-			list.add(new CBreakAction(myRule, fromSite, toSite, leftConnectedComponent, 
+			list.add(new CBreakAction(myRule, fromSite, toSite,
+					leftConnectedComponent, rightConnectedComponent));
+			list.add(new CBoundAction(myRule, toSite, (ISite) toSite
+					.getLinkState().getSite(), leftConnectedComponent,
 					rightConnectedComponent));
-			list.add(new CBoundAction(myRule, toSite, (ISite) toSite.getLinkState()
-					.getSite(), leftConnectedComponent, rightConnectedComponent));
 			if (!isChangedSiteContains(toSite))
 				myRule.addChangedSite(toSite);
 		}

@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.actions.*;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.SimulatorManager;
 
 public class CRule implements IRule {
 
@@ -16,6 +17,7 @@ public class CRule implements IRule {
 	private List<IConnectedComponent> rightHandSide;
 	private double activity = 0.;
 	private final String name;
+	private String data;
 	private double ruleRate;
 	private List<ISite> sitesConnectedWithDeleted;
 	private List<ISite> sitesConnectedWithBroken;
@@ -34,7 +36,21 @@ public class CRule implements IRule {
 	private IConstraint constraints;
 	private int countAgentsLHS = 0;
 
-	//TODO fields of this class is never read locally 
+	public final String getData() {
+		if (data == null) {
+			String line = SimulatorManager.printPartRule(leftHandSide);
+			line = line + "->";
+			line = line + SimulatorManager.printPartRule(rightHandSide);
+			data=line;
+		}
+		return data;
+	}
+
+	public final void setData(String data) {
+		this.data = new String(data);
+	}
+
+	// TODO fields of this class is never read locally
 	private class FixedSite {
 		private final ISite site;
 		private boolean linkState;
@@ -54,7 +70,7 @@ public class CRule implements IRule {
 			boolean internalState = false;
 		}
 	}
-	
+
 	public CRule(List<IConnectedComponent> left,
 			List<IConnectedComponent> right, String name, double ruleRate,
 			int ruleID) {
@@ -80,7 +96,7 @@ public class CRule implements IRule {
 		calculateAutomorphismsNumber();
 		indexingRHSAgents();
 	}
-	
+
 	public final int getCountAgentsLHS() {
 		return countAgentsLHS;
 	}
@@ -107,11 +123,11 @@ public class CRule implements IRule {
 	public final List<IObservablesConnectedComponent> getActivatedObservable() {
 		return Collections.unmodifiableList(activatedObservable);
 	}
-	
+
 	public final List<IRule> getActivatedRule() {
 		return Collections.unmodifiableList(activatedRule);
 	}
-	
+
 	public final List<ISite> getChangedSites() {
 		return Collections.unmodifiableList(changedSites);
 	}
@@ -124,7 +140,7 @@ public class CRule implements IRule {
 			List<IObservablesConnectedComponent> activatedObservable) {
 		this.activatedObservable = activatedObservable;
 	}
-	
+
 	public final void setActivatedRule(List<IRule> activatedRule) {
 		this.activatedRule = activatedRule;
 	}
@@ -188,13 +204,24 @@ public class CRule implements IRule {
 	public final IAgent getAgentAdd(IAgent key) {
 		return agentAddList.get(key);
 	}
-	
+
 	public final void putAgentAdd(IAgent key, IAgent value) {
 		agentAddList.put(key, value);
 	}
-	
+
+	private final void storifyAgents(List<IInjection> injectionList) {
+		for (IInjection inj : injectionList)
+			if (inj != CInjection.EMPTY_INJECTION)
+				for (IAgentLink al : inj.getAgentLinkList())
+					al.storifyAgent();
+	}
+
 	protected final void apply(List<IInjection> injectionList,
 			INetworkNotation netNotation) {
+		if (netNotation != null) {
+			storifyAgents(injectionList);
+		}
+
 		agentAddList = new HashMap<IAgent, IAgent>();
 		sitesConnectedWithDeleted = new ArrayList<ISite>();
 		sitesConnectedWithBroken = new ArrayList<ISite>();
@@ -219,7 +246,48 @@ public class CRule implements IRule {
 		}
 	}
 
+	private final void addRuleSitesToNetworkNotation(
+			INetworkNotation netNotation, ISite site) {
+		if (netNotation != null) {
+			byte agentMode = CNetworkNotation.MODE_NONE;
+			byte linkStateMode = CNetworkNotation.MODE_NONE;
+			byte internalStateMode = CNetworkNotation.MODE_NONE;
+			linkStateMode = CNetworkNotation.MODE_MODIFY;
+			netNotation.addToAgentsFromRules(site, agentMode,
+					internalStateMode, linkStateMode);
+		}
+	}
+
 	private final void addFixedSitesToNN(INetworkNotation netNotation) {
+		for (ISite siteInSolution : this.sitesConnectedWithBroken) {
+			// IInjection inj = getInjectionBySiteToFromLHS(siteFromRule);
+			// IAgent agentToInSolution = inj.getConnectedComponent()
+			// .getAgentByIdFromSolution(
+			// siteFromRule.getAgentLink()
+			// .getIdInConnectedComponent(), inj);
+			// ISite siteInSolution = agentToInSolution.getSite(siteFromRule
+			// .getNameId());
+
+			addRuleSitesToNetworkNotation(netNotation, siteInSolution);
+		}
+		for (ISite siteInSolution : this.sitesConnectedWithDeleted) {
+			// IInjection inj = getInjectionBySiteToFromLHS(siteFromRule);
+			// IAgent agentToInSolution = siteFromRule.getAgentLink();
+
+			// inj.getConnectedComponent()
+			// .getAgentByIdFromSolution(
+			// siteFromRule.getAgentLink()
+			// .getIdInConnectedComponent(), inj);
+
+			// if (agentToInSolution != null) {
+			/*
+			 * ISite siteInSolution = agentToInSolution.getSite(siteFromRule
+			 * .getNameId());
+			 */
+			addRuleSitesToNetworkNotation(netNotation, siteInSolution);
+			// }
+		}
+
 		for (FixedSite fs : fixedSites) {
 			CSite siteFromRule = (CSite) fs.site;
 			IInjection inj = getInjectionBySiteToFromLHS(siteFromRule);
@@ -238,6 +306,7 @@ public class CRule implements IRule {
 		List<IAgent> rhsAgents = new ArrayList<IAgent>();
 		List<IAgent> lhsAgents = new ArrayList<IAgent>();
 		int indexAgentRHS = 0;
+		fixedSites = new ArrayList<FixedSite>();
 
 		if (leftHandSide.get(0) == EMPTY_LHS_CC) {
 			countAgentsLHS = 0;
@@ -260,7 +329,6 @@ public class CRule implements IRule {
 		sortAgentsByRuleSide(lhsAgents);
 
 		int index = 0;
-		fixedSites = new ArrayList<FixedSite>();
 		for (IAgent lhsAgent : lhsAgents) {
 			if ((index < rhsAgents.size())
 					&& !(rhsAgents.get(index).equals(lhsAgent) && rhsAgents
@@ -272,8 +340,9 @@ public class CRule implements IRule {
 				break;
 			}
 			// filling of fixed agents
-			if (SimulationMain.getSimulationManager().getSimulationData()
-					.isStorify())
+			if (index < rhsAgents.size()
+					&& SimulationMain.getSimulationManager()
+							.getSimulationData().isStorify())
 				fillFixedSites(lhsAgent, rhsAgents.get(index));
 			index++;
 		}
@@ -286,7 +355,73 @@ public class CRule implements IRule {
 		}
 	}
 
+	// <<<<<<< .mine
+	// public final boolean isSiteInternalStateExistsInRule(ISite site) {
+	// if ( site.getInternalState().getNameId() != CSite.NO_INDEX)
+	// return true;
+	// return false;
+	// }
+
+	// private final void addRuleSitesToNetworkNotation(CActionType action,
+	// boolean existInRule, INetworkNotation netNotation, ISite site,
+	// IAgent agent) {
+	// if (netNotation != null) {
+	// byte agentMode = CNetworkNotation.MODE_NONE;
+	// byte linkStateMode = CNetworkNotation.MODE_NONE;
+	// byte internalStateMode = CNetworkNotation.MODE_NONE;
+	//
+	// switch (action.getId()) {
+	// case CActionType.BREAK.getId():
+	// if (existInRule) {
+	// agentMode = CNetworkNotation.MODE_TEST;
+	// linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+	// } else
+	// linkStateMode = CNetworkNotation.MODE_MODIFY;
+	// break;
+	// case CActionType.DELETE.getId():
+	// if (existInRule) {
+	// agentMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+	// ISite siteFromRule = agent.getSite(site.getNameId());
+	//
+	// if (siteFromRule != null)
+	// linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+	// else
+	// linkStateMode = CNetworkNotation.MODE_MODIFY;
+	//
+	// if (siteFromRule != null
+	// && siteFromRule.getInternalState().getNameId() != CSite.NO_INDEX)
+	// internalStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+	// else
+	// internalStateMode = CNetworkNotation.MODE_MODIFY;
+	// } else
+	// linkStateMode = CNetworkNotation.MODE_MODIFY;
+	// break;
+	// case CActionType.ADD.getId():
+	// agentMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+	// if (site.getInternalState().getNameId() != CSite.NO_INDEX)
+	// internalStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+	// if (site.getLinkState().getStatusLinkRank() != CLinkState.RANK_SEMI_LINK)
+	// linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+	// break;
+	// case CActionType.BOUND.getId():
+	// agentMode = CNetworkNotation.MODE_TEST;
+	// linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+	// break;
+	// case CActionType.MODIFY.getId():
+	// agentMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+	// internalStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+	// break;
+	//
+	// }
+	// netNotation.addToAgentsFromRules(site, agentMode,
+	// internalStateMode, linkStateMode);
+	// }
+	// }
+
+	// public final void fillFixedSites(IAgent lhsAgent, IAgent rhsAgent) {
+	// =======
 	private final void fillFixedSites(IAgent lhsAgent, IAgent rhsAgent) {
+		// >>>>>>> .r5154
 		for (ISite lhsSite : lhsAgent.getSites()) {
 			ISite rhsSite = rhsAgent.getSite(lhsSite.getNameId());
 			FixedSite fixedSite = new FixedSite(lhsSite);
@@ -305,7 +440,7 @@ public class CRule implements IRule {
 						&& lhsSite.getLinkState().getSite().getAgentLink()
 								.getIdInRuleSide() == rhsSite.getLinkState()
 								.getSite().getAgentLink().getIdInRuleSide())
-					fixedSite.setInternalState(true);
+					fixedSite.setLinkState(true);
 			}
 			if (fixedSite.linkState != false
 					|| fixedSite.internalState != false)
@@ -347,11 +482,12 @@ public class CRule implements IRule {
 
 	}
 
-	//TODO use standard sort
+	// TODO use standard sort
 	private final void sortActionList() {
 		for (int i = 0; i < actionList.size(); i++) {
 			for (int j = 0; j < actionList.size(); j++) {
-				if (actionList.get(i).getTypeId() < actionList.get(j).getTypeId()) {
+				if (actionList.get(i).getTypeId() < actionList.get(j)
+						.getTypeId()) {
 					IAction actionMin = actionList.get(j);
 					IAction actionR = actionList.get(i);
 					actionList.set(j, actionR);
@@ -466,7 +602,7 @@ public class CRule implements IRule {
 		for (IConnectedComponent ccR : rightHandSide) {
 			for (IAgent rAgent : ccR.getAgents()) {
 				if ((countAgentsLHS == 0)
-						|| (rAgent.getIdInRuleSide() > countAgentsLHS)) {		
+						|| (rAgent.getIdInRuleSide() > countAgentsLHS)) {
 					actionList.add(new CAddAction(this, rAgent, ccR));
 					fillChangedSites(rAgent);// for activation map
 					// creation
@@ -484,10 +620,10 @@ public class CRule implements IRule {
 	}
 
 	private final void fillChangedSites(IAgent agentRight) {
-//		if (agentLeft == null)
-			for (ISite site : agentRight.getSites()) {
-				changedSites.add(site);
-			}
+		// if (agentLeft == null)
+		for (ISite site : agentRight.getSites()) {
+			changedSites.add(site);
+		}
 	}
 
 	private final boolean isAgentFromLHSHasFoundInRHS(IAgent lAgent,
@@ -495,7 +631,8 @@ public class CRule implements IRule {
 		for (IConnectedComponent ccR : rightHandSide)
 			for (IAgent rAgent : ccR.getAgents()) {
 				if (lAgent.getIdInRuleSide() == rAgent.getIdInRuleSide()) {
-					IAction newAction = new CDefaultAction(this, lAgent, rAgent, ccL, ccR);
+					IAction newAction = new CDefaultAction(this, lAgent,
+							rAgent, ccL, ccR);
 					actionList.add(newAction);
 					actionList.addAll(newAction.createAtomicActions());
 					return true;
@@ -504,7 +641,7 @@ public class CRule implements IRule {
 		return false;
 	}
 
-	//TODO util??
+	// TODO util??
 	public final List<IAgent> getAgentsFromConnectedComponent(
 			List<IConnectedComponent> ccList) {
 		List<IAgent> agentList = new ArrayList<IAgent>();
@@ -517,7 +654,7 @@ public class CRule implements IRule {
 		return Collections.unmodifiableList(agentList);
 	}
 
-	//TODO is this necessary?
+	// TODO is this necessary?
 	private final IAgent getAgentByIdInRuleFromLHS(Integer id) {
 		for (IAgent agent : getAgentsFromConnectedComponent(leftHandSide))
 			if (agent.getIdInRuleSide() == id)
@@ -608,7 +745,545 @@ public class CRule implements IRule {
 		return null;
 	}
 
+	// <<<<<<< .mine
+	// <<<<<<< .mine
+	// public class Action implements IAction {
+	// public static final byte ACTION_BRK = 0;
+	// public static final byte ACTION_DEL = 1;
+	// public static final byte ACTION_ADD = 2;
+	// public static final byte ACTION_BND = 3;
+	// public static final byte ACTION_MOD = 4;
+	// public static final byte ACTION_NONE = -1;
+	//
+	// private byte action = ACTION_NONE;
+	//
+	// private IAgent fromAgent;
+	// private IAgent toAgent;
+	//
+	// private IConnectedComponent rightConnectedComponent;
+	// private IConnectedComponent leftConnectedComponent;
+	//
+	// /**
+	// * Default constructor, create AtomicAction and add to "actionList".
+	// *
+	// * @param fromAgent
+	// * @param toAgent
+	// */
+	// public Action(IAgent fromAgent, IAgent toAgent,
+	// IConnectedComponent ccR, IConnectedComponent ccL) {
+	// this.fromAgent = fromAgent;
+	// this.toAgent = toAgent;
+	// this.rightConnectedComponent = ccR;
+	// this.leftConnectedComponent = ccL;
+	// this.action = ACTION_NONE;
+	// actionList.add(this);
+	// }
+	//
+	// /**
+	// * Constructor "ACTION_BND".
+	// *
+	// * @param fromSite
+	// * @param toSite
+	// * @param action
+	// */
+	// public Action(ISite fromSite, ISite toSite, IConnectedComponent ccR,
+	// IConnectedComponent ccL) {
+	// this.siteFrom = fromSite;
+	// this.siteTo = toSite;
+	// this.rightConnectedComponent = ccR;
+	// this.leftConnectedComponent = ccL;
+	// this.action = ACTION_BND;
+	// }
+	//
+	// /**
+	// * Constructor "ACTION_BRK" and "ACTION_MOD".
+	// *
+	// * @param site
+	// * @param action
+	// */
+	// public Action(ISite siteFrom, ISite siteTo, IConnectedComponent ccR,
+	// IConnectedComponent ccL, byte action) {
+	// this.rightConnectedComponent = ccR;
+	// this.leftConnectedComponent = ccL;
+	// switch (action) {
+	// case ACTION_BRK: {
+	// this.siteFrom = siteFrom;
+	// this.action = ACTION_BRK;
+	// break;
+	// }
+	// case ACTION_MOD: {
+	// this.siteFrom = siteFrom;
+	// this.siteTo = siteTo;
+	// this.action = ACTION_MOD;
+	// this.nameInternalStateId = siteTo.getInternalState()
+	// .getNameId();
+	// break;
+	// }
+	// }
+	// }
+	//
+	// /**
+	// * Constructor "ACTION_ADD" and "ACTION_DEL".
+	// *
+	// * @param agent
+	// * @param ccR
+	// * @param action
+	// */
+	//
+	// public Action(IAgent agent, IConnectedComponent cc, byte action) {
+	// switch (action) {
+	// case ACTION_ADD: {
+	// this.action = ACTION_ADD;
+	// this.toAgent = agent;
+	// // agent.setIdInRuleSide(maxAgentID++);
+	// this.rightConnectedComponent = cc;
+	// createBound();
+	// break;
+	// }
+	// case ACTION_DEL: {
+	// this.action = ACTION_DEL;
+	// this.fromAgent = agent;
+	// this.leftConnectedComponent = cc;
+	// break;
+	// }
+	// }
+	// }
+	//
+	// public IConnectedComponent getCLeftComponent() {
+	// return leftConnectedComponent;
+	// }
+	//
+	// private ISite siteFrom;
+	//
+	// public IAgent getFromAgent() {
+	// return fromAgent;
+	// }
+	//
+	// public IAgent getToAgent() {
+	// return toAgent;
+	// }
+	//
+	// public ISite getSiteFrom() {
+	// return siteFrom;
+	// }
+	//
+	// public ISite getSiteTo() {
+	// return siteTo;
+	// }
+	//
+	// public Integer getNameInternalStateId() {
+	// return nameInternalStateId;
+	// }
+	//
+	// private ISite siteTo;
+	// private Integer nameInternalStateId;
+	//
+	// private final void addToNetworkNotation(int index,
+	// INetworkNotation netNotation, ISite site) {
+	// if (netNotation != null)
+	// switch (action) {
+	// case ACTION_BRK:
+	// netNotation.checkLinkForNetworkNotation(index, site);
+	// break;
+	// case ACTION_DEL:
+	// netNotation.checkLinkForNetworkNotationDel(index, site);
+	// break;
+	// case ACTION_ADD:
+	// netNotation.addToAgents(site, new CStoriesSiteStates(index,
+	// site.getInternalState().getNameId()), index);
+	// break;
+	// case ACTION_BND:
+	// netNotation.checkLinkForNetworkNotation(index, site);
+	// break;
+	// case ACTION_MOD:
+	// netNotation.addToAgents(site, new CStoriesSiteStates(index,
+	// site.getInternalState().getNameId()), index);
+	// break;
+	// }
+	// }
+	//
+	// public final void doAction(IInjection injection,
+	// INetworkNotation netNotation) {
+	//
+	// switch (action) {
+	// case ACTION_ADD: {
+	// /**
+	// * Done.
+	// */
+	// IAgent agent = new CAgent(toAgent.getNameId());
+	// for (ISite site : toAgent.getSites()) {
+	// ISite siteAdd = new CSite(site.getNameId());
+	// siteAdd.setInternalState(new CInternalState(site
+	// .getInternalState().getStateNameId()));
+	// agent.addSite(siteAdd);
+	// addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+	// netNotation, siteAdd);
+	// addRuleSitesToNetworkNotation(ACTION_ADD, false,
+	// netNotation, siteAdd, toAgent);
+	// }
+	// rightConnectedComponent.addAgentFromSolutionForRHS(agent);
+	// ((CSolution) SimulationMain.getSimulationManager()
+	// .getSimulationData().getSolution()).addAgent(agent);
+	//
+	// agentAddList.put(toAgent, agent);
+	// // toAgent.setIdInRuleSide(maxAgentID++);
+	// break;
+	// }
+	// case ACTION_NONE: {
+	// int agentIdInCC = getAgentIdInCCBySideId(toAgent);
+	// IAgent agentFromInSolution = leftConnectedComponent
+	// .getAgentByIdFromSolution(agentIdInCC, injection);
+	// rightConnectedComponent
+	// .addAgentFromSolutionForRHS(agentFromInSolution);
+	//
+	// break;
+	// }
+	// case ACTION_BND: {
+	// /**
+	// * Done.
+	// */
+	// IAgent agentFromInSolution;
+	// if (siteFrom.getAgentLink().getIdInRuleSide() >
+	// getAgentsFromConnectedComponent(
+	// leftHandSide).size()) {
+	// agentFromInSolution = agentAddList.get(siteFrom
+	// .getAgentLink());
+	// } else {
+	// int agentIdInCC = getAgentIdInCCBySideId(siteFrom
+	// .getAgentLink());
+	//
+	// agentFromInSolution = leftConnectedComponent
+	// .getAgentByIdFromSolution(agentIdInCC, injection);
+	//
+	// // /////////////////////////////////////////////
+	// ISite injectedSite = agentFromInSolution.getSite(siteFrom
+	// .getNameId());
+	// injection.addToChangedSites(injectedSite);
+	//
+	// addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+	// netNotation, injectedSite);
+	// addRuleSitesToNetworkNotation(ACTION_BND, false,
+	// netNotation, injectedSite, siteFrom.getAgentLink());
+	// // /////////////////////////////////////////////
+	// }
+	//
+	// IAgent agentToInSolution;
+	// if (siteTo.getAgentLink().getIdInRuleSide() >
+	// getAgentsFromConnectedComponent(
+	// leftHandSide).size()) {
+	// agentToInSolution = agentAddList.get(siteTo.getAgentLink());
+	// } else {
+	// int agentIdInCC = getAgentIdInCCBySideId(siteTo
+	// .getAgentLink());
+	// IInjection inj = getInjectionBySiteToFromLHS(siteTo);
+	// agentToInSolution = leftConnectedComponent
+	// .getAgentByIdFromSolution(agentIdInCC, inj);
+	// }
+	//
+	// agentFromInSolution.getSite(siteFrom.getNameId())
+	// .getLinkState().setSite(
+	// agentToInSolution.getSite(siteTo.getNameId()));
+	//
+	// addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+	// netNotation, agentFromInSolution.getSite(siteFrom
+	// .getNameId()));
+	//
+	// agentFromInSolution.getSite(siteFrom.getNameId()).setLinkIndex(
+	// siteFrom.getLinkIndex());
+	// agentToInSolution.getSite(siteTo.getNameId()).setLinkIndex(
+	// siteTo.getLinkIndex());
+	//
+	// break;
+	// }
+	// case ACTION_BRK: {
+	//
+	// IAgent agentFromInSolution;
+	// int agentIdInCC = getAgentIdInCCBySideId(siteFrom
+	// .getAgentLink());
+	// agentFromInSolution = leftConnectedComponent
+	// .getAgentByIdFromSolution(agentIdInCC, injection);
+	//
+	// ISite injectedSite = agentFromInSolution.getSite(siteFrom
+	// .getNameId());
+	//
+	// addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+	// netNotation, injectedSite);
+	// addRuleSitesToNetworkNotation(ACTION_BRK, true, netNotation,
+	// injectedSite, siteFrom.getAgentLink());
+	//
+	// ISite linkSite = (ISite) injectedSite.getLinkState().getSite();
+	// if ((siteFrom.getLinkState().getSite() == null)
+	// && (linkSite != null)) {
+	// addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+	// netNotation, linkSite);
+	//
+	// linkSite.getLinkState().setSite(null);
+	// linkSite.getLinkState().setStatusLink(
+	// CLinkState.STATUS_LINK_FREE);
+	// if (siteTo != null) {
+	// linkSite.setLinkIndex(siteTo.getLinkIndex());
+	// }
+	// injection.addToChangedSites(linkSite);
+	// rightConnectedComponent.addAgentFromSolutionForRHS(linkSite
+	// .getAgentLink());
+	// addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+	// netNotation, linkSite);
+	//
+	// }
+	//
+	// agentFromInSolution.getSite(siteFrom.getNameId())
+	// .getLinkState().setSite(null);
+	// agentFromInSolution.getSite(siteFrom.getNameId())
+	// .getLinkState().setStatusLink(
+	// CLinkState.STATUS_LINK_FREE);
+	// // /////////////////////////////////////////////
+	//
+	// injection.addToChangedSites(injectedSite);
+	//
+	// addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+	// netNotation, injectedSite);
+	// /**
+	// * Break a bond for this rules: A(x!_)->A(x)
+	// */
+	// if (siteFrom.getLinkState().getSite() == null
+	// && linkSite != null) {
+	// addSiteToConnectedWithBroken(linkSite);
+	// // addRuleSitesToNetworkNotation(false, netNotation,
+	// // linkSite);
+	// }
+	// // /////////////////////////////////////////////
+	// agentFromInSolution.getSite(siteFrom.getNameId()).setLinkIndex(
+	// siteFrom.getLinkIndex());
+	// break;
+	// }
+	// case ACTION_DEL: {
+	// /**
+	// * Done.
+	// */
+	//
+	// IAgent agent = leftConnectedComponent.getAgentByIdFromSolution(
+	// fromAgent.getIdInConnectedComponent(), injection);
+	// for (ISite site : agent.getSites()) {
+	// removeSiteToConnectedWithDeleted(site);
+	// ISite solutionSite = (ISite) site.getLinkState().getSite();
+	//
+	// if (solutionSite != null) {
+	// addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+	// netNotation, solutionSite);
+	//
+	// addSiteToConnectedWithDeleted(solutionSite);
+	// solutionSite.getLinkState().setSite(null);
+	// solutionSite.getLinkState().setStatusLink(
+	// CLinkState.STATUS_LINK_FREE);
+	// solutionSite.setLinkIndex(-1);
+	// addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+	// netNotation, solutionSite);
+	// // addRuleSitesToNetworkNotation(false, netNotation,
+	// // solutionSite);
+	// // //
+	// // solutionSite.removeInjectionsFromCCToSite(injection);
+	// }
+	// }
+	//
+	// for (ILiftElement lift : agent.getEmptySite().getLift()) {
+	// agent.getEmptySite().removeInjectionsFromCCToSite(
+	// lift.getInjection());
+	// lift.getInjection().getConnectedComponent()
+	// .removeInjection(lift.getInjection());
+	// }
+	//
+	// for (ISite site : agent.getSites()) {
+	// addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+	// netNotation, site);
+	// addRuleSitesToNetworkNotation(ACTION_DEL, true,
+	// netNotation, site, fromAgent);
+	// for (ILiftElement lift : site.getLift()) {
+	// site.removeInjectionsFromCCToSite(lift.getInjection());
+	// lift.getInjection().getConnectedComponent()
+	// .removeInjection(lift.getInjection());
+	// }
+	// site.getLift().clear();
+	// injection.removeSiteFromSitesList(site);
+	// }
+	// // injection.getConnectedComponent().getInjectionsList()
+	// // .remove(injection);
+	//
+	// ((CSolution) SimulationMain.getSimulationManager()
+	// .getSimulationData().getSolution()).removeAgent(agent);
+	//
+	// break;
+	// }
+	// case ACTION_MOD: {
+	// /**
+	// * Done.
+	// */
+	// int agentIdInCC = getAgentIdInCCBySideId(siteTo.getAgentLink());
+	// IAgent agentFromInSolution = leftConnectedComponent
+	// .getAgentByIdFromSolution(agentIdInCC, injection);
+	//
+	// // /////////////////////////////////////////////
+	// ISite injectedSite = agentFromInSolution.getSite(siteTo
+	// .getNameId());
+	// addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+	// netNotation, injectedSite);
+	// addRuleSitesToNetworkNotation(ACTION_MOD, false, netNotation,
+	// injectedSite, siteTo.getAgentLink());
+	//
+	// injectedSite.getInternalState().setNameId(nameInternalStateId);
+	// injection.addToChangedSites(injectedSite);
+	//
+	// addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+	// netNotation, injectedSite);
+	//
+	// // /////////////////////////////////////////////
+	// break;
+	// }
+	// }
+	// }
+	//
+	// private void removeSiteToConnectedWithDeleted(ISite checkedSite) {
+	// for (int i = 0; i < sitesConnectedWithDeleted.size(); i++) {
+	// if (sitesConnectedWithDeleted.get(i) == checkedSite) {
+	// sitesConnectedWithDeleted.remove(i);
+	// return;
+	// }
+	// }
+	// }
+	//
+	// private void addSiteToConnectedWithDeleted(ISite checkedSite) {
+	// for (ISite site : sitesConnectedWithDeleted)
+	// if (site == checkedSite)
+	// return;
+	// sitesConnectedWithDeleted.add(checkedSite);
+	// }
+	//
+	// private void addSiteToConnectedWithBroken(ISite checkedSite) {
+	// for (ISite site : sitesConnectedWithBroken)
+	// if (site == checkedSite)
+	// return;
+	// sitesConnectedWithBroken.add(checkedSite);
+	// }
+	//
+	// private final int getAgentIdInCCBySideId(IAgent toAgent2) {
+	// for (IConnectedComponent cc : leftHandSide)
+	// for (IAgent agentL : cc.getAgents())
+	// if (agentL.getIdInRuleSide() == toAgent2.getIdInRuleSide()) {
+	// if (leftConnectedComponent == null)
+	// leftConnectedComponent = cc;
+	// return agentL.getIdInConnectedComponent();
+	// }
+	// return -1;
+	// }
+	//
+	// public IConnectedComponent getRightCComponent() {
+	// return rightConnectedComponent;
+	// }
+	//
+	// public IConnectedComponent getLeftCComponent() {
+	// return leftConnectedComponent;
+	// }
+	//
+	// public byte getAction() {
+	// return action;
+	// }
+	//
+	// public final List<Action> createAtomicAction() {
+	// if (fromAgent.getSites() == null) {
+	// this.action = ACTION_NONE;
+	// return null;
+	// }
+	// List<Action> list = new ArrayList<Action>();
+	//
+	// for (ISite fromSite : fromAgent.getSites()) {
+	// ISite toSite = toAgent.getSite(fromSite.getNameId());
+	// if (fromSite.getInternalState().getStateNameId() != toSite
+	// .getInternalState().getStateNameId()) {
+	// list.add(new Action(fromSite, toSite,
+	// rightConnectedComponent, leftConnectedComponent,
+	// ACTION_MOD));
+	// if (!isChangedSiteContains(toSite))
+	// changedSites.add(toSite);
+	// }
+	//
+	// // if ((fromSite.getLinkState().getSite() == null)
+	// // && (toSite.getLinkState().getSite() == null))
+	// // continue;
+	// if ((fromSite.getLinkState().getStatusLink() ==
+	// CLinkState.STATUS_LINK_FREE)
+	// && (toSite.getLinkState().getStatusLink() ==
+	// CLinkState.STATUS_LINK_FREE))
+	// continue;
+	//
+	// // if ((fromSite.getLinkState().getSite() != null)
+	// // && (toSite.getLinkState().getSite() == null)) {
+	// if ((fromSite.getLinkState().getStatusLink() !=
+	// CLinkState.STATUS_LINK_FREE)
+	// && (toSite.getLinkState().getStatusLink() ==
+	// CLinkState.STATUS_LINK_FREE)) {
+	// list.add(new Action(fromSite, toSite,
+	// rightConnectedComponent, leftConnectedComponent,
+	// ACTION_BRK));
+	// if (!isChangedSiteContains(toSite))
+	// changedSites.add(toSite);
+	// continue;
+	// }
+	//
+	// // if ((fromSite.getLinkState().getSite() == null)
+	// // && (toSite.getLinkState().getSite() != null)) {
+	// if ((fromSite.getLinkState().getStatusLink() ==
+	// CLinkState.STATUS_LINK_FREE)
+	// && (toSite.getLinkState().getStatusLink() ==
+	// CLinkState.STATUS_LINK_BOUND)) {
+	// list.add(new Action(toSite, (ISite) toSite.getLinkState()
+	// .getSite(), rightConnectedComponent,
+	// leftConnectedComponent));
+	// if (!isChangedSiteContains(toSite))
+	// changedSites.add(toSite);
+	// continue;
+	// }
+	//
+	// ISite lConnectSite = (ISite) fromSite.getLinkState().getSite();
+	// ISite rConnectSite = (ISite) toSite.getLinkState().getSite();
+	// if (lConnectSite == null || rConnectSite == null)
+	// continue;
+	// if ((lConnectSite.getAgentLink().getIdInRuleSide() == rConnectSite
+	// .getAgentLink().getIdInRuleSide())
+	// && (lConnectSite.equals(rConnectSite)))
+	// continue;
+	// list.add(new Action(fromSite, toSite, rightConnectedComponent,
+	// leftConnectedComponent, ACTION_BRK));
+	// list.add(new Action(toSite, (ISite) toSite.getLinkState()
+	// .getSite(), rightConnectedComponent,
+	// leftConnectedComponent));
+	// if (!isChangedSiteContains(toSite))
+	// changedSites.add(toSite);
+	// }
+	// return list;
+	// }
+	//
+	// private boolean isChangedSiteContains(ISite site) {
+	// for (ISite siteCh : changedSites)
+	// if (siteCh == site)
+	// return true;
+	// return false;
+	// }
+	//
+	// private final void createBound() {
+	// for (ISite site : toAgent.getSites())
+	// if (site.getLinkState().getSite() != null)
+	// actionList.add(new Action(site, (site.getLinkState()
+	// .getSite()), rightConnectedComponent, null));
+	//
+	// }
+	//
+	// }
+	//
+	// =======
+	// >>>>>>> .r5077
+	// public boolean isClashForInfiniteRule() {
+	// =======
 	public final boolean isClashForInfiniteRule() {
+		// >>>>>>> .r5154
 		if (this.leftHandSide.size() == 2) {
 			if (this.leftHandSide.get(0).getInjectionsList().size() == 1
 					&& this.leftHandSide.get(1).getInjectionsList().size() == 1) {
@@ -624,23 +1299,23 @@ public class CRule implements IRule {
 	public final List<ISite> getSitesConnectedWithBroken() {
 		return Collections.unmodifiableList(sitesConnectedWithBroken);
 	}
-	
+
 	public final void addSiteConnectedWithBroken(ISite site) {
 		sitesConnectedWithBroken.add(site);
 	}
-	
+
 	public final List<ISite> getSitesConnectedWithDeleted() {
 		return Collections.unmodifiableList(sitesConnectedWithDeleted);
 	}
-	
+
 	public final void addSiteConnectedWithDeleted(ISite site) {
 		sitesConnectedWithDeleted.add(site);
 	}
-	
+
 	public final ISite getSiteConnectedWithDeleted(int index) {
 		return sitesConnectedWithDeleted.get(index);
 	}
-	
+
 	public final void removeSiteConnectedWithDeleted(int index) {
 		sitesConnectedWithDeleted.remove(index);
 	}

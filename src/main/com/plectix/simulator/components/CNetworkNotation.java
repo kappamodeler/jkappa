@@ -2,6 +2,7 @@ package com.plectix.simulator.components;
 
 import java.util.*;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
 
 public class CNetworkNotation implements INetworkNotation {
@@ -9,23 +10,37 @@ public class CNetworkNotation implements INetworkNotation {
 	public static final byte MODE_TEST_OR_MODIFY = 1;
 	public static final byte MODE_MODIFY = 2;
 	public static final byte MODE_NONE = -1;
-	
+
 	public final static byte HAS_FULL_INTERSECTION = 2;
 	public final static byte HAS_PART_INTERSECTION = 1;
 	public final static byte HAS_NO_INTERSECTION = 0;
 
-	//TODO is this field necessary?
-	private final int step;
+	// TODO is this field necessary?
+	private int step;
+	public void setStep(int step) {
+		this.step = step;
+	}
+
+	public int getStep() {
+		return step;
+	}
+
 	private final IRule rule;
 
-	//TODO private 
+	// TODO private
 	Map<Long, AgentSites> changedAgentsFromSolution;
-	//TODO private 
+	// TODO private
 	Map<Long, AgentSitesFromRules> usedAgentsFromRules;
 
-	//TODO separate!
-	/*package*/ final class AgentSitesFromRules {
-		//TODO private!!!
+	List<String> agentsNotation;
+
+	public List<String> getAgentsNotation() {
+		return agentsNotation;
+	}
+
+	// TODO separate!
+	/* package */final class AgentSitesFromRules {
+		// TODO private!!!
 		HashMap<Integer, SitesFromRules> sites;
 		private byte mode;
 
@@ -34,26 +49,43 @@ public class CNetworkNotation implements INetworkNotation {
 			sites = new HashMap<Integer, SitesFromRules>();
 		}
 
-		//TODO separate!!!!!!!!!!!!!!!!!!!!
-		/*package*/ final class SitesFromRules {
-			//TODO private!!!
-			byte internalStateMode = MODE_NONE;
+		// TODO separate!!!!!!!!!!!!!!!!!!!!
+		/* package */final class SitesFromRules {
+			// TODO private!!!
+			private byte internalStateMode = MODE_NONE;
+			public byte getInternalStateMode() {
+				return internalStateMode;
+			}
+
 			private byte linkStateMode = MODE_NONE;
 
-			public SitesFromRules(byte internalStateMode, byte linkStateMode) {
+			public byte getLinkStateMode() {
+				return linkStateMode;
+			}
+
+			private int linkAgentNameID;
+
+			public SitesFromRules(byte internalStateMode, byte linkStateMode,
+					int linkAgentNameID) {
 				this.internalStateMode = internalStateMode;
 				this.linkStateMode = linkStateMode;
+				this.linkAgentNameID = linkAgentNameID;
 			}
 
 			public SitesFromRules() {
 			}
 
-			public final void setInternalStateMode(byte internalStateMode) {
+			public final void setInternalStateMode(byte internalStateMode,
+					int linkAgentNameID) {
 				this.internalStateMode = internalStateMode;
+				this.linkAgentNameID = linkAgentNameID;
 			}
 
-			public final void setLinkStateMode(byte linkStateMode) {
+			public final void setLinkStateMode(byte linkStateMode,
+					int linkAgentNameID) {
 				this.linkStateMode = linkStateMode;
+				// this.linkAgentNameID = linkAgentNameID;
+
 			}
 
 			public final boolean isCausing(SitesFromRules sfr, boolean isLink) {
@@ -80,48 +112,75 @@ public class CNetworkNotation implements INetworkNotation {
 			}
 		}
 
-		public final void addToSitesFromRules(int idSite, byte internalStateMode,
-				byte linkStateMode) {
+		public final void addToSitesFromRules(int idSite,
+				byte internalStateMode, byte linkStateMode, int linkAgentNameID) {
 			SitesFromRules sFR = sites.get(idSite);
 			if (sFR == null) {
 				sFR = new SitesFromRules();
 				sites.put(idSite, sFR);
 			}
 			if (internalStateMode != MODE_NONE)
-				sFR.setInternalStateMode(internalStateMode);
+				sFR.setInternalStateMode(internalStateMode, linkAgentNameID);
 			if (linkStateMode != MODE_NONE)
-				sFR.setLinkStateMode(linkStateMode);
+				sFR.setLinkStateMode(linkStateMode, linkAgentNameID);
 		}
 
-		public final void addFixedSitesFromRules(int idSite, byte internalStateMode,
-				byte linkStateMode) {
+		public final void addFixedSitesFromRules(int idSite,
+				byte internalStateMode, byte linkStateMode, int linkAgentNameID) {
 			SitesFromRules sFR = sites.get(idSite);
 			if (sFR == null)
 
-				//TODO sFR can be only null =(
+				// TODO sFR can be only null =(
 				if (internalStateMode != MODE_NONE)
-					sFR.setInternalStateMode(internalStateMode);
+					sFR
+							.setInternalStateMode(internalStateMode,
+									linkAgentNameID);
 			if (linkStateMode != MODE_NONE)
-				sFR.setLinkStateMode(linkStateMode);
+				sFR.setLinkStateMode(linkStateMode, linkAgentNameID);
 			sites.put(idSite, sFR);
 		}
 	}
 
-	public CNetworkNotation(int step, IRule rule) {
+	public CNetworkNotation(int step, IRule rule,
+			List<IInjection> injectionsList, ISolution solution) {
 		this.step = step;
 		this.rule = rule;
 		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();
 		this.usedAgentsFromRules = new HashMap<Long, AgentSitesFromRules>();
+		this.agentsNotation = new ArrayList<String>();
+		createAgentsNotation(injectionsList, solution);
 	}
 
-//	public Map<Long, AgentSites> getChangedAgentsFromSolution() {
-//		return Collections.unmodifiableMap(changedAgentsFromSolution);
-//	}
-//
-//	public Map<Long, AgentSitesFromRules> getUsedAgentsFromRules() {
-//		return Collections.unmodifiableMap(usedAgentsFromRules);
-//	}
-	
+	private final void createAgentsNotation(List<IInjection> injectionsList,
+			ISolution solution) {
+
+		for (IInjection inj : injectionsList) {
+			if (inj != CInjection.EMPTY_INJECTION) {
+				IConnectedComponent cc = solution.getConnectedComponent(inj
+						.getAgentLinkList().get(0).getAgentTo());
+				boolean isStorify = false;
+				for (IAgentLink al : inj.getAgentLinkList()) {
+					if (al.getAgentTo().isStorify()) {
+						isStorify = true;
+						break;
+					}
+				}
+				if (!isStorify)
+					agentsNotation.add(SimulationMain.getSimulationManager()
+							.printPartRule(cc, 0));
+			}
+		}
+
+	}
+
+	// public Map<Long, AgentSites> getChangedAgentsFromSolution() {
+	// return Collections.unmodifiableMap(changedAgentsFromSolution);
+	// }
+	//
+	// public Map<Long, AgentSitesFromRules> getUsedAgentsFromRules() {
+	// return Collections.unmodifiableMap(usedAgentsFromRules);
+	// }
+
 	public final void checkLinkForNetworkNotation(int index, ISite site) {
 		if (site.getLinkState().getSite() == null)
 			this
@@ -151,7 +210,8 @@ public class CNetworkNotation implements INetworkNotation {
 							index);
 	}
 
-	public final void addToAgents(ISite site, IStoriesSiteStates siteStates, int index) {
+	public final void addToAgents(ISite site, IStoriesSiteStates siteStates,
+			int index) {
 		if (site != null) {
 			long key = site.getAgentLink().getHash();
 			AgentSites as = changedAgentsFromSolution.get(key);
@@ -173,7 +233,7 @@ public class CNetworkNotation implements INetworkNotation {
 				usedAgentsFromRules.put(key, aSFR);
 			}
 			aSFR.addToSitesFromRules(site.getNameId(), internalStateMode,
-					linkStateMode);
+					linkStateMode, site.getAgentLink().getNameId());
 		}
 	}
 
@@ -195,7 +255,7 @@ public class CNetworkNotation implements INetworkNotation {
 				linkStateMode = MODE_TEST;
 
 			aSFR.addToSitesFromRules(site.getNameId(), internalStateMode,
-					linkStateMode);
+					linkStateMode, site.getAgentLink().getNameId());
 		}
 	}
 

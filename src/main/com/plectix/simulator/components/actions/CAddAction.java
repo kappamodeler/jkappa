@@ -34,6 +34,7 @@ public class CAddAction extends CAction {
 		SimulationMain.getSimulationManager().getSimulationData()
 				.getSolution().addAgent(agent);
 
+		agent.storifyAgent();
 		myRule.putAgentAdd(myToAgent, agent);
 		// toAgent.setIdInRuleSide(maxAgentID++);
 	}

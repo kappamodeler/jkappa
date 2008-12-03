@@ -13,6 +13,10 @@ public interface IAgent extends Comparable<IAgent> {
 
 	public ISite getSite(int nameId);
 	
+	public boolean isStorify();
+	
+	public void storifyAgent();
+	
 	public long getId();
 	
 	public long getHash();

@@ -334,12 +334,19 @@ public class Simulator {
 				currentTime += ruleProbabilityCalculation.getTimeValue();
 				if (!rule.isClash(injectionsList)) {
 					CNetworkNotation netNotation = new CNetworkNotation(count,
-							rule);
+							rule,injectionsList,model.getSimulationData().getSolution());
+					// <<<<<<< .mine
+					// if (rule.getRuleID()==1)
+					// System.out.println();
+					// =======
 					max_clash = 0;
+					// >>>>>>> .r5077
 					if (stories.checkRule(rule.getRuleID(), i)) {
 						rule.applyLastRuleForStories(injectionsList,
 								netNotation);
+						rule.applyRuleForStories(injectionsList, netNotation);
 						stories.addToNetworkNotationStory(i, netNotation);
+						count++;
 						isEndRules = true;
 						System.out.println("#");
 						break;

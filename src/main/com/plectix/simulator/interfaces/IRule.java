@@ -19,7 +19,7 @@ public interface IRule {
 	public List<IObservablesConnectedComponent> getActivatedObservable();
 
 	public List<IConnectedComponent> getRightHandSide();
-	
+
 	public List<IConnectedComponent> getLeftHandSide();
 
 	public String getName();
@@ -27,15 +27,15 @@ public interface IRule {
 	public boolean isInfinityRate();
 
 	public void applyRule(List<IInjection> injectionsList);
-	
+
 	public List<ISite> getSitesConnectedWithDeleted();
-	
+
 	public List<ISite> getSitesConnectedWithBroken();
 
 	public double getActivity();
 
 	public int getCountAgentsLHS();
-	
+
 	public List<IAction> getActionList();
 
 	public void calcultateActivity();
@@ -52,4 +52,7 @@ public interface IRule {
 
 	public void setRuleRate(double d);
 
+	public String getData();
+
+	public void setData(String data);
 }

@@ -6,4 +6,5 @@ public interface IAgentLink {
 
 	public IAgent getAgentTo();
 
+	public void storifyAgent();
 }

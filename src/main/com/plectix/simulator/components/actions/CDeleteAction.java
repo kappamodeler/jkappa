@@ -77,15 +77,21 @@ public class CDeleteAction extends CAction {
 
 			if (existInRule) {
 				agentMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
-				linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
-				if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
+				ISite siteFromRule = myFromAgent.getSite(site.getNameId());
+
+				if (siteFromRule != null)
+					linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+				else
+					linkStateMode = CNetworkNotation.MODE_MODIFY;
+
+				if (siteFromRule != null
+						&& siteFromRule.getInternalState().getNameId() != CSite.NO_INDEX)
 					internalStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
-				} else {
+				else
 					internalStateMode = CNetworkNotation.MODE_MODIFY;
-				}
-			} else {
+			} else
 				linkStateMode = CNetworkNotation.MODE_MODIFY;
-			}
+			
 			netNotation.addToAgentsFromRules(site, agentMode,
 					internalStateMode, linkStateMode);
 		}
