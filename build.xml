@@ -26,6 +26,8 @@
 	</fileset>
 
 	<fileset id="test.jars" dir="${lib.dir}">
+        <include name="xstream/xstream-1.3.jar"/>
+        <include name="xstream/xpp3_min-1.1.4c.jar"/>
 		<include name="log4j/log4j-1.2.15.jar"/>
 		<include name="commons-cli/commons-cli-1.1.jar"/>
 		<include name="junit/junit.jar"/>
