@@ -417,7 +417,6 @@ public class SimulationData {
 					Element story = doc.createElement("Story");
 					story.setAttribute("Observable", rules.get(st.getRuleID())
 							.getName());
-					int depth = 0;
 					addConnection(story, st, doc, st.getRuleID());
 					simplxSession.appendChild(story);
 				}
@@ -494,187 +493,137 @@ public class SimulationData {
 		// + timerOutput.getTimer() + " sec. CPU");
 	}
 
-	class StoryType {
-		public static final byte TYPE_INTRO = 0;
-		public static final byte TYPE_RULE = 1;
+	
 
-		public static final String STRING_INTRO = "INTRO";
-		public static final String STRING_RULE = "RULE";
-		public static final String STRING_OBS = "OBSERVABLE";
-		private byte type;
-		private String text;
-
-		public String getText() {
-			return text;
+	private final void fillNodesLevelStoryTrees(
+			List<CStoryType> currentStTypeList, List<Element> nodes, Document doc) {
+		Element node;
+		for (CStoryType stT : currentStTypeList) {
+			if (stT.getType() == CStoryType.TYPE_RULE && stT.getId() == 0) {
+				node = doc.createElement("Node");
+				stT.fillNode(node, CStoryType.STRING_OBS);
+				nodes.add(node);
+			} else if (stT.getType() == CStoryType.TYPE_RULE) {
+				node = doc.createElement("Node");
+				stT.fillNode(node, CStoryType.STRING_RULE);
+				nodes.add(node);
+			} else {
+				node = doc.createElement("Node");
+				stT.fillNode(node, CStoryType.STRING_INTRO);
+				nodes.add(node);
+			}
 		}
-
-		public String getData() {
-			return data;
-		}
-
-		private String data;
-
-		public byte getType() {
-			return type;
-		}
-
-		public int getTraceID() {
-			return traceID;
-		}
-
-		public int getId() {
-			return id;
-		}
-
-		private int traceID;
-		private int id;
-		private int depth;
-
-		public StoryType(byte type, int traceID, int id, String text,
-				String data, int depth) {
-			this.traceID = traceID;
-			this.id = id;
-			this.type = type;
-			this.text = text;
-			this.data = data;
-			this.depth = depth;
-		}
-
-		public void fillNode(Element node, String strType) {
-			node.setAttribute("Id", Integer.toString(id));
-			node.setAttribute("Type", strType);
-			node.setAttribute("Text", text);
-			node.setAttribute("Data", data);
-			node.setAttribute("Depth", Integer.toString(depth));
-		}
-
-		public void fillConnection(Element node, int toNode) {
-			node.setAttribute("FromNode", Integer.toString(this.id));
-			node.setAttribute("ToNode", Integer.toString(toNode));
-			node.setAttribute("Relation", "STRONG");
-		}
-
 	}
 
-	private final void addConnection(Element story, CStoryTrees st,
+	private void fillIntroListStoryConnections(CStoryType toStoryType, List<CStoryType> introList,
+			List<Element> connections, Document doc) {
+		if (introList != null) {
+			Element node;
+			for (CStoryType stT : introList) {
+				node = doc.createElement("Connection");
+				stT.fillConnection(node, toStoryType.getId());
+				connections.add(node);
+			}
+		}
+	}
+
+	private void fillRuleListStoryConnections(CStoryType toStoryType,
+			HashMap<Integer, CStoryType> traceIdToStoryTypeRule,
+			List<RuleIDs> rIDs, List<Element> connections, Document doc) {
+		if (rIDs.size() != 0) {
+			Element node;
+			for (RuleIDs rID : rIDs) {
+				CStoryType st = traceIdToStoryTypeRule
+						.get(rID.getIndexInTrace());
+				node = doc.createElement("Connection");
+				st.fillConnection(node, toStoryType.getId());
+				connections.add(node);
+			}
+		}
+	}
+
+	private final void addConnection(Element story, CStoryTrees storyTree,
 			Document doc, int item) {
 
-		HashMap<Integer, List<Integer>> levelToTraceID = new HashMap<Integer, List<Integer>>();
-		HashMap<Integer, List<String>> traceIDToIntroString = new HashMap<Integer, List<String>>();
-		HashMap<Integer, String> traceIDToData = new HashMap<Integer, String>();
-		HashMap<Integer, String> traceIDToText = new HashMap<Integer, String>();
-		st.getLevelToTraceID(levelToTraceID, traceIDToIntroString,
-				traceIDToData, traceIDToText);
+		storyTree.fillMaps();
 
 		HashMap<Integer, Integer> mapIndex = new HashMap<Integer, Integer>();
-		HashMap<Integer, List<StoryType>> allLevels = new HashMap<Integer, List<StoryType>>();
+		HashMap<Integer, List<CStoryType>> allLevels = new HashMap<Integer, List<CStoryType>>();
 
-		HashMap<Integer, List<StoryType>> traceIdToStoryType = new HashMap<Integer, List<StoryType>>();
+		HashMap<Integer, List<CStoryType>> traceIdToStoryTypeIntro = new HashMap<Integer, List<CStoryType>>();
+		HashMap<Integer, CStoryType> traceIdToStoryTypeRule = new HashMap<Integer, CStoryType>();
 
 		int counter = 0;
 
-		Iterator<Integer> iterator = levelToTraceID.keySet().iterator();
-		int depth = levelToTraceID.size();
+		Iterator<Integer> iterator = storyTree.getLevelToTraceID().keySet().iterator();
+		int depth = storyTree.getLevelToTraceID().size();
 		while (iterator.hasNext()) {
 			int level = iterator.next();
-			List<Integer> list = levelToTraceID.get(level);
-			List<StoryType> listST = new ArrayList<StoryType>();
+			List<Integer> list = storyTree.getLevelToTraceID().get(level);
+			List<CStoryType> listST = new ArrayList<CStoryType>();
 			allLevels.put(level, listST);
 			for (Integer traceID : list) {
 				mapIndex.put(traceID, counter);
-				listST.add(new StoryType(StoryType.TYPE_RULE, traceID, counter,
-						traceIDToText.get(traceID), traceIDToData.get(traceID),
-						depth - level));
+				CStoryType storyType = new CStoryType(CStoryType.TYPE_RULE,
+						traceID, counter, storyTree.getTraceIDToText().get(traceID),
+						storyTree.getTraceIDToData().get(traceID), depth - level);
+				listST.add(storyType);
 				counter++;
-				List<String> introStringList = traceIDToIntroString
+				List<String> introStringList = storyTree.getTraceIDToIntroString()
 						.get(traceID);
-				
-				List<StoryType> introList = traceIdToStoryType.get(traceID);
-				
-				if (introStringList != null){
-					if(introList==null){
-						introList = new ArrayList<StoryType>();
-						traceIdToStoryType.put(traceID,introList);
+
+				CStoryType rule = traceIdToStoryTypeRule.get(traceID);
+
+				if (rule == null) {
+					rule = storyType;
+					traceIdToStoryTypeRule.put(traceID, rule);
+				}
+
+				List<CStoryType> introList = traceIdToStoryTypeIntro
+						.get(traceID);
+
+				if (introStringList != null) {
+					if (introList == null) {
+						introList = new ArrayList<CStoryType>();
+						traceIdToStoryTypeIntro.put(traceID, introList);
 					}
 					for (String str : introStringList) {
-						StoryType stT = new StoryType(StoryType.TYPE_INTRO, traceID,
-								counter++, "intro:" + str, "", depth - level
-										- 1);
+						CStoryType stT = new CStoryType(CStoryType.TYPE_INTRO,
+								traceID, counter++, "intro:" + str, "", depth
+										- level - 1);
 						listST.add(stT);
 						introList.add(stT);
 					}
-					}
+				}
 			}
 		}
 
 		List<Element> nodes = new ArrayList<Element>();
 		List<Element> connections = new ArrayList<Element>();
+		HashMap<Integer, List<RuleIDs>> traceIDToRuleIDs = storyTree
+				.getTraceIDToRuleIDs();
 
+		List<CStoryType> currentStTypeList = new ArrayList<CStoryType>();
 		iterator = allLevels.keySet().iterator();
-		iterator.next();
 
-		Element node = doc.createElement("Node");
-		StoryType stFirst = allLevels.get(0).get(0);
-		stFirst.fillNode(node, StoryType.STRING_OBS);
-		nodes.add(node);
-
-		List<StoryType> introList = traceIdToStoryType.get(stFirst.getTraceID());
-		if (introList!=null)
-		for (StoryType stT : introList){
-			node = doc.createElement("Connection");
-			stT.fillConnection(node, stFirst.getId());
-			connections.add(node);
-		}
-				
 		while (iterator.hasNext()) {
-			int level = iterator.next();
-			List<StoryType> listST = allLevels.get(level);
-			for (StoryType stT : listST) {
-				node = doc.createElement("Node");
-				if (stT.getType() == StoryType.TYPE_RULE)
-					stT.fillNode(node, StoryType.STRING_RULE);
-				else
-					stT.fillNode(node, StoryType.STRING_INTRO);
-				nodes.add(node);
-				
-//				node = doc.createElement("Connection");
-//				node.setAttribute("FromNode", Integer.toString(i));
-//				node.setAttribute("ToNode", map.get(i).toString());
-//				node.setAttribute("Relation", "STRONG");
+			int curKey = iterator.next();
+			currentStTypeList = allLevels.get(curKey);
+			fillNodesLevelStoryTrees(currentStTypeList, nodes, doc);
 
+			for (CStoryType stT : currentStTypeList) {
+				if (stT.getType() == CStoryType.TYPE_RULE) {
+					List<CStoryType> introList = traceIdToStoryTypeIntro.get(stT
+							.getTraceID());
+					fillIntroListStoryConnections(stT,introList, connections, doc);
+					int trID = stT.getTraceID();
+					List<RuleIDs> rIDs = traceIDToRuleIDs.get(trID);
+					fillRuleListStoryConnections(stT, traceIdToStoryTypeRule, rIDs,
+							connections, doc);
+				}
 			}
 		}
 
-		// if (map.get(item) == null)
-		// map.put(item, map.size());
-		// if (st.getList(item) == null)
-		// return;
-		// for (Integer i : st.getList(item)) {
-		// if (map.get(i) == null)
-		// map.put(i, map.size());
-		// Element node = doc.createElement("Connection");
-		// node.setAttribute("FromNode", map.get(item).toString());
-		// node.setAttribute("ToNode", map.get(i).toString());
-		// node.setAttribute("Relation", "STRONG");
-		// story.appendChild(node);
-		// addConnection(story, st, doc, i, depth, map);
-		// }
-		// Element node = doc.createElement("Node");
-		// node.setAttribute("Id", map.get(item).toString());
-		// if (item == st.getRuleID())
-		// node.setAttribute("Type", "OBSERVABLE");
-		// else
-		// node.setAttribute("Type", "RULE");
-		// node.setAttribute("Text", rules.get(item).getName());
-		// String line = SimulatorManager.printPartRule(rules.get(item)
-		// .getLeftHandSide());
-		// line = line + "->";
-		// line = line
-		// + SimulatorManager.printPartRule(rules.get(item)
-		// .getRightHandSide());
-		//
-		// node.setAttribute("Data", line);
-		// node.setAttribute("Depth", Integer.valueOf(depth).toString());
 		for (Element el : nodes)
 			story.appendChild(el);
 		for (Element el : connections)

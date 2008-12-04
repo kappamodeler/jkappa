@@ -7,71 +7,36 @@ import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules.Sit
 import com.plectix.simulator.interfaces.IRule;
 
 public final class CStoryTrees {
-	private HashMap<Integer, HashMap<RuleIDs, List<RuleIDs>>> contiguityList;
+	public static final byte IS_CAUSE = 2;
+	public static final byte IS_NONE = 1;
+	public static final byte IS_NOT_CAUSE = 0;
 	private int ruleId;
-	private Map<Long, HashMap<Integer, StorySites>> sSites;
 	private NetworkNotationForCurrentStory nnCS;
-
 	private HashMap<Integer, List<Integer>> ruleIDToTraceID;
 	private HashMap<Integer, List<RuleIDs>> traceIDToRuleIDs;
+	private HashMap<Integer, Integer> traceIDToLevel;
+	private HashMap<Integer, List<Integer>> levelToTraceID;
+	private HashMap<Integer, List<String>> traceIDToIntroString;
+	private HashMap<Integer, String> traceIDToData;
+	private HashMap<Integer, String> traceIDToText;
+
+	public HashMap<Integer, List<Integer>> getLevelToTraceID() {
+		return levelToTraceID;
+	}
+
+	public HashMap<Integer, List<String>> getTraceIDToIntroString() {
+		return traceIDToIntroString;
+	}
+
+	public HashMap<Integer, String> getTraceIDToData() {
+		return traceIDToData;
+	}
+
+	public HashMap<Integer, String> getTraceIDToText() {
+		return traceIDToText;
+	}
 
 	private int isomorphicCount = 1;
-
-	// TODO
-	private class StorySites {
-		boolean isLeaf;
-		int level = 0;
-		int siteID;
-
-		public StorySites(int level, int siteID, boolean isLeaf) {
-			this.level = level;
-			this.siteID = siteID;
-			this.isLeaf = isLeaf;
-		}
-
-		public void checkLeaf(List<CNetworkNotation> commonList, int begin,
-				long key) {
-			for (int i = begin; i < commonList.size(); i++) {
-				CNetworkNotation nn = commonList.get(i);
-				AgentSites as = nn.changedAgentsFromSolution.get(key);
-				if (as != null) {
-					CStoriesSiteStates sss = (CStoriesSiteStates) as.sites
-							.get(this.siteID);
-					if (sss != null)
-						return;
-				}
-			}
-			this.isLeaf = true;
-		}
-	}
-
-	// TODO separate
-	private class RuleIDs {
-		int ruleID;
-		int indexInTrace;
-		boolean isLeaf;
-		int level;
-		List<String> notation;
-
-		// private NetworkNotationForCurrentStory nnCS;
-
-		public RuleIDs(int ruleID, int indexInTrace, int level) {
-			this.ruleID = ruleID;
-			this.level = level;
-			this.indexInTrace = indexInTrace;
-			this.isLeaf = false;
-			notation = new ArrayList<String>();
-		}
-
-		public final boolean equals(Object obj) {
-			if (!(obj instanceof RuleIDs))
-				return false;
-			RuleIDs ruleID = (RuleIDs) obj;
-			if (indexInTrace != ruleID.indexInTrace)
-				return false;
-			return true;
-		}
-	}
 
 	public final int getIsomorphicCount() {
 		return isomorphicCount;
@@ -79,20 +44,11 @@ public final class CStoryTrees {
 
 	public CStoryTrees(int ruleId, NetworkNotationForCurrentStory nnCS) {
 		this.nnCS = nnCS;
-		// contiguityList = new HashMap<Integer, List<Integer>>();
 		this.ruleId = ruleId;
 	}
 
 	public final int getRuleID() {
 		return this.ruleId;
-	}
-
-	public final HashMap<RuleIDs, List<RuleIDs>> getList(int i) {
-		return contiguityList.get(i);
-	}
-
-	public final Map<Integer, HashMap<RuleIDs, List<RuleIDs>>> getMap() {
-		return Collections.unmodifiableMap(contiguityList);
 	}
 
 	public final void getTreeFromList(List<CNetworkNotation> commonList) {
@@ -102,54 +58,15 @@ public final class CStoryTrees {
 		this.ruleIDToTraceID = new HashMap<Integer, List<Integer>>();
 		this.traceIDToRuleIDs = new HashMap<Integer, List<RuleIDs>>();
 
-		contiguityList = new HashMap<Integer, HashMap<RuleIDs, List<RuleIDs>>>();
 		CNetworkNotation newNN = commonList.get(index);
 		traceIDToLevel.put(newNN.getStep(), index);
 		List<Integer> list = new ArrayList<Integer>();
 		list.add(newNN.getStep());
 		this.ruleIDToTraceID.put(newNN.getRule().getRuleID(), list);
 
-		/*
-		 * if (commonList.size() == 1) {
-		 * 
-		 * }
-		 */
-
-		// sSites = new HashMap<Long, HashMap<Integer, StorySites>>();
-		// addToStorySites(newNN, index, commonList, index + 1);
-		// getTree(index, 1, newNN, commonList);
 		isCausing(newNN, commonList, index + 1, 0);
 		pushTree();
 	}
-
-	// private void getTree(int index, int begin, CNetworkNotation newNN,
-	// List<CNetworkNotation> commonList) {
-	// List<Integer> list = new ArrayList<Integer>();
-	// int begInd = begin;
-	// index++;
-	// boolean isTrue = false;
-	// if (!contiguityList.keySet().contains(newNN.getRule().getRuleID())) {
-	// for (int i = begin; i < commonList.size(); i++) {
-	// CNetworkNotation nn = commonList.get(i);
-	// addToStorySites(nn, index, commonList, i + 1);
-	// //if (!list.contains(nn.getRule().getRuleID()))
-	// //if (nn.getRule().getRuleID() != newNN.getRule().getRuleID())
-	// list.add(nn.getRule().getRuleID());
-	// if (fullCover(index)) {
-	// begInd = i + 1;
-	// isTrue = true;
-	// break;
-	// }
-	// }
-	// addToConList(newNN, list);
-	// if (isTrue) {
-	// for (int i = begin; i < commonList.size(); i++) {
-	// CNetworkNotation nn = commonList.get(i);
-	// getTree(index, begInd, nn, commonList);
-	// }
-	// }
-	// }
-	// }
 
 	private void isCausing(CNetworkNotation newNN,
 			List<CNetworkNotation> commonList, int begin, int level) {
@@ -160,9 +77,6 @@ public final class CStoryTrees {
 		if (begin == commonList.size()) {
 			Integer key = newNN.getRule().getRuleID();
 			HashMap<Integer, List<RuleIDs>> cList = new HashMap<Integer, List<RuleIDs>>();
-			// this.traceIDToLevel
-			// contiguityList.put(key, cList);
-
 			addToMapRuleIDToTraceID(newNN, level);
 			return;
 		}
@@ -193,15 +107,12 @@ public final class CStoryTrees {
 		return;
 	}
 
-	public static final byte IS_CAUSE = 2;
-	public static final byte IS_NONE = 1;
-	public static final byte IS_NOT_CAUSE = 0;
-
 	private byte isCausing(CNetworkNotation newNN,
 			List<CNetworkNotation> commonList, int begin, boolean isLink,
 			Long agentKey, int siteKey, SitesFromRules sFR, int level) {
 		for (int i = begin; i < commonList.size(); i++) {
 			CNetworkNotation comparableNN = commonList.get(i);
+
 			AgentSitesFromRules aSFRComparable = comparableNN.usedAgentsFromRules
 					.get(agentKey);
 			if (aSFRComparable != null) {
@@ -228,15 +139,11 @@ public final class CStoryTrees {
 		return IS_NOT_CAUSE;
 	}
 
-	private HashMap<Integer, Integer> traceIDToLevel;
-
 	private void pushTree() {
 		Iterator<Integer> ruleIterator = ruleIDToTraceID.keySet().iterator();
-		// contiguityList.keySet().iterator();
-
+	
 		while (ruleIterator.hasNext()) {
 			int key = ruleIterator.next();
-			// HashMap<Integer, List<RuleIDs>> map = contiguityList.get(key);
 			List<Integer> traceIDList = ruleIDToTraceID.get(key);
 
 			for (Integer traceID : traceIDList) {
@@ -256,11 +163,12 @@ public final class CStoryTrees {
 		return nnCS.getNetworkNotation(index).getRule().getName();
 	}
 
-	public void getLevelToTraceID(
-			HashMap<Integer, List<Integer>> levelToTraceID,
-			HashMap<Integer, List<String>> traceIDToIntroString,
-			HashMap<Integer, String> traceIDToData,
-			HashMap<Integer, String> traceIDToText) {
+	public void fillMaps() {
+		levelToTraceID = new HashMap<Integer, List<Integer>>();
+		traceIDToIntroString = new HashMap<Integer, List<String>>();
+		traceIDToData = new HashMap<Integer, String>();
+		traceIDToText = new HashMap<Integer, String>();
+
 		Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
 		while (iterator.hasNext()) {
 			int traceID = iterator.next();
@@ -290,7 +198,6 @@ public final class CStoryTrees {
 		int indexInTrace = nn.getStep();
 		if (!list.contains(indexInTrace)) {
 			list.add(indexInTrace);
-			// traceIDToRuleIDs.put(indexInTrace, new ArrayList<RuleIDs>());
 		}
 
 		List<RuleIDs> ruleIDsList = traceIDToRuleIDs.get(nn.getStep());
@@ -298,12 +205,6 @@ public final class CStoryTrees {
 			ruleIDsList = new ArrayList<RuleIDs>();
 			traceIDToRuleIDs.put(nn.getStep(), ruleIDsList);
 		}
-
-		// RuleIDs cRuleID = new RuleIDs(nn.getRule().getRuleID(), nn.getStep(),
-		// level);
-
-		// if (!ruleIDsList.contains(ruleID))
-		// ruleIDsList.add(cRuleID);
 
 		Integer levelIn = traceIDToLevel.get(indexInTrace);
 		if ((levelIn == null) || (levelIn != null && levelIn < level))
@@ -314,8 +215,6 @@ public final class CStoryTrees {
 			int indexInTrace, int level) {
 
 		Integer key = nnToAdd.getRule().getRuleID();
-		// HashMap<RuleIDs,List<RuleIDs>> curMap = contiguityList.get(key);
-
 		List<Integer> intTraceList = ruleIDToTraceID.get(key);
 
 		if (intTraceList == null) {
@@ -392,37 +291,4 @@ public final class CStoryTrees {
 		}
 		return treeNumbers;
 	}
-
-	private void addToStorySites(CNetworkNotation nn, int index,
-			List<CNetworkNotation> commonList, int begin) {
-		Map<Long, AgentSites> chAFS = nn.changedAgentsFromSolution;
-		Iterator<Long> iterator = chAFS.keySet().iterator();
-
-		while (iterator.hasNext()) {
-			Long key = iterator.next();
-			HashMap<Integer, StorySites> ss = sSites.get(key);
-
-			AgentSites as = chAFS.get(key);
-
-			if (ss == null) {
-				ss = new HashMap<Integer, StorySites>();
-				sSites.put(key, ss);
-			}
-
-			Iterator<Integer> siteIterator = as.sites.keySet().iterator();
-			while (siteIterator.hasNext()) {
-				Integer keySite = siteIterator.next();
-				StorySites ssSite = ss.get(keySite);
-
-				if (ssSite == null) {
-					ssSite = new StorySites(index, keySite, false);
-					ssSite.checkLeaf(commonList, begin, key);
-					ss.put(keySite, ssSite);
-				} else {
-					ssSite.level = index;
-				}
-			}
-		}
-	}
-
 }

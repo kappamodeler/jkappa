@@ -85,7 +85,6 @@ public final class CStories extends CObservables {
 							boolean isAdd = true;
 							for (CStoryTrees sTree : treeList)
 								if (sTree.isIsomorphic(tree)) {
-									// treeList.add(tree);
 									isAdd = false;
 									break;
 								}
