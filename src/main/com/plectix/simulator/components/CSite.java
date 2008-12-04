@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.IInternalState;
+import com.plectix.simulator.interfaces.ILiftElement;
+import com.plectix.simulator.interfaces.ILinkState;
+import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.Simulator;
 
 public final class CSite implements ISite {
 	public static final int NO_INDEX = -1;
 
-	//TODO move to CInternalState?
+	// TODO move to CInternalState?
 	private static final CInternalState EMPTY_STATE = new CInternalState(
 			NO_INDEX);
 
@@ -38,7 +44,7 @@ public final class CSite implements ISite {
 		this.liftList = lift;
 	}
 
-	//TODO
+	// TODO
 	public final void addToLift(ILiftElement liftElement) {
 		this.liftList.add(liftElement);
 	}
@@ -46,7 +52,7 @@ public final class CSite implements ISite {
 	public final List<ILiftElement> getLift() {
 		return Collections.unmodifiableList(liftList);
 	}
-	
+
 	public final void clearLift() {
 		liftList.clear();
 	}
@@ -65,7 +71,7 @@ public final class CSite implements ISite {
 				list.add(liftElement.getInjection());
 		return Collections.unmodifiableList(list);
 	}
-	
+
 	public final ILinkState getLinkState() {
 		return linkState;
 	}
@@ -115,8 +121,8 @@ public final class CSite implements ISite {
 	public final int getNameId() {
 		return nameId;
 	}
-	
-	public final void clearLiftList(){
+
+	public final void clearLiftList() {
 		this.liftList.clear();
 	}
 
@@ -129,21 +135,17 @@ public final class CSite implements ISite {
 					if (this != site)
 						site.removeInjectionFromLift(injection);
 				}
-				liftElement.getConnectedComponent().removeInjection(
-						injection);
+				liftElement.getConnectedComponent().removeInjection(injection);
 			}
 		}
-		/*for (CLiftElement liftElement : this.liftList) {
-			CInjection injection = liftElement.getInjection();
-			if (injection != inInjection) {
-				for (CSite site : injection.getChangedSites()) {
-					if (this != site)
-						site.removeInjectionFromLift(injection);
-				}
-				liftElement.getConnectedComponent().getInjectionsList().remove(
-						injection);
-			}
-		}*/
+		/*
+		 * for (CLiftElement liftElement : this.liftList) { CInjection injection
+		 * = liftElement.getInjection(); if (injection != inInjection) { for
+		 * (CSite site : injection.getChangedSites()) { if (this != site)
+		 * site.removeInjectionFromLift(injection); }
+		 * liftElement.getConnectedComponent().getInjectionsList().remove(
+		 * injection); } }
+		 */
 	}
 
 	public final void removeInjectionFromLift(IInjection injection) {
@@ -155,7 +157,6 @@ public final class CSite implements ISite {
 	}
 
 	public final String getName() {
-		return SimulationMain.getSimulationManager().getNameDictionary()
-				.getName(nameId);
+		return Simulator.getNameDictionary().getName(nameId);
 	}
 }

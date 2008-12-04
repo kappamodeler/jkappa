@@ -53,6 +53,8 @@ public class Parser {
 
 	private double perturbationRate;
 	private boolean isForwarding;
+	private final SimulationData simulationData;
+	private final Simulator simulator;
 
 	private class DataString {
 		private String st1 = null;
@@ -80,38 +82,33 @@ public class Parser {
 
 	}
 
-	public Parser(DataReading data) {
+	public Parser(DataReading data, SimulationData simulationData, Simulator simulator) {
 		this.data = data;
-	}
-
-	public Parser() {
+		this.simulationData = simulationData;
+		this.simulator = simulator;
 	}
 
 	public final void parse() throws ParseErrorException {
-		SimulationMain.getSimulationManager().getSimulationData().addInfo(
-				new Info(Info.TYPE_INFO, "--Computing initial state"));
+		simulationData.addInfo(new Info(Info.TYPE_INFO,
+				"--Computing initial state"));
 		createSimData(data.getInits(), CREATE_INIT);
 		List<IRule> rules = createRules(data.getRules());
-		SimulationMain.getSimulationManager().setRules(rules);
-		if ((SimulationMain.getSimulationManager().getSimulationData()
-				.getStories() == null)
-				&& (SimulationMain.getSimulationManager().getSimulationData()
-						.isStorify())) {
-			SimulationMain.getSimulationManager().getSimulationData()
-					.setStories(new CStories());
+		simulationData.setRules(rules);
+		if ((simulationData.getStories() == null)
+				&& (simulationData.isStorify())) {
+			simulationData.setStories(new CStories());
 			createSimData(data.getStory(), CREATE_STORY);
 		} else
 			createSimData(data.getObservables(), CREATE_OBS);
 		List<CPerturbation> perturbations = createPertubations(data.getMods());
-		SimulationMain.getSimulationManager().getSimulationData()
-				.setPerturbations(perturbations);
+		simulationData.setPerturbations(perturbations);
 	}
 
 	private final IObservablesComponent checkInObservables(String obsName)
 			throws ParseErrorException {
 		IObservablesComponent obsId = null;
-		for (IObservablesComponent cc : SimulationMain.getSimulationManager()
-				.getSimulationData().getObservables().getComponentList()) {
+		for (IObservablesComponent cc : simulationData.getObservables()
+				.getComponentList()) {
 			if ((cc.getName() != null) && (cc.getName().equals(obsName))) {
 				obsId = cc;
 				break;
@@ -255,7 +252,7 @@ public class Parser {
 						CPerturbation pertubation = new CPerturbation(
 								pertubationID++, obsID, parameters, obsNameID,
 								CPerturbation.TYPE_NUMBER, perturbationRate,
-								rule, greater, rateExpression);
+								rule, greater, rateExpression, simulationData.getObservables());
 						perturbations.add(pertubation);
 
 					}
@@ -266,7 +263,7 @@ public class Parser {
 			}
 
 		}
-		return perturbations; 
+		return perturbations;
 	}
 
 	private final boolean checkOnce(String st, CDataString perturbationStr,
@@ -311,12 +308,10 @@ public class Parser {
 
 		List<IRule> listRules = createRules(cd);
 		if (!listRules.isEmpty()) {
-			CRulePerturbation rule = new CRulePerturbation(listRules.get(0));
-			rule.setRuleID(SimulationMain.getSimulationManager()
-					.getSimulationData().getRules().size());
+			CRulePerturbation rule = new CRulePerturbation(listRules.get(0), simulationData.isStorify());
+			rule.setRuleID(simulationData.getRules().size());
 			rule.setCount(countToFile);
-			SimulationMain.getSimulationManager().getSimulationData().addRule(
-					rule);
+			simulationData.addRule(rule);
 
 			CPerturbation perturbation = new CPerturbation(pertubationID, time,
 					CPerturbation.TYPE_ONCE, rule, greater);
@@ -417,7 +412,7 @@ public class Parser {
 
 	private final IRule getRuleWithEqualName(String ruleName)
 			throws ParseErrorException {
-		for (IRule rule : SimulationMain.getSimulationManager().getRules())
+		for (IRule rule : simulationData.getRules())
 			if ((rule.getName() != null) && (rule.getName().equals(ruleName))) {
 				return rule;
 			}
@@ -558,39 +553,36 @@ public class Parser {
 				switch (index) {
 				case CC_LHS: {
 					left = parseAgent(lhs.trim());
-					rules.add(SimulationMain.getSimulationManager().buildRule(
-							left, right, name, activity, ruleID));
+					rules.add(Simulator.buildRule(left, right, name, activity,
+							ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-						rules.add(SimulationMain.getSimulationManager()
-								.buildRule(right, parseAgent(lhs.trim()),
-										nameOp, activity2, ruleID));
+						rules.add(Simulator.buildRule(right, parseAgent(lhs
+								.trim()), nameOp, activity2, ruleID, simulationData.isStorify()));
 					}
 					break;
 				}
 				case CC_RHS: {
 					right = parseAgent(rhs.trim());
-					rules.add(SimulationMain.getSimulationManager().buildRule(
-							left, right, name, activity, ruleID));
+					rules.add(Simulator.buildRule(left, right, name, activity,
+							ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-						rules.add(SimulationMain.getSimulationManager()
-								.buildRule(parseAgent(rhs.trim()), left,
-										nameOp, activity2, ruleID));
+						rules.add(Simulator.buildRule(parseAgent(rhs.trim()),
+								left, nameOp, activity2, ruleID, simulationData.isStorify()));
 					}
 					break;
 				}
 				case CC_ALL: {
 					left = parseAgent(lhs.trim());
 					right = parseAgent(rhs.trim());
-					rules.add(SimulationMain.getSimulationManager().buildRule(
-							left, right, name, activity, ruleID));
+					rules.add(Simulator.buildRule(
+							left, right, name, activity, ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-						rules.add(SimulationMain.getSimulationManager()
-								.buildRule(parseAgent(rhs.trim()),
+						rules.add(Simulator.buildRule(parseAgent(rhs.trim()),
 										parseAgent(lhs.trim()), nameOp,
-										activity2, ruleID));
+										activity2, ruleID, simulationData.isStorify()));
 					}
 					break;
 				}
@@ -603,7 +595,7 @@ public class Parser {
 
 		}
 
-		//return Collections.unmodifiableList(rules);
+		// return Collections.unmodifiableList(rules);
 		return rules;
 	}
 
@@ -622,8 +614,7 @@ public class Parser {
 			count = 1;
 			double countInFile = 0;
 			if (length != 1) {
-				double rescale = SimulationMain.getSimulationManager()
-						.getSimulationData().getRescale();
+				double rescale = simulationData.getRescale();
 				if (rescale < 0)
 					rescale = 1.;
 
@@ -649,8 +640,6 @@ public class Parser {
 			// In the future will be create another addAgents to Solution,
 			// without
 			// parse "count" once "line"
-			SimulationData simulationData = SimulationMain
-					.getSimulationManager().getSimulationData();
 			try {
 				switch (code) {
 				case CREATE_INIT: {
@@ -662,10 +651,8 @@ public class Parser {
 							simulationData.getSolution().addAgents(
 									cloneAgentsList(listAgent));
 						}
-						if (SimulationMain.getSimulationManager()
-								.getSimulationData().isCompile()) {
-							((CSolution) SimulationMain.getSimulationManager()
-									.getSimulationData().getSolution())
+						if (simulationData.isCompile()) {
+							((CSolution) simulationData.getSolution())
 									.checkSolutionLinesAndAdd(line, count);
 
 						}
@@ -699,12 +686,10 @@ public class Parser {
 						simulationData.getObservables().addRulesName(
 								name,
 								obsNameID,
-								SimulationMain.getSimulationManager()
-										.getRules());
+								simulationData.getRules());
 					} else
 						simulationData.getObservables().addConnectedComponents(
-								SimulationMain.getSimulationManager()
-										.buildConnectedComponents(
+								Simulator.buildConnectedComponents(
 												parseAgent(line)), name, line,
 								obsNameID);
 					obsNameID++;
@@ -758,8 +743,7 @@ public class Parser {
 					throw new ParseErrorException("Unexpected agent name : "
 							+ ccomp);
 
-				cagent = new CAgent(SimulationMain.getSimulationManager()
-						.getNameDictionary().addName(ccomp));
+				cagent = new CAgent(simulator.getNameDictionary().addName(ccomp), simulator.generateNextAgentId());
 				listAgent.add(cagent);
 				while (agent.hasMoreTokens()) {
 					site = agent.nextToken().trim(); // Site name or State name.
@@ -781,7 +765,7 @@ public class Parser {
 		if (!testLine(line))
 			throw new ParseErrorException("Unexpected line : " + line);
 		return listAgent;
-		//return Collections.unmodifiableList(listAgent);
+		// return Collections.unmodifiableList(listAgent);
 	}
 
 	private final CSite parseSome(String site, Map<Integer, CSite> map)
@@ -809,14 +793,12 @@ public class Parser {
 		if (!site.trim().matches(PATTERN_AGENT_SITE))
 			throw new ParseErrorException("Unexpected site name : " + line);
 
-		final int siteNameId = SimulationMain.getSimulationManager()
-				.getNameDictionary().addName(site);
+		final int siteNameId = simulator.getNameDictionary().addName(site);
 		csite = new CSite(siteNameId);
 
 		if (state != null)
 			if ((state.length() != 0) && state.trim().matches(PATTERN_STATE)) {
-				final int nameId = SimulationMain.getSimulationManager()
-						.getNameDictionary().addName(state);
+				final int nameId = simulator.getNameDictionary().addName(state);
 				csite.setInternalState(new CInternalState(nameId));
 			} else {
 				throw new ParseErrorException(
@@ -906,7 +888,7 @@ public class Parser {
 	private final List<IAgent> cloneAgentsList(List<IAgent> agentList) {
 		List<IAgent> newAgentsList = new ArrayList<IAgent>();
 		for (IAgent agent : agentList) {
-			IAgent newAgent = new CAgent(agent.getNameId());
+			IAgent newAgent = new CAgent(agent.getNameId(), simulator.generateNextAgentId());
 			for (ISite site : agent.getSites()) {
 				CSite newSite = new CSite(site.getNameId(), newAgent);
 				newSite.setLinkIndex(site.getLinkIndex());

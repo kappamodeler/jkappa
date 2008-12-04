@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.Simulator;
 
 public class CNetworkNotation implements INetworkNotation {
 	public static final byte MODE_TEST = 0;
@@ -17,6 +18,7 @@ public class CNetworkNotation implements INetworkNotation {
 
 	// TODO is this field necessary?
 	private int step;
+
 	public void setStep(int step) {
 		this.step = step;
 	}
@@ -53,6 +55,7 @@ public class CNetworkNotation implements INetworkNotation {
 		/* package */final class SitesFromRules {
 			// TODO private!!!
 			private byte internalStateMode = MODE_NONE;
+
 			public byte getInternalStateMode() {
 				return internalStateMode;
 			}
@@ -166,8 +169,7 @@ public class CNetworkNotation implements INetworkNotation {
 					}
 				}
 				if (!isStorify)
-					agentsNotation.add(SimulationMain.getSimulationManager()
-							.printPartRule(cc, 0));
+					agentsNotation.add(Simulator.printPartRule(cc, 0));
 			}
 		}
 

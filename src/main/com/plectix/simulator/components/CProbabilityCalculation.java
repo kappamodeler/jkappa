@@ -3,11 +3,11 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.simulator.SimulationData;
 
 public final class CProbabilityCalculation {
 	private final List<IRule> rules;
@@ -15,16 +15,15 @@ public final class CProbabilityCalculation {
 	private final IRandom random;
 	private double commonActivity;
 
-	public CProbabilityCalculation(List<IRule> list, int seed) {
-		this.rules = list;
-		rulesProbability = new double[list.size()];
+	public CProbabilityCalculation(SimulationData simulationData) {
+		this.rules = simulationData.getRules();
+		rulesProbability = new double[rules.size()];
 
-		String randomizerPatch = SimulationMain.getSimulationManager()
-				.getSimulationData().getRandomizer();
+		String randomizerPatch = simulationData.getRandomizer();
 		if (randomizerPatch == null)
-			random = new CRandomJava(seed);
+			random = new CRandomJava(simulationData);
 		else
-			random = new CRandomOCaml(randomizerPatch, seed);
+			random = new CRandomOCaml(randomizerPatch, simulationData.getSeed());
 
 	}
 

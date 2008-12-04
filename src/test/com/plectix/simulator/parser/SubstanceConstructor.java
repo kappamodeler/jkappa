@@ -5,10 +5,11 @@ import java.util.*;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.Simulator;
 
 /*package*/ class SubstanceConstructor {
-	private final NameDictionary myNameDictionary = SimulationMain
-		.getSimulationManager().getNameDictionary();
+	private final NameDictionary myNameDictionary = Simulator.getNameDictionary();
+	private int myAgentIndexGenerator;
 	
 	public ISite createSite(String name, String internalStateName, String linkIndex) {
 		ISite site = new CSite(myNameDictionary.addName(name));
@@ -30,7 +31,7 @@ import com.plectix.simulator.interfaces.*;
 	}
 	
 	public IAgent createAgent(String name, List<ISite> sites) {
-		IAgent agent = new CAgent(myNameDictionary.addName(name));
+		IAgent agent = new CAgent(myNameDictionary.addName(name), myAgentIndexGenerator++);
 		for (ISite site : sites) {
 			agent.addSite(site);
 		}

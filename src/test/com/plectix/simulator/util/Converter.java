@@ -48,7 +48,7 @@ public class Converter {
 		StringBuffer sb = new StringBuffer();
 		boolean first = true;
 		TreeMap<String, List<IAgent>> agents = new TreeMap<String, List<IAgent>>();
-		IAgent empty = new CAgent(CAgent.EMPTY);
+		IAgent empty = new CAgent(CAgent.EMPTY, CAgent.EMPTY);
 		List<IAgent> list;
 		String agentString; 
 		for (IAgent agent : c.getAgents()) {

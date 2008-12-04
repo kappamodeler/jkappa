@@ -106,21 +106,17 @@ public final class CSolution implements ISolution {
 
 	
 	public final List<IConnectedComponent> split() {
-		List<Boolean> indexList = new ArrayList<Boolean>();
 
-		for (int i = 0; i < SimulationMain.getSimulationManager()
-				.getAgentIdGenerator(); i++) {
-			indexList.add(false);
-		}
+		BitSet bitset = new BitSet(1024);
 
 		List<IConnectedComponent> ccList = new ArrayList<IConnectedComponent>();
 
 		for (IAgent agent : agentMap.values()) {
 			int index = (int) agent.getId();
-			if (!indexList.get(index)) {
+			if (!bitset.get(index)) {
 				IConnectedComponent cc = getConnectedComponent(agent);
 				for (IAgent agentCC : cc.getAgents()) {
-					indexList.set((int) agentCC.getId(), true);
+					bitset.set((int) agentCC.getId(), true);
 				}
 				ccList.add(cc);
 			}

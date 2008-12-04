@@ -3,15 +3,15 @@ package com.plectix.simulator.perturbations;
 
 import org.junit.Before;
 
-import com.plectix.simulator.*;
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.DirectoryTestsRunner;
+import com.plectix.simulator.Initializator;
+import com.plectix.simulator.Test;
 import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.simulator.Simulator;
 
 public abstract class TestPerturbation extends DirectoryTestsRunner implements Test {
 	private String myTestFileName = "";
 	private Simulator mySimulator;
-	private SimulatorManager myManager;
 	
 	protected TestPerturbation (String fileName) {
 		super();
@@ -25,7 +25,6 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements T
 		
 		initializator.init(fullTestFilePath);
 		mySimulator = initializator.getSimulator();
-		myManager = initializator.getManager();
 		mySimulator.run(null);
 		init();
 	}
@@ -35,7 +34,7 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements T
 	public abstract void init();
 	
 	public IRule getRuleByName(String name) {
-		for (IRule rule : myManager.getRules()) {
+		for (IRule rule : mySimulator.getRules()) {
 			if (name.equals(rule.getName())) {
 				return rule;
 			}

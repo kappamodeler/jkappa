@@ -1,8 +1,17 @@
 package com.plectix.simulator.components.actions;
 
-import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CNetworkNotation;
+import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.CStoriesSiteStates;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.ILiftElement;
+import com.plectix.simulator.interfaces.INetworkNotation;
+import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.Simulator;
 
 public class CDeleteAction extends CAction {
 	private final CRule myRule;
@@ -15,7 +24,7 @@ public class CDeleteAction extends CAction {
 		setType(CActionType.DELETE);
 	}
 
-	public final void doAction(IInjection injection, INetworkNotation netNotation) {
+	public final void doAction(IInjection injection, INetworkNotation netNotation, Simulator simulator) {
 		/**
 		 * Done.
 		 */
@@ -63,11 +72,11 @@ public class CDeleteAction extends CAction {
 		// injection.getConnectedComponent().getInjectionsList()
 		// .remove(injection);
 
-		SimulationMain.getSimulationManager().getSimulationData()
-				.getSolution().removeAgent(agent);
+		simulator.getSimulationData().getSolution().removeAgent(agent);
 
 	}
 
+	@Override
 	public final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {

@@ -2,6 +2,8 @@ package com.plectix.simulator.parser;
 
 import org.junit.*;
 
+import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.util.*;
 
 public class TestSuccessParsing {
@@ -14,7 +16,8 @@ public class TestSuccessParsing {
 	public void setup() {
 		String fileName = myTestFileNamePrefix + "ParsePerturbationsTestFile";
 		myDR = new DataReading(fileName);
-		myParser = new Parser(myDR);
+		Simulator mySimulator = new Simulator(new SimulationData());
+		myParser = new Parser(myDR, mySimulator.getSimulationData(), mySimulator);
 	}
 	
 	@Test

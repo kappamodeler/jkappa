@@ -21,7 +21,7 @@ public class CConnectedComponent implements IConnectedComponent {
 		switch (empty) {
 		case EMPTY: {
 			agentList = new ArrayList<IAgent>();
-			agentList.add(new CAgent(CAgent.EMPTY));
+			agentList.add(new CAgent(CAgent.EMPTY, CAgent.EMPTY));
 			injectionsList = new TreeMap<Integer, IInjection>();
 			addInjection(CInjection.EMPTY_INJECTION, 0);
 			agentFromSolutionForRHS = new ArrayList<IAgent>();

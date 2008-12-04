@@ -1,6 +1,8 @@
 package com.plectix.simulator.interfaces;
 
-import java.util.*;
+import java.util.List;
+
+import com.plectix.simulator.simulator.Simulator;
 
 public interface IRule {
 
@@ -12,7 +14,7 @@ public interface IRule {
 			INetworkNotation netNotation);
 
 	public void applyRuleForStories(List<IInjection> injectionsList,
-			INetworkNotation netNotation);
+			INetworkNotation netNotation, Simulator simulator);
 
 	public List<IRule> getActivatedRule();
 
@@ -26,7 +28,7 @@ public interface IRule {
 
 	public boolean isInfinityRate();
 
-	public void applyRule(List<IInjection> injectionsList);
+	public void applyRule(List<IInjection> injectionsList, Simulator simulator);
 
 	public List<ISite> getSitesConnectedWithDeleted();
 

@@ -1,27 +1,25 @@
 package com.plectix.simulator.updates;
 
-import java.util.*;
+import static org.junit.Assert.fail;
+
+import java.util.List;
 
 import org.apache.log4j.Logger;
-
-import org.junit.*;
-
-import static org.junit.Assert.*;
+import org.junit.Before;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
-import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.Model;
+import com.plectix.simulator.components.CProbabilityCalculation;
+import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.simulator.SimulatorManager;
 
 public abstract class TestUpdate extends DirectoryTestsRunner {
 
-	private Model myModel;
 	private Simulator mySimulator;
-	private SimulatorManager myManager;
 	private final Logger LOGGER = Logger.getLogger(Simulator.class);
 	private double currentTime = 0.;
 	private IRule myActiveRule;
@@ -49,8 +47,6 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 
 		initializator.init(fullTestFilePath);
 		mySimulator = initializator.getSimulator();
-		myModel = initializator.getModel();
-		myManager = initializator.getManager();
 		run();
 		init();
 	}
@@ -60,7 +56,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	}
 
 	public List<IRule> getRules() {
-		return myManager.getRules();
+		return mySimulator.getRules();
 	}
 
 	public List<IInjection> getCurrentInjectionsList() {
@@ -79,17 +75,15 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	}
 
 	private void run() {
-		SimulationMain.getSimulationManager().startTimer();
-		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
-				myModel.getSimulationData().getRules(), myModel
-						.getSimulationData().getSeed());
+		mySimulator.startTimer();
+		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(mySimulator.getSimulationData());
 
-		myModel.getSimulationData().getObservables().calculateObs(currentTime,
-				1, myModel.getSimulationData().isTime());
+		mySimulator.getSimulationData().getObservables().calculateObs(currentTime,
+				1, mySimulator.getSimulationData().isTime());
 		myActiveRule = ruleProbabilityCalculation.getRandomRule();
 
 		if (myActiveRule == null) {
-			myModel.getSimulationData().setTimeLength(currentTime);
+			mySimulator.getSimulationData().setTimeLength(currentTime);
 			fail(myTestFileName + " : there's no active rules");
 		}
 
@@ -105,7 +99,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("negative update");
 
-			myActiveRule.applyRule(myCurrentInjectionsList);
+			myActiveRule.applyRule(myCurrentInjectionsList, mySimulator);
 			mySimulator.doNegativeUpdate(myCurrentInjectionsList);
 			if (isDoingPositive()) {
 				mySimulator.doPositiveUpdate(myActiveRule,

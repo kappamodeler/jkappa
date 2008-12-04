@@ -5,17 +5,11 @@ import java.util.List;
 
 import org.apache.log4j.PropertyConfigurator;
 
-import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.components.ObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.simulator.Model;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.simulator.SimulatorManager;
 
 public class Initializator {
-	private SimulatorManager myManager;
-	private Model myModel;
 	private Simulator mySimulator;
 	private List<IObservablesConnectedComponent> myObsComponents;
 	private SimulationMain instance;
@@ -46,7 +40,7 @@ public class Initializator {
 		args[4] = "5";
 		args[5] = "--seed";
 		args[6] = "10";
-		instance.parseArguments(args);
+		instance.cmdLineArgs = SimulationMain.parseArguments(mySimulator.getSimulationData(), args, SimulationMain.cmdLineOptions);
 	}
 
 	public void reset(String filePath) {
@@ -57,34 +51,22 @@ public class Initializator {
 	public void init(String filePath) {
 		if (myFirstRun) {
 			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
-			new SimulationMain();
-			instance = SimulationMain.getInstance();
+			
+			instance = new SimulationMain();
+			mySimulator = new Simulator(new SimulationData());
 
 			parseArgs(filePath);
 
-			instance.readSimulatonFile();
-			instance.initialize();
+			SimulationMain.readSimulatonFile(mySimulator, instance.cmdLineArgs);
+			mySimulator.initializeMain(instance.cmdLineArgs);
 
-			myManager = SimulationMain.getSimulationManager();
-
-			myModel = new Model(myManager.getSimulationData());
-
-			mySimulator = new Simulator(myModel);
 			myFirstRun = false;
-			myObsComponents = myManager.getSimulationData().getObservables()
+			myObsComponents = mySimulator.getSimulationData().getObservables()
 				.getConnectedComponentList();
 	
 		} else {
 			reset(filePath);
 		}
-	}
-	
-	public Model getModel() {
-		return myModel;
-	}
-	
-	public SimulatorManager getManager() {
-		return myManager;
 	}
 	
 	public Simulator getSimulator() { 

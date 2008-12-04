@@ -4,15 +4,17 @@ import java.util.Random;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IRandom;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.util.Info;
 
 /*package*/ final class CRandomJava implements IRandom {
 
 	private final Random rand;
 
-	public CRandomJava(int seed) {
+	public CRandomJava(SimulationData data) {
+		int seed = data.getSeed();
 		if (seed != 0) {
-			SimulationMain.getSimulationManager().getSimulationData().addInfo(
+			data.addInfo(
 					new Info(Info.TYPE_INFO,
 							"--Seeding random number generator with given seed "
 									+ Integer.valueOf(seed).toString()));

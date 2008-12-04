@@ -1,11 +1,13 @@
 package com.plectix.simulator.components.actions;
 
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CNetworkNotation;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.Simulator;
 
 public class CDefaultAction extends CAction {
 	private final IAgent myToAgent;
@@ -17,7 +19,7 @@ public class CDefaultAction extends CAction {
 		setType(CActionType.NONE);
 	}
 	
-	public final void doAction(IInjection injection, INetworkNotation netNotation) {
+	public final void doAction(IInjection injection, INetworkNotation netNotation, Simulator simulator) {
 		int agentIdInCC = getAgentIdInCCBySideId(myToAgent);
 		IAgent agentFromInSolution = getLeftCComponent()
 				.getAgentByIdFromSolution(agentIdInCC, injection);

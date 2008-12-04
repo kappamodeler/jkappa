@@ -7,6 +7,7 @@ import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.Simulator;
 
 public final class CAgent implements IAgent {
 	/**
@@ -35,8 +36,8 @@ public final class CAgent implements IAgent {
 		this.storify = true;
 	}
 
-	public CAgent(int nameId) {
-		id = SimulationMain.getSimulationManager().generateNextAgentId();
+	public CAgent(int nameId, long agentID) {
+		id = agentID;
 		storify = false;
 		this.nameId = nameId;
 	}
@@ -191,7 +192,7 @@ public final class CAgent implements IAgent {
 	}
 
 	public final String getName() {
-		return SimulationMain.getSimulationManager().getNameDictionary()
+		return Simulator.getNameDictionary()
 				.getName(nameId);
 	}
 

@@ -1,13 +1,30 @@
 package com.plectix.simulator.components;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.components.actions.*;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.SimulatorManager;
+import com.plectix.simulator.components.actions.CAddAction;
+import com.plectix.simulator.components.actions.CDefaultAction;
+import com.plectix.simulator.components.actions.CDeleteAction;
+import com.plectix.simulator.interfaces.IAction;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IAgentLink;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IConstraint;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.IInternalState;
+import com.plectix.simulator.interfaces.ILinkState;
+import com.plectix.simulator.interfaces.INetworkNotation;
+import com.plectix.simulator.interfaces.IObservables;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.Simulator;
 
 public class CRule implements IRule {
 
@@ -35,12 +52,13 @@ public class CRule implements IRule {
 	private List<FixedSite> fixedSites;
 	private IConstraint constraints;
 	private int countAgentsLHS = 0;
+	private final boolean isStorify;
 
 	public final String getData() {
 		if (data == null) {
-			String line = SimulatorManager.printPartRule(leftHandSide);
+			String line = Simulator.printPartRule(leftHandSide);
 			line = line + "->";
-			line = line + SimulatorManager.printPartRule(rightHandSide);
+			line = line + Simulator.printPartRule(rightHandSide);
 			data=line;
 		}
 		return data;
@@ -73,9 +91,10 @@ public class CRule implements IRule {
 
 	public CRule(List<IConnectedComponent> left,
 			List<IConnectedComponent> right, String name, double ruleRate,
-			int ruleID) {
+			int ruleID, boolean isStorify) {
 		this.leftHandSide = left;
 		this.rightHandSide = right;
+		this.isStorify = isStorify;
 		setConnectedComponentLinkRule(left);
 		setConnectedComponentLinkRule(right);
 		if (leftHandSide == null) {
@@ -193,12 +212,12 @@ public class CRule implements IRule {
 	}
 
 	public final void applyRuleForStories(List<IInjection> injectionList,
-			INetworkNotation netNotation) {
-		apply(injectionList, netNotation);
+			INetworkNotation netNotation, Simulator simulator) {
+		apply(injectionList, netNotation, simulator);
 	}
 
-	public void applyRule(List<IInjection> injectionList) {
-		apply(injectionList, null);
+	public void applyRule(List<IInjection> injectionList, Simulator simulator) {
+		apply(injectionList, null, simulator);
 	}
 
 	public final IAgent getAgentAdd(IAgent key) {
@@ -217,7 +236,7 @@ public class CRule implements IRule {
 	}
 
 	protected final void apply(List<IInjection> injectionList,
-			INetworkNotation netNotation) {
+			INetworkNotation netNotation, Simulator simulator) {
 		if (netNotation != null) {
 			storifyAgents(injectionList);
 		}
@@ -234,10 +253,10 @@ public class CRule implements IRule {
 
 		for (IAction action : actionList) {
 			if (action.getLeftCComponent() == null) {
-				action.doAction(null, netNotation);
+				action.doAction(null, netNotation, simulator);
 			} else {
 				action.doAction(injectionList.get(leftHandSide.indexOf(action
-						.getLeftCComponent())), netNotation);
+						.getLeftCComponent())), netNotation, simulator);
 			}
 		}
 
@@ -341,8 +360,7 @@ public class CRule implements IRule {
 			}
 			// filling of fixed agents
 			if (index < rhsAgents.size()
-					&& SimulationMain.getSimulationManager()
-							.getSimulationData().isStorify())
+					&& isStorify)
 				fillFixedSites(lhsAgent, rhsAgents.get(index));
 			index++;
 		}

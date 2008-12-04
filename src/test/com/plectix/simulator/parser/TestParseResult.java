@@ -1,24 +1,32 @@
 package com.plectix.simulator.parser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
-import org.junit.*;
-
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.plectix.simulator.util.*;
-import com.plectix.simulator.Initializator;
 import com.plectix.simulator.DirectoryTestsRunner;
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.SimulatorManager;
+import com.plectix.simulator.Initializator;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.util.Converter;
+import com.plectix.simulator.util.Failer;
+import com.plectix.simulator.util.QuantityDataParser;
+import com.plectix.simulator.util.RuleCCDataParser;
+import com.plectix.simulator.util.RuleStructure;
 
 public class TestParseResult extends DirectoryTestsRunner {
 	private static final String myTestFileNamePrefix = RunParserTests
 			.getFileNamePrefix()
 			+ "rules/";
 	private String myTestFileName;
-	private SimulatorManager myManager;
+	private Simulator mySimulator;
 	private IRule myRule;
 	private static final Map<String, RuleStructure> myRulesCCData = (new RuleCCDataParser(
 			myTestFileNamePrefix + "RulesCCData")).parse();
@@ -34,8 +42,8 @@ public class TestParseResult extends DirectoryTestsRunner {
 		String fullTestFilePath = getPrefixFileName() + myTestFileName;
 		Initializator initializator = getInitializator();
 		initializator.init(fullTestFilePath);
-		myManager = initializator.getManager();
-		myRule = myManager.getSimulationData().getRules().get(0);
+		mySimulator = initializator.getSimulator();
+		myRule = mySimulator.getSimulationData().getRules().get(0);
 	}
 
 	@Parameters
@@ -84,7 +92,7 @@ public class TestParseResult extends DirectoryTestsRunner {
 
 	@Test
 	public void testInitQuant() {
-		int size = myManager.getSimulationData().getSolution().split().size();
+		int size = mySimulator.getSimulationData().getSolution().split().size();
 		Integer expected = myInitQuantData.get(myTestFileName);
 		if (expected == null) {
 			myFailer.fail("Missing data for " + myTestFileName + " file");

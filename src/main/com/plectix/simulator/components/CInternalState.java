@@ -1,7 +1,7 @@
 package com.plectix.simulator.components;
 
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IInternalState;
+import com.plectix.simulator.simulator.Simulator;
 
 public class CInternalState extends CState implements IInternalState {
 
@@ -23,8 +23,9 @@ public class CInternalState extends CState implements IInternalState {
 		return nameId;
 	}
 
+	@Override
 	public final String getName() {
-		return SimulationMain.getSimulationManager().getNameDictionary()
+		return Simulator.getNameDictionary()
 				.getName(nameId);
 	}
 

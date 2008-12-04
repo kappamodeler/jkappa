@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.Simulator;
 
 public class CObservables implements IObservables {
 	private static boolean ocamlStyleObsName = false;
@@ -212,7 +213,7 @@ public class CObservables implements IObservables {
 		else
 			unique = true;
 		if (ocamlStyleObsName) {
-			line = SimulationMain.getSimulationManager().printPartRule(list);
+			line = Simulator.printPartRule(list);
 		}
 
 		for (IConnectedComponent component : list) {

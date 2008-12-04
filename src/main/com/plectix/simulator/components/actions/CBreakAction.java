@@ -1,7 +1,15 @@
 package com.plectix.simulator.components.actions;
 
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CNetworkNotation;
+import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.CStoriesSiteStates;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.INetworkNotation;
+import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.Simulator;
 
 public class CBreakAction extends CAction {
 	private final ISite mySiteFrom;
@@ -18,7 +26,7 @@ public class CBreakAction extends CAction {
 		setType(CActionType.BREAK);
 	}
 
-	public final void doAction(IInjection injection, INetworkNotation netNotation) {
+	public final void doAction(IInjection injection, INetworkNotation netNotation, Simulator simulator) {
 		IAgent agentFromInSolution;
 		int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getAgentLink());
 		agentFromInSolution = getLeftCComponent().getAgentByIdFromSolution(

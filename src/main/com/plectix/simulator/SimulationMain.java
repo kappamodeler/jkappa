@@ -1,6 +1,7 @@
 package com.plectix.simulator;
 
 import java.io.InputStream;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -14,18 +15,17 @@ import com.plectix.simulator.parser.DataReading;
 import com.plectix.simulator.parser.FileReadingException;
 import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.Parser;
-import com.plectix.simulator.simulator.Model;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.simulator.SimulatorManager;
 import com.plectix.simulator.util.Info;
 
 public class SimulationMain {
 
 	private final static String SHORT_SIMULATIONFILE_OPTION = "s";
 	private final static String LONG_SIMULATIONFILE_OPTION = "sim";
-	private final static String SHORT_COMPILE_OPTION = "c";
+	public final static String SHORT_COMPILE_OPTION = "c";
 	private final static String LONG_COMPILE_OPTION = "compile";
-	private final static String DEBUG_INIT_OPTION = "debug";
+	public final static String DEBUG_INIT_OPTION = "debug";
 	private final static String SHORT_TIME_OPTION = "t";
 	private final static String LONG_TIME_OPTION = "time";
 	private final static String LONG_SEED_OPTION = "seed";
@@ -51,12 +51,8 @@ public class SimulationMain {
 	private static final String LONG_FORWARD_OPTION = "forward";
 	private static final String LONG_OUTPUT_SCHEME_OPTION = "output_scheme";
 	private static final String LONG_KEY_OPTION = "key";
-	private static SimulationMain instance;
-	private static Options cmdLineOptions;
-	private CommandLine cmdLineArgs;
-	private boolean isForwarding = false;
-	private static SimulatorManager simulationManager = new SimulatorManager();
-	private static boolean myIsSimulating = false;
+	public static Options cmdLineOptions;
+	public CommandLine cmdLineArgs;
 
 	private static Logger LOGGER = Logger.getLogger(SimulationMain.class);
 
@@ -127,7 +123,6 @@ public class SimulationMain {
 	}
 
 	public SimulationMain() {
-		instance = this;
 	}
 
 	public static void main(String[] args) {
@@ -138,15 +133,19 @@ public class SimulationMain {
 		LOGGER.info("SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
 		LOGGER.info("Ant Java Version: " + BuildConstants.ANT_JAVA_VERSION);
 
-		instance = new SimulationMain();
-		// simulationManager = new SimulatorManager();
+
+		new SimulationMain().start(args);
+	}
+
+	private void start(String[] args) {
+		Simulator simulationManager = new Simulator(new SimulationData());
+		printToConsole(simulationManager.getSimulationData(), args);
 		simulationManager.startTimer();
-		printToConsole(args);
-		instance.parseArguments(args);
-		instance.readSimulatonFile();
-		instance.initialize();
-		if (myIsSimulating)
-			instance.runSimulator();
+		cmdLineArgs = parseArguments(simulationManager.getSimulationData(), changeArgs(args), cmdLineOptions);
+		readSimulatonFile(simulationManager, cmdLineArgs);
+		simulationManager.initializeMain(cmdLineArgs);
+		if (!cmdLineArgs.hasOption(SimulationMain.DEBUG_INIT_OPTION))
+			runSimulator(simulationManager);
 	}
 
 	private final static String[] changeArgs(String[] args) {
@@ -161,29 +160,7 @@ public class SimulationMain {
 		return argsNew;
 	}
 
-	public void initialize() {
-		simulationManager.initialize();
-		simulationManager.getSimulationData().stopTimer(
-				simulationManager.getTimer(), "-Initialization:");
-		// System.out.println("-Initialization: " + simulationManager.getTimer()
-		// + " sec. CPU");
-		if (!cmdLineArgs.hasOption(DEBUG_INIT_OPTION)) {
-			myIsSimulating = true;
-		}
-
-		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
-			simulationManager.outputData();
-			System.exit(1);
-		}
-		SimulationMain.getSimulationManager().getSimulationData()
-				.setClockStamp(System.currentTimeMillis());
-
-	}
-
-	private final void runSimulator() {
-
-		Simulator simulator = new Simulator(new Model(instance
-				.getSimulationManager().getSimulationData()));
+	private final void runSimulator(Simulator simulator) {
 
 		if (cmdLineArgs.hasOption(LONG_GENERATE_MAP_OPTION))
 			simulator.outputData(0);
@@ -195,8 +172,129 @@ public class SimulationMain {
 			simulator.run(null);
 	}
 
-	public final void readSimulatonFile() {
+	private final static void printToConsole(SimulationData simulationData, String[] args) {
+		simulationData.setCommandLine(args);
+		System.out.println("Java "
+				+ simulationData.getCommandLine());
+	}
 
+	public final InputStream getInputStream() {
+		return System.in;
+	}
+
+	public static final CommandLine parseArguments(SimulationData simulationData,
+			String[] args, Options cmdLineOptions) {
+		simulationData.addInfo(new Info(Info.TYPE_INFO, "-Initialization..."));
+		CommandLineParser parser = new PosixParser();
+		CommandLine cmdLineArgs = null;
+		try {
+			cmdLineArgs = parser.parse(cmdLineOptions, args);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			System.err.println("Error parsing arguments");
+			System.exit(1);
+		}
+
+		if (cmdLineArgs.hasOption(SimulationMain.LONG_XML_SESSION_NAME_OPTION)) {
+			simulationData.setXmlSessionName(cmdLineArgs
+					.getOptionValue(LONG_XML_SESSION_NAME_OPTION));
+		}
+
+		try {
+			if (cmdLineArgs.hasOption(LONG_INIT_OPTION)) {
+				simulationData.setInitialTime(Double.valueOf(cmdLineArgs
+						.getOptionValue(LONG_INIT_OPTION)));
+			}
+			if (cmdLineArgs.hasOption(LONG_POINTS_OPTION)) {
+				simulationData.setPoints(Integer.valueOf(cmdLineArgs
+						.getOptionValue(LONG_POINTS_OPTION)));
+			}
+			if (cmdLineArgs.hasOption(LONG_RESCALE_OPTION)) {
+				double rescale = Double.valueOf(cmdLineArgs
+						.getOptionValue(LONG_RESCALE_OPTION));
+				if (rescale > 0)
+					simulationData.setRescale(rescale);
+				else
+					throw new Exception();
+			}
+
+			if (cmdLineArgs.hasOption(LONG_SEED_OPTION)) {
+				int seed = 0;
+				seed = Integer.valueOf(cmdLineArgs
+						.getOptionValue(LONG_SEED_OPTION));
+				simulationData.setSeed(seed);
+			}
+
+			if (cmdLineArgs.hasOption(LONG_MAX_CLASHES_OPTION)) {
+				int max_clashes = 0;
+				max_clashes = Integer.valueOf(cmdLineArgs
+						.getOptionValue(LONG_MAX_CLASHES_OPTION));
+				simulationData.setMaxClashes(max_clashes);
+			}
+
+			if (cmdLineArgs.hasOption(LONG_EVENT_OPTION)) {
+				long event = 0;
+				event = Long.valueOf(cmdLineArgs
+						.getOptionValue(LONG_EVENT_OPTION));
+				simulationData.setEvent(event);
+			}
+
+		} catch (Exception e) {
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("use --sim [file]", cmdLineOptions);
+			System.exit(1);
+		}
+
+		if (cmdLineArgs.hasOption(LONG_RANDOMIZER_JAVA_OPTION)) {
+			simulationData.setRandomizer(
+					cmdLineArgs.getOptionValue(LONG_RANDOMIZER_JAVA_OPTION));
+		}
+
+		if (cmdLineArgs.hasOption(LONG_NO_ACTIVATION_MAP_OPTION)
+				|| (cmdLineArgs.hasOption(LONG_NO_MAPS_OPTION))
+				|| (cmdLineArgs.hasOption(LONG_NO_BUILD_INFLUENCE_MAP_OPTION))) {
+			simulationData.setActivationMap(false);
+		}
+
+		if (cmdLineArgs.hasOption(LONG_OCAML_STYLE_OBS_NAME_OPTION)) {
+			simulationData.setOcamlStyleObsName(true);
+		}
+
+		if (cmdLineArgs.hasOption(LONG_NUMBER_OF_RUNS_OPTION)) {
+			int iteration = 0;
+			boolean exp = false;
+			try {
+				iteration = Integer.valueOf(cmdLineArgs
+						.getOptionValue(LONG_NUMBER_OF_RUNS_OPTION));
+			} catch (Exception e) {
+				exp = true;
+			}
+			if ((exp) || (!cmdLineArgs.hasOption(LONG_SEED_OPTION))) {
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp("use --sim [file]", cmdLineOptions);
+				System.exit(1);
+			}
+			simulationData.setIterations(iteration);
+		}
+
+		if (cmdLineArgs.hasOption(LONG_CLOCK_PRECISION_OPTION)) {
+			long clockPrecision = 0;
+			clockPrecision = Long.valueOf(cmdLineArgs
+					.getOptionValue(LONG_CLOCK_PRECISION_OPTION));
+			clockPrecision *= 60000;
+			simulationData.setClockPrecision(clockPrecision);
+		}
+
+		if (cmdLineArgs.hasOption(LONG_OUTPUT_SCHEME_OPTION)) {
+			simulationData.setXmlSessionPath(cmdLineArgs
+					.getOptionValue(LONG_OUTPUT_SCHEME_OPTION));
+		}
+		return cmdLineArgs;
+	}
+
+	public static final void readSimulatonFile(Simulator simulator, CommandLine cmdLineArgs) {
+
+		SimulationData simulationData = simulator.getSimulationData(); 
 		boolean option = false;
 		String fileName = null;
 		double timeSim = 0.;
@@ -204,7 +302,7 @@ public class SimulationMain {
 
 		if (cmdLineArgs.hasOption(LONG_STORIFY_OPTION)) {
 			fileName = cmdLineArgs.getOptionValue(LONG_STORIFY_OPTION);
-			SimulationMain.getSimulationManager().getSimulationData()
+			simulationData
 					.setStorify(true);
 			option = true;
 		}
@@ -216,7 +314,7 @@ public class SimulationMain {
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("use --sim [file]", cmdLineOptions);
 			}
-			simulationManager.getSimulationData().setTimeLength(timeSim);
+			simulationData.setTimeLength(timeSim);
 		} else
 			System.out.println("*Warning* No time limit.");
 
@@ -232,12 +330,12 @@ public class SimulationMain {
 					HelpFormatter formatter = new HelpFormatter();
 					formatter.printHelp("use --sim [file]", cmdLineOptions);
 				}
-				simulationManager.getSimulationData().setSnapshotTime(
+				simulationData.setSnapshotTime(
 						snapshotTime);
 			}
 		}
 		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
-			simulationManager.getSimulationData().setCompile(true);
+			simulationData.setCompile(true);
 			if (!option) {
 				option = true;
 				fileName = cmdLineArgs.getOptionValue(SHORT_COMPILE_OPTION);
@@ -252,9 +350,6 @@ public class SimulationMain {
 			} else
 				option = false;
 		}
-		if (cmdLineArgs.hasOption(LONG_FORWARD_OPTION)) {
-			isForwarding = true;
-		}
 
 		if (!option) {
 			HelpFormatter formatter = new HelpFormatter();
@@ -262,12 +357,12 @@ public class SimulationMain {
 			System.exit(1);
 		}
 
-		simulationManager.getSimulationData().setInputFile(fileName);
+		simulationData.setInputFile(fileName);
 		DataReading data = new DataReading(fileName);
 		try {
 			data.readData();
-			Parser parser = new Parser(data);
-			parser.setForwarding(isForwarding);
+			Parser parser = new Parser(data, simulationData, simulator);
+			parser.setForwarding(cmdLineArgs.hasOption(LONG_FORWARD_OPTION));
 			parser.parse();
 		} catch (FileReadingException e) {
 			System.err.println("Error in file \"" + fileName + "\" :\n\t"
@@ -285,147 +380,6 @@ public class SimulationMain {
 		}
 	}
 
-	public final void parseArguments(String[] args) {
-		simulationManager.getSimulationData().addInfo(
-				new Info(Info.TYPE_INFO, "-Initialization..."));
-		args = changeArgs(args);
-		CommandLineParser parser = new PosixParser();
-		try {
-			cmdLineArgs = parser.parse(cmdLineOptions, args);
-		} catch (ParseException e) {
-			e.printStackTrace();
-			System.err.println("Error parsing arguments");
-			System.exit(1);
-		}
 
-		if (cmdLineArgs.hasOption(LONG_XML_SESSION_NAME_OPTION)) {
-			SimulationMain
-					.getSimulationManager()
-					.getSimulationData()
-					.setXmlSessionName(
-							cmdLineArgs
-									.getOptionValue(LONG_XML_SESSION_NAME_OPTION));
-		}
-
-		try {
-			if (cmdLineArgs.hasOption(LONG_INIT_OPTION)) {
-				SimulationMain.getSimulationManager().getSimulationData()
-						.setInitialTime(
-								Double.valueOf(cmdLineArgs
-										.getOptionValue(LONG_INIT_OPTION)));
-			}
-			if (cmdLineArgs.hasOption(LONG_POINTS_OPTION)) {
-				SimulationMain.getSimulationManager().getSimulationData()
-						.setPoints(
-								Integer.valueOf(cmdLineArgs
-										.getOptionValue(LONG_POINTS_OPTION)));
-			}
-			if (cmdLineArgs.hasOption(LONG_RESCALE_OPTION)) {
-				double rescale = Double.valueOf(cmdLineArgs
-						.getOptionValue(LONG_RESCALE_OPTION));
-				if (rescale > 0)
-					SimulationMain.getSimulationManager().getSimulationData()
-							.setRescale(rescale);
-				else
-					throw new Exception();
-			}
-
-			if (cmdLineArgs.hasOption(LONG_SEED_OPTION)) {
-				int seed = 0;
-				seed = Integer.valueOf(cmdLineArgs
-						.getOptionValue(LONG_SEED_OPTION));
-				SimulationMain.getSimulationManager().getSimulationData()
-						.setSeed(seed);
-			}
-
-			if (cmdLineArgs.hasOption(LONG_MAX_CLASHES_OPTION)) {
-				int max_clashes = 0;
-				max_clashes = Integer.valueOf(cmdLineArgs
-						.getOptionValue(LONG_MAX_CLASHES_OPTION));
-				SimulationMain.getSimulationManager().getSimulationData()
-						.setMaxClashes(max_clashes);
-			}
-
-			if (cmdLineArgs.hasOption(LONG_EVENT_OPTION)) {
-				long event = 0;
-				event = Long.valueOf(cmdLineArgs
-						.getOptionValue(LONG_EVENT_OPTION));
-				SimulationMain.getSimulationManager().getSimulationData()
-						.setEvent(event);
-			}
-
-		} catch (Exception e) {
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("use --sim [file]", cmdLineOptions);
-			System.exit(1);
-		}
-
-		if (cmdLineArgs.hasOption(LONG_RANDOMIZER_JAVA_OPTION)) {
-			simulationManager.getSimulationData().setRandomizer(
-					cmdLineArgs.getOptionValue(LONG_RANDOMIZER_JAVA_OPTION));
-		}
-
-		if (cmdLineArgs.hasOption(LONG_NO_ACTIVATION_MAP_OPTION)
-				|| (cmdLineArgs.hasOption(LONG_NO_MAPS_OPTION))
-				|| (cmdLineArgs.hasOption(LONG_NO_BUILD_INFLUENCE_MAP_OPTION))) {
-			simulationManager.getSimulationData().setActivationMap(false);
-		}
-
-		if (cmdLineArgs.hasOption(LONG_OCAML_STYLE_OBS_NAME_OPTION)) {
-			simulationManager.getSimulationData().setOcamlStyleObsName(true);
-		}
-
-		if (cmdLineArgs.hasOption(LONG_NUMBER_OF_RUNS_OPTION)) {
-			int iteration = 0;
-			boolean exp = false;
-			try {
-				iteration = Integer.valueOf(cmdLineArgs
-						.getOptionValue(LONG_NUMBER_OF_RUNS_OPTION));
-			} catch (Exception e) {
-				exp = true;
-			}
-			if ((exp) || (!cmdLineArgs.hasOption(LONG_SEED_OPTION))) {
-				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp("use --sim [file]", cmdLineOptions);
-				System.exit(1);
-			}
-			SimulationMain.getSimulationManager().getSimulationData()
-					.setIterations(iteration);
-		}
-
-		if (cmdLineArgs.hasOption(LONG_CLOCK_PRECISION_OPTION)) {
-			long clockPrecision = 0;
-			clockPrecision = Long.valueOf(cmdLineArgs
-					.getOptionValue(LONG_CLOCK_PRECISION_OPTION));
-			clockPrecision *= 60000;
-			SimulationMain.getSimulationManager().getSimulationData()
-					.setClockPrecision(clockPrecision);
-		}
-
-		if (cmdLineArgs.hasOption(LONG_OUTPUT_SCHEME_OPTION)) {
-			SimulationMain.getSimulationManager().getSimulationData()
-					.setXmlSessionPath(
-							cmdLineArgs
-									.getOptionValue(LONG_OUTPUT_SCHEME_OPTION));
-		}
-	}
-
-	public final static SimulatorManager getSimulationManager() {
-		return simulationManager;
-	}
-
-	public final static SimulationMain getInstance() {
-		return instance;
-	}
-
-	private final static void printToConsole(String[] args) {
-		simulationManager.getSimulationData().setCommandLine(args);
-		System.out.println("Java "
-				+ simulationManager.getSimulationData().getCommandLine());
-	}
-
-	public final InputStream getInputStream() {
-		return System.in;
-	}
-
+	
 }

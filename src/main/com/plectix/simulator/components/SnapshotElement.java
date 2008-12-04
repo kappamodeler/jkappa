@@ -2,6 +2,7 @@ package com.plectix.simulator.components;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.simulator.Simulator;
 
 public final class SnapshotElement {
 	private int count;
@@ -24,7 +25,7 @@ public final class SnapshotElement {
 	}
 
 	private final void parseCC() {
-		ccName = SimulationMain.getSimulationManager().printPartRule(cc,0);
+		ccName = Simulator.printPartRule(cc,0);
 	}
 
 	public final boolean exists(IConnectedComponent ccEx) {

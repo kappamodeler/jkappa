@@ -54,11 +54,10 @@ public final class CPerturbation {
 	public CPerturbation(int perturbationID, List<IObservablesComponent> obsID,
 			List<Double> parameters, int obsNameID, byte type,
 			double perturbationRate, IRule rule, boolean greater,
-			List<IPerturbationExpression> rateParameters) {
+			List<IPerturbationExpression> rateParameters, IObservables observables) {
 		this.perturbationID = perturbationID;
 		this.obsNameID = obsNameID;
-		IObservables obs = SimulationMain.getSimulationManager()
-				.getSimulationData().getObservables();
+		IObservables obs = observables;
 		fillParameters(obsID, parameters, obs);
 		this.type = type;
 		this.perturbationRate = perturbationRate;

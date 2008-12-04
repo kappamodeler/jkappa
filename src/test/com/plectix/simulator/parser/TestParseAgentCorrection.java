@@ -7,6 +7,8 @@ import java.io.*;
 import org.junit.Test;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.util.*;
 
 public class TestParseAgentCorrection {
@@ -23,7 +25,8 @@ public class TestParseAgentCorrection {
 		} catch(FileNotFoundException e) {
 			System.err.println(e.getMessage());
 		}
-		myParser = new Parser(new DataReading(fileName));
+		Simulator mySimulator = new Simulator(new SimulationData());
+		myParser = new Parser(new DataReading(fileName), mySimulator.getSimulationData(), mySimulator);
 		myMC = new MessageConstructor();
 	}
 	
