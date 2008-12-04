@@ -22,8 +22,8 @@ import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
 public class SimulationData {
-	private static List<Double> timeStamps;
-	private static List<ArrayList<RunningMetric>> runningMetrics;
+	private List<Double> timeStamps;
+	private List<List<RunningMetric>> runningMetrics;
 
 	private List<IRule> rules;
 	private CStories stories = null;
@@ -297,26 +297,17 @@ public class SimulationData {
 		this.perturbations = perturbations;
 	}
 
-	public final static List<Double> getTimeStamps() {
+	public final List<Double> getTimeStamps() {
 		return timeStamps;
 	}
 
-	public final static void setTimeStamps(List<Double> timeStamps) {
-		SimulationData.timeStamps = timeStamps;
-	}
-
-	public final static List<ArrayList<RunningMetric>> getRunningMetrics() {
+	public final List<List<RunningMetric>> getRunningMetrics() {
 		return runningMetrics;
 	}
 
-	public final static void setRunningMetrics(
-			List<ArrayList<RunningMetric>> runningMetrics) {
-		SimulationData.runningMetrics = runningMetrics;
-	}
-
-	public final void initIterations() {
-		SimulationData.timeStamps = new ArrayList<Double>();
-		SimulationData.runningMetrics = new ArrayList<ArrayList<RunningMetric>>();
+	public final void initIterations(List<Double> timeStamps, List<List<RunningMetric>> runningMetrics) {
+		this.timeStamps = timeStamps;
+		this.runningMetrics = runningMetrics;
 		int observable_num = observables.getComponentListForXMLOutput().size();
 		// int observable_num = observables.getComponentList().size();
 		for (int i = 0; i < observable_num; i++) {

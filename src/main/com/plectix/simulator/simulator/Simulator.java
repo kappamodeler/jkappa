@@ -773,7 +773,9 @@ public class Simulator {
 	public final void runIterations() {
 		isIteration = true;
 		int seed = getSimulationData().getSeed();
-		getSimulationData().initIterations();
+		List<Double> timeStamps = new ArrayList<Double>();
+		List<List<RunningMetric>> runningMetrics = new ArrayList<List<RunningMetric>>();
+		getSimulationData().initIterations(timeStamps, runningMetrics);
 		for (int iteration_num = 0; iteration_num < getSimulationData()
 				.getIterations(); iteration_num++) {
 			// Initialize the Random Number Generator with seed = initialSeed +
@@ -823,13 +825,13 @@ public class Simulator {
 
 	private final void addIteration(Integer iteration_num) {
 
-		List<ArrayList<RunningMetric>> runningMetrics = getSimulationData().getRunningMetrics();
+		List<List<RunningMetric>> runningMetrics = simulationData.getRunningMetrics();
 		int number_of_observables = getSimulationData().getObservables()
 				.getComponentListForXMLOutput().size();
 		// .getComponentList().size();
 
 		if (iteration_num == 0) {
-			getSimulationData().getTimeStamps().add(currentTime);
+			simulationData.getTimeStamps().add(currentTime);
 
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 				runningMetrics.get(observable_num).add(new RunningMetric());
