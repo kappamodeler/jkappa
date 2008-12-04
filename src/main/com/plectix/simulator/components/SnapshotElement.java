@@ -1,6 +1,5 @@
 package com.plectix.simulator.components;
 
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.Simulator;
 
@@ -25,7 +24,7 @@ public final class SnapshotElement {
 	}
 
 	private final void parseCC() {
-		ccName = Simulator.printPartRule(cc,0);
+		ccName = Simulator.printPartRule(cc, new int[] {0});
 	}
 
 	public final boolean exists(IConnectedComponent ccEx) {

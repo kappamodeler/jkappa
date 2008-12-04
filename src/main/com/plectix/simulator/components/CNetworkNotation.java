@@ -169,7 +169,7 @@ public class CNetworkNotation implements INetworkNotation {
 					}
 				}
 				if (!isStorify)
-					agentsNotation.add(Simulator.printPartRule(cc, 0));
+					agentsNotation.add(Simulator.printPartRule(cc, new int[] {0}));
 			}
 		}
 

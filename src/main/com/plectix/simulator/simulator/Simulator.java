@@ -46,12 +46,10 @@ public class Simulator {
 	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
 
 
-	private static int indexLink = 0;
-
 	
 	public static final String printPartRule(List<IConnectedComponent> ccList) {
 		String line = new String();
-		indexLink = 0;
+		int[] indexLink = new int[] {0};
 		int length = 0;
 		if (ccList == null)
 			return line;
@@ -70,9 +68,8 @@ public class Simulator {
 		return line;
 	}
 
-	public static final String printPartRule(IConnectedComponent cc, int index) {
+	public static final String printPartRule(IConnectedComponent cc, int[] index) {
 		String line = new String();
-		indexLink = index;
 		int length = 0;
 		if (cc == null)
 			return line;
@@ -108,9 +105,9 @@ public class Simulator {
 							.getLinkState().getSite()).getAgentLink()
 							.getIdInRuleSide()) {
 						((ISite) site.getLinkState().getSite()).getLinkState()
-								.setLinkStateID(indexLink);
-						siteStr = siteStr + "!" + indexLink;
-						indexLink++;
+								.setLinkStateID(index[0]);
+						siteStr = siteStr + "!" + index[0];
+						index[0]++;
 						// line = line + "!" + indexLink++;
 					} else {
 						siteStr = siteStr + "!"
