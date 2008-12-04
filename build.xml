@@ -72,7 +72,8 @@
 
 	<target name="build-project" depends="init" description="Building project">
         <echo message="OS: ${os.name} "/>
-        <echo message="Java: ${ant.java.version} "/>
+        <echo message="Java: ${java.version} "/>
+        <echo message="Ant Java: ${ant.java.version} "/>
         <echo message="${ant.project.name}: ${ant.file} "/>
         <javac srcdir="${src.dir}" destdir="${build.dir}" debug="true" failonerror="true">
             <classpath refid="simulator.classpath"/>
@@ -204,6 +205,7 @@
 	            <filter token="build.svn.revision" value="${build.svn.revision}" />
 	            <filter token="build.date" value="${build.date}" />
 	            <filter token="build.os.name" value="${os.name}" />
+	            <filter token="java.version" value="${java.version}" />
 	            <filter token="ant.java.version" value="${ant.java.version}" />
             </filterset>
             <globmapper from="*.tpl" to="*.java" />
@@ -231,7 +233,8 @@
 	<target name="build-tests" depends="init" description="Building tests">
 		<mkdir dir="${build.dir}/test"/>
 	    <echo message="OS: ${os.name} "/>
-	    <echo message="Java: ${ant.java.version} "/>
+        <echo message="Java: ${java.version} "/>
+        <echo message="Ant Java: ${ant.java.version} "/>
 	    <echo message="${ant.project.name}: ${ant.file} "/>
 		<javac srcdir="${test.dir};${src.dir}" destdir="${build.dir}\test" debug="true" failonerror="true">
 			<classpath refid="test.classpath"/>
