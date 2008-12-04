@@ -1,21 +1,19 @@
 package com.plectix.simulator.XML;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 
 import com.plectix.simulator.Initializator;
-import com.plectix.simulator.simulator.Model;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.simulator.SimulatorManager;
 
 public abstract class TestXML {
 
-	private static Model myModel;
 	private static Simulator mySimulator;
-	private static SimulatorManager myManager;
 	private static Initializator myInitializator = new Initializator();
 
-	private static final String mySourceDirPath = PathFinder.MAIN_DIR + "source .ka/";
+	private static final String mySourceDirPath = PathFinder.MAIN_DIR;
 
 	private static final double[] time = new double[] { 0.01, 1000, 
         0.5, 100, 
@@ -49,16 +47,14 @@ public abstract class TestXML {
 		Initializator initializator = myInitializator;
 
 		initializator.init(fullTestFilePath);
-		myModel = initializator.getModel();
-		myModel.getSimulationData().setTimeLength(time);
+		mySimulator = initializator.getSimulator();
+		mySimulator.getSimulationData().setTimeLength(time);
 
-		myModel.getSimulationData().getObservables()
+		mySimulator.getSimulationData().getObservables()
         .init(time, 0, -1, -1, true);
 
-		mySimulator = initializator.getSimulator();
-		myModel.getSimulationData().setXmlSessionName(
+		mySimulator.getSimulationData().setXmlSessionName(
 				PathFinder.MAIN_DIR + "out_java\\" + fileName.substring(0, fileName.indexOf(".ka")) + "_java.xml");
-		myManager = initializator.getManager();
 		mySimulator.run(null);
 		
 		
