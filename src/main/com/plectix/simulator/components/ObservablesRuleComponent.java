@@ -62,30 +62,25 @@ public final class ObservablesRuleComponent implements IObservablesRuleComponent
 		return countList.get(index).toString();
 	}
 
-	@Override
 	public void addAutomorphicObservables(int index) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public int getMainAutomorphismNumber() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public void setMainAutomorphismNumber(int index) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public boolean isUnique() {
 		return true;
 	}
 
-	@Override
 	public long getValue(int index, IObservables obs) {
 		return countList.get(index);
 	}

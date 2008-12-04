@@ -88,7 +88,6 @@ public final class CLinkState extends CState implements ILinkState {
 		}
 	}
 
-	@Override
 	public final String getName() {
 		return null;
 	}

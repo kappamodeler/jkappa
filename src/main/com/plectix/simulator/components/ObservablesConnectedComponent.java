@@ -96,12 +96,10 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 					index, obs);
 	}
 
-	@Override
 	public final boolean isUnique() {
 		return unique;
 	}
 
-	@Override
 	public final long getValue(int index, IObservables obs) {
 		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
 			return countList.get(index);

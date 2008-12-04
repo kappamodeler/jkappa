@@ -23,7 +23,6 @@ public class CInternalState extends CState implements IInternalState {
 		return nameId;
 	}
 
-	@Override
 	public final String getName() {
 		return SimulationMain.getSimulationManager().getNameDictionary()
 				.getName(nameId);
