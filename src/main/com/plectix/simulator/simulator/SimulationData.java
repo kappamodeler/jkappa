@@ -520,12 +520,12 @@ public class SimulationData {
 
 	private void fillRuleListStoryConnections(CStoryType toStoryType,
 			HashMap<Integer, CStoryType> traceIdToStoryTypeRule,
-			List<RuleIDs> rIDs, List<Element> connections, Document doc) {
+			List<Integer> rIDs, List<Element> connections, Document doc) {
 		if (rIDs.size() != 0) {
 			Element node;
-			for (RuleIDs rID : rIDs) {
+			for (int rID : rIDs) {
 				CStoryType st = traceIdToStoryTypeRule
-						.get(rID.getIndexInTrace());
+						.get(rID);
 				node = doc.createElement("Connection");
 				st.fillConnection(node, toStoryType.getId());
 				connections.add(node);
@@ -591,8 +591,8 @@ public class SimulationData {
 
 		List<Element> nodes = new ArrayList<Element>();
 		List<Element> connections = new ArrayList<Element>();
-		HashMap<Integer, List<RuleIDs>> traceIDToRuleIDs = storyTree
-				.getTraceIDToRuleIDs();
+		HashMap<Integer, List<Integer>> traceIDToTraceIDs = storyTree
+		.getTraceIDToTraceID();
 
 		List<CStoryType> currentStTypeList = new ArrayList<CStoryType>();
 		iterator = allLevels.keySet().iterator();
@@ -608,7 +608,7 @@ public class SimulationData {
 							.getTraceID());
 					fillIntroListStoryConnections(stT,introList, connections, doc);
 					int trID = stT.getTraceID();
-					List<RuleIDs> rIDs = traceIDToRuleIDs.get(trID);
+					List<Integer> rIDs = traceIDToTraceIDs.get(trID);
 					fillRuleListStoryConnections(stT, traceIdToStoryTypeRule, rIDs,
 							connections, doc);
 				}

@@ -16,6 +16,16 @@ public class CNetworkNotation implements INetworkNotation {
 	public final static byte HAS_PART_INTERSECTION = 1;
 	public final static byte HAS_NO_INTERSECTION = 0;
 
+	private boolean leaf;
+	
+	public boolean isLeaf() {
+		return leaf;
+	}
+
+	public void setLeaf(boolean leaf) {
+		this.leaf = leaf;
+	}
+
 	// TODO is this field necessary?
 	private int step;
 
@@ -148,6 +158,7 @@ public class CNetworkNotation implements INetworkNotation {
 			List<IInjection> injectionsList, ISolution solution) {
 		this.step = step;
 		this.rule = rule;
+		leaf = false;
 		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();
 		this.usedAgentsFromRules = new HashMap<Long, AgentSitesFromRules>();
 		this.agentsNotation = new ArrayList<String>();
