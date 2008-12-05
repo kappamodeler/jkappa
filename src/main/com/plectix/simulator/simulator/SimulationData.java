@@ -305,7 +305,8 @@ public class SimulationData {
 		return runningMetrics;
 	}
 
-	public final void initIterations(List<Double> timeStamps, List<List<RunningMetric>> runningMetrics) {
+	public final void initIterations(List<Double> timeStamps,
+			List<List<RunningMetric>> runningMetrics) {
 		this.timeStamps = timeStamps;
 		this.runningMetrics = runningMetrics;
 		int observable_num = observables.getComponentListForXMLOutput().size();
@@ -324,6 +325,13 @@ public class SimulationData {
 		TimerSimulation timer = new TimerSimulation();
 
 		Element simplxSession = doc.createElement("SimplxSession");
+		simplxSession.setAttribute("xsi:schemaLocation",
+				"http://plectix.synthesisstudios.com SimplxSession.xsd");
+		simplxSession.setAttribute("xmlns",
+				"http://plectix.synthesisstudios.com/schemas/kappasession");
+		simplxSession.setAttribute("xmlns:xsi",
+				"http://www.w3.org/2001/XMLSchema-instance");
+
 		simplxSession.setAttribute("CommandLine", commandLine);
 		simplxSession.setAttribute("InputFile", inputFile);
 		simplxSession.setAttribute("TimeStamp", "stmp");
@@ -365,7 +373,8 @@ public class SimulationData {
 				node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
 				node.setAttribute("Type", "RULE");
 				node.setAttribute("Text", rules.get(i).getName());
-				node.setAttribute("Data", rules.get(i).getData(isOcamlStyleObsName()));
+				node.setAttribute("Data", rules.get(i).getData(
+						isOcamlStyleObsName()));
 				node.setAttribute("Name", rules.get(i).getName());
 				influenceMap.appendChild(node);
 			}
@@ -484,10 +493,9 @@ public class SimulationData {
 		// + timerOutput.getTimer() + " sec. CPU");
 	}
 
-	
-
 	private final void fillNodesLevelStoryTrees(
-			List<CStoryType> currentStTypeList, List<Element> nodes, Document doc) {
+			List<CStoryType> currentStTypeList, List<Element> nodes,
+			Document doc) {
 		Element node;
 		for (CStoryType stT : currentStTypeList) {
 			if (stT.getType() == CStoryType.TYPE_RULE && stT.getId() == 0) {
@@ -506,8 +514,8 @@ public class SimulationData {
 		}
 	}
 
-	private void fillIntroListStoryConnections(CStoryType toStoryType, List<CStoryType> introList,
-			List<Element> connections, Document doc) {
+	private void fillIntroListStoryConnections(CStoryType toStoryType,
+			List<CStoryType> introList, List<Element> connections, Document doc) {
 		if (introList != null) {
 			Element node;
 			for (CStoryType stT : introList) {
@@ -524,8 +532,7 @@ public class SimulationData {
 		if (rIDs.size() != 0) {
 			Element node;
 			for (int rID : rIDs) {
-				CStoryType st = traceIdToStoryTypeRule
-						.get(rID);
+				CStoryType st = traceIdToStoryTypeRule.get(rID);
 				node = doc.createElement("Connection");
 				st.fillConnection(node, toStoryType.getId());
 				connections.add(node);
@@ -546,7 +553,8 @@ public class SimulationData {
 
 		int counter = 0;
 
-		Iterator<Integer> iterator = storyTree.getLevelToTraceID().keySet().iterator();
+		Iterator<Integer> iterator = storyTree.getLevelToTraceID().keySet()
+				.iterator();
 		int depth = storyTree.getLevelToTraceID().size();
 		while (iterator.hasNext()) {
 			int level = iterator.next();
@@ -556,12 +564,13 @@ public class SimulationData {
 			for (Integer traceID : list) {
 				mapIndex.put(traceID, counter);
 				CStoryType storyType = new CStoryType(CStoryType.TYPE_RULE,
-						traceID, counter, storyTree.getTraceIDToText().get(traceID),
-						storyTree.getTraceIDToData().get(traceID), depth - level);
+						traceID, counter, storyTree.getTraceIDToText().get(
+								traceID), storyTree.getTraceIDToData().get(
+								traceID), depth - level);
 				listST.add(storyType);
 				counter++;
-				List<String> introStringList = storyTree.getTraceIDToIntroString()
-						.get(traceID);
+				List<String> introStringList = storyTree
+						.getTraceIDToIntroString().get(traceID);
 
 				CStoryType rule = traceIdToStoryTypeRule.get(traceID);
 
@@ -592,7 +601,7 @@ public class SimulationData {
 		List<Element> nodes = new ArrayList<Element>();
 		List<Element> connections = new ArrayList<Element>();
 		HashMap<Integer, List<Integer>> traceIDToTraceIDs = storyTree
-		.getTraceIDToTraceID();
+				.getTraceIDToTraceID();
 
 		List<CStoryType> currentStTypeList = new ArrayList<CStoryType>();
 		iterator = allLevels.keySet().iterator();
@@ -604,13 +613,14 @@ public class SimulationData {
 
 			for (CStoryType stT : currentStTypeList) {
 				if (stT.getType() == CStoryType.TYPE_RULE) {
-					List<CStoryType> introList = traceIdToStoryTypeIntro.get(stT
-							.getTraceID());
-					fillIntroListStoryConnections(stT,introList, connections, doc);
+					List<CStoryType> introList = traceIdToStoryTypeIntro
+							.get(stT.getTraceID());
+					fillIntroListStoryConnections(stT, introList, connections,
+							doc);
 					int trID = stT.getTraceID();
 					List<Integer> rIDs = traceIDToTraceIDs.get(trID);
-					fillRuleListStoryConnections(stT, traceIdToStoryTypeRule, rIDs,
-							connections, doc);
+					fillRuleListStoryConnections(stT, traceIdToStoryTypeRule,
+							rIDs, connections, doc);
 				}
 			}
 		}
