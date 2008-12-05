@@ -1,5 +1,6 @@
 package com.plectix.simulator.interfaces;
 
+import java.util.Hashtable;
 import java.util.List;
 
 public interface IObservables {
@@ -31,4 +32,12 @@ public interface IObservables {
 
 	public boolean addRulesName(String name, int obsNameID, List<IRule> rules);
 
+	public List<Double> getCountTimeList();
+
+	public void setOcamlStyleObsName(boolean ocamlStyleObsName);
+
+	public boolean isOcamlStyleObsName();
+
+	
+	
 }

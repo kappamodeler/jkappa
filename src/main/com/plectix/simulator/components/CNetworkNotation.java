@@ -1,9 +1,20 @@
 package com.plectix.simulator.components;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IAgentLink;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.INetworkNotation;
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.interfaces.IStoriesSiteStates;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 
 public class CNetworkNotation implements INetworkNotation {
@@ -155,19 +166,21 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public CNetworkNotation(int step, IRule rule,
-			List<IInjection> injectionsList, ISolution solution) {
+			List<IInjection> injectionsList, SimulationData data) {
 		this.step = step;
 		this.rule = rule;
 		leaf = false;
 		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();
 		this.usedAgentsFromRules = new HashMap<Long, AgentSitesFromRules>();
 		this.agentsNotation = new ArrayList<String>();
-		createAgentsNotation(injectionsList, solution);
+		createAgentsNotation(injectionsList, data);
 	}
 
 	private final void createAgentsNotation(List<IInjection> injectionsList,
-			ISolution solution) {
+			SimulationData data) {
 
+		ISolution solution = data.getSolution();
+		
 		for (IInjection inj : injectionsList) {
 			if (inj != CInjection.EMPTY_INJECTION) {
 				IConnectedComponent cc = solution.getConnectedComponent(inj
@@ -180,7 +193,7 @@ public class CNetworkNotation implements INetworkNotation {
 					}
 				}
 				if (!isStorify)
-					agentsNotation.add(Simulator.printPartRule(cc, new int[] {0}));
+					agentsNotation.add(Simulator.printPartRule(cc, new int[] {0}, data.isOcamlStyleObsName()));
 			}
 		}
 

@@ -54,7 +54,7 @@ public interface IRule {
 
 	public void setRuleRate(double d);
 
-	public String getData();
+	public String getData(boolean isOcamlStyleObsName);
 
 	public void setData(String data);
 }

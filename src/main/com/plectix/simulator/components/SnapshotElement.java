@@ -8,11 +8,11 @@ public final class SnapshotElement {
 	private IConnectedComponent cc;
 	private String ccName;
 
-	public SnapshotElement(IConnectedComponent cc2) {
+	public SnapshotElement(IConnectedComponent cc2, boolean isOcamlStyleObsName) {
 		count = 1;
 		this.cc = cc2;
 		this.cc.initSpanningTreeMap();
-		parseCC();
+		parseCC(isOcamlStyleObsName);
 	}
 	
 	public final int getCount() {
@@ -23,8 +23,8 @@ public final class SnapshotElement {
 		return ccName;
 	}
 
-	private final void parseCC() {
-		ccName = Simulator.printPartRule(cc, new int[] {0});
+	private final void parseCC(boolean isOcamlStyleObsName) {
+		ccName = Simulator.printPartRule(cc, new int[] {0}, isOcamlStyleObsName);
 	}
 
 	public final boolean exists(IConnectedComponent ccEx) {

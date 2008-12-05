@@ -3,6 +3,7 @@ package com.plectix.simulator.components;
 import java.util.*;
 
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.simulator.SimulationData;
 
 public final class CSnapshot {
 
@@ -14,8 +15,8 @@ public final class CSnapshot {
 	private List<IConnectedComponent> ccList;
 	private List<SnapshotElement> snapshotElements;
 
-	public CSnapshot(CSolution solution) {
-		ccList = solution.split();
+	public CSnapshot(SimulationData simulationData) {
+		ccList = simulationData.getSolution().split();
 		totalAgents = 0;
 		totalConnectedComponents = ccList.size();
 		largestConnectedComponent = 0;
@@ -40,7 +41,7 @@ public final class CSnapshot {
 				}
 			}
 			if (!isAdd)
-				snapshotElements.add(new SnapshotElement(cc));
+				snapshotElements.add(new SnapshotElement(cc, simulationData.isOcamlStyleObsName()));
 		}
 
 		ccList.clear();

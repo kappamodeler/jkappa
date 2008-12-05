@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IObservables;
+import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.simulator.Simulator;
 
 public class CObservables implements IObservables {
-	private static boolean ocamlStyleObsName = false;
-	public static List<Double> countTimeList;
+	private boolean ocamlStyleObsName = false;
+	public List<Double> countTimeList;
 
 	private final List<IObservablesConnectedComponent> connectedComponentList;
 	private final List<IObservablesComponent> componentList;
@@ -34,11 +37,7 @@ public class CObservables implements IObservables {
 		return timeSampleMin;
 	}
 
-	public static final void setCountTimeList(List<Double> countTimeList) {
-		CObservables.countTimeList = countTimeList;
-	}
-
-	public static final List<Double> getCountTimeList() {
+	public final List<Double> getCountTimeList() {
 		return countTimeList;
 	}
 
@@ -213,7 +212,7 @@ public class CObservables implements IObservables {
 		else
 			unique = true;
 		if (ocamlStyleObsName) {
-			line = Simulator.printPartRule(list);
+			line = Simulator.printPartRule(list, ocamlStyleObsName);
 		}
 
 		for (IConnectedComponent component : list) {
@@ -255,11 +254,11 @@ public class CObservables implements IObservables {
 		}
 	}
 
-	public final static void setOcamlStyleObsName(boolean ocamlStyleObsName) {
-		CObservables.ocamlStyleObsName = ocamlStyleObsName;
+	public final void setOcamlStyleObsName(boolean ocamlStyleObsName) {
+		this.ocamlStyleObsName = ocamlStyleObsName;
 	}
 
-	public final static boolean isOcamlStyleObsName() {
+	public final boolean isOcamlStyleObsName() {
 		return ocamlStyleObsName;
 	}
 }

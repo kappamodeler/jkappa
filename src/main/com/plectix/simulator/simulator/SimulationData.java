@@ -66,7 +66,7 @@ public class SimulationData {
 	}
 
 	public final void setOcamlStyleObsName(boolean ocamlStyleObsName) {
-		CObservables.setOcamlStyleObsName(ocamlStyleObsName);
+		observables.setOcamlStyleObsName(ocamlStyleObsName);
 	}
 
 	public final boolean isTime() {
@@ -365,7 +365,7 @@ public class SimulationData {
 				node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
 				node.setAttribute("Type", "RULE");
 				node.setAttribute("Text", rules.get(i).getName());
-				node.setAttribute("Data", rules.get(i).getData());
+				node.setAttribute("Data", rules.get(i).getData(isOcamlStyleObsName()));
 				node.setAttribute("Name", rules.get(i).getName());
 				influenceMap.appendChild(node);
 			}
@@ -434,7 +434,7 @@ public class SimulationData {
 			stopTimer(timer, "-Building xml tree for snapshots:");
 		}
 
-		int obsCountTimeListSize = CObservables.getCountTimeList().size();
+		int obsCountTimeListSize = observables.getCountTimeList().size();
 
 		Element simulation = doc.createElement("Simulation");
 		simulation.setAttribute("TotalEvents", Long.toString(event));
@@ -536,7 +536,7 @@ public class SimulationData {
 	private final void addConnection(Element story, CStoryTrees storyTree,
 			Document doc, int item) {
 
-		storyTree.fillMaps();
+		storyTree.fillMaps(isOcamlStyleObsName());
 
 		HashMap<Integer, Integer> mapIndex = new HashMap<Integer, Integer>();
 		HashMap<Integer, List<CStoryType>> allLevels = new HashMap<Integer, List<CStoryType>>();
@@ -734,7 +734,7 @@ public class SimulationData {
 	private void appendData(IObservables obs, List<IObservablesComponent> list,
 			CDATASection cdata, int index) {
 		String enter = "\n";
-		cdata.appendData(CObservables.getCountTimeList().get(index).toString());
+		cdata.appendData(observables.getCountTimeList().get(index).toString());
 		for (int j = list.size() - 1; j >= 0; j--) {
 			cdata.appendData(",");
 			IObservablesComponent oCC = list.get(j);
@@ -829,6 +829,10 @@ public class SimulationData {
 			return xmlSessionPath + "\\" + xmlSessionName;
 		else
 			return xmlSessionName;
+	}
+
+	public boolean isOcamlStyleObsName() {
+		return observables.isOcamlStyleObsName();
 	}
 
 }

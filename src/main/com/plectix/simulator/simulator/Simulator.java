@@ -44,10 +44,8 @@ import com.plectix.simulator.util.TimerSimulation;
 
 public class Simulator {
 	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
-
-
 	
-	public static final String printPartRule(List<IConnectedComponent> ccList) {
+	public static final String printPartRule(List<IConnectedComponent> ccList, boolean isOcamlStyleObsName) {
 		String line = new String();
 		int[] indexLink = new int[] {0};
 		int length = 0;
@@ -59,7 +57,7 @@ public class Simulator {
 		for (IConnectedComponent cc : ccList) {
 			if (cc == CRule.EMPTY_LHS_CC)
 				return line;
-			line += printPartRule(cc, indexLink);
+			line += printPartRule(cc, indexLink, isOcamlStyleObsName);
 			if (index < ccList.size())
 				line += ",";
 			index++;
@@ -68,7 +66,7 @@ public class Simulator {
 		return line;
 	}
 
-	public static final String printPartRule(IConnectedComponent cc, int[] index) {
+	public static final String printPartRule(IConnectedComponent cc, int[] index, boolean isOcamlStyleObsName) {
 		String line = new String();
 		int length = 0;
 		if (cc == null)
@@ -131,7 +129,7 @@ public class Simulator {
 				sitesList.add(siteStr);
 			}
 	
-			line = line + getSitesLine(sortSitesStr(sitesList));
+			line = line + getSitesLine(sortSitesStr(sitesList, isOcamlStyleObsName));
 			if (length > j) {
 				line = line + "),";
 			} else {
@@ -156,8 +154,8 @@ public class Simulator {
 		return line;
 	}
 
-	private static final List<String> sortSitesStr(List<String> list) {
-		if (CObservables.isOcamlStyleObsName()) {
+	private static final List<String> sortSitesStr(List<String> list, boolean isOcamlStyleObsName) {
+		if (isOcamlStyleObsName) {
 			Collections.sort(list);
 		}
 	
@@ -249,8 +247,7 @@ public class Simulator {
 					&& getSimulationData().getSnapshotTime() <= currentTime) {
 				hasSnapshot = false;
 				getSimulationData().setSnapshot(
-						new CSnapshot((CSolution) getSimulationData()
-								.getSolution()));
+						new CSnapshot(getSimulationData()));
 				getSimulationData().setSnapshotTime(currentTime);
 			}
 			checkPerturbation();
@@ -737,7 +734,7 @@ public class Simulator {
 				currentTime += ruleProbabilityCalculation.getTimeValue();
 				if (!rule.isClash(injectionsList)) {
 					CNetworkNotation netNotation = new CNetworkNotation(count,
-							rule,injectionsList,getSimulationData().getSolution());
+							rule,injectionsList,getSimulationData());
 					max_clash = 0;
 					if (stories.checkRule(rule.getRuleID(), i)) {
 						rule.applyLastRuleForStories(injectionsList,
@@ -949,9 +946,9 @@ public class Simulator {
 	
 			}
 	
-			String line = printPartRule(rule.getLeftHandSide());
+			String line = printPartRule(rule.getLeftHandSide(), simulationData.isOcamlStyleObsName());
 			line = line + "->";
-			line = line + printPartRule(rule.getRightHandSide());
+			line = line + printPartRule(rule.getRightHandSide(), simulationData.isOcamlStyleObsName());
 			String ch = new String();
 			for (int j = 0; j < line.length(); j++)
 				ch = ch + "-";

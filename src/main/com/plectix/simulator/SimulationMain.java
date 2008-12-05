@@ -138,14 +138,14 @@ public class SimulationMain {
 	}
 
 	private void start(String[] args) {
-		Simulator simulationManager = new Simulator(new SimulationData());
-		printToConsole(simulationManager.getSimulationData(), args);
-		simulationManager.startTimer();
-		cmdLineArgs = parseArguments(simulationManager.getSimulationData(), changeArgs(args), cmdLineOptions);
-		readSimulatonFile(simulationManager, cmdLineArgs);
-		simulationManager.initializeMain(cmdLineArgs);
+		Simulator simulator = new Simulator(new SimulationData());
+		printToConsole(simulator.getSimulationData(), args);
+		simulator.startTimer();
+		cmdLineArgs = parseArguments(simulator.getSimulationData(), changeArgs(args), cmdLineOptions);
+		readSimulatonFile(simulator, cmdLineArgs);
+		simulator.initializeMain(cmdLineArgs);
 		if (!cmdLineArgs.hasOption(SimulationMain.DEBUG_INIT_OPTION))
-			runSimulator(simulationManager);
+			runSimulator(simulator);
 	}
 
 	private final static String[] changeArgs(String[] args) {

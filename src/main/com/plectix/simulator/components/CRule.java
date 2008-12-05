@@ -54,11 +54,11 @@ public class CRule implements IRule {
 	private int countAgentsLHS = 0;
 	private final boolean isStorify;
 
-	public final String getData() {
+	public final String getData(boolean isOcamlStyleObsName) {
 		if (data == null) {
-			String line = Simulator.printPartRule(leftHandSide);
+			String line = Simulator.printPartRule(leftHandSide, isOcamlStyleObsName);
 			line = line + "->";
-			line = line + Simulator.printPartRule(rightHandSide);
+			line = line + Simulator.printPartRule(rightHandSide, isOcamlStyleObsName);
 			data=line;
 		}
 		return data;

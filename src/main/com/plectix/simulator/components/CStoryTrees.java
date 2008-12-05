@@ -173,7 +173,7 @@ public final class CStoryTrees {
 		return nnCS.getNetworkNotation(index).getRule().getName();
 	}
 
-	public void fillMaps() {
+	public void fillMaps(boolean isOcamlStyleObsName) {
 		levelToTraceID = new HashMap<Integer, List<Integer>>();
 		traceIDToIntroString = new HashMap<Integer, List<String>>();
 		traceIDToData = new HashMap<Integer, String>();
@@ -193,7 +193,7 @@ public final class CStoryTrees {
 			if (nn.getAgentsNotation().size() > 0)
 				traceIDToIntroString.put(traceID, nn.getAgentsNotation());
 			IRule rule = nn.getRule();
-			traceIDToData.put(traceID, rule.getData());
+			traceIDToData.put(traceID, rule.getData(isOcamlStyleObsName));
 			traceIDToText.put(traceID, rule.getName());
 		}
 	}

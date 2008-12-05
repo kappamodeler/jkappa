@@ -2,7 +2,7 @@ package com.plectix.simulator.components;
 
 import java.util.*;
 
-public final class CStories extends CObservables {
+public final class CStories {
 
 	// TODO PUBLIC FIELD!!
 	public static int numberOfSimulations = 10;
