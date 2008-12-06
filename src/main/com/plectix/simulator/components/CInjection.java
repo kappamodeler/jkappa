@@ -6,7 +6,7 @@ import com.plectix.simulator.interfaces.*;
 
 public final class CInjection implements IInjection {
 
-	public static IInjection EMPTY_INJECTION = new CInjection();
+	public static final IInjection EMPTY_INJECTION = new CInjection();
 
 	private List<IAgentLink> agentLinkList;
 	private List<ISite> sitesList = new ArrayList<ISite>();

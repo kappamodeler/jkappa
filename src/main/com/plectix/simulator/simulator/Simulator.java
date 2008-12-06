@@ -706,7 +706,7 @@ public class Simulator {
 	public final void runStories() {
 		CStories stories = getSimulationData().getStories();
 		int count = 0;
-		for (int i = 0; i < CStories.numberOfSimulations; i++) {
+		for (int i = 0; i < CStories.NUMBER_OF_SIMULATIONS; i++) {
 			getSimulationData().addInfo(
 					new Info(Info.TYPE_INFO, "-Simulation..."));
 			startTimer();
@@ -760,7 +760,7 @@ public class Simulator {
 			count = 0;
 			outToLogger(isEndRules, timer);
 			stories.handling(i);
-			if (i < CStories.numberOfSimulations - 1)
+			if (i < CStories.NUMBER_OF_SIMULATIONS - 1)
 				resetSimulation();
 		}
 		stories.merge();
