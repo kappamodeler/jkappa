@@ -11,6 +11,12 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
+import com.plectix.simulator.controller.SimulationService;
+import com.plectix.simulator.controller.SimulatorCallable;
+import com.plectix.simulator.controller.SimulatorCallableListener;
+import com.plectix.simulator.controller.SimulatorInputData;
+import com.plectix.simulator.controller.SimulatorInterface;
+import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.parser.DataReading;
 import com.plectix.simulator.parser.FileReadingException;
 import com.plectix.simulator.parser.ParseErrorException;
@@ -19,7 +25,7 @@ import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.util.Info;
 
-public class SimulationMain {
+public class SimulationMain implements SimulatorCallableListener {
 
 	private final static String SHORT_SIMULATIONFILE_OPTION = "s";
 	private final static String LONG_SIMULATIONFILE_OPTION = "sim";
@@ -31,10 +37,10 @@ public class SimulationMain {
 	private final static String LONG_SEED_OPTION = "seed";
 	private final static String LONG_NO_SEED_OPTION = "no_seed";
 	private final static String LONG_XML_SESSION_NAME_OPTION = "xml_session_name";
-	private final static String LONG_STORIFY_OPTION = "storify";
+	public final static String LONG_STORIFY_OPTION = "storify";
 	private final static String LONG_EVENT_OPTION = "event";
 	private final static String LONG_RANDOMIZER_JAVA_OPTION = "randomizer";
-	private final static String LONG_NUMBER_OF_RUNS_OPTION = "number_of_runs";
+	public final static String LONG_NUMBER_OF_RUNS_OPTION = "number_of_runs";
 	private final static String LONG_SNAPSHOT_TIME = "set_snapshot_time";
 	private final static String LONG_NO_ACTIVATION_MAP_OPTION = "no_activation_map";
 	private final static String LONG_NO_MAPS_OPTION = "no_maps";
@@ -45,7 +51,7 @@ public class SimulationMain {
 	private final static String LONG_RESCALE_OPTION = "rescale";
 	private final static String LONG_MAX_CLASHES_OPTION = "max_clashes";
 	private final static String LONG_OCAML_STYLE_OBS_NAME_OPTION = "ocaml_style_obs_name";
-	private final static String LONG_GENERATE_MAP_OPTION = "generate_map";
+	public final static String LONG_GENERATE_MAP_OPTION = "generate_map";
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 	private static final String LONG_CLOCK_PRECISION_OPTION = "clock_precision";
 	private static final String LONG_FORWARD_OPTION = "forward";
@@ -138,17 +144,12 @@ public class SimulationMain {
 	}
 
 	private void start(String[] args) {
-		Simulator simulator = new Simulator(new SimulationData());
-		printToConsole(simulator.getSimulationData(), args);
-		simulator.startTimer();
-		cmdLineArgs = parseArguments(simulator.getSimulationData(), changeArgs(args), cmdLineOptions);
-		readSimulatonFile(simulator, cmdLineArgs);
-		simulator.initializeMain(cmdLineArgs);
-		if (!cmdLineArgs.hasOption(SimulationMain.DEBUG_INIT_OPTION))
-			runSimulator(simulator);
+		SimulatorInterface simulator = new Simulator();
+		SimulationService service = new SimulationService(simulator);
+		service.submit(new SimulatorInputData(args), this);
 	}
 
-	private final static String[] changeArgs(String[] args) {
+	public final static String[] changeArgs(String[] args) {
 		String[] argsNew = new String[args.length];
 		int i = 0;
 		for (String st : args)
@@ -158,24 +159,6 @@ public class SimulationMain {
 			else
 				argsNew[i++] = st;
 		return argsNew;
-	}
-
-	private final void runSimulator(Simulator simulator) {
-
-		if (cmdLineArgs.hasOption(LONG_GENERATE_MAP_OPTION))
-			simulator.outputData(0);
-		else if (cmdLineArgs.hasOption(LONG_NUMBER_OF_RUNS_OPTION))
-			simulator.runIterations();
-		else if (cmdLineArgs.hasOption(LONG_STORIFY_OPTION))
-			simulator.runStories();
-		else
-			simulator.run(null);
-	}
-
-	private final static void printToConsole(SimulationData simulationData, String[] args) {
-		simulationData.setCommandLine(args);
-		System.out.println("Java "
-				+ simulationData.getCommandLine());
 	}
 
 	public final InputStream getInputStream() {
@@ -378,6 +361,11 @@ public class SimulationMain {
 			e.printStackTrace();
 			System.exit(1);
 		}
+	}
+
+	public void finished(SimulatorCallable simulatorCallable) {
+		SimulatorResultsData results = simulatorCallable.getSimulatorResultsData();
+		//TODO process results
 	}
 
 

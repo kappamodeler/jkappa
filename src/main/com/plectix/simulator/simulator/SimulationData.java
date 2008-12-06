@@ -113,8 +113,7 @@ public class SimulationData {
 	private double step;
 	private double nextStep;
 
-	public final boolean isEndSimulation(double currentTime, long count,
-			Integer iteration_num) {
+	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
 		if (curClockTime - clockStamp > clockPrecision) {
 			System.out
@@ -221,14 +220,6 @@ public class SimulationData {
 		step = timeLength / 100;
 		nextStep = step;
 		this.isTime = true;
-	}
-
-	public final void initializeLifts() {
-		// creates lifts for all rules
-	}
-
-	public final void initializeInjections() {
-		// creates injections for all rules
 	}
 
 	public final double getTimeLength() {
@@ -843,6 +834,57 @@ public class SimulationData {
 
 	public boolean isOcamlStyleObsName() {
 		return observables.isOcamlStyleObsName();
+	}
+
+	public final void initialize() {
+		getObservables().init(getTimeLength(),
+				getInitialTime(), getEvent(),
+				getPoints(), isTime());
+		CSolution solution = (CSolution) getSolution();
+		List<IRule> rules = getRules();
+		Iterator<IAgent> iterator = solution.getAgents().values().iterator();
+		getObservables().checkAutomorphisms();
+	
+		if (isActivationMap()) {
+			TimerSimulation timer = new TimerSimulation(true);
+			addInfo(new Info(Info.TYPE_INFO,
+					"--Abstracting influence map..."));
+			for (IRule rule : rules) {
+				rule.createActivatedRulesList(rules);
+				rule.createActivatedObservablesList(getObservables());
+			}
+			stopTimer(timer, "--Abstraction:");
+			addInfo(new Info(Info.TYPE_INFO,
+					"--Influence map computed"));
+		}
+	
+		while (iterator.hasNext()) {
+			IAgent agent = iterator.next();
+			for (IRule rule : rules) {
+				for (IConnectedComponent cc : rule.getLeftHandSide()) {
+					if (cc != null) {
+						IInjection inj = cc.getInjection(agent);
+						if (inj != null) {
+							if (!agent.isAgentHaveLinkToConnectedComponent(cc,
+									inj))
+								cc.setInjection(inj);
+						}
+					}
+				}
+			}
+	
+			for (IObservablesConnectedComponent oCC : getObservables().getConnectedComponentList())
+				if (oCC != null)
+					if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
+						IInjection inj = oCC.getInjection(agent);
+						if (inj != null) {
+							if (!agent.isAgentHaveLinkToConnectedComponent(oCC,
+									inj))
+								oCC.setInjection(inj);
+						}
+					}
+		}
+	
 	}
 
 }

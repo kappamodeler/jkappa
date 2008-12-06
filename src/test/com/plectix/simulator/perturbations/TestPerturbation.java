@@ -25,7 +25,7 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements T
 		
 		initializator.init(fullTestFilePath);
 		mySimulator = initializator.getSimulator();
-		mySimulator.run(null);
+		mySimulator.run(0);
 		init();
 	}
 	

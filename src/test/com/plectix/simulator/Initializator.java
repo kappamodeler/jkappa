@@ -53,12 +53,12 @@ public class Initializator {
 			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 			
 			instance = new SimulationMain();
-			mySimulator = new Simulator(new SimulationData());
+			mySimulator = new Simulator();
 
 			parseArgs(filePath);
 
 			SimulationMain.readSimulatonFile(mySimulator, instance.cmdLineArgs);
-			mySimulator.initializeMain(instance.cmdLineArgs);
+			mySimulator.init(instance.cmdLineArgs);
 
 			myFirstRun = false;
 			myObsComponents = mySimulator.getSimulationData().getObservables()

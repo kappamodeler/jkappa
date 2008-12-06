@@ -1,15 +1,16 @@
 package com.plectix.simulator.parser;
 
-import java.util.*;
-
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Test;
 
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.components.CDataString;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.util.*;
+import com.plectix.simulator.util.EasyFileReader;
+import com.plectix.simulator.util.Failer;
+import com.plectix.simulator.util.MessageConstructor;
 
 public class TestParseAgentCorrection {
 	private static final String myTestFileNamePrefix = RunParserTests.getFileNamePrefix();
@@ -25,7 +26,7 @@ public class TestParseAgentCorrection {
 		} catch(FileNotFoundException e) {
 			System.err.println(e.getMessage());
 		}
-		Simulator mySimulator = new Simulator(new SimulationData());
+		Simulator mySimulator = new Simulator();
 		myParser = new Parser(new DataReading(fileName), mySimulator.getSimulationData(), mySimulator);
 		myMC = new MessageConstructor();
 	}

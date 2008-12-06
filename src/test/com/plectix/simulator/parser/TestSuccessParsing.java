@@ -1,10 +1,10 @@
 package com.plectix.simulator.parser;
 
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Test;
 
-import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.util.*;
+import com.plectix.simulator.util.Failer;
 
 public class TestSuccessParsing {
 	private static final String myTestFileNamePrefix = RunParserTests.getFileNamePrefix();
@@ -16,7 +16,7 @@ public class TestSuccessParsing {
 	public void setup() {
 		String fileName = myTestFileNamePrefix + "ParsePerturbationsTestFile";
 		myDR = new DataReading(fileName);
-		Simulator mySimulator = new Simulator(new SimulationData());
+		Simulator mySimulator = new Simulator();
 		myParser = new Parser(myDR, mySimulator.getSimulationData(), mySimulator);
 	}
 	
