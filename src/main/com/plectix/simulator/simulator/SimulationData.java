@@ -715,7 +715,7 @@ public class SimulationData {
 				writer.close();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace(Simulator.getErrorStream());
 		}
 
 		Simulator.println("-Results outputted in tmp session: "

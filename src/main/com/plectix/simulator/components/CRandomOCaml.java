@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 import com.plectix.simulator.interfaces.IRandom;
+import com.plectix.simulator.simulator.Simulator;
 
 /*package*/ final class CRandomOCaml implements IRandom {
 
@@ -18,7 +19,7 @@ import com.plectix.simulator.interfaces.IRandom;
 		try {
 			process = runtime.exec(patch);
 		} catch (IOException e) {
-			e.printStackTrace();
+			e.printStackTrace(Simulator.getErrorStream());
 		}
 		InputStream inputStream = process.getInputStream();
 		scanner = new Scanner(inputStream);

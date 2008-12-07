@@ -169,9 +169,9 @@ public class SimulationMain implements SimulatorCallableListener {
 		try {
 			cmdLineArgs = parser.parse(cmdLineOptions, args);
 		} catch (ParseException e) {
-			e.printStackTrace();
-			System.err.println("Error parsing arguments");
-			System.exit(1);
+			Simulator.println("Error parsing arguments:");
+			e.printStackTrace(Simulator.getErrorStream());
+			throw new IllegalArgumentException(e);
 		}
 
 		if (cmdLineArgs.hasOption(SimulationMain.LONG_XML_SESSION_NAME_OPTION)) {
@@ -221,7 +221,8 @@ public class SimulationMain implements SimulatorCallableListener {
 		} catch (Exception e) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("use --sim [file]", cmdLineOptions);
-			System.exit(1);
+			e.printStackTrace(Simulator.getErrorStream());
+			throw new IllegalArgumentException(e);
 		}
 
 		if (cmdLineArgs.hasOption(LONG_RANDOMIZER_JAVA_OPTION)) {
@@ -251,7 +252,7 @@ public class SimulationMain implements SimulatorCallableListener {
 			if ((exp) || (!cmdLineArgs.hasOption(LONG_SEED_OPTION))) {
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("use --sim [file]", cmdLineOptions);
-				System.exit(1);
+				throw new IllegalArgumentException("No SEED OPTION");
 			}
 			simulationData.setIterations(iteration);
 		}
@@ -333,7 +334,7 @@ public class SimulationMain implements SimulatorCallableListener {
 		if (!option) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp("use --sim [file]", cmdLineOptions);
-			System.exit(1);
+			throw new IllegalArgumentException("No option specified");
 		}
 
 		simulationData.setInputFile(fileName);
@@ -343,19 +344,10 @@ public class SimulationMain implements SimulatorCallableListener {
 			Parser parser = new Parser(data, simulationData, simulator);
 			parser.setForwarding(cmdLineArgs.hasOption(LONG_FORWARD_OPTION));
 			parser.parse();
-		} catch (FileReadingException e) {
-			System.err.println("Error in file \"" + fileName + "\" :\n\t"
-					+ e.getMessage());
-			System.exit(1);
-		} catch (ParseErrorException e) {
-			System.err.println("Error in file \"" + fileName + "\"\n\tin "
-					+ e.getMessage());
-			System.exit(1);
 		} catch (Exception e) {
-			System.err.println("Error encountered while reading file \""
-					+ fileName + "\" : \n\t");
-			e.printStackTrace();
-			System.exit(1);
+			Simulator.println("Error in file \"" + fileName + "\" :");
+			e.printStackTrace(Simulator.getErrorStream());
+			throw new IllegalArgumentException(e);
 		}
 	}
 

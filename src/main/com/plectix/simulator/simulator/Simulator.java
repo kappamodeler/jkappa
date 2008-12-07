@@ -51,6 +51,10 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		return nameDictionary;
 	}
 
+	public static PrintStream getErrorStream() {
+		return printStream.get();
+	}
+
 	public static void println(String text) {
 		printStream.get().println(text);
 	}
@@ -91,7 +95,6 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 				.getRunningMetrics();
 		int number_of_observables = getSimulationData().getObservables()
 				.getComponentListForXMLOutput().size();
-		// .getComponentList().size();
 
 		if (iteration_num == 0) {
 			simulationData.getTimeStamps().add(currentTime);
@@ -102,11 +105,10 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		}
 
 		for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
-			double x = // x is the value for the observable_num at the current
-			// time
-			getSimulationData().getObservables().getComponentListForXMLOutput()
-					.get(observable_num).getSize(
-							getSimulationData().getObservables());
+			// x is the value for the observable_num at the current time
+			double x = getSimulationData().getObservables()
+					.getComponentListForXMLOutput().get(observable_num)
+					.getSize(getSimulationData().getObservables());
 			if (timeStepCounter >= runningMetrics.get(observable_num).size()) {
 				runningMetrics.get(observable_num).add(new RunningMetric());
 			}
@@ -295,13 +297,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		this.cmdLineArgs = cmdLineArgs;
 		simulationData.initialize();
 		getSimulationData().stopTimer(getTimer(), "-Initialization:");
-
-		if (cmdLineArgs.hasOption(SimulationMain.SHORT_COMPILE_OPTION)) {
-			outputData();
-			System.exit(1);
-		}
 		getSimulationData().setClockStamp(System.currentTimeMillis());
-
 	}
 
 	public boolean isStoryMode() {
@@ -325,14 +321,10 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		try {
 			getSimulationData().writeToXML(timerOutput);
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
+			e.printStackTrace(Simulator.getErrorStream());
 		} catch (TransformerException e) {
-			e.printStackTrace();
+			e.printStackTrace(Simulator.getErrorStream());
 		}
-
-		// Simulator.println("-Results outputted in xml session: "
-		// + SimulationMain.getSimulationManager().getTimer()
-		// + " sec. CPU");
 	}
 
 	private final void outputPertubation() {
@@ -380,7 +372,8 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 				case DELETE: {
 					// DEL #0
 					Simulator.print("DEL #");
-					Simulator.println("" + (action.getAgentFrom().getIdInRuleSide() - 1));
+					Simulator.println(""
+							+ (action.getAgentFrom().getIdInRuleSide() - 1));
 					break;
 				}
 				case ADD: {
@@ -670,6 +663,10 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 				SimulationMain.changeArgs(args), SimulationMain.cmdLineOptions);
 		SimulationMain.readSimulatonFile(this, cmdLineArgs);
 		init(cmdLineArgs);
+		if (cmdLineArgs.hasOption(SimulationMain.SHORT_COMPILE_OPTION)) {
+			outputData();
+			return;
+		}
 		if (!cmdLineArgs.hasOption(SimulationMain.DEBUG_INIT_OPTION)) {
 			if (cmdLineArgs.hasOption(SimulationMain.LONG_GENERATE_MAP_OPTION))
 				outputData(0);

@@ -79,7 +79,6 @@ public class StatsComputer {
 				System.err.println("Wrote stats file " + statsFile);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
