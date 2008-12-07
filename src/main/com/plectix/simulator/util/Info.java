@@ -1,5 +1,7 @@
 package com.plectix.simulator.util;
 
+import com.plectix.simulator.simulator.Simulator;
+
 public class Info {
 	private final static String INFO = "INFO";
 	public final static byte TYPE_INFO = 0;
@@ -54,7 +56,7 @@ public class Info {
 		this.count = 1;
 		this.message = message;
 		this.position = index++;
-		System.out.println(message);
+		Simulator.println(message);
 	}
 
 	public final double getTime() {

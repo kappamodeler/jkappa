@@ -1,5 +1,6 @@
 package com.plectix.simulator.simulator;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,15 +42,25 @@ import com.plectix.simulator.util.TimerSimulation;
 public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
-	
-	private static NameDictionary nameDictionary = new NameDictionary(); 
-	
+
+	private static NameDictionary nameDictionary = new NameDictionary();
+
+	private static ThreadLocal<PrintStream> printStream = new ThreadLocal<PrintStream>();
+
 	public static final NameDictionary getNameDictionary() {
 		return nameDictionary;
 	}
-	
+
+	public static void println(String text) {
+		printStream.get().println(text);
+	}
+
+	public static void print(String text) {
+		printStream.get().print(text);
+	}
+
 	private IActivationMap activationMap;
-	
+
 	private int agentIdGenerator = 0;
 
 	private CommandLine cmdLineArgs;
@@ -71,11 +82,13 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 	public Simulator() {
 		simulationData = new SimulationData();
 		simulatorResultsData = new SimulatorResultsData();
+		printStream.set(System.out);
 	}
 
 	private final void addIteration(int iteration_num) {
 
-		List<List<RunningMetric>> runningMetrics = simulationData.getRunningMetrics();
+		List<List<RunningMetric>> runningMetrics = simulationData
+				.getRunningMetrics();
 		int number_of_observables = getSimulationData().getObservables()
 				.getComponentListForXMLOutput().size();
 		// .getComponentList().size();
@@ -91,9 +104,9 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 			double x = // x is the value for the observable_num at the current
 			// time
-			getSimulationData().getObservables()
-					.getComponentListForXMLOutput().get(observable_num)
-					.getSize(getSimulationData().getObservables());
+			getSimulationData().getObservables().getComponentListForXMLOutput()
+					.get(observable_num).getSize(
+							getSimulationData().getObservables());
 			if (timeStepCounter >= runningMetrics.get(observable_num).size()) {
 				runningMetrics.get(observable_num).add(new RunningMetric());
 			}
@@ -109,10 +122,10 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 				return;
 		list.add(agent);
 	}
+
 	private final void checkPerturbation() {
 		if (getSimulationData().getPerturbations().size() != 0) {
-			for (CPerturbation pb : getSimulationData()
-					.getPerturbations()) {
+			for (CPerturbation pb : getSimulationData().getPerturbations()) {
 				switch (pb.getType()) {
 				case CPerturbation.TYPE_TIME: {
 					if (!pb.isDo())
@@ -120,8 +133,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 					break;
 				}
 				case CPerturbation.TYPE_NUMBER: {
-					pb.checkCondition(getSimulationData()
-							.getObservables());
+					pb.checkCondition(getSimulationData().getObservables());
 					break;
 				}
 				case CPerturbation.TYPE_ONCE: {
@@ -135,7 +147,6 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 		}
 	}
-
 
 	public SimulatorInterface clone() {
 		return new Simulator();
@@ -208,8 +219,8 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 			positiveUpdate(rule.getActivatedRule(), rule
 					.getActivatedObservable(), rule);
 		} else {
-			positiveUpdate(getSimulationData().getRules(), getSimulationData().getObservables()
-					.getConnectedComponentList(), rule);
+			positiveUpdate(getSimulationData().getRules(), getSimulationData()
+					.getObservables().getConnectedComponentList(), rule);
 		}
 
 		doPositiveUpdateForDeletedAgents(doNegativeUpdateForDeletedAgents(rule,
@@ -283,16 +294,14 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 	public void init(CommandLine cmdLineArgs) {
 		this.cmdLineArgs = cmdLineArgs;
 		simulationData.initialize();
-		getSimulationData().stopTimer(
-				getTimer(), "-Initialization:");
-	
+		getSimulationData().stopTimer(getTimer(), "-Initialization:");
+
 		if (cmdLineArgs.hasOption(SimulationMain.SHORT_COMPILE_OPTION)) {
 			outputData();
 			System.exit(1);
 		}
-		getSimulationData()
-				.setClockStamp(System.currentTimeMillis());
-	
+		getSimulationData().setClockStamp(System.currentTimeMillis());
+
 	}
 
 	public boolean isStoryMode() {
@@ -300,9 +309,9 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 	}
 
 	public final void outputData() {
-	
+
 		outputRules();
-	
+
 		outputPertubation();
 		outputSolution();
 	}
@@ -321,26 +330,26 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 			e.printStackTrace();
 		}
 
-		// System.out.println("-Results outputted in xml session: "
+		// Simulator.println("-Results outputted in xml session: "
 		// + SimulationMain.getSimulationManager().getTimer()
 		// + " sec. CPU");
 	}
 
 	private final void outputPertubation() {
-	
-		System.out.println("PERTURBATIONS:");
-	
+
+		Simulator.println("PERTURBATIONS:");
+
 		for (CPerturbation perturbation : simulationData.getPerturbations()) {
-			System.out.println(perturbationToString(perturbation));
+			Simulator.println(perturbationToString(perturbation));
 		}
-	
+
 	}
 
 	private final void outputRules() {
 		for (IRule rule : getRules()) {
 			int countAgentsInLHS = rule.getCountAgentsLHS();
 			int indexNewAgent = countAgentsInLHS;
-	
+
 			for (IAction action : rule.getActionList()) {
 				switch (CActionType.getById(action.getTypeId())) {
 				case BREAK: {
@@ -349,48 +358,51 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() < siteTo
 							.getAgentLink().getIdInRuleSide()) {
 						// BRK (#0,a) (#1,x)
-						System.out.print("BRK (#");
-						System.out.print(action.getSiteFrom().getAgentLink()
-								.getIdInRuleSide() - 1);
-						System.out.print(",");
-						System.out.print(action.getSiteFrom().getName());
-						System.out.print(") ");
-						System.out.print("(#");
-						System.out.print(siteTo.getAgentLink()
-								.getIdInRuleSide() - 1);
-						System.out.print(",");
-						System.out.print(siteTo.getName());
-						System.out.print(") ");
-						System.out.println();
+						Simulator.print("BRK (#");
+						Simulator.print(""
+								+ (action.getSiteFrom().getAgentLink()
+										.getIdInRuleSide() - 1));
+						Simulator.print(",");
+						Simulator.print(action.getSiteFrom().getName());
+						Simulator.print(") ");
+						Simulator.print("(#");
+						Simulator
+								.print(""
+										+ (siteTo.getAgentLink()
+												.getIdInRuleSide() - 1));
+						Simulator.print(",");
+						Simulator.print(siteTo.getName());
+						Simulator.print(") ");
+						Simulator.println();
 					}
 					break;
 				}
 				case DELETE: {
 					// DEL #0
-					System.out.print("DEL #");
-					System.out
-							.println(action.getAgentFrom().getIdInRuleSide() - 1);
+					Simulator.print("DEL #");
+					Simulator.println("" + (action.getAgentFrom().getIdInRuleSide() - 1));
 					break;
 				}
 				case ADD: {
 					// ADD a#0(x)
-					System.out.print("ADD " + action.getAgentTo().getName()
+					Simulator.print("ADD " + action.getAgentTo().getName()
 							+ "#");
-	
-					System.out.print(action.getAgentTo().getIdInRuleSide() - 1);
-					System.out.print("(");
+
+					Simulator.print(""
+							+ (action.getAgentTo().getIdInRuleSide() - 1));
+					Simulator.print("(");
 					int i = 1;
 					for (ISite site : action.getAgentTo().getSites()) {
-						System.out.print(site.getName());
+						Simulator.print(site.getName());
 						if ((site.getInternalState() != null)
 								&& (site.getInternalState().getNameId() >= 0))
-							System.out.print("~"
+							Simulator.print("~"
 									+ site.getInternalState().getName());
 						if (action.getAgentTo().getSites().size() > i++)
-							System.out.print(",");
+							Simulator.print(",");
 					}
-					System.out.println(") ");
-	
+					Simulator.println(") ");
+
 					break;
 				}
 				case BOUND: {
@@ -399,83 +411,94 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 							.getSite());
 					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() > siteTo
 							.getAgentLink().getIdInRuleSide()) {
-						System.out.print("BND (#");
-						System.out.print(action.getSiteFrom().getAgentLink()
-								.getIdInRuleSide() - 1);
-						System.out.print(",");
-						System.out.print(action.getSiteFrom().getName());
-						System.out.print(") ");
-						System.out.print("(#");
-						System.out.print(action.getSiteTo().getAgentLink()
-								.getIdInRuleSide() - 1);
-						System.out.print(",");
-						System.out.print(siteTo.getName());
-						System.out.print(") ");
-						System.out.println();
+						Simulator.print("BND (#");
+						Simulator.print(""
+								+ (action.getSiteFrom().getAgentLink()
+										.getIdInRuleSide() - 1));
+						Simulator.print(",");
+						Simulator.print(action.getSiteFrom().getName());
+						Simulator.print(") ");
+						Simulator.print("(#");
+						Simulator.print(""
+								+ (action.getSiteTo().getAgentLink()
+										.getIdInRuleSide() - 1));
+						Simulator.print(",");
+						Simulator.print(siteTo.getName());
+						Simulator.print(") ");
+						Simulator.println();
 					}
 					break;
 				}
 				case MODIFY: {
 					// MOD (#1,x) with p
-					System.out.print("MOD (#");
-					System.out.print(action.getSiteFrom().getAgentLink()
-							.getIdInRuleSide() - 1);
-					System.out.print(",");
-					System.out.print(action.getSiteFrom().getName());
-					System.out.print(") with ");
-					System.out.print(action.getSiteTo().getInternalState()
+					Simulator.print("MOD (#");
+					Simulator.print(""
+							+ (action.getSiteFrom().getAgentLink()
+									.getIdInRuleSide() - 1));
+					Simulator.print(",");
+					Simulator.print(action.getSiteFrom().getName());
+					Simulator.print(") with ");
+					Simulator.print(action.getSiteTo().getInternalState()
 							.getName());
-					System.out.println();
+					Simulator.println();
 					break;
 				}
 				}
-	
+
 			}
-	
-			String line = printPartRule(rule.getLeftHandSide(), simulationData.isOcamlStyleObsName());
+
+			String line = printPartRule(rule.getLeftHandSide(), simulationData
+					.isOcamlStyleObsName());
 			line = line + "->";
-			line = line + printPartRule(rule.getRightHandSide(), simulationData.isOcamlStyleObsName());
+			line = line
+					+ printPartRule(rule.getRightHandSide(), simulationData
+							.isOcamlStyleObsName());
 			String ch = new String();
 			for (int j = 0; j < line.length(); j++)
 				ch = ch + "-";
-	
-			System.out.println(ch);
+
+			Simulator.println(ch);
 			if (rule.getName() != null) {
-				System.out.print(rule.getName());
-				System.out.print(": ");
+				Simulator.print(rule.getName());
+				Simulator.print(": ");
 			}
-			System.out.print(line);
-			System.out.println();
-			System.out.println(ch);
-			System.out.println();
-			System.out.println();
+			Simulator.print(line);
+			Simulator.println();
+			Simulator.println(ch);
+			Simulator.println();
+			Simulator.println();
 		}
 	}
 
+	public static void println() {
+		printStream.get().println();
+	}
+
 	private final void outputSolution() {
-		System.out.println("INITIAL SOLUTION:");
+		Simulator.println("INITIAL SOLUTION:");
 		for (SolutionLines sl : ((CSolution) simulationData.getSolution())
 				.getSolutionLines()) {
-			System.out.print("-");
-			System.out.print(sl.getCount());
-			System.out.print("*[");
-			System.out.print(sl.getLine());
-			System.out.println("]");
+			Simulator.print("-");
+			Simulator.print("" + sl.getCount());
+			Simulator.print("*[");
+			Simulator.print(sl.getLine());
+			Simulator.println("]");
 		}
 	}
 
 	private final void outToLogger(boolean isEndRules, TimerSimulation timer) {
 		getSimulationData().stopTimer(timer, "-Simulation:");
-		// System.out.println("-Simulation: " + timer.getTimer() + " sec. CPU");
+		// Simulator.println("-Simulation: " + timer.getTimer() + " sec. CPU");
 		if (!isEndRules)
 			LOGGER.info("end of simulation: time");
 		else
 			LOGGER.info("end of simulation: there are no active rules");
 	}
 
-	private final String perturbationParametersToString(List<IPerturbationExpression> sumParameters) {
+	private final String perturbationParametersToString(
+			List<IPerturbationExpression> sumParameters) {
 		String st = new String();
-	
+
 		int index = 1;
 		for (IPerturbationExpression parameters : sumParameters) {
 			st += parameters.getValueToString();
@@ -488,7 +511,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 				st += " + ";
 			index++;
 		}
-	
+
 		return st;
 	}
 
@@ -499,7 +522,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 			greater = "> ";
 		else
 			greater = "< ";
-	
+
 		switch (perturbation.getType()) {
 		case CPerturbation.TYPE_TIME: {
 			st += "Whenever current time ";
@@ -523,7 +546,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		st += "):=";
 		st += perturbationParametersToString(perturbation
 				.getRHSParametersList());
-	
+
 		return st;
 	}
 
@@ -560,12 +583,12 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 	}
 
 	public void run(int iteration_num) {
-		getSimulationData().addInfo(
-				new Info(Info.TYPE_INFO, "-Simulation..."));
+		getSimulationData().addInfo(new Info(Info.TYPE_INFO, "-Simulation..."));
 		TimerSimulation timer = new TimerSimulation(true);
 		long clash = 0;
 		IRule rule;
-		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(getSimulationData());
+		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
+				getSimulationData());
 
 		boolean isEndRules = false;
 
@@ -591,7 +614,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 			if (rule == null) {
 				isEndRules = true;
 				getSimulationData().setTimeLength(currentTime);
-				System.out.println("#");
+				Simulator.println("#");
 				break;
 			}
 			if (LOGGER.isDebugEnabled())
@@ -618,8 +641,8 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 				doPositiveUpdate(rule, injectionsList);
 
-				getSimulationData().getObservables().calculateObs(
-						currentTime, count, getSimulationData().isTime());
+				getSimulationData().getObservables().calculateObs(currentTime,
+						count, getSimulationData().isTime());
 			} else {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Clash");
@@ -630,8 +653,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 			if (isIteration)
 				addIteration(iteration_num);
 		}
-		getSimulationData().getObservables()
-				.calculateObsLast(currentTime);
+		getSimulationData().getObservables().calculateObsLast(currentTime);
 		outToLogger(isEndRules, timer);
 		if (!isIteration)
 			outputData(count);
@@ -639,18 +661,20 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 	public void run(SimulatorInputData simulatorInputData) throws Exception {
 		String[] args = simulatorInputData.getArgs();
+		printStream.set(simulatorInputData.getPrintStream());
 		SimulationData simulationData = getSimulationData();
 		simulationData.setCommandLine(args);
-		System.out.println("Java "
-				+ simulationData.getCommandLine());
+		Simulator.println("Java " + simulationData.getCommandLine());
 		startTimer();
-		cmdLineArgs = SimulationMain.parseArguments(getSimulationData(), SimulationMain.changeArgs(args), SimulationMain.cmdLineOptions);
+		cmdLineArgs = SimulationMain.parseArguments(getSimulationData(),
+				SimulationMain.changeArgs(args), SimulationMain.cmdLineOptions);
 		SimulationMain.readSimulatonFile(this, cmdLineArgs);
 		init(cmdLineArgs);
 		if (!cmdLineArgs.hasOption(SimulationMain.DEBUG_INIT_OPTION)) {
 			if (cmdLineArgs.hasOption(SimulationMain.LONG_GENERATE_MAP_OPTION))
 				outputData(0);
-			else if (cmdLineArgs.hasOption(SimulationMain.LONG_NUMBER_OF_RUNS_OPTION))
+			else if (cmdLineArgs
+					.hasOption(SimulationMain.LONG_NUMBER_OF_RUNS_OPTION))
 				runIterations();
 			else if (cmdLineArgs.hasOption(SimulationMain.LONG_STORIFY_OPTION))
 				runStories();
@@ -703,18 +727,18 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 			boolean isEndRules = false;
 			long clash = 0;
 			IRule rule;
-			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(getSimulationData());
+			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
+					getSimulationData());
 			long max_clash = 0;
 			getSimulationData().resetBar();
-			while (!getSimulationData().isEndSimulation(currentTime,
-					count)
+			while (!getSimulationData().isEndSimulation(currentTime, count)
 					&& max_clash <= getSimulationData().getMaxClashes()) {
 				checkPerturbation();
 				rule = ruleProbabilityCalculation.getRandomRule();
 
 				if (rule == null) {
 					getSimulationData().setTimeLength(currentTime);
-					System.out.println("#");
+					Simulator.println("#");
 					break;
 				}
 
@@ -723,16 +747,17 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 				currentTime += ruleProbabilityCalculation.getTimeValue();
 				if (!rule.isClash(injectionsList)) {
 					CNetworkNotation netNotation = new CNetworkNotation(count,
-							rule,injectionsList,getSimulationData());
+							rule, injectionsList, getSimulationData());
 					max_clash = 0;
 					if (stories.checkRule(rule.getRuleID(), i)) {
 						rule.applyLastRuleForStories(injectionsList,
 								netNotation);
-						rule.applyRuleForStories(injectionsList, netNotation, this);
+						rule.applyRuleForStories(injectionsList, netNotation,
+								this);
 						stories.addToNetworkNotationStory(i, netNotation);
 						count++;
 						isEndRules = true;
-						System.out.println("#");
+						Simulator.println("#");
 						break;
 					}
 					rule.applyRuleForStories(injectionsList, netNotation, this);
@@ -764,5 +789,5 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		timer = new TimerSimulation();
 		timer.startTimer();
 	}
-	
+
 }

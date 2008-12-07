@@ -116,29 +116,28 @@ public class SimulationData {
 	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
 		if (curClockTime - clockStamp > clockPrecision) {
-			System.out
-					.println("simulation interrupted because the clock time has expired");
+			Simulator.println("simulation interrupted because the clock time has expired");
 			return true;
 		}
 		if (isTime)
 			if (currentTime <= timeLength) {
 				if (currentTime >= nextStep) {
-					System.out.print("#");
+					Simulator.print("#");
 					nextStep += step;
 				}
 				return false;
 			} else {
-				System.out.println("#");
+				Simulator.println("#");
 				return true;
 			}
 		else if (count <= event) {
 			if (count >= nextStep) {
-				System.out.print("#");
+				Simulator.print("#");
 				nextStep += step;
 			}
 			return false;
 		} else {
-			System.out.println("#");
+			Simulator.println("#");
 			return true;
 		}
 	}
@@ -480,7 +479,7 @@ public class SimulationData {
 		// GraphDrawer gd = new GraphDrawer();
 		// gd.createGraphs(observables,initialTime,timeLength);
 
-		// System.out.println("-Results outputted in xml session: "
+		// Simulator.println("-Results outputted in xml session: "
 		// + timerOutput.getTimer() + " sec. CPU");
 	}
 
@@ -659,7 +658,7 @@ public class SimulationData {
 		if (timer == null)
 			return;
 		mess += " ";
-		System.out.println(mess + timer.getTimerMess() + " sec. CPU");
+		Simulator.println(mess + timer.getTimerMess() + " sec. CPU");
 		// timer.getTimer();
 		addInfo(new Info(Info.TYPE_INFO, mess, timer.getThreadTimeInSeconds(),
 				1));
@@ -719,7 +718,7 @@ public class SimulationData {
 			e.printStackTrace();
 		}
 
-		System.out.println("-Results outputted in tmp session: "
+		Simulator.println("-Results outputted in tmp session: "
 				+ timer.getTimerMess() + " sec. CPU");
 	}
 
@@ -837,27 +836,24 @@ public class SimulationData {
 	}
 
 	public final void initialize() {
-		getObservables().init(getTimeLength(),
-				getInitialTime(), getEvent(),
+		getObservables().init(getTimeLength(), getInitialTime(), getEvent(),
 				getPoints(), isTime());
 		CSolution solution = (CSolution) getSolution();
 		List<IRule> rules = getRules();
 		Iterator<IAgent> iterator = solution.getAgents().values().iterator();
 		getObservables().checkAutomorphisms();
-	
+
 		if (isActivationMap()) {
 			TimerSimulation timer = new TimerSimulation(true);
-			addInfo(new Info(Info.TYPE_INFO,
-					"--Abstracting influence map..."));
+			addInfo(new Info(Info.TYPE_INFO, "--Abstracting influence map..."));
 			for (IRule rule : rules) {
 				rule.createActivatedRulesList(rules);
 				rule.createActivatedObservablesList(getObservables());
 			}
 			stopTimer(timer, "--Abstraction:");
-			addInfo(new Info(Info.TYPE_INFO,
-					"--Influence map computed"));
+			addInfo(new Info(Info.TYPE_INFO, "--Influence map computed"));
 		}
-	
+
 		while (iterator.hasNext()) {
 			IAgent agent = iterator.next();
 			for (IRule rule : rules) {
@@ -872,8 +868,9 @@ public class SimulationData {
 					}
 				}
 			}
-	
-			for (IObservablesConnectedComponent oCC : getObservables().getConnectedComponentList())
+
+			for (IObservablesConnectedComponent oCC : getObservables()
+					.getConnectedComponentList())
 				if (oCC != null)
 					if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
 						IInjection inj = oCC.getInjection(agent);
@@ -884,7 +881,7 @@ public class SimulationData {
 						}
 					}
 		}
-	
+
 	}
 
 }

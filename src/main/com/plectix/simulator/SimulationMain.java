@@ -146,7 +146,7 @@ public class SimulationMain implements SimulatorCallableListener {
 	private void start(String[] args) {
 		SimulatorInterface simulator = new Simulator();
 		SimulationService service = new SimulationService(simulator);
-		service.submit(new SimulatorInputData(args), this);
+		service.submit(new SimulatorInputData(args, System.out), this);
 	}
 
 	public final static String[] changeArgs(String[] args) {
@@ -159,10 +159,6 @@ public class SimulationMain implements SimulatorCallableListener {
 			else
 				argsNew[i++] = st;
 		return argsNew;
-	}
-
-	public final InputStream getInputStream() {
-		return System.in;
 	}
 
 	public static final CommandLine parseArguments(SimulationData simulationData,
@@ -299,7 +295,7 @@ public class SimulationMain implements SimulatorCallableListener {
 			}
 			simulationData.setTimeLength(timeSim);
 		} else
-			System.out.println("*Warning* No time limit.");
+			Simulator.println("*Warning* No time limit.");
 
 		if (!option && (cmdLineArgs.hasOption(SHORT_SIMULATIONFILE_OPTION))) {
 			option = true;
