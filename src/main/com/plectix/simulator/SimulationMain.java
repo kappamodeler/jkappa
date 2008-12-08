@@ -30,7 +30,7 @@ public class SimulationMain implements SimulatorCallableListener {
 	private final static String SHORT_SIMULATIONFILE_OPTION = "s";
 	private final static String LONG_SIMULATIONFILE_OPTION = "sim";
 	private final static String LONG_COMPILE_OPTION = "compile";
-	
+
 	private final static String SHORT_TIME_OPTION = "t";
 	private final static String LONG_TIME_OPTION = "time";
 	private final static String LONG_SEED_OPTION = "seed";
@@ -53,13 +53,16 @@ public class SimulationMain implements SimulatorCallableListener {
 	private static final String LONG_FORWARD_OPTION = "forward";
 	private static final String LONG_OUTPUT_SCHEME_OPTION = "output_scheme";
 	private static final String LONG_KEY_OPTION = "key";
-	
+	private static final String LONG_NO_COMPRESS_STORIES_OPTION = "no_compress_stories";
+	private static final String LONG_COMPRESS_STORIES_OPTION = "compress_stories";
+	private static final String LONG_USE_STRONG_COMPRESSION_OPTION = "use_strong_compression";
+
 	public final static String SHORT_COMPILE_OPTION = "c";
 	public final static String LONG_GENERATE_MAP_OPTION = "generate_map";
 	public final static String LONG_NUMBER_OF_RUNS_OPTION = "number_of_runs";
 	public final static String LONG_STORIFY_OPTION = "storify";
 	public final static String DEBUG_INIT_OPTION = "debug";
-	
+
 	public static Options cmdLineOptions;
 	public CommandLine cmdLineArgs;
 
@@ -129,6 +132,12 @@ public class SimulationMain implements SimulatorCallableListener {
 				"(def: current dir) directory on which to put computed data");
 		cmdLineOptions.addOption(LONG_KEY_OPTION, true,
 				"Name of the file containing the key for the crypted version");
+		cmdLineOptions.addOption(LONG_COMPRESS_STORIES_OPTION, false,
+				"Weak compression of stories");
+		cmdLineOptions.addOption(LONG_NO_COMPRESS_STORIES_OPTION, false,
+				"Do not compress stories");
+		cmdLineOptions.addOption(LONG_USE_STRONG_COMPRESSION_OPTION, false,
+				"Use strong compression to classify stories");
 	}
 
 	public SimulationMain() {
@@ -141,7 +150,6 @@ public class SimulationMain implements SimulatorCallableListener {
 		LOGGER.info("Build OS: " + BuildConstants.BUILD_OS_NAME);
 		LOGGER.info("SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
 		LOGGER.info("Ant Java Version: " + BuildConstants.ANT_JAVA_VERSION);
-
 
 		new SimulationMain().start(args);
 	}
@@ -165,8 +173,8 @@ public class SimulationMain implements SimulatorCallableListener {
 		return argsNew;
 	}
 
-	public static final CommandLine parseArguments(SimulationData simulationData,
-			String[] args, Options cmdLineOptions) {
+	public static final CommandLine parseArguments(
+			SimulationData simulationData, String[] args, Options cmdLineOptions) {
 		simulationData.addInfo(new Info(Info.TYPE_INFO, "-Initialization..."));
 		CommandLineParser parser = new PosixParser();
 		CommandLine cmdLineArgs = null;
@@ -230,8 +238,8 @@ public class SimulationMain implements SimulatorCallableListener {
 		}
 
 		if (cmdLineArgs.hasOption(LONG_RANDOMIZER_JAVA_OPTION)) {
-			simulationData.setRandomizer(
-					cmdLineArgs.getOptionValue(LONG_RANDOMIZER_JAVA_OPTION));
+			simulationData.setRandomizer(cmdLineArgs
+					.getOptionValue(LONG_RANDOMIZER_JAVA_OPTION));
 		}
 
 		if (cmdLineArgs.hasOption(LONG_NO_ACTIVATION_MAP_OPTION)
@@ -276,9 +284,10 @@ public class SimulationMain implements SimulatorCallableListener {
 		return cmdLineArgs;
 	}
 
-	public static final void readSimulatonFile(Simulator simulator, CommandLine cmdLineArgs) {
+	public static final void readSimulatonFile(Simulator simulator,
+			CommandLine cmdLineArgs) {
 
-		SimulationData simulationData = simulator.getSimulationData(); 
+		SimulationData simulationData = simulator.getSimulationData();
 		boolean option = false;
 		String fileName = null;
 		double timeSim = 0.;
@@ -286,8 +295,7 @@ public class SimulationMain implements SimulatorCallableListener {
 
 		if (cmdLineArgs.hasOption(LONG_STORIFY_OPTION)) {
 			fileName = cmdLineArgs.getOptionValue(LONG_STORIFY_OPTION);
-			simulationData
-					.setStorify(true);
+			simulationData.setStorify(true);
 			option = true;
 		}
 		if (cmdLineArgs.hasOption(LONG_TIME_OPTION)) {
@@ -312,8 +320,7 @@ public class SimulationMain implements SimulatorCallableListener {
 				} catch (Exception e) {
 					throw new IllegalArgumentException(e);
 				}
-				simulationData.setSnapshotTime(
-						snapshotTime);
+				simulationData.setSnapshotTime(snapshotTime);
 			}
 		}
 		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
@@ -334,8 +341,8 @@ public class SimulationMain implements SimulatorCallableListener {
 		}
 
 		if (!option) {
-//			HelpFormatter formatter = new HelpFormatter();
-//			formatter.printHelp("use --sim [file]", cmdLineOptions);
+			// HelpFormatter formatter = new HelpFormatter();
+			// formatter.printHelp("use --sim [file]", cmdLineOptions);
 			throw new IllegalArgumentException("No option specified");
 		}
 
@@ -354,10 +361,9 @@ public class SimulationMain implements SimulatorCallableListener {
 	}
 
 	public void finished(SimulatorCallable simulatorCallable) {
-		SimulatorResultsData results = simulatorCallable.getSimulatorResultsData();
-		//TODO process results
+		SimulatorResultsData results = simulatorCallable
+				.getSimulatorResultsData();
+		// TODO process results
 	}
 
-
-	
 }
