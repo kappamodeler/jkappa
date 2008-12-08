@@ -439,35 +439,37 @@ public class SimulationData {
 			stopTimer(timer, "-Building xml tree for snapshots:");
 		}
 
-		int obsCountTimeListSize = observables.getCountTimeList().size();
 
-		Element simulation = doc.createElement("Simulation");
-		simulation.setAttribute("TotalEvents", Long.toString(event));
-		simulation.setAttribute("TotalTime", Double.toString(timeLength));
-		simulation.setAttribute("InitTime", Double.toString(initialTime));
+		if (!storify) {
+			int obsCountTimeListSize = observables.getCountTimeList().size();
+			Element simulation = doc.createElement("Simulation");
+			simulation.setAttribute("TotalEvents", Long.toString(event));
+			simulation.setAttribute("TotalTime", Double.toString(timeLength));
+			simulation.setAttribute("InitTime", Double.toString(initialTime));
 
-		simulation.setAttribute("TimeSample", Double.valueOf(
-				observables.getTimeSampleMin()).toString());
-		simplxSession.appendChild(simulation);
+			simulation.setAttribute("TimeSample", Double.valueOf(
+					observables.getTimeSampleMin()).toString());
+			simplxSession.appendChild(simulation);
 
-		List<IObservablesComponent> list = observables
-				.getComponentListForXMLOutput();
-		for (int i = list.size() - 1; i >= 0; i--) {
-			Element node = createElement(list.get(i), doc);
-			simulation.appendChild(node);
+			List<IObservablesComponent> list = observables
+					.getComponentListForXMLOutput();
+			for (int i = list.size() - 1; i >= 0; i--) {
+				Element node = createElement(list.get(i), doc);
+				simulation.appendChild(node);
+			}
+
+			timer.startTimer();
+			Element csv = doc.createElement("CSV");
+			CDATASection cdata = doc.createCDATASection("\n");
+
+			for (int i = 0; i < obsCountTimeListSize; i++) {
+				appendData(observables, list, cdata, i);
+			}
+
+			csv.appendChild(cdata);
+			simulation.appendChild(csv);
+			stopTimer(timer, "-Building xml tree for data points:");
 		}
-
-		timer.startTimer();
-		Element csv = doc.createElement("CSV");
-		CDATASection cdata = doc.createCDATASection("\n");
-
-		for (int i = 0; i < obsCountTimeListSize; i++) {
-			appendData(observables, list, cdata, i);
-		}
-
-		csv.appendChild(cdata);
-		simulation.appendChild(csv);
-		stopTimer(timer, "-Building xml tree for data points:");
 
 		stopTimer(timerOutput, "-Results outputted in xml session:");
 
