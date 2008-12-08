@@ -558,7 +558,15 @@ public class CRule implements IRule {
 							if (!(currentLinkState.getSite().equals(linkState
 									.getSite())))
 								continue;
-
+						
+						if (currentLinkState.getStatusLinkRank() == linkState
+								.getStatusLinkRank()
+								&& currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
+							if (currentLinkState.getSite().equals(linkState
+									.getSite()) && (currentLinkState.getSite().getInternalState().getNameId()!=linkState
+											.getSite().getInternalState().getNameId()))
+								continue;
+								
 						if (currentLinkState.getStatusLinkRank() >= linkState
 								.getStatusLinkRank())
 							return true;
