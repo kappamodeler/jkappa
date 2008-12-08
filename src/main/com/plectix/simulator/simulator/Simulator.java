@@ -73,13 +73,13 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 	private boolean isIteration = false;
 
-	protected SimulationData simulationData;
+	private SimulationData simulationData;
 
 	private boolean storyMode = false;
 
 	private TimerSimulation timer;
 
-	int timeStepCounter = 0;
+	private int timeStepCounter = 0;
 
 	private SimulatorResultsData simulatorResultsData;
 
@@ -252,7 +252,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		}
 	}
 
-	public final synchronized long generateNextAgentId() {
+	public final long generateNextAgentId() {
 		return agentIdGenerator++;
 	}
 

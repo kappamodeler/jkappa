@@ -135,7 +135,7 @@ public class Parser {
 						"Real number expected instead of '" + item + "'");
 			}
 		} else {
-			Double parameter = 0.0;
+			double parameter = 0.0;
 			String number = item.substring(0, item.indexOf("*")).trim();
 			try {
 				parameter = Double.valueOf(number);

@@ -29,18 +29,15 @@ public class SimulationMain implements SimulatorCallableListener {
 
 	private final static String SHORT_SIMULATIONFILE_OPTION = "s";
 	private final static String LONG_SIMULATIONFILE_OPTION = "sim";
-	public final static String SHORT_COMPILE_OPTION = "c";
 	private final static String LONG_COMPILE_OPTION = "compile";
-	public final static String DEBUG_INIT_OPTION = "debug";
+	
 	private final static String SHORT_TIME_OPTION = "t";
 	private final static String LONG_TIME_OPTION = "time";
 	private final static String LONG_SEED_OPTION = "seed";
 	private final static String LONG_NO_SEED_OPTION = "no_seed";
 	private final static String LONG_XML_SESSION_NAME_OPTION = "xml_session_name";
-	public final static String LONG_STORIFY_OPTION = "storify";
 	private final static String LONG_EVENT_OPTION = "event";
 	private final static String LONG_RANDOMIZER_JAVA_OPTION = "randomizer";
-	public final static String LONG_NUMBER_OF_RUNS_OPTION = "number_of_runs";
 	private final static String LONG_SNAPSHOT_TIME = "set_snapshot_time";
 	private final static String LONG_NO_ACTIVATION_MAP_OPTION = "no_activation_map";
 	private final static String LONG_NO_MAPS_OPTION = "no_maps";
@@ -51,12 +48,18 @@ public class SimulationMain implements SimulatorCallableListener {
 	private final static String LONG_RESCALE_OPTION = "rescale";
 	private final static String LONG_MAX_CLASHES_OPTION = "max_clashes";
 	private final static String LONG_OCAML_STYLE_OBS_NAME_OPTION = "ocaml_style_obs_name";
-	public final static String LONG_GENERATE_MAP_OPTION = "generate_map";
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 	private static final String LONG_CLOCK_PRECISION_OPTION = "clock_precision";
 	private static final String LONG_FORWARD_OPTION = "forward";
 	private static final String LONG_OUTPUT_SCHEME_OPTION = "output_scheme";
 	private static final String LONG_KEY_OPTION = "key";
+	
+	public final static String SHORT_COMPILE_OPTION = "c";
+	public final static String LONG_GENERATE_MAP_OPTION = "generate_map";
+	public final static String LONG_NUMBER_OF_RUNS_OPTION = "number_of_runs";
+	public final static String LONG_STORIFY_OPTION = "storify";
+	public final static String DEBUG_INIT_OPTION = "debug";
+	
 	public static Options cmdLineOptions;
 	public CommandLine cmdLineArgs;
 
@@ -292,8 +295,7 @@ public class SimulationMain implements SimulatorCallableListener {
 				timeSim = Double.valueOf(cmdLineArgs
 						.getOptionValue(LONG_TIME_OPTION));
 			} catch (Exception e) {
-				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp("use --sim [file]", cmdLineOptions);
+				throw new IllegalArgumentException(e);
 			}
 			simulationData.setTimeLength(timeSim);
 		} else
@@ -308,8 +310,7 @@ public class SimulationMain implements SimulatorCallableListener {
 					snapshotTime = Double.valueOf(cmdLineArgs
 							.getOptionValue(LONG_SNAPSHOT_TIME));
 				} catch (Exception e) {
-					HelpFormatter formatter = new HelpFormatter();
-					formatter.printHelp("use --sim [file]", cmdLineOptions);
+					throw new IllegalArgumentException(e);
 				}
 				simulationData.setSnapshotTime(
 						snapshotTime);
@@ -333,8 +334,8 @@ public class SimulationMain implements SimulatorCallableListener {
 		}
 
 		if (!option) {
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("use --sim [file]", cmdLineOptions);
+//			HelpFormatter formatter = new HelpFormatter();
+//			formatter.printHelp("use --sim [file]", cmdLineOptions);
 			throw new IllegalArgumentException("No option specified");
 		}
 

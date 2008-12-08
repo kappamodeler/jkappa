@@ -678,7 +678,7 @@ public class SimulationData {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(
 						tmpSessionName + "-" + oCamlObservableNo));
 
-				Double timeSampleMin = 0.;
+				double timeSampleMin = 0.;
 				double timeNext = 0.;
 				double fullTime = timeStamps.get(timeStamps.size() - 1);
 				if (initialTime > 0.0) {

@@ -19,7 +19,7 @@ public class TestInjectionsAgentLinking extends TestInjections {
 	private static int[] myObsAgentsOrder;
 	private static final int myScaryQuantity = 3;
 	private static final int myHalfInitPower = 199;
-	private static final int myInitPower = myScaryQuantity * 100 + 28 + myHalfInitPower + 3;
+	private static final int myInitPower = myScaryQuantity * 100 + 28 + myHalfInitPower + 2;
 		
 	private static int[] shift(int[] a) {
 		for (int i = 0; i < a.length; i++) {
