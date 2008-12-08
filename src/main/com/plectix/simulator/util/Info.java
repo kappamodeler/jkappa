@@ -1,5 +1,8 @@
 package com.plectix.simulator.util;
 
+import java.text.Format;
+import java.util.Formatter;
+
 import com.plectix.simulator.simulator.Simulator;
 
 public class Info {
@@ -16,8 +19,6 @@ public class Info {
 	private int count;
 	private double position;
 	private boolean isHaveTime = false;
-
-	private static int index = 0;
 
 	public String getType() {
 		return type;
@@ -44,7 +45,9 @@ public class Info {
 	}
 
 	public String getPosition() {
-		return Double.valueOf(position).toString();
+		Formatter fr = new Formatter();
+		fr.format("%.3f", position);
+		return fr.toString();
 	}
 
 	public Info() {
@@ -55,7 +58,7 @@ public class Info {
 		setType(type);
 		this.count = 1;
 		this.message = message;
-		this.position = index++;
+		this.position = System.currentTimeMillis() / 1000.0; 
 		Simulator.println(message);
 	}
 
@@ -83,7 +86,7 @@ public class Info {
 		isHaveTime = true;
 		this.time = time;
 		this.message = message;// + " sec. CPU";
-		this.position = index++;
+		this.position = System.currentTimeMillis() / 1000.0;
 	}
 
 }
