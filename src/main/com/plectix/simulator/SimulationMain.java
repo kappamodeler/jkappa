@@ -147,6 +147,7 @@ public class SimulationMain implements SimulatorCallableListener {
 		SimulatorInterface simulator = new Simulator();
 		SimulationService service = new SimulationService(simulator);
 		service.submit(new SimulatorInputData(args, System.out), this);
+		service.shutdown();
 	}
 
 	public final static String[] changeArgs(String[] args) {

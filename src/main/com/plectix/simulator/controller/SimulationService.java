@@ -164,4 +164,8 @@ public class SimulationService {
 		return futureTask.isDone();
 	}
 	
+	public void shutdown() {
+		EXECUTOR_SERVICE.shutdown();
+	}
+	
 }
