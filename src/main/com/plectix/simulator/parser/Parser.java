@@ -295,21 +295,35 @@ public class Parser {
 		}
 		line = line.substring(indexCount + 1);
 
-		String strRule;
+		List<IAgent> agentList = parseAgent(line);
+		List<IConnectedComponent> ccList = Simulator
+				.buildConnectedComponents(agentList);
 
-		if (indexAdd != -1)
-			strRule = " ->" + line;
-		else
-			strRule = line + "-> ";
-		strRule += "@0.0";
+		List<CRulePerturbation> ruleList = new ArrayList<CRulePerturbation>();
+		// public CRulePerturbation(List<IConnectedComponent> left,
+		// List<IConnectedComponent> right, String name, double ruleRate,
+		// int ruleID, boolean isStorify) {
+		// super(left, right, name, ruleRate, ruleID, isStorify);
+		// }
+		for (IConnectedComponent cc : ccList) {
+			List<IConnectedComponent> ccL = new ArrayList<IConnectedComponent>();
+			ccL.add(cc);
+			CRulePerturbation rp;
+			if (indexAdd != -1) {
+				if (countToFile == Double.MAX_VALUE)
+					throw new ParseErrorException(perturbationStr,
+							"$ADDONCE has not used with $INF");
+				rp = new CRulePerturbation(null, ccL, "", 0, ruleID++,
+						simulationData.isStorify());
+			} else {
+				rp = new CRulePerturbation(ccL, null, "", 0, ruleID++,
+						simulationData.isStorify());
+			}
+			ruleList.add(rp);
 
-		List<CDataString> cd = new ArrayList<CDataString>();
-		cd.add(new CDataString(perturbationStr.getLineNumber(), strRule));
+		}
 
-		List<IRule> listRules = createRules(cd);
-		if (!listRules.isEmpty()) {
-			CRulePerturbation rule = new CRulePerturbation(listRules.get(0), simulationData.isStorify());
-			rule.setRuleID(simulationData.getRules().size());
+		for (CRulePerturbation rule : ruleList) {
 			rule.setCount(countToFile);
 			simulationData.addRule(rule);
 
@@ -460,11 +474,12 @@ public class Parser {
 		}
 	}
 
+	private int ruleID = 0;
+
 	public final List<IRule> createRules(List<CDataString> list)
 			throws ParseErrorException {
 
 		List<IRule> rules = new ArrayList<IRule>();
-		int ruleID = 0;
 		for (CDataString rulesDS : list) {
 
 			String rulesStr = rulesDS.getLine();
@@ -558,7 +573,8 @@ public class Parser {
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 						rules.add(Simulator.buildRule(right, parseAgent(lhs
-								.trim()), nameOp, activity2, ruleID, simulationData.isStorify()));
+								.trim()), nameOp, activity2, ruleID,
+								simulationData.isStorify()));
 					}
 					break;
 				}
@@ -569,20 +585,21 @@ public class Parser {
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 						rules.add(Simulator.buildRule(parseAgent(rhs.trim()),
-								left, nameOp, activity2, ruleID, simulationData.isStorify()));
+								left, nameOp, activity2, ruleID, simulationData
+										.isStorify()));
 					}
 					break;
 				}
 				case CC_ALL: {
 					left = parseAgent(lhs.trim());
 					right = parseAgent(rhs.trim());
-					rules.add(Simulator.buildRule(
-							left, right, name, activity, ruleID, simulationData.isStorify()));
+					rules.add(Simulator.buildRule(left, right, name, activity,
+							ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 						rules.add(Simulator.buildRule(parseAgent(rhs.trim()),
-										parseAgent(lhs.trim()), nameOp,
-										activity2, ruleID, simulationData.isStorify()));
+								parseAgent(lhs.trim()), nameOp, activity2,
+								ruleID, simulationData.isStorify()));
 					}
 					break;
 				}
@@ -683,15 +700,15 @@ public class Parser {
 					}
 
 					if (line.length() == 0) {
-						simulationData.getObservables().addRulesName(
-								name,
-								obsNameID,
-								simulationData.getRules());
+						simulationData.getObservables().addRulesName(name,
+								obsNameID, simulationData.getRules());
 					} else
-						simulationData.getObservables().addConnectedComponents(
-								Simulator.buildConnectedComponents(
-												parseAgent(line)), name, line,
-								obsNameID);
+						simulationData
+								.getObservables()
+								.addConnectedComponents(
+										Simulator
+												.buildConnectedComponents(parseAgent(line)),
+										name, line, obsNameID);
 					obsNameID++;
 					break;
 				}
@@ -743,7 +760,8 @@ public class Parser {
 					throw new ParseErrorException("Unexpected agent name : "
 							+ ccomp);
 
-				cagent = new CAgent(simulator.getNameDictionary().addName(ccomp), simulator.generateNextAgentId());
+				cagent = new CAgent(simulator.getNameDictionary()
+						.addName(ccomp), simulator.generateNextAgentId());
 				listAgent.add(cagent);
 				while (agent.hasMoreTokens()) {
 					site = agent.nextToken().trim(); // Site name or State name.
@@ -888,7 +906,8 @@ public class Parser {
 	private final List<IAgent> cloneAgentsList(List<IAgent> agentList) {
 		List<IAgent> newAgentsList = new ArrayList<IAgent>();
 		for (IAgent agent : agentList) {
-			IAgent newAgent = new CAgent(agent.getNameId(), simulator.generateNextAgentId());
+			IAgent newAgent = new CAgent(agent.getNameId(), simulator
+					.generateNextAgentId());
 			for (ISite site : agent.getSites()) {
 				CSite newSite = new CSite(site.getNameId(), newAgent);
 				newSite.setLinkIndex(site.getLinkIndex());
