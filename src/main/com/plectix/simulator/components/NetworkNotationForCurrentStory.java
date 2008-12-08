@@ -36,6 +36,11 @@ class NetworkNotationForCurrentStory {
 			networkNotationList.add(networkNotation);
 	}
 
+	public void addToNetworkNotationListStorifyRule(
+			CNetworkNotation networkNotation) {
+		networkNotationList.add(networkNotation);
+	}
+
 	// TODO separate
 	private class CStoryVertexes {
 		AgentSites aSites;

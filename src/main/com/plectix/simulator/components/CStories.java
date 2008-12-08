@@ -50,6 +50,13 @@ public final class CStories {
 		this.networkNotationForCurrentStory.get(index)
 				.addToNetworkNotationList(networkNotation);
 	}
+	public final void addToNetworkNotationStoryStorifyRule(int index,
+			CNetworkNotation networkNotation) {
+		this.networkNotationForCurrentStory.get(index)
+		.addToNetworkNotationListStorifyRule(networkNotation);
+	}
+	
+	
 
 	public final boolean checkRule(int checkRuleID, int index) {
 		for (CStory story : this.stories)
