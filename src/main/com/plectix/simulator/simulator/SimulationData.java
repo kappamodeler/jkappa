@@ -3,8 +3,11 @@ package com.plectix.simulator.simulator;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -116,7 +119,8 @@ public class SimulationData {
 	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
 		if (curClockTime - clockStamp > clockPrecision) {
-			Simulator.println("simulation interrupted because the clock time has expired");
+			Simulator
+					.println("simulation interrupted because the clock time has expired");
 			return true;
 		}
 		if (isTime)
@@ -324,7 +328,9 @@ public class SimulationData {
 
 		simplxSession.setAttribute("CommandLine", commandLine);
 		simplxSession.setAttribute("InputFile", inputFile);
-		simplxSession.setAttribute("TimeStamp", "stmp");
+		Date d = new Date();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		simplxSession.setAttribute("TimeStamp", df.format(d));
 		doc.appendChild(simplxSession);
 
 		timer.startTimer();
