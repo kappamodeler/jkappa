@@ -96,7 +96,7 @@ public class Parser {
 		List<IRule> rules = createRules(data.getRules());
 		simulationData.setRules(rules);
 		if ((simulationData.getStories() == null)
-				&& (simulationData.getSimulationType() == SimulationData.SYMULATION_TYPE_STORIFY)) {
+				&& (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_STORIFY)) {
 			simulationData.setStories(new CStories());
 			createSimData(data.getStory(), CREATE_STORY);
 		} else
@@ -670,7 +670,7 @@ public class Parser {
 							simulationData.getSolution().addAgents(
 									cloneAgentsList(listAgent));
 						}
-						if (simulationData.getSimulationType() == SimulationData.SYMULATION_TYPE_COMPILE) {
+						if (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_COMPILE) {
 							((CSolution) simulationData.getSolution())
 									.checkSolutionLinesAndAdd(line, count);
 

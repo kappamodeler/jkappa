@@ -273,7 +273,7 @@ public class SimulationMain implements SimulatorCallableListener {
 				throw new IllegalArgumentException("No SEED OPTION");
 			}
 			simulationData
-					.setSimulationType(SimulationData.SYMULATION_TYPE_ITERATIONS);
+					.setSimulationType(SimulationData.SIMULATION_TYPE_ITERATIONS);
 			simulationData.setIterations(iteration);
 		}
 
@@ -304,7 +304,7 @@ public class SimulationMain implements SimulatorCallableListener {
 		if (cmdLineArgs.hasOption(LONG_STORIFY_OPTION)) {
 			fileName = cmdLineArgs.getOptionValue(LONG_STORIFY_OPTION);
 			simulationData
-					.setSimulationType(SimulationData.SYMULATION_TYPE_STORIFY);
+					.setSimulationType(SimulationData.SIMULATION_TYPE_STORIFY);
 			option = true;
 		}
 		if (cmdLineArgs.hasOption(LONG_TIME_OPTION)) {
@@ -332,7 +332,7 @@ public class SimulationMain implements SimulatorCallableListener {
 				simulationData.setSnapshotTime(snapshotTime);
 			}
 			simulationData
-					.setSimulationType(SimulationData.SYMULATION_TYPE_SIM);
+					.setSimulationType(SimulationData.SIMULATION_TYPE_SIM);
 		}
 		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
 			if (!option) {
@@ -341,7 +341,7 @@ public class SimulationMain implements SimulatorCallableListener {
 			} else
 				option = false;
 			simulationData
-					.setSimulationType(SimulationData.SYMULATION_TYPE_COMPILE);
+					.setSimulationType(SimulationData.SIMULATION_TYPE_COMPILE);
 		}
 
 		if (cmdLineArgs.hasOption(LONG_GENERATE_MAP_OPTION)) {
@@ -351,10 +351,10 @@ public class SimulationMain implements SimulatorCallableListener {
 			} else
 				option = false;
 			simulationData
-					.setSimulationType(SimulationData.SYMULATION_TYPE_GENERATE_MAP);
+					.setSimulationType(SimulationData.SIMULATION_TYPE_GENERATE_MAP);
 		}
 
-		if (simulationData.getSimulationType() == SimulationData.SYMULATION_TYPE_NONE) {
+		if (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_NONE) {
 			// HelpFormatter formatter = new HelpFormatter();
 			// formatter.printHelp("use --sim [file]", cmdLineOptions);
 			throw new IllegalArgumentException("No option specified");

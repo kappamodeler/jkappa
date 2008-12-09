@@ -25,12 +25,12 @@ import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
 public class SimulationData {
-	public final static byte SYMULATION_TYPE_NONE = -1;
-	public final static byte SYMULATION_TYPE_COMPILE = 0;
-	public final static byte SYMULATION_TYPE_STORIFY = 1;
-	public final static byte SYMULATION_TYPE_SIM = 2;
-	public final static byte SYMULATION_TYPE_ITERATIONS = 3;
-	public final static byte SYMULATION_TYPE_GENERATE_MAP = 4;
+	public final static byte SIMULATION_TYPE_NONE = -1;
+	public final static byte SIMULATION_TYPE_COMPILE = 0;
+	public final static byte SIMULATION_TYPE_STORIFY = 1;
+	public final static byte SIMULATION_TYPE_SIM = 2;
+	public final static byte SIMULATION_TYPE_ITERATIONS = 3;
+	public final static byte SIMULATION_TYPE_GENERATE_MAP = 4;
 
 	private List<Double> timeStamps;
 	private List<List<RunningMetric>> runningMetrics;
@@ -51,7 +51,7 @@ public class SimulationData {
 
 	private long event;
 
-	private byte simulationType = SYMULATION_TYPE_NONE;
+	private byte simulationType = SIMULATION_TYPE_NONE;
 
 	// private boolean compile = false;
 	// private boolean storify = false;
@@ -83,7 +83,7 @@ public class SimulationData {
 
 	public final boolean isParseSolution() {
 		switch (simulationType) {
-		case SYMULATION_TYPE_GENERATE_MAP:
+		case SIMULATION_TYPE_GENERATE_MAP:
 			return false;
 		}
 		return true;
@@ -220,7 +220,7 @@ public class SimulationData {
 	}
 
 	public boolean isStorify() {
-		if (simulationType == SYMULATION_TYPE_STORIFY)
+		if (simulationType == SIMULATION_TYPE_STORIFY)
 			return true;
 		return false;
 	}
@@ -421,7 +421,7 @@ public class SimulationData {
 			stopTimer(timer, "-Building xml tree for influence map:");
 		}
 
-		if (simulationType == SYMULATION_TYPE_STORIFY) {
+		if (simulationType == SIMULATION_TYPE_STORIFY) {
 
 			for (List<CStoryTrees> stList : stories.getTrees()) {
 				for (CStoryTrees st : stList) {
@@ -454,7 +454,7 @@ public class SimulationData {
 			stopTimer(timer, "-Building xml tree for snapshots:");
 		}
 
-		if (simulationType == SYMULATION_TYPE_SIM) {
+		if (simulationType == SIMULATION_TYPE_SIM) {
 			int obsCountTimeListSize = observables.getCountTimeList().size();
 			Element simulation = doc.createElement("Simulation");
 			simulation.setAttribute("TotalEvents", Long.toString(event));
