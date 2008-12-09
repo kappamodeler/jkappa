@@ -17,7 +17,7 @@ public class SimplxBatFileCreator {
 		String prefix = "simplx --sim ";
 		String time = " --time ";
 		String xml = " --xml-session-name \"out_simplx/";
-		File dir = new File(PathFinder.MAIN_DIR + "source .ka/");
+		File dir = new File(PathFinder.MAIN_DIR + "source_ka/");
 		File out = new File(PathFinder.MAIN_DIR + "out.bat");
 		PrintWriter pw = null;
 		try {
@@ -29,7 +29,7 @@ public class SimplxBatFileCreator {
 			for (String file : dir.list()) {
 				if (file.endsWith(".ka")) {
 					System.out.println(file);
-					pw.println(prefix + "\"source .ka/" + file + "\"" 
+					pw.println(prefix + "\"source_ka/" + file + "\"" 
 							+ time + myTime[i] + xml + file + "_simplx.xml\"");
 					i++;
 				}

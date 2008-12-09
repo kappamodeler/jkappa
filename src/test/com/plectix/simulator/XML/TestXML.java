@@ -13,7 +13,7 @@ public abstract class TestXML {
 	private static Simulator mySimulator;
 	private static Initializator myInitializator = new Initializator();
 
-	private static final String mySourceDirPath = PathFinder.MAIN_DIR;
+	private static final String mySourceDirPath = PathFinder.MAIN_DIR + "source_ka/";
 
 	private static final double[] time = new double[] { 0.01, 1000, 
         0.5, 100, 
@@ -56,8 +56,6 @@ public abstract class TestXML {
 		mySimulator.getSimulationData().setXmlSessionName(
 				PathFinder.MAIN_DIR + "out_java\\" + fileName.substring(0, fileName.indexOf(".ka")) + "_java.xml");
 		mySimulator.run(0);
-		
-		
 	}
 
 	public static void main(String[] args) {

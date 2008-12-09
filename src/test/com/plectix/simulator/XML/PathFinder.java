@@ -4,5 +4,5 @@ public class PathFinder {
 	/**
 	 * type here path to simplx.exe
 	 */
-	public static final String MAIN_DIR = "test.data/XML/";
+	public static final String MAIN_DIR = "test.data/simplx_compare/";
 }
