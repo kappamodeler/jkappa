@@ -361,7 +361,7 @@ public class SimulationData {
 			for (int i = obsCCList.size() - 1; i >= 0; i--) {
 				IObservablesConnectedComponent obsCC = obsCCList.get(i);
 				Element node = doc.createElement("Node");
-				node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
+				node.setAttribute("Id", Integer.toString(rulesAndObsNumber--));
 				node.setAttribute("Type", "OBSERVABLE");
 
 				String obsName = obsCC.getName();
@@ -381,7 +381,7 @@ public class SimulationData {
 
 			for (int i = rules.size() - 1; i >= 0; i--) {
 				Element node = doc.createElement("Node");
-				node.setAttribute("ID", Integer.toString(rulesAndObsNumber--));
+				node.setAttribute("Id", Integer.toString(rulesAndObsNumber--));
 				node.setAttribute("Type", "RULE");
 				node.setAttribute("Text", rules.get(i).getName());
 				node.setAttribute("Data", rules.get(i).getData(
