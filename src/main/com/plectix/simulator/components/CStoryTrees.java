@@ -89,13 +89,13 @@ public final class CStoryTrees {
 				boolean isLink = true;
 				byte isCause = isCausing(newNN, commonList, begin, isLink,
 						agentKey, siteKey, sFR, level);
-				if (isCause == IS_NOT_CAUSE /*|| isCause==IS_NONE*/) {
+				if (isCause == IS_NOT_CAUSE || isCause==IS_NONE) {
 					leafIndex++;
 				}
 				isLink = false;
 				isCause = isCausing(newNN, commonList, begin, isLink, agentKey,
 						siteKey, sFR, level);
-				if (isCause == IS_NOT_CAUSE/* || isCause==IS_NONE*/) {
+				if (isCause == IS_NOT_CAUSE || isCause==IS_NONE) {
 					leafIndex++;
 				}
 
