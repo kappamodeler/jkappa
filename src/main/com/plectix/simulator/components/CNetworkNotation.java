@@ -113,12 +113,12 @@ public class CNetworkNotation implements INetworkNotation {
 			}
 
 			public final boolean isCausing(SitesFromRules sfr, boolean isLink) {
-				if (isLink)
+				if (isLink) {
 					if (isCausing(this.linkStateMode, sfr.linkStateMode))
 						return true;
-					else if (isCausing(this.internalStateMode,
-							sfr.internalStateMode))
-						return true;
+				} else if (isCausing(this.internalStateMode,
+						sfr.internalStateMode))
+					return true;
 
 				return false;
 			}
@@ -180,7 +180,7 @@ public class CNetworkNotation implements INetworkNotation {
 			SimulationData data) {
 
 		ISolution solution = data.getSolution();
-		
+
 		for (IInjection inj : injectionsList) {
 			if (inj != CInjection.EMPTY_INJECTION) {
 				IConnectedComponent cc = solution.getConnectedComponent(inj
@@ -193,7 +193,8 @@ public class CNetworkNotation implements INetworkNotation {
 					}
 				}
 				if (!isStorify)
-					agentsNotation.add(Simulator.printPartRule(cc, new int[] {0}, data.isOcamlStyleObsName()));
+					agentsNotation.add(Simulator.printPartRule(cc,
+							new int[] { 0 }, data.isOcamlStyleObsName()));
 			}
 		}
 

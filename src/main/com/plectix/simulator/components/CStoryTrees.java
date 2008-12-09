@@ -71,12 +71,10 @@ public final class CStoryTrees {
 			List<CNetworkNotation> commonList, int begin, int level) {
 		Iterator<Long> agentIterator = newNN.usedAgentsFromRules.keySet()
 				.iterator();
-		if (newNN.isLeaf()) {
-			return;
-		}
-
+		
 		if (begin >= commonList.size()) {
 			addToMapRuleIDToTraceID(newNN, level);
+			newNN.setLeaf(true);
 			return;
 		}
 
@@ -91,16 +89,16 @@ public final class CStoryTrees {
 				boolean isLink = true;
 				byte isCause = isCausing(newNN, commonList, begin, isLink,
 						agentKey, siteKey, sFR, level);
-				if (isCause == IS_NOT_CAUSE) {
+				if (isCause == IS_NOT_CAUSE /*|| isCause==IS_NONE*/) {
 					leafIndex++;
 				}
-				if (isCause != IS_CAUSE) {
-					isLink = false;
-					if (isCausing(newNN, commonList, begin, isLink, agentKey,
-							siteKey, sFR, level) == IS_NOT_CAUSE) {
-						leafIndex++;
-					}
+				isLink = false;
+				isCause = isCausing(newNN, commonList, begin, isLink, agentKey,
+						siteKey, sFR, level);
+				if (isCause == IS_NOT_CAUSE/* || isCause==IS_NONE*/) {
+					leafIndex++;
 				}
+
 			}
 			if (aSFR.sites.size() * 2 == leafIndex) {
 				addToMapRuleIDToTraceID(newNN, level);
@@ -113,6 +111,11 @@ public final class CStoryTrees {
 	private byte isCausing(CNetworkNotation newNN,
 			List<CNetworkNotation> commonList, int begin, boolean isLink,
 			Long agentKey, int siteKey, SitesFromRules sFR, int level) {
+		
+		if (newNN.getRule().getRuleID()==21){
+			System.out.println();
+		}
+		
 		for (int i = begin; i < commonList.size(); i++) {
 			CNetworkNotation comparableNN = commonList.get(i);
 
