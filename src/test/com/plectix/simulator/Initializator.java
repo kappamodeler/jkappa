@@ -6,20 +6,20 @@ import java.util.List;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.options.SimulatorArguments;
 import com.plectix.simulator.simulator.Simulator;
 
 public class Initializator {
 	private Simulator mySimulator;
 	private List<IObservablesConnectedComponent> myObsComponents;
-	private SimulationMain instance;
 	private Double myRescale = null;
 	
+	private SimulatorArguments myArguments;
 	private static boolean myFirstRun = true;
 	
 	private final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
-	public void setRescale(Double rescale) {
+	public void setRescale(double rescale) {
 		myRescale = rescale;
 	}
 	
@@ -40,7 +40,8 @@ public class Initializator {
 		args[4] = "5";
 		args[5] = "--seed";
 		args[6] = "10";
-		instance.cmdLineArgs = SimulationMain.parseArguments(mySimulator.getSimulationData(), args, SimulationMain.cmdLineOptions);
+		myArguments = SimulationMain.parseArguments(
+				mySimulator.getSimulationData(), args);
 	}
 
 	public void reset(String filePath) {
@@ -52,13 +53,12 @@ public class Initializator {
 		if (myFirstRun) {
 			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 			
-			instance = new SimulationMain();
 			mySimulator = new Simulator();
 
 			parseArgs(filePath);
 
-			SimulationMain.readSimulatonFile(mySimulator, instance.cmdLineArgs);
-			mySimulator.init(instance.cmdLineArgs);
+			SimulationMain.readSimulatonFile(mySimulator, myArguments);
+			mySimulator.init(myArguments);
 
 			myFirstRun = false;
 			myObsComponents = mySimulator.getSimulationData().getObservables()

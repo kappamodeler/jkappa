@@ -10,7 +10,7 @@ import javax.xml.transform.TransformerException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
-import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.*;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CPerturbation;
@@ -35,6 +35,8 @@ import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.options.SimulatorOptions;
+import com.plectix.simulator.options.SimulatorArguments;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.TimerSimulation;
@@ -67,7 +69,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 	private int agentIdGenerator = 0;
 
-	private CommandLine cmdLineArgs;
+	private SimulatorArguments myArguments;
 
 	private double currentTime = 0.;
 
@@ -293,8 +295,8 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		return timer.getTimerMess();
 	}
 
-	public void init(CommandLine cmdLineArgs) {
-		this.cmdLineArgs = cmdLineArgs;
+	public void init(SimulatorArguments arguments) {
+		this.myArguments = arguments;
 		simulationData.initialize();
 		getSimulationData().stopTimer(getTimer(), "-Initialization:");
 		getSimulationData().setClockStamp(System.currentTimeMillis());
@@ -571,8 +573,8 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 		currentTime = 0;
 
-		SimulationMain.readSimulatonFile(this, cmdLineArgs);
-		init(cmdLineArgs);
+		SimulationMain.readSimulatonFile(this, myArguments);
+		init(myArguments);
 	}
 
 	public void run(int iteration_num) {
@@ -659,21 +661,20 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		simulationData.setCommandLine(args);
 		Simulator.println("Java " + simulationData.getCommandLine());
 		startTimer();
-		cmdLineArgs = SimulationMain.parseArguments(getSimulationData(),
-				SimulationMain.changeArgs(args), SimulationMain.cmdLineOptions);
-		SimulationMain.readSimulatonFile(this, cmdLineArgs);
-		init(cmdLineArgs);
-		if (cmdLineArgs.hasOption(SimulationMain.SHORT_COMPILE_OPTION)) {
+		myArguments = SimulationMain.parseArguments(getSimulationData(),
+				SimulationMain.changeArgs(args));
+		SimulationMain.readSimulatonFile(this, myArguments);
+		init(myArguments);
+		if (myArguments.hasOption(SimulatorOptions.COMPILE)) {
 			outputData();
 			return;
 		}
-		if (!cmdLineArgs.hasOption(SimulationMain.DEBUG_INIT_OPTION)) {
-			if (cmdLineArgs.hasOption(SimulationMain.LONG_GENERATE_MAP_OPTION))
+		if (!myArguments.hasOption(SimulatorOptions.DEBUG_INIT)) {
+			if (myArguments.hasOption(SimulatorOptions.GENERATE_MAP))
 				outputData(0);
-			else if (cmdLineArgs
-					.hasOption(SimulationMain.LONG_NUMBER_OF_RUNS_OPTION))
+			else if (myArguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS))
 				runIterations();
-			else if (cmdLineArgs.hasOption(SimulationMain.LONG_STORIFY_OPTION))
+			else if (myArguments.hasOption(SimulatorOptions.STORIFY))
 				runStories();
 			else
 				run(0);
