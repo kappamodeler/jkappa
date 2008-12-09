@@ -25,6 +25,13 @@ import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
 public class SimulationData {
+	public final static byte SYMULATION_TYPE_NONE = -1;
+	public final static byte SYMULATION_TYPE_COMPILE = 0;
+	public final static byte SYMULATION_TYPE_STORIFY = 1;
+	public final static byte SYMULATION_TYPE_SIM = 2;
+	public final static byte SYMULATION_TYPE_ITERATIONS = 3;
+	public final static byte SYMULATION_TYPE_GENERATE_MAP = 4;
+
 	private List<Double> timeStamps;
 	private List<List<RunningMetric>> runningMetrics;
 
@@ -44,8 +51,10 @@ public class SimulationData {
 
 	private long event;
 
-	private boolean compile = false;
-	private boolean storify = false;
+	private byte simulationType = SYMULATION_TYPE_NONE;
+
+	// private boolean compile = false;
+	// private boolean storify = false;
 
 	private double rescale = -1.;
 	private int points = -1;
@@ -63,6 +72,22 @@ public class SimulationData {
 	private double snapshotTime = -1.;
 	private long clockPrecision = 3600000;
 	private long clockStamp;
+
+	public final byte getSimulationType() {
+		return simulationType;
+	}
+
+	public final void setSimulationType(byte simulationType) {
+		this.simulationType = simulationType;
+	}
+
+	public final boolean isParseSolution() {
+		switch (simulationType) {
+		case SYMULATION_TYPE_GENERATE_MAP:
+			return false;
+		}
+		return true;
+	}
 
 	public final void setInputFile(String inputFile) {
 		this.inputFile = inputFile;
@@ -195,11 +220,9 @@ public class SimulationData {
 	}
 
 	public boolean isStorify() {
-		return storify;
-	}
-
-	public void setStorify(boolean storify) {
-		this.storify = storify;
+		if (simulationType == SYMULATION_TYPE_STORIFY)
+			return true;
+		return false;
 	}
 
 	public String getXmlSessionName() {
@@ -243,14 +266,6 @@ public class SimulationData {
 
 	public final List<IRule> getRules() {
 		return Collections.unmodifiableList(rules);
-	}
-
-	public boolean isCompile() {
-		return compile;
-	}
-
-	public void setCompile(boolean compile) {
-		this.compile = compile;
 	}
 
 	public final long getEvent() {
@@ -406,7 +421,7 @@ public class SimulationData {
 			stopTimer(timer, "-Building xml tree for influence map:");
 		}
 
-		if (storify) {
+		if (simulationType == SYMULATION_TYPE_STORIFY) {
 
 			for (List<CStoryTrees> stList : stories.getTrees()) {
 				for (CStoryTrees st : stList) {
@@ -439,8 +454,7 @@ public class SimulationData {
 			stopTimer(timer, "-Building xml tree for snapshots:");
 		}
 
-
-		if (!storify) {
+		if (simulationType == SYMULATION_TYPE_SIM) {
 			int obsCountTimeListSize = observables.getCountTimeList().size();
 			Element simulation = doc.createElement("Simulation");
 			simulation.setAttribute("TotalEvents", Long.toString(event));
@@ -891,5 +905,4 @@ public class SimulationData {
 		}
 
 	}
-
 }

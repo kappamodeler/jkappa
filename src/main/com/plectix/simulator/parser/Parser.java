@@ -91,11 +91,12 @@ public class Parser {
 	public final void parse() throws ParseErrorException {
 		simulationData.addInfo(new Info(Info.TYPE_INFO,
 				"--Computing initial state"));
-		createSimData(data.getInits(), CREATE_INIT);
+		if (simulationData.isParseSolution())
+			createSimData(data.getInits(), CREATE_INIT);
 		List<IRule> rules = createRules(data.getRules());
 		simulationData.setRules(rules);
 		if ((simulationData.getStories() == null)
-				&& (simulationData.isStorify())) {
+				&& (simulationData.getSimulationType() == SimulationData.SYMULATION_TYPE_STORIFY)) {
 			simulationData.setStories(new CStories());
 			createSimData(data.getStory(), CREATE_STORY);
 		} else
@@ -252,7 +253,8 @@ public class Parser {
 						CPerturbation pertubation = new CPerturbation(
 								pertubationID++, obsID, parameters, obsNameID,
 								CPerturbation.TYPE_NUMBER, perturbationRate,
-								rule, greater, rateExpression, simulationData.getObservables());
+								rule, greater, rateExpression, simulationData
+										.getObservables());
 						perturbations.add(pertubation);
 
 					}
@@ -668,7 +670,7 @@ public class Parser {
 							simulationData.getSolution().addAgents(
 									cloneAgentsList(listAgent));
 						}
-						if (simulationData.isCompile()) {
+						if (simulationData.getSimulationType() == SimulationData.SYMULATION_TYPE_COMPILE) {
 							((CSolution) simulationData.getSolution())
 									.checkSolutionLinesAndAdd(line, count);
 

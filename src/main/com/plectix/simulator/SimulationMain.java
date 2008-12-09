@@ -39,10 +39,12 @@ public class SimulationMain implements SimulatorCallableListener {
 	private final static String LONG_EVENT_OPTION = "event";
 	private final static String LONG_RANDOMIZER_JAVA_OPTION = "randomizer";
 	private final static String LONG_SNAPSHOT_TIME = "set_snapshot_time";
+
 	private final static String LONG_NO_ACTIVATION_MAP_OPTION = "no_activation_map";
 	private final static String LONG_NO_MAPS_OPTION = "no_maps";
 	private final static String LONG_NO_BUILD_INFLUENCE_MAP_OPTION = "no_build_influence_map";
 	private final static String LONG_BUILD_INFLUENCE_MAP_OPTION = "build_influence_map";
+
 	private final static String LONG_INIT_OPTION = "init";
 	private final static String LONG_POINTS_OPTION = "points";
 	private final static String LONG_RESCALE_OPTION = "rescale";
@@ -52,6 +54,8 @@ public class SimulationMain implements SimulatorCallableListener {
 	private static final String LONG_CLOCK_PRECISION_OPTION = "clock_precision";
 	private static final String LONG_FORWARD_OPTION = "forward";
 	private static final String LONG_OUTPUT_SCHEME_OPTION = "output_scheme";
+	private static final String LONG_MERGE_MAPS_OPTION = "merge_maps";
+
 	private static final String LONG_KEY_OPTION = "key";
 	private static final String LONG_NO_COMPRESS_STORIES_OPTION = "no_compress_stories";
 	private static final String LONG_COMPRESS_STORIES_OPTION = "compress_stories";
@@ -138,6 +142,8 @@ public class SimulationMain implements SimulatorCallableListener {
 				"Do not compress stories");
 		cmdLineOptions.addOption(LONG_USE_STRONG_COMPRESSION_OPTION, false,
 				"Use strong compression to classify stories");
+		cmdLineOptions.addOption(LONG_MERGE_MAPS_OPTION, false,
+				"Also constructs inhibition maps");
 	}
 
 	public SimulationMain() {
@@ -266,6 +272,8 @@ public class SimulationMain implements SimulatorCallableListener {
 				formatter.printHelp("use --sim [file]", cmdLineOptions);
 				throw new IllegalArgumentException("No SEED OPTION");
 			}
+			simulationData
+					.setSimulationType(SimulationData.SYMULATION_TYPE_ITERATIONS);
 			simulationData.setIterations(iteration);
 		}
 
@@ -295,7 +303,8 @@ public class SimulationMain implements SimulatorCallableListener {
 
 		if (cmdLineArgs.hasOption(LONG_STORIFY_OPTION)) {
 			fileName = cmdLineArgs.getOptionValue(LONG_STORIFY_OPTION);
-			simulationData.setStorify(true);
+			simulationData
+					.setSimulationType(SimulationData.SYMULATION_TYPE_STORIFY);
 			option = true;
 		}
 		if (cmdLineArgs.hasOption(LONG_TIME_OPTION)) {
@@ -322,14 +331,17 @@ public class SimulationMain implements SimulatorCallableListener {
 				}
 				simulationData.setSnapshotTime(snapshotTime);
 			}
+			simulationData
+					.setSimulationType(SimulationData.SYMULATION_TYPE_SIM);
 		}
 		if (cmdLineArgs.hasOption(SHORT_COMPILE_OPTION)) {
-			simulationData.setCompile(true);
 			if (!option) {
 				option = true;
 				fileName = cmdLineArgs.getOptionValue(SHORT_COMPILE_OPTION);
 			} else
 				option = false;
+			simulationData
+					.setSimulationType(SimulationData.SYMULATION_TYPE_COMPILE);
 		}
 
 		if (cmdLineArgs.hasOption(LONG_GENERATE_MAP_OPTION)) {
@@ -338,9 +350,11 @@ public class SimulationMain implements SimulatorCallableListener {
 				fileName = cmdLineArgs.getOptionValue(LONG_GENERATE_MAP_OPTION);
 			} else
 				option = false;
+			simulationData
+					.setSimulationType(SimulationData.SYMULATION_TYPE_GENERATE_MAP);
 		}
 
-		if (!option) {
+		if (simulationData.getSimulationType() == SimulationData.SYMULATION_TYPE_NONE) {
 			// HelpFormatter formatter = new HelpFormatter();
 			// formatter.printHelp("use --sim [file]", cmdLineOptions);
 			throw new IllegalArgumentException("No option specified");
