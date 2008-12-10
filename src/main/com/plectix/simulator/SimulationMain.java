@@ -1,5 +1,8 @@
 package com.plectix.simulator;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -25,7 +28,9 @@ public class SimulationMain implements SimulatorCallableListener {
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
 	private static Logger LOGGER = Logger.getLogger(SimulationMain.class);
-
+	private static final PrintStream myOutputStream = System.out;
+	private static final String VERSION = "0.6";
+	
 	public static void main(String[] args) {
 		// Initialize log4j
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
@@ -40,7 +45,7 @@ public class SimulationMain implements SimulatorCallableListener {
 	private void start(String[] args) {
 		SimulatorInterface simulator = new Simulator();
 		SimulationService service = new SimulationService(simulator);
-		service.submit(new SimulatorInputData(args, System.out), this);
+		service.submit(new SimulatorInputData(args, myOutputStream), this);
 		service.shutdown();
 	}
 
@@ -68,7 +73,20 @@ public class SimulationMain implements SimulatorCallableListener {
 			e.printStackTrace(Simulator.getErrorStream());
 			throw new IllegalArgumentException(e);
 		}
-
+		
+		if (arguments.hasOption(SimulatorOptions.HELP)) {
+			 HelpFormatter formatter = new HelpFormatter();
+			 formatter.printHelp("use --sim [file] [options]", myOptions);
+			 //TODO are we to exit here?
+			 System.exit(0);
+		}
+		
+		if (arguments.hasOption(SimulatorOptions.VERSION)) {
+			myOutputStream.println("Java simulator v." + VERSION);
+			 //TODO are we to exit here?
+			 System.exit(0);
+		}
+		
 		if (arguments.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
 			simulationData.setXmlSessionName(arguments.getValue(SimulatorOptions.XML_SESSION_NAME));
 		}
@@ -87,6 +105,10 @@ public class SimulationMain implements SimulatorCallableListener {
 					throw new Exception();
 			}
 
+			if (arguments.hasOption(SimulatorOptions.NO_SEED)) {
+				simulationData.setSeed(0);
+			}
+			//TODO else?
 			if (arguments.hasOption(SimulatorOptions.SEED)) {
 				int seed = 0;
 				seed = Integer.valueOf(arguments.getValue(SimulatorOptions.SEED));

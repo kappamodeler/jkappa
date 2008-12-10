@@ -20,6 +20,7 @@ public enum SimulatorOptions {
 	NUMBER_OF_RUNS("number_of_runs", true, "Number of runs, generates tmp file"),
 	SNAPSHOT_TIME("set_snapshot_time", true, 
 			"Takes a snapshot of solution at specified time unit"),
+	//TODO is this similar to "--debug debug mode (very verbose!)" ?
 	DEBUG_INIT("debug", false, 
 			"Program execution suspends right after initialization phase"),
 	NO_ACTIVATION_MAP("no_activation_map", false, "Do not construct activation map"),
@@ -41,35 +42,69 @@ public enum SimulatorOptions {
 	FORWARD("forward", false, "do not consider backward rules"),
 	OUTPUT_SCHEME("output_scheme", true,
 			"(def: current dir) directory on which to put computed data"),
-	KEY("key", true, "Name of the file containing the key for the crypted version"),
-	
-	
+	HELP("help", "help", false, "Display this list of options"),
+	VERSION("version", false, "Print simplx version"),
+	//TODO WE ARE UNABLE TO USE THIS OPTION INSIDE OF OUR SIMULATOR!
+	NO_GC("no_gc", false, "Prevent garbage collection"),
 	
 	//TODO USE THESE OPTIONS TOO =)
-	
+	PROFILE("profile", false, "Produces profile"),
+	KEY("key", true, "Name of the file containing the key for the crypted version"),
+	NO_INHIBITION_MAP("no_inhibition_map", false, "Don't construct inhibition map"),
 	COMPRESS_STORIES("compress_stories", false, "Weak compression of stories"),
 	DONT_COMPRESS_STORIES("no_compress_stories", false, "Do not compress stories"),
 	USE_STRONG_COMPRESSION("use_strong_compression", false,
 			"Use strong compression to classify stories"),
 	MERGE_MAPS("merge_maps", false, "Also constructs inhibition maps"),
 	WARNINGS("W", false, "Output all warnings on standard error channel"),
-	VERSION("version", false, "Print simplx version"),
-	ITERATION("iteration", true, "Number of stories to be searched for (with __storify option only)"),
+	ITERATION("iteration", true, "Number of stories to be searched for (with --storify option only)"),
 	FINAL_STATE("output_final_state", false, "Output final state"),
-	NO_ARROW_CLOSURE("no_arrow_closure", false, "Do not perform arrows transitive closure when displaying stories"),
+	NO_ARROW_CLOSURE("no_arrow_closure", false, 
+			"Do not perform arrows transitive closure when displaying stories"),
 	NO_MEASURE("no_measure", false, "Causes simplx to ignore observables"),
-	QUOTIENT_REFINEMENTS("quotient_refinements", false, "Replace each rule by the most general rule it is a refinement of when computing stories"),
-	MEMORY_LIMIT("memory_limit", true, "Sets limit the usage of the memory (check in Mb). Default is infinite (0)"),
+	QUOTIENT_REFINEMENTS("quotient_refinements", false, 
+			"Replace each rule by the most general rule it is a refinement of when computing stories"),
+	//TODO WE ARE UNABLE TO USE THIS OPTION INSIDE OF OUR SIMULATOR!
+	MEMORY_LIMIT("memory_limit", true, "Sets limit the usage of the memory (check in Mb). "
+			+ "Default is infinite (0)"),
 	CORES("cores", true, "Number of cores to use if multithreading is possible"),
 	SAVE_MAP("save_map", true, "Saves influence map into a file"),
 	LOAD_MAP("load_map", true, "Loads serialized influence map from file"),
 	LOAD_COMPILATION("load_compilation", true, "Loads serialized kappa file compilation"),
 	SAVE_COMPILATION("save_compilation", true, "Saves kappa file compilation into a file"),
 	LOAD_ALL("load_all", true, "Loads serialized init file compilation"),
-	SAVE_ALL("save_all", true, "Saves the whole initialization's marshalling (including influence maps) into a file"),
-	//TODO description
-	QA("QA", false, "Turns QA mode on (slower, but performs more sanity checks");
-	
+	SAVE_ALL("save_all", true, "Saves the whole initialization's marshalling "
+			+ "(including influence maps) into a file"),
+	QA("QA", false, "Turns QA mode on (slower, but performs more sanity checks"),
+	SNAPHOT_TMP("snapshot_tmp_file", true, 
+			"Sets the name of temp snapshot files (default snapshots.tmp)"),
+	DONT_USE_STRONG_COMPRESSION("no_use_strong_compression", false,
+			"Don't use strong compression to classify stories"),
+	LOG_COMPRESSION("log_compression", true, "Displays the before/after "
+			+ "compression status in the html desktop"),
+	BACKTRACK_LIMIT("backtrack_limit", true, "Limits the exploration when scanning for stories"),
+	MAX_PER_TIME_COMPRESSION("max_time_per_compression", true, 
+			"Limits the exploration when scanning for stories"),
+	REORDER_BY_DEPTH("reorder_by_depth", false, 
+			"Reoders events according to their depth before strong compression"),
+	MULTISET_ORDER("use_multiset_order_in_compression", false, 
+			"Use the multi-set of depths to	compare stories in strong compression"),
+	LINEAR_ORDER("use_linear_order", false, "Use linear order to compare stories in strong compression"),
+	HTML_OUTPUT("html_output", false, "HTML rendering"),
+	DOT_OUTPUT("dot_output", false, "Dot output for stories"),
+	NO_RULES("no_rules", false, "No recomputation of html rule rendering"),
+	PLOT("plot", true, "Creates a file containing the simulation data in clear text"),
+	NO_ABSTRACTION("no_abstraction", false, "Deactivate complx abstraction (will slow down influence"
+			+ "map generation for large systems"),
+	OUTPUT_FINAL_STATE("output_final_state", false, 
+			"output final state (same as –set-snapshot-time for the last time unit)"),
+	//TODO several times!
+	SET_SNAPSHOT_TIME("set_snapshot_time", true, 
+			"takes a snapshot of solution at specified time unit (may use option several times)"),
+	TIME_SAMPLE("time_sample", true, "Sets sample size in time units (default: 0.01)"),
+	EVENT_SAMPLE("event_sample", true, "Sets sample size in events (default: 100)"),
+	;
+
 	private final String myLongLine;
 	private final String myDescription;
 	private final boolean hasArguments;

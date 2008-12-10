@@ -2,7 +2,7 @@
 
 'Rule_0' A(x!_, y) -> @ 1.0
 
-%init: 3 * A(x!1, y, z!2), B(k!1), A(x!2, y)										
+%init: 3 * A(x!1, y, z!2), B(k!2), A(x!1, y)										
 
 # Simulation:
 
