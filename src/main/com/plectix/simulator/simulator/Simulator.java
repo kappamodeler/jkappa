@@ -646,6 +646,9 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 				getSimulationData().getObservables().calculateObs(currentTime,
 						count, getSimulationData().isTime());
 			} else {
+				getSimulationData().addInfo(
+						new Info(Info.TYPE_INTERNAL,
+								"Application of rule exp is clashing"));
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("Clash");
 				clash++;

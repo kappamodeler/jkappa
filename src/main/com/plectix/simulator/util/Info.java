@@ -58,8 +58,12 @@ public class Info {
 		setType(type);
 		this.count = 1;
 		this.message = message;
-		this.position = System.currentTimeMillis() / 1000.0; 
-		Simulator.println(message);
+		this.position = System.currentTimeMillis() / 1000.0;
+		switch (type) {
+		case TYPE_INFO:
+			Simulator.println(message);
+			break;
+		}
 	}
 
 	public final double getTime() {
