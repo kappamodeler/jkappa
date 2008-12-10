@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.cli.CommandLine;
@@ -87,7 +88,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 	public Simulator() {
 		simulationData = new SimulationData();
-		simulatorResultsData = new SimulatorResultsData();
+		simulatorResultsData = new SimulatorResultsData(simulationData);
 		printStream.set(System.out);
 	}
 
@@ -314,14 +315,20 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		outputSolution();
 	}
 
-	public final void outputData(long count) {
+	private Source addCompleteSource() throws TransformerException, ParserConfigurationException {
+		Source source = simulationData.createDOMModel();
+		simulatorResultsData.addResultSource(source);
+		return source;
+	}
+	
+	public final void outputData(Source source, long count) {
 		TimerSimulation timerOutput = new TimerSimulation();
 		timerOutput.startTimer();
 
 		getSimulationData().setTimeLength(currentTime);
 		getSimulationData().setEvent(count);
 		try {
-			getSimulationData().writeToXML(timerOutput);
+			getSimulationData().writeToXML(source, timerOutput);
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace(Simulator.getErrorStream());
 		} catch (TransformerException e) {
@@ -577,7 +584,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		init(myArguments);
 	}
 
-	public void run(int iteration_num) {
+	public void run(int iteration_num) throws Exception {
 		getSimulationData().addInfo(new Info(Info.TYPE_INFO, "-Simulation..."));
 		TimerSimulation timer = new TimerSimulation(true);
 		long clash = 0;
@@ -650,8 +657,9 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		}
 		getSimulationData().getObservables().calculateObsLast(currentTime);
 		outToLogger(isEndRules, timer);
+		Source source = addCompleteSource();
 		if (!isIteration)
-			outputData(count);
+			outputData(source, count);
 	}
 
 	public void run(SimulatorInputData simulatorInputData) throws Exception {
@@ -670,18 +678,24 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 			return;
 		}
 		if (!myArguments.hasOption(SimulatorOptions.DEBUG_INIT)) {
-			if (myArguments.hasOption(SimulatorOptions.GENERATE_MAP))
-				outputData(0);
-			else if (myArguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS))
+			
+			if (myArguments.hasOption(SimulatorOptions.GENERATE_MAP)) {
+				Source source = addCompleteSource();
+				outputData(source, 0);
+			} else if (myArguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS))
 				runIterations();
 			else if (myArguments.hasOption(SimulatorOptions.STORIFY))
 				runStories();
 			else
 				run(0);
+			
+//			simulatorResultsData.setResultSource(simulationData.createDOMModel());
 		}
+		System.out.println("-------"
+				+ simulatorResultsData.getResultSource());
 	}
 
-	public final void runIterations() {
+	public final void runIterations() throws Exception {
 		isIteration = true;
 		int seed = getSimulationData().getSeed();
 		List<Double> timeStamps = new ArrayList<Double>();
@@ -711,10 +725,11 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 		// we are done. report the results
 		getSimulationData().createTMPReport();
-
+//		Source source = addCompleteSource();
+//		outputData(source, 0);
 	}
 
-	public final void runStories() {
+	public final void runStories() throws Exception {
 		CStories stories = getSimulationData().getStories();
 		int count = 0;
 		for (int i = 0; i < simulationData.getIterations(); i++) {
@@ -778,7 +793,8 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 				resetSimulation();
 		}
 		stories.merge();
-		outputData(count);
+		Source source = addCompleteSource();
+		outputData(source, count);
 	}
 
 	public final void setRules(List<IRule> rules) {
@@ -789,5 +805,4 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		timer = new TimerSimulation();
 		timer.startTimer();
 	}
-
 }

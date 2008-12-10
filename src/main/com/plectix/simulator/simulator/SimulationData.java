@@ -54,7 +54,8 @@ public class SimulationData {
 	private long event;
 
 	private byte simulationType = SIMULATION_TYPE_NONE;
-
+	
+	private DOMSource myOutputDOMSource; 
 	// private boolean compile = false;
 	// private boolean storify = false;
 
@@ -338,8 +339,9 @@ public class SimulationData {
 
 	}
 
-	public void writeToXML(TimerSimulation timerOutput)
-			throws ParserConfigurationException, TransformerException {
+	
+	public DOMSource createDOMModel() 
+		throws ParserConfigurationException, TransformerException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.newDocument();
@@ -484,18 +486,22 @@ public class SimulationData {
 			stopTimer(timer, "-Building xml tree for data points:");
 		}
 
-		stopTimer(timerOutput, "-Results outputted in xml session:");
-
 		appendInfo(simplxSession, doc);
 
+		DOMSource domSource = new DOMSource(doc);
+		return domSource;
+	}
+	
+	public void writeToXML(Source source, TimerSimulation timerOutput)
+			throws ParserConfigurationException, TransformerException {
 		TransformerFactory trFactory = TransformerFactory.newInstance();
 		Transformer transformer = trFactory.newTransformer();
-		DOMSource domSource = new DOMSource(doc);
+		stopTimer(timerOutput, "-Results outputted in xml session:");
 		StreamResult streamesult = new StreamResult(getXmlSessionPath());
 		Properties pr = new Properties();
 		pr.setProperty(OutputKeys.METHOD, "html");
 		transformer.setOutputProperties(pr);
-		transformer.transform(domSource, streamesult);
+		transformer.transform(source, streamesult);
 
 		// GraphDrawer gd = new GraphDrawer();
 		// gd.createGraphs(observables,initialTime,timeLength);

@@ -79,7 +79,8 @@ public class SimulationService {
 		try {
 			return futureTask.get(timeout, unit);
 		} catch (Exception e) {
-			SimulatorResultsData simulatorResultsData = new SimulatorResultsData();
+			//SimulatorResultsData simulatorResultsData = new SimulatorResultsData();
+			SimulatorResultsData simulatorResultsData = simulator.getSimulatorResultsData();
 			simulatorResultsData.getSimulatorExitReport().setException(e);
 			return simulatorResultsData;
 		} finally {
