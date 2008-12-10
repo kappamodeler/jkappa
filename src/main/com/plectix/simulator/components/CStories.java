@@ -4,7 +4,7 @@ import java.util.*;
 
 public final class CStories {
 
-	public static final int NUMBER_OF_SIMULATIONS = 10;
+	private int iterations = 10;
 
 	private final List<CStory> stories;
 	private final List<NetworkNotationForCurrentStory> networkNotationForCurrentStory;
@@ -19,11 +19,12 @@ public final class CStories {
 		}
 	}
 
-	public CStories() {
+	public CStories(int iterations) {
+		this.iterations = iterations;
 		this.stories = new ArrayList<CStory>();
 		this.trees = new HashMap<Integer, List<CStoryTrees>>();
 		this.networkNotationForCurrentStory = new ArrayList<NetworkNotationForCurrentStory>();
-		for (int i = 0; i < NUMBER_OF_SIMULATIONS; i++)
+		for (int i = 0; i < iterations; i++)
 			this.networkNotationForCurrentStory
 					.add(new NetworkNotationForCurrentStory());
 	}

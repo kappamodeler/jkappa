@@ -127,6 +127,11 @@ public class SimulationMain implements SimulatorCallableListener {
 				simulationData.setEvent(event);
 			}
 
+			if (arguments.hasOption(SimulatorOptions.ITERATION)) {
+				simulationData.setIterations(Integer.valueOf(arguments
+						.getValue(SimulatorOptions.ITERATION)));
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace(Simulator.getErrorStream());
 			throw new IllegalArgumentException(e);

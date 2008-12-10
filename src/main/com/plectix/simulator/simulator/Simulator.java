@@ -717,7 +717,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 	public final void runStories() {
 		CStories stories = getSimulationData().getStories();
 		int count = 0;
-		for (int i = 0; i < CStories.NUMBER_OF_SIMULATIONS; i++) {
+		for (int i = 0; i < simulationData.getIterations(); i++) {
 			getSimulationData().addInfo(
 					new Info(Info.TYPE_INFO, "-Simulation..."));
 			startTimer();
@@ -774,7 +774,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 			count = 0;
 			outToLogger(isEndRules, timer);
 			stories.handling(i);
-			if (i < CStories.NUMBER_OF_SIMULATIONS - 1)
+			if (i < simulationData.getIterations() - 1)
 				resetSimulation();
 		}
 		stories.merge();

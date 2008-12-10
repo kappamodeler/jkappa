@@ -49,7 +49,7 @@ public class SimulationData {
 	private Double initialTime = 0.0;
 
 	private String randomizer;
-	private int iterations = 0;
+	private int iterations = 1;
 
 	private long event;
 
