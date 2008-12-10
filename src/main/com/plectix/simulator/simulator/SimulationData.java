@@ -31,6 +31,8 @@ public class SimulationData {
 	public final static byte SIMULATION_TYPE_SIM = 2;
 	public final static byte SIMULATION_TYPE_ITERATIONS = 3;
 	public final static byte SIMULATION_TYPE_GENERATE_MAP = 4;
+	private final static String TYPE_NEGATIVE_MAP = "NEGATIVE";
+	private final static String TYPE_POSITIVE_MAP = "POSITIVE";
 
 	private List<Double> timeStamps;
 	private List<List<RunningMetric>> runningMetrics;
@@ -68,10 +70,20 @@ public class SimulationData {
 	private String inputFile;
 
 	private boolean activationMap = true;
+	private boolean inhibitionMap = false;
+
 	private long maxClashes = 100;
 	private double snapshotTime = -1.;
 	private long clockPrecision = 3600000;
 	private long clockStamp;
+
+	public boolean isInhibitionMap() {
+		return inhibitionMap;
+	}
+
+	public void setInhibitionMap(boolean inhibitionMap) {
+		this.inhibitionMap = inhibitionMap;
+	}
 
 	public final byte getSimulationType() {
 		return simulationType;
@@ -394,29 +406,16 @@ public class SimulationData {
 			 * add activation map
 			 * */
 
-			int lastRuleID = rules.size();
-			for (int i = rules.size() - 1; i >= 0; i--) {
-				for (int j = rules.get(i).getActivatedObservable().size() - 1; j >= 0; j--) {
-					Element node = doc.createElement("Connection");
-					node.setAttribute("FromNode", Integer.toString(rules.get(i)
-							.getRuleID() + 1));
-					node.setAttribute("ToNode", Integer.toString(rules.get(i)
-							.getActivatedObservable().get(j).getNameID()
-							+ 1 + lastRuleID));
-					node.setAttribute("Relation", "POSITIVE");
-					influenceMap.appendChild(node);
-				}
-				for (int j = rules.get(i).getActivatedRule().size() - 1; j >= 0; j--) {
-					Element node = doc.createElement("Connection");
-					node.setAttribute("FromNode", Integer.toString(rules.get(i)
-							.getRuleID() + 1));
-					node.setAttribute("ToNode", Integer.toString(rules.get(i)
-							.getActivatedRule().get(j).getRuleID() + 1));
-					node.setAttribute("Relation", "POSITIVE");
-					influenceMap.appendChild(node);
-				}
+			for (int i = rules.size() - 1; i >= 0; i--)
+				printMap(doc, TYPE_POSITIVE_MAP, influenceMap, rules.get(i),
+						rules.get(i).getActivatedRule(), rules.get(i)
+								.getActivatedObservable());
+			if (inhibitionMap) {
+				for (int i = rules.size() - 1; i >= 0; i--)
+					printMap(doc, TYPE_NEGATIVE_MAP, influenceMap,
+							rules.get(i), rules.get(i).getInhibitedRule(),
+							rules.get(i).getInhibitedObservable());
 			}
-
 			simplxSession.appendChild(influenceMap);
 			stopTimer(timer, "-Building xml tree for influence map:");
 		}
@@ -503,6 +502,31 @@ public class SimulationData {
 
 		// Simulator.println("-Results outputted in xml session: "
 		// + timerOutput.getTimer() + " sec. CPU");
+	}
+
+	private void printMap(Document doc, String mapType, Element influenceMap,
+			IRule rule, List<IRule> rulesToPrint,
+			List<IObservablesConnectedComponent> obsToPrint) {
+		int rulesNumber = rules.size()+1;
+		for (int j = obsToPrint.size() - 1; j >= 0; j--) {
+			Element node = doc.createElement("Connection");
+			node.setAttribute("FromNode", Integer
+					.toString(rule.getRuleID() + 1));
+			node.setAttribute("ToNode", Integer.toString(obsToPrint.get(j)
+					.getNameID() + rulesNumber));
+			node.setAttribute("Relation", mapType);
+			influenceMap.appendChild(node);
+		}
+		for (int j = rulesToPrint.size() - 1; j >= 0; j--) {
+			Element node = doc.createElement("Connection");
+			node.setAttribute("FromNode", Integer
+					.toString(rule.getRuleID() + 1));
+			node.setAttribute("ToNode", Integer.toString(rulesToPrint.get(j)
+					.getRuleID() + 1));
+			node.setAttribute("Relation", mapType);
+			influenceMap.appendChild(node);
+		}
+
 	}
 
 	private final void fillNodesLevelStoryTrees(
@@ -867,13 +891,24 @@ public class SimulationData {
 
 		if (isActivationMap()) {
 			TimerSimulation timer = new TimerSimulation(true);
-			addInfo(new Info(Info.TYPE_INFO, "--Abstracting influence map..."));
+			addInfo(new Info(Info.TYPE_INFO, "--Abstracting activation map..."));
 			for (IRule rule : rules) {
 				rule.createActivatedRulesList(rules);
 				rule.createActivatedObservablesList(getObservables());
 			}
 			stopTimer(timer, "--Abstraction:");
-			addInfo(new Info(Info.TYPE_INFO, "--Influence map computed"));
+			addInfo(new Info(Info.TYPE_INFO, "--Activation map computed"));
+		}
+
+		if (isInhibitionMap()) {
+			TimerSimulation timer = new TimerSimulation(true);
+			addInfo(new Info(Info.TYPE_INFO, "--Abstracting inhibition map..."));
+			for (IRule rule : rules) {
+				rule.createInhibitedRulesList(rules);
+				rule.createInhibitedObservablesList(getObservables());
+			}
+			stopTimer(timer, "--Abstraction:");
+			addInfo(new Info(Info.TYPE_INFO, "--Inhibition map computed"));
 		}
 
 		while (iterator.hasNext()) {

@@ -42,13 +42,25 @@ public class CRule implements IRule {
 	private int automorphismNumber = 1;
 	private boolean infinityRate = false;
 	private List<IRule> activatedRule;
+	private List<IRule> inhibitedRule;
+
 	private List<IObservablesConnectedComponent> activatedObservable;
+	private List<IObservablesConnectedComponent> inhibitedObservable;
+
+	public List<IRule> getInhibitedRule() {
+		return inhibitedRule;
+	}
+
+	public List<IObservablesConnectedComponent> getInhibitedObservable() {
+		return inhibitedObservable;
+	}
 
 	private int ruleID;
 	private List<IAction> actionList;
 	private Map<IAgent, IAgent> agentAddList;
 	private List<IInjection> injList;
-	private List<ISite> changedSites;
+	private List<ISite> changedActivatedSites;
+	private List<FixedSite> changedInhibitedSites;
 	private List<FixedSite> fixedSites;
 	private IConstraint constraints;
 	private int countAgentsLHS = 0;
@@ -87,8 +99,14 @@ public class CRule implements IRule {
 
 		public FixedSite(ISite site) {
 			this.site = site;
-			boolean linkState = false;
-			boolean internalState = false;
+			this.linkState = false;
+			this.internalState = false;
+		}
+
+		public FixedSite(ISite site, boolean internalState, boolean linkState) {
+			this.site = site;
+			this.linkState = linkState;
+			this.internalState = internalState;
 		}
 	}
 
@@ -151,7 +169,7 @@ public class CRule implements IRule {
 	}
 
 	public final List<ISite> getChangedSites() {
-		return Collections.unmodifiableList(changedSites);
+		return Collections.unmodifiableList(changedActivatedSites);
 	}
 
 	public final List<IAction> getActionList() {
@@ -281,12 +299,11 @@ public class CRule implements IRule {
 	}
 
 	private final void addFixedSitesToNN(INetworkNotation netNotation) {
-		for (ISite siteInSolution : this.sitesConnectedWithBroken) 
+		for (ISite siteInSolution : this.sitesConnectedWithBroken)
 			addRuleSitesToNetworkNotation(netNotation, siteInSolution);
-		
-		for (ISite siteInSolution : this.sitesConnectedWithDeleted) 
+
+		for (ISite siteInSolution : this.sitesConnectedWithDeleted)
 			addRuleSitesToNetworkNotation(netNotation, siteInSolution);
-		
 
 		for (FixedSite fs : fixedSites) {
 			CSite siteFromRule = (CSite) fs.site;
@@ -434,7 +451,7 @@ public class CRule implements IRule {
 			if (this.rightHandSide != null && checkRulesNullAgents(agent))
 				return true;
 			for (ISite site : agent.getSites()) {
-				for (ISite changedSite : changedSites) {
+				for (ISite changedSite : changedActivatedSites) {
 					if (changedSite.equals(site)) {
 						IInternalState currentInternalState = changedSite
 								.getInternalState();
@@ -496,6 +513,84 @@ public class CRule implements IRule {
 		return false;
 	}
 
+	private final boolean isInhibited(List<IAgent> agentsFromAnotherRules) {
+		for (IAgent agent : agentsFromAnotherRules) {
+			if (this.leftHandSide != null && checkRulesNullAgents(agent))
+				return true;
+			for (ISite site : agent.getSites()) {
+				for (FixedSite changedSite : changedInhibitedSites) {
+					if (changedSite.site.equals(site)) {
+
+						IInternalState currentInternalState = changedSite.site
+								.getInternalState();
+						IInternalState internalState = site.getInternalState();
+
+						ILinkState currentLinkState = changedSite.site
+								.getLinkState();
+						ILinkState linkState = site.getLinkState();
+
+						if (changedSite.internalState == false
+								&& changedSite.linkState == true) {
+							if (!(currentInternalState.isRankRoot())
+									&& !(internalState.isRankRoot())) {
+								if (internalState.getNameId() == currentInternalState
+										.getNameId()) {
+									if (checkInhibitedLinkStates(currentLinkState,
+											linkState))
+										return true;								}
+							}
+
+							if (currentInternalState.isRankRoot()) {
+								if (checkInhibitedLinkStates(currentLinkState,
+										linkState))
+									return true;
+							}
+						}
+						
+						if (changedSite.internalState == true) {
+							if (!(currentInternalState.isRankRoot())
+									&& !(internalState.isRankRoot())) {
+								if (internalState.getNameId() == currentInternalState
+										.getNameId()) {
+									if (linkState.getStatusLinkRank() == CLinkState.RANK_BOUND_OR_FREE)
+										return true;
+									if (checkInhibitedLinkStates(
+											currentLinkState, linkState))
+										return true;
+								}
+							}
+
+							if (currentInternalState.isRankRoot()) {
+								if (currentLinkState.getStatusLinkRank() == CLinkState.RANK_FREE
+										&&  linkState.getStatusLinkRank() == CLinkState.RANK_BOUND_OR_FREE)
+									return true;
+								if (checkInhibitedLinkStates(currentLinkState,
+										linkState))
+									return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean checkInhibitedLinkStates(ILinkState currentLinkState,
+			ILinkState linkState) {
+		if (currentLinkState.getStatusLinkRank() == CLinkState.RANK_FREE
+				&& linkState.getStatusLinkRank() == CLinkState.RANK_FREE)
+			return true;
+		if (currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND
+				&& linkState.getStatusLinkRank() == CLinkState.RANK_SEMI_LINK)
+			return true;
+		if (currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND
+				&& linkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
+			if (currentLinkState.getSite().equals(linkState.getSite()))
+				return true;
+		return false;
+	}
+
 	private final boolean checkRulesNullAgents(IAgent agent) {
 		for (IConnectedComponent cc : this.getRightHandSide())
 
@@ -520,6 +615,19 @@ public class CRule implements IRule {
 		}
 	}
 
+	public final void createInhibitedRulesList(List<IRule> rules) {
+		inhibitedRule = new ArrayList<IRule>();
+		for (IRule rule : rules) {
+			if (this != rule)
+				for (IConnectedComponent cc : rule.getLeftHandSide()) {
+					if (isInhibited(cc.getAgents())) {
+						inhibitedRule.add(rule);
+						break;
+					}
+				}
+		}
+	}
+
 	public final void createActivatedObservablesList(IObservables observables) {
 		activatedObservable = new ArrayList<IObservablesConnectedComponent>();
 		for (IObservablesConnectedComponent obsCC : observables
@@ -531,14 +639,31 @@ public class CRule implements IRule {
 		}
 	}
 
+	public final void createInhibitedObservablesList(IObservables observables) {
+		inhibitedObservable = new ArrayList<IObservablesConnectedComponent>();
+		for (IObservablesConnectedComponent obsCC : observables
+				.getConnectedComponentList()) {
+			if (obsCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX
+					&& isInhibited(obsCC.getAgents())) {
+				inhibitedObservable.add(obsCC);
+			}
+		}
+	}
+
 	private final void createActionList() {
-		changedSites = new ArrayList<ISite>();
+		changedActivatedSites = new ArrayList<ISite>();
+		changedInhibitedSites = new ArrayList<FixedSite>();
 		actionList = new ArrayList<IAction>();
 
 		if (rightHandSide == null) {
 			for (IConnectedComponent ccL : leftHandSide)
-				for (IAgent lAgent : ccL.getAgents())
+				for (IAgent lAgent : ccL.getAgents()) {
 					actionList.add(new CDeleteAction(this, lAgent, ccL));
+					fillInhibitedChangedSites(lAgent);// for
+					// inhibition
+					// map
+					// creation
+				}
 			return;
 		}
 
@@ -547,7 +672,9 @@ public class CRule implements IRule {
 				if ((countAgentsLHS == 0)
 						|| (rAgent.getIdInRuleSide() > countAgentsLHS)) {
 					actionList.add(new CAddAction(this, rAgent, ccR));
-					fillChangedSites(rAgent);// for activation map
+					fillChangedSites(rAgent);// for
+					// activation
+					// map
 					// creation
 				}
 			}
@@ -565,7 +692,14 @@ public class CRule implements IRule {
 	private final void fillChangedSites(IAgent agentRight) {
 		// if (agentLeft == null)
 		for (ISite site : agentRight.getSites()) {
-			changedSites.add(site);
+			changedActivatedSites.add(site);
+		}
+	}
+
+	private final void fillInhibitedChangedSites(IAgent agentRight) {
+		// if (agentLeft == null)
+		for (ISite site : agentRight.getSites()) {
+			changedInhibitedSites.add(new FixedSite(site, true, true));
 		}
 	}
 
@@ -687,6 +821,7 @@ public class CRule implements IRule {
 		}
 		return null;
 	}
+
 	public final boolean isClashForInfiniteRule() {
 		if (this.leftHandSide.size() == 2) {
 			if (this.leftHandSide.get(0).getInjectionsList().size() == 1
@@ -738,6 +873,27 @@ public class CRule implements IRule {
 	}
 
 	public final void addChangedSite(ISite toSite) {
-		changedSites.add(toSite);
+		for (ISite inSite : changedActivatedSites)
+			if (inSite == toSite)
+				return;
+		changedActivatedSites.add(toSite);
+	}
+
+	public final void addInhibitedChangedSite(ISite fromSite,
+			boolean internalState, boolean linkState) {
+		for (FixedSite inSite : changedInhibitedSites)
+			if (inSite.site == fromSite) {
+				if (inSite.internalState == false)
+					inSite.internalState = internalState;
+				if (inSite.linkState == false)
+					inSite.linkState = linkState;
+				return;
+			}
+		changedInhibitedSites.add(new FixedSite(fromSite, internalState,
+				linkState));
+	}
+
+	public List<FixedSite> getChangedInhibitedSites() {
+		return changedInhibitedSites;
 	}
 }

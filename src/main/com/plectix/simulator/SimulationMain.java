@@ -142,6 +142,16 @@ public class SimulationMain implements SimulatorCallableListener {
 			simulationData.setActivationMap(false);
 		}
 
+		if (arguments.hasOption(SimulatorOptions.MERGE_MAPS)){
+			simulationData.setInhibitionMap(true);
+		}
+		
+		if (arguments.hasOption(SimulatorOptions.NO_INHIBITION_MAP)
+				|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
+				|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+			simulationData.setInhibitionMap(false);
+		}
+		
 		if (arguments.hasOption(SimulatorOptions.OCAML_STYLE_OBS_NAME)) {
 			simulationData.setOcamlStyleObsName(true);
 		}

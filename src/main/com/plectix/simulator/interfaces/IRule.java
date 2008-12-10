@@ -19,6 +19,10 @@ public interface IRule {
 	public List<IRule> getActivatedRule();
 
 	public List<IObservablesConnectedComponent> getActivatedObservable();
+	
+	public List<IRule> getInhibitedRule();
+
+	public List<IObservablesConnectedComponent> getInhibitedObservable(); 
 
 	public List<IConnectedComponent> getRightHandSide();
 
@@ -46,6 +50,8 @@ public interface IRule {
 
 	public void createActivatedRulesList(List<IRule> rules);
 
+	public void createInhibitedRulesList(List<IRule> rules);
+		
 	public void createActivatedObservablesList(IObservables observables);
 
 	public double getRuleRate();
@@ -57,4 +63,6 @@ public interface IRule {
 	public String getData(boolean isOcamlStyleObsName);
 
 	public void setData(String data);
+
+	public void createInhibitedObservablesList(IObservables observables);
 }
