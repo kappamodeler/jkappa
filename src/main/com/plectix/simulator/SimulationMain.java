@@ -187,6 +187,16 @@ public class SimulationMain implements SimulatorCallableListener {
 		if (arguments.hasOption(SimulatorOptions.OUTPUT_SCHEME)) {
 			simulationData.setXmlSessionPath(arguments.getValue(SimulatorOptions.OUTPUT_SCHEME));
 		}
+		
+		if (arguments.hasOption(SimulatorOptions.NO_SAVE_ALL)){
+			simulationData.setSerializationMode(simulationData.MODE_NONE);
+		}
+		
+		if (arguments.hasOption(SimulatorOptions.SAVE_ALL)){
+			simulationData.setSerializationFileName(arguments
+					.getValue(SimulatorOptions.SAVE_ALL));
+		}
+		
 		return arguments;
 	}
 

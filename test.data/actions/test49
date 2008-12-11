@@ -1,0 +1,3 @@
+'test_DEL_02' A(y!3,z!1,x~w!2),B(x!3,y),B(x!2,y),B(x!4,y!6),B(x!5),C(z~a!6),A(z!1,x~w!5,y!4) -> A(y!3,z,x~w!2),B(x!3,y),B(x!2,y),B(x,y!6),B(x),C(z~a!6)
+%init: 2 * (A(y!3,z!1,x~w!2),B(x!3,y),B(x!2,y),B(x!4,y!6),B(x!5),C(z~a!6),A(z!1,x~w!5,y!4))
+%obs: '0060' A(y!3,z!1,x~w!2),B(x!3,y),B(x!2,y),B(x!4,y!6),B(x!5),C(z~a!6),A(z!1,x~w!5,y!4)

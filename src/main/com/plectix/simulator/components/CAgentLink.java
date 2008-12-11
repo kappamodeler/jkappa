@@ -1,8 +1,10 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
+
 import com.plectix.simulator.interfaces.*;
 
-/*package*/ final class CAgentLink implements IAgentLink {
+/*package*/ final class CAgentLink implements IAgentLink, Serializable {
 	private final int idAgentFrom;
 	private final IAgent agentTo;
 	

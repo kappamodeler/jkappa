@@ -1,12 +1,13 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
 
-/*package*/ final class CSpanningTree {
+/*package*/ final class CSpanningTree implements Serializable {
 
 	private final List<Integer>[] vertexes;
 	private final int rootIndex;

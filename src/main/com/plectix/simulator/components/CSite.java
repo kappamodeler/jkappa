@@ -1,5 +1,6 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,7 +14,7 @@ import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.Simulator;
 
-public final class CSite implements ISite {
+public final class CSite implements ISite, Serializable {
 	public static final int NO_INDEX = -1;
 
 	// TODO move to CInternalState?

@@ -1,5 +1,6 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.Simulator;
 
-public class CRule implements IRule {
+public class CRule implements IRule, Serializable{
 
 	public static final IConnectedComponent EMPTY_LHS_CC = new CConnectedComponent(
 			CConnectedComponent.EMPTY);

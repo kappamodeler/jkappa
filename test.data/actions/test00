@@ -1,0 +1,4 @@
+'test_ADD_00' A(x~q) -> A(x~q), A(x~fi) 
+%init: 2 * A(x~q)
+%obs: '0010' A(x~q)
+%obs: '0011' A(x~fi)

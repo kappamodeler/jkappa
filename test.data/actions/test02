@@ -1,0 +1,4 @@
+'test_MOD_02' A(x~q, y) -> A(x~fi, y) 
+%init: 2 * A(x~q, y)
+%obs: '0020' A(x~q, y)
+%obs: '0021' A(x~fi, y)

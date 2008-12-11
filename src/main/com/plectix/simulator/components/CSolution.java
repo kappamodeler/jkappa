@@ -1,11 +1,12 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
 
-public final class CSolution implements ISolution {
+public final class CSolution implements ISolution, Serializable {
 	private final HashMap<Long, IAgent> agentMap;
 	private final List<SolutionLines> solutionLines;
 

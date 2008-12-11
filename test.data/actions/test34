@@ -1,0 +1,5 @@
+'test_BND_04' A(x), B(x, y)  -> A(x!1), B(x, y!1)
+%init: 2 * (B(x, y), A(x))
+%obs: '3040' A(x!1), B(x, y!1)
+%obs: '3042' A(x)
+%obs: '3043' B(x, y)

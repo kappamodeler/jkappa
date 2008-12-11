@@ -1,0 +1,3 @@
+'test_DEL_01' A(x) -> 
+%init: 2 * A(x)
+%obs: '2010' A(x)

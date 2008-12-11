@@ -1,0 +1,3 @@
+'test_MOD_04' A(x~w!2,y!3,z!1),A(z!1,x~w!5,y!4),B(x!2,y),B(x!4,y!6),B(x!5),C(z~a!6),B(x!3,y) -> A(x~w!2,y!3,z!1),A(z!1,x~fi!5,y!4),B(x!2,y),B(x!4,y!6),B(x!5),C(z~a!6),B(x!3,y)
+%init: 2 * (A(x~w!2,y!3,z!1),A(z!1,x~w!5,y!4),B(x!2,y),B(x!4,y!6),B(x!5),C(z~a!6),B(x!3,y))
+%obs: '4010' A(x~w!2,y!3,z!1),A(z!1,x~w!5,y!4),B(x!2,y),B(x!4,y!6),B(x!5),C(z~a!6),B(x!3,y)

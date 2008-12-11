@@ -1,10 +1,11 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.interfaces.*;
 
-public class CConnectedComponent implements IConnectedComponent {
+public class CConnectedComponent implements IConnectedComponent, Serializable {
 
 	public static final byte EMPTY = 0;
 

@@ -1,0 +1,6 @@
+'test_DEL_11' A(x~q!1, y~p!2), B(x!1), C(x!2) -> B(x), C(x) 
+%init: 2 * (A(x~q!1, y~p!2), B(x!1), C(x!2))
+%obs: '2110' A(x~q!1, y~p!2), B(x!1), C(x!2)
+%obs: '2112' C(x)
+%obs: '2113' B(x)
+

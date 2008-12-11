@@ -1,5 +1,6 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
@@ -9,7 +10,7 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.Simulator;
 
-public final class CAgent implements IAgent {
+public final class CAgent implements IAgent, Serializable {
 	/**
 	 * idInConnectedComponent is the unique id in ConnectedComponent id is an
 	 * unique id for agent

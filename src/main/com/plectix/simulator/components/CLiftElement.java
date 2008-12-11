@@ -1,8 +1,10 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
+
 import com.plectix.simulator.interfaces.*;
 
-public final class CLiftElement implements ILiftElement {
+public final class CLiftElement implements ILiftElement, Serializable {
 	
 	private final CConnectedComponent connectedComponent;
 	private final IInjection injection;

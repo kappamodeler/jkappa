@@ -1,0 +1,4 @@
+'test_BIG_02(BRK)' A(y!2,z!4,x~q!1),V(y!3,x~p!1),B(x~p!2,t!8,y!3),A(x~q!6,y!5,z!4),B(y!5,x~p!7),B(x~p!7,l!6),C(t!8) -> A(y!2,z,x~q!1),V(y!3,x~p!1),B(x~p!2,t!8,y!3),A(x~q!6,y!5,z),B(y!5,x~p!7),B(x~p!7,l!6),C(t!8)
+%init: 2 * (A(y!2,z!4,x~q!1),V(y!3,x~p!1),B(x~p!2,t!8,y!3),A(x~q!6,y!5,z!4),B(x~p!7,y!5),B(x~p!7,l!6),C(t!8))
+%obs: '4060' A(y!2,z!4,x~q!1),V(y!3,x~p!1),B(x~p!2,t!8,y!3),A(x~q!6,y!5,z!4),B(x~p!7,y!5),B(x~p!7,l!6),C(t!8)
+

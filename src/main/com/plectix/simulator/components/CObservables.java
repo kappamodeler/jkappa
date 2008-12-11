@@ -1,5 +1,6 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +12,7 @@ import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.simulator.Simulator;
 
-public class CObservables implements IObservables {
+public class CObservables implements IObservables, Serializable {
 	private boolean ocamlStyleObsName = false;
 	public List<Double> countTimeList;
 

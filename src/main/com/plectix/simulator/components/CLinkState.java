@@ -1,8 +1,10 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
+
 import com.plectix.simulator.interfaces.*;
 
-public final class CLinkState extends CState implements ILinkState {
+public final class CLinkState extends CState implements ILinkState, Serializable {
 
 	public static final byte STATUS_LINK_BOUND = 0x01;
 	public static final byte STATUS_LINK_WILDCARD = 0x02;

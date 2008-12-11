@@ -580,7 +580,9 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 		currentTime = 0;
 
-		SimulationMain.readSimulatonFile(this, myArguments);
+		if(getSimulationData().getSerializationMode() != getSimulationData().MODE_READ){
+			SimulationMain.readSimulatonFile(this, myArguments);
+		}
 		init(myArguments);
 	}
 

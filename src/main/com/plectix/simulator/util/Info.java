@@ -1,11 +1,12 @@
 package com.plectix.simulator.util;
 
+import java.io.Serializable;
 import java.text.Format;
 import java.util.Formatter;
 
 import com.plectix.simulator.simulator.Simulator;
 
-public class Info {
+public class Info implements Serializable{
 	private final static String INFO = "INFO";
 	public final static byte TYPE_INFO = 0;
 	private final static String INTERNAL = "INTERNAL";

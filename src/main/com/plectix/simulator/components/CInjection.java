@@ -1,10 +1,11 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.interfaces.*;
 
-public final class CInjection implements IInjection {
+public final class CInjection implements IInjection, Serializable {
 
 	public static final IInjection EMPTY_INJECTION = new CInjection();
 

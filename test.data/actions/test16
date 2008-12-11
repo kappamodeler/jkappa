@@ -1,0 +1,5 @@
+'test_ADD_08' B(x), C(x) -> A(x!1), B(x!1), C(x)
+%init:  2* (B(x), C(x))
+%obs: '1080' A(x!1), B(x!1)
+%obs: '1081' C(x)
+%obs: '1082' B(x)

@@ -1,0 +1,5 @@
+'test_BRK_06' A(x!1, y), B(x!1, y)->A(x, y), B(x, y)
+%init: 2 * (A(x!1, y),B(x!1, y))
+%obs: '4060' A(x!1, y),B(x!1, y)
+%obs: '4061' A(x, y)
+%obs: '4063' B(x, y)

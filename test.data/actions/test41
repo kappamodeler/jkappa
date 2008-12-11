@@ -1,0 +1,3 @@
+'test_BRK_04' A(x~q!_)->A(x~q)
+%init: 2 * A(x~q!_)
+%obs: '4041' A(x~q)

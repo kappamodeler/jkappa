@@ -1,0 +1,4 @@
+'test_BRK_08' A(x~q!_, y)->A(x~q, y)
+%init: 2*A(x~q!_, y)
+%obs: '4080' A(x~q!_, y)
+%obs: '4081' A(x~q, y)

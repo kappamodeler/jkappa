@@ -1,11 +1,12 @@
 package com.plectix.simulator.components.actions;
 
+import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
 
-/*package*/abstract class CAction implements IAction {
+/*package*/abstract class CAction implements IAction, Serializable {
 	private final IAgent fromAgent;
 	private final IAgent toAgent;
 	private final CRule myRule;

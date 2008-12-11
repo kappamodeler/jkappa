@@ -1,0 +1,4 @@
+'test_MOD_07' A(x~q!1), B(x~p!1) -> A(x~fi!1), B(x~p!1)
+%init: 2 * (A(x~q!1), B(x~p!1))
+%obs: '0070' A(x~q!1), B(x~p!1)
+%obs: '0071' A(x~fi!1), B(x~p!1)

@@ -1,9 +1,10 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import com.plectix.simulator.interfaces.IInternalState;
 import com.plectix.simulator.simulator.Simulator;
 
-public class CInternalState extends CState implements IInternalState {
+public class CInternalState extends CState implements IInternalState, Serializable {
 
 	private int nameId;
 

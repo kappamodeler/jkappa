@@ -1,0 +1,3 @@
+'test_ADD_01' B(x) ->   A(x), B(x) 
+%init: 2 * B(x)
+%obs: '1010' A(x)

@@ -1,10 +1,15 @@
 package com.plectix.simulator.simulator;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -25,6 +30,11 @@ import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
 public class SimulationData {
+
+	public final static byte MODE_SAVE = 2;
+	public final static byte MODE_READ = 1;
+	public final static byte MODE_NONE = 0;
+	
 	public final static byte SIMULATION_TYPE_NONE = -1;
 	public final static byte SIMULATION_TYPE_COMPILE = 0;
 	public final static byte SIMULATION_TYPE_STORIFY = 1;
@@ -159,6 +169,8 @@ public class SimulationData {
 
 	private double step;
 	private double nextStep;
+	private byte serializationMode = MODE_SAVE;
+	private String serializationFileName = "~tmp.sd";
 
 	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
@@ -894,6 +906,46 @@ public class SimulationData {
 	}
 
 	public final void initialize() {
+
+		if (getSerializationMode() == MODE_READ) {
+			  ObjectInputStream ois;
+			try {
+				ois = new ObjectInputStream(
+						  new FileInputStream(getSerializationFileName()));
+				solution = (CSolution)ois.readObject();
+				rules = (List<IRule>)ois.readObject();
+				observables = (IObservables)ois.readObject();
+				perturbations = (List<CPerturbation>)ois.readObject();
+				snapshotTime = (Double)ois.readObject();
+				event = (Long)ois.readObject();
+				timeLength = (Double)ois.readObject();
+				ois.close(); 
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		if (getSerializationMode()  == MODE_SAVE){
+			try {
+				ObjectOutputStream oos = new ObjectOutputStream(
+						new FileOutputStream(getSerializationFileName())) ; 
+				oos.writeObject(getSolution()); 
+				oos.writeObject(rules); 	
+				oos.writeObject(getObservables());
+				oos.writeObject(getPerturbations());
+				oos.writeObject(getSnapshotTime());
+				oos.writeObject(getEvent());
+				oos.writeObject(getTimeLength());
+				oos.flush(); 
+				setSerializationMode(MODE_READ);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} 
+		}
+		
 		getObservables().init(getTimeLength(), getInitialTime(), getEvent(),
 				getPoints(), isTime());
 		CSolution solution = (CSolution) getSolution();
@@ -962,4 +1014,20 @@ public class SimulationData {
 		}
 
 	}
+	public void setSerializationMode(byte serializationMode) {
+		this.serializationMode = serializationMode;
+	}
+
+	public int getSerializationMode() {
+		return serializationMode;
+	}
+
+	public void setSerializationFileName(String serializationFileName) {
+		this.serializationFileName = serializationFileName;
+	}
+
+	public String getSerializationFileName() {
+		return serializationFileName;
+	}
+
 }
