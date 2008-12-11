@@ -247,9 +247,19 @@ public class SimulationMain implements SimulatorCallableListener {
 			} else
 				option = false;
 			simulationData
-					.setSimulationType(SimulationData.SIMULATION_TYPE_GENERATE_MAP);
+					.setSimulationType(SimulationData.SIMULATION_TYPE_CONTACT_MAP);
 		}
 
+		if (options.hasOption(SimulatorOptions.CONTACT_MAP)) {
+			if (!option) {
+				option = true;
+				fileName = options.getValue(SimulatorOptions.CONTACT_MAP);
+			} else
+				option = false;
+			simulationData
+					.setSimulationType(SimulationData.SIMULATION_TYPE_CONTACT_MAP);
+		}
+		
 		if (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_NONE) {
 			// HelpFormatter formatter = new HelpFormatter();
 			// formatter.printHelp("use --sim [file]", cmdLineOptions);

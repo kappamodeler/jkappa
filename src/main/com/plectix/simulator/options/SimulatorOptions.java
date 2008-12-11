@@ -32,6 +32,7 @@ public enum SimulatorOptions {
 	OCAML_STYLE_OBS_NAME("ocaml_style_obs_name", false,	"convert Obs names to simpx"),
 	GENERATE_MAP("generate_map", true,
 			"Name of the kappa file for which the influence map should be computed"),
+	CONTACT_MAP("contact_map", true, "Name of the kappa file to build contact map"),
 	NO_MAPS("no_maps", false,
 			"Do not construct inhibition/activation maps"),
 	NO_BUILD_INFLUENCE_MAP("no_build_influence_map", false,

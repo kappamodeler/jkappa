@@ -31,6 +31,7 @@ public class SimulationData {
 	public final static byte SIMULATION_TYPE_SIM = 2;
 	public final static byte SIMULATION_TYPE_ITERATIONS = 3;
 	public final static byte SIMULATION_TYPE_GENERATE_MAP = 4;
+	public final static byte SIMULATION_TYPE_CONTACT_MAP = 5;
 	private final static String TYPE_NEGATIVE_MAP = "NEGATIVE";
 	private final static String TYPE_POSITIVE_MAP = "POSITIVE";
 
@@ -43,6 +44,11 @@ public class SimulationData {
 	private IObservables observables = new CObservables();
 	private CSnapshot snapshot = null;
 	private ISolution solution = new CSolution(); // soup of initial components
+
+	private CContactMap contactMap = new CContactMap();
+	public CContactMap getContactMap() {
+		return contactMap;
+	}
 
 	private List<Info> infoList = new ArrayList<Info>();
 
@@ -892,6 +898,11 @@ public class SimulationData {
 				getPoints(), isTime());
 		CSolution solution = (CSolution) getSolution();
 		List<IRule> rules = getRules();
+		
+		if (this.simulationType == SIMULATION_TYPE_CONTACT_MAP){
+			contactMap.addCreatedAgentsToSolution(this.solution, rules);
+		}
+		
 		Iterator<IAgent> iterator = solution.getAgents().values().iterator();
 		getObservables().checkAutomorphisms();
 
@@ -943,6 +954,11 @@ public class SimulationData {
 								oCC.setInjection(inj);
 						}
 					}
+		}
+		
+		if (this.simulationType == SIMULATION_TYPE_CONTACT_MAP){
+			contactMap.constructReachableRules(rules);
+			contactMap.constructContactMap();
 		}
 
 	}

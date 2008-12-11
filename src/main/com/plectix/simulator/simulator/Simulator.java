@@ -682,7 +682,8 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		}
 		if (!myArguments.hasOption(SimulatorOptions.DEBUG_INIT)) {
 			
-			if (myArguments.hasOption(SimulatorOptions.GENERATE_MAP)) {
+			if (myArguments.hasOption(SimulatorOptions.GENERATE_MAP)
+					|| myArguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
 				Source source = addCompleteSource();
 				outputData(source, 0);
 			} else if (myArguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS))

@@ -667,9 +667,14 @@ public class Parser {
 						line = line.replaceAll("[ 	]", "");
 						List<IAgent> listAgent = parseAgent(line);
 						simulationData.getSolution().addAgents(listAgent);
-						for (int i = 1; i < count; i++) {
-							simulationData.getSolution().addAgents(
-									cloneAgentsList(listAgent));
+						if (simulationData.getSimulationType()==SimulationData.SIMULATION_TYPE_CONTACT_MAP) {
+							simulationData.getContactMap()
+									.addAgentFromSolution(listAgent);
+						} else {
+							for (int i = 1; i < count; i++) {
+								simulationData.getSolution().addAgents(
+										cloneAgentsList(listAgent));
+							}
 						}
 						if (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_COMPILE) {
 							((CSolution) simulationData.getSolution())
