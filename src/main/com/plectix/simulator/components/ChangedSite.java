@@ -1,7 +1,9 @@
 package com.plectix.simulator.components;
+import java.io.Serializable;
+
 import com.plectix.simulator.interfaces.ISite;
 
-public class ChangedSite {
+public class ChangedSite implements Serializable{
 	private final ISite site;
 	private boolean linkState;
 	private boolean internalState;
