@@ -8,63 +8,25 @@ import com.plectix.simulator.interfaces.*;
 
 public class CContactMap {
 	private List<IRule> reachableRules;
-	private List<IRule> unreachableRules;
 	private Map<Integer, IAgent> agentsFromSolution;
-	private Map<Integer, Map<Integer, ChangedSiteWithRule>> agentsInContactMap;
-	private Map<Integer, IAgent> unreachableAgentsFromRules;
-	private Map<Integer, IAgent> usefulAgentsFromSolution;
-	private List<IConnectedComponent> reachableCC;
-	private List<IConnectedComponent> unReachableCC;
+	private HashMap<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap;
+	private HashMap<Integer, Map<Integer, List<CContactMapEdge>>> bondsInContactMap;
+	private List<IConnectedComponent> unreachableCC;
 
-	class ChangedSiteWithRule extends ChangedSite {
-		List<Integer> usedRuleIDs;
-
-		public ChangedSiteWithRule(ISite site, boolean internalState,
-				boolean linkState) {
-			super(site, internalState, linkState);
-			usedRuleIDs = new ArrayList<Integer>();
-		}
-
-		public void addRules(int value) {
-			if (!usedRuleIDs.contains(value))
-				usedRuleIDs.add(value);
-		}
-
+	public Map<Integer, Map<Integer, CContactMapChangedSite>> getAgentsInContactMap() {
+		return agentsInContactMap;
 	}
 
-	private void addToAgentsInContactMap(ChangedSiteWithRule site, IRule rule) {
-		int agentKey = site.getSite().getAgentLink().getNameId();
-		Map<Integer, ChangedSiteWithRule> chSiteMap = agentsInContactMap
-				.get(agentKey);
-		if (chSiteMap == null) {
-			chSiteMap = new HashMap<Integer, ChangedSiteWithRule>();
-			chSiteMap.put(site.getSite().getNameId(), site);
-			agentsInContactMap.put(agentKey, chSiteMap);
-		} else {
-			int siteKey = site.getSite().getNameId();
-			ChangedSiteWithRule chSite = chSiteMap.get(siteKey);
-			if (chSite == null) {
-				chSiteMap.put(siteKey, site);
-			} else {
-				if (!chSite.isInternalState())
-					chSite.setInternalState(site.isInternalState());
-				if (!chSite.isLinkState())
-					chSite.setLinkState(site.isLinkState());
-			}
-		}
-		if (rule != null)
-			site.addRules(rule.getRuleID());
+	public Map<Integer, Map<Integer, List<CContactMapEdge>>> getBondsInContactMap() {
+		return bondsInContactMap;
 	}
 
 	public CContactMap() {
 		reachableRules = new ArrayList<IRule>();
-		unreachableRules = new ArrayList<IRule>();
-		reachableCC = new ArrayList<IConnectedComponent>();
-		unReachableCC = new ArrayList<IConnectedComponent>();
+		unreachableCC = new ArrayList<IConnectedComponent>();
 		agentsFromSolution = new HashMap<Integer, IAgent>();
-		unreachableAgentsFromRules = new HashMap<Integer, IAgent>();
-		
-		agentsInContactMap = new HashMap<Integer, Map<Integer, ChangedSiteWithRule>>();
+		bondsInContactMap = new HashMap<Integer, Map<Integer, List<CContactMapEdge>>>();
+		agentsInContactMap = new HashMap<Integer, Map<Integer, CContactMapChangedSite>>();
 	}
 
 	public void addCreatedAgentsToSolution(ISolution solution, List<IRule> rules) {
@@ -79,20 +41,112 @@ public class CContactMap {
 		}
 	}
 
-	private void addToAgentsInContactMap(IAgent agent, IRule rule){
+	private void addToAgentsInContactMap(CContactMapChangedSite site, IRule rule) {
+		int agentKey = site.getSite().getAgentLink().getNameId();
+		Map<Integer, CContactMapChangedSite> chSiteMap = agentsInContactMap
+				.get(agentKey);
+		if (chSiteMap == null) {
+			chSiteMap = new HashMap<Integer, CContactMapChangedSite>();
+			chSiteMap.put(site.getSite().getNameId(), site);
+			agentsInContactMap.put(agentKey, chSiteMap);
+		} else {
+			int siteKey = site.getSite().getNameId();
+			CContactMapChangedSite chSite = chSiteMap.get(siteKey);
+			if (chSite == null) {
+				chSiteMap.put(siteKey, site);
+			} else {
+				if (!chSite.isInternalState())
+					chSite.setInternalState(site.isInternalState());
+				if (!chSite.isLinkState())
+					chSite.setLinkState(site.isLinkState());
+				if (site.isLinkState())
+					chSite.addRules(rule);
+				return;
+			}
+		}
+		if (site.isLinkState())
+			site.addRules(rule);
+	}
+
+	private void addToAgentsInContactMap(IAgent agent, IRule rule, boolean isLHS) {
 		for (ISite site : agent.getSites()) {
 			boolean internalState = false;
 			boolean linkState = false;
-			if (site.getInternalState().getNameId() != -1)
-				internalState = true;
-			if (site.getLinkState().getSite() != null)
-				linkState = true;
-			ChangedSiteWithRule chSite = new ChangedSiteWithRule(
-					site, internalState, linkState);
+			if (!isLHS) {
+				if (site.getInternalState().getNameId() != -1)
+					internalState = true;
+				if (site.getLinkState().getSite() != null)
+					linkState = true;
+			}
+			CContactMapChangedSite chSite = new CContactMapChangedSite(site,
+					internalState, linkState);
 			addToAgentsInContactMap(chSite, rule);
 		}
 	}
-	
+
+	private void addToEdgesInContactMap(IAgent agent, IRule rule) {
+		int agentKey = agent.getNameId();
+		Map<Integer, List<CContactMapEdge>> edgesMap = bondsInContactMap
+				.get(agentKey);
+
+		for (ISite site : agent.getSites()) {
+			ISite siteTo = site.getLinkState().getSite();
+			if (siteTo != null)
+				if (edgesMap == null) {
+					edgesMap = new HashMap<Integer, List<CContactMapEdge>>();
+					List<CContactMapEdge> edgeList = new ArrayList<CContactMapEdge>();
+					CContactMapEdge edge = new CContactMapEdge(site, siteTo);
+					edgeList.add(edge);
+					edgesMap.put(site.getNameId(), edgeList);
+					bondsInContactMap.put(agentKey, edgesMap);
+					edge.addRules(rule);
+				} else {
+					int siteKey = site.getNameId();
+					ArrayList<CContactMapEdge> edgeList = (ArrayList<CContactMapEdge>) edgesMap
+							.get(siteKey);
+					if (edgeList == null) {
+						CContactMapEdge edge = new CContactMapEdge(site, siteTo);
+						edgeList = new ArrayList<CContactMapEdge>();
+						edgeList.add(edge);
+						edgesMap.put(site.getNameId(), edgeList);
+						bondsInContactMap.put(agentKey, edgesMap);
+						edge.addRules(rule);
+					} else if (edgeList.size() == 1) {
+						CContactMapEdge edge = edgeList.get(0);
+						if (edge.getVertexTo() == null) {
+							edge.setVertexTo(siteTo);
+							edge.clearRules();
+							edge.addRules(rule);
+						} else if (edge.getVertexTo() != null) {
+							CContactMapEdge newEdge = new CContactMapEdge(site,
+									siteTo);
+							edgeList.add(newEdge);
+							edgesMap.put(site.getNameId(), edgeList);
+							bondsInContactMap.put(agentKey, edgesMap);
+							newEdge.addRules(rule);
+						}
+					} else {
+						int counter = 0;
+						for (CContactMapEdge edge : edgeList) {
+							if (edge.getVertexTo().equals(siteTo)) {
+								edge.addRules(rule);
+								break;
+							}
+							counter++;
+						}
+						if (counter == edgeList.size()) {
+							CContactMapEdge edge = new CContactMapEdge(site,
+									siteTo);
+							edgeList.add(edge);
+							edgesMap.put(site.getNameId(), edgeList);
+							bondsInContactMap.put(agentKey, edgesMap);
+							edge.addRules(rule);
+						}
+					}
+				}
+		}
+	}
+
 	public void constructContactMap() {
 		for (IRule rule : reachableRules) {
 			if (rule.getRightHandSide() != null) {
@@ -100,7 +154,8 @@ public class CContactMap {
 						.getAgentsFromConnectedComponent(rule
 								.getRightHandSide());
 				for (IAgent agent : agentsFromRHS) {
-				addToAgentsInContactMap(agent, rule); 	
+					addToAgentsInContactMap(agent, rule, false);
+					addToEdgesInContactMap(agent, rule);
 				}
 			}
 		}
@@ -108,15 +163,25 @@ public class CContactMap {
 		Iterator<Integer> iterator = agentsFromSolution.keySet().iterator();
 		while (iterator.hasNext()) {
 			int key = iterator.next();
-			if (agentsInContactMap.get(key) == null) {
+			if (!agentsInContactMap.containsKey(key)) {
 				IAgent agent = agentsFromSolution.get(key);
-				addToAgentsInContactMap(agent, null);
+				addToAgentsInContactMap(agent, null, false);
+				addToEdgesInContactMap(agent, null);
 			}
 		}
+
+		for (IConnectedComponent cc : unreachableCC) {
+			for (IAgent agent : cc.getAgents()) {
+				if (!agentsFromSolution.containsKey(agent.getNameId())) {
+					addToAgentsInContactMap(agent, null, true);
+				}
+			}
+
+		}
+
 	}
 
 	public void constructReachableRules(List<IRule> rules) {
-		// create reachable rules list
 		for (IRule rule : rules) {
 			if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC) {
 				reachableRules.add(rule);
@@ -125,9 +190,12 @@ public class CContactMap {
 				for (IConnectedComponent cc : rule.getLeftHandSide()) {
 					if (cc.getInjectionsList().size() != 0)
 						injCounter++;
+					else
+						unreachableCC.add(cc);
 				}
 				if (injCounter == rule.getLeftHandSide().size())
 					reachableRules.add(rule);
+
 			}
 		}
 	}

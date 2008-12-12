@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.parsers.*;
@@ -34,7 +35,7 @@ public class SimulationData {
 	public final static byte MODE_SAVE = 2;
 	public final static byte MODE_READ = 1;
 	public final static byte MODE_NONE = 0;
-	
+
 	public final static byte SIMULATION_TYPE_NONE = -1;
 	public final static byte SIMULATION_TYPE_COMPILE = 0;
 	public final static byte SIMULATION_TYPE_STORIFY = 1;
@@ -56,6 +57,7 @@ public class SimulationData {
 	private ISolution solution = new CSolution(); // soup of initial components
 
 	private CContactMap contactMap = new CContactMap();
+
 	public CContactMap getContactMap() {
 		return contactMap;
 	}
@@ -70,8 +72,8 @@ public class SimulationData {
 	private long event;
 
 	private byte simulationType = SIMULATION_TYPE_NONE;
-	
-	private DOMSource myOutputDOMSource; 
+
+	private DOMSource myOutputDOMSource;
 	// private boolean compile = false;
 	// private boolean storify = false;
 
@@ -357,9 +359,8 @@ public class SimulationData {
 
 	}
 
-	
-	public DOMSource createDOMModel() 
-		throws ParserConfigurationException, TransformerException {
+	public DOMSource createDOMModel() throws ParserConfigurationException,
+			TransformerException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.newDocument();
@@ -381,6 +382,80 @@ public class SimulationData {
 		doc.appendChild(simplxSession);
 
 		timer.startTimer();
+
+		if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
+			Element contactMapElement = doc.createElement("ContactMap");
+
+			Map<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap = this.contactMap
+					.getAgentsInContactMap();
+			Map<Integer, Map<Integer, List<CContactMapEdge>>> bondsInContactMap = this.contactMap
+					.getBondsInContactMap();
+
+			List<Integer> agentIDWasRead = new ArrayList<Integer>();
+
+			Iterator<Integer> agentIterator = agentsInContactMap.keySet()
+					.iterator();
+
+			while (agentIterator.hasNext()) {
+				Element agent = doc.createElement("Agent");
+				int agentKey = agentIterator.next();
+				Map<Integer, CContactMapChangedSite> sitesMap = agentsInContactMap
+						.get(agentKey);
+				Iterator<Integer> siteIterator = sitesMap.keySet().iterator();
+				int siteKey = siteIterator.next();
+				CContactMapChangedSite chSite = sitesMap.get(siteKey);
+				agent.setAttribute("AgentName", chSite.getSite().getAgentLink()
+						.getName());
+				addSiteToContactMapAgent(chSite, agent, doc);
+
+				while (siteIterator.hasNext()) {
+					siteKey = siteIterator.next();
+					chSite = sitesMap.get(siteKey);
+					addSiteToContactMapAgent(chSite, agent, doc);
+				}
+				contactMapElement.appendChild(agent);
+			}
+
+			agentIterator = bondsInContactMap.keySet().iterator();
+			while (agentIterator.hasNext()) {
+				int agentKey = agentIterator.next();
+				agentIDWasRead.add(agentKey);
+				Map<Integer, List<CContactMapEdge>> edgesMap = bondsInContactMap
+						.get(agentKey);
+				Iterator<Integer> siteIterator = edgesMap.keySet().iterator();
+				while (siteIterator.hasNext()) {
+					int siteKey = siteIterator.next();
+					List<CContactMapEdge> edgesList = edgesMap.get(siteKey);
+					for (CContactMapEdge edge : edgesList) {
+						Element bond = doc.createElement("Bond");
+						ISite vertexTo = edge.getVertexTo();
+						ISite vertexFrom = edge.getVertexFrom();
+						if (!agentIDWasRead.contains(vertexTo.getAgentLink()
+								.getNameId())) {
+
+							bond.setAttribute("FromAgent", vertexFrom
+									.getAgentLink().getName());
+							bond.setAttribute("FromSite", vertexFrom.getName());
+							bond.setAttribute("ToAgent", vertexTo
+									.getAgentLink().getName());
+							bond.setAttribute("ToSite", vertexTo.getName());
+
+							if (edge.getRules().size() != 0) {
+								Element rule = doc.createElement("Rule");
+								for (int ruleID : edge.getRules()) {
+									rule.setAttribute("Id", Integer
+											.toString(ruleID));
+								}
+								bond.appendChild(rule);
+							}
+							contactMapElement.appendChild(bond);
+						}
+					}
+				}
+			}
+			simplxSession.appendChild(contactMapElement);
+		}
+
 		if (activationMap) {
 			Element influenceMap = doc.createElement("InfluenceMap");
 
@@ -509,7 +584,23 @@ public class SimulationData {
 		DOMSource domSource = new DOMSource(doc);
 		return domSource;
 	}
-	
+
+	public void addSiteToContactMapAgent(CContactMapChangedSite site,
+			Element agent, Document doc) {
+		Element siteNode = doc.createElement("Site");
+		Element siteRule = doc.createElement("Rule");
+		for (Integer ruleID : site.getUsedRuleIDs()) {
+			siteRule.setAttribute("Id", Integer.toString(ruleID));
+			siteNode.appendChild(siteRule);
+		}
+		siteNode.setAttribute("Name", site.getSite().getName());
+		siteNode.setAttribute("CanChangeState", Boolean.toString(site
+				.isInternalState()));
+		siteNode.setAttribute("CanBeBound", Boolean
+				.toString(site.isLinkState()));
+		agent.appendChild(siteNode);
+	}
+
 	public void writeToXML(Source source, TimerSimulation timerOutput)
 			throws ParserConfigurationException, TransformerException {
 		TransformerFactory trFactory = TransformerFactory.newInstance();
@@ -531,13 +622,14 @@ public class SimulationData {
 	private void printMap(Document doc, String mapType, Element influenceMap,
 			IRule rule, List<IRule> rulesToPrint,
 			List<IObservablesConnectedComponent> obsToPrint) {
-		int rulesNumber = rules.size()+1;
+		int rulesNumber = rules.size() + 1;
 		for (int j = obsToPrint.size() - 1; j >= 0; j--) {
 			Element node = doc.createElement("Connection");
 			node.setAttribute("FromNode", Integer
 					.toString(rule.getRuleID() + 1));
 			node.setAttribute("ToNode", Integer.toString(obsToPrint.get(j)
-					.getNameID() + rulesNumber));
+					.getNameID()
+					+ rulesNumber));
 			node.setAttribute("Relation", mapType);
 			influenceMap.appendChild(node);
 		}
@@ -908,7 +1000,7 @@ public class SimulationData {
 	public final void initialize() {
 
 		if (getSerializationMode() == MODE_READ) {
-			  ObjectInputStream ois;
+			ObjectInputStream ois;
 			try {
 				ois = new ObjectInputStream(
 						  new FileInputStream(getSerializationFileName()));
@@ -922,13 +1014,13 @@ public class SimulationData {
 				ois.close(); 
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
-			}catch (ClassNotFoundException e) {
+			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
-			}catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		if (getSerializationMode()  == MODE_SAVE){
+		if (getSerializationMode() == MODE_SAVE) {
 			try {
 				ObjectOutputStream oos = new ObjectOutputStream(
 						new FileOutputStream(getSerializationFileName())) ; 
@@ -939,23 +1031,23 @@ public class SimulationData {
 				oos.writeDouble(snapshotTime);
 				oos.writeLong(event);
 				oos.writeDouble(timeLength);
-				oos.flush(); 
+				oos.flush();
 				oos.close();
 				setSerializationMode(MODE_READ);
 			} catch (IOException e) {
 				e.printStackTrace();
-			} 
+			}
 		}
-		
+
 		getObservables().init(getTimeLength(), getInitialTime(), getEvent(),
 				getPoints(), isTime());
 		CSolution solution = (CSolution) getSolution();
 		List<IRule> rules = getRules();
-		
-		if (this.simulationType == SIMULATION_TYPE_CONTACT_MAP){
+
+		if (this.simulationType == SIMULATION_TYPE_CONTACT_MAP) {
 			contactMap.addCreatedAgentsToSolution(this.solution, rules);
 		}
-		
+
 		Iterator<IAgent> iterator = solution.getAgents().values().iterator();
 		getObservables().checkAutomorphisms();
 
@@ -1008,13 +1100,14 @@ public class SimulationData {
 						}
 					}
 		}
-		
-		if (this.simulationType == SIMULATION_TYPE_CONTACT_MAP){
+
+		if (this.simulationType == SIMULATION_TYPE_CONTACT_MAP) {
 			contactMap.constructReachableRules(rules);
 			contactMap.constructContactMap();
 		}
 
 	}
+
 	public void setSerializationMode(byte serializationMode) {
 		this.serializationMode = serializationMode;
 	}

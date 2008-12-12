@@ -1,38 +1,50 @@
 package com.plectix.simulator.components;
 
+import java.util.*;
+
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.interfaces.ISite;
+
 public class CContactMapEdge {
-	private ChangedSite node1;
-	private ChangedSite node2;
-	
-	
-	
-	
-	
-	@Override
-	public final boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof CContactMapEdge)) {
-			return false;
-		}
-
-		CContactMapEdge edge = (CContactMapEdge) obj;
-
-		if (!this.node1.isLinkState()){
-			if(edge.node1.isLinkState()){
-				return false;
-			}else{
-				return this.node1.getSite().equals(edge.node1.getSite());
-			}
-		} else 
-			
-			/*
-			nameId != agent.getNameId()) {
-			return false;*/
-		//}
-		return true;
+	private ISite vertexFrom;
+	public ISite getVertexFrom() {
+		return vertexFrom;
 	}
 
+	public void setVertexFrom(ISite vertexFrom) {
+		this.vertexFrom = vertexFrom;
+	}
+
+	public ISite getVertexTo() {
+		return vertexTo;
+	}
+
+	public void setVertexTo(ISite vertexTo) {
+		this.vertexTo = vertexTo;
+	}
+
+	public List<Integer> getRules() {
+		return rules;
+	}
+
+	private ISite vertexTo;
+	private List<Integer> rules;
+
+	public CContactMapEdge(ISite vertexFrom, ISite vertexTo) {
+		this.vertexFrom = vertexFrom;
+		this.vertexTo = vertexTo;
+		rules = new ArrayList<Integer>();
+	}
+
+	public void clearRules(){
+		rules.clear();
+	}
 	
+	public void addRules(IRule rule) {
+		if (rule != null) {
+			int value = rule.getRuleID();
+			if (!rules.contains(value))
+				rules.add(value);
+		}
+	}
 }
