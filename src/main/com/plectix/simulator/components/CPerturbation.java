@@ -1,11 +1,12 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
 
-public final class CPerturbation {
+public final class CPerturbation implements Serializable{
 
 	public final static byte TYPE_TIME = 0;
 	public final static byte TYPE_NUMBER = 1;

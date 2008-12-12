@@ -3,9 +3,11 @@
  */
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
+
 import com.plectix.simulator.interfaces.*;
 
-/*package*/ final class SumParameters implements IPerturbationExpression {
+/*package*/ final class SumParameters implements IPerturbationExpression, Serializable {
 	/**
 	 * 
 	 */

@@ -916,9 +916,9 @@ public class SimulationData {
 				rules = (List<IRule>)ois.readObject();
 				observables = (IObservables)ois.readObject();
 				perturbations = (List<CPerturbation>)ois.readObject();
-				snapshotTime = (Double)ois.readObject();
-				event = (Long)ois.readObject();
-				timeLength = (Double)ois.readObject();
+				snapshotTime = (double)ois.readDouble();
+				event = (long)ois.readLong();
+				timeLength = (double)ois.readDouble();
 				ois.close(); 
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
@@ -932,14 +932,15 @@ public class SimulationData {
 			try {
 				ObjectOutputStream oos = new ObjectOutputStream(
 						new FileOutputStream(getSerializationFileName())) ; 
-				oos.writeObject(getSolution()); 
+				oos.writeObject(solution); 
 				oos.writeObject(rules); 	
-				oos.writeObject(getObservables());
-				oos.writeObject(getPerturbations());
-				oos.writeObject(getSnapshotTime());
-				oos.writeObject(getEvent());
-				oos.writeObject(getTimeLength());
+				oos.writeObject(observables);
+				oos.writeObject(perturbations);
+				oos.writeDouble(snapshotTime);
+				oos.writeLong(event);
+				oos.writeDouble(timeLength);
 				oos.flush(); 
+				oos.close();
 				setSerializationMode(MODE_READ);
 			} catch (IOException e) {
 				e.printStackTrace();

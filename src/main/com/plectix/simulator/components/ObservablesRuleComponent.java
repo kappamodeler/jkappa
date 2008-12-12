@@ -1,10 +1,11 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.interfaces.*;
 
-public final class ObservablesRuleComponent implements IObservablesRuleComponent {
+public final class ObservablesRuleComponent implements IObservablesRuleComponent, Serializable {
 	private final IRule rule;
 	private final int nameID;
 	private final List<Long> countList = new ArrayList<Long>();

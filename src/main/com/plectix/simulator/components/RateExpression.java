@@ -1,8 +1,10 @@
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
+
 import com.plectix.simulator.interfaces.*;
 
-public final class RateExpression implements IPerturbationExpression {
+public final class RateExpression implements IPerturbationExpression, Serializable {
 	private final IRule rule;
 	private double value;
 

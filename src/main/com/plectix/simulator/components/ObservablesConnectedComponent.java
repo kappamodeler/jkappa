@@ -3,6 +3,7 @@
  */
 package com.plectix.simulator.components;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 import com.plectix.simulator.interfaces.*;
 
 public final class ObservablesConnectedComponent extends CConnectedComponent
-		implements IObservablesConnectedComponent {
+		implements IObservablesConnectedComponent, Serializable {
 	public static final int NO_INDEX = -1;
 	
 	private int mainAutomorphismNumber = NO_INDEX;
