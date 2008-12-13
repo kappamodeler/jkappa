@@ -522,6 +522,11 @@ public class SimulationData {
 					Element story = doc.createElement("Story");
 					story.setAttribute("Observable", rules.get(st.getRuleID())
 							.getName());
+					double percentage = ((double)st.getIsomorphicCount()) / (double)iterations;
+					story.setAttribute("Percentage", Double
+							.toString(percentage));
+					story.setAttribute("Average", Double
+							.toString(st.getAverageTime()));
 					addConnection(story, st, doc, st.getRuleID());
 					simplxSession.appendChild(story);
 				}

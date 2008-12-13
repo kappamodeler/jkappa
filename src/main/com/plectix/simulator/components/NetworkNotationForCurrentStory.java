@@ -6,6 +6,15 @@ import java.util.List;
 class NetworkNotationForCurrentStory {
 	private List<CNetworkNotation> networkNotationList;
 	private boolean endOfStory;
+	private double averageTime;
+	
+	public double getAverageTime(){
+		return averageTime;
+	}
+
+	public void setAverageTime(double averageTime){
+		this.averageTime = averageTime;
+	}
 
 	public final boolean isEndOfStory() {
 		return endOfStory;

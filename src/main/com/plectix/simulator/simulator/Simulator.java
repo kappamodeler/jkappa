@@ -774,7 +774,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 						rule.applyRuleForStories(injectionsList, netNotation,
 								this);
 						stories.addToNetworkNotationStoryStorifyRule(i,
-								netNotation);
+								netNotation,currentTime);
 						// stories.addToNetworkNotationStory(i, netNotation);
 						count++;
 						isEndRules = true;

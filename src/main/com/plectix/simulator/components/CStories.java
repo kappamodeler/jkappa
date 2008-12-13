@@ -52,9 +52,10 @@ public final class CStories {
 				.addToNetworkNotationList(networkNotation);
 	}
 	public final void addToNetworkNotationStoryStorifyRule(int index,
-			CNetworkNotation networkNotation) {
+			CNetworkNotation networkNotation,double currentTime) {
 		this.networkNotationForCurrentStory.get(index)
 		.addToNetworkNotationListStorifyRule(networkNotation);
+		this.networkNotationForCurrentStory.get(index).setAverageTime(currentTime);
 	}
 	
 	

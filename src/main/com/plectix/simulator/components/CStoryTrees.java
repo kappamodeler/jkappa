@@ -10,6 +10,8 @@ public final class CStoryTrees {
 	public static final byte IS_CAUSE = 2;
 	public static final byte IS_NONE = 1;
 	public static final byte IS_NOT_CAUSE = 0;
+	private int isomorphicCount = 1;
+	private double averageTime;
 	private int ruleId;
 	private NetworkNotationForCurrentStory nnCS;
 	private HashMap<Integer, List<Integer>> ruleIDToTraceID;
@@ -19,7 +21,15 @@ public final class CStoryTrees {
 	private HashMap<Integer, String> traceIDToData;
 	private HashMap<Integer, String> traceIDToText;
 	private HashMap<Integer, List<Integer>> traceIDToTraceID;
+	
+	public double getAverageTime(){
+		return averageTime;
+	}
 
+	public void setAverageTime(double averageTime){
+		this.averageTime = averageTime;
+	}
+	
 	public HashMap<Integer, List<Integer>> getLevelToTraceID() {
 		return levelToTraceID;
 	}
@@ -36,8 +46,6 @@ public final class CStoryTrees {
 		return traceIDToText;
 	}
 
-	private int isomorphicCount = 1;
-
 	public final int getIsomorphicCount() {
 		return isomorphicCount;
 	}
@@ -45,6 +53,7 @@ public final class CStoryTrees {
 	public CStoryTrees(int ruleId, NetworkNotationForCurrentStory nnCS) {
 		this.nnCS = nnCS;
 		this.ruleId = ruleId;
+		this.averageTime = nnCS.getAverageTime();
 	}
 
 	public final int getRuleID() {
