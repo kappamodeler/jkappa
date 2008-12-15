@@ -293,6 +293,7 @@ public final class CStoryTrees {
 			return false;
 
 		isomorphicCount++;
+		averageTime+=treeIn.getAverageTime();
 		return true;
 	}
 

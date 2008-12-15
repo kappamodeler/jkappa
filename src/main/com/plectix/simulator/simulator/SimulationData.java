@@ -524,9 +524,9 @@ public class SimulationData {
 							.getName());
 					double percentage = ((double)st.getIsomorphicCount()) / (double)iterations;
 					story.setAttribute("Percentage", Double
-							.toString(percentage));
+							.toString(percentage*100));
 					story.setAttribute("Average", Double
-							.toString(st.getAverageTime()));
+							.toString(st.getAverageTime()/st.getIsomorphicCount()));
 					addConnection(story, st, doc, st.getRuleID());
 					simplxSession.appendChild(story);
 				}
