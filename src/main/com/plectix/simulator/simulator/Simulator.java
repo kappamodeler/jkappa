@@ -325,8 +325,6 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		TimerSimulation timerOutput = new TimerSimulation();
 		timerOutput.startTimer();
 
-		getSimulationData().setTimeLength(currentTime);
-		getSimulationData().setEvent(count);
 		try {
 			getSimulationData().writeToXML(source, timerOutput);
 		} catch (ParserConfigurationException e) {
@@ -661,6 +659,8 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 				addIteration(iteration_num);
 		}
 		getSimulationData().getObservables().calculateObsLast(currentTime);
+		getSimulationData().setTimeLength(currentTime);
+		getSimulationData().setEvent(count);
 		outToLogger(isEndRules, timer);
 		Source source = addCompleteSource();
 		if (!isIteration)
