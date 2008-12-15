@@ -632,7 +632,7 @@ public class Parser {
 			int length = result.length;
 			result[0] = result[0].trim();
 			count = 1;
-			double countInFile = 0;
+			double countInFile = 1;
 			if (length != 1) {
 				double rescale = simulationData.getRescale();
 				if (rescale < 0)
