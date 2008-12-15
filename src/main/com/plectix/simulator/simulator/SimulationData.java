@@ -171,7 +171,7 @@ public class SimulationData {
 
 	private double step;
 	private double nextStep;
-	private byte serializationMode = MODE_SAVE;
+	private byte serializationMode = MODE_NONE;
 	private String serializationFileName = "~tmp.sd";
 
 	public final boolean isEndSimulation(double currentTime, long count) {
