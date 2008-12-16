@@ -315,12 +315,13 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 		outputSolution();
 	}
 
-	private Source addCompleteSource() throws TransformerException, ParserConfigurationException {
+	private Source addCompleteSource() throws TransformerException,
+			ParserConfigurationException {
 		Source source = simulationData.createDOMModel();
 		simulatorResultsData.addResultSource(source);
 		return source;
 	}
-	
+
 	public final void outputData(Source source, long count) {
 		TimerSimulation timerOutput = new TimerSimulation();
 		timerOutput.startTimer();
@@ -578,7 +579,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 		currentTime = 0;
 
-		if(getSimulationData().getSerializationMode() != getSimulationData().MODE_READ){
+		if (getSimulationData().getSerializationMode() != getSimulationData().MODE_READ) {
 			SimulationMain.readSimulatonFile(this, myArguments);
 		}
 		init(myArguments);
@@ -683,7 +684,7 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 			return;
 		}
 		if (!myArguments.hasOption(SimulatorOptions.DEBUG_INIT)) {
-			
+
 			if (myArguments.hasOption(SimulatorOptions.GENERATE_MAP)
 					|| myArguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
 				Source source = addCompleteSource();
@@ -694,11 +695,11 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 				runStories();
 			else
 				run(0);
-			
-//			simulatorResultsData.setResultSource(simulationData.createDOMModel());
+
+			//simulatorResultsData.setResultSource(simulationData.createDOMModel
+			// ());
 		}
-		System.out.println("-------"
-				+ simulatorResultsData.getResultSource());
+		System.out.println("-------" + simulatorResultsData.getResultSource());
 	}
 
 	public final void runIterations() throws Exception {
@@ -731,8 +732,8 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 		// we are done. report the results
 		getSimulationData().createTMPReport();
-//		Source source = addCompleteSource();
-//		outputData(source, 0);
+		// Source source = addCompleteSource();
+		// outputData(source, 0);
 	}
 
 	public final void runStories() throws Exception {
@@ -772,17 +773,18 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 						rule.applyLastRuleForStories(injectionsList,
 								netNotation);
 						rule.applyRuleForStories(injectionsList, netNotation,
-								this);
+								this,true);
 						stories.addToNetworkNotationStoryStorifyRule(i,
-								netNotation,currentTime);
+								netNotation, currentTime);
 						// stories.addToNetworkNotationStory(i, netNotation);
 						count++;
 						isEndRules = true;
 						Simulator.println("#");
 						break;
 					}
-					rule.applyRuleForStories(injectionsList, netNotation, this);
-					stories.addToNetworkNotationStory(i, netNotation);
+					rule.applyRuleForStories(injectionsList, netNotation, this,false);
+					if (!rule.isRHSEqualsLHS())
+						stories.addToNetworkNotationStory(i, netNotation);
 					count++;
 
 					doNegativeUpdate(injectionsList);

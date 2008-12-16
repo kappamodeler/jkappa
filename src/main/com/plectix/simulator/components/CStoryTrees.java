@@ -21,7 +21,7 @@ public final class CStoryTrees {
 	private HashMap<Integer, String> traceIDToData;
 	private HashMap<Integer, String> traceIDToText;
 	private HashMap<Integer, List<Integer>> traceIDToTraceID;
-	
+
 	public double getAverageTime(){
 		return averageTime;
 	}
@@ -78,7 +78,7 @@ public final class CStoryTrees {
 
 	private void isCausing(CNetworkNotation newNN,
 			List<CNetworkNotation> commonList, int begin, int level) {
-		Iterator<Long> agentIterator = newNN.usedAgentsFromRules.keySet()
+		Iterator<Long> agentIterator = newNN.getUsedAgentsFromRules().keySet()
 				.iterator();
 		
 		if (begin >= commonList.size()) {
@@ -89,7 +89,7 @@ public final class CStoryTrees {
 
 		while (agentIterator.hasNext()) {
 			Long agentKey = agentIterator.next();
-			AgentSitesFromRules aSFR = newNN.usedAgentsFromRules.get(agentKey);
+			AgentSitesFromRules aSFR = newNN.getUsedAgentsFromRules().get(agentKey);
 			Iterator<Integer> siteIterator = aSFR.sites.keySet().iterator();
 			int leafIndex = 0;
 			while (siteIterator.hasNext()) {
@@ -120,15 +120,10 @@ public final class CStoryTrees {
 	private byte isCausing(CNetworkNotation newNN,
 			List<CNetworkNotation> commonList, int begin, boolean isLink,
 			Long agentKey, int siteKey, SitesFromRules sFR, int level) {
-		
-		if (newNN.getRule().getRuleID()==21){
-			System.out.println();
-		}
-		
 		for (int i = begin; i < commonList.size(); i++) {
 			CNetworkNotation comparableNN = commonList.get(i);
 
-			AgentSitesFromRules aSFRComparable = comparableNN.usedAgentsFromRules
+			AgentSitesFromRules aSFRComparable = comparableNN.getUsedAgentsFromRules()
 					.get(agentKey);
 			if (aSFRComparable != null) {
 				SitesFromRules sFRComparable = aSFRComparable.sites
@@ -144,14 +139,14 @@ public final class CStoryTrees {
 						isCausing(comparableNN, commonList, i + 1, level);
 						return IS_CAUSE;
 					}
-					if (!isLink
-							&& sFRComparable.getInternalStateMode() != CNetworkNotation.MODE_NONE) {
-						return IS_NONE;
-					}
-					if (isLink
-							&& sFRComparable.getLinkStateMode() != CNetworkNotation.MODE_NONE) {
-						return IS_NONE;
-					}
+//					if (!isLink
+//							&& sFRComparable.getInternalStateMode() != CNetworkNotation.MODE_NONE) {
+//						return IS_NONE;
+//					}
+//					if (isLink
+//							&& sFRComparable.getLinkStateMode() != CNetworkNotation.MODE_NONE) {
+//						return IS_NONE;
+//					}
 				}
 			}
 		}
@@ -172,7 +167,7 @@ public final class CStoryTrees {
 						.get(currentTraceID);
 				for (int traceID : traceIDList) {
 					Integer rightLevel = traceIDToLevel.get(traceID);
-					Integer checkingLevel = traceIDToLevel.get(traceID);
+					Integer checkingLevel = traceIDToLevel.get(currentTraceID)+1;
 					if ((rightLevel != null) && rightLevel == checkingLevel)
 						curList.add(traceID);
 				}

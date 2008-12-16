@@ -6,6 +6,8 @@ import com.plectix.simulator.simulator.Simulator;
 
 public interface IRule {
 
+	public boolean isRHSEqualsLHS();
+	
 	public int getRuleID();
 
 	public boolean isClash(List<IInjection> injectionsList);
@@ -14,7 +16,7 @@ public interface IRule {
 			INetworkNotation netNotation);
 
 	public void applyRuleForStories(List<IInjection> injectionsList,
-			INetworkNotation netNotation, Simulator simulator);
+			INetworkNotation netNotation, Simulator simulator, boolean isLast);
 
 	public List<IRule> getActivatedRule();
 

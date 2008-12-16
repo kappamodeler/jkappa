@@ -196,6 +196,15 @@ public class SimulationMain implements SimulatorCallableListener {
 			simulationData.setSerializationFileName(arguments
 					.getValue(SimulatorOptions.SAVE_ALL));
 		}
+		if (arguments.hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)){
+			simulationData.setStorifyMode(SimulationData.STORIFY_MODE_NONE);
+		}
+		if (arguments.hasOption(SimulatorOptions.COMPRESS_STORIES)){
+			simulationData.setStorifyMode(SimulationData.STORIFY_MODE_WEAK);
+		}
+		if (arguments.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)){
+			simulationData.setStorifyMode(SimulationData.STORIFY_MODE_STRONG);
+		}
 		
 		return arguments;
 	}

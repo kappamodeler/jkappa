@@ -2,9 +2,12 @@ package com.plectix.simulator.components;
 
 import org.w3c.dom.Element;
 
+import com.plectix.simulator.simulator.SimulationData;
+
 public class CStoryType {
 	public static final byte TYPE_INTRO = 0;
 	public static final byte TYPE_RULE = 1;
+	public static final byte TYPE_OBS = 2;
 
 	public static final String STRING_INTRO = "INTRO";
 	public static final String STRING_RULE = "RULE";
@@ -38,8 +41,8 @@ public class CStoryType {
 	private int id;
 	private int depth;
 
-	public CStoryType(byte type, int traceID, int id, String text,
-			String data, int depth) {
+	public CStoryType(byte type, int traceID, int id, String text, String data,
+			int depth) {
 		this.traceID = traceID;
 		this.id = id;
 		this.type = type;

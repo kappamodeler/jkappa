@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.plectix.simulator.components.actions.CActionType;
 import com.plectix.simulator.components.actions.CAddAction;
 import com.plectix.simulator.components.actions.CDefaultAction;
 import com.plectix.simulator.components.actions.CDeleteAction;
@@ -39,6 +40,7 @@ public class CRule implements IRule, Serializable {
 	private double ruleRate;
 	private List<ISite> sitesConnectedWithDeleted;
 	private List<ISite> sitesConnectedWithBroken;
+	private boolean rHSEqualsLHS;
 
 	private int automorphismNumber = 1;
 	private boolean infinityRate = false;
@@ -50,6 +52,10 @@ public class CRule implements IRule, Serializable {
 
 	public List<IRule> getInhibitedRule() {
 		return inhibitedRule;
+	}
+
+	public boolean isRHSEqualsLHS() {
+		return rHSEqualsLHS;
 	}
 
 	public List<IObservablesConnectedComponent> getInhibitedObservable() {
@@ -206,13 +212,13 @@ public class CRule implements IRule, Serializable {
 		return map;
 	}
 
-	public final void applyRuleForStories(List<IInjection> injectionList,
-			INetworkNotation netNotation, Simulator simulator) {
-		apply(injectionList, netNotation, simulator);
+	public void applyRuleForStories(List<IInjection> injectionList,
+			INetworkNotation netNotation, Simulator simulator, boolean isLast) {
+		apply(injectionList, netNotation, simulator, isLast);
 	}
 
 	public void applyRule(List<IInjection> injectionList, Simulator simulator) {
-		apply(injectionList, null, simulator);
+		apply(injectionList, null, simulator, false);
 	}
 
 	public final IAgent getAgentAdd(IAgent key) {
@@ -223,17 +229,18 @@ public class CRule implements IRule, Serializable {
 		agentAddList.put(key, value);
 	}
 
-	private final void storifyAgents(List<IInjection> injectionList) {
+	private final void storifyAgents(List<IInjection> injectionList, boolean isLast) {
 		for (IInjection inj : injectionList)
 			if (inj != CInjection.EMPTY_INJECTION)
 				for (IAgentLink al : inj.getAgentLinkList())
-					al.storifyAgent();
+					if (!rHSEqualsLHS || isLast)
+						al.storifyAgent();
 	}
 
 	protected final void apply(List<IInjection> injectionList,
-			INetworkNotation netNotation, Simulator simulator) {
+			INetworkNotation netNotation, Simulator simulator, boolean isLast) {
 		if (netNotation != null) {
-			storifyAgents(injectionList);
+			storifyAgents(injectionList, isLast);
 		}
 
 		agentAddList = new HashMap<IAgent, IAgent>();
@@ -402,7 +409,19 @@ public class CRule implements IRule, Serializable {
 		createActionList();
 
 		sortActionList();
+		checkRHSEqualsLHS();
 
+	}
+
+	private void checkRHSEqualsLHS() {
+		if (isStorify) {
+			rHSEqualsLHS = false;
+			for (IAction action : actionList) {
+				if (action.getTypeId() != CActionType.NONE.getId())
+					return;
+			}
+			rHSEqualsLHS = true;
+		}
 	}
 
 	// TODO use standard sort
@@ -422,7 +441,7 @@ public class CRule implements IRule, Serializable {
 
 	private final boolean isActivated(List<IAgent> agentsFromAnotherRules) {
 		for (IAgent agent : agentsFromAnotherRules) {
-			if (this.rightHandSide != null && checkRulesNullAgents(agent))
+			if (checkRulesNullAgents(agent))
 				return true;
 			for (ISite site : agent.getSites()) {
 				for (ISite changedSite : changedActivatedSites) {
@@ -842,6 +861,7 @@ public class CRule implements IRule, Serializable {
 				netNotation.checkLinkForNetworkNotationDel(
 						CStoriesSiteStates.LAST_STATE, site);
 		}
+		
 	}
 
 	public final void addAction(IAction action) {

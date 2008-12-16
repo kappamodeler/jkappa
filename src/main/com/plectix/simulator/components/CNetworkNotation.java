@@ -50,10 +50,12 @@ public class CNetworkNotation implements INetworkNotation {
 
 	private final IRule rule;
 
-	// TODO private
-	Map<Long, AgentSites> changedAgentsFromSolution;
-	// TODO private
-	Map<Long, AgentSitesFromRules> usedAgentsFromRules;
+	private Map<Long, AgentSites> changedAgentsFromSolution;
+	private Map<Long, AgentSitesFromRules> usedAgentsFromRules;
+
+	public Map<Long, AgentSitesFromRules> getUsedAgentsFromRules() {
+		return usedAgentsFromRules;
+	}
 
 	List<String> agentsNotation;
 

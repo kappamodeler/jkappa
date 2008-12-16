@@ -35,6 +35,9 @@ public class SimulationData {
 	public final static byte MODE_SAVE = 2;
 	public final static byte MODE_READ = 1;
 	public final static byte MODE_NONE = 0;
+	public final static byte STORIFY_MODE_NONE = 0;
+	public final static byte STORIFY_MODE_WEAK = 1;
+	public final static byte STORIFY_MODE_STRONG = 2;
 
 	public final static byte SIMULATION_TYPE_NONE = -1;
 	public final static byte SIMULATION_TYPE_COMPILE = 0;
@@ -72,6 +75,7 @@ public class SimulationData {
 	private long event;
 
 	private byte simulationType = SIMULATION_TYPE_NONE;
+	private byte storifyMode = STORIFY_MODE_STRONG;
 
 	private DOMSource myOutputDOMSource;
 	// private boolean compile = false;
@@ -98,6 +102,14 @@ public class SimulationData {
 
 	public boolean isInhibitionMap() {
 		return inhibitionMap;
+	}
+
+	public byte getStorifyMode() {
+		return storifyMode;
+	}
+
+	public void setStorifyMode(byte storifyMode) {
+		this.storifyMode = storifyMode;
 	}
 
 	public void setInhibitionMap(boolean inhibitionMap) {
@@ -522,11 +534,13 @@ public class SimulationData {
 					Element story = doc.createElement("Story");
 					story.setAttribute("Observable", rules.get(st.getRuleID())
 							.getName());
-					double percentage = ((double)st.getIsomorphicCount()) / (double)iterations;
+					double percentage = ((double) st.getIsomorphicCount())
+							/ (double) iterations;
 					story.setAttribute("Percentage", Double
-							.toString(percentage*100));
-					story.setAttribute("Average", Double
-							.toString(st.getAverageTime()/st.getIsomorphicCount()));
+							.toString(percentage * 100));
+					story.setAttribute("Average", Double.toString(st
+							.getAverageTime()
+							/ st.getIsomorphicCount()));
 					addConnection(story, st, doc, st.getRuleID());
 					simplxSession.appendChild(story);
 				}
@@ -655,7 +669,7 @@ public class SimulationData {
 			Document doc) {
 		Element node;
 		for (CStoryType stT : currentStTypeList) {
-			if (stT.getType() == CStoryType.TYPE_RULE && stT.getId() == 0) {
+			if (stT.getType() == CStoryType.TYPE_OBS) {
 				node = doc.createElement("Node");
 				stT.fillNode(node, CStoryType.STRING_OBS);
 				nodes.add(node);
@@ -702,7 +716,6 @@ public class SimulationData {
 
 		storyTree.fillMaps(isOcamlStyleObsName());
 
-		HashMap<Integer, Integer> mapIndex = new HashMap<Integer, Integer>();
 		HashMap<Integer, List<CStoryType>> allLevels = new HashMap<Integer, List<CStoryType>>();
 
 		HashMap<Integer, List<CStoryType>> traceIdToStoryTypeIntro = new HashMap<Integer, List<CStoryType>>();
@@ -719,23 +732,8 @@ public class SimulationData {
 			List<CStoryType> listST = new ArrayList<CStoryType>();
 			allLevels.put(level, listST);
 			for (Integer traceID : list) {
-				mapIndex.put(traceID, counter);
-				CStoryType storyType = new CStoryType(CStoryType.TYPE_RULE,
-						traceID, counter, storyTree.getTraceIDToText().get(
-								traceID), storyTree.getTraceIDToData().get(
-								traceID), depth - level);
-				listST.add(storyType);
-				counter++;
 				List<String> introStringList = storyTree
 						.getTraceIDToIntroString().get(traceID);
-
-				CStoryType rule = traceIdToStoryTypeRule.get(traceID);
-
-				if (rule == null) {
-					rule = storyType;
-					traceIdToStoryTypeRule.put(traceID, rule);
-				}
-
 				List<CStoryType> introList = traceIdToStoryTypeIntro
 						.get(traceID);
 
@@ -754,6 +752,44 @@ public class SimulationData {
 				}
 			}
 		}
+		iterator = storyTree.getLevelToTraceID().keySet().iterator();
+		int traceIDSize = storyTree.getTraceIDToLevel().size()+counter-1;
+		while (iterator.hasNext()) {
+			int level = iterator.next();
+			List<Integer> list = storyTree.getLevelToTraceID().get(level);
+			List<CStoryType> listST = allLevels.get(level);
+			byte type;
+			if (level == 0)
+				type = CStoryType.TYPE_OBS;
+			else
+				type = CStoryType.TYPE_RULE;
+
+			if (listST == null) {
+				listST = new ArrayList<CStoryType>();
+				allLevels.put(level, listST);
+			}
+			for (Integer traceID : list) {
+				CStoryType storyType;
+				if (storifyMode == STORIFY_MODE_NONE)
+					storyType = new CStoryType(type, traceID,
+							counter + traceID, storyTree.getTraceIDToText()
+									.get(traceID), storyTree.getTraceIDToData()
+									.get(traceID), depth - level);
+				else
+					storyType = new CStoryType(type, traceID, traceIDSize--,
+							storyTree.getTraceIDToText().get(traceID),
+							storyTree.getTraceIDToData().get(traceID), depth
+									- level);
+				listST.add(storyType);
+
+				CStoryType rule = traceIdToStoryTypeRule.get(traceID);
+
+				if (rule == null) {
+					rule = storyType;
+					traceIdToStoryTypeRule.put(traceID, rule);
+				}
+			}
+		}
 
 		List<Element> nodes = new ArrayList<Element>();
 		List<Element> connections = new ArrayList<Element>();
@@ -769,7 +805,7 @@ public class SimulationData {
 			fillNodesLevelStoryTrees(currentStTypeList, nodes, doc);
 
 			for (CStoryType stT : currentStTypeList) {
-				if (stT.getType() == CStoryType.TYPE_RULE) {
+				if (stT.getType() != CStoryType.TYPE_INTRO) {
 					List<CStoryType> introList = traceIdToStoryTypeIntro
 							.get(stT.getTraceID());
 					fillIntroListStoryConnections(stT, introList, connections,
@@ -1007,16 +1043,16 @@ public class SimulationData {
 		if (getSerializationMode() == MODE_READ) {
 			ObjectInputStream ois;
 			try {
-				ois = new ObjectInputStream(
-						  new FileInputStream(getSerializationFileName()));
-				solution = (CSolution)ois.readObject();
-				rules = (List<IRule>)ois.readObject();
-				observables = (IObservables)ois.readObject();
-				perturbations = (List<CPerturbation>)ois.readObject();
-				snapshotTime = (double)ois.readDouble();
-				event = (long)ois.readLong();
-				timeLength = (double)ois.readDouble();
-				ois.close(); 
+				ois = new ObjectInputStream(new FileInputStream(
+						getSerializationFileName()));
+				solution = (CSolution) ois.readObject();
+				rules = (List<IRule>) ois.readObject();
+				observables = (IObservables) ois.readObject();
+				perturbations = (List<CPerturbation>) ois.readObject();
+				snapshotTime = (double) ois.readDouble();
+				event = (long) ois.readLong();
+				timeLength = (double) ois.readDouble();
+				ois.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
@@ -1028,9 +1064,9 @@ public class SimulationData {
 		if (getSerializationMode() == MODE_SAVE) {
 			try {
 				ObjectOutputStream oos = new ObjectOutputStream(
-						new FileOutputStream(getSerializationFileName())) ; 
-				oos.writeObject(solution); 
-				oos.writeObject(rules); 	
+						new FileOutputStream(getSerializationFileName()));
+				oos.writeObject(solution);
+				oos.writeObject(rules);
 				oos.writeObject(observables);
 				oos.writeObject(perturbations);
 				oos.writeDouble(snapshotTime);

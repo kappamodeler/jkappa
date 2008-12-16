@@ -29,17 +29,18 @@ public final class CRulePerturbation extends CRule {
 			this.count = (int) count;
 	}
 
+	@Override
 	public final void applyRuleForStories(List<IInjection> injectionList,
-			CNetworkNotation netNotation, Simulator simulator) {
+			INetworkNotation netNotation, Simulator simulator, boolean isLast) {
 		check();
-		apply(injectionList, netNotation, simulator);
+		apply(injectionList, netNotation, simulator, false);
 		count--;
 	}
 
 	@Override
-	public final void applyRule(List<IInjection> injectionList, Simulator simulatorn) {
+	public final void applyRule(List<IInjection> injectionList, Simulator simulator) {
 		check();
-		apply(injectionList, null, simulatorn);
+		apply(injectionList, null, simulator, false);
 		count--;
 	}
 
