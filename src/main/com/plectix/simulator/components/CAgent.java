@@ -193,8 +193,7 @@ public final class CAgent implements IAgent, Serializable {
 	}
 
 	public final String getName() {
-		return Simulator.getNameDictionary()
-				.getName(nameId);
+		return Simulator.getNameDictionary().getName(nameId);
 	}
 
 	public long getHash() {

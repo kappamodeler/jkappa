@@ -25,8 +25,7 @@ public class CInternalState extends CState implements IInternalState, Serializab
 	}
 
 	public final String getName() {
-		return Simulator.getNameDictionary()
-				.getName(nameId);
+		return Simulator.getNameDictionary().getName(nameId);
 	}
 
 	public final int getStateNameId() {

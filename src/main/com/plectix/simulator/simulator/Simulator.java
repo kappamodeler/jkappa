@@ -44,6 +44,8 @@ import com.plectix.simulator.util.TimerSimulation;
 
 public class Simulator implements SimulatorInterface {
 
+	private static final String NAME = "Java Simulator JSIM";
+	
 	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
 
 	private static NameDictionary nameDictionary = new NameDictionary();
@@ -75,16 +77,17 @@ public class Simulator implements SimulatorInterface {
 	private double currentTime = 0.;
 
 	private boolean isIteration = false;
-
-	private SimulationData simulationData;
-
+	
 	private boolean storyMode = false;
 
 	private TimerSimulation timer;
 
 	private int timeStepCounter = 0;
 
+	private SimulationData simulationData;
+
 	private SimulatorResultsData simulatorResultsData;
+	
 
 	public Simulator() {
 		simulationData = new SimulationData();
@@ -92,6 +95,18 @@ public class Simulator implements SimulatorInterface {
 		printStream.set(System.out);
 	}
 
+	@Override
+	public SimulatorInterface clone() {
+		return new Simulator();
+	}
+
+	public void init(SimulatorArguments arguments) {
+		this.myArguments = arguments;
+		simulationData.initialize();
+		getSimulationData().stopTimer(timer, "-Initialization:");
+		getSimulationData().setClockStamp(System.currentTimeMillis());
+	}
+	
 	private final void addIteration(int iteration_num) {
 
 		List<List<RunningMetric>> runningMetrics = simulationData
@@ -151,10 +166,6 @@ public class Simulator implements SimulatorInterface {
 			}
 
 		}
-	}
-
-	public SimulatorInterface clone() {
-		return new Simulator();
 	}
 
 	public final void doNegativeUpdate(List<IInjection> injectionsList) {
@@ -259,53 +270,12 @@ public class Simulator implements SimulatorInterface {
 		return agentIdGenerator++;
 	}
 
-	public final IActivationMap getActivationMap() {
-		return activationMap;
+
+	public final void startTimer() {
+		timer = new TimerSimulation();
+		timer.startTimer();
 	}
 
-	public int getAgentIdGenerator() {
-		return agentIdGenerator;
-	}
-
-	public double getCurrentTime() {
-		return currentTime;
-	}
-
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public final List<IRule> getRules() {
-		return simulationData.getRules();
-	}
-
-	public final SimulationData getSimulationData() {
-		return simulationData;
-	}
-
-	public SimulatorResultsData getSimulatorResultsData() {
-		return simulatorResultsData;
-	}
-
-	public final TimerSimulation getTimer() {
-		return timer;
-	}
-
-	public final String getTimerMess() {
-		return timer.getTimerMess();
-	}
-
-	public void init(SimulatorArguments arguments) {
-		this.myArguments = arguments;
-		simulationData.initialize();
-		getSimulationData().stopTimer(getTimer(), "-Initialization:");
-		getSimulationData().setClockStamp(System.currentTimeMillis());
-	}
-
-	public boolean isStoryMode() {
-		return storyMode;
-	}
 
 	public final void outputData() {
 
@@ -809,8 +779,43 @@ public class Simulator implements SimulatorInterface {
 		getSimulationData().setRules(rules);
 	}
 
-	public final void startTimer() {
-		timer = new TimerSimulation();
-		timer.startTimer();
+	
+	//////////////////////////////////////////////////////////////////////////
+	//
+	//                    GETTERS AND SETTERS
+	//
+	//
+
+	public final IActivationMap getActivationMap() {
+		return activationMap;
 	}
+
+	public int getAgentIdGenerator() {
+		return agentIdGenerator;
+	}
+
+	public double getCurrentTime() {
+		return currentTime;
+	}
+
+	public final String getName() {
+		return NAME;
+	}
+
+	public final List<IRule> getRules() {
+		return simulationData.getRules();
+	}
+
+	public final SimulationData getSimulationData() {
+		return simulationData;
+	}
+
+	public SimulatorResultsData getSimulatorResultsData() {
+		return simulatorResultsData;
+	}
+
+	public boolean isStoryMode() {
+		return storyMode;
+	}
+
 }

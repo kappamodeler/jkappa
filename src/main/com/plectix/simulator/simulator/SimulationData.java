@@ -861,7 +861,7 @@ public class SimulationData {
 		if (timer == null)
 			return;
 		mess += " ";
-		Simulator.println(mess + timer.getTimerMess() + " sec. CPU");
+		Simulator.println(mess + timer.getTimerMessage() + " sec. CPU");
 		// timer.getTimer();
 		addInfo(new Info(Info.TYPE_INFO, mess, timer.getThreadTimeInSeconds(),
 				1));
@@ -922,7 +922,7 @@ public class SimulationData {
 		}
 
 		Simulator.println("-Results outputted in tmp session: "
-				+ timer.getTimerMess() + " sec. CPU");
+				+ timer.getTimerMessage() + " sec. CPU");
 	}
 
 	public final double getTimeSampleMin(double fullTime) {

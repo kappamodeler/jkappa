@@ -15,13 +15,15 @@ public class SimulatorResultsData {
 	private SimulatorCallableExitReport simulatorCallableExitReport = new SimulatorCallableExitReport();
 
 	private final SimulationData mySimulationData;
+	
 	private List<Source> myResultSource = null;
+	
     //***********************************************************************************
 	/**
 	 * 
 	 */
 	public SimulatorResultsData(SimulationData data) {
-//		super();
+		super();
 		mySimulationData = data;
 	}
 
