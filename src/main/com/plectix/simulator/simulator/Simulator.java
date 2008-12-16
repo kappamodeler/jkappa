@@ -42,7 +42,7 @@ import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.TimerSimulation;
 
-public class Simulator extends SimulationUtils implements SimulatorInterface {
+public class Simulator implements SimulatorInterface {
 
 	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
 
@@ -448,11 +448,11 @@ public class Simulator extends SimulationUtils implements SimulatorInterface {
 
 			}
 
-			String line = printPartRule(rule.getLeftHandSide(), simulationData
+			String line = SimulationUtils.printPartRule(rule.getLeftHandSide(), simulationData
 					.isOcamlStyleObsName());
 			line = line + "->";
 			line = line
-					+ printPartRule(rule.getRightHandSide(), simulationData
+					+ SimulationUtils.printPartRule(rule.getRightHandSide(), simulationData
 							.isOcamlStyleObsName());
 			String ch = new String();
 			for (int j = 0; j < line.length(); j++)

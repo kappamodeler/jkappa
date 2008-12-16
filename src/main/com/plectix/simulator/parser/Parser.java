@@ -299,8 +299,7 @@ public class Parser {
 		line = line.substring(indexCount + 1);
 
 		List<IAgent> agentList = parseAgent(line);
-		List<IConnectedComponent> ccList = Simulator
-				.buildConnectedComponents(agentList);
+		List<IConnectedComponent> ccList = SimulationUtils.buildConnectedComponents(agentList);
 
 		List<CRulePerturbation> ruleList = new ArrayList<CRulePerturbation>();
 		// public CRulePerturbation(List<IConnectedComponent> left,
@@ -571,11 +570,11 @@ public class Parser {
 				switch (index) {
 				case CC_LHS: {
 					left = parseAgent(lhs.trim());
-					rules.add(Simulator.buildRule(left, right, name, activity,
+					rules.add(SimulationUtils.buildRule(left, right, name, activity,
 							ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-						rules.add(Simulator.buildRule(right, parseAgent(lhs
+						rules.add(SimulationUtils.buildRule(right, parseAgent(lhs
 								.trim()), nameOp, activity2, ruleID,
 								simulationData.isStorify()));
 					}
@@ -583,11 +582,11 @@ public class Parser {
 				}
 				case CC_RHS: {
 					right = parseAgent(rhs.trim());
-					rules.add(Simulator.buildRule(left, right, name, activity,
+					rules.add(SimulationUtils.buildRule(left, right, name, activity,
 							ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-						rules.add(Simulator.buildRule(parseAgent(rhs.trim()),
+						rules.add(SimulationUtils.buildRule(parseAgent(rhs.trim()),
 								left, nameOp, activity2, ruleID, simulationData
 										.isStorify()));
 					}
@@ -596,11 +595,11 @@ public class Parser {
 				case CC_ALL: {
 					left = parseAgent(lhs.trim());
 					right = parseAgent(rhs.trim());
-					rules.add(Simulator.buildRule(left, right, name, activity,
+					rules.add(SimulationUtils.buildRule(left, right, name, activity,
 							ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-						rules.add(Simulator.buildRule(parseAgent(rhs.trim()),
+						rules.add(SimulationUtils.buildRule(parseAgent(rhs.trim()),
 								parseAgent(lhs.trim()), nameOp, activity2,
 								ruleID, simulationData.isStorify()));
 					}
@@ -714,8 +713,7 @@ public class Parser {
 						simulationData
 								.getObservables()
 								.addConnectedComponents(
-										Simulator
-												.buildConnectedComponents(parseAgent(line)),
+										SimulationUtils.buildConnectedComponents(parseAgent(line)),
 										name, line, obsNameID);
 					obsNameID++;
 					break;

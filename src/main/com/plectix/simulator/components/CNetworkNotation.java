@@ -15,6 +15,7 @@ import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.Simulator;
 
 public class CNetworkNotation implements INetworkNotation {
@@ -195,7 +196,7 @@ public class CNetworkNotation implements INetworkNotation {
 					}
 				}
 				if (!isStorify)
-					agentsNotation.add(Simulator.printPartRule(cc,
+					agentsNotation.add(SimulationUtils.printPartRule(cc,
 							new int[] { 0 }, data.isOcamlStyleObsName()));
 			}
 		}

@@ -10,6 +10,7 @@ import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.Simulator;
 
 public class CObservables implements IObservables, Serializable {
@@ -213,7 +214,7 @@ public class CObservables implements IObservables, Serializable {
 		else
 			unique = true;
 		if (ocamlStyleObsName) {
-			line = Simulator.printPartRule(list, ocamlStyleObsName);
+			line = SimulationUtils.printPartRule(list, ocamlStyleObsName);
 		}
 
 		for (IConnectedComponent component : list) {

@@ -26,6 +26,7 @@ import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.Simulator;
 
 public class CRule implements IRule, Serializable {
@@ -75,11 +76,11 @@ public class CRule implements IRule, Serializable {
 
 	public final String getData(boolean isOcamlStyleObsName) {
 		if (data == null) {
-			String line = Simulator.printPartRule(leftHandSide,
+			String line = SimulationUtils.printPartRule(leftHandSide,
 					isOcamlStyleObsName);
 			line = line + "->";
 			line = line
-					+ Simulator.printPartRule(rightHandSide,
+					+ SimulationUtils.printPartRule(rightHandSide,
 							isOcamlStyleObsName);
 			data = line;
 		}
