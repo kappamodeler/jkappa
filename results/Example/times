@@ -1,0 +1,10 @@
+
+Status
+
+Status of sets for graph 0 (current)
+ set#     n   X/Y          min         max        mean      stddev  comment
+   0       50  X             0          49        24.5      14.431  times-java
+               Y        2.2227      2.3837      2.2998    0.036225
+   1       50  X             0          49        24.5      14.431  times-simplx
+               Y        8.2063      8.5464      8.3714    0.077158
+
