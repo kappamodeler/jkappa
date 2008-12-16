@@ -18,10 +18,10 @@ public class SimulatorArguments {
 	}
 
 	public boolean hasOption(SimulatorOptions option) {
-		return cmdLineArgs.hasOption(option.getLine());
+		return cmdLineArgs.hasOption(option.getLongName());
 	}
 
 	public String getValue(SimulatorOptions option) {
-		return cmdLineArgs.getOptionValue(option.getLine());
+		return cmdLineArgs.getOptionValue(option.getLongName());
 	}
 }

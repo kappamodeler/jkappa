@@ -110,45 +110,44 @@ public enum SimulatorOptions {
 	EVENT_SAMPLE("event_sample", true, "Sets sample size in events (default: 100)"),
 	;
 
-	private final String myLongLine;
-	private final String myDescription;
+	private String shortName = null;
+	private final String longName;
+	private final String description;
 	private final boolean hasArguments;
-	private String myShortLine = null;
 	
-	private static Options cmdLineOptions = null;
+	private static Options commandLineOptions = null;
 	
-	private SimulatorOptions(String shortLine, String longLine, boolean hasArguments, String description) {
-		this.myLongLine = longLine;
-		this.myShortLine = shortLine;
-		this.myDescription = description;
+	private SimulatorOptions(String shortName, String longName, boolean hasArguments, String description) {
+		this.longName = longName;
+		this.shortName = shortName;
+		this.description = description;
 		this.hasArguments = hasArguments;
 	}
 	
-	private SimulatorOptions(String longLine, boolean hasArguments, String description) {
-		this.myShortLine = null;
-		this.myLongLine = longLine;
-		this.myDescription = description;
+	private SimulatorOptions(String longName, boolean hasArguments, String description) {
+		this.shortName = null;
+		this.longName = longName;
+		this.description = description;
 		this.hasArguments = hasArguments;
 	}
 
 	public static Options options() {
-		if (cmdLineOptions == null) {
-			cmdLineOptions = new Options();
+		if (commandLineOptions == null) {
+			commandLineOptions = new Options();
 			for (SimulatorOptions option : values()) {
-				if (option.myShortLine == null) {
-					cmdLineOptions.addOption(option.myLongLine, 
-							option.hasArguments, option.myDescription);
+				if (option.shortName == null) {
+					commandLineOptions.addOption(option.longName, 
+							option.hasArguments, option.description);
 				} else {
-					cmdLineOptions.addOption(option.myShortLine, 
-							option.myLongLine, 
-							option.hasArguments, option.myDescription);
+					commandLineOptions.addOption(option.shortName, option.longName, 
+							option.hasArguments, option.description);
 				}
 			}
 		}
-		return cmdLineOptions;
+		return commandLineOptions;
 	}
 	
-	protected String getLine() {
-		return myLongLine;
+	protected final String getLongName() {
+		return longName;
 	}
 }

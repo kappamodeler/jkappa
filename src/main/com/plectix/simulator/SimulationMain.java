@@ -22,7 +22,7 @@ import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.options.*;
 import com.plectix.simulator.util.Info;
 
-public class SimulationMain implements SimulatorCallableListener {
+public class SimulationMain  {
 
 	private static final Options myOptions = SimulatorOptions.options();
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
@@ -40,13 +40,38 @@ public class SimulationMain implements SimulatorCallableListener {
 		LOGGER.info("Build Java Version: " + BuildConstants.JAVA_VERSION);
 		LOGGER.info("Ant Java Version: " + BuildConstants.ANT_JAVA_VERSION);
 
+		LOGGER.info("OS: " 
+				+ System.getProperties().get("os.name") + " "
+				+ System.getProperties().get("os.version") + ", "
+				+ System.getProperties().get("os.arch"));
+		
+		LOGGER.info("Java Version: " 
+				+ System.getProperties().get("java.version") + ", "
+				+ System.getProperties().get("java.vendor"));
+		
+		LOGGER.info("Java Runtime: " 
+				+ System.getProperties().get("java.runtime.name") + ", "
+				+ System.getProperties().get("java.runtime.version"));
+		
+		LOGGER.info("Java VM: " 
+				+ System.getProperties().get("java.vm.name") + ", "
+				+ System.getProperties().get("java.vm.version") + ", "
+				+ System.getProperties().get("java.vm.vendor") + ", "
+				+ System.getProperties().get("java.vm.info"));
+		
+		LOGGER.info("Java Specifications: " +
+				System.getProperties().get("java.specification.name") + ", "
+				+ System.getProperties().get("java.specification.version") + ", "
+				+ System.getProperties().get("java.specification.vendor"));
+		LOGGER.info("Timezone: " + System.getProperties().get("user.timezone"));
+
 		new SimulationMain().start(args);
 	}
 
 	private void start(String[] args) {
 		SimulatorInterface simulator = new Simulator();
 		SimulationService service = new SimulationService(simulator);
-		service.submit(new SimulatorInputData(args, myOutputStream), this);
+		service.submit(new SimulatorInputData(args, myOutputStream), null);
 		service.shutdown();
 	}
 
@@ -298,12 +323,6 @@ public class SimulationMain implements SimulatorCallableListener {
 			e.printStackTrace(Simulator.getErrorStream());
 			throw new IllegalArgumentException(e);
 		}
-	}
-
-	public void finished(SimulatorCallable simulatorCallable) {
-		SimulatorResultsData results = simulatorCallable
-				.getSimulatorResultsData();
-		// TODO process results
 	}
 
 	public static Options getOptions() {
