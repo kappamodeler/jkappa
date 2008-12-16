@@ -27,7 +27,7 @@ import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.Simulator;
 
-public class CRule implements IRule, Serializable{
+public class CRule implements IRule, Serializable {
 
 	public static final IConnectedComponent EMPTY_LHS_CC = new CConnectedComponent(
 			CConnectedComponent.EMPTY);
@@ -289,7 +289,8 @@ public class CRule implements IRule, Serializable{
 			ISite site = agentToInSolution.getSite(siteFromRule.getNameId());
 			// add fixed agents
 			netNotation.addFixedSitesFromRules(site,
-					CNetworkNotation.MODE_TEST, fs.isInternalState(), fs.isLinkState());
+					CNetworkNotation.MODE_TEST, fs.isInternalState(), fs
+							.isLinkState());
 		}
 	}
 
@@ -365,8 +366,7 @@ public class CRule implements IRule, Serializable{
 								.getSite().getAgentLink().getIdInRuleSide())
 					fixedSite.setLinkState(true);
 			}
-			if (fixedSite.isLinkState()
-					|| fixedSite.isInternalState())
+			if (fixedSite.isLinkState() || fixedSite.isInternalState())
 				fixedSites.add(fixedSite);
 		}
 	}
@@ -495,8 +495,8 @@ public class CRule implements IRule, Serializable{
 				for (ChangedSite changedSite : changedInhibitedSites) {
 					if (changedSite.getSite().equals(site)) {
 
-						IInternalState currentInternalState = changedSite.getSite()
-								.getInternalState();
+						IInternalState currentInternalState = changedSite
+								.getSite().getInternalState();
 						IInternalState internalState = site.getInternalState();
 
 						ILinkState currentLinkState = changedSite.getSite()
@@ -509,9 +509,10 @@ public class CRule implements IRule, Serializable{
 									&& !(internalState.isRankRoot())) {
 								if (internalState.getNameId() == currentInternalState
 										.getNameId()) {
-									if (checkInhibitedLinkStates(currentLinkState,
-											linkState))
-										return true;								}
+									if (checkInhibitedLinkStates(
+											currentLinkState, linkState))
+										return true;
+								}
 							}
 
 							if (currentInternalState.isRankRoot()) {
@@ -520,7 +521,7 @@ public class CRule implements IRule, Serializable{
 									return true;
 							}
 						}
-						
+
 						if (changedSite.isInternalState()) {
 							if (!(currentInternalState.isRankRoot())
 									&& !(internalState.isRankRoot())) {
@@ -536,7 +537,7 @@ public class CRule implements IRule, Serializable{
 
 							if (currentInternalState.isRankRoot()) {
 								if (currentLinkState.getStatusLinkRank() == CLinkState.RANK_FREE
-										&&  linkState.getStatusLinkRank() == CLinkState.RANK_BOUND_OR_FREE)
+										&& linkState.getStatusLinkRank() == CLinkState.RANK_BOUND_OR_FREE)
 									return true;
 								if (checkInhibitedLinkStates(currentLinkState,
 										linkState))
@@ -566,13 +567,14 @@ public class CRule implements IRule, Serializable{
 	}
 
 	private final boolean checkRulesNullAgents(IAgent agent) {
-		for (IConnectedComponent cc : this.getRightHandSide())
+		if (this.rightHandSide != null)
+			for (IConnectedComponent cc : this.getRightHandSide())
 
-			for (IAgent agentFromRule : cc.getAgents())
-				if (agent.equals(agentFromRule))
-					if (agentFromRule.getSites().size() == 0
-							|| agent.getSites().size() == 0)
-						return true;
+				for (IAgent agentFromRule : cc.getAgents())
+					if (agent.equals(agentFromRule))
+						if (agentFromRule.getSites().size() == 0
+								|| agent.getSites().size() == 0)
+							return true;
 		return false;
 	}
 
