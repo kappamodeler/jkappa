@@ -404,7 +404,7 @@ public class SimulationData {
 				Iterator<Integer> siteIterator = sitesMap.keySet().iterator();
 				int siteKey = siteIterator.next();
 				CContactMapChangedSite chSite = sitesMap.get(siteKey);
-				agent.setAttribute("AgentName", chSite.getSite().getAgentLink()
+				agent.setAttribute("Name", chSite.getSite().getAgentLink()
 						.getName());
 				addSiteToContactMapAgent(chSite, agent, doc);
 
