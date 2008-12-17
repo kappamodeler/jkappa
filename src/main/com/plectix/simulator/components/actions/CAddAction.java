@@ -17,11 +17,13 @@ public class CAddAction extends CAction {
 		createBound();
 	}
 
-	public void doAction(IInjection injection, INetworkNotation netNotation, Simulator simulator) {
+	public void doAction(IInjection injection, INetworkNotation netNotation,
+			Simulator simulator) {
 		/**
 		 * Done.
 		 */
-		IAgent agent = new CAgent(myToAgent.getNameId(), simulator.generateNextAgentId());
+		IAgent agent = new CAgent(myToAgent.getNameId(), simulator
+				.generateNextAgentId());
 		for (ISite site : myToAgent.getSites()) {
 			ISite siteAdd = new CSite(site.getNameId());
 			siteAdd.setInternalState(new CInternalState(site.getInternalState()
@@ -31,6 +33,13 @@ public class CAddAction extends CAction {
 					siteAdd);
 			addRuleSitesToNetworkNotation(false, netNotation, siteAdd);
 		}
+		if (myToAgent.getSites().size() == 0) {
+			addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE, netNotation,
+					agent.getEmptySite());
+			addRuleSitesToNetworkNotation(false, netNotation, agent
+					.getEmptySite());
+		}
+		
 		getRightCComponent().addAgentFromSolutionForRHS(agent);
 		simulator.getSimulationData().getSolution().addAgent(agent);
 
@@ -53,25 +62,27 @@ public class CAddAction extends CAction {
 			if (site.getLinkState().getStatusLinkRank() != CLinkState.RANK_SEMI_LINK) {
 				linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
 			}
-			
+
 			netNotation.addToAgentsFromRules(site, agentMode,
 					internalStateMode, linkStateMode);
 		}
 	}
-	
+
 	protected final void addToNetworkNotation(int index,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
-				netNotation.addToAgents(site, new CStoriesSiteStates(index,
-						site.getInternalState().getNameId()), index);
+			netNotation.addToAgents(site, new CStoriesSiteStates(index, site
+					.getInternalState().getNameId()), index);
 		}
 	}
-	
+
 	private final void createBound() {
 		for (ISite site : myToAgent.getSites()) {
 			if (site.getLinkState().getSite() != null) {
-				myRule.addAction(new CBoundAction(myRule, site, (site.getLinkState()
-						.getSite()), null, getRightCComponent()));
+				myRule
+						.addAction(new CBoundAction(myRule, site, (site
+								.getLinkState().getSite()), null,
+								getRightCComponent()));
 			}
 		}
 	}

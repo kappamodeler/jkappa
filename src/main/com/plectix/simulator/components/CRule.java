@@ -230,7 +230,8 @@ public class CRule implements IRule, Serializable {
 		agentAddList.put(key, value);
 	}
 
-	private final void storifyAgents(List<IInjection> injectionList, boolean isLast) {
+	private final void storifyAgents(List<IInjection> injectionList,
+			boolean isLast) {
 		for (IInjection inj : injectionList)
 			if (inj != CInjection.EMPTY_INJECTION)
 				for (IAgentLink al : inj.getAgentLinkList())
@@ -294,7 +295,11 @@ public class CRule implements IRule, Serializable {
 					.getAgentByIdFromSolution(
 							siteFromRule.getAgentLink()
 									.getIdInConnectedComponent(), inj);
-			ISite site = agentToInSolution.getSite(siteFromRule.getNameId());
+			ISite site;
+			if (siteFromRule.getNameId() == CSite.NO_INDEX)
+				site = agentToInSolution.getEmptySite();
+			else
+				site = agentToInSolution.getSite(siteFromRule.getNameId());
 			// add fixed agents
 			netNotation.addFixedSitesFromRules(site,
 					CNetworkNotation.MODE_TEST, fs.isInternalState(), fs
@@ -376,6 +381,11 @@ public class CRule implements IRule, Serializable {
 			}
 			if (fixedSite.isLinkState() || fixedSite.isInternalState())
 				fixedSites.add(fixedSite);
+		}
+		if (lhsAgent.getSites().size() == 0 && rhsAgent.getSites().size() == 0) {
+			ChangedSite fixedSite = new ChangedSite(lhsAgent.getEmptySite());
+			fixedSite.setLinkState(true);
+			fixedSites.add(fixedSite);
 		}
 	}
 
@@ -862,7 +872,7 @@ public class CRule implements IRule, Serializable {
 				netNotation.checkLinkForNetworkNotationDel(
 						CStoriesSiteStates.LAST_STATE, site);
 		}
-		
+
 	}
 
 	public final void addAction(IAction action) {
