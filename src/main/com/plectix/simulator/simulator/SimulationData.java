@@ -48,6 +48,8 @@ public class SimulationData {
 	public final static byte SIMULATION_TYPE_CONTACT_MAP = 5;
 	private final static String TYPE_NEGATIVE_MAP = "NEGATIVE";
 	private final static String TYPE_POSITIVE_MAP = "POSITIVE";
+	
+	private static final double DEFAULT_NUMBER_OF_POINTS = 1000;
 
 	private List<Double> timeStamps;
 	private List<List<RunningMetric>> runningMetrics;
@@ -61,13 +63,9 @@ public class SimulationData {
 
 	private CContactMap contactMap = new CContactMap();
 
-	public CContactMap getContactMap() {
-		return contactMap;
-	}
-
 	private List<Info> infoList = new ArrayList<Info>();
 
-	private Double initialTime = 0.0;
+	private double initialTime = 0.0;
 
 	private String randomizer;
 	private int iterations = 1;
@@ -100,30 +98,15 @@ public class SimulationData {
 	private long clockPrecision = 3600000;
 	private long clockStamp;
 
-	public boolean isInhibitionMap() {
-		return inhibitionMap;
+	private double step;
+	private double nextStep;
+	private byte serializationMode = MODE_NONE;
+	private String serializationFileName = "~tmp.sd";
+	
+	public SimulationData() {
+		super();
 	}
-
-	public byte getStorifyMode() {
-		return storifyMode;
-	}
-
-	public void setStorifyMode(byte storifyMode) {
-		this.storifyMode = storifyMode;
-	}
-
-	public void setInhibitionMap(boolean inhibitionMap) {
-		this.inhibitionMap = inhibitionMap;
-	}
-
-	public final byte getSimulationType() {
-		return simulationType;
-	}
-
-	public final void setSimulationType(byte simulationType) {
-		this.simulationType = simulationType;
-	}
-
+	
 	public final boolean isParseSolution() {
 		switch (simulationType) {
 		case SIMULATION_TYPE_GENERATE_MAP:
@@ -132,17 +115,11 @@ public class SimulationData {
 		return true;
 	}
 
-	public final void setInputFile(String inputFile) {
-		this.inputFile = inputFile;
-	}
 
 	public final void setOcamlStyleObsName(boolean ocamlStyleObsName) {
 		observables.setOcamlStyleObsName(ocamlStyleObsName);
 	}
 
-	public final boolean isTime() {
-		return this.isTime;
-	}
 
 	public final void addInfo(Info info) {
 		for (Info inf : infoList) {
@@ -156,9 +133,6 @@ public class SimulationData {
 		infoList.add(info);
 	}
 
-	public final List<Info> getInfoList() {
-		return infoList;
-	}
 
 	public final void setCommandLine(String[] args) {
 		String st = new String();
@@ -168,23 +142,15 @@ public class SimulationData {
 		this.commandLine = st;
 	}
 
-	public final String getCommandLine() {
-		return this.commandLine;
-	}
 
-	public long getMaxClashes() {
-		return maxClashes;
-	}
-
-	public void setMaxClashes(long max_clashes) {
-		if (max_clashes > 0)
+	public final void setMaxClashes(long max_clashes) {
+		if (max_clashes > 0) {
 			this.maxClashes = max_clashes;
+		} else {
+			throw new IllegalArgumentException("Can't set negative max_clashes: " + max_clashes);
+		}
 	}
 
-	private double step;
-	private double nextStep;
-	private byte serializationMode = MODE_NONE;
-	private String serializationFileName = "~tmp.sd";
 
 	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
@@ -216,33 +182,6 @@ public class SimulationData {
 		}
 	}
 
-	public double getSnapshotTime() {
-		return snapshotTime;
-	}
-
-	public void setSnapshotTime(double snapshotTime) {
-		this.snapshotTime = snapshotTime;
-	}
-
-	public CSnapshot getSnapshot() {
-		return snapshot;
-	}
-
-	public void setSnapshot(CSnapshot snapshot) {
-		this.snapshot = snapshot;
-	}
-
-	public IObservables getObservables() {
-		return observables;
-	}
-
-	public final CStories getStories() {
-		return stories;
-	}
-
-	public final void setStories(CStories list) {
-		this.stories = list;
-	}
 
 	public final void addStories(String name) {
 		byte index = 0;
@@ -265,44 +204,18 @@ public class SimulationData {
 	}
 
 	public boolean isStorify() {
-		if (simulationType == SIMULATION_TYPE_STORIFY)
+		if (simulationType == SIMULATION_TYPE_STORIFY) {
 			return true;
+		} 
 		return false;
 	}
 
-	public String getXmlSessionName() {
-		return xmlSessionName;
-	}
-
-	public void setXmlSessionName(String xmlSessionName) {
-		this.xmlSessionName = xmlSessionName;
-	}
-
-	public int getSeed() {
-		return seed;
-	}
-
-	public void setSeed(int seed) {
-		this.seed = seed;
-	}
 
 	public void setTimeLength(double timeLength) {
 		this.timeLength = timeLength;
 		step = timeLength / 100;
 		nextStep = step;
 		this.isTime = true;
-	}
-
-	public final double getTimeLength() {
-		return timeLength;
-	}
-
-	public final ISolution getSolution() {
-		return solution;
-	}
-
-	public final void setRules(List<IRule> rules) {
-		this.rules = rules;
 	}
 
 	public final void addRule(CRule rule) {
@@ -313,9 +226,6 @@ public class SimulationData {
 		return Collections.unmodifiableList(rules);
 	}
 
-	public final long getEvent() {
-		return event;
-	}
 
 	public final void resetBar() {
 		nextStep = step;
@@ -327,37 +237,6 @@ public class SimulationData {
 		this.event = event;
 	}
 
-	public String getRandomizer() {
-		return randomizer;
-	}
-
-	public void setRandomizer(String randomizer) {
-		this.randomizer = randomizer;
-	}
-
-	public final int getIterations() {
-		return iterations;
-	}
-
-	public final void setIterations(int iterations) {
-		this.iterations = iterations;
-	}
-
-	public final List<CPerturbation> getPerturbations() {
-		return perturbations;
-	}
-
-	public final void setPerturbations(List<CPerturbation> perturbations) {
-		this.perturbations = perturbations;
-	}
-
-	public final List<Double> getTimeStamps() {
-		return timeStamps;
-	}
-
-	public final List<List<RunningMetric>> getRunningMetrics() {
-		return runningMetrics;
-	}
 
 	public final void initIterations(List<Double> timeStamps,
 			List<List<RunningMetric>> runningMetrics) {
@@ -371,7 +250,7 @@ public class SimulationData {
 
 	}
 
-	public DOMSource createDOMModel() throws ParserConfigurationException,
+	public final DOMSource createDOMModel() throws ParserConfigurationException,
 			TransformerException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
@@ -604,7 +483,7 @@ public class SimulationData {
 		return domSource;
 	}
 
-	public void addSiteToContactMapAgent(CContactMapChangedSite site,
+	public final void addSiteToContactMapAgent(CContactMapChangedSite site,
 			Element agent, Document doc) {
 		Element siteNode = doc.createElement("Site");
 		Element siteRule = doc.createElement("Rule");
@@ -620,7 +499,7 @@ public class SimulationData {
 		agent.appendChild(siteNode);
 	}
 
-	public void writeToXML(Source source, TimerSimulation timerOutput)
+	public final void writeToXML(Source source, TimerSimulation timerOutput)
 			throws ParserConfigurationException, TransformerException {
 		TransformerFactory trFactory = TransformerFactory.newInstance();
 		Transformer transformer = trFactory.newTransformer();
@@ -638,7 +517,7 @@ public class SimulationData {
 		// + timerOutput.getTimer() + " sec. CPU");
 	}
 
-	private void printMap(Document doc, String mapType, Element influenceMap,
+	private final void printMap(Document doc, String mapType, Element influenceMap,
 			IRule rule, List<IRule> rulesToPrint,
 			List<IObservablesConnectedComponent> obsToPrint) {
 		int rulesNumber = rules.size() + 1;
@@ -685,7 +564,7 @@ public class SimulationData {
 		}
 	}
 
-	private void fillIntroListStoryConnections(CStoryType toStoryType,
+	private final void fillIntroListStoryConnections(CStoryType toStoryType,
 			List<CStoryType> introList, List<Element> connections, Document doc) {
 		if (introList != null) {
 			Element node;
@@ -697,7 +576,7 @@ public class SimulationData {
 		}
 	}
 
-	private void fillRuleListStoryConnections(CStoryType toStoryType,
+	private final void fillRuleListStoryConnections(CStoryType toStoryType,
 			HashMap<Integer, CStoryType> traceIdToStoryTypeRule,
 			List<Integer> rIDs, List<Element> connections, Document doc) {
 		if (rIDs.size() != 0) {
@@ -864,8 +743,7 @@ public class SimulationData {
 		message += " ";
 		Simulator.println(message + timer.getTimerMessage() + " sec. CPU");
 		// timer.getTimer();
-		addInfo(new Info(Info.TYPE_INFO, message, timer.getThreadTimeInSeconds(),
-				1));
+		addInfo(new Info(Info.TYPE_INFO, message, timer.getThreadTimeInSeconds(), 1));
 	}
 
 	public final void createTMPReport() {
@@ -927,12 +805,11 @@ public class SimulationData {
 	}
 
 	public final double getTimeSampleMin(double fullTime) {
-		double timeSampleMin;
-		if (points != -1)
-			timeSampleMin = fullTime / points;
-		else
-			timeSampleMin = fullTime / 1000;
-		return timeSampleMin;
+		if (points > 0) {
+			return (fullTime / points);
+		} else {
+			return (fullTime / DEFAULT_NUMBER_OF_POINTS);
+		}
 	}
 
 	private void appendData(IObservables obs, List<IObservablesComponent> list,
@@ -947,8 +824,7 @@ public class SimulationData {
 		cdata.appendData(enter);
 	}
 
-	private final String getItem(IObservables obs, int index,
-			IObservablesComponent oCC) {
+	private final String getItem(IObservables obs, int index, IObservablesComponent oCC) {
 		if (oCC.isUnique())
 			return oCC.getItem(index, obs);
 		long value = 1;
@@ -960,65 +836,6 @@ public class SimulationData {
 		return Long.valueOf(value).toString();
 	}
 
-	public final String getTmpSessionName() {
-		return tmpSessionName;
-	}
-
-	public final void setTmpSessionName(String tmpSessionName) {
-		this.tmpSessionName = tmpSessionName;
-	}
-
-	public final boolean isActivationMap() {
-		return activationMap;
-	}
-
-	public final void setActivationMap(boolean activationMap) {
-		this.activationMap = activationMap;
-	}
-
-	public final Double getInitialTime() {
-		return initialTime;
-	}
-
-	public final void setInitialTime(double intialTime) {
-		this.initialTime = intialTime;
-	}
-
-	public final double getRescale() {
-		return rescale;
-	}
-
-	public final void setRescale(double rescale) {
-		this.rescale = rescale;
-	}
-
-	public final Integer getPoints() {
-		return points;
-	}
-
-	public final void setPoints(int points) {
-		this.points = points;
-	}
-
-	public void setClockPrecision(long clockPrecision) {
-		this.clockPrecision = clockPrecision;
-	}
-
-	public long getClockPrecision() {
-		return clockPrecision;
-	}
-
-	public void setClockStamp(long clockStamp) {
-		this.clockStamp = clockStamp;
-	}
-
-	public long getClockStamp() {
-		return clockStamp;
-	}
-
-	public void setXmlSessionPath(String path) {
-		this.xmlSessionPath = path;
-	}
 
 	public final void clearRules() {
 		rules.clear();
@@ -1028,14 +845,14 @@ public class SimulationData {
 		perturbations.clear();
 	}
 
-	public String getXmlSessionPath() {
+	public final String getXmlSessionPath() {
 		if (xmlSessionPath.length() > 0)
 			return xmlSessionPath + "\\" + xmlSessionName;
 		else
 			return xmlSessionName;
 	}
 
-	public boolean isOcamlStyleObsName() {
+	public final boolean isOcamlStyleObsName() {
 		return observables.isOcamlStyleObsName();
 	}
 
@@ -1150,20 +967,225 @@ public class SimulationData {
 
 	}
 
-	public void setSerializationMode(byte serializationMode) {
+	//*******************************************************************************
+	//
+	//              GETTERS AND SETTERS
+	// 
+	//
+
+	public final void setInputFile(String inputFile) {
+		this.inputFile = inputFile;
+	}
+	
+	public final double getSnapshotTime() {
+		return snapshotTime;
+	}
+
+	public final void setSnapshotTime(double snapshotTime) {
+		this.snapshotTime = snapshotTime;
+	}
+
+	public final CSnapshot getSnapshot() {
+		return snapshot;
+	}
+
+	public final String getXmlSessionName() {
+		return xmlSessionName;
+	}
+
+	public final void setXmlSessionName(String xmlSessionName) {
+		this.xmlSessionName = xmlSessionName;
+	}
+
+	public final int getSeed() {
+		return seed;
+	}
+
+	public final void setSeed(int seed) {
+		this.seed = seed;
+	}
+	
+	public final void setSnapshot(CSnapshot snapshot) {
+		this.snapshot = snapshot;
+	}
+
+	public final IObservables getObservables() {
+		return observables;
+	}
+
+	public final CStories getStories() {
+		return stories;
+	}
+
+	public final void setStories(CStories stories) {
+		this.stories = stories;
+	}
+	
+	public final boolean isTime() {
+		return this.isTime;
+	}
+	
+	public final boolean isInhibitionMap() {
+		return inhibitionMap;
+	}
+
+	public final byte getStorifyMode() {
+		return storifyMode;
+	}
+
+	public final void setStorifyMode(byte storifyMode) {
+		this.storifyMode = storifyMode;
+	}
+
+	public final void setInhibitionMap(boolean inhibitionMap) {
+		this.inhibitionMap = inhibitionMap;
+	}
+
+	public final byte getSimulationType() {
+		return simulationType;
+	}
+
+	public final void setSimulationType(byte simulationType) {
+		this.simulationType = simulationType;
+	}
+
+	public final String getRandomizer() {
+		return randomizer;
+	}
+
+	public final void setRandomizer(String randomizer) {
+		this.randomizer = randomizer;
+	}
+
+	public final int getIterations() {
+		return iterations;
+	}
+
+	public final void setIterations(int iterations) {
+		this.iterations = iterations;
+	}
+
+	public final List<CPerturbation> getPerturbations() {
+		return perturbations;
+	}
+
+	public final void setPerturbations(List<CPerturbation> perturbations) {
+		this.perturbations = perturbations;
+	}
+
+	public final List<Double> getTimeStamps() {
+		return timeStamps;
+	}
+
+	public final List<List<RunningMetric>> getRunningMetrics() {
+		return runningMetrics;
+	}
+	
+	public final String getTmpSessionName() {
+		return tmpSessionName;
+	}
+
+	public final void setTmpSessionName(String tmpSessionName) {
+		this.tmpSessionName = tmpSessionName;
+	}
+
+	public final boolean isActivationMap() {
+		return activationMap;
+	}
+
+	public final void setActivationMap(boolean activationMap) {
+		this.activationMap = activationMap;
+	}
+
+	public final Double getInitialTime() {
+		return initialTime;
+	}
+
+	public final void setInitialTime(double intialTime) {
+		this.initialTime = intialTime;
+	}
+
+	public final long getEvent() {
+		return event;
+	}
+
+	public final double getTimeLength() {
+		return timeLength;
+	}
+
+	public final ISolution getSolution() {
+		return solution;
+	}
+
+	public final void setRules(List<IRule> rules) {
+		this.rules = rules;
+	}
+
+	public final double getRescale() {
+		return rescale;
+	}
+
+	public final void setRescale(double rescale) {
+		this.rescale = rescale;
+	}
+
+	public final Integer getPoints() {
+		return points;
+	}
+
+	public final void setPoints(int points) {
+		this.points = points;
+	}
+
+	public final void setClockPrecision(long clockPrecision) {
+		this.clockPrecision = clockPrecision;
+	}
+
+	public final long getClockPrecision() {
+		return clockPrecision;
+	}
+
+	public final void setClockStamp(long clockStamp) {
+		this.clockStamp = clockStamp;
+	}
+
+	public final long getClockStamp() {
+		return clockStamp;
+	}
+
+	public final void setXmlSessionPath(String path) {
+		this.xmlSessionPath = path;
+	}
+	
+	public final void setSerializationMode(byte serializationMode) {
 		this.serializationMode = serializationMode;
 	}
 
-	public int getSerializationMode() {
+	public final int getSerializationMode() {
 		return serializationMode;
 	}
 
-	public void setSerializationFileName(String serializationFileName) {
+	public final List<Info> getInfoList() {
+		return infoList;
+	}
+	
+	public final String getCommandLine() {
+		return this.commandLine;
+	}
+
+	public final long getMaxClashes() {
+		return maxClashes;
+	}
+	
+	public final void setSerializationFileName(String serializationFileName) {
 		this.serializationFileName = serializationFileName;
 	}
 
-	public String getSerializationFileName() {
+	public final String getSerializationFileName() {
 		return serializationFileName;
 	}
 
+	public final CContactMap getContactMap() {
+		return contactMap;
+	}
 }

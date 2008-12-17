@@ -91,7 +91,7 @@ public class Simulator implements SimulatorInterface {
 
 	public Simulator() {
 		simulationData = new SimulationData();
-		simulatorResultsData = new SimulatorResultsData(simulationData);
+		simulatorResultsData = new SimulatorResultsData();
 		printStream.set(System.out);
 	}
 

@@ -13,8 +13,6 @@ import com.plectix.simulator.simulator.SimulationData;
 public class SimulatorResultsData {
 
 	private SimulatorCallableExitReport simulatorCallableExitReport = new SimulatorCallableExitReport();
-
-	private final SimulationData mySimulationData;
 	
 	private List<Source> myResultSource = null;
 	
@@ -22,9 +20,8 @@ public class SimulatorResultsData {
 	/**
 	 * 
 	 */
-	public SimulatorResultsData(SimulationData data) {
+	public SimulatorResultsData() {
 		super();
-		mySimulationData = data;
 	}
 
 	public void addResultSource(Source source) {
