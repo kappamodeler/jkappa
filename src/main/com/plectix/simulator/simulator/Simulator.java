@@ -646,7 +646,7 @@ public class Simulator implements SimulatorInterface {
 		Simulator.println("Java " + simulationData.getCommandLine());
 		startTimer();
 		myArguments = SimulationMain.parseArguments(getSimulationData(),
-				SimulationMain.changeArgs(args));
+				SimulationUtils.changeArgs(args));
 		SimulationMain.readSimulatonFile(this, myArguments);
 		init(myArguments);
 		if (myArguments.hasOption(SimulatorOptions.COMPILE)) {

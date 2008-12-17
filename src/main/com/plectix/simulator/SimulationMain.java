@@ -32,6 +32,15 @@ public class SimulationMain  {
 	private static final String VERSION = "0.6";
 	
 	public static void main(String[] args) {
+		 initializeLogging();
+		 
+		SimulatorInterface simulator = new Simulator();
+		SimulationService service = new SimulationService(simulator);
+		service.submit(new SimulatorInputData(args, myOutputStream), null);
+		service.shutdown();
+	}
+
+	public static final void initializeLogging() {
 		// Initialize log4j
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		LOGGER.info("Build Date: " + BuildConstants.BUILD_DATE);
@@ -63,33 +72,14 @@ public class SimulationMain  {
 				System.getProperties().get("java.specification.name") + ", "
 				+ System.getProperties().get("java.specification.version") + ", "
 				+ System.getProperties().get("java.specification.vendor"));
+		
 		LOGGER.info("Timezone: " + System.getProperties().get("user.timezone"));
-
-		new SimulationMain().start(args);
-	}
-
-	private void start(String[] args) {
-		SimulatorInterface simulator = new Simulator();
-		SimulationService service = new SimulationService(simulator);
-		service.submit(new SimulatorInputData(args, myOutputStream), null);
-		service.shutdown();
-	}
-
-	public final static String[] changeArgs(String[] args) {
-		String[] argsNew = new String[args.length];
-		int i = 0;
-		for (String st : args)
-			if (st.startsWith("-"))
-				argsNew[i++] = st.substring(0, 2)
-						+ st.substring(2).replaceAll("-", "_");
-			else
-				argsNew[i++] = st;
-		return argsNew;
 	}
 
 	public static final SimulatorArguments parseArguments(
 			SimulationData simulationData, String[] args) 
 					throws IllegalArgumentException {
+		
 		simulationData.addInfo(new Info(Info.TYPE_INFO, "-Initialization..."));
 		SimulatorArguments arguments = new SimulatorArguments(args);
 		try {
@@ -108,7 +98,7 @@ public class SimulationMain  {
 		}
 		
 		if (arguments.hasOption(SimulatorOptions.VERSION)) {
-			myOutputStream.println("Java simulator v." + VERSION);
+			myOutputStream.println("Java simulator v." + VERSION + " SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
 			 //TODO are we to exit here?
 			 System.exit(0);
 		}

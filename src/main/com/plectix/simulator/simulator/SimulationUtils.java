@@ -208,4 +208,16 @@ public class SimulationUtils {
 						buildConnectedComponents(right), name, activity, ruleID, isStorify);
 			}
 
+	public final static String[] changeArgs(String[] args) {
+		String[] argsNew = new String[args.length];
+		int i = 0;
+		for (String st : args)
+			if (st.startsWith("-"))
+				argsNew[i++] = st.substring(0, 2)
+						+ st.substring(2).replaceAll("-", "_");
+			else
+				argsNew[i++] = st;
+		return argsNew;
+	}
+
 }

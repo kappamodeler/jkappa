@@ -857,13 +857,14 @@ public class SimulationData {
 		return node;
 	}
 
-	public final void stopTimer(TimerSimulation timer, String mess) {
-		if (timer == null)
+	public final void stopTimer(TimerSimulation timer, String message) {
+		if (timer == null) {
 			return;
-		mess += " ";
-		Simulator.println(mess + timer.getTimerMessage() + " sec. CPU");
+		}
+		message += " ";
+		Simulator.println(message + timer.getTimerMessage() + " sec. CPU");
 		// timer.getTimer();
-		addInfo(new Info(Info.TYPE_INFO, mess, timer.getThreadTimeInSeconds(),
+		addInfo(new Info(Info.TYPE_INFO, message, timer.getThreadTimeInSeconds(),
 				1));
 	}
 
