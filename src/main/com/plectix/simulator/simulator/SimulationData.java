@@ -48,7 +48,7 @@ public class SimulationData {
 	public final static byte SIMULATION_TYPE_CONTACT_MAP = 5;
 	private final static String TYPE_NEGATIVE_MAP = "NEGATIVE";
 	private final static String TYPE_POSITIVE_MAP = "POSITIVE";
-	
+
 	private static final double DEFAULT_NUMBER_OF_POINTS = 1000;
 
 	private List<Double> timeStamps;
@@ -102,11 +102,11 @@ public class SimulationData {
 	private double nextStep;
 	private byte serializationMode = MODE_NONE;
 	private String serializationFileName = "~tmp.sd";
-	
+
 	public SimulationData() {
 		super();
 	}
-	
+
 	public final boolean isParseSolution() {
 		switch (simulationType) {
 		case SIMULATION_TYPE_GENERATE_MAP:
@@ -115,11 +115,9 @@ public class SimulationData {
 		return true;
 	}
 
-
 	public final void setOcamlStyleObsName(boolean ocamlStyleObsName) {
 		observables.setOcamlStyleObsName(ocamlStyleObsName);
 	}
-
 
 	public final void addInfo(Info info) {
 		for (Info inf : infoList) {
@@ -133,7 +131,6 @@ public class SimulationData {
 		infoList.add(info);
 	}
 
-
 	public final void setCommandLine(String[] args) {
 		String st = new String();
 		for (int i = 0; i < args.length; i++) {
@@ -142,15 +139,14 @@ public class SimulationData {
 		this.commandLine = st;
 	}
 
-
 	public final void setMaxClashes(long max_clashes) {
 		if (max_clashes > 0) {
 			this.maxClashes = max_clashes;
 		} else {
-			throw new IllegalArgumentException("Can't set negative max_clashes: " + max_clashes);
+			throw new IllegalArgumentException(
+					"Can't set negative max_clashes: " + max_clashes);
 		}
 	}
-
 
 	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
@@ -182,7 +178,6 @@ public class SimulationData {
 		}
 	}
 
-
 	public final void addStories(String name) {
 		byte index = 0;
 		List<Integer> ruleIDs = new ArrayList<Integer>();
@@ -206,10 +201,9 @@ public class SimulationData {
 	public boolean isStorify() {
 		if (simulationType == SIMULATION_TYPE_STORIFY) {
 			return true;
-		} 
+		}
 		return false;
 	}
-
 
 	public void setTimeLength(double timeLength) {
 		this.timeLength = timeLength;
@@ -226,7 +220,6 @@ public class SimulationData {
 		return Collections.unmodifiableList(rules);
 	}
 
-
 	public final void resetBar() {
 		nextStep = step;
 	}
@@ -236,7 +229,6 @@ public class SimulationData {
 		nextStep = step;
 		this.event = event;
 	}
-
 
 	public final void initIterations(List<Double> timeStamps,
 			List<List<RunningMetric>> runningMetrics) {
@@ -250,21 +242,39 @@ public class SimulationData {
 
 	}
 
-	public final DOMSource createDOMModel() throws ParserConfigurationException,
-			TransformerException {
+	public final DOMSource createDOMModel()
+			throws ParserConfigurationException, TransformerException {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.newDocument();
 		TimerSimulation timer = new TimerSimulation();
+		Element simplxSession = null;
+		if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
+			simplxSession = doc.createElement("ComplxSession");
+			simplxSession.setAttribute("xsi:schemaLocation",
+					"http://synthesisstudios.com ComplxSession.xsd");
+			
+//		"unexpected element (uri:"", local:"ComplxSession"). Expected elements are <{http://plectix.synthesisstudios.com/schemas/kappasession}ComplxSession>,<{http://plectix.synthesisstudios.com/schemas/kappasession}KappaResults>,<{http://plectix.synthesisstudios.com/schemas/kappasession}SimplxSession>"
+			Element element = doc.createElement("Refinement");
+			element.setAttribute("Name", "DAG");
+			simplxSession.appendChild(element);
+			element = doc.createElement("Refinement");
+			element.setAttribute("Name", "Maximal");
+			simplxSession.appendChild(element);
 
-		Element simplxSession = doc.createElement("SimplxSession");
-		simplxSession.setAttribute("xsi:schemaLocation",
-				"http://plectix.synthesisstudios.com SimplxSession.xsd");
+			Element ruleSet = doc.createElement("RuleSet");
+			ruleSet.setAttribute("Name", "Original");
+			addRulesToXML(ruleSet, rules.size(), doc);
+			simplxSession.appendChild(ruleSet);
+		} else {
+			simplxSession = doc.createElement("SimplxSession");
+			simplxSession.setAttribute("xsi:schemaLocation",
+					"http://plectix.synthesisstudios.com SimplxSession.xsd");
+		}
+		simplxSession.setAttribute("xmlns:xsi",
+		"http://www.w3.org/2001/XMLSchema-instance");
 		simplxSession.setAttribute("xmlns",
 				"http://plectix.synthesisstudios.com/schemas/kappasession");
-		simplxSession.setAttribute("xmlns:xsi",
-				"http://www.w3.org/2001/XMLSchema-instance");
-
 		simplxSession.setAttribute("CommandLine", commandLine);
 		simplxSession.setAttribute("InputFile", inputFile);
 		Date d = new Date();
@@ -276,6 +286,7 @@ public class SimulationData {
 
 		if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
 			Element contactMapElement = doc.createElement("ContactMap");
+			contactMapElement.setAttribute("Name", "Low resolution");
 
 			Map<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap = this.contactMap
 					.getAgentsInContactMap();
@@ -376,17 +387,17 @@ public class SimulationData {
 			/**
 			 * add rules
 			 * */
-
-			for (int i = rules.size() - 1; i >= 0; i--) {
-				Element node = doc.createElement("Node");
-				node.setAttribute("Id", Integer.toString(rulesAndObsNumber--));
-				node.setAttribute("Type", "RULE");
-				node.setAttribute("Text", rules.get(i).getName());
-				node.setAttribute("Data", rules.get(i).getData(
-						isOcamlStyleObsName()));
-				node.setAttribute("Name", rules.get(i).getName());
-				influenceMap.appendChild(node);
-			}
+			addRulesToXML(influenceMap, rulesAndObsNumber, doc);
+			// for (int i = rules.size() - 1; i >= 0; i--) {
+			// Element node = doc.createElement("Node");
+			// node.setAttribute("Id", Integer.toString(rulesAndObsNumber--));
+			// node.setAttribute("Type", "RULE");
+			// node.setAttribute("Text", rules.get(i).getName());
+			// node.setAttribute("Data", rules.get(i).getData(
+			// isOcamlStyleObsName()));
+			// node.setAttribute("Name", rules.get(i).getName());
+			// influenceMap.appendChild(node);
+			// }
 
 			/**
 			 * add activation map
@@ -483,6 +494,27 @@ public class SimulationData {
 		return domSource;
 	}
 
+	private void addRulesToXML(Element influenceMap, int rulesAndObsNumber,
+			Document doc) {
+		for (int i = rules.size() - 1; i >= 0; i--) {
+			Element node = null;
+			if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
+				node = doc.createElement("Rule");
+				node.setAttribute("Id", Integer.toString(rules.get(i)
+						.getRuleID() + 1));
+			} else {
+				node = doc.createElement("Node");
+				node.setAttribute("Type", "RULE");
+				node.setAttribute("Text", rules.get(i).getName());
+				node.setAttribute("Id", Integer.toString(rulesAndObsNumber--));
+			}
+			node.setAttribute("Data", rules.get(i).getData(
+					isOcamlStyleObsName()));
+			node.setAttribute("Name", rules.get(i).getName());
+			influenceMap.appendChild(node);
+		}
+	}
+
 	public final void addSiteToContactMapAgent(CContactMapChangedSite site,
 			Element agent, Document doc) {
 		Element siteNode = doc.createElement("Site");
@@ -517,8 +549,8 @@ public class SimulationData {
 		// + timerOutput.getTimer() + " sec. CPU");
 	}
 
-	private final void printMap(Document doc, String mapType, Element influenceMap,
-			IRule rule, List<IRule> rulesToPrint,
+	private final void printMap(Document doc, String mapType,
+			Element influenceMap, IRule rule, List<IRule> rulesToPrint,
 			List<IObservablesConnectedComponent> obsToPrint) {
 		int rulesNumber = rules.size() + 1;
 		for (int j = obsToPrint.size() - 1; j >= 0; j--) {
@@ -632,7 +664,7 @@ public class SimulationData {
 			}
 		}
 		iterator = storyTree.getLevelToTraceID().keySet().iterator();
-		int traceIDSize = storyTree.getTraceIDToLevel().size()+counter-1;
+		int traceIDSize = storyTree.getTraceIDToLevel().size() + counter - 1;
 		while (iterator.hasNext()) {
 			int level = iterator.next();
 			List<Integer> list = storyTree.getLevelToTraceID().get(level);
@@ -743,7 +775,8 @@ public class SimulationData {
 		message += " ";
 		Simulator.println(message + timer.getTimerMessage() + " sec. CPU");
 		// timer.getTimer();
-		addInfo(new Info(Info.TYPE_INFO, message, timer.getThreadTimeInSeconds(), 1));
+		addInfo(new Info(Info.TYPE_INFO, message, timer
+				.getThreadTimeInSeconds(), 1));
 	}
 
 	public final void createTMPReport() {
@@ -824,7 +857,8 @@ public class SimulationData {
 		cdata.appendData(enter);
 	}
 
-	private final String getItem(IObservables obs, int index, IObservablesComponent oCC) {
+	private final String getItem(IObservables obs, int index,
+			IObservablesComponent oCC) {
 		if (oCC.isUnique())
 			return oCC.getItem(index, obs);
 		long value = 1;
@@ -835,7 +869,6 @@ public class SimulationData {
 
 		return Long.valueOf(value).toString();
 	}
-
 
 	public final void clearRules() {
 		rules.clear();
@@ -967,16 +1000,17 @@ public class SimulationData {
 
 	}
 
-	//*******************************************************************************
+	//**************************************************************************
+	// *****
 	//
-	//              GETTERS AND SETTERS
+	// GETTERS AND SETTERS
 	// 
 	//
 
 	public final void setInputFile(String inputFile) {
 		this.inputFile = inputFile;
 	}
-	
+
 	public final double getSnapshotTime() {
 		return snapshotTime;
 	}
@@ -1004,7 +1038,7 @@ public class SimulationData {
 	public final void setSeed(int seed) {
 		this.seed = seed;
 	}
-	
+
 	public final void setSnapshot(CSnapshot snapshot) {
 		this.snapshot = snapshot;
 	}
@@ -1020,11 +1054,11 @@ public class SimulationData {
 	public final void setStories(CStories stories) {
 		this.stories = stories;
 	}
-	
+
 	public final boolean isTime() {
 		return this.isTime;
 	}
-	
+
 	public final boolean isInhibitionMap() {
 		return inhibitionMap;
 	}
@@ -1080,7 +1114,7 @@ public class SimulationData {
 	public final List<List<RunningMetric>> getRunningMetrics() {
 		return runningMetrics;
 	}
-	
+
 	public final String getTmpSessionName() {
 		return tmpSessionName;
 	}
@@ -1156,7 +1190,7 @@ public class SimulationData {
 	public final void setXmlSessionPath(String path) {
 		this.xmlSessionPath = path;
 	}
-	
+
 	public final void setSerializationMode(byte serializationMode) {
 		this.serializationMode = serializationMode;
 	}
@@ -1168,7 +1202,7 @@ public class SimulationData {
 	public final List<Info> getInfoList() {
 		return infoList;
 	}
-	
+
 	public final String getCommandLine() {
 		return this.commandLine;
 	}
@@ -1176,7 +1210,7 @@ public class SimulationData {
 	public final long getMaxClashes() {
 		return maxClashes;
 	}
-	
+
 	public final void setSerializationFileName(String serializationFileName) {
 		this.serializationFileName = serializationFileName;
 	}

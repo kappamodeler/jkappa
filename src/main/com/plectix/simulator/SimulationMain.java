@@ -106,6 +106,10 @@ public class SimulationMain  {
 		if (arguments.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
 			simulationData.setXmlSessionName(arguments.getValue(SimulatorOptions.XML_SESSION_NAME));
 		}
+		if (arguments.hasOption(SimulatorOptions.OUTPUT_XML)) {
+			simulationData.setXmlSessionName(arguments.getValue(SimulatorOptions.OUTPUT_XML));
+		}
+		
 		try {
 			if (arguments.hasOption(SimulatorOptions.INIT)) {
 				simulationData.setInitialTime(Double.valueOf(arguments.getValue(SimulatorOptions.INIT)));
@@ -282,7 +286,7 @@ public class SimulationMain  {
 			} else
 				option = false;
 			simulationData
-					.setSimulationType(SimulationData.SIMULATION_TYPE_CONTACT_MAP);
+					.setSimulationType(SimulationData.SIMULATION_TYPE_GENERATE_MAP);
 		}
 
 		if (options.hasOption(SimulatorOptions.CONTACT_MAP)) {

@@ -14,6 +14,9 @@ public enum SimulatorOptions {
 	XML_SESSION_NAME("xml_session_name", true,
 			"Name of the xml file containing results of the current session " +
 			"(default simplx.xml)"),
+	OUTPUT_XML("output_xml", true,
+					"Name of the xml file containing results of the current session " +
+			"(default simplx.xml)"),
 	STORIFY("storify", true, "Name of the kappa file to storify"),
 	EVENT("event", true, "Number of rule applications"),
 	RANDOMIZER_JAVA("randomizer", true,	"Use randomizer Java"),
@@ -108,6 +111,12 @@ public enum SimulatorOptions {
 			"takes a snapshot of solution at specified time unit (may use option several times)"),
 	TIME_SAMPLE("time_sample", true, "Sets sample size in time units (default: 0.01)"),
 	EVENT_SAMPLE("event_sample", true, "Sets sample size in events (default: 100)"),
+	NO_DUMP_ITERATION_NUMBER("no_dump_iteration_number", false, "No dump iteration number"),
+	NO_DUMP_RULE_ITERATION("no_dump_rule_iteration", false, "No dump rule iteration"),
+	NO_COMPUTE_QUANTITATIVE_COMPRESSION("no_compute_quantitative_compression", false, "No compute quantitative compression"),
+	NO_COMPUTE_QUALITATIVE_COMPRESSION("no_compute_qualitative_compression", false, "No compute qualitative compression"),
+	NO_ENUMERATE_COMPLEXES("no_enumerate_complexes", false, "No enumerate complexes"),
+	RESET_ALL("reset_all", false, "Reset all"),
 	;
 
 	private String shortName = null;
