@@ -17,15 +17,13 @@ public class SimulationMain  {
 
 	private static Logger LOGGER = Logger.getLogger(SimulationMain.class);
 
-	private static final Options options = SimulatorOptions.options();
-
 	public static final PrintStream myOutputStream = System.out;
 	
 	public static final String VERSION = "0.6";
 	
 	public static void main(String[] args) {
-		 initializeLogging();
-		 
+		initializeLogging();
+
 		SimulatorInterface simulator = new Simulator();
 		SimulationService service = new SimulationService(simulator);
 		service.submit(new SimulatorInputData(args, myOutputStream), null);
@@ -35,6 +33,8 @@ public class SimulationMain  {
 	public static final void initializeLogging() {
 		// Initialize log4j
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
+		
+		// Dump important info:
 		LOGGER.info("Build Date: " + BuildConstants.BUILD_DATE);
 		LOGGER.info("SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
 		LOGGER.info("Build OS: " + BuildConstants.BUILD_OS_NAME);
@@ -66,10 +66,6 @@ public class SimulationMain  {
 				+ System.getProperties().get("java.specification.vendor"));
 		
 		LOGGER.info("Timezone: " + System.getProperties().get("user.timezone"));
-	}
-
-	public static Options getOptions() {
-		return options;
 	}
 
 }

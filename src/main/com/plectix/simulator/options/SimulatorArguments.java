@@ -14,7 +14,7 @@ public class SimulatorArguments {
 	
 	public void parse() throws ParseException {
 		CommandLineParser parser = new PosixParser();
-		cmdLineArgs = parser.parse(SimulationMain.getOptions(), myArguments);
+		cmdLineArgs = parser.parse(SimulatorOptions.COMMAND_LINE_OPTIONS, myArguments);
 	}
 
 	public boolean hasOption(SimulatorOptions option) {

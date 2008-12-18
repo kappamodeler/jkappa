@@ -124,7 +124,19 @@ public enum SimulatorOptions {
 	private final String description;
 	private final boolean hasArguments;
 	
-	private static Options commandLineOptions = null;
+	public static final Options COMMAND_LINE_OPTIONS; 
+	static {
+		COMMAND_LINE_OPTIONS = new Options();
+		for (SimulatorOptions option : values()) {
+			if (option.shortName == null) {
+				COMMAND_LINE_OPTIONS.addOption(option.longName, 
+						option.hasArguments, option.description);
+			} else {
+				COMMAND_LINE_OPTIONS.addOption(option.shortName, option.longName, 
+						option.hasArguments, option.description);
+			}
+		}
+	}
 	
 	private SimulatorOptions(String shortName, String longName, boolean hasArguments, String description) {
 		this.longName = longName;
@@ -138,22 +150,6 @@ public enum SimulatorOptions {
 		this.longName = longName;
 		this.description = description;
 		this.hasArguments = hasArguments;
-	}
-
-	public static Options options() {
-		if (commandLineOptions == null) {
-			commandLineOptions = new Options();
-			for (SimulatorOptions option : values()) {
-				if (option.shortName == null) {
-					commandLineOptions.addOption(option.longName, 
-							option.hasArguments, option.description);
-				} else {
-					commandLineOptions.addOption(option.shortName, option.longName, 
-							option.hasArguments, option.description);
-				}
-			}
-		}
-		return commandLineOptions;
 	}
 	
 	protected final String getLongName() {

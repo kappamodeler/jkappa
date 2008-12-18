@@ -246,7 +246,7 @@ public class SimulationUtils {
 		
 		if (arguments.hasOption(SimulatorOptions.HELP)) {
 			 HelpFormatter formatter = new HelpFormatter();
-			 formatter.printHelp("use --sim [file] [options]", SimulationMain.getOptions());
+			 formatter.printHelp("use --sim [file] [options]", SimulatorOptions.COMMAND_LINE_OPTIONS);
 			 //TODO are we to exit here?
 			 System.exit(0);
 		}
