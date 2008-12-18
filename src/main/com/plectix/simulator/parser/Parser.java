@@ -97,8 +97,7 @@ public class Parser {
 		simulationData.setRules(rules);
 		if ((simulationData.getStories() == null)
 				&& (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_STORIFY)) {
-			simulationData.setStories(new CStories(simulationData
-					.getIterations()));
+			simulationData.setStories(new CStories(simulationData));
 			createSimData(data.getStory(), CREATE_STORY);
 		} else
 			createSimData(data.getObservables(), CREATE_OBS);

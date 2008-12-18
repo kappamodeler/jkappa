@@ -2,6 +2,8 @@ package com.plectix.simulator.components;
 
 import java.util.*;
 
+import com.plectix.simulator.simulator.SimulationData;
+
 public final class CStories {
 
 	private int iterations = 10;
@@ -19,14 +21,17 @@ public final class CStories {
 		}
 	}
 
-	public CStories(int iterations) {
-		this.iterations = iterations;
+	SimulationData simulationData;
+
+	public CStories(SimulationData simData) {
+		this.iterations = simData.getIterations();
 		this.stories = new ArrayList<CStory>();
 		this.trees = new HashMap<Integer, List<CStoryTrees>>();
 		this.networkNotationForCurrentStory = new ArrayList<NetworkNotationForCurrentStory>();
 		for (int i = 0; i < iterations; i++)
 			this.networkNotationForCurrentStory
 					.add(new NetworkNotationForCurrentStory());
+		this.simulationData = simData;
 	}
 
 	public final Collection<List<CStoryTrees>> getTrees() {
@@ -51,14 +56,14 @@ public final class CStories {
 		this.networkNotationForCurrentStory.get(index)
 				.addToNetworkNotationList(networkNotation);
 	}
+
 	public final void addToNetworkNotationStoryStorifyRule(int index,
-			CNetworkNotation networkNotation,double currentTime) {
+			CNetworkNotation networkNotation, double currentTime) {
 		this.networkNotationForCurrentStory.get(index)
-		.addToNetworkNotationListStorifyRule(networkNotation);
-		this.networkNotationForCurrentStory.get(index).setAverageTime(currentTime);
+				.addToNetworkNotationListStorifyRule(networkNotation);
+		this.networkNotationForCurrentStory.get(index).setAverageTime(
+				currentTime);
 	}
-	
-	
 
 	public final boolean checkRule(int checkRuleID, int index) {
 		for (CStory story : this.stories)
@@ -84,7 +89,8 @@ public final class CStories {
 					if (nnCS.getNetworkNotationList().get(0).getRule()
 							.getRuleID() == key) {
 
-						CStoryTrees tree = new CStoryTrees(key, nnCS);
+						CStoryTrees tree = new CStoryTrees(key, nnCS,
+								simulationData.getStorifyMode());
 						tree.getTreeFromList(nnCS.getNetworkNotationList());
 
 						if (treeList.size() == 0)

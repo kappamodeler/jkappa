@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.SimulationUtils;
 
 public class CConnectedComponent implements IConnectedComponent, Serializable {
 
@@ -36,7 +37,11 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		injectionsList = new TreeMap<Integer, IInjection>();
 		agentFromSolutionForRHS = new ArrayList<IAgent>();
 	}
-	
+
+	public final String getString() {
+		return SimulationUtils.printPartRule(this, new int[] { 0 }, true);
+	}
+
 	private final void addInjection(IInjection inj, int id) {
 		if (inj != null) {
 			maxId = Math.max(maxId, id);
@@ -56,10 +61,10 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		this.agentFromSolutionForRHS.add(agentFromSolutionForRHS);
 	}
 
-	public final void clearAgentsFromSolutionForRHS() { 
+	public final void clearAgentsFromSolutionForRHS() {
 		agentFromSolutionForRHS.clear();
 	}
-	
+
 	public final List<IAgent> getAgentFromSolutionForRHS() {
 		return Collections.unmodifiableList(agentFromSolutionForRHS);
 	}
@@ -267,7 +272,8 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 
 	}
 
-	private final boolean compareInternalStates(IInternalState currentInternalState,
+	private final boolean compareInternalStates(
+			IInternalState currentInternalState,
 			IInternalState solutionInternalState) {
 		if (currentInternalState.getNameId() != CSite.NO_INDEX
 				&& solutionInternalState.getNameId() == CSite.NO_INDEX)

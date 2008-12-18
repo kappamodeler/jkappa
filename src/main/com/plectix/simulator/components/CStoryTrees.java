@@ -4,7 +4,11 @@ import java.util.*;
 
 import com.plectix.simulator.components.CNetworkNotation.*;
 import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules.SitesFromRules;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.SimulationUtils;
 
 public final class CStoryTrees {
 	public static final byte IS_CAUSE = 2;
@@ -21,15 +25,18 @@ public final class CStoryTrees {
 	private HashMap<Integer, String> traceIDToData;
 	private HashMap<Integer, String> traceIDToText;
 	private HashMap<Integer, List<Integer>> traceIDToTraceID;
+SimulationData simData;
+	
+	private byte compressionMode;
 
-	public double getAverageTime(){
+	public double getAverageTime() {
 		return averageTime;
 	}
 
-	public void setAverageTime(double averageTime){
+	public void setAverageTime(double averageTime) {
 		this.averageTime = averageTime;
 	}
-	
+
 	public HashMap<Integer, List<Integer>> getLevelToTraceID() {
 		return levelToTraceID;
 	}
@@ -50,29 +57,99 @@ public final class CStoryTrees {
 		return isomorphicCount;
 	}
 
-	public CStoryTrees(int ruleId, NetworkNotationForCurrentStory nnCS) {
+	public CStoryTrees(int ruleId, NetworkNotationForCurrentStory nnCS,
+			byte compressionMode) {
 		this.nnCS = nnCS;
 		this.ruleId = ruleId;
 		this.averageTime = nnCS.getAverageTime();
+		this.compressionMode = compressionMode;
+
 	}
 
 	public final int getRuleID() {
 		return this.ruleId;
 	}
 
-	public final void getTreeFromList(List<CNetworkNotation> commonList) {
+	private void resetParameters(List<CNetworkNotation> commonList) {
 		int index = 0;
-
 		traceIDToLevel = new HashMap<Integer, Integer>();
 		this.ruleIDToTraceID = new HashMap<Integer, List<Integer>>();
 		this.traceIDToTraceID = new HashMap<Integer, List<Integer>>();
+
 		CNetworkNotation newNN = commonList.get(index);
 		traceIDToLevel.put(newNN.getStep(), index);
 		List<Integer> list = new ArrayList<Integer>();
 		list.add(newNN.getStep());
 		this.ruleIDToTraceID.put(newNN.getRule().getRuleID(), list);
+	}
 
-		isCausing(newNN, commonList, index + 1, 0);
+	private void weakCompressStoryTrace(List<CNetworkNotation> commonList) {
+		List<CNetworkNotation> weakCompressedList = new ArrayList<CNetworkNotation>();
+		noneCompressStoryTrace(commonList);
+
+		if (commonList.size() > 1) {
+			CNetworkNotation lastNN = null;
+
+			int index = 0;
+			for (CNetworkNotation nn : commonList) {
+				List<Integer> curList = ruleIDToTraceID.get(nn.getRule()
+						.getRuleID());
+				if (curList != null) {
+
+					if (weakCompressedList.size() <= 1) {
+						weakCompressedList.add(nn);
+						lastNN = nn;
+					} else if (nn.isOpposite(weakCompressedList)) {
+						weakCompressedList.add(nn);
+						lastNN = nn;
+					} else {
+						pushIntro(weakCompressedList, lastNN);
+					}
+				}
+				index++;
+			}
+
+			noneCompressStoryTrace(weakCompressedList);
+		}
+
+	}
+
+	private void pushIntro(List<CNetworkNotation> weakCompressedList,
+			CNetworkNotation currentNN) {
+		if (currentNN == null)
+			return;
+		Iterator<Long> agentIterator = currentNN.getUsedAgentsFromRules()
+				.keySet().iterator();
+		while (agentIterator.hasNext()) {
+			Long agentKey = agentIterator.next();
+			for (int i = weakCompressedList.size() - 1; i >= 0; i--) {
+				CNetworkNotation chekingNN = weakCompressedList.get(i);
+				if (chekingNN.getUsedAgentsFromRules().get(agentKey) != null) {
+					chekingNN.setHasIntro(true);
+					break;
+				}
+			}
+		}
+	}
+
+	private void noneCompressStoryTrace(List<CNetworkNotation> commonList) {
+		resetParameters(commonList);
+		isCausing(commonList.get(0), commonList, 1, 0);
+		if (ruleIDToTraceID.size() == 1)
+			commonList.get(0).setHasIntro(true);
+	}
+
+	public final void getTreeFromList(List<CNetworkNotation> commonList) {
+		switch (compressionMode) {
+		case SimulationData.STORIFY_MODE_NONE:
+			noneCompressStoryTrace(commonList);
+			break;
+		case SimulationData.STORIFY_MODE_WEAK:
+			weakCompressStoryTrace(commonList);
+			break;
+		default:
+			break;
+		}
 		pushTree();
 	}
 
@@ -80,7 +157,7 @@ public final class CStoryTrees {
 			List<CNetworkNotation> commonList, int begin, int level) {
 		Iterator<Long> agentIterator = newNN.getUsedAgentsFromRules().keySet()
 				.iterator();
-		
+
 		if (begin >= commonList.size()) {
 			addToMapRuleIDToTraceID(newNN, level);
 			newNN.setLeaf(true);
@@ -89,7 +166,8 @@ public final class CStoryTrees {
 
 		while (agentIterator.hasNext()) {
 			Long agentKey = agentIterator.next();
-			AgentSitesFromRules aSFR = newNN.getUsedAgentsFromRules().get(agentKey);
+			AgentSitesFromRules aSFR = newNN.getUsedAgentsFromRules().get(
+					agentKey);
 			Iterator<Integer> siteIterator = aSFR.sites.keySet().iterator();
 			int leafIndex = 0;
 			while (siteIterator.hasNext()) {
@@ -98,13 +176,13 @@ public final class CStoryTrees {
 				boolean isLink = true;
 				byte isCause = isCausing(newNN, commonList, begin, isLink,
 						agentKey, siteKey, sFR, level);
-				if (isCause == IS_NOT_CAUSE || isCause==IS_NONE) {
+				if (isCause == IS_NOT_CAUSE || isCause == IS_NONE) {
 					leafIndex++;
 				}
 				isLink = false;
 				isCause = isCausing(newNN, commonList, begin, isLink, agentKey,
 						siteKey, sFR, level);
-				if (isCause == IS_NOT_CAUSE || isCause==IS_NONE) {
+				if (isCause == IS_NOT_CAUSE || isCause == IS_NONE) {
 					leafIndex++;
 				}
 
@@ -123,8 +201,8 @@ public final class CStoryTrees {
 		for (int i = begin; i < commonList.size(); i++) {
 			CNetworkNotation comparableNN = commonList.get(i);
 
-			AgentSitesFromRules aSFRComparable = comparableNN.getUsedAgentsFromRules()
-					.get(agentKey);
+			AgentSitesFromRules aSFRComparable = comparableNN
+					.getUsedAgentsFromRules().get(agentKey);
 			if (aSFRComparable != null) {
 				SitesFromRules sFRComparable = aSFRComparable.sites
 						.get(siteKey);
@@ -139,14 +217,16 @@ public final class CStoryTrees {
 						isCausing(comparableNN, commonList, i + 1, level);
 						return IS_CAUSE;
 					}
-//					if (!isLink
-//							&& sFRComparable.getInternalStateMode() != CNetworkNotation.MODE_NONE) {
-//						return IS_NONE;
-//					}
-//					if (isLink
-//							&& sFRComparable.getLinkStateMode() != CNetworkNotation.MODE_NONE) {
-//						return IS_NONE;
-//					}
+					// if (!isLink
+					// && sFRComparable.getInternalStateMode() !=
+					// CNetworkNotation.MODE_NONE) {
+					// return IS_NONE;
+					// }
+					// if (isLink
+					// && sFRComparable.getLinkStateMode() !=
+					// CNetworkNotation.MODE_NONE) {
+					// return IS_NONE;
+					// }
 				}
 			}
 		}
@@ -167,7 +247,7 @@ public final class CStoryTrees {
 						.get(currentTraceID);
 				for (int traceID : traceIDList) {
 					Integer rightLevel = traceIDToLevel.get(traceID);
-					Integer checkingLevel = traceIDToLevel.get(currentTraceID)+1;
+					Integer checkingLevel = traceIDToLevel.get(currentTraceID) + 1;
 					if ((rightLevel != null) && rightLevel == checkingLevel)
 						curList.add(traceID);
 				}
@@ -186,6 +266,8 @@ public final class CStoryTrees {
 		traceIDToData = new HashMap<Integer, String>();
 		traceIDToText = new HashMap<Integer, String>();
 
+		List<Long> introAgents = new ArrayList<Long>();
+		
 		Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
 		while (iterator.hasNext()) {
 			int traceID = iterator.next();
@@ -197,8 +279,24 @@ public final class CStoryTrees {
 			}
 			list.add(traceID);
 			CNetworkNotation nn = this.nnCS.getNetworkNotation(traceID);
-			if (nn.getAgentsNotation().size() > 0)
-				traceIDToIntroString.put(traceID, nn.getAgentsNotation());
+			// if (nn.getAgentsNotation().size() > 0)
+			int counter=0;
+			if (nn.isHasIntro()){
+				List<String> introStr = new ArrayList<String>();
+				
+				for (IConnectedComponent cc : nn.getIntroCC()){
+					for (IAgent agent : cc.getAgents()){
+						if(!introAgents.contains(agent.getId())){
+							introAgents.add(agent.getId());
+							counter++;
+						}
+					}
+					if(counter == cc.getAgents().size())
+						introStr.add(cc.getString());
+					counter=0;
+				}
+				traceIDToIntroString.put(traceID, introStr);
+			}
 			IRule rule = nn.getRule();
 			traceIDToData.put(traceID, rule.getData(isOcamlStyleObsName));
 			traceIDToText.put(traceID, rule.getName());
@@ -251,7 +349,7 @@ public final class CStoryTrees {
 		if (!traceIDsList.contains(nnToAdd.getStep()))
 			traceIDsList.add(nnToAdd.getStep());
 
-		Integer levelIn = traceIDToLevel.get(indexInTrace);
+		Integer levelIn = traceIDToLevel.get(nnToAdd.getStep());
 		if ((levelIn == null) || (levelIn != null && levelIn < level))
 			traceIDToLevel.put(nnToAdd.getStep(), level);
 	}
@@ -288,7 +386,7 @@ public final class CStoryTrees {
 			return false;
 
 		isomorphicCount++;
-		averageTime+=treeIn.getAverageTime();
+		averageTime += treeIn.getAverageTime();
 		return true;
 	}
 

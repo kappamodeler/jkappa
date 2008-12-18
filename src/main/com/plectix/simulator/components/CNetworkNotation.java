@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -29,7 +30,17 @@ public class CNetworkNotation implements INetworkNotation {
 	public final static byte HAS_NO_INTERSECTION = 0;
 
 	private boolean leaf;
-	
+
+	private boolean hasIntro;
+
+	public boolean isHasIntro() {
+		return hasIntro;
+	}
+
+	public void setHasIntro(boolean hasIntro) {
+		this.hasIntro = hasIntro;
+	}
+
 	public boolean isLeaf() {
 		return leaf;
 	}
@@ -59,6 +70,8 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	List<String> agentsNotation;
+	List<IAgent> introAgents;
+	List<IConnectedComponent> introCC;
 
 	public List<String> getAgentsNotation() {
 		return agentsNotation;
@@ -173,9 +186,12 @@ public class CNetworkNotation implements INetworkNotation {
 		this.step = step;
 		this.rule = rule;
 		leaf = false;
+		hasIntro = false;
 		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();
 		this.usedAgentsFromRules = new HashMap<Long, AgentSitesFromRules>();
 		this.agentsNotation = new ArrayList<String>();
+		this.introCC = new ArrayList<IConnectedComponent>();
+		this.introAgents = new ArrayList<IAgent>();
 		createAgentsNotation(injectionsList, data);
 	}
 
@@ -190,14 +206,19 @@ public class CNetworkNotation implements INetworkNotation {
 						.getAgentLinkList().get(0).getAgentTo());
 				boolean isStorify = false;
 				for (IAgentLink al : inj.getAgentLinkList()) {
-					if (al.getAgentTo().isStorify()) {
+					if (al.getAgentTo().isStorify())
 						isStorify = true;
-						break;
-					}
+					// break;
+					// }else{
+					// }
+					this.introAgents.add(al.getAgentTo());
 				}
-				if (!isStorify)
-					agentsNotation.add(SimulationUtils.printPartRule(cc,
-							new int[] { 0 }, data.isOcamlStyleObsName()));
+				agentsNotation.add(SimulationUtils.printPartRule(cc,
+						new int[] { 0 }, data.isOcamlStyleObsName()));
+				introCC.add(cc);
+				if (!isStorify) {
+					hasIntro = true;
+				}
 			}
 		}
 
@@ -210,6 +231,10 @@ public class CNetworkNotation implements INetworkNotation {
 	// public Map<Long, AgentSitesFromRules> getUsedAgentsFromRules() {
 	// return Collections.unmodifiableMap(usedAgentsFromRules);
 	// }
+
+	public List<IConnectedComponent> getIntroCC() {
+		return introCC;
+	}
 
 	public final void checkLinkForNetworkNotation(int index, ISite site) {
 		if (site.getLinkState().getSite() == null)
