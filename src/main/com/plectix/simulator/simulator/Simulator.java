@@ -8,10 +8,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
-import org.apache.commons.cli.CommandLine;
 import org.apache.log4j.Logger;
 
-import com.plectix.simulator.*;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CPerturbation;
@@ -68,11 +66,8 @@ public class Simulator implements SimulatorInterface {
 		printStream.get().print(text);
 	}
 
-	private IActivationMap activationMap;
 
 	private int agentIdGenerator = 0;
-
-	private SimulatorArguments myArguments;
 
 	private double currentTime = 0.;
 
@@ -80,10 +75,14 @@ public class Simulator implements SimulatorInterface {
 	
 	private boolean storyMode = false;
 
-	private TimerSimulation timer;
-
 	private int timeStepCounter = 0;
 
+	private TimerSimulation timer;
+	
+	private IActivationMap activationMap;
+	
+	private SimulatorArguments myArguments;
+	
 	private SimulationData simulationData;
 
 	private SimulatorResultsData simulatorResultsData;
@@ -550,7 +549,7 @@ public class Simulator implements SimulatorInterface {
 		currentTime = 0;
 
 		if (getSimulationData().getSerializationMode() != getSimulationData().MODE_READ) {
-			SimulationMain.readSimulatonFile(this, myArguments);
+			SimulationUtils.readSimulatonFile(this, myArguments);
 		}
 		init(myArguments);
 	}
@@ -645,9 +644,9 @@ public class Simulator implements SimulatorInterface {
 		simulationData.setCommandLine(args);
 		Simulator.println("Java " + simulationData.getCommandLine());
 		startTimer();
-		myArguments = SimulationMain.parseArguments(getSimulationData(),
+		myArguments = SimulationUtils.parseArguments(getSimulationData(),
 				SimulationUtils.changeArgs(args));
-		SimulationMain.readSimulatonFile(this, myArguments);
+		SimulationUtils.readSimulatonFile(this, myArguments);
 		init(myArguments);
 		if (myArguments.hasOption(SimulatorOptions.COMPILE)) {
 			outputData();

@@ -12,7 +12,6 @@ import org.junit.*;
 
 import static org.junit.Assert.*;
 
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -21,6 +20,7 @@ import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.options.SimulatorArguments;
+import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.Simulator;
 
 @RunWith(value = Parameterized.class)
@@ -70,7 +70,7 @@ public class TestAction {
 		args[1] = arg2;
 		args[2] = arg3;
 		args[3] = arg4;
-		myArguments = SimulationMain.parseArguments(mySimulator
+		myArguments = SimulationUtils.parseArguments(mySimulator
 				.getSimulationData(), args);
 	}
 
@@ -81,7 +81,7 @@ public class TestAction {
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		mySimulator = new Simulator();
 		parseArgs(FilePath);
-		SimulationMain.readSimulatonFile(mySimulator, myArguments);
+		SimulationUtils.readSimulatonFile(mySimulator, myArguments);
 		mySimulator.init(myArguments);
 		System.out.println(FilePath);
 	}

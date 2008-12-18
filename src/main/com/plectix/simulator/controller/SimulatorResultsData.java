@@ -1,10 +1,10 @@
 package com.plectix.simulator.controller;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.xml.transform.Source;
-
-import com.plectix.simulator.simulator.SimulationData;
 
 /**
  * 
