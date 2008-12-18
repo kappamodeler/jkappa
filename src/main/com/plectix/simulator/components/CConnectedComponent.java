@@ -38,10 +38,6 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		agentFromSolutionForRHS = new ArrayList<IAgent>();
 	}
 
-	public final String getString() {
-		return SimulationUtils.printPartRule(this, new int[] { 0 }, true);
-	}
-
 	private final void addInjection(IInjection inj, int id) {
 		if (inj != null) {
 			maxId = Math.max(maxId, id);

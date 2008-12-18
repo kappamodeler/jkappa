@@ -19,7 +19,7 @@ public final class CStoryTrees {
 	private int ruleId;
 	private NetworkNotationForCurrentStory nnCS;
 	private HashMap<Integer, List<Integer>> ruleIDToTraceID;
-	private HashMap<Integer, Integer> traceIDToLevel;
+	private TreeMap<Integer, Integer> traceIDToLevel;
 	private HashMap<Integer, List<Integer>> levelToTraceID;
 	private HashMap<Integer, List<String>> traceIDToIntroString;
 	private HashMap<Integer, String> traceIDToData;
@@ -72,7 +72,7 @@ SimulationData simData;
 
 	private void resetParameters(List<CNetworkNotation> commonList) {
 		int index = 0;
-		traceIDToLevel = new HashMap<Integer, Integer>();
+		traceIDToLevel = new TreeMap<Integer, Integer>();
 		this.ruleIDToTraceID = new HashMap<Integer, List<Integer>>();
 		this.traceIDToTraceID = new HashMap<Integer, List<Integer>>();
 
@@ -281,6 +281,7 @@ SimulationData simData;
 			CNetworkNotation nn = this.nnCS.getNetworkNotation(traceID);
 			// if (nn.getAgentsNotation().size() > 0)
 			int counter=0;
+			int index=0;
 			if (nn.isHasIntro()){
 				List<String> introStr = new ArrayList<String>();
 				
@@ -292,7 +293,8 @@ SimulationData simData;
 						}
 					}
 					if(counter == cc.getAgents().size())
-						introStr.add(cc.getString());
+						introStr.add(nn.getAgentsNotation().get(index));
+					index++;
 					counter=0;
 				}
 				traceIDToIntroString.put(traceID, introStr);
@@ -358,7 +360,7 @@ SimulationData simData;
 		return ruleIDToTraceID;
 	}
 
-	public HashMap<Integer, Integer> getTraceIDToLevel() {
+	public TreeMap<Integer, Integer> getTraceIDToLevel() {
 		return traceIDToLevel;
 	}
 

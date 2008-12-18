@@ -5,7 +5,10 @@ import java.util.List;
 import com.plectix.simulator.simulator.Simulator;
 
 public interface IRule {
-
+	public List<IAgent> getStoryfiedAgents();
+	
+	public void clearStorifiedAgents();
+	
 	public boolean isRHSEqualsLHS();
 	
 	public int getRuleID();

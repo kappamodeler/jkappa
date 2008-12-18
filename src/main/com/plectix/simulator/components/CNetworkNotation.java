@@ -70,7 +70,6 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	List<String> agentsNotation;
-	List<IAgent> introAgents;
 	List<IConnectedComponent> introCC;
 
 	public List<String> getAgentsNotation() {
@@ -191,7 +190,6 @@ public class CNetworkNotation implements INetworkNotation {
 		this.usedAgentsFromRules = new HashMap<Long, AgentSitesFromRules>();
 		this.agentsNotation = new ArrayList<String>();
 		this.introCC = new ArrayList<IConnectedComponent>();
-		this.introAgents = new ArrayList<IAgent>();
 		createAgentsNotation(injectionsList, data);
 	}
 
@@ -206,12 +204,10 @@ public class CNetworkNotation implements INetworkNotation {
 						.getAgentLinkList().get(0).getAgentTo());
 				boolean isStorify = false;
 				for (IAgentLink al : inj.getAgentLinkList()) {
-					if (al.getAgentTo().isStorify())
+					if (al.getAgentTo().isStorify()) {
 						isStorify = true;
-					// break;
-					// }else{
-					// }
-					this.introAgents.add(al.getAgentTo());
+						break;
+					}
 				}
 				agentsNotation.add(SimulationUtils.printPartRule(cc,
 						new int[] { 0 }, data.isOcamlStyleObsName()));
@@ -222,6 +218,13 @@ public class CNetworkNotation implements INetworkNotation {
 			}
 		}
 
+	}
+
+	private void clearAgentsForDeletedOppositeRules(CNetworkNotation nn) {
+		if (nn.isHasIntro())
+			for (IAgent agent : nn.getRule().getStoryfiedAgents())
+				((CAgent) agent).unStorify();
+			nn.getRule().clearStorifiedAgents();
 	}
 
 	// public Map<Long, AgentSites> getChangedAgentsFromSolution() {
@@ -323,6 +326,8 @@ public class CNetworkNotation implements INetworkNotation {
 			CNetworkNotation nn = networkNotationList.get(i);
 			switch (isIntersects(nn)) {
 			case HAS_FULL_INTERSECTION:
+				clearAgentsForDeletedOppositeRules(this);
+				clearAgentsForDeletedOppositeRules(networkNotationList.get(i));
 				networkNotationList.remove(i);
 				return false;
 			case HAS_PART_INTERSECTION:

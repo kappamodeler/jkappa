@@ -5,8 +5,6 @@ import java.util.*;
 public interface IConnectedComponent {
 	//TODO ???
 	public boolean unify(IAgent agent);
-	
-	public String getString();
 		
 	public List<IAgent> getAgents();
 

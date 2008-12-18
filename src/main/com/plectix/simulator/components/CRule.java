@@ -55,6 +55,8 @@ public class CRule implements IRule, Serializable {
 		return inhibitedRule;
 	}
 
+	private List<IAgent> storyfiedAgents;
+
 	public boolean isRHSEqualsLHS() {
 		return rHSEqualsLHS;
 	}
@@ -91,6 +93,10 @@ public class CRule implements IRule, Serializable {
 		this.data = new String(data);
 	}
 
+	public void clearStorifiedAgents(){
+		this.storyfiedAgents.clear();
+	}
+	
 	public CRule(List<IConnectedComponent> left,
 			List<IConnectedComponent> right, String name, double ruleRate,
 			int ruleID, boolean isStorify) {
@@ -235,12 +241,20 @@ public class CRule implements IRule, Serializable {
 		for (IInjection inj : injectionList)
 			if (inj != CInjection.EMPTY_INJECTION)
 				for (IAgentLink al : inj.getAgentLinkList())
-					if (!rHSEqualsLHS || isLast)
+					if (!rHSEqualsLHS || isLast) {
+						if (!al.getAgentTo().isStorify())
+							storyfiedAgents.add(al.getAgentTo());
 						al.storifyAgent();
+					}
+	}
+
+	public List<IAgent> getStoryfiedAgents() {
+		return storyfiedAgents;
 	}
 
 	protected final void apply(List<IInjection> injectionList,
 			INetworkNotation netNotation, Simulator simulator, boolean isLast) {
+		storyfiedAgents = new ArrayList<IAgent>();
 		if (netNotation != null) {
 			storifyAgents(injectionList, isLast);
 		}
