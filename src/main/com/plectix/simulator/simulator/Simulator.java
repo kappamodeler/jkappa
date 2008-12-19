@@ -576,9 +576,7 @@ public class Simulator implements SimulatorInterface {
 			if (hasSnapshot
 					&& getSimulationData().getSnapshotTime() <= currentTime) {
 				hasSnapshot = false;
-				getSimulationData().setSnapshot(
-						new CSnapshot(getSimulationData()));
-				getSimulationData().setSnapshotTime(currentTime);
+				createSnapshots();				
 			}
 			checkPerturbation();
 			rule = ruleProbabilityCalculation.getRandomRule();
@@ -628,6 +626,7 @@ public class Simulator implements SimulatorInterface {
 			if (isIteration)
 				addIteration(iteration_num);
 		}
+		checkOutputFinalState();
 		getSimulationData().getObservables().calculateObsLast(currentTime);
 		getSimulationData().setTimeLength(currentTime);
 		getSimulationData().setEvent(count);
@@ -635,6 +634,17 @@ public class Simulator implements SimulatorInterface {
 		Source source = addCompleteSource();
 		if (!isIteration)
 			outputData(source, count);
+	}
+	
+	private void checkOutputFinalState(){
+		if(getSimulationData().isOutputFinalState())
+			createSnapshots();
+	}
+	
+	private void createSnapshots(){
+		getSimulationData().setSnapshot(
+				new CSnapshot(getSimulationData()));
+		getSimulationData().setSnapshotTime(currentTime);
 	}
 
 	public final void run(SimulatorInputData simulatorInputData) throws Exception {

@@ -263,6 +263,9 @@ public class SimulationUtils {
 		if (arguments.hasOption(SimulatorOptions.OUTPUT_XML)) {
 			simulationData.setXmlSessionName(arguments.getValue(SimulatorOptions.OUTPUT_XML));
 		}
+		if (arguments.hasOption(SimulatorOptions.DO_XML)) {
+			simulationData.setXmlSessionName(arguments.getValue(SimulatorOptions.DO_XML));
+		}
 		
 		try {
 			if (arguments.hasOption(SimulatorOptions.INIT)) {
@@ -357,7 +360,11 @@ public class SimulationUtils {
 			clockPrecision *= 60000;
 			simulationData.setClockPrecision(clockPrecision);
 		}
-	
+		
+		if (arguments.hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
+			simulationData.setOutputFinalState(true);
+		}
+		
 		if (arguments.hasOption(SimulatorOptions.OUTPUT_SCHEME)) {
 			simulationData.setXmlSessionPath(arguments.getValue(SimulatorOptions.OUTPUT_SCHEME));
 		}

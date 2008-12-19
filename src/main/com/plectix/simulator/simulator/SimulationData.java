@@ -97,6 +97,7 @@ public class SimulationData {
 
 	private long maxClashes = 100;
 	private double snapshotTime = -1.;
+	private boolean outputFinalState = false;
 	private long clockPrecision = 3600000;
 	private long clockStamp;
 
@@ -108,6 +109,15 @@ public class SimulationData {
 	public SimulationData() {
 		super();
 	}
+	
+	public final boolean isOutputFinalState(){
+		return outputFinalState;
+	}
+	
+	public final void setOutputFinalState(boolean outputFinalState){
+		this.outputFinalState = outputFinalState;
+	}
+	
 
 	public final boolean isParseSolution() {
 		switch (simulationType) {
