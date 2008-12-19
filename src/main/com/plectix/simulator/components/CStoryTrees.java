@@ -108,8 +108,60 @@ public final class CStoryTrees {
 			}
 
 			noneCompressStoryTrace(weakCompressedList);
+			//weakCompressTree(weakCompressedList);
 		}
 
+	}
+	
+	private void weakCompressTree(List<CNetworkNotation> weakCompressedList){
+		createWeakLevels();
+	}
+	
+	private void createWeakLevels(){
+		HashMap<Integer, List<Integer>> levelToRules = new HashMap<Integer, List<Integer>>();
+		for(Integer key : levelToTraceID.keySet()){
+			List<Integer> ruleList = new ArrayList<Integer>();
+			for(Integer trace : levelToTraceID.get(key)){
+				ruleList.add(getRuleForTraceId(trace));
+			}
+			levelToRules.put(key, ruleList);
+		}
+		
+		clearLevelsMap(levelToRules);
+	}
+	
+	private void clearLevelsMap(HashMap<Integer, List<Integer>> levelToRules){
+		
+		for(int level = 0; level<levelToRules.size();level++){
+			List<Integer> rulesUp = levelToRules.get(level);
+			
+			for(int levelDown = level+1; levelDown<levelToRules.size();levelDown++){
+				List<Integer> rulesDown = levelToRules.get(levelDown);
+				if(rulesDown!=null && rulesUp!=null && isEqualsList(rulesUp, rulesDown)){
+					System.out.println("EqualsList");
+				}
+			}			
+			
+		}
+		
+	}
+	
+	private static boolean isEqualsList(List<Integer> rulesUp, List<Integer> rulesDown){
+		if(rulesUp.size()!=rulesDown.size())
+			return false;
+		for(Integer up : rulesUp)
+			if(!rulesDown.contains(up))
+				return false;
+		return true;
+	}
+	
+	private int getRuleForTraceId(int traceId){
+		for(Integer rule : ruleIDToTraceID.keySet()){
+			if(ruleIDToTraceID.get(rule).contains(traceId)){
+				return rule;
+			}
+		}
+		return -1;
 	}
 
 	private void pushIntro(List<CNetworkNotation> weakCompressedList,
