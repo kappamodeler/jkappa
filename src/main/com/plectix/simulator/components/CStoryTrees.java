@@ -24,9 +24,8 @@ public final class CStoryTrees {
 	private HashMap<Integer, List<String>> traceIDToIntroString;
 	private HashMap<Integer, String> traceIDToData;
 	private HashMap<Integer, String> traceIDToText;
-	private HashMap<Integer, List<Integer>> traceIDToTraceID;
-SimulationData simData;
-	
+	private TreeMap<Integer, List<Integer>> traceIDToTraceID;
+
 	private byte compressionMode;
 
 	public double getAverageTime() {
@@ -63,7 +62,6 @@ SimulationData simData;
 		this.ruleId = ruleId;
 		this.averageTime = nnCS.getAverageTime();
 		this.compressionMode = compressionMode;
-
 	}
 
 	public final int getRuleID() {
@@ -74,7 +72,7 @@ SimulationData simData;
 		int index = 0;
 		traceIDToLevel = new TreeMap<Integer, Integer>();
 		this.ruleIDToTraceID = new HashMap<Integer, List<Integer>>();
-		this.traceIDToTraceID = new HashMap<Integer, List<Integer>>();
+		this.traceIDToTraceID = new TreeMap<Integer, List<Integer>>();
 
 		CNetworkNotation newNN = commonList.get(index);
 		traceIDToLevel.put(newNN.getStep(), index);
@@ -233,25 +231,64 @@ SimulationData simData;
 		return IS_NOT_CAUSE;
 	}
 
+	private boolean checkTransitivity(int checkingTraceID,
+			int beginningTraceID, boolean transitivity) {
+		List<Integer> traceIDs = traceIDToTraceID.get(beginningTraceID);
+
+		if (!transitivity)
+			for (int id : traceIDs) {
+				if (id == checkingTraceID) {
+					transitivity = true;
+					break;
+				} else
+					transitivity = checkTransitivity(checkingTraceID, id,
+							transitivity);
+			}
+
+		return transitivity;
+	}
+
+	/*
+	 * private void pushTree() {
+	 * 
+	 * Iterator<Integer> ruleIterator = ruleIDToTraceID.keySet().iterator();
+	 * 
+	 * while (ruleIterator.hasNext()) { int key = ruleIterator.next();
+	 * List<Integer> currentTraceIDList = ruleIDToTraceID.get(key);
+	 * 
+	 * for (Integer currentTraceID : currentTraceIDList) { List<Integer> curList
+	 * = new ArrayList<Integer>(); List<Integer> traceIDList = traceIDToTraceID
+	 * .get(currentTraceID); for (int traceID : traceIDList) { Integer
+	 * rightLevel = traceIDToLevel.get(traceID); Integer checkingLevel =
+	 * traceIDToLevel.get(currentTraceID) + 1; if ((rightLevel != null) &&
+	 * rightLevel == checkingLevel) curList.add(traceID); }
+	 * traceIDToTraceID.put(currentTraceID, curList); } } }
+	 */
+
 	private void pushTree() {
 
-		Iterator<Integer> ruleIterator = ruleIDToTraceID.keySet().iterator();
+		Iterator<Integer> ruleIterator = traceIDToTraceID.keySet().iterator();
 
 		while (ruleIterator.hasNext()) {
 			int key = ruleIterator.next();
-			List<Integer> currentTraceIDList = ruleIDToTraceID.get(key);
+			List<Integer> currentTraceIDList = traceIDToTraceID.get(key);
 
-			for (Integer currentTraceID : currentTraceIDList) {
-				List<Integer> curList = new ArrayList<Integer>();
-				List<Integer> traceIDList = traceIDToTraceID
-						.get(currentTraceID);
-				for (int traceID : traceIDList) {
-					Integer rightLevel = traceIDToLevel.get(traceID);
-					Integer checkingLevel = traceIDToLevel.get(currentTraceID) + 1;
-					if ((rightLevel != null) && rightLevel == checkingLevel)
-						curList.add(traceID);
+			List<Integer> curList = new ArrayList<Integer>();
+
+			if (currentTraceIDList.size() > 1) {
+				for (Integer checkingTraceID : currentTraceIDList) {
+					int counter = 0;
+					for (Integer currentTraceID : currentTraceIDList) {
+						if (checkingTraceID != currentTraceID) {
+							if (!checkTransitivity(checkingTraceID,
+									currentTraceID, false))
+								counter++;
+						}
+					}
+					if (counter == currentTraceIDList.size() - 1)
+						curList.add(checkingTraceID);
 				}
-				traceIDToTraceID.put(currentTraceID, curList);
+				traceIDToTraceID.put(key, curList);
 			}
 		}
 	}
@@ -267,7 +304,7 @@ SimulationData simData;
 		traceIDToText = new HashMap<Integer, String>();
 
 		List<Long> introAgents = new ArrayList<Long>();
-		
+
 		Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
 		while (iterator.hasNext()) {
 			int traceID = iterator.next();
@@ -280,22 +317,22 @@ SimulationData simData;
 			list.add(traceID);
 			CNetworkNotation nn = this.nnCS.getNetworkNotation(traceID);
 			// if (nn.getAgentsNotation().size() > 0)
-			int counter=0;
-			int index=0;
-			if (nn.isHasIntro()){
+			int counter = 0;
+			int index = 0;
+			if (nn.isHasIntro()) {
 				List<String> introStr = new ArrayList<String>();
-				
-				for (IConnectedComponent cc : nn.getIntroCC()){
-					for (IAgent agent : cc.getAgents()){
-						if(!introAgents.contains(agent.getId())){
+
+				for (IConnectedComponent cc : nn.getIntroCC()) {
+					for (IAgent agent : cc.getAgents()) {
+						if (!introAgents.contains(agent.getId())) {
 							introAgents.add(agent.getId());
 							counter++;
 						}
 					}
-					if(counter == cc.getAgents().size())
+					if (counter == cc.getAgents().size())
 						introStr.add(nn.getAgentsNotation().get(index));
 					index++;
-					counter=0;
+					counter = 0;
 				}
 				traceIDToIntroString.put(traceID, introStr);
 			}
@@ -364,7 +401,7 @@ SimulationData simData;
 		return traceIDToLevel;
 	}
 
-	public HashMap<Integer, List<Integer>> getTraceIDToTraceID() {
+	public TreeMap<Integer, List<Integer>> getTraceIDToTraceID() {
 		return traceIDToTraceID;
 	}
 

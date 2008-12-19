@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 
 import javax.xml.parsers.*;
 import javax.xml.transform.*;
@@ -84,6 +85,7 @@ public class SimulationData {
 	private double timeLength = 0;
 	private boolean isTime = false;
 	private int seed = 0;
+	
 	private String xmlSessionName = "simplx.xml";
 	private String xmlSessionPath = "";
 	private String tmpSessionName = "simplx.tmp";
@@ -637,6 +639,12 @@ public class SimulationData {
 		Iterator<Integer> iterator = storyTree.getLevelToTraceID().keySet()
 				.iterator();
 		int depth = storyTree.getLevelToTraceID().size();
+		
+		int number = storyTree.getLevelToTraceID().get(0).size();
+		if(number>1)
+			System.out.println("bad seed = "+ seed);
+		
+		
 		while (iterator.hasNext()) {
 			int level = iterator.next();
 			List<Integer> list = storyTree.getLevelToTraceID().get(level);
@@ -704,7 +712,7 @@ public class SimulationData {
 
 		List<Element> nodes = new ArrayList<Element>();
 		List<Element> connections = new ArrayList<Element>();
-		HashMap<Integer, List<Integer>> traceIDToTraceIDs = storyTree
+		TreeMap<Integer, List<Integer>> traceIDToTraceIDs = storyTree
 				.getTraceIDToTraceID();
 
 		List<CStoryType> currentStTypeList = new ArrayList<CStoryType>();
