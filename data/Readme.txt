@@ -124,6 +124,10 @@ Example files:
     erasure.ka                         copied from kappa_models/models/erasure/erasure.ka
                                        run with --time 10
 
+    Seda_111008_Insulin_Present.ka	   received it from Isha in Seda_111008.xml KF file
+                                       run with --time 15
+
+
 
 Options for simulator:
 	--compile name of the kappa file to compile
