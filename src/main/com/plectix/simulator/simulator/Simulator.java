@@ -99,7 +99,7 @@ public class Simulator implements SimulatorInterface {
 		return new Simulator();
 	}
 
-	public void init(SimulatorArguments arguments) {
+	public final void init(SimulatorArguments arguments) {
 		this.myArguments = arguments;
 		simulationData.initialize();
 		getSimulationData().stopTimer(timer, "-Initialization:");
@@ -317,7 +317,7 @@ public class Simulator implements SimulatorInterface {
 	private final void outputRules() {
 		for (IRule rule : getRules()) {
 			int countAgentsInLHS = rule.getCountAgentsLHS();
-			int indexNewAgent = countAgentsInLHS;
+			// int indexNewAgent = countAgentsInLHS;
 
 			for (IAction action : rule.getActionList()) {
 				switch (CActionType.getById(action.getTypeId())) {
@@ -440,7 +440,7 @@ public class Simulator implements SimulatorInterface {
 		}
 	}
 
-	public static void println() {
+	public static final void println() {
 		printStream.get().println();
 	}
 
@@ -548,13 +548,13 @@ public class Simulator implements SimulatorInterface {
 
 		currentTime = 0;
 
-		if (getSimulationData().getSerializationMode() != getSimulationData().MODE_READ) {
+		if (getSimulationData().getSerializationMode() != SimulationData.MODE_READ) {
 			SimulationUtils.readSimulatonFile(this, myArguments);
 		}
 		init(myArguments);
 	}
 
-	public void run(int iteration_num) throws Exception {
+	public final void run(int iteration_num) throws Exception {
 		getSimulationData().addInfo(new Info(Info.TYPE_INFO, "-Simulation..."));
 		TimerSimulation timer = new TimerSimulation(true);
 		long clash = 0;
@@ -637,7 +637,7 @@ public class Simulator implements SimulatorInterface {
 			outputData(source, count);
 	}
 
-	public void run(SimulatorInputData simulatorInputData) throws Exception {
+	public final void run(SimulatorInputData simulatorInputData) throws Exception {
 		String[] args = simulatorInputData.getArgs();
 		printStream.set(simulatorInputData.getPrintStream());
 		SimulationData simulationData = getSimulationData();
@@ -789,11 +789,11 @@ public class Simulator implements SimulatorInterface {
 		return activationMap;
 	}
 
-	public int getAgentIdGenerator() {
+	public final int getAgentIdGenerator() {
 		return agentIdGenerator;
 	}
 
-	public double getCurrentTime() {
+	public final double getCurrentTime() {
 		return currentTime;
 	}
 
@@ -809,11 +809,11 @@ public class Simulator implements SimulatorInterface {
 		return simulationData;
 	}
 
-	public SimulatorResultsData getSimulatorResultsData() {
+	public final SimulatorResultsData getSimulatorResultsData() {
 		return simulatorResultsData;
 	}
 
-	public boolean isStoryMode() {
+	public final boolean isStoryMode() {
 		return storyMode;
 	}
 

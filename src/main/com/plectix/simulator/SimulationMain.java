@@ -2,20 +2,18 @@ package com.plectix.simulator;
 
 import java.io.PrintStream;
 
-import org.apache.commons.cli.Options;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.controller.SimulationService;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
-import com.plectix.simulator.options.SimulatorOptions;
 import com.plectix.simulator.simulator.Simulator;
 
 public class SimulationMain  {
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
-	private static Logger LOGGER = Logger.getLogger(SimulationMain.class);
+	private static final Logger LOGGER = Logger.getLogger(SimulationMain.class);
 
 	public static final PrintStream myOutputStream = System.out;
 	

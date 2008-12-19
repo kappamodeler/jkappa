@@ -5,11 +5,8 @@ import java.io.PrintStream;
 public class SimulatorInputData {
 
 	private final String[] args;
+	
 	private PrintStream printStream;
-
-	public String[] getArgs() {
-		return args;
-	}
 
 	public SimulatorInputData(String[] args) {
 		this.args = args;
@@ -20,8 +17,11 @@ public class SimulatorInputData {
 		this.printStream = printStream;
 	}
 
-	public PrintStream getPrintStream() {
+	public final PrintStream getPrintStream() {
 		return printStream;
 	}
-	
+
+	public final String[] getArgs() {
+		return args;
+	}
 }
