@@ -12,6 +12,10 @@ public class CStoryType {
 	public static final String STRING_INTRO = "INTRO";
 	public static final String STRING_RULE = "RULE";
 	public static final String STRING_OBS = "OBSERVABLE";
+	
+	public static final String RELATION_STRONG = "STRONG";
+	public static final String RELATION_WEAK = "WEAK";
+	
 	private byte type;
 	private String text;
 
@@ -59,10 +63,9 @@ public class CStoryType {
 		node.setAttribute("Depth", Integer.toString(depth));
 	}
 
-	public void fillConnection(Element node, int toNode) {
+	public void fillConnection(Element node, int toNode, String relationType) {
+		node.setAttribute("Relation", relationType);
 		node.setAttribute("FromNode", Integer.toString(this.id));
 		node.setAttribute("ToNode", Integer.toString(toNode));
-		node.setAttribute("Relation", "STRONG");
 	}
-
 }

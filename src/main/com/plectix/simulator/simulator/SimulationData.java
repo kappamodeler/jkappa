@@ -74,7 +74,7 @@ public class SimulationData {
 	private long event;
 
 	private byte simulationType = SIMULATION_TYPE_NONE;
-	private byte storifyMode = STORIFY_MODE_STRONG;
+	private byte storifyMode = STORIFY_MODE_NONE;
 
 	private DOMSource myOutputDOMSource;
 	// private boolean compile = false;
@@ -85,7 +85,7 @@ public class SimulationData {
 	private double timeLength = 0;
 	private boolean isTime = false;
 	private int seed = 0;
-	
+
 	private String xmlSessionName = "simplx.xml";
 	private String xmlSessionPath = "";
 	private String tmpSessionName = "simplx.tmp";
@@ -109,15 +109,14 @@ public class SimulationData {
 	public SimulationData() {
 		super();
 	}
-	
-	public final boolean isOutputFinalState(){
+
+	public final boolean isOutputFinalState() {
 		return outputFinalState;
 	}
-	
-	public final void setOutputFinalState(boolean outputFinalState){
+
+	public final void setOutputFinalState(boolean outputFinalState) {
 		this.outputFinalState = outputFinalState;
 	}
-	
 
 	public final boolean isParseSolution() {
 		switch (simulationType) {
@@ -265,8 +264,9 @@ public class SimulationData {
 			simplxSession = doc.createElement("ComplxSession");
 			simplxSession.setAttribute("xsi:schemaLocation",
 					"http://synthesisstudios.com ComplxSession.xsd");
-			
-//		"unexpected element (uri:"", local:"ComplxSession"). Expected elements are <{http://plectix.synthesisstudios.com/schemas/kappasession}ComplxSession>,<{http://plectix.synthesisstudios.com/schemas/kappasession}KappaResults>,<{http://plectix.synthesisstudios.com/schemas/kappasession}SimplxSession>"
+
+			// "unexpected element (uri:"", local:"ComplxSession
+			// "). Expected elements are <{http://plectix.synthesisstudios.com/schemas/kappasession}ComplxSession>,<{http://plectix.synthesisstudios.com/schemas/kappasession}KappaResults>,<{http://plectix.synthesisstudios.com/schemas/kappasession}SimplxSession>"
 			Element element = doc.createElement("Refinement");
 			element.setAttribute("Name", "DAG");
 			simplxSession.appendChild(element);
@@ -284,7 +284,7 @@ public class SimulationData {
 					"http://plectix.synthesisstudios.com SimplxSession.xsd");
 		}
 		simplxSession.setAttribute("xmlns:xsi",
-		"http://www.w3.org/2001/XMLSchema-instance");
+				"http://www.w3.org/2001/XMLSchema-instance");
 		simplxSession.setAttribute("xmlns",
 				"http://plectix.synthesisstudios.com/schemas/kappasession");
 		simplxSession.setAttribute("CommandLine", commandLine);
@@ -417,8 +417,8 @@ public class SimulationData {
 
 			for (int i = rules.size() - 1; i >= 0; i--)
 				printMap(doc, TYPE_POSITIVE_MAP, influenceMap, rules.get(i),
-						rules.get(i).getActivatedRule(), rules.get(i)
-								.getActivatedObservable());
+						rules.get(i).getActivatedRuleForXMLOutput(), rules.get(
+								i).getActivatedObservableForXMLOutput());
 			if (inhibitionMap) {
 				for (int i = rules.size() - 1; i >= 0; i--)
 					printMap(doc, TYPE_NEGATIVE_MAP, influenceMap,
@@ -614,7 +614,8 @@ public class SimulationData {
 			Element node;
 			for (CStoryType stT : introList) {
 				node = doc.createElement("Connection");
-				stT.fillConnection(node, toStoryType.getId());
+				stT.fillConnection(node, toStoryType.getId(),
+						CStoryType.RELATION_STRONG);
 				connections.add(node);
 			}
 		}
@@ -622,13 +623,16 @@ public class SimulationData {
 
 	private final void fillRuleListStoryConnections(CStoryType toStoryType,
 			HashMap<Integer, CStoryType> traceIdToStoryTypeRule,
-			List<Integer> rIDs, List<Element> connections, Document doc) {
+			List<Integer> rIDs, List<Element> connections, Document doc,
+			String relationType) {
 		if (rIDs.size() != 0) {
 			Element node;
 			for (int rID : rIDs) {
 				CStoryType st = traceIdToStoryTypeRule.get(rID);
 				node = doc.createElement("Connection");
-				st.fillConnection(node, toStoryType.getId());
+				if (st==null)
+					System.out.println();
+				st.fillConnection(node, toStoryType.getId(), relationType);
 				connections.add(node);
 			}
 		}
@@ -649,12 +653,11 @@ public class SimulationData {
 		Iterator<Integer> iterator = storyTree.getLevelToTraceID().keySet()
 				.iterator();
 		int depth = storyTree.getLevelToTraceID().size();
-		
+
 		int number = storyTree.getLevelToTraceID().get(0).size();
-		if(number>1)
-			System.out.println("bad seed = "+ seed);
-		
-		
+		if (number > 1)
+			System.out.println("bad seed = " + seed);
+
 		while (iterator.hasNext()) {
 			int level = iterator.next();
 			List<Integer> list = storyTree.getLevelToTraceID().get(level);
@@ -724,6 +727,8 @@ public class SimulationData {
 		List<Element> connections = new ArrayList<Element>();
 		TreeMap<Integer, List<Integer>> traceIDToTraceIDs = storyTree
 				.getTraceIDToTraceID();
+		TreeMap<Integer, List<Integer>> traceIDToTraceIDsWeak = storyTree
+				.getTraceIDToTraceIDWeak();
 
 		List<CStoryType> currentStTypeList = new ArrayList<CStoryType>();
 		iterator = allLevels.keySet().iterator();
@@ -742,7 +747,12 @@ public class SimulationData {
 					int trID = stT.getTraceID();
 					List<Integer> rIDs = traceIDToTraceIDs.get(trID);
 					fillRuleListStoryConnections(stT, traceIdToStoryTypeRule,
-							rIDs, connections, doc);
+							rIDs, connections, doc, CStoryType.RELATION_STRONG);
+					rIDs = traceIDToTraceIDsWeak.get(trID);
+					if (rIDs != null)
+						fillRuleListStoryConnections(stT,
+								traceIdToStoryTypeRule, rIDs, connections, doc,
+								CStoryType.RELATION_WEAK);
 				}
 			}
 		}
