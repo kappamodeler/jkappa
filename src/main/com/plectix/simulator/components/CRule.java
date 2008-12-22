@@ -46,9 +46,11 @@ public class CRule implements IRule, Serializable {
 	private int automorphismNumber = 1;
 	private boolean infinityRate = false;
 	private List<IRule> activatedRule;
+	private List<IRule> activatedRuleForXMLOutput;
 	private List<IRule> inhibitedRule;
 
 	private List<IObservablesConnectedComponent> activatedObservable;
+	private List<IObservablesConnectedComponent> activatedObservableForXMLOutput;
 	private List<IObservablesConnectedComponent> inhibitedObservable;
 
 	public List<IRule> getInhibitedRule() {
@@ -93,10 +95,10 @@ public class CRule implements IRule, Serializable {
 		this.data = new String(data);
 	}
 
-	public void clearStorifiedAgents(){
+	public void clearStorifiedAgents() {
 		this.storyfiedAgents.clear();
 	}
-	
+
 	public CRule(List<IConnectedComponent> left,
 			List<IConnectedComponent> right, String name, double ruleRate,
 			int ruleID, boolean isStorify) {
@@ -624,15 +626,39 @@ public class CRule implements IRule, Serializable {
 
 	public final void createActivatedRulesList(List<IRule> rules) {
 		activatedRule = new ArrayList<IRule>();
+		activatedRuleForXMLOutput = new ArrayList<IRule>();
 		for (IRule rule : rules) {
 			// if (this != rule)
 			for (IConnectedComponent cc : rule.getLeftHandSide()) {
 				if (isActivated(cc.getAgents())) {
 					activatedRule.add(rule);
+					if (!checkEmbedding(rule.getLeftHandSide()))
+						activatedRuleForXMLOutput.add(rule);
 					break;
 				}
 			}
 		}
+	}
+
+	public List<IRule> getActivatedRuleForXMLOutput() {
+		return activatedRuleForXMLOutput;
+	}
+
+	private boolean checkEmbedding(List<IConnectedComponent> ccList) {
+		int counter = 0;
+
+		for (IConnectedComponent cc : ccList) {
+			for (IConnectedComponent checkCC : this.leftHandSide) {
+				if (cc.unify(checkCC.getAgents().get(0))) {
+					counter++;
+					break;
+				}
+			}
+		}
+		if (counter == ccList.size())
+			return true;
+
+		return false;
 	}
 
 	public final void createInhibitedRulesList(List<IRule> rules) {
@@ -650,13 +676,22 @@ public class CRule implements IRule, Serializable {
 
 	public final void createActivatedObservablesList(IObservables observables) {
 		activatedObservable = new ArrayList<IObservablesConnectedComponent>();
+		activatedObservableForXMLOutput = new ArrayList<IObservablesConnectedComponent>();
 		for (IObservablesConnectedComponent obsCC : observables
 				.getConnectedComponentList()) {
 			if (obsCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX
 					&& isActivated(obsCC.getAgents())) {
 				activatedObservable.add(obsCC);
+				List<IConnectedComponent> listCC = new ArrayList<IConnectedComponent>();
+				listCC.add(obsCC);
+				if (!checkEmbedding(listCC))
+					activatedObservableForXMLOutput.add(obsCC);
 			}
 		}
+	}
+
+	public List<IObservablesConnectedComponent> getActivatedObservableForXMLOutput() {
+		return activatedObservableForXMLOutput;
 	}
 
 	public final void createInhibitedObservablesList(IObservables observables) {

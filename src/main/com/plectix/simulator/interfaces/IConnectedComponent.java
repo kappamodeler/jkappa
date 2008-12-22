@@ -3,9 +3,9 @@ package com.plectix.simulator.interfaces;
 import java.util.*;
 
 public interface IConnectedComponent {
-	//TODO ???
+
 	public boolean unify(IAgent agent);
-		
+	
 	public List<IAgent> getAgents();
 
 	public void removeInjection(IInjection injection);

@@ -6,11 +6,11 @@ import com.plectix.simulator.simulator.Simulator;
 
 public interface IRule {
 	public List<IAgent> getStoryfiedAgents();
-	
+
 	public void clearStorifiedAgents();
-	
+
 	public boolean isRHSEqualsLHS();
-	
+
 	public int getRuleID();
 
 	public boolean isClash(List<IInjection> injectionsList);
@@ -23,11 +23,15 @@ public interface IRule {
 
 	public List<IRule> getActivatedRule();
 
+	public List<IRule> getActivatedRuleForXMLOutput();
+
 	public List<IObservablesConnectedComponent> getActivatedObservable();
-	
+
+	public List<IObservablesConnectedComponent> getActivatedObservableForXMLOutput();
+
 	public List<IRule> getInhibitedRule();
 
-	public List<IObservablesConnectedComponent> getInhibitedObservable(); 
+	public List<IObservablesConnectedComponent> getInhibitedObservable();
 
 	public List<IConnectedComponent> getRightHandSide();
 
@@ -56,7 +60,7 @@ public interface IRule {
 	public void createActivatedRulesList(List<IRule> rules);
 
 	public void createInhibitedRulesList(List<IRule> rules);
-		
+
 	public void createActivatedObservablesList(IObservables observables);
 
 	public double getRuleRate();
