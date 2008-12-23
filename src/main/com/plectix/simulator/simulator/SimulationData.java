@@ -1250,4 +1250,9 @@ public class SimulationData {
 	public final CContactMap getContactMap() {
 		return contactMap;
 	}
+
+	public void setFocusOn(String fileNameFocusOn) {
+		// TODO Auto-generated method stub
+		
+	}
 }

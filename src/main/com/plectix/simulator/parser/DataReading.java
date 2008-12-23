@@ -127,9 +127,9 @@ public final class DataReading {
 		if (rules.isEmpty())
 			throw new FileReadingException(
 					"There are no rules in the input data");
-		else if (inits.isEmpty())
-			throw new FileReadingException(
-					"There are no inits in the input data (use '%init:')");
+//		else if (inits.isEmpty())
+//			throw new FileReadingException(
+//					"There are no inits in the input data (use '%init:')");
 	}
 
 	private final String dellComment(String line) {

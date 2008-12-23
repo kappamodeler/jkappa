@@ -458,6 +458,10 @@ public class SimulationUtils {
 				option = false;
 			simulationData
 					.setSimulationType(SimulationData.SIMULATION_TYPE_CONTACT_MAP);
+			if(options.hasOption(SimulatorOptions.FOCUS_ON)){
+				String fileNameFocusOn = options.getValue(SimulatorOptions.FOCUS_ON);
+				simulationData.setFocusOn(fileNameFocusOn);
+			}
 		}
 		
 		if (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_NONE) {

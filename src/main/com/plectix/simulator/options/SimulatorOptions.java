@@ -120,6 +120,9 @@ public enum SimulatorOptions {
 	NO_COMPUTE_QUALITATIVE_COMPRESSION("no_compute_qualitative_compression", false, "No compute qualitative compression"),
 	NO_ENUMERATE_COMPLEXES("no_enumerate_complexes", false, "No enumerate complexes"),
 	RESET_ALL("reset_all", false, "Reset all"),
+	FOCUS_ON("focus_on", true, "(default: disabled) Focus contact maps around the given rules"),
+	DO_LOW_RES_CONTACT_MAP("do_low_res_contact_map", false, "(default: enabled)construct the low resolution contact map"),
+	
 	;
 
 	private String shortName = null;
