@@ -2,6 +2,8 @@ package com.plectix.simulator.components;
 
 import java.util.*;
 
+import org.apache.log4j.jmx.Agent;
+
 import com.plectix.simulator.components.actions.CActionType;
 import com.plectix.simulator.components.actions.CAddAction;
 import com.plectix.simulator.interfaces.*;
@@ -10,8 +12,9 @@ public class CContactMap {
 	public static final byte MODE_MODEL = 0;
 	public static final byte MODE_AGENT_OR_RULE = 1;
 
+	//private byte mode = MODE_AGENT_OR_RULE;
 	private byte mode = MODE_MODEL;
-
+	
 	public byte getMode() {
 		return mode;
 	}
@@ -23,10 +26,10 @@ public class CContactMap {
 	private List<IRule> reachableRules;
 	private Map<Integer, IAgent> agentsFromSolution;
 	private HashMap<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap;
-	private HashMap<Integer, Map<Integer, List<CContactMapEdge>>> bondsInContactMap;
+	private HashMap<Integer, Map<Integer, List<CContactMapEdge>>> edgesInContactMap;
 	private List<IConnectedComponent> unreachableCC;
 	private IRule focusRule;
-	
+	private List<IAgent> agentsFromFocusedRule;
 
 	public IRule getFocusRule() {
 		return focusRule;
@@ -41,26 +44,33 @@ public class CContactMap {
 	}
 
 	public Map<Integer, Map<Integer, List<CContactMapEdge>>> getBondsInContactMap() {
-		return bondsInContactMap;
+		return edgesInContactMap;
 	}
 
 	public CContactMap() {
 		reachableRules = new ArrayList<IRule>();
 		unreachableCC = new ArrayList<IConnectedComponent>();
 		agentsFromSolution = new HashMap<Integer, IAgent>();
-		bondsInContactMap = new HashMap<Integer, Map<Integer, List<CContactMapEdge>>>();
+		edgesInContactMap = new HashMap<Integer, Map<Integer, List<CContactMapEdge>>>();
 		agentsInContactMap = new HashMap<Integer, Map<Integer, CContactMapChangedSite>>();
+		agentsFromFocusedRule = new ArrayList<IAgent>();
 	}
 
 	public void addCreatedAgentsToSolution(ISolution solution, List<IRule> rules) {
-		for (IRule rule : rules) {
-			for (IAction action : rule.getActionList()) {
-				if (action.getTypeId() == CActionType.ADD.getId()) {
-					IAgent addAgent = ((CAddAction) action).getAgentTo();
-					addAgentFromSolution(addAgent, agentsFromSolution);
-					solution.addAgent(addAgent);
+		switch (mode) {
+		case MODE_MODEL:
+			for (IRule rule : rules) {
+				for (IAction action : rule.getActionList()) {
+					if (action.getTypeId() == CActionType.ADD.getId()) {
+						IAgent addAgent = ((CAddAction) action).getAgentTo();
+						addAgentFromSolution(addAgent, agentsFromSolution);
+						solution.addAgent(addAgent);
+					}
 				}
 			}
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -109,7 +119,7 @@ public class CContactMap {
 
 	private void addToEdgesInContactMap(IAgent agent, IRule rule) {
 		int agentKey = agent.getNameId();
-		Map<Integer, List<CContactMapEdge>> edgesMap = bondsInContactMap
+		Map<Integer, List<CContactMapEdge>> edgesMap = edgesInContactMap
 				.get(agentKey);
 
 		for (ISite site : agent.getSites()) {
@@ -121,7 +131,7 @@ public class CContactMap {
 					CContactMapEdge edge = new CContactMapEdge(site, siteTo);
 					edgeList.add(edge);
 					edgesMap.put(site.getNameId(), edgeList);
-					bondsInContactMap.put(agentKey, edgesMap);
+					edgesInContactMap.put(agentKey, edgesMap);
 					edge.addRules(rule);
 				} else {
 					int siteKey = site.getNameId();
@@ -132,7 +142,7 @@ public class CContactMap {
 						edgeList = new ArrayList<CContactMapEdge>();
 						edgeList.add(edge);
 						edgesMap.put(site.getNameId(), edgeList);
-						bondsInContactMap.put(agentKey, edgesMap);
+						edgesInContactMap.put(agentKey, edgesMap);
 						edge.addRules(rule);
 					} else if (edgeList.size() == 1) {
 						CContactMapEdge edge = edgeList.get(0);
@@ -145,7 +155,7 @@ public class CContactMap {
 									siteTo);
 							edgeList.add(newEdge);
 							edgesMap.put(site.getNameId(), edgeList);
-							bondsInContactMap.put(agentKey, edgesMap);
+							edgesInContactMap.put(agentKey, edgesMap);
 							newEdge.addRules(rule);
 						}
 					} else {
@@ -162,7 +172,7 @@ public class CContactMap {
 									siteTo);
 							edgeList.add(edge);
 							edgesMap.put(site.getNameId(), edgeList);
-							bondsInContactMap.put(agentKey, edgesMap);
+							edgesInContactMap.put(agentKey, edgesMap);
 							edge.addRules(rule);
 						}
 					}
@@ -205,20 +215,57 @@ public class CContactMap {
 	}
 
 	public void constructReachableRules(List<IRule> rules) {
-		for (IRule rule : rules) {
-			if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC) {
-				reachableRules.add(rule);
-			} else {
-				int injCounter = 0;
-				for (IConnectedComponent cc : rule.getLeftHandSide()) {
-					if (cc.getInjectionsList().size() != 0)
-						injCounter++;
-					else
-						unreachableCC.add(cc);
-				}
-				if (injCounter == rule.getLeftHandSide().size())
+		switch (mode) {
+		case MODE_MODEL:
+			for (IRule rule : rules) {
+				if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC) {
 					reachableRules.add(rule);
+				} else {
+					int injCounter = 0;
+					for (IConnectedComponent cc : rule.getLeftHandSide()) {
+						if (cc.getInjectionsList().size() != 0)
+							injCounter++;
+						else
+							unreachableCC.add(cc);
+					}
+					if (injCounter == rule.getLeftHandSide().size())
+						reachableRules.add(rule);
 
+				}
+			}
+			break;
+		case MODE_AGENT_OR_RULE:
+			fillAgentsFromRule((CRule) this.focusRule,
+					this.agentsFromFocusedRule);
+			for (IRule rule : rules) {
+				List<IAgent> agentsFromRule = new ArrayList<IAgent>();
+				fillAgentsFromRule((CRule) rule, agentsFromRule);
+
+				for (IAgent agent : this.agentsFromFocusedRule)
+					if (agentsFromRule.contains(agent)) {
+						reachableRules.add(rule);
+						break;
+					}
+			}
+			break;
+		}
+	}
+
+	private void fillAgentsFromRule(CRule rule, List<IAgent> agentsForAdding) {
+		List<IAgent> agents = rule
+				.getAgentsFromConnectedComponent(this.focusRule
+						.getLeftHandSide());
+		addAgentsToListFromRule(agents, agentsForAdding);
+		agents = rule.getAgentsFromConnectedComponent(this.focusRule
+				.getRightHandSide());
+		addAgentsToListFromRule(agents, agentsForAdding);
+	}
+
+	private void addAgentsToListFromRule(List<IAgent> agents,
+			List<IAgent> agentsForAdding) {
+		for (IAgent agent : agents) {
+			if (!agentsForAdding.contains(agent)) {
+				agentsForAdding.add(agent);
 			}
 		}
 	}
