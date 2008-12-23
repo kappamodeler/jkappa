@@ -2,6 +2,8 @@ package com.plectix.simulator.interfaces;
 
 import java.util.*;
 
+import com.plectix.simulator.simulator.Simulator;
+
 public interface ISolution {
 
 	public Map<Long, IAgent> getAgents();
@@ -19,5 +21,7 @@ public interface ISolution {
 	public void clearAgents();
 
 	public void clearSolutionLines();
+	
+	public List<IAgent> cloneAgentsList(List<IAgent> agentList, Simulator simulator);
 	
 }

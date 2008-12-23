@@ -5,6 +5,7 @@ import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.Simulator;
 
 public final class CSolution implements ISolution, Serializable {
 	private final HashMap<Long, IAgent> agentMap;
@@ -144,6 +145,47 @@ public final class CSolution implements ISolution, Serializable {
 		}
 		solutionLines.add(new SolutionLines(line, count));
 
+	}
+	
+	public List<IAgent> cloneAgentsList(List<IAgent> agentList, Simulator simulator) {
+		List<IAgent> newAgentsList = new ArrayList<IAgent>();
+		for (IAgent agent : agentList) {
+			IAgent newAgent = new CAgent(agent.getNameId(), simulator
+					.generateNextAgentId());
+			for (ISite site : agent.getSites()) {
+				CSite newSite = new CSite(site.getNameId(), newAgent);
+				newSite.setLinkIndex(site.getLinkIndex());
+				newSite.setInternalState(new CInternalState(site
+						.getInternalState().getNameId()));
+				// newSite.getInternalState().setNameId(
+				// site.getInternalState().getNameId());
+				newAgent.addSite(newSite);
+			}
+			newAgentsList.add(newAgent);
+		}
+		for (int i = 0; i < newAgentsList.size(); i++) {
+			for (ISite siteNew : newAgentsList.get(i).getSites()) {
+				ILinkState lsNew = siteNew.getLinkState();
+				ILinkState lsOld = agentList.get(i)
+						.getSite(siteNew.getNameId()).getLinkState();
+				lsNew.setStatusLink(lsOld.getStatusLink());
+				if (lsOld.getSite() != null) {
+					CSite siteOldLink = (CSite) lsOld.getSite();
+					int j = 0;
+					for (j = 0; j < agentList.size(); j++) {
+						if (agentList.get(j) == siteOldLink.getAgentLink())
+							break;
+					}
+					int index = j;
+					lsNew.setSite(newAgentsList.get(index).getSite(
+							siteOldLink.getNameId()));
+				}
+
+			}
+
+		}
+
+		return Collections.unmodifiableList(newAgentsList);
 	}
 
 	public final void clearSolutionLines() {
