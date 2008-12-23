@@ -17,8 +17,8 @@ public enum SimulatorOptions {
 	OUTPUT_XML("output_xml", true,
 					"Name of the xml file containing results of the current session " +
 			"(default simplx.xml)"),
-	DO_XML("do_XML", true,
-					"Name of the xml file containing results of the current session " +
+	DO_XML("do_XML", false,
+					"(default: enabled) dump XML session" +
 			"(default simplx.xml)"),
 	STORIFY("storify", true, "Name of the kappa file to storify"),
 	EVENT("event", true, "Number of rule applications"),

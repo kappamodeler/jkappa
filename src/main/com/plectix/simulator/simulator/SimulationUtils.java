@@ -273,10 +273,10 @@ public class SimulationUtils {
 			simulationData.setXmlSessionName(arguments
 					.getValue(SimulatorOptions.OUTPUT_XML));
 		}
-		if (arguments.hasOption(SimulatorOptions.DO_XML)) {
-			simulationData.setXmlSessionName(arguments
-					.getValue(SimulatorOptions.DO_XML));
-		}
+//		if (arguments.hasOption(SimulatorOptions.DO_XML)) {
+//			simulationData.setXmlSessionName(arguments
+//					.getValue(SimulatorOptions.DO_XML));
+//		}
 
 		try {
 			if (arguments.hasOption(SimulatorOptions.INIT)) {
