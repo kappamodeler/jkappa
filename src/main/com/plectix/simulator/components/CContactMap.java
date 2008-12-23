@@ -7,6 +7,15 @@ import com.plectix.simulator.components.actions.CAddAction;
 import com.plectix.simulator.interfaces.*;
 
 public class CContactMap {
+	public static final byte MODE_MODEL = 0;
+	public static final byte MODE_AGENT_OR_RULE = 1;
+
+	private byte mode = MODE_MODEL;
+
+	public byte getMode() {
+		return mode;
+	}
+
 	private List<IRule> reachableRules;
 	private Map<Integer, IAgent> agentsFromSolution;
 	private HashMap<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap;
