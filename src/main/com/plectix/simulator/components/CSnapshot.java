@@ -14,8 +14,18 @@ public final class CSnapshot {
 	private int uniqueConnectedComponent;
 	private List<IConnectedComponent> ccList;
 	private List<SnapshotElement> snapshotElements;
+	private double snapshotTime;
 
-	public CSnapshot(SimulationData simulationData) {
+	public double getSnapshotTime() {
+		return snapshotTime;
+	}
+
+	public void setSnapshotTime(double snapshotTime) {
+		this.snapshotTime = snapshotTime;
+	}
+
+	public CSnapshot(SimulationData simulationData,double snapshotTime) {
+		this.snapshotTime = snapshotTime;
 		ccList = simulationData.getSolution().split();
 		totalAgents = 0;
 		totalConnectedComponents = ccList.size();

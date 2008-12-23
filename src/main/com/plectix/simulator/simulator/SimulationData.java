@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 import javax.xml.parsers.*;
@@ -62,7 +63,7 @@ public class SimulationData {
 	private CStories stories = null;
 	private List<CPerturbation> perturbations;
 	private IObservables observables = new CObservables();
-	private CSnapshot snapshot = null;
+	private List<CSnapshot> snapshots = null;
 	private ISolution solution = new CSolution(); // soup of initial components
 
 	private CContactMap contactMap = new CContactMap();
@@ -99,7 +100,7 @@ public class SimulationData {
 	private boolean inhibitionMap = false;
 
 	private long maxClashes = 100;
-	private double snapshotTime = -1.;
+	private List<Double> snapshotTimes;
 	private boolean outputFinalState = false;
 	private long clockPrecision = 3600000;
 	private long clockStamp;
@@ -453,11 +454,12 @@ public class SimulationData {
 
 		}
 
-		if (snapshotTime >= 0.0) {
+		if (snapshots != null) {
 			timer.startTimer();
-			Element snapshotElement = doc.createElement("FinalState");
-			snapshotElement.setAttribute("Time", String.valueOf(snapshotTime));
-			if (snapshot != null) {
+			for (CSnapshot snapshot : snapshots) {
+				Element snapshotElement = doc.createElement("FinalState");
+				snapshotElement.setAttribute("Time", String.valueOf(snapshot
+						.getSnapshotTime()));
 				List<SnapshotElement> snapshotElementList = snapshot
 						.getSnapshotElements();
 				for (SnapshotElement se : snapshotElementList) {
@@ -467,8 +469,8 @@ public class SimulationData {
 							.valueOf(se.getCount()));
 					snapshotElement.appendChild(species);
 				}
+				simplxSession.appendChild(snapshotElement);
 			}
-			simplxSession.appendChild(snapshotElement);
 			stopTimer(timer, "-Building xml tree for snapshots:");
 		}
 
@@ -931,7 +933,7 @@ public class SimulationData {
 				rules = (List<IRule>) ois.readObject();
 				observables = (IObservables) ois.readObject();
 				perturbations = (List<CPerturbation>) ois.readObject();
-				snapshotTime = (double) ois.readDouble();
+				snapshotTimes = (List<Double>) ois.readObject();
 				event = (long) ois.readLong();
 				timeLength = (double) ois.readDouble();
 				ois.close();
@@ -951,7 +953,7 @@ public class SimulationData {
 				oos.writeObject(rules);
 				oos.writeObject(observables);
 				oos.writeObject(perturbations);
-				oos.writeDouble(snapshotTime);
+				oos.writeObject(snapshotTimes);
 				oos.writeLong(event);
 				oos.writeDouble(timeLength);
 				oos.flush();
@@ -1042,16 +1044,32 @@ public class SimulationData {
 		this.inputFile = inputFile;
 	}
 
-	public final double getSnapshotTime() {
-		return snapshotTime;
+	public final boolean checkSnapshots(double currentTime) {
+		for (Double time : snapshotTimes)
+			if (currentTime > time) {
+				snapshotTimes.remove(time);
+				return true;
+			}
+		return false;
 	}
 
-	public final void setSnapshotTime(double snapshotTime) {
-		this.snapshotTime = snapshotTime;
+	public final void setSnapshotTime(String snapshotTimeStr) throws Exception {
+		StringTokenizer st = new StringTokenizer(snapshotTimeStr, ",");
+		String timeSt;
+		while (st.hasMoreTokens()) {
+			timeSt = st.nextToken().trim();
+			double time = Double.valueOf(timeSt);
+			if (snapshotTimes == null)
+				snapshotTimes = new ArrayList<Double>();
+			snapshotTimes.add(time);
+		}
+		Collections.sort(snapshotTimes);
+		// this.snapshotTimes = -1;
+		// this.snapshotTime = snapshotTime;
 	}
 
-	public final CSnapshot getSnapshot() {
-		return snapshot;
+	public final List<CSnapshot> getSnapshots() {
+		return snapshots;
 	}
 
 	public final String getXmlSessionName() {
@@ -1070,8 +1088,10 @@ public class SimulationData {
 		this.seed = seed;
 	}
 
-	public final void setSnapshot(CSnapshot snapshot) {
-		this.snapshot = snapshot;
+	public final void addSnapshot(CSnapshot snapshot) {
+		if (snapshots == null)
+			snapshots = new ArrayList<CSnapshot>();
+		this.snapshots.add(snapshot);
 	}
 
 	public final IObservables getObservables() {
@@ -1262,7 +1282,7 @@ public class SimulationData {
 		com.plectix.simulator.parser.Parser pr = new com.plectix.simulator.parser.Parser(
 				dr, this, simulator);
 		ruleList = pr.createRules(dr.getRules());
-		if (ruleList != null && !ruleList.isEmpty()){
+		if (ruleList != null && !ruleList.isEmpty()) {
 			contactMap.setFocusRule(ruleList.get(0));
 			contactMap.setMode(CContactMap.MODE_AGENT_OR_RULE);
 		}

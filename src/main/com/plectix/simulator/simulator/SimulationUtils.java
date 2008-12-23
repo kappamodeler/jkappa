@@ -420,7 +420,7 @@ public class SimulationUtils {
 		boolean option = false;
 		String fileName = null;
 		double timeSim = 0.;
-		double snapshotTime = -1.;
+		String snapshotTime;
 
 		if (options.hasOption(SimulatorOptions.STORIFY)) {
 			fileName = options.getValue(SimulatorOptions.STORIFY);
@@ -445,12 +445,11 @@ public class SimulationUtils {
 			if (options.hasOption(SimulatorOptions.SNAPSHOT_TIME)) {
 				option = true;
 				try {
-					snapshotTime = Double.valueOf(options
-							.getValue(SimulatorOptions.SNAPSHOT_TIME));
+					snapshotTime = options.getValue(SimulatorOptions.SNAPSHOT_TIME);
+					simulationData.setSnapshotTime(snapshotTime);
 				} catch (Exception e) {
 					throw new IllegalArgumentException(e);
 				}
-				simulationData.setSnapshotTime(snapshotTime);
 			}
 			simulationData
 					.setSimulationType(SimulationData.SIMULATION_TYPE_SIM);

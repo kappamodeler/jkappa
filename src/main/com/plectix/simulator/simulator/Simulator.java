@@ -564,18 +564,12 @@ public class Simulator implements SimulatorInterface {
 
 		boolean isEndRules = false;
 
-		boolean hasSnapshot = false;
-		if (getSimulationData().getSnapshotTime() >= 0.0)
-			hasSnapshot = true;
-
 		long count = 0;
 
 		long max_clash = 0;
 		while (!getSimulationData().isEndSimulation(currentTime, count)
 				&& max_clash <= getSimulationData().getMaxClashes()) {
-			if (hasSnapshot
-					&& getSimulationData().getSnapshotTime() <= currentTime) {
-				hasSnapshot = false;
+			while (getSimulationData().checkSnapshots(currentTime)) {
 				createSnapshots();				
 			}
 			checkPerturbation();
@@ -642,9 +636,9 @@ public class Simulator implements SimulatorInterface {
 	}
 	
 	private void createSnapshots(){
-		getSimulationData().setSnapshot(
-				new CSnapshot(getSimulationData()));
-		getSimulationData().setSnapshotTime(currentTime);
+		getSimulationData().addSnapshot(
+				new CSnapshot(getSimulationData(),currentTime));
+//		getSimulationData().setSnapshotTime(currentTime);
 	}
 
 	public final void run(SimulatorInputData simulatorInputData) throws Exception {
