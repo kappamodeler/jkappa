@@ -29,6 +29,9 @@ import org.w3c.dom.*;
 
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.parser.DataReading;
+import com.plectix.simulator.parser.FileReadingException;
+import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.util.*;
 
 public class SimulationData {
@@ -630,7 +633,7 @@ public class SimulationData {
 			for (int rID : rIDs) {
 				CStoryType st = traceIdToStoryTypeRule.get(rID);
 				node = doc.createElement("Connection");
-				if (st==null)
+				if (st == null)
 					System.out.println();
 				st.fillConnection(node, toStoryType.getId(), relationType);
 				connections.add(node);
@@ -1251,8 +1254,17 @@ public class SimulationData {
 		return contactMap;
 	}
 
-	public void setFocusOn(String fileNameFocusOn) {
-		// TODO Auto-generated method stub
-		
+	public void setFocusOn(String fileNameFocusOn, Simulator simulator)
+			throws Exception {
+		List<IRule> ruleList;
+		DataReading dr = new DataReading(fileNameFocusOn);
+		dr.readData();
+		com.plectix.simulator.parser.Parser pr = new com.plectix.simulator.parser.Parser(
+				dr, this, simulator);
+		ruleList = pr.createRules(dr.getRules());
+		if (ruleList != null && !ruleList.isEmpty()){
+			contactMap.setFocusRule(ruleList.get(0));
+			contactMap.setMode(CContactMap.MODE_AGENT_OR_RULE);
+		}
 	}
 }

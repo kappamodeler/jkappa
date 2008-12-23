@@ -25,9 +25,10 @@ import com.plectix.simulator.util.Info;
 
 public class SimulationUtils {
 
-	public static final String printPartRule(List<IConnectedComponent> ccList, boolean isOcamlStyleObsName) {
+	public static final String printPartRule(List<IConnectedComponent> ccList,
+			boolean isOcamlStyleObsName) {
 		String line = new String();
-		int[] indexLink = new int[] {0};
+		int[] indexLink = new int[] { 0 };
 		int length = 0;
 		if (ccList == null)
 			return line;
@@ -41,87 +42,88 @@ public class SimulationUtils {
 			if (index < ccList.size())
 				line += ",";
 			index++;
-	
+
 		}
 		return line;
 	}
 
-	public static final String printPartRule(IConnectedComponent cc, int[] index,
-			boolean isOcamlStyleObsName) {
-				String line = new String();
-				int length = 0;
-				if (cc == null)
-					return line;
-				length = cc.getAgents().size();
-			
-				int j = 1;
-				if (cc == CRule.EMPTY_LHS_CC)
-					return line;
-			
-				List<IAgent> sortedAgents = cc.getAgentsSortedByIdInRule();
-			
-				for (IAgent agent : sortedAgents) {
-					line = line + agent.getName();
-					line = line + "(";
-			
-					List<String> sitesList = new ArrayList<String>();
-			
-					int i = 1;
-					for (ISite site : agent.getSites()) {
-						String siteStr = new String(site.getName());
-						// line = line + site.getName();
-						if ((site.getInternalState() != null)
-								&& (site.getInternalState().getNameId() >= 0)) {
-							siteStr = siteStr + "~" + site.getInternalState().getName();
-							// line = line + "~" + site.getInternalState().getName();
-						}
-						switch (site.getLinkState().getStatusLink()) {
-						case CLinkState.STATUS_LINK_BOUND: {
-							if (site.getLinkState().getStatusLinkRank() == CLinkState.RANK_SEMI_LINK) {
-								siteStr = siteStr + "!_";
-								// line = line + "!_";
-							} else if (site.getAgentLink().getIdInRuleSide() < ((ISite) site
-									.getLinkState().getSite()).getAgentLink()
-									.getIdInRuleSide()) {
-								((ISite) site.getLinkState().getSite()).getLinkState()
-										.setLinkStateID(index[0]);
-								siteStr = siteStr + "!" + index[0];
-								index[0]++;
-								// line = line + "!" + indexLink++;
-							} else {
-								siteStr = siteStr + "!"
-										+ site.getLinkState().getLinkStateID();
-								// line = line + "!"
-								// + site.getLinkState().getLinkStateID();
-								site.getLinkState().setLinkStateID(-1);
-							}
-			
-							break;
-						}
-						case CLinkState.STATUS_LINK_WILDCARD: {
-							siteStr = siteStr + "?";
-							// line = line + "?";
-							break;
-						}
-						}
-			
-						// if (agent.getSites().size() > i++)
-						// line = line + ",";
-						sitesList.add(siteStr);
-					}
-			
-					line = line + getSitesLine(sortSitesStr(sitesList, isOcamlStyleObsName));
-					if (length > j) {
-						line = line + "),";
-					} else {
-						line = line + ")";
-					}
-					sitesList.clear();
-					j++;
+	public static final String printPartRule(IConnectedComponent cc,
+			int[] index, boolean isOcamlStyleObsName) {
+		String line = new String();
+		int length = 0;
+		if (cc == null)
+			return line;
+		length = cc.getAgents().size();
+
+		int j = 1;
+		if (cc == CRule.EMPTY_LHS_CC)
+			return line;
+
+		List<IAgent> sortedAgents = cc.getAgentsSortedByIdInRule();
+
+		for (IAgent agent : sortedAgents) {
+			line = line + agent.getName();
+			line = line + "(";
+
+			List<String> sitesList = new ArrayList<String>();
+
+			int i = 1;
+			for (ISite site : agent.getSites()) {
+				String siteStr = new String(site.getName());
+				// line = line + site.getName();
+				if ((site.getInternalState() != null)
+						&& (site.getInternalState().getNameId() >= 0)) {
+					siteStr = siteStr + "~" + site.getInternalState().getName();
+					// line = line + "~" + site.getInternalState().getName();
 				}
-			
-				return line;
+				switch (site.getLinkState().getStatusLink()) {
+				case CLinkState.STATUS_LINK_BOUND: {
+					if (site.getLinkState().getStatusLinkRank() == CLinkState.RANK_SEMI_LINK) {
+						siteStr = siteStr + "!_";
+						// line = line + "!_";
+					} else if (site.getAgentLink().getIdInRuleSide() < ((ISite) site
+							.getLinkState().getSite()).getAgentLink()
+							.getIdInRuleSide()) {
+						((ISite) site.getLinkState().getSite()).getLinkState()
+								.setLinkStateID(index[0]);
+						siteStr = siteStr + "!" + index[0];
+						index[0]++;
+						// line = line + "!" + indexLink++;
+					} else {
+						siteStr = siteStr + "!"
+								+ site.getLinkState().getLinkStateID();
+						// line = line + "!"
+						// + site.getLinkState().getLinkStateID();
+						site.getLinkState().setLinkStateID(-1);
+					}
+
+					break;
+				}
+				case CLinkState.STATUS_LINK_WILDCARD: {
+					siteStr = siteStr + "?";
+					// line = line + "?";
+					break;
+				}
+				}
+
+				// if (agent.getSites().size() > i++)
+				// line = line + ",";
+				sitesList.add(siteStr);
 			}
+
+			line = line
+					+ getSitesLine(sortSitesStr(sitesList, isOcamlStyleObsName));
+			if (length > j) {
+				line = line + "),";
+			} else {
+				line = line + ")";
+			}
+			sitesList.clear();
+			j++;
+		}
+
+		return line;
+	}
 
 	private static final String getSitesLine(List<String> list) {
 		String line = new String("");
@@ -131,58 +133,60 @@ public class SimulationUtils {
 			line = line + list.get(i) + ",";
 		}
 		line = line + list.get(list.size() - 1);
-	
+
 		return line;
 	}
 
-	private static final List<String> sortSitesStr(List<String> list, boolean isOcamlStyleObsName) {
+	private static final List<String> sortSitesStr(List<String> list,
+			boolean isOcamlStyleObsName) {
 		if (isOcamlStyleObsName) {
 			Collections.sort(list);
 		}
-	
+
 		return list;
 	}
 
-	public static final List<IConnectedComponent> buildConnectedComponents(List<IAgent> agents) {
-	
+	public static final List<IConnectedComponent> buildConnectedComponents(
+			List<IAgent> agents) {
+
 		if (agents == null || agents.isEmpty())
 			return null;
-	
+
 		List<IConnectedComponent> result = new ArrayList<IConnectedComponent>();
-	
+
 		int index = 1;
 		for (IAgent agent : agents)
 			agent.setIdInRuleSide(index++);
-	
+
 		while (!agents.isEmpty()) {
-	
+
 			List<IAgent> connectedAgents = new ArrayList<IAgent>();
-	
+
 			findConnectedComponent(agents.get(0), agents, connectedAgents);
-	
+
 			// It needs recursive tree search of connected component
 			result.add(new CConnectedComponent(connectedAgents));
 		}
-	
+
 		return result;
 	}
 
 	private static final void findConnectedComponent(IAgent rootAgent,
 			List<IAgent> hsRulesList, List<IAgent> agentsList) {
-				agentsList.add(rootAgent);
-				rootAgent.setIdInConnectedComponent(agentsList.size() - 1);
-				removeAgent(hsRulesList, rootAgent);
-				for (ISite site : rootAgent.getSites()) {
-					if (site.getLinkIndex() != CSite.NO_INDEX) {
-						IAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
-						if (linkedAgent != null) {
-							if (!isAgentInList(agentsList, linkedAgent))
-								findConnectedComponent(linkedAgent, hsRulesList,
-										agentsList);
-						}
-					}
+		agentsList.add(rootAgent);
+		rootAgent.setIdInConnectedComponent(agentsList.size() - 1);
+		removeAgent(hsRulesList, rootAgent);
+		for (ISite site : rootAgent.getSites()) {
+			if (site.getLinkIndex() != CSite.NO_INDEX) {
+				IAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
+				if (linkedAgent != null) {
+					if (!isAgentInList(agentsList, linkedAgent))
+						findConnectedComponent(linkedAgent, hsRulesList,
+								agentsList);
 				}
 			}
+		}
+	}
 
 	private static final boolean isAgentInList(List<IAgent> list, IAgent agent) {
 		for (IAgent lagent : list) {
@@ -214,9 +218,10 @@ public class SimulationUtils {
 
 	public static final IRule buildRule(List<IAgent> left, List<IAgent> right,
 			String name, double activity, int ruleID, boolean isStorify) {
-				return new CRule(buildConnectedComponents(left),
-						buildConnectedComponents(right), name, activity, ruleID, isStorify);
-			}
+		return new CRule(buildConnectedComponents(left),
+				buildConnectedComponents(right), name, activity, ruleID,
+				isStorify);
+	}
 
 	public final static String[] changeArgs(String[] args) {
 		String[] argsNew = new String[args.length];
@@ -231,9 +236,9 @@ public class SimulationUtils {
 	}
 
 	public static final SimulatorArguments parseArguments(
-			SimulationData simulationData, String[] args) 
-					throws IllegalArgumentException {
-		
+			SimulationData simulationData, String[] args)
+			throws IllegalArgumentException {
+
 		simulationData.addInfo(new Info(Info.TYPE_INFO, "-Initialization..."));
 		SimulatorArguments arguments = new SimulatorArguments(args);
 		try {
@@ -243,106 +248,122 @@ public class SimulationUtils {
 			e.printStackTrace(Simulator.getErrorStream());
 			throw new IllegalArgumentException(e);
 		}
-		
+
 		if (arguments.hasOption(SimulatorOptions.HELP)) {
-			 HelpFormatter formatter = new HelpFormatter();
-			 formatter.printHelp("use --sim [file] [options]", SimulatorOptions.COMMAND_LINE_OPTIONS);
-			 //TODO are we to exit here?
-			 System.exit(0);
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("use --sim [file] [options]",
+					SimulatorOptions.COMMAND_LINE_OPTIONS);
+			// TODO are we to exit here?
+			System.exit(0);
 		}
-		
+
 		if (arguments.hasOption(SimulatorOptions.VERSION)) {
-			SimulationMain.myOutputStream.println("Java simulator v." + SimulationMain.VERSION + " SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
-			 //TODO are we to exit here?
-			 System.exit(0);
+			SimulationMain.myOutputStream.println("Java simulator v."
+					+ SimulationMain.VERSION + " SVN Revision: "
+					+ BuildConstants.BUILD_SVN_REVISION);
+			// TODO are we to exit here?
+			System.exit(0);
 		}
-		
+
 		if (arguments.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
-			simulationData.setXmlSessionName(arguments.getValue(SimulatorOptions.XML_SESSION_NAME));
+			simulationData.setXmlSessionName(arguments
+					.getValue(SimulatorOptions.XML_SESSION_NAME));
 		}
 		if (arguments.hasOption(SimulatorOptions.OUTPUT_XML)) {
-			simulationData.setXmlSessionName(arguments.getValue(SimulatorOptions.OUTPUT_XML));
+			simulationData.setXmlSessionName(arguments
+					.getValue(SimulatorOptions.OUTPUT_XML));
 		}
 		if (arguments.hasOption(SimulatorOptions.DO_XML)) {
-			simulationData.setXmlSessionName(arguments.getValue(SimulatorOptions.DO_XML));
+			simulationData.setXmlSessionName(arguments
+					.getValue(SimulatorOptions.DO_XML));
 		}
-		
+
 		try {
 			if (arguments.hasOption(SimulatorOptions.INIT)) {
-				simulationData.setInitialTime(Double.valueOf(arguments.getValue(SimulatorOptions.INIT)));
+				simulationData.setInitialTime(Double.valueOf(arguments
+						.getValue(SimulatorOptions.INIT)));
 			}
 			if (arguments.hasOption(SimulatorOptions.POINTS)) {
-				simulationData.setPoints(Integer.valueOf(arguments.getValue(SimulatorOptions.POINTS)));
+				simulationData.setPoints(Integer.valueOf(arguments
+						.getValue(SimulatorOptions.POINTS)));
 			}
 			if (arguments.hasOption(SimulatorOptions.RESCALE)) {
-				double rescale = Double.valueOf(arguments.getValue(SimulatorOptions.RESCALE));
+				double rescale = Double.valueOf(arguments
+						.getValue(SimulatorOptions.RESCALE));
 				if (rescale > 0)
 					simulationData.setRescale(rescale);
 				else
 					throw new Exception();
 			}
-	
+
 			if (arguments.hasOption(SimulatorOptions.NO_SEED)) {
 				simulationData.setSeed(0);
 			}
-			//TODO else?
+			// TODO else?
 			if (arguments.hasOption(SimulatorOptions.SEED)) {
 				int seed = 0;
-				seed = Integer.valueOf(arguments.getValue(SimulatorOptions.SEED));
+				seed = Integer.valueOf(arguments
+						.getValue(SimulatorOptions.SEED));
 				simulationData.setSeed(seed);
 			}
-	
+
 			if (arguments.hasOption(SimulatorOptions.MAX_CLASHES)) {
 				int max_clashes = 0;
-				max_clashes = Integer.valueOf(arguments.getValue(SimulatorOptions.MAX_CLASHES));
+				max_clashes = Integer.valueOf(arguments
+						.getValue(SimulatorOptions.MAX_CLASHES));
 				simulationData.setMaxClashes(max_clashes);
 			}
-	
+
 			if (arguments.hasOption(SimulatorOptions.EVENT)) {
 				long event = 0;
-				event = Long.valueOf(arguments.getValue(SimulatorOptions.EVENT));
+				event = Long
+						.valueOf(arguments.getValue(SimulatorOptions.EVENT));
 				simulationData.setEvent(event);
 			}
-	
+
 			if (arguments.hasOption(SimulatorOptions.ITERATION)) {
 				simulationData.setIterations(Integer.valueOf(arguments
 						.getValue(SimulatorOptions.ITERATION)));
 			}
-	
+
 		} catch (Exception e) {
 			e.printStackTrace(Simulator.getErrorStream());
 			throw new IllegalArgumentException(e);
 		}
-	
+
 		if (arguments.hasOption(SimulatorOptions.RANDOMIZER_JAVA)) {
-			simulationData.setRandomizer(arguments.getValue(SimulatorOptions.RANDOMIZER_JAVA));
+			simulationData.setRandomizer(arguments
+					.getValue(SimulatorOptions.RANDOMIZER_JAVA));
 		}
-	
+
 		if (arguments.hasOption(SimulatorOptions.NO_ACTIVATION_MAP)
 				|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
-				|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+				|| (arguments
+						.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
 			simulationData.setActivationMap(false);
 		}
-	
-		if (arguments.hasOption(SimulatorOptions.MERGE_MAPS)){
+
+		if (arguments.hasOption(SimulatorOptions.MERGE_MAPS)) {
 			simulationData.setInhibitionMap(true);
 		}
-		
+
 		if (arguments.hasOption(SimulatorOptions.NO_INHIBITION_MAP)
 				|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
-				|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+				|| (arguments
+						.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
 			simulationData.setInhibitionMap(false);
 		}
-		
+
 		if (arguments.hasOption(SimulatorOptions.OCAML_STYLE_OBS_NAME)) {
 			simulationData.setOcamlStyleObsName(true);
 		}
-	
+
 		if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
 			int iteration = 0;
 			boolean exp = false;
 			try {
-				iteration = Integer.valueOf(arguments.getValue(SimulatorOptions.NUMBER_OF_RUNS));
+				iteration = Integer.valueOf(arguments
+						.getValue(SimulatorOptions.NUMBER_OF_RUNS));
 			} catch (Exception e) {
 				exp = true;
 			}
@@ -353,52 +374,54 @@ public class SimulationUtils {
 					.setSimulationType(SimulationData.SIMULATION_TYPE_ITERATIONS);
 			simulationData.setIterations(iteration);
 		}
-	
+
 		if (arguments.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
 			long clockPrecision = 0;
-			clockPrecision = Long.valueOf(arguments.getValue(SimulatorOptions.CLOCK_PRECISION));
+			clockPrecision = Long.valueOf(arguments
+					.getValue(SimulatorOptions.CLOCK_PRECISION));
 			clockPrecision *= 60000;
 			simulationData.setClockPrecision(clockPrecision);
 		}
-		
+
 		if (arguments.hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
 			simulationData.setOutputFinalState(true);
 		}
-		
+
 		if (arguments.hasOption(SimulatorOptions.OUTPUT_SCHEME)) {
-			simulationData.setXmlSessionPath(arguments.getValue(SimulatorOptions.OUTPUT_SCHEME));
+			simulationData.setXmlSessionPath(arguments
+					.getValue(SimulatorOptions.OUTPUT_SCHEME));
 		}
-		
-		if (arguments.hasOption(SimulatorOptions.NO_SAVE_ALL)){
+
+		if (arguments.hasOption(SimulatorOptions.NO_SAVE_ALL)) {
 			simulationData.setSerializationMode(simulationData.MODE_NONE);
 		}
-		
-		if (arguments.hasOption(SimulatorOptions.SAVE_ALL)){
+
+		if (arguments.hasOption(SimulatorOptions.SAVE_ALL)) {
 			simulationData.setSerializationFileName(arguments
 					.getValue(SimulatorOptions.SAVE_ALL));
 		}
-		if (arguments.hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)){
+		if (arguments.hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)) {
 			simulationData.setStorifyMode(SimulationData.STORIFY_MODE_NONE);
 		}
-		if (arguments.hasOption(SimulatorOptions.COMPRESS_STORIES)){
+		if (arguments.hasOption(SimulatorOptions.COMPRESS_STORIES)) {
 			simulationData.setStorifyMode(SimulationData.STORIFY_MODE_WEAK);
 		}
-		if (arguments.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)){
+		if (arguments.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
 			simulationData.setStorifyMode(SimulationData.STORIFY_MODE_STRONG);
 		}
-		
+
 		return arguments;
 	}
 
 	public static final void readSimulatonFile(Simulator simulator,
 			SimulatorArguments options) {
-	
+
 		SimulationData simulationData = simulator.getSimulationData();
 		boolean option = false;
 		String fileName = null;
 		double timeSim = 0.;
 		double snapshotTime = -1.;
-	
+
 		if (options.hasOption(SimulatorOptions.STORIFY)) {
 			fileName = options.getValue(SimulatorOptions.STORIFY);
 			simulationData
@@ -407,21 +430,23 @@ public class SimulationUtils {
 		}
 		if (options.hasOption(SimulatorOptions.TIME)) {
 			try {
-				timeSim = Double.valueOf(options.getValue(SimulatorOptions.TIME));
+				timeSim = Double.valueOf(options
+						.getValue(SimulatorOptions.TIME));
 			} catch (Exception e) {
 				throw new IllegalArgumentException(e);
 			}
 			simulationData.setTimeLength(timeSim);
 		} else
 			Simulator.println("*Warning* No time limit.");
-	
+
 		if (!option && (options.hasOption(SimulatorOptions.SIMULATIONFILE))) {
 			option = true;
 			fileName = options.getValue(SimulatorOptions.SIMULATIONFILE);
 			if (options.hasOption(SimulatorOptions.SNAPSHOT_TIME)) {
 				option = true;
 				try {
-					snapshotTime = Double.valueOf(options.getValue(SimulatorOptions.SNAPSHOT_TIME));
+					snapshotTime = Double.valueOf(options
+							.getValue(SimulatorOptions.SNAPSHOT_TIME));
 				} catch (Exception e) {
 					throw new IllegalArgumentException(e);
 				}
@@ -439,7 +464,7 @@ public class SimulationUtils {
 			simulationData
 					.setSimulationType(SimulationData.SIMULATION_TYPE_COMPILE);
 		}
-	
+
 		if (options.hasOption(SimulatorOptions.GENERATE_MAP)) {
 			if (!option) {
 				option = true;
@@ -449,7 +474,7 @@ public class SimulationUtils {
 			simulationData
 					.setSimulationType(SimulationData.SIMULATION_TYPE_GENERATE_MAP);
 		}
-	
+
 		if (options.hasOption(SimulatorOptions.CONTACT_MAP)) {
 			if (!option) {
 				option = true;
@@ -458,21 +483,24 @@ public class SimulationUtils {
 				option = false;
 			simulationData
 					.setSimulationType(SimulationData.SIMULATION_TYPE_CONTACT_MAP);
-			if(options.hasOption(SimulatorOptions.FOCUS_ON)){
-				String fileNameFocusOn = options.getValue(SimulatorOptions.FOCUS_ON);
-				simulationData.setFocusOn(fileNameFocusOn);
-			}
 		}
-		
+
 		if (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_NONE) {
 			// HelpFormatter formatter = new HelpFormatter();
 			// formatter.printHelp("use --sim [file]", cmdLineOptions);
 			throw new IllegalArgumentException("No option specified");
 		}
-	
+
 		simulationData.setInputFile(fileName);
 		DataReading data = new DataReading(fileName);
 		try {
+			if (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_CONTACT_MAP) {
+				if (options.hasOption(SimulatorOptions.FOCUS_ON)) {
+					String fileNameFocusOn = options
+							.getValue(SimulatorOptions.FOCUS_ON);
+					simulationData.setFocusOn(fileNameFocusOn, simulator);
+				}
+			}
 			data.readData();
 			Parser parser = new Parser(data, simulationData, simulator);
 			parser.setForwarding(options.hasOption(SimulatorOptions.FORWARD));

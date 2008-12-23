@@ -16,11 +16,25 @@ public class CContactMap {
 		return mode;
 	}
 
+	public void setMode(byte mode) {
+		this.mode = mode;
+	}
+
 	private List<IRule> reachableRules;
 	private Map<Integer, IAgent> agentsFromSolution;
 	private HashMap<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap;
 	private HashMap<Integer, Map<Integer, List<CContactMapEdge>>> bondsInContactMap;
 	private List<IConnectedComponent> unreachableCC;
+	private IRule focusRule;
+	
+
+	public IRule getFocusRule() {
+		return focusRule;
+	}
+
+	public void setFocusRule(IRule focusRule) {
+		this.focusRule = focusRule;
+	}
 
 	public Map<Integer, Map<Integer, CContactMapChangedSite>> getAgentsInContactMap() {
 		return agentsInContactMap;
