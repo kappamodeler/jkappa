@@ -6,15 +6,16 @@ import org.apache.log4j.jmx.Agent;
 
 import com.plectix.simulator.components.actions.CActionType;
 import com.plectix.simulator.components.actions.CAddAction;
+import com.plectix.simulator.components.actions.CModifyAction;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.Simulator;
 
 public class CContactMap {
 	public static final byte MODE_MODEL = 0;
 	public static final byte MODE_AGENT_OR_RULE = 1;
 
-	//private byte mode = MODE_AGENT_OR_RULE;
 	private byte mode = MODE_MODEL;
-	
+
 	public byte getMode() {
 		return mode;
 	}
@@ -24,6 +25,13 @@ public class CContactMap {
 	}
 
 	private List<IRule> reachableRules;
+	private Simulator simulator;
+	private ISolution solution;
+
+	public void setSimulator(Simulator simulator) {
+		this.simulator = simulator;
+	}
+
 	private Map<Integer, IAgent> agentsFromSolution;
 	private HashMap<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap;
 	private HashMap<Integer, Map<Integer, List<CContactMapEdge>>> edgesInContactMap;
@@ -57,6 +65,7 @@ public class CContactMap {
 	}
 
 	public void addCreatedAgentsToSolution(ISolution solution, List<IRule> rules) {
+		this.solution = solution;
 		switch (mode) {
 		case MODE_MODEL:
 			for (IRule rule : rules) {
@@ -101,7 +110,25 @@ public class CContactMap {
 			site.addRules(rule);
 	}
 
+	private boolean checkConnectionWithFocused(IAgent checkingAgent) {
+		for (IAgent agent : agentsFromFocusedRule) {
+			if (agent.equals(checkingAgent))
+				return true;
+			for (ISite site : ((CAgent) checkingAgent).getSites()) {
+				ISite linkSite = site.getLinkState().getSite();
+				if (linkSite != null)
+					if (linkSite.getAgentLink().equals(agent))
+						return true;
+
+			}
+		}
+		return false;
+	}
+
 	private void addToAgentsInContactMap(IAgent agent, IRule rule, boolean isLHS) {
+		if (mode == MODE_AGENT_OR_RULE && !checkConnectionWithFocused(agent)) {
+			return;
+		}
 		for (ISite site : agent.getSites()) {
 			boolean internalState = false;
 			boolean linkState = false;
@@ -118,6 +145,10 @@ public class CContactMap {
 	}
 
 	private void addToEdgesInContactMap(IAgent agent, IRule rule) {
+		if (mode == MODE_AGENT_OR_RULE && !checkConnectionWithFocused(agent)) {
+			return;
+		}
+
 		int agentKey = agent.getNameId();
 		Map<Integer, List<CContactMapEdge>> edgesMap = edgesInContactMap
 				.get(agentKey);
@@ -214,24 +245,102 @@ public class CContactMap {
 
 	}
 
+//	private void addToRuleList(List<IRule>rulesList, IRule rule){
+//		if()
+//	}
+	
+	private IRule addReachableRule(List<IRule> rules, List<IRule> chekedRules) {
+		IRule chRule = null;
+		for (IRule rule : rules) {
+			int injCounter = 0;
+			List<IInjection> injList = new ArrayList<IInjection>();
+			for (IConnectedComponent cc : rule.getLeftHandSide()) {
+				if (cc.getInjectionsList().size() != 0) {
+					injCounter++;
+					injList.add(cc.getInjectionsList().iterator().next());
+				} else if (!unreachableCC.contains(cc))
+					unreachableCC.add(cc);
+			}
+			if (injCounter == rule.getLeftHandSide().size())
+				if (!reachableRules.contains(rule)) {
+					reachableRules.add(rule);
+					rule = chRule;
+				}
+		}
+
+		for (IRule rule : reachableRules) {
+			if (!chekedRules.contains(rule)) {
+				List<IInjection> oldInjList = new ArrayList<IInjection>();
+				for (IConnectedComponent cc : rule.getLeftHandSide()) {
+					if (cc.getInjectionsList().size() != 0)
+						oldInjList
+								.add(cc.getInjectionsList().iterator().next());
+				}
+				List<IAgent> newAgents = new ArrayList<IAgent>();
+				List<IAgent> oldAgents = new ArrayList<IAgent>();
+
+				for (IInjection inj : oldInjList) {
+					IAgent agent = inj.getAgentLinkList().get(0).getAgentTo();
+					oldAgents.addAll(solution.getConnectedComponent(agent)
+							.getAgents());
+				}
+
+				newAgents = solution.cloneAgentsList(oldAgents, simulator);
+				List<IInjection> newInjList = new ArrayList<IInjection>();
+
+				for (IAgent agent : newAgents)
+					for (IConnectedComponent cc : rule.getLeftHandSide()) {
+						if (cc != null) {
+							IInjection inj = cc.getInjection(agent);
+							if (inj != null) {
+ 								if (!agent.isAgentHaveLinkToConnectedComponent(
+										cc, inj)) {
+									cc.setInjection(inj);
+									newInjList.add(inj);
+								}
+
+							}
+						}
+					}
+
+				rule.applyRule(newInjList, simulator);
+				chekedRules.add(rule);
+				simulator.doPositiveUpdate(rule, newInjList);
+				chRule = rule;
+			}
+		}
+
+		if (chRule != null)
+			return chRule;
+		return null;
+	}
+
 	public void constructReachableRules(List<IRule> rules) {
 		switch (mode) {
 		case MODE_MODEL:
-			for (IRule rule : rules) {
-				if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC) {
-					reachableRules.add(rule);
-				} else {
-					int injCounter = 0;
-					for (IConnectedComponent cc : rule.getLeftHandSide()) {
-						if (cc.getInjectionsList().size() != 0)
-							injCounter++;
-						else
-							unreachableCC.add(cc);
-					}
-					if (injCounter == rule.getLeftHandSide().size())
-						reachableRules.add(rule);
+			IRule lastRule = rules.get(rules.size() - 1);
+			IRule currentRule = rules.get(0);
+			List<IRule> checkedRules = new ArrayList<IRule>();
+			while (currentRule != null) {
+				currentRule = addReachableRule(rules, checkedRules);
+			}
 
-				}
+			for (IRule rule : rules) {
+				if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC) 
+					reachableRules.add(rule);
+				
+//				else {
+//					int injCounter = 0;
+//					for (IConnectedComponent cc : rule.getLeftHandSide()) {
+//						if (cc.getInjectionsList().size() != 0)
+//							injCounter++;
+//						else
+//							unreachableCC.add(cc);
+//					}
+//					if (injCounter == rule.getLeftHandSide().size())
+//						reachableRules.add(rule);
+//
+//				}
 			}
 			break;
 		case MODE_AGENT_OR_RULE:
@@ -252,13 +361,18 @@ public class CContactMap {
 	}
 
 	private void fillAgentsFromRule(CRule rule, List<IAgent> agentsForAdding) {
-		List<IAgent> agents = rule
-				.getAgentsFromConnectedComponent(this.focusRule
-						.getLeftHandSide());
-		addAgentsToListFromRule(agents, agentsForAdding);
-		agents = rule.getAgentsFromConnectedComponent(this.focusRule
-				.getRightHandSide());
-		addAgentsToListFromRule(agents, agentsForAdding);
+		List<IAgent> agents;
+		if (this.focusRule.getLeftHandSide().size() > 0) {
+			agents = rule.getAgentsFromConnectedComponent(this.focusRule
+					.getLeftHandSide());
+			addAgentsToListFromRule(agents, agentsForAdding);
+		}
+		if (this.focusRule.getRightHandSide() != null) {
+
+			agents = rule.getAgentsFromConnectedComponent(this.focusRule
+					.getRightHandSide());
+			addAgentsToListFromRule(agents, agentsForAdding);
+		}
 	}
 
 	private void addAgentsToListFromRule(List<IAgent> agents,

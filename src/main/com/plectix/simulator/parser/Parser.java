@@ -668,6 +668,7 @@ public class Parser {
 						if (simulationData.getSimulationType()==SimulationData.SIMULATION_TYPE_CONTACT_MAP) {
 							simulationData.getContactMap()
 									.addAgentFromSolution(listAgent);
+							simulationData.getContactMap().setSimulator(simulator);
 						} else {
 							for (int i = 1; i < count; i++) {
 								simulationData.getSolution().addAgents(
