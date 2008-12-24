@@ -1045,11 +1045,12 @@ public class SimulationData {
 	}
 
 	public final boolean checkSnapshots(double currentTime) {
-		for (Double time : snapshotTimes)
-			if (currentTime > time) {
-				snapshotTimes.remove(time);
-				return true;
-			}
+		if (snapshotTimes != null)
+			for (Double time : snapshotTimes)
+				if (currentTime > time) {
+					snapshotTimes.remove(time);
+					return true;
+				}
 		return false;
 	}
 
