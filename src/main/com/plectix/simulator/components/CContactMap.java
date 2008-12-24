@@ -245,17 +245,17 @@ public class CContactMap {
 
 	}
 
-//	private void addToRuleList(List<IRule>rulesList, IRule rule){
-//		if()
-//	}
-	
-	private IRule addReachableRule(List<IRule> rules, List<IRule> chekedRules) {
-		IRule chRule = null;
+	// private void addToRuleList(List<IRule>rulesList, IRule rule){
+	// if()
+	// }
+
+	private boolean addReachableRule(List<IRule> rules, List<IRule> chekedRules) {
+		boolean added = false;
 		for (IRule rule : rules) {
 			int injCounter = 0;
 			List<IInjection> injList = new ArrayList<IInjection>();
 			for (IConnectedComponent cc : rule.getLeftHandSide()) {
-				if (cc.getInjectionsList().size() != 0) {
+				if (cc!=CRule.EMPTY_LHS_CC && cc.getInjectionsList().size() != 0) {
 					injCounter++;
 					injList.add(cc.getInjectionsList().iterator().next());
 				} else if (!unreachableCC.contains(cc))
@@ -264,83 +264,130 @@ public class CContactMap {
 			if (injCounter == rule.getLeftHandSide().size())
 				if (!reachableRules.contains(rule)) {
 					reachableRules.add(rule);
-					rule = chRule;
 				}
 		}
 
 		for (IRule rule : reachableRules) {
 			if (!chekedRules.contains(rule)) {
+
 				List<IInjection> oldInjList = new ArrayList<IInjection>();
-				for (IConnectedComponent cc : rule.getLeftHandSide()) {
-					if (cc.getInjectionsList().size() != 0)
-						oldInjList
-								.add(cc.getInjectionsList().iterator().next());
-				}
-				List<IAgent> newAgents = new ArrayList<IAgent>();
-				List<IAgent> oldAgents = new ArrayList<IAgent>();
-
-				for (IInjection inj : oldInjList) {
-					IAgent agent = inj.getAgentLinkList().get(0).getAgentTo();
-					oldAgents.addAll(solution.getConnectedComponent(agent)
-							.getAgents());
-				}
-
-				newAgents = solution.cloneAgentsList(oldAgents, simulator);
-				List<IInjection> newInjList = new ArrayList<IInjection>();
-
-				for (IAgent agent : newAgents)
-					for (IConnectedComponent cc : rule.getLeftHandSide()) {
-						if (cc != null) {
-							IInjection inj = cc.getInjection(agent);
-							if (inj != null) {
- 								if (!agent.isAgentHaveLinkToConnectedComponent(
-										cc, inj)) {
-									cc.setInjection(inj);
-									newInjList.add(inj);
-								}
-
-							}
+				if (rule.getLeftHandSide().size() == 2) {
+					Collection<IInjection> injectionsMap1 = rule
+							.getLeftHandSide().get(0).getInjectionsList();
+					List<IInjection> injList1 = new ArrayList<IInjection>();
+					injList1.addAll(injectionsMap1);
+					
+					Collection<IInjection> injectionsMap2 = rule
+							.getLeftHandSide().get(1).getInjectionsList();
+					List<IInjection> injList2 = new ArrayList<IInjection>();
+					injList2.addAll(injectionsMap2);
+					
+					for (IInjection inj1 : injList1) {
+						oldInjList.add(inj1);
+						for (IInjection inj2 : injList2) {
+							oldInjList.add(inj2);
+							addNewElementsToSolution(oldInjList, rule);
+							oldInjList.remove(1);
 						}
+						oldInjList.clear();
 					}
-
-				rule.applyRule(newInjList, simulator);
-				chekedRules.add(rule);
-				simulator.doPositiveUpdate(rule, newInjList);
-				chRule = rule;
+				} else if (rule.getLeftHandSide().get(0) != CRule.EMPTY_LHS_CC) {
+					Collection<IInjection> injectionsMap = rule
+							.getLeftHandSide().get(0).getInjectionsList();
+					List<IInjection> injList = new ArrayList<IInjection>();
+					injList.addAll(injectionsMap);
+					
+					
+					for (IInjection inj : injList) {
+						oldInjList.add(inj);
+						addNewElementsToSolution(oldInjList, rule);
+						oldInjList.clear();
+					}
+				}
+				if (rule.getLeftHandSide().get(0) != CRule.EMPTY_LHS_CC) {
+					chekedRules.add(rule);
+					added = true;
+				}
 			}
 		}
 
-		if (chRule != null)
-			return chRule;
-		return null;
+		return added;
+	}
+
+	private void addNewElementsToSolution(IRule rule) {
+		List<Collection<IInjection>> listColls = new ArrayList<Collection<IInjection>>();
+		List<Integer> listCollsNumbers = new ArrayList<Integer>();
+		List<IInjection> oldInjList = new ArrayList<IInjection>();
+
+		for (IConnectedComponent cc : rule.getLeftHandSide()) {
+			Collection<IInjection> injCollection = cc.getInjectionsList();
+			listColls.add(injCollection);
+			listCollsNumbers.add(injCollection.size());
+		}
+
+		// for(IInjection inj)
+
+	}
+
+	private void addNewElementsToSolution(List<IInjection> oldInjList,
+			IRule rule) {
+		List<IAgent> newAgents = new ArrayList<IAgent>();
+		List<IAgent> oldAgents = new ArrayList<IAgent>();
+
+		for (IInjection inj : oldInjList) {
+			IAgent agent = inj.getAgentLinkList().get(0).getAgentTo();
+			oldAgents.addAll(solution.getConnectedComponent(agent).getAgents());
+		}
+
+		newAgents = solution.cloneAgentsList(oldAgents, simulator);
+		solution.addAgents(newAgents);
+		List<IInjection> newInjList = new ArrayList<IInjection>();
+
+		for (IAgent agent : newAgents)
+			for (IConnectedComponent cc : rule.getLeftHandSide()) {
+				if (cc != null) {
+					IInjection inj = cc.getInjection(agent);
+					if (inj != null) {
+						if (!agent.isAgentHaveLinkToConnectedComponent(cc, inj)) {
+							cc.setInjection(inj);
+							newInjList.add(inj);
+						}
+
+					}
+				}
+			}
+
+		rule.applyRule(newInjList, simulator);
+		simulator.doPositiveUpdate(rule, newInjList);
+
 	}
 
 	public void constructReachableRules(List<IRule> rules) {
 		switch (mode) {
 		case MODE_MODEL:
-			IRule lastRule = rules.get(rules.size() - 1);
-			IRule currentRule = rules.get(0);
+			boolean added = true;
 			List<IRule> checkedRules = new ArrayList<IRule>();
-			while (currentRule != null) {
-				currentRule = addReachableRule(rules, checkedRules);
+
+			while (added) {
+				added = addReachableRule(rules, checkedRules);
 			}
 
 			for (IRule rule : rules) {
-				if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC) 
+				if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC)
 					reachableRules.add(rule);
-				
-//				else {
-//					int injCounter = 0;
-//					for (IConnectedComponent cc : rule.getLeftHandSide()) {
-//						if (cc.getInjectionsList().size() != 0)
-//							injCounter++;
-//						else
-//							unreachableCC.add(cc);
-//					}
-//					if (injCounter == rule.getLeftHandSide().size())
-//						reachableRules.add(rule);
-//
-//				}
+
+				// else {
+				// int injCounter = 0;
+				// for (IConnectedComponent cc : rule.getLeftHandSide()) {
+				// if (cc.getInjectionsList().size() != 0)
+				// injCounter++;
+				// else
+				// unreachableCC.add(cc);
+				// }
+				// if (injCounter == rule.getLeftHandSide().size())
+				// reachableRules.add(rule);
+				//
+				// }
 			}
 			break;
 		case MODE_AGENT_OR_RULE:
