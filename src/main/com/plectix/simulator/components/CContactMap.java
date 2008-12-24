@@ -227,11 +227,9 @@ public class CContactMap {
 		Iterator<Integer> iterator = agentsFromSolution.keySet().iterator();
 		while (iterator.hasNext()) {
 			int key = iterator.next();
-			if (!agentsInContactMap.containsKey(key)) {
 				IAgent agent = agentsFromSolution.get(key);
 				addToAgentsInContactMap(agent, null, false);
 				addToEdgesInContactMap(agent, null);
-			}
 		}
 
 		for (IConnectedComponent cc : unreachableCC) {
@@ -255,11 +253,13 @@ public class CContactMap {
 			int injCounter = 0;
 			List<IInjection> injList = new ArrayList<IInjection>();
 			for (IConnectedComponent cc : rule.getLeftHandSide()) {
-				if (cc!=CRule.EMPTY_LHS_CC && cc.getInjectionsList().size() != 0) {
+				if (cc != CRule.EMPTY_LHS_CC
+						&& cc.getInjectionsList().size() != 0) {
 					injCounter++;
 					injList.add(cc.getInjectionsList().iterator().next());
-				} else if (!unreachableCC.contains(cc))
-					unreachableCC.add(cc);
+				} 
+//				else if (!unreachableCC.contains(cc))
+//					unreachableCC.add(cc);
 			}
 			if (injCounter == rule.getLeftHandSide().size())
 				if (!reachableRules.contains(rule)) {
@@ -276,12 +276,12 @@ public class CContactMap {
 							.getLeftHandSide().get(0).getInjectionsList();
 					List<IInjection> injList1 = new ArrayList<IInjection>();
 					injList1.addAll(injectionsMap1);
-					
+
 					Collection<IInjection> injectionsMap2 = rule
 							.getLeftHandSide().get(1).getInjectionsList();
 					List<IInjection> injList2 = new ArrayList<IInjection>();
 					injList2.addAll(injectionsMap2);
-					
+
 					for (IInjection inj1 : injList1) {
 						oldInjList.add(inj1);
 						for (IInjection inj2 : injList2) {
@@ -296,8 +296,7 @@ public class CContactMap {
 							.getLeftHandSide().get(0).getInjectionsList();
 					List<IInjection> injList = new ArrayList<IInjection>();
 					injList.addAll(injectionsMap);
-					
-					
+
 					for (IInjection inj : injList) {
 						oldInjList.add(inj);
 						addNewElementsToSolution(oldInjList, rule);
@@ -375,7 +374,13 @@ public class CContactMap {
 			for (IRule rule : rules) {
 				if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC)
 					reachableRules.add(rule);
-
+				else
+				for (IConnectedComponent cc : rule.getLeftHandSide()) {
+					if (cc != CRule.EMPTY_LHS_CC
+							&& cc.getInjectionsList().size() == 0) {
+						unreachableCC.add(cc);
+					}
+				}
 				// else {
 				// int injCounter = 0;
 				// for (IConnectedComponent cc : rule.getLeftHandSide()) {

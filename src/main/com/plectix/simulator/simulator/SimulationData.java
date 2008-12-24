@@ -359,12 +359,12 @@ public class SimulationData {
 							bond.setAttribute("ToSite", vertexTo.getName());
 
 							if (edge.getRules().size() != 0) {
-								Element rule = doc.createElement("Rule");
 								for (int ruleID : edge.getRules()) {
+									Element rule = doc.createElement("Rule");
 									rule.setAttribute("Id", Integer
 											.toString(ruleID));
+									bond.appendChild(rule);
 								}
-								bond.appendChild(rule);
 							}
 							contactMapElement.appendChild(bond);
 						}
@@ -535,8 +535,8 @@ public class SimulationData {
 	public final void addSiteToContactMapAgent(CContactMapChangedSite site,
 			Element agent, Document doc) {
 		Element siteNode = doc.createElement("Site");
-		Element siteRule = doc.createElement("Rule");
 		for (Integer ruleID : site.getUsedRuleIDs()) {
+			Element siteRule = doc.createElement("Rule");
 			siteRule.setAttribute("Id", Integer.toString(ruleID));
 			siteNode.appendChild(siteRule);
 		}
