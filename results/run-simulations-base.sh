@@ -3,7 +3,7 @@
 ######################  Global Variables  #################################################
 
 export JAR_FILE=/tmp/simjav.jar
-export SIMPLX=/Users/ecemis/plectix-20081125/osx/simplx
+export SIMPLX=/Users/ecemis/plectix-20081224/osx/simplx
 export DATA_DIR=/Users/ecemis/eclipse-workspace/simulator/data/
 export ITERATIONS=50
 
@@ -11,6 +11,7 @@ export ITERATIONS=50
 # export SIMPLX=/Users/ecemis/plectix-20080930/osx/i386/simplx
 # export SIMPLX=/Users/ecemis/plectix-20081107/osx/simplx
 # export SIMPLX=/Users/ecemis/plectix-20081117/osx/simplx
+# export SIMPLX=/Users/ecemis/plectix-20081125/osx/simplx
 
 ############################################################################################
 #
