@@ -3,13 +3,14 @@
 ######################  Global Variables  #################################################
 
 export JAR_FILE=/tmp/simjav.jar
-export SIMPLX=/Users/ecemis/plectix-20081117/osx/simplx
+export SIMPLX=/Users/ecemis/plectix-20081125/osx/simplx
 export DATA_DIR=/Users/ecemis/eclipse-workspace/simulator/data/
 export ITERATIONS=50
 
 # old version of simplx (buggy):
 # export SIMPLX=/Users/ecemis/plectix-20080930/osx/i386/simplx
 # export SIMPLX=/Users/ecemis/plectix-20081107/osx/simplx
+# export SIMPLX=/Users/ecemis/plectix-20081117/osx/simplx
 
 ############################################################################################
 #
@@ -61,7 +62,7 @@ fi
 
 ############################################################################################
 
-JAVA_COMMAND_PREFIX="time java -Xmx1G -classpath $JAR_FILE com.plectix.simulator.SimulationMain --sim $KAPPA_FILE --time $TIME "
+JAVA_COMMAND_PREFIX="time java -Xmx1G -classpath $JAR_FILE com.plectix.simulator.SimulationMain --ocaml_style_obs_name --sim $KAPPA_FILE --time $TIME "
 SIMPLX_COMMAND_PREFIX="$SIMPLX --sim $KAPPA_FILE --time $TIME "
 echo JAVA_COMMAND_PREFIX: $JAVA_COMMAND_PREFIX
 echo SIMPLX_COMMAND_PREFIX: $SIMPLX_COMMAND_PREFIX

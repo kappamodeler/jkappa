@@ -1,56 +1,64 @@
 -------------------------------------------------------------------------------------
                   new tests
 -------------------------------------------------------------------------------------
-debugging-compression          ???
-debugging-justin-9-07-2008     ???
-debugging-polymere             ???  Need to look at averages. OCaml has much higher std. Why???
-sfb                            ???
-will                           ???
-side_effect                    ???
-scalability-bench-mapk1        ???  Look at averages
-repressilator                  ???  Interesting curves, Don't know how to compare automatically!
-non_atomic                     ???  Look at averages
-add_linked_species             ???  Look at averages
-abc2                           ???  Perturbation simulation. Need to look at 2 time scales
-MekScaf                        ???  Look at averages
-eric                           ???  Look at averages
-half_binding                   ???  Look at averages AT 2 DIFFERENT TIME SCALES
-easy-egfr                      ???  Look at averages
-erasure                        ???  Look at averages
+
+
 -------------------------------------------------------------------------------------
                   current tests using harness
 -------------------------------------------------------------------------------------
-Example                        OK. Can look at averages.
-KPT_study                      OK. Can look at averages.
-calcium2                       OK. Can look at averages.
-debugging-walter-fev08         OK. Can look at averages.
-large_systems-sysepi           OK. Can look at averages. --> BUT TOO SLOW! --> ENG-76
-brightberl.ka                  OK. Can look at averages. --> BUT TOO SLOW! --> ENG-81   
-debugging-bug_update           OK. Can look at averages.
-debugging-link                 OK. Can look at averages.
-debugging-semi-link-bug        OK. Can look at averages.
-debugging-weird                OK. Can look at averages. 
-degradation-deg-all            OK. Can look at averages. 
-degradation-deg-free           OK. Can look at averages. 
-degradation-deg-bnd            OK. Can look at averages.
-SIA_2007_03_23-egfr            OK. Can look at averages.
-SIA_2007_03_23-global          OK. Can look at averages.
-egfr                           OK. Can look at averages.
-fgf2-fgf                       OK. Can look at averages.
+Example                        OK. Can look at averages. --> FINE
+KPT_study                      OK. Can look at averages. --> FINE
+calcium2                       OK. Can look at averages. --> FINE
+debugging-walter-fev08         OK. Can look at averages. --> FINE
+large_systems-sysepi           OK. Can look at averages. --> BUT TOO SLOW! --> ENG-76 --> FINE
+brightberl                     OK. Can look at averages. --> FINE
+debugging-bug_update           OK. Can look at averages. --> FINE
+debugging-link                 OK. Can look at averages. --> FINE
+debugging-semi-link-bug        OK. Can look at averages. --> FINE
+debugging-weird                OK. Can look at averages. --> FINE
+degradation-deg-all            OK. Can look at averages. --> FINE
+degradation-deg-free           OK. Can look at averages. --> FINE
+degradation-deg-bnd            OK. Can look at averages. --> FINE
+SIA_2007_03_23-egfr            OK. Can look at averages. --> FINE
+SIA_2007_03_23-global          OK. Can look at averages. --> FINE
+egfr                           OK. Can look at averages. --> FINE
+fgf2-fgf                       OK. Can look at averages. --> FINE
+add_linked_species             OK. Can look at averages. --> FINE
+sfb                            OK. Can look at averages. --> FINE
+debugging-polymere             OK. Can look at averages. --> FINE
+side_effect                    OK. Can look at averages. --> FINE
+erasure                        OK. Can look at averages. --> FINE
+eric                           OK. Can look at averages. --> FINE
+MekScaf                        OK. Can look at averages. --> FINE
+non_atomic                     OK. Can look at averages. --> FINE
+abc2-time-00.05                OK. Can look at averages. ---> NEW MISMATCH
+abc2-time-25.00		           OK. Can look at averages. Perturbation simulation. --> NEW MISMATCH
+half_binding-time-00.05        OK. Can look at averages. --> FINE
+half_binding-time-10.00        OK. Can look at averages. --> FINE
+debugging-justin-9-07-2008     OK. Can look at averages. Zigzag averages for Ocaml --> FINE
+will                           OK. Can look at averages. but it is better to compute frequencies...  --> FINE
+osc                            OK. Can look at averages. but it is better to compute frequencies...  --> FINE
+easy-egfr                      Look at averages  --> ENG-90: results don't match  --> FINE
+Seda_111008_Insulin_Present    OK. Can look at averages. --> FINE
 -------------------------------------------------------------------------------------
-debugging-inf                  OK. But can't look at the averages! Need to use --events option...
-invexp                         OK. But can't look at the averages! --> BUT TOO SLOW! --> ENG-68
+repressilator                  OK.  Interesting curves, Don't know how to compare automatically!  --> ACABA???
+
+debugging-inf                  OK. But can't look at the averages! --> FINE
+                               Need to use --events option...
+
+invexp                         OK. But can't look at the averages! --> BUT TOO SLOW! --> ENG-68  --> FINE
                                Need to make sure that x = 0.5/t for small t. Plot 1/x vs t.  
-exponentielle                  OK. Can't look at averages. 
+
+exponentielle                  OK. Can't look at averages.  --> NEW MISMATCH!!!!  ENG-105 --> FINE
                                Need to make sure d(ln(x))/dt = 1
+
+contextual_rules-add_rem       ENG-85: results don't match  --> MISMATCH  ---> AYNI MUHABBET!!!
+
+TyThomson-ReceptorAndGProtein  ENG-87: results don't match  --> FINE
 -------------------------------------------------------------------------------------
                   previous tests
 -------------------------------------------------------------------------------------
-
-osc                            SIMPLX BUG --> ENG-80
-
-contextual_rules-add_rem       ENG-85: results don't match
-TyThomson-ReceptorAndGProtein  ENG-87: results don't match
-
+debugging-compression          very long simulation: Simplx: 1632.139627 sec. CPU  --> java.lang.OutOfMemoryError -Xmx1800M
+scalability-bench-mapk1        ???  Look at averages  java.lang.OutOfMemoryError with -Xmx1800M 
 large_systems-sorger           Needs too much memory!!!
 
