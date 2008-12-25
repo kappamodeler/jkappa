@@ -1,0 +1,20 @@
+# Rules:
+#######
+
+'1' a(x) ->  b(x~q) @ 1.0
+'2' d(x) -> b(x~q) @ 1.0
+'3' b(x~q) -> b(x~q), c(x) @ 1.0
+'4' c(x)->c(x~q) @ 1.0
+
+
+
+# Initial conditions:
+%init: 1 * (a(x))
+%init: 1 * (d(x))
+
+# Simulation:
+%obs: b(x~q)
+%obs: a(x)
+%obs: c(x~q)
+
+%story: '4'

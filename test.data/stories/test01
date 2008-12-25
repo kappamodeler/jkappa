@@ -1,0 +1,44 @@
+# Rules:
+#######
+# chapter 'chapter 1'
+'1' a(v~gtp),b(x~u) -> a(v~gtp!1),b(x~u!1) @ 1.0
+'2' a(v~gtp!1),b(x~u!1) -> a(v~gtp!1),b(x~p!1) @ 1.0
+'3' a(v~gtp!1),b(x!1) -> a(v~gtp),b(x) @ 1.0
+'4' c(s),b(x~p) -> c(s!1),b(x~p!1) @ 1.0
+'5' c(s!1),b(x~p!1) -> c(s!1),b(x~u!1) @ 1.0
+'6' c(s!1),b(x!1) -> c(s),b(x) @ 1.0
+'7' d(s),e(r~p) -> d(s!1),e(r~p!1) @ 1.0
+'8' d(s!1),e(r~p!1) -> d(s!1),e(r~u!1) @ 1.0
+'9' d(s!1),e(r!1) -> d(s),e(r) @ 1.0
+'10' d(s),e(q~p) -> d(s!1),e(q~p!1) @ 1.0
+'11' d(s!1),e(q~p!1) -> d(s!1),e(q~u!1) @ 1.0
+'12' d(s!1),e(q!1) -> d(s),e(q) @ 1.0
+'13' e(s,q~p,r~p),f(t~u) -> e(s!1,q~p,r~p),f(t~u!1) @ 1.0
+'14' e(s!1,q~p,r~p),f(t~u!1) -> e(s!1,q~p,r~p),f(t~p!1) @ 1.0
+'15' e(s!1,q~p,r~p),f(t!1) -> e(s,q~p,r~p),f(t) @ 1.0
+'16' e(s,q~p,r~p),f(y~u) -> e(s!1,q~p,r~p),f(y~u!1) @ 1.0
+'17' e(s!1,q~p,r~p),f(y~u!1) -> e(s!1,q~p,r~p),f(y~p!1) @ 1.0
+'18' e(s!1,q~p,r~p),f(y!1) -> e(s,q~p,r~p),f(y) @ 1.0
+'19' h(s),f(t~p) -> h(s!1),f(t~p!1) @ 1.0
+'20' h(s!1),f(t~p!1) -> h(s!1),f(t~u!1) @ 1.0
+'21' h(s!1),f(t!1) -> h(s),f(t) @ 1.0
+'22' h(s),f(y~p) -> h(s!1),f(y~p!1) @ 1.0
+'23' h(s!1),f(y~p!1) -> h(s!1),f(y~u!1) @ 1.0
+'24' h(s!1),f(y!1) -> h(s),f(y) @ 1.0
+
+
+# Initial conditions:
+#%init: 1 * (a(v~gtp))
+#%init: 1 * (b(x~u))
+#%init: 1 * (c(s))
+#%init: 1 * (d(s))
+%init: 1 * (e(s,r~p,q~p))
+%init: 1 * (f(s,t~u,y~u))
+%init: 1 * (h(s))
+
+# Simulation:
+%obs: b(x~p?)
+%obs: f(t~p?,y~p?)
+%obs: e(q~p?,r~p?)
+
+%story: '24'
