@@ -19,6 +19,7 @@ public final class CStoryTrees {
 	private NetworkNotationForCurrentStory nnCS;
 	private HashMap<Integer, List<Integer>> ruleIDToTraceID;
 	private TreeMap<Integer, Integer> traceIDToLevel;
+	private TreeMap<Integer, Integer> traceIDToRuleID;
 	private HashMap<Integer, List<Integer>> levelToTraceID;
 	private HashMap<Integer, List<String>> traceIDToIntroString;
 	private HashMap<Integer, String> traceIDToData;
@@ -57,11 +58,12 @@ public final class CStoryTrees {
 	}
 
 	public CStoryTrees(int ruleId, NetworkNotationForCurrentStory nnCS,
-			byte compressionMode) {
+			byte compressionMode, boolean isOcamlStyleObsName) {
 		this.nnCS = nnCS;
 		this.ruleId = ruleId;
 		this.averageTime = nnCS.getAverageTime();
 		this.compressionMode = compressionMode;
+		this.isOcamlStyleObsName = isOcamlStyleObsName;
 	}
 
 	public final int getRuleID() {
@@ -74,7 +76,7 @@ public final class CStoryTrees {
 		this.ruleIDToTraceID = new HashMap<Integer, List<Integer>>();
 		this.traceIDToTraceID = new TreeMap<Integer, List<Integer>>();
 		this.traceIDToTraceIDWeak = new TreeMap<Integer, List<Integer>>();
-
+		this.traceIDToRuleID = new TreeMap<Integer, Integer>();
 		CNetworkNotation newNN = commonList.get(index);
 		traceIDToLevel.put(newNN.getStep(), index);
 		List<Integer> list = new ArrayList<Integer>();
@@ -108,6 +110,27 @@ public final class CStoryTrees {
 				index++;
 			}
 
+			
+			List<Integer> weakIDsToClear = new ArrayList<Integer>();
+			for (int i = weakCompressedList.size() - 1; i > 0; i--) {
+				if (!weakIDsToClear.contains(i)) {
+					CNetworkNotation nn1 = weakCompressedList.get(i);
+					for (int j = i - 1; j >= 0; j--) {
+						CNetworkNotation nn2 = weakCompressedList.get(j);
+						if (nn1.getRule().getRuleID() == nn2.getRule()
+								.getRuleID())
+							if (isEqualNetworkNotations(nn1, nn2))
+								weakIDsToClear.add(j);
+					}
+				}
+			}
+			
+			Collections.sort(weakIDsToClear);
+			
+			for (int i = weakIDsToClear.size()-1;i>=0;i--) {
+				weakCompressedList.remove( weakIDsToClear.get(i).intValue());
+			}
+
 			// Map<Integer, List<CNetworkNotation>> levelToNNList = new
 			// HashMap<Integer, List<CNetworkNotation>>();
 			// fillLevelToNetworkNotationMap(levelToNNList, commonList);
@@ -118,6 +141,24 @@ public final class CStoryTrees {
 
 	}
 
+	private boolean isEqualNetworkNotations(CNetworkNotation nn1,
+			CNetworkNotation nn2) {
+		Map<Long, AgentSitesFromRules> usedAgentsFromRules1 = nn1
+				.getUsedAgentsFromRules();
+		Map<Long, AgentSitesFromRules> usedAgentsFromRules2 = nn2
+				.getUsedAgentsFromRules();
+		if(usedAgentsFromRules1.size()!=usedAgentsFromRules2.size())
+			return false;
+		Iterator<Long> iterator = usedAgentsFromRules1.keySet().iterator();
+		while(iterator.hasNext()){
+			Long key = iterator.next();
+			if(!usedAgentsFromRules2.containsKey(key))
+				return false;
+		}
+		
+		return true;
+	}
+	
 	private void findEqualLevels(
 			Map<Integer, List<CNetworkNotation>> levelToNNList) {
 		Iterator<Integer> currentIterator = levelToNNList.keySet().iterator();
@@ -266,6 +307,7 @@ public final class CStoryTrees {
 			break;
 		}
 		pushTree();
+		fillMaps();
 	}
 
 	private void isCausing(CNetworkNotation newNN,
@@ -341,12 +383,14 @@ public final class CStoryTrees {
 						return IS_CAUSE;
 					}
 					if (!isLink
-							&& sFRComparable.getInternalStateMode() == CNetworkNotation.MODE_TEST) {
+							&& sFRComparable.getInternalStateMode() == CNetworkNotation.MODE_TEST
+							&& sFR.getInternalStateMode() == CNetworkNotation.MODE_TEST_OR_MODIFY) {
 						if (!weakTraceIDs.contains(comparableNN.getStep()))
 							weakTraceIDs.add(comparableNN.getStep());
 					}
 					if (isLink
-							&& sFRComparable.getLinkStateMode() == CNetworkNotation.MODE_TEST) {
+							&& sFRComparable.getLinkStateMode() == CNetworkNotation.MODE_TEST
+							&& sFR.getLinkStateMode() == CNetworkNotation.MODE_TEST_OR_MODIFY) {
 						if (!weakTraceIDs.contains(comparableNN.getStep()))
 							weakTraceIDs.add(comparableNN.getStep());
 					}
@@ -437,12 +481,15 @@ public final class CStoryTrees {
 		return nnCS.getNetworkNotation(index).getRule().getName();
 	}
 
-	public void fillMaps(boolean isOcamlStyleObsName) {
+	private boolean isOcamlStyleObsName;
+
+	private void fillMaps() {
 		levelToTraceID = new HashMap<Integer, List<Integer>>();
 		traceIDToIntroString = new HashMap<Integer, List<String>>();
 		traceIDToData = new HashMap<Integer, String>();
 		traceIDToText = new HashMap<Integer, String>();
 
+		List<Long> agentsIntro = new ArrayList<Long>();
 		List<Long> introAgents = new ArrayList<Long>();
 
 		Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
@@ -456,6 +503,7 @@ public final class CStoryTrees {
 			}
 			list.add(traceID);
 			CNetworkNotation nn = this.nnCS.getNetworkNotation(traceID);
+			this.traceIDToRuleID.put(traceID, nn.getRule().getRuleID());
 			// if (nn.getAgentsNotation().size() > 0)
 			int counter = 0;
 			int index = 0;
@@ -546,40 +594,49 @@ public final class CStoryTrees {
 	}
 
 	public final boolean isIsomorphic(CStoryTrees treeIn) {
-		if (this.getRuleIDToTraceID().size() != treeIn.getRuleIDToTraceID()
-				.size())
+		if (this.ruleIDToTraceID.size() != treeIn.getRuleIDToTraceID().size())
 			return false;
 
-		List<Integer> treeNumbers = getTreeNumbers(this);
+		if (this.levelToTraceID.size() != treeIn.getLevelToTraceID().size())
+			return false;
 
-		List<Integer> treeNumbersIn = getTreeNumbers(treeIn);
+		Iterator<Integer> levelIterator = this.levelToTraceID.keySet()
+				.iterator();
 
-		for (Integer i : treeNumbers) {
-			if (treeNumbersIn.contains(i))
-				treeNumbersIn.remove(i);
-			else
+		while (levelIterator.hasNext()) {
+			int level = levelIterator.next();
+			List<Integer> list = this.levelToTraceID.get(level);
+			List<Integer> listIn = treeIn.getLevelToTraceID().get(level);
+			if (list.size() != list.size())
 				return false;
+			List<Integer> rules = new ArrayList<Integer>();
+			int intro = getRulesList(list, this, rules);
+			List<Integer> rulesIn = new ArrayList<Integer>();
+			int introIn = getRulesList(listIn, treeIn, rulesIn);
+			if (introIn != intro)
+				return false;
+
+			for (Integer ruleID : rules) {
+				if (!rulesIn.contains(ruleID))
+					return false;
+			}
 		}
-
-		if (treeNumbersIn.size() != 0)
-			return false;
-
-		isomorphicCount++;
-		averageTime += treeIn.getAverageTime();
 		return true;
 	}
 
-	private final List<Integer> getTreeNumbers(CStoryTrees treeIn) {
-		Iterator<Integer> ruleIterator = treeIn.getRuleIDToTraceID().keySet()
-				.iterator();
-		List<Integer> treeNumbers = new ArrayList<Integer>();
-
-		while (ruleIterator.hasNext()) {
-			int key = ruleIterator.next();
-			List<Integer> list = treeIn.getRuleIDToTraceID().get(key);
-			for (Integer number : list)
-				treeNumbers.add(key);
+	private int getRulesList(List<Integer> traceList, CStoryTrees tree,
+			List<Integer> rules) {
+		int introCounter = 0;
+		for (Integer number : traceList) {
+			rules.add(tree.getTraceIDToRuleID().get(number));
+			if (tree.getTraceIDToIntroString().get(number) != null)
+				introCounter += tree.getTraceIDToIntroString().get(number)
+						.size();
 		}
-		return treeNumbers;
+		return introCounter;
+	}
+
+	public TreeMap<Integer, Integer> getTraceIDToRuleID() {
+		return traceIDToRuleID;
 	}
 }

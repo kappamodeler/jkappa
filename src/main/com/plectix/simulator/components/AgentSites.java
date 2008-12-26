@@ -2,12 +2,23 @@ package com.plectix.simulator.components;
 
 import java.util.*;
 
+import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 
 /*package*/ final class AgentSites {
-	Map<Integer, IStoriesSiteStates> sites;
+	IAgent agent;
+	public IAgent getAgent() {
+		return agent;
+	}
 
-	public AgentSites() {
+	private Map<Integer, IStoriesSiteStates> sites;
+
+	public Map<Integer, IStoriesSiteStates> getSites() {
+		return sites;
+	}
+
+	public AgentSites(IAgent agent) {
+		this.agent = agent;
 		sites = new HashMap<Integer, IStoriesSiteStates>();
 	}
 

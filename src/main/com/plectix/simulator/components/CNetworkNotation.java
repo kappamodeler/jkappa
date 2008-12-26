@@ -63,6 +63,10 @@ public class CNetworkNotation implements INetworkNotation {
 	private final IRule rule;
 
 	private Map<Long, AgentSites> changedAgentsFromSolution;
+	public Map<Long, AgentSites> getChangedAgentsFromSolution() {
+		return changedAgentsFromSolution;
+	}
+
 	private Map<Long, AgentSitesFromRules> usedAgentsFromRules;
 
 	public Map<Long, AgentSitesFromRules> getUsedAgentsFromRules() {
@@ -81,8 +85,14 @@ public class CNetworkNotation implements INetworkNotation {
 		// TODO private!!!
 		HashMap<Integer, SitesFromRules> sites;
 		private byte mode;
+		
+		private IAgent agent;
 
-		public AgentSitesFromRules(byte mode) {
+		public IAgent getAgent() {
+			return agent;
+		}
+
+		public AgentSitesFromRules(byte mode, IAgent agent) {
 			this.mode = mode;
 			sites = new HashMap<Integer, SitesFromRules>();
 		}
@@ -162,21 +172,6 @@ public class CNetworkNotation implements INetworkNotation {
 				sFR.setInternalStateMode(internalStateMode, linkAgentNameID);
 			if (linkStateMode != MODE_NONE)
 				sFR.setLinkStateMode(linkStateMode, linkAgentNameID);
-		}
-
-		public final void addFixedSitesFromRules(int idSite,
-				byte internalStateMode, byte linkStateMode, int linkAgentNameID) {
-			SitesFromRules sFR = sites.get(idSite);
-			if (sFR == null)
-
-				// TODO sFR can be only null =(
-				if (internalStateMode != MODE_NONE)
-					sFR
-							.setInternalStateMode(internalStateMode,
-									linkAgentNameID);
-			if (linkStateMode != MODE_NONE)
-				sFR.setLinkStateMode(linkStateMode, linkAgentNameID);
-			sites.put(idSite, sFR);
 		}
 	}
 
@@ -274,7 +269,7 @@ public class CNetworkNotation implements INetworkNotation {
 			long key = site.getAgentLink().getHash();
 			AgentSites as = changedAgentsFromSolution.get(key);
 			if (as == null) {
-				as = new AgentSites();
+				as = new AgentSites(site.getAgentLink());
 				changedAgentsFromSolution.put(key, as);
 			}
 			as.addToSites(site.getNameId(), siteStates, index);
@@ -287,7 +282,7 @@ public class CNetworkNotation implements INetworkNotation {
 			long key = site.getAgentLink().getHash();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(key);
 			if (aSFR == null) {
-				aSFR = new AgentSitesFromRules(agentMode);
+				aSFR = new AgentSitesFromRules(agentMode, site.getAgentLink());
 				usedAgentsFromRules.put(key, aSFR);
 			}
 			aSFR.addToSitesFromRules(site.getNameId(), internalStateMode,
@@ -301,7 +296,7 @@ public class CNetworkNotation implements INetworkNotation {
 			long key = site.getAgentLink().getHash();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(key);
 			if (aSFR == null) {
-				aSFR = new AgentSitesFromRules(agentMode);
+				aSFR = new AgentSitesFromRules(agentMode, site.getAgentLink());
 				usedAgentsFromRules.put(key, aSFR);
 			}
 			byte internalStateMode = MODE_NONE;
@@ -365,30 +360,30 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	private final byte checkSites(long key, CNetworkNotation nn) {
-		Iterator<Integer> iterator = this.changedAgentsFromSolution.get(key).sites
+		Iterator<Integer> iterator = this.changedAgentsFromSolution.get(key).getSites()
 				.keySet().iterator();
 		int counter = 0;
 		int fullCounter = 0;
 
 		while (iterator.hasNext()) {
 			Integer keySite = iterator.next();
-			if (nn.changedAgentsFromSolution.get(key).sites
+			if (nn.changedAgentsFromSolution.get(key).getSites()
 					.containsKey(keySite)) {
 				counter++;
 
 				if (CStoriesSiteStates.isEqual(this.changedAgentsFromSolution
-						.get(key).sites.get(keySite).getCurrentState(),
-						nn.changedAgentsFromSolution.get(key).sites
+						.get(key).getSites().get(keySite).getCurrentState(),
+						nn.changedAgentsFromSolution.get(key).getSites()
 								.get(keySite).getLastState())) {
 					fullCounter++;
 				}
 			}
 		}
 
-		if ((fullCounter == this.changedAgentsFromSolution.get(key).sites
+		if ((fullCounter == this.changedAgentsFromSolution.get(key).getSites()
 				.size())
-				&& (this.changedAgentsFromSolution.get(key).sites.size() == nn.changedAgentsFromSolution
-						.get(key).sites.size()))
+				&& (this.changedAgentsFromSolution.get(key).getSites().size() == nn.changedAgentsFromSolution
+						.get(key).getSites().size()))
 			return HAS_FULL_INTERSECTION;
 
 		if (counter > 0)

@@ -8,14 +8,16 @@ public final class CStoriesSiteStates implements IStoriesSiteStates {
 
 	private IStates currentState;
 	private IStates lastState;
-	
-	//TODO separate
+
+	// TODO separate
 	private class States implements IStates {
 		private int idInternalState = -1;
 		private long idLinkAgent = -1;
 		private int idLinkSite = -1;
 
-		
+		public States() {
+		}
+
 		public States(int idInternalState, long idLinkAgent, int idLinkSite) {
 			this.idInternalState = idInternalState;
 			this.idLinkAgent = idLinkAgent;
@@ -53,7 +55,12 @@ public final class CStoriesSiteStates implements IStoriesSiteStates {
 			}
 		}
 	}
-	
+
+	public CStoriesSiteStates() {
+		currentState = new States();
+		lastState = new States();
+	}
+
 	public CStoriesSiteStates(int index, long idLinkAgent, int idLinkSite) {
 		switch (index) {
 		case CURRENT_STATE:
@@ -111,23 +118,28 @@ public final class CStoriesSiteStates implements IStoriesSiteStates {
 			break;
 		case LAST_STATE:
 			if (lastState != null)
-				lastState.addInformation(
-						siteStates.getLastState().getIdInternalState(), siteStates
-								.getLastState().getIdLinkAgent(), siteStates
-								.getLastState().getIdLinkSite());
+				lastState.addInformation(siteStates.getLastState()
+						.getIdInternalState(), siteStates.getLastState()
+						.getIdLinkAgent(), siteStates.getLastState()
+						.getIdLinkSite());
 			break;
 		}
 	}
 
 	public final static boolean isEqual(IStates states, IStates states2) {
-		if (states==null || states2==null)
+		if (states == null || states2 == null)
 			return false;
-		
-		if (states.getIdInternalState() != states2.getIdInternalState())
-			return false;
+
 		if (states.getIdLinkAgent() != states2.getIdLinkAgent())
 			return false;
 		if (states.getIdLinkSite() != states2.getIdLinkSite())
+			return false;
+
+		if (states.getIdInternalState() == CSite.NO_INDEX
+				|| states2.getIdInternalState() == CSite.NO_INDEX)
+			return true;
+
+		if (states.getIdInternalState() != states2.getIdInternalState())
 			return false;
 
 		return true;

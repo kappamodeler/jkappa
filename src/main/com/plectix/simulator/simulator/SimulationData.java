@@ -646,8 +646,6 @@ public class SimulationData {
 	private final void addConnection(Element story, CStoryTrees storyTree,
 			Document doc, int item) {
 
-		storyTree.fillMaps(isOcamlStyleObsName());
-
 		HashMap<Integer, List<CStoryType>> allLevels = new HashMap<Integer, List<CStoryType>>();
 
 		HashMap<Integer, List<CStoryType>> traceIdToStoryTypeIntro = new HashMap<Integer, List<CStoryType>>();
@@ -658,10 +656,6 @@ public class SimulationData {
 		Iterator<Integer> iterator = storyTree.getLevelToTraceID().keySet()
 				.iterator();
 		int depth = storyTree.getLevelToTraceID().size();
-
-		int number = storyTree.getLevelToTraceID().get(0).size();
-		if (number > 1)
-			System.out.println("bad seed = " + seed);
 
 		while (iterator.hasNext()) {
 			int level = iterator.next();
