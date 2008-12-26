@@ -37,6 +37,8 @@ import com.plectix.simulator.util.*;
 
 public class SimulationData {
 
+	public final static byte DEFAULT_SEED = -1;
+	
 	public final static byte MODE_SAVE = 2;
 	public final static byte MODE_READ = 1;
 	public final static byte MODE_NONE = 0;
@@ -88,7 +90,7 @@ public class SimulationData {
 	private int points = -1;
 	private double timeLength = 0;
 	private boolean isTime = false;
-	private int seed = 0;
+	private int seed = DEFAULT_SEED;
 
 	private String xmlSessionName = "simplx.xml";
 	private String xmlSessionPath = "";
