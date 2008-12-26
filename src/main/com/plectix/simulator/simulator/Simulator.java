@@ -712,6 +712,8 @@ public class Simulator implements SimulatorInterface {
 	public final void runStories() throws Exception {
 		CStories stories = getSimulationData().getStories();
 		int count = 0;
+		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
+				getSimulationData());
 		for (int i = 0; i < simulationData.getIterations(); i++) {
 			getSimulationData().addInfo(
 					new Info(Info.TYPE_INFO, "-Simulation..."));
@@ -720,8 +722,6 @@ public class Simulator implements SimulatorInterface {
 			boolean isEndRules = false;
 			long clash = 0;
 			IRule rule;
-			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
-					getSimulationData());
 			long max_clash = 0;
 			getSimulationData().resetBar();
 			while (!getSimulationData().isEndSimulation(currentTime, count)
