@@ -712,10 +712,8 @@ public class Simulator implements SimulatorInterface {
 	public final void runStories() throws Exception {
 		CStories stories = getSimulationData().getStories();
 		int count = 0;
-		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
-				getSimulationData());
 		for (int i = 0; i < simulationData.getIterations(); i++) {
-			getSimulationData().addInfo(
+		    getSimulationData().addInfo(
 					new Info(Info.TYPE_INFO, "-Simulation..."));
 			startTimer();
 			TimerSimulation timer = new TimerSimulation(true);
@@ -723,7 +721,9 @@ public class Simulator implements SimulatorInterface {
 			long clash = 0;
 			IRule rule;
 			long max_clash = 0;
-			getSimulationData().resetBar();
+			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
+					getSimulationData());
+		    getSimulationData().resetBar();
 			while (!getSimulationData().isEndSimulation(currentTime, count)
 					&& max_clash <= getSimulationData().getMaxClashes()) {
 				checkPerturbation();
