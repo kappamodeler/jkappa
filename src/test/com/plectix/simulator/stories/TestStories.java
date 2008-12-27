@@ -42,33 +42,14 @@ public class TestStories extends InitStoriesTests{
 			for (CStoryTrees storyTrees : list) {
 				trace = storyTrees.getTraceIDToTraceID();
 				
-//				createWrongTrace();
 				TestTree tree = new TestTree(trace);
 				tree.test();
-				
+					
 				TestTransitivity transitivity = new TestTransitivity(trace);
 				transitivity.test();
+				
+				
 			}
 		}
-	}
-	
-	private void createWrongTrace() {
-		trace.clear();
-		List<Integer> value = new ArrayList<Integer>();
-		value.add(1);
-		trace.put(2, value);
-		value = new ArrayList<Integer>();
-		value.add(2);
-		trace.put(3, value);
-		value = new ArrayList<Integer>();
-		value.add(3);
-		value.add(1);
-//		value.add(5);
-		trace.put(4, value);
-		value = new ArrayList<Integer>();
-		value.add(4);
-		trace.put(5, value);
-		value = new ArrayList<Integer>();
-		trace.put(1, value);
 	}
 }
