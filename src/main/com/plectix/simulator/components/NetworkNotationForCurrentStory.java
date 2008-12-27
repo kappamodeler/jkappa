@@ -7,7 +7,7 @@ class NetworkNotationForCurrentStory {
 	private List<CNetworkNotation> networkNotationList;
 	private boolean endOfStory;
 	private double averageTime;
-	
+
 	public double getAverageTime(){
 		return averageTime;
 	}
@@ -29,25 +29,26 @@ class NetworkNotationForCurrentStory {
 	}
 
 	public final CNetworkNotation getNetworkNotation(int traceID) {
-		for(CNetworkNotation nn: networkNotationList)
-			if (nn.getStep()==traceID)
+		for (CNetworkNotation nn : networkNotationList)
+			if (nn.getStep() == traceID)
 				return nn;
 		return null;
 	}
-	
+
 	public NetworkNotationForCurrentStory() {
 		networkNotationList = new ArrayList<CNetworkNotation>();
 		endOfStory = false;
 	}
 
-	public void addToNetworkNotationList(CNetworkNotation networkNotation) {
+	public static void addToNetworkNotationList(CNetworkNotation networkNotation,
+			List<CNetworkNotation> networkNotationList) {
 		if (networkNotation.isOpposite(networkNotationList))
 			networkNotationList.add(networkNotation);
 	}
 
 	public void addToNetworkNotationListStorifyRule(
 			CNetworkNotation networkNotation) {
-		networkNotationList.add(networkNotation);
+			networkNotationList.add(networkNotation);
 	}
 
 	// TODO separate
@@ -58,10 +59,11 @@ class NetworkNotationForCurrentStory {
 	public void handling() {
 		List<CNetworkNotation> nnList = new ArrayList<CNetworkNotation>();
 		nnList.add(networkNotationList.get(networkNotationList.size() - 1));
-		for (int i = networkNotationList.size() - 2; i >= 0; i--) {
+		nnList.add(networkNotationList.get(networkNotationList.size() - 2));
+		for (int i = networkNotationList.size() - 3; i >= 0; i--) {
 			CNetworkNotation nn = networkNotationList.get(i);
 			if (isIntersects(nn, nnList)) {
-				nnList.add(nn);
+				addToNetworkNotationList(nn, nnList);
 			}
 		}
 		this.networkNotationList = nnList;

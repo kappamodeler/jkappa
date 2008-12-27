@@ -53,8 +53,12 @@ public final class CStories {
 
 	public final void addToNetworkNotationStory(int index,
 			CNetworkNotation networkNotation) {
-		this.networkNotationForCurrentStory.get(index)
-				.addToNetworkNotationList(networkNotation);
+		// this.networkNotationForCurrentStory.get(index)
+		// .addToNetworkNotationList(networkNotation);
+
+		NetworkNotationForCurrentStory.addToNetworkNotationList(
+				networkNotation, this.networkNotationForCurrentStory.get(index)
+						.getNetworkNotationList());
 	}
 
 	public final void addToNetworkNotationStoryStorifyRule(int index,

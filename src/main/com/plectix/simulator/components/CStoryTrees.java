@@ -110,55 +110,189 @@ public final class CStoryTrees {
 				index++;
 			}
 
+			// List<Integer> weakIDsToClear = new ArrayList<Integer>();
+
+			// int size = 1;
+			// while (size > 0) {
+			// List<CNetworkNotation> nnList =
+			// removeBlockFromTrace(weakCompressedList);
+			// size = nnList.size();
+			// if (size > 0)
+			// weakCompressedList = nnList;
+			// }
+			if (commonList.size() != weakCompressedList.size())
+				noneCompressStoryTrace(weakCompressedList);
 			
-			List<Integer> weakIDsToClear = new ArrayList<Integer>();
-			for (int i = weakCompressedList.size() - 1; i > 0; i--) {
-				if (!weakIDsToClear.contains(i)) {
-					CNetworkNotation nn1 = weakCompressedList.get(i);
-					for (int j = i - 1; j >= 0; j--) {
-						CNetworkNotation nn2 = weakCompressedList.get(j);
-						if (nn1.getRule().getRuleID() == nn2.getRule()
-								.getRuleID())
-							if (isEqualNetworkNotations(nn1, nn2))
-								weakIDsToClear.add(j);
-					}
-				}
+			Map<Integer, Integer> traceIDToIndex = new HashMap<Integer, Integer>();
+			int ind = 0;
+			for (CNetworkNotation nn : weakCompressedList) {
+				traceIDToIndex.put(nn.getStep(), ind);
+				ind++;
 			}
-			
-			Collections.sort(weakIDsToClear);
-			
-			for (int i = weakIDsToClear.size()-1;i>=0;i--) {
-				weakCompressedList.remove( weakIDsToClear.get(i).intValue());
-			}
+			List<Integer> traceIDList = new ArrayList<Integer>();
+			int rootStep = weakCompressedList.get(0).getStep();
+			List<Integer> weakRelationList = new ArrayList<Integer>();
+
+			isOppositeBranch(rootStep, rootStep, weakCompressedList,
+					traceIDList, traceIDToIndex, weakRelationList);
+
+			Collections.sort(traceIDList);
+			for (int i = traceIDList.size() - 1; i >= 0; i--)
+				weakCompressedList.remove(traceIDToIndex.get(traceIDList.get(i)).intValue());
+
+			// System.out.println();
+
+			// for (int i = weakCompressedList.size() - 1; i > 0; i--) {
+			// if (!weakIDsToClear.contains(i)) {
+			// CNetworkNotation nn1 = weakCompressedList.get(i);
+			// for (int j = i - 1; j >= 0; j--) {
+			// CNetworkNotation nn2 = weakCompressedList.get(j);
+			// if (nn1.getRule().getRuleID() == nn2.getRule()
+			// .getRuleID())
+			// if (isEqualNetworkNotations(nn1, nn2))
+			// weakIDsToClear.add(j);
+			// }
+			// }
+			// }
+			//
+			// Collections.sort(weakIDsToClear);
+			//
+			// for (int i = weakIDsToClear.size() - 1; i >= 0; i--) {
+			// weakCompressedList.remove(weakIDsToClear.get(i).intValue());
+			// }
 
 			// Map<Integer, List<CNetworkNotation>> levelToNNList = new
 			// HashMap<Integer, List<CNetworkNotation>>();
 			// fillLevelToNetworkNotationMap(levelToNNList, commonList);
-
-			noneCompressStoryTrace(weakCompressedList);
+			if (commonList.size() != weakCompressedList.size())
+				noneCompressStoryTrace(weakCompressedList);
 			// weakCompressTree(weakCompressedList);
 		}
 
 	}
 
+	private boolean isOppositeBranch(int traceId, Integer mainTraceId,
+			List<CNetworkNotation> list, List<Integer> indexList,
+			Map<Integer, Integer> traceIDToIndex, List<Integer> weakList) {
+		List<Integer> traceIDList = traceIDToTraceID.get(traceId);
+		Collections.sort(traceIDList);
+
+		for (int trID : traceIDList) {
+			if (traceIDList.size() == 1 && (traceId != mainTraceId)) {
+				if (!indexList.contains(trID) && !indexList.contains(traceId)) {
+					// if (!weakList.contains(trID) &&
+					// !weakList.contains(traceId)) {
+					if (!traceIDToIndex.containsKey(traceId)
+							|| !traceIDToIndex.containsKey(trID))
+						System.out.println();
+
+					int index1 = traceIDToIndex.get(traceId);
+					int index2 = traceIDToIndex.get(trID);
+					if (!list.get(index1).isOpposite(list.get(index2)))
+						if (traceIDToTraceIDWeak.get(traceId).size() == 0) {
+							indexList.add(trID);
+							indexList.add(traceId);
+							/*
+							 * } else { weakList.add(trID);
+							 * weakList.add(traceId);
+							 */
+						}
+				}
+			}
+			isOppositeBranch(trID, mainTraceId, list, indexList,
+					traceIDToIndex, weakList);
+		}
+
+		return true;
+	}
+
+	private List<CNetworkNotation> removeBlockFromTrace(
+			List<CNetworkNotation> weakCompressedList) {
+		List<CNetworkNotation> nnList = new ArrayList<CNetworkNotation>();
+
+		int size = weakCompressedList.size() - 1;
+		CNetworkNotation nn = weakCompressedList.get(size);
+		int index = -1;
+		for (int i = size - 1; i > 0; i--) {
+			CNetworkNotation newNN = weakCompressedList.get(i);
+			if (isEqualNetworkNotations(nn, newNN)) {
+				index = i;
+				break;
+			}
+		}
+
+		if (index > 0) {
+			for (int i = 0; i < index; i++) {
+				nnList.add(weakCompressedList.get(i));
+			}
+			return nnList;
+		}
+
+		return nnList;
+	}
+
+	private void pushTrace(int newIndex, int indexToRemove,
+			List<CNetworkNotation> list) {
+		List<Integer> numbersToPush = new ArrayList<Integer>();
+
+		CNetworkNotation nnToRemove = list.get(indexToRemove);
+		CNetworkNotation nnNew = list.get(newIndex);
+
+	}
+
+	private void getFromTree(List<Integer> numbersToPush, int stepToStop,
+			int stepToStart) {
+		// List<Integer> list = traceIDToTraceID.getSt
+	}
+
+	private boolean hasIndexForTracePermutation(List<CNetworkNotation> list,
+			List<Integer> weakIDsToClear) {
+		for (int i = 1; i < list.size() - 1; i++) {
+			int newIndex = 0;
+			while (newIndex >= 0) {
+				newIndex = getNextNumberToExclude(i, list, weakIDsToClear,
+						i + 1);
+				if (newIndex > 0) {
+					// do something and return true
+				}
+			}
+		}
+		return false;
+	}
+
+	private int getNextNumberToExclude(int number, List<CNetworkNotation> list,
+			List<Integer> weakIDsToClear, int begin) {
+		CNetworkNotation nn = list.get(number);
+
+		for (int i = begin; i < list.size(); i++) {
+			CNetworkNotation nnToExclude = list.get(i);
+			if (nn.getRule().getRuleID() == nnToExclude.getRule().getRuleID())
+				if (isEqualNetworkNotations(nn, nnToExclude))
+					return i;
+		}
+		return -1;
+	}
+
 	private boolean isEqualNetworkNotations(CNetworkNotation nn1,
 			CNetworkNotation nn2) {
+		if (nn1.getRule().getRuleID() != nn2.getRule().getRuleID())
+			return false;
 		Map<Long, AgentSitesFromRules> usedAgentsFromRules1 = nn1
 				.getUsedAgentsFromRules();
 		Map<Long, AgentSitesFromRules> usedAgentsFromRules2 = nn2
 				.getUsedAgentsFromRules();
-		if(usedAgentsFromRules1.size()!=usedAgentsFromRules2.size())
+		if (usedAgentsFromRules1.size() != usedAgentsFromRules2.size())
 			return false;
 		Iterator<Long> iterator = usedAgentsFromRules1.keySet().iterator();
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			Long key = iterator.next();
-			if(!usedAgentsFromRules2.containsKey(key))
+			if (!usedAgentsFromRules2.containsKey(key))
 				return false;
 		}
-		
+
 		return true;
 	}
-	
+
 	private void findEqualLevels(
 			Map<Integer, List<CNetworkNotation>> levelToNNList) {
 		Iterator<Integer> currentIterator = levelToNNList.keySet().iterator();

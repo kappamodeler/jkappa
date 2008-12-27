@@ -49,7 +49,6 @@ public class CNetworkNotation implements INetworkNotation {
 		this.leaf = leaf;
 	}
 
-	// TODO is this field necessary?
 	private int step;
 
 	public void setStep(int step) {
@@ -332,6 +331,17 @@ public class CNetworkNotation implements INetworkNotation {
 		return true;
 	}
 
+	public final boolean isOpposite(CNetworkNotation networkNotation) {
+			switch (isIntersects(networkNotation)) {
+			case HAS_FULL_INTERSECTION:
+				clearAgentsForDeletedOppositeRules(this);
+				clearAgentsForDeletedOppositeRules(networkNotation);
+				return false;
+			case HAS_PART_INTERSECTION:
+				return true;
+			}
+			return true;
+	}
 	public final byte isIntersects(CNetworkNotation nn) {
 		Iterator<Long> iterator = this.changedAgentsFromSolution.keySet()
 				.iterator();
