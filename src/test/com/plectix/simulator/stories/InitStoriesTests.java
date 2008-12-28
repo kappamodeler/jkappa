@@ -16,7 +16,7 @@ import com.plectix.simulator.components.CStoryTrees;
 import com.plectix.simulator.components.CStoryType;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.options.SimulatorArguments;
-import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 
 
@@ -73,7 +73,7 @@ public class InitStoriesTests extends DirectoryTestsRunner{
 		args[4] = "--no_compress_stories";
 		args[5] = "--iteration";
 		args[6] = "10";
-		myArguments = SimulationUtils.parseArguments(
+		myArguments = SimulationData.parseArguments(
 				mySimulator.getSimulationData(), args);
 	}
 	
@@ -82,7 +82,7 @@ public class InitStoriesTests extends DirectoryTestsRunner{
 			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 			mySimulator = new Simulator();
 			parseArgs(filePath);
-			SimulationUtils.readSimulatonFile(mySimulator, myArguments);
+			SimulationData.readSimulatonFile(mySimulator, myArguments);
 			mySimulator.init(myArguments);
 		}
 

@@ -6,10 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -21,19 +21,54 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.*;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.ParseException;
+import org.w3c.dom.CDATASection;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.BuildConstants;
+import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.components.CContactMap;
+import com.plectix.simulator.components.CContactMapChangedSite;
+import com.plectix.simulator.components.CContactMapEdge;
+import com.plectix.simulator.components.CObservables;
+import com.plectix.simulator.components.CPerturbation;
+import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.CSnapshot;
+import com.plectix.simulator.components.CSolution;
+import com.plectix.simulator.components.CStories;
+import com.plectix.simulator.components.CStoryTrees;
+import com.plectix.simulator.components.CStoryType;
+import com.plectix.simulator.components.ObservablesConnectedComponent;
+import com.plectix.simulator.components.SnapshotElement;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.IObservables;
+import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.options.SimulatorArguments;
+import com.plectix.simulator.options.SimulatorOptions;
 import com.plectix.simulator.parser.DataReading;
-import com.plectix.simulator.parser.FileReadingException;
-import com.plectix.simulator.parser.ParseErrorException;
-import com.plectix.simulator.util.*;
+import com.plectix.simulator.parser.Parser;
+import com.plectix.simulator.util.Info;
+import com.plectix.simulator.util.RunningMetric;
+import com.plectix.simulator.util.TimerSimulation;
 
 public class SimulationData {
 
@@ -100,7 +135,14 @@ public class SimulationData {
 
 	private boolean activationMap = true;
 	private boolean inhibitionMap = false;
-
+	
+	private boolean compile = false;
+	private boolean debugInitOption = false;
+	private boolean genereteMapOption = false;
+	private boolean contactMapOption = false;
+	private boolean numberOfRunsOption = false;
+	private boolean storifyOption = false;
+	
 	private long maxClashes = 100;
 	private List<Double> snapshotTimes;
 	private boolean outputFinalState = false;
@@ -112,8 +154,309 @@ public class SimulationData {
 	private byte serializationMode = MODE_NONE;
 	private String serializationFileName = "~tmp.sd";
 
+	private SimulatorArguments simulatorArguments;
+	
 	public SimulationData() {
 		super();
+	}
+
+	public final void parseArguments(String[] args)
+				throws IllegalArgumentException {
+	
+			addInfo(new Info(Info.TYPE_INFO, "-Initialization..."));
+			
+			// let's replace all '-' by '_' 
+			args = SimulationUtils.changeArgs(args);
+			
+			SimulatorArguments arguments = new SimulatorArguments(args);
+			this.simulatorArguments = arguments;
+			
+			try {
+				arguments.parse();
+			} catch (ParseException e) {
+				Simulator.println("Error parsing arguments:");
+				e.printStackTrace(Simulator.getErrorStream());
+				throw new IllegalArgumentException(e);
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.HELP)) {
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp("use --sim [file] [options]",
+						SimulatorOptions.COMMAND_LINE_OPTIONS);
+				// TODO are we to exit here?
+				System.exit(0);
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.VERSION)) {
+				SimulationMain.myOutputStream.println("Java simulator v."
+						+ SimulationMain.VERSION + " SVN Revision: "
+						+ BuildConstants.BUILD_SVN_REVISION);
+				// TODO are we to exit here?
+				System.exit(0);
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
+				setXmlSessionName(arguments.getValue(SimulatorOptions.XML_SESSION_NAME));
+			}
+			if (arguments.hasOption(SimulatorOptions.OUTPUT_XML)) {
+				setXmlSessionName(arguments.getValue(SimulatorOptions.OUTPUT_XML));
+			}
+	//		if (arguments.hasOption(SimulatorOptions.DO_XML)) {
+	//			setXmlSessionName(arguments
+	//					.getValue(SimulatorOptions.DO_XML));
+	//		}
+	
+			try {
+				if (arguments.hasOption(SimulatorOptions.INIT)) {
+					setInitialTime(Double.valueOf(arguments.getValue(SimulatorOptions.INIT)));
+				}
+				if (arguments.hasOption(SimulatorOptions.POINTS)) {
+					setPoints(Integer.valueOf(arguments.getValue(SimulatorOptions.POINTS)));
+				}
+				if (arguments.hasOption(SimulatorOptions.RESCALE)) {
+					double rescale = Double.valueOf(arguments.getValue(SimulatorOptions.RESCALE));
+					if (rescale > 0) {
+						setRescale(rescale);
+					} else {
+						throw new Exception();
+					}
+				}
+	
+				if (arguments.hasOption(SimulatorOptions.NO_SEED)) {
+					setSeed(0);
+				}
+				
+				// TODO else?
+				if (arguments.hasOption(SimulatorOptions.SEED)) {
+					int seed = Integer.valueOf(arguments.getValue(SimulatorOptions.SEED));
+					setSeed(seed);
+				}
+	
+				if (arguments.hasOption(SimulatorOptions.MAX_CLASHES)) {
+					int max_clashes = Integer.valueOf(arguments.getValue(SimulatorOptions.MAX_CLASHES));
+					setMaxClashes(max_clashes);
+				}
+	
+				if (arguments.hasOption(SimulatorOptions.EVENT)) {
+					long event = Long.valueOf(arguments.getValue(SimulatorOptions.EVENT));
+					setEvent(event);
+				}
+	
+				if (arguments.hasOption(SimulatorOptions.ITERATION)) {
+					setIterations(Integer.valueOf(arguments.getValue(SimulatorOptions.ITERATION)));
+				}
+	
+			} catch (Exception e) {
+				e.printStackTrace(Simulator.getErrorStream());
+				throw new IllegalArgumentException(e);
+			}
+	
+			
+			if (arguments.hasOption(SimulatorOptions.RANDOMIZER_JAVA)) {
+				setRandomizer(arguments.getValue(SimulatorOptions.RANDOMIZER_JAVA));
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.NO_ACTIVATION_MAP)
+					|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
+					|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+				activationMap = false;
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.MERGE_MAPS)) {
+				inhibitionMap = true;
+			}
+			
+			if (arguments.hasOption(SimulatorOptions.COMPILE)) {
+				compile = true;
+			}
+			
+			
+			if (arguments.hasOption(SimulatorOptions.DEBUG_INIT)) {
+				debugInitOption = false;
+			}
+			
+			if (arguments.hasOption(SimulatorOptions.GENERATE_MAP)) {
+				genereteMapOption = false;
+			}
+
+			if (arguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
+				contactMapOption = false;
+			}
+			
+			if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
+				numberOfRunsOption = false;
+			}
+			
+			if (arguments.hasOption(SimulatorOptions.STORIFY)) {
+				storifyOption = false;
+			}
+					
+					
+			if (arguments.hasOption(SimulatorOptions.NO_INHIBITION_MAP)
+					|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
+					|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+				inhibitionMap = false;
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.OCAML_STYLE_OBS_NAME)) {
+				setOcamlStyleObsName(true);
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
+				int iteration = 0;
+				boolean exp = false;
+				try {
+					iteration = Integer.valueOf(arguments
+							.getValue(SimulatorOptions.NUMBER_OF_RUNS));
+				} catch (Exception e) {
+					exp = true;
+				}
+				if ((exp) || (!arguments.hasOption(SimulatorOptions.SEED))) {
+					throw new IllegalArgumentException("No SEED OPTION");
+				}
+				
+				setSimulationType(SIMULATION_TYPE_ITERATIONS);
+				setIterations(iteration);
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
+				long clockPrecision = 0;
+				clockPrecision = Long.valueOf(arguments
+						.getValue(SimulatorOptions.CLOCK_PRECISION));
+				clockPrecision *= 60000;
+				setClockPrecision(clockPrecision);
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
+				setOutputFinalState(true);
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.OUTPUT_SCHEME)) {
+				setXmlSessionPath(arguments.getValue(SimulatorOptions.OUTPUT_SCHEME));
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.NO_SAVE_ALL)) {
+				setSerializationMode(MODE_NONE);
+			}
+	
+			if (arguments.hasOption(SimulatorOptions.SAVE_ALL)) {
+				setSerializationFileName(arguments.getValue(SimulatorOptions.SAVE_ALL));
+			}
+			if (arguments.hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)) {
+				setStorifyMode(STORIFY_MODE_NONE);
+			}
+			if (arguments.hasOption(SimulatorOptions.COMPRESS_STORIES)) {
+				setStorifyMode(STORIFY_MODE_WEAK);
+			}
+			if (arguments.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
+				setStorifyMode(STORIFY_MODE_STRONG);
+			}
+		}
+
+	public final void readSimulatonFile(Simulator simulator) {
+	
+		if (this.simulatorArguments == null) {
+			throw new RuntimeException("Simulator Arguments must be set before reading the simulation file!");
+		}
+		
+		boolean option = false;
+		String fileName = null;
+		double timeSim = 0.;
+		String snapshotTime;
+	
+		if (simulatorArguments.hasOption(SimulatorOptions.STORIFY)) {
+			fileName = simulatorArguments.getValue(SimulatorOptions.STORIFY);
+			setSimulationType(SIMULATION_TYPE_STORIFY);
+			option = true;
+		}
+		
+		if (simulatorArguments.hasOption(SimulatorOptions.TIME)) {
+			try {
+				timeSim = Double.valueOf(simulatorArguments.getValue(SimulatorOptions.TIME));
+			} catch (Exception e) {
+				throw new IllegalArgumentException(e);
+			}
+			
+			setTimeLength(timeSim);
+		} else {
+			Simulator.println("*Warning* No time limit.");
+		}
+	
+		if (!option && (simulatorArguments.hasOption(SimulatorOptions.SIMULATIONFILE))) {
+			option = true;
+			fileName = simulatorArguments.getValue(SimulatorOptions.SIMULATIONFILE);
+			if (simulatorArguments.hasOption(SimulatorOptions.SNAPSHOT_TIME)) {
+				option = true;
+				try {
+					snapshotTime = simulatorArguments.getValue(SimulatorOptions.SNAPSHOT_TIME);
+					setSnapshotTime(snapshotTime);
+				} catch (Exception e) {
+					throw new IllegalArgumentException(e);
+				}
+			}
+			setSimulationType(SIMULATION_TYPE_SIM);
+		}
+		
+		if (simulatorArguments.hasOption(SimulatorOptions.COMPILE)) {
+			if (!option) {
+				option = true;
+				fileName = simulatorArguments.getValue(SimulatorOptions.COMPILE);
+			} else {
+				option = false;
+			}
+			setSimulationType(SIMULATION_TYPE_COMPILE);
+		}
+	
+		if (simulatorArguments.hasOption(SimulatorOptions.GENERATE_MAP)) {
+			if (!option) {
+				option = true;
+				fileName = simulatorArguments.getValue(SimulatorOptions.GENERATE_MAP);
+			} else {
+				option = false;
+			}
+			
+			setSimulationType(SIMULATION_TYPE_GENERATE_MAP);
+		}
+	
+		if (simulatorArguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
+			if (!option) {
+				option = true;
+				fileName = simulatorArguments.getValue(SimulatorOptions.CONTACT_MAP);
+			} else {
+				option = false;
+			}
+			
+			setSimulationType(SIMULATION_TYPE_CONTACT_MAP);
+		}
+	
+		if (simulationType == SIMULATION_TYPE_NONE) {
+			// HelpFormatter formatter = new HelpFormatter();
+			// formatter.printHelp("use --sim [file]", cmdLineOptions);
+			throw new IllegalArgumentException("No option specified");
+		}
+	
+		inputFile = fileName;
+		
+		DataReading data = new DataReading(fileName);
+		try {
+			if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
+				if (simulatorArguments.hasOption(SimulatorOptions.FOCUS_ON)) {
+					String fileNameFocusOn = simulatorArguments
+							.getValue(SimulatorOptions.FOCUS_ON);
+					setFocusOn(fileNameFocusOn, simulator);
+				}
+			}
+			
+			data.readData();
+			
+			Parser parser = new Parser(data, this, simulator);
+			parser.setForwarding(simulatorArguments.hasOption(SimulatorOptions.FORWARD));
+			parser.parse();
+		} catch (Exception e) {
+			Simulator.println("Error in file \"" + fileName + "\" :");
+			e.printStackTrace(Simulator.getErrorStream());
+			throw new IllegalArgumentException(e);
+		}
 	}
 
 	public final boolean isOutputFinalState() {
@@ -1030,15 +1373,10 @@ public class SimulationData {
 	}
 
 	//**************************************************************************
-	// *****
 	//
 	// GETTERS AND SETTERS
 	// 
 	//
-
-	public final void setInputFile(String inputFile) {
-		this.inputFile = inputFile;
-	}
 
 	public final boolean checkSnapshots(double currentTime) {
 		if (snapshotTimes != null)
@@ -1119,10 +1457,6 @@ public class SimulationData {
 		this.storifyMode = storifyMode;
 	}
 
-	public final void setInhibitionMap(boolean inhibitionMap) {
-		this.inhibitionMap = inhibitionMap;
-	}
-
 	public final byte getSimulationType() {
 		return simulationType;
 	}
@@ -1173,10 +1507,6 @@ public class SimulationData {
 
 	public final boolean isActivationMap() {
 		return activationMap;
-	}
-
-	public final void setActivationMap(boolean activationMap) {
-		this.activationMap = activationMap;
 	}
 
 	public final Double getInitialTime() {
@@ -1283,5 +1613,29 @@ public class SimulationData {
 			contactMap.setFocusRule(ruleList.get(0));
 			contactMap.setMode(CContactMap.MODE_AGENT_OR_RULE);
 		}
+	}
+
+	public final boolean isCompile() {
+		return compile;
+	}
+
+	public final boolean isDebugInitOption() {
+		return debugInitOption;
+	}
+
+	public final boolean isGenereteMapOption() {
+		return genereteMapOption;
+	}
+
+	public final boolean isContactMapOption() {
+		return contactMapOption;
+	}
+
+	public final boolean isNumberOfRunsOption() {
+		return numberOfRunsOption;
+	}
+
+	public final boolean isStorifyOption() {
+		return storifyOption;
 	}
 }

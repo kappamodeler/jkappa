@@ -20,7 +20,7 @@ import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.options.SimulatorArguments;
-import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 
 @RunWith(value = Parameterized.class)
@@ -70,7 +70,7 @@ public class TestAction {
 		args[1] = arg2;
 		args[2] = arg3;
 		args[3] = arg4;
-		myArguments = SimulationUtils.parseArguments(mySimulator
+		myArguments = SimulationData.parseArguments(mySimulator
 				.getSimulationData(), args);
 	}
 
@@ -81,7 +81,7 @@ public class TestAction {
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		mySimulator = new Simulator();
 		parseArgs(FilePath);
-		SimulationUtils.readSimulatonFile(mySimulator, myArguments);
+		SimulationData.readSimulatonFile(mySimulator, myArguments);
 		mySimulator.init(myArguments);
 		System.out.println(FilePath);
 	}

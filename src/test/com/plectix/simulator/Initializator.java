@@ -7,7 +7,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.options.SimulatorArguments;
-import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 
 public class Initializator {
@@ -41,7 +41,7 @@ public class Initializator {
 		args[4] = "5";
 		args[5] = "--seed";
 		args[6] = "10";
-		myArguments = SimulationUtils.parseArguments(
+		myArguments = SimulationData.parseArguments(
 				mySimulator.getSimulationData(), args);
 	}
 
@@ -58,7 +58,7 @@ public class Initializator {
 
 			parseArgs(filePath);
 
-			SimulationUtils.readSimulatonFile(mySimulator, myArguments);
+			SimulationData.readSimulatonFile(mySimulator, myArguments);
 			mySimulator.init(myArguments);
 
 			myFirstRun = false;

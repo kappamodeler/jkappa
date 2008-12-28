@@ -66,7 +66,6 @@ public class Simulator implements SimulatorInterface {
 		printStream.get().print(text);
 	}
 
-
 	private int agentIdGenerator = 0;
 
 	private double currentTime = 0.;
@@ -80,8 +79,6 @@ public class Simulator implements SimulatorInterface {
 	private TimerSimulation timer;
 	
 	private IActivationMap activationMap;
-	
-	private SimulatorArguments myArguments;
 	
 	private SimulationData simulationData;
 
@@ -99,8 +96,7 @@ public class Simulator implements SimulatorInterface {
 		return new Simulator();
 	}
 
-	public final void init(SimulatorArguments arguments) {
-		this.myArguments = arguments;
+	public final void initialize() {
 		simulationData.initialize();
 		getSimulationData().stopTimer(timer, "-Initialization:");
 		getSimulationData().setClockStamp(System.currentTimeMillis());
@@ -549,9 +545,10 @@ public class Simulator implements SimulatorInterface {
 		currentTime = 0;
 
 		if (getSimulationData().getSerializationMode() != SimulationData.MODE_READ) {
-			SimulationUtils.readSimulatonFile(this, myArguments);
+			getSimulationData().readSimulatonFile(this);
 		}
-		init(myArguments);
+		
+		initialize();
 	}
 
 	public final void run(int iteration_num) throws Exception {
@@ -648,30 +645,35 @@ public class Simulator implements SimulatorInterface {
 		simulationData.setCommandLine(args);
 		Simulator.println("Java " + simulationData.getCommandLine());
 		startTimer();
-		myArguments = SimulationUtils.parseArguments(getSimulationData(),
-				SimulationUtils.changeArgs(args));
-		SimulationUtils.readSimulatonFile(this, myArguments);
-		init(myArguments);
-		if (myArguments.hasOption(SimulatorOptions.COMPILE)) {
+		
+		simulationData.parseArguments(args);
+		
+		simulationData.readSimulatonFile(this);
+		
+		initialize();
+		
+		if (simulationData.isCompile()) {
 			outputData();
 			return;
 		}
-		if (!myArguments.hasOption(SimulatorOptions.DEBUG_INIT)) {
+		
+		if (!simulationData.isDebugInitOption()) {
 
-			if (myArguments.hasOption(SimulatorOptions.GENERATE_MAP)
-					|| myArguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
+			if (simulationData.isGenereteMapOption() || simulationData.isContactMapOption() ) {
 				Source source = addCompleteSource();
 				outputData(source, 0);
-			} else if (myArguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS))
+			} else if (simulationData.isNumberOfRunsOption()) {
 				runIterations();
-			else if (myArguments.hasOption(SimulatorOptions.STORIFY))
+			} else if (simulationData.isStorifyOption()) {
 				runStories();
-			else
+			} else {
 				run(0);
+			}
 
 			//simulatorResultsData.setResultSource(simulationData.createDOMModel
 			// ());
 		}
+		
 		System.out.println("-------" + simulatorResultsData.getResultSource());
 	}
 
