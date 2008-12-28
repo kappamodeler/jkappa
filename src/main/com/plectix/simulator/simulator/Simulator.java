@@ -25,7 +25,6 @@ import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.interfaces.IAction;
-import com.plectix.simulator.interfaces.IActivationMap;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -34,11 +33,9 @@ import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.options.SimulatorOptions;
-import com.plectix.simulator.options.SimulatorArguments;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.RunningMetric;
-import com.plectix.simulator.util.TimerSimulation;
+import com.plectix.simulator.util.PlxTimer;
 
 public class Simulator implements SimulatorInterface {
 
@@ -71,14 +68,8 @@ public class Simulator implements SimulatorInterface {
 	private double currentTime = 0.;
 
 	private boolean isIteration = false;
-	
-	private boolean storyMode = false;
 
 	private int timeStepCounter = 0;
-
-	private TimerSimulation timer;
-	
-	private IActivationMap activationMap;
 	
 	private SimulationData simulationData;
 
@@ -94,12 +85,6 @@ public class Simulator implements SimulatorInterface {
 	@Override
 	public SimulatorInterface clone() {
 		return new Simulator();
-	}
-
-	public final void initialize() {
-		simulationData.initialize();
-		getSimulationData().stopTimer(timer, "-Initialization:");
-		getSimulationData().setClockStamp(System.currentTimeMillis());
 	}
 	
 	private final void addIteration(int iteration_num) {
@@ -227,16 +212,12 @@ public class Simulator implements SimulatorInterface {
 	public final void doPositiveUpdate(IRule rule,
 			List<IInjection> myCurrentInjectionsList) {
 		if (getSimulationData().isActivationMap()) {
-			positiveUpdate(rule.getActivatedRule(), rule
-					.getActivatedObservable(), rule);
+			positiveUpdate(rule.getActivatedRule(), rule.getActivatedObservable(), rule);
 		} else {
-			positiveUpdate(getSimulationData().getRules(), getSimulationData()
-					.getObservables().getConnectedComponentList(), rule);
+			positiveUpdate(getSimulationData().getRules(), getSimulationData().getObservables().getConnectedComponentList(), rule);
 		}
 
-		doPositiveUpdateForDeletedAgents(doNegativeUpdateForDeletedAgents(rule,
-				myCurrentInjectionsList));
-
+		doPositiveUpdateForDeletedAgents(doNegativeUpdateForDeletedAgents(rule, myCurrentInjectionsList));
 	}
 
 	public final void doPositiveUpdateForDeletedAgents(List<IAgent> agentsList) {
@@ -265,17 +246,8 @@ public class Simulator implements SimulatorInterface {
 		return agentIdGenerator++;
 	}
 
-
-	public final void startTimer() {
-		timer = new TimerSimulation();
-		timer.startTimer();
-	}
-
-
 	public final void outputData() {
-
 		outputRules();
-
 		outputPertubation();
 		outputSolution();
 	}
@@ -288,10 +260,9 @@ public class Simulator implements SimulatorInterface {
 	}
 
 	public final void outputData(Source source, long count) {
-		TimerSimulation timerOutput = new TimerSimulation();
-		timerOutput.startTimer();
-
 		try {
+			PlxTimer timerOutput = new PlxTimer();
+			timerOutput.startTimer();
 			getSimulationData().writeToXML(source, timerOutput);
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace(Simulator.getErrorStream());
@@ -312,7 +283,7 @@ public class Simulator implements SimulatorInterface {
 
 	private final void outputRules() {
 		for (IRule rule : getRules()) {
-			int countAgentsInLHS = rule.getCountAgentsLHS();
+			// int countAgentsInLHS = rule.getCountAgentsLHS();
 			// int indexNewAgent = countAgentsInLHS;
 
 			for (IAction action : rule.getActionList()) {
@@ -452,9 +423,9 @@ public class Simulator implements SimulatorInterface {
 		}
 	}
 
-	private final void outToLogger(boolean isEndRules, TimerSimulation timer) {
-		getSimulationData().stopTimer(timer, "-Simulation:");
-		// Simulator.println("-Simulation: " + timer.getTimer() + " sec. CPU");
+	private final void outToLogger(boolean isEndRules, PlxTimer timer) {
+		simulationData.stopTimer(timer, "-Simulation:");
+
 		if (!isEndRules)
 			LOGGER.info("end of simulation: time");
 		else
@@ -530,47 +501,53 @@ public class Simulator implements SimulatorInterface {
 	}
 
 	public final void resetSimulation() {
-		getSimulationData().addInfo(
-				new Info(Info.TYPE_INFO, "-Reset simulation data."));
-		getSimulationData().addInfo(
-				new Info(Info.TYPE_INFO, "-Initialization..."));
-		startTimer();
-		getSimulationData().clearRules();
-		getSimulationData().getObservables().resetLists();
-		getSimulationData().getSolution().clearAgents();
-		getSimulationData().getSolution().clearSolutionLines();
-		if (getSimulationData().getPerturbations() != null)
-			getSimulationData().clearPerturbations();
+		getSimulationData().addInfo(new Info(Info.TYPE_INFO, "-Reset simulation data."));
+		getSimulationData().addInfo(new Info(Info.TYPE_INFO, "-Initialization..."));
+		
+		PlxTimer timer = new PlxTimer();
+		timer.startTimer();
+		
+		simulationData.clearRules();
+		simulationData.getObservables().resetLists();
+		simulationData.getSolution().clearAgents();
+		simulationData.getSolution().clearSolutionLines();
+		
+		if (simulationData.getPerturbations() != null) {
+			simulationData.clearPerturbations();
+		}
 
-		currentTime = 0;
+		currentTime = 0.0;
 
 		if (getSimulationData().getSerializationMode() != SimulationData.MODE_READ) {
 			getSimulationData().readSimulatonFile(this);
 		}
 		
-		initialize();
+		simulationData.initialize();
+		
+		simulationData.stopTimer(timer, "-Initialization:");
+		simulationData.setClockStamp(System.currentTimeMillis());
 	}
 
 	public final void run(int iteration_num) throws Exception {
 		getSimulationData().addInfo(new Info(Info.TYPE_INFO, "-Simulation..."));
-		TimerSimulation timer = new TimerSimulation(true);
+		
+		PlxTimer timer = new PlxTimer();
+		timer.startTimer();
+		
+		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(getSimulationData());
+
 		long clash = 0;
-		IRule rule;
-		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
-				getSimulationData());
-
-		boolean isEndRules = false;
-
 		long count = 0;
-
 		long max_clash = 0;
+		boolean isEndRules = false;
+		
 		while (!getSimulationData().isEndSimulation(currentTime, count)
 				&& max_clash <= getSimulationData().getMaxClashes()) {
 			while (getSimulationData().checkSnapshots(currentTime)) {
 				createSnapshots();				
 			}
 			checkPerturbation();
-			rule = ruleProbabilityCalculation.getRandomRule();
+			IRule rule = ruleProbabilityCalculation.getRandomRule();
 
 			if (rule == null) {
 				isEndRules = true;
@@ -621,6 +598,7 @@ public class Simulator implements SimulatorInterface {
 		getSimulationData().getObservables().calculateObsLast(currentTime);
 		getSimulationData().setTimeLength(currentTime);
 		getSimulationData().setEvent(count);
+		
 		outToLogger(isEndRules, timer);
 		Source source = addCompleteSource();
 		if (!isIteration)
@@ -644,13 +622,17 @@ public class Simulator implements SimulatorInterface {
 		SimulationData simulationData = getSimulationData();
 		simulationData.setCommandLine(args);
 		Simulator.println("Java " + simulationData.getCommandLine());
-		startTimer();
+
+		PlxTimer timer = new PlxTimer();
+		timer.startTimer();
 		
 		simulationData.parseArguments(args);
 		
 		simulationData.readSimulatonFile(this);
 		
-		initialize();
+		simulationData.initialize();
+		getSimulationData().stopTimer(timer, "-Initialization:");
+		getSimulationData().setClockStamp(System.currentTimeMillis());
 		
 		if (simulationData.isCompile()) {
 			outputData();
@@ -715,10 +697,11 @@ public class Simulator implements SimulatorInterface {
 		CStories stories = getSimulationData().getStories();
 		int count = 0;
 		for (int i = 0; i < simulationData.getIterations(); i++) {
-		    getSimulationData().addInfo(
-					new Info(Info.TYPE_INFO, "-Simulation..."));
-			startTimer();
-			TimerSimulation timer = new TimerSimulation(true);
+		    getSimulationData().addInfo(new Info(Info.TYPE_INFO, "-Simulation..."));
+		    
+			PlxTimer timer = new PlxTimer();
+			timer.startTimer();
+			
 			boolean isEndRules = false;
 			long clash = 0;
 			IRule rule;
@@ -790,11 +773,7 @@ public class Simulator implements SimulatorInterface {
 	//                    GETTERS AND SETTERS
 	//
 	//
-
-	public final IActivationMap getActivationMap() {
-		return activationMap;
-	}
-
+	
 	public final int getAgentIdGenerator() {
 		return agentIdGenerator;
 	}
@@ -817,10 +796,6 @@ public class Simulator implements SimulatorInterface {
 
 	public final SimulatorResultsData getSimulatorResultsData() {
 		return simulatorResultsData;
-	}
-
-	public final boolean isStoryMode() {
-		return storyMode;
 	}
 
 }

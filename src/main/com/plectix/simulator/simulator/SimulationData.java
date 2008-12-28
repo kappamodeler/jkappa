@@ -68,7 +68,7 @@ import com.plectix.simulator.parser.DataReading;
 import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.RunningMetric;
-import com.plectix.simulator.util.TimerSimulation;
+import com.plectix.simulator.util.PlxTimer;
 
 public class SimulationData {
 
@@ -481,8 +481,7 @@ public class SimulationData {
 
 	public final void addInfo(Info info) {
 		for (Info inf : infoList) {
-			if (inf.getMessageWithoutTime()
-					.equals(info.getMessageWithoutTime())) {
+			if (inf.getMessageWithoutTime().equals(info.getMessageWithoutTime())) {
 				inf.upCount(info.getTime());
 				return;
 			}
@@ -607,7 +606,7 @@ public class SimulationData {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = dbf.newDocumentBuilder();
 		Document doc = db.newDocument();
-		TimerSimulation timer = new TimerSimulation();
+		PlxTimer timer = new PlxTimer();
 		Element simplxSession = null;
 		if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
 			simplxSession = doc.createElement("ComplxSession");
@@ -893,7 +892,7 @@ public class SimulationData {
 		agent.appendChild(siteNode);
 	}
 
-	public final void writeToXML(Source source, TimerSimulation timerOutput)
+	public final void writeToXML(Source source, PlxTimer timerOutput)
 			throws ParserConfigurationException, TransformerException {
 		TransformerFactory trFactory = TransformerFactory.newInstance();
 		Transformer transformer = trFactory.newTransformer();
@@ -903,12 +902,6 @@ public class SimulationData {
 		pr.setProperty(OutputKeys.METHOD, "html");
 		transformer.setOutputProperties(pr);
 		transformer.transform(source, streamesult);
-
-		// GraphDrawer gd = new GraphDrawer();
-		// gd.createGraphs(observables,initialTime,timeLength);
-
-		// Simulator.println("-Results outputted in xml session: "
-		// + timerOutput.getTimer() + " sec. CPU");
 	}
 
 	private final void printMap(Document doc, String mapType,
@@ -1140,20 +1133,21 @@ public class SimulationData {
 		return node;
 	}
 
-	public final void stopTimer(TimerSimulation timer, String message) {
+	public final void stopTimer(PlxTimer timer, String message) {
 		if (timer == null) {
 			return;
 		}
+		timer.stopTimer();
+		
 		message += " ";
-		Simulator.println(message + timer.getTimerMessage() + " sec. CPU");
+		Simulator.println(message + timer.getTimeMessage() + " sec. CPU");
 		// timer.getTimer();
-		addInfo(new Info(Info.TYPE_INFO, message, timer
-				.getThreadTimeInSeconds(), 1));
+		addInfo(new Info(Info.TYPE_INFO, message, timer.getThreadTimeInSeconds(), 1));
 	}
 
 	public final void createTMPReport() {
 		// model.getSimulationData().updateData();
-		TimerSimulation timer = new TimerSimulation();
+		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
 
 		int number_of_observables = observables.getComponentListForXMLOutput()
@@ -1206,7 +1200,7 @@ public class SimulationData {
 		}
 
 		Simulator.println("-Results outputted in tmp session: "
-				+ timer.getTimerMessage() + " sec. CPU");
+				+ timer.getTimeMessage() + " sec. CPU");
 	}
 
 	public final double getTimeSampleMin(double fullTime) {
@@ -1316,8 +1310,10 @@ public class SimulationData {
 		getObservables().checkAutomorphisms();
 
 		if (isActivationMap()) {
-			TimerSimulation timer = new TimerSimulation(true);
+			PlxTimer timer = new PlxTimer();
 			addInfo(new Info(Info.TYPE_INFO, "--Abstracting activation map..."));
+			
+			timer.startTimer();
 			for (IRule rule : rules) {
 				rule.createActivatedRulesList(rules);
 				rule.createActivatedObservablesList(getObservables());
@@ -1327,8 +1323,10 @@ public class SimulationData {
 		}
 
 		if (isInhibitionMap()) {
-			TimerSimulation timer = new TimerSimulation(true);
+			PlxTimer timer = new PlxTimer();
 			addInfo(new Info(Info.TYPE_INFO, "--Abstracting inhibition map..."));
+			
+			timer.startTimer();
 			for (IRule rule : rules) {
 				rule.createInhibitedRulesList(rules);
 				rule.createInhibitedObservablesList(getObservables());
