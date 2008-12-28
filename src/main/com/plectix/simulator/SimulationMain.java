@@ -21,7 +21,7 @@ public class SimulationMain  {
 	
 	public static void main(String[] args) {
 		initializeLogging();
-
+		
 		SimulatorInterface simulator = new Simulator();
 		SimulationService service = new SimulationService(simulator);
 		service.submit(new SimulatorInputData(args, myOutputStream), null);
