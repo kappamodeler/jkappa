@@ -6,11 +6,17 @@ import java.util.List;
 
 
 import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.ILiftElement;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.interfaces.IPerturbationExpression;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 
@@ -58,7 +64,6 @@ public class SimulationUtils {
 
 			List<String> sitesList = new ArrayList<String>();
 
-			int i = 1;
 			for (ISite site : agent.getSites()) {
 				String siteStr = new String(site.getName());
 				// line = line + site.getName();
@@ -234,6 +239,96 @@ public class SimulationUtils {
 			}
 		}
 		list.add(agent);
+	}
+
+	public final static void doNegativeUpdate(List<IInjection> injectionsList) {
+		for (IInjection injection : injectionsList) {
+			if (injection != CInjection.EMPTY_INJECTION) {
+				for (ISite site : injection.getChangedSites()) {
+					site.getAgentLink().getEmptySite().removeInjectionsFromCCToSite(injection);
+					site.getAgentLink().getEmptySite().clearLiftList();
+					site.removeInjectionsFromCCToSite(injection);
+					site.clearLiftList();
+				}
+				if (injection.getChangedSites().size() != 0) {
+					for (ISite site : injection.getSiteList()) {
+						if (!injection.checkSiteExistanceAmongChangedSites(site)) {
+							site.removeInjectionFromLift(injection);
+						}
+					}
+					injection.getConnectedComponent()
+							.removeInjection(injection);
+				}
+			}
+		}
+	}
+
+	public final static List<IAgent> doNegativeUpdateForDeletedAgents(IRule rule, List<IInjection> injectionsList) {
+		List<IAgent> freeAgents = new ArrayList<IAgent>();
+		for (IInjection injection : injectionsList) {
+			for (ISite checkedSite : rule.getSitesConnectedWithDeleted()) {
+				if (!injection.checkSiteExistanceAmongChangedSites(checkedSite)) {
+	
+					IAgent checkedAgent = checkedSite.getAgentLink();
+					addToAgentList(freeAgents, checkedAgent);
+					for (ILiftElement lift : checkedAgent.getEmptySite()
+							.getLift()) {
+						lift.getConnectedComponent().removeInjection(
+								lift.getInjection());
+					}
+					checkedAgent.getEmptySite().clearLiftList();
+					for (ILiftElement lift : checkedSite.getLift()) {
+	
+						for (ISite site : lift.getInjection().getSiteList()) {
+							if (site != checkedSite)
+								site.removeInjectionFromLift(lift
+										.getInjection());
+						}
+	
+						lift.getConnectedComponent().removeInjection(
+								lift.getInjection());
+					}
+					checkedSite.clearLiftList();
+				}
+			}
+		}
+		for (ISite checkedSite : rule.getSitesConnectedWithBroken()) {
+			IAgent checkedAgent = checkedSite.getAgentLink();
+			addToAgentList(freeAgents, checkedAgent);
+		}
+		return freeAgents;
+	}
+
+	public final static String perturbationParametersToString(
+			List<IPerturbationExpression> sumParameters) {
+		String st = new String();
+	
+		int index = 1;
+		for (IPerturbationExpression parameters : sumParameters) {
+			st += parameters.getValueToString();
+			if (parameters.getName() != null) {
+				st += "*[";
+				st += parameters.getName();
+				st += "]";
+			}
+			if (index < sumParameters.size())
+				st += " + ";
+			index++;
+		}
+	
+		return st;
+	}
+
+	public final static void positiveUpdate(List<IRule> rulesList, List<IObservablesConnectedComponent> list, IRule rule) {
+		for (IRule rules : rulesList) {
+			for (IConnectedComponent cc : rules.getLeftHandSide()) {
+				cc.doPositiveUpdate(rule.getRightHandSide());
+			}
+		}
+		for (IObservablesConnectedComponent oCC : list) {
+			if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
+				oCC.doPositiveUpdate(rule.getRightHandSide());
+		}
 	}
 
 }

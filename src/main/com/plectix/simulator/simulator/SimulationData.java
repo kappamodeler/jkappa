@@ -117,10 +117,6 @@ public class SimulationData {
 	private byte simulationType = SIMULATION_TYPE_NONE;
 	private byte storifyMode = STORIFY_MODE_NONE;
 
-	private DOMSource myOutputDOMSource;
-	// private boolean compile = false;
-	// private boolean storify = false;
-
 	private double rescale = -1.;
 	private int points = -1;
 	private double timeLength = 0;
@@ -1368,6 +1364,93 @@ public class SimulationData {
 			contactMap.constructContactMap();
 		}
 
+	}
+
+	public final void outputPertubation() {
+		Simulator.println("PERTURBATIONS:");
+
+		for (CPerturbation perturbation : perturbations) {
+			Simulator.println(perturbationToString(perturbation));
+		}
+
+	}
+
+	public final void outputData(Source source, long count) {
+		try {
+			PlxTimer timerOutput = new PlxTimer();
+			timerOutput.startTimer();
+			writeToXML(source, timerOutput);
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace(Simulator.getErrorStream());
+		} catch (TransformerException e) {
+			e.printStackTrace(Simulator.getErrorStream());
+		}
+	}
+
+	private final String perturbationToString(CPerturbation perturbation) {
+		String st = "-";
+		String greater;
+		if (perturbation.getGreater()) {
+			greater = "> ";
+		} else {
+			greater = "< ";
+		}
+
+		switch (perturbation.getType()) {
+		case CPerturbation.TYPE_TIME: {
+			st += "Whenever current time ";
+			st += greater;
+			st += perturbation.getTimeCondition();
+			break;
+		}
+		case CPerturbation.TYPE_NUMBER: {
+			st += "Whenever [";
+			st += observables.getComponentList().get(perturbation.getObsNameID()).getName();
+			st += "] ";
+			st += greater;
+			st += SimulationUtils.perturbationParametersToString(perturbation.getLHSParametersList());
+			break;
+		}
+		}
+		
+		st += " do kin(";
+		st += perturbation.getPerturbationRule().getName();
+		st += "):=";
+		st += SimulationUtils.perturbationParametersToString(perturbation.getRHSParametersList());
+
+		return st;
+	}
+
+	public final void doPositiveUpdateForDeletedAgents(List<IAgent> agentsList) {
+		for (IAgent agent : agentsList) {
+			for (IRule rule : getRules()) {
+				for (IConnectedComponent cc : rule.getLeftHandSide()) {
+					IInjection inj = cc.getInjection(agent);
+					if (inj != null) {
+						if (!agent.isAgentHaveLinkToConnectedComponent(cc, inj))
+							cc.setInjection(inj);
+					}
+				}
+			}
+			for (IObservablesConnectedComponent obsCC : observables.getConnectedComponentList()) {
+				IInjection inj = obsCC.getInjection(agent);
+				if (inj != null) {
+					if (!agent.isAgentHaveLinkToConnectedComponent(obsCC, inj))
+						obsCC.setInjection(inj);
+				}
+			}
+		}
+	}
+
+	public final void doPositiveUpdate(IRule rule, List<IInjection> currentInjectionsList) {
+		if (activationMap) {
+			SimulationUtils.positiveUpdate(rule.getActivatedRule(), rule.getActivatedObservable(), rule);
+		} else {
+			SimulationUtils.positiveUpdate(getRules(), observables.getConnectedComponentList(), rule);
+		}
+
+		List<IAgent> freeAgents = SimulationUtils.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
+		doPositiveUpdateForDeletedAgents(freeAgents);
 	}
 
 	public final boolean checkSnapshots(double currentTime) {

@@ -357,8 +357,7 @@ public class CContactMap {
 			}
 
 		rule.applyRule(newInjList, simulator);
-		simulator.doPositiveUpdate(rule, newInjList);
-
+		simulator.getSimulationData().doPositiveUpdate(rule, newInjList);
 	}
 
 	public void constructReachableRules(List<IRule> rules) {

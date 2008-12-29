@@ -1,6 +1,5 @@
 package com.plectix.simulator.interfaces;
 
-import java.util.Hashtable;
 import java.util.List;
 
 public interface IObservables {

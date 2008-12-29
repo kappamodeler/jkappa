@@ -15,6 +15,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.Simulator;
 
 public abstract class TestUpdate extends DirectoryTestsRunner {
@@ -100,7 +101,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 				LOGGER.debug("negative update");
 
 			myActiveRule.applyRule(myCurrentInjectionsList, mySimulator);
-			mySimulator.doNegativeUpdate(myCurrentInjectionsList);
+			SimulationUtils.doNegativeUpdate(myCurrentInjectionsList);
 			if (isDoingPositive()) {
 				mySimulator.doPositiveUpdate(myActiveRule,
 						myCurrentInjectionsList);
