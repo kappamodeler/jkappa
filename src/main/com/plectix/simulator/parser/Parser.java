@@ -1,11 +1,29 @@
 package com.plectix.simulator.parser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
-import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CDataString;
+import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CPerturbation;
+import com.plectix.simulator.components.CRulePerturbation;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.CSolution;
+import com.plectix.simulator.components.CStories;
+import com.plectix.simulator.components.RateExpression;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.IPerturbationExpression;
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.util.Info;
 
 public class Parser {

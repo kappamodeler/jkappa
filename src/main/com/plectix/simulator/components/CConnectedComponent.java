@@ -1,10 +1,23 @@
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IAgentLink;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.IInternalState;
+import com.plectix.simulator.interfaces.ILinkState;
+import com.plectix.simulator.interfaces.IRandom;
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.interfaces.ISite;
 
 public class CConnectedComponent implements IConnectedComponent, Serializable {
 

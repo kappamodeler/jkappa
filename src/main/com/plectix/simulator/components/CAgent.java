@@ -1,9 +1,12 @@
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -16,7 +19,6 @@ public final class CAgent implements IAgent, Serializable {
 	 * unique id for agent
 	 */
 	public static final int UNMARKED = -1;
-	public static final byte ACTION_CREATE = -2;
 	public static final byte EMPTY = -1;
 
 	private int idInConnectedComponent;

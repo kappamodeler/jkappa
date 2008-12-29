@@ -2,8 +2,6 @@ package com.plectix.simulator.components;
 
 import org.w3c.dom.Element;
 
-import com.plectix.simulator.simulator.SimulationData;
-
 public class CStoryType {
 	public static final byte TYPE_INTRO = 0;
 	public static final byte TYPE_RULE = 1;

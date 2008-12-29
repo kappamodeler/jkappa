@@ -81,6 +81,7 @@ public class SimulationData {
 	public final static byte MODE_SAVE = 2;
 	public final static byte MODE_READ = 1;
 	public final static byte MODE_NONE = 0;
+	
 	public final static byte STORIFY_MODE_NONE = 0;
 	public final static byte STORIFY_MODE_WEAK = 1;
 	public final static byte STORIFY_MODE_STRONG = 2;
@@ -92,6 +93,7 @@ public class SimulationData {
 	public final static byte SIMULATION_TYPE_ITERATIONS = 3;
 	public final static byte SIMULATION_TYPE_GENERATE_MAP = 4;
 	public final static byte SIMULATION_TYPE_CONTACT_MAP = 5;
+	
 	private final static String TYPE_NEGATIVE_MAP = "NEGATIVE";
 	private final static String TYPE_POSITIVE_MAP = "POSITIVE";
 

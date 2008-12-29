@@ -1,7 +1,6 @@
 package com.plectix.simulator.util;
 
 import java.io.Serializable;
-import java.text.Format;
 import java.util.Formatter;
 
 import com.plectix.simulator.simulator.Simulator;
