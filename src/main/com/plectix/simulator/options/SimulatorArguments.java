@@ -1,27 +1,23 @@
 package com.plectix.simulator.options;
 
-import org.apache.commons.cli.*;
-
-import com.plectix.simulator.SimulationMain;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.ParseException;
+import org.apache.commons.cli.PosixParser;
 
 public class SimulatorArguments {
-	private CommandLine cmdLineArgs;
-	private String[] myArguments;
+	private CommandLine commandLine;
 
-	public SimulatorArguments(String[] args) {
-		myArguments = args;
-	}
-	
-	public void parse() throws ParseException {
+	public SimulatorArguments(String[] args) throws ParseException {
 		CommandLineParser parser = new PosixParser();
-		cmdLineArgs = parser.parse(SimulatorOptions.COMMAND_LINE_OPTIONS, myArguments);
+		commandLine = parser.parse(SimulatorOptions.COMMAND_LINE_OPTIONS, args);
 	}
 
 	public boolean hasOption(SimulatorOptions option) {
-		return cmdLineArgs.hasOption(option.getLongName());
+		return commandLine.hasOption(option.getLongName());
 	}
 
 	public String getValue(SimulatorOptions option) {
-		return cmdLineArgs.getOptionValue(option.getLongName());
+		return commandLine.getOptionValue(option.getLongName());
 	}
 }

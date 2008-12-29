@@ -185,17 +185,18 @@ public class SimulationData {
 			// let's replace all '-' by '_' 
 			args = SimulationUtils.changeArguments(args);
 			
-			SimulatorArguments arguments = new SimulatorArguments(args);
-			this.simulatorArguments = arguments;
+			SimulatorArguments arguments = null;
 			
 			try {
-				arguments.parse();
+				arguments = new SimulatorArguments(args);
 			} catch (ParseException e) {
 				Simulator.println("Error parsing arguments:");
 				e.printStackTrace(Simulator.getErrorStream());
 				throw new IllegalArgumentException(e);
 			}
-	
+
+			this.simulatorArguments = arguments;
+			
 			if (arguments.hasOption(SimulatorOptions.HELP)) {
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp("use --sim [file] [options]",
@@ -323,8 +324,7 @@ public class SimulationData {
 				int iteration = 0;
 				boolean exp = false;
 				try {
-					iteration = Integer.valueOf(arguments
-							.getValue(SimulatorOptions.NUMBER_OF_RUNS));
+					iteration = Integer.valueOf(arguments.getValue(SimulatorOptions.NUMBER_OF_RUNS));
 				} catch (Exception e) {
 					exp = true;
 				}
