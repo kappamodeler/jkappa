@@ -1,6 +1,7 @@
 package com.plectix.simulator.simulator;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -159,13 +160,28 @@ public class SimulationData {
 		super();
 	}
 
+	public final void clearRules() {
+		rules.clear();
+	}
+
+	public final void clearPerturbations() {
+		if (perturbations == null) {
+			return;
+		}
+		perturbations.clear();
+	}
+
+	public final boolean isOcamlStyleObsName() {
+		return observables.isOcamlStyleObsName();
+	}
+
 	public final void parseArguments(String[] args)
 				throws IllegalArgumentException {
 	
 			addInfo(new Info(Info.TYPE_INFO, "-Initialization..."));
 			
 			// let's replace all '-' by '_' 
-			args = SimulationUtils.changeArgs(args);
+			args = SimulationUtils.changeArguments(args);
 			
 			SimulatorArguments arguments = new SimulatorArguments(args);
 			this.simulatorArguments = arguments;
@@ -207,15 +223,15 @@ public class SimulationData {
 	
 			try {
 				if (arguments.hasOption(SimulatorOptions.INIT)) {
-					setInitialTime(Double.valueOf(arguments.getValue(SimulatorOptions.INIT)));
+					initialTime = Double.valueOf(arguments.getValue(SimulatorOptions.INIT));
 				}
 				if (arguments.hasOption(SimulatorOptions.POINTS)) {
-					setPoints(Integer.valueOf(arguments.getValue(SimulatorOptions.POINTS)));
+					points = Integer.valueOf(arguments.getValue(SimulatorOptions.POINTS));
 				}
 				if (arguments.hasOption(SimulatorOptions.RESCALE)) {
 					double rescale = Double.valueOf(arguments.getValue(SimulatorOptions.RESCALE));
 					if (rescale > 0) {
-						setRescale(rescale);
+						this.rescale = rescale;
 					} else {
 						throw new Exception();
 					}
@@ -319,36 +335,35 @@ public class SimulationData {
 			}
 	
 			if (arguments.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
-				long clockPrecision = 0;
-				clockPrecision = Long.valueOf(arguments
-						.getValue(SimulatorOptions.CLOCK_PRECISION));
-				clockPrecision *= 60000;
-				setClockPrecision(clockPrecision);
+				clockPrecision = 60000 * Long.valueOf(arguments.getValue(SimulatorOptions.CLOCK_PRECISION));
 			}
 	
 			if (arguments.hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
-				setOutputFinalState(true);
+				outputFinalState = true;
 			}
 	
 			if (arguments.hasOption(SimulatorOptions.OUTPUT_SCHEME)) {
-				setXmlSessionPath(arguments.getValue(SimulatorOptions.OUTPUT_SCHEME));
+				xmlSessionPath = arguments.getValue(SimulatorOptions.OUTPUT_SCHEME);
 			}
 	
 			if (arguments.hasOption(SimulatorOptions.NO_SAVE_ALL)) {
-				setSerializationMode(MODE_NONE);
+				serializationMode = MODE_NONE;
 			}
 	
 			if (arguments.hasOption(SimulatorOptions.SAVE_ALL)) {
-				setSerializationFileName(arguments.getValue(SimulatorOptions.SAVE_ALL));
+				serializationFileName = arguments.getValue(SimulatorOptions.SAVE_ALL) ;
 			}
+			
 			if (arguments.hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)) {
-				setStorifyMode(STORIFY_MODE_NONE);
+				storifyMode = STORIFY_MODE_NONE;
 			}
+			
 			if (arguments.hasOption(SimulatorOptions.COMPRESS_STORIES)) {
-				setStorifyMode(STORIFY_MODE_WEAK);
+				storifyMode = STORIFY_MODE_WEAK;
 			}
+			
 			if (arguments.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
-				setStorifyMode(STORIFY_MODE_STRONG);
+				storifyMode = STORIFY_MODE_STRONG;
 			}
 		}
 
@@ -457,15 +472,7 @@ public class SimulationData {
 			throw new IllegalArgumentException(e);
 		}
 	}
-
-	public final boolean isOutputFinalState() {
-		return outputFinalState;
-	}
-
-	public final void setOutputFinalState(boolean outputFinalState) {
-		this.outputFinalState = outputFinalState;
-	}
-
+	
 	public final boolean isParseSolution() {
 		switch (simulationType) {
 		case SIMULATION_TYPE_GENERATE_MAP:
@@ -490,30 +497,29 @@ public class SimulationData {
 	}
 
 	public final void setCommandLine(String[] args) {
-		String st = new String();
+		StringBuffer stringBuffer = new StringBuffer();
 		for (int i = 0; i < args.length; i++) {
-			st += args[i] + " ";
+			stringBuffer.append(args[i] + " ");
 		}
-		this.commandLine = st;
+		this.commandLine = stringBuffer.toString();
 	}
 
 	public final void setMaxClashes(long max_clashes) {
 		if (max_clashes > 0) {
 			this.maxClashes = max_clashes;
 		} else {
-			throw new IllegalArgumentException(
-					"Can't set negative max_clashes: " + max_clashes);
+			throw new IllegalArgumentException("Can't set negative max_clashes: " + max_clashes);
 		}
 	}
 
 	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
 		if (curClockTime - clockStamp > clockPrecision) {
-			Simulator
-					.println("simulation interrupted because the clock time has expired");
+			Simulator.println("simulation interrupted because the clock time has expired");
 			return true;
 		}
-		if (isTime)
+		
+		if (isTime) {
 			if (currentTime <= timeLength) {
 				if (currentTime >= nextStep) {
 					Simulator.print("#");
@@ -524,7 +530,7 @@ public class SimulationData {
 				Simulator.println("#");
 				return true;
 			}
-		else if (count <= event) {
+		} else if (count <= event) {
 			if (count >= nextStep) {
 				Simulator.print("#");
 				nextStep += step;
@@ -557,10 +563,7 @@ public class SimulationData {
 	}
 
 	public boolean isStorify() {
-		if (simulationType == SIMULATION_TYPE_STORIFY) {
-			return true;
-		}
-		return false;
+		return (simulationType == SIMULATION_TYPE_STORIFY);
 	}
 
 	public void setTimeLength(double timeLength) {
@@ -588,8 +591,7 @@ public class SimulationData {
 		this.event = event;
 	}
 
-	public final void initIterations(List<Double> timeStamps,
-			List<List<RunningMetric>> runningMetrics) {
+	public final void initIterations(List<Double> timeStamps, List<List<RunningMetric>> runningMetrics) {
 		this.timeStamps = timeStamps;
 		this.runningMetrics = runningMetrics;
 		int observable_num = observables.getComponentListForXMLOutput().size();
@@ -1235,32 +1237,21 @@ public class SimulationData {
 		return Long.valueOf(value).toString();
 	}
 
-	public final void clearRules() {
-		rules.clear();
-	}
-
-	public final void clearPerturbations() {
-		perturbations.clear();
-	}
-
 	public final String getXmlSessionPath() {
-		if (xmlSessionPath.length() > 0)
-			return xmlSessionPath + "\\" + xmlSessionName;
-		else
-			return xmlSessionName;
+		if (xmlSessionPath.length() > 0) {
+			return xmlSessionPath + File.separator + xmlSessionName;
+		} else {
+			return xmlSessionName; 
+		}
 	}
 
-	public final boolean isOcamlStyleObsName() {
-		return observables.isOcamlStyleObsName();
-	}
 
 	public final void initialize() {
 
 		if (getSerializationMode() == MODE_READ) {
 			ObjectInputStream ois;
 			try {
-				ois = new ObjectInputStream(new FileInputStream(
-						getSerializationFileName()));
+				ois = new ObjectInputStream(new FileInputStream(serializationFileName));
 				solution = (CSolution) ois.readObject();
 				rules = (List<IRule>) ois.readObject();
 				observables = (IObservables) ois.readObject();
@@ -1279,8 +1270,7 @@ public class SimulationData {
 		}
 		if (getSerializationMode() == MODE_SAVE) {
 			try {
-				ObjectOutputStream oos = new ObjectOutputStream(
-						new FileOutputStream(getSerializationFileName()));
+				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(serializationFileName));
 				oos.writeObject(solution);
 				oos.writeObject(rules);
 				oos.writeObject(observables);
@@ -1290,14 +1280,13 @@ public class SimulationData {
 				oos.writeDouble(timeLength);
 				oos.flush();
 				oos.close();
-				setSerializationMode(MODE_READ);
+				serializationMode = MODE_READ;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		getObservables().init(getTimeLength(), getInitialTime(), getEvent(),
-				getPoints(), isTime());
+		getObservables().init(timeLength, initialTime, event, points, isTime());
 		CSolution solution = (CSolution) getSolution();
 		List<IRule> rules = getRules();
 
@@ -1308,7 +1297,7 @@ public class SimulationData {
 		Iterator<IAgent> iterator = solution.getAgents().values().iterator();
 		getObservables().checkAutomorphisms();
 
-		if (isActivationMap()) {
+		if (activationMap) {
 			PlxTimer timer = new PlxTimer();
 			addInfo(new Info(Info.TYPE_INFO, "--Abstracting activation map..."));
 			
@@ -1321,7 +1310,7 @@ public class SimulationData {
 			addInfo(new Info(Info.TYPE_INFO, "--Activation map computed"));
 		}
 
-		if (isInhibitionMap()) {
+		if (inhibitionMap) {
 			PlxTimer timer = new PlxTimer();
 			addInfo(new Info(Info.TYPE_INFO, "--Abstracting inhibition map..."));
 			
@@ -1370,7 +1359,7 @@ public class SimulationData {
 	}
 
 	public void checkOutputFinalState(double currentTime){
-		if(outputFinalState) {
+		if (outputFinalState) {
 			createSnapshots(currentTime);
 		}
 	}
@@ -1602,12 +1591,14 @@ public class SimulationData {
 	}
 
 	public final boolean checkSnapshots(double currentTime) {
-		if (snapshotTimes != null)
-			for (Double time : snapshotTimes)
+		if (snapshotTimes != null) {
+			for (Double time : snapshotTimes) {
 				if (currentTime > time) {
 					snapshotTimes.remove(time);
 					return true;
 				}
+			}
+		}
 		return false;
 	}
 	
@@ -1652,19 +1643,25 @@ public class SimulationData {
 		// this.snapshotTime = snapshotTime;
 	}
 
+	public void setFocusOn(String fileNameFocusOn, Simulator simulator) throws Exception {
+		DataReading dataReading = new DataReading(fileNameFocusOn);
+		dataReading.readData();
+		
+		Parser parser = new Parser(dataReading, this, simulator);
+		List<IRule> ruleList = parser.createRules(dataReading.getRules());
+		
+		if (ruleList != null && !ruleList.isEmpty()) {
+			contactMap.setFocusRule(ruleList.get(0));
+			contactMap.setMode(CContactMap.MODE_AGENT_OR_RULE);
+		}
+	}
+
 	//**************************************************************************
 	//
 	// GETTERS AND SETTERS
 	// 
 	//
 
-	public final List<CSnapshot> getSnapshots() {
-		return snapshots;
-	}
-
-	public final String getXmlSessionName() {
-		return xmlSessionName;
-	}
 
 	public final void setXmlSessionName(String xmlSessionName) {
 		this.xmlSessionName = xmlSessionName;
@@ -1701,16 +1698,8 @@ public class SimulationData {
 		return this.isTime;
 	}
 
-	public final boolean isInhibitionMap() {
-		return inhibitionMap;
-	}
-
 	public final byte getStorifyMode() {
 		return storifyMode;
-	}
-
-	public final void setStorifyMode(byte storifyMode) {
-		this.storifyMode = storifyMode;
 	}
 
 	public final byte getSimulationType() {
@@ -1737,10 +1726,6 @@ public class SimulationData {
 		this.iterations = iterations;
 	}
 
-	public final List<CPerturbation> getPerturbations() {
-		return perturbations;
-	}
-
 	public final void setPerturbations(List<CPerturbation> perturbations) {
 		this.perturbations = perturbations;
 	}
@@ -1751,34 +1736,6 @@ public class SimulationData {
 
 	public final List<List<RunningMetric>> getRunningMetrics() {
 		return runningMetrics;
-	}
-
-	public final String getTmpSessionName() {
-		return tmpSessionName;
-	}
-
-	public final void setTmpSessionName(String tmpSessionName) {
-		this.tmpSessionName = tmpSessionName;
-	}
-
-	public final boolean isActivationMap() {
-		return activationMap;
-	}
-
-	public final Double getInitialTime() {
-		return initialTime;
-	}
-
-	public final void setInitialTime(double intialTime) {
-		this.initialTime = intialTime;
-	}
-
-	public final long getEvent() {
-		return event;
-	}
-
-	public final double getTimeLength() {
-		return timeLength;
 	}
 
 	public final ISolution getSolution() {
@@ -1793,50 +1750,14 @@ public class SimulationData {
 		return rescale;
 	}
 
-	public final void setRescale(double rescale) {
-		this.rescale = rescale;
-	}
-
-	public final Integer getPoints() {
-		return points;
-	}
-
-	public final void setPoints(int points) {
-		this.points = points;
-	}
-
-	public final void setClockPrecision(long clockPrecision) {
-		this.clockPrecision = clockPrecision;
-	}
-
-	public final long getClockPrecision() {
-		return clockPrecision;
-	}
-
 	public final void setClockStamp(long clockStamp) {
 		this.clockStamp = clockStamp;
-	}
-
-	public final long getClockStamp() {
-		return clockStamp;
-	}
-
-	public final void setXmlSessionPath(String path) {
-		this.xmlSessionPath = path;
-	}
-
-	public final void setSerializationMode(byte serializationMode) {
-		this.serializationMode = serializationMode;
 	}
 
 	public final int getSerializationMode() {
 		return serializationMode;
 	}
-
-	public final List<Info> getInfoList() {
-		return infoList;
-	}
-
+	
 	public final String getCommandLine() {
 		return this.commandLine;
 	}
@@ -1845,31 +1766,10 @@ public class SimulationData {
 		return maxClashes;
 	}
 
-	public final void setSerializationFileName(String serializationFileName) {
-		this.serializationFileName = serializationFileName;
-	}
-
-	public final String getSerializationFileName() {
-		return serializationFileName;
-	}
-
 	public final CContactMap getContactMap() {
 		return contactMap;
 	}
 
-	public void setFocusOn(String fileNameFocusOn, Simulator simulator)
-			throws Exception {
-		List<IRule> ruleList;
-		DataReading dr = new DataReading(fileNameFocusOn);
-		dr.readData();
-		com.plectix.simulator.parser.Parser pr = new com.plectix.simulator.parser.Parser(
-				dr, this, simulator);
-		ruleList = pr.createRules(dr.getRules());
-		if (ruleList != null && !ruleList.isEmpty()) {
-			contactMap.setFocusRule(ruleList.get(0));
-			contactMap.setMode(CContactMap.MODE_AGENT_OR_RULE);
-		}
-	}
 
 	public final boolean isCompile() {
 		return compile;

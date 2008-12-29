@@ -1,13 +1,21 @@
 package com.plectix.simulator.components;
 
-import java.util.*;
-
-import org.apache.log4j.jmx.Agent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import com.plectix.simulator.components.actions.CActionType;
 import com.plectix.simulator.components.actions.CAddAction;
-import com.plectix.simulator.components.actions.CModifyAction;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IAction;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.Simulator;
 
 public class CContactMap {
@@ -313,6 +321,9 @@ public class CContactMap {
 		return added;
 	}
 
+	/*
+	 * TODO: Can we remove this method???
+	 * 
 	private void addNewElementsToSolution(IRule rule) {
 		List<Collection<IInjection>> listColls = new ArrayList<Collection<IInjection>>();
 		List<Integer> listCollsNumbers = new ArrayList<Integer>();
@@ -327,6 +338,7 @@ public class CContactMap {
 		// for(IInjection inj)
 
 	}
+	*/
 
 	private void addNewElementsToSolution(List<IInjection> oldInjList,
 			IRule rule) {

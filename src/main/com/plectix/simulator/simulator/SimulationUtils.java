@@ -133,8 +133,7 @@ public class SimulationUtils {
 		return line;
 	}
 
-	private static final List<String> sortSitesStr(List<String> list,
-			boolean isOcamlStyleObsName) {
+	private static final List<String> sortSitesStr(List<String> list, boolean isOcamlStyleObsName) {
 		if (isOcamlStyleObsName) {
 			Collections.sort(list);
 		}
@@ -142,11 +141,11 @@ public class SimulationUtils {
 		return list;
 	}
 
-	public static final List<IConnectedComponent> buildConnectedComponents(
-			List<IAgent> agents) {
+	public static final List<IConnectedComponent> buildConnectedComponents(List<IAgent> agents) {
 
-		if (agents == null || agents.isEmpty())
+		if (agents == null || agents.isEmpty()) {
 			return null;
+		}
 
 		List<IConnectedComponent> result = new ArrayList<IConnectedComponent>();
 
@@ -220,7 +219,7 @@ public class SimulationUtils {
 				isStorify);
 	}
 
-	public final static String[] changeArgs(String[] args) {
+	public final static String[] changeArguments(String[] args) {
 		String[] argsNew = new String[args.length];
 		int i = 0;
 		for (String st : args)

@@ -51,7 +51,7 @@ public class Simulator implements SimulatorInterface {
 
 	private int agentIdGenerator = 0;
 
-	private double currentTime = 0.;
+	private double currentTime = 0.0;
 
 	private boolean isIteration = false;
 
@@ -141,10 +141,7 @@ public class Simulator implements SimulatorInterface {
 		simulationData.getObservables().resetLists();
 		simulationData.getSolution().clearAgents();
 		simulationData.getSolution().clearSolutionLines();
-		
-		if (simulationData.getPerturbations() != null) {
-			simulationData.clearPerturbations();
-		}
+		simulationData.clearPerturbations();
 
 		currentTime = 0.0;
 
@@ -186,14 +183,15 @@ public class Simulator implements SimulatorInterface {
 				Simulator.println("#");
 				break;
 			}
+			
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Rule: " + rule.getName());
 			}
 
-			List<IInjection> injectionsList = ruleProbabilityCalculation
-					.getSomeInjectionList(rule);
-			if (!rule.isInfinityRate())
+			List<IInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
+			if (!rule.isInfinityRate()) {
 				currentTime += ruleProbabilityCalculation.getTimeValue();
+			}
 
 			if (!rule.isClash(injectionsList)) {
 				// negative update
@@ -205,25 +203,27 @@ public class Simulator implements SimulatorInterface {
 				rule.applyRule(injectionsList, this);
 
 				SimulationUtils.doNegativeUpdate(injectionsList);
+				
 				// positive update
-				if (LOGGER.isDebugEnabled())
+				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("positive update");
+				}
 
 				simulationData.doPositiveUpdate(rule, injectionsList);
 
 				simulationData.getObservables().calculateObs(currentTime, count, simulationData.isTime());
 			} else {
-				simulationData.addInfo(
-						new Info(Info.TYPE_INTERNAL,
-								"Application of rule exp is clashing"));
-				if (LOGGER.isDebugEnabled())
+				simulationData.addInfo(new Info(Info.TYPE_INTERNAL, "Application of rule exp is clashing"));
+				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Clash");
+				}
 				clash++;
 				max_clash++;
 			}
 
-			if (isIteration)
+			if (isIteration) {
 				addIteration(iteration_num);
+			}
 		}
 		
 		simulationData.checkOutputFinalState(currentTime);
@@ -285,8 +285,8 @@ public class Simulator implements SimulatorInterface {
 		List<Double> timeStamps = new ArrayList<Double>();
 		List<List<RunningMetric>> runningMetrics = new ArrayList<List<RunningMetric>>();
 		simulationData.initIterations(timeStamps, runningMetrics);
-		for (int iteration_num = 0; iteration_num < simulationData
-				.getIterations(); iteration_num++) {
+		
+		for (int iteration_num = 0; iteration_num < simulationData.getIterations(); iteration_num++) {
 			// Initialize the Random Number Generator with seed = initialSeed +
 			// i
 			// We also need a new command line argument to feed the initialSeed.
@@ -302,8 +302,9 @@ public class Simulator implements SimulatorInterface {
 
 			// if the simulator's initial state is cached, reload it for next
 			// run
-			if (iteration_num < simulationData.getIterations() - 1)
+			if (iteration_num < simulationData.getIterations() - 1) {
 				resetSimulation();
+			}
 
 		}
 
@@ -324,16 +325,15 @@ public class Simulator implements SimulatorInterface {
 			
 			boolean isEndRules = false;
 			long clash = 0;
-			IRule rule;
 			long max_clash = 0;
-			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
-					simulationData);
+			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(simulationData);
 		    simulationData.resetBar();
+		    
 			while (!simulationData.isEndSimulation(currentTime, count)
 					&& max_clash <= simulationData.getMaxClashes()) {
 				
 				simulationData.checkPerturbation(currentTime);
-				rule = ruleProbabilityCalculation.getRandomRule();
+				IRule rule = ruleProbabilityCalculation.getRandomRule();
 
 				if (rule == null) {
 					simulationData.setTimeLength(currentTime);
@@ -341,29 +341,28 @@ public class Simulator implements SimulatorInterface {
 					break;
 				}
 
-				List<IInjection> injectionsList = ruleProbabilityCalculation
-						.getSomeInjectionList(rule);
+				List<IInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
+				
 				currentTime += ruleProbabilityCalculation.getTimeValue();
+				
 				if (!rule.isClash(injectionsList)) {
-					CNetworkNotation netNotation = new CNetworkNotation(count,
-							rule, injectionsList, simulationData);
+					CNetworkNotation netNotation = new CNetworkNotation(count, rule, injectionsList, simulationData);
 					max_clash = 0;
 					if (stories.checkRule(rule.getRuleID(), i)) {
-						rule.applyLastRuleForStories(injectionsList,
-								netNotation);
-						rule.applyRuleForStories(injectionsList, netNotation,
-								this,true);
-						stories.addToNetworkNotationStoryStorifyRule(i,
-								netNotation, currentTime);
+						rule.applyLastRuleForStories(injectionsList,netNotation);
+						rule.applyRuleForStories(injectionsList, netNotation, this,true);
+						stories.addToNetworkNotationStoryStorifyRule(i, netNotation, currentTime);
 						// stories.addToNetworkNotationStory(i, netNotation);
 						count++;
 						isEndRules = true;
 						Simulator.println("#");
 						break;
 					}
+					
 					rule.applyRuleForStories(injectionsList, netNotation, this,false);
-					if (!rule.isRHSEqualsLHS())
+					if (!rule.isRHSEqualsLHS()) {
 						stories.addToNetworkNotationStory(i, netNotation);
+					}
 					count++;
 
 					SimulationUtils.doNegativeUpdate(injectionsList);
@@ -373,12 +372,16 @@ public class Simulator implements SimulatorInterface {
 					max_clash++;
 				}
 			}
+			
 			count = 0;
 			outToLogger(isEndRules, timer);
 			stories.handling(i);
-			if (i < simulationData.getIterations() - 1)
+			
+			if (i < simulationData.getIterations() - 1) {
 				resetSimulation();
+			}
 		}
+		
 		stories.merge();
 		Source source = addCompleteSource();
 		simulationData.outputData(source, count);
