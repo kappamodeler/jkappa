@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CLinkState;
@@ -133,7 +132,8 @@ public class SimulationUtils {
 		return line;
 	}
 
-	private static final List<String> sortSitesStr(List<String> list, boolean isOcamlStyleObsName) {
+	private static final List<String> sortSitesStr(List<String> list,
+			boolean isOcamlStyleObsName) {
 		if (isOcamlStyleObsName) {
 			Collections.sort(list);
 		}
@@ -141,7 +141,8 @@ public class SimulationUtils {
 		return list;
 	}
 
-	public static final List<IConnectedComponent> buildConnectedComponents(List<IAgent> agents) {
+	public static final List<IConnectedComponent> buildConnectedComponents(
+			List<IAgent> agents) {
 
 		if (agents == null || agents.isEmpty()) {
 			return null;
@@ -170,7 +171,7 @@ public class SimulationUtils {
 			List<IAgent> hsRulesList, List<IAgent> agentsList) {
 		agentsList.add(rootAgent);
 		rootAgent.setIdInConnectedComponent(agentsList.size() - 1);
-		removeAgent(hsRulesList, rootAgent);
+		hsRulesList.remove(rootAgent);
 		for (ISite site : rootAgent.getSites()) {
 			if (site.getLinkIndex() != CSite.NO_INDEX) {
 				IAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
@@ -203,15 +204,6 @@ public class SimulationUtils {
 		return null;
 	}
 
-	private static final void removeAgent(List<IAgent> agents, IAgent agent) {
-		int i = 0;
-		for (i = 0; i < agents.size(); i++) {
-			if (agents.get(i) == agent)
-				break;
-		}
-		agents.remove(i);
-	}
-
 	public static final IRule buildRule(List<IAgent> left, List<IAgent> right,
 			String name, double activity, int ruleID, boolean isStorify) {
 		return new CRule(buildConnectedComponents(left),
@@ -232,10 +224,8 @@ public class SimulationUtils {
 	}
 
 	public final static void addToAgentList(List<IAgent> list, IAgent agent) {
-		for (IAgent agentL : list) {
-			if (agentL == agent) {
-				return;
-			}
+		if (list.contains(agent)) {
+			return;
 		}
 		list.add(agent);
 	}
@@ -244,14 +234,16 @@ public class SimulationUtils {
 		for (IInjection injection : injectionsList) {
 			if (injection != CInjection.EMPTY_INJECTION) {
 				for (ISite site : injection.getChangedSites()) {
-					site.getAgentLink().getEmptySite().removeInjectionsFromCCToSite(injection);
+					site.getAgentLink().getEmptySite()
+							.removeInjectionsFromCCToSite(injection);
 					site.getAgentLink().getEmptySite().clearLiftList();
 					site.removeInjectionsFromCCToSite(injection);
 					site.clearLiftList();
 				}
 				if (injection.getChangedSites().size() != 0) {
 					for (ISite site : injection.getSiteList()) {
-						if (!injection.checkSiteExistanceAmongChangedSites(site)) {
+						if (!injection
+								.checkSiteExistanceAmongChangedSites(site)) {
 							site.removeInjectionFromLift(injection);
 						}
 					}
@@ -262,12 +254,13 @@ public class SimulationUtils {
 		}
 	}
 
-	public final static List<IAgent> doNegativeUpdateForDeletedAgents(IRule rule, List<IInjection> injectionsList) {
+	public final static List<IAgent> doNegativeUpdateForDeletedAgents(
+			IRule rule, List<IInjection> injectionsList) {
 		List<IAgent> freeAgents = new ArrayList<IAgent>();
 		for (IInjection injection : injectionsList) {
 			for (ISite checkedSite : rule.getSitesConnectedWithDeleted()) {
 				if (!injection.checkSiteExistanceAmongChangedSites(checkedSite)) {
-	
+
 					IAgent checkedAgent = checkedSite.getAgentLink();
 					addToAgentList(freeAgents, checkedAgent);
 					for (ILiftElement lift : checkedAgent.getEmptySite()
@@ -277,13 +270,13 @@ public class SimulationUtils {
 					}
 					checkedAgent.getEmptySite().clearLiftList();
 					for (ILiftElement lift : checkedSite.getLift()) {
-	
+
 						for (ISite site : lift.getInjection().getSiteList()) {
 							if (site != checkedSite)
 								site.removeInjectionFromLift(lift
 										.getInjection());
 						}
-	
+
 						lift.getConnectedComponent().removeInjection(
 								lift.getInjection());
 					}
@@ -301,7 +294,7 @@ public class SimulationUtils {
 	public final static String perturbationParametersToString(
 			List<IPerturbationExpression> sumParameters) {
 		String st = new String();
-	
+
 		int index = 1;
 		for (IPerturbationExpression parameters : sumParameters) {
 			st += parameters.getValueToString();
@@ -314,11 +307,12 @@ public class SimulationUtils {
 				st += " + ";
 			index++;
 		}
-	
+
 		return st;
 	}
 
-	public final static void positiveUpdate(List<IRule> rulesList, List<IObservablesConnectedComponent> list, IRule rule) {
+	public final static void positiveUpdate(List<IRule> rulesList,
+			List<IObservablesConnectedComponent> list, IRule rule) {
 		for (IRule rules : rulesList) {
 			for (IConnectedComponent cc : rules.getLeftHandSide()) {
 				cc.doPositiveUpdate(rule.getRightHandSide());
