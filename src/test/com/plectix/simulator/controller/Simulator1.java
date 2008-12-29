@@ -18,22 +18,18 @@ public class Simulator1 implements SimulatorInterface {
 		return new Simulator1();
 	}
 	
-	@Override
 	public double getCurrentTime() {
 		return currentTime;
 	}
 
-	@Override
 	public String getName() {
 		return NAME;
 	}
 
-	@Override
 	public SimulatorResultsData getSimulatorResultsData() {
 		return resultsData;
 	}
 
-	@Override
 	public void run(SimulatorInputData simulatorInputData) throws InterruptedException {
 		for (int i= 0; i < 2000; i++) {
 			currentTime += Math.random();

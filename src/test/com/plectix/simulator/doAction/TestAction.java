@@ -9,9 +9,11 @@ import org.junit.runners.*;
 import org.junit.runners.Parameterized.Parameters;
 
 import org.junit.*;
+import org.omg.CORBA.INITIALIZE;
 
 import static org.junit.Assert.*;
 
+import com.plectix.simulator.Initializator;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -59,7 +61,7 @@ public class TestAction {
 		FilePath = testFilePath;
 	}
 
-	private static void parseArgs(String filePath) {
+	private static String[] parseArgs(String filePath) {
 		String arg1 = new String("--debug");
 		String arg2 = new String("--sim");
 		String arg3 = new String(filePath);
@@ -70,19 +72,16 @@ public class TestAction {
 		args[1] = arg2;
 		args[2] = arg3;
 		args[3] = arg4;
-		myArguments = SimulationData.parseArguments(mySimulator
-				.getSimulationData(), args);
+		return args;
 	}
 
 	@BeforeClass
 	public static void init() {
 		if (myFirstRun)
 			FilePath = "test.data/actions/test00";
-		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
-		mySimulator = new Simulator();
-		parseArgs(FilePath);
-		SimulationData.readSimulatonFile(mySimulator, myArguments);
-		mySimulator.init(myArguments);
+		Initializator initializator = new Initializator();
+		initializator.init(parseArgs(FilePath));
+		mySimulator = initializator.getSimulator();
 		System.out.println(FilePath);
 	}
 

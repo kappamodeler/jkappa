@@ -6,16 +6,13 @@ import java.util.List;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.options.SimulatorArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 
 public class Initializator {
 	private Simulator mySimulator;
-	private List<IObservablesConnectedComponent> myObsComponents;
 	private Double myRescale = null;
 	
-	private SimulatorArguments myArguments;
 	private static boolean myFirstRun = true;
 	
 	private final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
@@ -24,7 +21,7 @@ public class Initializator {
 		myRescale = rescale;
 	}
 	
-	private void parseArgs(String filePath) {
+	private String[] prepareTestArgs(String filePath) {
 		boolean rescale = (myRescale != null);
 		String[] args;
 		if (!rescale) {
@@ -41,33 +38,36 @@ public class Initializator {
 		args[4] = "5";
 		args[5] = "--seed";
 		args[6] = "10";
-		myArguments = SimulationData.parseArguments(
-				mySimulator.getSimulationData(), args);
+		return args;
 	}
 
 	public void reset(String filePath) {
-		parseArgs(filePath);
+		prepareTestArgs(filePath);
 		mySimulator.resetSimulation();
 	}
 	
 	public void init(String filePath) {
+		String[] args = prepareTestArgs(filePath);
 		if (myFirstRun) {
+			init(prepareTestArgs(filePath));
+			myFirstRun = false;
+		} else {
+			reset(filePath);
+		}
+
+	}
+	
+	public void init(String[] testArgs) {
 			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 			
 			mySimulator = new Simulator();
 
-			parseArgs(filePath);
+			SimulationData simulationData = mySimulator.getSimulationData();
 
-			SimulationData.readSimulatonFile(mySimulator, myArguments);
-			mySimulator.init(myArguments);
-
-			myFirstRun = false;
-			myObsComponents = mySimulator.getSimulationData().getObservables()
-				.getConnectedComponentList();
+			simulationData.parseArguments(testArgs);
+			simulationData.readSimulatonFile(mySimulator);
+			simulationData.initialize();
 	
-		} else {
-			reset(filePath);
-		}
 	}
 	
 	public Simulator getSimulator() { 
@@ -75,8 +75,8 @@ public class Initializator {
 	}
 	
 	public List<IObservablesConnectedComponent> getObservables() {
-		return Collections.unmodifiableList(myObsComponents);
+		return Collections.unmodifiableList(mySimulator.getSimulationData().getObservables()
+				.getConnectedComponentList());
 	}
-
 	
 }

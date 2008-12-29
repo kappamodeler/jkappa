@@ -55,7 +55,6 @@ public class SimulationServiceTest implements SimulatorCallableListener {
 		System.exit(0);
 	}
 
-	@Override
 	public void finished(SimulatorCallable simulatorCallable) {
 		Exception e = simulatorCallable.getSimulatorExitReport().getException();
 		System.err.println("Simulator [" + simulatorCallable.getSimulator().getName() 
