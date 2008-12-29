@@ -39,7 +39,7 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements T
 	public abstract void init();
 	
 	public IRule getRuleByName(String name) {
-		for (IRule rule : mySimulator.getRules()) {
+		for (IRule rule : mySimulator.getSimulationData().getRules()) {
 			if (name.equals(rule.getName())) {
 				return rule;
 			}

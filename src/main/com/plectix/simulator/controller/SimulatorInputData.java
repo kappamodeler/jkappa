@@ -4,16 +4,16 @@ import java.io.PrintStream;
 
 public class SimulatorInputData {
 
-	private final String[] args;
+	private final String[] arguments;
 	
 	private PrintStream printStream;
 
 	public SimulatorInputData(String[] args) {
-		this.args = args;
+		this.arguments = args;
 	}
 
 	public SimulatorInputData(String[] args, PrintStream printStream) {
-		this.args = args;
+		this.arguments = args;
 		this.printStream = printStream;
 	}
 
@@ -21,7 +21,7 @@ public class SimulatorInputData {
 		return printStream;
 	}
 
-	public final String[] getArgs() {
-		return args;
+	public final String[] getArguments() {
+		return arguments;
 	}
 }

@@ -53,6 +53,9 @@ import com.plectix.simulator.components.CStoryTrees;
 import com.plectix.simulator.components.CStoryType;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.SnapshotElement;
+import com.plectix.simulator.components.SolutionLines;
+import com.plectix.simulator.components.actions.CActionType;
+import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -1366,6 +1369,151 @@ public class SimulationData {
 
 	}
 
+	public void checkOutputFinalState(double currentTime){
+		if(outputFinalState) {
+			createSnapshots(currentTime);
+		}
+	}
+	
+	public void createSnapshots(double currentTime){
+		addSnapshot(new CSnapshot(this, currentTime));
+//		simulationData.setSnapshotTime(currentTime);
+	}
+	
+	public final void outputSolution() {
+		Simulator.println("INITIAL SOLUTION:");
+		for (SolutionLines sl : ((CSolution) solution).getSolutionLines()) {
+			Simulator.print("-");
+			Simulator.print("" + sl.getCount());
+			Simulator.print("*[");
+			Simulator.print(sl.getLine());
+			Simulator.println("]");
+		}
+	}
+	
+	public final void outputRules() {
+		for (IRule rule : getRules()) {
+			// int countAgentsInLHS = rule.getCountAgentsLHS();
+			// int indexNewAgent = countAgentsInLHS;
+
+			for (IAction action : rule.getActionList()) {
+				switch (CActionType.getById(action.getTypeId())) {
+				case BREAK: {
+					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
+							.getSite());
+					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() < siteTo
+							.getAgentLink().getIdInRuleSide()) {
+						// BRK (#0,a) (#1,x)
+						Simulator.print("BRK (#");
+						Simulator.print(""
+								+ (action.getSiteFrom().getAgentLink()
+										.getIdInRuleSide() - 1));
+						Simulator.print(",");
+						Simulator.print(action.getSiteFrom().getName());
+						Simulator.print(") ");
+						Simulator.print("(#");
+						Simulator
+								.print(""
+										+ (siteTo.getAgentLink()
+												.getIdInRuleSide() - 1));
+						Simulator.print(",");
+						Simulator.print(siteTo.getName());
+						Simulator.print(") ");
+						Simulator.println();
+					}
+					break;
+				}
+				case DELETE: {
+					// DEL #0
+					Simulator.print("DEL #");
+					Simulator.println(""
+							+ (action.getAgentFrom().getIdInRuleSide() - 1));
+					break;
+				}
+				case ADD: {
+					// ADD a#0(x)
+					Simulator.print("ADD " + action.getAgentTo().getName()
+							+ "#");
+
+					Simulator.print(""
+							+ (action.getAgentTo().getIdInRuleSide() - 1));
+					Simulator.print("(");
+					int i = 1;
+					for (ISite site : action.getAgentTo().getSites()) {
+						Simulator.print(site.getName());
+						if ((site.getInternalState() != null)
+								&& (site.getInternalState().getNameId() >= 0))
+							Simulator.print("~"
+									+ site.getInternalState().getName());
+						if (action.getAgentTo().getSites().size() > i++)
+							Simulator.print(",");
+					}
+					Simulator.println(") ");
+
+					break;
+				}
+				case BOUND: {
+					// BND (#1,x) (#0,a)
+					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
+							.getSite());
+					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() > siteTo
+							.getAgentLink().getIdInRuleSide()) {
+						Simulator.print("BND (#");
+						Simulator.print(""
+								+ (action.getSiteFrom().getAgentLink()
+										.getIdInRuleSide() - 1));
+						Simulator.print(",");
+						Simulator.print(action.getSiteFrom().getName());
+						Simulator.print(") ");
+						Simulator.print("(#");
+						Simulator.print(""
+								+ (action.getSiteTo().getAgentLink()
+										.getIdInRuleSide() - 1));
+						Simulator.print(",");
+						Simulator.print(siteTo.getName());
+						Simulator.print(") ");
+						Simulator.println();
+					}
+					break;
+				}
+				case MODIFY: {
+					// MOD (#1,x) with p
+					Simulator.print("MOD (#");
+					Simulator.print(""
+							+ (action.getSiteFrom().getAgentLink()
+									.getIdInRuleSide() - 1));
+					Simulator.print(",");
+					Simulator.print(action.getSiteFrom().getName());
+					Simulator.print(") with ");
+					Simulator.print(action.getSiteTo().getInternalState()
+							.getName());
+					Simulator.println();
+					break;
+				}
+				}
+
+			}
+
+			String line = SimulationUtils.printPartRule(rule.getLeftHandSide(), isOcamlStyleObsName());
+			line = line + "->";
+			line = line + SimulationUtils.printPartRule(rule.getRightHandSide(), isOcamlStyleObsName());
+			String ch = new String();
+			for (int j = 0; j < line.length(); j++)
+				ch = ch + "-";
+
+			Simulator.println(ch);
+			if (rule.getName() != null) {
+				Simulator.print(rule.getName());
+				Simulator.print(": ");
+			}
+			Simulator.print(line);
+			Simulator.println();
+			Simulator.println(ch);
+			Simulator.println();
+			Simulator.println();
+		}
+	}
+
 	public final void outputPertubation() {
 		Simulator.println("PERTURBATIONS:");
 
@@ -1531,8 +1679,9 @@ public class SimulationData {
 	}
 
 	public final void addSnapshot(CSnapshot snapshot) {
-		if (snapshots == null)
+		if (snapshots == null) {
 			snapshots = new ArrayList<CSnapshot>();
+		}
 		this.snapshots.add(snapshot);
 	}
 

@@ -57,7 +57,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	}
 
 	public List<IRule> getRules() {
-		return mySimulator.getRules();
+		return mySimulator.getSimulationData().getRules();
 	}
 
 	public List<IInjection> getCurrentInjectionsList() {

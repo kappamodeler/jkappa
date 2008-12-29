@@ -12,19 +12,13 @@ import org.apache.log4j.Logger;
 
 import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CProbabilityCalculation;
-import com.plectix.simulator.components.CSnapshot;
-import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.NameDictionary;
-import com.plectix.simulator.components.SolutionLines;
-import com.plectix.simulator.components.actions.CActionType;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
-import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
@@ -63,14 +57,13 @@ public class Simulator implements SimulatorInterface {
 
 	private int timeStepCounter = 0;
 	
-	private SimulationData simulationData;
+	private SimulationData simulationData = new SimulationData();
 
-	private SimulatorResultsData simulatorResultsData;
+	private SimulatorResultsData simulatorResultsData = new SimulatorResultsData();
 	
 
 	public Simulator() {
-		simulationData = new SimulationData();
-		simulatorResultsData = new SimulatorResultsData();
+		super();
 		printStream.set(System.out);
 	}
 
@@ -80,7 +73,7 @@ public class Simulator implements SimulatorInterface {
 	}
 	
 	private final void addIteration(int iteration_num) {
-
+		// TODO: This method should be rewritten!!!
 		List<List<RunningMetric>> runningMetrics = simulationData.getRunningMetrics();
 		int number_of_observables = simulationData.getObservables().getComponentListForXMLOutput().size();
 
@@ -111,9 +104,9 @@ public class Simulator implements SimulatorInterface {
 	}
 
 	public final void outputData() {
-		outputRules();
+		simulationData.outputRules();
 		simulationData.outputPertubation();
-		outputSolution();
+		simulationData.outputSolution();
 	}
 
 	private Source addCompleteSource() throws TransformerException, ParserConfigurationException {
@@ -122,156 +115,19 @@ public class Simulator implements SimulatorInterface {
 		return source;
 	}
 
-
-	private final void outputRules() {
-		for (IRule rule : getRules()) {
-			// int countAgentsInLHS = rule.getCountAgentsLHS();
-			// int indexNewAgent = countAgentsInLHS;
-
-			for (IAction action : rule.getActionList()) {
-				switch (CActionType.getById(action.getTypeId())) {
-				case BREAK: {
-					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
-							.getSite());
-					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() < siteTo
-							.getAgentLink().getIdInRuleSide()) {
-						// BRK (#0,a) (#1,x)
-						Simulator.print("BRK (#");
-						Simulator.print(""
-								+ (action.getSiteFrom().getAgentLink()
-										.getIdInRuleSide() - 1));
-						Simulator.print(",");
-						Simulator.print(action.getSiteFrom().getName());
-						Simulator.print(") ");
-						Simulator.print("(#");
-						Simulator
-								.print(""
-										+ (siteTo.getAgentLink()
-												.getIdInRuleSide() - 1));
-						Simulator.print(",");
-						Simulator.print(siteTo.getName());
-						Simulator.print(") ");
-						Simulator.println();
-					}
-					break;
-				}
-				case DELETE: {
-					// DEL #0
-					Simulator.print("DEL #");
-					Simulator.println(""
-							+ (action.getAgentFrom().getIdInRuleSide() - 1));
-					break;
-				}
-				case ADD: {
-					// ADD a#0(x)
-					Simulator.print("ADD " + action.getAgentTo().getName()
-							+ "#");
-
-					Simulator.print(""
-							+ (action.getAgentTo().getIdInRuleSide() - 1));
-					Simulator.print("(");
-					int i = 1;
-					for (ISite site : action.getAgentTo().getSites()) {
-						Simulator.print(site.getName());
-						if ((site.getInternalState() != null)
-								&& (site.getInternalState().getNameId() >= 0))
-							Simulator.print("~"
-									+ site.getInternalState().getName());
-						if (action.getAgentTo().getSites().size() > i++)
-							Simulator.print(",");
-					}
-					Simulator.println(") ");
-
-					break;
-				}
-				case BOUND: {
-					// BND (#1,x) (#0,a)
-					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
-							.getSite());
-					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() > siteTo
-							.getAgentLink().getIdInRuleSide()) {
-						Simulator.print("BND (#");
-						Simulator.print(""
-								+ (action.getSiteFrom().getAgentLink()
-										.getIdInRuleSide() - 1));
-						Simulator.print(",");
-						Simulator.print(action.getSiteFrom().getName());
-						Simulator.print(") ");
-						Simulator.print("(#");
-						Simulator.print(""
-								+ (action.getSiteTo().getAgentLink()
-										.getIdInRuleSide() - 1));
-						Simulator.print(",");
-						Simulator.print(siteTo.getName());
-						Simulator.print(") ");
-						Simulator.println();
-					}
-					break;
-				}
-				case MODIFY: {
-					// MOD (#1,x) with p
-					Simulator.print("MOD (#");
-					Simulator.print(""
-							+ (action.getSiteFrom().getAgentLink()
-									.getIdInRuleSide() - 1));
-					Simulator.print(",");
-					Simulator.print(action.getSiteFrom().getName());
-					Simulator.print(") with ");
-					Simulator.print(action.getSiteTo().getInternalState()
-							.getName());
-					Simulator.println();
-					break;
-				}
-				}
-
-			}
-
-			String line = SimulationUtils.printPartRule(rule.getLeftHandSide(), simulationData
-					.isOcamlStyleObsName());
-			line = line + "->";
-			line = line
-					+ SimulationUtils.printPartRule(rule.getRightHandSide(), simulationData
-							.isOcamlStyleObsName());
-			String ch = new String();
-			for (int j = 0; j < line.length(); j++)
-				ch = ch + "-";
-
-			Simulator.println(ch);
-			if (rule.getName() != null) {
-				Simulator.print(rule.getName());
-				Simulator.print(": ");
-			}
-			Simulator.print(line);
-			Simulator.println();
-			Simulator.println(ch);
-			Simulator.println();
-			Simulator.println();
-		}
-	}
-
 	public static final void println() {
 		printStream.get().println();
 	}
 
-	private final void outputSolution() {
-		Simulator.println("INITIAL SOLUTION:");
-		for (SolutionLines sl : ((CSolution) simulationData.getSolution())
-				.getSolutionLines()) {
-			Simulator.print("-");
-			Simulator.print("" + sl.getCount());
-			Simulator.print("*[");
-			Simulator.print(sl.getLine());
-			Simulator.println("]");
-		}
-	}
 
 	private final void outToLogger(boolean isEndRules, PlxTimer timer) {
 		simulationData.stopTimer(timer, "-Simulation:");
 
-		if (!isEndRules)
+		if (!isEndRules) {
 			LOGGER.info("end of simulation: time");
-		else
+		} else {
 			LOGGER.info("end of simulation: there are no active rules");
+		}
 	}
 
 	public final void resetSimulation() {
@@ -318,8 +174,9 @@ public class Simulator implements SimulatorInterface {
 		while (!simulationData.isEndSimulation(currentTime, count)
 				&& max_clash <= simulationData.getMaxClashes()) {
 			while (simulationData.checkSnapshots(currentTime)) {
-				createSnapshots();				
+				simulationData.createSnapshots(currentTime);				
 			}
+			
 			simulationData.checkPerturbation(currentTime);
 			IRule rule = ruleProbabilityCalculation.getRandomRule();
 
@@ -329,8 +186,9 @@ public class Simulator implements SimulatorInterface {
 				Simulator.println("#");
 				break;
 			}
-			if (LOGGER.isDebugEnabled())
+			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Rule: " + rule.getName());
+			}
 
 			List<IInjection> injectionsList = ruleProbabilityCalculation
 					.getSomeInjectionList(rule);
@@ -367,7 +225,8 @@ public class Simulator implements SimulatorInterface {
 			if (isIteration)
 				addIteration(iteration_num);
 		}
-		checkOutputFinalState();
+		
+		simulationData.checkOutputFinalState(currentTime);
 		simulationData.getObservables().calculateObsLast(currentTime);
 		simulationData.setTimeLength(currentTime);
 		simulationData.setEvent(count);
@@ -380,21 +239,11 @@ public class Simulator implements SimulatorInterface {
 		}
 	}
 	
-	private void checkOutputFinalState(){
-		if(simulationData.isOutputFinalState())
-			createSnapshots();
-	}
-	
-	private void createSnapshots(){
-		simulationData.addSnapshot(
-				new CSnapshot(simulationData,currentTime));
-//		simulationData.setSnapshotTime(currentTime);
-	}
 
 	public final void run(SimulatorInputData simulatorInputData) throws Exception {
-		String[] args = simulatorInputData.getArgs();
+		String[] args = simulatorInputData.getArguments();
 		printStream.set(simulatorInputData.getPrintStream());
-		SimulationData simulationData = getSimulationData();
+
 		simulationData.setCommandLine(args);
 		Simulator.println("Java " + simulationData.getCommandLine());
 
@@ -402,12 +251,11 @@ public class Simulator implements SimulatorInterface {
 		timer.startTimer();
 		
 		simulationData.parseArguments(args);
-		
 		simulationData.readSimulatonFile(this);
-		
 		simulationData.initialize();
-		getSimulationData().stopTimer(timer, "-Initialization:");
-		getSimulationData().setClockStamp(System.currentTimeMillis());
+		
+		simulationData.stopTimer(timer, "-Initialization:");
+		simulationData.setClockStamp(System.currentTimeMillis());
 		
 		if (simulationData.isCompile()) {
 			outputData();
@@ -426,9 +274,6 @@ public class Simulator implements SimulatorInterface {
 			} else {
 				run(0);
 			}
-
-			//simulatorResultsData.setResultSource(simulationData.createDOMModel
-			// ());
 		}
 		
 		System.out.println("-------" + simulatorResultsData.getResultSource());
@@ -538,11 +383,6 @@ public class Simulator implements SimulatorInterface {
 		Source source = addCompleteSource();
 		simulationData.outputData(source, count);
 	}
-
-	public final void setRules(List<IRule> rules) {
-		simulationData.setRules(rules);
-	}
-
 	
 	//////////////////////////////////////////////////////////////////////////
 	//
@@ -560,10 +400,6 @@ public class Simulator implements SimulatorInterface {
 
 	public final String getName() {
 		return NAME;
-	}
-
-	public final List<IRule> getRules() {
-		return simulationData.getRules();
 	}
 
 	public final SimulationData getSimulationData() {
