@@ -329,7 +329,7 @@ public class Simulator implements SimulatorInterface {
 			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(simulationData);
 		    simulationData.resetBar();
 		    
-			while (!simulationData.isEndSimulation(currentTime, count)
+		    while (!simulationData.isEndSimulation(currentTime, count)
 					&& max_clash <= simulationData.getMaxClashes()) {
 				
 				simulationData.checkPerturbation(currentTime);
@@ -343,8 +343,9 @@ public class Simulator implements SimulatorInterface {
 
 				List<IInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
 				
-				currentTime += ruleProbabilityCalculation.getTimeValue();
-				
+				if (!rule.isInfinityRate()) {
+					currentTime += ruleProbabilityCalculation.getTimeValue();
+				}
 				if (!rule.isClash(injectionsList)) {
 					CNetworkNotation netNotation = new CNetworkNotation(count, rule, injectionsList, simulationData);
 					max_clash = 0;
