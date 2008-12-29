@@ -181,8 +181,9 @@ public class SimulationUtils {
 
 	private static final boolean isAgentInList(List<IAgent> list, IAgent agent) {
 		for (IAgent lagent : list) {
-			if (lagent == agent)
+			if (lagent == agent) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -224,6 +225,15 @@ public class SimulationUtils {
 			else
 				argsNew[i++] = st;
 		return argsNew;
+	}
+
+	public final static void addToAgentList(List<IAgent> list, IAgent agent) {
+		for (IAgent agentL : list) {
+			if (agentL == agent) {
+				return;
+			}
+		}
+		list.add(agent);
 	}
 
 }

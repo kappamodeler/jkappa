@@ -89,10 +89,8 @@ public class Simulator implements SimulatorInterface {
 	
 	private final void addIteration(int iteration_num) {
 
-		List<List<RunningMetric>> runningMetrics = simulationData
-				.getRunningMetrics();
-		int number_of_observables = getSimulationData().getObservables()
-				.getComponentListForXMLOutput().size();
+		List<List<RunningMetric>> runningMetrics = simulationData.getRunningMetrics();
+		int number_of_observables = getSimulationData().getObservables().getComponentListForXMLOutput().size();
 
 		if (iteration_num == 0) {
 			simulationData.getTimeStamps().add(currentTime);
@@ -114,38 +112,6 @@ public class Simulator implements SimulatorInterface {
 		}
 
 		timeStepCounter++;
-	}
-
-	private final void addToAgentList(List<IAgent> list, IAgent agent) {
-		for (IAgent agentL : list)
-			if (agentL == agent)
-				return;
-		list.add(agent);
-	}
-
-	private final void checkPerturbation() {
-		if (getSimulationData().getPerturbations().size() != 0) {
-			for (CPerturbation pb : getSimulationData().getPerturbations()) {
-				switch (pb.getType()) {
-				case CPerturbation.TYPE_TIME: {
-					if (!pb.isDo())
-						pb.checkCondition(currentTime);
-					break;
-				}
-				case CPerturbation.TYPE_NUMBER: {
-					pb.checkCondition(getSimulationData().getObservables());
-					break;
-				}
-				case CPerturbation.TYPE_ONCE: {
-					if (!pb.isDo())
-						pb.checkConditionOnce(currentTime);
-					break;
-				}
-				}
-
-			}
-
-		}
 	}
 
 	public final void doNegativeUpdate(List<IInjection> injectionsList) {
@@ -180,7 +146,7 @@ public class Simulator implements SimulatorInterface {
 				if (!injection.checkSiteExistanceAmongChangedSites(checkedSite)) {
 
 					IAgent checkedAgent = checkedSite.getAgentLink();
-					addToAgentList(freeAgents, checkedAgent);
+					SimulationUtils.addToAgentList(freeAgents, checkedAgent);
 					for (ILiftElement lift : checkedAgent.getEmptySite()
 							.getLift()) {
 						lift.getConnectedComponent().removeInjection(
@@ -204,7 +170,7 @@ public class Simulator implements SimulatorInterface {
 		}
 		for (ISite checkedSite : rule.getSitesConnectedWithBroken()) {
 			IAgent checkedAgent = checkedSite.getAgentLink();
-			addToAgentList(freeAgents, checkedAgent);
+			SimulationUtils.addToAgentList(freeAgents, checkedAgent);
 		}
 		return freeAgents;
 	}
@@ -546,7 +512,7 @@ public class Simulator implements SimulatorInterface {
 			while (getSimulationData().checkSnapshots(currentTime)) {
 				createSnapshots();				
 			}
-			checkPerturbation();
+			simulationData.checkPerturbation(currentTime);
 			IRule rule = ruleProbabilityCalculation.getRandomRule();
 
 			if (rule == null) {
@@ -711,7 +677,8 @@ public class Simulator implements SimulatorInterface {
 		    getSimulationData().resetBar();
 			while (!getSimulationData().isEndSimulation(currentTime, count)
 					&& max_clash <= getSimulationData().getMaxClashes()) {
-				checkPerturbation();
+				
+				simulationData.checkPerturbation(currentTime);
 				rule = ruleProbabilityCalculation.getRandomRule();
 
 				if (rule == null) {

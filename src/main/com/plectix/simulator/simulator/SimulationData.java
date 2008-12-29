@@ -1370,12 +1370,6 @@ public class SimulationData {
 
 	}
 
-	//**************************************************************************
-	//
-	// GETTERS AND SETTERS
-	// 
-	//
-
 	public final boolean checkSnapshots(double currentTime) {
 		if (snapshotTimes != null)
 			for (Double time : snapshotTimes)
@@ -1385,6 +1379,32 @@ public class SimulationData {
 				}
 		return false;
 	}
+	
+
+	public final void checkPerturbation(double currentTime) {
+		if (perturbations.size() != 0) {
+			for (CPerturbation pb : perturbations) {
+				switch (pb.getType()) {
+				case CPerturbation.TYPE_TIME: {
+					if (!pb.isDo())
+						pb.checkCondition(currentTime);
+					break;
+				}
+				case CPerturbation.TYPE_NUMBER: {
+					pb.checkCondition(observables);
+					break;
+				}
+				case CPerturbation.TYPE_ONCE: {
+					if (!pb.isDo())
+						pb.checkConditionOnce(currentTime);
+					break;
+				}
+				}
+
+			}
+		}
+	}
+
 
 	public final void setSnapshotTime(String snapshotTimeStr) throws Exception {
 		StringTokenizer st = new StringTokenizer(snapshotTimeStr, ",");
@@ -1400,6 +1420,12 @@ public class SimulationData {
 		// this.snapshotTimes = -1;
 		// this.snapshotTime = snapshotTime;
 	}
+
+	//**************************************************************************
+	//
+	// GETTERS AND SETTERS
+	// 
+	//
 
 	public final List<CSnapshot> getSnapshots() {
 		return snapshots;
