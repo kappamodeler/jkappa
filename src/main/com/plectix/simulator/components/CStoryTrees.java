@@ -7,7 +7,6 @@ import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules.Sit
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.SimulationData;
 
 public final class CStoryTrees {
@@ -161,20 +160,6 @@ public final class CStoryTrees {
 				noneCompressStoryTrace(weakCompressedList);
 				weakCompressedList = updateMainList(weakCompressedList);
 			}
-
-			// if (weakCompressedList.get(4).isHasIntro()) {
-			// CNetworkNotation nn = weakCompressedList.get(4);
-			// CNetworkNotation nn1 = weakCompressedList.get(1);
-			// long ag = nn1.getIntroCC().get(0).getAgents().get(0).getId();
-			// for (IConnectedComponent cc : nn.getIntroCC()) {
-			// for (IAgent agent : cc.getAgents()) {
-			// if (agent.getId() == ag) {
-			// System.out.println();
-			// }
-			// }
-			// }
-			// }
-
 			return weakCompressedList;
 		}
 		return commonList;
