@@ -187,6 +187,14 @@ public class CNetworkNotation implements INetworkNotation {
 		createAgentsNotation(injectionsList, data);
 	}
 
+	public final void changeIntroCCAndAgentNotation(int indexToDel,
+			IConnectedComponent cc, String str) {
+		this.getIntroCC().remove(indexToDel);
+		this.getIntroCC().add(cc);
+		this.getAgentsNotation().remove(indexToDel);
+		this.getAgentsNotation().add(str);
+	}
+
 	private final void createAgentsNotation(List<IInjection> injectionsList,
 			SimulationData data) {
 
@@ -215,10 +223,11 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	private void clearAgentsForDeletedOppositeRules(CNetworkNotation nn) {
-		if (nn.isHasIntro())
+		if (nn.isHasIntro()) {
 			for (IAgent agent : nn.getRule().getStoryfiedAgents())
 				((CAgent) agent).unStorify();
 			nn.getRule().clearStorifiedAgents();
+		}
 	}
 
 	// public Map<Long, AgentSites> getChangedAgentsFromSolution() {
@@ -315,7 +324,8 @@ public class CNetworkNotation implements INetworkNotation {
 		return rule;
 	}
 
-	public final boolean isOpposite(List<CNetworkNotation> networkNotationList) {
+	public final boolean isNotOpposite(
+			List<CNetworkNotation> networkNotationList) {
 		for (int i = networkNotationList.size() - 1; i >= 0; i--) {
 			CNetworkNotation nn = networkNotationList.get(i);
 			switch (isIntersects(nn)) {
@@ -332,16 +342,17 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public final boolean isOpposite(CNetworkNotation networkNotation) {
-			switch (isIntersects(networkNotation)) {
-			case HAS_FULL_INTERSECTION:
-				clearAgentsForDeletedOppositeRules(this);
-				clearAgentsForDeletedOppositeRules(networkNotation);
-				return false;
-			case HAS_PART_INTERSECTION:
-				return true;
-			}
+		switch (isIntersects(networkNotation)) {
+		case HAS_FULL_INTERSECTION:
+			clearAgentsForDeletedOppositeRules(this);
+			clearAgentsForDeletedOppositeRules(networkNotation);
+			return false;
+		case HAS_PART_INTERSECTION:
 			return true;
+		}
+		return true;
 	}
+
 	public final byte isIntersects(CNetworkNotation nn) {
 		Iterator<Long> iterator = this.changedAgentsFromSolution.keySet()
 				.iterator();
@@ -370,21 +381,21 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	private final byte checkSites(long key, CNetworkNotation nn) {
-		Iterator<Integer> iterator = this.changedAgentsFromSolution.get(key).getSites()
-				.keySet().iterator();
+		Iterator<Integer> iterator = this.changedAgentsFromSolution.get(key)
+				.getSites().keySet().iterator();
 		int counter = 0;
 		int fullCounter = 0;
 
 		while (iterator.hasNext()) {
 			Integer keySite = iterator.next();
-			if (nn.changedAgentsFromSolution.get(key).getSites()
-					.containsKey(keySite)) {
+			if (nn.changedAgentsFromSolution.get(key).getSites().containsKey(
+					keySite)) {
 				counter++;
 
 				if (CStoriesSiteStates.isEqual(this.changedAgentsFromSolution
 						.get(key).getSites().get(keySite).getCurrentState(),
-						nn.changedAgentsFromSolution.get(key).getSites()
-								.get(keySite).getLastState())) {
+						nn.changedAgentsFromSolution.get(key).getSites().get(
+								keySite).getLastState())) {
 					fullCounter++;
 				}
 			}

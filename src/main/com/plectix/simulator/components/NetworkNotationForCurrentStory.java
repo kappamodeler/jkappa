@@ -42,7 +42,7 @@ class NetworkNotationForCurrentStory {
 
 	public static void addToNetworkNotationList(CNetworkNotation networkNotation,
 			List<CNetworkNotation> networkNotationList) {
-		if (networkNotation.isOpposite(networkNotationList))
+		if (networkNotation.isNotOpposite(networkNotationList))
 			networkNotationList.add(networkNotation);
 	}
 

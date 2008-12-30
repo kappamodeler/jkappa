@@ -306,7 +306,7 @@ public class SimulationData {
 			}
 			
 			if (arguments.hasOption(SimulatorOptions.STORIFY)) {
-				storifyOption = false;
+				storifyOption = true;
 			}
 					
 					

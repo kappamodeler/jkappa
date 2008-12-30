@@ -256,7 +256,8 @@ public class CRule implements IRule, Serializable {
 
 	protected final void apply(List<IInjection> injectionList,
 			INetworkNotation netNotation, Simulator simulator, boolean isLast) {
-		storyfiedAgents = new ArrayList<IAgent>();
+		if (storyfiedAgents == null)
+			storyfiedAgents = new ArrayList<IAgent>();
 		if (netNotation != null) {
 			storifyAgents(injectionList, isLast);
 		}
@@ -429,8 +430,6 @@ public class CRule implements IRule, Serializable {
 
 	private final void indexingRHSAgents() {
 		// markedLHS();
-		Map<Integer, List<IAgent>> lhsAgentMap = createAgentMap(leftHandSide);
-		Map<Integer, List<IAgent>> rhsAgentMap = createAgentMap(rightHandSide);
 		markRHSAgents();
 
 		createActionList();
