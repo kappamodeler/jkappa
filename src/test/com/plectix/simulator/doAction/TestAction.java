@@ -1,20 +1,25 @@
 package com.plectix.simulator.doAction;
 
-import java.util.*;
+import static org.junit.Assert.fail;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.*;
+import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import org.junit.*;
-import org.omg.CORBA.INITIALIZE;
-
-import static org.junit.Assert.*;
-
 import com.plectix.simulator.Initializator;
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -22,13 +27,12 @@ import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.options.SimulatorArguments;
-import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 
 @RunWith(value = Parameterized.class)
 public class TestAction {
 	private static Simulator mySimulator;
-	private final Logger LOGGER = Logger.getLogger(Simulator.class);
+	private final Logger LOGGER = Logger.getLogger(TestAction.class);
 	private double currentTime = 0.;
 	private IRule myActiveRule;
 	private static int myRunQuant = 0;
@@ -105,7 +109,6 @@ public class TestAction {
 	}
 
 	private void run() {
-		mySimulator.startTimer();
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
 				mySimulator.getSimulationData());
 		myActiveRule = ruleProbabilityCalculation.getRandomRule();

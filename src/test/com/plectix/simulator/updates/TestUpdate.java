@@ -76,7 +76,6 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	}
 
 	private void run() {
-		mySimulator.startTimer();
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(mySimulator.getSimulationData());
 
 		mySimulator.getSimulationData().getObservables().calculateObs(currentTime,
