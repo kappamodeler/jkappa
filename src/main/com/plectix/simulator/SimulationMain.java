@@ -14,15 +14,15 @@ public class SimulationMain  {
 
 	private static final Logger LOGGER = Logger.getLogger(SimulationMain.class);
 
-	public static final PrintStream myOutputStream = System.out;
+	private static final PrintStream DEFAULT_OUTPUT_STREAM = System.err;
 	
-	public static final String VERSION = "0.6";
+	public static final String COMMAND_LINE_SYNTAX = "use --sim [file] [options]";
 	
 	public static void main(String[] args) {
 		initializeLogging();
 		
 		SimulationService service = new SimulationService(new DefaultSimulatorFactory());
-		service.submit(new SimulatorInputData(args, myOutputStream), null);
+		service.submit(new SimulatorInputData(args, DEFAULT_OUTPUT_STREAM), null);
 		service.shutdown();
 	}
 

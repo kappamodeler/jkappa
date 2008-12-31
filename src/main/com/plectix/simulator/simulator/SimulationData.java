@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -230,17 +232,22 @@ public class SimulationData {
 		addInfo(Info.TYPE_INFO, "-Initialization...");
 
 		if (arguments.hasOption(SimulatorOptions.HELP)) {
-			HelpFormatter formatter = new HelpFormatter();
-			formatter.printHelp("use --sim [file] [options]",
-					SimulatorOptions.COMMAND_LINE_OPTIONS);
+			if (printStream != null) {            
+		        PrintWriter printWriter = new PrintWriter(printStream);
+				HelpFormatter formatter = new HelpFormatter(); 
+		        formatter.printHelp(printWriter, HelpFormatter.DEFAULT_WIDTH, 
+		        		SimulationMain.COMMAND_LINE_SYNTAX, null, 
+		        		SimulatorOptions.COMMAND_LINE_OPTIONS, HelpFormatter.DEFAULT_LEFT_PAD, 
+		        		HelpFormatter.DEFAULT_DESC_PAD, null, false);
+		        printWriter.flush();
+			}
+	        
 			// TODO are we to exit here?
 			System.exit(0);
 		}
 
 		if (arguments.hasOption(SimulatorOptions.VERSION)) {
-			SimulationMain.myOutputStream.println("Java simulator v."
-					+ SimulationMain.VERSION + " SVN Revision: "
-					+ BuildConstants.BUILD_SVN_REVISION);
+			println("Java simulator SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
 			// TODO are we to exit here?
 			System.exit(0);
 		}
