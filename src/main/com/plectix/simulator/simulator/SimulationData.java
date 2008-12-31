@@ -1009,8 +1009,9 @@ public class SimulationData {
 			for (int rID : rIDs) {
 				CStoryType st = traceIdToStoryTypeRule.get(rID);
 				node = doc.createElement("Connection");
-				if (st == null)
-					System.out.println();
+				if (st == null) {
+					printStream.println();
+				}
 				st.fillConnection(node, toStoryType.getId(), relationType);
 				connections.add(node);
 			}

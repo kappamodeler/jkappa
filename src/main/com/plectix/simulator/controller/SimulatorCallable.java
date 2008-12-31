@@ -45,7 +45,6 @@ public class SimulatorCallable implements Callable<SimulatorResultsData> {
             simulator.getSimulatorResultsData().getSimulatorExitReport().setStartTimestamp(System.currentTimeMillis());
             simulator.run(simulatorInputData);
         } catch (Exception e) {
-        	//System.out.println();
         	e.printStackTrace();
         	simulator.getSimulatorResultsData().getSimulatorExitReport().setException(e);
         } finally {

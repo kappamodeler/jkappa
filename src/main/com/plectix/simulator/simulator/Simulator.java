@@ -212,7 +212,7 @@ public class Simulator implements SimulatorInterface {
 			}
 		}
 		
-		System.out.println("-------" + simulatorResultsData.getResultSource());
+		simulationData.println("-------" + simulatorResultsData.getResultSource());
 	}
 
 	public final void runIterations() throws Exception {
