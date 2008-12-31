@@ -182,7 +182,7 @@ public class SimulationData {
 			perturbations.clear();
 		}
 
-		if (getSerializationMode() != SimulationData.MODE_READ) {
+		if (serializationMode != SimulationData.MODE_READ) {
 			readSimulatonFile();
 		}
 		
@@ -246,7 +246,7 @@ public class SimulationData {
 		}
 
 		// let's dump the command line arguments
-		println("Java " + getCommandLine());
+		println("Java " + commandLine);
 		
 		// moved this below since the line above might have turned the printing off...
 		addInfo(Info.TYPE_INFO, "-Initialization...");
@@ -300,7 +300,7 @@ public class SimulationData {
 					}
 
 					if (arguments.hasOption(SimulatorOptions.ITERATION)) {
-						setIterations(Integer.valueOf(arguments.getValue(SimulatorOptions.ITERATION)));
+						iterations = Integer.valueOf(arguments.getValue(SimulatorOptions.ITERATION));
 					}
 
 		} catch (Exception e) {
@@ -312,7 +312,7 @@ public class SimulationData {
 
 
 		if (arguments.hasOption(SimulatorOptions.RANDOMIZER_JAVA)) {
-			setRandomizer(arguments.getValue(SimulatorOptions.RANDOMIZER_JAVA));
+			randomizer = arguments.getValue(SimulatorOptions.RANDOMIZER_JAVA);
 		}
 
 		if (arguments.hasOption(SimulatorOptions.NO_ACTIVATION_MAP)
@@ -373,8 +373,8 @@ public class SimulationData {
 				throw new IllegalArgumentException("No SEED OPTION");
 			}
 
-			setSimulationType(SIMULATION_TYPE_ITERATIONS);
-			setIterations(iteration);
+			this.simulationType = SIMULATION_TYPE_ITERATIONS;
+			this.iterations = iteration;
 		}
 
 		if (arguments.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
@@ -423,7 +423,7 @@ public class SimulationData {
 	
 		if (simulatorArguments.hasOption(SimulatorOptions.STORIFY)) {
 			fileName = simulatorArguments.getValue(SimulatorOptions.STORIFY);
-			setSimulationType(SIMULATION_TYPE_STORIFY);
+			this.simulationType = SIMULATION_TYPE_STORIFY;
 			option = true;
 		}
 		
@@ -451,7 +451,7 @@ public class SimulationData {
 					throw new IllegalArgumentException(e);
 				}
 			}
-			setSimulationType(SIMULATION_TYPE_SIM);
+			this.simulationType = SIMULATION_TYPE_SIM;
 		}
 		
 		if (simulatorArguments.hasOption(SimulatorOptions.COMPILE)) {
@@ -461,7 +461,7 @@ public class SimulationData {
 			} else {
 				option = false;
 			}
-			setSimulationType(SIMULATION_TYPE_COMPILE);
+			this.simulationType = SIMULATION_TYPE_COMPILE;
 		}
 	
 		if (simulatorArguments.hasOption(SimulatorOptions.GENERATE_MAP)) {
@@ -472,7 +472,7 @@ public class SimulationData {
 				option = false;
 			}
 			
-			setSimulationType(SIMULATION_TYPE_GENERATE_MAP);
+			this.simulationType = SIMULATION_TYPE_GENERATE_MAP;
 		}
 	
 		if (simulatorArguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
@@ -483,7 +483,7 @@ public class SimulationData {
 				option = false;
 			}
 			
-			setSimulationType(SIMULATION_TYPE_CONTACT_MAP);
+			this.simulationType = SIMULATION_TYPE_CONTACT_MAP;
 		}
 	
 		if (simulationType == SIMULATION_TYPE_NONE) {
@@ -520,8 +520,7 @@ public class SimulationData {
 	}
 	
 	public final boolean isParseSolution() {
-		switch (simulationType) {
-		case SIMULATION_TYPE_GENERATE_MAP:
+		if (simulationType == SIMULATION_TYPE_GENERATE_MAP) {
 			return false;
 		}
 		return true;
@@ -1297,7 +1296,7 @@ public class SimulationData {
 
 	public final void initialize() {
 
-		if (getSerializationMode() == MODE_READ) {
+		if (serializationMode == MODE_READ) {
 			ObjectInputStream ois;
 			try {
 				ois = new ObjectInputStream(new FileInputStream(serializationFileName));
@@ -1317,7 +1316,7 @@ public class SimulationData {
 				e.printStackTrace();
 			}
 		}
-		if (getSerializationMode() == MODE_SAVE) {
+		if (serializationMode == MODE_SAVE) {
 			try {
 				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(serializationFileName));
 				oos.writeObject(solution);
@@ -1782,24 +1781,12 @@ public class SimulationData {
 		return simulationType;
 	}
 
-	public final void setSimulationType(byte simulationType) {
-		this.simulationType = simulationType;
-	}
-
 	public final String getRandomizer() {
 		return randomizer;
 	}
 
-	public final void setRandomizer(String randomizer) {
-		this.randomizer = randomizer;
-	}
-
 	public final int getIterations() {
 		return iterations;
-	}
-
-	public final void setIterations(int iterations) {
-		this.iterations = iterations;
 	}
 
 	public final void setPerturbations(List<CPerturbation> perturbations) {
@@ -1828,14 +1815,6 @@ public class SimulationData {
 
 	public final void setClockStamp(long clockStamp) {
 		this.clockStamp = clockStamp;
-	}
-
-	public final int getSerializationMode() {
-		return serializationMode;
-	}
-	
-	public final String getCommandLine() {
-		return this.commandLine;
 	}
 
 	public final long getMaxClashes() {
