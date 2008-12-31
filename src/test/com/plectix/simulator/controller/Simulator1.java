@@ -36,8 +36,7 @@ public class Simulator1 implements SimulatorInterface {
 	}
 
 	public static final class Simulator1Factory implements SimulatorFactoryInterface {
-		@Override
-		public SimulatorInterface createSimulator() {
+		public final SimulatorInterface createSimulator() {
 			return new Simulator1();
 		}
 	}
