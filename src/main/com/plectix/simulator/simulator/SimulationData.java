@@ -203,7 +203,7 @@ public class SimulationData {
 	public final void parseArguments(String[] args)
 				throws IllegalArgumentException {
 	
-			addInfo(new Info(Info.TYPE_INFO, "-Initialization...", printStream));
+			addInfo(Info.TYPE_INFO, "-Initialization...");
 			
 			// let's replace all '-' by '_' 
 			args = SimulationUtils.changeArguments(args);
@@ -1343,7 +1343,7 @@ public class SimulationData {
 
 		if (activationMap) {
 			PlxTimer timer = new PlxTimer();
-			addInfo(new Info(Info.TYPE_INFO, "--Abstracting activation map...", printStream));
+			addInfo(Info.TYPE_INFO, "--Abstracting activation map...");
 			
 			timer.startTimer();
 			for (IRule rule : rules) {
@@ -1351,12 +1351,12 @@ public class SimulationData {
 				rule.createActivatedObservablesList(getObservables());
 			}
 			stopTimer(timer, "--Abstraction:");
-			addInfo(new Info(Info.TYPE_INFO, "--Activation map computed", printStream));
+			addInfo(Info.TYPE_INFO, "--Activation map computed");
 		}
 
 		if (inhibitionMap) {
 			PlxTimer timer = new PlxTimer();
-			addInfo(new Info(Info.TYPE_INFO, "--Abstracting inhibition map...", printStream));
+			addInfo(Info.TYPE_INFO, "--Abstracting inhibition map...");
 			
 			timer.startTimer();
 			for (IRule rule : rules) {
@@ -1364,7 +1364,7 @@ public class SimulationData {
 				rule.createInhibitedObservablesList(getObservables());
 			}
 			stopTimer(timer, "--Abstraction:");
-			addInfo(new Info(Info.TYPE_INFO, "--Inhibition map computed", printStream));
+			addInfo(Info.TYPE_INFO, "--Inhibition map computed");
 		}
 
 		while (iterator.hasNext()) {
