@@ -11,7 +11,7 @@ import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 public final class CAgent implements IAgent, Serializable {
 	/**
@@ -200,7 +200,7 @@ public final class CAgent implements IAgent, Serializable {
 	}
 
 	public final String getName() {
-		return Simulator.getNameDictionary().getName(nameId);
+		return ThreadLocalData.getNameDictionary().getName(nameId);
 	}
 
 	public long getHash() {

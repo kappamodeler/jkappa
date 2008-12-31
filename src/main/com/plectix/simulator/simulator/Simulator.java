@@ -1,6 +1,5 @@
 package com.plectix.simulator.simulator;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import org.apache.log4j.Logger;
 import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CStories;
-import com.plectix.simulator.components.NameDictionary;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
@@ -29,28 +27,6 @@ public class Simulator implements SimulatorInterface {
 	
 	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
 
-	private static NameDictionary nameDictionary = new NameDictionary();
-
-	private static ThreadLocal<PrintStream> printStream = new ThreadLocal<PrintStream>();
-
-	public static final NameDictionary getNameDictionary() {
-		return nameDictionary;
-	}
-
-	public static PrintStream getErrorStream() {
-		return printStream.get();
-	}
-
-	public static void println(String text) {
-		printStream.get().println(text);
-	}
-
-	public static void print(String text) {
-		printStream.get().print(text);
-	}
-
-	private int agentIdGenerator = 0;
-
 	private double currentTime = 0.0;
 
 	private boolean isIteration = false;
@@ -64,14 +40,8 @@ public class Simulator implements SimulatorInterface {
 
 	public Simulator() {
 		super();
-		printStream.set(System.out);
 	}
 
-	@Override
-	public SimulatorInterface clone() {
-		return new Simulator();
-	}
-	
 	private final void addIteration(int iteration_num) {
 		// TODO: This method should be rewritten!!!
 		List<List<RunningMetric>> runningMetrics = simulationData.getRunningMetrics();
@@ -99,9 +69,6 @@ public class Simulator implements SimulatorInterface {
 		timeStepCounter++;
 	}
 
-	public final long generateNextAgentId() {
-		return agentIdGenerator++;
-	}
 
 	public final void outputData() {
 		simulationData.outputRules();
@@ -109,14 +76,10 @@ public class Simulator implements SimulatorInterface {
 		simulationData.outputSolution();
 	}
 
-	private Source addCompleteSource() throws TransformerException, ParserConfigurationException {
+	private final Source addCompleteSource() throws TransformerException, ParserConfigurationException {
 		Source source = simulationData.createDOMModel();
 		simulatorResultsData.addResultSource(source);
 		return source;
-	}
-
-	public static final void println() {
-		printStream.get().println();
 	}
 
 
@@ -131,32 +94,12 @@ public class Simulator implements SimulatorInterface {
 	}
 
 	public final void resetSimulation() {
-		simulationData.addInfo(new Info(Info.TYPE_INFO, "-Reset simulation data."));
-		simulationData.addInfo(new Info(Info.TYPE_INFO, "-Initialization..."));
-		
-		PlxTimer timer = new PlxTimer();
-		timer.startTimer();
-		
-		simulationData.clearRules();
-		simulationData.getObservables().resetLists();
-		simulationData.getSolution().clearAgents();
-		simulationData.getSolution().clearSolutionLines();
-		simulationData.clearPerturbations();
-
 		currentTime = 0.0;
-
-		if (simulationData.getSerializationMode() != SimulationData.MODE_READ) {
-			simulationData.readSimulatonFile(this);
-		}
-		
-		simulationData.initialize();
-		
-		simulationData.stopTimer(timer, "-Initialization:");
-		simulationData.setClockStamp(System.currentTimeMillis());
+		simulationData.resetSimulation();
 	}
 
 	public final void run(int iteration_num) throws Exception {
-		simulationData.addInfo(new Info(Info.TYPE_INFO, "-Simulation..."));
+		simulationData.addInfo(Info.TYPE_INFO, "-Simulation...");
 		
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
@@ -180,7 +123,7 @@ public class Simulator implements SimulatorInterface {
 			if (rule == null) {
 				isEndRules = true;
 				simulationData.setTimeLength(currentTime);
-				Simulator.println("#");
+				simulationData.println("#");
 				break;
 			}
 			
@@ -200,7 +143,7 @@ public class Simulator implements SimulatorInterface {
 					LOGGER.debug("negative update");
 
 				count++;
-				rule.applyRule(injectionsList, this);
+				rule.applyRule(injectionsList, simulationData);
 
 				SimulationUtils.doNegativeUpdate(injectionsList);
 				
@@ -213,7 +156,7 @@ public class Simulator implements SimulatorInterface {
 
 				simulationData.getObservables().calculateObs(currentTime, count, simulationData.isTime());
 			} else {
-				simulationData.addInfo(new Info(Info.TYPE_INTERNAL, "Application of rule exp is clashing"));
+				simulationData.addInfo(Info.TYPE_INTERNAL, "Application of rule exp is clashing");
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Clash");
 				}
@@ -242,16 +185,17 @@ public class Simulator implements SimulatorInterface {
 
 	public final void run(SimulatorInputData simulatorInputData) throws Exception {
 		String[] args = simulatorInputData.getArguments();
-		printStream.set(simulatorInputData.getPrintStream());
 
 		simulationData.setCommandLine(args);
-		Simulator.println("Java " + simulationData.getCommandLine());
+		simulationData.setPrintStream(simulatorInputData.getPrintStream());
+		
+		simulationData.println("Java " + simulationData.getCommandLine());
 
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
 		
 		simulationData.parseArguments(args);
-		simulationData.readSimulatonFile(this);
+		simulationData.readSimulatonFile();
 		simulationData.initialize();
 		
 		simulationData.stopTimer(timer, "-Initialization:");
@@ -263,7 +207,6 @@ public class Simulator implements SimulatorInterface {
 		}
 		
 		if (!simulationData.isDebugInitOption()) {
-
 			if (simulationData.isGenereteMapOption() || simulationData.isContactMapOption() ) {
 				Source source = addCompleteSource();
 				simulationData.outputData(source, 0);
@@ -318,7 +261,7 @@ public class Simulator implements SimulatorInterface {
 		CStories stories = simulationData.getStories();
 		int count = 0;
 		for (int i = 0; i < simulationData.getIterations(); i++) {
-		    simulationData.addInfo(new Info(Info.TYPE_INFO, "-Simulation..."));
+		    simulationData.addInfo(Info.TYPE_INFO, "-Simulation...");
 		    
 			PlxTimer timer = new PlxTimer();
 			timer.startTimer();
@@ -337,7 +280,7 @@ public class Simulator implements SimulatorInterface {
 
 				if (rule == null) {
 					simulationData.setTimeLength(currentTime);
-					Simulator.println("#");
+					simulationData.println("#");
 					break;
 				}
 
@@ -351,16 +294,16 @@ public class Simulator implements SimulatorInterface {
 					max_clash = 0;
 					if (stories.checkRule(rule.getRuleID(), i)) {
 						rule.applyLastRuleForStories(injectionsList,netNotation);
-						rule.applyRuleForStories(injectionsList, netNotation, this,true);
+						rule.applyRuleForStories(injectionsList, netNotation, simulationData, true);
 						stories.addToNetworkNotationStoryStorifyRule(i, netNotation, currentTime);
 						// stories.addToNetworkNotationStory(i, netNotation);
 						count++;
 						isEndRules = true;
-						Simulator.println("#");
+						simulationData.println("#");
 						break;
 					}
 					
-					rule.applyRuleForStories(injectionsList, netNotation, this,false);
+					rule.applyRuleForStories(injectionsList, netNotation, simulationData, false);
 					if (!rule.isRHSEqualsLHS()) {
 						stories.addToNetworkNotationStory(i, netNotation);
 					}
@@ -393,10 +336,6 @@ public class Simulator implements SimulatorInterface {
 	//                    GETTERS AND SETTERS
 	//
 	//
-	
-	public final int getAgentIdGenerator() {
-		return agentIdGenerator;
-	}
 
 	public final double getCurrentTime() {
 		return currentTime;

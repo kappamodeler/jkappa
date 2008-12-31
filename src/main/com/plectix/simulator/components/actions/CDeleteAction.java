@@ -11,7 +11,7 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ILiftElement;
 import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.SimulationData;
 
 public class CDeleteAction extends CAction {
 	private final CRule myRule;
@@ -24,7 +24,7 @@ public class CDeleteAction extends CAction {
 		setType(CActionType.DELETE);
 	}
 
-	public final void doAction(IInjection injection, INetworkNotation netNotation, Simulator simulator) {
+	public final void doAction(IInjection injection, INetworkNotation netNotation, SimulationData simulationData) {
 		/**
 		 * Done.
 		 */
@@ -72,8 +72,7 @@ public class CDeleteAction extends CAction {
 		// injection.getConnectedComponent().getInjectionsList()
 		// .remove(injection);
 
-		simulator.getSimulationData().getSolution().removeAgent(agent);
-
+		simulationData.getSolution().removeAgent(agent);
 	}
 
 	@Override

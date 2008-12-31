@@ -2,6 +2,7 @@ package com.plectix.simulator.interfaces;
 
 import java.util.*;
 
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 
 public interface ISolution {
@@ -22,6 +23,6 @@ public interface ISolution {
 
 	public void clearSolutionLines();
 	
-	public List<IAgent> cloneAgentsList(List<IAgent> agentList, Simulator simulator);
+	public List<IAgent> cloneAgentsList(List<IAgent> agentList, SimulationData simulationData);
 	
 }

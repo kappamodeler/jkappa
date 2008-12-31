@@ -1,11 +1,19 @@
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.ILinkState;
+import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.simulator.SimulationData;
 
 public final class CSolution implements ISolution, Serializable {
 	private final HashMap<Long, IAgent> agentMap;
@@ -147,11 +155,10 @@ public final class CSolution implements ISolution, Serializable {
 
 	}
 	
-	public List<IAgent> cloneAgentsList(List<IAgent> agentList, Simulator simulator) {
+	public List<IAgent> cloneAgentsList(List<IAgent> agentList, SimulationData simulationData) {
 		List<IAgent> newAgentsList = new ArrayList<IAgent>();
 		for (IAgent agent : agentList) {
-			IAgent newAgent = new CAgent(agent.getNameId(), simulator
-					.generateNextAgentId());
+			IAgent newAgent = new CAgent(agent.getNameId(), simulationData.generateNextAgentId());
 			for (ISite site : agent.getSites()) {
 				CSite newSite = new CSite(site.getNameId(), newAgent);
 				newSite.setLinkIndex(site.getLinkIndex());

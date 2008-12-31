@@ -17,7 +17,7 @@ public class TestSuccessParsing {
 		String fileName = myTestFileNamePrefix + "ParsePerturbationsTestFile";
 		myDR = new DataReading(fileName);
 		Simulator mySimulator = new Simulator();
-		myParser = new Parser(myDR, mySimulator.getSimulationData(), mySimulator);
+		myParser = new Parser(myDR, mySimulator.getSimulationData());
 	}
 	
 	@Test

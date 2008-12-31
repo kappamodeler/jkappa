@@ -2,8 +2,11 @@ package com.plectix.simulator.components;
 
 import java.util.List;
 
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.INetworkNotation;
+import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.simulator.SimulationData;
 
 public final class CRulePerturbation extends CRule {
 
@@ -31,16 +34,16 @@ public final class CRulePerturbation extends CRule {
 
 	@Override
 	public final void applyRuleForStories(List<IInjection> injectionList,
-			INetworkNotation netNotation, Simulator simulator, boolean isLast) {
+			INetworkNotation netNotation, SimulationData simulationData, boolean isLast) {
 		check();
-		apply(injectionList, netNotation, simulator, false);
+		apply(injectionList, netNotation, simulationData, false);
 		count--;
 	}
 
 	@Override
-	public final void applyRule(List<IInjection> injectionList, Simulator simulator) {
+	public final void applyRule(List<IInjection> injectionList, SimulationData simulationData) {
 		check();
-		apply(injectionList, null, simulator, false);
+		apply(injectionList, null, simulationData, false);
 		count--;
 	}
 

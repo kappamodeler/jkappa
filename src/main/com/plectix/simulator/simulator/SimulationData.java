@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,6 +72,7 @@ import com.plectix.simulator.options.SimulatorOptions;
 import com.plectix.simulator.parser.DataReading;
 import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.util.Info;
+import com.plectix.simulator.util.NameDictionary;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.PlxTimer;
 
@@ -145,6 +147,9 @@ public class SimulationData {
 	private boolean numberOfRunsOption = false;
 	private boolean storifyOption = false;
 	
+	private PrintStream printStream = null;
+	private boolean dumpStdoutStderr = false;
+	
 	private long maxClashes = 100;
 	private List<Double> snapshotTimes;
 	private boolean outputFinalState = false;
@@ -158,29 +163,50 @@ public class SimulationData {
 
 	private SimulatorArguments simulatorArguments;
 	
+	private int agentIdGenerator = 0;
+
 	public SimulationData() {
 		super();
 	}
-
-	public final void clearRules() {
+	
+	public final void resetSimulation() {
+		addInfo(Info.TYPE_INFO, "-Reset simulation data.");
+		addInfo(Info.TYPE_INFO, "-Initialization...");
+		
+		PlxTimer timer = new PlxTimer();
+		timer.startTimer();
+		
 		rules.clear();
-	}
+		observables.resetLists();
+		solution.clearAgents();
+		solution.clearSolutionLines();
 
-	public final void clearPerturbations() {
-		if (perturbations == null) {
-			return;
+		if (perturbations != null) {
+			perturbations.clear();
 		}
-		perturbations.clear();
+
+		if (getSerializationMode() != SimulationData.MODE_READ) {
+			readSimulatonFile();
+		}
+		
+		initialize();
+		
+		stopTimer(timer, "-Initialization:");
+		setClockStamp(System.currentTimeMillis());
 	}
 
 	public final boolean isOcamlStyleObsName() {
 		return observables.isOcamlStyleObsName();
 	}
 
+	public final long generateNextAgentId() {
+		return agentIdGenerator++;
+	}
+	
 	public final void parseArguments(String[] args)
 				throws IllegalArgumentException {
 	
-			addInfo(new Info(Info.TYPE_INFO, "-Initialization..."));
+			addInfo(new Info(Info.TYPE_INFO, "-Initialization...", printStream));
 			
 			// let's replace all '-' by '_' 
 			args = SimulationUtils.changeArguments(args);
@@ -190,12 +216,16 @@ public class SimulationData {
 			try {
 				arguments = new SimulatorArguments(args);
 			} catch (ParseException e) {
-				Simulator.println("Error parsing arguments:");
-				e.printStackTrace(Simulator.getErrorStream());
+				printStream.println("Error parsing arguments:");
+				e.printStackTrace(printStream);
 				throw new IllegalArgumentException(e);
 			}
 
 			this.simulatorArguments = arguments;
+			
+			if (arguments.hasOption(SimulatorOptions.DUMP_STDOUT_STDERR)) {
+				dumpStdoutStderr  = true;
+			}
 			
 			if (arguments.hasOption(SimulatorOptions.HELP)) {
 				HelpFormatter formatter = new HelpFormatter();
@@ -216,6 +246,7 @@ public class SimulationData {
 			if (arguments.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
 				setXmlSessionName(arguments.getValue(SimulatorOptions.XML_SESSION_NAME));
 			}
+			
 			if (arguments.hasOption(SimulatorOptions.OUTPUT_XML)) {
 				setXmlSessionName(arguments.getValue(SimulatorOptions.OUTPUT_XML));
 			}
@@ -265,7 +296,7 @@ public class SimulationData {
 				}
 	
 			} catch (Exception e) {
-				e.printStackTrace(Simulator.getErrorStream());
+				e.printStackTrace(printStream);
 				throw new IllegalArgumentException(e);
 			}
 	
@@ -369,7 +400,7 @@ public class SimulationData {
 			}
 		}
 
-	public final void readSimulatonFile(Simulator simulator) {
+	public final void readSimulatonFile() {
 	
 		if (this.simulatorArguments == null) {
 			throw new RuntimeException("Simulator Arguments must be set before reading the simulation file!");
@@ -395,7 +426,7 @@ public class SimulationData {
 			
 			setTimeLength(timeSim);
 		} else {
-			Simulator.println("*Warning* No time limit.");
+			printStream.println("*Warning* No time limit.");
 		}
 	
 		if (!option && (simulatorArguments.hasOption(SimulatorOptions.SIMULATIONFILE))) {
@@ -459,18 +490,18 @@ public class SimulationData {
 				if (simulatorArguments.hasOption(SimulatorOptions.FOCUS_ON)) {
 					String fileNameFocusOn = simulatorArguments
 							.getValue(SimulatorOptions.FOCUS_ON);
-					setFocusOn(fileNameFocusOn, simulator);
+					setFocusOn(fileNameFocusOn);
 				}
 			}
 			
 			data.readData();
 			
-			Parser parser = new Parser(data, this, simulator);
+			Parser parser = new Parser(data, this);
 			parser.setForwarding(simulatorArguments.hasOption(SimulatorOptions.FORWARD));
 			parser.parse();
 		} catch (Exception e) {
-			Simulator.println("Error in file \"" + fileName + "\" :");
-			e.printStackTrace(Simulator.getErrorStream());
+			printStream.println("Error in file \"" + fileName + "\" :");
+			e.printStackTrace(printStream);
 			throw new IllegalArgumentException(e);
 		}
 	}
@@ -487,6 +518,10 @@ public class SimulationData {
 		observables.setOcamlStyleObsName(ocamlStyleObsName);
 	}
 
+	public final void addInfo(byte type, String message) {
+		addInfo(new Info(type, message, printStream));
+	}
+	
 	public final void addInfo(Info info) {
 		for (Info inf : infoList) {
 			if (inf.getMessageWithoutTime().equals(info.getMessageWithoutTime())) {
@@ -517,29 +552,29 @@ public class SimulationData {
 	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
 		if (curClockTime - clockStamp > clockPrecision) {
-			Simulator.println("simulation interrupted because the clock time has expired");
+			printStream.println("simulation interrupted because the clock time has expired");
 			return true;
 		}
 		
 		if (isTime) {
 			if (currentTime <= timeLength) {
 				if (currentTime >= nextStep) {
-					Simulator.print("#");
+					printStream.print("#");
 					nextStep += step;
 				}
 				return false;
 			} else {
-				Simulator.println("#");
+				printStream.println("#");
 				return true;
 			}
 		} else if (count <= event) {
 			if (count >= nextStep) {
-				Simulator.print("#");
+				printStream.print("#");
 				nextStep += step;
 			}
 			return false;
 		} else {
-			Simulator.println("#");
+			printStream.println("#");
 			return true;
 		}
 	}
@@ -1143,7 +1178,7 @@ public class SimulationData {
 		timer.stopTimer();
 		
 		message += " ";
-		Simulator.println(message + timer.getTimeMessage() + " sec. CPU");
+		printStream.println(message + timer.getTimeMessage() + " sec. CPU");
 		// timer.getTimer();
 		addInfo(new Info(Info.TYPE_INFO, message, timer.getThreadTimeInSeconds(), 1));
 	}
@@ -1199,10 +1234,10 @@ public class SimulationData {
 				writer.close();
 			}
 		} catch (IOException e) {
-			e.printStackTrace(Simulator.getErrorStream());
+			e.printStackTrace(printStream);
 		}
 
-		Simulator.println("-Results outputted in tmp session: "
+		printStream.println("-Results outputted in tmp session: "
 				+ timer.getTimeMessage() + " sec. CPU");
 	}
 
@@ -1301,7 +1336,7 @@ public class SimulationData {
 
 		if (activationMap) {
 			PlxTimer timer = new PlxTimer();
-			addInfo(new Info(Info.TYPE_INFO, "--Abstracting activation map..."));
+			addInfo(new Info(Info.TYPE_INFO, "--Abstracting activation map...", printStream));
 			
 			timer.startTimer();
 			for (IRule rule : rules) {
@@ -1309,12 +1344,12 @@ public class SimulationData {
 				rule.createActivatedObservablesList(getObservables());
 			}
 			stopTimer(timer, "--Abstraction:");
-			addInfo(new Info(Info.TYPE_INFO, "--Activation map computed"));
+			addInfo(new Info(Info.TYPE_INFO, "--Activation map computed", printStream));
 		}
 
 		if (inhibitionMap) {
 			PlxTimer timer = new PlxTimer();
-			addInfo(new Info(Info.TYPE_INFO, "--Abstracting inhibition map..."));
+			addInfo(new Info(Info.TYPE_INFO, "--Abstracting inhibition map...", printStream));
 			
 			timer.startTimer();
 			for (IRule rule : rules) {
@@ -1322,7 +1357,7 @@ public class SimulationData {
 				rule.createInhibitedObservablesList(getObservables());
 			}
 			stopTimer(timer, "--Abstraction:");
-			addInfo(new Info(Info.TYPE_INFO, "--Inhibition map computed"));
+			addInfo(new Info(Info.TYPE_INFO, "--Inhibition map computed", printStream));
 		}
 
 		while (iterator.hasNext()) {
@@ -1372,13 +1407,13 @@ public class SimulationData {
 	}
 	
 	public final void outputSolution() {
-		Simulator.println("INITIAL SOLUTION:");
+		printStream.println("INITIAL SOLUTION:");
 		for (SolutionLines sl : ((CSolution) solution).getSolutionLines()) {
-			Simulator.print("-");
-			Simulator.print("" + sl.getCount());
-			Simulator.print("*[");
-			Simulator.print(sl.getLine());
-			Simulator.println("]");
+			printStream.print("-");
+			printStream.print("" + sl.getCount());
+			printStream.print("*[");
+			printStream.print(sl.getLine());
+			printStream.println("]");
 		}
 	}
 	
@@ -1395,51 +1430,50 @@ public class SimulationData {
 					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() < siteTo
 							.getAgentLink().getIdInRuleSide()) {
 						// BRK (#0,a) (#1,x)
-						Simulator.print("BRK (#");
-						Simulator.print(""
+						printStream.print("BRK (#");
+						printStream.print(""
 								+ (action.getSiteFrom().getAgentLink()
 										.getIdInRuleSide() - 1));
-						Simulator.print(",");
-						Simulator.print(action.getSiteFrom().getName());
-						Simulator.print(") ");
-						Simulator.print("(#");
-						Simulator
-								.print(""
+						printStream.print(",");
+						printStream.print(action.getSiteFrom().getName());
+						printStream.print(") ");
+						printStream.print("(#");
+						printStream.print(""
 										+ (siteTo.getAgentLink()
 												.getIdInRuleSide() - 1));
-						Simulator.print(",");
-						Simulator.print(siteTo.getName());
-						Simulator.print(") ");
-						Simulator.println();
+						printStream.print(",");
+						printStream.print(siteTo.getName());
+						printStream.print(") ");
+						printStream.println();
 					}
 					break;
 				}
 				case DELETE: {
 					// DEL #0
-					Simulator.print("DEL #");
-					Simulator.println(""
+					printStream.print("DEL #");
+					printStream.println(""
 							+ (action.getAgentFrom().getIdInRuleSide() - 1));
 					break;
 				}
 				case ADD: {
 					// ADD a#0(x)
-					Simulator.print("ADD " + action.getAgentTo().getName()
+					printStream.print("ADD " + action.getAgentTo().getName()
 							+ "#");
 
-					Simulator.print(""
+					printStream.print(""
 							+ (action.getAgentTo().getIdInRuleSide() - 1));
-					Simulator.print("(");
+					printStream.print("(");
 					int i = 1;
 					for (ISite site : action.getAgentTo().getSites()) {
-						Simulator.print(site.getName());
+						printStream.print(site.getName());
 						if ((site.getInternalState() != null)
 								&& (site.getInternalState().getNameId() >= 0))
-							Simulator.print("~"
+							printStream.print("~"
 									+ site.getInternalState().getName());
 						if (action.getAgentTo().getSites().size() > i++)
-							Simulator.print(",");
+							printStream.print(",");
 					}
-					Simulator.println(") ");
+					printStream.println(") ");
 
 					break;
 				}
@@ -1449,36 +1483,36 @@ public class SimulationData {
 							.getSite());
 					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() > siteTo
 							.getAgentLink().getIdInRuleSide()) {
-						Simulator.print("BND (#");
-						Simulator.print(""
+						printStream.print("BND (#");
+						printStream.print(""
 								+ (action.getSiteFrom().getAgentLink()
 										.getIdInRuleSide() - 1));
-						Simulator.print(",");
-						Simulator.print(action.getSiteFrom().getName());
-						Simulator.print(") ");
-						Simulator.print("(#");
-						Simulator.print(""
+						printStream.print(",");
+						printStream.print(action.getSiteFrom().getName());
+						printStream.print(") ");
+						printStream.print("(#");
+						printStream.print(""
 								+ (action.getSiteTo().getAgentLink()
 										.getIdInRuleSide() - 1));
-						Simulator.print(",");
-						Simulator.print(siteTo.getName());
-						Simulator.print(") ");
-						Simulator.println();
+						printStream.print(",");
+						printStream.print(siteTo.getName());
+						printStream.print(") ");
+						printStream.println();
 					}
 					break;
 				}
 				case MODIFY: {
 					// MOD (#1,x) with p
-					Simulator.print("MOD (#");
-					Simulator.print(""
+					printStream.print("MOD (#");
+					printStream.print(""
 							+ (action.getSiteFrom().getAgentLink()
 									.getIdInRuleSide() - 1));
-					Simulator.print(",");
-					Simulator.print(action.getSiteFrom().getName());
-					Simulator.print(") with ");
-					Simulator.print(action.getSiteTo().getInternalState()
+					printStream.print(",");
+					printStream.print(action.getSiteFrom().getName());
+					printStream.print(") with ");
+					printStream.print(action.getSiteTo().getInternalState()
 							.getName());
-					Simulator.println();
+					printStream.println();
 					break;
 				}
 				}
@@ -1492,24 +1526,24 @@ public class SimulationData {
 			for (int j = 0; j < line.length(); j++)
 				ch = ch + "-";
 
-			Simulator.println(ch);
+			printStream.println(ch);
 			if (rule.getName() != null) {
-				Simulator.print(rule.getName());
-				Simulator.print(": ");
+				printStream.print(rule.getName());
+				printStream.print(": ");
 			}
-			Simulator.print(line);
-			Simulator.println();
-			Simulator.println(ch);
-			Simulator.println();
-			Simulator.println();
+			printStream.print(line);
+			printStream.println();
+			printStream.println(ch);
+			printStream.println();
+			printStream.println();
 		}
 	}
 
 	public final void outputPertubation() {
-		Simulator.println("PERTURBATIONS:");
+		printStream.println("PERTURBATIONS:");
 
 		for (CPerturbation perturbation : perturbations) {
-			Simulator.println(perturbationToString(perturbation));
+			printStream.println(perturbationToString(perturbation));
 		}
 
 	}
@@ -1520,9 +1554,9 @@ public class SimulationData {
 			timerOutput.startTimer();
 			writeToXML(source, timerOutput);
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace(Simulator.getErrorStream());
+			e.printStackTrace(printStream);
 		} catch (TransformerException e) {
-			e.printStackTrace(Simulator.getErrorStream());
+			e.printStackTrace(printStream);
 		}
 	}
 
@@ -1645,17 +1679,21 @@ public class SimulationData {
 		// this.snapshotTime = snapshotTime;
 	}
 
-	public void setFocusOn(String fileNameFocusOn, Simulator simulator) throws Exception {
+	public void setFocusOn(String fileNameFocusOn) throws Exception {
 		DataReading dataReading = new DataReading(fileNameFocusOn);
 		dataReading.readData();
 		
-		Parser parser = new Parser(dataReading, this, simulator);
+		Parser parser = new Parser(dataReading, this);
 		List<IRule> ruleList = parser.createRules(dataReading.getRules());
 		
 		if (ruleList != null && !ruleList.isEmpty()) {
 			contactMap.setFocusRule(ruleList.get(0));
 			contactMap.setMode(CContactMap.MODE_AGENT_OR_RULE);
 		}
+	}
+
+	public final void println(String text) {
+		printStream.println(text);
 	}
 
 	//**************************************************************************
@@ -1795,5 +1833,17 @@ public class SimulationData {
 
 	public final boolean isStorifyOption() {
 		return storifyOption;
+	}
+
+	public final boolean isDumpStdoutStderr() {
+		return dumpStdoutStderr;
+	}
+
+	public final PrintStream getPrintStream() {
+		return printStream;
+	}
+
+	public final void setPrintStream(PrintStream printStream) {
+		this.printStream = printStream;
 	}
 }

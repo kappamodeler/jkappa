@@ -27,7 +27,7 @@ public class TestParseRuleCorrection {
 			System.err.println(e.getMessage());
 		}
 		Simulator mySimulator = new Simulator();
-		myParser = new Parser(new DataReading(fileName), mySimulator.getSimulationData(), mySimulator);
+		myParser = new Parser(new DataReading(fileName), mySimulator.getSimulationData());
 		myMC = new MessageConstructor();
 	}
 	

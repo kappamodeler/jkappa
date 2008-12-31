@@ -7,8 +7,7 @@ import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.controller.SimulationService;
 import com.plectix.simulator.controller.SimulatorInputData;
-import com.plectix.simulator.controller.SimulatorInterface;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.DefaultSimulatorFactory;
 
 public class SimulationMain  {
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
@@ -22,8 +21,7 @@ public class SimulationMain  {
 	public static void main(String[] args) {
 		initializeLogging();
 		
-		SimulatorInterface simulator = new Simulator();
-		SimulationService service = new SimulationService(simulator);
+		SimulationService service = new SimulationService(new DefaultSimulatorFactory());
 		service.submit(new SimulatorInputData(args, myOutputStream), null);
 		service.shutdown();
 	}

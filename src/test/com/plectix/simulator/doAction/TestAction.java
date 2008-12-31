@@ -132,7 +132,7 @@ public class TestAction {
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("negative update");
 
-			myActiveRule.applyRule(injectionsList, mySimulator);
+			myActiveRule.applyRule(injectionsList, mySimulator.getSimulationData());
 
 		} else {
 			if (LOGGER.isDebugEnabled())

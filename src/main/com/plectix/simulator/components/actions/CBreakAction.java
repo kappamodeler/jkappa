@@ -9,7 +9,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.SimulationData;
 
 public class CBreakAction extends CAction {
 	private final ISite mySiteFrom;
@@ -26,7 +26,7 @@ public class CBreakAction extends CAction {
 		setType(CActionType.BREAK);
 	}
 
-	public final void doAction(IInjection injection, INetworkNotation netNotation, Simulator simulator) {
+	public final void doAction(IInjection injection, INetworkNotation netNotation, SimulationData simulationData) {
 		IAgent agentFromInSolution;
 		int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getAgentLink());
 		agentFromInSolution = getLeftCComponent().getAgentByIdFromSolution(

@@ -23,7 +23,7 @@ import com.plectix.simulator.interfaces.IPerturbationExpression;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.Info;
 
 public class Parser {
@@ -72,7 +72,6 @@ public class Parser {
 	private double perturbationRate;
 	private boolean isForwarding;
 	private final SimulationData simulationData;
-	private final Simulator simulator;
 
 	private class DataString {
 		private String st1 = null;
@@ -100,15 +99,14 @@ public class Parser {
 
 	}
 
-	public Parser(DataReading data, SimulationData simulationData, Simulator simulator) {
+	public Parser(DataReading data, SimulationData simulationData) {
 		this.data = data;
 		this.simulationData = simulationData;
-		this.simulator = simulator;
 	}
 
 	public final void parse() throws ParseErrorException {
-		simulationData.addInfo(new Info(Info.TYPE_INFO,
-				"--Computing initial state"));
+		simulationData.addInfo(Info.TYPE_INFO,"--Computing initial state");
+		
 		if (simulationData.isParseSolution())
 			createSimData(data.getInits(), CREATE_INIT);
 		List<IRule> rules = createRules(data.getRules());
@@ -686,11 +684,11 @@ public class Parser {
 						if (simulationData.getSimulationType()==SimulationData.SIMULATION_TYPE_CONTACT_MAP) {
 							simulationData.getContactMap()
 									.addAgentFromSolution(listAgent);
-							simulationData.getContactMap().setSimulator(simulator);
+							simulationData.getContactMap().setSimulationData(simulationData);
 						} else {
 							for (int i = 1; i < count; i++) {
 								simulationData.getSolution().addAgents(
-										simulationData.getSolution().cloneAgentsList(listAgent,simulator));
+										simulationData.getSolution().cloneAgentsList(listAgent, simulationData));
 							}
 						}
 						if (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_COMPILE) {
@@ -784,8 +782,8 @@ public class Parser {
 					throw new ParseErrorException("Unexpected agent name : "
 							+ ccomp);
 
-				cagent = new CAgent(simulator.getNameDictionary()
-						.addName(ccomp), simulator.generateNextAgentId());
+				cagent = new CAgent(ThreadLocalData.getNameDictionary().addName(ccomp), simulationData.generateNextAgentId());
+				
 				listAgent.add(cagent);
 				while (agent.hasMoreTokens()) {
 					site = agent.nextToken().trim(); // Site name or State name.
@@ -835,12 +833,12 @@ public class Parser {
 		if (!site.trim().matches(PATTERN_AGENT_SITE))
 			throw new ParseErrorException("Unexpected site name : " + line);
 
-		final int siteNameId = simulator.getNameDictionary().addName(site);
+		final int siteNameId = ThreadLocalData.getNameDictionary().addName(site);
 		csite = new CSite(siteNameId);
 
 		if (state != null)
 			if ((state.length() != 0) && state.trim().matches(PATTERN_STATE)) {
-				final int nameId = simulator.getNameDictionary().addName(state);
+				final int nameId = ThreadLocalData.getNameDictionary().addName(state);
 				csite.setInternalState(new CInternalState(nameId));
 			} else {
 				throw new ParseErrorException(

@@ -3,6 +3,7 @@ package com.plectix.simulator.components.actions;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 
 public class CAddAction extends CAction {
@@ -17,13 +18,12 @@ public class CAddAction extends CAction {
 		createBound();
 	}
 
-	public void doAction(IInjection injection, INetworkNotation netNotation,
-			Simulator simulator) {
+	public void doAction(IInjection injection, INetworkNotation netNotation, SimulationData simulationData) {
 		/**
 		 * Done.
 		 */
-		IAgent agent = new CAgent(myToAgent.getNameId(), simulator
-				.generateNextAgentId());
+		IAgent agent = new CAgent(myToAgent.getNameId(), simulationData.generateNextAgentId());
+		
 		for (ISite site : myToAgent.getSites()) {
 			ISite siteAdd = new CSite(site.getNameId());
 			siteAdd.setInternalState(new CInternalState(site.getInternalState()
@@ -41,7 +41,7 @@ public class CAddAction extends CAction {
 		}
 		
 		getRightCComponent().addAgentFromSolutionForRHS(agent);
-		simulator.getSimulationData().getSolution().addAgent(agent);
+		simulationData.getSolution().addAgent(agent);
 
 		agent.storifyAgent();
 		myRule.putAgentAdd(myToAgent, agent);

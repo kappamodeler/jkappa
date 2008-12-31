@@ -15,7 +15,7 @@ public class SimulationService {
 	private static final int NUMBER_OF_THREADS = 4;
 	private static ExecutorService EXECUTOR_SERVICE = null;
 
-	private SimulatorInterface simulator = null;
+	private SimulatorFactoryInterface simulatorFactory = null;
 	
 	private ConcurrentHashMap<Long, SimulatorFutureTask> callablesMap = new ConcurrentHashMap<Long, SimulatorFutureTask>();
 	
@@ -23,11 +23,11 @@ public class SimulationService {
 	 * 
 	 * @param simulatorInterface
 	 */
-	public SimulationService(SimulatorInterface simulatorInterface) {
-		if (simulatorInterface == null) {
-			throw new RuntimeException("We need a simulator!");
+	public SimulationService(SimulatorFactoryInterface simulatorFactoryInterface) {
+		if (simulatorFactoryInterface == null) {
+			throw new RuntimeException("We need a simulator factory!");
 		}
-		this.simulator = simulatorInterface;
+		this.simulatorFactory = simulatorFactoryInterface;
 		
 		if (EXECUTOR_SERVICE == null) {
 			EXECUTOR_SERVICE = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
@@ -40,7 +40,7 @@ public class SimulationService {
 	 * @return
 	 */
 	public long submit(SimulatorInputData simulatorInputData, SimulatorCallableListener listener) {
-		SimulatorCallable simulatorCallable = new SimulatorCallable(simulator.clone(), simulatorInputData, listener);
+		SimulatorCallable simulatorCallable = new SimulatorCallable(simulatorFactory.createSimulator(), simulatorInputData, listener);
 		SimulatorFutureTask futureTask = new SimulatorFutureTask(simulatorCallable);
 		// submit task:
 		EXECUTOR_SERVICE.submit(futureTask);
@@ -57,7 +57,7 @@ public class SimulationService {
 	 */
 	public SimulatorProgressMonitor submit(List<SimulatorInputData> simulationInputDataList, SimulatorCallableListener listener) {
 		SimulatorProgressMonitor progressMonitor = new SimulatorProgressMonitor(
-				simulator, simulationInputDataList, listener,
+				simulatorFactory, simulationInputDataList, listener,
 				new ExecutorCompletionService<SimulatorResultsData>(EXECUTOR_SERVICE));
 		return progressMonitor;
 	}
@@ -80,7 +80,8 @@ public class SimulationService {
 			return futureTask.get(timeout, unit);
 		} catch (Exception e) {
 			//SimulatorResultsData simulatorResultsData = new SimulatorResultsData();
-			SimulatorResultsData simulatorResultsData = simulator.getSimulatorResultsData();
+			
+			SimulatorResultsData simulatorResultsData = futureTask.getSimulator().getSimulatorResultsData();
 			simulatorResultsData.getSimulatorExitReport().setException(e);
 			return simulatorResultsData;
 		} finally {

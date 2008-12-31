@@ -35,7 +35,6 @@ public enum SimulatorOptions {
 	POINTS("points", true, "Number of data points per plots"),
 	MAX_CLASHES("max_clashes", true,
 			"Max number of consequtive clashes before aborting (default 100, 0=infinite)"),
-	OCAML_STYLE_OBS_NAME("ocaml_style_obs_name", false,	"convert Obs names to simpx"),
 	GENERATE_MAP("generate_map", true,
 			"Name of the kappa file for which the influence map should be computed"),
 	CONTACT_MAP("contact_map", true, "Name of the kappa file to build contact map"),
@@ -122,7 +121,9 @@ public enum SimulatorOptions {
 	RESET_ALL("reset_all", false, "Reset all"),
 	FOCUS_ON("focus_on", true, "(default: disabled) Focus contact maps around the given rules"),
 	DO_LOW_RES_CONTACT_MAP("do_low_res_contact_map", false, "(default: enabled)construct the low resolution contact map"),
-	
+	// Java specific options:
+	OCAML_STYLE_OBS_NAME("ocaml_style_obs_name", false,	"convert observable names to simplx variants"),
+	DUMP_STDOUT_STDERR("dump_stdout_stderr", true, "dump information to stdout and/or stderr"),
 	;
 
 	private String shortName = null;

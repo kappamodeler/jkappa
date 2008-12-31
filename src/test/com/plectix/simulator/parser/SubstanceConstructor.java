@@ -1,21 +1,27 @@
 package com.plectix.simulator.parser;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
-import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.util.NameDictionary;
 
-/*package*/ class SubstanceConstructor {
-	private final NameDictionary myNameDictionary = Simulator.getNameDictionary();
+public class SubstanceConstructor {
+	private final NameDictionary nameDictionary = ThreadLocalData.getNameDictionary();
 	private int myAgentIndexGenerator;
 	
 	public ISite createSite(String name, String internalStateName, String linkIndex) {
-		ISite site = new CSite(myNameDictionary.addName(name));
+		ISite site = new CSite(nameDictionary.addName(name));
 		if (internalStateName != null) { 
-			site.setInternalState(new CInternalState(
-					myNameDictionary.addName(internalStateName)));
+			site.setInternalState(new CInternalState(nameDictionary.addName(internalStateName)));
 		}
 		if (linkIndex != null) {
 			if ("?".equals(linkIndex)) {
@@ -31,7 +37,7 @@ import com.plectix.simulator.simulator.Simulator;
 	}
 	
 	public IAgent createAgent(String name, List<ISite> sites) {
-		IAgent agent = new CAgent(myNameDictionary.addName(name), myAgentIndexGenerator++);
+		IAgent agent = new CAgent(nameDictionary.addName(name), myAgentIndexGenerator++);
 		for (ISite site : sites) {
 			agent.addSite(site);
 		}

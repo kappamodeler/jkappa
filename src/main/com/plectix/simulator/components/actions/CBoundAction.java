@@ -8,7 +8,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.SimulationData;
 
 public class CBoundAction extends CAction {
 	private final ISite mySiteFrom;
@@ -25,7 +25,7 @@ public class CBoundAction extends CAction {
 		setType(CActionType.BOUND);
 	}
 
-	public final void doAction(IInjection injection, INetworkNotation netNotation, Simulator simulator) {
+	public final void doAction(IInjection injection, INetworkNotation netNotation, SimulationData simulationData) {
 		//	TODO remove copypaste
 		/**
 		 * Done.

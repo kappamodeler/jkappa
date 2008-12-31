@@ -28,13 +28,13 @@ public class SimulatorProgressMonitor implements SimulatorCallableListener {
      * @param listener 
      * 
      */
-    public SimulatorProgressMonitor(SimulatorInterface simulator, 
+    public SimulatorProgressMonitor(SimulatorFactoryInterface simulatorFactoryInterface, 
     		List<SimulatorInputData> simulationInputDataList,
 			SimulatorCallableListener listener, 
 			ExecutorCompletionService<SimulatorResultsData> executorCompletionService) {
     	super();
 
-        if (simulator == null || simulationInputDataList == null || executorCompletionService == null) {
+        if (simulatorFactoryInterface == null || simulationInputDataList == null || executorCompletionService == null) {
         	throw new RuntimeException("Unexpected null objects");
         }
         
@@ -47,7 +47,7 @@ public class SimulatorProgressMonitor implements SimulatorCallableListener {
 
         startTimestamp = System.currentTimeMillis();
         for (SimulatorInputData simulatorInputData : simulationInputDataList) {
-    		SimulatorCallable simulatorCallable = new SimulatorCallable(simulator.clone(), simulatorInputData, this);
+    		SimulatorCallable simulatorCallable = new SimulatorCallable(simulatorFactoryInterface.createSimulator(), simulatorInputData, this);
     		SimulatorFutureTask futureTask = new SimulatorFutureTask(simulatorCallable);
         	executorCompletionService.submit(futureTask, futureTask.getSimulator().getSimulatorResultsData());
     		futureTaskList.add(futureTask);

@@ -5,26 +5,8 @@ import java.util.concurrent.TimeUnit;
 
 public class SimulationServiceTest implements SimulatorCallableListener {
 
-	public static void main(String[] args) throws InterruptedException {
-		Date date = new Date();
-		System.err.println(date.getTime() + " vs " + System.currentTimeMillis());
-		
-		float ourPosition = System.currentTimeMillis() / 1000.0f;
-		float simplxStartPosition = 1228536517.613349f;
-		System.err.println("our: " + ourPosition + " sim: " + simplxStartPosition + " diff: " + (ourPosition-simplxStartPosition));
-		
-		long startDate = (long)(simplxStartPosition*1000); 
-		date.setTime(startDate); //
-		System.err.println("simplx start date: " + date + " = current_date - " + (System.currentTimeMillis()-startDate)/1000 );
-		
-		
-		long endDate = (long)(1228536518.423739*1000);
-		date.setTime(endDate);
-		System.err.println(date);
-		System.err.println("simplx end date: " + date + " = current_date - " + (System.currentTimeMillis()-endDate)/1000 );
-		
-		
-		SimulationService service = new SimulationService(new Simulator1());
+	public static void main(String[] args) throws InterruptedException {	
+		SimulationService service = new SimulationService(new Simulator1.Simulator1Factory());
 		
 		long jobID = service.submit(new SimulatorInputData(args), new SimulationServiceTest());
 		long jobID2 = service.submit(new SimulatorInputData(args), null);
@@ -65,5 +47,24 @@ public class SimulationServiceTest implements SimulatorCallableListener {
 		if (e != null) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void dumpDates() {
+		Date date = new Date();
+		System.err.println(date.getTime() + " vs " + System.currentTimeMillis());
+		
+		float ourPosition = System.currentTimeMillis() / 1000.0f;
+		float simplxStartPosition = 1228536517.613349f;
+		System.err.println("our: " + ourPosition + " sim: " + simplxStartPosition + " diff: " + (ourPosition-simplxStartPosition));
+		
+		long startDate = (long)(simplxStartPosition*1000); 
+		date.setTime(startDate); //
+		System.err.println("simplx start date: " + date + " = current_date - " + (System.currentTimeMillis()-startDate)/1000 );
+		
+		
+		long endDate = (long)(1228536518.423739*1000);
+		date.setTime(endDate);
+		System.err.println(date);
+		System.err.println("simplx end date: " + date + " = current_date - " + (System.currentTimeMillis()-endDate)/1000 );
 	}
 }

@@ -13,10 +13,9 @@ import com.plectix.simulator.util.Info;
 	public CRandomJava(SimulationData data) {
 		int seed = data.getSeed();
 		if (seed != SimulationData.DEFAULT_SEED) {
-			data.addInfo(
-					new Info(Info.TYPE_INFO,
+			data.addInfo(Info.TYPE_INFO,
 							"--Seeding random number generator with given seed "
-									+ Integer.valueOf(seed).toString()));
+									+ Integer.valueOf(seed).toString());
 			rand = new Random(seed);
 		} else
 			rand = new Random();

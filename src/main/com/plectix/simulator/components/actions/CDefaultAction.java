@@ -7,7 +7,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.SimulationData;
 
 public class CDefaultAction extends CAction {
 	private final IAgent myToAgent;
@@ -19,7 +19,7 @@ public class CDefaultAction extends CAction {
 		setType(CActionType.NONE);
 	}
 	
-	public final void doAction(IInjection injection, INetworkNotation netNotation, Simulator simulator) {
+	public final void doAction(IInjection injection, INetworkNotation netNotation, SimulationData simulationData) {
 		int agentIdInCC = getAgentIdInCCBySideId(myToAgent);
 		IAgent agentFromInSolution = getLeftCComponent()
 				.getAgentByIdFromSolution(agentIdInCC, injection);

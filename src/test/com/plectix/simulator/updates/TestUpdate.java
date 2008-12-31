@@ -99,7 +99,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("negative update");
 
-			myActiveRule.applyRule(myCurrentInjectionsList, mySimulator);
+			myActiveRule.applyRule(myCurrentInjectionsList, mySimulator.getSimulationData());
 			SimulationUtils.doNegativeUpdate(myCurrentInjectionsList);
 			if (isDoingPositive()) {
 				mySimulator.getSimulationData().doPositiveUpdate(myActiveRule,

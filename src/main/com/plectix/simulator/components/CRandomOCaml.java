@@ -19,7 +19,7 @@ import com.plectix.simulator.simulator.Simulator;
 		try {
 			process = runtime.exec(patch);
 		} catch (IOException e) {
-			e.printStackTrace(Simulator.getErrorStream());
+			e.printStackTrace();
 		}
 		InputStream inputStream = process.getInputStream();
 		scanner = new Scanner(inputStream);

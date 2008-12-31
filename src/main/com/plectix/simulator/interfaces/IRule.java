@@ -2,7 +2,7 @@ package com.plectix.simulator.interfaces;
 
 import java.util.List;
 
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.SimulationData;
 
 public interface IRule {
 	public List<IAgent> getStoryfiedAgents();
@@ -19,7 +19,7 @@ public interface IRule {
 			INetworkNotation netNotation);
 
 	public void applyRuleForStories(List<IInjection> injectionsList,
-			INetworkNotation netNotation, Simulator simulator, boolean isLast);
+			INetworkNotation netNotation, SimulationData simulationData, boolean isLast);
 
 	public List<IRule> getActivatedRule();
 
@@ -41,7 +41,7 @@ public interface IRule {
 
 	public boolean isInfinityRate();
 
-	public void applyRule(List<IInjection> injectionsList, Simulator simulator);
+	public void applyRule(List<IInjection> injectionsList, SimulationData simulationData);
 
 	public List<ISite> getSitesConnectedWithDeleted();
 

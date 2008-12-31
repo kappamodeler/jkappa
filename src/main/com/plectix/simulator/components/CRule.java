@@ -26,8 +26,8 @@ import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.simulator.Simulator;
 
 public class CRule implements IRule, Serializable {
 
@@ -222,12 +222,12 @@ public class CRule implements IRule, Serializable {
 	}
 
 	public void applyRuleForStories(List<IInjection> injectionList,
-			INetworkNotation netNotation, Simulator simulator, boolean isLast) {
-		apply(injectionList, netNotation, simulator, isLast);
+			INetworkNotation netNotation, SimulationData simulationData, boolean isLast) {
+		apply(injectionList, netNotation, simulationData, isLast);
 	}
 
-	public void applyRule(List<IInjection> injectionList, Simulator simulator) {
-		apply(injectionList, null, simulator, false);
+	public void applyRule(List<IInjection> injectionList, SimulationData simulationData) {
+		apply(injectionList, null, simulationData, false);
 	}
 
 	public final IAgent getAgentAdd(IAgent key) {
@@ -255,7 +255,7 @@ public class CRule implements IRule, Serializable {
 	}
 
 	protected final void apply(List<IInjection> injectionList,
-			INetworkNotation netNotation, Simulator simulator, boolean isLast) {
+			INetworkNotation netNotation, SimulationData simulationData, boolean isLast) {
 		if (storyfiedAgents == null)
 			storyfiedAgents = new ArrayList<IAgent>();
 		if (netNotation != null) {
@@ -274,10 +274,10 @@ public class CRule implements IRule, Serializable {
 
 		for (IAction action : actionList) {
 			if (action.getLeftCComponent() == null) {
-				action.doAction(null, netNotation, simulator);
+				action.doAction(null, netNotation, simulationData);
 			} else {
 				action.doAction(injectionList.get(leftHandSide.indexOf(action
-						.getLeftCComponent())), netNotation, simulator);
+						.getLeftCComponent())), netNotation, simulationData);
 			}
 		}
 

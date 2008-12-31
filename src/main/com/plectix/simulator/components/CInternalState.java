@@ -1,8 +1,9 @@
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
+
 import com.plectix.simulator.interfaces.IInternalState;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class CInternalState extends CState implements IInternalState, Serializable {
 
@@ -25,7 +26,7 @@ public class CInternalState extends CState implements IInternalState, Serializab
 	}
 
 	public final String getName() {
-		return Simulator.getNameDictionary().getName(nameId);
+		return ThreadLocalData.getNameDictionary().getName(nameId);
 	}
 
 	public final int getStateNameId() {

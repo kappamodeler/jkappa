@@ -1,4 +1,4 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;

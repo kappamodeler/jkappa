@@ -16,6 +16,7 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 
 public class CContactMap {
@@ -33,11 +34,11 @@ public class CContactMap {
 	}
 
 	private List<IRule> reachableRules;
-	private Simulator simulator;
+	private SimulationData simulationData;
 	private ISolution solution;
 
-	public void setSimulator(Simulator simulator) {
-		this.simulator = simulator;
+	public void setSimulationData(SimulationData simulationData) {
+		this.simulationData = simulationData;
 	}
 
 	private Map<Integer, IAgent> agentsFromSolution;
@@ -340,8 +341,7 @@ public class CContactMap {
 	}
 	*/
 
-	private void addNewElementsToSolution(List<IInjection> oldInjList,
-			IRule rule) {
+	private void addNewElementsToSolution(List<IInjection> oldInjList, IRule rule) {
 		List<IAgent> newAgents = new ArrayList<IAgent>();
 		List<IAgent> oldAgents = new ArrayList<IAgent>();
 
@@ -350,7 +350,7 @@ public class CContactMap {
 			oldAgents.addAll(solution.getConnectedComponent(agent).getAgents());
 		}
 
-		newAgents = solution.cloneAgentsList(oldAgents, simulator);
+		newAgents = solution.cloneAgentsList(oldAgents, simulationData);
 		solution.addAgents(newAgents);
 		List<IInjection> newInjList = new ArrayList<IInjection>();
 
@@ -368,8 +368,8 @@ public class CContactMap {
 				}
 			}
 
-		rule.applyRule(newInjList, simulator);
-		simulator.getSimulationData().doPositiveUpdate(rule, newInjList);
+		rule.applyRule(newInjList, simulationData);
+		simulationData.doPositiveUpdate(rule, newInjList);
 	}
 
 	public void constructReachableRules(List<IRule> rules) {

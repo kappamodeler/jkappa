@@ -12,7 +12,7 @@ import com.plectix.simulator.interfaces.IInternalState;
 import com.plectix.simulator.interfaces.ILiftElement;
 import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 public final class CSite implements ISite, Serializable {
 	public static final int NO_INDEX = -1;
@@ -158,6 +158,6 @@ public final class CSite implements ISite, Serializable {
 	}
 
 	public final String getName() {
-		return Simulator.getNameDictionary().getName(nameId);
+		return ThreadLocalData.getNameDictionary().getName(nameId);
 	}
 }

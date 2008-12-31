@@ -3,6 +3,8 @@ package com.plectix.simulator.interfaces;
 import java.util.Collection;
 import java.util.List;
 
+import com.plectix.simulator.util.NameDictionary;
+
 public interface IAgent extends Comparable<IAgent> {
 	
 	public int getIdInConnectedComponent();  //Returns the identifier of this object in the database.

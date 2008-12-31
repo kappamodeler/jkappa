@@ -65,9 +65,8 @@ public class Initializator {
 			SimulationData simulationData = mySimulator.getSimulationData();
 
 			simulationData.parseArguments(testArgs);
-			simulationData.readSimulatonFile(mySimulator);
+			simulationData.readSimulatonFile();
 			simulationData.initialize();
-	
 	}
 	
 	public Simulator getSimulator() { 
