@@ -225,12 +225,6 @@ public class SimulationData {
 			printStream = null;
 		}
 
-		// let's dump the command line arguments
-		println("Java " + getCommandLine());
-		
-		// moved this below since the line above might have turned the printing off...
-		addInfo(Info.TYPE_INFO, "-Initialization...");
-
 		if (arguments.hasOption(SimulatorOptions.HELP)) {
 			if (printStream != null) {            
 		        PrintWriter printWriter = new PrintWriter(printStream);
@@ -252,6 +246,12 @@ public class SimulationData {
 			System.exit(0);
 		}
 
+		// let's dump the command line arguments
+		println("Java " + getCommandLine());
+		
+		// moved this below since the line above might have turned the printing off...
+		addInfo(Info.TYPE_INFO, "-Initialization...");
+		
 		if (arguments.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
 			setXmlSessionName(arguments.getValue(SimulatorOptions.XML_SESSION_NAME));
 		}
