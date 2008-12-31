@@ -70,9 +70,8 @@ import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.DataReading;
 import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.util.Info;
-import com.plectix.simulator.util.NameDictionary;
-import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.PlxTimer;
+import com.plectix.simulator.util.RunningMetric;
 
 public class SimulationData {
 
@@ -214,8 +213,10 @@ public class SimulationData {
 			try {
 				arguments = new SimulatorArguments(args);
 			} catch (ParseException e) {
-				printStream.println("Error parsing arguments:");
-				e.printStackTrace(printStream);
+				println("Error parsing arguments:");
+				if (printStream != null) {
+					e.printStackTrace(printStream);
+				}
 				throw new IllegalArgumentException(e);
 			}
 
@@ -294,7 +295,9 @@ public class SimulationData {
 				}
 	
 			} catch (Exception e) {
-				e.printStackTrace(printStream);
+				if (printStream != null) {
+					e.printStackTrace(printStream);
+				}
 				throw new IllegalArgumentException(e);
 			}
 	
@@ -424,7 +427,7 @@ public class SimulationData {
 			
 			setTimeLength(timeSim);
 		} else {
-			printStream.println("*Warning* No time limit.");
+			println("*Warning* No time limit.");
 		}
 	
 		if (!option && (simulatorArguments.hasOption(SimulatorOptions.SIMULATIONFILE))) {
@@ -498,8 +501,11 @@ public class SimulationData {
 			parser.setForwarding(simulatorArguments.hasOption(SimulatorOptions.FORWARD));
 			parser.parse();
 		} catch (Exception e) {
-			printStream.println("Error in file \"" + fileName + "\" :");
-			e.printStackTrace(printStream);
+			println("Error in file \"" + fileName + "\" :");
+
+			if (printStream != null) {
+				e.printStackTrace(printStream);
+			}
 			throw new IllegalArgumentException(e);
 		}
 	}
@@ -550,29 +556,29 @@ public class SimulationData {
 	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
 		if (curClockTime - clockStamp > clockPrecision) {
-			printStream.println("simulation interrupted because the clock time has expired");
+			println("simulation interrupted because the clock time has expired");
 			return true;
 		}
 		
 		if (isTime) {
 			if (currentTime <= timeLength) {
 				if (currentTime >= nextStep) {
-					printStream.print("#");
+					print("#");
 					nextStep += step;
 				}
 				return false;
 			} else {
-				printStream.println("#");
+				println("#");
 				return true;
 			}
 		} else if (count <= event) {
 			if (count >= nextStep) {
-				printStream.print("#");
+				print("#");
 				nextStep += step;
 			}
 			return false;
 		} else {
-			printStream.println("#");
+			println("#");
 			return true;
 		}
 	}
@@ -1010,7 +1016,7 @@ public class SimulationData {
 				CStoryType st = traceIdToStoryTypeRule.get(rID);
 				node = doc.createElement("Connection");
 				if (st == null) {
-					printStream.println();
+					println();
 				}
 				st.fillConnection(node, toStoryType.getId(), relationType);
 				connections.add(node);
@@ -1177,7 +1183,7 @@ public class SimulationData {
 		timer.stopTimer();
 		
 		message += " ";
-		printStream.println(message + timer.getTimeMessage() + " sec. CPU");
+		println(message + timer.getTimeMessage() + " sec. CPU");
 		// timer.getTimer();
 		addInfo(new Info(Info.TYPE_INFO, message, timer.getThreadTimeInSeconds(), 1));
 	}
@@ -1233,10 +1239,12 @@ public class SimulationData {
 				writer.close();
 			}
 		} catch (IOException e) {
-			e.printStackTrace(printStream);
+			if (printStream != null) {
+				e.printStackTrace(printStream);
+			}
 		}
 
-		printStream.println("-Results outputted in tmp session: "
+		println("-Results outputted in tmp session: "
 				+ timer.getTimeMessage() + " sec. CPU");
 	}
 
@@ -1412,13 +1420,13 @@ public class SimulationData {
 	}
 
 	public final void outputSolution() {
-		printStream.println("INITIAL SOLUTION:");
+		println("INITIAL SOLUTION:");
 		for (SolutionLines sl : ((CSolution) solution).getSolutionLines()) {
-			printStream.print("-");
-			printStream.print("" + sl.getCount());
-			printStream.print("*[");
-			printStream.print(sl.getLine());
-			printStream.println("]");
+			print("-");
+			print("" + sl.getCount());
+			print("*[");
+			print(sl.getLine());
+			println("]");
 		}
 	}
 	
@@ -1435,50 +1443,50 @@ public class SimulationData {
 					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() < siteTo
 							.getAgentLink().getIdInRuleSide()) {
 						// BRK (#0,a) (#1,x)
-						printStream.print("BRK (#");
-						printStream.print(""
+						print("BRK (#");
+						print(""
 								+ (action.getSiteFrom().getAgentLink()
 										.getIdInRuleSide() - 1));
-						printStream.print(",");
-						printStream.print(action.getSiteFrom().getName());
-						printStream.print(") ");
-						printStream.print("(#");
-						printStream.print(""
+						print(",");
+						print(action.getSiteFrom().getName());
+						print(") ");
+						print("(#");
+						print(""
 										+ (siteTo.getAgentLink()
 												.getIdInRuleSide() - 1));
-						printStream.print(",");
-						printStream.print(siteTo.getName());
-						printStream.print(") ");
-						printStream.println();
+						print(",");
+						print(siteTo.getName());
+						print(") ");
+						println();
 					}
 					break;
 				}
 				case DELETE: {
 					// DEL #0
-					printStream.print("DEL #");
-					printStream.println(""
+					print("DEL #");
+					println(""
 							+ (action.getAgentFrom().getIdInRuleSide() - 1));
 					break;
 				}
 				case ADD: {
 					// ADD a#0(x)
-					printStream.print("ADD " + action.getAgentTo().getName()
+					print("ADD " + action.getAgentTo().getName()
 							+ "#");
 
-					printStream.print(""
+					print(""
 							+ (action.getAgentTo().getIdInRuleSide() - 1));
-					printStream.print("(");
+					print("(");
 					int i = 1;
 					for (ISite site : action.getAgentTo().getSites()) {
-						printStream.print(site.getName());
+						print(site.getName());
 						if ((site.getInternalState() != null)
 								&& (site.getInternalState().getNameId() >= 0))
-							printStream.print("~"
+							print("~"
 									+ site.getInternalState().getName());
 						if (action.getAgentTo().getSites().size() > i++)
-							printStream.print(",");
+							print(",");
 					}
-					printStream.println(") ");
+					println(") ");
 
 					break;
 				}
@@ -1488,36 +1496,36 @@ public class SimulationData {
 							.getSite());
 					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() > siteTo
 							.getAgentLink().getIdInRuleSide()) {
-						printStream.print("BND (#");
-						printStream.print(""
+						print("BND (#");
+						print(""
 								+ (action.getSiteFrom().getAgentLink()
 										.getIdInRuleSide() - 1));
-						printStream.print(",");
-						printStream.print(action.getSiteFrom().getName());
-						printStream.print(") ");
-						printStream.print("(#");
-						printStream.print(""
+						print(",");
+						print(action.getSiteFrom().getName());
+						print(") ");
+						print("(#");
+						print(""
 								+ (action.getSiteTo().getAgentLink()
 										.getIdInRuleSide() - 1));
-						printStream.print(",");
-						printStream.print(siteTo.getName());
-						printStream.print(") ");
-						printStream.println();
+						print(",");
+						print(siteTo.getName());
+						print(") ");
+						println();
 					}
 					break;
 				}
 				case MODIFY: {
 					// MOD (#1,x) with p
-					printStream.print("MOD (#");
-					printStream.print(""
+					print("MOD (#");
+					print(""
 							+ (action.getSiteFrom().getAgentLink()
 									.getIdInRuleSide() - 1));
-					printStream.print(",");
-					printStream.print(action.getSiteFrom().getName());
-					printStream.print(") with ");
-					printStream.print(action.getSiteTo().getInternalState()
+					print(",");
+					print(action.getSiteFrom().getName());
+					print(") with ");
+					print(action.getSiteTo().getInternalState()
 							.getName());
-					printStream.println();
+					println();
 					break;
 				}
 				}
@@ -1531,24 +1539,24 @@ public class SimulationData {
 			for (int j = 0; j < line.length(); j++)
 				ch = ch + "-";
 
-			printStream.println(ch);
+			println(ch);
 			if (rule.getName() != null) {
-				printStream.print(rule.getName());
-				printStream.print(": ");
+				print(rule.getName());
+				print(": ");
 			}
-			printStream.print(line);
-			printStream.println();
-			printStream.println(ch);
-			printStream.println();
-			printStream.println();
+			print(line);
+			println();
+			println(ch);
+			println();
+			println();
 		}
 	}
 
 	public final void outputPertubation() {
-		printStream.println("PERTURBATIONS:");
+		println("PERTURBATIONS:");
 
 		for (CPerturbation perturbation : perturbations) {
-			printStream.println(perturbationToString(perturbation));
+			println(perturbationToString(perturbation));
 		}
 
 	}
@@ -1559,9 +1567,13 @@ public class SimulationData {
 			timerOutput.startTimer();
 			writeToXML(source, timerOutput);
 		} catch (ParserConfigurationException e) {
-			e.printStackTrace(printStream);
+			if (printStream != null) {
+				e.printStackTrace(printStream);
+			}
 		} catch (TransformerException e) {
-			e.printStackTrace(printStream);
+			if (printStream != null) {
+				e.printStackTrace(printStream);
+			}
 		}
 	}
 
@@ -1697,8 +1709,22 @@ public class SimulationData {
 		}
 	}
 
+	public final void print(String text) {
+		if (printStream != null) {
+			printStream.print(text);
+		}
+	}
+	
+	public final void println() {
+		if (printStream != null) {
+			printStream.println();
+		}
+	}
+	
 	public final void println(String text) {
-		printStream.println(text);
+		if (printStream != null) {
+			printStream.println(text);
+		}
 	}
 
 	//**************************************************************************
@@ -1815,7 +1841,6 @@ public class SimulationData {
 		return contactMap;
 	}
 
-
 	public final boolean isCompile() {
 		return compile;
 	}
@@ -1842,10 +1867,6 @@ public class SimulationData {
 
 	public final boolean isDumpStdoutStderr() {
 		return dumpStdoutStderr;
-	}
-
-	public final PrintStream getPrintStream() {
-		return printStream;
 	}
 
 	public final void setPrintStream(PrintStream printStream) {
