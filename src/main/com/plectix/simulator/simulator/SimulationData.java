@@ -36,7 +36,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
@@ -359,7 +358,7 @@ public class SimulationData {
 		}
 
 		if (arguments.hasOption(SimulatorOptions.OCAML_STYLE_OBS_NAME)) {
-			setOcamlStyleObsName(true);
+			observables.setOcamlStyleObsName(true);
 		}
 
 		if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
@@ -528,15 +527,11 @@ public class SimulationData {
 		return true;
 	}
 
-	public final void setOcamlStyleObsName(boolean ocamlStyleObsName) {
-		observables.setOcamlStyleObsName(ocamlStyleObsName);
-	}
-
 	public final void addInfo(byte type, String message) {
 		addInfo(new Info(type, message, printStream));
 	}
 	
-	public final void addInfo(Info info) {
+	private final void addInfo(Info info) {
 		for (Info inf : infoList) {
 			if (inf.getMessageWithoutTime().equals(info.getMessageWithoutTime())) {
 				inf.upCount(info.getTime());
@@ -547,7 +542,7 @@ public class SimulationData {
 		infoList.add(info);
 	}
 
-	public final void setCommandLine(String[] args) {
+	private final void setCommandLine(String[] args) {
 		StringBuffer stringBuffer = new StringBuffer();
 		for (int i = 0; i < args.length; i++) {
 			stringBuffer.append(args[i] + " ");
@@ -555,7 +550,7 @@ public class SimulationData {
 		this.commandLine = stringBuffer.toString();
 	}
 
-	public final void setMaxClashes(long max_clashes) {
+	private final void setMaxClashes(long max_clashes) {
 		if (max_clashes > 0) {
 			this.maxClashes = max_clashes;
 		} else {
@@ -928,7 +923,7 @@ public class SimulationData {
 		}
 	}
 
-	public final void addSiteToContactMapAgent(CContactMapChangedSite site,
+	private final void addSiteToContactMapAgent(CContactMapChangedSite site,
 			Element agent, Document doc) {
 		Element siteNode = doc.createElement("Site");
 		for (Integer ruleID : site.getUsedRuleIDs()) {
@@ -944,7 +939,7 @@ public class SimulationData {
 		agent.appendChild(siteNode);
 	}
 
-	public final void writeToXML(Source source, PlxTimer timerOutput)
+	private final void writeToXML(Source source, PlxTimer timerOutput)
 			throws ParserConfigurationException, TransformerException {
 		TransformerFactory trFactory = TransformerFactory.newInstance();
 		Transformer transformer = trFactory.newTransformer();
@@ -1258,7 +1253,7 @@ public class SimulationData {
 				+ timer.getTimeMessage() + " sec. CPU");
 	}
 
-	public final double getTimeSampleMin(double fullTime) {
+	private final double getTimeSampleMin(double fullTime) {
 		if (points > 0) {
 			return (fullTime / points);
 		} else {
@@ -1291,7 +1286,7 @@ public class SimulationData {
 		return Long.valueOf(value).toString();
 	}
 
-	public final String getXmlSessionPath() {
+	private final String getXmlSessionPath() {
 		if (xmlSessionPath.length() > 0) {
 			return xmlSessionPath + File.separator + xmlSessionName;
 		} else {
@@ -1429,7 +1424,7 @@ public class SimulationData {
 		outputSolution();
 	}
 
-	public final void outputSolution() {
+	private final void outputSolution() {
 		println("INITIAL SOLUTION:");
 		for (SolutionLines sl : ((CSolution) solution).getSolutionLines()) {
 			print("-");
@@ -1440,7 +1435,7 @@ public class SimulationData {
 		}
 	}
 	
-	public final void outputRules() {
+	private final void outputRules() {
 		for (IRule rule : getRules()) {
 			// int countAgentsInLHS = rule.getCountAgentsLHS();
 			// int indexNewAgent = countAgentsInLHS;
@@ -1562,7 +1557,7 @@ public class SimulationData {
 		}
 	}
 
-	public final void outputPertubation() {
+	private final void outputPertubation() {
 		println("PERTURBATIONS:");
 
 		for (CPerturbation perturbation : perturbations) {
@@ -1621,7 +1616,7 @@ public class SimulationData {
 		return st;
 	}
 
-	public final void doPositiveUpdateForDeletedAgents(List<IAgent> agentsList) {
+	private final void doPositiveUpdateForDeletedAgents(List<IAgent> agentsList) {
 		for (IAgent agent : agentsList) {
 			for (IRule rule : getRules()) {
 				for (IConnectedComponent cc : rule.getLeftHandSide()) {
@@ -1706,7 +1701,7 @@ public class SimulationData {
 		// this.snapshotTime = snapshotTime;
 	}
 
-	public final void setFocusOn(String fileNameFocusOn) throws Exception {
+	private final void setFocusOn(String fileNameFocusOn) throws Exception {
 		DataReading dataReading = new DataReading(fileNameFocusOn);
 		dataReading.readData();
 		
@@ -1719,19 +1714,19 @@ public class SimulationData {
 		}
 	}
 
-	public final void print(String text) {
+	private final void print(String text) {
 		if (printStream != null) {
 			printStream.print(text);
 		}
 	}
 	
-	public final void println() {
+	private final void println() {
 		if (printStream != null) {
 			printStream.println();
 		}
 	}
 	
-	public final void println(String text) {
+	protected final void println(String text) {
 		if (printStream != null) {
 			printStream.println(text);
 		}
