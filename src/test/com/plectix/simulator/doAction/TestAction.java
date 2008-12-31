@@ -26,8 +26,8 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
-import com.plectix.simulator.options.SimulatorArguments;
 import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.SimulatorArguments;
 
 @RunWith(value = Parameterized.class)
 public class TestAction {

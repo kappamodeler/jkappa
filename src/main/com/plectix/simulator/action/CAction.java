@@ -1,4 +1,4 @@
-package com.plectix.simulator.components.actions;
+package com.plectix.simulator.action;
 
 import java.io.Serializable;
 import java.util.*;

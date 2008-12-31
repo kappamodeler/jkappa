@@ -1,4 +1,4 @@
-package com.plectix.simulator.components.actions;
+package com.plectix.simulator.action;
 
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CNetworkNotation;

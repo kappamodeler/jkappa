@@ -42,6 +42,7 @@ import org.w3c.dom.Element;
 
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.components.CContactMap;
 import com.plectix.simulator.components.CContactMapChangedSite;
 import com.plectix.simulator.components.CContactMapEdge;
@@ -56,7 +57,6 @@ import com.plectix.simulator.components.CStoryType;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.SnapshotElement;
 import com.plectix.simulator.components.SolutionLines;
-import com.plectix.simulator.components.actions.CActionType;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -67,8 +67,6 @@ import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
-import com.plectix.simulator.options.SimulatorArguments;
-import com.plectix.simulator.options.SimulatorOptions;
 import com.plectix.simulator.parser.DataReading;
 import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.util.Info;
@@ -599,11 +597,11 @@ public class SimulationData {
 		this.stories.addToStories(ruleIDs);
 	}
 
-	public boolean isStorify() {
+	public final boolean isStorify() {
 		return (simulationType == SIMULATION_TYPE_STORIFY);
 	}
 
-	public void setTimeLength(double timeLength) {
+	public final void setTimeLength(double timeLength) {
 		this.timeLength = timeLength;
 		step = timeLength / 100;
 		nextStep = step;
@@ -893,7 +891,7 @@ public class SimulationData {
 		return domSource;
 	}
 
-	private void addRulesToXML(Element influenceMap, int rulesAndObsNumber,
+	private final void addRulesToXML(Element influenceMap, int rulesAndObsNumber,
 			Document doc) {
 		for (int i = rules.size() - 1; i >= 0; i--) {
 			Element node = null;
@@ -1249,7 +1247,7 @@ public class SimulationData {
 		}
 	}
 
-	private void appendData(IObservables obs, List<IObservablesComponent> list,
+	private final void appendData(IObservables obs, List<IObservablesComponent> list,
 			CDATASection cdata, int index) {
 		String enter = "\n";
 		cdata.appendData(observables.getCountTimeList().get(index).toString());
@@ -1395,17 +1393,23 @@ public class SimulationData {
 
 	}
 
-	public void checkOutputFinalState(double currentTime){
+	public final void checkOutputFinalState(double currentTime){
 		if (outputFinalState) {
 			createSnapshots(currentTime);
 		}
 	}
 	
-	public void createSnapshots(double currentTime){
+	public final void createSnapshots(double currentTime){
 		addSnapshot(new CSnapshot(this, currentTime));
 //		simulationData.setSnapshotTime(currentTime);
 	}
-	
+
+	public final void outputData() {
+		outputRules();
+		outputPertubation();
+		outputSolution();
+	}
+
 	public final void outputSolution() {
 		printStream.println("INITIAL SOLUTION:");
 		for (SolutionLines sl : ((CSolution) solution).getSolutionLines()) {
@@ -1679,7 +1683,7 @@ public class SimulationData {
 		// this.snapshotTime = snapshotTime;
 	}
 
-	public void setFocusOn(String fileNameFocusOn) throws Exception {
+	public final void setFocusOn(String fileNameFocusOn) throws Exception {
 		DataReading dataReading = new DataReading(fileNameFocusOn);
 		dataReading.readData();
 		

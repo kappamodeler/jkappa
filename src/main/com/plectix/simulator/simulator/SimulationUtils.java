@@ -132,8 +132,7 @@ public class SimulationUtils {
 		return line;
 	}
 
-	private static final List<String> sortSitesStr(List<String> list,
-			boolean isOcamlStyleObsName) {
+	private static final List<String> sortSitesStr(List<String> list, boolean isOcamlStyleObsName) {
 		if (isOcamlStyleObsName) {
 			Collections.sort(list);
 		}

@@ -7,8 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.plectix.simulator.components.actions.CActionType;
-import com.plectix.simulator.components.actions.CAddAction;
+import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.action.CAddAction;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;

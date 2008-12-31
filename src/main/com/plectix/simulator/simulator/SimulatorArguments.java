@@ -1,9 +1,10 @@
-package com.plectix.simulator.options;
+package com.plectix.simulator.simulator;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+
 
 public class SimulatorArguments {
 	private CommandLine commandLine;

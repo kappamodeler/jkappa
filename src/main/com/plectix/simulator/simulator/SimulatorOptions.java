@@ -1,4 +1,4 @@
-package com.plectix.simulator.options;
+package com.plectix.simulator.simulator;
 
 import org.apache.commons.cli.Options;
 

@@ -69,13 +69,6 @@ public class Simulator implements SimulatorInterface {
 		timeStepCounter++;
 	}
 
-
-	public final void outputData() {
-		simulationData.outputRules();
-		simulationData.outputPertubation();
-		simulationData.outputSolution();
-	}
-
 	private final Source addCompleteSource() throws TransformerException, ParserConfigurationException {
 		Source source = simulationData.createDOMModel();
 		simulatorResultsData.addResultSource(source);
@@ -83,7 +76,7 @@ public class Simulator implements SimulatorInterface {
 	}
 
 
-	private final void outToLogger(boolean isEndRules, PlxTimer timer) {
+	private final void endOfSimulation(boolean isEndRules, PlxTimer timer) {
 		simulationData.stopTimer(timer, "-Simulation:");
 
 		if (!isEndRules) {
@@ -174,7 +167,7 @@ public class Simulator implements SimulatorInterface {
 		simulationData.setTimeLength(currentTime);
 		simulationData.setEvent(count);
 		
-		outToLogger(isEndRules, timer);
+		endOfSimulation(isEndRules, timer);
 		Source source = addCompleteSource();
 		
 		if (!isIteration) {
@@ -202,7 +195,7 @@ public class Simulator implements SimulatorInterface {
 		simulationData.setClockStamp(System.currentTimeMillis());
 		
 		if (simulationData.isCompile()) {
-			outputData();
+			simulationData.outputData();
 			return;
 		}
 		
@@ -318,7 +311,7 @@ public class Simulator implements SimulatorInterface {
 			}
 			
 			count = 0;
-			outToLogger(isEndRules, timer);
+			endOfSimulation(isEndRules, timer);
 			stories.handling(i);
 			
 			if (i < simulationData.getIterations() - 1) {

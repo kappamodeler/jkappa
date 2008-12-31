@@ -1,4 +1,4 @@
-package com.plectix.simulator.components.actions;
+package com.plectix.simulator.action;
 
 public enum CActionType {
 	NONE(-1),

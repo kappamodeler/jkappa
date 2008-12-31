@@ -9,10 +9,10 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import com.plectix.simulator.components.actions.CActionType;
-import com.plectix.simulator.components.actions.CAddAction;
-import com.plectix.simulator.components.actions.CDefaultAction;
-import com.plectix.simulator.components.actions.CDeleteAction;
+import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.action.CAddAction;
+import com.plectix.simulator.action.CDefaultAction;
+import com.plectix.simulator.action.CDeleteAction;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
