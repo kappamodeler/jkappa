@@ -123,7 +123,7 @@ public enum SimulatorOptions {
 	DO_LOW_RES_CONTACT_MAP("do_low_res_contact_map", false, "(default: enabled)construct the low resolution contact map"),
 	// Java specific options:
 	OCAML_STYLE_OBS_NAME("ocaml_style_obs_name", false,	"convert observable names to simplx variants"),
-	DUMP_STDOUT_STDERR("dump_stdout_stderr", true, "dump information to stdout and/or stderr"),
+	NO_DUMP_STDOUT_STDERR("no_dump_stdout_stderr", false, "don't dump information to stdout and/or stderr"),
 	;
 
 	private String shortName = null;

@@ -145,7 +145,6 @@ public class SimulationData {
 	private boolean storifyOption = false;
 	
 	private PrintStream printStream = null;
-	private boolean dumpStdoutStderr = false;
 	
 	private long maxClashes = 100;
 	private List<Double> snapshotTimes;
@@ -200,206 +199,210 @@ public class SimulationData {
 		return agentIdGenerator++;
 	}
 	
-	public final void parseArguments(String[] args)
-				throws IllegalArgumentException {
-	
-			addInfo(Info.TYPE_INFO, "-Initialization...");
-			
-			// let's replace all '-' by '_' 
-			args = SimulationUtils.changeArguments(args);
-			
-			SimulatorArguments arguments = null;
-			
-			try {
-				arguments = new SimulatorArguments(args);
-			} catch (ParseException e) {
-				println("Error parsing arguments:");
-				if (printStream != null) {
-					e.printStackTrace(printStream);
-				}
-				throw new IllegalArgumentException(e);
-			}
+	public final void parseArguments(String[] args) throws IllegalArgumentException {
+		// let's get the original command line before we change it:
+		setCommandLine(args);
 
-			this.simulatorArguments = arguments;
-			
-			if (arguments.hasOption(SimulatorOptions.DUMP_STDOUT_STDERR)) {
-				dumpStdoutStderr  = true;
-			}
-			
-			if (arguments.hasOption(SimulatorOptions.HELP)) {
-				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp("use --sim [file] [options]",
-						SimulatorOptions.COMMAND_LINE_OPTIONS);
-				// TODO are we to exit here?
-				System.exit(0);
-			}
-	
-			if (arguments.hasOption(SimulatorOptions.VERSION)) {
-				SimulationMain.myOutputStream.println("Java simulator v."
-						+ SimulationMain.VERSION + " SVN Revision: "
-						+ BuildConstants.BUILD_SVN_REVISION);
-				// TODO are we to exit here?
-				System.exit(0);
-			}
-	
-			if (arguments.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
-				setXmlSessionName(arguments.getValue(SimulatorOptions.XML_SESSION_NAME));
-			}
-			
-			if (arguments.hasOption(SimulatorOptions.OUTPUT_XML)) {
-				setXmlSessionName(arguments.getValue(SimulatorOptions.OUTPUT_XML));
-			}
-	//		if (arguments.hasOption(SimulatorOptions.DO_XML)) {
-	//			setXmlSessionName(arguments
-	//					.getValue(SimulatorOptions.DO_XML));
-	//		}
-	
-			try {
-				if (arguments.hasOption(SimulatorOptions.INIT)) {
-					initialTime = Double.valueOf(arguments.getValue(SimulatorOptions.INIT));
-				}
-				if (arguments.hasOption(SimulatorOptions.POINTS)) {
-					points = Integer.valueOf(arguments.getValue(SimulatorOptions.POINTS));
-				}
-				if (arguments.hasOption(SimulatorOptions.RESCALE)) {
-					double rescale = Double.valueOf(arguments.getValue(SimulatorOptions.RESCALE));
-					if (rescale > 0) {
-						this.rescale = rescale;
-					} else {
-						throw new Exception();
-					}
-				}
-	
-				if (arguments.hasOption(SimulatorOptions.NO_SEED)) {
-					setSeed(0);
-				}
-				
-				// TODO else?
-				if (arguments.hasOption(SimulatorOptions.SEED)) {
-					int seed = Integer.valueOf(arguments.getValue(SimulatorOptions.SEED));
-					setSeed(seed);
-				}
-	
-				if (arguments.hasOption(SimulatorOptions.MAX_CLASHES)) {
-					int max_clashes = Integer.valueOf(arguments.getValue(SimulatorOptions.MAX_CLASHES));
-					setMaxClashes(max_clashes);
-				}
-	
-				if (arguments.hasOption(SimulatorOptions.EVENT)) {
-					long event = Long.valueOf(arguments.getValue(SimulatorOptions.EVENT));
-					setEvent(event);
-				}
-	
-				if (arguments.hasOption(SimulatorOptions.ITERATION)) {
-					setIterations(Integer.valueOf(arguments.getValue(SimulatorOptions.ITERATION)));
-				}
-	
-			} catch (Exception e) {
-				if (printStream != null) {
-					e.printStackTrace(printStream);
-				}
-				throw new IllegalArgumentException(e);
-			}
-	
-			
-			if (arguments.hasOption(SimulatorOptions.RANDOMIZER_JAVA)) {
-				setRandomizer(arguments.getValue(SimulatorOptions.RANDOMIZER_JAVA));
-			}
-	
-			if (arguments.hasOption(SimulatorOptions.NO_ACTIVATION_MAP)
-					|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
-					|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
-				activationMap = false;
-			}
-	
-			if (arguments.hasOption(SimulatorOptions.MERGE_MAPS)) {
-				inhibitionMap = true;
-			}
-			
-			if (arguments.hasOption(SimulatorOptions.COMPILE)) {
-				compile = true;
-			}
-			
-			
-			if (arguments.hasOption(SimulatorOptions.DEBUG_INIT)) {
-				debugInitOption = false;
-			}
-			
-			if (arguments.hasOption(SimulatorOptions.GENERATE_MAP)) {
-				genereteMapOption = false;
-			}
+		// let's replace all '-' by '_' 
+		args = SimulationUtils.changeArguments(args);
 
-			if (arguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
-				contactMapOption = false;
+		SimulatorArguments arguments = null;
+		try {
+			arguments = new SimulatorArguments(args);
+		} catch (ParseException e) {
+			println("Error parsing arguments:");
+			if (printStream != null) {
+				e.printStackTrace(printStream);
 			}
-			
-			if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
-				numberOfRunsOption = false;
-			}
-			
-			if (arguments.hasOption(SimulatorOptions.STORIFY)) {
-				storifyOption = true;
-			}
-					
-					
-			if (arguments.hasOption(SimulatorOptions.NO_INHIBITION_MAP)
-					|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
-					|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
-				inhibitionMap = false;
-			}
-	
-			if (arguments.hasOption(SimulatorOptions.OCAML_STYLE_OBS_NAME)) {
-				setOcamlStyleObsName(true);
-			}
-	
-			if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
-				int iteration = 0;
-				boolean exp = false;
-				try {
-					iteration = Integer.valueOf(arguments.getValue(SimulatorOptions.NUMBER_OF_RUNS));
-				} catch (Exception e) {
-					exp = true;
-				}
-				if ((exp) || (!arguments.hasOption(SimulatorOptions.SEED))) {
-					throw new IllegalArgumentException("No SEED OPTION");
-				}
-				
-				setSimulationType(SIMULATION_TYPE_ITERATIONS);
-				setIterations(iteration);
-			}
-	
-			if (arguments.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
-				clockPrecision = 60000 * Long.valueOf(arguments.getValue(SimulatorOptions.CLOCK_PRECISION));
-			}
-	
-			if (arguments.hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
-				outputFinalState = true;
-			}
-	
-			if (arguments.hasOption(SimulatorOptions.OUTPUT_SCHEME)) {
-				xmlSessionPath = arguments.getValue(SimulatorOptions.OUTPUT_SCHEME);
-			}
-	
-			if (arguments.hasOption(SimulatorOptions.NO_SAVE_ALL)) {
-				serializationMode = MODE_NONE;
-			}
-	
-			if (arguments.hasOption(SimulatorOptions.SAVE_ALL)) {
-				serializationFileName = arguments.getValue(SimulatorOptions.SAVE_ALL) ;
-			}
-			
-			if (arguments.hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)) {
-				storifyMode = STORIFY_MODE_NONE;
-			}
-			
-			if (arguments.hasOption(SimulatorOptions.COMPRESS_STORIES)) {
-				storifyMode = STORIFY_MODE_WEAK;
-			}
-			
-			if (arguments.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
-				storifyMode = STORIFY_MODE_STRONG;
-			}
+			throw new IllegalArgumentException(e);
 		}
+
+		this.simulatorArguments = arguments;
+
+		if (arguments.hasOption(SimulatorOptions.NO_DUMP_STDOUT_STDERR)) {
+			printStream = null;
+		}
+
+		// let's dump the command line arguments
+		println("Java " + getCommandLine());
+		
+		// moved this below since the line above might have turned the printing off...
+		addInfo(Info.TYPE_INFO, "-Initialization...");
+
+		if (arguments.hasOption(SimulatorOptions.HELP)) {
+			HelpFormatter formatter = new HelpFormatter();
+			formatter.printHelp("use --sim [file] [options]",
+					SimulatorOptions.COMMAND_LINE_OPTIONS);
+			// TODO are we to exit here?
+			System.exit(0);
+		}
+
+		if (arguments.hasOption(SimulatorOptions.VERSION)) {
+			SimulationMain.myOutputStream.println("Java simulator v."
+					+ SimulationMain.VERSION + " SVN Revision: "
+					+ BuildConstants.BUILD_SVN_REVISION);
+			// TODO are we to exit here?
+			System.exit(0);
+		}
+
+		if (arguments.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
+			setXmlSessionName(arguments.getValue(SimulatorOptions.XML_SESSION_NAME));
+		}
+
+		if (arguments.hasOption(SimulatorOptions.OUTPUT_XML)) {
+			setXmlSessionName(arguments.getValue(SimulatorOptions.OUTPUT_XML));
+		}
+		//		if (arguments.hasOption(SimulatorOptions.DO_XML)) {
+		//			setXmlSessionName(arguments
+		//					.getValue(SimulatorOptions.DO_XML));
+		//		}
+
+		try {
+			if (arguments.hasOption(SimulatorOptions.INIT)) {
+				initialTime = Double.valueOf(arguments.getValue(SimulatorOptions.INIT));
+			}
+			if (arguments.hasOption(SimulatorOptions.POINTS)) {
+				points = Integer.valueOf(arguments.getValue(SimulatorOptions.POINTS));
+			}
+			if (arguments.hasOption(SimulatorOptions.RESCALE)) {
+				double rescale = Double.valueOf(arguments.getValue(SimulatorOptions.RESCALE));
+				if (rescale > 0) {
+					this.rescale = rescale;
+				} else {
+					throw new Exception();
+				}
+			}
+
+			if (arguments.hasOption(SimulatorOptions.NO_SEED)) {
+				setSeed(0);
+			}
+
+			// TODO else?
+					if (arguments.hasOption(SimulatorOptions.SEED)) {
+						int seed = Integer.valueOf(arguments.getValue(SimulatorOptions.SEED));
+						setSeed(seed);
+					}
+
+					if (arguments.hasOption(SimulatorOptions.MAX_CLASHES)) {
+						int max_clashes = Integer.valueOf(arguments.getValue(SimulatorOptions.MAX_CLASHES));
+						setMaxClashes(max_clashes);
+					}
+
+					if (arguments.hasOption(SimulatorOptions.EVENT)) {
+						long event = Long.valueOf(arguments.getValue(SimulatorOptions.EVENT));
+						setEvent(event);
+					}
+
+					if (arguments.hasOption(SimulatorOptions.ITERATION)) {
+						setIterations(Integer.valueOf(arguments.getValue(SimulatorOptions.ITERATION)));
+					}
+
+		} catch (Exception e) {
+			if (printStream != null) {
+				e.printStackTrace(printStream);
+			}
+			throw new IllegalArgumentException(e);
+		}
+
+
+		if (arguments.hasOption(SimulatorOptions.RANDOMIZER_JAVA)) {
+			setRandomizer(arguments.getValue(SimulatorOptions.RANDOMIZER_JAVA));
+		}
+
+		if (arguments.hasOption(SimulatorOptions.NO_ACTIVATION_MAP)
+				|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
+				|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+			activationMap = false;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.MERGE_MAPS)) {
+			inhibitionMap = true;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.COMPILE)) {
+			compile = true;
+		}
+
+
+		if (arguments.hasOption(SimulatorOptions.DEBUG_INIT)) {
+			debugInitOption = false;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.GENERATE_MAP)) {
+			genereteMapOption = false;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
+			contactMapOption = false;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
+			numberOfRunsOption = false;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.STORIFY)) {
+			storifyOption = true;
+		}
+
+
+		if (arguments.hasOption(SimulatorOptions.NO_INHIBITION_MAP)
+				|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
+				|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+			inhibitionMap = false;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.OCAML_STYLE_OBS_NAME)) {
+			setOcamlStyleObsName(true);
+		}
+
+		if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
+			int iteration = 0;
+			boolean exp = false;
+			try {
+				iteration = Integer.valueOf(arguments.getValue(SimulatorOptions.NUMBER_OF_RUNS));
+			} catch (Exception e) {
+				exp = true;
+			}
+			if ((exp) || (!arguments.hasOption(SimulatorOptions.SEED))) {
+				throw new IllegalArgumentException("No SEED OPTION");
+			}
+
+			setSimulationType(SIMULATION_TYPE_ITERATIONS);
+			setIterations(iteration);
+		}
+
+		if (arguments.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
+			clockPrecision = 60000 * Long.valueOf(arguments.getValue(SimulatorOptions.CLOCK_PRECISION));
+		}
+
+		if (arguments.hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
+			outputFinalState = true;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.OUTPUT_SCHEME)) {
+			xmlSessionPath = arguments.getValue(SimulatorOptions.OUTPUT_SCHEME);
+		}
+
+		if (arguments.hasOption(SimulatorOptions.NO_SAVE_ALL)) {
+			serializationMode = MODE_NONE;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.SAVE_ALL)) {
+			serializationFileName = arguments.getValue(SimulatorOptions.SAVE_ALL) ;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)) {
+			storifyMode = STORIFY_MODE_NONE;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.COMPRESS_STORIES)) {
+			storifyMode = STORIFY_MODE_WEAK;
+		}
+
+		if (arguments.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
+			storifyMode = STORIFY_MODE_STRONG;
+		}
+	}
 
 	public final void readSimulatonFile() {
 	
@@ -1863,10 +1866,6 @@ public class SimulationData {
 
 	public final boolean isStorifyOption() {
 		return storifyOption;
-	}
-
-	public final boolean isDumpStdoutStderr() {
-		return dumpStdoutStderr;
 	}
 
 	public final void setPrintStream(PrintStream printStream) {

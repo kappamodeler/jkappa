@@ -177,17 +177,12 @@ public class Simulator implements SimulatorInterface {
 	
 
 	public final void run(SimulatorInputData simulatorInputData) throws Exception {
-		String[] args = simulatorInputData.getArguments();
-
-		simulationData.setCommandLine(args);
 		simulationData.setPrintStream(simulatorInputData.getPrintStream());
-		
-		simulationData.println("Java " + simulationData.getCommandLine());
 
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
 		
-		simulationData.parseArguments(args);
+		simulationData.parseArguments(simulatorInputData.getArguments());
 		simulationData.readSimulatonFile();
 		simulationData.initialize();
 		
