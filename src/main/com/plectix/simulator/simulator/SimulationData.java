@@ -76,22 +76,6 @@ import com.plectix.simulator.util.RunningMetric;
 
 public class SimulationData {
 	
-	public final static byte MODE_SAVE = 2;
-	public final static byte MODE_READ = 1;
-	public final static byte MODE_NONE = 0;
-	
-	public final static byte STORIFY_MODE_NONE = 0;
-	public final static byte STORIFY_MODE_WEAK = 1;
-	public final static byte STORIFY_MODE_STRONG = 2;
-
-	public final static byte SIMULATION_TYPE_NONE = -1;
-	public final static byte SIMULATION_TYPE_COMPILE = 0;
-	public final static byte SIMULATION_TYPE_STORIFY = 1;
-	public final static byte SIMULATION_TYPE_SIM = 2;
-	public final static byte SIMULATION_TYPE_AVERAGE_OF_RUNS = 3;
-	public final static byte SIMULATION_TYPE_GENERATE_MAP = 4;
-	public final static byte SIMULATION_TYPE_CONTACT_MAP = 5;
-	
 	private final static String TYPE_NEGATIVE_MAP = "NEGATIVE";
 	private final static String TYPE_POSITIVE_MAP = "POSITIVE";
 
@@ -111,9 +95,6 @@ public class SimulationData {
 
 	private List<Info> infoList = new ArrayList<Info>();
 
-	private byte simulationType = SIMULATION_TYPE_NONE;
-	private byte storifyMode = STORIFY_MODE_NONE;
-
 	private String tmpSessionName = "simplx.tmp";
 	private String commandLineString;
 
@@ -124,7 +105,6 @@ public class SimulationData {
 
 	private double step;
 	private double nextStep;
-	private byte serializationMode = MODE_NONE;
 	
 	private int agentIdGenerator = 0;
 
@@ -151,7 +131,7 @@ public class SimulationData {
 			perturbations.clear();
 		}
 
-		if (serializationMode != SimulationData.MODE_READ) {
+		if (simulationArguments.getSerializationMode() != SimulationArguments.SerializationMode.READ) {
 			readSimulatonFile();
 		}
 		
@@ -315,7 +295,7 @@ public class SimulationData {
 				throw new IllegalArgumentException("No SEED OPTION");
 			}
 
-			this.simulationType = SIMULATION_TYPE_AVERAGE_OF_RUNS;
+			simulationArguments.setSimulationType(SimulationArguments.SimulationType.AVERAGE_OF_RUNS);
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
@@ -331,7 +311,7 @@ public class SimulationData {
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.NO_SAVE_ALL)) {
-			serializationMode = MODE_NONE;
+			simulationArguments.setSerializationMode(SimulationArguments.SerializationMode.NONE);
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.SAVE_ALL)) {
@@ -339,15 +319,15 @@ public class SimulationData {
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)) {
-			storifyMode = STORIFY_MODE_NONE;
+			simulationArguments.setStorifyMode(SimulationArguments.StorifyMode.NONE);
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.COMPRESS_STORIES)) {
-			storifyMode = STORIFY_MODE_WEAK;
+			simulationArguments.setStorifyMode(SimulationArguments.StorifyMode.WEAK);
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
-			storifyMode = STORIFY_MODE_STRONG;
+			simulationArguments.setStorifyMode(SimulationArguments.StorifyMode.STRONG);
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.TIME)) {
@@ -361,7 +341,7 @@ public class SimulationData {
 		
 		if (commandLine.hasOption(SimulatorOptions.STORIFY)) {
 			fileName = commandLine.getValue(SimulatorOptions.STORIFY);
-			this.simulationType = SIMULATION_TYPE_STORIFY;
+			simulationArguments.setSimulationType(SimulationArguments.SimulationType.STORIFY);
 			option = true;
 		}
 		
@@ -377,7 +357,7 @@ public class SimulationData {
 					throw new IllegalArgumentException(e);
 				}
 			}
-			this.simulationType = SIMULATION_TYPE_SIM;
+			simulationArguments.setSimulationType(SimulationArguments.SimulationType.SIM);
 		}
 		
 		if (commandLine.hasOption(SimulatorOptions.COMPILE)) {
@@ -387,7 +367,7 @@ public class SimulationData {
 			} else {
 				option = false;
 			}
-			this.simulationType = SIMULATION_TYPE_COMPILE;
+			simulationArguments.setSimulationType(SimulationArguments.SimulationType.COMPILE);
 		}
 	
 		if (commandLine.hasOption(SimulatorOptions.GENERATE_MAP)) {
@@ -398,7 +378,7 @@ public class SimulationData {
 				option = false;
 			}
 			
-			this.simulationType = SIMULATION_TYPE_GENERATE_MAP;
+			simulationArguments.setSimulationType(SimulationArguments.SimulationType.GENERATE_MAP);
 		}
 	
 		if (commandLine.hasOption(SimulatorOptions.CONTACT_MAP)) {
@@ -409,10 +389,10 @@ public class SimulationData {
 				option = false;
 			}
 			
-			this.simulationType = SIMULATION_TYPE_CONTACT_MAP;
+			simulationArguments.setSimulationType(SimulationArguments.SimulationType.CONTACT_MAP);
 		}
 	
-		if (simulationType == SIMULATION_TYPE_NONE) {
+		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.NONE) {
 			// HelpFormatter formatter = new HelpFormatter();
 			// formatter.printHelp("use --sim [file]", cmdLineOptions);
 			throw new IllegalArgumentException("No option specified");
@@ -420,7 +400,7 @@ public class SimulationData {
 	
 		simulationArguments.setInputFile(fileName);
 		
-		if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
+		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 			if (commandLine.hasOption(SimulatorOptions.FOCUS_ON)) {
 				simulationArguments.setFocusFilename(commandLine.getValue(SimulatorOptions.FOCUS_ON));
 			}
@@ -467,7 +447,7 @@ public class SimulationData {
 	}
 	
 	public final boolean isParseSolution() {
-		if (simulationType == SIMULATION_TYPE_GENERATE_MAP) {
+		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.GENERATE_MAP) {
 			return false;
 		}
 		return true;
@@ -555,7 +535,7 @@ public class SimulationData {
 	}
 
 	public final boolean isStorify() {
-		return (simulationType == SIMULATION_TYPE_STORIFY);
+		return (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY);
 	}
 
 	public final void setTimeLength(double timeLength) {
@@ -601,7 +581,7 @@ public class SimulationData {
 		Document doc = db.newDocument();
 		PlxTimer timer = new PlxTimer();
 		Element simplxSession = null;
-		if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
+		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 			simplxSession = doc.createElement("ComplxSession");
 			simplxSession.setAttribute("xsi:schemaLocation",
 					"http://synthesisstudios.com ComplxSession.xsd");
@@ -637,7 +617,7 @@ public class SimulationData {
 
 		timer.startTimer();
 
-		if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
+		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 			Element contactMapElement = doc.createElement("ContactMap");
 			contactMapElement.setAttribute("Name", "Low resolution");
 
@@ -770,8 +750,7 @@ public class SimulationData {
 			stopTimer(timer, "-Building xml tree for influence map:");
 		}
 
-		if (simulationType == SIMULATION_TYPE_STORIFY) {
-
+		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY) {
 			for (List<CStoryTrees> stList : stories.getTrees()) {
 				for (CStoryTrees st : stList) {
 					Element story = doc.createElement("Story");
@@ -811,7 +790,7 @@ public class SimulationData {
 			stopTimer(timer, "-Building xml tree for snapshots:");
 		}
 
-		if (simulationType == SIMULATION_TYPE_SIM) {
+		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.SIM) {
 			int obsCountTimeListSize = observables.getCountTimeList().size();
 			Element simulation = doc.createElement("Simulation");
 			simulation.setAttribute("TotalEvents", Long.toString(simulationArguments.getEvent()));
@@ -852,7 +831,7 @@ public class SimulationData {
 			Document doc) {
 		for (int i = rules.size() - 1; i >= 0; i--) {
 			Element node = null;
-			if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
+			if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 				node = doc.createElement("Rule");
 				node.setAttribute("Id", Integer.toString(rules.get(i)
 						.getRuleID() + 1));
@@ -1033,7 +1012,7 @@ public class SimulationData {
 			}
 			for (Integer traceID : list) {
 				CStoryType storyType;
-				if (storifyMode == STORIFY_MODE_NONE)
+				if (simulationArguments.getStorifyMode() == SimulationArguments.StorifyMode.NONE)
 					storyType = new CStoryType(type, traceID,
 							counter + traceID, storyTree.getTraceIDToText()
 									.get(traceID), storyTree.getTraceIDToData()
@@ -1242,7 +1221,7 @@ public class SimulationData {
 
 	public final void initialize() {
 
-		if (serializationMode == MODE_READ) {
+		if (simulationArguments.getSerializationMode() == SimulationArguments.SerializationMode.READ) {
 			ObjectInputStream ois;
 			try {
 				ois = new ObjectInputStream(new FileInputStream(simulationArguments.getSerializationFileName()));
@@ -1262,7 +1241,7 @@ public class SimulationData {
 				e.printStackTrace();
 			}
 		}
-		if (serializationMode == MODE_SAVE) {
+		if (simulationArguments.getSerializationMode() == SimulationArguments.SerializationMode.SAVE) {
 			try {
 				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(simulationArguments.getSerializationFileName()));
 				oos.writeObject(solution);
@@ -1274,7 +1253,7 @@ public class SimulationData {
 				oos.writeDouble(simulationArguments.getTimeLength());
 				oos.flush();
 				oos.close();
-				serializationMode = MODE_READ;
+				simulationArguments.setSerializationMode(SimulationArguments.SerializationMode.READ);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -1284,7 +1263,7 @@ public class SimulationData {
 		CSolution solution = (CSolution) getSolution();
 		List<IRule> rules = getRules();
 
-		if (this.simulationType == SIMULATION_TYPE_CONTACT_MAP) {
+		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 			contactMap.addCreatedAgentsToSolution(this.solution, rules);
 		}
 
@@ -1345,7 +1324,7 @@ public class SimulationData {
 					}
 		}
 
-		if (this.simulationType == SIMULATION_TYPE_CONTACT_MAP) {
+		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 			contactMap.constructReachableRules(rules);
 			contactMap.constructContactMap();
 		}
@@ -1702,14 +1681,6 @@ public class SimulationData {
 
 	public final void setStories(CStories stories) {
 		this.stories = stories;
-	}
-
-	public final byte getStorifyMode() {
-		return storifyMode;
-	}
-
-	public final byte getSimulationType() {
-		return simulationType;
 	}
 
 	public final void setPerturbations(List<CPerturbation> perturbations) {

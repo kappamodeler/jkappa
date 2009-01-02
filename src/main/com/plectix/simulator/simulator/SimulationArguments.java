@@ -6,6 +6,28 @@ public class SimulationArguments {
 
 	public static final byte DEFAULT_SEED = -1;
 	public static final int DEFAULT_MAX_CLASHES = 100;
+
+	public enum SimulationType { 
+		NONE,
+		COMPILE,
+		STORIFY,
+		SIM,
+		AVERAGE_OF_RUNS,
+		GENERATE_MAP,
+		CONTACT_MAP
+	}
+
+	public enum StorifyMode {
+		NONE,
+		WEAK,
+		STRONG
+	}
+
+	public enum SerializationMode {
+		NONE,
+		READ,
+		SAVE
+	}
 	
 	private String xmlSessionName = "simplx.xml";
 	private double initialTime = 0.0;
@@ -35,11 +57,11 @@ public class SimulationArguments {
 	private String inputFile = null;	
 	private String snapshotsTimeString = null;
 	private String focusFilename = null;
-	// For future use, DO NO DELETE:
-	private String simulationTypeName = null;    // SIMULATION_TYPE_NONE
-	private String serializationModeName = null; // MODE_NONE
-	private String storifyModeName = null; // STORIFY_MODE_NONE;
-
+	private SimulationType simulationType = SimulationType.NONE;
+	private StorifyMode storifyMode = StorifyMode.NONE;
+	private SerializationMode serializationMode = SerializationMode.NONE;
+	
+	
 	public SimulationArguments() {
 		super();
 	}
@@ -226,23 +248,27 @@ public class SimulationArguments {
 	public final void setFocusFilename(String focusFilename) {
 		this.focusFilename = focusFilename;
 	}
-	public final String getSimulationTypeName() {
-		return simulationTypeName;
+
+	public final SimulationType getSimulationType() {
+		return simulationType;
 	}
-	public final void setSimulationTypeName(String simulationTypeName) {
-		this.simulationTypeName = simulationTypeName;
+	public final void setSimulationType(SimulationType simulationType) {
+		this.simulationType = simulationType;
 	}
-	public final String getSerializationModeName() {
-		return serializationModeName;
+
+	public final SerializationMode getSerializationMode() {
+		return serializationMode;
 	}
-	public final void setSerializationModeName(String serializationModeName) {
-		this.serializationModeName = serializationModeName;
+
+	public final void setSerializationMode(SerializationMode serializationMode) {
+		this.serializationMode = serializationMode;
 	}
-	public final String getStorifyModeName() {
-		return storifyModeName;
+
+	public final StorifyMode getStorifyMode() {
+		return storifyMode;
 	}
-	public final void setStorifyModeName(String storifyModeName) {
-		this.storifyModeName = storifyModeName;
+
+	public final void setStorifyMode(StorifyMode storifyMode) {
+		this.storifyMode = storifyMode;
 	}
-	
 }

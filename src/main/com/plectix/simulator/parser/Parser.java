@@ -21,9 +21,11 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
 import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.util.Info;
 
 public class Parser {
@@ -112,7 +114,7 @@ public class Parser {
 		List<IRule> rules = createRules(data.getRules());
 		simulationData.setRules(rules);
 		if ((simulationData.getStories() == null)
-				&& (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_STORIFY)) {
+				&& (simulationData.getSimulationArguments().getSimulationType() == SimulationArguments.SimulationType.STORIFY)) {
 			simulationData.setStories(new CStories(simulationData));
 			createSimData(data.getStory(), CREATE_STORY);
 		} else
@@ -682,7 +684,7 @@ public class Parser {
 						line = line.replaceAll("[ 	]", "");
 						List<IAgent> listAgent = parseAgent(line);
 						simulationData.getSolution().addAgents(listAgent);
-						if (simulationData.getSimulationType()==SimulationData.SIMULATION_TYPE_CONTACT_MAP) {
+						if (simulationData.getSimulationArguments().getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 							simulationData.getContactMap()
 									.addAgentFromSolution(listAgent);
 							simulationData.getContactMap().setSimulationData(simulationData);
@@ -692,7 +694,7 @@ public class Parser {
 										simulationData.getSolution().cloneAgentsList(listAgent, simulationData));
 							}
 						}
-						if (simulationData.getSimulationType() == SimulationData.SIMULATION_TYPE_COMPILE) {
+						if (simulationData.getSimulationArguments().getSimulationType() == SimulationArguments.SimulationType.COMPILE) {
 							((CSolution) simulationData.getSolution())
 									.checkSolutionLinesAndAdd(line, count);
 

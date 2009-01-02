@@ -1,13 +1,19 @@
 package com.plectix.simulator.components;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-import com.plectix.simulator.components.CNetworkNotation.*;
+import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules;
 import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules.SitesFromRules;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.SimulationArguments;
 
 public final class CStoryTrees {
 	public static final byte IS_CAUSE = 2;
@@ -27,7 +33,7 @@ public final class CStoryTrees {
 	private TreeMap<Integer, List<Integer>> traceIDToTraceID;
 	private TreeMap<Integer, List<Integer>> traceIDToTraceIDWeak;
 
-	private byte compressionMode;
+	private SimulationArguments.StorifyMode compressionMode;
 
 	public double getAverageTime() {
 		return averageTime;
@@ -58,7 +64,7 @@ public final class CStoryTrees {
 	}
 
 	public CStoryTrees(int ruleId, NetworkNotationForCurrentStory nnCS,
-			byte compressionMode, boolean isOcamlStyleObsName) {
+			SimulationArguments.StorifyMode compressionMode, boolean isOcamlStyleObsName) {
 		this.nnCS = nnCS;
 		this.ruleId = ruleId;
 		this.averageTime = nnCS.getAverageTime();
@@ -546,18 +552,14 @@ public final class CStoryTrees {
 
 	public final void getTreeFromList(List<CNetworkNotation> commonList) {
 		List<CNetworkNotation> nnList = commonList;
-		switch (compressionMode) {
-		case SimulationData.STORIFY_MODE_NONE:
+		if (compressionMode == SimulationArguments.StorifyMode.NONE) {
 			noneCompressStoryTrace(commonList);
-			break;
-		case SimulationData.STORIFY_MODE_WEAK:
+		} else if (compressionMode == SimulationArguments.StorifyMode.WEAK) {
 			nnList = weakCompressStoryTrace(commonList);
-			break;
-		case SimulationData.STORIFY_MODE_STRONG:
+		} else if (compressionMode == SimulationArguments.StorifyMode.STRONG) {
 			nnList = strongCompressStoryTrace(commonList);
-			break;
-		default:
-			break;
+		} else {
+			throw new IllegalArgumentException("Unknown StorifyMode: " + compressionMode);
 		}
 		fillMaps(nnList);
 	}

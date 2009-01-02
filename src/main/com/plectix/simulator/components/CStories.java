@@ -21,7 +21,7 @@ public final class CStories {
 		}
 	}
 
-	SimulationData simulationData;
+	private SimulationData simulationData;
 
 	public CStories(SimulationData simData) {
 		this.iterations = simData.getSimulationArguments().getIterations();
@@ -94,8 +94,8 @@ public final class CStories {
 							.getRuleID() == key) {
 
 						CStoryTrees tree = new CStoryTrees(key, nnCS,
-								simulationData.getStorifyMode(), simulationData
-										.isOcamlStyleObsName());
+								simulationData.getSimulationArguments().getStorifyMode(), 
+								simulationData.isOcamlStyleObsName());
 						tree.getTreeFromList(nnCS.getNetworkNotationList());
 
 						if (treeList.size() == 0)
