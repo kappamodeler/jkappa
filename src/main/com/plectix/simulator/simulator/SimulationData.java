@@ -223,15 +223,15 @@ public class SimulationData {
 		}
 		
 		if (commandLine.hasOption(SimulatorOptions.INIT)) {
-			simulationArguments.setInitialTime(Double.valueOf(commandLine.getValue(SimulatorOptions.INIT)));
+			simulationArguments.setInitialTime(commandLine.getDoubleValue(SimulatorOptions.INIT));
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.POINTS)) {
-			simulationArguments.setPoints(Integer.valueOf(commandLine.getValue(SimulatorOptions.POINTS)));
+			simulationArguments.setPoints(commandLine.getIntValue(SimulatorOptions.POINTS));
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.RESCALE)) {
-			double rescale = Double.valueOf(commandLine.getValue(SimulatorOptions.RESCALE));
+			double rescale = commandLine.getDoubleValue(SimulatorOptions.RESCALE);
 			if (rescale > 0) {
 				simulationArguments.setRescale(rescale);
 			} else {
@@ -245,24 +245,20 @@ public class SimulationData {
 
 		// TODO else?
 		if (commandLine.hasOption(SimulatorOptions.SEED)) {
-			int seed = Integer.valueOf(commandLine.getValue(SimulatorOptions.SEED));
-			simulationArguments.setSeed(seed);
+			simulationArguments.setSeed(Integer.valueOf(commandLine.getValue(SimulatorOptions.SEED)));
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.MAX_CLASHES)) {
-			int max_clashes = Integer.valueOf(commandLine.getValue(SimulatorOptions.MAX_CLASHES));
-			setMaxClashes(max_clashes);
+			setMaxClashes(commandLine.getIntValue(SimulatorOptions.MAX_CLASHES));
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.EVENT)) {
-			long event = Long.valueOf(commandLine.getValue(SimulatorOptions.EVENT));
-			setEvent(event);
+			setEvent(commandLine.getLongValue(SimulatorOptions.EVENT));
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.ITERATION)) {
-			simulationArguments.setIterations(Integer.valueOf(commandLine.getValue(SimulatorOptions.ITERATION)));
+			simulationArguments.setIterations(commandLine.getIntValue(SimulatorOptions.ITERATION));
 		}
-
 
 		if (commandLine.hasOption(SimulatorOptions.RANDOMIZER_JAVA)) {
 			simulationArguments.setRandomizer(commandLine.getValue(SimulatorOptions.RANDOMIZER_JAVA));
@@ -313,7 +309,7 @@ public class SimulationData {
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
-			simulationArguments.setIterations(Integer.valueOf(commandLine.getValue(SimulatorOptions.NUMBER_OF_RUNS)));
+			simulationArguments.setIterations(commandLine.getIntValue(SimulatorOptions.NUMBER_OF_RUNS));
 
 			if (!commandLine.hasOption(SimulatorOptions.SEED)) {
 				throw new IllegalArgumentException("No SEED OPTION");
@@ -323,7 +319,7 @@ public class SimulationData {
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
-			simulationArguments.setClockPrecision(60000 * Long.valueOf(commandLine.getValue(SimulatorOptions.CLOCK_PRECISION)));
+			simulationArguments.setClockPrecision(60000 * commandLine.getLongValue(SimulatorOptions.CLOCK_PRECISION));
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
@@ -355,7 +351,7 @@ public class SimulationData {
 		}
 
 		if (commandLine.hasOption(SimulatorOptions.TIME)) {
-			setTimeLength(Double.valueOf(commandLine.getValue(SimulatorOptions.TIME)));
+			setTimeLength(commandLine.getDoubleValue(SimulatorOptions.TIME));
 		} else {
 			println("*Warning* No time limit.");
 		}

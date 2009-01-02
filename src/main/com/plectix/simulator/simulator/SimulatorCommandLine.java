@@ -21,4 +21,17 @@ public class SimulatorCommandLine {
 	public final String getValue(SimulatorOptions option) {
 		return commandLine.getOptionValue(option.getLongName());
 	}
+
+	public final int getIntValue(SimulatorOptions option) {
+		return Integer.parseInt(getValue(option));
+	}
+
+	public final long getLongValue(SimulatorOptions option) {
+		return Long.parseLong(getValue(option));
+	}
+
+	public final Double getDoubleValue(SimulatorOptions option) {
+		return Double.parseDouble(getValue(option));
+	}
+	
 }
