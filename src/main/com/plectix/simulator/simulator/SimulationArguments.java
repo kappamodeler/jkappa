@@ -1,5 +1,7 @@
 package com.plectix.simulator.simulator;
 
+import com.plectix.simulator.util.PersistenceUtils;
+
 public class SimulationArguments {
 
 	public static final byte DEFAULT_SEED = -1;
@@ -38,15 +40,23 @@ public class SimulationArguments {
 	private String serializationModeName = null; // MODE_NONE
 	private String storifyModeName = null; // STORIFY_MODE_NONE;
 
+	public SimulationArguments() {
+		super();
+	}
+	
+	public static void main(String[] args) {
+		SimulationArguments simulationArguments = new SimulationArguments();
+		PersistenceUtils.addAlias(simulationArguments);
+		String argumentsXML = PersistenceUtils.getXStream().toXML(simulationArguments);
+		System.err.println(argumentsXML);
+	}
+	
+	
 	//**************************************************************************
 	//
 	// GETTERS AND SETTERS
 	// 
 	//
-	
-	public SimulationArguments() {
-		super();
-	}
 	
 	public final String getXmlSessionName() {
 		return xmlSessionName;

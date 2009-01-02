@@ -196,7 +196,9 @@ public class PersistenceUtils {
 	 * 
 	 * @param clazz
 	 */
-	private static final void addAlias(Class clazz) {
+	public static final void addAlias(Object object) {
+		initialize();
+		Class clazz = object.getClass();
 		xStream.alias(clazz.getSimpleName(), clazz);
 	}
 
