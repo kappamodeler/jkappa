@@ -27,7 +27,7 @@ import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.simulator.SimulatorArguments;
+import com.plectix.simulator.simulator.SimulatorCommandLine;
 
 @RunWith(value = Parameterized.class)
 public class TestAction {
@@ -38,7 +38,7 @@ public class TestAction {
 	private static int myRunQuant = 0;
 	private static int myTestQuant = 70;
 	private static boolean myFirstRun = true;
-	private static SimulatorArguments myArguments;
+	private static SimulatorCommandLine myArguments;
 	private static String FilePath = "";
 	private final static String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 	private ISolution csolution;

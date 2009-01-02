@@ -118,7 +118,7 @@ public class SimulationData {
 	private byte storifyMode = STORIFY_MODE_NONE;
 
 	private String tmpSessionName = "simplx.tmp";
-	private String commandLine;
+	private String commandLineString;
 
 	private PrintStream printStream = null;
 	
@@ -208,14 +208,14 @@ public class SimulationData {
 	
 	public final void parseArguments(String[] args) throws IllegalArgumentException {
 		// let's get the original command line before we change it:
-		setCommandLine(args);
+		setCommandLineString(args);
 
 		// let's replace all '-' by '_' 
 		args = SimulationUtils.changeArguments(args);
 
-		SimulatorArguments arguments = null;
+		SimulatorCommandLine commandLine = null;
 		try {
-			arguments = new SimulatorArguments(args);
+			commandLine = new SimulatorCommandLine(args);
 		} catch (ParseException e) {
 			println("Error parsing arguments:");
 			if (printStream != null) {
@@ -225,11 +225,11 @@ public class SimulationData {
 		}
 
 
-		if (arguments.hasOption(SimulatorOptions.NO_DUMP_STDOUT_STDERR)) {
+		if (commandLine.hasOption(SimulatorOptions.NO_DUMP_STDOUT_STDERR)) {
 			printStream = null;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.HELP)) {
+		if (commandLine.hasOption(SimulatorOptions.HELP)) {
 			if (printStream != null) {            
 				PrintWriter printWriter = new PrintWriter(printStream);
 				HelpFormatter formatter = new HelpFormatter(); 
@@ -241,34 +241,34 @@ public class SimulationData {
 			}
 		}
 
-		if (arguments.hasOption(SimulatorOptions.VERSION)) {
+		if (commandLine.hasOption(SimulatorOptions.VERSION)) {
 			println("Java simulator SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
 		}
 
 		// let's dump the command line arguments
-		println("Java " + commandLine);
+		println("Java " + commandLineString);
 
 		// moved this below since the line above might have turned the printing off...
 		addInfo(Info.TYPE_INFO, "-Initialization...");
 
-		if (arguments.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
-			setXmlSessionName(arguments.getValue(SimulatorOptions.XML_SESSION_NAME));
+		if (commandLine.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
+			setXmlSessionName(commandLine.getValue(SimulatorOptions.XML_SESSION_NAME));
 		}
 
-		if (arguments.hasOption(SimulatorOptions.OUTPUT_XML)) {
-			setXmlSessionName(arguments.getValue(SimulatorOptions.OUTPUT_XML));
+		if (commandLine.hasOption(SimulatorOptions.OUTPUT_XML)) {
+			setXmlSessionName(commandLine.getValue(SimulatorOptions.OUTPUT_XML));
 		}
 		
-		if (arguments.hasOption(SimulatorOptions.INIT)) {
-			initialTime = Double.valueOf(arguments.getValue(SimulatorOptions.INIT));
+		if (commandLine.hasOption(SimulatorOptions.INIT)) {
+			initialTime = Double.valueOf(commandLine.getValue(SimulatorOptions.INIT));
 		}
 
-		if (arguments.hasOption(SimulatorOptions.POINTS)) {
-			points = Integer.valueOf(arguments.getValue(SimulatorOptions.POINTS));
+		if (commandLine.hasOption(SimulatorOptions.POINTS)) {
+			points = Integer.valueOf(commandLine.getValue(SimulatorOptions.POINTS));
 		}
 
-		if (arguments.hasOption(SimulatorOptions.RESCALE)) {
-			double rescale = Double.valueOf(arguments.getValue(SimulatorOptions.RESCALE));
+		if (commandLine.hasOption(SimulatorOptions.RESCALE)) {
+			double rescale = Double.valueOf(commandLine.getValue(SimulatorOptions.RESCALE));
 			if (rescale > 0) {
 				this.rescale = rescale;
 			} else {
@@ -276,124 +276,124 @@ public class SimulationData {
 			}
 		}
 
-		if (arguments.hasOption(SimulatorOptions.NO_SEED)) {
+		if (commandLine.hasOption(SimulatorOptions.NO_SEED)) {
 			setSeed(0);
 		}
 
 		// TODO else?
-		if (arguments.hasOption(SimulatorOptions.SEED)) {
-			int seed = Integer.valueOf(arguments.getValue(SimulatorOptions.SEED));
+		if (commandLine.hasOption(SimulatorOptions.SEED)) {
+			int seed = Integer.valueOf(commandLine.getValue(SimulatorOptions.SEED));
 			setSeed(seed);
 		}
 
-		if (arguments.hasOption(SimulatorOptions.MAX_CLASHES)) {
-			int max_clashes = Integer.valueOf(arguments.getValue(SimulatorOptions.MAX_CLASHES));
+		if (commandLine.hasOption(SimulatorOptions.MAX_CLASHES)) {
+			int max_clashes = Integer.valueOf(commandLine.getValue(SimulatorOptions.MAX_CLASHES));
 			setMaxClashes(max_clashes);
 		}
 
-		if (arguments.hasOption(SimulatorOptions.EVENT)) {
-			long event = Long.valueOf(arguments.getValue(SimulatorOptions.EVENT));
+		if (commandLine.hasOption(SimulatorOptions.EVENT)) {
+			long event = Long.valueOf(commandLine.getValue(SimulatorOptions.EVENT));
 			setEvent(event);
 		}
 
-		if (arguments.hasOption(SimulatorOptions.ITERATION)) {
-			iterations = Integer.valueOf(arguments.getValue(SimulatorOptions.ITERATION));
+		if (commandLine.hasOption(SimulatorOptions.ITERATION)) {
+			iterations = Integer.valueOf(commandLine.getValue(SimulatorOptions.ITERATION));
 		}
 
 
-		if (arguments.hasOption(SimulatorOptions.RANDOMIZER_JAVA)) {
-			randomizer = arguments.getValue(SimulatorOptions.RANDOMIZER_JAVA);
+		if (commandLine.hasOption(SimulatorOptions.RANDOMIZER_JAVA)) {
+			randomizer = commandLine.getValue(SimulatorOptions.RANDOMIZER_JAVA);
 		}
 
-		if (arguments.hasOption(SimulatorOptions.NO_ACTIVATION_MAP)
-				|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
-				|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+		if (commandLine.hasOption(SimulatorOptions.NO_ACTIVATION_MAP)
+				|| (commandLine.hasOption(SimulatorOptions.NO_MAPS))
+				|| (commandLine.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
 			activationMap = false;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.MERGE_MAPS)) {
+		if (commandLine.hasOption(SimulatorOptions.MERGE_MAPS)) {
 			inhibitionMap = true;
 		}
 		
-		if (arguments.hasOption(SimulatorOptions.NO_INHIBITION_MAP)
-				|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
-				|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+		if (commandLine.hasOption(SimulatorOptions.NO_INHIBITION_MAP)
+				|| (commandLine.hasOption(SimulatorOptions.NO_MAPS))
+				|| (commandLine.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
 			inhibitionMap = false;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.COMPILE)) {
+		if (commandLine.hasOption(SimulatorOptions.COMPILE)) {
 			compile = true;
 		}
 
 
-		if (arguments.hasOption(SimulatorOptions.DEBUG_INIT)) {
+		if (commandLine.hasOption(SimulatorOptions.DEBUG_INIT)) {
 			debugInitOption = false;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.GENERATE_MAP)) {
+		if (commandLine.hasOption(SimulatorOptions.GENERATE_MAP)) {
 			genereteMapOption = false;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
+		if (commandLine.hasOption(SimulatorOptions.CONTACT_MAP)) {
 			contactMapOption = false;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
+		if (commandLine.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
 			numberOfRunsOption = false;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.STORIFY)) {
+		if (commandLine.hasOption(SimulatorOptions.STORIFY)) {
 			storifyOption = true;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.OCAML_STYLE_OBS_NAME)) {
+		if (commandLine.hasOption(SimulatorOptions.OCAML_STYLE_OBS_NAME)) {
 			this.ocamlStyleObservableNames = true;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
-			this.iterations = Integer.valueOf(arguments.getValue(SimulatorOptions.NUMBER_OF_RUNS));
+		if (commandLine.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
+			this.iterations = Integer.valueOf(commandLine.getValue(SimulatorOptions.NUMBER_OF_RUNS));
 
-			if (!arguments.hasOption(SimulatorOptions.SEED)) {
+			if (!commandLine.hasOption(SimulatorOptions.SEED)) {
 				throw new IllegalArgumentException("No SEED OPTION");
 			}
 
 			this.simulationType = SIMULATION_TYPE_AVERAGE_OF_RUNS;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
-			clockPrecision = 60000 * Long.valueOf(arguments.getValue(SimulatorOptions.CLOCK_PRECISION));
+		if (commandLine.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
+			clockPrecision = 60000 * Long.valueOf(commandLine.getValue(SimulatorOptions.CLOCK_PRECISION));
 		}
 
-		if (arguments.hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
+		if (commandLine.hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
 			outputFinalState = true;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.OUTPUT_SCHEME)) {
-			xmlSessionPath = arguments.getValue(SimulatorOptions.OUTPUT_SCHEME);
+		if (commandLine.hasOption(SimulatorOptions.OUTPUT_SCHEME)) {
+			xmlSessionPath = commandLine.getValue(SimulatorOptions.OUTPUT_SCHEME);
 		}
 
-		if (arguments.hasOption(SimulatorOptions.NO_SAVE_ALL)) {
+		if (commandLine.hasOption(SimulatorOptions.NO_SAVE_ALL)) {
 			serializationMode = MODE_NONE;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.SAVE_ALL)) {
-			serializationFileName = arguments.getValue(SimulatorOptions.SAVE_ALL) ;
+		if (commandLine.hasOption(SimulatorOptions.SAVE_ALL)) {
+			serializationFileName = commandLine.getValue(SimulatorOptions.SAVE_ALL) ;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)) {
+		if (commandLine.hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)) {
 			storifyMode = STORIFY_MODE_NONE;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.COMPRESS_STORIES)) {
+		if (commandLine.hasOption(SimulatorOptions.COMPRESS_STORIES)) {
 			storifyMode = STORIFY_MODE_WEAK;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
+		if (commandLine.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
 			storifyMode = STORIFY_MODE_STRONG;
 		}
 
-		if (arguments.hasOption(SimulatorOptions.TIME)) {
-			double timeSim = Double.valueOf(arguments.getValue(SimulatorOptions.TIME));
+		if (commandLine.hasOption(SimulatorOptions.TIME)) {
+			double timeSim = Double.valueOf(commandLine.getValue(SimulatorOptions.TIME));
 			setTimeLength(timeSim);
 		} else {
 			println("*Warning* No time limit.");
@@ -402,20 +402,20 @@ public class SimulationData {
 		boolean option = false;
 		String fileName = null;
 		
-		if (arguments.hasOption(SimulatorOptions.STORIFY)) {
-			fileName = arguments.getValue(SimulatorOptions.STORIFY);
+		if (commandLine.hasOption(SimulatorOptions.STORIFY)) {
+			fileName = commandLine.getValue(SimulatorOptions.STORIFY);
 			this.simulationType = SIMULATION_TYPE_STORIFY;
 			option = true;
 		}
 		
 	
-		if (!option && (arguments.hasOption(SimulatorOptions.SIMULATIONFILE))) {
+		if (!option && (commandLine.hasOption(SimulatorOptions.SIMULATIONFILE))) {
 			option = true;
-			fileName = arguments.getValue(SimulatorOptions.SIMULATIONFILE);
-			if (arguments.hasOption(SimulatorOptions.SNAPSHOT_TIME)) {
+			fileName = commandLine.getValue(SimulatorOptions.SIMULATIONFILE);
+			if (commandLine.hasOption(SimulatorOptions.SNAPSHOT_TIME)) {
 				option = true;
 				try {
-					this.snapshotsTimeString = arguments.getValue(SimulatorOptions.SNAPSHOT_TIME);
+					this.snapshotsTimeString = commandLine.getValue(SimulatorOptions.SNAPSHOT_TIME);
 				} catch (Exception e) {
 					throw new IllegalArgumentException(e);
 				}
@@ -423,20 +423,20 @@ public class SimulationData {
 			this.simulationType = SIMULATION_TYPE_SIM;
 		}
 		
-		if (arguments.hasOption(SimulatorOptions.COMPILE)) {
+		if (commandLine.hasOption(SimulatorOptions.COMPILE)) {
 			if (!option) {
 				option = true;
-				fileName = arguments.getValue(SimulatorOptions.COMPILE);
+				fileName = commandLine.getValue(SimulatorOptions.COMPILE);
 			} else {
 				option = false;
 			}
 			this.simulationType = SIMULATION_TYPE_COMPILE;
 		}
 	
-		if (arguments.hasOption(SimulatorOptions.GENERATE_MAP)) {
+		if (commandLine.hasOption(SimulatorOptions.GENERATE_MAP)) {
 			if (!option) {
 				option = true;
-				fileName = arguments.getValue(SimulatorOptions.GENERATE_MAP);
+				fileName = commandLine.getValue(SimulatorOptions.GENERATE_MAP);
 			} else {
 				option = false;
 			}
@@ -444,10 +444,10 @@ public class SimulationData {
 			this.simulationType = SIMULATION_TYPE_GENERATE_MAP;
 		}
 	
-		if (arguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
+		if (commandLine.hasOption(SimulatorOptions.CONTACT_MAP)) {
 			if (!option) {
 				option = true;
-				fileName = arguments.getValue(SimulatorOptions.CONTACT_MAP);
+				fileName = commandLine.getValue(SimulatorOptions.CONTACT_MAP);
 			} else {
 				option = false;
 			}
@@ -465,12 +465,12 @@ public class SimulationData {
 		
 
 		if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
-			if (arguments.hasOption(SimulatorOptions.FOCUS_ON)) {
-				this.focusFilename = arguments.getValue(SimulatorOptions.FOCUS_ON);
+			if (commandLine.hasOption(SimulatorOptions.FOCUS_ON)) {
+				this.focusFilename = commandLine.getValue(SimulatorOptions.FOCUS_ON);
 			}
 		}
 		
-		this.forwardOption = arguments.hasOption(SimulatorOptions.FORWARD);
+		this.forwardOption = commandLine.hasOption(SimulatorOptions.FORWARD);
 		
 		this.argumentsSet = true;
 	}
@@ -533,12 +533,12 @@ public class SimulationData {
 		infoList.add(info);
 	}
 
-	private final void setCommandLine(String[] args) {
+	private final void setCommandLineString(String[] args) {
 		StringBuffer stringBuffer = new StringBuffer();
 		for (int i = 0; i < args.length; i++) {
 			stringBuffer.append(args[i] + " ");
 		}
-		this.commandLine = stringBuffer.toString();
+		this.commandLineString = stringBuffer.toString();
 	}
 
 	private final void setMaxClashes(long max_clashes) {
@@ -673,7 +673,7 @@ public class SimulationData {
 				"http://www.w3.org/2001/XMLSchema-instance");
 		simplxSession.setAttribute("xmlns",
 				"http://plectix.synthesisstudios.com/schemas/kappasession");
-		simplxSession.setAttribute("CommandLine", commandLine);
+		simplxSession.setAttribute("CommandLine", commandLineString);
 		simplxSession.setAttribute("InputFile", inputFile);
 		Date d = new Date();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

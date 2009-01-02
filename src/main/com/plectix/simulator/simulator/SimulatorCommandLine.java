@@ -6,10 +6,10 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
 
-public class SimulatorArguments {
+public class SimulatorCommandLine {
 	private final CommandLine commandLine;
 
-	public SimulatorArguments(String[] args) throws ParseException {
+	public SimulatorCommandLine(String[] args) throws ParseException {
 		CommandLineParser parser = new PosixParser();
 		commandLine = parser.parse(SimulatorOptions.COMMAND_LINE_OPTIONS, args);
 	}
