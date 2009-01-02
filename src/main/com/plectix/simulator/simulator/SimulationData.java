@@ -76,7 +76,8 @@ import com.plectix.simulator.util.RunningMetric;
 
 public class SimulationData {
 
-	public final static byte DEFAULT_SEED = -1;
+	public static final byte DEFAULT_SEED = -1;
+	public static final int DEFAULT_MAX_CLASHES = 100;
 	
 	public final static byte MODE_SAVE = 2;
 	public final static byte MODE_READ = 1;
@@ -90,7 +91,7 @@ public class SimulationData {
 	public final static byte SIMULATION_TYPE_COMPILE = 0;
 	public final static byte SIMULATION_TYPE_STORIFY = 1;
 	public final static byte SIMULATION_TYPE_SIM = 2;
-	public final static byte SIMULATION_TYPE_ITERATIONS = 3;
+	public final static byte SIMULATION_TYPE_AVERAGE_OF_RUNS = 3;
 	public final static byte SIMULATION_TYPE_GENERATE_MAP = 4;
 	public final static byte SIMULATION_TYPE_CONTACT_MAP = 5;
 	
@@ -113,31 +114,39 @@ public class SimulationData {
 
 	private List<Info> infoList = new ArrayList<Info>();
 
-	private double initialTime = 0.0;
-
-	private String randomizer;
-	private int iterations = 1;
-
-	private long event;
-
 	private byte simulationType = SIMULATION_TYPE_NONE;
 	private byte storifyMode = STORIFY_MODE_NONE;
 
-	private double rescale = -1.;
-	private int points = -1;
-	private double timeLength = 0;
-	private boolean isTime = false;
-	private int seed = DEFAULT_SEED;
-
-	private String xmlSessionName = "simplx.xml";
-	private String xmlSessionPath = "";
 	private String tmpSessionName = "simplx.tmp";
 	private String commandLine;
-	private String inputFile;
 
+	private PrintStream printStream = null;
+	
+	private List<Double> snapshotTimes;
+	private long clockStamp;
+
+	private double step;
+	private double nextStep;
+	private byte serializationMode = MODE_NONE;
+	
+	private int agentIdGenerator = 0;
+
+	private boolean argumentsSet = false;
+	
+	// Arguments to be moved to a new Class
+	private String xmlSessionName = "simplx.xml";
+	private double initialTime = 0.0;
+	private int points = -1;
+	private double rescale = Double.NaN;
+	private int seed = DEFAULT_SEED;
+	private long maxClashes = DEFAULT_MAX_CLASHES;
+	private long event;
+	private double timeLength = 0;
+	private boolean isTime = false;
+	private int iterations = 1;
+	private String randomizer = null;
 	private boolean activationMap = true;
 	private boolean inhibitionMap = false;
-	
 	private boolean compile = false;
 	private boolean debugInitOption = false;
 	private boolean genereteMapOption = false;
@@ -145,26 +154,20 @@ public class SimulationData {
 	private boolean numberOfRunsOption = false;
 	private boolean storifyOption = false;
 	private boolean forwardOption = false;
-	
-	private PrintStream printStream = null;
-	
-	private long maxClashes = 100;
-	private String snapshotsTimeString = null;
-	private List<Double> snapshotTimes;
-	private boolean outputFinalState = false;
+	private boolean ocamlStyleObservableNames = false;
 	private long clockPrecision = 3600000;
-	private long clockStamp;
-
-	private double step;
-	private double nextStep;
-	private byte serializationMode = MODE_NONE;
+	private boolean outputFinalState = false;
+	private String xmlSessionPath = "";
 	private String serializationFileName = "~tmp.sd";
+	private String inputFile = null;	
+	private String snapshotsTimeString = null;
 	private String focusFilename = null;
-
-	private boolean argumentsSet = false;
+	// For future use, DO NO DELETE:
+	private String simulationTypeName = null;    // SIMULATION_TYPE_NONE
+	private String serializationModeName = null; // MODE_NONE
+	private String storifyModeName = null; // STORIFY_MODE_NONE;
+	// END OF Arguments to be moved to a new Class
 	
-	private int agentIdGenerator = 0;
-
 	public SimulationData() {
 		super();
 	}
@@ -202,7 +205,7 @@ public class SimulationData {
 	public final long generateNextAgentId() {
 		return agentIdGenerator++;
 	}
-
+	
 	public final void parseArguments(String[] args) throws IllegalArgumentException {
 		// let's get the original command line before we change it:
 		setCommandLine(args);
@@ -236,15 +239,10 @@ public class SimulationData {
 						HelpFormatter.DEFAULT_DESC_PAD, null, false);
 				printWriter.flush();
 			}
-
-			// TODO are we to exit here?
-					System.exit(0);
 		}
 
 		if (arguments.hasOption(SimulatorOptions.VERSION)) {
 			println("Java simulator SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
-			// TODO are we to exit here?
-			System.exit(0);
 		}
 
 		// let's dump the command line arguments
@@ -260,11 +258,7 @@ public class SimulationData {
 		if (arguments.hasOption(SimulatorOptions.OUTPUT_XML)) {
 			setXmlSessionName(arguments.getValue(SimulatorOptions.OUTPUT_XML));
 		}
-		//		if (arguments.hasOption(SimulatorOptions.DO_XML)) {
-		//			setXmlSessionName(arguments
-		//					.getValue(SimulatorOptions.DO_XML));
-		//		}
-
+		
 		if (arguments.hasOption(SimulatorOptions.INIT)) {
 			initialTime = Double.valueOf(arguments.getValue(SimulatorOptions.INIT));
 		}
@@ -320,6 +314,12 @@ public class SimulationData {
 		if (arguments.hasOption(SimulatorOptions.MERGE_MAPS)) {
 			inhibitionMap = true;
 		}
+		
+		if (arguments.hasOption(SimulatorOptions.NO_INHIBITION_MAP)
+				|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
+				|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+			inhibitionMap = false;
+		}
 
 		if (arguments.hasOption(SimulatorOptions.COMPILE)) {
 			compile = true;
@@ -346,15 +346,8 @@ public class SimulationData {
 			storifyOption = true;
 		}
 
-
-		if (arguments.hasOption(SimulatorOptions.NO_INHIBITION_MAP)
-				|| (arguments.hasOption(SimulatorOptions.NO_MAPS))
-				|| (arguments.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
-			inhibitionMap = false;
-		}
-
 		if (arguments.hasOption(SimulatorOptions.OCAML_STYLE_OBS_NAME)) {
-			observables.setOcamlStyleObsName(true);
+			this.ocamlStyleObservableNames = true;
 		}
 
 		if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
@@ -364,7 +357,7 @@ public class SimulationData {
 				throw new IllegalArgumentException("No SEED OPTION");
 			}
 
-			this.simulationType = SIMULATION_TYPE_ITERATIONS;
+			this.simulationType = SIMULATION_TYPE_AVERAGE_OF_RUNS;
 		}
 
 		if (arguments.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
@@ -422,7 +415,7 @@ public class SimulationData {
 			if (arguments.hasOption(SimulatorOptions.SNAPSHOT_TIME)) {
 				option = true;
 				try {
-					this.snapshotsTimeString  = arguments.getValue(SimulatorOptions.SNAPSHOT_TIME);
+					this.snapshotsTimeString = arguments.getValue(SimulatorOptions.SNAPSHOT_TIME);
 				} catch (Exception e) {
 					throw new IllegalArgumentException(e);
 				}
@@ -473,8 +466,7 @@ public class SimulationData {
 
 		if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
 			if (arguments.hasOption(SimulatorOptions.FOCUS_ON)) {
-				String fileNameFocusOn = arguments.getValue(SimulatorOptions.FOCUS_ON);
-				this.focusFilename = fileNameFocusOn;
+				this.focusFilename = arguments.getValue(SimulatorOptions.FOCUS_ON);
 			}
 		}
 		
@@ -491,6 +483,7 @@ public class SimulationData {
 		// TODO: move the following lines to a reset method. they should not be part of reading the simulation file!
 		// They are here now because this method used to parse arguments!
 		resetBar();
+		observables.setOcamlStyleObsName(ocamlStyleObservableNames);
 		if (this.snapshotsTimeString != null) {
 			setSnapshotTime(snapshotsTimeString);
 		}
@@ -1202,8 +1195,7 @@ public class SimulationData {
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 				int oCamlObservableNo = number_of_observables - observable_num
 						- 1; // everything is backward with OCaml!
-				BufferedWriter writer = new BufferedWriter(new FileWriter(
-						tmpSessionName + "-" + oCamlObservableNo));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(tmpSessionName + "-" + oCamlObservableNo));
 
 				double timeSampleMin = 0.;
 				double timeNext = 0.;

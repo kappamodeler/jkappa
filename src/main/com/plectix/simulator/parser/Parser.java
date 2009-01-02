@@ -649,8 +649,9 @@ public class Parser {
 			double countInFile = 1;
 			if (length != 1) {
 				double rescale = simulationData.getRescale();
-				if (rescale < 0)
+				if (rescale < 0 || Double.isNaN(rescale)) {
 					rescale = 1.;
+				}
 
 				try {
 					countInFile = Double.valueOf(result[0]) * rescale;
