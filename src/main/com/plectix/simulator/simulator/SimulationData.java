@@ -144,10 +144,12 @@ public class SimulationData {
 	private boolean contactMapOption = false;
 	private boolean numberOfRunsOption = false;
 	private boolean storifyOption = false;
+	private boolean forwardOption = false;
 	
 	private PrintStream printStream = null;
 	
 	private long maxClashes = 100;
+	private String snapshotsTimeString = null;
 	private List<Double> snapshotTimes;
 	private boolean outputFinalState = false;
 	private long clockPrecision = 3600000;
@@ -157,8 +159,9 @@ public class SimulationData {
 	private double nextStep;
 	private byte serializationMode = MODE_NONE;
 	private String serializationFileName = "~tmp.sd";
+	private String focusFilename = null;
 
-	private SimulatorArguments simulatorArguments;
+	private boolean argumentsSet = false;
 	
 	private int agentIdGenerator = 0;
 
@@ -199,7 +202,7 @@ public class SimulationData {
 	public final long generateNextAgentId() {
 		return agentIdGenerator++;
 	}
-	
+
 	public final void parseArguments(String[] args) throws IllegalArgumentException {
 		// let's get the original command line before we change it:
 		setCommandLine(args);
@@ -218,7 +221,6 @@ public class SimulationData {
 			throw new IllegalArgumentException(e);
 		}
 
-		this.simulatorArguments = arguments;
 
 		if (arguments.hasOption(SimulatorOptions.NO_DUMP_STDOUT_STDERR)) {
 			printStream = null;
@@ -226,17 +228,17 @@ public class SimulationData {
 
 		if (arguments.hasOption(SimulatorOptions.HELP)) {
 			if (printStream != null) {            
-		        PrintWriter printWriter = new PrintWriter(printStream);
+				PrintWriter printWriter = new PrintWriter(printStream);
 				HelpFormatter formatter = new HelpFormatter(); 
-		        formatter.printHelp(printWriter, HelpFormatter.DEFAULT_WIDTH, 
-		        		SimulationMain.COMMAND_LINE_SYNTAX, null, 
-		        		SimulatorOptions.COMMAND_LINE_OPTIONS, HelpFormatter.DEFAULT_LEFT_PAD, 
-		        		HelpFormatter.DEFAULT_DESC_PAD, null, false);
-		        printWriter.flush();
+				formatter.printHelp(printWriter, HelpFormatter.DEFAULT_WIDTH, 
+						SimulationMain.COMMAND_LINE_SYNTAX, null, 
+						SimulatorOptions.COMMAND_LINE_OPTIONS, HelpFormatter.DEFAULT_LEFT_PAD, 
+						HelpFormatter.DEFAULT_DESC_PAD, null, false);
+				printWriter.flush();
 			}
-	        
+
 			// TODO are we to exit here?
-			System.exit(0);
+					System.exit(0);
 		}
 
 		if (arguments.hasOption(SimulatorOptions.VERSION)) {
@@ -247,10 +249,10 @@ public class SimulationData {
 
 		// let's dump the command line arguments
 		println("Java " + commandLine);
-		
+
 		// moved this below since the line above might have turned the printing off...
 		addInfo(Info.TYPE_INFO, "-Initialization...");
-		
+
 		if (arguments.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
 			setXmlSessionName(arguments.getValue(SimulatorOptions.XML_SESSION_NAME));
 		}
@@ -263,51 +265,45 @@ public class SimulationData {
 		//					.getValue(SimulatorOptions.DO_XML));
 		//		}
 
-		try {
-			if (arguments.hasOption(SimulatorOptions.INIT)) {
-				initialTime = Double.valueOf(arguments.getValue(SimulatorOptions.INIT));
+		if (arguments.hasOption(SimulatorOptions.INIT)) {
+			initialTime = Double.valueOf(arguments.getValue(SimulatorOptions.INIT));
+		}
+
+		if (arguments.hasOption(SimulatorOptions.POINTS)) {
+			points = Integer.valueOf(arguments.getValue(SimulatorOptions.POINTS));
+		}
+
+		if (arguments.hasOption(SimulatorOptions.RESCALE)) {
+			double rescale = Double.valueOf(arguments.getValue(SimulatorOptions.RESCALE));
+			if (rescale > 0) {
+				this.rescale = rescale;
+			} else {
+				throw new IllegalArgumentException("Negative rescale value: " + rescale);
 			}
-			if (arguments.hasOption(SimulatorOptions.POINTS)) {
-				points = Integer.valueOf(arguments.getValue(SimulatorOptions.POINTS));
-			}
-			if (arguments.hasOption(SimulatorOptions.RESCALE)) {
-				double rescale = Double.valueOf(arguments.getValue(SimulatorOptions.RESCALE));
-				if (rescale > 0) {
-					this.rescale = rescale;
-				} else {
-					throw new Exception();
-				}
-			}
+		}
 
-			if (arguments.hasOption(SimulatorOptions.NO_SEED)) {
-				setSeed(0);
-			}
+		if (arguments.hasOption(SimulatorOptions.NO_SEED)) {
+			setSeed(0);
+		}
 
-			// TODO else?
-					if (arguments.hasOption(SimulatorOptions.SEED)) {
-						int seed = Integer.valueOf(arguments.getValue(SimulatorOptions.SEED));
-						setSeed(seed);
-					}
+		// TODO else?
+		if (arguments.hasOption(SimulatorOptions.SEED)) {
+			int seed = Integer.valueOf(arguments.getValue(SimulatorOptions.SEED));
+			setSeed(seed);
+		}
 
-					if (arguments.hasOption(SimulatorOptions.MAX_CLASHES)) {
-						int max_clashes = Integer.valueOf(arguments.getValue(SimulatorOptions.MAX_CLASHES));
-						setMaxClashes(max_clashes);
-					}
+		if (arguments.hasOption(SimulatorOptions.MAX_CLASHES)) {
+			int max_clashes = Integer.valueOf(arguments.getValue(SimulatorOptions.MAX_CLASHES));
+			setMaxClashes(max_clashes);
+		}
 
-					if (arguments.hasOption(SimulatorOptions.EVENT)) {
-						long event = Long.valueOf(arguments.getValue(SimulatorOptions.EVENT));
-						setEvent(event);
-					}
+		if (arguments.hasOption(SimulatorOptions.EVENT)) {
+			long event = Long.valueOf(arguments.getValue(SimulatorOptions.EVENT));
+			setEvent(event);
+		}
 
-					if (arguments.hasOption(SimulatorOptions.ITERATION)) {
-						iterations = Integer.valueOf(arguments.getValue(SimulatorOptions.ITERATION));
-					}
-
-		} catch (Exception e) {
-			if (printStream != null) {
-				e.printStackTrace(printStream);
-			}
-			throw new IllegalArgumentException(e);
+		if (arguments.hasOption(SimulatorOptions.ITERATION)) {
+			iterations = Integer.valueOf(arguments.getValue(SimulatorOptions.ITERATION));
 		}
 
 
@@ -362,19 +358,13 @@ public class SimulationData {
 		}
 
 		if (arguments.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
-			int iteration = 0;
-			boolean exp = false;
-			try {
-				iteration = Integer.valueOf(arguments.getValue(SimulatorOptions.NUMBER_OF_RUNS));
-			} catch (Exception e) {
-				exp = true;
-			}
-			if ((exp) || (!arguments.hasOption(SimulatorOptions.SEED))) {
+			this.iterations = Integer.valueOf(arguments.getValue(SimulatorOptions.NUMBER_OF_RUNS));
+
+			if (!arguments.hasOption(SimulatorOptions.SEED)) {
 				throw new IllegalArgumentException("No SEED OPTION");
 			}
 
 			this.simulationType = SIMULATION_TYPE_ITERATIONS;
-			this.iterations = iteration;
 		}
 
 		if (arguments.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
@@ -408,45 +398,31 @@ public class SimulationData {
 		if (arguments.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
 			storifyMode = STORIFY_MODE_STRONG;
 		}
-	}
 
-	public final void readSimulatonFile() {
-	
-		if (this.simulatorArguments == null) {
-			throw new RuntimeException("Simulator Arguments must be set before reading the simulation file!");
-		}
-		
-		boolean option = false;
-		String fileName = null;
-		double timeSim = 0.;
-		String snapshotTime;
-	
-		if (simulatorArguments.hasOption(SimulatorOptions.STORIFY)) {
-			fileName = simulatorArguments.getValue(SimulatorOptions.STORIFY);
-			this.simulationType = SIMULATION_TYPE_STORIFY;
-			option = true;
-		}
-		
-		if (simulatorArguments.hasOption(SimulatorOptions.TIME)) {
-			try {
-				timeSim = Double.valueOf(simulatorArguments.getValue(SimulatorOptions.TIME));
-			} catch (Exception e) {
-				throw new IllegalArgumentException(e);
-			}
-			
+		if (arguments.hasOption(SimulatorOptions.TIME)) {
+			double timeSim = Double.valueOf(arguments.getValue(SimulatorOptions.TIME));
 			setTimeLength(timeSim);
 		} else {
 			println("*Warning* No time limit.");
 		}
-	
-		if (!option && (simulatorArguments.hasOption(SimulatorOptions.SIMULATIONFILE))) {
+		
+		boolean option = false;
+		String fileName = null;
+		
+		if (arguments.hasOption(SimulatorOptions.STORIFY)) {
+			fileName = arguments.getValue(SimulatorOptions.STORIFY);
+			this.simulationType = SIMULATION_TYPE_STORIFY;
 			option = true;
-			fileName = simulatorArguments.getValue(SimulatorOptions.SIMULATIONFILE);
-			if (simulatorArguments.hasOption(SimulatorOptions.SNAPSHOT_TIME)) {
+		}
+		
+	
+		if (!option && (arguments.hasOption(SimulatorOptions.SIMULATIONFILE))) {
+			option = true;
+			fileName = arguments.getValue(SimulatorOptions.SIMULATIONFILE);
+			if (arguments.hasOption(SimulatorOptions.SNAPSHOT_TIME)) {
 				option = true;
 				try {
-					snapshotTime = simulatorArguments.getValue(SimulatorOptions.SNAPSHOT_TIME);
-					setSnapshotTime(snapshotTime);
+					this.snapshotsTimeString  = arguments.getValue(SimulatorOptions.SNAPSHOT_TIME);
 				} catch (Exception e) {
 					throw new IllegalArgumentException(e);
 				}
@@ -454,20 +430,20 @@ public class SimulationData {
 			this.simulationType = SIMULATION_TYPE_SIM;
 		}
 		
-		if (simulatorArguments.hasOption(SimulatorOptions.COMPILE)) {
+		if (arguments.hasOption(SimulatorOptions.COMPILE)) {
 			if (!option) {
 				option = true;
-				fileName = simulatorArguments.getValue(SimulatorOptions.COMPILE);
+				fileName = arguments.getValue(SimulatorOptions.COMPILE);
 			} else {
 				option = false;
 			}
 			this.simulationType = SIMULATION_TYPE_COMPILE;
 		}
 	
-		if (simulatorArguments.hasOption(SimulatorOptions.GENERATE_MAP)) {
+		if (arguments.hasOption(SimulatorOptions.GENERATE_MAP)) {
 			if (!option) {
 				option = true;
-				fileName = simulatorArguments.getValue(SimulatorOptions.GENERATE_MAP);
+				fileName = arguments.getValue(SimulatorOptions.GENERATE_MAP);
 			} else {
 				option = false;
 			}
@@ -475,10 +451,10 @@ public class SimulationData {
 			this.simulationType = SIMULATION_TYPE_GENERATE_MAP;
 		}
 	
-		if (simulatorArguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
+		if (arguments.hasOption(SimulatorOptions.CONTACT_MAP)) {
 			if (!option) {
 				option = true;
-				fileName = simulatorArguments.getValue(SimulatorOptions.CONTACT_MAP);
+				fileName = arguments.getValue(SimulatorOptions.CONTACT_MAP);
 			} else {
 				option = false;
 			}
@@ -494,23 +470,46 @@ public class SimulationData {
 	
 		inputFile = fileName;
 		
-		DataReading data = new DataReading(fileName);
-		try {
-			if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
-				if (simulatorArguments.hasOption(SimulatorOptions.FOCUS_ON)) {
-					String fileNameFocusOn = simulatorArguments
-							.getValue(SimulatorOptions.FOCUS_ON);
-					setFocusOn(fileNameFocusOn);
-				}
+
+		if (simulationType == SIMULATION_TYPE_CONTACT_MAP) {
+			if (arguments.hasOption(SimulatorOptions.FOCUS_ON)) {
+				String fileNameFocusOn = arguments.getValue(SimulatorOptions.FOCUS_ON);
+				this.focusFilename = fileNameFocusOn;
 			}
+		}
+		
+		this.forwardOption = arguments.hasOption(SimulatorOptions.FORWARD);
+		
+		this.argumentsSet = true;
+	}
+
+	public final void readSimulatonFile() {
+		if (!this.argumentsSet) {
+			throw new RuntimeException("Simulator Arguments must be set before reading the simulation file!");
+		}
+		
+		// TODO: move the following lines to a reset method. they should not be part of reading the simulation file!
+		// They are here now because this method used to parse arguments!
+		resetBar();
+		if (this.snapshotsTimeString != null) {
+			setSnapshotTime(snapshotsTimeString);
+		}
+		
+	
+		try {
+			DataReading data = new DataReading(inputFile);
 			
+			if (this.focusFilename != null) {
+				setFocusOn(focusFilename);
+			}
+		
 			data.readData();
 			
 			Parser parser = new Parser(data, this);
-			parser.setForwarding(simulatorArguments.hasOption(SimulatorOptions.FORWARD));
+			parser.setForwarding(forwardOption);
 			parser.parse();
 		} catch (Exception e) {
-			println("Error in file \"" + fileName + "\" :");
+			println("Error in file \"" + inputFile + "\" :");
 
 			if (printStream != null) {
 				e.printStackTrace(printStream);
@@ -1685,7 +1684,7 @@ public class SimulationData {
 	}
 
 
-	public final void setSnapshotTime(String snapshotTimeStr) throws Exception {
+	public final void setSnapshotTime(String snapshotTimeStr) {
 		StringTokenizer st = new StringTokenizer(snapshotTimeStr, ",");
 		String timeSt;
 		while (st.hasMoreTokens()) {
@@ -1696,8 +1695,6 @@ public class SimulationData {
 			snapshotTimes.add(time);
 		}
 		Collections.sort(snapshotTimes);
-		// this.snapshotTimes = -1;
-		// this.snapshotTime = snapshotTime;
 	}
 
 	private final void setFocusOn(String fileNameFocusOn) throws Exception {
