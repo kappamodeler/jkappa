@@ -79,7 +79,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(mySimulator.getSimulationData());
 
 		mySimulator.getSimulationData().getObservables().calculateObs(currentTime,
-				1, mySimulator.getSimulationData().isTime());
+				1, mySimulator.getSimulationData().getSimulationArguments().isTime());
 		myActiveRule = ruleProbabilityCalculation.getRandomRule();
 
 		if (myActiveRule == null) {

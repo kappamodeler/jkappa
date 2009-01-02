@@ -3,6 +3,7 @@ package com.plectix.simulator.components;
 import java.util.Random;
 
 import com.plectix.simulator.interfaces.IRandom;
+import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.util.Info;
 
@@ -11,8 +12,8 @@ import com.plectix.simulator.util.Info;
 	private final Random rand;
 
 	public CRandomJava(SimulationData data) {
-		int seed = data.getSeed();
-		if (seed != SimulationData.DEFAULT_SEED) {
+		int seed = data.getSimulationArguments().getSeed();
+		if (seed != SimulationArguments.DEFAULT_SEED) {
 			data.addInfo(Info.TYPE_INFO,
 							"--Seeding random number generator with given seed "
 									+ Integer.valueOf(seed).toString());

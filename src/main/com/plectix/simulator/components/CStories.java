@@ -24,7 +24,7 @@ public final class CStories {
 	SimulationData simulationData;
 
 	public CStories(SimulationData simData) {
-		this.iterations = simData.getIterations();
+		this.iterations = simData.getSimulationArguments().getIterations();
 		this.stories = new ArrayList<CStory>();
 		this.trees = new HashMap<Integer, List<CStoryTrees>>();
 		this.networkNotationForCurrentStory = new ArrayList<NetworkNotationForCurrentStory>();

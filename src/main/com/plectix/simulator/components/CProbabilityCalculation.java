@@ -19,11 +19,11 @@ public final class CProbabilityCalculation {
 		this.rules = simulationData.getRules();
 		rulesProbability = new double[rules.size()];
 
-		String randomizerPatch = simulationData.getRandomizer();
+		String randomizerPatch = simulationData.getSimulationArguments().getRandomizer();
 		if (randomizerPatch == null)
 			random = new CRandomJava(simulationData);
 		else
-			random = new CRandomOCaml(randomizerPatch, simulationData.getSeed());
+			random = new CRandomOCaml(randomizerPatch, simulationData.getSimulationArguments().getSeed());
 
 	}
 

@@ -105,7 +105,7 @@ public class Simulator implements SimulatorInterface {
 		boolean isEndRules = false;
 		
 		while (!simulationData.isEndSimulation(currentTime, count)
-				&& max_clash <= simulationData.getMaxClashes()) {
+				&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {
 			while (simulationData.checkSnapshots(currentTime)) {
 				simulationData.createSnapshots(currentTime);				
 			}
@@ -147,7 +147,7 @@ public class Simulator implements SimulatorInterface {
 
 				simulationData.doPositiveUpdate(rule, injectionsList);
 
-				simulationData.getObservables().calculateObs(currentTime, count, simulationData.isTime());
+				simulationData.getObservables().calculateObs(currentTime, count, simulationData.getSimulationArguments().isTime());
 			} else {
 				simulationData.addInfo(Info.TYPE_INTERNAL, "Application of rule exp is clashing");
 				if (LOGGER.isDebugEnabled()) {
@@ -189,18 +189,18 @@ public class Simulator implements SimulatorInterface {
 		simulationData.stopTimer(timer, "-Initialization:");
 		simulationData.setClockStamp(System.currentTimeMillis());
 		
-		if (simulationData.isCompile()) {
+		if (simulationData.getSimulationArguments().isCompile()) {
 			simulationData.outputData();
 			return;
 		}
 		
-		if (!simulationData.isDebugInitOption()) {
-			if (simulationData.isGenereteMapOption() || simulationData.isContactMapOption() ) {
+		if (!simulationData.getSimulationArguments().isDebugInitOption()) {
+			if (simulationData.getSimulationArguments().isGenereteMapOption() || simulationData.getSimulationArguments().isContactMapOption() ) {
 				Source source = addCompleteSource();
 				simulationData.outputData(source, 0);
-			} else if (simulationData.isNumberOfRunsOption()) {
+			} else if (simulationData.getSimulationArguments().isNumberOfRunsOption()) {
 				runIterations();
-			} else if (simulationData.isStorifyOption()) {
+			} else if (simulationData.getSimulationArguments().isStorifyOption()) {
 				runStories();
 			} else {
 				run(0);
@@ -212,17 +212,17 @@ public class Simulator implements SimulatorInterface {
 
 	public final void runIterations() throws Exception {
 		isIteration = true;
-		int seed = simulationData.getSeed();
+		int seed = simulationData.getSimulationArguments().getSeed();
 		List<Double> timeStamps = new ArrayList<Double>();
 		List<List<RunningMetric>> runningMetrics = new ArrayList<List<RunningMetric>>();
 		simulationData.initIterations(timeStamps, runningMetrics);
 		
-		for (int iteration_num = 0; iteration_num < simulationData.getIterations(); iteration_num++) {
+		for (int iteration_num = 0; iteration_num < simulationData.getSimulationArguments().getIterations(); iteration_num++) {
 			// Initialize the Random Number Generator with seed = initialSeed +
 			// i
 			// We also need a new command line argument to feed the initialSeed.
 			// See --seed argument of simplx.
-			simulationData.setSeed(seed + iteration_num);
+			simulationData.getSimulationArguments().setSeed(seed + iteration_num);
 
 			// run the simulator
 			timeStepCounter = 0;
@@ -233,7 +233,7 @@ public class Simulator implements SimulatorInterface {
 
 			// if the simulator's initial state is cached, reload it for next
 			// run
-			if (iteration_num < simulationData.getIterations() - 1) {
+			if (iteration_num < simulationData.getSimulationArguments().getIterations() - 1) {
 				resetSimulation();
 			}
 
@@ -248,7 +248,7 @@ public class Simulator implements SimulatorInterface {
 	public final void runStories() throws Exception {
 		CStories stories = simulationData.getStories();
 		int count = 0;
-		for (int i = 0; i < simulationData.getIterations(); i++) {
+		for (int i = 0; i < simulationData.getSimulationArguments().getIterations(); i++) {
 		    simulationData.addInfo(Info.TYPE_INFO, "-Simulation...");
 		    
 			PlxTimer timer = new PlxTimer();
@@ -261,7 +261,7 @@ public class Simulator implements SimulatorInterface {
 		    simulationData.resetBar();
 		    
 		    while (!simulationData.isEndSimulation(currentTime, count)
-					&& max_clash <= simulationData.getMaxClashes()) {
+					&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {
 				
 				simulationData.checkPerturbation(currentTime);
 				IRule rule = ruleProbabilityCalculation.getRandomRule();
@@ -309,7 +309,7 @@ public class Simulator implements SimulatorInterface {
 			endOfSimulation(isEndRules, timer);
 			stories.handling(i);
 			
-			if (i < simulationData.getIterations() - 1) {
+			if (i < simulationData.getSimulationArguments().getIterations() - 1) {
 				resetSimulation();
 			}
 		}

@@ -53,7 +53,7 @@ public abstract class TestXML {
 		mySimulator.getSimulationData().getObservables()
         .init(time, 0, -1, -1, true);
 
-		mySimulator.getSimulationData().setXmlSessionName(
+		mySimulator.getSimulationData().getSimulationArguments().setXmlSessionName(
 				PathFinder.MAIN_DIR + "out_java\\" + fileName.substring(0, fileName.indexOf(".ka")) + "_java.xml");
 		try{
 			mySimulator.run(0);

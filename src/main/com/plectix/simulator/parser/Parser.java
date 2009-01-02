@@ -648,7 +648,7 @@ public class Parser {
 			count = 1;
 			double countInFile = 1;
 			if (length != 1) {
-				double rescale = simulationData.getRescale();
+				double rescale = simulationData.getSimulationArguments().getRescale();
 				if (rescale < 0 || Double.isNaN(rescale)) {
 					rescale = 1.;
 				}

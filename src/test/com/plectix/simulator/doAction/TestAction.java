@@ -38,7 +38,7 @@ public class TestAction {
 	private static int myRunQuant = 0;
 	private static int myTestQuant = 70;
 	private static boolean myFirstRun = true;
-	private static SimulatorCommandLine myArguments;
+	private static SimulatorCommandLine commandLine;
 	private static String FilePath = "";
 	private final static String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 	private ISolution csolution;
