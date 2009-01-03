@@ -1,5 +1,7 @@
 package com.plectix.simulator.simulator;
 
+import org.apache.commons.cli.ParseException;
+
 import com.plectix.simulator.util.PersistenceUtils;
 
 public class SimulationArguments {
@@ -46,12 +48,12 @@ public class SimulationArguments {
 	private boolean activationMap = true;
 	private boolean inhibitionMap = false;
 	private boolean compile = false;
-	private boolean debugInitOption = false;
-	private boolean genereteMapOption = false;
-	private boolean contactMapOption = false;
-	private boolean numberOfRunsOption = false;
-	private boolean storifyOption = false;
-	private boolean forwardOption = false;
+	private boolean debugInit = false;
+	private boolean genereteMap = false;
+	private boolean contactMap = false;
+	private boolean numberOfRuns = false;
+	private boolean storify = false;
+	private boolean forward = false;
 	private boolean ocamlStyleObservableNames = false;
 	private long clockPrecision = 3600000;
 	private boolean outputFinalState = false;
@@ -70,11 +72,32 @@ public class SimulationArguments {
 		super();
 	}
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 		SimulationArguments simulationArguments = new SimulationArguments();
 		PersistenceUtils.addAlias(simulationArguments);
-		String argumentsXML = PersistenceUtils.getXStream().toXML(simulationArguments);
-		System.err.println(argumentsXML);
+		
+		System.err.println("==================== DEFAULT SIMULATION ARGUMENTS ====================");
+		System.err.println(PersistenceUtils.getXStream().toXML(simulationArguments));
+		
+		System.err.println("==================== SIMULATION ARGUMENTS EXAMPLE 1 ====================");
+		SimulatorCommandLine commandLine = new SimulatorCommandLine(new String[]{"--sim", "file.ka", "--time", "100"});
+		simulationArguments = commandLine.getSimulationArguments();
+		System.err.println(PersistenceUtils.getXStream().toXML(simulationArguments));
+
+		System.err.println("==================== SIMULATION ARGUMENTS EXAMPLE 2 ====================");
+		commandLine = new SimulatorCommandLine(new String[]{"--sim", "file.ka", "--event", "1000"});
+		simulationArguments = commandLine.getSimulationArguments();
+		System.err.println(PersistenceUtils.getXStream().toXML(simulationArguments));
+		
+		System.err.println("==================== SIMULATION ARGUMENTS EXAMPLE 3 ====================");
+		commandLine = new SimulatorCommandLine(new String[]{"--storify", "file.ka", "--iteration", "50"});
+		simulationArguments = commandLine.getSimulationArguments();
+		System.err.println(PersistenceUtils.getXStream().toXML(simulationArguments));
+		
+		System.err.println("==================== SIMULATION ARGUMENTS EXAMPLE 4 ====================");
+		commandLine = new SimulatorCommandLine(new String[]{"--help"});
+		simulationArguments = commandLine.getSimulationArguments();
+		System.err.println(PersistenceUtils.getXStream().toXML(simulationArguments));
 	}
 	
 	
@@ -168,41 +191,41 @@ public class SimulationArguments {
 	public final void setCompile(boolean compile) {
 		this.compile = compile;
 	}
-	public final boolean isDebugInitOption() {
-		return debugInitOption;
+	public final boolean isDebugInit() {
+		return debugInit;
 	}
-	public final void setDebugInitOption(boolean debugInitOption) {
-		this.debugInitOption = debugInitOption;
+	public final void setDebugInit(boolean debugInitOption) {
+		this.debugInit = debugInitOption;
 	}
-	public final boolean isGenereteMapOption() {
-		return genereteMapOption;
+	public final boolean isGenereteMap() {
+		return genereteMap;
 	}
-	public final void setGenereteMapOption(boolean genereteMapOption) {
-		this.genereteMapOption = genereteMapOption;
+	public final void setGenereteMap(boolean genereteMapOption) {
+		this.genereteMap = genereteMapOption;
 	}
-	public final boolean isContactMapOption() {
-		return contactMapOption;
+	public final boolean isContactMap() {
+		return contactMap;
 	}
-	public final void setContactMapOption(boolean contactMapOption) {
-		this.contactMapOption = contactMapOption;
+	public final void setContactMap(boolean contactMapOption) {
+		this.contactMap = contactMapOption;
 	}
-	public final boolean isNumberOfRunsOption() {
-		return numberOfRunsOption;
+	public final boolean isNumberOfRuns() {
+		return numberOfRuns;
 	}
-	public final void setNumberOfRunsOption(boolean numberOfRunsOption) {
-		this.numberOfRunsOption = numberOfRunsOption;
+	public final void setNumberOfRuns(boolean numberOfRunsOption) {
+		this.numberOfRuns = numberOfRunsOption;
 	}
-	public final boolean isStorifyOption() {
-		return storifyOption;
+	public final boolean isStorify() {
+		return storify;
 	}
-	public final void setStorifyOption(boolean storifyOption) {
-		this.storifyOption = storifyOption;
+	public final void setStorify(boolean storifyOption) {
+		this.storify = storifyOption;
 	}
-	public final boolean isForwardOption() {
-		return forwardOption;
+	public final boolean isForward() {
+		return forward;
 	}
-	public final void setForwardOption(boolean forwardOption) {
-		this.forwardOption = forwardOption;
+	public final void setForward(boolean forwardOption) {
+		this.forward = forwardOption;
 	}
 	public final boolean isOcamlStyleObservableNames() {
 		return ocamlStyleObservableNames;

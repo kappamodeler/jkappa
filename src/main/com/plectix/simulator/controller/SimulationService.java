@@ -12,7 +12,8 @@ import java.util.concurrent.TimeUnit;
  * @author ecemis
  */
 public class SimulationService {
-	private static final int NUMBER_OF_THREADS = 4;
+	private static final int DEFAULT_NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
+	
 	private static ExecutorService EXECUTOR_SERVICE = null;
 
 	private SimulatorFactoryInterface simulatorFactory = null;
@@ -24,13 +25,21 @@ public class SimulationService {
 	 * @param simulatorInterface
 	 */
 	public SimulationService(SimulatorFactoryInterface simulatorFactoryInterface) {
+		this(simulatorFactoryInterface, DEFAULT_NUMBER_OF_THREADS);
+	}
+	
+	/**
+	 * 
+	 * @param simulatorInterface
+	 */
+	public SimulationService(SimulatorFactoryInterface simulatorFactoryInterface, int numberOfThreads) {
 		if (simulatorFactoryInterface == null) {
 			throw new RuntimeException("We need a simulator factory!");
 		}
 		this.simulatorFactory = simulatorFactoryInterface;
 		
 		if (EXECUTOR_SERVICE == null) {
-			EXECUTOR_SERVICE = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+			EXECUTOR_SERVICE = Executors.newFixedThreadPool(numberOfThreads);
 		}
 	}
 	
@@ -165,7 +174,18 @@ public class SimulationService {
 		}
 		return futureTask.isDone();
 	}
-	
+
+    /**
+     * Initiates an orderly shutdown in which previously submitted
+     * tasks are executed, but no new tasks will be
+     * accepted. 
+     * Invocation has no additional effect if already shut down.
+     * @throws SecurityException if a security manager exists and
+     * shutting down this ExecutorService may manipulate threads that
+     * the caller is not permitted to modify because it does not hold
+     * {@link java.lang.RuntimePermission}<tt>("modifyThread")</tt>,
+     * or the security manager's <tt>checkAccess</tt>  method denies access.
+     */
 	public void shutdown() {
 		EXECUTOR_SERVICE.shutdown();
 	}

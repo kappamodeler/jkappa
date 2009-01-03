@@ -26,6 +26,7 @@ public class SimulationUtils {
 		for (int i = 0; i < args.length; i++) {
 			stringBuffer.append(args[i] + " ");
 		}
+		stringBuffer.deleteCharAt(stringBuffer.length()-1);
 		return stringBuffer.toString();
 	}
 	

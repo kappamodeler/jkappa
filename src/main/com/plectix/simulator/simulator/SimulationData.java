@@ -214,7 +214,7 @@ public class SimulationData {
 			data.readData();
 			
 			Parser parser = new Parser(data, this);
-			parser.setForwarding(simulationArguments.isForwardOption());
+			parser.setForwarding(simulationArguments.isForward());
 			parser.parse();
 		} catch (Exception e) {
 			println("Error in file \"" + simulationArguments.getInputFile() + "\" :");

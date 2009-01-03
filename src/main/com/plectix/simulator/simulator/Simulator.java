@@ -192,13 +192,13 @@ public class Simulator implements SimulatorInterface {
 			return;
 		}
 		
-		if (!simulationData.getSimulationArguments().isDebugInitOption()) {
-			if (simulationData.getSimulationArguments().isGenereteMapOption() || simulationData.getSimulationArguments().isContactMapOption() ) {
+		if (!simulationData.getSimulationArguments().isDebugInit()) {
+			if (simulationData.getSimulationArguments().isGenereteMap() || simulationData.getSimulationArguments().isContactMap() ) {
 				Source source = addCompleteSource();
 				simulationData.outputData(source, 0);
-			} else if (simulationData.getSimulationArguments().isNumberOfRunsOption()) {
+			} else if (simulationData.getSimulationArguments().isNumberOfRuns()) {
 				runIterations();
-			} else if (simulationData.getSimulationArguments().isStorifyOption()) {
+			} else if (simulationData.getSimulationArguments().isStorify()) {
 				runStories();
 			} else {
 				run(0);
