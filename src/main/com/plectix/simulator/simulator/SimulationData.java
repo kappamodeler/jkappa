@@ -36,7 +36,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.ParseException;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -81,12 +80,12 @@ public class SimulationData {
 
 	private static final double DEFAULT_NUMBER_OF_POINTS = 1000;
 
-	private List<Double> timeStamps;
-	private List<List<RunningMetric>> runningMetrics;
+	private List<Double> timeStamps = null;
+	private List<List<RunningMetric>> runningMetrics = null;
 
-	private List<IRule> rules;
+	private List<IRule> rules = null;
 	private CStories stories = null;
-	private List<CPerturbation> perturbations;
+	private List<CPerturbation> perturbations = null;
 	private IObservables observables = new CObservables();
 	private List<CSnapshot> snapshots = null;
 	private ISolution solution = new CSolution(); // soup of initial components
@@ -96,11 +95,11 @@ public class SimulationData {
 	private List<Info> infoList = new ArrayList<Info>();
 
 	private String tmpSessionName = "simplx.tmp";
-	private String commandLineString;
 
 	private PrintStream printStream = null;
 	
-	private List<Double> snapshotTimes;
+	private List<Double> snapshotTimes = null;
+	
 	private long clockStamp;
 
 	private double step;
@@ -149,30 +148,16 @@ public class SimulationData {
 		return agentIdGenerator++;
 	}
 	
-	public final void parseArguments(String[] args) throws IllegalArgumentException {
-		// let's get the original command line before we change it:
-		setCommandLineString(args);
+	public final void setSimulationArguments(SimulationArguments arguments) {
+		this.simulationArguments = arguments;
 
-		// let's replace all '-' by '_' 
-		args = SimulationUtils.changeArguments(args);
-
-		SimulatorCommandLine commandLine = null;
-		try {
-			commandLine = new SimulatorCommandLine(args);
-		} catch (ParseException e) {
-			println("Error parsing arguments:");
-			if (printStream != null) {
-				e.printStackTrace(printStream);
-			}
-			throw new IllegalArgumentException(e);
-		}
-
-
-		if (commandLine.hasOption(SimulatorOptions.NO_DUMP_STDOUT_STDERR)) {
+		if (simulationArguments.isNoDumpStdoutStderr()) {
 			printStream = null;
 		}
 
-		if (commandLine.hasOption(SimulatorOptions.HELP)) {
+		// do not print anything above because the line above might have turned the printing off...
+
+		if (simulationArguments.isHelp()) {
 			if (printStream != null) {            
 				PrintWriter printWriter = new PrintWriter(printStream);
 				HelpFormatter formatter = new HelpFormatter(); 
@@ -184,229 +169,24 @@ public class SimulationData {
 			}
 		}
 
-		if (commandLine.hasOption(SimulatorOptions.VERSION)) {
+		if (simulationArguments.isVersion()) {
 			println("Java simulator SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
 		}
-
+		
 		// let's dump the command line arguments
-		println("Java " + commandLineString);
+		if (simulationArguments.getCommandLineString() != null) {
+			println("Java " + simulationArguments.getCommandLineString());
+		}
 
-		// moved this below since the line above might have turned the printing off...
 		addInfo(Info.TYPE_INFO, "-Initialization...");
-
-		if (commandLine.hasOption(SimulatorOptions.XML_SESSION_NAME)) {
-			simulationArguments.setXmlSessionName(commandLine.getValue(SimulatorOptions.XML_SESSION_NAME));
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.OUTPUT_XML)) {
-			simulationArguments.setXmlSessionName(commandLine.getValue(SimulatorOptions.OUTPUT_XML));
-		}
 		
-		if (commandLine.hasOption(SimulatorOptions.INIT)) {
-			simulationArguments.setInitialTime(commandLine.getDoubleValue(SimulatorOptions.INIT));
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.POINTS)) {
-			simulationArguments.setPoints(commandLine.getIntValue(SimulatorOptions.POINTS));
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.RESCALE)) {
-			double rescale = commandLine.getDoubleValue(SimulatorOptions.RESCALE);
-			if (rescale > 0) {
-				simulationArguments.setRescale(rescale);
-			} else {
-				throw new IllegalArgumentException("Negative rescale value: " + rescale);
-			}
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.NO_SEED)) {
-			simulationArguments.setSeed(0);
-		}
-
-		// TODO else?
-		if (commandLine.hasOption(SimulatorOptions.SEED)) {
-			simulationArguments.setSeed(Integer.valueOf(commandLine.getValue(SimulatorOptions.SEED)));
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.MAX_CLASHES)) {
-			setMaxClashes(commandLine.getIntValue(SimulatorOptions.MAX_CLASHES));
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.EVENT)) {
-			setEvent(commandLine.getLongValue(SimulatorOptions.EVENT));
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.ITERATION)) {
-			simulationArguments.setIterations(commandLine.getIntValue(SimulatorOptions.ITERATION));
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.RANDOMIZER_JAVA)) {
-			simulationArguments.setRandomizer(commandLine.getValue(SimulatorOptions.RANDOMIZER_JAVA));
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.NO_ACTIVATION_MAP)
-				|| (commandLine.hasOption(SimulatorOptions.NO_MAPS))
-				|| (commandLine.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
-			simulationArguments.setActivationMap(false);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.MERGE_MAPS)) {
-			simulationArguments.setInhibitionMap(true);
-		}
-		
-		if (commandLine.hasOption(SimulatorOptions.NO_INHIBITION_MAP)
-				|| (commandLine.hasOption(SimulatorOptions.NO_MAPS))
-				|| (commandLine.hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
-			simulationArguments.setInhibitionMap(false);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.COMPILE)) {
-			simulationArguments.setCompile(true);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.DEBUG_INIT)) {
-			simulationArguments.setDebugInitOption(true);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.GENERATE_MAP)) {
-			simulationArguments.setGenereteMapOption(true);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.CONTACT_MAP)) {
-			simulationArguments.setContactMapOption(true);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
-			simulationArguments.setNumberOfRunsOption(true);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.STORIFY)) {
-			simulationArguments.setStorifyOption(true);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.OCAML_STYLE_OBS_NAME)) {
-			simulationArguments.setOcamlStyleObservableNames(true);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
-			simulationArguments.setIterations(commandLine.getIntValue(SimulatorOptions.NUMBER_OF_RUNS));
-
-			if (!commandLine.hasOption(SimulatorOptions.SEED)) {
-				throw new IllegalArgumentException("No SEED OPTION");
-			}
-
-			simulationArguments.setSimulationType(SimulationArguments.SimulationType.AVERAGE_OF_RUNS);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.CLOCK_PRECISION)) {
-			simulationArguments.setClockPrecision(60000 * commandLine.getLongValue(SimulatorOptions.CLOCK_PRECISION));
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
-			simulationArguments.setOutputFinalState(true);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.OUTPUT_SCHEME)) {
-			simulationArguments.setXmlSessionPath(commandLine.getValue(SimulatorOptions.OUTPUT_SCHEME));
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.NO_SAVE_ALL)) {
-			simulationArguments.setSerializationMode(SimulationArguments.SerializationMode.NONE);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.SAVE_ALL)) {
-			simulationArguments.setSerializationFileName(commandLine.getValue(SimulatorOptions.SAVE_ALL)) ;
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)) {
-			simulationArguments.setStorifyMode(SimulationArguments.StorifyMode.NONE);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.COMPRESS_STORIES)) {
-			simulationArguments.setStorifyMode(SimulationArguments.StorifyMode.WEAK);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
-			simulationArguments.setStorifyMode(SimulationArguments.StorifyMode.STRONG);
-		}
-
-		if (commandLine.hasOption(SimulatorOptions.TIME)) {
-			setTimeLength(commandLine.getDoubleValue(SimulatorOptions.TIME));
+		// TODO: remove the following lines after checking all the dependencies to them!!!
+		if (simulationArguments.isTime()) {
+			setTimeLength(simulationArguments.getTimeLength());
 		} else {
+			setEvent(simulationArguments.getEvent());	
 			println("*Warning* No time limit.");
 		}
-		
-		boolean option = false;
-		String fileName = null;
-		
-		if (commandLine.hasOption(SimulatorOptions.STORIFY)) {
-			fileName = commandLine.getValue(SimulatorOptions.STORIFY);
-			simulationArguments.setSimulationType(SimulationArguments.SimulationType.STORIFY);
-			option = true;
-		}
-		
-	
-		if (!option && (commandLine.hasOption(SimulatorOptions.SIMULATIONFILE))) {
-			option = true;
-			fileName = commandLine.getValue(SimulatorOptions.SIMULATIONFILE);
-			if (commandLine.hasOption(SimulatorOptions.SNAPSHOT_TIME)) {
-				option = true;
-				try {
-					simulationArguments.setSnapshotsTimeString(commandLine.getValue(SimulatorOptions.SNAPSHOT_TIME));
-				} catch (Exception e) {
-					throw new IllegalArgumentException(e);
-				}
-			}
-			simulationArguments.setSimulationType(SimulationArguments.SimulationType.SIM);
-		}
-		
-		if (commandLine.hasOption(SimulatorOptions.COMPILE)) {
-			if (!option) {
-				option = true;
-				fileName = commandLine.getValue(SimulatorOptions.COMPILE);
-			} else {
-				option = false;
-			}
-			simulationArguments.setSimulationType(SimulationArguments.SimulationType.COMPILE);
-		}
-	
-		if (commandLine.hasOption(SimulatorOptions.GENERATE_MAP)) {
-			if (!option) {
-				option = true;
-				fileName = commandLine.getValue(SimulatorOptions.GENERATE_MAP);
-			} else {
-				option = false;
-			}
-			
-			simulationArguments.setSimulationType(SimulationArguments.SimulationType.GENERATE_MAP);
-		}
-	
-		if (commandLine.hasOption(SimulatorOptions.CONTACT_MAP)) {
-			if (!option) {
-				option = true;
-				fileName = commandLine.getValue(SimulatorOptions.CONTACT_MAP);
-			} else {
-				option = false;
-			}
-			
-			simulationArguments.setSimulationType(SimulationArguments.SimulationType.CONTACT_MAP);
-		}
-	
-		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.NONE) {
-			// HelpFormatter formatter = new HelpFormatter();
-			// formatter.printHelp("use --sim [file]", cmdLineOptions);
-			throw new IllegalArgumentException("No option specified");
-		}
-	
-		simulationArguments.setInputFile(fileName);
-		
-		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-			if (commandLine.hasOption(SimulatorOptions.FOCUS_ON)) {
-				simulationArguments.setFocusFilename(commandLine.getValue(SimulatorOptions.FOCUS_ON));
-			}
-		}
-		
-		simulationArguments.setForwardOption(commandLine.hasOption(SimulatorOptions.FORWARD));
 		
 		this.argumentsSet = true;
 	}
@@ -468,21 +248,6 @@ public class SimulationData {
 		infoList.add(info);
 	}
 
-	private final void setCommandLineString(String[] args) {
-		StringBuffer stringBuffer = new StringBuffer();
-		for (int i = 0; i < args.length; i++) {
-			stringBuffer.append(args[i] + " ");
-		}
-		this.commandLineString = stringBuffer.toString();
-	}
-
-	private final void setMaxClashes(long max_clashes) {
-		if (max_clashes > 0) {
-			simulationArguments.setMaxClashes(max_clashes);
-		} else {
-			throw new IllegalArgumentException("Can't set negative max_clashes: " + max_clashes);
-		}
-	}
 
 	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
@@ -538,13 +303,6 @@ public class SimulationData {
 		return (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY);
 	}
 
-	public final void setTimeLength(double timeLength) {
-		simulationArguments.setTimeLength(timeLength);
-		step = timeLength / 100;
-		nextStep = step;
-		simulationArguments.setTime(true);
-	}
-
 	public final void addRule(CRule rule) {
 		rules.add(rule);
 	}
@@ -561,6 +319,13 @@ public class SimulationData {
 		step = event / 100;
 		nextStep = step;
 		simulationArguments.setEvent(event);
+	}
+
+	public final void setTimeLength(double timeLength) {
+		step = timeLength / 100;
+		nextStep = step;
+		simulationArguments.setTimeLength(timeLength);
+		simulationArguments.setTime(true);
 	}
 
 	public final void initIterations(List<Double> timeStamps, List<List<RunningMetric>> runningMetrics) {
@@ -608,7 +373,7 @@ public class SimulationData {
 				"http://www.w3.org/2001/XMLSchema-instance");
 		simplxSession.setAttribute("xmlns",
 				"http://plectix.synthesisstudios.com/schemas/kappasession");
-		simplxSession.setAttribute("CommandLine", commandLineString);
+		simplxSession.setAttribute("CommandLine", simulationArguments.getCommandLineString());
 		simplxSession.setAttribute("InputFile", simulationArguments.getInputFile());
 		Date d = new Date();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

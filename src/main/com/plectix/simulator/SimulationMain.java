@@ -2,12 +2,14 @@ package com.plectix.simulator;
 
 import java.io.PrintStream;
 
+import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.controller.SimulationService;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.DefaultSimulatorFactory;
+import com.plectix.simulator.simulator.SimulatorCommandLine;
 
 public class SimulationMain  {
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
@@ -18,11 +20,12 @@ public class SimulationMain  {
 	
 	public static final String COMMAND_LINE_SYNTAX = "use --sim [file] [options]";
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 		initializeLogging();
 		
+		SimulatorCommandLine commandLine = new SimulatorCommandLine(args);
 		SimulationService service = new SimulationService(new DefaultSimulatorFactory());
-		service.submit(new SimulatorInputData(args, DEFAULT_OUTPUT_STREAM), null);
+		service.submit(new SimulatorInputData(commandLine.getSimulationArguments(), DEFAULT_OUTPUT_STREAM), null);
 		service.shutdown();
 	}
 

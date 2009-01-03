@@ -3,11 +3,13 @@ package com.plectix.simulator;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.SimulatorCommandLine;
 
 public class Initializator {
 	private Simulator mySimulator;
@@ -64,7 +66,15 @@ public class Initializator {
 
 			SimulationData simulationData = mySimulator.getSimulationData();
 
-			simulationData.parseArguments(testArgs);
+			SimulatorCommandLine commandLine = null;
+			try {
+				commandLine = new SimulatorCommandLine(testArgs);
+			} catch (ParseException e) {
+				e.printStackTrace();
+				throw new IllegalArgumentException(e);
+			}
+			
+			simulationData.setSimulationArguments(commandLine.getSimulationArguments());
 			simulationData.readSimulatonFile();
 			simulationData.initialize();
 	}

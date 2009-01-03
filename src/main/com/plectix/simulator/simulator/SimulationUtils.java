@@ -21,6 +21,14 @@ import com.plectix.simulator.interfaces.ISite;
 
 public class SimulationUtils {
 
+	public final static String getCommandLineString(String[] args) {
+		StringBuffer stringBuffer = new StringBuffer();
+		for (int i = 0; i < args.length; i++) {
+			stringBuffer.append(args[i] + " ");
+		}
+		return stringBuffer.toString();
+	}
+	
 	public static final String printPartRule(List<IConnectedComponent> ccList,
 			boolean isOcamlStyleObsName) {
 		String line = new String();

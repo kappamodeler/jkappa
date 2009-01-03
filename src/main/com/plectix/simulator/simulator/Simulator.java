@@ -174,15 +174,13 @@ public class Simulator implements SimulatorInterface {
 			simulationData.outputData(source, count);
 		}
 	}
-	
 
 	public final void run(SimulatorInputData simulatorInputData) throws Exception {
-		simulationData.setPrintStream(simulatorInputData.getPrintStream());
-
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
-		
-		simulationData.parseArguments(simulatorInputData.getArguments());
+
+		simulationData.setPrintStream(simulatorInputData.getPrintStream());
+		simulationData.setSimulationArguments(simulatorInputData.getSimulationArguments());
 		simulationData.readSimulatonFile();
 		simulationData.initialize();
 		

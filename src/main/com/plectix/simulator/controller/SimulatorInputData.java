@@ -2,18 +2,21 @@ package com.plectix.simulator.controller;
 
 import java.io.PrintStream;
 
+import com.plectix.simulator.simulator.SimulationArguments;
+
 public class SimulatorInputData {
-
-	private final String[] arguments;
 	
-	private PrintStream printStream;
+	private final SimulationArguments simulationArguments;
+	
+	private final PrintStream printStream;
 
-	public SimulatorInputData(String[] args) {
-		this.arguments = args;
+	public SimulatorInputData(SimulationArguments simulationArguments) {
+		this.simulationArguments = simulationArguments;
+		this.printStream = null;
 	}
 
-	public SimulatorInputData(String[] args, PrintStream printStream) {
-		this.arguments = args;
+	public SimulatorInputData(SimulationArguments simulationArguments, PrintStream printStream) {
+		this.simulationArguments = simulationArguments;
 		this.printStream = printStream;
 	}
 
@@ -21,7 +24,7 @@ public class SimulatorInputData {
 		return printStream;
 	}
 
-	public final String[] getArguments() {
-		return arguments;
+	public final SimulationArguments getSimulationArguments() {
+		return simulationArguments;
 	}
 }

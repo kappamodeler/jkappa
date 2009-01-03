@@ -3,13 +3,20 @@ package com.plectix.simulator.controller;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.cli.ParseException;
+
+import com.plectix.simulator.simulator.SimulationArguments;
+import com.plectix.simulator.simulator.SimulatorCommandLine;
+
 public class SimulationServiceTest implements SimulatorCallableListener {
 
-	public static void main(String[] args) throws InterruptedException {	
+	public static void main(String[] args) throws InterruptedException, ParseException {	
 		SimulationService service = new SimulationService(new Simulator1.Simulator1Factory());
 		
-		long jobID = service.submit(new SimulatorInputData(args), new SimulationServiceTest());
-		long jobID2 = service.submit(new SimulatorInputData(args), null);
+		SimulatorCommandLine commandLine = new SimulatorCommandLine(args);
+		SimulationArguments simulationArguments = commandLine.getSimulationArguments();
+		long jobID = service.submit(new SimulatorInputData(simulationArguments), new SimulationServiceTest());
+		long jobID2 = service.submit(new SimulatorInputData(simulationArguments), null);
 		
 		SimulatorResultsData results = service.getSimulatorResultsData(jobID2, 5, TimeUnit.SECONDS);
 		Exception e = results.getSimulatorExitReport().getException();

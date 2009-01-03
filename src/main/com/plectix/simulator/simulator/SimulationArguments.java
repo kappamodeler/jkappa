@@ -29,6 +29,9 @@ public class SimulationArguments {
 		SAVE
 	}
 	
+	private boolean noDumpStdoutStderr = false;
+	private boolean help = false;
+	private boolean version = false;
 	private String xmlSessionName = "simplx.xml";
 	private double initialTime = 0.0;
 	private int points = -1;
@@ -57,6 +60,7 @@ public class SimulationArguments {
 	private String inputFile = null;	
 	private String snapshotsTimeString = null;
 	private String focusFilename = null;
+	private String commandLineString = null;
 	private SimulationType simulationType = SimulationType.NONE;
 	private StorifyMode storifyMode = StorifyMode.NONE;
 	private SerializationMode serializationMode = SerializationMode.NONE;
@@ -270,5 +274,37 @@ public class SimulationArguments {
 
 	public final void setStorifyMode(StorifyMode storifyMode) {
 		this.storifyMode = storifyMode;
+	}
+
+	public final String getCommandLineString() {
+		return commandLineString;
+	}
+
+	public final void setCommandLineString(String commandLineString) {
+		this.commandLineString = commandLineString;
+	}
+
+	public final boolean isNoDumpStdoutStderr() {
+		return noDumpStdoutStderr;
+	}
+
+	public final void setNoDumpStdoutStderr(boolean noDumpStdoutStderr) {
+		this.noDumpStdoutStderr = noDumpStdoutStderr;
+	}
+
+	public final boolean isHelp() {
+		return help;
+	}
+
+	public final void setHelp(boolean help) {
+		this.help = help;
+	}
+
+	public final boolean isVersion() {
+		return version;
+	}
+
+	public final void setVersion(boolean version) {
+		this.version = version;
 	}
 }
