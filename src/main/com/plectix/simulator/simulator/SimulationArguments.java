@@ -53,13 +53,14 @@ public class SimulationArguments {
 	private boolean contactMap = false;
 	private boolean numberOfRuns = false;
 	private boolean storify = false;
-	private boolean forward = false;
+	private boolean forwardOnly = false;
 	private boolean ocamlStyleObservableNames = false;
 	private long clockPrecision = 3600000;
 	private boolean outputFinalState = false;
 	private String xmlSessionPath = "";
 	private String serializationFileName = "~tmp.sd";
-	private String inputFile = null;	
+	private String inputFile = null;
+	private String inputFilename = null;	
 	private String snapshotsTimeString = null;
 	private String focusFilename = null;
 	private String commandLineString = null;
@@ -221,11 +222,11 @@ public class SimulationArguments {
 	public final void setStorify(boolean storifyOption) {
 		this.storify = storifyOption;
 	}
-	public final boolean isForward() {
-		return forward;
+	public final boolean isForwardOnly() {
+		return forwardOnly;
 	}
-	public final void setForward(boolean forwardOption) {
-		this.forward = forwardOption;
+	public final void setForwardOnly(boolean forwardOption) {
+		this.forwardOnly = forwardOption;
 	}
 	public final boolean isOcamlStyleObservableNames() {
 		return ocamlStyleObservableNames;
@@ -257,11 +258,11 @@ public class SimulationArguments {
 	public final void setSerializationFileName(String serializationFileName) {
 		this.serializationFileName = serializationFileName;
 	}
-	public final String getInputFile() {
-		return inputFile;
+	public final String getInputFilename() {
+		return inputFilename;
 	}
-	public final void setInputFile(String inputFile) {
-		this.inputFile = inputFile;
+	public final void setInputFilename(String inputFile) {
+		this.inputFilename = inputFile;
 	}
 	public final String getSnapshotsTimeString() {
 		return snapshotsTimeString;
@@ -329,5 +330,13 @@ public class SimulationArguments {
 
 	public final void setVersion(boolean version) {
 		this.version = version;
+	}
+
+	public final String getInputFile() {
+		return inputFile;
+	}
+
+	public final void setInputFile(String inputFile) {
+		this.inputFile = inputFile;
 	}
 }

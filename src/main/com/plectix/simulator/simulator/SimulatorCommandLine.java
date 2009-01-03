@@ -280,7 +280,7 @@ public class SimulatorCommandLine {
 			}
 		}
 	
-		simulationArguments.setInputFile(fileName);
+		simulationArguments.setInputFilename(fileName);
 		
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 			if (hasOption(SimulatorOptions.FOCUS_ON)) {
@@ -288,7 +288,7 @@ public class SimulatorCommandLine {
 			}
 		}
 		
-		simulationArguments.setForward(hasOption(SimulatorOptions.FORWARD));
+		simulationArguments.setForwardOnly(hasOption(SimulatorOptions.FORWARD));
 		
 		return simulationArguments;
 	}

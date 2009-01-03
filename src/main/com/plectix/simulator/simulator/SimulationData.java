@@ -205,7 +205,7 @@ public class SimulationData {
 		}
 		
 		try {
-			DataReading data = new DataReading(simulationArguments.getInputFile());
+			DataReading data = new DataReading(simulationArguments.getInputFilename());
 			
 			if (simulationArguments.getFocusFilename() != null) {
 				setFocusOn(simulationArguments.getFocusFilename());
@@ -214,10 +214,10 @@ public class SimulationData {
 			data.readData();
 			
 			Parser parser = new Parser(data, this);
-			parser.setForwarding(simulationArguments.isForward());
+			parser.setForwarding(simulationArguments.isForwardOnly());
 			parser.parse();
 		} catch (Exception e) {
-			println("Error in file \"" + simulationArguments.getInputFile() + "\" :");
+			println("Error in file \"" + simulationArguments.getInputFilename() + "\" :");
 
 			if (printStream != null) {
 				e.printStackTrace(printStream);
@@ -374,7 +374,7 @@ public class SimulationData {
 		simplxSession.setAttribute("xmlns",
 				"http://plectix.synthesisstudios.com/schemas/kappasession");
 		simplxSession.setAttribute("CommandLine", simulationArguments.getCommandLineString());
-		simplxSession.setAttribute("InputFile", simulationArguments.getInputFile());
+		simplxSession.setAttribute("InputFile", simulationArguments.getInputFilename());
 		Date d = new Date();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		simplxSession.setAttribute("TimeStamp", df.format(d));
