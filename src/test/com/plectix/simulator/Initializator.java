@@ -13,6 +13,7 @@ import com.plectix.simulator.simulator.SimulatorCommandLine;
 
 public class Initializator {
 	private Simulator mySimulator;
+	private List<IObservablesConnectedComponent> myObsComponents;
 	private Double myRescale = null;
 	
 	private static boolean myFirstRun = true;
@@ -42,24 +43,24 @@ public class Initializator {
 		args[6] = "10";
 		return args;
 	}
-
+	
 	public void reset(String filePath) {
-		prepareTestArgs(filePath);
+		String[] testArgs = prepareTestArgs(filePath);
+		SimulatorCommandLine commandLine = null;
+		try {
+			commandLine = new SimulatorCommandLine(testArgs);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException(e);
+		}
+		
+		mySimulator.getSimulationData().setSimulationArguments(commandLine.getSimulationArguments());
 		mySimulator.resetSimulation();
 	}
 	
 	public void init(String filePath) {
-		String[] args = prepareTestArgs(filePath);
+		String[] testArgs = prepareTestArgs(filePath);
 		if (myFirstRun) {
-			init(prepareTestArgs(filePath));
-			myFirstRun = false;
-		} else {
-			reset(filePath);
-		}
-
-	}
-	
-	public void init(String[] testArgs) {
 			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 			
 			mySimulator = new Simulator();
@@ -77,6 +78,13 @@ public class Initializator {
 			simulationData.setSimulationArguments(commandLine.getSimulationArguments());
 			simulationData.readSimulatonFile();
 			simulationData.initialize();
+			
+			myFirstRun = false;
+			myObsComponents = mySimulator.getSimulationData().getObservables().getConnectedComponentList();
+		} else {
+			reset(filePath);
+		}
+
 	}
 	
 	public Simulator getSimulator() { 
@@ -84,8 +92,7 @@ public class Initializator {
 	}
 	
 	public List<IObservablesConnectedComponent> getObservables() {
-		return Collections.unmodifiableList(mySimulator.getSimulationData().getObservables()
-				.getConnectedComponentList());
+		return Collections.unmodifiableList(myObsComponents);
 	}
 	
 }

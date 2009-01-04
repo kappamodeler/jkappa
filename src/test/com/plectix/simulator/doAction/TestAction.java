@@ -9,7 +9,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -26,6 +28,7 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 
@@ -65,7 +68,7 @@ public class TestAction {
 		FilePath = testFilePath;
 	}
 
-	private static String[] parseArgs(String filePath) {
+	private static String[] prepareTestArgs(String filePath) {
 		String arg1 = new String("--debug");
 		String arg2 = new String("--sim");
 		String arg3 = new String(filePath);
@@ -79,13 +82,42 @@ public class TestAction {
 		return args;
 	}
 
+	public void reset(String filePath) {
+		String[] testArgs = prepareTestArgs(filePath);
+		SimulatorCommandLine commandLine = null;
+		try {
+			commandLine = new SimulatorCommandLine(testArgs);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException(e);
+		}
+		
+		mySimulator.getSimulationData().setSimulationArguments(commandLine.getSimulationArguments());
+		mySimulator.resetSimulation();
+	}
+	
 	@BeforeClass
 	public static void init() {
 		if (myFirstRun)
 			FilePath = "test.data/actions/test00";
-		Initializator initializator = new Initializator();
-		initializator.init(parseArgs(FilePath));
-		mySimulator = initializator.getSimulator();
+		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
+		mySimulator = new Simulator();
+		
+		String[] testArgs = prepareTestArgs(FilePath);
+
+		SimulationData simulationData = mySimulator.getSimulationData();
+
+		SimulatorCommandLine commandLine = null;
+		try {
+			commandLine = new SimulatorCommandLine(testArgs);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException(e);
+		}
+		
+		simulationData.setSimulationArguments(commandLine.getSimulationArguments());
+		simulationData.readSimulatonFile();
+		simulationData.initialize();
 		System.out.println(FilePath);
 	}
 
@@ -103,8 +135,7 @@ public class TestAction {
 	@After
 	public void teardown() {
 		if (myRunQuant != myTestQuant) {
-			parseArgs(FilePath);
-			mySimulator.resetSimulation();
+			reset(FilePath);
 		}
 	}
 

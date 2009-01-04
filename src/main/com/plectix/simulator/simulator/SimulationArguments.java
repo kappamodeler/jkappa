@@ -1,6 +1,9 @@
 package com.plectix.simulator.simulator;
 
-import org.apache.commons.cli.ParseException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.nio.CharBuffer;
 
 import com.plectix.simulator.util.PersistenceUtils;
 
@@ -73,7 +76,7 @@ public class SimulationArguments {
 		super();
 	}
 	
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws Exception {
 		SimulationArguments simulationArguments = new SimulationArguments();
 		PersistenceUtils.addAlias(simulationArguments);
 		
@@ -99,6 +102,18 @@ public class SimulationArguments {
 		commandLine = new SimulatorCommandLine(new String[]{"--help"});
 		simulationArguments = commandLine.getSimulationArguments();
 		System.err.println(PersistenceUtils.getXStream().toXML(simulationArguments));
+		
+		System.err.println("==================== SIMULATION ARGUMENTS EXAMPLE 5 ====================");
+		commandLine = new SimulatorCommandLine(new String[]{"--sim", "file.ka", "--time", "100"});
+		simulationArguments = commandLine.getSimulationArguments();
+		File file = new File("data/Example.ka");
+		BufferedReader reader = new BufferedReader(new FileReader(file));
+		CharBuffer buffer = CharBuffer.allocate((int) file.length());
+		reader.read(buffer);
+		String inputFile = buffer.rewind().toString();
+		simulationArguments.setInputFile(inputFile);
+		System.err.println(PersistenceUtils.getXStream().toXML(simulationArguments));
+
 	}
 	
 	

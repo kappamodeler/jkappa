@@ -3,6 +3,8 @@ package com.plectix.simulator.stories;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.commons.cli.ParseException;
+import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.runners.Parameterized.Parameters;
 
@@ -11,16 +13,19 @@ import com.plectix.simulator.Initializator;
 import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.CStoryTrees;
 import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.SimulatorCommandLine;
 
 public class InitStoriesTests extends DirectoryTestsRunner {
 	private final static String testDirectory = "test.data/stories/";
 
+	private final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
+	
 	private String FilePath = "";
 	private Simulator mySimulator;
 	private CStoryTrees storyTrees;
 
-	private Initializator myInitializator = new Initializator();
 	private double time = 10;
 
 	@Override
@@ -48,7 +53,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 		}
 	}
 
-	private String[] parseArgs(String filePath) {
+	private String[] prepareTestArgs(String filePath) {
 		String[] args;
 		args = new String[7];
 		args[0] = "--storify";
@@ -62,8 +67,25 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	}
 	
 	public void init(String filePath) {
-		myInitializator.init(parseArgs(filePath));
-		mySimulator = myInitializator.getSimulator();
+		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
+		mySimulator = new Simulator();
+		
+		String[] testArgs = prepareTestArgs(FilePath);
+
+		SimulationData simulationData = mySimulator.getSimulationData();
+
+		SimulatorCommandLine commandLine = null;
+		try {
+			commandLine = new SimulatorCommandLine(testArgs);
+		} catch (ParseException e) {
+			e.printStackTrace();
+			throw new IllegalArgumentException(e);
+		}
+		
+		simulationData.setSimulationArguments(commandLine.getSimulationArguments());
+		simulationData.readSimulatonFile();
+		simulationData.initialize();
+		System.out.println(FilePath);
 	}
 
 	public static String getDirectory() {
