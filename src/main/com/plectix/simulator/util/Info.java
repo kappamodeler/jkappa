@@ -19,10 +19,6 @@ public class Info implements Serializable{
 	private double time;
 	private String type;
 
-	public Info() {
-
-	}
-
 	public Info(byte type, String message, double time, int count) {
 		setType(type);
 		this.count = count;
@@ -46,11 +42,11 @@ public class Info implements Serializable{
 		}
 	}
 
-	public String getCount() {
-		return Integer.valueOf(count).toString();
+	public final String getCount() {
+		return Integer.toString(count); 
 	}
 
-	public String getMessage() {
+	public final String getMessageWithTime() {
 		if (isHaveTime)
 			return message + time + " sec. CPU";
 		else
@@ -61,7 +57,7 @@ public class Info implements Serializable{
 		return message;
 	}
 
-	public String getPosition() {
+	public final String getPosition() {
 		Formatter fr = new Formatter();
 		fr.format("%.3f", position);
 		return fr.toString();
@@ -71,11 +67,11 @@ public class Info implements Serializable{
 		return time;
 	}
 
-	public String getType() {
+	public final String getType() {
 		return type;
 	}
 
-	private void setType(byte type) {
+	private final void setType(byte type) {
 		switch (type) {
 		case TYPE_INFO:
 			this.type = INFO;

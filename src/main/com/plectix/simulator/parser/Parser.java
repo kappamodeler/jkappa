@@ -25,7 +25,6 @@ import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.ThreadLocalData;
-import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.util.Info;
 
 public class Parser {

@@ -846,7 +846,7 @@ public class SimulationData {
 			Element node = doc.createElement("Entry");
 			node.setAttribute("Position", info.getPosition());
 			node.setAttribute("Count", info.getCount());
-			node.setAttribute("Message", info.getMessage());
+			node.setAttribute("Message", info.getMessageWithTime());
 			node.setAttribute("Type", info.getType());
 			log.appendChild(node);
 		}
