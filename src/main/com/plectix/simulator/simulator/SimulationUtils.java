@@ -179,7 +179,8 @@ public class SimulationUtils {
 			List<IAgent> hsRulesList, List<IAgent> agentsList) {
 		agentsList.add(rootAgent);
 		rootAgent.setIdInConnectedComponent(agentsList.size() - 1);
-		hsRulesList.remove(rootAgent);
+		removeAgent(hsRulesList, rootAgent);
+		//hsRulesList.remove(rootAgent);
 		for (ISite site : rootAgent.getSites()) {
 			if (site.getLinkIndex() != CSite.NO_INDEX) {
 				IAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
@@ -210,6 +211,15 @@ public class SimulationUtils {
 			}
 		}
 		return null;
+	}
+
+	private static final void removeAgent(List<IAgent> agents, IAgent agent) {
+		int i = 0;
+		for (i = 0; i < agents.size(); i++) {
+			if (agents.get(i) == agent)
+				break;
+		}
+		agents.remove(i);
 	}
 
 	public static final IRule buildRule(List<IAgent> left, List<IAgent> right,
