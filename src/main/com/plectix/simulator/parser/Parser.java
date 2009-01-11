@@ -38,6 +38,9 @@ public class Parser {
 	private final static int KEY__MAY_BE = 3;
 	private final static String SYMBOL_CONNECT = "!";
 	private final static int KEY_CONNECT = 4;
+	
+	private final static String NO_POLY = "NO_POLY";
+	private final static String NO_HELIX = "NO_HELIX";
 
 	private final static byte RULE_TWO_WAY = 1;
 
@@ -501,6 +504,8 @@ public class Parser {
 		for (CDataString rulesDS : list) {
 
 			String rulesStr = rulesDS.getLine();
+			ConstraintData constraintLeftToRight = null;
+			ConstraintData constraintRightToLeft = null;
 			double activity = 1.;
 			double activity2 = 1.;
 
@@ -525,12 +530,21 @@ public class Parser {
 							.toString());
 					activStr = activStr.replaceAll("\\$INF", inf);
 					if (activStr.indexOf(",") != -1) {
-						activity = Double.valueOf(activStr.substring(0,
+						constraintLeftToRight = parseConstraint(activStr.substring(0,
 								activStr.indexOf(",")));
-						activity2 = Double.valueOf(activStr.substring(activStr
+						activity = constraintLeftToRight.getActivity();
+//						activity = Double.valueOf(activStr.substring(0,
+//								activStr.indexOf(",")));
+						constraintRightToLeft = parseConstraint(activStr.substring(activStr
 								.indexOf(",") + 1));
-					} else
-						activity = Double.valueOf(activStr);
+						activity2 = constraintRightToLeft.getActivity();
+//						activity2 = Double.valueOf(activStr.substring(activStr
+//								.indexOf(",") + 1));
+					} else{
+						constraintLeftToRight = parseConstraint(activStr);
+						activity = constraintLeftToRight.getActivity();
+						//activity = Double.valueOf(activStr);
+					}
 				} catch (Exception e) {
 					String details = rulesStr.substring(index).trim();
 					throw new ParseErrorException(rulesDS,
@@ -632,6 +646,35 @@ public class Parser {
 
 		// return Collections.unmodifiableList(rules);
 		return rules;
+	}
+	
+	private ConstraintData parseConstraint(String activStr){
+		byte activityType=ConstraintData.TYPE_CONSTRAINT_NORMAL;
+		double activity = 1.;
+		double activityConstraint = 1.;	
+		if(activStr.indexOf(NO_POLY)!=-1&& activStr.indexOf("[")!=-1 && activStr.indexOf("]")!=-1){
+			activityType = ConstraintData.TYPE_CONSTRAINT_NO_POLY;
+			String constr = activStr.substring(activStr.indexOf("["),activStr.indexOf("]")+1);
+			activStr = activStr.replace(constr, "");
+		}
+		if(activityType==ConstraintData.TYPE_CONSTRAINT_NORMAL && activStr.indexOf(NO_HELIX)!=-1){
+			activityType = ConstraintData.TYPE_CONSTRAINT_NO_HELIX;
+			activStr = activStr.replace(NO_HELIX, "");
+		}
+		if(activStr.indexOf("(")!=-1 && activStr.indexOf(")")!=-1){
+			String constr = activStr.substring(activStr.indexOf("("),activStr.indexOf(")")+1);
+			activStr = activStr.replace(constr, "");
+			constr = constr.substring(1,constr.length()-1);
+			activityConstraint = Double.valueOf(constr);
+		}else{
+			activityConstraint = -1;
+		}
+		activity = Double.valueOf(activStr);
+		ConstraintData ct = new ConstraintData(activityType,activity,activityConstraint);
+//		ct.setActivity(activity);
+//		ct.setActivityConstraint(activityConstraint);
+//		ct.setType(activityType);
+		return ct;
 	}
 
 	private final void createSimData(List<CDataString> list, byte code)
