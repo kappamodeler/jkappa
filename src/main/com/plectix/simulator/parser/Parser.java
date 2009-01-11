@@ -648,7 +648,7 @@ public class Parser {
 		return rules;
 	}
 	
-	private ConstraintData parseConstraint(String activStr){
+	private ConstraintData parseConstraint(String activStr)throws Exception{
 		byte activityType=ConstraintData.TYPE_CONSTRAINT_NORMAL;
 		double activity = 1.;
 		double activityConstraint = 1.;	
