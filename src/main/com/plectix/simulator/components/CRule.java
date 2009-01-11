@@ -38,7 +38,7 @@ public class CRule implements IRule, Serializable {
 	private double activity = 0.;
 	private final String name;
 	private String data;
-	private double ruleRate;
+//	private double ruleRate;
 	private List<ISite> sitesConnectedWithDeleted;
 	private List<ISite> sitesConnectedWithBroken;
 	private boolean rHSEqualsLHS;
@@ -77,6 +77,7 @@ public class CRule implements IRule, Serializable {
 	private IConstraint constraints;
 	private int countAgentsLHS = 0;
 	private final boolean isStorify;
+	private ConstraintData constraintData;
 
 	public final String getData(boolean isOcamlStyleObsName) {
 		if (data == null) {
@@ -100,11 +101,12 @@ public class CRule implements IRule, Serializable {
 	}
 
 	public CRule(List<IConnectedComponent> left,
-			List<IConnectedComponent> right, String name, double ruleRate,
+			List<IConnectedComponent> right, String name, ConstraintData ruleRate,
 			int ruleID, boolean isStorify) {
 		this.leftHandSide = left;
 		this.rightHandSide = right;
 		this.isStorify = isStorify;
+		this.constraintData = ruleRate;
 		setConnectedComponentLinkRule(left);
 		setConnectedComponentLinkRule(right);
 		if (leftHandSide == null) {
@@ -114,16 +116,22 @@ public class CRule implements IRule, Serializable {
 		for (IConnectedComponent cc : this.leftHandSide) {
 			cc.initSpanningTreeMap();
 		}
-		if (ruleRate == Double.MAX_VALUE) {
+		if (ruleRate.getActivity() == Double.MAX_VALUE) {
 			this.infinityRate = true;
-			this.ruleRate = 1;
-		} else
-			this.ruleRate = ruleRate;
+			constraintData.setActivity(1);
+//			this.ruleRate = 1;
+		} else{
+//			this.ruleRate = ruleRate.getActivity();
+		}
 
 		this.name = name;
 		this.ruleID = ruleID;
 		calculateAutomorphismsNumber();
 		indexingRHSAgents();
+	}
+
+	public ConstraintData getConstraintData() {
+		return constraintData;
 	}
 
 	public final int getCountAgentsLHS() {
@@ -140,12 +148,14 @@ public class CRule implements IRule, Serializable {
 
 	public final void setRuleRate(double ruleRate) {
 		if (ruleRate >= 0) {
-			this.ruleRate = ruleRate;
+//			this.ruleRate = ruleRate;
+			constraintData.setActivity(ruleRate);
 		} else {
 			Logger logger = Logger.getLogger(this.getClass());
 			logger.info("warning : rate of the rule '" + name
 					+ "' was attempted to be set as negative");
-			this.ruleRate = 0;
+//			this.ruleRate = 0;
+			constraintData.setActivity(0);
 		}
 	}
 
@@ -187,7 +197,8 @@ public class CRule implements IRule, Serializable {
 	}
 
 	public final double getRuleRate() {
-		return ruleRate;
+		return constraintData.getActivity();
+//		return ruleRate;
 	}
 
 	// private final void markedLHS() {
@@ -821,7 +832,8 @@ public class CRule implements IRule, Serializable {
 		for (IConnectedComponent cc : this.leftHandSide) {
 			activity *= cc.getInjectionsList().size();
 		}
-		activity *= ruleRate;
+		activity *= constraintData.getActivity();
+//		activity *= ruleRate;
 		activity /= automorphismNumber;
 	}
 

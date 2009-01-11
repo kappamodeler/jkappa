@@ -9,6 +9,7 @@ import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.ConstraintData;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -223,7 +224,7 @@ public class SimulationUtils {
 	}
 
 	public static final IRule buildRule(List<IAgent> left, List<IAgent> right,
-			String name, double activity, int ruleID, boolean isStorify) {
+			String name, ConstraintData activity, int ruleID, boolean isStorify) {
 		return new CRule(buildConnectedComponents(left),
 				buildConnectedComponents(right), name, activity, ruleID,
 				isStorify);

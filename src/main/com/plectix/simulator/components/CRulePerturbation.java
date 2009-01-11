@@ -15,11 +15,11 @@ public final class CRulePerturbation extends CRule {
 
 	public CRulePerturbation(IRule rule, boolean isStorify) {
 		super(rule.getLeftHandSide(), rule.getRightHandSide(), rule.getName(),
-				rule.getRuleRate(), rule.getRuleID(), isStorify);
+				rule.getConstraintData(), rule.getRuleID(), isStorify);
 	}
 
 	public CRulePerturbation(List<IConnectedComponent> left,
-			List<IConnectedComponent> right, String name, double ruleRate,
+			List<IConnectedComponent> right, String name, ConstraintData ruleRate,
 			int ruleID, boolean isStorify) {
 		super(left, right, name, ruleRate, ruleID, isStorify);
 	}

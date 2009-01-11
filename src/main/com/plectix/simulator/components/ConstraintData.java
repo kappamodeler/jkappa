@@ -1,6 +1,6 @@
-package com.plectix.simulator.parser;
+package com.plectix.simulator.components;
 
-class ConstraintData {
+public class ConstraintData {
 	public final static byte TYPE_CONSTRAINT_NORMAL = 0;
 	public final static byte TYPE_CONSTRAINT_NO_POLY = 1;
 	public final static byte TYPE_CONSTRAINT_NO_HELIX = 2;
@@ -8,6 +8,12 @@ class ConstraintData {
 	private byte type;
 	private double activity;
 	private double activityConstraint;
+	
+	public ConstraintData(double activity){
+		this.activity = activity;
+		this.type = TYPE_CONSTRAINT_NORMAL;
+		this.activityConstraint = -1;
+	}
 
 	public ConstraintData(byte type, double activity, double activityConstraint){
 		this.type = type;

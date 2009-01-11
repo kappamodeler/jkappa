@@ -15,6 +15,7 @@ import com.plectix.simulator.components.CRulePerturbation;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.CStories;
+import com.plectix.simulator.components.ConstraintData;
 import com.plectix.simulator.components.RateExpression;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -334,10 +335,10 @@ public class Parser {
 				if (countToFile == Double.MAX_VALUE)
 					throw new ParseErrorException(perturbationStr,
 							"$ADDONCE has not used with $INF");
-				rp = new CRulePerturbation(null, ccL, "", 0, ruleID++,
+				rp = new CRulePerturbation(null, ccL, "", new ConstraintData(0), ruleID++,
 						simulationData.isStorify());
 			} else {
-				rp = new CRulePerturbation(ccL, null, "", 0, ruleID++,
+				rp = new CRulePerturbation(ccL, null, "", new ConstraintData(0), ruleID++,
 						simulationData.isStorify());
 			}
 			ruleList.add(rp);
@@ -559,6 +560,10 @@ public class Parser {
 				typeRule = RULE_TWO_WAY;
 				rulesStr = rulesStr.replace("<", "");
 				activity2 = isForwarding() ? 0. : activity2;
+				if(constraintRightToLeft==null)
+					constraintRightToLeft = new ConstraintData(activity2);
+				else
+					constraintRightToLeft.setActivity(activity2);
 			}
 
 			rulesStr = rulesStr.trim();
@@ -600,24 +605,29 @@ public class Parser {
 				switch (index) {
 				case CC_LHS: {
 					left = parseAgent(lhs.trim());
-					rules.add(SimulationUtils.buildRule(left, right, name, activity,
+					rules.add(SimulationUtils.buildRule(left, right, name, constraintLeftToRight,
 							ruleID, simulationData.isStorify()));
+//					rules.add(SimulationUtils.buildRule(left, right, name, activity,
+//							ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 						rules.add(SimulationUtils.buildRule(right, parseAgent(lhs
-								.trim()), nameOp, activity2, ruleID,
+								.trim()), nameOp, constraintRightToLeft, ruleID,
 								simulationData.isStorify()));
+//						rules.add(SimulationUtils.buildRule(right, parseAgent(lhs
+//								.trim()), nameOp, activity2, ruleID,
+//								simulationData.isStorify()));
 					}
 					break;
 				}
 				case CC_RHS: {
 					right = parseAgent(rhs.trim());
-					rules.add(SimulationUtils.buildRule(left, right, name, activity,
+					rules.add(SimulationUtils.buildRule(left, right, name, constraintLeftToRight,
 							ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 						rules.add(SimulationUtils.buildRule(parseAgent(rhs.trim()),
-								left, nameOp, activity2, ruleID, simulationData
+								left, nameOp, constraintRightToLeft, ruleID, simulationData
 										.isStorify()));
 					}
 					break;
@@ -625,12 +635,12 @@ public class Parser {
 				case CC_ALL: {
 					left = parseAgent(lhs.trim());
 					right = parseAgent(rhs.trim());
-					rules.add(SimulationUtils.buildRule(left, right, name, activity,
+					rules.add(SimulationUtils.buildRule(left, right, name, constraintLeftToRight,
 							ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 						rules.add(SimulationUtils.buildRule(parseAgent(rhs.trim()),
-								parseAgent(lhs.trim()), nameOp, activity2,
+								parseAgent(lhs.trim()), nameOp, constraintRightToLeft,
 								ruleID, simulationData.isStorify()));
 					}
 					break;

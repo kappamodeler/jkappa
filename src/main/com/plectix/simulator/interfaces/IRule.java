@@ -2,6 +2,7 @@ package com.plectix.simulator.interfaces;
 
 import java.util.List;
 
+import com.plectix.simulator.components.ConstraintData;
 import com.plectix.simulator.simulator.SimulationData;
 
 public interface IRule {
@@ -74,4 +75,6 @@ public interface IRule {
 	public void setData(String data);
 
 	public void createInhibitedObservablesList(IObservables observables);
+	
+	public ConstraintData getConstraintData();
 }
