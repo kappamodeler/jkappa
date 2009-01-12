@@ -925,8 +925,8 @@ public final class CStoryTrees {
 	}
 
 	public final boolean isIsomorphic(CStoryTrees treeIn) {
-		if (this.ruleIDToTraceID.size() != treeIn.getRuleIDToTraceID().size())
-			return false;
+//		if (this.ruleIDToTraceID.size() != treeIn.getRuleIDToTraceID().size())
+//			return false;
 
 		if (this.levelToTraceID.size() != treeIn.getLevelToTraceID().size())
 			return false;
