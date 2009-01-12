@@ -135,39 +135,48 @@ public final class CStoryTrees {
 			int mainSize = commonList.size();
 			int weakSize = weakCompressedList.size();
 
-			while (mainSize != weakSize) {
-				mainSize = weakCompressedList.size();
-				noneCompressStoryTrace(weakCompressedList);
-				weakCompressedList = updateMainList(weakCompressedList);
+			while (true) {
+
+				while (mainSize != weakSize) {
+					mainSize = weakCompressedList.size();
+					noneCompressStoryTrace(weakCompressedList);
+					weakCompressedList = updateMainList(weakCompressedList);
+					weakSize = weakCompressedList.size();
+				}
+
+				// deleting equal blocks
+				weakCompressedList = removeEqualLevels(weakCompressedList);
 				weakSize = weakCompressedList.size();
-			}
 
-			// deleting equal blocks
-			weakCompressedList = removeEqualLevels(weakCompressedList);
-			int lastSize = weakCompressedList.size();
+				// deleting opposite rules which are not neighbours in trace
+				List<Integer> traceIDList = new ArrayList<Integer>();
+				int rootStep = weakCompressedList.get(0).getStep();
+				List<Integer> weakRelationList = new ArrayList<Integer>();
 
-			// deleting opposite rules which are not neighbours in trace
-			List<Integer> traceIDList = new ArrayList<Integer>();
-			int rootStep = weakCompressedList.get(0).getStep();
-			List<Integer> weakRelationList = new ArrayList<Integer>();
+				isOppositeBranch(rootStep, rootStep, weakCompressedList,
+						traceIDList, weakRelationList);
+				Collections.sort(traceIDList);
 
-			isOppositeBranch(rootStep, rootStep, weakCompressedList,
-					traceIDList, weakRelationList);
-			Collections.sort(traceIDList);
+				for (int deletingTraceID : traceIDList) {
+					int deletingIndex = traceIDToIndex.get(deletingTraceID);
+					CNetworkNotation nn = weakCompressedList.get(deletingIndex);
+					pushIntro(weakCompressedList, nn, deletingIndex,
+							traceIDList);
+					removeTraceIDsFromMaps(nn);
+					weakCompressedList.remove(deletingIndex);
+				}
 
-			for (int deletingTraceID : traceIDList) {
-				int deletingIndex = traceIDToIndex.get(deletingTraceID);
-				CNetworkNotation nn = weakCompressedList.get(deletingIndex);
-				pushIntro(weakCompressedList, nn, deletingIndex, traceIDList);
-				removeTraceIDsFromMaps(nn);
-				weakCompressedList.remove(deletingIndex);
-			}
+				if (weakSize != weakCompressedList.size()) {
+					noneCompressStoryTrace(weakCompressedList);
+					weakCompressedList = updateMainList(weakCompressedList);
+					weakSize = weakCompressedList.size();
+				}
+				if (weakSize == mainSize)
+					break;
 
-			if (lastSize != weakCompressedList.size()) {
-				noneCompressStoryTrace(weakCompressedList);
-				weakCompressedList = updateMainList(weakCompressedList);
 			}
 			return weakCompressedList;
+
 		}
 		return commonList;
 	}
@@ -245,7 +254,7 @@ public final class CStoryTrees {
 				currentList = replaceAgentsInTrace(commonList, agentIDToDelete,
 						agentID, agentToNNs.get(agentIDToDelete), agentToNNs
 								.get(agentID));
-				if(currentList.size()>0)
+				if (currentList.size() > 0)
 					return currentList;
 			}
 		}
@@ -261,11 +270,12 @@ public final class CStoryTrees {
 			return listToReturn;
 
 		for (CNetworkNotation nn : nnListForDelete) {
-			Map<Long, AgentSites> changedAgentsFromSolution = nn.getChangedAgentsFromSolution();
+			Map<Long, AgentSites> changedAgentsFromSolution = nn
+					.getChangedAgentsFromSolution();
 			AgentSites aS = changedAgentsFromSolution.get(agentIDToDelete);
 			changedAgentsFromSolution.put(agentID, aS);
 			changedAgentsFromSolution.remove(agentIDToDelete);
-			
+
 			Map<Long, AgentSitesFromRules> usedAgentsFromRules = nn
 					.getUsedAgentsFromRules();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(agentIDToDelete);
@@ -473,7 +483,7 @@ public final class CStoryTrees {
 		while (traceIDIterator.hasNext()) {
 			currentTraceId = traceIDIterator.next();
 			for (int id : traceIDToTraceID.get(currentTraceId)) {
-				if (id < lowerBoundTraceID)
+				if (id < lowerBoundTraceID && id >=upperBoundTraceID)
 					return true;
 			}
 		}
@@ -548,7 +558,7 @@ public final class CStoryTrees {
 			}
 		}
 	}
-	
+
 	private void pushIntro(List<CNetworkNotation> weakCompressedList,
 			CNetworkNotation currentNN, int indexToBegin,
 			List<Integer> listToDelete) {
@@ -925,9 +935,6 @@ public final class CStoryTrees {
 	}
 
 	public final boolean isIsomorphic(CStoryTrees treeIn) {
-//		if (this.ruleIDToTraceID.size() != treeIn.getRuleIDToTraceID().size())
-//			return false;
-
 		if (this.levelToTraceID.size() != treeIn.getLevelToTraceID().size())
 			return false;
 
