@@ -553,6 +553,10 @@ public class Parser {
 				}
 				rulesStr = rulesStr.substring(0, index).trim();
 			}
+			if(constraintLeftToRight==null)
+				constraintLeftToRight = new ConstraintData(activity);
+			if(constraintRightToLeft==null)
+				constraintRightToLeft = new ConstraintData(activity2);	
 
 			index = -1;
 			byte typeRule = 0;
@@ -560,10 +564,7 @@ public class Parser {
 				typeRule = RULE_TWO_WAY;
 				rulesStr = rulesStr.replace("<", "");
 				activity2 = isForwarding() ? 0. : activity2;
-				if(constraintRightToLeft==null)
-					constraintRightToLeft = new ConstraintData(activity2);
-				else
-					constraintRightToLeft.setActivity(activity2);
+				constraintRightToLeft.setActivity(activity2);
 			}
 
 			rulesStr = rulesStr.trim();
