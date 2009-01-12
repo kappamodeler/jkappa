@@ -14,12 +14,11 @@ public final class CInjection implements IInjection, Serializable {
 	private List<ISite> changedSites;
 	private int myId = 0;
 	private CConnectedComponent connectedComponent;
-	
-	
+
 	private CInjection() {
-		
+
 	}
-	
+
 	public CInjection(CConnectedComponent connectedComponent,
 			List<ISite> sitesList, List<IAgentLink> agentLinkList) {
 		this.connectedComponent = connectedComponent;
@@ -28,13 +27,17 @@ public final class CInjection implements IInjection, Serializable {
 		this.changedSites = new ArrayList<ISite>();
 	}
 
-	public final void removeSiteFromSitesList(ISite site){
-		for (ISite siteL : this.sitesList)
-			if (site==siteL){
-				this.sitesList.remove(site);
-				return;}
+	public final void removeSiteFromSitesList(ISite site) {
+		int index = 0;
+		for (ISite siteL : this.sitesList) {
+			if (site == siteL) {
+				this.sitesList.remove(index);
+				return;
+			}
+			index++;
+		}
 	}
-	
+
 	public final void addToChangedSites(ISite site) {
 		if (!(checkSiteExistanceAmongChangedSites(site)))
 			this.changedSites.add(site);
@@ -50,15 +53,15 @@ public final class CInjection implements IInjection, Serializable {
 				return true;
 		return false;
 	}
-	
+
 	public final void setId(int id) {
 		myId = id;
 	}
-	
+
 	public final int getId() {
 		return myId;
 	}
-	
+
 	public final List<ISite> getChangedSites() {
 		return Collections.unmodifiableList(changedSites);
 	}
