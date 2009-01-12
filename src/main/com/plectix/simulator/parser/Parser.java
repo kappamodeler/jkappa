@@ -669,7 +669,8 @@ public class Parser {
 		}
 		if(activityType==ConstraintData.TYPE_CONSTRAINT_NORMAL && activStr.indexOf(NO_HELIX)!=-1){
 			activityType = ConstraintData.TYPE_CONSTRAINT_NO_HELIX;
-			activStr = activStr.replace(NO_HELIX, "");
+			String constr = activStr.substring(activStr.indexOf("["),activStr.indexOf("]")+1);
+			activStr = activStr.replace(constr, "");
 		}
 		if(activStr.indexOf("(")!=-1 && activStr.indexOf(")")!=-1){
 			String constr = activStr.substring(activStr.indexOf("("),activStr.indexOf(")")+1);
