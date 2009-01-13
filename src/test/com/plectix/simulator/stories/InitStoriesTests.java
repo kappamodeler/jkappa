@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.DirectoryTestsRunner;
-import com.plectix.simulator.Initializator;
 import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.components.CStoryTrees;
 import com.plectix.simulator.interfaces.IRule;
@@ -70,7 +69,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		mySimulator = new Simulator();
 		
-		String[] testArgs = prepareTestArgs(FilePath);
+		String[] testArgs = prepareTestArgs(filePath);
 
 		SimulationData simulationData = mySimulator.getSimulationData();
 

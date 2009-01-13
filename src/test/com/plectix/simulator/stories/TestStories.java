@@ -1,8 +1,8 @@
 package com.plectix.simulator.stories;
 
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -12,13 +12,14 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.components.CStoryTrees;
+import com.plectix.simulator.components.CStoryType;
 
 @RunWith(value = Parameterized.class)
 public class TestStories extends InitStoriesTests{
 	private static final String testFileNamePrefix = "test.data/stories/";
 	private String FilePath = "";
 	private TreeMap<Integer,List<Integer>> trace; 
-
+	
 	@Override
 	public String getPrefixFileName() {
 		return testFileNamePrefix;
@@ -48,7 +49,8 @@ public class TestStories extends InitStoriesTests{
 				TestTransitivity transitivity = new TestTransitivity(trace);
 				transitivity.test();
 				
-				
+				TestIntro intros = new TestIntro(storyTrees, trace);
+				intros.test();
 			}
 		}
 	}
