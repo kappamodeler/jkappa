@@ -400,7 +400,7 @@ public class CRule implements IRule, Serializable {
 			}
 			if (lhsSite.getLinkState().getSite() != null
 					&& rhsSite.getLinkState().getSite() != null) {
-				if (lhsSite.getLinkState().getSite().equals(
+				if (lhsSite.getLinkState().getSite().equalz(
 						rhsSite.getLinkState().getSite())
 						&& lhsSite.getLinkState().getSite().getAgentLink()
 								.getIdInRuleSide() == rhsSite.getLinkState()
