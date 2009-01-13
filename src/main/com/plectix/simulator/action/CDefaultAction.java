@@ -2,6 +2,7 @@ package com.plectix.simulator.action;
 
 import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -29,9 +30,9 @@ public class CDefaultAction extends CAction {
 	public final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
-			byte agentMode = CNetworkNotation.MODE_NONE;
-			byte linkStateMode = CNetworkNotation.MODE_NONE;
-			byte internalStateMode = CNetworkNotation.MODE_NONE;
+			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
+			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
+			NetworkNotationMode internalStateMode = NetworkNotationMode.NONE;
 			netNotation.addToAgentsFromRules(site, agentMode,
 					internalStateMode, linkStateMode);
 		}

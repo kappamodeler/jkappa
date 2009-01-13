@@ -306,19 +306,19 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 				&& solutionLinkState.isLeftBranchStatus())
 			return false;
 
-		if (currentState.getStatusLinkRank() < solutionLinkState
-				.getStatusLinkRank())
+		if (currentState.getStatusLinkRank().smaller(solutionLinkState
+				.getStatusLinkRank()))
 			return true;
 
 		if (currentState.getStatusLinkRank() == solutionLinkState
 				.getStatusLinkRank()
-				&& currentState.getStatusLinkRank() == CLinkState.RANK_BOUND)
+				&& currentState.getStatusLinkRank() == CLinkRank.BOUND)
 			if (currentState.getSite().equalz(solutionLinkState.getSite()))
 				return true;
 
 		if (currentState.getStatusLinkRank() == solutionLinkState
 				.getStatusLinkRank()
-				&& currentState.getStatusLinkRank() != CLinkState.RANK_BOUND)
+				&& currentState.getStatusLinkRank() != CLinkRank.BOUND)
 			return true;
 
 		return false;
@@ -342,13 +342,13 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 
 		if (currentLinkState.getStatusLinkRank() == solutionLinkState
 				.getStatusLinkRank()
-				&& currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
+				&& currentLinkState.getStatusLinkRank() == CLinkRank.BOUND)
 			if (currentLinkState.getSite().equalz(solutionLinkState.getSite()))
 				return true;
 
 		if (currentLinkState.getStatusLinkRank() == solutionLinkState
 				.getStatusLinkRank()
-				&& currentLinkState.getStatusLinkRank() != CLinkState.RANK_BOUND)
+				&& currentLinkState.getStatusLinkRank() != CLinkRank.BOUND)
 			return true;
 
 		return false;

@@ -12,9 +12,9 @@ public final class CPerturbation implements Serializable{
 	public final static byte TYPE_NUMBER = 1;
 	public final static byte TYPE_ONCE = 2;
 
-	private byte type;
+	private CPerturbationType type;
 
-	public byte getType() {
+	public CPerturbationType getType() {
 		return type;
 	}
 
@@ -29,7 +29,7 @@ public final class CPerturbation implements Serializable{
 	private boolean isDO = false;
 	private List<IPerturbationExpression> parametersRHS;
 
-	public CPerturbation(int perturbationID, double time, byte type,
+	public CPerturbation(int perturbationID, double time, CPerturbationType type,
 			double perturbationRate, IRule rule, boolean greater,
 			List<IPerturbationExpression> rateParameters) {
 		this.perturbationID = perturbationID;
@@ -42,7 +42,7 @@ public final class CPerturbation implements Serializable{
 		this.parametersRHS = rateParameters;
 	}
 
-	public CPerturbation(int perturbationID, double time, byte type,
+	public CPerturbation(int perturbationID, double time, CPerturbationType type,
 			CRulePerturbation rule, boolean greater) {
 		this.perturbationID = perturbationID;
 		this.timeCondition = time;
@@ -53,7 +53,7 @@ public final class CPerturbation implements Serializable{
 	}
 
 	public CPerturbation(int perturbationID, List<IObservablesComponent> obsID,
-			List<Double> parameters, int obsNameID, byte type,
+			List<Double> parameters, int obsNameID, CPerturbationType type,
 			double perturbationRate, IRule rule, boolean greater,
 			List<IPerturbationExpression> rateParameters, IObservables observables) {
 		this.perturbationID = perturbationID;

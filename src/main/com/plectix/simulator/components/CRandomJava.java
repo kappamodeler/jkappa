@@ -6,6 +6,7 @@ import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.util.Info;
+import com.plectix.simulator.util.Info.InfoType;
 
 /*package*/ final class CRandomJava implements IRandom {
 
@@ -14,7 +15,7 @@ import com.plectix.simulator.util.Info;
 	public CRandomJava(SimulationData data) {
 		int seed = data.getSimulationArguments().getSeed();
 		if (seed != SimulationArguments.DEFAULT_SEED) {
-			data.addInfo(Info.TYPE_INFO,
+			data.addInfo(InfoType.INFO,
 							"--Seeding random number generator with given seed "
 									+ Integer.valueOf(seed).toString());
 			rand = new Random(seed);

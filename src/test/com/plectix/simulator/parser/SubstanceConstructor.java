@@ -7,6 +7,7 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -25,9 +26,9 @@ public class SubstanceConstructor {
 		}
 		if (linkIndex != null) {
 			if ("?".equals(linkIndex)) {
-				site.getLinkState().setStatusLink(CLinkState.STATUS_LINK_WILDCARD);
+				site.getLinkState().setStatusLink(CLinkStatus.WILDCARD);
 			} else {
-				site.getLinkState().setStatusLink(CLinkState.STATUS_LINK_BOUND);
+				site.getLinkState().setStatusLink(CLinkStatus.BOUND);
 				if (!"_".equals(linkIndex)) {
 					site.setLinkIndex(Integer.valueOf(linkIndex));
 				}

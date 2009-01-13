@@ -1,12 +1,15 @@
 package com.plectix.simulator.interfaces;
 
+import com.plectix.simulator.components.CLinkRank;
+import com.plectix.simulator.components.CLinkStatus;
+
 public interface ILinkState {
 
 	public ISite getSite();
 
-	public byte getStatusLinkRank();
+	public CLinkRank getStatusLinkRank();
 
-	public byte getStatusLink();
+	public CLinkStatus getStatusLink();
 
 	public boolean isLeftBranchStatus();
 
@@ -14,7 +17,7 @@ public interface ILinkState {
 
 	public void setSite(ISite site);
 
-	public void setStatusLink(byte statusLinkFree);
+	public void setStatusLink(CLinkStatus statusLinkFree);
 
 	public void setLinkStateID(int indexLink);
 

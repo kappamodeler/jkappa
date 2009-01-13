@@ -3,6 +3,8 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.plectix.simulator.components.CNetworkNotation.IntersectionType;
+
 class NetworkNotationForCurrentStory {
 	private List<CNetworkNotation> networkNotationList;
 	private boolean endOfStory;
@@ -73,8 +75,8 @@ class NetworkNotationForCurrentStory {
 			List<CNetworkNotation> nnList) {
 
 		for (CNetworkNotation nnFromList : nnList) {
-			if (!((nnFromList.isIntersects(nn) == CNetworkNotation.HAS_NO_INTERSECTION) && (nn
-					.isIntersects(nnFromList) == CNetworkNotation.HAS_NO_INTERSECTION)))
+			if (!((nnFromList.isIntersects(nn) == IntersectionType.NO_INTERSECTION) && (nn
+					.isIntersects(nnFromList) == IntersectionType.NO_INTERSECTION)))
 				return true;
 		}
 

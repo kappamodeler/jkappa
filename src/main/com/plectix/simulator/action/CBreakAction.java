@@ -1,9 +1,11 @@
 package com.plectix.simulator.action;
 
 import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CStoriesSiteStates;
+import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -44,7 +46,7 @@ public class CBreakAction extends CAction {
 					linkSite);
 
 			linkSite.getLinkState().setSite(null);
-			linkSite.getLinkState().setStatusLink(CLinkState.STATUS_LINK_FREE);
+			linkSite.getLinkState().setStatusLink(CLinkStatus.FREE);
 			if (mySiteTo != null) {
 				linkSite.setLinkIndex(mySiteTo.getLinkIndex());
 			}
@@ -59,7 +61,7 @@ public class CBreakAction extends CAction {
 		agentFromInSolution.getSite(mySiteFrom.getNameId()).getLinkState()
 				.setSite(null);
 		agentFromInSolution.getSite(mySiteFrom.getNameId()).getLinkState()
-				.setStatusLink(CLinkState.STATUS_LINK_FREE);
+				.setStatusLink(CLinkStatus.FREE);
 		// /////////////////////////////////////////////
 
 		injection.addToChangedSites(injectedSite);
@@ -90,15 +92,15 @@ public class CBreakAction extends CAction {
 	public final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
-			byte agentMode = CNetworkNotation.MODE_NONE;
-			byte linkStateMode = CNetworkNotation.MODE_NONE;
-			byte internalStateMode = CNetworkNotation.MODE_NONE;
+			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
+			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
+			NetworkNotationMode internalStateMode = NetworkNotationMode.NONE;
 
 			if (existInRule) {
-				agentMode = CNetworkNotation.MODE_TEST;
-				linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+				agentMode = NetworkNotationMode.TEST;
+				linkStateMode = NetworkNotationMode.TEST_OR_MODIFY;
 			} else {
-				linkStateMode = CNetworkNotation.MODE_MODIFY;
+				linkStateMode = NetworkNotationMode.MODIFY;
 			}
 			netNotation.addToAgentsFromRules(site, agentMode,
 					internalStateMode, linkStateMode);

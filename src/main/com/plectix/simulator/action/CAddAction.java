@@ -2,6 +2,7 @@ package com.plectix.simulator.action;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
@@ -51,16 +52,16 @@ public class CAddAction extends CAction {
 	public final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
-			byte agentMode = CNetworkNotation.MODE_NONE;
-			byte linkStateMode = CNetworkNotation.MODE_NONE;
-			byte internalStateMode = CNetworkNotation.MODE_NONE;
+			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
+			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
+			NetworkNotationMode internalStateMode = NetworkNotationMode.NONE;
 
-			agentMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+			agentMode = NetworkNotationMode.TEST_OR_MODIFY;
 			if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
-				internalStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+				internalStateMode = NetworkNotationMode.TEST_OR_MODIFY;
 			}
-			if (site.getLinkState().getStatusLinkRank() != CLinkState.RANK_SEMI_LINK) {
-				linkStateMode = CNetworkNotation.MODE_TEST_OR_MODIFY;
+			if (site.getLinkState().getStatusLinkRank() != CLinkRank.SEMI_LINK) {
+				linkStateMode = NetworkNotationMode.TEST_OR_MODIFY;
 			}
 
 			netNotation.addToAgentsFromRules(site, agentMode,

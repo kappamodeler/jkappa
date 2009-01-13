@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules;
+import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules.SitesFromRules;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -711,8 +712,8 @@ public final class CStoryTrees {
 						return IS_CAUSE;
 					}
 					if (!isLink
-							&& sFRComparable.getInternalStateMode() == CNetworkNotation.MODE_TEST
-							&& sFR.getInternalStateMode() == CNetworkNotation.MODE_TEST_OR_MODIFY) {
+							&& sFRComparable.getInternalStateMode() == NetworkNotationMode.TEST
+							&& sFR.getInternalStateMode() == NetworkNotationMode.TEST_OR_MODIFY) {
 						List<Integer> helpList = traceIDToTraceID.get(newNN
 								.getStep());
 						if (helpList == null
@@ -725,8 +726,8 @@ public final class CStoryTrees {
 							}
 					}
 					if (isLink
-							&& sFRComparable.getLinkStateMode() == CNetworkNotation.MODE_TEST
-							&& sFR.getLinkStateMode() == CNetworkNotation.MODE_TEST_OR_MODIFY) {
+							&& sFRComparable.getLinkStateMode() == NetworkNotationMode.TEST
+							&& sFR.getLinkStateMode() == NetworkNotationMode.TEST_OR_MODIFY) {
 						List<Integer> helpList = traceIDToTraceID.get(newNN
 								.getStep());
 						if (helpList == null

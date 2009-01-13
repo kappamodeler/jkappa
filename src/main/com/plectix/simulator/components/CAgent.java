@@ -259,11 +259,11 @@ public final class CAgent implements IAgent, Serializable {
 			if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
 				sb.append("~" + site.getInternalState().getName());
 			}
-			if (site.getLinkState().getStatusLinkRank() == CLinkState.RANK_SEMI_LINK) {
+			if (site.getLinkState().getStatusLinkRank() == CLinkRank.SEMI_LINK) {
 				sb.append("!_");
 			} else if (site.getLinkIndex() != -1) {
 				sb.append("!" + site.getLinkIndex());
-			} else if (site.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_WILDCARD) {
+			} else if (site.getLinkState().getStatusLink() == CLinkStatus.WILDCARD) {
 				sb.append("?");
 			}
 		}

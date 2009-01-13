@@ -19,15 +19,19 @@ import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
 
 public class CNetworkNotation implements INetworkNotation {
-	public static final byte MODE_TEST = 0;
-	public static final byte MODE_TEST_OR_MODIFY = 1;
-	public static final byte MODE_MODIFY = 2;
-	public static final byte MODE_NONE = -1;
+	public enum NetworkNotationMode {
+		TEST,
+		TEST_OR_MODIFY,
+		MODIFY,
+		NONE;
+	}
 
-	public final static byte HAS_FULL_INTERSECTION = 2;
-	public final static byte HAS_PART_INTERSECTION = 1;
-	public final static byte HAS_NO_INTERSECTION = 0;
-
+	public enum IntersectionType {
+		NO_INTERSECTION,
+		PART_INTERSECTION,
+		FULL_INTERSECTION;
+	}
+	
 	private boolean leaf;
 
 	private boolean hasIntro;
@@ -94,7 +98,7 @@ public class CNetworkNotation implements INetworkNotation {
 	/* package */final class AgentSitesFromRules {
 		// TODO private!!!
 		HashMap<Integer, SitesFromRules> sites;
-		private byte mode;
+		private NetworkNotationMode mode;
 		
 		private IAgent agent;
 
@@ -102,7 +106,7 @@ public class CNetworkNotation implements INetworkNotation {
 			return agent;
 		}
 
-		public AgentSitesFromRules(byte mode, IAgent agent) {
+		public AgentSitesFromRules(NetworkNotationMode mode, IAgent agent) {
 			this.mode = mode;
 			sites = new HashMap<Integer, SitesFromRules>();
 		}
@@ -110,22 +114,22 @@ public class CNetworkNotation implements INetworkNotation {
 		// TODO separate!!!!!!!!!!!!!!!!!!!!
 		/* package */final class SitesFromRules {
 			// TODO private!!!
-			private byte internalStateMode = MODE_NONE;
+			private NetworkNotationMode internalStateMode = NetworkNotationMode.NONE;
 
-			public byte getInternalStateMode() {
+			public NetworkNotationMode getInternalStateMode() {
 				return internalStateMode;
 			}
 
-			private byte linkStateMode = MODE_NONE;
+			private NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
 
-			public byte getLinkStateMode() {
+			public NetworkNotationMode getLinkStateMode() {
 				return linkStateMode;
 			}
 
 			private int linkAgentNameID;
 
-			public SitesFromRules(byte internalStateMode, byte linkStateMode,
-					int linkAgentNameID) {
+			public SitesFromRules(NetworkNotationMode internalStateMode, 
+					NetworkNotationMode linkStateMode, int linkAgentNameID) {
 				this.internalStateMode = internalStateMode;
 				this.linkStateMode = linkStateMode;
 				this.linkAgentNameID = linkAgentNameID;
@@ -134,13 +138,13 @@ public class CNetworkNotation implements INetworkNotation {
 			public SitesFromRules() {
 			}
 
-			public final void setInternalStateMode(byte internalStateMode,
+			public final void setInternalStateMode(NetworkNotationMode internalStateMode,
 					int linkAgentNameID) {
 				this.internalStateMode = internalStateMode;
 				this.linkAgentNameID = linkAgentNameID;
 			}
 
-			public final void setLinkStateMode(byte linkStateMode,
+			public final void setLinkStateMode(NetworkNotationMode linkStateMode,
 					int linkAgentNameID) {
 				this.linkStateMode = linkStateMode;
 				// this.linkAgentNameID = linkAgentNameID;
@@ -158,29 +162,29 @@ public class CNetworkNotation implements INetworkNotation {
 				return false;
 			}
 
-			public final boolean isCausing(byte mode, byte sfrMode) {
-				if (mode == MODE_TEST_OR_MODIFY
-						&& sfrMode == MODE_TEST_OR_MODIFY)
+			public final boolean isCausing(NetworkNotationMode mode, NetworkNotationMode sfrMode) {
+				if (mode == NetworkNotationMode.TEST_OR_MODIFY
+						&& sfrMode == NetworkNotationMode.TEST_OR_MODIFY)
 					return true;
-				if (mode == MODE_TEST_OR_MODIFY && sfrMode == MODE_TEST)
+				if (mode == NetworkNotationMode.TEST_OR_MODIFY && sfrMode == NetworkNotationMode.TEST)
 					return true;
-				if (mode == MODE_MODIFY && sfrMode == MODE_TEST)
+				if (mode == NetworkNotationMode.MODIFY && sfrMode == NetworkNotationMode.TEST)
 					return true;
 
 				return false;
 			}
 		}
 
-		public final void addToSitesFromRules(int idSite,
-				byte internalStateMode, byte linkStateMode, int linkAgentNameID) {
+		public final void addToSitesFromRules(int idSite, NetworkNotationMode internalStateMode, 
+				NetworkNotationMode linkStateMode, int linkAgentNameID) {
 			SitesFromRules sFR = sites.get(idSite);
 			if (sFR == null) {
 				sFR = new SitesFromRules();
 				sites.put(idSite, sFR);
 			}
-			if (internalStateMode != MODE_NONE)
+			if (internalStateMode != NetworkNotationMode.NONE)
 				sFR.setInternalStateMode(internalStateMode, linkAgentNameID);
-			if (linkStateMode != MODE_NONE)
+			if (linkStateMode != NetworkNotationMode.NONE)
 				sFR.setLinkStateMode(linkStateMode, linkAgentNameID);
 		}
 	}
@@ -298,8 +302,8 @@ public class CNetworkNotation implements INetworkNotation {
 		}
 	}
 
-	public final void addToAgentsFromRules(ISite site, byte agentMode,
-			byte internalStateMode, byte linkStateMode) {
+	public final void addToAgentsFromRules(ISite site, NetworkNotationMode agentMode,
+			NetworkNotationMode internalStateMode, NetworkNotationMode linkStateMode) {
 		if (site != null) {
 			long key = site.getAgentLink().getHash();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(key);
@@ -312,7 +316,7 @@ public class CNetworkNotation implements INetworkNotation {
 		}
 	}
 
-	public final void addFixedSitesFromRules(ISite site, byte agentMode,
+	public final void addFixedSitesFromRules(ISite site, NetworkNotationMode agentMode,
 			boolean internalState, boolean linkState) {
 		if (site != null) {
 			long key = site.getAgentLink().getHash();
@@ -321,13 +325,13 @@ public class CNetworkNotation implements INetworkNotation {
 				aSFR = new AgentSitesFromRules(agentMode, site.getAgentLink());
 				usedAgentsFromRules.put(key, aSFR);
 			}
-			byte internalStateMode = MODE_NONE;
-			byte linkStateMode = MODE_NONE;
+			NetworkNotationMode internalStateMode = NetworkNotationMode.NONE;
+			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
 
 			if (internalState == true)
-				internalStateMode = MODE_TEST;
+				internalStateMode = NetworkNotationMode.TEST;
 			if (linkState == true)
-				linkStateMode = MODE_TEST;
+				linkStateMode = NetworkNotationMode.TEST;
 
 			aSFR.addToSitesFromRules(site.getNameId(), internalStateMode,
 					linkStateMode, site.getAgentLink().getNameId());
@@ -343,12 +347,12 @@ public class CNetworkNotation implements INetworkNotation {
 		for (int i = networkNotationList.size() - 1; i >= 0; i--) {
 			CNetworkNotation nn = networkNotationList.get(i);
 			switch (isIntersects(nn)) {
-			case HAS_FULL_INTERSECTION:
+			case FULL_INTERSECTION:
 				clearAgentsForDeletedOppositeRules(this);
 				clearAgentsForDeletedOppositeRules(networkNotationList.get(i));
 				networkNotationList.remove(i);
 				return false;
-			case HAS_PART_INTERSECTION:
+			case PART_INTERSECTION:
 				return true;
 			}
 		}
@@ -357,17 +361,17 @@ public class CNetworkNotation implements INetworkNotation {
 
 	public final boolean isOpposite(CNetworkNotation networkNotation) {
 		switch (isIntersects(networkNotation)) {
-		case HAS_FULL_INTERSECTION:
+		case FULL_INTERSECTION:
 			clearAgentsForDeletedOppositeRules(this);
 			clearAgentsForDeletedOppositeRules(networkNotation);
 			return false;
-		case HAS_PART_INTERSECTION:
+		case PART_INTERSECTION:
 			return true;
 		}
 		return true;
 	}
 
-	public final byte isIntersects(CNetworkNotation nn) {
+	public final IntersectionType isIntersects(CNetworkNotation nn) {
 		Iterator<Long> iterator = this.changedAgentsFromSolution.keySet()
 				.iterator();
 		int counter = 0;
@@ -377,7 +381,7 @@ public class CNetworkNotation implements INetworkNotation {
 			Long key = iterator.next();
 
 			if (nn.changedAgentsFromSolution.containsKey(key)) {
-				if (checkSites(key, nn) == HAS_FULL_INTERSECTION)
+				if (checkSites(key, nn) == IntersectionType.FULL_INTERSECTION)
 					fullCounter++;
 				counter++;
 			}
@@ -386,15 +390,15 @@ public class CNetworkNotation implements INetworkNotation {
 		if ((fullCounter == this.changedAgentsFromSolution.size())
 				&& (this.changedAgentsFromSolution.size() == nn.changedAgentsFromSolution
 						.size()))
-			return HAS_FULL_INTERSECTION;
+			return IntersectionType.FULL_INTERSECTION;
 
 		if (counter > 0)
-			return HAS_PART_INTERSECTION;
+			return IntersectionType.PART_INTERSECTION;
 
-		return HAS_NO_INTERSECTION;
+		return IntersectionType.NO_INTERSECTION;
 	}
 
-	private final byte checkSites(long key, CNetworkNotation nn) {
+	private final IntersectionType checkSites(long key, CNetworkNotation nn) {
 		Iterator<Integer> iterator = this.changedAgentsFromSolution.get(key)
 				.getSites().keySet().iterator();
 		int counter = 0;
@@ -419,11 +423,11 @@ public class CNetworkNotation implements INetworkNotation {
 				.size())
 				&& (this.changedAgentsFromSolution.get(key).getSites().size() == nn.changedAgentsFromSolution
 						.get(key).getSites().size()))
-			return HAS_FULL_INTERSECTION;
+			return IntersectionType.FULL_INTERSECTION;
 
 		if (counter > 0)
-			return HAS_PART_INTERSECTION;
+			return IntersectionType.PART_INTERSECTION;
 
-		return HAS_NO_INTERSECTION;
+		return IntersectionType.NO_INTERSECTION;
 	}
 }

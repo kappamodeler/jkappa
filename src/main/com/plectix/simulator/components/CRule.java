@@ -13,6 +13,7 @@ import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.action.CAddAction;
 import com.plectix.simulator.action.CDefaultAction;
 import com.plectix.simulator.action.CDeleteAction;
+import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
@@ -300,10 +301,10 @@ public class CRule implements IRule, Serializable {
 	private final void addRuleSitesToNetworkNotation(
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
-			byte agentMode = CNetworkNotation.MODE_NONE;
-			byte linkStateMode = CNetworkNotation.MODE_NONE;
-			byte internalStateMode = CNetworkNotation.MODE_NONE;
-			linkStateMode = CNetworkNotation.MODE_MODIFY;
+			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
+			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
+			NetworkNotationMode internalStateMode = NetworkNotationMode.NONE;
+			linkStateMode = NetworkNotationMode.MODIFY;
 			netNotation.addToAgentsFromRules(site, agentMode,
 					internalStateMode, linkStateMode);
 		}
@@ -330,7 +331,7 @@ public class CRule implements IRule, Serializable {
 				site = agentToInSolution.getSite(siteFromRule.getNameId());
 			// add fixed agents
 			netNotation.addFixedSitesFromRules(site,
-					CNetworkNotation.MODE_TEST, fs.isInternalState(), fs
+					NetworkNotationMode.TEST, fs.isInternalState(), fs
 							.isLinkState());
 		}
 	}
@@ -502,7 +503,7 @@ public class CRule implements IRule, Serializable {
 							return true;
 
 						if (currentLinkState.isLeftBranchStatus()
-								&& linkState.getStatusLinkRank() == CLinkState.RANK_BOUND_OR_FREE)
+								&& linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
 							return true;
 
 						if (currentLinkState.isLeftBranchStatus()
@@ -515,14 +516,14 @@ public class CRule implements IRule, Serializable {
 
 						if (currentLinkState.getStatusLinkRank() == linkState
 								.getStatusLinkRank()
-								&& currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
+								&& currentLinkState.getStatusLinkRank() == CLinkRank.BOUND)
 							if (!(currentLinkState.getSite().equalz(linkState
 									.getSite())))
 								continue;
 
 						if (currentLinkState.getStatusLinkRank() == linkState
 								.getStatusLinkRank()
-								&& currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
+								&& currentLinkState.getStatusLinkRank() == CLinkRank.BOUND)
 							if (currentLinkState.getSite().equalz(
 									linkState.getSite())
 									&& (currentLinkState.getSite()
@@ -531,8 +532,8 @@ public class CRule implements IRule, Serializable {
 											.getNameId()))
 								continue;
 
-						if (currentLinkState.getStatusLinkRank() >= linkState
-								.getStatusLinkRank())
+						if (!currentLinkState.getStatusLinkRank().smaller(linkState
+								.getStatusLinkRank()))
 							return true;
 
 						return true;
@@ -583,7 +584,7 @@ public class CRule implements IRule, Serializable {
 									&& !(internalState.isRankRoot())) {
 								if (internalState.getNameId() == currentInternalState
 										.getNameId()) {
-									if (linkState.getStatusLinkRank() == CLinkState.RANK_BOUND_OR_FREE)
+									if (linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
 										return true;
 									if (checkInhibitedLinkStates(
 											currentLinkState, linkState))
@@ -592,8 +593,8 @@ public class CRule implements IRule, Serializable {
 							}
 
 							if (currentInternalState.isRankRoot()) {
-								if (currentLinkState.getStatusLinkRank() == CLinkState.RANK_FREE
-										&& linkState.getStatusLinkRank() == CLinkState.RANK_BOUND_OR_FREE)
+								if (currentLinkState.getStatusLinkRank() == CLinkRank.FREE
+										&& linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
 									return true;
 								if (checkInhibitedLinkStates(currentLinkState,
 										linkState))
@@ -609,14 +610,14 @@ public class CRule implements IRule, Serializable {
 
 	private boolean checkInhibitedLinkStates(ILinkState currentLinkState,
 			ILinkState linkState) {
-		if (currentLinkState.getStatusLinkRank() == CLinkState.RANK_FREE
-				&& linkState.getStatusLinkRank() == CLinkState.RANK_FREE)
+		if (currentLinkState.getStatusLinkRank() == CLinkRank.FREE
+				&& linkState.getStatusLinkRank() == CLinkRank.FREE)
 			return true;
-		if (currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND
-				&& linkState.getStatusLinkRank() == CLinkState.RANK_SEMI_LINK)
+		if (currentLinkState.getStatusLinkRank() == CLinkRank.BOUND
+				&& linkState.getStatusLinkRank() == CLinkRank.SEMI_LINK)
 			return true;
-		if (currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND
-				&& linkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
+		if (currentLinkState.getStatusLinkRank() == CLinkRank.BOUND
+				&& linkState.getStatusLinkRank() == CLinkRank.BOUND)
 			if (currentLinkState.getSite().equals(linkState.getSite()))
 				return true;
 		return false;

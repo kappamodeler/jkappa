@@ -20,6 +20,7 @@ import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
+import com.plectix.simulator.util.Info.InfoType;
 
 public class Simulator implements SimulatorInterface {
 
@@ -92,7 +93,7 @@ public class Simulator implements SimulatorInterface {
 	}
 
 	public final void run(int iteration_num) throws Exception {
-		simulationData.addInfo(Info.TYPE_INFO, "-Simulation...");
+		simulationData.addInfo(InfoType.INFO, "-Simulation...");
 		
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
@@ -149,7 +150,7 @@ public class Simulator implements SimulatorInterface {
 
 				simulationData.getObservables().calculateObs(currentTime, count, simulationData.getSimulationArguments().isTime());
 			} else {
-				simulationData.addInfo(Info.TYPE_INTERNAL, "Application of rule exp is clashing");
+				simulationData.addInfo(InfoType.INTERNAL, "Application of rule exp is clashing");
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Clash");
 				}
@@ -247,7 +248,7 @@ public class Simulator implements SimulatorInterface {
 		CStories stories = simulationData.getStories();
 		int count = 0;
 		for (int i = 0; i < simulationData.getSimulationArguments().getIterations(); i++) {
-		    simulationData.addInfo(Info.TYPE_INFO, "-Simulation...");
+		    simulationData.addInfo(InfoType.INFO, "-Simulation...");
 		    
 			PlxTimer timer = new PlxTimer();
 			timer.startTimer();

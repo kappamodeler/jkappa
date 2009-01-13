@@ -6,27 +6,18 @@ import com.plectix.simulator.interfaces.*;
 
 public final class CLinkState extends CState implements ILinkState, Serializable {
 
-	public static final byte STATUS_LINK_BOUND = 0x01;
-	public static final byte STATUS_LINK_WILDCARD = 0x02;
-	public static final byte STATUS_LINK_FREE = 0x04;
-
-	public static final byte RANK_BOUND_OR_FREE = 0x01;
-	public static final byte RANK_SEMI_LINK = 0x02;
-	public static final byte RANK_BOUND = 0x03;
-	public static final byte RANK_FREE = 0x04;
-	
 	public static final byte NULL_INDEX = -1;
 
-	private byte statusLink;
+	private CLinkStatus statusLink;
 	private ISite linkSite = null;
 	private int linkStateID = NULL_INDEX;
 	
-	public CLinkState(ISite site, byte statusLink) {
+	public CLinkState(ISite site, CLinkStatus statusLink) {
 		linkSite = site;
 		this.statusLink = statusLink;
 	}
 
-	public CLinkState(byte statusLink) {
+	public CLinkState(CLinkStatus statusLink) {
 		this.statusLink = statusLink;
 	}
 	
@@ -40,18 +31,18 @@ public final class CLinkState extends CState implements ILinkState, Serializable
 
 	@Override
 	public boolean isRankRoot() {
-		if (statusLink == STATUS_LINK_WILDCARD)
+		if (statusLink == CLinkStatus.WILDCARD)
 			return true;
 		else
 			return false;
 	}
 
 	public final boolean isLeftBranchStatus() {
-		return (statusLink == STATUS_LINK_FREE) ? true : false;
+		return (statusLink == CLinkStatus.FREE) ? true : false;
 	}
 
 	public final boolean isRightBranchStatus() {
-		return (statusLink == STATUS_LINK_BOUND) ? true : false;
+		return (statusLink == CLinkStatus.BOUND) ? true : false;
 	}
 
 	public final ISite getSite() {
@@ -61,14 +52,14 @@ public final class CLinkState extends CState implements ILinkState, Serializable
 	public final void setSite(ISite site) {
 		linkSite = site;
 		if (linkSite != null)
-			statusLink = STATUS_LINK_BOUND;
+			statusLink = CLinkStatus.BOUND;
 	}
 
-	public final void setStatusLink(byte statusLink) {
+	public final void setStatusLink(CLinkStatus statusLink) {
 		this.statusLink = statusLink;
 	}
 
-	public final byte getStatusLink() {
+	public final CLinkStatus getStatusLink() {
 		return statusLink;
 	}
 
@@ -76,17 +67,17 @@ public final class CLinkState extends CState implements ILinkState, Serializable
 	 * Returns the rank of the status link (according to the Simulation Engine
 	 * Specification part 2) Used to compare states.
 	 */
-	public final byte getStatusLinkRank() {
+	public final CLinkRank getStatusLinkRank() {
 		switch (statusLink) {
-		case STATUS_LINK_BOUND:
+		case BOUND:
 			if (linkSite != null)
-				return RANK_BOUND;
+				return CLinkRank.BOUND;
 			else
-				return RANK_SEMI_LINK;
-		case STATUS_LINK_WILDCARD:
-			return RANK_BOUND_OR_FREE;
+				return CLinkRank.SEMI_LINK;
+		case WILDCARD:
+			return CLinkRank.BOUND_OR_FREE;
 		default:
-			return RANK_FREE;
+			return CLinkRank.FREE;
 		}
 	}
 

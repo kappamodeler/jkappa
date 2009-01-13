@@ -10,6 +10,7 @@ import java.util.TreeMap;
 
 import com.plectix.simulator.components.CStoryTrees;
 import com.plectix.simulator.components.CStoryType;
+import com.plectix.simulator.components.CStoryType.StoryOutputType;
 
 public class TestIntro {
 
@@ -51,7 +52,7 @@ public class TestIntro {
 						traceIdToStoryTypeIntro.put(traceID, introList);
 					}
 					for (String str : introStringList) {
-						CStoryType stT = new CStoryType(CStoryType.TYPE_INTRO,
+						CStoryType stT = new CStoryType(StoryOutputType.INTRO,
 								traceID, counter++, "intro:" + str, "", depth
 										- level - 1);
 						listST.add(stT);

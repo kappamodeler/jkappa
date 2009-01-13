@@ -115,14 +115,14 @@ import com.plectix.simulator.interfaces.*;
 			// if ((fromSite.getLinkState().getSite() == null)
 			// && (toSite.getLinkState().getSite() == null))
 			// continue;
-			if ((fromSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_FREE)
-					&& (toSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_FREE))
+			if ((fromSite.getLinkState().getStatusLink() == CLinkStatus.FREE)
+					&& (toSite.getLinkState().getStatusLink() == CLinkStatus.FREE))
 				continue;
 
 			// if ((fromSite.getLinkState().getSite() != null)
 			// && (toSite.getLinkState().getSite() == null)) {
-			if ((fromSite.getLinkState().getStatusLink() != CLinkState.STATUS_LINK_FREE)
-					&& (toSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_FREE)) {
+			if ((fromSite.getLinkState().getStatusLink() != CLinkStatus.FREE)
+					&& (toSite.getLinkState().getStatusLink() == CLinkStatus.FREE)) {
 				list.add(new CBreakAction(myRule, fromSite, toSite,
 						leftConnectedComponent, rightConnectedComponent));
 					myRule.addChangedSite(toSite);
@@ -132,8 +132,8 @@ import com.plectix.simulator.interfaces.*;
 
 			// if ((fromSite.getLinkState().getSite() == null)
 			// && (toSite.getLinkState().getSite() != null)) {
-			if ((fromSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_FREE)
-					&& (toSite.getLinkState().getStatusLink() == CLinkState.STATUS_LINK_BOUND)) {
+			if ((fromSite.getLinkState().getStatusLink() == CLinkStatus.FREE)
+					&& (toSite.getLinkState().getStatusLink() == CLinkStatus.BOUND)) {
 				list.add(new CBoundAction(myRule, toSite, toSite.getLinkState()
 						.getSite(), leftConnectedComponent,
 						rightConnectedComponent));

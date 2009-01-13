@@ -10,7 +10,9 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CDataString;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CPerturbation;
+import com.plectix.simulator.components.CPerturbationType;
 import com.plectix.simulator.components.CRulePerturbation;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CSolution;
@@ -26,19 +28,28 @@ import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.ThreadLocalData;
-import com.plectix.simulator.util.Info;
+import com.plectix.simulator.util.Info.InfoType;
 
 public class Parser {
 
-	private final static String SYMBOL_STATE = "~";
-	private final static int KEY_STATE = 1;
-	private final static String SYMBOL_CONNECTED = "!_";
+	private enum SitePropertyKey {
+		INTERNAL_STATE("~"),
+		BLIND_CONNECTION("!_"),
+		WILDCARD("?"),
+		CONNECTION("!");
+		
+		private final String mySymbol;
+		
+		private SitePropertyKey(String symbol) {
+			mySymbol = symbol;
+		}
+		
+		public String getSymbol() {
+			return mySymbol;
+		}
+	}
+	
 	private final static String SYMBOL_CONNECTED_TRUE_VALUE = "_";
-	private final static int KEY_CONNECTED_TRUE = 2;
-	private final static String SYMBOL_CONNECTED_MAY_BE = "?";
-	private final static int KEY__MAY_BE = 3;
-	private final static String SYMBOL_CONNECT = "!";
-	private final static int KEY_CONNECT = 4;
 	
 	private final static String NO_POLY = "NO_POLY";
 	private final static String NO_HELIX = "NO_HELIX";
@@ -110,7 +121,7 @@ public class Parser {
 	}
 
 	public final void parse() throws ParseErrorException {
-		simulationData.addInfo(Info.TYPE_INFO,"--Computing initial state");
+		simulationData.addInfo(InfoType.INFO,"--Computing initial state");
 		
 		if (simulationData.isParseSolution())
 			createSimData(data.getInits(), CREATE_INIT);
@@ -225,7 +236,7 @@ public class Parser {
 						if (rule != null) {
 							perturbations.add(new CPerturbation(
 									pertubationID++, time,
-									CPerturbation.TYPE_TIME, perturbationRate,
+									CPerturbationType.TIME, perturbationRate,
 									rule, greater, rateExpression));
 						}
 					}
@@ -273,7 +284,7 @@ public class Parser {
 
 						CPerturbation pertubation = new CPerturbation(
 								pertubationID++, obsID, parameters, obsNameID,
-								CPerturbation.TYPE_NUMBER, perturbationRate,
+								CPerturbationType.NUMBER, perturbationRate,
 								rule, greater, rateExpression, simulationData
 										.getObservables());
 						perturbations.add(pertubation);
@@ -350,7 +361,7 @@ public class Parser {
 			simulationData.addRule(rule);
 
 			CPerturbation perturbation = new CPerturbation(pertubationID, time,
-					CPerturbation.TYPE_ONCE, rule, greater);
+					CPerturbationType.ONCE, rule, greater);
 			perturbations.add(perturbation);
 		}
 
@@ -873,17 +884,17 @@ public class Parser {
 		DataString dt = null;
 		CSite csite = null;
 
-		dt = parseLine(site, KEY_STATE);
+		dt = parseLine(site, SitePropertyKey.INTERNAL_STATE);
 		site = dt.getSt1();
 		state = dt.getSt2();
 		if (state != null) {
-			dt = parseLine(state, KEY_CONNECT);
+			dt = parseLine(state, SitePropertyKey.CONNECTION);
 			state = dt.getSt1();
 			if (!state.matches(PATTERN_LINE_SITE_STATE))
 				throw new ParseErrorException(
 						"Unexpected internal state name : " + line);
 		} else {
-			dt = parseLine(site, KEY_CONNECT);
+			dt = parseLine(site, SitePropertyKey.CONNECTION);
 			site = dt.getSt1();
 		}
 		connect = dt.getSt2();
@@ -905,10 +916,10 @@ public class Parser {
 		if (connect != null)
 			if (connect.length() == 0) {
 				csite.getLinkState().setStatusLink(
-						CLinkState.STATUS_LINK_WILDCARD);
+						CLinkStatus.WILDCARD);
 			} else if (connect.equals(SYMBOL_CONNECTED_TRUE_VALUE)) {
 				csite.getLinkState()
-						.setStatusLink(CLinkState.STATUS_LINK_BOUND);
+						.setStatusLink(CLinkStatus.BOUND);
 			} else {
 				try {
 					int index = Integer.valueOf(connect);
@@ -934,27 +945,25 @@ public class Parser {
 		return csite;
 	}
 
-	private final DataString parseLine(String st, int key)
+	private final DataString parseLine(String st, SitePropertyKey key)
 			throws ParseErrorException {
-		String id = null;
+		String id = key.getSymbol();
 		DataString ds = new DataString(st);
 		int i = -1;
 		switch (key) {
-		case KEY_STATE: {
-			id = SYMBOL_STATE;
+		case INTERNAL_STATE: {
 			i = st.indexOf(id);
 			break;
 		}
-		case KEY_CONNECT: {
-			id = SYMBOL_CONNECT;
+		case CONNECTION: {
 			i = st.indexOf(id);
 		}
-		case KEY_CONNECTED_TRUE: {
+		case BLIND_CONNECTION: {
 			if (i != -1) {
-				id = SYMBOL_CONNECTED;
+				id = SitePropertyKey.BLIND_CONNECTION.getSymbol();
 				i = st.indexOf(id);
 				if (i == -1) {
-					i = st.indexOf(SYMBOL_CONNECT);
+					i = st.indexOf(SitePropertyKey.CONNECTION.getSymbol());
 					String test = new String(st);
 					test = test.substring(i + 1);
 					if (test.length() == 0)
@@ -964,9 +973,9 @@ public class Parser {
 				break;
 			}
 		}
-		case KEY__MAY_BE: {
+		case WILDCARD: {
 			if (i == -1) {
-				id = SYMBOL_CONNECTED_MAY_BE;
+				id = SitePropertyKey.WILDCARD.getSymbol();
 				i = st.indexOf(id);
 			}
 			break;

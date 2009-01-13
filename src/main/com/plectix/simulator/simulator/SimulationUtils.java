@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
+import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
@@ -82,8 +83,8 @@ public class SimulationUtils {
 					// line = line + "~" + site.getInternalState().getName();
 				}
 				switch (site.getLinkState().getStatusLink()) {
-				case CLinkState.STATUS_LINK_BOUND: {
-					if (site.getLinkState().getStatusLinkRank() == CLinkState.RANK_SEMI_LINK) {
+				case BOUND: {
+					if (site.getLinkState().getStatusLinkRank() == CLinkRank.SEMI_LINK) {
 						siteStr = siteStr + "!_";
 						// line = line + "!_";
 					} else if (site.getAgentLink().getIdInRuleSide() < ((ISite) site
@@ -104,7 +105,7 @@ public class SimulationUtils {
 
 					break;
 				}
-				case CLinkState.STATUS_LINK_WILDCARD: {
+				case WILDCARD: {
 					siteStr = siteStr + "?";
 					// line = line + "?";
 					break;

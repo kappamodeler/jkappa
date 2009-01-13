@@ -3,10 +3,13 @@ package com.plectix.simulator.components;
 import org.w3c.dom.Element;
 
 public class CStoryType {
-	public static final byte TYPE_INTRO = 0;
-	public static final byte TYPE_RULE = 1;
-	public static final byte TYPE_OBS = 2;
-
+	
+	public enum StoryOutputType {
+		INTRO,
+		RULE,
+		OBS;
+	}
+	
 	public static final String STRING_INTRO = "INTRO";
 	public static final String STRING_RULE = "RULE";
 	public static final String STRING_OBS = "OBSERVABLE";
@@ -14,7 +17,7 @@ public class CStoryType {
 	public static final String RELATION_STRONG = "STRONG";
 	public static final String RELATION_WEAK = "WEAK";
 	
-	private byte type;
+	private StoryOutputType type;
 	private String text;
 
 	public String getText() {
@@ -27,7 +30,7 @@ public class CStoryType {
 
 	private String data;
 
-	public byte getType() {
+	public StoryOutputType getType() {
 		return type;
 	}
 
@@ -43,7 +46,7 @@ public class CStoryType {
 	private int id;
 	private int depth;
 
-	public CStoryType(byte type, int traceID, int id, String text, String data,
+	public CStoryType(StoryOutputType type, int traceID, int id, String text, String data,
 			int depth) {
 		this.traceID = traceID;
 		this.id = id;

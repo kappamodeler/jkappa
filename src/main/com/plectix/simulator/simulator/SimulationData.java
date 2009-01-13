@@ -48,6 +48,7 @@ import com.plectix.simulator.components.CContactMapChangedSite;
 import com.plectix.simulator.components.CContactMapEdge;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CPerturbation;
+import com.plectix.simulator.components.CPerturbationType;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
@@ -57,6 +58,7 @@ import com.plectix.simulator.components.CStoryType;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.SnapshotElement;
 import com.plectix.simulator.components.SolutionLines;
+import com.plectix.simulator.components.CStoryType.StoryOutputType;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -72,6 +74,7 @@ import com.plectix.simulator.parser.Parser;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
+import com.plectix.simulator.util.Info.InfoType;
 
 public class SimulationData {
 	
@@ -115,8 +118,8 @@ public class SimulationData {
 	}
 	
 	public final void resetSimulation() {
-		addInfo(Info.TYPE_INFO, "-Reset simulation data.");
-		addInfo(Info.TYPE_INFO, "-Initialization...");
+		addInfo(InfoType.INFO, "-Reset simulation data.");
+		addInfo(InfoType.INFO, "-Initialization...");
 		
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
@@ -178,7 +181,7 @@ public class SimulationData {
 			println("Java " + simulationArguments.getCommandLineString());
 		}
 
-		addInfo(Info.TYPE_INFO, "-Initialization...");
+		addInfo(InfoType.INFO, "-Initialization...");
 		
 		// TODO: remove the following lines after checking all the dependencies to them!!!
 		if (simulationArguments.isTime()) {
@@ -233,7 +236,7 @@ public class SimulationData {
 		return true;
 	}
 
-	public final void addInfo(byte type, String message) {
+	public final void addInfo(InfoType type, String message) {
 		addInfo(new Info(type, message, printStream));
 	}
 	
@@ -672,11 +675,11 @@ public class SimulationData {
 			Document doc) {
 		Element node;
 		for (CStoryType stT : currentStTypeList) {
-			if (stT.getType() == CStoryType.TYPE_OBS) {
+			if (stT.getType() == StoryOutputType.OBS) {
 				node = doc.createElement("Node");
 				stT.fillNode(node, CStoryType.STRING_OBS);
 				nodes.add(node);
-			} else if (stT.getType() == CStoryType.TYPE_RULE) {
+			} else if (stT.getType() == StoryOutputType.RULE) {
 				node = doc.createElement("Node");
 				stT.fillNode(node, CStoryType.STRING_RULE);
 				nodes.add(node);
@@ -750,7 +753,7 @@ public class SimulationData {
 						traceIdToStoryTypeIntro.put(traceID, introList);
 					}
 					for (String str : introStringList) {
-						CStoryType stT = new CStoryType(CStoryType.TYPE_INTRO,
+						CStoryType stT = new CStoryType(StoryOutputType.INTRO,
 								traceID, counter++, "intro:" + str, "", depth
 										- level - 1);
 						listST.add(stT);
@@ -765,11 +768,11 @@ public class SimulationData {
 			int level = iterator.next();
 			List<Integer> list = storyTree.getLevelToTraceID().get(level);
 			List<CStoryType> listST = allLevels.get(level);
-			byte type;
+			StoryOutputType type;
 			if (level == 0)
-				type = CStoryType.TYPE_OBS;
+				type = StoryOutputType.OBS;
 			else
-				type = CStoryType.TYPE_RULE;
+				type = StoryOutputType.RULE;
 
 			if (listST == null) {
 				listST = new ArrayList<CStoryType>();
@@ -814,7 +817,7 @@ public class SimulationData {
 			fillNodesLevelStoryTrees(currentStTypeList, nodes, doc);
 
 			for (CStoryType stT : currentStTypeList) {
-				if (stT.getType() != CStoryType.TYPE_INTRO) {
+				if (stT.getType() != StoryOutputType.INTRO) {
 					List<CStoryType> introList = traceIdToStoryTypeIntro
 							.get(stT.getTraceID());
 					fillIntroListStoryConnections(stT, introList, connections,
@@ -847,7 +850,7 @@ public class SimulationData {
 			node.setAttribute("Position", info.getPosition());
 			node.setAttribute("Count", info.getCount());
 			node.setAttribute("Message", info.getMessageWithTime());
-			node.setAttribute("Type", info.getType());
+			node.setAttribute("Type", info.getType().toString());
 			log.appendChild(node);
 		}
 
@@ -880,7 +883,7 @@ public class SimulationData {
 		message += " ";
 		println(message + timer.getTimeMessage() + " sec. CPU");
 		// timer.getTimer();
-		addInfo(new Info(Info.TYPE_INFO, message, timer.getThreadTimeInSeconds(), 1));
+		addInfo(new Info(InfoType.INFO, message, timer.getThreadTimeInSeconds(), 1));
 	}
 
 	public final void createTMPReport() {
@@ -1037,7 +1040,7 @@ public class SimulationData {
 
 		if (simulationArguments.isActivationMap()) {
 			PlxTimer timer = new PlxTimer();
-			addInfo(Info.TYPE_INFO, "--Abstracting activation map...");
+			addInfo(InfoType.INFO, "--Abstracting activation map...");
 			
 			timer.startTimer();
 			for (IRule rule : rules) {
@@ -1045,12 +1048,12 @@ public class SimulationData {
 				rule.createActivatedObservablesList(getObservables());
 			}
 			stopTimer(timer, "--Abstraction:");
-			addInfo(Info.TYPE_INFO, "--Activation map computed");
+			addInfo(InfoType.INFO, "--Activation map computed");
 		}
 
 		if (simulationArguments.isInhibitionMap()) {
 			PlxTimer timer = new PlxTimer();
-			addInfo(Info.TYPE_INFO, "--Abstracting inhibition map...");
+			addInfo(InfoType.INFO, "--Abstracting inhibition map...");
 			
 			timer.startTimer();
 			for (IRule rule : rules) {
@@ -1058,7 +1061,7 @@ public class SimulationData {
 				rule.createInhibitedObservablesList(getObservables());
 			}
 			stopTimer(timer, "--Abstraction:");
-			addInfo(Info.TYPE_INFO, "--Inhibition map computed");
+			addInfo(InfoType.INFO, "--Inhibition map computed");
 		}
 
 		while (iterator.hasNext()) {
@@ -1281,13 +1284,13 @@ public class SimulationData {
 		}
 
 		switch (perturbation.getType()) {
-		case CPerturbation.TYPE_TIME: {
+		case TIME: {
 			st += "Whenever current time ";
 			st += greater;
 			st += perturbation.getTimeCondition();
 			break;
 		}
-		case CPerturbation.TYPE_NUMBER: {
+		case NUMBER: {
 			st += "Whenever [";
 			st += observables.getComponentList().get(perturbation.getObsNameID()).getName();
 			st += "] ";
@@ -1354,16 +1357,16 @@ public class SimulationData {
 		if (perturbations.size() != 0) {
 			for (CPerturbation pb : perturbations) {
 				switch (pb.getType()) {
-				case CPerturbation.TYPE_TIME: {
+				case TIME: {
 					if (!pb.isDo())
 						pb.checkCondition(currentTime);
 					break;
 				}
-				case CPerturbation.TYPE_NUMBER: {
+				case NUMBER: {
 					pb.checkCondition(observables);
 					break;
 				}
-				case CPerturbation.TYPE_ONCE: {
+				case ONCE: {
 					if (!pb.isDo())
 						pb.checkConditionOnce(currentTime);
 					break;

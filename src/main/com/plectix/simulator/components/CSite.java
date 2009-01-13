@@ -32,12 +32,12 @@ public final class CSite implements ISite, Serializable {
 
 	public CSite(int id) {
 		this.nameId = id;
-		linkState = new CLinkState(CLinkState.STATUS_LINK_FREE);
+		linkState = new CLinkState(CLinkStatus.FREE);
 	}
 
 	public CSite(int id, IAgent agent) {
 		this.nameId = id;
-		linkState = new CLinkState(CLinkState.STATUS_LINK_FREE);
+		linkState = new CLinkState(CLinkStatus.FREE);
 		linkAgent = agent;
 	}
 
