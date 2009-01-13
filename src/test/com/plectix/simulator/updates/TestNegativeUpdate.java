@@ -22,6 +22,7 @@ public class TestNegativeUpdate extends TestUpdate {
 		
 	public TestNegativeUpdate(String fileName) {
 		super(fileName);
+		
 		myTestFileName = fileName;
 		myFailer.loadTestFile(myTestFileName);
 	}

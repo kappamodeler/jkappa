@@ -33,6 +33,7 @@ public class CInternalState extends CState implements IInternalState, Serializab
 		return nameId;
 	}
 
+	// is this method needed ?
 	@Override
 	public final boolean equals(Object obj) {
 		if (this == obj) {

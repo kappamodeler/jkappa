@@ -1,11 +1,7 @@
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -147,7 +143,7 @@ public final class CAgent implements IAgent, Serializable {
 			if (agent != agent2)
 				return null;
 		}
-		if (agent.equals(agentFromCC))
+		if (agent.equalz(agentFromCC))
 			return agent;
 
 		return null;
@@ -174,23 +170,65 @@ public final class CAgent implements IAgent, Serializable {
 		return id;
 	}
 
-	@Override
-	public final boolean equals(Object obj) {
+	public final boolean equalz(IAgent obj) {
 		if (this == obj) {
 			return true;
 		}
+		
+		if (obj == null) {
+			return false;
+		}
+			
 		if (!(obj instanceof CAgent)) {
 			return false;
 		}
 
 		CAgent agent = (CAgent) obj;
-
-		if (nameId != agent.getNameId()) {
+		
+		return nameId == agent.nameId;
+	}
+	
+	public boolean includedInCollection(Collection<IAgent> collection) {
+		for (IAgent agent : collection) {
+			if (this.equalz(agent)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean siteMapsAreEqual(IAgent agent) {
+		if (agent == null) {
 			return false;
 		}
-		return true;
+		
+		Set<ISite> listThis = new HashSet<ISite>();
+		Set<ISite> listThat = new HashSet<ISite>();
+		
+		listThis.addAll(siteMap.values());
+		listThat.addAll(agent.getSiteMap().values());
+		
+		for (ISite siteThis : siteMap.values()) {
+			boolean containsCurrent = false;
+			ISite foundedSiteThat = null;
+			for (ISite siteThat : listThat) {
+				if (siteThis.equalz(siteThat)) {
+					foundedSiteThat = siteThat;
+					containsCurrent = true;
+					break;
+				}
+			}
+			
+			if (!containsCurrent) {
+				return false;
+			} else {
+				listThis.remove(siteThis);
+				listThat.remove(foundedSiteThat);
+			}
+		}
+		return listThis.isEmpty() && listThat.isEmpty();
 	}
-
+	
 	public final ISite getSite(int siteNameId) {
 		return siteMap.get(siteNameId);
 	}

@@ -243,7 +243,9 @@ public class SimulationUtils {
 	}
 
 	public final static void addToAgentList(List<IAgent> list, IAgent agent) {
-		if (list.contains(agent)) {
+		
+		//if (list.contains(agent)) {
+		if (agent.includedInCollection(list)) {
 			return;
 		}
 		list.add(agent);

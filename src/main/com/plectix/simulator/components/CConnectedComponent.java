@@ -313,7 +313,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		if (currentState.getStatusLinkRank() == solutionLinkState
 				.getStatusLinkRank()
 				&& currentState.getStatusLinkRank() == CLinkState.RANK_BOUND)
-			if (currentState.getSite().equals(solutionLinkState.getSite()))
+			if (currentState.getSite().equalz(solutionLinkState.getSite()))
 				return true;
 
 		if (currentState.getStatusLinkRank() == solutionLinkState
@@ -343,7 +343,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		if (currentLinkState.getStatusLinkRank() == solutionLinkState
 				.getStatusLinkRank()
 				&& currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
-			if (currentLinkState.getSite().equals(solutionLinkState.getSite()))
+			if (currentLinkState.getSite().equalz(solutionLinkState.getSite()))
 				return true;
 
 		if (currentLinkState.getStatusLinkRank() == solutionLinkState

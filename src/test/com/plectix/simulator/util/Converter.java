@@ -52,7 +52,7 @@ public class Converter {
 		List<IAgent> list;
 		String agentString; 
 		for (IAgent agent : c.getAgents()) {
-			if (empty.equals(agent)) {
+			if (empty.equalz(agent)) {
 				return "";
 			}
 			

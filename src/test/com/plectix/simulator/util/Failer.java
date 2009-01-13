@@ -4,7 +4,8 @@ import java.util.*;
 
 public class Failer {
 	private String myCurrentTestFileName;
-
+	private boolean myIsFailed = false;
+	
 	public Failer() {
 	}
 
@@ -13,9 +14,14 @@ public class Failer {
 	}
 
 	public void fail(String message) {
+		myIsFailed = true;
 		org.junit.Assert.fail(message);
 	}
 
+	public boolean isFailed() {
+		return myIsFailed;
+	}
+	
 	private void myFail(String message) {
 		if (myCurrentTestFileName != null) {
 			fail(myCurrentTestFileName + " : " + message);

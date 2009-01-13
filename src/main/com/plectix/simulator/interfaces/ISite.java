@@ -40,4 +40,6 @@ public interface ISite {
 	public void setLinkIndex(int valueOf);
 
 	public void clearLift();
+
+	public boolean equalz(ISite siteThat);
 }

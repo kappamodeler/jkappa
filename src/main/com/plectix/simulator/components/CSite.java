@@ -99,18 +99,32 @@ public final class CSite implements ISite, Serializable {
 		return changed;
 	}
 
-	@Override
-	public final boolean equals(Object obj) {
-		if (!(obj instanceof CSite))
-			return false;
-		CSite site = (CSite) obj;
-		if (!(nameId == site.nameId))
-			return false;
-		if (!(this.linkAgent.equals(site.getAgentLink())))
-			return false;
-		return true;
-	}
+	public final boolean equalz(ISite obj) {
+		if (this == obj) {
+			return true;
+		}
 
+		if (obj == null) { 
+			return false;
+		}
+
+		if (!(obj instanceof CSite)) {
+			return false;
+		}
+		
+		CSite site = (CSite) obj;
+		
+		if (nameId != site.nameId) {
+			return false;
+		}
+
+		if (linkAgent == null) {
+			return site.getAgentLink() == null;
+		} else {
+			return linkAgent.equalz(site.getAgentLink());
+		}
+	}
+	
 	public final void setLinkIndex(int index) {
 		this.linkIndex = index;
 	}
@@ -159,5 +173,9 @@ public final class CSite implements ISite, Serializable {
 
 	public final String getName() {
 		return ThreadLocalData.getNameDictionary().getName(nameId);
+	}
+	
+	public String toString() {
+		return linkAgent.getName() + "(" + getName() + ")";
 	}
 }

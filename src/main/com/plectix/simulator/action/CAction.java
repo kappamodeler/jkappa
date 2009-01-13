@@ -148,7 +148,7 @@ import com.plectix.simulator.interfaces.*;
 				continue;
 			if ((lConnectSite.getAgentLink().getIdInRuleSide() == rConnectSite
 					.getAgentLink().getIdInRuleSide())
-					&& (lConnectSite.equals(rConnectSite)))
+					&& (lConnectSite.equalz(rConnectSite)))
 				continue;
 			list.add(new CBreakAction(myRule, fromSite, toSite,
 					leftConnectedComponent, rightConnectedComponent));

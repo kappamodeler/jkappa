@@ -9,6 +9,7 @@ import org.junit.Before;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;

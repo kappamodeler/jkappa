@@ -364,9 +364,9 @@ public class CRule implements IRule, Serializable {
 		int index = 0;
 		for (IAgent lhsAgent : lhsAgents) {
 			if ((index < rhsAgents.size())
-					&& !(rhsAgents.get(index).equals(lhsAgent) && rhsAgents
-							.get(index).getSiteMap().equals(
-									lhsAgent.getSiteMap()))) {
+					&& !(rhsAgents.get(index).equalz(lhsAgent) 
+							&& rhsAgents.get(index).siteMapsAreEqual(lhsAgent))) {
+				
 				// rhsAgents.get(index)
 				// .setIdInRuleSide(lhsAgent.getIdInRuleSide());
 				// } else {
@@ -482,7 +482,7 @@ public class CRule implements IRule, Serializable {
 				return true;
 			for (ISite site : agent.getSites()) {
 				for (ISite changedSite : changedActivatedSites) {
-					if (changedSite.equals(site)) {
+					if (changedSite.equalz(site)) {
 						IInternalState currentInternalState = changedSite
 								.getInternalState();
 						IInternalState internalState = site.getInternalState();
@@ -516,14 +516,14 @@ public class CRule implements IRule, Serializable {
 						if (currentLinkState.getStatusLinkRank() == linkState
 								.getStatusLinkRank()
 								&& currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
-							if (!(currentLinkState.getSite().equals(linkState
+							if (!(currentLinkState.getSite().equalz(linkState
 									.getSite())))
 								continue;
 
 						if (currentLinkState.getStatusLinkRank() == linkState
 								.getStatusLinkRank()
 								&& currentLinkState.getStatusLinkRank() == CLinkState.RANK_BOUND)
-							if (currentLinkState.getSite().equals(
+							if (currentLinkState.getSite().equalz(
 									linkState.getSite())
 									&& (currentLinkState.getSite()
 											.getInternalState().getNameId() != linkState
@@ -627,7 +627,7 @@ public class CRule implements IRule, Serializable {
 			for (IConnectedComponent cc : this.getRightHandSide())
 
 				for (IAgent agentFromRule : cc.getAgents())
-					if (agent.equals(agentFromRule))
+					if (agent.equalz(agentFromRule))
 						if (agentFromRule.getSites().size() == 0
 								|| agent.getSites().size() == 0)
 							return true;
