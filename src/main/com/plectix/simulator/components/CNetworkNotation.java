@@ -17,7 +17,6 @@ import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.simulator.Simulator;
 
 public class CNetworkNotation implements INetworkNotation {
 	public static final byte MODE_TEST = 0;
@@ -79,6 +78,18 @@ public class CNetworkNotation implements INetworkNotation {
 		return agentsNotation;
 	}
 
+	@Override
+	public String toString() {
+		String st = "hasIntro="+Boolean.toString(hasIntro)+" ";
+		st+= "usedAgentsFromRules="+usedAgentsFromRules.keySet().toString()+" ";
+		st+= "changedAgentsFromSolution="+changedAgentsFromSolution.keySet().toString()+" ";
+		st+="ruleName="+rule.getName()+" ";
+		st+="agentsNotation="+agentsNotation.toString()+" ";
+		
+//		return super.toString();
+		return st;
+	}
+	
 	// TODO separate!
 	/* package */final class AgentSitesFromRules {
 		// TODO private!!!
@@ -205,12 +216,15 @@ public class CNetworkNotation implements INetworkNotation {
 				IConnectedComponent cc = solution.getConnectedComponent(inj
 						.getAgentLinkList().get(0).getAgentTo());
 				boolean isStorify = false;
+				int counter = 0;
 				for (IAgentLink al : inj.getAgentLinkList()) {
 					if (al.getAgentTo().isStorify()) {
-						isStorify = true;
-						break;
+						counter++;
 					}
 				}
+				if(counter == inj.getAgentLinkList().size())
+					isStorify = true;
+									
 				agentsNotation.add(SimulationUtils.printPartRule(cc,
 						new int[] { 0 }, data.isOcamlStyleObsName()));
 				introCC.add(cc);

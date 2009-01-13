@@ -483,7 +483,7 @@ public final class CStoryTrees {
 		while (traceIDIterator.hasNext()) {
 			currentTraceId = traceIDIterator.next();
 			for (int id : traceIDToTraceID.get(currentTraceId)) {
-				if (id < lowerBoundTraceID && id >=upperBoundTraceID)
+				if (id < lowerBoundTraceID && id >= upperBoundTraceID)
 					return true;
 			}
 		}
@@ -565,42 +565,46 @@ public final class CStoryTrees {
 		if (currentNN == null || !currentNN.isHasIntro())
 			return;
 
+		int indexIntroFromCurrent = 0;
 		for (IConnectedComponent ccMain : currentNN.getIntroCC()) {
 			for (IAgent agentMain : ccMain.getAgents()) {
 
 				Long agentKey = agentMain.getId();
 				if (currentNN.getUsedAgentsFromRules().containsKey(agentKey)) {
+					changeIntro(weakCompressedList, currentNN, indexToBegin,
+							listToDelete, agentKey, ccMain,
+							indexIntroFromCurrent);
 
-					for (int i = indexToBegin - 1; i >= 0; i--) {
-						CNetworkNotation checkingNN = weakCompressedList.get(i);
+				}
+			}
+			indexIntroFromCurrent++;
+		}
+	}
 
-						if (!listToDelete.contains(checkingNN.getStep())) {
-							if (checkingNN.getUsedAgentsFromRules().get(
-									agentKey) != null) {
+	private void changeIntro(List<CNetworkNotation> weakCompressedList,
+			CNetworkNotation currentNN, int indexToBegin,
+			List<Integer> listToDelete, Long agentKey,
+			IConnectedComponent ccMain, int indexIntroFromCurrent) {
+		for (int i = indexToBegin - 1; i >= 0; i--) {
+			CNetworkNotation checkingNN = weakCompressedList.get(i);
+
+			if (!listToDelete.contains(checkingNN.getStep())) {
+				if (checkingNN.getUsedAgentsFromRules().get(agentKey) != null) {
+					int indexToDel = 0;
+					for (IConnectedComponent cc : checkingNN.getIntroCC()) {
+						for (IAgent agent : cc.getAgents()) {
+							if (agent.getId() == agentKey) {
+
 								checkingNN.setHasIntro(true);
-								int indexToDel = 0;
-								for (IConnectedComponent cc : checkingNN
-										.getIntroCC()) {
-									boolean is = false;
-									for (IAgent agent : cc.getAgents()) {
-										if (agent.getId() == agentKey) {
-											checkingNN
-													.changeIntroCCAndAgentNotation(
-															indexToDel,
-															ccMain,
-															currentNN.agentsNotation
-																	.get(indexToDel));
-											is = true;
-											break;
-										}
-									}
-									if (is)
-										break;
-									indexToDel++;
-								}
-								break;
+
+								checkingNN.changeIntroCCAndAgentNotation(
+										indexToDel, ccMain,
+										currentNN.agentsNotation
+												.get(indexIntroFromCurrent));
+								return;
 							}
 						}
+						indexToDel++;
 					}
 				}
 			}
@@ -830,6 +834,26 @@ public final class CStoryTrees {
 		traceIDToText = new HashMap<Integer, String>();
 
 		List<Long> introAgents = new ArrayList<Long>();
+		for (int i = nnList.size() - 1; i >= 0; i--) {
+			int counter = 0;
+			int index = 0;
+			CNetworkNotation nn = nnList.get(i);
+			List<String> introStr = new ArrayList<String>();
+
+			for (IConnectedComponent cc : nn.getIntroCC()) {
+				for (IAgent agent : cc.getAgents()) {
+					if (!introAgents.contains(agent.getId())) {
+						introAgents.add(agent.getId());
+						counter++;
+					}
+				}
+				if (counter == cc.getAgents().size())
+					introStr.add(nn.getAgentsNotation().get(index));
+				index++;
+				counter = 0;
+			}
+			traceIDToIntroString.put(nn.getStep(), introStr);
+		}
 
 		Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
 		while (iterator.hasNext()) {
@@ -845,26 +869,26 @@ public final class CStoryTrees {
 			CNetworkNotation nn = nnList.get(traceIDToIndex.get(traceID)
 					.intValue());
 			this.traceIDToRuleID.put(traceID, nn.getRule().getRuleID());
-			int counter = 0;
-			int index = 0;
+			// int counter = 0;
+			// int index = 0;
 
-			if (nn.isHasIntro()) {
-				List<String> introStr = new ArrayList<String>();
-
-				for (IConnectedComponent cc : nn.getIntroCC()) {
-					for (IAgent agent : cc.getAgents()) {
-						if (!introAgents.contains(agent.getId())) {
-							introAgents.add(agent.getId());
-							counter++;
-						}
-					}
-					if (counter == cc.getAgents().size())
-						introStr.add(nn.getAgentsNotation().get(index));
-					index++;
-					counter = 0;
-				}
-				traceIDToIntroString.put(traceID, introStr);
-			}
+			// if (nn.isHasIntro()) {
+			// List<String> introStr = new ArrayList<String>();
+			//
+			// for (IConnectedComponent cc : nn.getIntroCC()) {
+			// for (IAgent agent : cc.getAgents()) {
+			// if (!introAgents.contains(agent.getId())) {
+			// introAgents.add(agent.getId());
+			// counter++;
+			// }
+			// }
+			// if (counter == cc.getAgents().size())
+			// introStr.add(nn.getAgentsNotation().get(index));
+			// index++;
+			// counter = 0;
+			// }
+			// traceIDToIntroString.put(traceID, introStr);
+			// }
 			IRule rule = nn.getRule();
 			traceIDToData.put(traceID, rule.getData(isOcamlStyleObsName));
 			traceIDToText.put(traceID, rule.getName());
