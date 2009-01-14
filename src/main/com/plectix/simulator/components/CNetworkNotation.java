@@ -20,18 +20,13 @@ import com.plectix.simulator.simulator.SimulationUtils;
 
 public class CNetworkNotation implements INetworkNotation {
 	public enum NetworkNotationMode {
-		TEST,
-		TEST_OR_MODIFY,
-		MODIFY,
-		NONE;
+		TEST, TEST_OR_MODIFY, MODIFY, NONE;
 	}
 
 	public enum IntersectionType {
-		NO_INTERSECTION,
-		PART_INTERSECTION,
-		FULL_INTERSECTION;
+		NO_INTERSECTION, PART_INTERSECTION, FULL_INTERSECTION;
 	}
-	
+
 	private boolean leaf;
 
 	private boolean hasIntro;
@@ -65,6 +60,7 @@ public class CNetworkNotation implements INetworkNotation {
 	private final IRule rule;
 
 	private Map<Long, AgentSites> changedAgentsFromSolution;
+
 	public Map<Long, AgentSites> getChangedAgentsFromSolution() {
 		return changedAgentsFromSolution;
 	}
@@ -76,7 +72,7 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	List<String> agentsNotation;
-	List<IConnectedComponent> introCC;
+	List<List<Long>> introCC;
 
 	public List<String> getAgentsNotation() {
 		return agentsNotation;
@@ -84,22 +80,24 @@ public class CNetworkNotation implements INetworkNotation {
 
 	@Override
 	public String toString() {
-		String st = "hasIntro="+Boolean.toString(hasIntro)+" ";
-		st+= "usedAgentsFromRules="+usedAgentsFromRules.keySet().toString()+" ";
-		st+= "changedAgentsFromSolution="+changedAgentsFromSolution.keySet().toString()+" ";
-		st+="ruleName="+rule.getName()+" ";
-		st+="agentsNotation="+agentsNotation.toString()+" ";
-		
-//		return super.toString();
+		String st = "hasIntro=" + Boolean.toString(hasIntro) + " ";
+		st += "usedAgentsFromRules=" + usedAgentsFromRules.keySet().toString()
+				+ " ";
+		st += "changedAgentsFromSolution="
+				+ changedAgentsFromSolution.keySet().toString() + " ";
+		st += "ruleName=" + rule.getName() + " ";
+		st += "agentsNotation=" + agentsNotation.toString() + " ";
+
+		// return super.toString();
 		return st;
 	}
-	
+
 	// TODO separate!
 	/* package */final class AgentSitesFromRules {
 		// TODO private!!!
 		HashMap<Integer, SitesFromRules> sites;
 		private NetworkNotationMode mode;
-		
+
 		private IAgent agent;
 
 		public IAgent getAgent() {
@@ -109,6 +107,7 @@ public class CNetworkNotation implements INetworkNotation {
 		public AgentSitesFromRules(NetworkNotationMode mode, IAgent agent) {
 			this.mode = mode;
 			sites = new HashMap<Integer, SitesFromRules>();
+			this.agent = agent;
 		}
 
 		// TODO separate!!!!!!!!!!!!!!!!!!!!
@@ -128,7 +127,7 @@ public class CNetworkNotation implements INetworkNotation {
 
 			private int linkAgentNameID;
 
-			public SitesFromRules(NetworkNotationMode internalStateMode, 
+			public SitesFromRules(NetworkNotationMode internalStateMode,
 					NetworkNotationMode linkStateMode, int linkAgentNameID) {
 				this.internalStateMode = internalStateMode;
 				this.linkStateMode = linkStateMode;
@@ -138,14 +137,14 @@ public class CNetworkNotation implements INetworkNotation {
 			public SitesFromRules() {
 			}
 
-			public final void setInternalStateMode(NetworkNotationMode internalStateMode,
-					int linkAgentNameID) {
+			public final void setInternalStateMode(
+					NetworkNotationMode internalStateMode, int linkAgentNameID) {
 				this.internalStateMode = internalStateMode;
 				this.linkAgentNameID = linkAgentNameID;
 			}
 
-			public final void setLinkStateMode(NetworkNotationMode linkStateMode,
-					int linkAgentNameID) {
+			public final void setLinkStateMode(
+					NetworkNotationMode linkStateMode, int linkAgentNameID) {
 				this.linkStateMode = linkStateMode;
 				// this.linkAgentNameID = linkAgentNameID;
 
@@ -162,20 +161,24 @@ public class CNetworkNotation implements INetworkNotation {
 				return false;
 			}
 
-			public final boolean isCausing(NetworkNotationMode mode, NetworkNotationMode sfrMode) {
+			public final boolean isCausing(NetworkNotationMode mode,
+					NetworkNotationMode sfrMode) {
 				if (mode == NetworkNotationMode.TEST_OR_MODIFY
 						&& sfrMode == NetworkNotationMode.TEST_OR_MODIFY)
 					return true;
-				if (mode == NetworkNotationMode.TEST_OR_MODIFY && sfrMode == NetworkNotationMode.TEST)
+				if (mode == NetworkNotationMode.TEST_OR_MODIFY
+						&& sfrMode == NetworkNotationMode.TEST)
 					return true;
-				if (mode == NetworkNotationMode.MODIFY && sfrMode == NetworkNotationMode.TEST)
+				if (mode == NetworkNotationMode.MODIFY
+						&& sfrMode == NetworkNotationMode.TEST)
 					return true;
 
 				return false;
 			}
 		}
 
-		public final void addToSitesFromRules(int idSite, NetworkNotationMode internalStateMode, 
+		public final void addToSitesFromRules(int idSite,
+				NetworkNotationMode internalStateMode,
 				NetworkNotationMode linkStateMode, int linkAgentNameID) {
 			SitesFromRules sFR = sites.get(idSite);
 			if (sFR == null) {
@@ -198,16 +201,27 @@ public class CNetworkNotation implements INetworkNotation {
 		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();
 		this.usedAgentsFromRules = new HashMap<Long, AgentSitesFromRules>();
 		this.agentsNotation = new ArrayList<String>();
-		this.introCC = new ArrayList<IConnectedComponent>();
+		this.introCC = new ArrayList<List<Long>>();
 		createAgentsNotation(injectionsList, data);
 	}
 
 	public final void changeIntroCCAndAgentNotation(int indexToDel,
-			IConnectedComponent cc, String str) {
-		this.getIntroCC().remove(indexToDel);
-		this.getIntroCC().add(cc);
+			List<Long> agentsList, String str) {
+		this.introCC.remove(indexToDel);
+		this.introCC.add(agentsList);
 		this.getAgentsNotation().remove(indexToDel);
 		this.getAgentsNotation().add(str);
+	}
+
+	public final void changeIntroCC(Long agentToDelete, Long agent) {
+		for (List<Long> agentIDsListint : this.introCC) {
+			int index = agentIDsListint.indexOf(agentToDelete);
+			if (index >= 0) {
+				agentIDsListint.remove(index);
+				agentIDsListint.add(agent);
+				return;
+			}
+		}
 	}
 
 	private final void createAgentsNotation(List<IInjection> injectionsList,
@@ -226,12 +240,21 @@ public class CNetworkNotation implements INetworkNotation {
 						counter++;
 					}
 				}
-				if(counter == inj.getAgentLinkList().size())
+				
+				if (counter == inj.getAgentLinkList().size())
 					isStorify = true;
-									
+
 				agentsNotation.add(SimulationUtils.printPartRule(cc,
 						new int[] { 0 }, data.isOcamlStyleObsName()));
-				introCC.add(cc);
+				
+				List<Long> agentIDsList= new ArrayList<Long>();
+				
+				for (IAgent agent : cc.getAgents()) {
+					agentIDsList.add(agent.getId());
+				}
+				introCC.add(agentIDsList);
+				
+				
 				if (!isStorify) {
 					hasIntro = true;
 				}
@@ -256,7 +279,7 @@ public class CNetworkNotation implements INetworkNotation {
 	// return Collections.unmodifiableMap(usedAgentsFromRules);
 	// }
 
-	public List<IConnectedComponent> getIntroCC() {
+	public List<List<Long>> getIntroCC() {
 		return introCC;
 	}
 
@@ -302,8 +325,10 @@ public class CNetworkNotation implements INetworkNotation {
 		}
 	}
 
-	public final void addToAgentsFromRules(ISite site, NetworkNotationMode agentMode,
-			NetworkNotationMode internalStateMode, NetworkNotationMode linkStateMode) {
+	public final void addToAgentsFromRules(ISite site,
+			NetworkNotationMode agentMode,
+			NetworkNotationMode internalStateMode,
+			NetworkNotationMode linkStateMode) {
 		if (site != null) {
 			long key = site.getAgentLink().getHash();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(key);
@@ -316,8 +341,9 @@ public class CNetworkNotation implements INetworkNotation {
 		}
 	}
 
-	public final void addFixedSitesFromRules(ISite site, NetworkNotationMode agentMode,
-			boolean internalState, boolean linkState) {
+	public final void addFixedSitesFromRules(ISite site,
+			NetworkNotationMode agentMode, boolean internalState,
+			boolean linkState) {
 		if (site != null) {
 			long key = site.getAgentLink().getHash();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(key);

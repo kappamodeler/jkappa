@@ -66,7 +66,10 @@ class NetworkNotationForCurrentStory {
 			CNetworkNotation nn = networkNotationList.get(i);
 			if (isIntersects(nn, nnList)) {
 				addToNetworkNotationList(nn, nnList);
+			}else{
+				//nn.clearAgentsForDeletedOppositeRules();
 			}
+				
 		}
 		this.networkNotationList = nnList;
 	}

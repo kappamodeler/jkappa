@@ -111,7 +111,7 @@ public final class CStoryTrees {
 					updatedList.add(nn);
 					lastNN = nn;
 				} else {
-					pushIntro(updatedList, nn);
+					pushIntro(updatedList, nn, 0, new ArrayList<Integer>());
 					removeTraceIDsFromMaps(lastNN);
 					removeTraceIDsFromMaps(nn);
 					clearMapsLists(nn);
@@ -151,18 +151,21 @@ public final class CStoryTrees {
 
 				// deleting opposite rules which are not neighbours in trace
 				List<Integer> traceIDList = new ArrayList<Integer>();
+				List<Integer> traceIDListOpposite = new ArrayList<Integer>();
 				int rootStep = weakCompressedList.get(0).getStep();
 				List<Integer> weakRelationList = new ArrayList<Integer>();
 
 				isOppositeBranch(rootStep, rootStep, weakCompressedList,
-						traceIDList, weakRelationList);
+						traceIDList, traceIDListOpposite, weakRelationList);
 				Collections.sort(traceIDList);
 
 				for (int deletingTraceID : traceIDList) {
 					int deletingIndex = traceIDToIndex.get(deletingTraceID);
 					CNetworkNotation nn = weakCompressedList.get(deletingIndex);
-					pushIntro(weakCompressedList, nn, deletingIndex,
-							traceIDList);
+
+					if (!traceIDListOpposite.contains(deletingTraceID))
+						pushIntro(weakCompressedList, nn, deletingIndex,
+								traceIDList);
 					removeTraceIDsFromMaps(nn);
 					weakCompressedList.remove(deletingIndex);
 				}
@@ -194,11 +197,11 @@ public final class CStoryTrees {
 
 			for (CNetworkNotation nn : strongCompressedList) {
 
-				Iterator<Long> agentIDIterator = nn
-						.getChangedAgentsFromSolution().keySet().iterator();
+				Iterator<Long> agentIDIterator = nn.getUsedAgentsFromRules()
+						.keySet().iterator();
 				while (agentIDIterator.hasNext()) {
 					long agentID = agentIDIterator.next();
-					AgentSites as = nn.getChangedAgentsFromSolution().get(
+					AgentSitesFromRules asFR = nn.getUsedAgentsFromRules().get(
 							agentID);
 
 					List<CNetworkNotation> nnList = agentToNNs.get(agentID);
@@ -208,7 +211,7 @@ public final class CStoryTrees {
 					}
 					nnList.add(nn);
 
-					int agentNameID = as.getAgent().getNameId();
+					int agentNameID = asFR.getAgent().getNameId();
 					List<Long> agentIDsList = agentNameIDToAgentID
 							.get(agentNameID);
 					if (agentIDsList == null) {
@@ -274,14 +277,17 @@ public final class CStoryTrees {
 			Map<Long, AgentSites> changedAgentsFromSolution = nn
 					.getChangedAgentsFromSolution();
 			AgentSites aS = changedAgentsFromSolution.get(agentIDToDelete);
-			changedAgentsFromSolution.put(agentID, aS);
-			changedAgentsFromSolution.remove(agentIDToDelete);
-
+			if (aS != null) {
+				changedAgentsFromSolution.put(agentID, aS);
+				changedAgentsFromSolution.remove(agentIDToDelete);
+			}
 			Map<Long, AgentSitesFromRules> usedAgentsFromRules = nn
 					.getUsedAgentsFromRules();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(agentIDToDelete);
 			usedAgentsFromRules.put(agentID, aSFR);
 			usedAgentsFromRules.remove(agentIDToDelete);
+
+			nn.changeIntroCC(agentIDToDelete, agentID);
 		}
 
 		for (CNetworkNotation nn : commonList) {
@@ -411,13 +417,15 @@ public final class CStoryTrees {
 
 			CNetworkNotation nnToCheck = nnList.get(end);
 			CNetworkNotation nnToRemove = nnList.get(begin);
+			int indexToCheck = traceIDToIndex.get(nnToCheck.getStep());
+			int indexToRemove = traceIDToIndex.get(nnToRemove.getStep());
 
-			pushIntro(nnToCheck, nnToRemove);
+			// pushIntro(nnToCheck, nnToRemove, indexToCheck, indexToRemove);
 			copyTraceIDList(nnToRemove, nnToCheck);
 
 			for (int i = begin; i >= end + 1; i--) {
 				CNetworkNotation nn = nnList.get(i);
-				pushIntro(newList, nn);
+				pushIntro(newList, nn, end, new ArrayList<Integer>());
 				removeTraceIDsFromMaps(nn);
 			}
 
@@ -439,22 +447,6 @@ public final class CStoryTrees {
 			traceIDToTraceIDWeak.remove(currentNN.getStep());
 		else
 			traceIDToTraceIDWeak.put(currentNN.getStep(), weakList);
-
-	}
-
-	private void pushIntro(CNetworkNotation nnToCheck,
-			CNetworkNotation nnToRemove) {
-		if (nnToRemove == null)
-			return;
-		Iterator<Long> agentIterator = nnToRemove.getUsedAgentsFromRules()
-				.keySet().iterator();
-		while (agentIterator.hasNext()) {
-			Long agentKey = agentIterator.next();
-			if (nnToCheck.getUsedAgentsFromRules().get(agentKey) != null) {
-				nnToCheck.setHasIntro(true);
-				break;
-			}
-		}
 
 	}
 
@@ -493,7 +485,7 @@ public final class CStoryTrees {
 
 	private boolean isOppositeBranch(int traceId, Integer mainTraceId,
 			List<CNetworkNotation> list, List<Integer> indexList,
-			List<Integer> weakList) {
+			List<Integer> indexListOpposite, List<Integer> weakList) {
 		List<Integer> traceIDList = traceIDToTraceID.get(traceId);
 		Collections.sort(traceIDList);
 
@@ -512,11 +504,13 @@ public final class CStoryTrees {
 								|| (listWeak != null && listWeak.size() == 0)) {
 							indexList.add(trID);
 							indexList.add(traceId);
+							indexListOpposite.add(traceId);
 						}
 					}
 				}
 			}
-			isOppositeBranch(trID, mainTraceId, list, indexList, weakList);
+			isOppositeBranch(trID, mainTraceId, list, indexList,
+					indexListOpposite, weakList);
 		}
 
 		return true;
@@ -560,6 +554,26 @@ public final class CStoryTrees {
 		}
 	}
 
+	private void pushIntro(CNetworkNotation nnToCheck,
+			CNetworkNotation nnToRemove, int indexToCheck, int indexToRemove) {
+		if (nnToRemove == null)
+			return;
+		Iterator<Long> agentIterator = nnToRemove.getUsedAgentsFromRules()
+				.keySet().iterator();
+		while (agentIterator.hasNext()) {
+			Long agentKey = agentIterator.next();
+			if (nnToCheck.getUsedAgentsFromRules().get(agentKey) != null) {
+				nnToCheck.setHasIntro(true);
+				// nnToCheck.changeIntroCCAndAgentNotation(
+				// indexToCheck, ccMain,
+				// nnToRemove.agentsNotation
+				// .get(indexToRemove));
+				break;
+			}
+		}
+
+	}
+
 	private void pushIntro(List<CNetworkNotation> weakCompressedList,
 			CNetworkNotation currentNN, int indexToBegin,
 			List<Integer> listToDelete) {
@@ -567,15 +581,12 @@ public final class CStoryTrees {
 			return;
 
 		int indexIntroFromCurrent = 0;
-		for (IConnectedComponent ccMain : currentNN.getIntroCC()) {
-			for (IAgent agentMain : ccMain.getAgents()) {
-
-				Long agentKey = agentMain.getId();
-				if (currentNN.getUsedAgentsFromRules().containsKey(agentKey)) {
+		for (List<Long> agentListMain : currentNN.getIntroCC()) {
+			for (Long agentIDMain : agentListMain) {
+				if (currentNN.getUsedAgentsFromRules().containsKey(agentIDMain)) {
 					changeIntro(weakCompressedList, currentNN, indexToBegin,
-							listToDelete, agentKey, ccMain,
+							listToDelete, agentIDMain, agentListMain,
 							indexIntroFromCurrent);
-
 				}
 			}
 			indexIntroFromCurrent++;
@@ -585,21 +596,21 @@ public final class CStoryTrees {
 	private void changeIntro(List<CNetworkNotation> weakCompressedList,
 			CNetworkNotation currentNN, int indexToBegin,
 			List<Integer> listToDelete, Long agentKey,
-			IConnectedComponent ccMain, int indexIntroFromCurrent) {
+			List<Long> agentListMain, int indexIntroFromCurrent) {
 		for (int i = indexToBegin - 1; i >= 0; i--) {
 			CNetworkNotation checkingNN = weakCompressedList.get(i);
 
 			if (!listToDelete.contains(checkingNN.getStep())) {
 				if (checkingNN.getUsedAgentsFromRules().get(agentKey) != null) {
 					int indexToDel = 0;
-					for (IConnectedComponent cc : checkingNN.getIntroCC()) {
-						for (IAgent agent : cc.getAgents()) {
-							if (agent.getId() == agentKey) {
+					for (List<Long> agentList : checkingNN.getIntroCC()) {
+						for (Long agent : agentList) {
+							if (agent.longValue() == agentKey.longValue()) {
 
 								checkingNN.setHasIntro(true);
 
 								checkingNN.changeIntroCCAndAgentNotation(
-										indexToDel, ccMain,
+										indexToDel, agentListMain,
 										currentNN.agentsNotation
 												.get(indexIntroFromCurrent));
 								return;
@@ -835,27 +846,32 @@ public final class CStoryTrees {
 		traceIDToText = new HashMap<Integer, String>();
 
 		List<Long> introAgents = new ArrayList<Long>();
+		// List<Integer> introAgentsN = new ArrayList<Integer>();
+
 		for (int i = nnList.size() - 1; i >= 0; i--) {
 			int counter = 0;
 			int index = 0;
 			CNetworkNotation nn = nnList.get(i);
 			List<String> introStr = new ArrayList<String>();
 
-			for (IConnectedComponent cc : nn.getIntroCC()) {
-				for (IAgent agent : cc.getAgents()) {
-					if (!introAgents.contains(agent.getId())) {
-						introAgents.add(agent.getId());
-						counter++;
-					}
+			for (List<Long> agentIDsList : nn.getIntroCC()) {
+				for (Long agentID : agentIDsList) {
+					if (nn.getUsedAgentsFromRules().containsKey(agentID))
+						if (!introAgents.contains(agentID)) {
+							introAgents.add(agentID);
+							counter++;
+							// if(introAgentsN.contains(o)
+						}
 				}
-				if (counter == cc.getAgents().size())
+				if (counter == agentIDsList.size()) {
 					introStr.add(nn.getAgentsNotation().get(index));
+
+				}
 				index++;
 				counter = 0;
 			}
 			traceIDToIntroString.put(nn.getStep(), introStr);
 		}
-
 		Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
 		while (iterator.hasNext()) {
 			int traceID = iterator.next();
