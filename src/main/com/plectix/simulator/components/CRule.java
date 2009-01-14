@@ -550,7 +550,8 @@ public class CRule implements IRule, Serializable {
 				return true;
 			for (ISite site : agent.getSites()) {
 				for (ChangedSite changedSite : changedInhibitedSites) {
-					if (changedSite.getSite().equals(site)) {
+					if (changedSite.getSite().equalz(site)) {
+//						if (changedSite.getSite().equals(site)) {
 
 						IInternalState currentInternalState = changedSite
 								.getSite().getInternalState();
@@ -618,7 +619,8 @@ public class CRule implements IRule, Serializable {
 			return true;
 		if (currentLinkState.getStatusLinkRank() == CLinkRank.BOUND
 				&& linkState.getStatusLinkRank() == CLinkRank.BOUND)
-			if (currentLinkState.getSite().equals(linkState.getSite()))
+			if (currentLinkState.getSite().equalz(linkState.getSite()))
+//				if (currentLinkState.getSite().equals(linkState.getSite()))
 				return true;
 		return false;
 	}
