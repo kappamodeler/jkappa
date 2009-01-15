@@ -87,6 +87,7 @@ public class CNetworkNotation implements INetworkNotation {
 		st += "changedAgentsFromSolution="
 				+ changedAgentsFromSolution.keySet().toString() + " ";
 		st += "ruleName=" + rule.getName() + " ";
+		st += "step=" +step + " ";
 		st += "agentsNotation=" + agentsNotation.toString() + " ";
 
 		// return super.toString();
@@ -289,13 +290,24 @@ public class CNetworkNotation implements INetworkNotation {
 			this
 					.addToAgents(site, new CStoriesSiteStates(index, -1, -1),
 							index);
+//		this
+//		.addToAgents(site, new CStoriesSiteStates(index,site
+//				.getInternalState().getNameId(), -1, -1),
+//				index);
 		else
+//			this
+//					.addToAgents(site, new CStoriesSiteStates(index,site
+//							.getInternalState().getNameId(),
+//							((CAgent) site.getLinkState().getSite()
+//									.getAgentLink()).getHash(), ((CSite) site
+//									.getLinkState().getSite()).getNameId()),
+//							index);
 			this
-					.addToAgents(site, new CStoriesSiteStates(index,
-							((CAgent) site.getLinkState().getSite()
-									.getAgentLink()).getHash(), ((CSite) site
-									.getLinkState().getSite()).getNameId()),
-							index);
+			.addToAgents(site, new CStoriesSiteStates(index,
+					((CAgent) site.getLinkState().getSite()
+							.getAgentLink()).getHash(), ((CSite) site
+							.getLinkState().getSite()).getNameId()),
+					index);
 
 	}
 
@@ -438,9 +450,9 @@ public class CNetworkNotation implements INetworkNotation {
 				counter++;
 
 				if (CStoriesSiteStates.isEqual(this.changedAgentsFromSolution
-						.get(key).getSites().get(keySite).getCurrentState(),
+						.get(key).getSites().get(keySite).getAfterState(),
 						nn.changedAgentsFromSolution.get(key).getSites().get(
-								keySite).getLastState())) {
+								keySite).getBeforeState())) {
 					fullCounter++;
 				}
 			}

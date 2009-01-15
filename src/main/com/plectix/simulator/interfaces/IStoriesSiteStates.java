@@ -6,8 +6,8 @@ public interface IStoriesSiteStates {
 
 	public void addInformation(StateType index, IStoriesSiteStates siteStates);
 
-	public IStates getLastState();
+	public IStates getBeforeState();
 
-	public IStates getCurrentState();
+	public IStates getAfterState();
 
 }

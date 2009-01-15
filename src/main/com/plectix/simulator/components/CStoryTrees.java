@@ -14,6 +14,9 @@ import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules.Sit
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.interfaces.IState;
+import com.plectix.simulator.interfaces.IStates;
+import com.plectix.simulator.interfaces.IStoriesSiteStates;
 import com.plectix.simulator.simulator.SimulationArguments;
 
 public final class CStoryTrees {
@@ -273,6 +276,10 @@ public final class CStoryTrees {
 		if (hasLink(nnListForChange, agentIDToDelete))
 			return listToReturn;
 
+		if (hasWrongIntersection(agentIDToDelete, agentID, nnListForDelete,
+				nnListForChange))
+			return listToReturn;
+
 		for (CNetworkNotation nn : nnListForDelete) {
 			Map<Long, AgentSites> changedAgentsFromSolution = nn
 					.getChangedAgentsFromSolution();
@@ -296,6 +303,107 @@ public final class CStoryTrees {
 		}
 
 		return listToReturn;
+	}
+
+	private boolean hasWrongIntersection(Long agentIDToDelete, Long agentID,
+			List<CNetworkNotation> nnListForDelete,
+			List<CNetworkNotation> nnListForChange) {
+
+		List<CNetworkNotation> mainList = new ArrayList<CNetworkNotation>();
+		List<Long> mainListAgentID = new ArrayList<Long>();
+
+		int counterForDelete = nnListForDelete.size() - 1;
+		int counterForChange = nnListForChange.size() - 1;
+
+		CNetworkNotation nnDelete = null;
+		CNetworkNotation nnChange = null;
+
+		while (true) {
+			if (counterForDelete >= 0)
+				nnDelete = nnListForDelete.get(counterForDelete);
+			if (counterForChange >= 0)
+				nnChange = nnListForChange.get(counterForChange);
+
+			if (nnDelete.getStep() < nnChange.getStep()) {
+				addToChangingList(nnDelete, agentIDToDelete, mainList,
+						mainListAgentID);
+				counterForDelete--;
+			} else {
+				addToChangingList(nnChange, agentID, mainList, mainListAgentID);
+				counterForChange--;
+			}
+
+			if (counterForDelete < 0 || counterForChange < 0)
+				break;
+		}
+
+		while (true) {
+			if (counterForDelete >= 0) {
+				nnDelete = nnListForDelete.get(counterForDelete);
+				addToChangingList(nnDelete, agentIDToDelete, mainList,
+						mainListAgentID);
+				counterForDelete--;
+			}
+			if (counterForChange >= 0) {
+				nnChange = nnListForChange.get(counterForChange);
+				addToChangingList(nnChange, agentID, mainList, mainListAgentID);
+				counterForChange--;
+			}
+
+			if (counterForDelete < 0 && counterForChange < 0)
+				break;
+		}
+
+		for (int i = 1; i < mainList.size(); i++) {
+			AgentSites aS = mainList.get(i - 1).getChangedAgentsFromSolution()
+					.get(mainListAgentID.get(i - 1));
+			AgentSites aSNext = mainList.get(i).getChangedAgentsFromSolution()
+					.get(mainListAgentID.get(i));
+			if (!isSequentialTwoSiteMaps(aS, aSNext))
+				return true;
+		}
+
+		return false;
+	}
+
+	private boolean isSequentialTwoSiteMaps(AgentSites aS, AgentSites aSNext) {
+		Iterator<Integer> iterator = aS.getSites().keySet().iterator();
+
+		while (iterator.hasNext()) {
+			Integer key = iterator.next();
+
+			if (aSNext.getSites().containsKey(key)) {
+				IStoriesSiteStates sss = aS.getSites().get(key);
+				IStoriesSiteStates sssNext = aSNext.getSites().get(key);
+
+				IStates state = sss.getAfterState();
+				IStates stateNext = sssNext.getBeforeState();
+
+				if (state.getIdInternalState() != CSite.NO_INDEX
+						&& stateNext.getIdInternalState() != CSite.NO_INDEX
+						&& state.getIdInternalState() != stateNext
+								.getIdInternalState())
+					return false;
+
+				if (state.getIdLinkSite() != CSite.NO_INDEX
+						&& stateNext.getIdLinkSite() == CSite.NO_INDEX)
+					return false;
+
+				if (state.getIdLinkSite() == CSite.NO_INDEX
+						&& stateNext.getIdLinkSite() != CSite.NO_INDEX)
+					return false;
+			}
+		}
+
+		return true;
+	}
+
+	private void addToChangingList(CNetworkNotation nn, Long agentID,
+			List<CNetworkNotation> mainList, List<Long> mainListAgentID) {
+		if (nn.getChangedAgentsFromSolution().containsKey(agentID)) {
+			mainList.add(nn);
+			mainListAgentID.add(agentID);
+		}
 	}
 
 	private boolean hasLink(List<CNetworkNotation> nnList, long agentID) {
@@ -537,44 +645,6 @@ public final class CStoryTrees {
 	}
 
 	private void pushIntro(List<CNetworkNotation> weakCompressedList,
-			CNetworkNotation currentNN) {
-		if (currentNN == null)
-			return;
-		Iterator<Long> agentIterator = currentNN.getUsedAgentsFromRules()
-				.keySet().iterator();
-		while (agentIterator.hasNext()) {
-			Long agentKey = agentIterator.next();
-			for (int i = weakCompressedList.size() - 1; i >= 0; i--) {
-				CNetworkNotation chekingNN = weakCompressedList.get(i);
-				if (chekingNN.getUsedAgentsFromRules().get(agentKey) != null) {
-					chekingNN.setHasIntro(true);
-					break;
-				}
-			}
-		}
-	}
-
-	private void pushIntro(CNetworkNotation nnToCheck,
-			CNetworkNotation nnToRemove, int indexToCheck, int indexToRemove) {
-		if (nnToRemove == null)
-			return;
-		Iterator<Long> agentIterator = nnToRemove.getUsedAgentsFromRules()
-				.keySet().iterator();
-		while (agentIterator.hasNext()) {
-			Long agentKey = agentIterator.next();
-			if (nnToCheck.getUsedAgentsFromRules().get(agentKey) != null) {
-				nnToCheck.setHasIntro(true);
-				// nnToCheck.changeIntroCCAndAgentNotation(
-				// indexToCheck, ccMain,
-				// nnToRemove.agentsNotation
-				// .get(indexToRemove));
-				break;
-			}
-		}
-
-	}
-
-	private void pushIntro(List<CNetworkNotation> weakCompressedList,
 			CNetworkNotation currentNN, int indexToBegin,
 			List<Integer> listToDelete) {
 		if (currentNN == null || !currentNN.isHasIntro())
@@ -671,7 +741,7 @@ public final class CStoryTrees {
 				List<Integer> weakTraceIDs = new ArrayList<Integer>();
 				byte isCause = isCausing(newNN, commonList, begin, isLink,
 						agentKey, siteKey, sFR, level, weakTraceIDs);
-				if (isCause == IS_NOT_CAUSE || isCause == IS_NONE) {
+				if (isCause == IS_NOT_CAUSE) {
 					leafIndex++;
 				}
 				if (isCause == IS_CAUSE)
@@ -681,7 +751,7 @@ public final class CStoryTrees {
 				weakTraceIDs = new ArrayList<Integer>();
 				isCause = isCausing(newNN, commonList, begin, isLink, agentKey,
 						siteKey, sFR, level, weakTraceIDs);
-				if (isCause == IS_NOT_CAUSE || isCause == IS_NONE) {
+				if (isCause == IS_NOT_CAUSE) {
 					leafIndex++;
 				}
 				if (isCause == IS_CAUSE)
@@ -846,7 +916,6 @@ public final class CStoryTrees {
 		traceIDToText = new HashMap<Integer, String>();
 
 		List<Long> introAgents = new ArrayList<Long>();
-		// List<Integer> introAgentsN = new ArrayList<Integer>();
 
 		for (int i = nnList.size() - 1; i >= 0; i--) {
 			int counter = 0;
@@ -860,7 +929,6 @@ public final class CStoryTrees {
 						if (!introAgents.contains(agentID)) {
 							introAgents.add(agentID);
 							counter++;
-							// if(introAgentsN.contains(o)
 						}
 				}
 				if (counter == agentIDsList.size()) {
@@ -886,26 +954,6 @@ public final class CStoryTrees {
 			CNetworkNotation nn = nnList.get(traceIDToIndex.get(traceID)
 					.intValue());
 			this.traceIDToRuleID.put(traceID, nn.getRule().getRuleID());
-			// int counter = 0;
-			// int index = 0;
-
-			// if (nn.isHasIntro()) {
-			// List<String> introStr = new ArrayList<String>();
-			//
-			// for (IConnectedComponent cc : nn.getIntroCC()) {
-			// for (IAgent agent : cc.getAgents()) {
-			// if (!introAgents.contains(agent.getId())) {
-			// introAgents.add(agent.getId());
-			// counter++;
-			// }
-			// }
-			// if (counter == cc.getAgents().size())
-			// introStr.add(nn.getAgentsNotation().get(index));
-			// index++;
-			// counter = 0;
-			// }
-			// traceIDToIntroString.put(traceID, introStr);
-			// }
 			IRule rule = nn.getRule();
 			traceIDToData.put(traceID, rule.getData(isOcamlStyleObsName));
 			traceIDToText.put(traceID, rule.getName());
