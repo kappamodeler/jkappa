@@ -2,6 +2,7 @@ package com.plectix.simulator.components;
 
 import java.util.*;
 
+import com.plectix.simulator.components.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 
@@ -23,7 +24,7 @@ import com.plectix.simulator.interfaces.IStoriesSiteStates;
 	}
 
 	public final void addToSites(int idSite, IStoriesSiteStates siteStates,
-			int index) {
+			StateType index) {
 		IStoriesSiteStates ss = sites.get(idSite);
 		if (ss == null)
 			sites.put(idSite, siteStates);

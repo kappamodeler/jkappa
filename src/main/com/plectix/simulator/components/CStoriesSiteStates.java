@@ -3,9 +3,11 @@ package com.plectix.simulator.components;
 import com.plectix.simulator.interfaces.*;
 
 public final class CStoriesSiteStates implements IStoriesSiteStates {
-	public final static byte LAST_STATE = 0;
-	public final static byte CURRENT_STATE = 1;
-
+	public enum StateType {
+		LAST,
+		CURRENT;
+	}
+	
 	private IStates currentState;
 	private IStates lastState;
 
@@ -61,35 +63,35 @@ public final class CStoriesSiteStates implements IStoriesSiteStates {
 		lastState = new States();
 	}
 
-	public CStoriesSiteStates(int index, long idLinkAgent, int idLinkSite) {
+	public CStoriesSiteStates(StateType index, long idLinkAgent, int idLinkSite) {
 		switch (index) {
-		case CURRENT_STATE:
+		case CURRENT:
 			currentState = new States(idLinkAgent, idLinkSite);
 			break;
-		case LAST_STATE:
+		case LAST:
 			lastState = new States(idLinkAgent, idLinkSite);
 			break;
 		}
 	}
 
-	public CStoriesSiteStates(int index, int idInternalState) {
+	public CStoriesSiteStates(StateType index, int idInternalState) {
 		switch (index) {
-		case CURRENT_STATE:
+		case CURRENT:
 			currentState = new States(idInternalState);
 			break;
-		case LAST_STATE:
+		case LAST:
 			lastState = new States(idInternalState);
 			break;
 		}
 	}
 
-	public CStoriesSiteStates(int index, int idInternalState, long idLinkAgent,
+	public CStoriesSiteStates(StateType index, int idInternalState, long idLinkAgent,
 			int idLinkSite) {
 		switch (index) {
-		case CURRENT_STATE:
+		case CURRENT:
 			currentState = new States(idInternalState, idLinkAgent, idLinkSite);
 			break;
-		case LAST_STATE:
+		case LAST:
 			lastState = new States(idInternalState, idLinkAgent, idLinkSite);
 			break;
 		}
@@ -111,12 +113,12 @@ public final class CStoriesSiteStates implements IStoriesSiteStates {
 		this.lastState = lastState;
 	}
 
-	public final void addInformation(int index, IStoriesSiteStates siteStates) {
+	public final void addInformation(StateType index, IStoriesSiteStates siteStates) {
 		switch (index) {
-		case CURRENT_STATE:
+		case CURRENT:
 			currentState = siteStates.getCurrentState();
 			break;
-		case LAST_STATE:
+		case LAST:
 			if (lastState != null)
 				lastState.addInformation(siteStates.getLastState()
 						.getIdInternalState(), siteStates.getLastState()

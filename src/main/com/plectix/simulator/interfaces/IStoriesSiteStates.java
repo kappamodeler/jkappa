@@ -1,8 +1,10 @@
 package com.plectix.simulator.interfaces;
 
+import com.plectix.simulator.components.CStoriesSiteStates.StateType;
+
 public interface IStoriesSiteStates {
 
-	public void addInformation(int index, IStoriesSiteStates siteStates);
+	public void addInformation(StateType index, IStoriesSiteStates siteStates);
 
 	public IStates getLastState();
 

@@ -3,6 +3,7 @@ package com.plectix.simulator.action;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
+import com.plectix.simulator.components.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
@@ -30,12 +31,12 @@ public class CAddAction extends CAction {
 			siteAdd.setInternalState(new CInternalState(site.getInternalState()
 					.getStateNameId()));
 			agent.addSite(siteAdd);
-			addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE, netNotation,
+			addToNetworkNotation(StateType.CURRENT, netNotation,
 					siteAdd);
 			addRuleSitesToNetworkNotation(false, netNotation, siteAdd);
 		}
 		if (myToAgent.getSites().size() == 0) {
-			addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE, netNotation,
+			addToNetworkNotation(StateType.CURRENT, netNotation,
 					agent.getEmptySite());
 			addRuleSitesToNetworkNotation(false, netNotation, agent
 					.getEmptySite());
@@ -69,7 +70,7 @@ public class CAddAction extends CAction {
 		}
 	}
 
-	protected final void addToNetworkNotation(int index,
+	protected final void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			netNotation.addToAgents(site, new CStoriesSiteStates(index, site

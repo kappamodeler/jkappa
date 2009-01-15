@@ -6,6 +6,7 @@ import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CStoriesSiteStates;
 import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
+import com.plectix.simulator.components.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -36,13 +37,13 @@ public class CBreakAction extends CAction {
 
 		ISite injectedSite = agentFromInSolution.getSite(mySiteFrom.getNameId());
 
-		addToNetworkNotation(CStoriesSiteStates.LAST_STATE, netNotation,
+		addToNetworkNotation(StateType.LAST, netNotation,
 				injectedSite);
 		addRuleSitesToNetworkNotation(true, netNotation, injectedSite);
 
 		ISite linkSite = (ISite) injectedSite.getLinkState().getSite();
 		if ((mySiteFrom.getLinkState().getSite() == null) && (linkSite != null)) {
-			addToNetworkNotation(CStoriesSiteStates.LAST_STATE, netNotation,
+			addToNetworkNotation(StateType.LAST, netNotation,
 					linkSite);
 
 			linkSite.getLinkState().setSite(null);
@@ -53,7 +54,7 @@ public class CBreakAction extends CAction {
 			injection.addToChangedSites(linkSite);
 			getRightCComponent().addAgentFromSolutionForRHS(linkSite
 					.getAgentLink());
-			addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE, netNotation,
+			addToNetworkNotation(StateType.CURRENT, netNotation,
 					linkSite);
 
 		}
@@ -66,7 +67,7 @@ public class CBreakAction extends CAction {
 
 		injection.addToChangedSites(injectedSite);
 
-		addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE, netNotation,
+		addToNetworkNotation(StateType.CURRENT, netNotation,
 				injectedSite);
 		/**
 		 * Break a bond for this rules: A(x!_)->A(x)
@@ -107,7 +108,7 @@ public class CBreakAction extends CAction {
 		}
 	}
 
-	protected final void addToNetworkNotation(int index,
+	protected final void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			netNotation.checkLinkForNetworkNotation(index, site);

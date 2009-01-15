@@ -20,16 +20,18 @@ import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 
 public class CContactMap {
-	public static final byte MODE_MODEL = 0;
-	public static final byte MODE_AGENT_OR_RULE = 1;
+	public enum ContactMapMode {
+		MODEL,
+		AGENT_OR_RULE;
+	}
+	
+	private ContactMapMode mode = ContactMapMode.MODEL;
 
-	private byte mode = MODE_MODEL;
-
-	public byte getMode() {
+	public ContactMapMode getMode() {
 		return mode;
 	}
 
-	public void setMode(byte mode) {
+	public void setMode(ContactMapMode mode) {
 		this.mode = mode;
 	}
 
@@ -76,7 +78,7 @@ public class CContactMap {
 	public void addCreatedAgentsToSolution(ISolution solution, List<IRule> rules) {
 		this.solution = solution;
 		switch (mode) {
-		case MODE_MODEL:
+		case MODEL:
 			for (IRule rule : rules) {
 				for (IAction action : rule.getActionList()) {
 					if (action.getTypeId() == CActionType.ADD.getId()) {
@@ -135,7 +137,7 @@ public class CContactMap {
 	}
 
 	private void addToAgentsInContactMap(IAgent agent, IRule rule, boolean isLHS) {
-		if (mode == MODE_AGENT_OR_RULE && !checkConnectionWithFocused(agent)) {
+		if (mode == ContactMapMode.AGENT_OR_RULE && !checkConnectionWithFocused(agent)) {
 			return;
 		}
 		for (ISite site : agent.getSites()) {
@@ -154,7 +156,7 @@ public class CContactMap {
 	}
 
 	private void addToEdgesInContactMap(IAgent agent, IRule rule) {
-		if (mode == MODE_AGENT_OR_RULE && !checkConnectionWithFocused(agent)) {
+		if (mode == ContactMapMode.AGENT_OR_RULE && !checkConnectionWithFocused(agent)) {
 			return;
 		}
 
@@ -374,7 +376,7 @@ public class CContactMap {
 
 	public void constructReachableRules(List<IRule> rules) {
 		switch (mode) {
-		case MODE_MODEL:
+		case MODEL:
 			boolean added = true;
 			List<IRule> checkedRules = new ArrayList<IRule>();
 
@@ -406,7 +408,7 @@ public class CContactMap {
 				// }
 			}
 			break;
-		case MODE_AGENT_OR_RULE:
+		case AGENT_OR_RULE:
 			fillAgentsFromRule((CRule) this.focusRule,
 					this.agentsFromFocusedRule);
 			for (IRule rule : rules) {

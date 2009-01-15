@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.plectix.simulator.components.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -283,7 +284,7 @@ public class CNetworkNotation implements INetworkNotation {
 		return introCC;
 	}
 
-	public final void checkLinkForNetworkNotation(int index, ISite site) {
+	public final void checkLinkForNetworkNotation(StateType index, ISite site) {
 		if (site.getLinkState().getSite() == null)
 			this
 					.addToAgents(site, new CStoriesSiteStates(index, -1, -1),
@@ -298,7 +299,7 @@ public class CNetworkNotation implements INetworkNotation {
 
 	}
 
-	public final void checkLinkForNetworkNotationDel(int index, ISite site) {
+	public final void checkLinkForNetworkNotationDel(StateType index, ISite site) {
 		if (site.getLinkState().getSite() == null)
 			this.addToAgents(site, new CStoriesSiteStates(index, site
 					.getInternalState().getNameId(), -1, -1), index);
@@ -313,7 +314,7 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public final void addToAgents(ISite site, IStoriesSiteStates siteStates,
-			int index) {
+			StateType index) {
 		if (site != null) {
 			long key = site.getAgentLink().getHash();
 			AgentSites as = changedAgentsFromSolution.get(key);

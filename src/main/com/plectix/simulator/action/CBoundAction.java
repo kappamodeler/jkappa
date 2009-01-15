@@ -4,6 +4,7 @@ import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CStoriesSiteStates;
 import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
+import com.plectix.simulator.components.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -47,7 +48,7 @@ public class CBoundAction extends CAction {
 					.getNameId());
 			injection.addToChangedSites(injectedSite);
 
-			addToNetworkNotation(CStoriesSiteStates.LAST_STATE, netNotation,
+			addToNetworkNotation(StateType.LAST, netNotation,
 					injectedSite);
 			addRuleSitesToNetworkNotation(false, netNotation, injectedSite);
 			// /////////////////////////////////////////////
@@ -67,7 +68,7 @@ public class CBoundAction extends CAction {
 		agentFromInSolution.getSite(mySiteFrom.getNameId()).getLinkState()
 				.setSite(agentToInSolution.getSite(mySiteTo.getNameId()));
 
-		addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE, netNotation,
+		addToNetworkNotation(StateType.CURRENT, netNotation,
 				agentFromInSolution.getSite(mySiteFrom.getNameId()));
 
 		agentFromInSolution.getSite(mySiteFrom.getNameId()).setLinkIndex(
@@ -91,7 +92,7 @@ public class CBoundAction extends CAction {
 		}
 	}
 
-	protected final void addToNetworkNotation(int index,
+	protected final void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			netNotation.checkLinkForNetworkNotation(index, site);

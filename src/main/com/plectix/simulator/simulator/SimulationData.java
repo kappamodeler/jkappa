@@ -58,6 +58,7 @@ import com.plectix.simulator.components.CStoryType;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.SnapshotElement;
 import com.plectix.simulator.components.SolutionLines;
+import com.plectix.simulator.components.CContactMap.ContactMapMode;
 import com.plectix.simulator.components.CStoryType.StoryOutputType;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
@@ -1400,7 +1401,7 @@ public class SimulationData {
 		
 		if (ruleList != null && !ruleList.isEmpty()) {
 			contactMap.setFocusRule(ruleList.get(0));
-			contactMap.setMode(CContactMap.MODE_AGENT_OR_RULE);
+			contactMap.setMode(ContactMapMode.AGENT_OR_RULE);
 		}
 	}
 

@@ -1,0 +1,1434 @@
+<SimplxSession xmlns="http://plectix.synthesisstudios.com/schemas/kappasession" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" CommandLine="--sim test.data/simplx_compare/source_ka/SIA_2007_03_23-egfr.ka --time 15.0" InputFile="test.data/simplx_compare/source_ka/SIA_2007_03_23-egfr.ka" TimeStamp="2009-01-13 16:46:41" xsi:schemaLocation="http://plectix.synthesisstudios.com SimplxSession.xsd">
+<InfluenceMap>
+<Node Data="So(d!2),G(b!2,a!1),R(Y68~p!1)" Id="41" Name="[So(d!2),G(b!2,a!1),R(Y68~p!1)]" Text="[So(d!2),G(b!2,a!1),R(Y68~p!1)]" Type="OBSERVABLE"></Node>
+<Node Data="So(d!2),G(b!2,a!1),Sh(Y7~p!1,pi!0),R(Y48~p!0)" Id="40" Name="[So(d!2),G(b!2,a!1),Sh(Y7~p!1,pi!0),R(Y48~p!0)]" Text="[So(d!2),G(b!2,a!1),Sh(Y7~p!1,pi!0),R(Y48~p!0)]" Type="OBSERVABLE"></Node>
+<Node Data="R(Y48~p!0),Sh(pi!0,Y7~p!1),G(a!1,b!2),So(d!2)->R(Y48~p!0),Sh(pi!0,Y7~p),G(a,b!1),So(d!1)" Id="39" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p!0),Sh(pi!0,Y7~p),G(a,b!1),So(d!1)->R(Y48~p!0),Sh(pi!0,Y7~p!1),G(a!1,b!2),So(d!2)" Id="38" Name="" Text="" Type="RULE"></Node>
+<Node Data="Sh(pi,Y7~p!0),G(a!0,b!_)->Sh(pi,Y7~p),G(a,b!_)" Id="37" Name="" Text="" Type="RULE"></Node>
+<Node Data="Sh(pi,Y7~p),G(a,b!_)->Sh(pi,Y7~p!0),G(a!0,b!_)" Id="36" Name="" Text="" Type="RULE"></Node>
+<Node Data="Sh(pi,Y7~p!0),G(a!0,b)->Sh(pi,Y7~p),G(a,b)" Id="35" Name="" Text="" Type="RULE"></Node>
+<Node Data="Sh(pi,Y7~p),G(a,b)->Sh(pi,Y7~p!0),G(a!0,b)" Id="34" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p!0),Sh(pi!0,Y7~p!1),G(a!1,b)->R(Y48~p!0),Sh(pi!0,Y7~p),G(a,b)" Id="33" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p!0),Sh(pi!0,Y7~p),G(a,b)->R(Y48~p!0),Sh(pi!0,Y7~p!1),G(a!1,b)" Id="32" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p!0),Sh(pi!0,Y7~p!1),G(a!1,b!2),So(d!2)->R(Y48~p),Sh(pi,Y7~p!0),G(a!0,b!1),So(d!1)" Id="31" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p),Sh(pi,Y7~p!0),G(a!0,b!1),So(d!1)->R(Y48~p!0),Sh(pi!0,Y7~p!1),G(a!1,b!2),So(d!2)" Id="30" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p!0),Sh(pi!0,Y7~p!1),G(a!1,b)->R(Y48~p),Sh(pi,Y7~p!0),G(a!0,b)" Id="29" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p),Sh(pi,Y7~p!0),G(a!0,b)->R(Y48~p!0),Sh(pi!0,Y7~p!1),G(a!1,b)" Id="28" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p!0),Sh(pi!0,Y7~p)->R(Y48~p),Sh(pi,Y7~p)" Id="27" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p),Sh(pi,Y7~p)->R(Y48~p!0),Sh(pi!0,Y7~p)" Id="26" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p!0),Sh(pi!0,Y7~u)->R(Y48~p),Sh(pi,Y7~u)" Id="25" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p),Sh(pi,Y7~u)->R(Y48~p!0),Sh(pi!0,Y7~u)" Id="24" Name="" Text="" Type="RULE"></Node>
+<Node Data="Sh(pi!_,Y7~p!0),G(a!0,b!1),So(d!1)->Sh(pi!_,Y7~p!0),G(a!0,b),So(d)" Id="23" Name="" Text="" Type="RULE"></Node>
+<Node Data="Sh(pi!_,Y7~p!0),G(a!0,b),So(d)->Sh(pi!_,Y7~p!0),G(a!0,b!1),So(d!1)" Id="22" Name="" Text="" Type="RULE"></Node>
+<Node Data="Sh(pi,Y7~p!0),G(a!0,b!1),So(d!1)->Sh(pi,Y7~p!0),G(a!0,b),So(d)" Id="21" Name="" Text="" Type="RULE"></Node>
+<Node Data="Sh(pi,Y7~p!0),G(a!0,b),So(d)->Sh(pi,Y7~p!0),G(a!0,b!1),So(d!1)" Id="20" Name="" Text="" Type="RULE"></Node>
+<Node Data="G(a,b!0),So(d!0)->G(a,b),So(d)" Id="19" Name="" Text="" Type="RULE"></Node>
+<Node Data="G(a,b),So(d)->G(a,b!0),So(d!0)" Id="18" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y68~p!0),G(a!0,b!1),So(d!1)->R(Y68~p!0),G(a!0,b),So(d)" Id="17" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y68~p!0),G(a!0,b),So(d)->R(Y68~p!0),G(a!0,b!1),So(d!1)" Id="16" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y68~p!0),G(a!0,b!_)->R(Y68~p),G(a,b!_)" Id="15" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y68~p),G(a,b!_)->R(Y68~p!0),G(a!0,b!_)" Id="14" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y68~p!0),G(a!0,b)->R(Y68~p),G(a,b)" Id="13" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y68~p),G(a,b)->R(Y68~p!0),G(a!0,b)" Id="12" Name="" Text="" Type="RULE"></Node>
+<Node Data="Sh(pi,Y7~p)->Sh(pi,Y7~u)" Id="11" Name="" Text="" Type="RULE"></Node>
+<Node Data="Sh(pi!_,Y7~p)->Sh(pi!_,Y7~u)" Id="10" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(r!_,Y48~p!0),Sh(pi!0,Y7~u)->R(r!_,Y48~p!0),Sh(pi!0,Y7~p)" Id="9" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y48~p)->R(Y48~u)" Id="8" Name="" Text="" Type="RULE"></Node>
+<Node Data="E(r!0),E(r!1),R(l!0,r!2,Y48~u),R(l!1,r!2)->E(r!0),E(r!1),R(l!0,r!2,Y48~p),R(l!1,r!2)" Id="7" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(Y68~p)->R(Y68~u)" Id="6" Name="" Text="" Type="RULE"></Node>
+<Node Data="E(r!0),E(r!1),R(l!0,r!2,Y68~u),R(l!1,r!2)->E(r!0),E(r!1),R(l!0,r!2,Y68~p),R(l!1,r!2)" Id="5" Name="" Text="" Type="RULE"></Node>
+<Node Data="E(r!0),E(r!1),R(l!0,r!2),R(l!1,r!2)->E(r!0),R(l!0,r),E(r!1),R(l!1,r)" Id="4" Name="" Text="" Type="RULE"></Node>
+<Node Data="E(r!0),R(l!0,r),E(r!1),R(l!1,r)->E(r!0),E(r!1),R(l!0,r!2),R(l!1,r!2)" Id="3" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(l!0,r),E(r!0)->R(l,r),E(r)" Id="2" Name="" Text="" Type="RULE"></Node>
+<Node Data="R(l,r),E(r)->R(l!0,r),E(r!0)" Id="1" Name="" Text="" Type="RULE"></Node>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="27"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="19"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="10"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="27"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="19"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="10"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="27"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="19"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="35" Relation="POSITIVE" ToNode="10"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="27"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="19"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="10"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="24"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="8"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="27"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="25"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="10"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="9"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="24"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="8"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="27"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="25"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="10"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="9"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="24"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="8"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="27"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="25"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="10"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="9"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="24"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="8"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="27"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="25"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="10"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="9"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="16"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="13"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="41"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="19"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="17"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="15"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="16"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="13"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="41"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="19"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="17"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="15"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="16"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="13"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="41"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="19"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="17"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="15"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="16"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="13"></Connection>
+<Connection FromNode="17" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="41"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="19"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="17"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="15"></Connection>
+<Connection FromNode="16" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="15" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="15" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="15" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="15" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="15" Relation="POSITIVE" ToNode="19"></Connection>
+<Connection FromNode="15" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="15" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="15" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="15" Relation="POSITIVE" ToNode="6"></Connection>
+<Connection FromNode="14" Relation="POSITIVE" ToNode="41"></Connection>
+<Connection FromNode="14" Relation="POSITIVE" ToNode="17"></Connection>
+<Connection FromNode="14" Relation="POSITIVE" ToNode="16"></Connection>
+<Connection FromNode="14" Relation="POSITIVE" ToNode="15"></Connection>
+<Connection FromNode="14" Relation="POSITIVE" ToNode="13"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="19"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="6"></Connection>
+<Connection FromNode="12" Relation="POSITIVE" ToNode="41"></Connection>
+<Connection FromNode="12" Relation="POSITIVE" ToNode="17"></Connection>
+<Connection FromNode="12" Relation="POSITIVE" ToNode="16"></Connection>
+<Connection FromNode="12" Relation="POSITIVE" ToNode="15"></Connection>
+<Connection FromNode="12" Relation="POSITIVE" ToNode="13"></Connection>
+<Connection FromNode="11" Relation="POSITIVE" ToNode="25"></Connection>
+<Connection FromNode="11" Relation="POSITIVE" ToNode="24"></Connection>
+<Connection FromNode="11" Relation="POSITIVE" ToNode="9"></Connection>
+<Connection FromNode="10" Relation="POSITIVE" ToNode="25"></Connection>
+<Connection FromNode="10" Relation="POSITIVE" ToNode="24"></Connection>
+<Connection FromNode="10" Relation="POSITIVE" ToNode="9"></Connection>
+<Connection FromNode="9" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="9" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="9" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="9" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="9" Relation="POSITIVE" ToNode="27"></Connection>
+<Connection FromNode="9" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="9" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="9" Relation="POSITIVE" ToNode="10"></Connection>
+<Connection FromNode="8" Relation="POSITIVE" ToNode="7"></Connection>
+<Connection FromNode="7" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="7" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="7" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="7" Relation="POSITIVE" ToNode="24"></Connection>
+<Connection FromNode="7" Relation="POSITIVE" ToNode="8"></Connection>
+<Connection FromNode="6" Relation="POSITIVE" ToNode="5"></Connection>
+<Connection FromNode="5" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="5" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="5" Relation="POSITIVE" ToNode="6"></Connection>
+<Connection FromNode="4" Relation="POSITIVE" ToNode="3"></Connection>
+<Connection FromNode="4" Relation="POSITIVE" ToNode="2"></Connection>
+<Connection FromNode="4" Relation="POSITIVE" ToNode="1"></Connection>
+<Connection FromNode="3" Relation="POSITIVE" ToNode="9"></Connection>
+<Connection FromNode="3" Relation="POSITIVE" ToNode="7"></Connection>
+<Connection FromNode="3" Relation="POSITIVE" ToNode="5"></Connection>
+<Connection FromNode="3" Relation="POSITIVE" ToNode="4"></Connection>
+<Connection FromNode="2" Relation="POSITIVE" ToNode="1"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="7"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="5"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="4"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="3"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="2"></Connection>
+</InfluenceMap>
+<Simulation InitTime="0.0" TimeSample="0.015" TotalEvents="92991" TotalTime="15.000096283744137">
+<Plot Text="[So(d!2),G(b!2,a!1),R(Y68~p!1)]" Type="OBSERVABLE"></Plot>
+<Plot Text="[So(d!2),G(b!2,a!1),Sh(Y7~p!1,pi!0),R(Y48~p!0)]" Type="OBSERVABLE"></Plot>
+<CSV><![CDATA[
+0.014874095005179855,4,0
+0.029985576396180588,11,0
+0.044997835007186356,17,1
+0.059241245754145015,26,0
+0.07467239304878621,30,2
+0.08990851287773363,38,3
+0.10487717656786441,42,3
+0.11980658214536562,49,4
+0.13438832620811836,55,4
+0.14972579920898577,65,6
+0.16498131212006578,68,7
+0.17982546230954607,71,8
+0.19496912462540675,75,9
+0.20978732704387149,82,10
+0.2248486605805098,91,10
+0.23937619078808786,104,11
+0.2549825753620574,106,11
+0.2699751343856842,110,13
+0.28484483205058925,114,13
+0.2997517232210897,116,14
+0.3147969213426849,122,16
+0.3298270871903487,126,17
+0.34495430967130625,128,21
+0.35986727137478325,137,22
+0.37470315000632093,148,23
+0.38990938740947484,146,25
+0.40479618873162715,151,28
+0.4198849474936354,153,30
+0.43429043129003964,156,31
+0.4497012016042022,161,34
+0.46447367126605676,163,35
+0.479865376374792,163,35
+0.4949310479929149,179,38
+0.5099426057348532,181,38
+0.5248210246216198,187,41
+0.5399257148846028,188,44
+0.5548586392259585,194,49
+0.569986096348977,200,52
+0.5846944160565122,201,56
+0.5997758763906775,210,61
+0.614979054026249,213,62
+0.6299543985239054,225,64
+0.6445591872595663,229,67
+0.6596348427180071,234,72
+0.6749963019984249,237,70
+0.6899906840190415,232,70
+0.7046572805668861,237,71
+0.7198743106973502,243,73
+0.7344045038191522,242,76
+0.7497257316799386,248,77
+0.7649790865834003,252,79
+0.7799096845626435,257,86
+0.79486129534878,259,84
+0.8094737090202926,262,87
+0.8245964564817109,264,96
+0.8398803021476384,268,96
+0.8548865963052734,273,94
+0.869204335928538,272,98
+0.8848242950623946,280,99
+0.8999971658935652,289,105
+0.914997001978062,287,107
+0.9297864661769224,286,112
+0.9449139072416468,297,111
+0.9597353897642262,301,115
+0.9749173612866859,303,110
+0.9898009495583494,308,110
+1.0048167059686108,307,108
+1.019958341265431,306,116
+1.034730293029821,306,119
+1.0499323761477528,305,120
+1.064914981551833,308,124
+1.0799609221127915,307,124
+1.094832076568793,310,128
+1.109945504365147,318,130
+1.1245123705492746,317,131
+1.139920982177784,320,131
+1.154779239031351,320,129
+1.1699437915711226,324,131
+1.184981641876959,330,135
+1.1995102812761684,331,135
+1.214746219356078,335,137
+1.2299481670491708,333,139
+1.2448395156751662,329,138
+1.259852124292631,330,141
+1.2748097969913659,332,143
+1.2899374644398531,331,144
+1.3049426059610498,335,143
+1.3190538378477616,342,144
+1.3348549319853527,338,141
+1.3499778536791809,341,139
+1.3649466256916734,340,145
+1.3799632108913324,336,147
+1.394839274847869,341,148
+1.409823685345348,343,149
+1.4247640102507715,339,149
+1.4396960792368598,342,150
+1.4549052810104353,341,147
+1.4698871803528883,340,150
+1.4848378864242806,344,151
+1.499939845485702,342,151
+1.5149974910036232,343,149
+1.5297942738771149,344,154
+1.5445918702483727,345,153
+1.559988524681264,345,153
+1.5749797328957629,340,152
+1.5897918807657931,346,150
+1.6049561777575347,342,147
+1.6197625832102298,349,148
+1.6346474543947198,344,152
+1.6498527359471862,345,150
+1.6646791863239652,340,151
+1.679720822952856,342,154
+1.6948201859514553,340,152
+1.7099396038932488,341,154
+1.7245455802804388,342,154
+1.7399162596835787,349,149
+1.7549611031875538,346,149
+1.7696487925716724,345,151
+1.784959403652798,344,149
+1.7995397614888016,345,147
+1.8148438733842003,341,151
+1.8299924278394626,343,151
+1.8444886889855194,343,151
+1.8598807631010417,344,150
+1.8747474672306395,345,151
+1.8898144387121527,342,152
+1.9046170150550585,343,155
+1.9197226197190984,342,154
+1.9349494017011766,344,155
+1.9499194135213624,340,155
+1.9648982416225642,343,152
+1.9799450503890985,342,155
+1.9948981724716364,344,153
+2.0098531960287134,343,144
+2.0248857228232566,345,150
+2.0398094902390294,343,153
+2.054923720679959,343,154
+2.069973576635857,338,154
+2.0848031204406285,338,156
+2.0993647863630245,342,156
+2.1149771713868506,340,155
+2.1297761395718506,342,155
+2.1448946125401065,340,156
+2.159907168409947,344,151
+2.174771305790135,346,150
+2.1899936737313586,346,152
+2.2048788761595834,347,149
+2.2197270416734245,346,151
+2.2348869220405216,347,149
+2.249631788000418,348,151
+2.2648200554922084,343,150
+2.2797557008375278,344,154
+2.294911427068607,342,155
+2.3099025136281677,342,154
+2.3244584459540847,339,158
+2.3393361907397563,338,160
+2.354741629876759,334,159
+2.369875328349858,337,159
+2.384960900381893,337,157
+2.3996311322679484,336,159
+2.41498138769993,342,153
+2.4299280470410753,345,153
+2.4449545752729196,343,156
+2.4599852420146378,336,158
+2.4749372529094997,340,159
+2.489996092750595,337,159
+2.5047859978422347,335,158
+2.5199744491868152,338,162
+2.534988766238295,336,159
+2.549365578219998,333,161
+2.5649125020451127,335,163
+2.5798477048803723,336,163
+2.594924410121167,335,160
+2.6099942561408387,335,159
+2.6246018834600333,338,160
+2.639899076913968,336,164
+2.6546596703707768,334,164
+2.669944640800259,334,163
+2.6848334924052857,337,162
+2.699622793235747,336,162
+2.7149813217488616,338,157
+2.7296627633591077,342,157
+2.744932206811414,338,160
+2.7599072826749294,338,159
+2.774675673162482,342,152
+2.7898712936787837,347,149
+2.8048904737913096,345,153
+2.8199674708652043,339,154
+2.8349094140779165,340,155
+2.8499165032545584,343,155
+2.8649085504410357,340,156
+2.8797027663682457,343,152
+2.8946850970773266,340,158
+2.9098934082507686,335,158
+2.924592757283498,337,159
+2.939973093802671,339,158
+2.9548890304033644,331,164
+2.9698469233468274,332,163
+2.984880562476534,334,163
+2.9997913098479603,327,169
+3.014699076653672,329,166
+3.0297917485732313,333,164
+3.044670313241779,330,166
+3.0598497097819743,324,169
+3.074980393958352,334,161
+3.089910398066891,331,164
+3.1049944587408453,332,161
+3.1199318124345234,332,166
+3.134498608695671,332,164
+3.1498701540950185,333,163
+3.1647890222338075,335,162
+3.1799134647802156,335,163
+3.194948796427904,333,163
+3.2098908813651175,331,168
+3.22499390338854,330,168
+3.239493650951052,329,166
+3.254880673851763,329,168
+3.2695970038053073,324,170
+3.2849818297765276,327,172
+3.299759410023995,327,169
+3.314762217169296,329,167
+3.329991430674958,324,170
+3.344904527330905,325,172
+3.3599557271091824,322,173
+3.374915464456523,323,169
+3.389966124070992,327,169
+3.4049870989138533,329,166
+3.419952106856765,333,163
+3.4349626672659204,331,166
+3.44998361267769,333,166
+3.464966639653159,335,161
+3.4798665628930325,333,159
+3.494204687834844,337,161
+3.509995898617299,333,164
+3.5249345185417478,335,161
+3.5399296117161096,332,165
+3.554944907929981,331,163
+3.56972749822757,330,166
+3.5846650171604364,329,166
+3.5997547306120685,328,166
+3.6149212874629493,331,164
+3.6298938111632433,330,168
+3.64497748353125,329,164
+3.659847708060001,332,165
+3.67499360624476,337,162
+3.6894873287903116,336,160
+3.704943617853285,336,158
+3.7198261012114138,339,157
+3.734780236092396,337,160
+3.7498869419055696,337,159
+3.764927667550517,333,165
+3.7798437770095807,332,163
+3.7949890558298005,331,165
+3.809927466584853,331,165
+3.8249984196311955,331,166
+3.839977237471842,335,161
+3.854997009092271,331,165
+3.8699487029795656,335,165
+3.8848340978799136,336,162
+3.8996505194030946,332,160
+3.9147258009136694,339,160
+3.929943179249384,339,157
+3.9449674063586295,338,159
+3.959950972317861,332,164
+3.974978975095767,331,162
+3.9899764493035796,332,162
+4.004988158959986,333,165
+4.0193795496326565,333,165
+4.034851026460373,337,163
+4.0499261690603365,334,162
+4.064861258853068,336,160
+4.079887240998987,340,159
+4.094841734590171,333,160
+4.109929308866318,334,162
+4.12481841303552,333,164
+4.139993003472923,331,164
+4.154965090332731,333,165
+4.169867999189303,334,162
+4.184916743007272,337,160
+4.199807580527559,339,159
+4.2149707902204865,340,159
+4.229907151701293,338,159
+4.244790912745479,339,158
+4.259857563542385,341,154
+4.2749414005760755,341,156
+4.289840927578808,344,154
+4.304862699283948,345,151
+4.319810289103571,345,153
+4.33469549807728,345,152
+4.349833577884522,343,155
+4.364888985453536,339,155
+4.379885912367508,340,155
+4.394994816178054,337,160
+4.409895486118438,339,160
+4.424809424573126,337,160
+4.439672973466184,340,159
+4.454869010465105,339,158
+4.469970839448945,338,158
+4.484893797242254,339,158
+4.499924159917673,337,159
+4.514920141658326,333,166
+4.5298573568570335,333,162
+4.544994606002891,340,158
+4.559809852689042,336,159
+4.574991392061935,334,159
+4.589990186829339,330,165
+4.604913718214482,334,166
+4.6199175128392636,330,168
+4.634927086810221,331,165
+4.649917578915074,332,166
+4.664833280366619,332,165
+4.679816802987691,338,161
+4.69499680200588,337,160
+4.709955692802034,336,159
+4.724845009760849,335,163
+4.7398072025403435,336,159
+4.7545554898206435,341,157
+4.769757865318085,340,159
+4.784891951471156,335,161
+4.799875218564977,339,158
+4.814506377495938,334,164
+4.829604409644707,332,163
+4.844975428433081,329,163
+4.85982967025539,331,166
+4.874555246780883,333,164
+4.889784854879336,335,163
+4.904638483262503,333,165
+4.919728147759173,334,161
+4.934689758902023,332,165
+4.949838837847694,331,166
+4.964956072174462,332,168
+4.979507788572106,325,172
+4.994611542479702,327,172
+5.0099741357928975,325,174
+5.024960897382875,324,174
+5.039742485009608,325,170
+5.054860689810165,327,170
+5.0699371500499035,326,170
+5.08499029188664,327,171
+5.099954320901752,328,169
+5.114825836338335,328,168
+5.129587130047192,336,164
+5.144966305767993,335,161
+5.159662830273791,335,161
+5.174726858189635,328,165
+5.189922760018671,334,164
+5.204845767497088,338,162
+5.2199677553774695,335,163
+5.234577550601624,338,162
+5.24981255275719,334,163
+5.26491182325503,333,161
+5.279932990077947,333,161
+5.294906295026471,337,160
+5.309980379885328,337,160
+5.324825411895646,338,161
+5.339834452967273,336,160
+5.354969714587115,335,163
+5.369847647576705,337,159
+5.384911739019872,337,160
+5.399960202611484,337,162
+5.414865524116742,336,160
+5.42985117946298,334,164
+5.444965093927159,330,166
+5.459793582873904,330,165
+5.474997067686567,327,167
+5.489596075428935,331,166
+5.504974153166844,332,164
+5.519995669307164,331,167
+5.534899125812594,332,165
+5.549876726600868,331,167
+5.564909274208847,329,167
+5.579849080083242,331,166
+5.594970833405595,327,169
+5.6095821422848084,328,171
+5.624971044693239,331,166
+5.639914741955887,333,161
+5.654911084179718,329,165
+5.669837208647408,336,161
+5.684905772492615,339,161
+5.699843764289769,335,162
+5.714950291953502,337,157
+5.729703141549479,337,156
+5.744818848415559,338,159
+5.759977058624532,338,160
+5.774900513177941,335,163
+5.789898325611816,330,165
+5.804886256671751,325,171
+5.819662664578752,328,171
+5.834878266091555,325,169
+5.8496886765091105,330,168
+5.864972307102658,328,169
+5.8798577353936805,327,170
+5.894973575399952,328,169
+5.909751528685208,331,167
+5.92498731923241,329,167
+5.93990008592139,329,168
+5.954778278563957,327,168
+5.969994974839526,324,170
+5.984719441937536,323,171
+5.9999483004792245,324,175
+6.014913805272075,323,169
+6.029982231605607,328,168
+6.0449648449910365,331,166
+6.059522546178602,332,168
+6.074871944086025,327,167
+6.0899255559527585,327,167
+6.104785974919285,328,171
+6.119747817605399,327,170
+6.134862847965471,327,170
+6.149996801492705,326,172
+6.16465616673056,322,173
+6.179650775912738,318,179
+6.194970539951367,318,174
+6.209955916595422,318,172
+6.224383965728761,322,176
+6.239774280291904,323,173
+6.254871305572858,323,174
+6.269783791320147,322,176
+6.284627481294212,322,176
+6.299999230603706,323,175
+6.314928874325228,324,175
+6.329948471942825,323,175
+6.344953940795636,322,176
+6.359941534139044,317,176
+6.374944539685752,315,181
+6.389896404342143,312,181
+6.404812170855137,318,179
+6.419843058969997,322,173
+6.434971360070332,322,176
+6.449944284066468,323,175
+6.464926884204668,322,177
+6.4798297974656744,320,178
+6.494871121955041,316,178
+6.509931117475059,314,182
+6.524999498343905,318,181
+6.539877899757301,318,179
+6.554794899047686,321,177
+6.569836564607334,318,176
+6.584846929161634,318,175
+6.599602453096643,318,179
+6.614883431420429,317,176
+6.629902293045229,319,177
+6.644765342704107,324,174
+6.659988579221574,323,174
+6.67463499884716,323,177
+6.689839815014518,322,177
+6.704913646478286,315,180
+6.719560487181759,319,180
+6.734348421141578,321,177
+6.749978428541553,319,178
+6.764757430731496,319,177
+6.779675901509968,318,179
+6.794955822946091,321,178
+6.809670715095621,320,179
+6.824998631241677,318,180
+6.839904842793436,319,178
+6.854834485028777,319,179
+6.869923194276118,316,181
+6.884972355930457,315,182
+6.899623251717355,317,180
+6.914864361279998,317,178
+6.929984098735407,319,180
+6.944909871704862,319,179
+6.959844062184857,316,177
+6.974984793398709,323,174
+6.989812208342432,321,174
+7.004583334772155,320,176
+7.01952357428518,322,173
+7.034401639427988,323,175
+7.049501298536405,324,173
+7.064912912666122,324,173
+7.07992231359055,328,171
+7.094871536845912,332,166
+7.109508580198983,329,169
+7.124964378126839,329,170
+7.139912593920413,325,170
+7.154571281358806,330,166
+7.169852072149725,330,166
+7.184347115140578,329,169
+7.199864303589483,322,174
+7.214670436787124,322,176
+7.229937500866949,320,178
+7.244752201177364,320,179
+7.259902152021712,322,175
+7.274121853431932,321,177
+7.289832764687862,322,174
+7.30481185467734,320,177
+7.31997791867776,320,173
+7.334796719625995,322,176
+7.349857576536718,321,175
+7.364907089521861,325,171
+7.379649150660019,325,169
+7.394961175210538,326,167
+7.409810755615167,331,164
+7.424775076981219,333,163
+7.439962609984285,333,163
+7.454974872222361,331,166
+7.469795815003791,339,161
+7.484780126482044,334,161
+7.4999259846049675,333,164
+7.514760432369581,335,160
+7.5298614071995065,335,160
+7.544940552833616,334,162
+7.5599324203145475,338,157
+7.574870118766065,332,164
+7.589926843101214,337,160
+7.604961751842683,334,161
+7.619686623577148,335,160
+7.634667655333505,335,159
+7.649920038236329,334,158
+7.664512807903597,331,164
+7.679925004223304,332,165
+7.694954306969388,325,171
+7.709906404614857,323,172
+7.724930547298651,326,171
+7.739980760836749,326,171
+7.7549640025126045,327,171
+7.769952025007447,328,171
+7.784684493112324,324,175
+7.799968623921145,327,172
+7.814961086957277,330,163
+7.829856712753151,328,165
+7.844906572252787,322,174
+7.859490608277912,324,171
+7.874887251739248,325,170
+7.889966721950742,331,165
+7.904970284230488,330,166
+7.919930767358812,334,161
+7.9348659023354795,337,161
+7.94960717005502,333,160
+7.964870487139411,330,165
+7.979750059574259,326,169
+7.9948917625610365,328,170
+8.009903142441019,327,167
+8.024952246534118,322,175
+8.039890844261848,327,171
+8.054870758218655,326,173
+8.069850133179125,323,173
+8.08496190367422,320,178
+8.099702346906504,322,172
+8.11493454310253,328,170
+8.129893497894251,329,167
+8.144805842357746,326,170
+8.159703267179191,324,173
+8.174743690105084,322,177
+8.189947186598262,317,180
+8.204889979503614,317,181
+8.219820651131805,319,178
+8.234779700718965,324,174
+8.249998891200889,325,173
+8.264563945502623,327,170
+8.279997664461407,327,171
+8.294965866929015,320,174
+8.309937459552879,321,178
+8.324912486180752,320,175
+8.339376322458065,318,180
+8.354808845151801,317,177
+8.369996896011795,316,178
+8.384845805569801,318,180
+8.399953523261475,318,180
+8.414929906989723,316,178
+8.429782876843884,311,183
+8.444971895684304,310,188
+8.459825168085462,309,189
+8.474852746944826,308,188
+8.489810924661542,306,193
+8.50494416821444,305,191
+8.519539318059381,305,191
+8.534972015037065,307,190
+8.54963927694837,309,188
+8.564860800895284,309,188
+8.579723841682855,307,189
+8.594996853537301,310,184
+8.609980667663164,315,183
+8.624969188107478,312,184
+8.639745948435863,313,186
+8.65462518273212,310,185
+8.669813395726853,307,185
+8.684615271116808,303,193
+8.69986199778628,302,197
+8.71498303212115,302,194
+8.729837480679691,301,196
+8.744943789177471,307,187
+8.759772195955273,311,186
+8.774950290738367,313,185
+8.78991652835272,313,184
+8.804879040324632,312,182
+8.819897920613737,318,181
+8.834760280124128,318,180
+8.849924314015183,312,179
+8.864725326516275,311,186
+8.879916375745,307,190
+8.893798918383624,308,188
+8.90967449865019,313,182
+8.924891860771176,316,179
+8.939841513353667,315,182
+8.954991904705883,316,182
+8.969806881604626,318,175
+8.984976256970954,320,176
+8.99990003738058,319,177
+9.014998361449088,320,176
+9.0299062007957,323,173
+9.044873272322068,319,178
+9.059668340896826,320,177
+9.07472915148422,316,178
+9.089937904326401,320,177
+9.104822048103648,318,181
+9.119983293219647,320,177
+9.134472805040769,320,177
+9.149943130567632,318,179
+9.164918942600588,314,180
+9.179997224918585,309,186
+9.19486420813696,309,186
+9.209977385011397,310,184
+9.22483674642369,312,185
+9.239921457317868,311,186
+9.254716505857841,312,185
+9.269840384574557,311,186
+9.284946635719535,315,179
+9.299953722504469,316,182
+9.314908486363636,318,180
+9.329573477494678,321,176
+9.344896757763873,315,181
+9.359450380116453,314,182
+9.374793873204379,318,181
+9.389919809240036,321,178
+9.404856467662405,322,174
+9.41961677441477,320,179
+9.434539558200438,320,173
+9.449633494287164,330,168
+9.46492008296351,329,170
+9.479971757429283,325,172
+9.494812879115997,323,173
+9.509867054888243,323,175
+9.524738727210304,324,175
+9.53990206589795,327,170
+9.554733535684484,325,171
+9.56998935955671,331,169
+9.58498115844999,327,171
+9.599830273424345,325,171
+9.614811312269678,328,169
+9.62977893886132,326,170
+9.644964501822269,326,168
+9.659856930592436,325,171
+9.674771693714012,323,173
+9.689848620567798,323,175
+9.704962660527459,324,172
+9.719887635097807,328,169
+9.73487227941559,332,165
+9.749693336809743,335,165
+9.764831715577811,331,163
+9.779734707587593,333,164
+9.794969034680419,329,167
+9.809678577986302,330,166
+9.824758681727817,330,167
+9.839134131926578,330,168
+9.854936803236,331,169
+9.869994406127994,323,168
+9.884951126854116,329,167
+9.899984827640276,329,170
+9.914879637118531,323,174
+9.929517319538837,322,174
+9.94492702431492,327,169
+9.959780214761695,329,167
+9.974854894653594,329,169
+9.989804080188275,323,172
+10.00496531538765,322,173
+10.01970865703934,323,175
+10.034982867631902,325,173
+10.049785272189315,325,171
+10.064790650952114,327,168
+10.079851146992356,327,172
+10.094930225150666,326,172
+10.109995366870217,323,172
+10.124977939366032,325,170
+10.139846682821721,331,167
+10.154532608859379,337,160
+10.169801871028257,337,160
+10.184430926297136,335,159
+10.199803560113375,339,158
+10.214909067881345,339,155
+10.22975300797788,340,155
+10.244971035320187,340,153
+10.259594048653895,345,152
+10.274947729340973,348,149
+10.289851577706399,345,153
+10.304991981980201,343,150
+10.31997664271011,346,151
+10.334868599009127,344,155
+10.349588230455698,341,156
+10.364834320059282,346,154
+10.37998028499159,345,150
+10.39453542044754,347,152
+10.40936006457169,348,149
+10.424906023458407,348,147
+10.439870086892292,350,145
+10.454923254192925,355,141
+10.469791011737662,356,139
+10.484656708421786,361,138
+10.499902097886343,357,139
+10.514996388153024,356,142
+10.529862947019208,355,140
+10.54499714751867,350,146
+10.559955234067495,348,150
+10.574715968484947,346,148
+10.5899222886386,350,150
+10.604980267851166,347,147
+10.619995269950913,347,150
+10.6347085527989,344,152
+10.649948419211702,345,153
+10.664884477811876,336,160
+10.67985053281065,337,160
+10.694984895814788,334,162
+10.709928550133208,337,158
+10.724984003159303,334,163
+10.7399620571161,336,162
+10.754549346130402,334,162
+10.769849229168008,335,161
+10.78472560035326,334,162
+10.79991821444823,328,165
+10.814783654877122,329,168
+10.829637898008674,330,167
+10.844794031330002,331,164
+10.859798173607981,335,164
+10.874500782288107,334,161
+10.889301873597654,339,160
+10.904852880958769,339,158
+10.919838384030497,338,159
+10.934924434542545,337,158
+10.949465656752247,335,161
+10.964997689380638,334,162
+10.979892784292888,331,164
+10.994826703352738,327,162
+11.00995457220124,332,163
+11.02487615291186,332,167
+11.03986535412979,332,167
+11.054747037214831,334,164
+11.06992316146937,333,165
+11.084973361973724,328,164
+11.099581585875827,334,162
+11.114985356102578,339,159
+11.12997804510939,335,162
+11.14450650026655,331,163
+11.15982850548123,332,167
+11.174801980529109,332,164
+11.189883969850817,333,164
+11.204911853428404,337,161
+11.219423597451444,336,160
+11.234971527436537,332,163
+11.249999660466342,331,168
+11.264504934348102,333,165
+11.279519398276916,337,160
+11.294759166283303,334,162
+11.309801551085956,336,163
+11.324968634374878,335,161
+11.339646818513343,330,163
+11.354421064141647,332,166
+11.369998069780523,333,161
+11.384993813340468,334,165
+11.399970809529345,329,165
+11.414968271293972,331,167
+11.429932020578672,331,168
+11.4449285989276,327,167
+11.459987722343756,328,169
+11.474978610097708,329,168
+11.48998608181332,330,164
+11.504943638889506,332,164
+11.519828183481472,332,165
+11.534779827986428,329,169
+11.54977674421261,333,163
+11.564694465726147,330,164
+11.579826523136301,332,160
+11.594945312353357,332,162
+11.609856715298529,329,165
+11.624993859046063,329,165
+11.639906772141906,334,165
+11.654936485503693,334,165
+11.669804677318886,333,165
+11.684245744599481,333,166
+11.699808649534985,330,166
+11.714988825430448,329,166
+11.72992867856243,326,169
+11.74469990814546,324,174
+11.759524284576466,324,173
+11.77468385632483,328,168
+11.789993445321308,327,169
+11.804998480975812,326,169
+11.819597275696227,327,165
+11.834947838058406,330,169
+11.849905166031657,326,167
+11.864939689732465,330,168
+11.879876221090331,330,167
+11.89485354727362,331,166
+11.909956754893592,330,167
+11.924952294650799,329,166
+11.939876632267358,329,163
+11.954924957467899,333,165
+11.969768861328475,332,164
+11.984663133644467,331,164
+11.99997574279548,333,164
+12.014904630192559,335,164
+12.029918800865245,335,162
+12.044724547741632,331,167
+12.059787053007154,328,169
+12.074504293905369,331,166
+12.089973501525787,326,171
+12.104591779932901,327,170
+12.119951337513385,326,172
+12.134910120200047,327,171
+12.149809876732036,327,169
+12.164803754347995,325,169
+12.179915157941474,328,169
+12.194870971159702,326,171
+12.209991556045905,328,169
+12.224852629081841,325,170
+12.239930635191467,320,177
+12.254794737301156,322,177
+12.2699730860629,322,171
+12.284856547097888,323,171
+12.299979302073483,327,172
+12.31499659303971,326,172
+12.329693898604871,324,174
+12.344833717517279,325,174
+12.359752361791422,326,174
+12.37481406603535,324,174
+12.389812196817088,325,172
+12.404520566379519,324,172
+12.41985441730839,328,167
+12.434985221158682,330,165
+12.449982207422705,330,165
+12.464904406158592,325,167
+12.479949031668928,327,172
+12.494934551498835,328,170
+12.509925644459923,333,167
+12.52497330995857,335,163
+12.539788704023131,333,165
+12.554892576051802,338,160
+12.569755880651517,339,159
+12.584955670930698,334,163
+12.59986087108474,332,165
+12.614850328450013,328,170
+12.62961845925379,326,170
+12.644742570494943,328,169
+12.65991217905558,327,169
+12.674730205403582,330,168
+12.68984280858685,331,165
+12.704659122154062,331,164
+12.719647324076284,336,163
+12.73496172231774,335,160
+12.74993892291896,336,160
+12.764814310523372,331,165
+12.779723333512765,332,165
+12.794609216921163,335,164
+12.809589333748427,333,163
+12.824810082283369,334,164
+12.83990094091114,333,163
+12.854920377678392,336,163
+12.86983994958774,334,160
+12.884883230227425,333,164
+12.899827234787864,329,168
+12.91467693322066,326,167
+12.929673650188942,329,170
+12.944993821515098,326,171
+12.959964726783548,326,169
+12.97494132912982,327,169
+12.989637336119742,328,167
+13.004893210605836,325,172
+13.019814383053683,324,171
+13.03490022910247,326,172
+13.049721915288648,325,173
+13.06499792175537,323,173
+13.079845580242997,325,170
+13.09496964384621,330,167
+13.109951963149877,330,166
+13.124804773023426,334,163
+13.13978893134843,334,161
+13.154917411143595,337,157
+13.169712429669769,337,158
+13.18482256177533,337,159
+13.199980770183906,331,167
+13.21473047566562,334,165
+13.229979754155638,336,160
+13.24455264792588,333,164
+13.2599878711119,334,162
+13.274635399983366,331,167
+13.289841668622858,326,169
+13.30483866006315,331,163
+13.31975154122166,333,165
+13.334995428749526,335,162
+13.349839482543743,335,160
+13.364886572362392,337,160
+13.379958087547033,335,162
+13.394531708815766,333,159
+13.409815935216557,333,160
+13.424872324162465,335,163
+13.439859680738664,335,164
+13.454961840787542,329,163
+13.469874826607073,338,159
+13.48493604345506,339,159
+13.499947114667059,338,158
+13.514794500504149,339,156
+13.529866256072433,338,160
+13.54456957449432,334,163
+13.559914889014937,335,164
+13.574926851619729,332,165
+13.589755675763634,331,165
+13.604983176797138,334,166
+13.619973843476295,329,168
+13.634996677986976,330,164
+13.649972487915518,332,163
+13.664813162288578,330,166
+13.679759770208964,331,166
+13.694763337847773,333,165
+13.709689862297616,339,159
+13.724667895747283,340,155
+13.739607008500741,336,160
+13.754643570103822,338,158
+13.76967990779885,338,158
+13.78478113637137,333,162
+13.799352158772104,335,161
+13.81470837296241,334,164
+13.829987339265374,328,167
+13.844943791732794,337,163
+13.859908329536825,330,165
+13.874466029718382,326,168
+13.88996959655289,327,169
+13.904989126307308,329,169
+13.919503521435612,329,168
+13.934831413512041,322,173
+13.949933957517992,327,171
+13.964988679799555,325,173
+13.979925643432905,324,174
+13.994832637144189,324,174
+14.009944902750457,320,177
+14.02498267839748,321,177
+14.039991253379863,321,174
+14.054878116410219,326,166
+14.069988963781567,325,171
+14.084942118755347,327,169
+14.09951608269488,330,168
+14.11491760872948,327,166
+14.129527210939385,329,170
+14.14488202412266,331,164
+14.15992120723341,330,167
+14.174999096841733,333,162
+14.18995185309193,330,166
+14.204796644188201,331,167
+14.219924179498031,332,165
+14.234739371221856,335,164
+14.249985527044075,336,162
+14.264777182478099,334,163
+14.279530096537533,337,157
+14.294912077385767,336,159
+14.309858757545943,339,159
+14.324820870690568,337,161
+14.339620234491122,338,158
+14.354954327380748,337,161
+14.369919595860768,338,161
+14.38476730409203,332,163
+14.399317152653682,334,163
+14.414899798431552,336,161
+14.42983520915849,332,166
+14.44496671737856,327,170
+14.45987065367165,333,167
+14.474836276863517,330,169
+14.489887641809124,328,168
+14.50487412125244,326,167
+14.519843440999281,325,173
+14.534830256449833,322,173
+14.54897072061627,324,173
+14.564966051711625,322,170
+14.579922143433123,328,170
+14.594830504705662,327,169
+14.609843084317259,328,169
+14.624925463505543,325,174
+14.639941228691548,321,176
+14.654990350749532,325,174
+14.66985315412273,327,170
+14.684764314359656,329,170
+14.69963897032136,332,167
+14.714149779134685,334,163
+14.729817997486192,328,167
+14.744951392033267,331,166
+14.759827458806887,332,162
+14.774683822293229,332,165
+14.789986152598532,332,163
+14.804974723587868,330,164
+14.819465535615215,331,161
+14.83489350992958,336,159
+14.849938033520885,335,162
+14.86499498408392,337,158
+14.879930986115166,338,157
+14.894850658781175,338,159
+14.909866272045015,341,155
+14.924756565418143,339,157
+14.939950796168036,339,155
+14.954868648038108,343,154
+14.969812190419553,343,155
+14.984700623085349,343,155
+14.999902900573042,335,160
+15.000096283744137,335,159
+]]></CSV>
+</Simulation>
+<Log>
+<Entry Count="1" Message="-Initialization..." Position="1231854391.602" Type="INFO"></Entry>
+<Entry Count="1" Message="--Computing initial state" Position="1231854391.602" Type="INFO"></Entry>
+<Entry Count="1" Message="--Abstracting activation map..." Position="1231854391.633" Type="INFO"></Entry>
+<Entry Count="1" Message="--Abstraction: 0.0 sec. CPU" Position="1231854391.665" Type="INFO"></Entry>
+<Entry Count="1" Message="--Activation map computed" Position="1231854391.665" Type="INFO"></Entry>
+<Entry Count="1" Message="-Initialization: 0.125 sec. CPU" Position="1231854391.821" Type="INFO"></Entry>
+<Entry Count="1" Message="-Simulation..." Position="1231854391.821" Type="INFO"></Entry>
+<Entry Count="215" Message="Application of rule exp is clashing" Position="1231854392.040" Type="INTERNAL"></Entry>
+<Entry Count="1" Message="-Simulation: 6.734375 sec. CPU" Position="1231854401.243" Type="INFO"></Entry>
+<Entry Count="1" Message="-Building xml tree for influence map: 0.0 sec. CPU" Position="1231854401.243" Type="INFO"></Entry>
+<Entry Count="1" Message="-Building xml tree for data points: 0.4375 sec. CPU" Position="1231854401.946" Type="INFO"></Entry>
+</Log>
+</SimplxSession>

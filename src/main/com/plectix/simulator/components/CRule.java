@@ -14,6 +14,7 @@ import com.plectix.simulator.action.CAddAction;
 import com.plectix.simulator.action.CDefaultAction;
 import com.plectix.simulator.action.CDeleteAction;
 import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
+import com.plectix.simulator.components.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
@@ -933,7 +934,7 @@ public class CRule implements IRule, Serializable {
 		for (IInjection inj : injectionsList) {
 			for (ISite site : inj.getSiteList())
 				netNotation.checkLinkForNetworkNotationDel(
-						CStoriesSiteStates.LAST_STATE, site);
+						StateType.LAST, site);
 		}
 
 	}

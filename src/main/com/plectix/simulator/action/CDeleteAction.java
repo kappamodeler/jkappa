@@ -7,6 +7,7 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CStoriesSiteStates;
 import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
+import com.plectix.simulator.components.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -37,7 +38,7 @@ public class CDeleteAction extends CAction {
 			ISite solutionSite = (ISite) site.getLinkState().getSite();
 
 			if (solutionSite != null) {
-				addToNetworkNotation(CStoriesSiteStates.LAST_STATE,
+				addToNetworkNotation(StateType.LAST,
 						netNotation, solutionSite);
 
 				addSiteToConnectedWithDeleted(solutionSite);
@@ -45,7 +46,7 @@ public class CDeleteAction extends CAction {
 				solutionSite.getLinkState().setStatusLink(
 						CLinkStatus.FREE);
 				solutionSite.setLinkIndex(-1);
-				addToNetworkNotation(CStoriesSiteStates.CURRENT_STATE,
+				addToNetworkNotation(StateType.CURRENT,
 						netNotation, solutionSite);
 				addRuleSitesToNetworkNotation(false, netNotation, solutionSite);
 				// solutionSite.removeInjectionsFromCCToSite(injection);
@@ -60,7 +61,7 @@ public class CDeleteAction extends CAction {
 		}
 
 		for (ISite site : agent.getSites()) {
-			addToNetworkNotation(CStoriesSiteStates.LAST_STATE, netNotation,
+			addToNetworkNotation(StateType.LAST, netNotation,
 					site);
 			addRuleSitesToNetworkNotation(true, netNotation, site);
 			for (ILiftElement lift : site.getLift()) {
@@ -107,7 +108,7 @@ public class CDeleteAction extends CAction {
 		}
 	}
 	
-	protected final void addToNetworkNotation(int index,
+	protected final void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			netNotation.checkLinkForNetworkNotationDel(index, site);

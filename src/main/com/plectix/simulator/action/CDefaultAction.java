@@ -3,6 +3,7 @@ package com.plectix.simulator.action;
 import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
+import com.plectix.simulator.components.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -38,7 +39,7 @@ public class CDefaultAction extends CAction {
 		}
 	}
 	
-	protected final void addToNetworkNotation(int index,
+	protected final void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, ISite site) {
 	}
 }

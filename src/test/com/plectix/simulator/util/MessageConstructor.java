@@ -26,6 +26,10 @@ public class MessageConstructor {
 	}
 	
 	public String getMessage() {
-		return myMessage.toString();
+		if (isEmpty()) {
+			return "OK";
+		} else {
+			return myMessage.toString();
+		}
 	}
 }

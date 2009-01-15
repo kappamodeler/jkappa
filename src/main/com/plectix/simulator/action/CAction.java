@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.*;
 
 /*package*/abstract class CAction implements IAction, Serializable {
@@ -66,7 +67,7 @@ import com.plectix.simulator.interfaces.*;
 		return nameInternalStateId;
 	}
 
-	protected abstract void addToNetworkNotation(int index,
+	protected abstract void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, ISite site);
 
 	protected abstract void addRuleSitesToNetworkNotation(boolean existInRule,

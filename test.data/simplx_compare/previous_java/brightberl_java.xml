@@ -1,0 +1,1300 @@
+<SimplxSession xmlns="http://plectix.synthesisstudios.com/schemas/kappasession" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" CommandLine="--sim test.data/simplx_compare/source_ka/brightberl.ka --time 1000.0" InputFile="test.data/simplx_compare/source_ka/brightberl.ka" TimeStamp="2009-01-13 16:46:19" xsi:schemaLocation="http://plectix.synthesisstudios.com SimplxSession.xsd">
+<InfluenceMap>
+<Node Data="ERK(T185~p?,Y187~p?)" Id="75" Name="[ERK(T185~p?,Y187~p?)]" Text="[ERK(T185~p?,Y187~p?)]" Type="OBSERVABLE"></Node>
+<Node Data="MEK(S218~p?,S222~p?)" Id="74" Name="[MEK(S218~p?,S222~p?)]" Text="[MEK(S218~p?,S222~p?)]" Type="OBSERVABLE"></Node>
+<Node Data="Raf(x~p?)" Id="73" Name="[Raf(x~p?)]" Text="[Raf(x~p?)]" Type="OBSERVABLE"></Node>
+<Node Data="Ras(S1S2~gtp?)" Id="72" Name="[Ras(S1S2~gtp?)]" Text="[Ras(S1S2~gtp?)]" Type="OBSERVABLE"></Node>
+<Node Data="SoS(SS~p)->SoS(SS~u)" Id="71" Name="SoS@SS_op" Text="SoS@SS_op" Type="RULE"></Node>
+<Node Data="SoS(SS~u!0),ERK(s!0,T185~p,Y187~p)->SoS(SS~p!0),ERK(s!0,T185~p,Y187~p)" Id="70" Name="SoS@SS" Text="SoS@SS" Type="RULE"></Node>
+<Node Data="SoS(SS!0),ERK(s!0)->SoS(SS),ERK(s)" Id="69" Name="SoS_ERK_op" Text="SoS_ERK_op" Type="RULE"></Node>
+<Node Data="SoS(SS~u),ERK(s,T185~p,Y187~p)->SoS(SS~u!0),ERK(s!0,T185~p,Y187~p)" Id="68" Name="SoS_ERK" Text="SoS_ERK" Type="RULE"></Node>
+<Node Data="MKP3(s!0),ERK(Y187!0)->MKP3(s),ERK(Y187)" Id="67" Name="MKP_ERK@187_op" Text="MKP_ERK@187_op" Type="RULE"></Node>
+<Node Data="MKP3(s!0),ERK(Y187~p!0)->MKP3(s!0),ERK(Y187~u!0)" Id="66" Name="ERK@187_op" Text="ERK@187_op" Type="RULE"></Node>
+<Node Data="MKP3(s),ERK(Y187~p)->MKP3(s!0),ERK(Y187~p!0)" Id="65" Name="MKP_ERK@187" Text="MKP_ERK@187" Type="RULE"></Node>
+<Node Data="MKP3(s!0),ERK(T185!0)->MKP3(s),ERK(T185)" Id="64" Name="MKP_ERK@185_op" Text="MKP_ERK@185_op" Type="RULE"></Node>
+<Node Data="MKP3(s!0),ERK(T185~p!0)->MKP3(s!0),ERK(T185~u!0)" Id="63" Name="ERK@185_op" Text="ERK@185_op" Type="RULE"></Node>
+<Node Data="MKP3(s),ERK(T185~p)->MKP3(s!0),ERK(T185~p!0)" Id="62" Name="MKP_ERK@185" Text="MKP_ERK@185" Type="RULE"></Node>
+<Node Data="MEK(s!0),ERK(Y187!0)->MEK(s),ERK(Y187)" Id="61" Name="MEK_ERK@187_op" Text="MEK_ERK@187_op" Type="RULE"></Node>
+<Node Data="MEK(s!0,S222~p,S218~p),ERK(Y187~u!0)->MEK(s!0,S222~p,S218~p),ERK(Y187~p!0)" Id="60" Name="ERK@187" Text="ERK@187" Type="RULE"></Node>
+<Node Data="MEK(s,S222~p,S218~p),ERK(Y187~u)->MEK(s!0,S222~p,S218~p),ERK(Y187~u!0)" Id="59" Name="MEK_ERK@187" Text="MEK_ERK@187" Type="RULE"></Node>
+<Node Data="MEK(s!0),ERK(T185!0)->MEK(s),ERK(T185)" Id="58" Name="MEK_ERK@185_op" Text="MEK_ERK@185_op" Type="RULE"></Node>
+<Node Data="MEK(s!0,S222~p,S218~p),ERK(T185~u!0)->MEK(s!0,S222~p,S218~p),ERK(T185~p!0)" Id="57" Name="ERK@185" Text="ERK@185" Type="RULE"></Node>
+<Node Data="MEK(s,S222~p,S218~p),ERK(T185~u)->MEK(s!0,S222~p,S218~p),ERK(T185~u!0)" Id="56" Name="MEK_ERK@185" Text="MEK_ERK@185" Type="RULE"></Node>
+<Node Data="PP2A2(s!0),MEK(S218!0)->PP2A2(s),MEK(S218)" Id="55" Name="PP2A2_MEK@218_op" Text="PP2A2_MEK@218_op" Type="RULE"></Node>
+<Node Data="PP2A2(s!0),MEK(S218~p!0)->PP2A2(s!0),MEK(S218~u!0)" Id="54" Name="MEK@218_op" Text="MEK@218_op" Type="RULE"></Node>
+<Node Data="PP2A2(s),MEK(S218~p)->PP2A2(s!0),MEK(S218~p!0)" Id="53" Name="PP2A2_MEK@218" Text="PP2A2_MEK@218" Type="RULE"></Node>
+<Node Data="PP2A2(s!0),MEK(S222!0)->PP2A2(s),MEK(S222)" Id="52" Name="PP2A2_MEK@222_op" Text="PP2A2_MEK@222_op" Type="RULE"></Node>
+<Node Data="PP2A2(s!0),MEK(S222~p!0)->PP2A2(s!0),MEK(S222~u!0)" Id="51" Name="MEK@222_op" Text="MEK@222_op" Type="RULE"></Node>
+<Node Data="PP2A2(s),MEK(S222~p)->PP2A2(s!0),MEK(S222~p!0)" Id="50" Name="PP2A2_MEK@222" Text="PP2A2_MEK@222" Type="RULE"></Node>
+<Node Data="Raf(x~p!0),MEK(S218!0)->Raf(x~p),MEK(S218)" Id="49" Name="Raf_MEK@218_op" Text="Raf_MEK@218_op" Type="RULE"></Node>
+<Node Data="Raf(x~p!0),MEK(S218~u!0)->Raf(x~p!0),MEK(S218~p!0)" Id="48" Name="MEK@218" Text="MEK@218" Type="RULE"></Node>
+<Node Data="Raf(x~p),MEK(S218~u)->Raf(x~p!0),MEK(S218~u!0)" Id="47" Name="Raf_MEK@218" Text="Raf_MEK@218" Type="RULE"></Node>
+<Node Data="Raf(x~p!0),MEK(S222!0)->Raf(x~p),MEK(S222)" Id="46" Name="Raf_MEK@222_op" Text="Raf_MEK@222_op" Type="RULE"></Node>
+<Node Data="Raf(x~p!0),MEK(S222~u!0)->Raf(x~p!0),MEK(S222~p!0)" Id="45" Name="MEK@222" Text="MEK@222" Type="RULE"></Node>
+<Node Data="Raf(x~p),MEK(S222~u)->Raf(x~p!0),MEK(S222~u!0)" Id="44" Name="Raf_MEK@222" Text="Raf_MEK@222" Type="RULE"></Node>
+<Node Data="PP2A1(s!0),Raf(x!0)->PP2A1(s),Raf(x)" Id="43" Name="PP2A1_Raf_op" Text="PP2A1_Raf_op" Type="RULE"></Node>
+<Node Data="PP2A1(s!0),Raf(x~p!0)->PP2A1(s!0),Raf(x~u!0)" Id="42" Name="Raf_op" Text="Raf_op" Type="RULE"></Node>
+<Node Data="PP2A1(s),Raf(x~p)->PP2A1(s!0),Raf(x~p!0)" Id="41" Name="PP2A1_Raf" Text="PP2A1_Raf" Type="RULE"></Node>
+<Node Data="Ras(S1S2~gtp!0),Raf(x!0)->Ras(S1S2~gtp),Raf(x)" Id="40" Name="Ras_Raf_op" Text="Ras_Raf_op" Type="RULE"></Node>
+<Node Data="Ras(S1S2~gtp!0),Raf(x~u!0)->Ras(S1S2~gtp!0),Raf(x~p!0)" Id="39" Name="Raf" Text="Raf" Type="RULE"></Node>
+<Node Data="Ras(S1S2~gtp),Raf(x~u)->Ras(S1S2~gtp!0),Raf(x~u!0)" Id="38" Name="Ras_Raf" Text="Ras_Raf" Type="RULE"></Node>
+<Node Data="Ras(S1S2~gtp)->Ras(S1S2~gdp)" Id="37" Name="intrinsic Ras GDP" Text="intrinsic Ras GDP" Type="RULE"></Node>
+<Node Data="RasGAP(s!0),Ras(S1S2!0)->RasGAP(s),Ras(S1S2)" Id="36" Name="RasGAP_Ras_op" Text="RasGAP_Ras_op" Type="RULE"></Node>
+<Node Data="RasGAP(s!0),Ras(S1S2~gtp!0)->RasGAP(s!0),Ras(S1S2~gdp!0)" Id="35" Name="Ras GDP" Text="Ras GDP" Type="RULE"></Node>
+<Node Data="EGFR(Y992~p!0),RasGAP(SH2!0,s),Ras(S1S2~gtp)->EGFR(Y992~p!0),RasGAP(SH2!0,s!1),Ras(S1S2~gtp!1)" Id="34" Name="direct RasGAP_Ras" Text="direct RasGAP_Ras" Type="RULE"></Node>
+<Node Data="SoS(b!0),Ras(S1S2!0)->SoS(b),Ras(S1S2)" Id="33" Name="SoS_Ras_op" Text="SoS_Ras_op" Type="RULE"></Node>
+<Node Data="SoS(b!0),Ras(S1S2~gdp!0)->SoS(b!0),Ras(S1S2~gtp!0)" Id="32" Name="Ras GTP" Text="Ras GTP" Type="RULE"></Node>
+<Node Data="EGFR(Y1068~p!0),Grb2(SH2!0,SH3!1),SoS(a!1,b),Ras(S1S2~gdp)->EGFR(Y1068~p!0),Grb2(SH2!0,SH3!1),SoS(a!1,b!2),Ras(S1S2~gdp!2)" Id="31" Name="short arm SoS_Ras" Text="short arm SoS_Ras" Type="RULE"></Node>
+<Node Data="EGFR(Y1148~p!0),Shc(PTB!0,Y318~p!1),Grb2(SH2!1,SH3!2),SoS(a!2,b),Ras(S1S2~gdp)->EGFR(Y1148~p!0),Shc(PTB!0,Y318~p!1),Grb2(SH2!1,SH3!2),SoS(a!2,b!3),Ras(S1S2~gdp!3)" Id="30" Name="long arm SoS_Ras" Text="long arm SoS_Ras" Type="RULE"></Node>
+<Node Data="Shc(Y318~p)->Shc(Y318~u)" Id="29" Name="Shc@318_op" Text="Shc@318_op" Type="RULE"></Node>
+<Node Data="EGFR(CR!_,Y1148~p!0),Shc(PTB!0,Y318~u)->EGFR(CR!_,Y1148~p!0),Shc(PTB!0,Y318~p)" Id="28" Name="Shc@318" Text="Shc@318" Type="RULE"></Node>
+<Node Data="Shc(Y318~p!0),Grb2(SH2!0)->Shc(Y318~p),Grb2(SH2)" Id="27" Name="Shc_Grb2_op" Text="Shc_Grb2_op" Type="RULE"></Node>
+<Node Data="Shc(Y318~p),Grb2(SH2)->Shc(Y318~p!0),Grb2(SH2!0)" Id="26" Name="Shc_Grb2" Text="Shc_Grb2" Type="RULE"></Node>
+<Node Data="EGFR(Y1148~p!0),Shc(PTB!0)->EGFR(Y1148~p),Shc(PTB)" Id="25" Name="EGFR_Shc_op" Text="EGFR_Shc_op" Type="RULE"></Node>
+<Node Data="EGFR(Y1148~p),Shc(PTB)->EGFR(Y1148~p!0),Shc(PTB!0)" Id="24" Name="EGFR_Shc" Text="EGFR_Shc" Type="RULE"></Node>
+<Node Data="Grb2(SH3!0),SoS(a!0)->Grb2(SH3),SoS(a)" Id="23" Name="Grb2_SoS_op" Text="Grb2_SoS_op" Type="RULE"></Node>
+<Node Data="Grb2(SH3),SoS(a,SS~u)->Grb2(SH3!0),SoS(a!0,SS~u)" Id="22" Name="Grb2_SoS" Text="Grb2_SoS" Type="RULE"></Node>
+<Node Data="EGFR(Y1068~p!0),Grb2(SH2!0)->EGFR(Y1068~p),Grb2(SH2)" Id="21" Name="EGFR_Grb2_op" Text="EGFR_Grb2_op" Type="RULE"></Node>
+<Node Data="EGFR(Y1068~p),Grb2(SH2)->EGFR(Y1068~p!0),Grb2(SH2!0)" Id="20" Name="EGFR_Grb2" Text="EGFR_Grb2" Type="RULE"></Node>
+<Node Data="EGFR(Y992~p!0),RasGAP(SH2!0)->EGFR(Y992~p),RasGAP(SH2)" Id="19" Name="EGFR_RasGAP_op" Text="EGFR_RasGAP_op" Type="RULE"></Node>
+<Node Data="EGFR(Y992~p),RasGAP(SH2)->EGFR(Y992~p!0),RasGAP(SH2!0)" Id="18" Name="EGFR_RasGAP" Text="EGFR_RasGAP" Type="RULE"></Node>
+<Node Data="EGFR(L,Y992~u,Y1068~u,Y1148~u)->EGFR(L,Y992~u,Y1068~u,Y1148~u)" Id="17" Name="rec_EGFR" Text="rec_EGFR" Type="RULE"></Node>
+<Node Data="EGFR(L,CR)->" Id="16" Name="deg_EGFR" Text="deg_EGFR" Type="RULE"></Node>
+<Node Data="EGF(r)->" Id="15" Name="deg_EGF" Text="deg_EGF" Type="RULE"></Node>
+<Node Data="EGF(r!0),EGFR(L!0,CR)->EGF(r),EGFR(L,CR)" Id="14" Name="EGF_EGFR_op" Text="EGF_EGFR_op" Type="RULE"></Node>
+<Node Data="EGFR(L!_,CR!0),EGFR(L!_,CR!0)->EGFR(L!_,CR),EGFR(L!_,CR)" Id="13" Name="EGFR_EGFR_op" Text="EGFR_EGFR_op" Type="RULE"></Node>
+<Node Data="EGF(r!0),EGFR(L!0,CR!1),EGF(r!2),EGFR(L!2,CR!1)->EGF(r!0),EGFR(L!0,CR!1),EGF(r!2),EGFR(L!2,CR!1)" Id="12" Name="int_dimer" Text="int_dimer" Type="RULE"></Node>
+<Node Data="EGF(r!0),EGFR(L!0,CR)->EGF(r!0),EGFR(L!0,CR)" Id="11" Name="int_monomer" Text="int_monomer" Type="RULE"></Node>
+<Node Data="EGFR(Y1148~p)->EGFR(Y1148~u)" Id="10" Name="1148_op" Text="1148_op" Type="RULE"></Node>
+<Node Data="EGFR(Y1068~p)->EGFR(Y1068~u)" Id="9" Name="1068_op" Text="1068_op" Type="RULE"></Node>
+<Node Data="EGFR(Y992~p)->EGFR(Y992~u)" Id="8" Name="992_op" Text="992_op" Type="RULE"></Node>
+<Node Data="EGFR(CR!_,Y1148~u)->EGFR(CR!_,Y1148~p)" Id="7" Name="EGFR@1148" Text="EGFR@1148" Type="RULE"></Node>
+<Node Data="EGFR(CR!_,Y1068~u)->EGFR(CR!_,Y1068~p)" Id="6" Name="EGFR@1068" Text="EGFR@1068" Type="RULE"></Node>
+<Node Data="EGFR(CR!_,Y992~u)->EGFR(CR!_,Y992~p)" Id="5" Name="EGFR@992" Text="EGFR@992" Type="RULE"></Node>
+<Node Data="EGFR(L!_,CR!0),EGFR(L!_,CR!0)->EGFR(L!_,CR),EGFR(L!_,CR)" Id="4" Name="EGFR_EGFR_op" Text="EGFR_EGFR_op" Type="RULE"></Node>
+<Node Data="EGFR(L!_,CR),EGFR(L!_,CR)->EGFR(L!_,CR!0),EGFR(L!_,CR!0)" Id="3" Name="EGFR_EGFR" Text="EGFR_EGFR" Type="RULE"></Node>
+<Node Data="EGF(r!0),EGFR(L!0,CR)->EGF(r),EGFR(L,CR)" Id="2" Name="EGF_EGFR_op" Text="EGF_EGFR_op" Type="RULE"></Node>
+<Node Data="EGF(r),EGFR(L,CR)->EGF(r!0),EGFR(L!0,CR)" Id="1" Name="EGF_EGFR" Text="EGF_EGFR" Type="RULE"></Node>
+<Connection FromNode="71" Relation="POSITIVE" ToNode="68"></Connection>
+<Connection FromNode="71" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="69" Relation="POSITIVE" ToNode="71"></Connection>
+<Connection FromNode="69" Relation="POSITIVE" ToNode="68"></Connection>
+<Connection FromNode="69" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="68" Relation="POSITIVE" ToNode="70"></Connection>
+<Connection FromNode="68" Relation="POSITIVE" ToNode="69"></Connection>
+<Connection FromNode="67" Relation="POSITIVE" ToNode="75"></Connection>
+<Connection FromNode="67" Relation="POSITIVE" ToNode="70"></Connection>
+<Connection FromNode="67" Relation="POSITIVE" ToNode="68"></Connection>
+<Connection FromNode="67" Relation="POSITIVE" ToNode="65"></Connection>
+<Connection FromNode="67" Relation="POSITIVE" ToNode="62"></Connection>
+<Connection FromNode="67" Relation="POSITIVE" ToNode="59"></Connection>
+<Connection FromNode="65" Relation="POSITIVE" ToNode="75"></Connection>
+<Connection FromNode="65" Relation="POSITIVE" ToNode="67"></Connection>
+<Connection FromNode="65" Relation="POSITIVE" ToNode="66"></Connection>
+<Connection FromNode="64" Relation="POSITIVE" ToNode="75"></Connection>
+<Connection FromNode="64" Relation="POSITIVE" ToNode="70"></Connection>
+<Connection FromNode="64" Relation="POSITIVE" ToNode="68"></Connection>
+<Connection FromNode="64" Relation="POSITIVE" ToNode="65"></Connection>
+<Connection FromNode="64" Relation="POSITIVE" ToNode="62"></Connection>
+<Connection FromNode="64" Relation="POSITIVE" ToNode="56"></Connection>
+<Connection FromNode="62" Relation="POSITIVE" ToNode="75"></Connection>
+<Connection FromNode="62" Relation="POSITIVE" ToNode="64"></Connection>
+<Connection FromNode="62" Relation="POSITIVE" ToNode="63"></Connection>
+<Connection FromNode="61" Relation="POSITIVE" ToNode="75"></Connection>
+<Connection FromNode="61" Relation="POSITIVE" ToNode="70"></Connection>
+<Connection FromNode="61" Relation="POSITIVE" ToNode="68"></Connection>
+<Connection FromNode="61" Relation="POSITIVE" ToNode="65"></Connection>
+<Connection FromNode="61" Relation="POSITIVE" ToNode="59"></Connection>
+<Connection FromNode="61" Relation="POSITIVE" ToNode="56"></Connection>
+<Connection FromNode="60" Relation="POSITIVE" ToNode="75"></Connection>
+<Connection FromNode="59" Relation="POSITIVE" ToNode="61"></Connection>
+<Connection FromNode="59" Relation="POSITIVE" ToNode="60"></Connection>
+<Connection FromNode="58" Relation="POSITIVE" ToNode="75"></Connection>
+<Connection FromNode="58" Relation="POSITIVE" ToNode="70"></Connection>
+<Connection FromNode="58" Relation="POSITIVE" ToNode="68"></Connection>
+<Connection FromNode="58" Relation="POSITIVE" ToNode="62"></Connection>
+<Connection FromNode="58" Relation="POSITIVE" ToNode="59"></Connection>
+<Connection FromNode="58" Relation="POSITIVE" ToNode="56"></Connection>
+<Connection FromNode="57" Relation="POSITIVE" ToNode="75"></Connection>
+<Connection FromNode="56" Relation="POSITIVE" ToNode="58"></Connection>
+<Connection FromNode="56" Relation="POSITIVE" ToNode="57"></Connection>
+<Connection FromNode="55" Relation="POSITIVE" ToNode="74"></Connection>
+<Connection FromNode="55" Relation="POSITIVE" ToNode="60"></Connection>
+<Connection FromNode="55" Relation="POSITIVE" ToNode="59"></Connection>
+<Connection FromNode="55" Relation="POSITIVE" ToNode="57"></Connection>
+<Connection FromNode="55" Relation="POSITIVE" ToNode="56"></Connection>
+<Connection FromNode="55" Relation="POSITIVE" ToNode="53"></Connection>
+<Connection FromNode="55" Relation="POSITIVE" ToNode="50"></Connection>
+<Connection FromNode="55" Relation="POSITIVE" ToNode="47"></Connection>
+<Connection FromNode="53" Relation="POSITIVE" ToNode="74"></Connection>
+<Connection FromNode="53" Relation="POSITIVE" ToNode="55"></Connection>
+<Connection FromNode="53" Relation="POSITIVE" ToNode="54"></Connection>
+<Connection FromNode="52" Relation="POSITIVE" ToNode="74"></Connection>
+<Connection FromNode="52" Relation="POSITIVE" ToNode="60"></Connection>
+<Connection FromNode="52" Relation="POSITIVE" ToNode="59"></Connection>
+<Connection FromNode="52" Relation="POSITIVE" ToNode="57"></Connection>
+<Connection FromNode="52" Relation="POSITIVE" ToNode="56"></Connection>
+<Connection FromNode="52" Relation="POSITIVE" ToNode="53"></Connection>
+<Connection FromNode="52" Relation="POSITIVE" ToNode="50"></Connection>
+<Connection FromNode="52" Relation="POSITIVE" ToNode="44"></Connection>
+<Connection FromNode="50" Relation="POSITIVE" ToNode="74"></Connection>
+<Connection FromNode="50" Relation="POSITIVE" ToNode="52"></Connection>
+<Connection FromNode="50" Relation="POSITIVE" ToNode="51"></Connection>
+<Connection FromNode="49" Relation="POSITIVE" ToNode="74"></Connection>
+<Connection FromNode="49" Relation="POSITIVE" ToNode="60"></Connection>
+<Connection FromNode="49" Relation="POSITIVE" ToNode="59"></Connection>
+<Connection FromNode="49" Relation="POSITIVE" ToNode="57"></Connection>
+<Connection FromNode="49" Relation="POSITIVE" ToNode="56"></Connection>
+<Connection FromNode="49" Relation="POSITIVE" ToNode="53"></Connection>
+<Connection FromNode="49" Relation="POSITIVE" ToNode="47"></Connection>
+<Connection FromNode="49" Relation="POSITIVE" ToNode="44"></Connection>
+<Connection FromNode="49" Relation="POSITIVE" ToNode="41"></Connection>
+<Connection FromNode="48" Relation="POSITIVE" ToNode="74"></Connection>
+<Connection FromNode="47" Relation="POSITIVE" ToNode="49"></Connection>
+<Connection FromNode="47" Relation="POSITIVE" ToNode="48"></Connection>
+<Connection FromNode="46" Relation="POSITIVE" ToNode="74"></Connection>
+<Connection FromNode="46" Relation="POSITIVE" ToNode="60"></Connection>
+<Connection FromNode="46" Relation="POSITIVE" ToNode="59"></Connection>
+<Connection FromNode="46" Relation="POSITIVE" ToNode="57"></Connection>
+<Connection FromNode="46" Relation="POSITIVE" ToNode="56"></Connection>
+<Connection FromNode="46" Relation="POSITIVE" ToNode="50"></Connection>
+<Connection FromNode="46" Relation="POSITIVE" ToNode="47"></Connection>
+<Connection FromNode="46" Relation="POSITIVE" ToNode="44"></Connection>
+<Connection FromNode="46" Relation="POSITIVE" ToNode="41"></Connection>
+<Connection FromNode="45" Relation="POSITIVE" ToNode="74"></Connection>
+<Connection FromNode="44" Relation="POSITIVE" ToNode="46"></Connection>
+<Connection FromNode="44" Relation="POSITIVE" ToNode="45"></Connection>
+<Connection FromNode="43" Relation="POSITIVE" ToNode="73"></Connection>
+<Connection FromNode="43" Relation="POSITIVE" ToNode="47"></Connection>
+<Connection FromNode="43" Relation="POSITIVE" ToNode="44"></Connection>
+<Connection FromNode="43" Relation="POSITIVE" ToNode="41"></Connection>
+<Connection FromNode="43" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="41" Relation="POSITIVE" ToNode="43"></Connection>
+<Connection FromNode="41" Relation="POSITIVE" ToNode="42"></Connection>
+<Connection FromNode="40" Relation="POSITIVE" ToNode="73"></Connection>
+<Connection FromNode="40" Relation="POSITIVE" ToNode="47"></Connection>
+<Connection FromNode="40" Relation="POSITIVE" ToNode="44"></Connection>
+<Connection FromNode="40" Relation="POSITIVE" ToNode="41"></Connection>
+<Connection FromNode="40" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="40" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="40" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="39" Relation="POSITIVE" ToNode="73"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="40"></Connection>
+<Connection FromNode="38" Relation="POSITIVE" ToNode="39"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="37" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="72"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="36" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="36"></Connection>
+<Connection FromNode="34" Relation="POSITIVE" ToNode="35"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="72"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="38"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="37"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="33" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="32" Relation="POSITIVE" ToNode="72"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="31" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="33"></Connection>
+<Connection FromNode="30" Relation="POSITIVE" ToNode="32"></Connection>
+<Connection FromNode="29" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="28" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="29"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="27" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="26" Relation="POSITIVE" ToNode="27"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="24"></Connection>
+<Connection FromNode="25" Relation="POSITIVE" ToNode="10"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="24" Relation="POSITIVE" ToNode="25"></Connection>
+<Connection FromNode="23" Relation="POSITIVE" ToNode="22"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="30"></Connection>
+<Connection FromNode="22" Relation="POSITIVE" ToNode="23"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="26"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="21" Relation="POSITIVE" ToNode="9"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="31"></Connection>
+<Connection FromNode="20" Relation="POSITIVE" ToNode="21"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="19" Relation="POSITIVE" ToNode="8"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="34"></Connection>
+<Connection FromNode="18" Relation="POSITIVE" ToNode="19"></Connection>
+<Connection FromNode="14" Relation="POSITIVE" ToNode="17"></Connection>
+<Connection FromNode="14" Relation="POSITIVE" ToNode="16"></Connection>
+<Connection FromNode="14" Relation="POSITIVE" ToNode="15"></Connection>
+<Connection FromNode="14" Relation="POSITIVE" ToNode="1"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="16"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="3"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="2"></Connection>
+<Connection FromNode="13" Relation="POSITIVE" ToNode="1"></Connection>
+<Connection FromNode="10" Relation="POSITIVE" ToNode="17"></Connection>
+<Connection FromNode="10" Relation="POSITIVE" ToNode="7"></Connection>
+<Connection FromNode="9" Relation="POSITIVE" ToNode="17"></Connection>
+<Connection FromNode="9" Relation="POSITIVE" ToNode="6"></Connection>
+<Connection FromNode="8" Relation="POSITIVE" ToNode="17"></Connection>
+<Connection FromNode="8" Relation="POSITIVE" ToNode="5"></Connection>
+<Connection FromNode="7" Relation="POSITIVE" ToNode="24"></Connection>
+<Connection FromNode="7" Relation="POSITIVE" ToNode="10"></Connection>
+<Connection FromNode="6" Relation="POSITIVE" ToNode="20"></Connection>
+<Connection FromNode="6" Relation="POSITIVE" ToNode="9"></Connection>
+<Connection FromNode="5" Relation="POSITIVE" ToNode="18"></Connection>
+<Connection FromNode="5" Relation="POSITIVE" ToNode="8"></Connection>
+<Connection FromNode="4" Relation="POSITIVE" ToNode="16"></Connection>
+<Connection FromNode="4" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="4" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="4" Relation="POSITIVE" ToNode="3"></Connection>
+<Connection FromNode="4" Relation="POSITIVE" ToNode="2"></Connection>
+<Connection FromNode="4" Relation="POSITIVE" ToNode="1"></Connection>
+<Connection FromNode="3" Relation="POSITIVE" ToNode="28"></Connection>
+<Connection FromNode="3" Relation="POSITIVE" ToNode="13"></Connection>
+<Connection FromNode="3" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="3" Relation="POSITIVE" ToNode="7"></Connection>
+<Connection FromNode="3" Relation="POSITIVE" ToNode="6"></Connection>
+<Connection FromNode="3" Relation="POSITIVE" ToNode="5"></Connection>
+<Connection FromNode="3" Relation="POSITIVE" ToNode="4"></Connection>
+<Connection FromNode="2" Relation="POSITIVE" ToNode="17"></Connection>
+<Connection FromNode="2" Relation="POSITIVE" ToNode="16"></Connection>
+<Connection FromNode="2" Relation="POSITIVE" ToNode="15"></Connection>
+<Connection FromNode="2" Relation="POSITIVE" ToNode="1"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="14"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="13"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="12"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="11"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="4"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="3"></Connection>
+<Connection FromNode="1" Relation="POSITIVE" ToNode="2"></Connection>
+</InfluenceMap>
+<Simulation InitTime="0.0" TimeSample="1.0" TotalEvents="215757" TotalTime="1000.0097356454048">
+<Plot Text="[ERK(T185~p?,Y187~p?)]" Type="OBSERVABLE"></Plot>
+<Plot Text="[MEK(S218~p?,S222~p?)]" Type="OBSERVABLE"></Plot>
+<Plot Text="[Raf(x~p?)]" Type="OBSERVABLE"></Plot>
+<Plot Text="[Ras(S1S2~gtp?)]" Type="OBSERVABLE"></Plot>
+<CSV><![CDATA[
+0.9991989216560357,0,0,0,1
+1.9926272040909063,0,0,1,4
+2.999197315985292,0,0,5,14
+3.9874103509913437,0,0,13,27
+4.996820591185264,0,0,19,40
+5.99944150157299,0,1,35,49
+6.9998967586945655,0,1,55,50
+7.997097655118489,0,1,68,55
+8.998195183884434,0,2,81,48
+9.998774847291937,0,4,86,39
+10.999447978122953,0,9,88,31
+11.997609116063007,0,15,88,25
+12.998733288789266,0,25,91,19
+13.998293090660109,0,25,92,13
+14.999901868327692,0,29,88,8
+15.99995711320067,0,21,87,7
+16.997792596658133,0,25,81,6
+17.99872564058119,0,32,76,6
+18.998728139796484,0,39,71,6
+19.99774173006768,0,44,70,6
+20.999385567164296,0,46,71,4
+21.995774655673383,1,51,68,4
+22.99801067159367,1,47,64,4
+23.99943448831174,0,46,58,4
+24.99975111391708,1,48,54,4
+25.999744762403015,1,39,51,4
+26.999306104498814,0,45,50,4
+27.999783065209403,0,41,46,4
+28.99969351223264,1,39,47,4
+29.999928649619818,0,40,46,4
+30.99904895488378,1,34,46,4
+31.997631577413024,2,33,44,4
+32.99714817422766,0,29,42,4
+33.9901954026486,0,25,41,4
+34.99283687231235,2,25,40,4
+35.99786972108005,1,21,40,4
+36.999605163639934,1,24,40,4
+37.995216514130995,1,24,38,4
+38.99916469472566,0,17,35,3
+39.99949376946128,0,16,34,3
+40.998254757181634,0,13,34,3
+41.99948743626659,0,13,32,3
+42.99813440949506,0,10,29,3
+43.996992287126766,0,10,30,3
+44.99682024280205,0,5,29,3
+45.99190585180446,0,5,28,3
+46.99743451298146,0,2,30,3
+47.99831709983826,0,0,30,3
+48.998761878240614,0,1,30,3
+49.99906096654919,0,1,28,3
+50.996117504944344,0,1,25,3
+51.99576001589523,0,0,23,3
+52.996406086257245,0,1,25,3
+53.99746450621297,0,0,26,3
+54.999256650941284,0,0,24,3
+55.98948202458319,0,1,23,3
+56.99391663211154,0,3,26,3
+57.99888716782313,0,1,27,3
+58.99650602677028,0,1,25,3
+59.997942253522076,0,0,24,3
+60.99498782747138,0,0,22,3
+61.998157338279,0,1,21,3
+62.993784310173375,0,1,22,3
+63.9991433731168,0,1,23,3
+64.9968775340748,0,0,24,3
+65.99703065365858,0,0,22,3
+66.99586440738962,0,0,20,3
+67.99680758489535,0,1,22,3
+68.99817229777783,0,0,22,3
+69.99528211813315,0,0,21,3
+70.99648559216945,0,0,23,3
+71.99891324394439,0,1,22,3
+72.99836071310438,0,1,21,3
+73.99530518078781,0,1,23,3
+74.97889439682854,0,1,25,3
+75.99626046892048,0,0,25,3
+76.99826014686109,0,1,25,3
+77.99754144790344,0,1,26,3
+78.99798710511506,0,1,24,3
+79.99441106973237,0,0,23,3
+80.99977176246334,0,0,22,3
+81.99841730403958,0,0,23,3
+82.99845136241564,0,0,23,3
+83.99430957940291,0,1,24,3
+84.99889881884846,0,0,25,3
+85.99897330988496,0,0,23,3
+86.99323199172636,0,0,24,3
+87.99882775651693,0,0,24,3
+88.99919580810077,0,2,26,3
+89.9989609698796,0,1,26,3
+90.99902491263538,0,2,24,3
+91.99693207505109,0,1,23,3
+92.99793753069318,0,0,23,3
+93.99637834406045,0,1,23,3
+94.99976170795459,0,0,24,3
+95.99844241630828,0,0,25,3
+96.99452187113118,0,1,24,3
+97.99895695446725,0,2,24,3
+98.99474265468868,0,1,22,3
+99.9986737640376,0,1,22,3
+100.99998953836382,0,1,23,3
+101.99486534220728,0,1,24,3
+102.99954267232799,0,0,25,3
+103.99917872909174,0,0,25,3
+104.99936702502072,0,2,26,3
+105.99633262738529,0,0,26,3
+106.99372697750226,0,0,25,3
+107.9971977499557,0,1,25,3
+108.99411739605073,0,0,25,3
+109.99988953452431,0,0,26,3
+110.99968686485425,0,1,27,3
+111.99010517095338,0,1,25,3
+112.99422507362569,0,0,22,2
+113.99125087357442,0,2,22,2
+114.99726439897859,0,1,23,1
+115.9982112975815,0,0,23,1
+116.99963127231412,0,1,21,1
+117.99858286896186,0,0,21,1
+118.9975147062855,0,0,20,1
+119.9983921744056,0,1,21,1
+120.99824666299342,0,1,19,1
+121.99984606024492,0,0,19,1
+122.99991363395903,0,0,20,1
+123.99526676525693,0,1,19,1
+124.99897364257966,0,0,20,1
+125.99721077340601,0,0,19,1
+126.99877183536856,0,0,20,1
+127.99653138088544,0,0,18,1
+128.99003124331333,0,0,19,1
+129.9989820936536,0,1,19,1
+130.99611212630805,0,0,19,1
+131.99700962524813,0,0,21,1
+132.99511853322028,0,1,19,1
+133.99076878463555,0,0,17,1
+134.99298366026838,0,0,17,1
+135.99898819283715,0,0,17,1
+136.99811082166164,0,0,17,1
+137.99875499104456,0,0,18,1
+138.9975251186321,0,0,18,1
+139.9903742469633,0,0,19,1
+140.99918406014896,0,0,19,1
+141.9910788388083,0,0,19,1
+142.99897616168678,0,0,20,1
+143.9965693493798,0,1,20,1
+144.998452558039,0,0,19,1
+145.99984944079029,0,1,18,1
+146.99741945439263,0,0,18,1
+147.99139447914774,0,0,18,1
+148.99468063554048,0,0,17,1
+149.99574874703865,0,0,17,1
+150.9906790399301,0,0,16,1
+151.9967799570787,0,1,17,1
+152.99993847664098,0,0,16,1
+153.99628639424444,0,0,16,1
+154.999333130741,0,0,16,1
+155.99905100594208,0,1,14,1
+156.99979751835374,0,0,15,1
+157.99929685379726,0,0,16,1
+158.9992406431095,0,0,15,1
+159.99921617117118,0,0,14,1
+160.99903904590042,0,0,15,1
+161.98714103125502,0,0,16,1
+162.9950757855679,0,1,17,1
+163.99781223912072,0,1,16,1
+164.9986873283844,0,0,15,1
+165.9960771469949,0,0,14,1
+166.99799402207054,0,0,13,1
+167.99516760256404,0,0,13,1
+168.99992721680562,0,1,14,1
+169.99119344570198,0,1,14,1
+170.98764973341045,0,0,13,1
+171.9922546975704,0,0,13,1
+172.997621527655,0,0,14,1
+173.98878570486318,0,0,10,1
+174.99588865899017,0,0,11,1
+175.99439700454596,0,0,12,1
+176.99940473176767,0,0,13,1
+177.99688693032581,0,0,12,1
+178.99793194228528,0,0,12,1
+179.99538498351623,0,0,11,1
+180.9999968664056,0,0,11,1
+181.99410648335623,0,0,10,1
+182.99790490914813,0,0,10,1
+183.99918884664655,0,0,11,1
+184.99901681553382,0,0,11,1
+185.99915472698495,0,0,11,1
+186.99831575372832,0,1,11,1
+187.99497059052743,0,0,12,1
+188.994149243134,0,0,12,1
+189.99539625470194,0,0,10,1
+190.993516917835,0,0,11,1
+191.99906704433084,0,0,12,1
+192.99872106540167,0,0,11,1
+193.99846292415148,0,0,12,1
+194.99652052151637,0,0,10,1
+195.99641615858906,0,1,10,1
+196.9979774148901,0,1,9,1
+197.9973429637718,0,0,10,1
+198.99845060256098,0,0,10,1
+199.99816533262094,0,0,9,1
+200.99903421907695,0,0,9,1
+201.9924146000548,0,0,9,1
+202.99737678144984,0,1,10,1
+203.99936984787524,0,0,8,1
+204.99397207199067,0,0,8,1
+205.9992756632145,0,0,8,1
+206.99872243317984,0,0,9,1
+207.99509075447997,0,0,10,1
+208.99705474777363,0,0,10,1
+209.99839309085434,0,0,11,1
+210.99970472347746,0,0,11,1
+211.99906297951492,0,0,11,1
+212.9996898071886,0,0,11,1
+213.99798278701886,0,0,9,1
+214.99978584233807,0,0,10,1
+215.99970639933647,0,0,9,1
+216.99721559168606,0,0,10,1
+217.98924832060405,0,0,10,1
+218.99793814595304,0,0,11,1
+219.98637363888457,0,0,11,1
+220.9992442511406,0,0,12,1
+221.9992656606982,0,0,12,1
+222.9994996855915,0,0,11,0
+223.99804729658103,0,1,11,0
+224.9984274763408,0,1,10,0
+225.99956998303844,0,1,10,0
+226.99593916603442,0,1,9,0
+227.99668196444546,0,0,9,0
+228.99629720360605,0,0,9,0
+229.9969414839193,0,0,9,0
+230.99999373384918,0,0,8,0
+231.9969551693761,0,0,6,0
+232.9990845454402,0,0,5,0
+233.99548041375937,0,0,5,0
+234.9952571196982,0,0,5,0
+235.99856503109137,0,0,5,0
+236.9995780926203,0,0,5,0
+237.99826752853022,0,0,5,0
+238.99514434148978,0,0,5,0
+239.9993608764897,0,0,5,0
+240.99368841288353,0,0,5,0
+241.9988305674638,0,0,5,0
+242.9959991988292,0,0,5,0
+243.99651483014156,0,0,5,0
+244.99893888285692,0,0,5,0
+245.99398104559125,0,0,5,0
+246.99865318196325,0,0,4,0
+247.99778413052164,0,0,4,0
+248.99716135673341,0,1,4,0
+249.99997293447694,0,0,4,0
+250.99751269386292,0,0,3,0
+251.99942990117827,0,0,3,0
+252.99963344905044,0,0,3,0
+253.98777197101694,0,0,3,0
+254.99705424915172,0,0,3,0
+255.99177852522126,0,0,3,0
+256.9859661618521,0,0,2,0
+257.99940781831447,0,0,2,0
+258.99860705537657,0,0,2,0
+259.98961052518695,0,1,2,0
+260.98606229622004,0,0,1,0
+261.99591373275723,0,0,1,0
+262.99815412948595,0,0,1,0
+263.9923493125829,0,0,1,0
+264.9994000192512,0,0,1,0
+265.9971011603946,0,0,1,0
+266.9972039197673,0,0,1,0
+267.998431096404,0,0,1,0
+268.99335677409744,0,0,1,0
+269.9961944753852,0,0,1,0
+270.99810123384384,0,0,1,0
+271.98773699187234,0,0,1,0
+272.99007477118494,0,0,1,0
+273.9942394699089,0,0,1,0
+274.99410216095447,0,0,1,0
+275.9933206409627,0,0,1,0
+276.99877999830795,0,0,1,0
+277.9778970728792,0,0,1,0
+278.9965291007276,0,0,1,0
+279.99946808875944,0,0,1,0
+280.9994432943259,0,0,1,0
+281.9894639023531,0,0,1,0
+282.9934722314347,0,0,1,0
+283.99906235443007,0,0,1,0
+284.9896890661785,0,0,1,0
+285.9975472125438,0,0,0,0
+286.99465115184313,0,0,0,0
+287.9987273713736,0,0,0,0
+288.9968807219738,0,0,0,0
+289.9987665563376,0,0,0,0
+290.98649177374676,0,0,0,0
+291.97930024967116,0,0,0,0
+292.99642802076977,0,0,0,0
+293.9989303966726,0,0,0,0
+294.9945806633411,0,0,0,0
+295.9967866326331,0,0,0,0
+296.99980919271724,0,0,0,0
+297.998345663451,0,0,0,0
+298.9984585341961,0,0,0,0
+299.9846905551745,0,0,0,0
+300.99410923664703,0,0,0,0
+301.99104664441364,0,0,0,0
+302.9937562120891,0,0,0,0
+303.99904672927147,0,0,0,0
+304.99718952211487,0,0,0,0
+305.99644946461217,0,0,0,0
+306.9951286744224,0,0,0,0
+307.99071381896914,0,0,0,0
+308.99581100556986,0,0,0,0
+309.998425192834,0,0,0,0
+310.96932701320657,0,0,0,0
+311.9944130327456,0,0,0,0
+312.99493003708653,0,0,0,0
+313.9994111835593,0,0,0,0
+314.99537659772875,0,0,0,0
+315.9976559695579,0,0,0,0
+316.9939895104685,0,0,0,0
+317.9907383270168,0,0,0,0
+318.98341507962886,0,0,0,0
+319.9989332532991,0,0,0,0
+320.9966057533919,0,0,0,0
+321.9969513263016,0,0,0,0
+322.99689619691907,0,0,0,0
+323.9975423031986,0,0,0,0
+324.9958693999185,0,0,0,0
+325.9969229489047,0,0,0,0
+326.9875770261479,0,0,0,0
+327.9960780638806,0,0,0,0
+328.99376892825006,0,0,0,0
+329.9926655941727,0,0,0,0
+330.9909960386958,0,0,0,0
+331.96466387992666,0,0,0,0
+332.9954175865067,0,0,0,0
+333.9972257974646,0,0,0,0
+334.9993597864548,0,0,0,0
+335.99414845232474,0,0,0,0
+336.99945312050363,0,0,0,0
+337.99523559321375,0,0,0,0
+338.9916899307211,0,0,0,0
+339.99574290346817,0,0,0,0
+340.9991745236999,0,0,0,0
+341.99439163069155,0,0,0,0
+342.9905982055541,0,0,0,0
+343.9984945595983,0,0,0,0
+344.9935949750463,0,0,0,0
+345.99390679324847,0,0,0,0
+346.99581976073426,0,0,0,0
+347.9979457155697,0,0,0,0
+348.9995717996304,0,0,0,0
+349.9966789771608,0,0,0,0
+350.99856494333335,0,0,0,0
+351.9975823477341,0,0,0,0
+352.9939912558876,0,0,0,0
+353.995898948107,0,0,0,0
+354.99049913340883,0,0,0,0
+355.98862624196005,0,0,0,0
+356.9906786818929,0,0,0,0
+357.996604773,0,0,0,0
+358.99911224760666,0,0,0,0
+359.9964195939041,0,0,0,0
+360.9990942101085,0,0,0,0
+361.9941627189984,0,0,0,0
+362.99955848896303,0,0,0,0
+363.9958643952331,0,0,0,0
+364.9988453680872,0,0,0,0
+365.9996511605916,0,0,0,0
+366.99995858456305,0,0,0,0
+367.99769805252276,0,0,0,0
+368.98942889364844,0,0,0,0
+369.98804159666236,0,0,0,0
+370.99936898820914,0,0,0,0
+371.9979648599606,0,0,0,0
+372.99851001188546,0,0,0,0
+373.99575583499836,0,0,0,0
+374.9967874040809,0,0,0,0
+375.9990014999378,0,0,0,0
+376.99642607039823,0,0,0,0
+377.9976006909268,0,0,0,0
+378.9996102201505,0,0,0,0
+379.99348852155254,0,0,0,0
+380.99705946941816,0,0,0,0
+381.99024364067003,0,0,0,0
+382.99434734352303,0,0,0,0
+383.99438019081896,0,0,0,0
+384.99029977249285,0,0,0,0
+385.99755452832693,0,0,0,0
+386.99866708696084,0,0,0,0
+387.9959693459091,0,0,0,0
+388.99997577655057,0,0,0,0
+389.9996574204337,0,0,0,0
+390.9952729147478,0,0,0,0
+391.9997008775152,0,0,0,0
+392.9935387522187,0,0,0,0
+393.993655929519,0,0,0,0
+394.9884200610926,0,0,0,0
+395.99811045964617,0,0,0,0
+396.99408033930644,0,0,0,0
+397.99447734720354,0,0,0,0
+398.9936383614098,0,0,0,0
+399.9996530817056,0,0,0,0
+400.9990732449549,0,0,0,0
+401.99690095845216,0,0,0,0
+402.99983063080583,0,0,0,0
+403.9966357714397,0,0,0,0
+404.9963164771622,0,0,0,0
+405.9995713702999,0,0,0,0
+406.9999926981919,0,0,0,0
+407.99673790224494,0,0,0,0
+408.99998311090286,0,0,0,0
+409.99850358134825,0,0,0,0
+410.9913290587312,0,0,0,0
+411.99903150014904,0,0,0,0
+412.9998973888874,0,0,0,0
+413.99610392082536,0,0,0,0
+414.9964379570431,0,0,0,0
+415.9707846238378,0,0,0,0
+416.9997359244824,0,0,0,0
+417.9845388160924,0,0,0,0
+418.99101966386905,0,0,0,0
+419.9578552199827,0,0,0,0
+420.99673801964343,0,0,0,0
+421.9966343770443,0,0,0,0
+422.9986522137039,0,0,0,0
+423.9982950453509,0,0,0,0
+424.99948830243477,0,0,0,0
+425.9976359815902,0,0,0,0
+426.9981031194823,0,0,0,0
+427.98925975321833,0,0,0,0
+428.9947140090008,0,0,0,0
+429.99947498933096,0,0,0,0
+430.9913388794358,0,0,0,0
+431.98843121277577,0,0,0,0
+432.99347337461427,0,0,0,0
+433.99831490115815,0,0,0,0
+434.99201800419047,0,0,0,0
+435.9958716871012,0,0,0,0
+436.99587115997525,0,0,0,0
+437.9977643876556,0,0,0,0
+438.9866727930936,0,0,0,0
+439.9935553258607,0,0,0,0
+440.9916968720215,0,0,0,0
+441.9977440197037,0,0,0,0
+442.99293955839426,0,0,0,0
+443.99345639816187,0,0,0,0
+444.99580966275613,0,0,0,0
+445.9900855298434,0,0,0,0
+446.99462761720775,0,0,0,0
+447.9822872269804,0,0,0,0
+448.996028649482,0,0,0,0
+449.9757627672382,0,0,0,0
+450.99869371641336,0,0,0,0
+451.9919534842651,0,0,0,0
+452.99650659324254,0,0,0,0
+453.99422787436157,0,0,0,0
+454.9954221725257,0,0,0,0
+455.9929746988677,0,0,0,0
+456.9991731884986,0,0,0,0
+457.99860937128204,0,0,0,0
+458.98480435706773,0,0,0,0
+459.9996207973293,0,0,0,0
+460.9938861965639,0,0,0,0
+461.99706816591595,0,0,0,0
+462.98964871309806,0,0,0,0
+463.9755369589572,0,0,0,0
+464.999889613157,0,0,0,0
+465.9920485519081,0,0,0,0
+466.9980043637559,0,0,0,0
+467.98769889798547,0,0,0,0
+468.99853875935673,0,0,0,0
+469.99532143209603,0,0,0,0
+470.98944721300893,0,0,0,0
+471.9831018780522,0,0,0,0
+472.992563085623,0,0,0,0
+473.99952246715935,0,0,0,0
+474.9702879439796,0,0,0,0
+475.9878248516496,0,0,0,0
+476.9991052433628,0,0,0,0
+477.9894970766689,0,0,0,0
+478.989879410041,0,0,0,0
+479.9900162998797,0,0,0,0
+480.99683109957306,0,0,0,0
+481.9913456438753,0,0,0,0
+482.9978658604274,0,0,0,0
+483.9939290216145,0,0,0,0
+484.99864126395266,0,0,0,0
+485.9889475457657,0,0,0,0
+486.99471071592393,0,0,0,0
+487.9967687843657,0,0,0,0
+488.9823702984774,0,0,0,0
+489.9991622546125,0,0,0,0
+490.9957088535795,0,0,0,0
+491.98588067338227,0,0,0,0
+492.997553151602,0,0,0,0
+493.99555815017874,0,0,0,0
+494.99898280691815,0,0,0,0
+495.9998965759827,0,0,0,0
+496.99561865540716,0,0,0,0
+497.99843566736956,0,0,0,0
+498.9979244242329,0,0,0,0
+499.98666995941215,0,0,0,0
+500.99913695454705,0,0,0,0
+501.9963716806874,0,0,0,0
+502.9933678819778,0,0,0,0
+503.99852369383575,0,0,0,0
+504.9984526744489,0,0,0,0
+505.9967591305334,0,0,0,0
+506.9985086475408,0,0,0,0
+507.9980242908576,0,0,0,0
+508.9998849509552,0,0,0,0
+509.99935352482265,0,0,0,0
+510.99187412627776,0,0,0,0
+511.9989872039265,0,0,0,0
+512.9992844881049,0,0,0,0
+513.99503031781,0,0,0,0
+514.9951604104185,0,0,0,0
+515.9943723300979,0,0,0,0
+516.9958581968444,0,0,0,0
+517.9999178933716,0,0,0,0
+518.9947311273079,0,0,0,0
+519.9944626161018,0,0,0,0
+520.9971567927934,0,0,0,0
+521.9929165550849,0,0,0,0
+522.9982296176406,0,0,0,0
+523.9960563841562,0,0,0,0
+524.9945891982575,0,0,0,0
+525.9978939840222,0,0,0,0
+526.9962999902499,0,0,0,0
+527.9992995460904,0,0,0,0
+528.9932730748025,0,0,0,0
+529.9994203671937,0,0,0,0
+530.9927238114434,0,0,0,0
+531.9958457881334,0,0,0,0
+532.987339228257,0,0,0,0
+533.9995475328418,0,0,0,0
+534.9974464741867,0,0,0,0
+535.9752950495663,0,0,0,0
+536.9944304762,0,0,0,0
+537.9971045967881,0,0,0,0
+538.9782212993454,0,0,0,0
+539.9923783237075,0,0,0,0
+540.9977845771442,0,0,0,0
+541.9955586405762,0,0,0,0
+542.9978887558011,0,0,0,0
+543.9924594761052,0,0,0,0
+544.999417359852,0,0,0,0
+545.9937212148633,0,0,0,0
+546.9982048764547,0,0,0,0
+547.9897645372099,0,0,0,0
+548.9849270034136,0,0,0,0
+549.9931640799973,0,0,0,0
+550.9977303738535,0,0,0,0
+551.9959464870045,0,0,0,0
+552.9966818184108,0,0,0,0
+553.9915419726588,0,0,0,0
+554.9988909651141,0,0,0,0
+555.9998433649127,0,0,0,0
+556.9959307031309,0,0,0,0
+557.9940465695915,0,0,0,0
+558.9991241390293,0,0,0,0
+559.9935373784766,0,0,0,0
+560.9954439273041,0,0,0,0
+561.9796719350652,0,0,0,0
+562.9863926121849,0,0,0,0
+563.9918406719046,0,0,0,0
+564.9959324988695,0,0,0,0
+565.9978896538167,0,0,0,0
+566.9873942760385,0,0,0,0
+567.9954788763382,0,0,0,0
+568.9854051262996,0,0,0,0
+569.9967485619329,0,0,0,0
+570.9761622084892,0,0,0,0
+571.9877003722307,0,0,0,0
+572.9977433757816,0,0,0,0
+573.9960661121607,0,0,0,0
+574.9756052068402,0,0,0,0
+575.9997172261747,0,0,0,0
+576.9975771751427,0,0,0,0
+577.9999799330537,0,0,0,0
+578.9883541778345,0,0,0,0
+579.9968158174534,0,0,0,0
+580.996222978834,0,0,0,0
+581.9991011245747,0,0,0,0
+582.9903317891097,0,0,0,0
+583.9950139657266,0,0,0,0
+584.9818133892886,0,0,0,0
+585.973585537089,0,0,0,0
+586.9954057366853,0,0,0,0
+587.9980280971598,0,0,0,0
+588.9928209134657,0,0,0,0
+589.9983083677307,0,0,0,0
+590.9930533702101,0,0,0,0
+591.9995011229419,0,0,0,0
+592.9972370238049,0,0,0,0
+593.9951170608308,0,0,0,0
+594.9980414296593,0,0,0,0
+595.9906676828573,0,0,0,0
+596.9987855852918,0,0,0,0
+597.9824233056077,0,0,0,0
+598.9995173121096,0,0,0,0
+599.9977533440634,0,0,0,0
+600.9953876711287,0,0,0,0
+601.9898216972348,0,0,0,0
+602.9923376896173,0,0,0,0
+603.9946952908916,0,0,0,0
+604.9914078613283,0,0,0,0
+605.992895164323,0,0,0,0
+606.9968190964362,0,0,0,0
+607.9996764961807,0,0,0,0
+608.9842497463211,0,0,0,0
+609.9830767391156,0,0,0,0
+610.9880233798219,0,0,0,0
+611.9924765837378,0,0,0,0
+612.9848027294624,0,0,0,0
+613.9906681860143,0,0,0,0
+614.9922426772182,0,0,0,0
+615.9982892758115,0,0,0,0
+616.9821452853656,0,0,0,0
+617.9940021759473,0,0,0,0
+618.9951376127375,0,0,0,0
+619.9881332199325,0,0,0,0
+620.9970400715408,0,0,0,0
+621.9961965507873,0,0,0,0
+622.9787860086889,0,0,0,0
+623.9986408580447,0,0,0,0
+624.9946229151045,0,0,0,0
+625.9862203039629,0,0,0,0
+626.9968887052552,0,0,0,0
+627.9999316725598,0,0,0,0
+628.9935543230674,0,0,0,0
+629.9980037598215,0,0,0,0
+630.9980100400916,0,0,0,0
+631.9945836492291,0,0,0,0
+632.9991387523401,0,0,0,0
+633.9970972125019,0,0,0,0
+634.9994510238879,0,0,0,0
+635.9900224830856,0,0,0,0
+636.9959462372672,0,0,0,0
+637.9941512109912,0,0,0,0
+638.9939246446993,0,0,0,0
+639.9989772267478,0,0,0,0
+640.9978244169597,0,0,0,0
+641.9982838769381,0,0,0,0
+642.9922568724802,0,0,0,0
+643.9933476146339,0,0,0,0
+644.9984457061032,0,0,0,0
+645.9932950157643,0,0,0,0
+646.9976046518415,0,0,0,0
+647.9941474059342,0,0,0,0
+648.9970131981631,0,0,0,0
+649.9952856679034,0,0,0,0
+650.9981821473967,0,0,0,0
+651.9954528122867,0,0,0,0
+652.9937302917689,0,0,0,0
+653.997053181374,0,0,0,0
+654.9955122648036,0,0,0,0
+655.9888524505357,0,0,0,0
+656.9994755122938,0,0,0,0
+657.9991764952119,0,0,0,0
+658.9729661895334,0,0,0,0
+659.9994140610867,0,0,0,0
+660.9967937555632,0,0,0,0
+661.9963334986553,0,0,0,0
+662.996640448965,0,0,0,0
+663.9962846033407,0,0,0,0
+664.9981207978857,0,0,0,0
+665.9942353844041,0,0,0,0
+666.9979238460063,0,0,0,0
+667.9957761827461,0,0,0,0
+668.9956279220129,0,0,0,0
+669.994558767301,0,0,0,0
+670.9990706954737,0,0,0,0
+671.9996585133365,0,0,0,0
+672.9976688304663,0,0,0,0
+673.9992698422664,0,0,0,0
+674.9962051750103,0,0,0,0
+675.9980995195948,0,0,0,0
+676.9976906245739,0,0,0,0
+677.9926180875709,0,0,0,0
+678.9986332693807,0,0,0,0
+679.9988544199646,0,0,0,0
+680.9970406742772,0,0,0,0
+681.9938568562441,0,0,0,0
+682.9961164697418,0,0,0,0
+683.9837687424066,0,0,0,0
+684.9910520628034,0,0,0,0
+685.9954120393095,0,0,0,0
+686.9998225799359,0,0,0,0
+687.9988850968932,0,0,0,0
+688.9989698214405,0,0,0,0
+689.996548931471,0,0,0,0
+690.9969676519515,0,0,0,0
+691.9985678000248,0,0,0,0
+692.9834546779953,0,0,0,0
+693.998967494523,0,0,0,0
+694.997378815402,0,0,0,0
+695.9931717909466,0,0,0,0
+696.9916827965682,0,0,0,0
+697.98769682822,0,0,0,0
+698.9920355654282,0,0,0,0
+699.999657292075,0,0,0,0
+700.9963092993083,0,0,0,0
+701.9934637230588,0,0,0,0
+702.9840112627819,0,0,0,0
+703.9913799661653,0,0,0,0
+704.9876097499231,0,0,0,0
+705.998638475633,0,0,0,0
+706.9839657225813,0,0,0,0
+707.9721550556625,0,0,0,0
+708.998413965254,0,0,0,0
+709.9895442602435,0,0,0,0
+710.9918956730405,0,0,0,0
+711.9865251213502,0,0,0,0
+712.9984863486421,0,0,0,0
+713.9994518741308,0,0,0,0
+714.9973256120209,0,0,0,0
+715.990497709543,0,0,0,0
+716.9998988938355,0,0,0,0
+717.9962225637796,0,0,0,0
+718.9971251236075,0,0,0,0
+719.9967592401564,0,0,0,0
+720.9994824828233,0,0,0,0
+721.9968103417248,0,0,0,0
+722.9991307617069,0,0,0,0
+723.9778438803417,0,0,0,0
+724.9979778022686,0,0,0,0
+725.9933128146531,0,0,0,0
+726.9990639465626,0,0,0,0
+727.9749273448992,0,0,0,0
+728.9957366512195,0,0,0,0
+729.9972732206438,0,0,0,0
+730.9886136878075,0,0,0,0
+731.9992043916376,0,0,0,0
+732.9977457490064,0,0,0,0
+733.9969362569797,0,0,0,0
+734.9964646374846,0,0,0,0
+735.9964500463865,0,0,0,0
+736.9763029482264,0,0,0,0
+737.9804027716914,0,0,0,0
+738.9920904038629,0,0,0,0
+739.9844211765392,0,0,0,0
+740.9945330778578,0,0,0,0
+741.9988224457122,0,0,0,0
+742.9954444743114,0,0,0,0
+743.9982796820846,0,0,0,0
+744.9957818576216,0,0,0,0
+745.9923169939229,0,0,0,0
+746.9886442134473,0,0,0,0
+747.9966579665205,0,0,0,0
+748.9919398586658,0,0,0,0
+749.9997841497194,0,0,0,0
+750.9949262965722,0,0,0,0
+751.9932254340015,0,0,0,0
+752.9999403531439,0,0,0,0
+753.9984081216758,0,0,0,0
+754.9946058992006,0,0,0,0
+755.99976930697,0,0,0,0
+756.9852643896158,0,0,0,0
+757.9865313814738,0,0,0,0
+758.9923333612693,0,0,0,0
+759.9961146312951,0,0,0,0
+760.9933277037583,0,0,0,0
+761.9993133197211,0,0,0,0
+762.9949590659927,0,0,0,0
+763.9991395893255,0,0,0,0
+764.9854608740825,0,0,0,0
+765.9987578806782,0,0,0,0
+766.9968299261592,0,0,0,0
+767.9953198099532,0,0,0,0
+768.9973788971906,0,0,0,0
+769.9981816858689,0,0,0,0
+770.9869326522937,0,0,0,0
+771.9979612347917,0,0,0,0
+772.9898899613988,0,0,0,0
+773.9812180915974,0,0,0,0
+774.9900263917556,0,0,0,0
+775.9959887874552,0,0,0,0
+776.999715252409,0,0,0,0
+777.9896624416323,0,0,0,0
+778.9871471101512,0,0,0,0
+779.998149420811,0,0,0,0
+780.998736110767,0,0,0,0
+781.9958332706159,0,0,0,0
+782.9896430559896,0,0,0,0
+783.9998771214875,0,0,0,0
+784.996020396569,0,0,0,0
+785.9969103804701,0,0,0,0
+786.996838245986,0,0,0,0
+787.9974665621809,0,0,0,0
+788.990899525407,0,0,0,0
+789.9958940721937,0,0,0,0
+790.9708109318972,0,0,0,0
+791.9789833782505,0,0,0,0
+792.9966298418411,0,0,0,0
+793.9809659491058,0,0,0,0
+794.9962387322655,0,0,0,0
+795.9885382414687,0,0,0,0
+796.995373190364,0,0,0,0
+797.990661448349,0,0,0,0
+798.9923807633105,0,0,0,0
+799.9958660618815,0,0,0,0
+800.9986093436174,0,0,0,0
+801.9883279994335,0,0,0,0
+802.9988828360492,0,0,0,0
+803.999182476636,0,0,0,0
+804.9869320185733,0,0,0,0
+805.9989651748074,0,0,0,0
+806.988240292153,0,0,0,0
+807.9965662754897,0,0,0,0
+808.9816104378319,0,0,0,0
+809.984840181924,0,0,0,0
+810.9620082154933,0,0,0,0
+811.98861684785,0,0,0,0
+812.9993461958029,0,0,0,0
+813.9974685820222,0,0,0,0
+814.9930885896677,0,0,0,0
+815.9986452846745,0,0,0,0
+816.9968364803143,0,0,0,0
+817.9909097889665,0,0,0,0
+818.9956790971023,0,0,0,0
+819.9954861698478,0,0,0,0
+820.9967004888236,0,0,0,0
+821.9953013004957,0,0,0,0
+822.9888489093441,0,0,0,0
+823.9945425938816,0,0,0,0
+824.9993641412434,0,0,0,0
+825.9937159216214,0,0,0,0
+826.9967107440649,0,0,0,0
+827.9993252443489,0,0,0,0
+828.9970701056809,0,0,0,0
+829.986445139919,0,0,0,0
+830.9993034791926,0,0,0,0
+831.9917128494391,0,0,0,0
+832.9913673738232,0,0,0,0
+833.9915555875806,0,0,0,0
+834.9956704722924,0,0,0,0
+835.9998709030965,0,0,0,0
+836.9975571340772,0,0,0,0
+837.9999223562974,0,0,0,0
+838.9965271533499,0,0,0,0
+839.9981673381938,0,0,0,0
+840.9972455173636,0,0,0,0
+841.9877374495101,0,0,0,0
+842.9957904626151,0,0,0,0
+843.9973576328,0,0,0,0
+844.9901447273708,0,0,0,0
+845.979852393751,0,0,0,0
+846.9817782706358,0,0,0,0
+847.9999196271791,0,0,0,0
+848.9993983436353,0,0,0,0
+849.9850594542473,0,0,0,0
+850.9955097638779,0,0,0,0
+851.9980595996409,0,0,0,0
+852.9989061442145,0,0,0,0
+853.997952370495,0,0,0,0
+854.9975826040907,0,0,0,0
+855.99068219709,0,0,0,0
+856.9892991150779,0,0,0,0
+857.999364121202,0,0,0,0
+858.9959817083478,0,0,0,0
+859.9959384338994,0,0,0,0
+860.9980400821303,0,0,0,0
+861.9990520065685,0,0,0,0
+862.9960919633149,0,0,0,0
+863.9994555695636,0,0,0,0
+864.9919286853026,0,0,0,0
+865.9921277283044,0,0,0,0
+866.9983715147406,0,0,0,0
+867.988940787378,0,0,0,0
+868.9958187745432,0,0,0,0
+869.9943901192003,0,0,0,0
+870.9956107525342,0,0,0,0
+871.992413689489,0,0,0,0
+872.9965827536233,0,0,0,0
+873.9993811103064,0,0,0,0
+874.9981187213386,0,0,0,0
+875.9899183636979,0,0,0,0
+876.9960907184075,0,0,0,0
+877.9985630000506,0,0,0,0
+878.9938101950611,0,0,0,0
+879.9986138239007,0,0,0,0
+880.9976925209666,0,0,0,0
+881.9996807683573,0,0,0,0
+882.9967866448692,0,0,0,0
+883.9987697834881,0,0,0,0
+884.9969312263828,0,0,0,0
+885.9948386790645,0,0,0,0
+886.9962046839644,0,0,0,0
+887.9971010528516,0,0,0,0
+888.989595255213,0,0,0,0
+889.9965661175647,0,0,0,0
+890.9997917765052,0,0,0,0
+891.9968801751705,0,0,0,0
+892.9969749848478,0,0,0,0
+893.998955518283,0,0,0,0
+894.9987178762797,0,0,0,0
+895.9984053914023,0,0,0,0
+896.9782044342221,0,0,0,0
+897.9995984951464,0,0,0,0
+898.999022198321,0,0,0,0
+899.9975308488389,0,0,0,0
+900.9855713825198,0,0,0,0
+901.9860500490915,0,0,0,0
+902.986417698708,0,0,0,0
+903.992809905217,0,0,0,0
+904.9991662639059,0,0,0,0
+905.9972264411382,0,0,0,0
+906.9988052140483,0,0,0,0
+907.9920837835413,0,0,0,0
+908.9921462972052,0,0,0,0
+909.9881584599833,0,0,0,0
+910.9979201847952,0,0,0,0
+911.9998896754339,0,0,0,0
+912.992372772576,0,0,0,0
+913.9984884335397,0,0,0,0
+914.9975834847902,0,0,0,0
+915.9986694963766,0,0,0,0
+916.9997342416204,0,0,0,0
+917.9982981072785,0,0,0,0
+918.9989141979447,0,0,0,0
+919.9989356534586,0,0,0,0
+920.9973609335328,0,0,0,0
+921.9993078411577,0,0,0,0
+922.9857037136046,0,0,0,0
+923.9962020151246,0,0,0,0
+924.9995655829317,0,0,0,0
+925.9962557022751,0,0,0,0
+926.9914259959303,0,0,0,0
+927.9990022144189,0,0,0,0
+928.9963517041458,0,0,0,0
+929.9854170209569,0,0,0,0
+930.999856046353,0,0,0,0
+931.9696912237822,0,0,0,0
+932.9793818419598,0,0,0,0
+933.9838390696523,0,0,0,0
+934.9782998760988,0,0,0,0
+935.9932161022198,0,0,0,0
+936.9963619943425,0,0,0,0
+937.9977209731514,0,0,0,0
+938.9990056122391,0,0,0,0
+939.9843079564552,0,0,0,0
+940.9859918433827,0,0,0,0
+941.9993109998646,0,0,0,0
+942.9992536457097,0,0,0,0
+943.9949717403438,0,0,0,0
+944.9897771413968,0,0,0,0
+945.9988428949798,0,0,0,0
+946.9995919554813,0,0,0,0
+947.9992522127258,0,0,0,0
+948.9970180395835,0,0,0,0
+949.9992349418848,0,0,0,0
+950.994249434123,0,0,0,0
+951.9979576141455,0,0,0,0
+952.9967365996025,0,0,0,0
+953.9972045864283,0,0,0,0
+954.9943747932764,0,0,0,0
+955.9934194090996,0,0,0,0
+956.9991698103228,0,0,0,0
+957.9989962235387,0,0,0,0
+958.9722328620726,0,0,0,0
+959.9984881627367,0,0,0,0
+960.9993790280904,0,0,0,0
+961.9986042033883,0,0,0,0
+962.9976576031107,0,0,0,0
+963.999406174406,0,0,0,0
+964.9797135375842,0,0,0,0
+965.9919707784574,0,0,0,0
+966.9955656163004,0,0,0,0
+967.9992568878059,0,0,0,0
+968.9951823445026,0,0,0,0
+969.99859421428,0,0,0,0
+970.9986828708144,0,0,0,0
+971.9986873386229,0,0,0,0
+972.9966867765644,0,0,0,0
+973.9892424668426,0,0,0,0
+974.9981032280057,0,0,0,0
+975.9903673425428,0,0,0,0
+976.9996193849527,0,0,0,0
+977.997099404809,0,0,0,0
+978.9905843693317,0,0,0,0
+979.9985302697727,0,0,0,0
+980.9784799333996,0,0,0,0
+981.9804089999856,0,0,0,0
+982.9849344291576,0,0,0,0
+983.9948594671389,0,0,0,0
+984.9981572847697,0,0,0,0
+985.9916239227372,0,0,0,0
+986.9888234784987,0,0,0,0
+987.9964799881468,0,0,0,0
+988.9801521583723,0,0,0,0
+989.9943839164209,0,0,0,0
+990.9947184440786,0,0,0,0
+991.9898794048562,0,0,0,0
+992.9974323409369,0,0,0,0
+993.9891599516707,0,0,0,0
+994.9947329522784,0,0,0,0
+995.9931121954945,0,0,0,0
+996.994602114207,0,0,0,0
+997.9987788895361,0,0,0,0
+998.9902577560892,0,0,0,0
+999.9756249977006,0,0,0,0
+1000.0097356454048,0,0,0,0
+]]></CSV>
+</Simulation>
+<Log>
+<Entry Count="1" Message="-Initialization..." Position="1231854369.992" Type="INFO"></Entry>
+<Entry Count="1" Message="--Computing initial state" Position="1231854369.992" Type="INFO"></Entry>
+<Entry Count="1" Message="--Abstracting activation map..." Position="1231854370.117" Type="INFO"></Entry>
+<Entry Count="1" Message="--Abstraction: 0.0 sec. CPU" Position="1231854370.133" Type="INFO"></Entry>
+<Entry Count="1" Message="--Activation map computed" Position="1231854370.133" Type="INFO"></Entry>
+<Entry Count="1" Message="-Initialization: 0.140625 sec. CPU" Position="1231854370.242" Type="INFO"></Entry>
+<Entry Count="1" Message="-Simulation..." Position="1231854370.242" Type="INFO"></Entry>
+<Entry Count="5" Message="Application of rule exp is clashing" Position="1231854370.242" Type="INTERNAL"></Entry>
+<Entry Count="1" Message="-Simulation: 8.265625 sec. CPU" Position="1231854379.899" Type="INFO"></Entry>
+<Entry Count="1" Message="-Building xml tree for influence map: 0.0 sec. CPU" Position="1231854379.914" Type="INFO"></Entry>
+<Entry Count="1" Message="-Building xml tree for data points: 0.9218750000000001 sec. CPU" Position="1231854380.930" Type="INFO"></Entry>
+</Log>
+</SimplxSession>
