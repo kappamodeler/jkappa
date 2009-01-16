@@ -731,7 +731,7 @@ public class Parser {
 
 		st = st.substring(1, st.length() - 1);
 
-		st = st.trim().replaceAll(" 	", "");
+		st = st.trim().replaceAll("[ 	]", "");
 
 		ConstraintData constraintData;
 		if (indexConstraintEnd < index)
