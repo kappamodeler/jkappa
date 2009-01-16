@@ -123,12 +123,14 @@ public class CContactMap {
 
 	private boolean checkConnectionWithFocused(IAgent checkingAgent) {
 		for (IAgent agent : agentsFromFocusedRule) {
-			if (agent.equals(checkingAgent))
+			if (agent.equalz(checkingAgent))
+//				if (agent.equals(checkingAgent))
 				return true;
 			for (ISite site : ((CAgent) checkingAgent).getSites()) {
 				ISite linkSite = site.getLinkState().getSite();
 				if (linkSite != null)
-					if (linkSite.getAgentLink().equals(agent))
+					if (linkSite.getAgentLink().equalz(agent))
+//						if (linkSite.getAgentLink().equals(agent))
 						return true;
 
 			}
@@ -416,7 +418,8 @@ public class CContactMap {
 				fillAgentsFromRule((CRule) rule, agentsFromRule);
 
 				for (IAgent agent : this.agentsFromFocusedRule)
-					if (agentsFromRule.contains(agent)) {
+					if (agent.includedInCollection(agentsFromRule)) {
+//						if (agentsFromRule.contains(agent)) {
 						reachableRules.add(rule);
 						break;
 					}
