@@ -29,7 +29,7 @@ public final class CSolution implements ISolution, Serializable {
 			ISite linkSite = site.getLinkState().getSite();
 			if (linkSite != null) {
 				IAgent agent = linkSite.getAgentLink();
-				if (!(agentsList.contains(agent))) {
+				if (!(agent.includedInCollection(agentsList))) {
 					agentsList.add(agent);
 					depthSearch(agent, agentsList);
 				}

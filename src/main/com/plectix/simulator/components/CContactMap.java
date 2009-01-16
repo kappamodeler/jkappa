@@ -446,7 +446,7 @@ public class CContactMap {
 	private void addAgentsToListFromRule(List<IAgent> agents,
 			List<IAgent> agentsForAdding) {
 		for (IAgent agent : agents) {
-			if (!agentsForAdding.contains(agent)) {
+			if (!agent.includedInCollection(agentsForAdding)) {
 				agentsForAdding.add(agent);
 			}
 		}
