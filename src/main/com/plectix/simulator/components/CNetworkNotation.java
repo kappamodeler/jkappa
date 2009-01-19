@@ -93,7 +93,7 @@ public class CNetworkNotation implements INetworkNotation {
 		st += "changedAgentsFromSolution="
 				+ changedAgentsFromSolution.keySet().toString() + " ";
 		st += "changesOfAllUsedSites="
-			+ changesOfAllUsedSites.keySet().toString() + " ";
+				+ changesOfAllUsedSites.keySet().toString() + " ";
 		st += "ruleName=" + rule.getName() + " ";
 		st += "step=" + step + " ";
 		st += "agentsNotation=" + agentsNotation.toString() + " ";
@@ -304,19 +304,29 @@ public class CNetworkNotation implements INetworkNotation {
 					index, true);
 	}
 
+	public final boolean changedSitesContains(ISite site) {
+		IAgent agent = site.getAgentLink();
+		AgentSites as = changesOfAllUsedSites.get(agent.getId());
+		if (as != null) {
+			IStoriesSiteStates sss = as.getSites().get(site.getNameId());
+			if (sss != null)
+				return true;
+		}
+		return false;
+	}
+
 	public final void checkLinkToUsedSites(StateType index, ISite site) {
 		if (site.getLinkState().getSite() == null)
-			this.addToAgents(site, new CStoriesSiteStates(index,site
-					.getInternalState().getNameId(), -1, -1),
-					index, false);
+			this.addToAgents(site, new CStoriesSiteStates(index, site
+					.getInternalState().getNameId(), -1, -1), index, false);
 		else
-			this.addToAgents(site, new CStoriesSiteStates(index,site
+			this.addToAgents(site, new CStoriesSiteStates(index, site
 					.getInternalState().getNameId(), ((CAgent) site
 					.getLinkState().getSite().getAgentLink()).getHash(),
 					((CSite) site.getLinkState().getSite()).getNameId()),
 					index, false);
 	}
-	
+
 	public final void checkLinkForNetworkNotationDel(StateType index,
 			ISite site, boolean toChangedAgents) {
 		if (site.getLinkState().getSite() == null)
@@ -481,4 +491,33 @@ public class CNetworkNotation implements INetworkNotation {
 
 		return IntersectionType.NO_INTERSECTION;
 	}
+
+	public final boolean isEqualsNetworkNotation(CNetworkNotation checkNN,
+            Long agentIDToDelete, Long checkAgentID) {
+       if (this.changedAgentsFromSolution.size() != checkNN
+                 .getChangedAgentsFromSolution().size())
+            return false;
+       Iterator<Long> agentIterator = this.changedAgentsFromSolution.keySet()
+                 .iterator();
+       while (agentIterator.hasNext()) {
+            Long agentID = agentIterator.next();
+
+            AgentSites as = this.changedAgentsFromSolution.get(agentIDToDelete);
+            AgentSites asToCheck = null;
+            if (agentID.equals(agentIDToDelete)) {
+                 asToCheck = checkNN.getChangedAgentsFromSolution().get(
+                           checkAgentID);
+            } else {
+                 asToCheck = checkNN.getChangedAgentsFromSolution().get(agentID);
+            }
+
+            if (asToCheck == null)
+                 return false;
+            if(!as.isEqualsAgentSites(asToCheck))
+            	return false;
+            
+       }
+
+       return true;
+  }
 }

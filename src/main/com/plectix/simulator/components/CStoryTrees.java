@@ -276,6 +276,7 @@ public final class CStoryTrees {
 		if (hasLink(nnListForChange, agentIDToDelete))
 			return listToReturn;
 
+		//List<CNetworkNotation> listToCheck = new ArrayList<CNetworkNotation>();
 		if (hasWrongIntersection(agentIDToDelete, agentID, nnListForDelete,
 				nnListForChange))
 			return listToReturn;

@@ -37,4 +37,22 @@ import com.plectix.simulator.interfaces.IStoriesSiteStates;
 		// TODO Auto-generated method stub
 
 	}
+	
+	public final boolean isEqualsAgentSites(AgentSites checkAS){
+		if(sites.size()!=checkAS.getSites().size())
+			return false;
+		
+		Iterator<Integer> iterator = sites.keySet().iterator();
+		while (iterator.hasNext()) {
+            int key = iterator.next();
+            IStoriesSiteStates checkSS =checkAS.getSites().get(key);
+            IStoriesSiteStates ss = sites.get(key);
+            if(checkSS==null)
+            	return false;
+            if(!ss.isEqualsAfterState(checkSS))
+            	return false;
+            
+		}
+		return true;
+	}
 }

@@ -105,4 +105,16 @@ public final class CStoriesSiteStates implements IStoriesSiteStates {
 
 		return true;
 	}
+	
+	public final boolean isEqualsAfterState(IStoriesSiteStates checkSS){
+		if(this.afterState.getIdInternalState()!=checkSS.getAfterState().getIdInternalState())
+			return false;
+		if(this.afterState.getIdLinkAgent()!=checkSS.getAfterState().getIdLinkAgent())
+			return false;
+		if(this.afterState.getIdLinkSite()!=checkSS.getAfterState().getIdLinkSite())
+			return false;
+		
+		return true;
+	}
+	
 }

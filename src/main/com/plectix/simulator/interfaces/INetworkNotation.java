@@ -20,5 +20,5 @@ public interface INetworkNotation {
 	public void checkLinkToUsedSites(StateType index, ISite site);
 	public void checkLinkForNetworkNotationDel(StateType index, ISite site,
 			boolean toChangedAgents);
-
+	public boolean changedSitesContains(ISite site);
 }

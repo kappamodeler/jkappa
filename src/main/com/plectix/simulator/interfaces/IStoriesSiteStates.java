@@ -9,5 +9,7 @@ public interface IStoriesSiteStates {
 	public IStates getBeforeState();
 
 	public IStates getAfterState();
+	
+	public boolean isEqualsAfterState(IStoriesSiteStates checkSS);
 
 }
