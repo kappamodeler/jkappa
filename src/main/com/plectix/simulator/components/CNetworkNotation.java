@@ -87,6 +87,8 @@ public class CNetworkNotation implements INetworkNotation {
 				+ " ";
 		st += "changedAgentsFromSolution="
 				+ changedAgentsFromSolution.keySet().toString() + " ";
+		st += "changesOfAllUsedSites="
+			+ changesOfAllUsedSites.keySet().toString() + " ";
 		st += "ruleName=" + rule.getName() + " ";
 		st += "step=" + step + " ";
 		st += "agentsNotation=" + agentsNotation.toString() + " ";
@@ -202,6 +204,7 @@ public class CNetworkNotation implements INetworkNotation {
 		leaf = false;
 		hasIntro = false;
 		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();
+		this.changesOfAllUsedSites = new HashMap<Long, AgentSites>();
 		this.usedAgentsFromRules = new HashMap<Long, AgentSitesFromRules>();
 		this.agentsNotation = new ArrayList<String>();
 		this.introCC = new ArrayList<List<Long>>();

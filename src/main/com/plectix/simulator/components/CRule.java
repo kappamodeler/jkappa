@@ -317,11 +317,15 @@ public class CRule implements IRule, Serializable {
 	private final void addFixedSitesToNN(INetworkNotation netNotation) {
 		for (ISite siteInSolution : this.sitesConnectedWithBroken){
 			addRuleSitesToNetworkNotation(netNotation, siteInSolution);
-		//	netNotation.checkLinkToUsedSites(StateType.CURRENT, site)
+			netNotation.checkLinkToUsedSites(StateType.BEFORE, siteInSolution);
+			netNotation.checkLinkToUsedSites(StateType.AFTER, siteInSolution);
 		}
 
-		for (ISite siteInSolution : this.sitesConnectedWithDeleted)
+		for (ISite siteInSolution : this.sitesConnectedWithDeleted){
 			addRuleSitesToNetworkNotation(netNotation, siteInSolution);
+			netNotation.checkLinkToUsedSites(StateType.BEFORE, siteInSolution);
+			netNotation.checkLinkToUsedSites(StateType.AFTER, siteInSolution);	
+		}
 
 		for (ChangedSite fs : fixedSites) {
 			CSite siteFromRule = (CSite) fs.getSite();
@@ -338,6 +342,8 @@ public class CRule implements IRule, Serializable {
 			// add fixed agents
 			netNotation.addFixedSitesFromRules(site, NetworkNotationMode.TEST,
 					fs.isInternalState(), fs.isLinkState());
+			netNotation.checkLinkToUsedSites(StateType.BEFORE, site);
+			netNotation.checkLinkToUsedSites(StateType.AFTER, site);
 		}
 	}
 
