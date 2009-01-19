@@ -288,11 +288,18 @@ public final class CStoryTrees {
 				changedAgentsFromSolution.put(agentID, aS);
 				changedAgentsFromSolution.remove(agentIDToDelete);
 			}
+			
 			Map<Long, AgentSitesFromRules> usedAgentsFromRules = nn
 					.getUsedAgentsFromRules();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(agentIDToDelete);
 			usedAgentsFromRules.put(agentID, aSFR);
 			usedAgentsFromRules.remove(agentIDToDelete);
+			
+			Map<Long, AgentSites> changesOfAllUsedSites = nn
+					.getChangesOfAllUsedSites();
+			AgentSites aSCh = changesOfAllUsedSites.get(agentIDToDelete);
+			changesOfAllUsedSites.put(agentID, aSCh);
+			changesOfAllUsedSites.remove(agentIDToDelete);
 
 			nn.changeIntroCC(agentIDToDelete, agentID);
 		}
@@ -355,10 +362,10 @@ public final class CStoryTrees {
 		}
 
 		for (int i = 1; i < mainList.size(); i++) {
-			AgentSites aS = mainList.get(i - 1).getChangedAgentsFromSolution()
-					.get(mainListAgentID.get(i - 1));
-			AgentSites aSNext = mainList.get(i).getChangedAgentsFromSolution()
-					.get(mainListAgentID.get(i));
+			AgentSites aS = mainList.get(i - 1).getChangesOfAllUsedSites().get(
+					mainListAgentID.get(i - 1));
+			AgentSites aSNext = mainList.get(i).getChangesOfAllUsedSites().get(
+					mainListAgentID.get(i));
 			if (!isSequentialTwoSiteMaps(aS, aSNext))
 				return true;
 		}
@@ -400,10 +407,10 @@ public final class CStoryTrees {
 
 	private void addToChangingList(CNetworkNotation nn, Long agentID,
 			List<CNetworkNotation> mainList, List<Long> mainListAgentID) {
-		if (nn.getChangedAgentsFromSolution().containsKey(agentID)) {
+		//if (nn.getChangedAgentsFromSolution().containsKey(agentID)) {
 			mainList.add(nn);
 			mainListAgentID.add(agentID);
-		}
+	//	}
 	}
 
 	private boolean hasLink(List<CNetworkNotation> nnList, long agentID) {
