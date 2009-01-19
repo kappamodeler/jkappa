@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.plectix.simulator.components.CDataString;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.util.EasyFileReader;
 import com.plectix.simulator.util.Failer;
@@ -14,20 +13,26 @@ import com.plectix.simulator.util.MessageConstructor;
 
 public class TestParseAgentCorrection {
 	private static final String myTestFileNamePrefix = RunParserTests.getFileNamePrefix();
-	private final Parser myParser;
+	private KappaSystemParser myParser;
 	private EasyFileReader myReader; 
 	private MessageConstructor myMC;
 	private Failer myFailer = new Failer();
 	
 	public TestParseAgentCorrection() {
 		String fileName = myTestFileNamePrefix + "ParseAgentsTestFile";
+		System.err.println(fileName);
 		try {
 			myReader = new EasyFileReader(fileName);
 		} catch(FileNotFoundException e) {
 			System.err.println(e.getMessage());
 		}
 		Simulator mySimulator = new Simulator();
-		myParser = new Parser(new DataReading(fileName), mySimulator.getSimulationData());
+		KappaFileReader reader = new KappaFileReader(fileName);
+		try {
+			myParser = new KappaSystemParser(reader.parse(), mySimulator.getSimulationData());
+		} catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
 		myMC = new MessageConstructor();
 	}
 	
@@ -41,8 +46,8 @@ public class TestParseAgentCorrection {
 	}
 	
 	private void tryParseAgent(String line, boolean isCorrect) {
-		List<CDataString> listRules = new ArrayList<CDataString>();
-		listRules.add(new CDataString(0, line));
+		List<KappaFileLine> listRules = new ArrayList<KappaFileLine>();
+		listRules.add(new KappaFileLine(0, line));
 		try {
 			myParser.parseAgent(line);
 			if (!isCorrect) {
@@ -61,6 +66,7 @@ public class TestParseAgentCorrection {
 		boolean currentCorrectionValue = true;
 		
 		while (line != null) {
+			System.out.println(line);
 			if (!"".equals(line)) {
 				if ("#INCORRECT".equals(line)) {
 					currentCorrectionValue = false;

@@ -1,6 +1,5 @@
 package com.plectix.simulator.parser;
 
-import com.plectix.simulator.components.CDataString;
 
 public class ParseErrorException extends Exception {
 
@@ -8,7 +7,7 @@ public class ParseErrorException extends Exception {
 	private String myMessage = "";
 	private String myLine = null;
 	
-	public ParseErrorException(CDataString line, String message) {
+	public ParseErrorException(KappaFileLine line, String message) {
 		super(line + "\n" + message);
 		myLine = line.toString();
 		myMessage = message;
@@ -19,7 +18,7 @@ public class ParseErrorException extends Exception {
 		myMessage = message;
 	}
 	
-	public final void setLineDescription(CDataString line) {
+	public final void setLineDescription(KappaFileLine line) {
 		if (myLine == null) {
 			myLine = line.toString();
 		}

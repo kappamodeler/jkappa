@@ -1,6 +1,6 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.parser;
 
-public final class CDataString{
+/*package*/ final class KappaFileLine{
 	private final int lineNumber;
 	private final String line;
 	
@@ -12,7 +12,7 @@ public final class CDataString{
 		return line;
 	}
 
-	public CDataString(int lineNumber, String line){
+	public KappaFileLine(int lineNumber, String line){
 		this.line=line.intern();
 		this.lineNumber=lineNumber;
 	}

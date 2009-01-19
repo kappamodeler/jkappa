@@ -70,8 +70,9 @@ import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
-import com.plectix.simulator.parser.DataReading;
-import com.plectix.simulator.parser.Parser;
+import com.plectix.simulator.parser.KappaFile;
+import com.plectix.simulator.parser.KappaFileReader;
+import com.plectix.simulator.parser.KappaSystemParser;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
@@ -209,15 +210,15 @@ public class SimulationData {
 		}
 		
 		try {
-			DataReading data = new DataReading(simulationArguments.getInputFilename());
+			KappaFileReader kappaFileReader = new KappaFileReader(simulationArguments.getInputFilename());
 			
 			if (simulationArguments.getFocusFilename() != null) {
 				setFocusOn(simulationArguments.getFocusFilename());
 			}
 		
-			data.readData();
+			KappaFile kappaFile = kappaFileReader.parse();
 			
-			Parser parser = new Parser(data, this);
+			KappaSystemParser parser = new KappaSystemParser(kappaFile, this);
 			parser.setForwarding(simulationArguments.isForwardOnly());
 			parser.parse();
 		} catch (Exception e) {
@@ -1393,11 +1394,11 @@ public class SimulationData {
 	}
 
 	private final void setFocusOn(String fileNameFocusOn) throws Exception {
-		DataReading dataReading = new DataReading(fileNameFocusOn);
-		dataReading.readData();
+		KappaFileReader kappaFileReader = new KappaFileReader(fileNameFocusOn);
+		KappaFile kappaFile = kappaFileReader.parse();
 		
-		Parser parser = new Parser(dataReading, this);
-		List<IRule> ruleList = parser.createRules(dataReading.getRules());
+		KappaSystemParser parser = new KappaSystemParser(kappaFile, this);
+		List<IRule> ruleList = parser.createRules();
 		
 		if (ruleList != null && !ruleList.isEmpty()) {
 			contactMap.setFocusRule(ruleList.get(0));

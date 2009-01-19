@@ -4,9 +4,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import com.plectix.simulator.components.CDataString;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.util.EasyFileReader;
 import com.plectix.simulator.util.Failer;
@@ -14,12 +14,13 @@ import com.plectix.simulator.util.MessageConstructor;
 
 public class TestParseRuleCorrection {
 	private static final String myTestFileNamePrefix = RunParserTests.getFileNamePrefix();
-	private final Parser myParser;
+	private KappaSystemParser myParser;
 	private EasyFileReader myReader; 
 	private MessageConstructor myMC;
 	private Failer myFailer = new Failer();
 	
-	public TestParseRuleCorrection() {
+	@Before
+	public void setup() {
 		String fileName = myTestFileNamePrefix + "ParseRulesTestFile";
 		try {
 			myReader = new EasyFileReader(fileName);
@@ -27,7 +28,12 @@ public class TestParseRuleCorrection {
 			System.err.println(e.getMessage());
 		}
 		Simulator mySimulator = new Simulator();
-		myParser = new Parser(new DataReading(fileName), mySimulator.getSimulationData());
+		KappaFileReader reader = new KappaFileReader(fileName);
+		try {
+			myParser = new KappaSystemParser(reader.parse(), mySimulator.getSimulationData());
+		} catch(Exception e) {
+			myFailer.fail("File Reading Error : " + e);
+		}
 		myMC = new MessageConstructor();
 	}
 	
@@ -41,10 +47,10 @@ public class TestParseRuleCorrection {
 	}
 	
 	private void testParseRule(String line, boolean isCorrect) {
-		List<CDataString> listRules = new ArrayList<CDataString>();
-		listRules.add(new CDataString(0, line));
+		KappaFileParagraph rule = new KappaFileParagraph();
+		rule.addLine(new KappaFileLine(0, line));
 		try {
-			myParser.createRules(listRules);
+			myParser.createRules(rule);
 			if (!isCorrect) {
 				failOnLine(line, isCorrect);
 			}

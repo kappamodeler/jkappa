@@ -152,7 +152,7 @@ public class TestParseAgents extends DirectoryTestsRunner {
 					agentName = line;
 				}
 			}
-			line = myReader.getStringFromFile();
+			line = myReader.getLine();
 		}
 		currentAgent = mySubstanceConstructor.createAgent(agentName,
 				currentSites);
