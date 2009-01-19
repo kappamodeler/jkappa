@@ -60,8 +60,13 @@ public class CNetworkNotation implements INetworkNotation {
 
 	private final IRule rule;
 
-	private Map<Long, AgentSites> changedAgentsFromSolution;
 	private Map<Long, AgentSites> changesOfAllUsedSites;
+
+	public Map<Long, AgentSites> getChangesOfAllUsedSites() {
+		return changesOfAllUsedSites;
+	}
+
+	private Map<Long, AgentSites> changedAgentsFromSolution;
 
 	public Map<Long, AgentSites> getChangedAgentsFromSolution() {
 		return changedAgentsFromSolution;
