@@ -4,8 +4,8 @@ import com.plectix.simulator.interfaces.*;
 
 public final class CStoriesSiteStates implements IStoriesSiteStates {
 	public enum StateType {
-		LAST,
-		CURRENT;
+		BEFORE,
+		AFTER;
 	}
 	
 	private IStates afterState;
@@ -20,10 +20,10 @@ public final class CStoriesSiteStates implements IStoriesSiteStates {
 
 	public CStoriesSiteStates(StateType index, long idLinkAgent, int idLinkSite) {
 		switch (index) {
-		case CURRENT:
+		case AFTER:
 			afterState = new CStoryState(idLinkAgent, idLinkSite);
 			break;
-		case LAST:
+		case BEFORE:
 			beforeState = new CStoryState(idLinkAgent, idLinkSite);
 			break;
 		}
@@ -31,10 +31,10 @@ public final class CStoriesSiteStates implements IStoriesSiteStates {
 
 	public CStoriesSiteStates(StateType index, int idInternalState) {
 		switch (index) {
-		case CURRENT:
+		case AFTER:
 			afterState = new CStoryState(idInternalState);
 			break;
-		case LAST:
+		case BEFORE:
 			beforeState = new CStoryState(idInternalState);
 			break;
 		}
@@ -43,11 +43,11 @@ public final class CStoriesSiteStates implements IStoriesSiteStates {
 	public CStoriesSiteStates(StateType index, int idInternalState, long idLinkAgent,
 			int idLinkSite) {
 		switch (index) {
-		case CURRENT:
+		case AFTER:
 			afterState = new CStoryState(idInternalState, idLinkAgent,
 					idLinkSite);
 			break;
-		case LAST:
+		case BEFORE:
 			beforeState = new CStoryState(idInternalState, idLinkAgent,
 					idLinkSite);
 			break;
@@ -72,10 +72,10 @@ public final class CStoriesSiteStates implements IStoriesSiteStates {
 
 	public final void addInformation(StateType index, IStoriesSiteStates siteStates) {
 		switch (index) {
-		case CURRENT:
+		case AFTER:
 			afterState = siteStates.getAfterState();
 			break;
-		case LAST:
+		case BEFORE:
 			if (beforeState != null)
 				beforeState.addInformation(siteStates.getBeforeState()
 						.getIdInternalState(), siteStates.getBeforeState()
