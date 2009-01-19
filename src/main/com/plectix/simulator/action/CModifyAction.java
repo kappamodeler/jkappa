@@ -35,14 +35,14 @@ public class CModifyAction extends CAction {
 		// /////////////////////////////////////////////
 		ISite injectedSite = agentFromInSolution.getSite(mySiteTo
 				.getNameId());
-		addToNetworkNotation(StateType.LAST,
+		addToNetworkNotation(StateType.BEFORE,
 				netNotation, injectedSite);
 		addRuleSitesToNetworkNotation(false, netNotation, injectedSite);
 
 		injectedSite.getInternalState().setNameId(myInternalStateNameId);
 		injection.addToChangedSites(injectedSite);
 
-		addToNetworkNotation(StateType.CURRENT,
+		addToNetworkNotation(StateType.AFTER,
 				netNotation, injectedSite);
 
 		// /////////////////////////////////////////////
@@ -65,7 +65,9 @@ public class CModifyAction extends CAction {
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			netNotation.addToAgents(site, new CStoriesSiteStates(index,
-					site.getInternalState().getNameId()), index); 
+					site.getInternalState().getNameId()), index, true); 
+			netNotation.addToAgents(site, new CStoriesSiteStates(index,
+					site.getInternalState().getNameId()), index, false);
 		}
 	}
 }

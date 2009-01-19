@@ -38,7 +38,7 @@ public class CDeleteAction extends CAction {
 			ISite solutionSite = (ISite) site.getLinkState().getSite();
 
 			if (solutionSite != null) {
-				addToNetworkNotation(StateType.LAST,
+				addToNetworkNotation(StateType.BEFORE,
 						netNotation, solutionSite);
 
 				addSiteToConnectedWithDeleted(solutionSite);
@@ -46,7 +46,7 @@ public class CDeleteAction extends CAction {
 				solutionSite.getLinkState().setStatusLink(
 						CLinkStatus.FREE);
 				solutionSite.setLinkIndex(-1);
-				addToNetworkNotation(StateType.CURRENT,
+				addToNetworkNotation(StateType.AFTER,
 						netNotation, solutionSite);
 				addRuleSitesToNetworkNotation(false, netNotation, solutionSite);
 				// solutionSite.removeInjectionsFromCCToSite(injection);
@@ -61,7 +61,7 @@ public class CDeleteAction extends CAction {
 		}
 
 		for (ISite site : agent.getSites()) {
-			addToNetworkNotation(StateType.LAST, netNotation,
+			addToNetworkNotation(StateType.BEFORE, netNotation,
 					site);
 			addRuleSitesToNetworkNotation(true, netNotation, site);
 			for (ILiftElement lift : site.getLift()) {
@@ -111,7 +111,8 @@ public class CDeleteAction extends CAction {
 	protected final void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
-			netNotation.checkLinkForNetworkNotationDel(index, site);
+			netNotation.checkLinkForNetworkNotationDel(index, site, true);
+			netNotation.checkLinkForNetworkNotationDel(index, site, false);
 		}
 	}
 	

@@ -40,7 +40,7 @@ public class CRule implements IRule, Serializable {
 	private double activity = 0.;
 	private final String name;
 	private String data;
-//	private double ruleRate;
+	// private double ruleRate;
 	private List<ISite> sitesConnectedWithDeleted;
 	private List<ISite> sitesConnectedWithBroken;
 	private boolean rHSEqualsLHS;
@@ -103,8 +103,8 @@ public class CRule implements IRule, Serializable {
 	}
 
 	public CRule(List<IConnectedComponent> left,
-			List<IConnectedComponent> right, String name, ConstraintData ruleRate,
-			int ruleID, boolean isStorify) {
+			List<IConnectedComponent> right, String name,
+			ConstraintData ruleRate, int ruleID, boolean isStorify) {
 		this.leftHandSide = left;
 		this.rightHandSide = right;
 		this.isStorify = isStorify;
@@ -121,9 +121,9 @@ public class CRule implements IRule, Serializable {
 		if (ruleRate.getActivity() == Double.MAX_VALUE) {
 			this.infinityRate = true;
 			constraintData.setActivity(1);
-//			this.ruleRate = 1;
-		} else{
-//			this.ruleRate = ruleRate.getActivity();
+			// this.ruleRate = 1;
+		} else {
+			// this.ruleRate = ruleRate.getActivity();
 		}
 
 		this.name = name;
@@ -150,13 +150,13 @@ public class CRule implements IRule, Serializable {
 
 	public final void setRuleRate(double ruleRate) {
 		if (ruleRate >= 0) {
-//			this.ruleRate = ruleRate;
+			// this.ruleRate = ruleRate;
 			constraintData.setActivity(ruleRate);
 		} else {
 			Logger logger = Logger.getLogger(this.getClass());
 			logger.info("warning : rate of the rule '" + name
 					+ "' was attempted to be set as negative");
-//			this.ruleRate = 0;
+			// this.ruleRate = 0;
 			constraintData.setActivity(0);
 		}
 	}
@@ -200,7 +200,7 @@ public class CRule implements IRule, Serializable {
 
 	public final double getRuleRate() {
 		return constraintData.getActivity();
-//		return ruleRate;
+		// return ruleRate;
 	}
 
 	// private final void markedLHS() {
@@ -235,11 +235,13 @@ public class CRule implements IRule, Serializable {
 	}
 
 	public void applyRuleForStories(List<IInjection> injectionList,
-			INetworkNotation netNotation, SimulationData simulationData, boolean isLast) {
+			INetworkNotation netNotation, SimulationData simulationData,
+			boolean isLast) {
 		apply(injectionList, netNotation, simulationData, isLast);
 	}
 
-	public void applyRule(List<IInjection> injectionList, SimulationData simulationData) {
+	public void applyRule(List<IInjection> injectionList,
+			SimulationData simulationData) {
 		apply(injectionList, null, simulationData, false);
 	}
 
@@ -268,7 +270,8 @@ public class CRule implements IRule, Serializable {
 	}
 
 	protected final void apply(List<IInjection> injectionList,
-			INetworkNotation netNotation, SimulationData simulationData, boolean isLast) {
+			INetworkNotation netNotation, SimulationData simulationData,
+			boolean isLast) {
 		if (storyfiedAgents == null)
 			storyfiedAgents = new ArrayList<IAgent>();
 		if (netNotation != null) {
@@ -312,8 +315,10 @@ public class CRule implements IRule, Serializable {
 	}
 
 	private final void addFixedSitesToNN(INetworkNotation netNotation) {
-		for (ISite siteInSolution : this.sitesConnectedWithBroken)
+		for (ISite siteInSolution : this.sitesConnectedWithBroken){
 			addRuleSitesToNetworkNotation(netNotation, siteInSolution);
+		//	netNotation.checkLinkToUsedSites(StateType.CURRENT, site)
+		}
 
 		for (ISite siteInSolution : this.sitesConnectedWithDeleted)
 			addRuleSitesToNetworkNotation(netNotation, siteInSolution);
@@ -331,9 +336,8 @@ public class CRule implements IRule, Serializable {
 			else
 				site = agentToInSolution.getSite(siteFromRule.getNameId());
 			// add fixed agents
-			netNotation.addFixedSitesFromRules(site,
-					NetworkNotationMode.TEST, fs.isInternalState(), fs
-							.isLinkState());
+			netNotation.addFixedSitesFromRules(site, NetworkNotationMode.TEST,
+					fs.isInternalState(), fs.isLinkState());
 		}
 	}
 
@@ -366,9 +370,9 @@ public class CRule implements IRule, Serializable {
 		int index = 0;
 		for (IAgent lhsAgent : lhsAgents) {
 			if ((index < rhsAgents.size())
-					&& !(rhsAgents.get(index).equalz(lhsAgent) 
-							&& rhsAgents.get(index).siteMapsAreEqual(lhsAgent))) {
-				
+					&& !(rhsAgents.get(index).equalz(lhsAgent) && rhsAgents
+							.get(index).siteMapsAreEqual(lhsAgent))) {
+
 				// rhsAgents.get(index)
 				// .setIdInRuleSide(lhsAgent.getIdInRuleSide());
 				// } else {
@@ -533,8 +537,8 @@ public class CRule implements IRule, Serializable {
 											.getNameId()))
 								continue;
 
-						if (!currentLinkState.getStatusLinkRank().smaller(linkState
-								.getStatusLinkRank()))
+						if (!currentLinkState.getStatusLinkRank().smaller(
+								linkState.getStatusLinkRank()))
 							return true;
 
 						return true;
@@ -552,7 +556,7 @@ public class CRule implements IRule, Serializable {
 			for (ISite site : agent.getSites()) {
 				for (ChangedSite changedSite : changedInhibitedSites) {
 					if (changedSite.getSite().equalz(site)) {
-//						if (changedSite.getSite().equals(site)) {
+						// if (changedSite.getSite().equals(site)) {
 
 						IInternalState currentInternalState = changedSite
 								.getSite().getInternalState();
@@ -621,7 +625,7 @@ public class CRule implements IRule, Serializable {
 		if (currentLinkState.getStatusLinkRank() == CLinkRank.BOUND
 				&& linkState.getStatusLinkRank() == CLinkRank.BOUND)
 			if (currentLinkState.getSite().equalz(linkState.getSite()))
-//				if (currentLinkState.getSite().equals(linkState.getSite()))
+				// if (currentLinkState.getSite().equals(linkState.getSite()))
 				return true;
 		return false;
 	}
@@ -837,7 +841,7 @@ public class CRule implements IRule, Serializable {
 			activity *= cc.getInjectionsList().size();
 		}
 		activity *= constraintData.getActivity();
-//		activity *= ruleRate;
+		// activity *= ruleRate;
 		activity /= automorphismNumber;
 	}
 
@@ -932,9 +936,12 @@ public class CRule implements IRule, Serializable {
 	public final void applyLastRuleForStories(List<IInjection> injectionsList,
 			INetworkNotation netNotation) {
 		for (IInjection inj : injectionsList) {
-			for (ISite site : inj.getSiteList())
-				netNotation.checkLinkForNetworkNotationDel(
-						StateType.LAST, site);
+			for (ISite site : inj.getSiteList()) {
+				netNotation.checkLinkForNetworkNotationDel(StateType.BEFORE,
+						site, true);
+				netNotation.checkLinkForNetworkNotationDel(StateType.BEFORE,
+						site, false);
+			}
 		}
 
 	}

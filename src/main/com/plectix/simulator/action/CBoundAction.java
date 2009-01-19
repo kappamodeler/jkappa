@@ -48,7 +48,7 @@ public class CBoundAction extends CAction {
 					.getNameId());
 			injection.addToChangedSites(injectedSite);
 
-			addToNetworkNotation(StateType.LAST, netNotation,
+			addToNetworkNotation(StateType.BEFORE, netNotation,
 					injectedSite);
 			addRuleSitesToNetworkNotation(false, netNotation, injectedSite);
 			// /////////////////////////////////////////////
@@ -68,7 +68,7 @@ public class CBoundAction extends CAction {
 		agentFromInSolution.getSite(mySiteFrom.getNameId()).getLinkState()
 				.setSite(agentToInSolution.getSite(mySiteTo.getNameId()));
 
-		addToNetworkNotation(StateType.CURRENT, netNotation,
+		addToNetworkNotation(StateType.AFTER, netNotation,
 				agentFromInSolution.getSite(mySiteFrom.getNameId()));
 
 		agentFromInSolution.getSite(mySiteFrom.getNameId()).setLinkIndex(
@@ -96,6 +96,7 @@ public class CBoundAction extends CAction {
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			netNotation.checkLinkForNetworkNotation(index, site);
+			netNotation.checkLinkToUsedSites(index, site);
 		}
 	}
 }

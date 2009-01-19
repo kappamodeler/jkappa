@@ -61,6 +61,7 @@ public class CNetworkNotation implements INetworkNotation {
 	private final IRule rule;
 
 	private Map<Long, AgentSites> changedAgentsFromSolution;
+	private Map<Long, AgentSites> changesOfAllUsedSites;
 
 	public Map<Long, AgentSites> getChangedAgentsFromSolution() {
 		return changedAgentsFromSolution;
@@ -87,7 +88,7 @@ public class CNetworkNotation implements INetworkNotation {
 		st += "changedAgentsFromSolution="
 				+ changedAgentsFromSolution.keySet().toString() + " ";
 		st += "ruleName=" + rule.getName() + " ";
-		st += "step=" +step + " ";
+		st += "step=" + step + " ";
 		st += "agentsNotation=" + agentsNotation.toString() + " ";
 
 		// return super.toString();
@@ -242,21 +243,20 @@ public class CNetworkNotation implements INetworkNotation {
 						counter++;
 					}
 				}
-				
+
 				if (counter == inj.getAgentLinkList().size())
 					isStorify = true;
 
 				agentsNotation.add(SimulationUtils.printPartRule(cc,
 						new int[] { 0 }, data.isOcamlStyleObsName()));
-				
-				List<Long> agentIDsList= new ArrayList<Long>();
-				
+
+				List<Long> agentIDsList = new ArrayList<Long>();
+
 				for (IAgent agent : cc.getAgents()) {
 					agentIDsList.add(agent.getId());
 				}
 				introCC.add(agentIDsList);
-				
-				
+
 				if (!isStorify) {
 					hasIntro = true;
 				}
@@ -287,52 +287,56 @@ public class CNetworkNotation implements INetworkNotation {
 
 	public final void checkLinkForNetworkNotation(StateType index, ISite site) {
 		if (site.getLinkState().getSite() == null)
-			this
-					.addToAgents(site, new CStoriesSiteStates(index, -1, -1),
-							index);
-//		this
-//		.addToAgents(site, new CStoriesSiteStates(index,site
-//				.getInternalState().getNameId(), -1, -1),
-//				index);
+			this.addToAgents(site, new CStoriesSiteStates(index, -1, -1),
+					index, true);
 		else
-//			this
-//					.addToAgents(site, new CStoriesSiteStates(index,site
-//							.getInternalState().getNameId(),
-//							((CAgent) site.getLinkState().getSite()
-//									.getAgentLink()).getHash(), ((CSite) site
-//									.getLinkState().getSite()).getNameId()),
-//							index);
-			this
-			.addToAgents(site, new CStoriesSiteStates(index,
-					((CAgent) site.getLinkState().getSite()
-							.getAgentLink()).getHash(), ((CSite) site
-							.getLinkState().getSite()).getNameId()),
-					index);
-
+			this.addToAgents(site, new CStoriesSiteStates(index, ((CAgent) site
+					.getLinkState().getSite().getAgentLink()).getHash(),
+					((CSite) site.getLinkState().getSite()).getNameId()),
+					index, true);
 	}
 
-	public final void checkLinkForNetworkNotationDel(StateType index, ISite site) {
+	public final void checkLinkToUsedSites(StateType index, ISite site) {
+		if (site.getLinkState().getSite() == null)
+			this.addToAgents(site, new CStoriesSiteStates(index,site
+					.getInternalState().getNameId(), -1, -1),
+					index, false);
+		else
+			this.addToAgents(site, new CStoriesSiteStates(index,site
+					.getInternalState().getNameId(), ((CAgent) site
+					.getLinkState().getSite().getAgentLink()).getHash(),
+					((CSite) site.getLinkState().getSite()).getNameId()),
+					index, false);
+	}
+	
+	public final void checkLinkForNetworkNotationDel(StateType index,
+			ISite site, boolean toChangedAgents) {
 		if (site.getLinkState().getSite() == null)
 			this.addToAgents(site, new CStoriesSiteStates(index, site
-					.getInternalState().getNameId(), -1, -1), index);
+					.getInternalState().getNameId(), -1, -1), index,
+					toChangedAgents);
 		else
-			this
-					.addToAgents(site, new CStoriesSiteStates(index, site
-							.getInternalState().getNameId(),
-							((CAgent) site.getLinkState().getSite()
-									.getAgentLink()).getHash(), ((CSite) site
-									.getLinkState().getSite()).getNameId()),
-							index);
+			this.addToAgents(site, new CStoriesSiteStates(index, site
+					.getInternalState().getNameId(), ((CAgent) site
+					.getLinkState().getSite().getAgentLink()).getHash(),
+					((CSite) site.getLinkState().getSite()).getNameId()),
+					index, toChangedAgents);
 	}
 
 	public final void addToAgents(ISite site, IStoriesSiteStates siteStates,
-			StateType index) {
+			StateType index, boolean toChangedAgents) {
+
+		Map<Long, AgentSites> map;
+		if (toChangedAgents)
+			map = changedAgentsFromSolution;
+		else
+			map = changesOfAllUsedSites;
 		if (site != null) {
 			long key = site.getAgentLink().getHash();
-			AgentSites as = changedAgentsFromSolution.get(key);
+			AgentSites as = map.get(key);
 			if (as == null) {
 				as = new AgentSites(site.getAgentLink());
-				changedAgentsFromSolution.put(key, as);
+				map.put(key, as);
 			}
 			as.addToSites(site.getNameId(), siteStates, index);
 		}

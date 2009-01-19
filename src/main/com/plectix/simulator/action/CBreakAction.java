@@ -37,13 +37,13 @@ public class CBreakAction extends CAction {
 
 		ISite injectedSite = agentFromInSolution.getSite(mySiteFrom.getNameId());
 
-		addToNetworkNotation(StateType.LAST, netNotation,
+		addToNetworkNotation(StateType.BEFORE, netNotation,
 				injectedSite);
 		addRuleSitesToNetworkNotation(true, netNotation, injectedSite);
 
 		ISite linkSite = (ISite) injectedSite.getLinkState().getSite();
 		if ((mySiteFrom.getLinkState().getSite() == null) && (linkSite != null)) {
-			addToNetworkNotation(StateType.LAST, netNotation,
+			addToNetworkNotation(StateType.BEFORE, netNotation,
 					linkSite);
 
 			linkSite.getLinkState().setSite(null);
@@ -54,7 +54,7 @@ public class CBreakAction extends CAction {
 			injection.addToChangedSites(linkSite);
 			getRightCComponent().addAgentFromSolutionForRHS(linkSite
 					.getAgentLink());
-			addToNetworkNotation(StateType.CURRENT, netNotation,
+			addToNetworkNotation(StateType.AFTER, netNotation,
 					linkSite);
 
 		}
@@ -67,7 +67,7 @@ public class CBreakAction extends CAction {
 
 		injection.addToChangedSites(injectedSite);
 
-		addToNetworkNotation(StateType.CURRENT, netNotation,
+		addToNetworkNotation(StateType.AFTER, netNotation,
 				injectedSite);
 		/**
 		 * Break a bond for this rules: A(x!_)->A(x)
@@ -112,6 +112,7 @@ public class CBreakAction extends CAction {
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			netNotation.checkLinkForNetworkNotation(index, site);
+			netNotation.checkLinkToUsedSites(index, site);
 		}
 	}
 }

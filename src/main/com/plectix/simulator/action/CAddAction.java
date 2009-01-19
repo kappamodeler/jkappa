@@ -31,12 +31,12 @@ public class CAddAction extends CAction {
 			siteAdd.setInternalState(new CInternalState(site.getInternalState()
 					.getStateNameId()));
 			agent.addSite(siteAdd);
-			addToNetworkNotation(StateType.CURRENT, netNotation,
+			addToNetworkNotation(StateType.AFTER, netNotation,
 					siteAdd);
 			addRuleSitesToNetworkNotation(false, netNotation, siteAdd);
 		}
 		if (myToAgent.getSites().size() == 0) {
-			addToNetworkNotation(StateType.CURRENT, netNotation,
+			addToNetworkNotation(StateType.AFTER, netNotation,
 					agent.getEmptySite());
 			addRuleSitesToNetworkNotation(false, netNotation, agent
 					.getEmptySite());
@@ -74,7 +74,9 @@ public class CAddAction extends CAction {
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			netNotation.addToAgents(site, new CStoriesSiteStates(index, site
-					.getInternalState().getNameId()), index);
+					.getInternalState().getNameId()), index, true);
+			netNotation.addToAgents(site, new CStoriesSiteStates(index, site
+					.getInternalState().getNameId()), index, false);
 		}
 	}
 

@@ -6,16 +6,19 @@ import com.plectix.simulator.components.CStoriesSiteStates.StateType;
 public interface INetworkNotation {
 
 	public void addToAgents(ISite site, IStoriesSiteStates storiesSiteStates,
-			StateType index);
+			StateType index, boolean toChangedAgents);
 
 	public void addToAgentsFromRules(ISite site, NetworkNotationMode agentMode,
-			NetworkNotationMode internalStateMode, NetworkNotationMode linkStateMode);
+			NetworkNotationMode internalStateMode,
+			NetworkNotationMode linkStateMode);
 
-	public void addFixedSitesFromRules(ISite site, NetworkNotationMode agentMode,
-			boolean internalStateMode, boolean linkStateMode);
+	public void addFixedSitesFromRules(ISite site,
+			NetworkNotationMode agentMode, boolean internalStateMode,
+			boolean linkStateMode);
 
 	public void checkLinkForNetworkNotation(StateType index, ISite site);
-
-	public void checkLinkForNetworkNotationDel(StateType index, ISite site);
+	public void checkLinkToUsedSites(StateType index, ISite site);
+	public void checkLinkForNetworkNotationDel(StateType index, ISite site,
+			boolean toChangedAgents);
 
 }
