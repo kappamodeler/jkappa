@@ -407,7 +407,7 @@ public class CNetworkNotation implements INetworkNotation {
 			List<CNetworkNotation> networkNotationList) {
 		for (int i = networkNotationList.size() - 1; i >= 0; i--) {
 			CNetworkNotation nn = networkNotationList.get(i);
-			switch (isIntersects(nn)) {
+			switch (isIntersects(nn, true)) {
 			case FULL_INTERSECTION:
 				clearAgentsForDeletedOppositeRules(this);
 				clearAgentsForDeletedOppositeRules(networkNotationList.get(i));
@@ -432,7 +432,7 @@ public class CNetworkNotation implements INetworkNotation {
 		return true;
 	}
 
-	public final IntersectionType isIntersects(CNetworkNotation nn) {
+	 public final IntersectionType isIntersects(CNetworkNotation nn) {
 		Iterator<Long> iterator = this.changedAgentsFromSolution.keySet()
 				.iterator();
 		int counter = 0;
@@ -442,9 +442,12 @@ public class CNetworkNotation implements INetworkNotation {
 			Long key = iterator.next();
 
 			if (nn.changedAgentsFromSolution.containsKey(key)) {
-				if (checkSites(key, nn) == IntersectionType.FULL_INTERSECTION)
+				IntersectionType it = checkSites(key, nn);
+
+				if (it == IntersectionType.FULL_INTERSECTION)
 					fullCounter++;
-				counter++;
+				//if (it != IntersectionType.NO_INTERSECTION)
+					counter++;
 			}
 		}
 
@@ -459,7 +462,79 @@ public class CNetworkNotation implements INetworkNotation {
 		return IntersectionType.NO_INTERSECTION;
 	}
 
-	private final IntersectionType checkSites(long key, CNetworkNotation nn) {
+	public final IntersectionType isIntersects(CNetworkNotation nn,
+			boolean isAllUsedSites) {
+		Map<Long, AgentSites> mapThis;
+		Map<Long, AgentSites> mapCheck;
+
+		if (isAllUsedSites) {
+			mapThis = this.changesOfAllUsedSites;
+			mapCheck = nn.changesOfAllUsedSites;
+		} else {
+			mapThis = this.changedAgentsFromSolution;
+			mapCheck = nn.changedAgentsFromSolution;
+		}
+		Iterator<Long> iterator = mapThis.keySet().iterator();
+
+		int counter = 0;
+		int fullCounter = 0;
+
+		while (iterator.hasNext()) {
+			Long key = iterator.next();
+
+			if (mapCheck.containsKey(key)) {
+				IntersectionType it = checkSites(key, mapThis, mapCheck);
+				//IntersectionType it = checkSites(key, nn);
+				if (it == IntersectionType.FULL_INTERSECTION)
+					fullCounter++;
+				if ((!isAllUsedSites && it != IntersectionType.NO_INTERSECTION) || isAllUsedSites)
+			//	if (it != IntersectionType.NO_INTERSECTION) 
+					counter++;
+			}
+		}
+
+		if ((fullCounter == mapThis.size())
+				&& (mapThis.size() == mapCheck.size()))
+			return IntersectionType.FULL_INTERSECTION;
+
+		if (counter > 0)
+			return IntersectionType.PART_INTERSECTION;
+
+		return IntersectionType.NO_INTERSECTION;
+	}
+
+	private final IntersectionType checkSites(long key,
+			Map<Long, AgentSites> mapThis, Map<Long, AgentSites> mapCheck) {
+		Iterator<Integer> iterator = mapThis.get(key).getSites().keySet()
+				.iterator();
+		int counter = 0;
+		int fullCounter = 0;
+
+		while (iterator.hasNext()) {
+			Integer keySite = iterator.next();
+			if (mapCheck.get(key).getSites().containsKey(keySite)) {
+				counter++;
+
+				if (CStoriesSiteStates.isEqual(mapThis.get(key).getSites().get(
+						keySite).getAfterState(), mapCheck.get(key).getSites()
+						.get(keySite).getBeforeState())) {
+					fullCounter++;
+				}
+			}
+		}
+
+		if ((fullCounter == mapThis.get(key).getSites().size())
+				&& (mapThis.get(key).getSites().size() == mapCheck.get(key)
+						.getSites().size()))
+			return IntersectionType.FULL_INTERSECTION;
+
+		if (counter > 0)
+			return IntersectionType.PART_INTERSECTION;
+
+		return IntersectionType.NO_INTERSECTION;
+	}
+
+	 private final IntersectionType checkSites(long key, CNetworkNotation nn) {
 		Iterator<Integer> iterator = this.changedAgentsFromSolution.get(key)
 				.getSites().keySet().iterator();
 		int counter = 0;
@@ -493,31 +568,31 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public final boolean isEqualsNetworkNotation(CNetworkNotation checkNN,
-            Long agentIDToDelete, Long checkAgentID) {
-       if (this.changedAgentsFromSolution.size() != checkNN
-                 .getChangedAgentsFromSolution().size())
-            return false;
-       Iterator<Long> agentIterator = this.changedAgentsFromSolution.keySet()
-                 .iterator();
-       while (agentIterator.hasNext()) {
-            Long agentID = agentIterator.next();
+			Long agentIDToDelete, Long checkAgentID) {
+		if (this.changedAgentsFromSolution.size() != checkNN
+				.getChangedAgentsFromSolution().size())
+			return false;
+		Iterator<Long> agentIterator = this.changedAgentsFromSolution.keySet()
+				.iterator();
+		while (agentIterator.hasNext()) {
+			Long agentID = agentIterator.next();
 
-            AgentSites as = this.changedAgentsFromSolution.get(agentIDToDelete);
-            AgentSites asToCheck = null;
-            if (agentID.equals(agentIDToDelete)) {
-                 asToCheck = checkNN.getChangedAgentsFromSolution().get(
-                           checkAgentID);
-            } else {
-                 asToCheck = checkNN.getChangedAgentsFromSolution().get(agentID);
-            }
+			AgentSites as = this.changedAgentsFromSolution.get(agentIDToDelete);
+			AgentSites asToCheck = null;
+			if (agentID.equals(agentIDToDelete)) {
+				asToCheck = checkNN.getChangedAgentsFromSolution().get(
+						checkAgentID);
+			} else {
+				asToCheck = checkNN.getChangedAgentsFromSolution().get(agentID);
+			}
 
-            if (asToCheck == null)
-                 return false;
-            if(!as.isEqualsAgentSites(asToCheck))
-            	return false;
-            
-       }
+			if (asToCheck == null)
+				return false;
+			if (!as.isEqualsAgentSites(asToCheck))
+				return false;
 
-       return true;
-  }
+		}
+
+		return true;
+	}
 }

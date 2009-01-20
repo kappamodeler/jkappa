@@ -13,6 +13,7 @@ import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules.SitesFromRules;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.IState;
 import com.plectix.simulator.interfaces.IStates;
@@ -258,9 +259,25 @@ public final class CStoryTrees {
 			Long agentIDToDelete = agentIDs.get(i);
 			for (int j = i + 1; j < size; j++) {
 				Long agentID = agentIDs.get(j);
+
+				List<CNetworkNotation> nnListForChange = agentToNNs
+						.get(agentID);
+				if (hasLink(nnListForChange, agentIDToDelete))
+					return currentList;
+
+				List<CNetworkNotation> listToCheck = new ArrayList<CNetworkNotation>();
+
+				for (CNetworkNotation nn : commonList) {
+					addToListToCheck(listToCheck, nn, agentIDToDelete, agentID);
+				}
+
+//				if (listToCheck.size() != commonList.size()) {
+//
+//				}
+
 				currentList = replaceAgentsInTrace(commonList, agentIDToDelete,
-						agentID, agentToNNs.get(agentIDToDelete), agentToNNs
-								.get(agentID));
+						agentID, agentToNNs.get(agentIDToDelete),
+						nnListForChange);
 				if (currentList.size() > 0)
 					return currentList;
 			}
@@ -268,15 +285,24 @@ public final class CStoryTrees {
 		return currentList;
 	}
 
+	private void addToListToCheck(List<CNetworkNotation> listNN,
+			CNetworkNotation nnToCheck, Long agentIDToDelete, Long checkAgentID) {
+		for (CNetworkNotation nn : listNN) {
+			if (!nn.isEqualsNetworkNotation(nnToCheck, agentIDToDelete,
+					checkAgentID))
+				listNN.add(nn);
+		}
+	}
+
 	private List<CNetworkNotation> replaceAgentsInTrace(
 			List<CNetworkNotation> commonList, Long agentIDToDelete,
 			Long agentID, List<CNetworkNotation> nnListForDelete,
 			List<CNetworkNotation> nnListForChange) {
 		List<CNetworkNotation> listToReturn = new ArrayList<CNetworkNotation>();
-		if (hasLink(nnListForChange, agentIDToDelete))
-			return listToReturn;
 
-		//List<CNetworkNotation> listToCheck = new ArrayList<CNetworkNotation>();
+		// if (hasLink(nnListForChange, agentIDToDelete))
+		// return listToReturn;
+
 		if (hasWrongIntersection(agentIDToDelete, agentID, nnListForDelete,
 				nnListForChange))
 			return listToReturn;
@@ -289,13 +315,13 @@ public final class CStoryTrees {
 				changedAgentsFromSolution.put(agentID, aS);
 				changedAgentsFromSolution.remove(agentIDToDelete);
 			}
-			
+
 			Map<Long, AgentSitesFromRules> usedAgentsFromRules = nn
 					.getUsedAgentsFromRules();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(agentIDToDelete);
 			usedAgentsFromRules.put(agentID, aSFR);
 			usedAgentsFromRules.remove(agentIDToDelete);
-			
+
 			Map<Long, AgentSites> changesOfAllUsedSites = nn
 					.getChangesOfAllUsedSites();
 			AgentSites aSCh = changesOfAllUsedSites.get(agentIDToDelete);
@@ -408,10 +434,10 @@ public final class CStoryTrees {
 
 	private void addToChangingList(CNetworkNotation nn, Long agentID,
 			List<CNetworkNotation> mainList, List<Long> mainListAgentID) {
-		//if (nn.getChangedAgentsFromSolution().containsKey(agentID)) {
-			mainList.add(nn);
-			mainListAgentID.add(agentID);
-	//	}
+		// if (nn.getChangedAgentsFromSolution().containsKey(agentID)) {
+		mainList.add(nn);
+		mainListAgentID.add(agentID);
+		// }
 	}
 
 	private boolean hasLink(List<CNetworkNotation> nnList, long agentID) {
@@ -702,6 +728,8 @@ public final class CStoryTrees {
 	}
 
 	private void noneCompressStoryTrace(List<CNetworkNotation> commonList) {
+		
+		
 		resetParameters(commonList);
 		isCausing(commonList.get(0), commonList, 1, 0);
 		if (ruleIDToTraceID.size() == 1)
@@ -923,6 +951,9 @@ public final class CStoryTrees {
 		traceIDToData = new HashMap<Integer, String>();
 		traceIDToText = new HashMap<Integer, String>();
 
+		
+		
+		
 		List<Long> introAgents = new ArrayList<Long>();
 
 		for (int i = nnList.size() - 1; i >= 0; i--) {

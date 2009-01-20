@@ -81,6 +81,14 @@ public class CRule implements IRule, Serializable {
 	private final boolean isStorify;
 	private ConstraintData constraintData;
 
+	@Override
+	public String toString() {
+		String st = "ruleName=" + this.name+" ";
+		
+		// return super.toString();
+		return st;
+	}
+	
 	public final String getData(boolean isOcamlStyleObsName) {
 		if (data == null) {
 			String line = SimulationUtils.printPartRule(leftHandSide,

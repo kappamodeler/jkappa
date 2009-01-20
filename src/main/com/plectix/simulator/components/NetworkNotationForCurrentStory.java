@@ -61,11 +61,12 @@ class NetworkNotationForCurrentStory {
 	public void handling() {
 		List<CNetworkNotation> nnList = new ArrayList<CNetworkNotation>();
 		nnList.add(networkNotationList.get(networkNotationList.size() - 1));
-		nnList.add(networkNotationList.get(networkNotationList.size() - 2));
-		for (int i = networkNotationList.size() - 3; i >= 0; i--) {
+		//nnList.add(networkNotationList.get(networkNotationList.size() - 2));
+		for (int i = networkNotationList.size() - 2; i >= 0; i--) {
 			CNetworkNotation nn = networkNotationList.get(i);
 			if (isIntersects(nn, nnList)) {
-				addToNetworkNotationList(nn, nnList);
+				//addToNetworkNotationList(nn, nnList);
+				nnList.add(nn);
 			}else{
 				//nn.clearAgentsForDeletedOppositeRules();
 			}
@@ -77,11 +78,20 @@ class NetworkNotationForCurrentStory {
 	private final boolean isIntersects(CNetworkNotation nn,
 			List<CNetworkNotation> nnList) {
 
+//		for (int i = nnList.size()-1;i>=0;i--) {
+//			  CNetworkNotation nnFromList = nnList.get(i);
+		int counter =0;
 		for (CNetworkNotation nnFromList : nnList) {
-			if (!((nnFromList.isIntersects(nn) == IntersectionType.NO_INTERSECTION) && (nn
-					.isIntersects(nnFromList) == IntersectionType.NO_INTERSECTION)))
-				return true;
+			
+//			if (!((nnFromList.isIntersects(nn) == IntersectionType.NO_INTERSECTION) && (nn
+//					.isIntersects(nnFromList) == IntersectionType.NO_INTERSECTION)))
+				
+			if (((nnFromList.isIntersects(nn, true) != IntersectionType.NO_INTERSECTION) || (nn
+						.isIntersects(nnFromList, true) != IntersectionType.NO_INTERSECTION)))
+				counter++;
 		}
+		if (counter!=0)
+			return true;
 
 		return false;
 	}
