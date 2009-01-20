@@ -487,8 +487,8 @@ public class CNetworkNotation implements INetworkNotation {
 				//IntersectionType it = checkSites(key, nn);
 				if (it == IntersectionType.FULL_INTERSECTION)
 					fullCounter++;
-				if ((!isAllUsedSites && it != IntersectionType.NO_INTERSECTION) || isAllUsedSites)
-			//	if (it != IntersectionType.NO_INTERSECTION) 
+				//if ((!isAllUsedSites && it != IntersectionType.NO_INTERSECTION) || isAllUsedSites)
+				if (it != IntersectionType.NO_INTERSECTION) 
 					counter++;
 			}
 		}
