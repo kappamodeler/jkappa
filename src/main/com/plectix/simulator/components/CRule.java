@@ -2,6 +2,7 @@ package com.plectix.simulator.components;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -975,6 +976,33 @@ public class CRule implements IRule, Serializable {
 		changedActivatedSites.add(toSite);
 	}
 
+	public final boolean equalz(IRule obj) {
+		if (this == obj) {
+			return true;
+		}
+		
+		if (obj == null) {
+			return false;
+		}
+			
+		if (!(obj instanceof IRule)) {
+			return false;
+		}
+
+		CRule rule = (CRule) obj;
+		
+		return rule.getRuleID() == ruleID;
+	}
+	
+	public boolean includedInCollection(Collection<IRule> collection) {
+		for (IRule rule : collection) {
+			if (this.equalz(rule)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public final void addInhibitedChangedSite(ISite fromSite,
 			boolean internalState, boolean linkState) {
 		for (ChangedSite inSite : changedInhibitedSites)
