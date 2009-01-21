@@ -37,6 +37,7 @@ public class SimulationArguments {
 	private boolean noDumpStdoutStderr = false;
 	private boolean help = false;
 	private boolean version = false;
+	private boolean shortConsoleOutput = false;
 	private String xmlSessionName = "simplx.xml";
 	private double initialTime = 0.0;
 	private int points = -1;
@@ -122,6 +123,14 @@ public class SimulationArguments {
 	// GETTERS AND SETTERS
 	// 
 	//
+	
+	public boolean isShortConsoleOutput() {
+		return shortConsoleOutput;
+	}
+	
+	public void setShortConsoleOutput(boolean shortConsoleOutput) {
+		this.shortConsoleOutput = shortConsoleOutput;
+	}
 	
 	public final String getXmlSessionName() {
 		return xmlSessionName;

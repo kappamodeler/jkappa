@@ -18,6 +18,7 @@ import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.util.Info.InfoType;
 
 public abstract class TestUpdate extends DirectoryTestsRunner {
 
@@ -77,7 +78,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	}
 
 	private void run() {
-		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(mySimulator.getSimulationData());
+		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.OUTPUT,mySimulator.getSimulationData());
 
 		mySimulator.getSimulationData().getObservables().calculateObs(currentTime,
 				1, mySimulator.getSimulationData().getSimulationArguments().isTime());

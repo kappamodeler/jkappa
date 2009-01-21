@@ -15,6 +15,7 @@ import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
+import com.plectix.simulator.util.Info.InfoType;
 
 public class InitStoriesTests extends DirectoryTestsRunner {
 	private final static String testDirectory = "test.data/stories/";
@@ -81,9 +82,9 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 			throw new IllegalArgumentException(e);
 		}
 		
-		simulationData.setSimulationArguments(commandLine.getSimulationArguments());
-		simulationData.readSimulatonFile();
-		simulationData.initialize();
+		simulationData.setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
+		simulationData.readSimulatonFile(InfoType.OUTPUT);
+		simulationData.initialize(InfoType.OUTPUT);
 		System.out.println(FilePath);
 	}
 

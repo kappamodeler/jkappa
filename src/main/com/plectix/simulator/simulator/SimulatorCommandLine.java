@@ -69,6 +69,10 @@ public class SimulatorCommandLine {
 			simulationArguments.setVersion(true);
 		}
 		
+		if (hasOption(SimulatorOptions.SHORT_CONSOLE_OUTPUT)) {
+			simulationArguments.setShortConsoleOutput(true);
+		}
+
 		if (hasOption(SimulatorOptions.XML_SESSION_NAME)) {
 			simulationArguments.setXmlSessionName(getValue(SimulatorOptions.XML_SESSION_NAME));
 		}

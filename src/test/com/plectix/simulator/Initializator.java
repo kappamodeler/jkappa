@@ -10,6 +10,7 @@ import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
+import com.plectix.simulator.util.Info.InfoType;
 
 public class Initializator {
 	private Simulator mySimulator;
@@ -54,8 +55,8 @@ public class Initializator {
 			throw new IllegalArgumentException(e);
 		}
 		
-		mySimulator.getSimulationData().setSimulationArguments(commandLine.getSimulationArguments());
-		mySimulator.resetSimulation();
+		mySimulator.getSimulationData().setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
+		mySimulator.resetSimulation(InfoType.OUTPUT);
 	}
 	
 	public void init(String filePath) {
@@ -75,9 +76,9 @@ public class Initializator {
 				throw new IllegalArgumentException(e);
 			}
 			
-			simulationData.setSimulationArguments(commandLine.getSimulationArguments());
-			simulationData.readSimulatonFile();
-			simulationData.initialize();
+			simulationData.setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
+			simulationData.readSimulatonFile(InfoType.OUTPUT);
+			simulationData.initialize(InfoType.OUTPUT);
 			
 			myFirstRun = false;
 			myObsComponents = mySimulator.getSimulationData().getObservables().getConnectedComponentList();

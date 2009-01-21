@@ -31,6 +31,7 @@ import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
+import com.plectix.simulator.util.Info.InfoType;
 
 @RunWith(value = Parameterized.class)
 public class TestAction {
@@ -92,8 +93,8 @@ public class TestAction {
 			throw new IllegalArgumentException(e);
 		}
 		
-		mySimulator.getSimulationData().setSimulationArguments(commandLine.getSimulationArguments());
-		mySimulator.resetSimulation();
+		mySimulator.getSimulationData().setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
+		mySimulator.resetSimulation(InfoType.OUTPUT);
 	}
 	
 	@BeforeClass
@@ -115,9 +116,9 @@ public class TestAction {
 			throw new IllegalArgumentException(e);
 		}
 		
-		simulationData.setSimulationArguments(commandLine.getSimulationArguments());
-		simulationData.readSimulatonFile();
-		simulationData.initialize();
+		simulationData.setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
+		simulationData.readSimulatonFile(InfoType.OUTPUT);
+		simulationData.initialize(InfoType.OUTPUT);
 		System.out.println(FilePath);
 	}
 
@@ -141,7 +142,7 @@ public class TestAction {
 
 	private void run() {
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
-				mySimulator.getSimulationData());
+				InfoType.OUTPUT,mySimulator.getSimulationData());
 		myActiveRule = ruleProbabilityCalculation.getRandomRule();
 
 		if (myActiveRule == null) {

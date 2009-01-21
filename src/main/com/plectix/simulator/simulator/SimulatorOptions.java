@@ -124,6 +124,7 @@ public enum SimulatorOptions {
 	// Java specific options:
 	OCAML_STYLE_OBS_NAME("ocaml_style_obs_name", false,	"convert observable names to simplx variants"),
 	NO_DUMP_STDOUT_STDERR("no_dump_stdout_stderr", false, "don't dump information to stdout and/or stderr"),
+	SHORT_CONSOLE_OUTPUT("short_console_output", false, "Short console output"),
 	;
 
 	private String shortName = null;

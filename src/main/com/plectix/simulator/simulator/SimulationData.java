@@ -73,13 +73,14 @@ import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
 import com.plectix.simulator.parser.KappaSystemParser;
+import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class SimulationData {
-	
+
 	private final static String TYPE_NEGATIVE_MAP = "NEGATIVE";
 	private final static String TYPE_POSITIVE_MAP = "POSITIVE";
 
@@ -102,30 +103,34 @@ public class SimulationData {
 	private String tmpSessionName = "simplx.tmp";
 
 	private PrintStream printStream = null;
-	
+
 	private List<Double> snapshotTimes = null;
-	
+
 	private long clockStamp;
 
 	private double step;
 	private double nextStep;
-	
+	private double stepStories;
+	private double nextStepStories;
+
 	private int agentIdGenerator = 0;
 
 	private boolean argumentsSet = false;
-	private SimulationArguments simulationArguments = new SimulationArguments(); 
-		
+	private SimulationArguments simulationArguments = new SimulationArguments();
+
 	public SimulationData() {
 		super();
 	}
-	
-	public final void resetSimulation() {
-		addInfo(InfoType.INFO, "-Reset simulation data.");
-		addInfo(InfoType.INFO, "-Initialization...");
-		
+
+	public final void resetSimulation(InfoType outputType) {
+		if(!simulationArguments.isShortConsoleOutput())
+			outputType = InfoType.OUTPUT;
+		addInfo(outputType, InfoType.INFO, "-Reset simulation data.");
+		addInfo(outputType, InfoType.INFO, "-Initialization...");
+
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
-		
+
 		rules.clear();
 		observables.resetLists();
 		solution.clearAgents();
@@ -136,12 +141,12 @@ public class SimulationData {
 		}
 
 		if (simulationArguments.getSerializationMode() != SimulationArguments.SerializationMode.READ) {
-			readSimulatonFile();
+			readSimulatonFile(outputType);
 		}
+
+		initialize(outputType);
 		
-		initialize();
-		
-		stopTimer(timer, "-Initialization:");
+		stopTimer(outputType, timer, "-Initialization:");
 		setClockStamp(System.currentTimeMillis());
 	}
 
@@ -152,77 +157,87 @@ public class SimulationData {
 	public final long generateNextAgentId() {
 		return agentIdGenerator++;
 	}
-	
-	public final void setSimulationArguments(SimulationArguments arguments) {
+
+	public final void setSimulationArguments(InfoType outputType,
+			SimulationArguments arguments) {
 		this.simulationArguments = arguments;
 
 		if (simulationArguments.isNoDumpStdoutStderr()) {
 			printStream = null;
 		}
 
-		// do not print anything above because the line above might have turned the printing off...
+		// do not print anything above because the line above might have turned
+		// the printing off...
 
 		if (simulationArguments.isHelp()) {
-			if (printStream != null) {            
+			if (printStream != null) {
 				PrintWriter printWriter = new PrintWriter(printStream);
-				HelpFormatter formatter = new HelpFormatter(); 
-				formatter.printHelp(printWriter, HelpFormatter.DEFAULT_WIDTH, 
-						SimulationMain.COMMAND_LINE_SYNTAX, null, 
-						SimulatorOptions.COMMAND_LINE_OPTIONS, HelpFormatter.DEFAULT_LEFT_PAD, 
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp(printWriter, HelpFormatter.DEFAULT_WIDTH,
+						SimulationMain.COMMAND_LINE_SYNTAX, null,
+						SimulatorOptions.COMMAND_LINE_OPTIONS,
+						HelpFormatter.DEFAULT_LEFT_PAD,
 						HelpFormatter.DEFAULT_DESC_PAD, null, false);
 				printWriter.flush();
 			}
 		}
 
 		if (simulationArguments.isVersion()) {
-			println("Java simulator SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
+			println("Java simulator SVN Revision: "
+					+ BuildConstants.BUILD_SVN_REVISION);
 		}
-		
+
 		// let's dump the command line arguments
 		if (simulationArguments.getCommandLineString() != null) {
 			println("Java " + simulationArguments.getCommandLineString());
 		}
 
-		addInfo(InfoType.INFO, "-Initialization...");
-		
-		// TODO: remove the following lines after checking all the dependencies to them!!!
+		addInfo(outputType, InfoType.INFO, "-Initialization...");
+
+		// TODO: remove the following lines after checking all the dependencies
+		// to them!!!
 		if (simulationArguments.isTime()) {
 			setTimeLength(simulationArguments.getTimeLength());
 		} else {
-			setEvent(simulationArguments.getEvent());	
+			setEvent(simulationArguments.getEvent());
 			println("*Warning* No time limit.");
 		}
-		
+
 		this.argumentsSet = true;
 	}
 
-	public final void readSimulatonFile() {
+	public final void readSimulatonFile(InfoType outputType) {
 		if (!this.argumentsSet) {
-			throw new RuntimeException("Simulator Arguments must be set before reading the simulation file!");
+			throw new RuntimeException(
+					"Simulator Arguments must be set before reading the simulation file!");
 		}
-		
-		// TODO: move the following lines to a reset method. they should not be part of reading the simulation file!
+
+		// TODO: move the following lines to a reset method. they should not be
+		// part of reading the simulation file!
 		// They are here now because this method used to parse arguments!
 		resetBar();
-		observables.setOcamlStyleObsName(simulationArguments.isOcamlStyleObservableNames());
+		observables.setOcamlStyleObsName(simulationArguments
+				.isOcamlStyleObservableNames());
 		if (simulationArguments.getSnapshotsTimeString() != null) {
 			setSnapshotTime(simulationArguments.getSnapshotsTimeString());
 		}
-		
+
 		try {
-			KappaFileReader kappaFileReader = new KappaFileReader(simulationArguments.getInputFilename());
-			
+			KappaFileReader kappaFileReader = new KappaFileReader(
+					simulationArguments.getInputFilename());
+
 			if (simulationArguments.getFocusFilename() != null) {
 				setFocusOn(simulationArguments.getFocusFilename());
 			}
-		
+
 			KappaFile kappaFile = kappaFileReader.parse();
-			
+
 			KappaSystemParser parser = new KappaSystemParser(kappaFile, this);
 			parser.setForwarding(simulationArguments.isForwardOnly());
-			parser.parse();
+			parser.parse(outputType);
 		} catch (Exception e) {
-			println("Error in file \"" + simulationArguments.getInputFilename() + "\" :");
+			println("Error in file \"" + simulationArguments.getInputFilename()
+					+ "\" :");
 
 			if (printStream != null) {
 				e.printStackTrace(printStream);
@@ -230,7 +245,7 @@ public class SimulationData {
 			throw new IllegalArgumentException(e);
 		}
 	}
-	
+
 	public final boolean isParseSolution() {
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.GENERATE_MAP) {
 			return false;
@@ -238,13 +253,16 @@ public class SimulationData {
 		return true;
 	}
 
-	public final void addInfo(InfoType type, String message) {
-		addInfo(new Info(type, message, printStream));
+	public final void addInfo(InfoType outputType, InfoType type, String message) {
+		if(!simulationArguments.isShortConsoleOutput())
+			outputType = InfoType.OUTPUT;
+		addInfo(new Info(outputType, type, message, printStream));
 	}
-	
+
 	private final void addInfo(Info info) {
 		for (Info inf : infoList) {
-			if (inf.getMessageWithoutTime().equals(info.getMessageWithoutTime())) {
+			if (inf.getMessageWithoutTime()
+					.equals(info.getMessageWithoutTime())) {
 				inf.upCount(info.getTime());
 				return;
 			}
@@ -253,35 +271,39 @@ public class SimulationData {
 		infoList.add(info);
 	}
 
-
 	public final boolean isEndSimulation(double currentTime, long count) {
 		long curClockTime = System.currentTimeMillis();
 		if (curClockTime - clockStamp > simulationArguments.getClockPrecision()) {
 			println("simulation interrupted because the clock time has expired");
 			return true;
 		}
-		
+
 		if (simulationArguments.isTime()) {
 			if (currentTime <= simulationArguments.getTimeLength()) {
 				if (currentTime >= nextStep) {
-					print("#");
+					outputBar();
 					nextStep += step;
 				}
 				return false;
 			} else {
-				println("#");
+				outputBar();
 				return true;
 			}
 		} else if (count <= simulationArguments.getEvent()) {
 			if (count >= nextStep) {
-				print("#");
+				outputBar();
 				nextStep += step;
 			}
 			return false;
 		} else {
-			println("#");
+			outputBar();
 			return true;
 		}
+	}
+	
+	private void outputBar(){
+		if(!simulationArguments.isShortConsoleOutput() || !isStorify())
+			print("#");
 	}
 
 	public final void addStories(String name) {
@@ -319,21 +341,46 @@ public class SimulationData {
 	public final void resetBar() {
 		nextStep = step;
 	}
+	
+	private void checkAndInitStoriesBar(){
+		if(simulationArguments.isStorify()){
+			stepStories = simulationArguments.getIterations()/100;
+			nextStepStories = stepStories;
+		}
+	}
+	
+	public void checkStoriesBar(int i){
+		if(i>=nextStepStories){
+			double r;
+			if(stepStories>1)
+				r=1;
+			else
+				r = stepStories;
+			while(r>0){
+				print("#");
+				r--;
+			}
+			nextStepStories+=stepStories;
+		}
+	}
 
 	public final void setEvent(long event) {
+		checkAndInitStoriesBar();
 		step = event / 100;
 		nextStep = step;
 		simulationArguments.setEvent(event);
 	}
 
 	public final void setTimeLength(double timeLength) {
+		checkAndInitStoriesBar();
 		step = timeLength / 100;
 		nextStep = step;
 		simulationArguments.setTimeLength(timeLength);
 		simulationArguments.setTime(true);
 	}
 
-	public final void initIterations(List<Double> timeStamps, List<List<RunningMetric>> runningMetrics) {
+	public final void initIterations(List<Double> timeStamps,
+			List<List<RunningMetric>> runningMetrics) {
 		this.timeStamps = timeStamps;
 		this.runningMetrics = runningMetrics;
 		int observable_num = observables.getComponentListForXMLOutput().size();
@@ -378,8 +425,10 @@ public class SimulationData {
 				"http://www.w3.org/2001/XMLSchema-instance");
 		simplxSession.setAttribute("xmlns",
 				"http://plectix.synthesisstudios.com/schemas/kappasession");
-		simplxSession.setAttribute("CommandLine", simulationArguments.getCommandLineString());
-		simplxSession.setAttribute("InputFile", simulationArguments.getInputFilename());
+		simplxSession.setAttribute("CommandLine", simulationArguments
+				.getCommandLineString());
+		simplxSession.setAttribute("InputFile", simulationArguments
+				.getInputFilename());
 		Date d = new Date();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		simplxSession.setAttribute("TimeStamp", df.format(d));
@@ -517,7 +566,8 @@ public class SimulationData {
 							rules.get(i).getInhibitedObservable());
 			}
 			simplxSession.appendChild(influenceMap);
-			stopTimer(timer, "-Building xml tree for influence map:");
+			stopTimer(InfoType.OUTPUT, timer,
+					"-Building xml tree for influence map:");
 		}
 
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY) {
@@ -557,15 +607,19 @@ public class SimulationData {
 				}
 				simplxSession.appendChild(snapshotElement);
 			}
-			stopTimer(timer, "-Building xml tree for snapshots:");
+			stopTimer(InfoType.OUTPUT, timer,
+					"-Building xml tree for snapshots:");
 		}
 
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.SIM) {
 			int obsCountTimeListSize = observables.getCountTimeList().size();
 			Element simulation = doc.createElement("Simulation");
-			simulation.setAttribute("TotalEvents", Long.toString(simulationArguments.getEvent()));
-			simulation.setAttribute("TotalTime", Double.toString(simulationArguments.getTimeLength()));
-			simulation.setAttribute("InitTime", Double.toString(simulationArguments.getInitialTime()));
+			simulation.setAttribute("TotalEvents", Long
+					.toString(simulationArguments.getEvent()));
+			simulation.setAttribute("TotalTime", Double
+					.toString(simulationArguments.getTimeLength()));
+			simulation.setAttribute("InitTime", Double
+					.toString(simulationArguments.getInitialTime()));
 
 			simulation.setAttribute("TimeSample", Double.valueOf(
 					observables.getTimeSampleMin()).toString());
@@ -588,7 +642,8 @@ public class SimulationData {
 
 			csv.appendChild(cdata);
 			simulation.appendChild(csv);
-			stopTimer(timer, "-Building xml tree for data points:");
+			stopTimer(InfoType.OUTPUT, timer,
+					"-Building xml tree for data points:");
 		}
 
 		appendInfo(simplxSession, doc);
@@ -597,8 +652,8 @@ public class SimulationData {
 		return domSource;
 	}
 
-	private final void addRulesToXML(Element influenceMap, int rulesAndObsNumber,
-			Document doc) {
+	private final void addRulesToXML(Element influenceMap,
+			int rulesAndObsNumber, Document doc) {
 		for (int i = rules.size() - 1; i >= 0; i--) {
 			Element node = null;
 			if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
@@ -638,7 +693,8 @@ public class SimulationData {
 			throws ParserConfigurationException, TransformerException {
 		TransformerFactory trFactory = TransformerFactory.newInstance();
 		Transformer transformer = trFactory.newTransformer();
-		stopTimer(timerOutput, "-Results outputted in xml session:");
+		stopTimer(InfoType.OUTPUT, timerOutput,
+				"-Results outputted in xml session:");
 		StreamResult streamesult = new StreamResult(getXmlSessionPath());
 		Properties pr = new Properties();
 		pr.setProperty(OutputKeys.METHOD, "html");
@@ -876,16 +932,20 @@ public class SimulationData {
 		return node;
 	}
 
-	public final void stopTimer(PlxTimer timer, String message) {
+	public final void stopTimer(InfoType outputType, PlxTimer timer,
+			String message) {
 		if (timer == null) {
 			return;
 		}
 		timer.stopTimer();
-		
-		message += " ";
-		println(message + timer.getTimeMessage() + " sec. CPU");
+
+		if(outputType == InfoType.OUTPUT){
+			message += " ";
+			println(message + timer.getTimeMessage() + " sec. CPU");
+		}
 		// timer.getTimer();
-		addInfo(new Info(InfoType.INFO, message, timer.getThreadTimeInSeconds(), 1));
+		addInfo(new Info(outputType, InfoType.INFO, message, timer
+				.getThreadTimeInSeconds(), 1));
 	}
 
 	public final void createTMPReport() {
@@ -899,7 +959,8 @@ public class SimulationData {
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 				int oCamlObservableNo = number_of_observables - observable_num
 						- 1; // everything is backward with OCaml!
-				BufferedWriter writer = new BufferedWriter(new FileWriter(tmpSessionName + "-" + oCamlObservableNo));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(
+						tmpSessionName + "-" + oCamlObservableNo));
 
 				double timeSampleMin = 0.;
 				double timeNext = 0.;
@@ -943,8 +1004,8 @@ public class SimulationData {
 			}
 		}
 
-		println("-Results outputted in tmp session: "
-				+ timer.getTimeMessage() + " sec. CPU");
+		println("-Results outputted in tmp session: " + timer.getTimeMessage()
+				+ " sec. CPU");
 	}
 
 	private final double getTimeSampleMin(double fullTime) {
@@ -955,8 +1016,8 @@ public class SimulationData {
 		}
 	}
 
-	private final void appendData(IObservables obs, List<IObservablesComponent> list,
-			CDATASection cdata, int index) {
+	private final void appendData(IObservables obs,
+			List<IObservablesComponent> list, CDATASection cdata, int index) {
 		String enter = "\n";
 		cdata.appendData(observables.getCountTimeList().get(index).toString());
 		for (int j = list.size() - 1; j >= 0; j--) {
@@ -982,19 +1043,20 @@ public class SimulationData {
 
 	private final String getXmlSessionPath() {
 		if (simulationArguments.getXmlSessionPath().length() > 0) {
-			return simulationArguments.getXmlSessionPath() + File.separator + simulationArguments.getXmlSessionName();
+			return simulationArguments.getXmlSessionPath() + File.separator
+					+ simulationArguments.getXmlSessionName();
 		} else {
-			return simulationArguments.getXmlSessionName(); 
+			return simulationArguments.getXmlSessionName();
 		}
 	}
 
-
-	public final void initialize() {
+	public final void initialize(InfoType outputType) {
 
 		if (simulationArguments.getSerializationMode() == SimulationArguments.SerializationMode.READ) {
 			ObjectInputStream ois;
 			try {
-				ois = new ObjectInputStream(new FileInputStream(simulationArguments.getSerializationFileName()));
+				ois = new ObjectInputStream(new FileInputStream(
+						simulationArguments.getSerializationFileName()));
 				solution = (CSolution) ois.readObject();
 				rules = (List<IRule>) ois.readObject();
 				observables = (IObservables) ois.readObject();
@@ -1013,7 +1075,9 @@ public class SimulationData {
 		}
 		if (simulationArguments.getSerializationMode() == SimulationArguments.SerializationMode.SAVE) {
 			try {
-				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(simulationArguments.getSerializationFileName()));
+				ObjectOutputStream oos = new ObjectOutputStream(
+						new FileOutputStream(simulationArguments
+								.getSerializationFileName()));
 				oos.writeObject(solution);
 				oos.writeObject(rules);
 				oos.writeObject(observables);
@@ -1023,13 +1087,17 @@ public class SimulationData {
 				oos.writeDouble(simulationArguments.getTimeLength());
 				oos.flush();
 				oos.close();
-				simulationArguments.setSerializationMode(SimulationArguments.SerializationMode.READ);
+				simulationArguments
+						.setSerializationMode(SimulationArguments.SerializationMode.READ);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 
-		getObservables().init(simulationArguments.getTimeLength(), simulationArguments.getInitialTime(), simulationArguments.getEvent(), simulationArguments.getPoints(), simulationArguments.isTime());
+		getObservables().init(simulationArguments.getTimeLength(),
+				simulationArguments.getInitialTime(),
+				simulationArguments.getEvent(),
+				simulationArguments.getPoints(), simulationArguments.isTime());
 		CSolution solution = (CSolution) getSolution();
 		List<IRule> rules = getRules();
 
@@ -1042,28 +1110,30 @@ public class SimulationData {
 
 		if (simulationArguments.isActivationMap()) {
 			PlxTimer timer = new PlxTimer();
-			addInfo(InfoType.INFO, "--Abstracting activation map...");
-			
+			addInfo(outputType, InfoType.INFO,
+					"--Abstracting activation map...");
+
 			timer.startTimer();
 			for (IRule rule : rules) {
 				rule.createActivatedRulesList(rules);
 				rule.createActivatedObservablesList(getObservables());
 			}
-			stopTimer(timer, "--Abstraction:");
-			addInfo(InfoType.INFO, "--Activation map computed");
+			stopTimer(outputType, timer, "--Abstraction:");
+			addInfo(outputType, InfoType.INFO, "--Activation map computed");
 		}
 
 		if (simulationArguments.isInhibitionMap()) {
 			PlxTimer timer = new PlxTimer();
-			addInfo(InfoType.INFO, "--Abstracting inhibition map...");
-			
+			addInfo(outputType, InfoType.INFO,
+					"--Abstracting inhibition map...");
+
 			timer.startTimer();
 			for (IRule rule : rules) {
 				rule.createInhibitedRulesList(rules);
 				rule.createInhibitedObservablesList(getObservables());
 			}
-			stopTimer(timer, "--Abstraction:");
-			addInfo(InfoType.INFO, "--Inhibition map computed");
+			stopTimer(outputType, timer, "--Abstraction:");
+			addInfo(outputType, InfoType.INFO, "--Inhibition map computed");
 		}
 
 		while (iterator.hasNext()) {
@@ -1101,15 +1171,15 @@ public class SimulationData {
 
 	}
 
-	public final void checkOutputFinalState(double currentTime){
+	public final void checkOutputFinalState(double currentTime) {
 		if (simulationArguments.isOutputFinalState()) {
 			createSnapshots(currentTime);
 		}
 	}
-	
-	public final void createSnapshots(double currentTime){
+
+	public final void createSnapshots(double currentTime) {
 		addSnapshot(new CSnapshot(this, currentTime));
-//		simulationData.setSnapshotTime(currentTime);
+		// simulationData.setSnapshotTime(currentTime);
 	}
 
 	public final void outputData() {
@@ -1128,7 +1198,7 @@ public class SimulationData {
 			println("]");
 		}
 	}
-	
+
 	private final void outputRules() {
 		for (IRule rule : getRules()) {
 			// int countAgentsInLHS = rule.getCountAgentsLHS();
@@ -1151,8 +1221,7 @@ public class SimulationData {
 						print(") ");
 						print("(#");
 						print(""
-										+ (siteTo.getAgentLink()
-												.getIdInRuleSide() - 1));
+								+ (siteTo.getAgentLink().getIdInRuleSide() - 1));
 						print(",");
 						print(siteTo.getName());
 						print(") ");
@@ -1163,25 +1232,21 @@ public class SimulationData {
 				case DELETE: {
 					// DEL #0
 					print("DEL #");
-					println(""
-							+ (action.getAgentFrom().getIdInRuleSide() - 1));
+					println("" + (action.getAgentFrom().getIdInRuleSide() - 1));
 					break;
 				}
 				case ADD: {
 					// ADD a#0(x)
-					print("ADD " + action.getAgentTo().getName()
-							+ "#");
+					print("ADD " + action.getAgentTo().getName() + "#");
 
-					print(""
-							+ (action.getAgentTo().getIdInRuleSide() - 1));
+					print("" + (action.getAgentTo().getIdInRuleSide() - 1));
 					print("(");
 					int i = 1;
 					for (ISite site : action.getAgentTo().getSites()) {
 						print(site.getName());
 						if ((site.getInternalState() != null)
 								&& (site.getInternalState().getNameId() >= 0))
-							print("~"
-									+ site.getInternalState().getName());
+							print("~" + site.getInternalState().getName());
 						if (action.getAgentTo().getSites().size() > i++)
 							print(",");
 					}
@@ -1222,8 +1287,7 @@ public class SimulationData {
 					print(",");
 					print(action.getSiteFrom().getName());
 					print(") with ");
-					print(action.getSiteTo().getInternalState()
-							.getName());
+					print(action.getSiteTo().getInternalState().getName());
 					println();
 					break;
 				}
@@ -1231,9 +1295,12 @@ public class SimulationData {
 
 			}
 
-			String line = SimulationUtils.printPartRule(rule.getLeftHandSide(), isOcamlStyleObsName());
+			String line = SimulationUtils.printPartRule(rule.getLeftHandSide(),
+					isOcamlStyleObsName());
 			line = line + "->";
-			line = line + SimulationUtils.printPartRule(rule.getRightHandSide(), isOcamlStyleObsName());
+			line = line
+					+ SimulationUtils.printPartRule(rule.getRightHandSide(),
+							isOcamlStyleObsName());
 			String ch = new String();
 			for (int j = 0; j < line.length(); j++)
 				ch = ch + "-";
@@ -1294,18 +1361,21 @@ public class SimulationData {
 		}
 		case NUMBER: {
 			st += "Whenever [";
-			st += observables.getComponentList().get(perturbation.getObsNameID()).getName();
+			st += observables.getComponentList().get(
+					perturbation.getObsNameID()).getName();
 			st += "] ";
 			st += greater;
-			st += SimulationUtils.perturbationParametersToString(perturbation.getLHSParametersList());
+			st += SimulationUtils.perturbationParametersToString(perturbation
+					.getLHSParametersList());
 			break;
 		}
 		}
-		
+
 		st += " do kin(";
 		st += perturbation.getPerturbationRule().getName();
 		st += "):=";
-		st += SimulationUtils.perturbationParametersToString(perturbation.getRHSParametersList());
+		st += SimulationUtils.perturbationParametersToString(perturbation
+				.getRHSParametersList());
 
 		return st;
 	}
@@ -1321,7 +1391,8 @@ public class SimulationData {
 					}
 				}
 			}
-			for (IObservablesConnectedComponent obsCC : observables.getConnectedComponentList()) {
+			for (IObservablesConnectedComponent obsCC : observables
+					.getConnectedComponentList()) {
 				IInjection inj = obsCC.getInjection(agent);
 				if (inj != null) {
 					if (!agent.isAgentHaveLinkToConnectedComponent(obsCC, inj))
@@ -1331,14 +1402,18 @@ public class SimulationData {
 		}
 	}
 
-	public final void doPositiveUpdate(IRule rule, List<IInjection> currentInjectionsList) {
+	public final void doPositiveUpdate(IRule rule,
+			List<IInjection> currentInjectionsList) {
 		if (simulationArguments.isActivationMap()) {
-			SimulationUtils.positiveUpdate(rule.getActivatedRule(), rule.getActivatedObservable(), rule);
+			SimulationUtils.positiveUpdate(rule.getActivatedRule(), rule
+					.getActivatedObservable(), rule);
 		} else {
-			SimulationUtils.positiveUpdate(getRules(), observables.getConnectedComponentList(), rule);
+			SimulationUtils.positiveUpdate(getRules(), observables
+					.getConnectedComponentList(), rule);
 		}
 
-		List<IAgent> freeAgents = SimulationUtils.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
+		List<IAgent> freeAgents = SimulationUtils
+				.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
 		doPositiveUpdateForDeletedAgents(freeAgents);
 	}
 
@@ -1353,7 +1428,6 @@ public class SimulationData {
 		}
 		return false;
 	}
-	
 
 	public final void checkPerturbation(double currentTime) {
 		if (perturbations.size() != 0) {
@@ -1379,7 +1453,6 @@ public class SimulationData {
 		}
 	}
 
-
 	public final void setSnapshotTime(String snapshotTimeStr) {
 		StringTokenizer st = new StringTokenizer(snapshotTimeStr, ",");
 		String timeSt;
@@ -1396,10 +1469,10 @@ public class SimulationData {
 	private final void setFocusOn(String fileNameFocusOn) throws Exception {
 		KappaFileReader kappaFileReader = new KappaFileReader(fileNameFocusOn);
 		KappaFile kappaFile = kappaFileReader.parse();
-		
+
 		KappaSystemParser parser = new KappaSystemParser(kappaFile, this);
 		List<IRule> ruleList = parser.createRules();
-		
+
 		if (ruleList != null && !ruleList.isEmpty()) {
 			contactMap.setFocusRule(ruleList.get(0));
 			contactMap.setMode(ContactMapMode.AGENT_OR_RULE);
@@ -1411,13 +1484,20 @@ public class SimulationData {
 			printStream.print(text);
 		}
 	}
-	
+
 	private final void println() {
 		if (printStream != null) {
 			printStream.println();
 		}
 	}
 	
+	protected final void printlnBar() {
+		if(!simulationArguments.isShortConsoleOutput())
+			if (printStream != null) {
+				printStream.println("#");
+			}
+	}
+
 	protected final void println(String text) {
 		if (printStream != null) {
 			printStream.println(text);

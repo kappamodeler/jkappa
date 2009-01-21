@@ -8,6 +8,7 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.util.Info.InfoType;
 
 public final class CProbabilityCalculation {
 	private final List<IRule> rules;
@@ -15,13 +16,16 @@ public final class CProbabilityCalculation {
 	private final IRandom random;
 	private double commonActivity;
 
-	public CProbabilityCalculation(SimulationData simulationData) {
+	public CProbabilityCalculation(InfoType outputType,SimulationData simulationData) {
 		this.rules = simulationData.getRules();
 		rulesProbability = new double[rules.size()];
 
 		String randomizerPatch = simulationData.getSimulationArguments().getRandomizer();
+		if(!simulationData.getSimulationArguments().isShortConsoleOutput())
+			outputType = InfoType.OUTPUT;
+		
 		if (randomizerPatch == null)
-			random = new CRandomJava(simulationData);
+			random = new CRandomJava(outputType,simulationData);
 		else
 			random = new CRandomOCaml(randomizerPatch, simulationData.getSimulationArguments().getSeed());
 

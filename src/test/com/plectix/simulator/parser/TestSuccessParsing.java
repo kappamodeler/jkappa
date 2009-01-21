@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.util.Failer;
+import com.plectix.simulator.util.Info.InfoType;
 
 public class TestSuccessParsing {
 	private static final String myTestFileNamePrefix = RunParserTests.getFileNamePrefix();
@@ -29,7 +30,7 @@ public class TestSuccessParsing {
 			myFailer.fail("File Reading Error : " + e);
 		}
 		try {
-			myParser.parse();
+			myParser.parse(InfoType.OUTPUT);
 		} catch (Exception e) {
 			myFailer.fail(e.toString());
 		}

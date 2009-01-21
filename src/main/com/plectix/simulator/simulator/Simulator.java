@@ -77,28 +77,34 @@ public class Simulator implements SimulatorInterface {
 	}
 
 
-	private final void endOfSimulation(boolean isEndRules, PlxTimer timer) {
-		simulationData.stopTimer(timer, "-Simulation:");
+	private final void endOfSimulation(InfoType outputType,boolean isEndRules, PlxTimer timer) {
+		if(!simulationData.getSimulationArguments().isShortConsoleOutput())
+			outputType = InfoType.OUTPUT;
+		simulationData.stopTimer(outputType,timer, "-Simulation:");
 
-		if (!isEndRules) {
-			LOGGER.info("end of simulation: time");
-		} else {
-			LOGGER.info("end of simulation: there are no active rules");
+		switch (outputType) {
+		case OUTPUT:
+			if (!isEndRules) {
+				LOGGER.info("end of simulation: time");
+			} else {
+				LOGGER.info("end of simulation: there are no active rules");
+			}
+			break;
 		}
 	}
 
-	public final void resetSimulation() {
+	public final void resetSimulation(InfoType outputType) {
 		currentTime = 0.0;
-		simulationData.resetSimulation();
+		simulationData.resetSimulation(outputType);
 	}
 
 	public final void run(int iteration_num) throws Exception {
-		simulationData.addInfo(InfoType.INFO, "-Simulation...");
+		simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
 		
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
 		
-		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(simulationData);
+		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.OUTPUT,simulationData);
 
 		long clash = 0;
 		long count = 0;
@@ -150,7 +156,7 @@ public class Simulator implements SimulatorInterface {
 
 				simulationData.getObservables().calculateObs(currentTime, count, simulationData.getSimulationArguments().isTime());
 			} else {
-				simulationData.addInfo(InfoType.INTERNAL, "Application of rule exp is clashing");
+				simulationData.addInfo(InfoType.OUTPUT,InfoType.INTERNAL, "Application of rule exp is clashing");
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Clash");
 				}
@@ -168,7 +174,7 @@ public class Simulator implements SimulatorInterface {
 		simulationData.setTimeLength(currentTime);
 		simulationData.setEvent(count);
 		
-		endOfSimulation(isEndRules, timer);
+		endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
 		Source source = addCompleteSource();
 		
 		if (!isIteration) {
@@ -181,11 +187,11 @@ public class Simulator implements SimulatorInterface {
 		timer.startTimer();
 
 		simulationData.setPrintStream(simulatorInputData.getPrintStream());
-		simulationData.setSimulationArguments(simulatorInputData.getSimulationArguments());
-		simulationData.readSimulatonFile();
-		simulationData.initialize();
+		simulationData.setSimulationArguments(InfoType.OUTPUT,simulatorInputData.getSimulationArguments());
+		simulationData.readSimulatonFile(InfoType.OUTPUT);
+		simulationData.initialize(InfoType.OUTPUT);
 		
-		simulationData.stopTimer(timer, "-Initialization:");
+		simulationData.stopTimer(InfoType.OUTPUT,timer, "-Initialization:");
 		simulationData.setClockStamp(System.currentTimeMillis());
 		
 		if (simulationData.getSimulationArguments().isCompile()) {
@@ -233,7 +239,7 @@ public class Simulator implements SimulatorInterface {
 			// if the simulator's initial state is cached, reload it for next
 			// run
 			if (iteration_num < simulationData.getSimulationArguments().getIterations() - 1) {
-				resetSimulation();
+				resetSimulation(InfoType.OUTPUT);
 			}
 
 		}
@@ -247,17 +253,23 @@ public class Simulator implements SimulatorInterface {
 	public final void runStories() throws Exception {
 		CStories stories = simulationData.getStories();
 		int count = 0;
+		if(simulationData.getSimulationArguments().isShortConsoleOutput())
+			simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
+		simulationData.resetBar();
+		PlxTimer timerAllStories = new PlxTimer();
+		timerAllStories.startTimer();
 		for (int i = 0; i < simulationData.getSimulationArguments().getIterations(); i++) {
-		    simulationData.addInfo(InfoType.INFO, "-Simulation...");
-		    
-			PlxTimer timer = new PlxTimer();
-			timer.startTimer();
+			PlxTimer timer=null;
+			if(!simulationData.getSimulationArguments().isShortConsoleOutput()){
+				simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
+				timer = new PlxTimer();
+				timer.startTimer();
+			}
 			
 			boolean isEndRules = false;
 			long clash = 0;
 			long max_clash = 0;
-			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(simulationData);
-		    simulationData.resetBar();
+			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.NOT_OUTPUT,simulationData);
 		    
 		    while (!simulationData.isEndSimulation(currentTime, count)
 					&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {
@@ -267,7 +279,7 @@ public class Simulator implements SimulatorInterface {
 
 				if (rule == null) {
 					simulationData.setTimeLength(currentTime);
-					simulationData.println("#");
+					simulationData.printlnBar();
 					break;
 				}
 
@@ -286,7 +298,7 @@ public class Simulator implements SimulatorInterface {
 						// stories.addToNetworkNotationStory(i, netNotation);
 						count++;
 						isEndRules = true;
-						simulationData.println("#");
+						simulationData.printlnBar();
 						break;
 					}
 					
@@ -303,14 +315,19 @@ public class Simulator implements SimulatorInterface {
 					max_clash++;
 				}
 			}
-			
+			simulationData.checkStoriesBar(i);
 			count = 0;
-			endOfSimulation(isEndRules, timer);
 			stories.handling(i);
+			if(!simulationData.getSimulationArguments().isShortConsoleOutput())
+				endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
 			
 			if (i < simulationData.getSimulationArguments().getIterations() - 1) {
-				resetSimulation();
+				resetSimulation(InfoType.NOT_OUTPUT);
 			}
+		}
+		if(simulationData.getSimulationArguments().isShortConsoleOutput()){
+			simulationData.println("#");
+			endOfSimulation(InfoType.OUTPUT, false, timerAllStories);
 		}
 		
 		stories.merge();

@@ -8,7 +8,9 @@ public class Info implements Serializable{
 	public enum InfoType {
 		INFO,
 		INTERNAL,
-		WARNING;
+		WARNING,
+		OUTPUT,
+		NOT_OUTPUT;
 	}
 	
 	private int count;
@@ -18,7 +20,7 @@ public class Info implements Serializable{
 	private double time;
 	private InfoType type;
 
-	public Info(InfoType type, String message, double time, int count) {
+	public Info(InfoType outputType,InfoType type, String message, double time, int count) {
 		setType(type);
 		this.count = count;
 		isHaveTime = true;
@@ -27,13 +29,14 @@ public class Info implements Serializable{
 		this.position = System.currentTimeMillis() / 1000.0;
 	}
 
-	public Info(InfoType type, String message, PrintStream printStream) {
+	public Info(InfoType outputType,InfoType type, String message, PrintStream printStream) {
 		setType(type);
 		this.count = 1;
 		this.message = message;
 		this.position = System.currentTimeMillis() / 1000.0;
-		switch (type) {
-		case INFO:
+		switch (outputType) {
+		case OUTPUT:
+//		case INFO:
 			if (printStream != null) {
 				printStream.println(message);
 			}

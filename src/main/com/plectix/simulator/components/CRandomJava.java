@@ -12,10 +12,10 @@ import com.plectix.simulator.util.Info.InfoType;
 
 	private final Random rand;
 
-	public CRandomJava(SimulationData data) {
+	public CRandomJava(InfoType outputType,SimulationData data) {
 		int seed = data.getSimulationArguments().getSeed();
 		if (seed != SimulationArguments.DEFAULT_SEED) {
-			data.addInfo(InfoType.INFO,
+			data.addInfo(outputType,InfoType.INFO,
 							"--Seeding random number generator with given seed "
 									+ Integer.valueOf(seed).toString());
 			rand = new Random(seed);

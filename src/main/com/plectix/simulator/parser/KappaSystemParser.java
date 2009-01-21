@@ -135,8 +135,8 @@ public class KappaSystemParser {
 		this.simulationData = simulationData;
 	}
 
-	public final void parse() throws ParseErrorException {
-		simulationData.addInfo(InfoType.INFO,"--Computing initial state");
+	public final void parse(InfoType outputType) throws ParseErrorException {
+		simulationData.addInfo(outputType,InfoType.INFO,"--Computing initial state");
 		
 		if (simulationData.isParseSolution())
 			createSimData(CREATE_INIT);
