@@ -263,6 +263,8 @@ public class CContactMap {
 
 	private boolean addReachableRule(List<IRule> rules, List<IRule> checkedRules) {
 		boolean added = false;
+		
+		List<IRule> newRules = new ArrayList<IRule>();
 		for (IRule rule : rules) {
 			int injCounter = 0;
 			List<IInjection> injList = new ArrayList<IInjection>();
@@ -279,14 +281,18 @@ public class CContactMap {
 				// unreachableCC.add(cc);
 			}
 			if (injCounter == rule.getLeftHandSide().size())
-				if (!reachableRules.contains(rule)) {
+				// if (!reachableRules.contains(rule)) {
+				if (!((CRule) rule).includedInCollection(checkedRules)) {
 					reachableRules.add(rule);
+					newRules.add(rule);
 				}
 		}
 
-		for (IRule rule : reachableRules) {
-			if (!checkedRules.contains(rule)) {
-
+		int y=0;
+		
+		for (IRule rule : newRules) {
+			//if (!checkedRules.contains(rule)) {
+			if(!((CRule) rule).includedInCollection(checkedRules)){
 				List<IInjection> oldInjList = new ArrayList<IInjection>();
 				if (rule.getLeftHandSide().size() == 2) {
 					Collection<IInjection> injectionsMap1 = rule
@@ -361,7 +367,6 @@ public class CContactMap {
 
 	private void addNewElementsToSolution(List<IInjection> oldInjList,
 			IRule rule) {
-		List<IAgent> newAgents = new ArrayList<IAgent>();
 		List<IAgent> oldAgents = new ArrayList<IAgent>();
 
 		for (IInjection inj : oldInjList) {
