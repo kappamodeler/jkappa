@@ -338,13 +338,21 @@ public class SimulationData {
 		return Collections.unmodifiableList(rules);
 	}
 
+	public final IRule getRulesByID(int ruleID) {
+		for(IRule rule : rules)
+			if(rule.getRuleID() == ruleID)
+				return rule;
+		return null;
+//		return Collections.unmodifiableList(rules);
+	}
+
 	public final void resetBar() {
 		nextStep = step;
 	}
 	
 	private void checkAndInitStoriesBar(){
 		if(simulationArguments.isStorify()){
-			stepStories = simulationArguments.getIterations()/100;
+			stepStories = simulationArguments.getIterations()/100.;
 			nextStepStories = stepStories;
 		}
 	}
@@ -352,13 +360,13 @@ public class SimulationData {
 	public void checkStoriesBar(int i){
 		if(i>=nextStepStories){
 			double r;
-			if(stepStories>1)
+			if(stepStories>=1)
 				r=1;
 			else
-				r = stepStories;
+				r = 100*stepStories;
 			while(r>0){
 				print("#");
-				r--;
+				r = r-1;
 			}
 			nextStepStories+=stepStories;
 		}

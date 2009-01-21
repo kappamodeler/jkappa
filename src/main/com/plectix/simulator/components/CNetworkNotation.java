@@ -18,6 +18,7 @@ import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.simulator.Simulator;
 
 public class CNetworkNotation implements INetworkNotation {
 	public enum NetworkNotationMode {
@@ -29,26 +30,32 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	private boolean leaf;
-
 	private boolean hasIntro;
-
+	private int step;
+//	private final IRule rule;
+	private final int ruleID;
+	private Simulator simulator;
+	private Map<Long, AgentSites> changesOfAllUsedSites;
+	private Map<Long, AgentSites> changedAgentsFromSolution;
+	private Map<Long, AgentSitesFromRules> usedAgentsFromRules;
+	List<String> agentsNotation;
+	List<List<Long>> introCC;
+	
 	public boolean isHasIntro() {
 		return hasIntro;
 	}
-
+	
 	public void setHasIntro(boolean hasIntro) {
 		this.hasIntro = hasIntro;
 	}
-
+	
 	public boolean isLeaf() {
 		return leaf;
 	}
-
+	
 	public void setLeaf(boolean leaf) {
 		this.leaf = leaf;
 	}
-
-	private int step;
 
 	public void setStep(int step) {
 		this.step = step;
@@ -58,28 +65,22 @@ public class CNetworkNotation implements INetworkNotation {
 		return step;
 	}
 
-	private final IRule rule;
 
-	private Map<Long, AgentSites> changesOfAllUsedSites;
 
 	public Map<Long, AgentSites> getChangesOfAllUsedSites() {
 		return changesOfAllUsedSites;
 	}
 
-	private Map<Long, AgentSites> changedAgentsFromSolution;
 
 	public Map<Long, AgentSites> getChangedAgentsFromSolution() {
 		return changedAgentsFromSolution;
 	}
 
-	private Map<Long, AgentSitesFromRules> usedAgentsFromRules;
 
 	public Map<Long, AgentSitesFromRules> getUsedAgentsFromRules() {
 		return usedAgentsFromRules;
 	}
 
-	List<String> agentsNotation;
-	List<List<Long>> introCC;
 
 	public List<String> getAgentsNotation() {
 		return agentsNotation;
@@ -94,7 +95,7 @@ public class CNetworkNotation implements INetworkNotation {
 				+ changedAgentsFromSolution.keySet().toString() + " ";
 		st += "changesOfAllUsedSites="
 				+ changesOfAllUsedSites.keySet().toString() + " ";
-		st += "ruleName=" + rule.getName() + " ";
+		st += "ruleName=" + simulator.getSimulationData().getRulesByID(ruleID).getName() + " ";
 		st += "step=" + step + " ";
 		st += "agentsNotation=" + agentsNotation.toString() + " ";
 
@@ -108,16 +109,16 @@ public class CNetworkNotation implements INetworkNotation {
 		HashMap<Integer, SitesFromRules> sites;
 		private NetworkNotationMode mode;
 
-		private IAgent agent;
+		private int agentName;
 
-		public IAgent getAgent() {
-			return agent;
+		public int getAgentName() {
+			return agentName;
 		}
 
 		public AgentSitesFromRules(NetworkNotationMode mode, IAgent agent) {
 			this.mode = mode;
 			sites = new HashMap<Integer, SitesFromRules>();
-			this.agent = agent;
+			this.agentName = agent.getNameId();
 		}
 
 		// TODO separate!!!!!!!!!!!!!!!!!!!!
@@ -202,10 +203,12 @@ public class CNetworkNotation implements INetworkNotation {
 		}
 	}
 
-	public CNetworkNotation(int step, IRule rule,
+	public CNetworkNotation(Simulator simulator, int step, IRule rule,
 			List<IInjection> injectionsList, SimulationData data) {
+		this.simulator = simulator;
 		this.step = step;
-		this.rule = rule;
+//		this.rule = rule;
+		this.ruleID = rule.getRuleID();
 		leaf = false;
 		hasIntro = false;
 		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();
@@ -400,7 +403,7 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public final IRule getRule() {
-		return rule;
+		return simulator.getSimulationData().getRulesByID(ruleID);
 	}
 
 	public final boolean isNotOpposite(
@@ -420,8 +423,6 @@ public class CNetworkNotation implements INetworkNotation {
 		return true;
 	}
 
-	public int rand;
-	
 	public final boolean isOpposite(CNetworkNotation networkNotation) {
 		switch (isIntersects(networkNotation, true)) {
 		case FULL_INTERSECTION:

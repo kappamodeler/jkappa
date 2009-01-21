@@ -215,7 +215,7 @@ public final class CStoryTrees {
 					}
 					nnList.add(nn);
 
-					int agentNameID = asFR.getAgent().getNameId();
+					int agentNameID = asFR.getAgentName();//.getNameId();
 					List<Long> agentIDsList = agentNameIDToAgentID
 							.get(agentNameID);
 					if (agentIDsList == null) {

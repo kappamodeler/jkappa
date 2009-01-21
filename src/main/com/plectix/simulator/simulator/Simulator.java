@@ -289,7 +289,7 @@ public class Simulator implements SimulatorInterface {
 					currentTime += ruleProbabilityCalculation.getTimeValue();
 				}
 				if (!rule.isClash(injectionsList)) {
-					CNetworkNotation netNotation = new CNetworkNotation(count, rule, injectionsList, simulationData);
+					CNetworkNotation netNotation = new CNetworkNotation(this,count, rule, injectionsList, simulationData);
 					max_clash = 0;
 					if (stories.checkRule(rule.getRuleID(), i)) {
 						rule.applyLastRuleForStories(injectionsList,netNotation);

@@ -7,10 +7,10 @@ import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 
 /*package*/ final class AgentSites {
-	IAgent agent;
-	public IAgent getAgent() {
-		return agent;
-	}
+//	IAgent agent;
+//	public IAgent getAgent() {
+//		return agent;
+//	}
 
 	private Map<Integer, IStoriesSiteStates> sites;
 
@@ -19,7 +19,7 @@ import com.plectix.simulator.interfaces.IStoriesSiteStates;
 	}
 
 	public AgentSites(IAgent agent) {
-		this.agent = agent;
+//		this.agent = agent;
 		sites = new HashMap<Integer, IStoriesSiteStates>();
 	}
 
