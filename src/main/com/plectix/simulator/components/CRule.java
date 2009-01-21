@@ -616,9 +616,7 @@ public class CRule implements IRule, Serializable {
 											currentLinkState, linkState))
 										return true;
 								}
-							}
-
-							if (currentInternalState.isRankRoot()) {
+							}else{
 								if (currentLinkState.getStatusLinkRank() == CLinkRank.FREE
 										&& linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
 									return true;
