@@ -21,10 +21,9 @@ import com.plectix.simulator.simulator.Simulator;
 
 public class CContactMap {
 	public enum ContactMapMode {
-		MODEL,
-		AGENT_OR_RULE;
+		MODEL, AGENT_OR_RULE;
 	}
-	
+
 	private ContactMapMode mode = ContactMapMode.MODEL;
 
 	public ContactMapMode getMode() {
@@ -124,13 +123,13 @@ public class CContactMap {
 	private boolean checkConnectionWithFocused(IAgent checkingAgent) {
 		for (IAgent agent : agentsFromFocusedRule) {
 			if (agent.equalz(checkingAgent))
-//				if (agent.equals(checkingAgent))
+				// if (agent.equals(checkingAgent))
 				return true;
 			for (ISite site : ((CAgent) checkingAgent).getSites()) {
 				ISite linkSite = site.getLinkState().getSite();
 				if (linkSite != null)
 					if (linkSite.getAgentLink().equalz(agent))
-//						if (linkSite.getAgentLink().equals(agent))
+						// if (linkSite.getAgentLink().equals(agent))
 						return true;
 
 			}
@@ -139,7 +138,8 @@ public class CContactMap {
 	}
 
 	private void addToAgentsInContactMap(IAgent agent, IRule rule, boolean isLHS) {
-		if (mode == ContactMapMode.AGENT_OR_RULE && !checkConnectionWithFocused(agent)) {
+		if (mode == ContactMapMode.AGENT_OR_RULE
+				&& !checkConnectionWithFocused(agent)) {
 			return;
 		}
 		for (ISite site : agent.getSites()) {
@@ -158,7 +158,8 @@ public class CContactMap {
 	}
 
 	private void addToEdgesInContactMap(IAgent agent, IRule rule) {
-		if (mode == ContactMapMode.AGENT_OR_RULE && !checkConnectionWithFocused(agent)) {
+		if (mode == ContactMapMode.AGENT_OR_RULE
+				&& !checkConnectionWithFocused(agent)) {
 			return;
 		}
 
@@ -240,9 +241,9 @@ public class CContactMap {
 		Iterator<Integer> iterator = agentsFromSolution.keySet().iterator();
 		while (iterator.hasNext()) {
 			int key = iterator.next();
-				IAgent agent = agentsFromSolution.get(key);
-				addToAgentsInContactMap(agent, null, false);
-				addToEdgesInContactMap(agent, null);
+			IAgent agent = agentsFromSolution.get(key);
+			addToAgentsInContactMap(agent, null, false);
+			addToEdgesInContactMap(agent, null);
 		}
 
 		for (IConnectedComponent cc : unreachableCC) {
@@ -260,7 +261,7 @@ public class CContactMap {
 	// if()
 	// }
 
-	private boolean addReachableRule(List<IRule> rules, List<IRule> chekedRules) {
+	private boolean addReachableRule(List<IRule> rules, List<IRule> checkedRules) {
 		boolean added = false;
 		for (IRule rule : rules) {
 			int injCounter = 0;
@@ -270,9 +271,12 @@ public class CContactMap {
 						&& cc.getInjectionsList().size() != 0) {
 					injCounter++;
 					injList.add(cc.getInjectionsList().iterator().next());
-				} 
-//				else if (!unreachableCC.contains(cc))
-//					unreachableCC.add(cc);
+				} else if (cc == CRule.EMPTY_LHS_CC) {
+					injCounter++;
+				}
+
+				// else if (!unreachableCC.contains(cc))
+				// unreachableCC.add(cc);
 			}
 			if (injCounter == rule.getLeftHandSide().size())
 				if (!reachableRules.contains(rule)) {
@@ -281,7 +285,7 @@ public class CContactMap {
 		}
 
 		for (IRule rule : reachableRules) {
-			if (!chekedRules.contains(rule)) {
+			if (!checkedRules.contains(rule)) {
 
 				List<IInjection> oldInjList = new ArrayList<IInjection>();
 				if (rule.getLeftHandSide().size() == 2) {
@@ -316,10 +320,20 @@ public class CContactMap {
 						oldInjList.clear();
 					}
 				}
-				if (rule.getLeftHandSide().get(0) != CRule.EMPTY_LHS_CC) {
-					chekedRules.add(rule);
-					added = true;
-				}
+
+				if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC)
+					for (IAction action : rule.getActionList()) {
+						if (action.getTypeId() == CActionType.ADD.getId()) {
+							List<IAgent> addAgent = new ArrayList<IAgent>();
+							addAgent.add(((CAddAction) action).getAgentTo());
+							addNewAgentsToSolution(addAgent, rule);
+						}
+					}
+
+				// if (rule.getLeftHandSide().get(0) != CRule.EMPTY_LHS_CC) {
+				checkedRules.add(rule);
+				added = true;
+				// }
 			}
 		}
 
@@ -329,30 +343,39 @@ public class CContactMap {
 	/*
 	 * TODO: Can we remove this method???
 	 * 
-	private void addNewElementsToSolution(IRule rule) {
-		List<Collection<IInjection>> listColls = new ArrayList<Collection<IInjection>>();
-		List<Integer> listCollsNumbers = new ArrayList<Integer>();
-		List<IInjection> oldInjList = new ArrayList<IInjection>();
+	 * private void addNewElementsToSolution(IRule rule) {
+	 * List<Collection<IInjection>> listColls = new
+	 * ArrayList<Collection<IInjection>>(); List<Integer> listCollsNumbers = new
+	 * ArrayList<Integer>(); List<IInjection> oldInjList = new
+	 * ArrayList<IInjection>();
+	 * 
+	 * for (IConnectedComponent cc : rule.getLeftHandSide()) {
+	 * Collection<IInjection> injCollection = cc.getInjectionsList();
+	 * listColls.add(injCollection); listCollsNumbers.add(injCollection.size());
+	 * }
+	 * 
+	 * // for(IInjection inj)
+	 * 
+	 * }
+	 */
 
-		for (IConnectedComponent cc : rule.getLeftHandSide()) {
-			Collection<IInjection> injCollection = cc.getInjectionsList();
-			listColls.add(injCollection);
-			listCollsNumbers.add(injCollection.size());
-		}
-
-		// for(IInjection inj)
-
-	}
-	*/
-
-	private void addNewElementsToSolution(List<IInjection> oldInjList, IRule rule) {
+	private void addNewElementsToSolution(List<IInjection> oldInjList,
+			IRule rule) {
 		List<IAgent> newAgents = new ArrayList<IAgent>();
 		List<IAgent> oldAgents = new ArrayList<IAgent>();
 
 		for (IInjection inj : oldInjList) {
 			IAgent agent = inj.getAgentLinkList().get(0).getAgentTo();
-			oldAgents.addAll(solution.getConnectedComponent(agent).getAgents());
+			IConnectedComponent cc = solution.getConnectedComponent(agent);
+			if (cc != null)
+				oldAgents.addAll(cc.getAgents());
 		}
+
+		addNewAgentsToSolution(oldAgents, rule);
+	}
+
+	private void addNewAgentsToSolution(List<IAgent> oldAgents, IRule rule) {
+		List<IAgent> newAgents = new ArrayList<IAgent>();
 
 		newAgents = solution.cloneAgentsList(oldAgents, simulationData);
 		solution.addAgents(newAgents);
@@ -372,8 +395,15 @@ public class CContactMap {
 				}
 			}
 
+		if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC) {
+			newInjList.add(CInjection.EMPTY_INJECTION);
+		}
 		rule.applyRule(newInjList, simulationData);
 		simulationData.doPositiveUpdate(rule, newInjList);
+	}
+
+	public void setSolution(ISolution solution) {
+		this.solution = solution;
 	}
 
 	public void constructReachableRules(List<IRule> rules) {
@@ -390,12 +420,12 @@ public class CContactMap {
 				if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC)
 					reachableRules.add(rule);
 				else
-				for (IConnectedComponent cc : rule.getLeftHandSide()) {
-					if (cc != CRule.EMPTY_LHS_CC
-							&& cc.getInjectionsList().size() == 0) {
-						unreachableCC.add(cc);
+					for (IConnectedComponent cc : rule.getLeftHandSide()) {
+						if (cc != CRule.EMPTY_LHS_CC
+								&& cc.getInjectionsList().size() == 0) {
+							unreachableCC.add(cc);
+						}
 					}
-				}
 				// else {
 				// int injCounter = 0;
 				// for (IConnectedComponent cc : rule.getLeftHandSide()) {
@@ -419,7 +449,7 @@ public class CContactMap {
 
 				for (IAgent agent : this.agentsFromFocusedRule)
 					if (agent.includedInCollection(agentsFromRule)) {
-//						if (agentsFromRule.contains(agent)) {
+						// if (agentsFromRule.contains(agent)) {
 						reachableRules.add(rule);
 						break;
 					}
