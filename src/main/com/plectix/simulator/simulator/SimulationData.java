@@ -1102,7 +1102,8 @@ public class SimulationData {
 		List<IRule> rules = getRules();
 
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-			contactMap.addCreatedAgentsToSolution(this.solution, rules);
+		//	contactMap.addCreatedAgentsToSolution(this.solution, rules);
+			contactMap.setSolution(this.solution);
 		}
 
 		Iterator<IAgent> iterator = solution.getAgents().values().iterator();
