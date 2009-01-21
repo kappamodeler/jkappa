@@ -420,8 +420,10 @@ public class CNetworkNotation implements INetworkNotation {
 		return true;
 	}
 
+	public int rand;
+	
 	public final boolean isOpposite(CNetworkNotation networkNotation) {
-		switch (isIntersects(networkNotation)) {
+		switch (isIntersects(networkNotation, true)) {
 		case FULL_INTERSECTION:
 			clearAgentsForDeletedOppositeRules(this);
 			clearAgentsForDeletedOppositeRules(networkNotation);

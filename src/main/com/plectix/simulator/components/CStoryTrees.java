@@ -649,6 +649,7 @@ public final class CStoryTrees {
 							indexListOpposite.add(traceId);
 						}
 					}
+					
 				}
 			}
 			isOppositeBranch(trID, mainTraceId, list, indexList,
@@ -946,13 +947,12 @@ public final class CStoryTrees {
 	private boolean isOcamlStyleObsName;
 
 	private void fillMaps(List<CNetworkNotation> nnList) {
+		
+		
 		levelToTraceID = new TreeMap<Integer, List<Integer>>();
 		traceIDToIntroString = new HashMap<Integer, List<String>>();
 		traceIDToData = new HashMap<Integer, String>();
 		traceIDToText = new HashMap<Integer, String>();
-
-		
-		
 		
 		List<Long> introAgents = new ArrayList<Long>();
 
@@ -979,6 +979,10 @@ public final class CStoryTrees {
 			}
 			traceIDToIntroString.put(nn.getStep(), introStr);
 		}
+		//traceIDToLevel.size()==7 && 
+		if(nnList.get(nnList.size()-2).getRule().getRuleID()==14)
+			System.out.println();
+		
 		Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
 		while (iterator.hasNext()) {
 			int traceID = iterator.next();
@@ -1073,7 +1077,7 @@ public final class CStoryTrees {
 			int level = levelIterator.next();
 			List<Integer> list = this.levelToTraceID.get(level);
 			List<Integer> listIn = treeIn.getLevelToTraceID().get(level);
-			if (list.size() != list.size())
+			if (list.size() != listIn.size())
 				return false;
 			List<Integer> rules = new ArrayList<Integer>();
 			int intro = getRulesList(list, this, rules);
