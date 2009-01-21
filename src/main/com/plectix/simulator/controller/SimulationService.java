@@ -8,6 +8,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * This class runs jobs in a thread pool. The thread pool is created only once, when any
+ * of the constructors are called and then its size can not be changed again. The default
+ * size is the number of available processors on the system. Once can submit simulation
+ * jobs to this class, and monitor their progress either through using callback functions, 
+ * blocking calls to this class, or looping over non-blocking calls to this class.
  * 
  * @author ecemis
  */
@@ -21,6 +26,9 @@ public class SimulationService {
 	private ConcurrentHashMap<Long, SimulatorFutureTask> callablesMap = new ConcurrentHashMap<Long, SimulatorFutureTask>();
 	
 	/**
+	 * Creates a SimulationService which would use the given simulatorFactoryInterface 
+	 * to create new Simulators to work in parallel threads. The first call to any 
+	 * of the constructors creates the thread pool whose size can not be changed.
 	 * 
 	 * @param simulatorInterface
 	 */
@@ -29,6 +37,9 @@ public class SimulationService {
 	}
 	
 	/**
+	 * Creates a SimulationService which would use the given simulatorFactoryInterface 
+	 * to create new Simulators to work in parallel threads. The first call to any 
+	 * of the constructors creates the thread pool whose size can not be changed.
 	 * 
 	 * @param simulatorInterface
 	 */
@@ -45,6 +56,10 @@ public class SimulationService {
 	
 	/**
 	 * 
+	 * Submits simulatorInputData to get executed by the thread pool and returns an ID to query the
+	 * job progress alter. The progress can also be monitored through callback functions using the
+	 * listener passed to this method.
+	 *  
 	 * @param simulatorInputData
 	 * @return
 	 */
@@ -72,7 +87,9 @@ public class SimulationService {
 	}
 	
 	/**
-	 * Waits if necessary for the computation to complete, and then retrieves its result. 
+	 * Waits if necessary for the computation of jobID to complete, and then retrieves its result. 
+	 * Returns null if there is no job with id jobID. Note that the jobID is removed from the queue
+	 * no matter what this method returns. Once can not call this function twice with the same jobID.
 	 * 
 	 * @param jobID
 	 * @param timeout
@@ -102,6 +119,7 @@ public class SimulationService {
 	/**
 	 * Returns the current simulation time for <code>jobID</code> or
 	 * <code>Double.NaN</code> if the job doesn't exist.
+	 * 
 	 * @param jobID
 	 * @return
 	 */
@@ -131,6 +149,7 @@ public class SimulationService {
 	 * @param jobID
 	 * @param mayInterruptIfRunning - <code>true</code> if the thread executing this job 
 	 * should be interrupted; otherwise, in-progress jobs are allowed to complete 
+	 * @param removeJob - if <code>true</code> the jobID can not be queried again.
 	 * 
 	 * @return <code>false</code> if the jobId doesn't exist, the job could not 
 	 * be canceled, typically because it has already completed normally; 
@@ -180,6 +199,7 @@ public class SimulationService {
      * tasks are executed, but no new tasks will be
      * accepted. 
      * Invocation has no additional effect if already shut down.
+     * 
      * @throws SecurityException if a security manager exists and
      * shutting down this ExecutorService may manipulate threads that
      * the caller is not permitted to modify because it does not hold
