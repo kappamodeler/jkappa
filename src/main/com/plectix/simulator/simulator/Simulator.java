@@ -15,9 +15,9 @@ import com.plectix.simulator.components.CStories;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
+import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
@@ -43,6 +43,12 @@ public class Simulator implements SimulatorInterface {
 		super();
 	}
 
+	@Override
+	public SimulatorStatusInterface getStatus() {
+		// TODO Need to implement this class for streaming data...
+		return null;
+	}
+	
 	private final void addIteration(int iteration_num) {
 		// TODO: This method should be rewritten!!!
 		List<List<RunningMetric>> runningMetrics = simulationData.getRunningMetrics();
@@ -356,5 +362,6 @@ public class Simulator implements SimulatorInterface {
 	public final SimulatorResultsData getSimulatorResultsData() {
 		return simulatorResultsData;
 	}
+
 
 }

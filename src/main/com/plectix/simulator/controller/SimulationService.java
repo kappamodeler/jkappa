@@ -8,9 +8,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This class runs jobs in a thread pool. The thread pool is created only once, when any
+ * This class runs jobs in a thread pool. The thread pool is created only once, when any one
  * of the constructors are called and then its size can not be changed again. The default
- * size is the number of available processors on the system. Once can submit simulation
+ * size is the number of available processors on the system. One can submit simulation
  * jobs to this class, and monitor their progress either through using callback functions, 
  * blocking calls to this class, or looping over non-blocking calls to this class.
  * 
@@ -27,7 +27,7 @@ public class SimulationService {
 	
 	/**
 	 * Creates a SimulationService which would use the given simulatorFactoryInterface 
-	 * to create new Simulators to work in parallel threads. The first call to any 
+	 * to create new Simulators to work in parallel threads. The first call to any one
 	 * of the constructors creates the thread pool whose size can not be changed.
 	 * 
 	 * @param simulatorInterface
@@ -38,7 +38,7 @@ public class SimulationService {
 	
 	/**
 	 * Creates a SimulationService which would use the given simulatorFactoryInterface 
-	 * to create new Simulators to work in parallel threads. The first call to any 
+	 * to create new Simulators to work in parallel threads. The first call to any one
 	 * of the constructors creates the thread pool whose size can not be changed.
 	 * 
 	 * @param simulatorInterface
@@ -57,7 +57,7 @@ public class SimulationService {
 	/**
 	 * 
 	 * Submits simulatorInputData to get executed by the thread pool and returns an ID to query the
-	 * job progress alter. The progress can also be monitored through callback functions using the
+	 * job progress. The progress can also be monitored through the callback functions of the
 	 * listener passed to this method.
 	 *  
 	 * @param simulatorInputData
@@ -89,7 +89,7 @@ public class SimulationService {
 	/**
 	 * Waits if necessary for the computation of jobID to complete, and then retrieves its result. 
 	 * Returns null if there is no job with id jobID. Note that the jobID is removed from the queue
-	 * no matter what this method returns. Once can not call this function twice with the same jobID.
+	 * no matter what this method returns. I.e. One can not call this function twice with the same jobID.
 	 * 
 	 * @param jobID
 	 * @param timeout

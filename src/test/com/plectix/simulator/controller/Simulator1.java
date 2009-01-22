@@ -27,6 +27,12 @@ public class Simulator1 implements SimulatorInterface {
 		return resultsData;
 	}
 
+	@Override
+	public SimulatorStatusInterface getStatus() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	public void run(SimulatorInputData simulatorInputData) throws InterruptedException {
 		for (int i= 0; i < 2000; i++) {
 			currentTime += Math.random();
@@ -40,4 +46,5 @@ public class Simulator1 implements SimulatorInterface {
 			return new Simulator1();
 		}
 	}
+
 }
