@@ -162,7 +162,7 @@ public class Simulator implements SimulatorInterface {
 
 				simulationData.getObservables().calculateObs(currentTime, count, simulationData.getSimulationArguments().isTime());
 			} else {
-				simulationData.addInfo(InfoType.OUTPUT,InfoType.INTERNAL, "Application of rule exp is clashing");
+				simulationData.addInfo(InfoType.NOT_OUTPUT,InfoType.INTERNAL, "Application of rule exp is clashing");
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Clash");
 				}
