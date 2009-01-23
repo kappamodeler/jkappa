@@ -1,8 +1,8 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.stories;
 
 import com.plectix.simulator.interfaces.IStates;
 
-public class CStoryState implements IStates {
+class CStoryState implements IStates {
 	
 		private int idInternalState = -1;
 		private long idLinkAgent = -1;

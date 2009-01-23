@@ -9,9 +9,9 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.log4j.Logger;
 
-import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CProbabilityCalculation;
-import com.plectix.simulator.components.CStories;
+import com.plectix.simulator.components.stories.CNetworkNotation;
+import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;

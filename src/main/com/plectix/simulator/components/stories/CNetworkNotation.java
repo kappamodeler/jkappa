@@ -1,4 +1,4 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.stories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.plectix.simulator.components.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CInjection;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -32,7 +35,6 @@ public class CNetworkNotation implements INetworkNotation {
 	private boolean leaf;
 	private boolean hasIntro;
 	private int step;
-//	private final IRule rule;
 	private final int ruleID;
 	private Simulator simulator;
 	private Map<Long, AgentSites> changesOfAllUsedSites;
@@ -101,106 +103,6 @@ public class CNetworkNotation implements INetworkNotation {
 
 		// return super.toString();
 		return st;
-	}
-
-	// TODO separate!
-	/* package */final class AgentSitesFromRules {
-		// TODO private!!!
-		HashMap<Integer, SitesFromRules> sites;
-		private NetworkNotationMode mode;
-
-		private int agentName;
-
-		public int getAgentName() {
-			return agentName;
-		}
-
-		public AgentSitesFromRules(NetworkNotationMode mode, IAgent agent) {
-			this.mode = mode;
-			sites = new HashMap<Integer, SitesFromRules>();
-			this.agentName = agent.getNameId();
-		}
-
-		// TODO separate!!!!!!!!!!!!!!!!!!!!
-		/* package */final class SitesFromRules {
-			// TODO private!!!
-			private NetworkNotationMode internalStateMode = NetworkNotationMode.NONE;
-
-			public NetworkNotationMode getInternalStateMode() {
-				return internalStateMode;
-			}
-
-			private NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
-
-			public NetworkNotationMode getLinkStateMode() {
-				return linkStateMode;
-			}
-
-			private int linkAgentNameID;
-
-			public SitesFromRules(NetworkNotationMode internalStateMode,
-					NetworkNotationMode linkStateMode, int linkAgentNameID) {
-				this.internalStateMode = internalStateMode;
-				this.linkStateMode = linkStateMode;
-				this.linkAgentNameID = linkAgentNameID;
-			}
-
-			public SitesFromRules() {
-			}
-
-			public final void setInternalStateMode(
-					NetworkNotationMode internalStateMode, int linkAgentNameID) {
-				this.internalStateMode = internalStateMode;
-				this.linkAgentNameID = linkAgentNameID;
-			}
-
-			public final void setLinkStateMode(
-					NetworkNotationMode linkStateMode, int linkAgentNameID) {
-				this.linkStateMode = linkStateMode;
-				// this.linkAgentNameID = linkAgentNameID;
-
-			}
-
-			public final boolean isCausing(SitesFromRules sfr, boolean isLink) {
-				if (isLink) {
-					if (isCausing(this.linkStateMode, sfr.linkStateMode))
-						return true;
-				} else if (isCausing(this.internalStateMode,
-						sfr.internalStateMode))
-					return true;
-
-				return false;
-			}
-
-			public final boolean isCausing(NetworkNotationMode mode,
-					NetworkNotationMode sfrMode) {
-				if (mode == NetworkNotationMode.TEST_OR_MODIFY
-						&& sfrMode == NetworkNotationMode.TEST_OR_MODIFY)
-					return true;
-				if (mode == NetworkNotationMode.TEST_OR_MODIFY
-						&& sfrMode == NetworkNotationMode.TEST)
-					return true;
-				if (mode == NetworkNotationMode.MODIFY
-						&& sfrMode == NetworkNotationMode.TEST)
-					return true;
-
-				return false;
-			}
-		}
-
-		public final void addToSitesFromRules(int idSite,
-				NetworkNotationMode internalStateMode,
-				NetworkNotationMode linkStateMode, int linkAgentNameID) {
-			SitesFromRules sFR = sites.get(idSite);
-			if (sFR == null) {
-				sFR = new SitesFromRules();
-				sites.put(idSite, sFR);
-			}
-			if (internalStateMode != NetworkNotationMode.NONE)
-				sFR.setInternalStateMode(internalStateMode, linkAgentNameID);
-			if (linkStateMode != NetworkNotationMode.NONE)
-				sFR.setLinkStateMode(linkStateMode, linkAgentNameID);
-		}
 	}
 
 	public CNetworkNotation(Simulator simulator, int step, IRule rule,

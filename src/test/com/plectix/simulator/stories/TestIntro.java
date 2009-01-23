@@ -8,9 +8,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
-import com.plectix.simulator.components.CStoryTrees;
-import com.plectix.simulator.components.CStoryType;
-import com.plectix.simulator.components.CStoryType.StoryOutputType;
+import com.plectix.simulator.components.stories.CStoryTrees;
+import com.plectix.simulator.components.stories.CStoryType;
+import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
 
 public class TestIntro {
 

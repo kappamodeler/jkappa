@@ -43,23 +43,23 @@ import org.w3c.dom.Element;
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.action.CActionType;
-import com.plectix.simulator.components.CContactMap;
-import com.plectix.simulator.components.CContactMapChangedSite;
-import com.plectix.simulator.components.CContactMapEdge;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CPerturbationType;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
-import com.plectix.simulator.components.CStories;
-import com.plectix.simulator.components.CStoryTrees;
-import com.plectix.simulator.components.CStoryType;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.SnapshotElement;
 import com.plectix.simulator.components.SolutionLines;
-import com.plectix.simulator.components.CContactMap.ContactMapMode;
-import com.plectix.simulator.components.CStoryType.StoryOutputType;
+import com.plectix.simulator.components.contactMap.CContactMap;
+import com.plectix.simulator.components.contactMap.CContactMapChangedSite;
+import com.plectix.simulator.components.contactMap.CContactMapEdge;
+import com.plectix.simulator.components.contactMap.CContactMap.ContactMapMode;
+import com.plectix.simulator.components.stories.CStories;
+import com.plectix.simulator.components.stories.CStoryTrees;
+import com.plectix.simulator.components.stories.CStoryType;
+import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -363,7 +363,7 @@ public class SimulationData {
 			if (stepStories >= 1)
 				r = 1;
 			else
-				r = 100 * stepStories;
+				r = 100 / simulationArguments.getIterations();
 			while (r > 0) {
 				print("#");
 				r = r - 1;

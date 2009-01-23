@@ -11,8 +11,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.plectix.simulator.components.CStoryTrees;
-import com.plectix.simulator.components.CStoryType;
+import com.plectix.simulator.components.stories.CStoryTrees;
+import com.plectix.simulator.components.stories.CStoryType;
 
 @RunWith(value = Parameterized.class)
 public class TestStories extends InitStoriesTests{

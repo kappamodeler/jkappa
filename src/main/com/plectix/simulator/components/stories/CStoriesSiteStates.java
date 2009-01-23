@@ -1,5 +1,6 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.stories;
 
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.*;
 
 public final class CStoriesSiteStates implements IStoriesSiteStates {

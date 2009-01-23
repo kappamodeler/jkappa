@@ -1,9 +1,9 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.stories;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.components.CNetworkNotation.IntersectionType;
+import com.plectix.simulator.components.stories.CNetworkNotation.IntersectionType;
 
 class NetworkNotationForCurrentStory {
 	private List<CNetworkNotation> networkNotationList;

@@ -1,7 +1,7 @@
 package com.plectix.simulator.interfaces;
 
-import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
-import com.plectix.simulator.components.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
+import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 
 public interface INetworkNotation {
 

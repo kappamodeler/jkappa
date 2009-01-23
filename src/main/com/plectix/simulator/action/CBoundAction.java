@@ -1,10 +1,10 @@
 package com.plectix.simulator.action;
 
-import com.plectix.simulator.components.CNetworkNotation;
 import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CStoriesSiteStates;
-import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
-import com.plectix.simulator.components.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.CNetworkNotation;
+import com.plectix.simulator.components.stories.CStoriesSiteStates;
+import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
+import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;

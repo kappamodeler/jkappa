@@ -1,17 +1,12 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.stories;
 
 import java.util.*;
 
-import com.plectix.simulator.components.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 
-/*package*/ final class AgentSites {
-//	IAgent agent;
-//	public IAgent getAgent() {
-//		return agent;
-//	}
-
+final class AgentSites {
 	private Map<Integer, IStoriesSiteStates> sites;
 
 	public Map<Integer, IStoriesSiteStates> getSites() {
@@ -19,7 +14,6 @@ import com.plectix.simulator.interfaces.IStoriesSiteStates;
 	}
 
 	public AgentSites(IAgent agent) {
-//		this.agent = agent;
 		sites = new HashMap<Integer, IStoriesSiteStates>();
 	}
 
@@ -32,12 +26,6 @@ import com.plectix.simulator.interfaces.IStoriesSiteStates;
 			ss.addInformation(index, siteStates);
 	}
 
-	public final void addToSites(int nameId, CStoriesSiteStates siteStates,
-			int index) {
-		// TODO Auto-generated method stub
-
-	}
-	
 	public final boolean isEqualsAgentSites(AgentSites checkAS){
 		if(sites.size()!=checkAS.getSites().size())
 			return false;

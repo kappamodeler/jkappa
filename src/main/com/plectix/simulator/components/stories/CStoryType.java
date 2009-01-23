@@ -1,4 +1,4 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.stories;
 
 import org.w3c.dom.Element;
 

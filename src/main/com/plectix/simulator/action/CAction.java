@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.components.*;
-import com.plectix.simulator.components.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.*;
 
 /*package*/abstract class CAction implements IAction, Serializable {

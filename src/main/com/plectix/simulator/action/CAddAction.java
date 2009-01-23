@@ -2,8 +2,9 @@ package com.plectix.simulator.action;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
-import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
-import com.plectix.simulator.components.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.CStoriesSiteStates;
+import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
+import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;

@@ -1,4 +1,4 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.contactMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +10,9 @@ import java.util.TreeMap;
 
 import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.action.CAddAction;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CInjection;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;

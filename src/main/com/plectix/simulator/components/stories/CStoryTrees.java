@@ -1,4 +1,4 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.stories;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules;
-import com.plectix.simulator.components.CNetworkNotation.NetworkNotationMode;
-import com.plectix.simulator.components.CNetworkNotation.AgentSitesFromRules.SitesFromRules;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.INetworkNotation;
@@ -769,11 +768,11 @@ public final class CStoryTrees {
 			Long agentKey = agentIterator.next();
 			AgentSitesFromRules aSFR = newNN.getUsedAgentsFromRules().get(
 					agentKey);
-			Iterator<Integer> siteIterator = aSFR.sites.keySet().iterator();
+			Iterator<Integer> siteIterator = aSFR.getSites().keySet().iterator();
 			int leafIndex = 0;
 			while (siteIterator.hasNext()) {
 				Integer siteKey = siteIterator.next();
-				SitesFromRules sFR = aSFR.sites.get(siteKey);
+				SitesFromRules sFR = aSFR.getSites().get(siteKey);
 				boolean isLink = true;
 				List<Integer> weakTraceIDs = new ArrayList<Integer>();
 				byte isCause = isCausing(newNN, commonList, begin, isLink,
@@ -794,7 +793,7 @@ public final class CStoryTrees {
 				if (isCause == IS_CAUSE)
 					putToWeakRelationMap(newNN.getStep(), weakTraceIDs);
 			}
-			if (aSFR.sites.size() * 2 == leafIndex) {
+			if (aSFR.getSites().size() * 2 == leafIndex) {
 				addToMapRuleIDToTraceID(newNN, level);
 				newNN.setLeaf(true);
 			}
@@ -813,7 +812,7 @@ public final class CStoryTrees {
 			AgentSitesFromRules aSFRComparable = comparableNN
 					.getUsedAgentsFromRules().get(agentKey);
 			if (aSFRComparable != null) {
-				SitesFromRules sFRComparable = aSFRComparable.sites
+				SitesFromRules sFRComparable = aSFRComparable.getSites()
 						.get(siteKey);
 				if (sFRComparable != null) {
 					if (sFRComparable.isCausing(sFR, isLink)) {

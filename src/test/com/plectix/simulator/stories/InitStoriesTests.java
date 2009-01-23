@@ -9,8 +9,8 @@ import org.junit.Before;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.DirectoryTestsRunner;
-import com.plectix.simulator.components.CStories;
-import com.plectix.simulator.components.CStoryTrees;
+import com.plectix.simulator.components.stories.CStories;
+import com.plectix.simulator.components.stories.CStoryTrees;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
