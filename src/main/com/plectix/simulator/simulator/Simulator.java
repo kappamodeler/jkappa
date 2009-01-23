@@ -259,6 +259,7 @@ public class Simulator implements SimulatorInterface {
 	public final void runStories() throws Exception {
 		CStories stories = simulationData.getStories();
 		int count = 0;
+		int rand=1600;
 		if(simulationData.getSimulationArguments().isShortConsoleOutput())
 			simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
 		simulationData.resetBar();
@@ -275,6 +276,7 @@ public class Simulator implements SimulatorInterface {
 			boolean isEndRules = false;
 			long clash = 0;
 			long max_clash = 0;
+	//		simulationData.getSimulationArguments().setSeed(rand++);
 			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.NOT_OUTPUT,simulationData);
 		    
 		    while (!simulationData.isEndSimulation(currentTime, count)
@@ -283,6 +285,9 @@ public class Simulator implements SimulatorInterface {
 				simulationData.checkPerturbation(currentTime);
 				IRule rule = ruleProbabilityCalculation.getRandomRule();
 
+				if(count==15)
+					System.out.println();
+				
 				if (rule == null) {
 					simulationData.setTimeLength(currentTime);
 					simulationData.printlnBar();
@@ -297,6 +302,7 @@ public class Simulator implements SimulatorInterface {
 				if (!rule.isClash(injectionsList)) {
 					CNetworkNotation netNotation = new CNetworkNotation(this,count, rule, injectionsList, simulationData);
 					max_clash = 0;
+					//netNotation.rand = rand;
 					if (stories.checkRule(rule.getRuleID(), i)) {
 						rule.applyLastRuleForStories(injectionsList,netNotation);
 						rule.applyRuleForStories(injectionsList, netNotation, simulationData, true);
@@ -327,6 +333,7 @@ public class Simulator implements SimulatorInterface {
 			if(!simulationData.getSimulationArguments().isShortConsoleOutput())
 				endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
 			
+				
 			if (i < simulationData.getSimulationArguments().getIterations() - 1) {
 				resetSimulation(InfoType.NOT_OUTPUT);
 			}

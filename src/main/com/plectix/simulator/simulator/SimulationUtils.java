@@ -28,10 +28,10 @@ public class SimulationUtils {
 		for (int i = 0; i < args.length; i++) {
 			stringBuffer.append(args[i] + " ");
 		}
-		stringBuffer.deleteCharAt(stringBuffer.length()-1);
+		stringBuffer.deleteCharAt(stringBuffer.length() - 1);
 		return stringBuffer.toString();
 	}
-	
+
 	public static final String printPartRule(List<IConnectedComponent> ccList,
 			boolean isOcamlStyleObsName) {
 		String line = new String();
@@ -143,7 +143,8 @@ public class SimulationUtils {
 		return line;
 	}
 
-	private static final List<String> sortSitesStr(List<String> list, boolean isOcamlStyleObsName) {
+	private static final List<String> sortSitesStr(List<String> list,
+			boolean isOcamlStyleObsName) {
 		if (isOcamlStyleObsName) {
 			Collections.sort(list);
 		}
@@ -182,7 +183,7 @@ public class SimulationUtils {
 		agentsList.add(rootAgent);
 		rootAgent.setIdInConnectedComponent(agentsList.size() - 1);
 		removeAgent(hsRulesList, rootAgent);
-		//hsRulesList.remove(rootAgent);
+		// hsRulesList.remove(rootAgent);
 		for (ISite site : rootAgent.getSites()) {
 			if (site.getLinkIndex() != CSite.NO_INDEX) {
 				IAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
@@ -244,8 +245,8 @@ public class SimulationUtils {
 	}
 
 	public final static void addToAgentList(List<IAgent> list, IAgent agent) {
-		
-		//if (list.contains(agent)) {
+
+		// if (list.contains(agent)) {
 		if (agent.includedInCollection(list)) {
 			return;
 		}
@@ -253,6 +254,30 @@ public class SimulationUtils {
 	}
 
 	public final static void doNegativeUpdate(List<IInjection> injectionsList) {
+		for (IInjection injection : injectionsList) {
+			if (injection != CInjection.EMPTY_INJECTION) {
+				for (ISite site : injection.getChangedSites()) {
+					site.getAgentLink().getEmptySite()
+							.removeInjectionsFromCCToSite(injection);
+					site.getAgentLink().getEmptySite().clearLiftList();
+					site.removeInjectionsFromCCToSite(injection);
+					site.clearLiftList();
+				}
+				if (injection.getChangedSites().size() != 0) {
+					for (ISite site : injection.getSiteList()) {
+						if (!injection
+								.checkSiteExistanceAmongChangedSites(site)) {
+							site.removeInjectionFromLift(injection);
+						}
+					}
+					injection.getConnectedComponent()
+							.removeInjection(injection);
+				}
+			}
+		}
+	}
+	
+	public final static void doNegativeUpdateForContactMap(List<IInjection> injectionsList, IRule rule) {
 		for (IInjection injection : injectionsList) {
 			if (injection != CInjection.EMPTY_INJECTION) {
 				for (ISite site : injection.getChangedSites()) {
@@ -336,6 +361,7 @@ public class SimulationUtils {
 	public final static void positiveUpdate(List<IRule> rulesList,
 			List<IObservablesConnectedComponent> list, IRule rule) {
 		for (IRule rules : rulesList) {
+			// if(rules!=rule)
 			for (IConnectedComponent cc : rules.getLeftHandSide()) {
 				cc.doPositiveUpdate(rule.getRightHandSide());
 			}
@@ -343,6 +369,22 @@ public class SimulationUtils {
 		for (IObservablesConnectedComponent oCC : list) {
 			if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
 				oCC.doPositiveUpdate(rule.getRightHandSide());
+		}
+	}
+
+	public final static void positiveUpdateForContactMap(List<IRule> rulesList,
+			IRule rule, List<IRule> invokedRulesList) {
+		for (IRule rules : rulesList) {
+		//	if (rule != rules)
+			int g=0;
+				for (IConnectedComponent cc : rules.getLeftHandSide()) {
+					cc.doPositiveUpdate(rule.getRightHandSide());
+				}
+			
+			if (rules.isInvokedRule()
+					&& !rules.includedInCollection(invokedRulesList)) {
+				invokedRulesList.add(rules);
+			}
 		}
 	}
 

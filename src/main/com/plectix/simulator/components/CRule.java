@@ -846,6 +846,24 @@ public class CRule implements IRule, Serializable {
 			}
 	}
 
+	public final boolean isInvokedRule(){
+		int injCounter = 0;
+		List<IInjection> injList = new ArrayList<IInjection>();
+		for (IConnectedComponent cc : this.getLeftHandSide()) {
+			if (cc != CRule.EMPTY_LHS_CC
+					&& cc.getInjectionsList().size() != 0) {
+				injCounter++;
+				injList.add(cc.getInjectionsList().iterator().next());
+			} else if (cc == CRule.EMPTY_LHS_CC) {
+				injCounter++;
+			}
+		}
+		if (injCounter == this.getLeftHandSide().size()) {
+			return true;
+		}
+		return false;
+	}
+	
 	private final void setConnectedComponentLinkRule(
 			List<IConnectedComponent> cList) {
 		if (cList == null)
@@ -994,7 +1012,7 @@ public class CRule implements IRule, Serializable {
 		return rule.getRuleID() == ruleID;
 	}
 	
-	public boolean includedInCollection(Collection<IRule> collection) {
+	public final boolean includedInCollection(Collection<IRule> collection) {
 		for (IRule rule : collection) {
 			if (this.equalz(rule)) {
 				return true;

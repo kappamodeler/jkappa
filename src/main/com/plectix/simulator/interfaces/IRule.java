@@ -1,5 +1,6 @@
 package com.plectix.simulator.interfaces;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.plectix.simulator.components.ConstraintData;
@@ -77,4 +78,8 @@ public interface IRule {
 	public void createInhibitedObservablesList(IObservables observables);
 	
 	public ConstraintData getConstraintData();
+	
+	public boolean includedInCollection(Collection<IRule> list);
+	
+	public boolean isInvokedRule();
 }

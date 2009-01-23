@@ -123,7 +123,7 @@ public class SimulationData {
 	}
 
 	public final void resetSimulation(InfoType outputType) {
-		if(!simulationArguments.isShortConsoleOutput())
+		if (!simulationArguments.isShortConsoleOutput())
 			outputType = InfoType.OUTPUT;
 		addInfo(outputType, InfoType.INFO, "-Reset simulation data.");
 		addInfo(outputType, InfoType.INFO, "-Initialization...");
@@ -145,7 +145,7 @@ public class SimulationData {
 		}
 
 		initialize(outputType);
-		
+
 		stopTimer(outputType, timer, "-Initialization:");
 		setClockStamp(System.currentTimeMillis());
 	}
@@ -254,7 +254,7 @@ public class SimulationData {
 	}
 
 	public final void addInfo(InfoType outputType, InfoType type, String message) {
-		if(!simulationArguments.isShortConsoleOutput())
+		if (!simulationArguments.isShortConsoleOutput())
 			outputType = InfoType.OUTPUT;
 		addInfo(new Info(outputType, type, message, printStream));
 	}
@@ -300,9 +300,9 @@ public class SimulationData {
 			return true;
 		}
 	}
-	
-	private void outputBar(){
-		if(!simulationArguments.isShortConsoleOutput() || !isStorify())
+
+	private void outputBar() {
+		if (!simulationArguments.isShortConsoleOutput() || !isStorify())
 			print("#");
 	}
 
@@ -339,36 +339,36 @@ public class SimulationData {
 	}
 
 	public final IRule getRulesByID(int ruleID) {
-		for(IRule rule : rules)
-			if(rule.getRuleID() == ruleID)
+		for (IRule rule : rules)
+			if (rule.getRuleID() == ruleID)
 				return rule;
 		return null;
-//		return Collections.unmodifiableList(rules);
+		// return Collections.unmodifiableList(rules);
 	}
 
 	public final void resetBar() {
 		nextStep = step;
 	}
-	
-	private void checkAndInitStoriesBar(){
-		if(simulationArguments.isStorify()){
-			stepStories = simulationArguments.getIterations()/100.;
+
+	private void checkAndInitStoriesBar() {
+		if (simulationArguments.isStorify()) {
+			stepStories = simulationArguments.getIterations() / 100.;
 			nextStepStories = stepStories;
 		}
 	}
-	
-	public void checkStoriesBar(int i){
-		if(i>=nextStepStories){
+
+	public void checkStoriesBar(int i) {
+		if (i >= nextStepStories) {
 			double r;
-			if(stepStories>=1)
-				r=1;
+			if (stepStories >= 1)
+				r = 1;
 			else
-				r = 100*stepStories;
-			while(r>0){
+				r = 100 * stepStories;
+			while (r > 0) {
 				print("#");
-				r = r-1;
+				r = r - 1;
 			}
-			nextStepStories+=stepStories;
+			nextStepStories += stepStories;
 		}
 	}
 
@@ -947,7 +947,7 @@ public class SimulationData {
 		}
 		timer.stopTimer();
 
-		if(outputType == InfoType.OUTPUT){
+		if (outputType == InfoType.OUTPUT) {
 			message += " ";
 			println(message + timer.getTimeMessage() + " sec. CPU");
 		}
@@ -1110,7 +1110,7 @@ public class SimulationData {
 		List<IRule> rules = getRules();
 
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-		//	contactMap.addCreatedAgentsToSolution(this.solution, rules);
+			// contactMap.addCreatedAgentsToSolution(this.solution, rules);
 			contactMap.setSolution(this.solution);
 		}
 
@@ -1148,6 +1148,8 @@ public class SimulationData {
 		while (iterator.hasNext()) {
 			IAgent agent = iterator.next();
 			for (IRule rule : rules) {
+				if (rule.getRuleID() == 18)
+					System.out.println();
 				for (IConnectedComponent cc : rule.getLeftHandSide()) {
 					if (cc != null) {
 						IInjection inj = cc.getInjection(agent);
@@ -1411,6 +1413,24 @@ public class SimulationData {
 		}
 	}
 
+	private final void doPositiveUpdateForDeletedAgentsForContactMap(
+			List<IAgent> agentsList, List<IRule> rules) {
+		for (IAgent agent : agentsList) {
+			for (IRule rule : getRules()) {
+				for (IConnectedComponent cc : rule.getLeftHandSide()) {
+					IInjection inj = cc.getInjection(agent);
+					if (inj != null) {
+						if (!agent.isAgentHaveLinkToConnectedComponent(cc, inj))
+							cc.setInjection(inj);
+					}
+				}
+				if (rule.isInvokedRule() && !rule.includedInCollection(rules)) {
+					rules.add(rule);
+				}
+			}
+		}
+	}
+
 	public final void doPositiveUpdate(IRule rule,
 			List<IInjection> currentInjectionsList) {
 		if (simulationArguments.isActivationMap()) {
@@ -1424,6 +1444,15 @@ public class SimulationData {
 		List<IAgent> freeAgents = SimulationUtils
 				.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
 		doPositiveUpdateForDeletedAgents(freeAgents);
+	}
+
+	public final void doPositiveUpdateForContactMap(IRule rule,
+			List<IInjection> currentInjectionsList, List<IRule> invokedRules) {
+		SimulationUtils.positiveUpdateForContactMap(getRules(), rule,
+				invokedRules);
+		List<IAgent> freeAgents = SimulationUtils
+				.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
+		doPositiveUpdateForDeletedAgentsForContactMap(freeAgents, invokedRules);
 	}
 
 	public final boolean checkSnapshots(double currentTime) {
@@ -1499,9 +1528,9 @@ public class SimulationData {
 			printStream.println();
 		}
 	}
-	
+
 	protected final void printlnBar() {
-		if(!simulationArguments.isShortConsoleOutput())
+		if (!simulationArguments.isShortConsoleOutput())
 			if (printStream != null) {
 				printStream.println("#");
 			}
