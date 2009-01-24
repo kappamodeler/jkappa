@@ -1,7 +1,5 @@
 package com.plectix.simulator.parser;
 
-import static org.junit.Assert.fail;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -20,8 +18,7 @@ import java.io.IOException;
 		try {
 			return myReader.readLine();
 		} catch (IOException e) {
-			fail(e.getMessage());
-			return null;
+			throw new RuntimeException(e);
 		}
 	}
 	
