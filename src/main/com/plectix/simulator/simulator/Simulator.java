@@ -43,7 +43,6 @@ public class Simulator implements SimulatorInterface {
 		super();
 	}
 
-	@Override
 	public SimulatorStatusInterface getStatus() {
 		// TODO Need to implement this class for streaming data...
 		return null;

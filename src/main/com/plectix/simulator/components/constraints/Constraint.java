@@ -6,7 +6,6 @@ import com.plectix.simulator.interfaces.IRule;
 
 /*package*/ abstract class Constraint implements IConstraint {
 
-	@Override
 	public boolean acceptRule(IRule rule, IConnectedComponent cc1, IConnectedComponent cc2) {
 		if (!ruleIsMatching(rule)) {
 			return false;
@@ -15,7 +14,6 @@ import com.plectix.simulator.interfaces.IRule;
 		}
 	}
 
-	@Override
 	public abstract boolean ruleIsMatching(IRule rule);
 
 	protected abstract boolean acceptMatchingRule(IRule rule, IConnectedComponent cc1, IConnectedComponent cc2);
