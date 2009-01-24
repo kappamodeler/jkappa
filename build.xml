@@ -58,11 +58,11 @@
 		<delete dir="${deploy.dir}"/>
 	</target>
  
-	<target name="build" depends="build-subprojects,set-svn-revision,filter-tpl,build-project"/>
+	<target name="build" depends="build-subprojects,filter-tpl,build-project"/>
     
 	<target name="build-subprojects"/>
      
-    <target name="init">
+    <target name="init" depends="filter-tpl">
 		<tstamp/>
         <mkdir dir="${build.dir}"/>
         <copy includeemptydirs="false" todir="${build.dir}">
@@ -192,7 +192,7 @@
 		<echo message="SVN Revision ${build.svn.revision}" />
     </target>
 
-    <target name="filter-tpl">
+    <target name="filter-tpl" depends="set-svn-revision">
         <echo message="Processing the templates. ${ant.build.javac.source}" />
 	    <tstamp>
 	          <format property="build.date" pattern="yyyy-MM-dd HH:mm:ss z" />
