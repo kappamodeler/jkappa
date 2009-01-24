@@ -1148,8 +1148,6 @@ public class SimulationData {
 		while (iterator.hasNext()) {
 			IAgent agent = iterator.next();
 			for (IRule rule : rules) {
-				if (rule.getRuleID() == 18)
-					System.out.println();
 				for (IConnectedComponent cc : rule.getLeftHandSide()) {
 					if (cc != null) {
 						IInjection inj = cc.getInjection(agent);
