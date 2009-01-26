@@ -404,7 +404,7 @@ public class CContactMap {
 				simulationData.doPositiveUpdateForContactMap(rule, newInjList,
 						invokedRules);
 				// addToInvokedRules(invokedRules, currentInvokedRules);
-				printInjections(rule);
+			
 			}
 		}
 
