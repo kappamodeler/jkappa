@@ -2,6 +2,7 @@ package com.plectix.simulator.parser;
 
 import java.io.*;
 
+
 public class KappaFileReader extends Parser<KappaFile> {
 
 	private static final String STRING_INITIAL_CONDITIONS_PREFIX = "%init"; //7;
@@ -39,7 +40,7 @@ public class KappaFileReader extends Parser<KappaFile> {
 			if (line.startsWith(STRING_MOD_PREFIX)) {
 				String significant = handleModifier(index, line,
 						STRING_MOD_PREFIX);
-				kappaFile.addModLine(new KappaFileLine(index, significant));
+				kappaFile.addPerturbationLine(new KappaFileLine(index, significant));
 			} else if (line.startsWith("%story")) {
 				String significant = handleModifier(index, line,
 						STRING_STORIFY_PREFIX);

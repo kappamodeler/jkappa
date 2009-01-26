@@ -8,7 +8,6 @@ import java.util.StringTokenizer;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CPerturbationType;
@@ -211,7 +210,7 @@ public class KappaSystemParser {
 			throws ParseErrorException {
 		List<CPerturbation> perturbations = new ArrayList<CPerturbation>();
 		int pertubationID = 0;
-		for (KappaFileLine perturbationStr : myKappaFile.getModConditions().getLines()) {
+		for (KappaFileLine perturbationStr : myKappaFile.getPerturbations().getLines()) {
 			try {
 				String st = perturbationStr.getLine();
 				st = st.trim();
@@ -832,7 +831,7 @@ public class KappaSystemParser {
 		
 		switch (code) {
 		case CREATE_INIT: {
-			paragraph = myKappaFile.getInitialSolution();
+			paragraph = myKappaFile.getSolution();
 			break;
 		}
 		case CREATE_STORY: {

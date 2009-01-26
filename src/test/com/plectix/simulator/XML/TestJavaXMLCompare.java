@@ -23,8 +23,11 @@ public class TestJavaXMLCompare {
 	@Test
 	public void compare() {
 		try {
-			(new FileDirComparator(PathFinder.PREVIOUS_OUTPUT_DIR, 
+			String message = (new FileDirComparator(PathFinder.PREVIOUS_OUTPUT_DIR, 
 				PathFinder.OUTPUT_DIR, "xml")).compare();
+			if (!"".equals(message)) {
+				org.junit.Assert.fail(message);
+			}
 		} catch (Exception e) {
 			org.junit.Assert.fail(e.getMessage());
 		}

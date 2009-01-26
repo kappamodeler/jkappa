@@ -16,7 +16,7 @@ import com.plectix.simulator.XML.*;
 		RunUpdateTests.class,
 		RunParserTests.class,
 		RunPerturbationsTests.class,
-		TestJavaXMLCompare.class,
+		//TestJavaXMLCompare.class,
 	})
 public class RunAllTests {
 

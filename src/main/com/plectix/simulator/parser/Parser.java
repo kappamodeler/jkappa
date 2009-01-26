@@ -2,6 +2,8 @@ package com.plectix.simulator.parser;
 
 import java.io.*;
 
+
+
 /*package*/ abstract class Parser<E> {
 	private EasyFileReader myReader;
 	

@@ -225,13 +225,23 @@ public class SimulationUtils {
 		agents.remove(i);
 	}
 
+	/**
+	 * @deprecated
+	 * @param left
+	 * @param right
+	 * @param name
+	 * @param activity
+	 * @param ruleID
+	 * @param isStorify
+	 * @return
+	 */
 	public static final IRule buildRule(List<IAgent> left, List<IAgent> right,
 			String name, ConstraintData activity, int ruleID, boolean isStorify) {
 		return new CRule(buildConnectedComponents(left),
 				buildConnectedComponents(right), name, activity, ruleID,
 				isStorify);
 	}
-
+	
 	public final static String[] changeArguments(String[] args) {
 		String[] argsNew = new String[args.length];
 		int i = 0;

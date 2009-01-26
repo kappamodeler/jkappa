@@ -2,7 +2,7 @@ package com.plectix.simulator.parser;
 
 import java.util.*;
 
-/*package*/ class KappaFileParagraph {
+public class KappaFileParagraph {
 	private Collection<KappaFileLine> myParagraph = new ArrayList<KappaFileLine>();
 	
 	public KappaFileParagraph() {

@@ -139,6 +139,7 @@ public final class CSolution implements ISolution, Serializable {
 		return Collections.unmodifiableList(solutionLines);
 	}
 
+	//TODO REMOVE
 	public final void checkSolutionLinesAndAdd(String line, long count) {
 		line = line.replaceAll("[ 	]", "");
 		while (line.indexOf("(") == 0) {

@@ -82,6 +82,7 @@ public class CRule implements IRule, Serializable {
 	private int countAgentsLHS = 0;
 	private final boolean isStorify;
 	private ConstraintData constraintData;
+	private double rate;
 
 	@Override
 	public String toString() {
@@ -142,6 +143,36 @@ public class CRule implements IRule, Serializable {
 		indexingRHSAgents();
 	}
 
+	public CRule(List<IConnectedComponent> left,
+			List<IConnectedComponent> right, String name,
+			double ruleRate, int ruleID, boolean isStorify) {
+		this.leftHandSide = left;
+		this.rightHandSide = right;
+		this.isStorify = isStorify;
+		this.rate = ruleRate;
+		setConnectedComponentLinkRule(left);
+		setConnectedComponentLinkRule(right);
+		if (leftHandSide == null) {
+			leftHandSide = new ArrayList<IConnectedComponent>();
+			leftHandSide.add(EMPTY_LHS_CC);
+		}
+		for (IConnectedComponent cc : this.leftHandSide) {
+			cc.initSpanningTreeMap();
+		}
+		if (ruleRate == Double.MAX_VALUE) {
+			this.infinityRate = true;
+			//constraintData.setActivity(1);
+//			this.rate = 1;
+		} else {
+//			this.rate = ruleRate.getActivity();
+		}
+
+		this.name = name;
+		this.ruleID = ruleID;
+		calculateAutomorphismsNumber();
+		indexingRHSAgents();
+	}
+	
 	public ConstraintData getConstraintData() {
 		return constraintData;
 	}

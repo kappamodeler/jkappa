@@ -1,13 +1,11 @@
 package com.plectix.simulator.parser;
 
-import java.util.*;
-
 public class KappaFile {
 	private KappaFileParagraph myRules = new KappaFileParagraph();
 	private KappaFileParagraph myObservables = new KappaFileParagraph();
 	private KappaFileParagraph myStories = new KappaFileParagraph();
 	private KappaFileParagraph myInitialSolution = new KappaFileParagraph();
-	private KappaFileParagraph myModConditions = new KappaFileParagraph();
+	private KappaFileParagraph myPerturbations = new KappaFileParagraph();
 	
 	public boolean hasNoRules() {
 		return myRules.isEmpty();
@@ -31,8 +29,8 @@ public class KappaFile {
 		myInitialSolution.addLine(line);
 	}
 	
-	public void addModLine(KappaFileLine line) {
-		myModConditions.addLine(line);
+	public void addPerturbationLine(KappaFileLine line) {
+		myPerturbations.addLine(line);
 	}
 	
 	//----------------------GETTERS-------------------------------
@@ -49,12 +47,12 @@ public class KappaFile {
 		return myStories;
 	}
 
-	public KappaFileParagraph getInitialSolution() {
+	public KappaFileParagraph getSolution() {
 		return myInitialSolution;
 	}
 
-	public KappaFileParagraph getModConditions() {
-		return myModConditions;
+	public KappaFileParagraph getPerturbations() {
+		return myPerturbations;
 	}
 
 	

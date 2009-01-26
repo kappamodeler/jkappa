@@ -1,6 +1,6 @@
 package com.plectix.simulator.parser;
 
-/*package*/ final class KappaFileLine{
+public final class KappaFileLine{
 	private final int lineNumber;
 	private final String line;
 	
