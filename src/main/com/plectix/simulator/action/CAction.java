@@ -109,7 +109,7 @@ import com.plectix.simulator.interfaces.*;
 				list.add(new CModifyAction(myRule, fromSite, toSite,
 						leftConnectedComponent, rightConnectedComponent));
 				//if (!isChangedSiteContains(toSite))
-					myRule.addChangedSite(toSite);
+					//myRule.addChangedSite(toSite);
 					myRule.addInhibitedChangedSite(fromSite,true, false);
 			}
 
@@ -126,7 +126,7 @@ import com.plectix.simulator.interfaces.*;
 					&& (toSite.getLinkState().getStatusLink() == CLinkStatus.FREE)) {
 				list.add(new CBreakAction(myRule, fromSite, toSite,
 						leftConnectedComponent, rightConnectedComponent));
-					myRule.addChangedSite(toSite);
+				//	myRule.addChangedSite(toSite);
 					myRule.addInhibitedChangedSite(fromSite, false, true);
 				continue;
 			}
@@ -138,7 +138,7 @@ import com.plectix.simulator.interfaces.*;
 				list.add(new CBoundAction(myRule, toSite, toSite.getLinkState()
 						.getSite(), leftConnectedComponent,
 						rightConnectedComponent));
-					myRule.addChangedSite(toSite);
+				//	myRule.addChangedSite(toSite);
 					myRule.addInhibitedChangedSite(fromSite, false, true);
 				continue;
 			}
@@ -156,7 +156,7 @@ import com.plectix.simulator.interfaces.*;
 			list.add(new CBoundAction(myRule, toSite, (ISite) toSite
 					.getLinkState().getSite(), leftConnectedComponent,
 					rightConnectedComponent));
-				myRule.addChangedSite(toSite);
+				//myRule.addChangedSite(toSite);
 				myRule.addInhibitedChangedSite(fromSite, false, true);
 		}
 		return Collections.unmodifiableList(list);

@@ -86,12 +86,12 @@ public class CRule implements IRule, Serializable {
 
 	@Override
 	public String toString() {
-		String st = "ruleName=" + this.name+" ";
-		
+		String st = "ruleName=" + this.name + " ";
+
 		// return super.toString();
 		return st;
 	}
-	
+
 	public final String getData(boolean isOcamlStyleObsName) {
 		if (data == null) {
 			String line = SimulationUtils.printPartRule(leftHandSide,
@@ -144,8 +144,8 @@ public class CRule implements IRule, Serializable {
 	}
 
 	public CRule(List<IConnectedComponent> left,
-			List<IConnectedComponent> right, String name,
-			double ruleRate, int ruleID, boolean isStorify) {
+			List<IConnectedComponent> right, String name, double ruleRate,
+			int ruleID, boolean isStorify) {
 		this.leftHandSide = left;
 		this.rightHandSide = right;
 		this.isStorify = isStorify;
@@ -161,10 +161,10 @@ public class CRule implements IRule, Serializable {
 		}
 		if (ruleRate == Double.MAX_VALUE) {
 			this.infinityRate = true;
-			//constraintData.setActivity(1);
-//			this.rate = 1;
+			// constraintData.setActivity(1);
+			// this.rate = 1;
 		} else {
-//			this.rate = ruleRate.getActivity();
+			// this.rate = ruleRate.getActivity();
 		}
 
 		this.name = name;
@@ -172,7 +172,7 @@ public class CRule implements IRule, Serializable {
 		calculateAutomorphismsNumber();
 		indexingRHSAgents();
 	}
-	
+
 	public ConstraintData getConstraintData() {
 		return constraintData;
 	}
@@ -210,9 +210,9 @@ public class CRule implements IRule, Serializable {
 		return Collections.unmodifiableList(activatedRule);
 	}
 
-	public final List<ISite> getChangedSites() {
-		return Collections.unmodifiableList(changedActivatedSites);
-	}
+	// public final List<ISite> getChangedSites() {
+	// return Collections.unmodifiableList(changedActivatedSites);
+	// }
 
 	public final List<IAction> getActionList() {
 		return Collections.unmodifiableList(actionList);
@@ -356,19 +356,23 @@ public class CRule implements IRule, Serializable {
 	}
 
 	private final void addFixedSitesToNN(INetworkNotation netNotation) {
-		for (ISite siteInSolution : this.sitesConnectedWithBroken){
+		for (ISite siteInSolution : this.sitesConnectedWithBroken) {
 			addRuleSitesToNetworkNotation(netNotation, siteInSolution);
-			if(!netNotation.changedSitesContains(siteInSolution)){
-				netNotation.checkLinkToUsedSites(StateType.BEFORE, siteInSolution);
-				netNotation.checkLinkToUsedSites(StateType.AFTER, siteInSolution);
+			if (!netNotation.changedSitesContains(siteInSolution)) {
+				netNotation.checkLinkToUsedSites(StateType.BEFORE,
+						siteInSolution);
+				netNotation.checkLinkToUsedSites(StateType.AFTER,
+						siteInSolution);
 			}
 		}
 
-		for (ISite siteInSolution : this.sitesConnectedWithDeleted){
+		for (ISite siteInSolution : this.sitesConnectedWithDeleted) {
 			addRuleSitesToNetworkNotation(netNotation, siteInSolution);
-			if(!netNotation.changedSitesContains(siteInSolution)){
-				netNotation.checkLinkToUsedSites(StateType.BEFORE, siteInSolution);
-				netNotation.checkLinkToUsedSites(StateType.AFTER, siteInSolution);
+			if (!netNotation.changedSitesContains(siteInSolution)) {
+				netNotation.checkLinkToUsedSites(StateType.BEFORE,
+						siteInSolution);
+				netNotation.checkLinkToUsedSites(StateType.AFTER,
+						siteInSolution);
 			}
 		}
 
@@ -387,7 +391,7 @@ public class CRule implements IRule, Serializable {
 			// add fixed agents
 			netNotation.addFixedSitesFromRules(site, NetworkNotationMode.TEST,
 					fs.isInternalState(), fs.isLinkState());
-			if(!netNotation.changedSitesContains(site)){
+			if (!netNotation.changedSitesContains(site)) {
 				netNotation.checkLinkToUsedSites(StateType.BEFORE, site);
 				netNotation.checkLinkToUsedSites(StateType.AFTER, site);
 			}
@@ -535,13 +539,30 @@ public class CRule implements IRule, Serializable {
 		}
 	}
 
+	private boolean hasAgentIntersection(List<IAgent> agentsFromAnotherRules) {
+		if (rightHandSide != null)
+			for (IConnectedComponent cc : rightHandSide)
+				for (IAgent agentRight : cc.getAgents())
+					if (agentRight.includedInCollection(agentsFromAnotherRules))
+						return true;
+		return false;
+	}
+
 	private final boolean isActivated(List<IAgent> agentsFromAnotherRules) {
+		if (this.rightHandSide == null)
+			return false;
+		int allIntersectsSites = 0;
+		if (!hasAgentIntersection(agentsFromAnotherRules))
+			return false;
+
 		for (IAgent agent : agentsFromAnotherRules) {
 			if (checkRulesNullAgents(agent))
 				return true;
+
 			for (ISite site : agent.getSites()) {
 				for (ISite changedSite : changedActivatedSites) {
 					if (changedSite.equalz(site)) {
+						allIntersectsSites++;
 						IInternalState currentInternalState = changedSite
 								.getInternalState();
 						IInternalState internalState = site.getInternalState();
@@ -549,35 +570,41 @@ public class CRule implements IRule, Serializable {
 								&& !(internalState.isRankRoot())) {
 							if (internalState.getNameId() != currentInternalState
 									.getNameId())
-								continue;
+								return false;
 						}
-
+					}
+				}
+			}
+			
+			for (ISite site : agent.getSites()) {
+				for (ISite changedSite : changedActivatedSites) {
+					if (changedSite.equalz(site)) {
 						ILinkState currentLinkState = changedSite
 								.getLinkState();
 						ILinkState linkState = site.getLinkState();
 
 						if (currentLinkState.isLeftBranchStatus()
 								&& linkState.isLeftBranchStatus())
-							return true;
-
+							continue;
+						
 						if (currentLinkState.isLeftBranchStatus()
 								&& linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
-							return true;
+							continue;
 
 						if (currentLinkState.isLeftBranchStatus()
 								&& (!(linkState.isLeftBranchStatus())))
-							continue;
+							return false;
 
 						if ((!(currentLinkState.isLeftBranchStatus()))
 								&& linkState.isLeftBranchStatus())
-							continue;
+							return false;
 
 						if (currentLinkState.getStatusLinkRank() == linkState
 								.getStatusLinkRank()
 								&& currentLinkState.getStatusLinkRank() == CLinkRank.BOUND)
 							if (!(currentLinkState.getSite().equalz(linkState
 									.getSite())))
-								continue;
+								return false;
 
 						if (currentLinkState.getStatusLinkRank() == linkState
 								.getStatusLinkRank()
@@ -588,24 +615,26 @@ public class CRule implements IRule, Serializable {
 											.getInternalState().getNameId() != linkState
 											.getSite().getInternalState()
 											.getNameId()))
-								continue;
+								return false;
 
 						if (!currentLinkState.getStatusLinkRank().smaller(
 								linkState.getStatusLinkRank()))
-							return true;
-
-						return true;
+							continue;
 					}
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	private final boolean isInhibited(List<IAgent> agentsFromAnotherRules) {
 		for (IAgent agent : agentsFromAnotherRules) {
 			if (this.leftHandSide != null && checkRulesNullAgents(agent))
 				return true;
+			
+			if (!hasAgentIntersection(agentsFromAnotherRules))
+				return false;
+			
 			for (ISite site : agent.getSites()) {
 				for (ChangedSite changedSite : changedInhibitedSites) {
 					if (changedSite.getSite().equalz(site)) {
@@ -649,7 +678,7 @@ public class CRule implements IRule, Serializable {
 											currentLinkState, linkState))
 										return true;
 								}
-							}else{
+							} else {
 								if (currentLinkState.getStatusLinkRank() == CLinkRank.FREE
 										&& linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
 									return true;
@@ -779,6 +808,8 @@ public class CRule implements IRule, Serializable {
 		changedInhibitedSites = new ArrayList<ChangedSite>();
 		actionList = new ArrayList<IAction>();
 
+		fillChangedSites();
+
 		if (rightHandSide == null) {
 			for (IConnectedComponent ccL : leftHandSide)
 				for (IAgent lAgent : ccL.getAgents()) {
@@ -796,7 +827,7 @@ public class CRule implements IRule, Serializable {
 				if ((countAgentsLHS == 0)
 						|| (rAgent.getIdInRuleSide() > countAgentsLHS)) {
 					actionList.add(new CAddAction(this, rAgent, ccR));
-					fillChangedSites(rAgent);// for
+					// fillChangedSites(rAgent);// for
 					// activation
 					// map
 					// creation
@@ -813,11 +844,21 @@ public class CRule implements IRule, Serializable {
 			}
 	}
 
-	private final void fillChangedSites(IAgent agentRight) {
+	// private final void fillChangedSites(IAgent agentRight) {
+	// // if (agentLeft == null)
+	// for (ISite site : agentRight.getSites()) {
+	// changedActivatedSites.add(site);
+	// }
+	// }
+
+	private final void fillChangedSites() {
 		// if (agentLeft == null)
-		for (ISite site : agentRight.getSites()) {
-			changedActivatedSites.add(site);
-		}
+		if (rightHandSide != null)
+			for (IConnectedComponent cc : rightHandSide)
+				for (IAgent agentRight : cc.getAgents())
+					for (ISite site : agentRight.getSites()) {
+						changedActivatedSites.add(site);
+					}
 	}
 
 	private final void fillInhibitedChangedSites(IAgent agentRight) {
@@ -878,12 +919,11 @@ public class CRule implements IRule, Serializable {
 			}
 	}
 
-	public final boolean isInvokedRule(){
+	public final boolean isInvokedRule() {
 		int injCounter = 0;
 		List<IInjection> injList = new ArrayList<IInjection>();
 		for (IConnectedComponent cc : this.getLeftHandSide()) {
-			if (cc != CRule.EMPTY_LHS_CC
-					&& cc.getInjectionsList().size() != 0) {
+			if (cc != CRule.EMPTY_LHS_CC && cc.getInjectionsList().size() != 0) {
 				injCounter++;
 				injList.add(cc.getInjectionsList().iterator().next());
 			} else if (cc == CRule.EMPTY_LHS_CC) {
@@ -895,7 +935,7 @@ public class CRule implements IRule, Serializable {
 		}
 		return false;
 	}
-	
+
 	private final void setConnectedComponentLinkRule(
 			List<IConnectedComponent> cList) {
 		if (cList == null)
@@ -1019,31 +1059,30 @@ public class CRule implements IRule, Serializable {
 		actionList.add(action);
 	}
 
-	public final void addChangedSite(ISite toSite) {
-		for (ISite inSite : changedActivatedSites)
-			if (inSite == toSite)
-				return;
-		changedActivatedSites.add(toSite);
-	}
+	/*
+	 * public final void addChangedSite(ISite toSite) { for (ISite inSite :
+	 * changedActivatedSites) if (inSite == toSite) return;
+	 * changedActivatedSites.add(toSite); }
+	 */
 
 	public final boolean equalz(IRule obj) {
 		if (this == obj) {
 			return true;
 		}
-		
+
 		if (obj == null) {
 			return false;
 		}
-			
+
 		if (!(obj instanceof IRule)) {
 			return false;
 		}
 
 		CRule rule = (CRule) obj;
-		
+
 		return rule.getRuleID() == ruleID;
 	}
-	
+
 	public final boolean includedInCollection(Collection<IRule> collection) {
 		for (IRule rule : collection) {
 			if (this.equalz(rule)) {
@@ -1052,7 +1091,7 @@ public class CRule implements IRule, Serializable {
 		}
 		return false;
 	}
-	
+
 	public final void addInhibitedChangedSite(ISite fromSite,
 			boolean internalState, boolean linkState) {
 		for (ChangedSite inSite : changedInhibitedSites)
@@ -1067,7 +1106,7 @@ public class CRule implements IRule, Serializable {
 				linkState));
 	}
 
-	public List<ChangedSite> getChangedInhibitedSites() {
-		return changedInhibitedSites;
-	}
+	// public List<ChangedSite> getChangedInhibitedSites() {
+	// return changedInhibitedSites;
+	// }
 }
