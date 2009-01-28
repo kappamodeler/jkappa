@@ -10,8 +10,8 @@ import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.simulator.Simulator;
 
 public class CObservables implements IObservables, Serializable {
 	private boolean ocamlStyleObsName = false;
@@ -57,13 +57,12 @@ public class CObservables implements IObservables, Serializable {
 		return false;
 	}
 
-	private final double getTimeSampleMin(double fullTime, int points) {
-		double timeSampleMin;
-		if (points != -1)
-			timeSampleMin = fullTime / points;
-		else
-			timeSampleMin = fullTime / 1000;
-		return timeSampleMin;
+	private final double getTimeSampleMin(double fullTime, int points) { 
+		if (points == -1) {
+			return (fullTime / SimulationArguments.DEFAULT_NUMBER_OF_POINTS);
+		} else {
+			return (fullTime / points);
+		}
 	}
 
 	public final void calculateObs(double time, long count, boolean isTime) {

@@ -11,6 +11,7 @@ public class SimulationArguments {
 
 	public static final byte DEFAULT_SEED = -1;
 	public static final int DEFAULT_MAX_CLASHES = 100;
+	public static final int DEFAULT_NUMBER_OF_POINTS = 1000;
 
 	public enum SimulationType { 
 		NONE,

@@ -7,7 +7,6 @@ import java.util.List;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CLinkRank;
-import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.ConstraintData;
@@ -24,6 +23,9 @@ import com.plectix.simulator.interfaces.ISite;
 public class SimulationUtils {
 
 	public final static String getCommandLineString(String[] args) {
+		if (args.length == 0) {
+			return null;
+		}
 		StringBuffer stringBuffer = new StringBuffer();
 		for (int i = 0; i < args.length; i++) {
 			stringBuffer.append(args[i] + " ");
