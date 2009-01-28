@@ -978,10 +978,7 @@ public final class CStoryTrees {
 			}
 			traceIDToIntroString.put(nn.getStep(), introStr);
 		}
-		//traceIDToLevel.size()==7 && 
-		if(nnList.get(nnList.size()-2).getRule().getRuleID()==14)
-			System.out.println();
-		
+
 		Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
 		while (iterator.hasNext()) {
 			int traceID = iterator.next();
