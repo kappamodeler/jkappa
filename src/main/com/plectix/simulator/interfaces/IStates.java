@@ -10,5 +10,5 @@ public interface IStates {
 
 	public void addInformation(int idInternalState, long idLinkAgent,
 			int idLinkSite);
-
+	public boolean equalz(IStates states);
 }
