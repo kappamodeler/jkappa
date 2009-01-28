@@ -575,7 +575,7 @@ public class CRule implements IRule, Serializable {
 					}
 				}
 			}
-			
+
 			for (ISite site : agent.getSites()) {
 				for (ISite changedSite : changedActivatedSites) {
 					if (changedSite.equalz(site)) {
@@ -586,9 +586,16 @@ public class CRule implements IRule, Serializable {
 						if (currentLinkState.isLeftBranchStatus()
 								&& linkState.isLeftBranchStatus())
 							continue;
-						
-						if (currentLinkState.isLeftBranchStatus()
-								&& linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
+
+						if (linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
+							continue;
+
+						if (currentLinkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
+							continue;
+
+						if ((currentLinkState.getStatusLinkRank() == CLinkRank.SEMI_LINK || currentLinkState
+								.getStatusLinkRank() == CLinkRank.BOUND)
+								&& linkState.getStatusLinkRank() == CLinkRank.SEMI_LINK)
 							continue;
 
 						if (currentLinkState.isLeftBranchStatus()
@@ -605,21 +612,6 @@ public class CRule implements IRule, Serializable {
 							if (!(currentLinkState.getSite().equalz(linkState
 									.getSite())))
 								return false;
-
-						if (currentLinkState.getStatusLinkRank() == linkState
-								.getStatusLinkRank()
-								&& currentLinkState.getStatusLinkRank() == CLinkRank.BOUND)
-							if (currentLinkState.getSite().equalz(
-									linkState.getSite())
-									&& (currentLinkState.getSite()
-											.getInternalState().getNameId() != linkState
-											.getSite().getInternalState()
-											.getNameId()))
-								return false;
-
-						if (!currentLinkState.getStatusLinkRank().smaller(
-								linkState.getStatusLinkRank()))
-							continue;
 					}
 				}
 			}
@@ -631,10 +623,10 @@ public class CRule implements IRule, Serializable {
 		for (IAgent agent : agentsFromAnotherRules) {
 			if (this.leftHandSide != null && checkRulesNullAgents(agent))
 				return true;
-			
+
 			if (!hasAgentIntersection(agentsFromAnotherRules))
 				return false;
-			
+
 			for (ISite site : agent.getSites()) {
 				for (ChangedSite changedSite : changedInhibitedSites) {
 					if (changedSite.getSite().equalz(site)) {
@@ -726,7 +718,6 @@ public class CRule implements IRule, Serializable {
 		activatedRule = new ArrayList<IRule>();
 		activatedRuleForXMLOutput = new ArrayList<IRule>();
 		for (IRule rule : rules) {
-			// if (this != rule)
 			for (IConnectedComponent cc : rule.getLeftHandSide()) {
 				if (isActivated(cc.getAgents())) {
 					activatedRule.add(rule);
