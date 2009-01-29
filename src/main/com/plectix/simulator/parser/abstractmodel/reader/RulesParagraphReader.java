@@ -6,13 +6,15 @@ import java.util.*;
 import com.plectix.simulator.components.ConstraintData;
 import com.plectix.simulator.components.ConstraintExpression;
 import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
 import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.AbstractRule;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.util.AgentFactory;
-import com.plectix.simulator.parser.util.BuildUtil;
+import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.ThreadLocalData;
@@ -46,22 +48,20 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 	private final static String NO_HELIX = "NO_HELIX";
 	
 	private final SimulationArguments myArguments;
-	private final AgentFactory myAgentFactory;
 	
-	public RulesParagraphReader(KappaModel model, SimulationArguments arguments) {
-		super(model, arguments);
+	public RulesParagraphReader(KappaModel model, SimulationArguments arguments,
+			AgentFactory factory) {
+		super(model, arguments, factory);
 		myArguments = getArguments();
-		myAgentFactory = new AgentFactory(getModel().getAgentIdGenerator());
-	}
-	
-	private final List<IAgent> parseAgent(String line) throws ParseErrorException {
-		return myAgentFactory.parseAgent(line);
 	}
 	
 	public Collection<AbstractRule> addComponent(KappaFileParagraph rulesParagraph) throws ParseErrorException {
 		List<AbstractRule> rules = new ArrayList<AbstractRule>();
 		int ruleID = 0;
-		for (KappaFileLine ruleLine : rulesParagraph.getLines()) {
+		boolean isStorify = myArguments.isStorify();
+		
+		for (KappaFileLine ruleLine : rulesParagraph.
+				getLines()) {
 
 			String rulesStr = ruleLine.getLine();
 			ConstraintData constraintLeftToRight = null;
@@ -113,6 +113,11 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 				}
 				rulesStr = rulesStr.substring(0, index).trim();
 			}
+			if (constraintLeftToRight == null)
+				constraintLeftToRight = new ConstraintData(activity);
+			if (constraintRightToLeft == null)
+				constraintRightToLeft = new ConstraintData(activity2);
+
 			rulesStr = checkConstraintsInRule(ruleLine, rulesStr, rulesStr
 					.indexOf("->"), constraintLeftToRight,
 					constraintRightToLeft);
@@ -126,6 +131,7 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 				typeRule = RULE_TWO_WAY;
 				rulesStr = rulesStr.replace("<", "");
 				activity2 = myArguments.isForwardOnly() ? 0. : activity2;
+				constraintRightToLeft.setActivity(activity2);
 			}
 
 			rulesStr = rulesStr.trim();
@@ -158,13 +164,13 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 				rhs = result[1];
 			}
 
-			List<IAgent> left = null;
-			List<IAgent> right = null;
+			List<AbstractAgent> left = null;
+			List<AbstractAgent> right = null;
 			String nameOp = null;
+			
+			
 			if (name != null)
 				nameOp = name + "_op";
-			
-			boolean storify = myArguments.isStorify();
 			try {
 				switch (index) {
 				case CC_LHS: {
@@ -172,18 +178,16 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 //					rules.add(SimulationUtils.buildRule(left, right, name,
 //							constraintLeftToRight, ruleID, simulationData
 //									.isStorify()));
-					 rules.add(BuildUtil.buildRule(left, right, name,
-					 activity,
-					 ruleID, storify));
+					rules.add(new AbstractRule(left, right, name, activity, ruleID, isStorify));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 //						rules.add(SimulationUtils.buildRule(right,
 //								parseAgent(lhs.trim()), nameOp,
 //								constraintRightToLeft, ruleID, simulationData
 //										.isStorify()));
-						 rules.add(BuildUtil.buildRule(right,
+						 rules.add(new AbstractRule(right,
 						 parseAgent(lhs.trim()), nameOp, activity2, ruleID,
-						 storify));
+						 isStorify));
 					}
 					break;
 				}
@@ -192,15 +196,15 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 //					rules.add(SimulationUtils.buildRule(left, right, name,
 //							constraintLeftToRight, ruleID, simulationData
 //									.isStorify()));
-					rules.add(BuildUtil.buildRule(left, right, name,
-							 activity, ruleID, storify));
+					rules.add(new AbstractRule(left, right, name,
+							 activity, ruleID, isStorify));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 //						rules.add(SimulationUtils.buildRule(parseAgent(rhs
 //								.trim()), left, nameOp, constraintRightToLeft,
 //								ruleID, simulationData.isStorify()));
-						rules.add(BuildUtil.buildRule(parseAgent(rhs.trim()), 
-								left, name, activity2, ruleID, storify));
+						rules.add(new AbstractRule(parseAgent(rhs.trim()), 
+								left, name, activity2, ruleID, isStorify));
 					}
 					break;
 				}
@@ -210,16 +214,16 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 //					rules.add(SimulationUtils.buildRule(left, right, name,
 //							constraintLeftToRight, ruleID, simulationData
 //									.isStorify()));
-					rules.add(BuildUtil.buildRule(left, right, name,
-							 activity, ruleID, storify));
+					rules.add(new AbstractRule(left, right, name,
+							 activity, ruleID, isStorify));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 //						rules.add(SimulationUtils.buildRule(parseAgent(rhs
 //								.trim()), parseAgent(lhs.trim()), nameOp,
 //								constraintRightToLeft, ruleID, simulationData
 //										.isStorify()));
-						rules.add(BuildUtil.buildRule(parseAgent(rhs.trim()), 
-								left, name, activity2, ruleID, storify));
+						rules.add(new AbstractRule(parseAgent(rhs.trim()), 
+								left, name, activity2, ruleID, isStorify));
 					}
 					break;
 				}
@@ -229,6 +233,7 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 				throw e;
 			}
 			ruleID++;
+
 		}
 		return rules;
 	}

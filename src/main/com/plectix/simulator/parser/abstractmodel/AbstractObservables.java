@@ -13,43 +13,29 @@ import com.plectix.simulator.simulator.SimulationUtils;
 
 //copypaste =(
 public class AbstractObservables implements IAbstractComponent {
-	private final List<IObservablesConnectedComponent> connectedComponentList;
-	private final List<IObservablesComponent> componentList;
-	private final List<AbstractObservableRule> myObservableRules; 
+	private final List<ObservableComponentLineData> myComponents 
+						= new LinkedList<ObservableComponentLineData>();
+	private final List<ObservableRuleLineData> myRules = new LinkedList<ObservableRuleLineData>();
 	
 	public AbstractObservables() {
-		connectedComponentList = new ArrayList<IObservablesConnectedComponent>();
-		componentList = new ArrayList<IObservablesComponent>();
-		myObservableRules = new ArrayList<AbstractObservableRule>();
 	}
 	
-	public void addConnectedComponents(
-			List<IConnectedComponent> list, String name,
-			String line, int nameID, boolean ocamlStyleObsName) {
-		boolean unique;
-		if (list.size() > 1)
-			unique = false;
-		else
-			unique = true;
-		if (ocamlStyleObsName) {
-			line = SimulationUtils.printPartRule(list, ocamlStyleObsName);
-		}
+	public void addComponent(
+			List<AbstractAgent> list, String name, int obsId) {//, String line, boolean ocamlStyleObsName) {
 
-		for (IConnectedComponent component : list) {
-			IObservablesConnectedComponent oCC = new ObservablesConnectedComponent(
-					component.getAgents(), name, line, nameID, unique);
-			oCC.initSpanningTreeMap();
-			connectedComponentList.add(oCC);
-			componentList.add(oCC);
-		}
+		myComponents.add(new ObservableComponentLineData(list, name, obsId));
 	}
 
-	public void addRuleName(int observableId, String ruleName) {
-		myObservableRules.add(new AbstractObservableRule(observableId, ruleName));
+	public void addRuleName(String ruleName, int obsId) {
+		myRules.add(new ObservableRuleLineData(ruleName, obsId));
 	}
 	
-	public List<AbstractObservableRule> getRuleNames() {
-		return myObservableRules;
+	public List<ObservableRuleLineData> getRuleNames() {
+		return myRules;
+	}
+	
+	public List<ObservableComponentLineData> getComponents() {
+		return myComponents;
 	}
 	
 //	public void addRulesName(String name, int obsRuleNameID, Collection<AbstractRule> rules) {
@@ -61,14 +47,5 @@ public class AbstractObservables implements IAbstractComponent {
 //			}
 //		}
 //	}
-
-	public List<IObservablesComponent> getComponentList() {
-		return componentList;
-	}
-	
-	public List<IObservablesConnectedComponent> getConnectedComponentList() {
-		return connectedComponentList;
-	}
-
 	
 }

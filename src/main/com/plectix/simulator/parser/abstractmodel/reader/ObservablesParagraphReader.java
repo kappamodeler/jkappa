@@ -11,13 +11,9 @@ import com.plectix.simulator.simulator.SimulationUtils;
 /*package*/class ObservablesParagraphReader extends
 		KappaParagraphReader<AbstractObservables> {
 
-	private final AgentFactory myAgentFactory;
-	private final KappaModel myModel;
-
-	public ObservablesParagraphReader(KappaModel model, SimulationArguments arguments) {
-		super(model, arguments);
-		myModel = model;
-		myAgentFactory = new AgentFactory(getModel().getAgentIdGenerator());
+	public ObservablesParagraphReader(KappaModel model, SimulationArguments arguments,
+			AgentFactory factory) {
+		super(model, arguments, factory);
 	}
 
 	public final AbstractObservables addComponent(KappaFileParagraph observablesParagraph)
@@ -40,13 +36,10 @@ import com.plectix.simulator.simulator.SimulationUtils;
 
 				if (line.length() == 0) {
 					//TODO
-					observables.addRuleName(obsId, name);
+					observables.addRuleName(name, obsId);
 				} else
-					observables.addConnectedComponents(
-							SimulationUtils
-									.buildConnectedComponents(myAgentFactory
-											.parseAgent(line)), name, line,
-							obsId, getArguments().isOcamlStyleObservableNames());
+					observables.addComponent(parseAgent(line), name, //line,
+							obsId);//, getArguments().isOcamlStyleObservableNames());
 				obsId++;
 			} catch (ParseErrorException e) {
 				e.setLineDescription(itemDS);

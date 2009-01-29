@@ -9,9 +9,9 @@ import com.plectix.simulator.*;
 
 @RunWith(value=Suite.class)
 @SuiteClasses(value = {
-		TestInjectionsCorrection.class, 
-		TestInjectionsLifts.class,
-		TestInjectionsQuantity.class,
+//		TestInjectionsCorrection.class, 
+//		TestInjectionsLifts.class,
+//		TestInjectionsQuantity.class,
 		TestInjectionsAgentLinking.class
 	})
 public class RunInjectionsTests extends TestRunner {

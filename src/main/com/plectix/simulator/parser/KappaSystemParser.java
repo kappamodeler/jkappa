@@ -20,13 +20,20 @@ import com.plectix.simulator.components.RateExpression;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
 import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.parser.abstractmodel.AbstractRule;
+import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.abstractmodel.ModelToString;
 import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
 import com.plectix.simulator.parser.builders.KappaSystemBuilder;
+import com.plectix.simulator.parser.builders.ObservablesBuilder;
+import com.plectix.simulator.parser.builders.RuleBuilder;
+import com.plectix.simulator.parser.builders.SolutionBuilder;
+import com.plectix.simulator.parser.builders.StoriesBuilder;
+import com.plectix.simulator.parser.util.IdGenerator;
 //import com.plectix.simulator.parser.builders.KappaSystemBuilder;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
@@ -142,10 +149,35 @@ public class KappaSystemParser {
 	public final void parse(InfoType outputType) throws ParseErrorException {
 		simulationData.addInfo(outputType,InfoType.INFO,"--Computing initial state");
 		
+		KappaSystemBuilder builder = new KappaSystemBuilder();
+		KappaModel model = (new KappaModelCreator(
+				simulationData.getSimulationArguments())).createModel(myKappaFile);
+//		builder.build(model, simulationData);
+		
+		SimulationArguments arguments = simulationData.getSimulationArguments();
+//		simulationData.setIdGenerator(generator);
+		
+		// solution
 		if (simulationData.isParseSolution())
 			createSimData(CREATE_INIT);
+		
+//		if (arguments.getSimulationType() != SimulationArguments.SimulationType.GENERATE_MAP) { 
+//			AbstractSolution solution = model.getSolution();
+//			simulationData.setSolution((new SolutionBuilder(simulationData)).build(solution));
+//		}
+
+		// rules
 		List<IRule> rules = createRules(myKappaFile.getRules());
+		
+//		List<IRule> rules = new ArrayList<IRule>();
+//		for (AbstractRule abstractRule : model.getRules()) {
+//			RuleBuilder rb = new RuleBuilder(simulationData);
+//			IRule rule = rb.build(abstractRule);
+//			rules.add(rule);
+//		}
+		
 		simulationData.setRules(rules);
+
 		if ((simulationData.getStories() == null)
 				&& (simulationData.getSimulationArguments().getSimulationType() == SimulationArguments.SimulationType.STORIFY)) {
 			simulationData.setStories(new CStories(simulationData));
@@ -153,13 +185,39 @@ public class KappaSystemParser {
 		} else {
 			createSimData(CREATE_OBS);
 		}
+				
+//		if ((simulationData.getStories() == null)
+//				&& (arguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY)) {
+//			// stories
+//			simulationData.setStories(new CStories(simulationData));
+//			for (String storifiedName : (new StoriesBuilder()).build(model
+//					.getStories())) {
+//				simulationData.addStories(storifiedName);
+//			}
+//		} else {
+//			// observables
+//			IObservables observables = (new ObservablesBuilder()).build(model
+//					.getObservables(), rules);
+//			simulationData.setObservables(observables);
+//		}
+
+//		List<CPerturbation> perturbations = createPertubations();
+//		simulationData.setPerturbations(perturbations);
+		
+		
+		
+		
+//		List<IRule> rules = createRules(myKappaFile.getRules());
+//		simulationData.setRules(rules);
+//		if ((simulationData.getStories() == null)
+//				&& (simulationData.getSimulationArguments().getSimulationType() == SimulationArguments.SimulationType.STORIFY)) {
+//			simulationData.setStories(new CStories(simulationData));
+//			createSimData(CREATE_STORY);
+//		} else {
+//			createSimData(CREATE_OBS);
+//		}
 		List<CPerturbation> perturbations = createPertubations();
 		simulationData.setPerturbations(perturbations);
-		
-//		KappaSystemBuilder builder = new KappaSystemBuilder();
-//		KappaModel model = (new KappaModelCreator(
-//				simulationData.getSimulationArguments())).createModel(myKappaFile);
-//		builder.build(model, simulationData);
 	}
 
 	private final IObservablesComponent checkInObservables(String obsName)

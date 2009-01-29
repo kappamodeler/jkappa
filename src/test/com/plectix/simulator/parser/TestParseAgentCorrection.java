@@ -20,7 +20,6 @@ public class TestParseAgentCorrection {
 	
 	public TestParseAgentCorrection() {
 		String fileName = myTestFileNamePrefix + "ParseAgentsTestFile";
-		System.err.println(fileName);
 		try {
 			myReader = new EasyFileReader(fileName);
 		} catch(FileNotFoundException e) {
@@ -66,7 +65,6 @@ public class TestParseAgentCorrection {
 		boolean currentCorrectionValue = true;
 		
 		while (line != null) {
-			System.out.println(line);
 			if (!"".equals(line)) {
 				if ("#INCORRECT".equals(line)) {
 					currentCorrectionValue = false;

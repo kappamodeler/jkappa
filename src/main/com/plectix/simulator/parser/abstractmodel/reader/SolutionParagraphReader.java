@@ -13,12 +13,11 @@ import com.plectix.simulator.simulator.SimulationArguments;
 /*package*/class SolutionParagraphReader extends
 		KappaParagraphReader<AbstractSolution> {
 	private final SimulationArguments myArguments;
-	private final AgentFactory myAgentFactory;
 	
-	public SolutionParagraphReader(KappaModel model, SimulationArguments arguments) {
-		super(model, arguments);
+	public SolutionParagraphReader(KappaModel model, SimulationArguments arguments,
+			AgentFactory factory) {
+		super(model, arguments, factory);
 		myArguments = getArguments();
-		myAgentFactory = new AgentFactory(getModel().getAgentIdGenerator());
 	}
 
 	public final AbstractSolution addComponent(KappaFileParagraph solutionParagraph)
@@ -67,21 +66,9 @@ import com.plectix.simulator.simulator.SimulationArguments;
 			try {
 				if (countInFile > 0) {
 					line = line.replaceAll("[ 	]", "");
-					List<IAgent> listAgent = myAgentFactory.parseAgent(line);
+					List<AbstractAgent> listAgent = parseAgent(line);
 					solution.addAgents(count, listAgent);
-					// ANOTHER CODE
-//					if (myArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-//
-//						myModel.getContactMap().addAgentFromSolution(listAgent);
-//						myModel.getContactMap().setSimulationData(
-//								getSimulationData());
-//					} else {
-//						for (int i = 1; i < count; i++) {
-//							solution.addAgents(
-//									solution.cloneAgentsList(
-//											listAgent, getSimulationData()));
-//						}
-//					}
+
 					if (myArguments.getSimulationType() == SimulationArguments.SimulationType.COMPILE) {
 						solution.checkSolutionLinesAndAdd(line, count);
 					}

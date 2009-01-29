@@ -6,7 +6,7 @@ import com.plectix.simulator.parser.util.IdGenerator;
 
 public class KappaModel {
 	
-	private List<AbstractPerturbation> myPerturbations = new ArrayList<AbstractPerturbation>();
+//	private List<AbstractPerturbation> myPerturbations = new ArrayList<AbstractPerturbation>();
 	
 	private AbstractObservables myObservables = new AbstractObservables();
 	private AbstractSolution mySolution = new AbstractSolution(); // soup of initial components
@@ -41,13 +41,13 @@ public class KappaModel {
 		mySolution = solution;
 	}
 	
-	public void setPerturbations(List<AbstractPerturbation> perturbations) {
-		myPerturbations = perturbations;
-	}
-
-	public List<AbstractPerturbation> getPerturbations() {
-		return Collections.unmodifiableList(myPerturbations);
-	}
+//	public void setPerturbations(List<AbstractPerturbation> perturbations) {
+//		myPerturbations = perturbations;
+//	}
+//
+//	public List<AbstractPerturbation> getPerturbations() {
+//		return Collections.unmodifiableList(myPerturbations);
+//	}
 	
 	public void setStories(AbstractStories stories) {
 		myStories = stories;

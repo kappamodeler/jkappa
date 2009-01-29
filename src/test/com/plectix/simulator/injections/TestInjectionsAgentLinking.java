@@ -95,6 +95,7 @@ public class TestInjectionsAgentLinking extends TestInjections {
 						
 						assertEquals(myObsAgentsOrder[index] + (myNumber - 1) * 10, 
 								agentFrom.getId());
+//								agentFrom.getId() + 2);
 					}
 				}
 

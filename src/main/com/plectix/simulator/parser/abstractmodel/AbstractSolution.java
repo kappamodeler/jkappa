@@ -8,20 +8,20 @@ import com.plectix.simulator.interfaces.ISolution;
 
 public class AbstractSolution implements IAbstractComponent {
 	//Long - counter, List - connectedcomponent
-	private Map<List<IAgent>, Long> myAgents = new HashMap<List<IAgent>, Long>();
+	private List<SolutionLineData> myAgents = new LinkedList<SolutionLineData>();
 	private final List<SolutionLines> mySolutionLines = new ArrayList<SolutionLines>();
 	
-	public final void addAgents(long quant, List<IAgent> agents) {
+	public final void addAgents(long quant, List<AbstractAgent> agents) {
 		if (agents == null || agents.isEmpty() || quant <= 0)
 			return;
-		myAgents.put(agents, quant);
+		myAgents.add(new SolutionLineData(agents, quant));
 	}
 
 //	public Map<Long, List<IAgent>> getAgents() {
 //		return Collections.unmodifiableMap(myAgents);
 //	}
 	
-	public Map<List<IAgent>, Long> getAgents() {
+	public List<SolutionLineData> getAgents() {
 		return myAgents;
 	}
 

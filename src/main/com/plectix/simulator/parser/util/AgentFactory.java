@@ -2,6 +2,7 @@ package com.plectix.simulator.parser.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -12,6 +13,7 @@ import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
@@ -24,13 +26,13 @@ public class AgentFactory {
 
 	private final static String SYMBOL_CONNECTED_TRUE_VALUE = "_";
 	
-	private final IdGenerator myIdGenerator;
+//	private final IdGenerator myIdGenerator = new IdGenerator();
 	
-	public AgentFactory(IdGenerator idGenerator) {
-		myIdGenerator = idGenerator;
+	
+	public AgentFactory() {
 	}
 	
-	public final List<IAgent> parseAgent(String line)
+	public final List<AbstractAgent> parseAgent(String line)
 			throws ParseErrorException {
 		line = line.replaceAll("[ 	]", "");
 		// if (!testLine(line))
@@ -41,8 +43,9 @@ public class AgentFactory {
 		StringTokenizer agent;
 		String ccomp;
 		String site;
-		List<IAgent> listAgent = new ArrayList<IAgent>();
-		CAgent cagent = null;
+		List<AbstractAgent> listAgent = new LinkedList<AbstractAgent>();
+		AbstractAgent cagent = null;
+		
 		while (st.hasMoreTokens()) {
 			ccomp = st.nextToken().trim();
 			if (ccomp.indexOf("(") != -1) {
@@ -54,8 +57,8 @@ public class AgentFactory {
 					throw new ParseErrorException("Unexpected agent name : "
 							+ ccomp);
 
-				cagent = new CAgent(ThreadLocalData.getNameDictionary()
-						.addName(ccomp), myIdGenerator.generateNextAgentId());
+				cagent = new AbstractAgent(ThreadLocalData.getNameDictionary()
+						.addName(ccomp));
 
 				listAgent.add(cagent);
 				while (agent.hasMoreTokens()) {
@@ -195,4 +198,14 @@ public class AgentFactory {
 		}
 		return ds;
 	}
+
+//	public long getCurrentId() {
+//		return myIdGenerator.check();
+//	}
+
+//	public List<AbstractAgent> parseAgent(String line, long count) throws ParseErrorException {
+//		List<AbstractAgent> result = parseAgent(line);
+////		myIdGenerator.shift(result.size() * (count - 1));
+//		return result;
+//	}
 }

@@ -31,14 +31,14 @@ public class KappaSystemBuilder {
 		// solution
 		if (arguments.getSimulationType() != SimulationArguments.SimulationType.GENERATE_MAP) { 
 			AbstractSolution solution = model.getSolution();
-			data.setSolution((new SolutionBuilder(data)).build(solution, generator));
+			data.setSolution((new SolutionBuilder(data)).build(solution));
 		}
 
 //		System.out.println("GENERATOR - " + generator.generateNextAgentId());
 		// rules
 		List<IRule> rules = new ArrayList<IRule>();
 		for (AbstractRule abstractRule : model.getRules()) {
-			IRule rule = (new RuleBuilder()).build(abstractRule);
+			IRule rule = (new RuleBuilder(data)).build(abstractRule);
 			rules.add(rule);
 		}
 		data.setRules(rules);
@@ -55,7 +55,7 @@ public class KappaSystemBuilder {
 			}
 		} else {
 			// observables
-			IObservables observables = (new ObservablesBuilder()).build(model
+			IObservables observables = (new ObservablesBuilder(data, arguments)).build(model
 					.getObservables(), rules);
 			data.setObservables(observables);
 		}

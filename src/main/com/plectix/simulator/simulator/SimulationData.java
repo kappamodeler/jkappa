@@ -248,7 +248,7 @@ public class SimulationData {
 				e.printStackTrace(printStream);
 			}
 			e.printStackTrace();
-			throw new IllegalArgumentException(e);
+			//throw new IllegalArgumentException(e);
 		}
 	}
 

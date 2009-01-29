@@ -4,13 +4,14 @@ import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
 import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.*;
+import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 
 /*package*/class StoriesParagraphReader extends
 		KappaParagraphReader<AbstractStories> {
 	public StoriesParagraphReader(KappaModel model,
-			SimulationArguments arguments) {
-		super(model, arguments);
+			SimulationArguments arguments, AgentFactory factory) {
+		super(model, arguments, factory);
 	}
 
 	public final AbstractStories addComponent(KappaFileParagraph storiesParagraph)
