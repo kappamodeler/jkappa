@@ -17,8 +17,8 @@ public class CObservables implements IObservables, Serializable {
 	private boolean ocamlStyleObsName = false;
 	public List<Double> countTimeList;
 
-	private final List<IObservablesConnectedComponent> connectedComponentList;
-	private final List<IObservablesComponent> componentList;
+	private List<IObservablesConnectedComponent> connectedComponentList;
+	private List<IObservablesComponent> componentList;
 	private double timeNext;
 	private double timeSampleMin;
 	private double initialTime = 0.0;
@@ -261,5 +261,17 @@ public class CObservables implements IObservables, Serializable {
 
 	public final boolean isOcamlStyleObsName() {
 		return ocamlStyleObsName;
+	}
+
+	
+	// next 2 methods should be called only once - in KappaSystemBuilder 
+	
+	public void setConnectedComponentList(
+			List<IObservablesConnectedComponent> connectedComponentList) {
+		this.connectedComponentList = connectedComponentList;
+	}
+
+	public void setComponentList(List<IObservablesComponent> componentList) {
+		this.componentList = componentList;
 	}
 }

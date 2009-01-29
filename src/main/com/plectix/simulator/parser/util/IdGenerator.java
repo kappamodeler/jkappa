@@ -6,4 +6,8 @@ public class IdGenerator {
 	public int generateNextAgentId() {
 		return id++;
 	}
+	
+	public void reset() {
+		id = 0;
+	}
 }

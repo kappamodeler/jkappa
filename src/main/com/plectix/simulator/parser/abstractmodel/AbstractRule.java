@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IRule;
 
 public class AbstractRule implements IAbstractComponent {
 	private final String myName;
@@ -11,8 +12,9 @@ public class AbstractRule implements IAbstractComponent {
 	private final List<IConnectedComponent> myRHS;
 	private final double myRate;
 	private final int myId;
-	public static final IConnectedComponent EMPTY_LHS_CC = new CConnectedComponent(
+	private static final IConnectedComponent EMPTY_LHS_CC = new CConnectedComponent(
 			CConnectedComponent.EMPTY);
+	private final boolean myIsStorify;
 	
 	public AbstractRule(List<IConnectedComponent> left,
 			List<IConnectedComponent> right, String name,
@@ -33,6 +35,7 @@ public class AbstractRule implements IAbstractComponent {
 		}
 		myName = name;
 		myId = ruleID;
+		myIsStorify = isStorify;
 	}
 	
 	public String getName() {
@@ -52,7 +55,11 @@ public class AbstractRule implements IAbstractComponent {
 		return myLHS;
 	}
 
-	public Integer getID() {
+	public int getID() {
 		return myId;
+	}
+
+	public boolean isStorify() {
+		return myIsStorify;
 	}
 }

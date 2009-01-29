@@ -73,6 +73,7 @@ import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
 import com.plectix.simulator.parser.KappaSystemParser;
+import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.PlxTimer;
@@ -113,10 +114,11 @@ public class SimulationData {
 	private double stepStories;
 	private double nextStepStories;
 
-	private int agentIdGenerator = 0;
+//	private int agentIdGenerator = 0;
 
 	private boolean argumentsSet = false;
 	private SimulationArguments simulationArguments = new SimulationArguments();
+	private IdGenerator myIdGenerator = new IdGenerator();
 
 	public SimulationData() {
 		super();
@@ -135,7 +137,9 @@ public class SimulationData {
 		observables.resetLists();
 		solution.clearAgents();
 		solution.clearSolutionLines();
-
+		
+//		myIdGenerator.reset();
+		
 		if (perturbations != null) {
 			perturbations.clear();
 		}
@@ -155,7 +159,8 @@ public class SimulationData {
 	}
 
 	public final long generateNextAgentId() {
-		return agentIdGenerator++;
+		return myIdGenerator.generateNextAgentId();
+//		return agentIdGenerator++;
 	}
 
 	public final void setSimulationArguments(InfoType outputType,
@@ -242,6 +247,7 @@ public class SimulationData {
 			if (printStream != null) {
 				e.printStackTrace(printStream);
 			}
+			e.printStackTrace();
 			throw new IllegalArgumentException(e);
 		}
 	}
@@ -1599,5 +1605,21 @@ public class SimulationData {
 
 	public final void setPrintStream(PrintStream printStream) {
 		this.printStream = printStream;
+	}
+
+	public IdGenerator getIdGenerator() {
+		return myIdGenerator ;
+	}
+
+	public void setIdGenerator(IdGenerator generator) {
+		myIdGenerator = generator;
+	}
+	
+	public void setSolution(ISolution solution) {
+		this.solution = solution;
+	}
+
+	public void setObservables(IObservables observables) {
+		this.observables = observables;
 	}
 }

@@ -4,19 +4,29 @@ import java.util.*;
 
 import com.plectix.simulator.components.SolutionLines;
 import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.ISolution;
 
 public class AbstractSolution implements IAbstractComponent {
-	private Map<Long, List<IAgent>> myAgents = new HashMap<Long, List<IAgent>>();
+	//Long - counter, List - connectedcomponent
+	private Map<List<IAgent>, Long> myAgents = new HashMap<List<IAgent>, Long>();
 	private final List<SolutionLines> mySolutionLines = new ArrayList<SolutionLines>();
 	
 	public final void addAgents(long quant, List<IAgent> agents) {
-		if (agents == null || agents.isEmpty())
+		if (agents == null || agents.isEmpty() || quant <= 0)
 			return;
-		myAgents.put(quant, agents);
+		myAgents.put(agents, quant);
 	}
 
-	public Map<Long, List<IAgent>> getAgents() {
-		return Collections.unmodifiableMap(myAgents);
+//	public Map<Long, List<IAgent>> getAgents() {
+//		return Collections.unmodifiableMap(myAgents);
+//	}
+	
+	public Map<List<IAgent>, Long> getAgents() {
+		return myAgents;
+	}
+
+	public List<SolutionLines> getSolutionLines() {
+		return mySolutionLines;
 	}
 	
 	public final void checkSolutionLinesAndAdd(String line, long count) {
@@ -34,5 +44,4 @@ public class AbstractSolution implements IAbstractComponent {
 		mySolutionLines.add(new SolutionLines(line, count));
 
 	}
-
 }

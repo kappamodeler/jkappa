@@ -77,7 +77,7 @@ public interface IRule {
 
 	public void createInhibitedObservablesList(IObservables observables);
 	
-	public ConstraintData getConstraintData();
+//	public ConstraintData getConstraintData();
 	
 	public boolean includedInCollection(Collection<IRule> list);
 	

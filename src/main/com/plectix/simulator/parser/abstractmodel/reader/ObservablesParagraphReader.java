@@ -23,7 +23,7 @@ import com.plectix.simulator.simulator.SimulationUtils;
 	public final AbstractObservables addComponent(KappaFileParagraph observablesParagraph)
 			throws ParseErrorException {
 		AbstractObservables observables = new AbstractObservables();
-		int obsNameID = 0;
+		int obsId = 0;
 
 		for (KappaFileLine itemDS : observablesParagraph.getLines()) {
 			String line = itemDS.getLine().trim();
@@ -39,15 +39,15 @@ import com.plectix.simulator.simulator.SimulationUtils;
 				}
 
 				if (line.length() == 0) {
-					observables.addRulesName(name, obsNameID,
-							myModel.getRules());
+					//TODO
+					observables.addRuleName(obsId, name);
 				} else
 					observables.addConnectedComponents(
 							SimulationUtils
 									.buildConnectedComponents(myAgentFactory
 											.parseAgent(line)), name, line,
-							obsNameID);
-				obsNameID++;
+							obsId, getArguments().isOcamlStyleObservableNames());
+				obsId++;
 			} catch (ParseErrorException e) {
 				e.setLineDescription(itemDS);
 				throw e;

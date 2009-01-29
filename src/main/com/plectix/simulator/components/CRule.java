@@ -81,7 +81,7 @@ public class CRule implements IRule, Serializable {
 	private IConstraint constraints;
 	private int countAgentsLHS = 0;
 	private final boolean isStorify;
-	private ConstraintData constraintData;
+//	private ConstraintData constraintData;
 	private double rate;
 
 	@Override
@@ -113,35 +113,35 @@ public class CRule implements IRule, Serializable {
 		this.storyfiedAgents.clear();
 	}
 
-	public CRule(List<IConnectedComponent> left,
-			List<IConnectedComponent> right, String name,
-			ConstraintData ruleRate, int ruleID, boolean isStorify) {
-		this.leftHandSide = left;
-		this.rightHandSide = right;
-		this.isStorify = isStorify;
-		this.constraintData = ruleRate;
-		setConnectedComponentLinkRule(left);
-		setConnectedComponentLinkRule(right);
-		if (leftHandSide == null) {
-			leftHandSide = new ArrayList<IConnectedComponent>();
-			leftHandSide.add(EMPTY_LHS_CC);
-		}
-		for (IConnectedComponent cc : this.leftHandSide) {
-			cc.initSpanningTreeMap();
-		}
-		if (ruleRate.getActivity() == Double.MAX_VALUE) {
-			this.infinityRate = true;
-			constraintData.setActivity(1);
-			// this.ruleRate = 1;
-		} else {
-			// this.ruleRate = ruleRate.getActivity();
-		}
-
-		this.name = name;
-		this.ruleID = ruleID;
-		calculateAutomorphismsNumber();
-		indexingRHSAgents();
-	}
+//	public CRule(List<IConnectedComponent> left,
+//			List<IConnectedComponent> right, String name,
+//			ConstraintData ruleRate, int ruleID, boolean isStorify) {
+//		this.leftHandSide = left;
+//		this.rightHandSide = right;
+//		this.isStorify = isStorify;
+//		this.constraintData = ruleRate;
+//		setConnectedComponentLinkRule(left);
+//		setConnectedComponentLinkRule(right);
+//		if (leftHandSide == null) {
+//			leftHandSide = new ArrayList<IConnectedComponent>();
+//			leftHandSide.add(EMPTY_LHS_CC);
+//		}
+//		for (IConnectedComponent cc : this.leftHandSide) {
+//			cc.initSpanningTreeMap();
+//		}
+//		if (ruleRate.getActivity() == Double.MAX_VALUE) {
+//			this.infinityRate = true;
+//			constraintData.setActivity(1);
+//			// this.ruleRate = 1;
+//		} else {
+//			// this.ruleRate = ruleRate.getActivity();
+//		}
+//
+//		this.name = name;
+//		this.ruleID = ruleID;
+//		calculateAutomorphismsNumber();
+//		indexingRHSAgents();
+//	}
 
 	public CRule(List<IConnectedComponent> left,
 			List<IConnectedComponent> right, String name, double ruleRate,
@@ -162,9 +162,9 @@ public class CRule implements IRule, Serializable {
 		if (ruleRate == Double.MAX_VALUE) {
 			this.infinityRate = true;
 			// constraintData.setActivity(1);
-			// this.rate = 1;
+			 this.rate = 1;
 		} else {
-			// this.rate = ruleRate.getActivity();
+			 this.rate = ruleRate;
 		}
 
 		this.name = name;
@@ -173,9 +173,9 @@ public class CRule implements IRule, Serializable {
 		indexingRHSAgents();
 	}
 
-	public ConstraintData getConstraintData() {
-		return constraintData;
-	}
+//	public ConstraintData getConstraintData() {
+//		return constraintData;
+//	}
 
 	public final int getCountAgentsLHS() {
 		return countAgentsLHS;
@@ -191,14 +191,14 @@ public class CRule implements IRule, Serializable {
 
 	public final void setRuleRate(double ruleRate) {
 		if (ruleRate >= 0) {
-			// this.ruleRate = ruleRate;
-			constraintData.setActivity(ruleRate);
+			 this.rate = ruleRate;
+//			constraintData.setActivity(ruleRate);
 		} else {
 			Logger logger = Logger.getLogger(this.getClass());
 			logger.info("warning : rate of the rule '" + name
 					+ "' was attempted to be set as negative");
-			// this.ruleRate = 0;
-			constraintData.setActivity(0);
+			 this.rate = 0;
+//			constraintData.setActivity(0);
 		}
 	}
 
@@ -240,8 +240,8 @@ public class CRule implements IRule, Serializable {
 	}
 
 	public final double getRuleRate() {
-		return constraintData.getActivity();
-		// return ruleRate;
+//		return constraintData.getActivity();
+		 return rate;
 	}
 
 	// private final void markedLHS() {
@@ -940,8 +940,8 @@ public class CRule implements IRule, Serializable {
 		for (IConnectedComponent cc : this.leftHandSide) {
 			activity *= cc.getInjectionsList().size();
 		}
-		activity *= constraintData.getActivity();
-		// activity *= ruleRate;
+//		activity *= constraintData.getActivity();
+		activity *= rate;
 		activity /= automorphismNumber;
 	}
 

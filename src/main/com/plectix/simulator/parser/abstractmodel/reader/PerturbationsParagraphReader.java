@@ -49,7 +49,7 @@ import com.plectix.simulator.simulator.SimulationUtils;
 				String st = perturbationStr.getLine();
 				st = st.trim();
 
-				List<IPerturbationExpression> rateExpression = new ArrayList<IPerturbationExpression>();
+				List<AbstractRateExpression> rateExpression = new ArrayList<AbstractRateExpression>();
 
 				if (st.indexOf("$T") == 0) {
 					boolean greater = getGreater(st, 2);
@@ -77,16 +77,16 @@ import com.plectix.simulator.simulator.SimulationUtils;
 					st = st.substring(index + 2).trim();
 
 					this.perturbationRate = -1.;
-					AbstractRule rule = null;
+					String ruleName = null;
 					if (!checkOnce(st, perturbationStr, perturbations,
 							pertubationID, time, greater)) {
-						rule = getGreaterRule(st, perturbationStr,
+						ruleName = getGreaterRuleName(st, perturbationStr,
 								rateExpression);
-						if (rule != null) {
+						if (ruleName != null) {
 							perturbations.add(new AbstractPerturbation(
 									pertubationID++, time,
 									CPerturbationType.TIME, perturbationRate,
-									rule, greater, rateExpression));
+									ruleName, greater, rateExpression));
 						}
 					}
 				} else {
@@ -108,13 +108,13 @@ import com.plectix.simulator.simulator.SimulationUtils;
 					StringUtil.checkString("do", st, perturbationStr);
 					String pertStr = st.substring(st.indexOf("do") + 2);
 					this.perturbationRate = -1.;
-					AbstractRule rule = getGreaterRule(pertStr, perturbationStr,
+					String ruleName = getGreaterRuleName(pertStr, perturbationStr,
 							rateExpression);
 
 					st = st.substring(0, st.indexOf("do")).trim();
 
 					List<Double> parameters = new ArrayList<Double>();
-					List<IObservablesComponent> obsID = new ArrayList<IObservablesComponent>();
+					List<String> obsID = new ArrayList<String>();
 					if (st.indexOf("+") == -1) {
 						parseExpressionMonomeBeforeDo(st, perturbationStr,
 								parameters, obsID);
@@ -129,13 +129,14 @@ import com.plectix.simulator.simulator.SimulationUtils;
 
 					}
 
-					if (rule != null) {
+					if (ruleName != null) {
 
 						AbstractPerturbation pertubation = new AbstractPerturbation(
-								pertubationID++, obsID, parameters, obsNameID,
+								pertubationID++, obsID, 
+								parameters, obsNameID,
 								CPerturbationType.NUMBER, perturbationRate,
-								rule, greater, rateExpression, myModel
-										.getObservables());
+								ruleName, greater, rateExpression);
+//								, myModel.getObservables());
 						perturbations.add(pertubation);
 
 					}
@@ -169,7 +170,7 @@ import com.plectix.simulator.simulator.SimulationUtils;
 
 	private final void parseExpressionMonomeBeforeDo(String arg,
 			KappaFileLine perturbationStr, List<Double> parameters,
-			List<IObservablesComponent> obsID) throws ParseErrorException {
+			List<String> obsNames) throws ParseErrorException {
 
 		String item = arg;
 		if (item.indexOf("*") == -1) {
@@ -198,14 +199,14 @@ import com.plectix.simulator.simulator.SimulationUtils;
 
 			String obsName = getName(item);
 
-			IObservablesComponent obsId = checkInObservables(obsName);
-			obsID.add(obsId);
+//			IObservablesComponent obsId = checkInObservables(obsName);
+			obsNames.add(obsName);
 		}
 	}
 
 	private final double parseExpressionMonomeAfterDo(String arg,
 			KappaFileLine perturbationStr,
-			List<IPerturbationExpression> rateExpression)
+			List<AbstractRateExpression> rateExpression)
 			throws ParseErrorException {
 		String item = arg;
 		double freeTerm = 0;
@@ -232,17 +233,17 @@ import com.plectix.simulator.simulator.SimulationUtils;
 			StringUtil.checkString("'", item, perturbationStr);
 			item = item.substring(item.indexOf("'") + 1).trim();
 
-			AbstractRule curRule = getRuleWithEqualName(getName(item));
+			String curRuleName = getName(item);
 
 			//TODO!!!
-			//rateExpression.add(new RateExpression(curRule, curValue));
+			rateExpression.add(new AbstractRateExpression(curRuleName, curValue));
 		}
 		return freeTerm;
 	}
 
-	private final AbstractRule getGreaterRule(String st,
+	private final String getGreaterRuleName(String st,
 			KappaFileLine perturbationStr,
-			List<IPerturbationExpression> rateExpression)
+			List<AbstractRateExpression> rateExpression)
 			throws ParseErrorException {
 		boolean fail = false;
 		if (st.length() > 0) {
@@ -279,9 +280,9 @@ import com.plectix.simulator.simulator.SimulationUtils;
 			}
 		}
 		if (freeTerm > 0.0)
-			rateExpression.add(new RateExpression(null, freeTerm));
+			rateExpression.add(new AbstractRateExpression(null, freeTerm));
 
-		return getRuleWithEqualName(ruleName);
+		return ruleName;
 	}
 
 	private final boolean getGreater(String st, int index)
@@ -309,25 +310,14 @@ import com.plectix.simulator.simulator.SimulationUtils;
 		return name;
 	}
 
-	private final AbstractRule getRuleWithEqualName(String ruleName)
-			throws ParseErrorException {
-		for (AbstractRule rule : myModel.getRules()) {
-			if ((rule.getName() != null) && (rule.getName().equals(ruleName))) {
-				return rule;
-			}
-		}
-		// TODO decide if error message is not necessary
-		throw new ParseErrorException("No such rule : " + ruleName);
-	}
-	
 	private final void addFreeRule(
-			List<IPerturbationExpression> rateExpression, String item)
+			List<AbstractRateExpression> rateExpression, String item)
 			throws ParseErrorException {
 		item = item.substring(item.indexOf("'") + 1).trim();
-		AbstractRule curRule = getRuleWithEqualName(getName(item));
-		if (curRule != null) {
+		String curRuleName = getName(item);
+		if (curRuleName != null) {
 			//TODO!!!
-//			rateExpression.add(new RateExpression(curRule, 1.0));
+			rateExpression.add(new AbstractRateExpression(curRuleName, 1.0));
 		}
 	}
 	
@@ -366,11 +356,7 @@ import com.plectix.simulator.simulator.SimulationUtils;
 				.buildConnectedComponents(agentList);
 
 		List<AbstractPerturbationRule> ruleList = new ArrayList<AbstractPerturbationRule>();
-		// public CRulePerturbation(List<IConnectedComponent> left,
-		// List<IConnectedComponent> right, String name, double ruleRate,
-		// int ruleID, boolean isStorify) {
-		// super(left, right, name, ruleRate, ruleID, isStorify);
-		// }
+
 		for (IConnectedComponent cc : ccList) {
 			List<IConnectedComponent> ccL = new ArrayList<IConnectedComponent>();
 			ccL.add(cc);

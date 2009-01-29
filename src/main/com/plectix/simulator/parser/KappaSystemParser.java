@@ -23,6 +23,11 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
 import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.parser.abstractmodel.KappaModel;
+import com.plectix.simulator.parser.abstractmodel.ModelToString;
+import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
+import com.plectix.simulator.parser.builders.KappaSystemBuilder;
+//import com.plectix.simulator.parser.builders.KappaSystemBuilder;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
@@ -150,6 +155,11 @@ public class KappaSystemParser {
 		}
 		List<CPerturbation> perturbations = createPertubations();
 		simulationData.setPerturbations(perturbations);
+		
+//		KappaSystemBuilder builder = new KappaSystemBuilder();
+//		KappaModel model = (new KappaModelCreator(
+//				simulationData.getSimulationArguments())).createModel(myKappaFile);
+//		builder.build(model, simulationData);
 	}
 
 	private final IObservablesComponent checkInObservables(String obsName)
@@ -363,11 +373,11 @@ public class KappaSystemParser {
 					throw new ParseErrorException(perturbationStr,
 							"$ADDONCE has not used with $INF");
 				rp = new CRulePerturbation(null, ccL, "",
-						new ConstraintData(0), ruleID++, simulationData
+						0, ruleID++, simulationData
 								.isStorify());
 			} else {
 				rp = new CRulePerturbation(ccL, null, "",
-						new ConstraintData(0), ruleID++, simulationData
+						0, ruleID++, simulationData
 								.isStorify());
 			}
 			ruleList.add(rp);
@@ -567,19 +577,19 @@ public class KappaSystemParser {
 					if (activStr.indexOf(",") != -1) {
 						constraintLeftToRight = parseConstraint(activStr
 								.substring(0, activStr.indexOf(",")));
-						activity = constraintLeftToRight.getActivity();
-						// activity = Double.valueOf(activStr.substring(0,
-						// activStr.indexOf(",")));
+//						activity = constraintLeftToRight.getActivity();
+						 activity = Double.valueOf(activStr.substring(0,
+						 activStr.indexOf(",")));
 						constraintRightToLeft = parseConstraint(activStr
 								.substring(activStr.indexOf(",") + 1));
-						activity2 = constraintRightToLeft.getActivity();
-						// activity2 =
-						// Double.valueOf(activStr.substring(activStr
-						// .indexOf(",") + 1));
+//						activity2 = constraintRightToLeft.getActivity();
+						 activity2 =
+						 Double.valueOf(activStr.substring(activStr
+						 .indexOf(",") + 1));
 					} else {
-						constraintLeftToRight = parseConstraint(activStr);
-						activity = constraintLeftToRight.getActivity();
-						// activity = Double.valueOf(activStr);
+//						constraintLeftToRight = parseConstraint(activStr);
+//						activity = constraintLeftToRight.getActivity();
+						 activity = Double.valueOf(activStr);
 					}
 				} catch (Exception e) {
 					String details = rulesStr.substring(index).trim();
@@ -648,50 +658,57 @@ public class KappaSystemParser {
 				switch (index) {
 				case CC_LHS: {
 					left = parseAgent(lhs.trim());
-					rules.add(SimulationUtils.buildRule(left, right, name,
-							constraintLeftToRight, ruleID, simulationData
-									.isStorify()));
-					// rules.add(SimulationUtils.buildRule(left, right, name,
-					// activity,
-					// ruleID, simulationData.isStorify()));
+//					rules.add(SimulationUtils.buildRule(left, right, name,
+//							constraintLeftToRight, ruleID, simulationData
+//									.isStorify()));
+					 rules.add(SimulationUtils.buildRule(left, right, name,
+					 activity,
+					 ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-						rules.add(SimulationUtils.buildRule(right,
-								parseAgent(lhs.trim()), nameOp,
-								constraintRightToLeft, ruleID, simulationData
-										.isStorify()));
-						// rules.add(SimulationUtils.buildRule(right,
-						// parseAgent(lhs
-						// .trim()), nameOp, activity2, ruleID,
-						// simulationData.isStorify()));
+//						rules.add(SimulationUtils.buildRule(right,
+//								parseAgent(lhs.trim()), nameOp,
+//								constraintRightToLeft, ruleID, simulationData
+//										.isStorify()));
+						 rules.add(SimulationUtils.buildRule(right,
+						 parseAgent(lhs.trim()), nameOp, activity2, ruleID,
+						 simulationData.isStorify()));
 					}
 					break;
 				}
 				case CC_RHS: {
 					right = parseAgent(rhs.trim());
+//					rules.add(SimulationUtils.buildRule(left, right, name,
+//							constraintLeftToRight, ruleID, simulationData
+//									.isStorify()));
 					rules.add(SimulationUtils.buildRule(left, right, name,
-							constraintLeftToRight, ruleID, simulationData
-									.isStorify()));
+							 activity, ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-						rules.add(SimulationUtils.buildRule(parseAgent(rhs
-								.trim()), left, nameOp, constraintRightToLeft,
-								ruleID, simulationData.isStorify()));
+//						rules.add(SimulationUtils.buildRule(parseAgent(rhs
+//								.trim()), left, nameOp, constraintRightToLeft,
+//								ruleID, simulationData.isStorify()));
+						rules.add(SimulationUtils.buildRule(parseAgent(rhs.trim()), 
+								left, name, activity2, ruleID, simulationData.isStorify()));
 					}
 					break;
 				}
 				case CC_ALL: {
 					left = parseAgent(lhs.trim());
 					right = parseAgent(rhs.trim());
+//					rules.add(SimulationUtils.buildRule(left, right, name,
+//							constraintLeftToRight, ruleID, simulationData
+//									.isStorify()));
 					rules.add(SimulationUtils.buildRule(left, right, name,
-							constraintLeftToRight, ruleID, simulationData
-									.isStorify()));
+							 activity, ruleID, simulationData.isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-						rules.add(SimulationUtils.buildRule(parseAgent(rhs
-								.trim()), parseAgent(lhs.trim()), nameOp,
-								constraintRightToLeft, ruleID, simulationData
-										.isStorify()));
+//						rules.add(SimulationUtils.buildRule(parseAgent(rhs
+//								.trim()), parseAgent(lhs.trim()), nameOp,
+//								constraintRightToLeft, ruleID, simulationData
+//										.isStorify()));
+						rules.add(SimulationUtils.buildRule(parseAgent(rhs.trim()), 
+								left, name, activity2, ruleID, simulationData.isStorify()));
 					}
 					break;
 				}
