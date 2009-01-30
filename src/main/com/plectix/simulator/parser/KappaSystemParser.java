@@ -196,26 +196,11 @@ public class KappaSystemParser {
 //			}
 //		} else {
 //			// observables
-//			IObservables observables = (new ObservablesBuilder()).build(model
-//					.getObservables(), rules);
+//			IObservables observables = (new ObservablesBuilder(simulationData, arguments)).build(model
+//					.getObservables(), simulationData.getRules());
 //			simulationData.setObservables(observables);
 //		}
 
-//		List<CPerturbation> perturbations = createPertubations();
-//		simulationData.setPerturbations(perturbations);
-		
-		
-		
-		
-//		List<IRule> rules = createRules(myKappaFile.getRules());
-//		simulationData.setRules(rules);
-//		if ((simulationData.getStories() == null)
-//				&& (simulationData.getSimulationArguments().getSimulationType() == SimulationArguments.SimulationType.STORIFY)) {
-//			simulationData.setStories(new CStories(simulationData));
-//			createSimData(CREATE_STORY);
-//		} else {
-//			createSimData(CREATE_OBS);
-//		}
 		List<CPerturbation> perturbations = createPertubations();
 		simulationData.setPerturbations(perturbations);
 	}

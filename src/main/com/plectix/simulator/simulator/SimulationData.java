@@ -138,7 +138,7 @@ public class SimulationData {
 		solution.clearAgents();
 		solution.clearSolutionLines();
 		
-//		myIdGenerator.reset();
+		myIdGenerator.reset();
 		
 		if (perturbations != null) {
 			perturbations.clear();

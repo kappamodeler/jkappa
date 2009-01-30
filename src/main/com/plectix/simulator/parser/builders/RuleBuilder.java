@@ -34,69 +34,69 @@ public class RuleBuilder {
 //		CRule newRule = new CRule(lhsCCList, rhsCCList, name, rate, id, isStorify);
 		IRule newRule = SimulationUtils.buildRule(lhsAgents, rhsAgents, name, rate, id, isStorify);
 		
-		String one = ruleToString(rule);
-		String two = ruleToString(newRule);
-		if	(!one.equals(two)) { 
-			System.out.println("OLD - - - " + one);
-			System.out.println("New - - - " + two);
-		}
+//		String one = ruleToString(rule);
+//		String two = ruleToString(newRule);
+//		if	(!one.equals(two)) { 
+//			System.out.println("OLD - - - " + one);
+//			System.out.println("New - - - " + two);
+//		}
 		return newRule;
 	}
 	
-	public String handSideToString(List<AbstractAgent> list) {
-		List<IAgent> agents = mySubstanceBuilder.buildAgents(list);
-		StringBuffer sb = new StringBuffer();
-		boolean first = true;
-		if (agents == null) {
-			return "";
-		}
-		for (IAgent cc : agents) {
-			if (!first) {
-				sb.append(", ");
-			} else {
-				first = false;
-			}
-			sb.append(Converter.toString(cc));
-		}
-		return sb.toString();
-	}
-	
-	private String handToString(List<IConnectedComponent> list) {
-		StringBuffer sb = new StringBuffer();
-		boolean first = true;
-		if (list == null) {
-			return "";
-		}
-		for (IConnectedComponent cc : list) {
-			if (!first) {
-				sb.append(", ");
-			} else {
-				first = false;
-			}
-			sb.append(Converter.toString(cc));
-		}
-		return sb.toString();
-	}
-	
-	private String ruleToString(IRule rule) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(handToString(rule.getLeftHandSide()));
-		sb.append(" -> ");
-		sb.append(handToString(rule.getRightHandSide()));
-		sb.append(" @ ");
-		sb.append(rule.getRuleRate());
-		return sb.toString();
-	}
-
-	public String ruleToString(AbstractRule rule) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(handSideToString(rule.getLHS()));
-		sb.append(" -> ");
-		sb.append(handSideToString(rule.getRHS()));
-//		sb.append(" (");
-//		sb.append(")");
-		sb.append(" @ ");
-		sb.append(rule.getRate());
-		return sb.toString();
-	}
+//	public String handSideToString(List<AbstractAgent> list) {
+//		List<IAgent> agents = mySubstanceBuilder.buildAgents(list);
+//		StringBuffer sb = new StringBuffer();
+//		boolean first = true;
+//		if (agents == null) {
+//			return "";
+//		}
+//		for (IAgent cc : agents) {
+//			if (!first) {
+//				sb.append(", ");
+//			} else {
+//				first = false;
+//			}
+//			sb.append(Converter.toString(cc));
+//		}
+//		return sb.toString();
+//	}
+//	
+//	private String handToString(List<IConnectedComponent> list) {
+//		StringBuffer sb = new StringBuffer();
+//		boolean first = true;
+//		if (list == null) {
+//			return "";
+//		}
+//		for (IConnectedComponent cc : list) {
+//			if (!first) {
+//				sb.append(", ");
+//			} else {
+//				first = false;
+//			}
+//			sb.append(Converter.toString(cc));
+//		}
+//		return sb.toString();
+//	}
+//	
+//	public String ruleToString(IRule rule) {
+//		StringBuffer sb = new StringBuffer();
+//		sb.append(handToString(rule.getLeftHandSide()));
+//		sb.append(" -> ");
+//		sb.append(handToString(rule.getRightHandSide()));
+//		sb.append(" @ ");
+//		sb.append(rule.getRuleRate());
+//		return sb.toString();
+//	}
+//
+//	public String ruleToString(AbstractRule rule) {
+//		StringBuffer sb = new StringBuffer();
+//		sb.append(handSideToString(rule.getLHS()));
+//		sb.append(" -> ");
+//		sb.append(handSideToString(rule.getRHS()));
+////		sb.append(" (");
+////		sb.append(")");
+//		sb.append(" @ ");
+//		sb.append(rule.getRate());
+//		return sb.toString();
+//	}
 }

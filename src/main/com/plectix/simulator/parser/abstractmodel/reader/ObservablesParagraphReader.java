@@ -38,7 +38,7 @@ import com.plectix.simulator.simulator.SimulationUtils;
 					//TODO
 					observables.addRuleName(name, obsId);
 				} else
-					observables.addComponent(parseAgent(line), name, //line,
+					observables.addComponent(parseAgent(line), name, line,
 							obsId);//, getArguments().isOcamlStyleObservableNames());
 				obsId++;
 			} catch (ParseErrorException e) {

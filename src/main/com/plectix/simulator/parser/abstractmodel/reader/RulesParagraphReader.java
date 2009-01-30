@@ -223,7 +223,7 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 //								constraintRightToLeft, ruleID, simulationData
 //										.isStorify()));
 						rules.add(new AbstractRule(parseAgent(rhs.trim()), 
-								left, name, activity2, ruleID, isStorify));
+								parseAgent(lhs.trim()), nameOp, activity2, ruleID, isStorify));
 					}
 					break;
 				}

@@ -18,18 +18,22 @@ import com.plectix.simulator.parser.abstractmodel.ObservableRuleLineData;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.util.Converter;
 
 public class ObservablesBuilder {
 	private final SimulationArguments myArguments;
+	private IObservables done;
 	private final SubstanceBuilder mySubstanceBuilder;
 	
 	public ObservablesBuilder(SimulationData data, SimulationArguments args) {
 		myArguments = args;
+		done = data.getObservables();
 		mySubstanceBuilder = new SubstanceBuilder(data);
 	}
 	
 	public IObservables build(AbstractObservables arg, List<IRule> rules) {
-		CObservables observables = new CObservables();
+//		CObservables observables = new CObservables();
+		IObservables observables = done;
 		
 		for (ObservableComponentLineData componentData : arg.getComponents()) {
 			List<IAgent> agentsList = mySubstanceBuilder.buildAgents(componentData.getAgents());
@@ -38,12 +42,8 @@ public class ObservablesBuilder {
 			
 			List<IConnectedComponent> listCC = SimulationUtils
 										.buildConnectedComponents(agentsList);
-			String line = null;
-			if (myArguments.isOcamlStyleObservableNames()) {
-				line = SimulationUtils.printPartRule(listCC, true);
-			}
 			
-			observables.addConnectedComponents(listCC, obsName, line, id);
+			observables.addConnectedComponents(listCC, obsName, componentData.getLine(), id);
 		}
 		
 		for (ObservableRuleLineData obsRule : arg.getRuleNames()) {

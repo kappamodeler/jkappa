@@ -21,9 +21,9 @@ public class AbstractObservables implements IAbstractComponent {
 	}
 	
 	public void addComponent(
-			List<AbstractAgent> list, String name, int obsId) {//, String line, boolean ocamlStyleObsName) {
+			List<AbstractAgent> list, String name, String line,  int obsId) {//, String line, boolean ocamlStyleObsName) {
 
-		myComponents.add(new ObservableComponentLineData(list, name, obsId));
+		myComponents.add(new ObservableComponentLineData(list, name, line, obsId));
 	}
 
 	public void addRuleName(String ruleName, int obsId) {
