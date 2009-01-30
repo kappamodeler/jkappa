@@ -159,7 +159,7 @@ public final class CStoryTrees {
 			return false;
 		}
 
-		public IStates getStoryStateByTraceID(int id) {
+		public IStates getStoryStateByTraceID(int id, boolean isEmpty) {
 			int index;
 			for (index = 0; index < traceIDList.size(); index++) {
 				if (traceIDList.get(index) >= id)
@@ -167,6 +167,7 @@ public final class CStoryTrees {
 			}
 			if (index == traceIDList.size())
 				return CStoryState.EMPTY_STATE;
+
 			return storyStatesList.get(index);
 		}
 	}
@@ -231,6 +232,10 @@ public final class CStoryTrees {
 		for (int i = 0; i < list1.size(); i++) {
 			IStates states1 = list1.get(i);
 			IStates states2 = list2.get(i);
+
+			// if (states1.isEmpty() && states2.isEmpty())
+			// continue;
+
 			if (states1 != CStoryState.EMPTY_STATE
 					&& states2 != CStoryState.EMPTY_STATE
 					&& !states1.equalz(states2)) {
@@ -241,7 +246,9 @@ public final class CStoryTrees {
 	}
 
 	private List<IStates> getFullHorizontalWire(
+			List<CNetworkNotation> commonList,
 			int traceID,
+			int nextTraceID,
 			Map<Long, Map<Integer, StoryChangeStateWithTrace>> agentIDSiteIDToTraceID) {
 
 		List<IStates> list = new ArrayList<IStates>();
@@ -259,11 +266,30 @@ public final class CStoryTrees {
 				Integer keySite = siteIterator.next();
 				StoryChangeStateWithTrace scswt = storyChangeStateWithTraceMap
 						.get(keySite);
-				list.add(scswt.getStoryStateByTraceID(traceID));
+				boolean isEmpty = false;
+				if (isEmptyIntersection(commonList, keyAgent, keySite, traceID)) {
+					isEmpty = true;
+				}
+				list.add(scswt.getStoryStateByTraceID(nextTraceID, isEmpty));
+
 			}
 		}
 
 		return list;
+	}
+
+	private boolean isEmptyIntersection(List<CNetworkNotation> commonList,
+			Long agentKey, Integer siteKey, Integer traceID) {
+		CNetworkNotation nn = commonList.get(this.traceIDToIndex.get(traceID));
+		AgentSites as = nn.getChangesOfAllUsedSites().get(agentKey);
+		if (as == null)
+			return true;
+
+		IStoriesSiteStates sss = as.getSites().get(siteKey);
+		if (sss == null)
+			return true;
+
+		return false;
 	}
 
 	private void convertTree(
@@ -293,10 +319,10 @@ public final class CStoryTrees {
 
 	}
 
-	
 	List<Integer> listToDelete;
 
 	private void createListToDelete(
+			List<CNetworkNotation> commonList,
 			Map<Integer, List<Integer>> reversedTraceIDToTraceID,
 			int minTraceID,
 			int currentTraceID,
@@ -338,7 +364,8 @@ public final class CStoryTrees {
 					if (listToDelete.get(0) < idOfSon) {
 						listToDelete.set(0, idOfSon);
 						List<IStates> maxTraceIDStatesList = getFullHorizontalWire(
-								traceIDToNextTraceID.get(idOfSon).intValue(),
+								commonList, idOfSon, traceIDToNextTraceID.get(
+										idOfSon).intValue(),
 								agentIDSiteIDToTraceID);
 						if (checkFullHorizontalWires(minTraceIDStatesList,
 								maxTraceIDStatesList)) {
@@ -346,9 +373,10 @@ public final class CStoryTrees {
 							return;
 						}
 					}
-					createListToDelete(reversedTraceIDToTraceID, minTraceID, idOfSon,
-							traceIDLastRule, minTraceIDStatesList,
-							traceIDToNextTraceID, agentIDSiteIDToTraceID);
+					createListToDelete(commonList, reversedTraceIDToTraceID,
+							minTraceID, idOfSon, traceIDLastRule,
+							minTraceIDStatesList, traceIDToNextTraceID,
+							agentIDSiteIDToTraceID);
 				}
 			}
 			if (listToDelete.get(0) == -2)
@@ -359,37 +387,39 @@ public final class CStoryTrees {
 					listToDelete.set(0, idOfFather);
 				listToDelete.add(idOfFather);
 				List<IStates> maxTraceIDStatesList = getFullHorizontalWire(
-						traceIDToNextTraceID.get(idOfFather).intValue(),
-						agentIDSiteIDToTraceID);
+						commonList, idOfFather, traceIDToNextTraceID.get(
+								idOfFather).intValue(), agentIDSiteIDToTraceID);
 				if (checkFullHorizontalWires(minTraceIDStatesList,
 						maxTraceIDStatesList)) {
 					listToDelete.set(0, -2);
 					return;
 				}
-				createListToDelete(reversedTraceIDToTraceID, minTraceID, idOfFather,
-						traceIDLastRule, minTraceIDStatesList,
-						traceIDToNextTraceID, agentIDSiteIDToTraceID);
+				createListToDelete(commonList, reversedTraceIDToTraceID,
+						minTraceID, idOfFather, traceIDLastRule,
+						minTraceIDStatesList, traceIDToNextTraceID,
+						agentIDSiteIDToTraceID);
 			}
 		}
 		return;
 	}
 
 	private List<Integer> getListToRemove(
+			List<CNetworkNotation> commonList,
 			int minTraceID,
 			int traceIDLastRule,
 			Map<Long, Map<Integer, StoryChangeStateWithTrace>> agentIDSiteIDToTraceID,
 			Map<Integer, Integer> traceIDToNextTraceID) {
-		List<IStates> minTraceIDStatesList = getFullHorizontalWire(minTraceID,
-				agentIDSiteIDToTraceID);
+		List<IStates> minTraceIDStatesList = getFullHorizontalWire(commonList,
+				minTraceID, minTraceID, agentIDSiteIDToTraceID);
 		// List<Integer> listToDelete = new ArrayList<Integer>();
 		Map<Integer, List<Integer>> reversedTraceIDToTraceID = new TreeMap<Integer, List<Integer>>();
 		listToDelete = new ArrayList<Integer>();
 		listToDelete.add(-1);
 		listToDelete.add(minTraceID);
 		convertTree(reversedTraceIDToTraceID);
-		createListToDelete(reversedTraceIDToTraceID, minTraceID, minTraceID,
-				traceIDLastRule, minTraceIDStatesList, traceIDToNextTraceID,
-				agentIDSiteIDToTraceID);
+		createListToDelete(commonList, reversedTraceIDToTraceID, minTraceID,
+				minTraceID, traceIDLastRule, minTraceIDStatesList,
+				traceIDToNextTraceID, agentIDSiteIDToTraceID);
 
 		return listToDelete;
 	}
@@ -407,8 +437,8 @@ public final class CStoryTrees {
 		while (true) {
 			for (int i = commonList.size() - 1; i > 0; i--) {
 				CNetworkNotation nn = commonList.get(i);
-				List<Integer> listToDelete = getListToRemove(nn.getStep(),
-						traceIDLastRule, agentIDSiteIDToTraceID,
+				List<Integer> listToDelete = getListToRemove(commonList, nn
+						.getStep(), traceIDLastRule, agentIDSiteIDToTraceID,
 						traceIDToNextTraceID);
 				listToDeleteSize = listToDelete.size();
 				if (listToDelete.size() > 1 && listToDelete.get(0) == -2) {
@@ -421,6 +451,7 @@ public final class CStoryTrees {
 
 					while (mainSize != weakSize) {
 						mainSize = commonList.size();
+						//doPermutation(commonList);
 						noneCompressStoryTrace(commonList);
 						commonList = updateMainList(commonList);
 						weakSize = commonList.size();
@@ -461,6 +492,43 @@ public final class CStoryTrees {
 		return updatedList;
 	}
 
+	private List<CNetworkNotation> doPermutation(
+			List<CNetworkNotation> commonList) {
+
+		int size = commonList.size() - 1;
+
+		boolean fullPermutation = false;
+		for (int i = size; i > 1; i--) {
+			int index = i;
+			boolean wasPermutation = true;
+			while (wasPermutation) {
+				CNetworkNotation nn = commonList.get(index);
+				CNetworkNotation nnNext = commonList.get(index - 1);
+				if (traceIDToTraceID.get(nnNext.getStep()).contains(
+						nn.getStep())||(traceIDToTraceIDWeak.get(nnNext.getStep())!=null && traceIDToTraceIDWeak.get(nnNext.getStep()).contains(
+								nn.getStep()))) {
+					wasPermutation = false;
+					break;
+				}
+				fullPermutation = true;
+				commonList.set(index - 1, nn);
+				commonList.set(index, nnNext);
+				index++;
+
+				if (index == size + 1)
+					break;
+			}
+		}
+
+		if (fullPermutation) {
+			for (CNetworkNotation nn : commonList) {
+				nn.setStep(size--);
+			}
+		}
+
+		return commonList;
+	}
+
 	private List<CNetworkNotation> weakCompressStoryTrace(
 			List<CNetworkNotation> commonList) {
 		List<CNetworkNotation> weakCompressedList = new ArrayList<CNetworkNotation>();
@@ -470,7 +538,7 @@ public final class CStoryTrees {
 
 			Map<Integer, Integer> traceIDToNextTraceID = new HashMap<Integer, Integer>();
 			Map<Long, Map<Integer, StoryChangeStateWithTrace>> agentIDSiteIDToTraceID = new HashMap<Long, Map<Integer, StoryChangeStateWithTrace>>();
-
+		//	commonList = doPermutation(commonList);
 			// deleting opposite rules which are neighbours in trace
 			weakCompressedList = updateMainList(commonList);
 			int mainSize = commonList.size();
@@ -480,6 +548,7 @@ public final class CStoryTrees {
 
 				while (mainSize != weakSize) {
 					mainSize = weakCompressedList.size();
+					doPermutation(weakCompressedList);
 					noneCompressStoryTrace(weakCompressedList);
 					weakCompressedList = updateMainList(weakCompressedList);
 					weakSize = weakCompressedList.size();
@@ -1326,7 +1395,7 @@ public final class CStoryTrees {
 			}
 			traceIDToIntroString.put(nn.getStep(), introStr);
 		}
-		
+
 		Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
 		while (iterator.hasNext()) {
 			int traceID = iterator.next();
