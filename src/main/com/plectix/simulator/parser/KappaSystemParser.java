@@ -766,7 +766,7 @@ public class KappaSystemParser {
 //								constraintRightToLeft, ruleID, simulationData
 //										.isStorify()));
 						rules.add(SimulationUtils.buildRule(parseAgent(rhs.trim()), 
-								left, name, activity2, ruleID, simulationData.isStorify()));
+								parseAgent(lhs.trim()), nameOp, activity2, ruleID, simulationData.isStorify()));
 					}
 					break;
 				}
