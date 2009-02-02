@@ -1,0 +1,6 @@
+'1' A(x~q) -> A(x~fi) 
+'2' A(x~q) -> A(x~fi) 
+'test_' A(x~q) -> A(x~fi) 
+'3' A(x~q) -> A(x~fi) 
+%init:  2 * A(x~q)
+%story: 'test_'

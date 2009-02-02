@@ -34,6 +34,12 @@ public final class CStories {
 		this.simulationData = simData;
 	}
 
+	public int getRuleIdAtStories(int index){
+		if(index>=stories.size()|| index<0)
+			return -1;
+		return stories.get(index).ruleID;
+	}
+
 	public final Collection<List<CStoryTrees>> getTrees() {
 		return Collections.unmodifiableCollection(trees.values());
 	}
