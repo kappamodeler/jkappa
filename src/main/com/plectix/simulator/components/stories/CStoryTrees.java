@@ -4,19 +4,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.interfaces.IState;
 import com.plectix.simulator.interfaces.IStates;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 import com.plectix.simulator.simulator.SimulationArguments;
@@ -144,48 +138,6 @@ public final class CStoryTrees {
 
 		updateTraceIDToIndex(updatedList);
 		return updatedList;
-	}
-
-	/**
-	 * Will be separated soon. Do not replace it.
-	 * */
-	private class StoryChangeStateWithTrace {
-		private List<Integer> traceIDList;
-		private List<IStates> storyStatesList;
-
-		public StoryChangeStateWithTrace() {
-			traceIDList = new ArrayList<Integer>();
-			storyStatesList = new ArrayList<IStates>();
-		}
-
-		public void addToStoryChangeStateWithTraceLists(int traceID,
-				IStates state) {
-			traceIDList.add(traceID);
-			storyStatesList.add(state);
-		}
-
-		public boolean isLastUpdate(int id) {
-			int index;
-			for (index = 0; index < traceIDList.size(); index++) {
-				if (traceIDList.get(index) > id)
-					break;
-			}
-			if (index == traceIDList.size())
-				return true;
-			return false;
-		}
-
-		public IStates getStoryStateByTraceID(int id, boolean isEmpty) {
-			int index;
-			for (index = 0; index < traceIDList.size(); index++) {
-				if (traceIDList.get(index) >= id)
-					break;
-			}
-			if (index == traceIDList.size())
-				return CStoryState.EMPTY_STATE;
-
-			return storyStatesList.get(index);
-		}
 	}
 
 	private void addToWeakCompressionHelpMap(

@@ -80,6 +80,10 @@ public class Simulator implements SimulatorInterface {
 		simulatorResultsData.addResultSource(source);
 		return source;
 	}
+	
+	private final void endOfMerge(PlxTimer timer){
+		simulationData.stopTimer(InfoType.OUTPUT,timer, "-Merge stories:");
+	}
 
 
 	private final void endOfSimulation(InfoType outputType,boolean isEndRules, PlxTimer timer) {
@@ -334,8 +338,10 @@ public class Simulator implements SimulatorInterface {
 			simulationData.println("#");
 			endOfSimulation(InfoType.OUTPUT, false, timerAllStories);
 		}
-		
+		PlxTimer mergeTimer= new PlxTimer();
+		mergeTimer.startTimer();
 		stories.merge();
+		endOfMerge(mergeTimer);
 		Source source = addCompleteSource();
 		simulationData.outputData(source, count);
 	}
