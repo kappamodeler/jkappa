@@ -4,7 +4,6 @@ import java.util.*;
 
 import org.junit.*;
 
-import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
@@ -51,10 +50,6 @@ public class TestInjectionsCorrection extends TestInjections {
 		// print first failed test info in console
 		if (!ohohoh & !antiFlag) {
 			antiFlag = true;
-			System.out.println("generate (" + c.getName() + ") : "
-					+ solutionLinkingForCurrentObs);
-			System.out.println("expected (" + c.getName() + ") : "
-					+ myCompareData.get(c.getName()));
 		}
 		return (ohohoh);
 	}

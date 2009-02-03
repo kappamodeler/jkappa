@@ -30,7 +30,6 @@ package com.plectix.simulator.util;
 				return command;
 			}
 		}
-		System.out.println("unknown command, fear!");
 		return UNKNOWN; 
 	}
 }

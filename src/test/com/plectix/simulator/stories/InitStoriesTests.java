@@ -85,7 +85,6 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 		simulationData.setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
 		simulationData.readSimulatonFile(InfoType.OUTPUT);
 		simulationData.initialize(InfoType.OUTPUT);
-		System.out.println(FilePath);
 	}
 
 	public static String getDirectory() {

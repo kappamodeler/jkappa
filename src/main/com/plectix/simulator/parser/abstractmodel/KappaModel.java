@@ -6,7 +6,7 @@ import com.plectix.simulator.parser.util.IdGenerator;
 
 public class KappaModel {
 	
-//	private List<AbstractPerturbation> myPerturbations = new ArrayList<AbstractPerturbation>();
+	private List<AbstractPerturbation> myPerturbations = new ArrayList<AbstractPerturbation>();
 	
 	private AbstractObservables myObservables = new AbstractObservables();
 	private AbstractSolution mySolution = new AbstractSolution(); // soup of initial components
@@ -41,36 +41,8 @@ public class KappaModel {
 		mySolution = solution;
 	}
 	
-//	public void setPerturbations(List<AbstractPerturbation> perturbations) {
-//		myPerturbations = perturbations;
-//	}
-//
-//	public List<AbstractPerturbation> getPerturbations() {
-//		return Collections.unmodifiableList(myPerturbations);
-//	}
-	
 	public void setStories(AbstractStories stories) {
 		myStories = stories;
-	}
-
-	public void addStories(String name) {
-		byte index = 0;
-		List<Integer> ruleDs = new ArrayList<Integer>();
-		for (AbstractRule rule : myRules) {
-			if ((rule.getName() != null)
-					&& (rule.getName().startsWith(name) && ((name.length() == rule
-							.getName().length()) || ((rule.getName()
-							.startsWith(name + "_op")) && ((name.length() + 3) == rule
-							.getName().length()))))) {
-				ruleDs.add(rule.getID());
-				index++;
-			}
-			if (index == 2) {
-				myStories.addToStories(ruleDs);
-				return;
-			}
-		}
-		myStories.addToStories(ruleDs);
 	}
 
 	public void setRules(Collection<AbstractRule> rules) {
@@ -87,5 +59,23 @@ public class KappaModel {
 
 	public void setObservables(AbstractObservables observables) {
 		myObservables = observables;
+	}
+	
+	public void setPerturbations(List<AbstractPerturbation> perturbations) {
+		myPerturbations = perturbations;
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		for (AbstractRule rule : myRules) {
+			sb.append(rule + "\n");
+		}
+		sb.append("\n" + mySolution + "\n");
+		sb.append(myObservables + "\n");
+		sb.append(myStories + "\n");
+		for (AbstractPerturbation perturbation : myPerturbations) {
+			sb.append(perturbation + "\n");
+		}
+		return sb.toString();
 	}
 }

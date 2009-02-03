@@ -7,6 +7,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
@@ -45,17 +46,20 @@ public class Initializator {
 		return args;
 	}
 	
-	public void reset(String filePath) {
+	public SimulationArguments prepareDefaultArguments(String filePath) throws ParseException{
 		String[] testArgs = prepareTestArgs(filePath);
 		SimulatorCommandLine commandLine = null;
+		commandLine = new SimulatorCommandLine(testArgs);
+		return commandLine.getSimulationArguments();
+	}
+	
+	public void reset(String filePath) {
 		try {
-			commandLine = new SimulatorCommandLine(testArgs);
+			mySimulator.getSimulationData().setSimulationArguments(InfoType.OUTPUT, prepareDefaultArguments(filePath));
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);
 		}
-		
-		mySimulator.getSimulationData().setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
 		mySimulator.resetSimulation(InfoType.OUTPUT);
 	}
 	

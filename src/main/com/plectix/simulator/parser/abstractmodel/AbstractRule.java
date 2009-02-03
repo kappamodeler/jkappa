@@ -2,9 +2,7 @@ package com.plectix.simulator.parser.abstractmodel;
 
 import java.util.*;
 
-import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.parser.util.StringUtil;
 
 public class AbstractRule implements IAbstractComponent {
 	private final String myName;
@@ -12,8 +10,8 @@ public class AbstractRule implements IAbstractComponent {
 	private final List<AbstractAgent> myRHS;
 	private final double myRate;
 	private final int myId;
-	private static final IConnectedComponent EMPTY_LHS_CC = new CConnectedComponent(
-			CConnectedComponent.EMPTY);
+//	private static final IConnectedComponent EMPTY_LHS_CC = new CConnectedComponent(
+//			CConnectedComponent.EMPTY);
 	private final boolean myIsStorify;
 	
 	public AbstractRule(List<AbstractAgent> left,
@@ -51,5 +49,17 @@ public class AbstractRule implements IAbstractComponent {
 
 	public boolean isStorify() {
 		return myIsStorify;
+	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		Collections.sort(myLHS);
+		Collections.sort(myRHS);
+		sb.append("'" + myName + "' ");
+		sb.append(StringUtil.listToString(myLHS));
+		sb.append(" -> ");
+		sb.append(StringUtil.listToString(myRHS));
+		
+		return sb.toString();
 	}
 }

@@ -11,4 +11,12 @@ public class ObservableRuleLineData extends ObservablesLineData {
 	public String getRuleName() {
 		return myRuleName;
 	}
+	
+	
+	//-----------------------toString--------------------------
+	
+	
+	public String toString() {
+		return "'" + myRuleName + "'";
+	}
 }

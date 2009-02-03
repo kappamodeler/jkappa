@@ -2,16 +2,6 @@ package com.plectix.simulator.parser.abstractmodel;
 
 import java.util.*;
 
-import com.plectix.simulator.components.ObservablesConnectedComponent;
-import com.plectix.simulator.components.ObservablesRuleComponent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IObservables;
-import com.plectix.simulator.interfaces.IObservablesComponent;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.simulator.SimulationUtils;
-
-//copypaste =(
 public class AbstractObservables implements IAbstractComponent {
 	private final List<ObservableComponentLineData> myComponents 
 						= new LinkedList<ObservableComponentLineData>();
@@ -38,14 +28,17 @@ public class AbstractObservables implements IAbstractComponent {
 		return myComponents;
 	}
 	
-//	public void addRulesName(String name, int obsRuleNameID, Collection<AbstractRule> rules) {
-//		for (AbstractRule rule : rules) {
-//			if ((rule.getName() != null) && (rule.getName().equals(name))) {
-//				ObservablesRuleComponent obsRC = new ObservablesRuleComponent(
-//						rule, obsRuleNameID);
-//				componentList.add(obsRC);
-//			}
-//		}
-//	}
+	//-------------------toString-------------------------
 	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		
+		for (ObservableRuleLineData ruleData : myRules) {
+			sb.append("%obs: " + ruleData + "\n");
+		}
+		for (ObservableComponentLineData componentData : myComponents) {
+			sb.append("%obs: " + componentData + "\n");
+		}
+		return sb.toString();
+	}
 }

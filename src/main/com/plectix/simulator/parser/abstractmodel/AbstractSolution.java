@@ -3,8 +3,6 @@ package com.plectix.simulator.parser.abstractmodel;
 import java.util.*;
 
 import com.plectix.simulator.components.SolutionLines;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.ISolution;
 
 public class AbstractSolution implements IAbstractComponent {
 	//Long - counter, List - connectedcomponent
@@ -17,10 +15,6 @@ public class AbstractSolution implements IAbstractComponent {
 		myAgents.add(new SolutionLineData(agents, quant));
 	}
 
-//	public Map<Long, List<IAgent>> getAgents() {
-//		return Collections.unmodifiableMap(myAgents);
-//	}
-	
 	public List<SolutionLineData> getAgents() {
 		return myAgents;
 	}
@@ -43,5 +37,16 @@ public class AbstractSolution implements IAbstractComponent {
 		}
 		mySolutionLines.add(new SolutionLines(line, count));
 
+	}
+	
+	
+	//--------------toString-----------------------------------
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		for (SolutionLineData line : myAgents) {
+			sb.append("%init: " + line + "\n");
+		}
+		return sb.toString();
 	}
 }

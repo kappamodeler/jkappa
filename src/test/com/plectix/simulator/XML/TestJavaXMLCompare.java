@@ -2,6 +2,8 @@ package com.plectix.simulator.XML;
 
 import org.junit.*;
 
+import com.plectix.simulator.util.FileDirComparator;
+
 public class TestJavaXMLCompare {
 	
 //	@Before

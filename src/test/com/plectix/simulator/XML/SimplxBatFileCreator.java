@@ -23,12 +23,11 @@ public class SimplxBatFileCreator {
 		try {
 			pw = new PrintWriter(out);
 			if (!dir.exists() || !dir.isDirectory()) {
-				System.out.println("ONO");
+				//System.out.println("ONO");
 			}
 			int i = 0;
 			for (String file : dir.list()) {
 				if (file.endsWith(".ka")) {
-					System.out.println(file);
 					pw.println(prefix + "\"source_ka/" + file + "\"" 
 							+ time + myTime[i] + xml + file + "_simplx.xml\"");
 					i++;

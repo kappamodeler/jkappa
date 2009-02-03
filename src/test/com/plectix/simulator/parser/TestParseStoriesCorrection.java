@@ -75,7 +75,6 @@ public class TestParseStoriesCorrection {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);
 		}
-		System.out.println(filePath);
 		
 		mySimulator.getSimulationData().setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
 		mySimulator.resetSimulation(InfoType.OUTPUT);

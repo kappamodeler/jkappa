@@ -1,4 +1,4 @@
-package com.plectix.simulator.XML;
+package com.plectix.simulator.util;
 
 import java.io.*;
 import com.plectix.simulator.util.*;

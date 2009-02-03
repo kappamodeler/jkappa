@@ -8,14 +8,13 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.*;
 import org.junit.runner.RunWith;
 
-import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
 @RunWith(Parameterized.class)
 public class TestInjectionsQuantity extends TestInjections  {
 	private String myNameParameter;
-	private static Map<String, Integer> myDataMap = new HashMap<String, Integer>();
+	private static Map<String, Integer> myDataMap = new TreeMap<String, Integer>();
 	private IObservablesConnectedComponent myCurrentCC;
 	private Failer myFailer = new Failer();
 	

@@ -31,27 +31,24 @@ public class KappaModelCreator {
 			model.setSolution(solution);
 		}
 
-//		System.out.println(myAgentFactory.getCurrentId());
+		// System.out.println(myAgentFactory.getCurrentId());
 		Collection<AbstractRule> rules = (new RulesParagraphReader(model,
 				myArguments, myAgentFactory)).addComponent(file.getRules());
 		model.setRules(rules);
 
-		if ((model.getStories() == null)
-				&& (myArguments.getSimulationType() == SimulationType.STORIFY)) {
-			AbstractStories stories = (new StoriesParagraphReader(model,
-					myArguments, myAgentFactory)).addComponent(file
-					.getStories());
-			model.setStories(stories);
-		} else {
-			AbstractObservables observables = (new ObservablesParagraphReader(
-					model, myArguments, myAgentFactory)).addComponent(file
-					.getObservables());
-			model.setObservables(observables);
-		}
-//		List<AbstractPerturbation> perturbations = (new PerturbationsParagraphReader(
-//				model, myArguments, myAgentFactory)).addComponent(file
-//				.getPerturbations());
-//		model.setPerturbations(perturbations);
+		AbstractStories stories = (new StoriesParagraphReader(model,
+				myArguments, myAgentFactory)).addComponent(file.getStories());
+		model.setStories(stories);
+
+		AbstractObservables observables = (new ObservablesParagraphReader(
+				model, myArguments, myAgentFactory)).addComponent(file
+				.getObservables());
+		model.setObservables(observables);
+
+		List<AbstractPerturbation> perturbations = (new PerturbationsParagraphReader(
+				model, myArguments, myAgentFactory)).addComponent(file
+				.getPerturbations());
+		model.setPerturbations(perturbations);
 
 		return model;
 	}

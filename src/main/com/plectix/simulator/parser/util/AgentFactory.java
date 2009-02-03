@@ -1,19 +1,15 @@
 package com.plectix.simulator.parser.util;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkStatus;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
+import com.plectix.simulator.parser.abstractmodel.AbstractSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
@@ -39,7 +35,7 @@ public class AgentFactory {
 		// throw new ParseErrorException();
 
 		StringTokenizer st = new StringTokenizer(line, "),");
-		Map<Integer, CSite> map = new HashMap<Integer, CSite>();
+		Map<Integer, AbstractSite> map = new HashMap<Integer, AbstractSite>();
 		StringTokenizer agent;
 		String ccomp;
 		String site;
@@ -73,10 +69,8 @@ public class AgentFactory {
 			}
 		}
 		if (!map.isEmpty()) {
-			CSite errSite = (CSite) map.values().toArray()[0];
-			throw new ParseErrorException("Unexpected Link State: '"
-					+ errSite.getName() + "' from Agent: '"
-					+ errSite.getAgentLink().getName() + "'");
+//			AbstractSite errSite = (AbstractSite) map.values().toArray()[0];
+			throw new ParseErrorException("Wrong co-ordination of connections : " + line);
 		}
 		if (!AgentFormatChecker.check(line))
 			throw new ParseErrorException("Unexpected line : " + line);
@@ -84,16 +78,14 @@ public class AgentFactory {
 		// return Collections.unmodifiableList(listAgent);
 	}
 
-	private final CSite parseSome(String site, Map<Integer, CSite> map)
+	private final AbstractSite parseSome(String line, Map<Integer, AbstractSite> map)
 			throws ParseErrorException {
-		String line = site;
 		String state = null;
 		String connect = null;
 		DataString dt = null;
-		CSite csite = null;
 
-		dt = parseLine(site, SitePropertyKey.INTERNAL_STATE);
-		site = dt.getSt1();
+		dt = parseLine(line, SitePropertyKey.INTERNAL_STATE);
+		line = dt.getSt1();
 		state = dt.getSt2();
 		if (state != null) {
 			dt = parseLine(state, SitePropertyKey.CONNECTION);
@@ -102,22 +94,22 @@ public class AgentFactory {
 				throw new ParseErrorException(
 						"Unexpected internal state name : " + line);
 		} else {
-			dt = parseLine(site, SitePropertyKey.CONNECTION);
-			site = dt.getSt1();
+			dt = parseLine(line, SitePropertyKey.CONNECTION);
+			line = dt.getSt1();
 		}
 		connect = dt.getSt2();
-		if (!site.trim().matches(PATTERN_AGENT_SITE))
+		if (!line.trim().matches(PATTERN_AGENT_SITE))
 			throw new ParseErrorException("Unexpected site name : " + line);
 
 		final int siteNameId = ThreadLocalData.getNameDictionary()
-				.addName(site);
-		csite = new CSite(siteNameId);
+				.addName(line);
+		AbstractSite csite = new AbstractSite(siteNameId);
 
 		if (state != null)
 			if ((state.length() != 0) && state.trim().matches(PATTERN_STATE)) {
 				final int nameId = ThreadLocalData.getNameDictionary().addName(
 						state);
-				csite.setInternalState(new CInternalState(nameId));
+				csite.setInternalState(nameId);
 			} else {
 				throw new ParseErrorException(
 						"Unexpected internal state name : " + line);
@@ -131,7 +123,7 @@ public class AgentFactory {
 			} else {
 				try {
 					int index = Integer.valueOf(connect);
-					CSite isite = map.get(index);
+					AbstractSite isite = map.get(index);
 					if (isite != null) {
 						isite.getLinkState().setSite(csite);
 						csite.getLinkState().setSite(isite);

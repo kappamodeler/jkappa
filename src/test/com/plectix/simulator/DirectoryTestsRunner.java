@@ -20,9 +20,10 @@ public abstract class DirectoryTestsRunner extends TestRunner {
 				}
 			}
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			org.junit.Assert.fail("Cannot instantiate fileName parameters");
 		}
-		return Collections.unmodifiableList(parameters);
+		//return Collections.unmodifiableList(parameters);
+		return parameters;
 	}
 
 	public abstract String getPrefixFileName();

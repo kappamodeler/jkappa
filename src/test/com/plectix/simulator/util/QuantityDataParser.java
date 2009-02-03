@@ -1,8 +1,6 @@
 package com.plectix.simulator.util;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class QuantityDataParser extends Parser<Map<String, Integer>> {
 	private EasyFileReader myReader = getFileReader();
@@ -12,8 +10,8 @@ public class QuantityDataParser extends Parser<Map<String, Integer>> {
 	}
 
 	@Override
-	protected Map<String, Integer> unsafeParse() {
-		Map<String, Integer> map = new HashMap<String, Integer>();
+	protected Map<String, Integer> unsafeParse() throws NumberFormatException {
+		Map<String, Integer> map = new TreeMap<String, Integer>();
 
 		String line = myReader.getStringFromFile();
 		String currentName = "";
@@ -23,13 +21,7 @@ public class QuantityDataParser extends Parser<Map<String, Integer>> {
 			if (!"".equals(line)) {
 				String[] data = line.split(" - ");
 				currentName = data[0];
-				try {
-					value = Integer.parseInt(data[1]);
-				} catch (NumberFormatException e) {
-					System.err.println(data[1] + " is not an integer!");
-				} catch (Exception ne) {
-					System.out.println(ne.getMessage() + " at " + line);
-				}
+				value = Integer.parseInt(data[1]);
 
 				map.put(currentName.intern(), value);
 			}

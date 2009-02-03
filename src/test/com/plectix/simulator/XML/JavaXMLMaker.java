@@ -76,7 +76,7 @@ public final class JavaXMLMaker {
 		try {
 			xmlMaker.make();
 		} catch(Exception e) {
-			System.out.println(e);
+			//System.out.println(e);
 		}
 	}
 }

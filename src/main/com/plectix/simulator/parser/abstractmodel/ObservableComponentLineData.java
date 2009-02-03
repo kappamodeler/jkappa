@@ -1,6 +1,9 @@
 package com.plectix.simulator.parser.abstractmodel;
 
+import java.util.Collections;
 import java.util.List;
+
+import com.plectix.simulator.parser.util.StringUtil;
 
 public class ObservableComponentLineData extends ObservablesLineData{
 	private final List<AbstractAgent> myAgents;
@@ -24,5 +27,17 @@ public class ObservableComponentLineData extends ObservablesLineData{
 	
 	public String getLine() {
 		return myLine;
+	}
+	
+	//-----------------toString--------------
+	
+	public String toString() {
+		Collections.sort(myAgents);
+		StringBuffer sb = new StringBuffer();
+		if (myName != null) {
+			sb.append("'" + myName + "' ");
+		}
+		sb.append(StringUtil.listToString(myAgents));
+		return sb.toString();
 	}
 }
