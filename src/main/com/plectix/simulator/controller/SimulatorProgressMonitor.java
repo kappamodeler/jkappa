@@ -24,9 +24,10 @@ public class SimulatorProgressMonitor implements SimulatorCallableListener {
 
     //**********************************************************************************************************
     /**
-     * @param simulator 
-     * @param listener 
-     * 
+     * @param simulatorFactoryInterface 
+     * @param simulationInputDataList 
+     * @param listener
+     * @param executorCompletionService
      */
     public SimulatorProgressMonitor(SimulatorFactoryInterface simulatorFactoryInterface, 
     		List<SimulatorInputData> simulationInputDataList,

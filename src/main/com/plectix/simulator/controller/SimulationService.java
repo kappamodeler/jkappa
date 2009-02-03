@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * This class runs jobs in a thread pool. The thread pool is created only once, when any one
  * of the constructors are called and then its size can not be changed again. The default
  * size is the number of available processors on the system. One can submit simulation
- * jobs to this class, and monitor their progress either through using callback functions, 
+ * jobs to this class, and monitor their progress either through using call-back functions, 
  * blocking calls to this class, or looping over non-blocking calls to this class.
  * 
  * @author ecemis
@@ -30,7 +30,7 @@ public class SimulationService {
 	 * to create new Simulators to work in parallel threads. The first call to any one
 	 * of the constructors creates the thread pool whose size can not be changed.
 	 * 
-	 * @param simulatorInterface
+	 * @param simulatorFactoryInterface
 	 */
 	public SimulationService(SimulatorFactoryInterface simulatorFactoryInterface) {
 		this(simulatorFactoryInterface, DEFAULT_NUMBER_OF_THREADS);
@@ -41,7 +41,8 @@ public class SimulationService {
 	 * to create new Simulators to work in parallel threads. The first call to any one
 	 * of the constructors creates the thread pool whose size can not be changed.
 	 * 
-	 * @param simulatorInterface
+	 * @param simulatorFactoryInterface
+	 * @param numberOfThreads
 	 */
 	public SimulationService(SimulatorFactoryInterface simulatorFactoryInterface, int numberOfThreads) {
 		if (simulatorFactoryInterface == null) {
@@ -55,13 +56,13 @@ public class SimulationService {
 	}
 	
 	/**
-	 * 
 	 * Submits simulatorInputData to get executed by the thread pool and returns an ID to query the
 	 * job progress. The progress can also be monitored through the callback functions of the
 	 * listener passed to this method.
 	 *  
 	 * @param simulatorInputData
-	 * @return
+	 * @param listener
+	 * @return the job ID to query the progress
 	 */
 	public long submit(SimulatorInputData simulatorInputData, SimulatorCallableListener listener) {
 		SimulatorCallable simulatorCallable = new SimulatorCallable(simulatorFactory.createSimulator(), simulatorInputData, listener);
@@ -74,10 +75,11 @@ public class SimulationService {
 	}
 	
 	/**
+	 * Submits a collection of jobs to run.
 	 * 
 	 * @param simulationInputDataList
 	 * @param listener
-	 * @return
+	 * @return a {@link SimulatorProgressMonitor}
 	 */
 	public SimulatorProgressMonitor submit(List<SimulatorInputData> simulationInputDataList, SimulatorCallableListener listener) {
 		SimulatorProgressMonitor progressMonitor = new SimulatorProgressMonitor(
@@ -94,7 +96,7 @@ public class SimulationService {
 	 * @param jobID
 	 * @param timeout
 	 * @param unit
-	 * @return
+	 * @return the result of the simulation as {@link SimulatorResultsData}
 	 */
 	public SimulatorResultsData getSimulatorResultsData(long jobID, long timeout, TimeUnit unit) {
 		SimulatorFutureTask futureTask = callablesMap.get(jobID);
@@ -121,7 +123,7 @@ public class SimulationService {
 	 * <code>Double.NaN</code> if the job doesn't exist.
 	 * 
 	 * @param jobID
-	 * @return
+	 * @return the current time
 	 */
 	public double getCurrentTime(long jobID) {
 		SimulatorFutureTask futureTask = callablesMap.get(jobID);
@@ -169,8 +171,9 @@ public class SimulationService {
 	
 	/**
 	 * Returns true if this job doesn't exist or was canceled before it completed normally. 
+	 * 
 	 * @param jobID
-	 * @return
+	 * @return true if this job doesn't exist or was canceled before it completed normally. 
 	 */
 	public boolean isCancelled(long jobID) {
 		SimulatorFutureTask futureTask = callablesMap.get(jobID);
@@ -183,8 +186,9 @@ public class SimulationService {
 	/**
 	 * Returns true if this task completed. Completion may be due to normal termination, 
 	 * an exception, or cancellation -- in all of these cases, this method will return true. 
+	 * 
 	 * @param jobID
-	 * @return
+	 * @return true if this task completed. 
 	 */
 	public boolean isDone(long jobID) {
 		SimulatorFutureTask futureTask = callablesMap.get(jobID);

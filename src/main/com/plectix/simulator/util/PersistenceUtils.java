@@ -90,7 +90,7 @@ public class PersistenceUtils {
 	/**
 	 * 
 	 * @param filename
-	 * @return
+	 * @return the object read from the binary file
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
@@ -134,7 +134,7 @@ public class PersistenceUtils {
 	 * 
 	 * @param filename
 	 * @param zipped
-	 * @return
+	 * @return an input stream
 	 * @throws IOException
 	 */
 	public static InputStream getInputStream(String filename, boolean zipped)
@@ -155,7 +155,7 @@ public class PersistenceUtils {
 	 * 
 	 * @param filename
 	 * @param zipped
-	 * @return
+	 * @return an output stream
 	 * @throws IOException
 	 */
 	public static OutputStream getOutputStream(String filename, boolean zipped)
@@ -194,7 +194,7 @@ public class PersistenceUtils {
 	// ************************************************************************************
 	/**
 	 * 
-	 * @param clazz
+	 * @param object
 	 */
 	public static final void addAlias(Object object) {
 		initialize();
@@ -286,7 +286,7 @@ public class PersistenceUtils {
 	 * for enumerating field for objects that have an otherwise prohibitively
 	 * large number of members.
 	 * 
-	 * @Throws Error
+	 * @throws Error
 	 *             if a field is not accessible, typically because runtime
 	 *             security settings prevent access to private fields. Also
 	 *             fails if a field name is repeated in a class's hierarchy.

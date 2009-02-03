@@ -24,7 +24,8 @@ public class SimulatorCallableExitReport {
     //***********************************************************************************
     /**
      * This is wall clock time.
-     * @return
+     * 
+     * @return the total runtime for this job
      */
     public int getRunTimeInMillis() {
         if (startTimestamp == Long.MIN_VALUE || endTimestamp == Long.MIN_VALUE) {

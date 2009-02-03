@@ -9,10 +9,17 @@ import com.plectix.simulator.util.PersistenceUtils;
 
 public class SimulationArguments {
 
-	public static final byte DEFAULT_SEED = -1;
-	public static final int DEFAULT_MAX_CLASHES = 100;
+	public static final int NUMBER_OF_MILLISECONDS_IN_SECOND = 1000;
+	public static final int NUMBER_OF_MILLISECONDS_IN_MINUTE = 60 * NUMBER_OF_MILLISECONDS_IN_SECOND;
+	public static final int NUMBER_OF_MILLISECONDS_IN_HOUR = 60 * NUMBER_OF_MILLISECONDS_IN_MINUTE;
+	public static final int NUMBER_OF_MILLISECONDS_IN_DAY = 24 * NUMBER_OF_MILLISECONDS_IN_HOUR;
+	
+	public static final int DEFAULT_SEED = -1;
+	public static final long DEFAULT_MAX_CLASHES = 100;
 	public static final int DEFAULT_NUMBER_OF_POINTS = 1000;
+	public static final long DEFAULT_WALL_CLOCK_TIME_LIMIT = NUMBER_OF_MILLISECONDS_IN_DAY;
 	public static final String DEFAULT_XML_SESSION_NAME = "simplx.xml";
+	public static final String DEFAULT_SERIALIZATION_FILE_NAME = "~tmp.sd";
 
 	public enum SimulationType { 
 		NONE,
@@ -64,10 +71,10 @@ public class SimulationArguments {
 	private boolean storify = false;
 	private boolean forwardOnly = false;
 	private boolean ocamlStyleObservableNames = false;
-	private long clockPrecision = 3600000;
+	private long wallClockTimeLimit = DEFAULT_WALL_CLOCK_TIME_LIMIT;
 	private boolean outputFinalState = false;
 	private String xmlSessionPath = "";
-	private String serializationFileName = "~tmp.sd";
+	private String serializationFileName = DEFAULT_SERIALIZATION_FILE_NAME;
 	private String inputFile = null;
 	private String inputFilename = null;	
 	private String snapshotsTimeString = null;
@@ -129,14 +136,6 @@ public class SimulationArguments {
 	// 
 	//
 	
-	public boolean isShortConsoleOutput() {
-		return shortConsoleOutput;
-	}
-
-	public void setShortConsoleOutput(boolean shortConsoleOutput) {
-		this.shortConsoleOutput = shortConsoleOutput;
-	}
-	
 	public final String getXmlSessionName() {
 		return xmlSessionName;
 	}
@@ -159,6 +158,7 @@ public class SimulationArguments {
 	
 	/**
 	 * Sets the parameter to start taking measures (stories) at indicated time.
+	 * <br><br>
 	 * Corresponds to "--init" option in simplx. Default value is 0.0.
 	 * 
 	 * @param initialTime
@@ -173,6 +173,7 @@ public class SimulationArguments {
 	
 	/**
 	 * Corresponds to "--points" option in simplx. Default value is {@value #DEFAULT_NUMBER_OF_POINTS}.
+	 * 
 	 * @param points
 	 * @see #DEFAULT_NUMBER_OF_POINTS
 	 */
@@ -185,9 +186,12 @@ public class SimulationArguments {
 	}
 
 	/**
-	 * Sets the rescaling factor.
+	 * Sets the rescaling factor for the initial condition.
+	 * The counts for all species are multiplied by the given factor when creating the initial condition.
+	 * <br><br>
 	 * Corresponds to "--rescale" option in simplx. 
-	 * @param points
+	 * 
+	 * @param rescale
 	 */
 	public final void setRescale(double rescale) {
 		this.rescale = rescale;
@@ -199,12 +203,12 @@ public class SimulationArguments {
 	
 	/**
 	 * Sets the seed for the random number generator.
-	 * Same integer will generate the same random number sequence, except #DEFAULT_SEED
-	 * which uses a random seed. 
-	 * 
+	 * Same integer will generate the same random number sequence, 
+	 * except when set to {@link #DEFAULT_SEED} which sets a random seed for each simulation. 
 	 * <br><br>
 	 * Corresponds to "--seed" option in simplx. 
 	 * Default value is {@value #DEFAULT_SEED} which sets a random seed each time.
+	 * 
 	 * @param seed
 	 * @see #DEFAULT_SEED
 	 */
@@ -228,6 +232,7 @@ public class SimulationArguments {
 	 * that we have a deadlock and we stop the simulation.
 	 * <br><br>
 	 * Corresponds to "--max-clashes" option in simplx. Default value is {@value #DEFAULT_MAX_CLASHES}.
+	 * 
 	 * @param maxClashes
 	 * @see #DEFAULT_MAX_CLASHES
 	 */
@@ -240,7 +245,9 @@ public class SimulationArguments {
 	}
 	
 	/**
-	 * Sets whether the simulation would run up to certain time or to a certain number of events.
+	 * Sets whether the simulation would run up to a certain time or to a certain number of events.
+	 * If "--time" option is specified on the command line, it is set to <code>true</code>. 
+	 * If "--event" option is specified on the command line, it is set to <code>false</code>.
 	 * 
 	 * @param isTime
 	 * @see #setTimeLength(double)
@@ -276,23 +283,32 @@ public class SimulationArguments {
 	 * This parameter is discarded if the simulation is time-based.
 	 * <br><br>
 	 * Corresponds to "--event" option in simplx. 
+	 * 
 	 * @param event
 	 * @see #isTime()
 	 */
 	public final void setEvent(long event) {
 		this.event = event;
 	}
-	
-	public final int getIterations() {
-		return iterations;
-	}
-	public final void setIterations(int iterations) {
-		this.iterations = iterations;
-	}
+
 	
 	public final String getRandomizer() {
 		return randomizer;
 	}
+	
+	/**
+	 * Registers an optional executable to use as an external random number generator.
+	 * <br><br>
+	 * If set to <code>null</code>, 
+	 * {@link <a href="http://java.sun.com/javase/6/docs/api/java/util/Random.html">java.util.Random</a>} 
+	 * is used as the random number generator.
+	 * Otherwise, the given randomizer is run in a new process through 
+	 * <code>Runtime.getRuntime().exec(randomizer)</code> and its output is scanned to get random numbers.
+	 * <br><br>
+	 * The default value is <code>null</code>.
+	 * 
+	 * @param randomizer
+	 */
 	public final void setRandomizer(String randomizer) {
 		this.randomizer = randomizer;
 	}
@@ -300,102 +316,225 @@ public class SimulationArguments {
 	public final boolean isActivationMap() {
 		return activationMap;
 	}
+	
+	/**
+	 * If set to <code>true</code>, the Activation Map (also known as Influence Map) is computed 
+	 * and saved into the output XML file.
+	 * 
+	 * @param activationMap
+	 */
 	public final void setActivationMap(boolean activationMap) {
 		this.activationMap = activationMap;
 	}
+	
 	public final boolean isInhibitionMap() {
 		return inhibitionMap;
 	}
+	
+	/**
+	 * If set to <code>true</code>, the Inhibition Map is computed 
+	 * and saved into the output XML file.
+	 * @param inhibitionMap
+	 */
 	public final void setInhibitionMap(boolean inhibitionMap) {
 		this.inhibitionMap = inhibitionMap;
 	}
+	
 	public final boolean isCompile() {
 		return compile;
 	}
+	
+	/**
+	 * If set to <code>true</code>, rules, perturbations and the initial condition are compiled 
+	 * and dumped to the output stream. This is needed for debugging purposes.
+	 * <br><br>
+	 * Corresponds to the "--compile" option of simplx.
+	 * 
+	 * @param compile
+	 */
 	public final void setCompile(boolean compile) {
 		this.compile = compile;
 	}
+	
 	public final boolean isDebugInit() {
 		return debugInit;
 	}
+	
+	/**
+	 * 	Corresponds to the "--debug" option of simplx. 
+	 *  Program exits right after the initialization phase. Used mainly for debugging.
+	 * 	
+	 * @param debugInitOption
+	 */
 	public final void setDebugInit(boolean debugInitOption) {
 		this.debugInit = debugInitOption;
 	}
+	
 	public final boolean isGenereteMap() {
 		return genereteMap;
 	}
+	
 	public final void setGenereteMap(boolean genereteMapOption) {
 		this.genereteMap = genereteMapOption;
 	}
+	
 	public final boolean isContactMap() {
 		return contactMap;
 	}
+	
 	public final void setContactMap(boolean contactMapOption) {
 		this.contactMap = contactMapOption;
 	}
+	
 	public final boolean isNumberOfRuns() {
 		return numberOfRuns;
 	}
+	
 	public final void setNumberOfRuns(boolean numberOfRunsOption) {
 		this.numberOfRuns = numberOfRunsOption;
 	}
+	
 	public final boolean isStorify() {
 		return storify;
 	}
+	
+	/**
+	 * If set to <code>true</code>, the simulator runs in the Stories mode.
+	 * 
+	 * Corresponds to the "--storify" option of simplx.
+	 * 
+	 * @param storifyOption
+	 */
 	public final void setStorify(boolean storifyOption) {
 		this.storify = storifyOption;
 	}
+	
 	public final boolean isForwardOnly() {
 		return forwardOnly;
 	}
+	
+	/**
+	 * If set to <code>true</code>, the simulator does not consider backward rules.
+	 * <br><br>
+	 * Corresponds to the "--forward" option of simplx.
+	 * 
+	 * @param forwardOption
+	 */
 	public final void setForwardOnly(boolean forwardOption) {
 		this.forwardOnly = forwardOption;
 	}
+	
 	public final boolean isOcamlStyleObservableNames() {
 		return ocamlStyleObservableNames;
 	}
+	
+	/**
+	 * If <code>true</code>, the observable names match those of simplx.
+	 * <br><br>
+	 * Our OCaml simulator, simplx, doesn't keep the observable names specified in the Kappa file
+	 * but rewrites them in the Plot Text argument of the XML output file. For example:
+	 * <br><br>
+	 * <code> %obs: A(r,l)</code>
+	 * <br><br>
+	 * in a Kappa file is plotted as <code>A(l,r)</code> by simplx.
+	 * Under simplx, the internal representation of the sites is a Set and 
+	 * simplx doesn't have access to the original strings once they are compiled.
+	 * <br><br>
+	 * Through this option, the original names mentioned in the Kappa file are converted to simplx-style 
+	 * names when they are written to the output file. The conversion
+	 * <br><br>
+	 * <li> orders the site names alphabetically,
+	 * <li> removes all unnecessary white spaces, and
+	 * <li> relabels all link numbers starting from 0 at the left hand side and then incrementing it to the right.
+	 * <br><br>
+	 * The default option is to save the names as they appear in the Kappa file. 
+	 * @param ocamlStyleObservableNames
+	 */
 	public final void setOcamlStyleObservableNames(boolean ocamlStyleObservableNames) {
 		this.ocamlStyleObservableNames = ocamlStyleObservableNames;
 	}
-	public final long getClockPrecision() {
-		return clockPrecision;
+	
+	public final long getWallClockTimeLimit() {
+		return wallClockTimeLimit;
 	}
-	public final void setClockPrecision(long clockPrecision) {
-		this.clockPrecision = clockPrecision;
+	
+	/**
+	 * Registers a wall clock time limit in milliseconds. 
+	 * The simulation is interrupted if it lasts more than this limit.
+	 * The default value is {@value #DEFAULT_WALL_CLOCK_TIME_LIMIT}. 
+	 * 
+	 * @param wallClockTimeLimit
+	 * @see #DEFAULT_WALL_CLOCK_TIME_LIMIT
+	 */
+	public final void setWallClockTimeLimit(long wallClockTimeLimit) {
+		this.wallClockTimeLimit = wallClockTimeLimit;
 	}
+	
 	public final boolean isOutputFinalState() {
 		return outputFinalState;
 	}
+	
+	/**
+	 * Corresponds to the "--output_final_state" option of simplx. 
+	 * Same as using --set-snapshot-time for the last time unit.
+	 * 
+	 * @param outputFinalState
+	 */
 	public final void setOutputFinalState(boolean outputFinalState) {
 		this.outputFinalState = outputFinalState;
 	}
+	
 	public final String getXmlSessionPath() {
 		return xmlSessionPath;
 	}
+	
+	/**
+	 * Sets the current directory to save the output data.
+	 * <br><br>
+	 * Corresponds to "--output-scheme" option in simplx. 
+	 * @param xmlSessionPath
+	 */
 	public final void setXmlSessionPath(String xmlSessionPath) {
 		this.xmlSessionPath = xmlSessionPath;
 	}
+	
 	public final String getSerializationFileName() {
 		return serializationFileName;
 	}
+	
+	/**
+	 * Corresponds to the "--save_all" option of simplx which requires
+	 * an argument as the name of the file in which to save the whole 
+	 * initialization's marshalling (including influence maps).
+	 * The default value is {@value #DEFAULT_SERIALIZATION_FILE_NAME}.
+	 * 
+	 * @param serializationFileName
+	 * @see #DEFAULT_SERIALIZATION_FILE_NAME
+	 */
 	public final void setSerializationFileName(String serializationFileName) {
 		this.serializationFileName = serializationFileName;
 	}
+	
 	public final String getInputFilename() {
 		return inputFilename;
 	}
+	
 	public final void setInputFilename(String inputFile) {
 		this.inputFilename = inputFile;
 	}
+	
 	public final String getSnapshotsTimeString() {
 		return snapshotsTimeString;
 	}
+	
 	public final void setSnapshotsTimeString(String snapshotsTimeString) {
 		this.snapshotsTimeString = snapshotsTimeString;
 	}
+	
 	public final String getFocusFilename() {
 		return focusFilename;
 	}
+	
 	public final void setFocusFilename(String focusFilename) {
 		this.focusFilename = focusFilename;
 	}
@@ -435,6 +574,11 @@ public class SimulationArguments {
 		return noDumpStdoutStderr;
 	}
 
+	/**
+	 * If <code>true</code>, nothing is dumped into either standard output or standard error.
+	 * 
+	 * @param noDumpStdoutStderr
+	 */
 	public final void setNoDumpStdoutStderr(boolean noDumpStdoutStderr) {
 		this.noDumpStdoutStderr = noDumpStdoutStderr;
 	}
@@ -443,6 +587,11 @@ public class SimulationArguments {
 		return help;
 	}
 
+	/**
+	 * If <code>true</code>, the usage information is dumped into the output stream.
+	 * 
+	 * @param help
+	 */
 	public final void setHelp(boolean help) {
 		this.help = help;
 	}
@@ -451,6 +600,13 @@ public class SimulationArguments {
 		return version;
 	}
 
+	/**
+	 * If <code>true</code>, the version number is dumped into the output stream.
+	 * <br><br>
+	 * Corresponds to the "--version" option of simplx.
+	 * 
+	 * @param version
+	 */
 	public final void setVersion(boolean version) {
 		this.version = version;
 	}
@@ -461,5 +617,26 @@ public class SimulationArguments {
 
 	public final void setInputFile(String inputFile) {
 		this.inputFile = inputFile;
+	}
+	
+	public final int getIterations() {
+		return iterations;
+	}
+	
+	public final void setIterations(int iterations) {
+		this.iterations = iterations;
+	}
+	
+	public boolean isShortConsoleOutput() {
+		return shortConsoleOutput;
+	}
+
+	/**
+	 * If set to <code>true</code>, the console output is reduced.
+	 * 
+	 * @param shortConsoleOutput
+	 */
+	public void setShortConsoleOutput(boolean shortConsoleOutput) {
+		this.shortConsoleOutput = shortConsoleOutput;
 	}
 }

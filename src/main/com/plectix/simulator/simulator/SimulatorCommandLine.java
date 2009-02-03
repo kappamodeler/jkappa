@@ -7,8 +7,6 @@ import org.apache.commons.cli.PosixParser;
 
 
 public class SimulatorCommandLine {
-	public static final int CLOCK_PRECISION_MULTIPLIER = 60000;
-
 	private final String commandLineString;
 	
 	private final CommandLine commandLine;
@@ -178,8 +176,8 @@ public class SimulatorCommandLine {
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.AVERAGE_OF_RUNS);
 		}
 
-		if (hasOption(SimulatorOptions.CLOCK_PRECISION)) {
-			simulationArguments.setClockPrecision(CLOCK_PRECISION_MULTIPLIER * getLongValue(SimulatorOptions.CLOCK_PRECISION));
+		if (hasOption(SimulatorOptions.WALL_CLOCK_TIME_LIMIT)) {
+			simulationArguments.setWallClockTimeLimit(getLongValue(SimulatorOptions.WALL_CLOCK_TIME_LIMIT));
 		}
 
 		if (hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {

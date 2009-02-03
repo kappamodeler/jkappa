@@ -69,7 +69,7 @@ public class ExponentialMovingAverage {
 	//*****************************************************************************
 	/**
 	 * 
-	 * @return
+	 * @return the current value
 	 */
 	public double getCurrentValue() {
 		if (itemCount < timePeriod) {
@@ -81,7 +81,7 @@ public class ExponentialMovingAverage {
 	//*****************************************************************************
 	/**
 	 *
-	 * @return
+	 * @return the time period
 	 */
 	public int getTimePeriod() {
 		return timePeriod;
@@ -101,7 +101,7 @@ public class ExponentialMovingAverage {
 	//*****************************************************************************
 	/**
 	 * 
-	 * @return
+	 * @return the name
 	 */
 	public String getName() {
 		return name;

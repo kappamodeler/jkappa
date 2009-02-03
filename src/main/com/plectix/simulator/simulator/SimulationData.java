@@ -278,9 +278,8 @@ public class SimulationData {
 	}
 
 	public final boolean isEndSimulation(double currentTime, long count) {
-		long curClockTime = System.currentTimeMillis();
-		if (curClockTime - clockStamp > simulationArguments.getClockPrecision()) {
-			println("simulation interrupted because the clock time has expired");
+		if (System.currentTimeMillis() - clockStamp > simulationArguments.getWallClockTimeLimit()) {
+			println("Simulation is interrupted because the wall clock time has expired");
 			return true;
 		}
 
@@ -1069,8 +1068,7 @@ public class SimulationData {
 		if (simulationArguments.getSerializationMode() == SimulationArguments.SerializationMode.READ) {
 			ObjectInputStream ois;
 			try {
-				ois = new ObjectInputStream(new FileInputStream(
-						simulationArguments.getSerializationFileName()));
+				ois = new ObjectInputStream(new FileInputStream(simulationArguments.getSerializationFileName()));
 				solution = (CSolution) ois.readObject();
 				rules = (List<IRule>) ois.readObject();
 				observables = (IObservables) ois.readObject();
@@ -1090,8 +1088,7 @@ public class SimulationData {
 		if (simulationArguments.getSerializationMode() == SimulationArguments.SerializationMode.SAVE) {
 			try {
 				ObjectOutputStream oos = new ObjectOutputStream(
-						new FileOutputStream(simulationArguments
-								.getSerializationFileName()));
+						new FileOutputStream(simulationArguments.getSerializationFileName()));
 				oos.writeObject(solution);
 				oos.writeObject(rules);
 				oos.writeObject(observables);
