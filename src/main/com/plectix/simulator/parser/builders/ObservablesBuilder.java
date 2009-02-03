@@ -1,24 +1,17 @@
 package com.plectix.simulator.parser.builders;
 
-import java.util.*;
+import java.util.List;
 
-import com.plectix.simulator.components.CObservables;
-import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservables;
-import com.plectix.simulator.interfaces.IObservablesComponent;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
-import com.plectix.simulator.parser.abstractmodel.AbstractObservableRule;
 import com.plectix.simulator.parser.abstractmodel.AbstractObservables;
 import com.plectix.simulator.parser.abstractmodel.ObservableComponentLineData;
 import com.plectix.simulator.parser.abstractmodel.ObservableRuleLineData;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.util.Converter;
 
 public class ObservablesBuilder {
 	private final SimulationArguments myArguments;

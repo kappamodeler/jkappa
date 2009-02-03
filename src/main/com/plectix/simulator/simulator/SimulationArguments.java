@@ -12,6 +12,7 @@ public class SimulationArguments {
 	public static final byte DEFAULT_SEED = -1;
 	public static final int DEFAULT_MAX_CLASHES = 100;
 	public static final int DEFAULT_NUMBER_OF_POINTS = 1000;
+	public static final String DEFAULT_XML_SESSION_NAME = "simplx.xml";
 
 	public enum SimulationType { 
 		NONE,
@@ -24,8 +25,11 @@ public class SimulationArguments {
 	}
 
 	public enum StorifyMode {
+		/** Sets the mode for stories to No Compression */
 		NONE,
+		/** Sets the mode for stories to Weak Compression */
 		WEAK,
+		/** Sets the mode for stories to Strong Compression */
 		STRONG
 	}
 
@@ -39,7 +43,7 @@ public class SimulationArguments {
 	private boolean help = false;
 	private boolean version = false;
 	private boolean shortConsoleOutput = false;
-	private String xmlSessionName = "simplx.xml";
+	private String xmlSessionName = DEFAULT_XML_SESSION_NAME;
 	private double initialTime = 0.0;
 	private int points = -1;
 	private double rescale = Double.NaN;
@@ -128,7 +132,7 @@ public class SimulationArguments {
 	public boolean isShortConsoleOutput() {
 		return shortConsoleOutput;
 	}
-	
+
 	public void setShortConsoleOutput(boolean shortConsoleOutput) {
 		this.shortConsoleOutput = shortConsoleOutput;
 	}
@@ -136,69 +140,163 @@ public class SimulationArguments {
 	public final String getXmlSessionName() {
 		return xmlSessionName;
 	}
+	
+	/**
+	 * Sets the XML file name where the output is saved.
+	 * <br><br>
+	 * Corresponds to "--xml-session-name" option in simplx. Default value is {@value #DEFAULT_XML_SESSION_NAME}.
+	 * 
+	 * @param xmlSessionName
+	 * @see #DEFAULT_XML_SESSION_NAME
+	 */
 	public final void setXmlSessionName(String xmlSessionName) {
 		this.xmlSessionName = xmlSessionName;
 	}
+	
 	public final double getInitialTime() {
 		return initialTime;
 	}
+	
+	/**
+	 * Sets the parameter to start taking measures (stories) at indicated time.
+	 * Corresponds to "--init" option in simplx. Default value is 0.0.
+	 * 
+	 * @param initialTime
+	 */
 	public final void setInitialTime(double initialTime) {
 		this.initialTime = initialTime;
 	}
+	
 	public final int getPoints() {
 		return points;
 	}
+	
+	/**
+	 * Corresponds to "--points" option in simplx. Default value is {@value #DEFAULT_NUMBER_OF_POINTS}.
+	 * @param points
+	 * @see #DEFAULT_NUMBER_OF_POINTS
+	 */
 	public final void setPoints(int points) {
 		this.points = points;
 	}
+	
 	public final double getRescale() {
 		return rescale;
 	}
+
+	/**
+	 * Sets the rescaling factor.
+	 * Corresponds to "--rescale" option in simplx. 
+	 * @param points
+	 */
 	public final void setRescale(double rescale) {
 		this.rescale = rescale;
 	}
+	
 	public final int getSeed() {
 		return seed;
 	}
+	
+	/**
+	 * Sets the seed for the random number generator.
+	 * Same integer will generate the same random number sequence, except #DEFAULT_SEED
+	 * which uses a random seed. 
+	 * 
+	 * <br><br>
+	 * Corresponds to "--seed" option in simplx. 
+	 * Default value is {@value #DEFAULT_SEED} which sets a random seed each time.
+	 * @param seed
+	 * @see #DEFAULT_SEED
+	 */
 	public final void setSeed(int seed) {
 		this.seed = seed;
 	}
+	
 	public final long getMaxClashes() {
 		return maxClashes;
 	}
+
+	/**
+	 * Sets the maximum number of consecutive clashes before aborting the simulation.
+	 * <br><br>
+	 * When we select a rule, we don't know whether its injections would "clash" with each other. 
+	 * If it does so, then we select a new rule. and most of the time we apply it with no clash... 
+	 * and simulation continues.
+	 * <br><br>
+	 * But sometimes we may have another clash, so we count the number of consecutive 
+	 * clashes until we can apply a rule. if we have maxClashes consecutive clashes we assume 
+	 * that we have a deadlock and we stop the simulation.
+	 * <br><br>
+	 * Corresponds to "--max-clashes" option in simplx. Default value is {@value #DEFAULT_MAX_CLASHES}.
+	 * @param maxClashes
+	 * @see #DEFAULT_MAX_CLASHES
+	 */
 	public final void setMaxClashes(long maxClashes) {
 		this.maxClashes = maxClashes;
 	}
-	public final long getEvent() {
-		return event;
-	}
-	public final void setEvent(long event) {
-		this.event = event;
-	}
-	public final double getTimeLength() {
-		return timeLength;
-	}
-	public final void setTimeLength(double timeLength) {
-		this.timeLength = timeLength;
-	}
+
 	public final boolean isTime() {
 		return isTime;
 	}
+	
+	/**
+	 * Sets whether the simulation would run up to certain time or to a certain number of events.
+	 * 
+	 * @param isTime
+	 * @see #setTimeLength(double)
+	 * @see #setEvent(long)
+	 */
 	public final void setTime(boolean isTime) {
 		this.isTime = isTime;
 	}
+	
+	public final double getTimeLength() {
+		return timeLength;
+	}
+	
+	/**
+	 * Sets the time limit until when the simulation would run.
+	 * This parameter is discarded if the simulation is event-based.
+	 * <br><br>
+	 * Corresponds to "--time" option in simplx.
+	 * 
+	 * @param timeLength
+	 * @see #isTime()
+	 */
+	public final void setTimeLength(double timeLength) {
+		this.timeLength = timeLength;
+	}
+
+	public final long getEvent() {
+		return event;
+	}
+
+	/**
+	 * Sets the number of events (i.e. rule application) the simulation would run for.
+	 * This parameter is discarded if the simulation is time-based.
+	 * <br><br>
+	 * Corresponds to "--event" option in simplx. 
+	 * @param event
+	 * @see #isTime()
+	 */
+	public final void setEvent(long event) {
+		this.event = event;
+	}
+	
 	public final int getIterations() {
 		return iterations;
 	}
 	public final void setIterations(int iterations) {
 		this.iterations = iterations;
 	}
+	
 	public final String getRandomizer() {
 		return randomizer;
 	}
 	public final void setRandomizer(String randomizer) {
 		this.randomizer = randomizer;
 	}
+	
 	public final boolean isActivationMap() {
 		return activationMap;
 	}
