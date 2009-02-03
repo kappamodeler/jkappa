@@ -7,10 +7,7 @@ import com.plectix.simulator.components.ConstraintData;
 import com.plectix.simulator.simulator.SimulationData;
 
 public interface IRule {
-	public List<IAgent> getStoryfiedAgents();
-
-	public void clearStorifiedAgents();
-
+	
 	public boolean isRHSEqualsLHS();
 
 	public int getRuleID();

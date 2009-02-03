@@ -21,28 +21,13 @@ public final class CAgent implements IAgent, Serializable {
 	private int idInRuleSide = UNMARKED;
 	private int nameId = -1;
 	private long id = -1;
-	private boolean storify;
 
 	// TODO: is this field static or not???
 	private final ISite myEmptySite = new CSite(CSite.NO_INDEX, this);
 	private TreeMap<Integer, ISite> siteMap = new TreeMap<Integer, ISite>();
 
-	// TODO: change with one function
-	public final boolean isStorify() {
-		return storify;
-	}
-
-	public final void unStorify() {
-		storify=false;
-	}
-	
-	public final void storifyAgent() {
-		this.storify = true;
-	}
-
 	public CAgent(int nameId, long agentID) {
 		id = agentID;
-		storify = false;
 		this.nameId = nameId;
 	}
 

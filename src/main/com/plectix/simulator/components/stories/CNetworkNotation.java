@@ -33,7 +33,6 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	private boolean leaf;
-	private boolean hasIntro;
 	private int step;
 	private final int ruleID;
 	private Simulator simulator;
@@ -42,19 +41,11 @@ public class CNetworkNotation implements INetworkNotation {
 	private Map<Long, AgentSitesFromRules> usedAgentsFromRules;
 	List<String> agentsNotation;
 	List<List<Long>> introCC;
-	
-	public boolean isHasIntro() {
-		return hasIntro;
-	}
-	
-	public void setHasIntro(boolean hasIntro) {
-		this.hasIntro = hasIntro;
-	}
-	
+
 	public boolean isLeaf() {
 		return leaf;
 	}
-	
+
 	public void setLeaf(boolean leaf) {
 		this.leaf = leaf;
 	}
@@ -67,22 +58,17 @@ public class CNetworkNotation implements INetworkNotation {
 		return step;
 	}
 
-
-
 	public Map<Long, AgentSites> getChangesOfAllUsedSites() {
 		return changesOfAllUsedSites;
 	}
-
 
 	public Map<Long, AgentSites> getChangedAgentsFromSolution() {
 		return changedAgentsFromSolution;
 	}
 
-
 	public Map<Long, AgentSitesFromRules> getUsedAgentsFromRules() {
 		return usedAgentsFromRules;
 	}
-
 
 	public List<String> getAgentsNotation() {
 		return agentsNotation;
@@ -90,14 +76,15 @@ public class CNetworkNotation implements INetworkNotation {
 
 	@Override
 	public String toString() {
-		String st = "hasIntro=" + Boolean.toString(hasIntro) + " ";
+		String st = "ruleName="
+				+ simulator.getSimulationData().getRulesByID(ruleID).getName()
+				+ " ";
 		st += "usedAgentsFromRules=" + usedAgentsFromRules.keySet().toString()
 				+ " ";
 		st += "changedAgentsFromSolution="
 				+ changedAgentsFromSolution.keySet().toString() + " ";
 		st += "changesOfAllUsedSites="
 				+ changesOfAllUsedSites.keySet().toString() + " ";
-		st += "ruleName=" + simulator.getSimulationData().getRulesByID(ruleID).getName() + " ";
 		st += "step=" + step + " ";
 		st += "agentsNotation=" + agentsNotation.toString() + " ";
 
@@ -109,10 +96,9 @@ public class CNetworkNotation implements INetworkNotation {
 			List<IInjection> injectionsList, SimulationData data) {
 		this.simulator = simulator;
 		this.step = step;
-//		this.rule = rule;
+		// this.rule = rule;
 		this.ruleID = rule.getRuleID();
 		leaf = false;
-		hasIntro = false;
 		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();
 		this.changesOfAllUsedSites = new HashMap<Long, AgentSites>();
 		this.usedAgentsFromRules = new HashMap<Long, AgentSitesFromRules>();
@@ -149,20 +135,8 @@ public class CNetworkNotation implements INetworkNotation {
 			if (inj != CInjection.EMPTY_INJECTION) {
 				IConnectedComponent cc = solution.getConnectedComponent(inj
 						.getAgentLinkList().get(0).getAgentTo());
-				boolean isStorify = false;
-				int counter = 0;
-				for (IAgentLink al : inj.getAgentLinkList()) {
-					if (al.getAgentTo().isStorify()) {
-						counter++;
-					}
-				}
-
-				if (counter == inj.getAgentLinkList().size())
-					isStorify = true;
-
 				agentsNotation.add(SimulationUtils.printPartRule(cc,
 						new int[] { 0 }, data.isOcamlStyleObsName()));
-
 				List<Long> agentIDsList = new ArrayList<Long>();
 
 				for (IAgent agent : cc.getAgents()) {
@@ -170,30 +144,11 @@ public class CNetworkNotation implements INetworkNotation {
 				}
 				introCC.add(agentIDsList);
 
-				if (!isStorify) {
-					hasIntro = true;
-				}
 			}
 		}
 
 	}
-
-	private void clearAgentsForDeletedOppositeRules(CNetworkNotation nn) {
-		if (nn.isHasIntro()) {
-			for (IAgent agent : nn.getRule().getStoryfiedAgents())
-				((CAgent) agent).unStorify();
-			nn.getRule().clearStorifiedAgents();
-		}
-	}
-
-	// public Map<Long, AgentSites> getChangedAgentsFromSolution() {
-	// return Collections.unmodifiableMap(changedAgentsFromSolution);
-	// }
-	//
-	// public Map<Long, AgentSitesFromRules> getUsedAgentsFromRules() {
-	// return Collections.unmodifiableMap(usedAgentsFromRules);
-	// }
-
+	
 	public List<List<Long>> getIntroCC() {
 		return introCC;
 	}
@@ -308,28 +263,24 @@ public class CNetworkNotation implements INetworkNotation {
 		return simulator.getSimulationData().getRulesByID(ruleID);
 	}
 
-	public final boolean isNotOpposite(
+	public final CNetworkNotation isNotOpposite(
 			List<CNetworkNotation> networkNotationList) {
 		for (int i = networkNotationList.size() - 1; i >= 0; i--) {
 			CNetworkNotation nn = networkNotationList.get(i);
 			switch (isIntersects(nn, true)) {
 			case FULL_INTERSECTION:
-				clearAgentsForDeletedOppositeRules(this);
-				clearAgentsForDeletedOppositeRules(networkNotationList.get(i));
 				networkNotationList.remove(i);
-				return false;
+				return nn;
 			case PART_INTERSECTION:
-				return true;
+				return null;
 			}
 		}
-		return true;
+		return null;
 	}
 
 	public final boolean isOpposite(CNetworkNotation networkNotation) {
 		switch (isIntersects(networkNotation, true)) {
 		case FULL_INTERSECTION:
-			clearAgentsForDeletedOppositeRules(this);
-			clearAgentsForDeletedOppositeRules(networkNotation);
 			return false;
 		case PART_INTERSECTION:
 			return true;
@@ -337,7 +288,7 @@ public class CNetworkNotation implements INetworkNotation {
 		return true;
 	}
 
-	 public final IntersectionType isIntersects(CNetworkNotation nn) {
+	public final IntersectionType isIntersects(CNetworkNotation nn) {
 		Iterator<Long> iterator = this.changedAgentsFromSolution.keySet()
 				.iterator();
 		int counter = 0;
@@ -351,8 +302,8 @@ public class CNetworkNotation implements INetworkNotation {
 
 				if (it == IntersectionType.FULL_INTERSECTION)
 					fullCounter++;
-				//if (it != IntersectionType.NO_INTERSECTION)
-					counter++;
+				// if (it != IntersectionType.NO_INTERSECTION)
+				counter++;
 			}
 		}
 
@@ -389,11 +340,12 @@ public class CNetworkNotation implements INetworkNotation {
 
 			if (mapCheck.containsKey(key)) {
 				IntersectionType it = checkSites(key, mapThis, mapCheck);
-				//IntersectionType it = checkSites(key, nn);
+				// IntersectionType it = checkSites(key, nn);
 				if (it == IntersectionType.FULL_INTERSECTION)
 					fullCounter++;
-				//if ((!isAllUsedSites && it != IntersectionType.NO_INTERSECTION) || isAllUsedSites)
-				if (it != IntersectionType.NO_INTERSECTION) 
+				// if ((!isAllUsedSites && it !=
+				// IntersectionType.NO_INTERSECTION) || isAllUsedSites)
+				if (it != IntersectionType.NO_INTERSECTION)
 					counter++;
 			}
 		}
@@ -439,7 +391,7 @@ public class CNetworkNotation implements INetworkNotation {
 		return IntersectionType.NO_INTERSECTION;
 	}
 
-	 private final IntersectionType checkSites(long key, CNetworkNotation nn) {
+	private final IntersectionType checkSites(long key, CNetworkNotation nn) {
 		Iterator<Integer> iterator = this.changedAgentsFromSolution.get(key)
 				.getSites().keySet().iterator();
 		int counter = 0;

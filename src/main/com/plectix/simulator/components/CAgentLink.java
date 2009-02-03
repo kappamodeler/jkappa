@@ -17,10 +17,6 @@ import com.plectix.simulator.interfaces.*;
 		return idAgentFrom;
 	}
 
-	public final void storifyAgent(){
-		this.agentTo.storifyAgent();
-	}
-	
 	public final IAgent getAgentTo() {
 		return agentTo;
 	}

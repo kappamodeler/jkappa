@@ -28,6 +28,12 @@ public final class CStoryTrees {
 	private int isomorphicCount = 1;
 	private double averageTime;
 	private int ruleId;
+	private int mainTraceID;
+
+	public int getMainTraceID() {
+		return mainTraceID;
+	}
+
 	private NetworkNotationForCurrentStory nnCS;
 	private HashMap<Integer, List<Integer>> ruleIDToTraceID;
 	private TreeMap<Integer, Integer> traceIDToLevel;
@@ -95,6 +101,7 @@ public final class CStoryTrees {
 		List<Integer> list = new ArrayList<Integer>();
 		list.add(newNN.getStep());
 		this.ruleIDToTraceID.put(newNN.getRule().getRuleID(), list);
+		this.mainTraceID = commonList.get(0).getStep();
 	}
 
 	private Map<Integer, Integer> traceIDToIndex;
@@ -112,17 +119,26 @@ public final class CStoryTrees {
 				if (updatedList.size() <= 1) {
 					updatedList.add(nn);
 					lastNN = nn;
-				} else if (nn.isNotOpposite(updatedList)) {
-					updatedList.add(nn);
-					lastNN = nn;
 				} else {
-					pushIntro(updatedList, nn, 0, new ArrayList<Integer>());
-					removeTraceIDsFromMaps(lastNN);
-					removeTraceIDsFromMaps(nn);
-					clearMapsLists(nn);
-					clearMapsLists(lastNN);
+					CNetworkNotation newNN = nn.isNotOpposite(updatedList);
+					if (newNN == null) {
+						updatedList.add(nn);
+						lastNN = nn;
+					} else {
+						pushIntro(updatedList, nn, updatedList.size(),
+								new ArrayList<Integer>());
+						// pushIntro(updatedList, newNN, 0, new
+						// ArrayList<Integer>());
+						removeTraceIDsFromMaps(newNN);
+						removeTraceIDsFromMaps(nn);
+						clearMapsLists(nn);
+						clearMapsLists(newNN);
+					}
 				}
-			}
+			} else
+				pushIntro(updatedList, nn, updatedList.size(),
+						new ArrayList<Integer>());
+
 			index++;
 		}
 
@@ -312,13 +328,6 @@ public final class CStoryTrees {
 
 	}
 
-	private void fillNoneInterestingSites(
-			Map<Long, List<Integer>> mapNoneInterestingSites,
-			Map<Long, Map<Integer, StoryChangeStateWithTrace>> agentIDSiteIDToTraceID,
-			int traceID, Long agentKey) {
-
-	}
-
 	List<Integer> listToDelete;
 
 	private void createListToDelete(
@@ -343,48 +352,51 @@ public final class CStoryTrees {
 
 		for (Integer idOfFather : traceIDListOfFathers) {
 			List<Integer> traceIDListOfSons = traceIDToTraceID.get(idOfFather);
-			if (listToDelete.get(0) == -2)
+			if (listToDelete.get(0) == -2 && listToDelete.get(1) < idOfFather)
 				return;
 			if (traceIDLastRule == idOfFather.intValue()) {
 				listToDelete = new ArrayList();
+				listToDelete.add(-2);
 				listToDelete.add(-2);
 				return;
 			}
 
 			for (Integer idOfSon : traceIDListOfSons) {
-				if (listToDelete.get(0) == -2)
+				if (listToDelete.get(0) == -2 && listToDelete.get(1) < idOfSon)
 					return;
 				if (!listToDelete.contains(idOfSon)) {
-					if (idOfSon < minTraceID) {
-						listToDelete = new ArrayList();
-						listToDelete.add(-2);
-						return;
-					}
-					listToDelete.add(idOfSon);
-					if (listToDelete.get(0) < idOfSon) {
-						listToDelete.set(0, idOfSon);
-						List<IStates> maxTraceIDStatesList = getFullHorizontalWire(
-								commonList, idOfSon, traceIDToNextTraceID.get(
-										idOfSon).intValue(),
-								agentIDSiteIDToTraceID);
-						if (checkFullHorizontalWires(minTraceIDStatesList,
-								maxTraceIDStatesList)) {
-							listToDelete.set(0, -2);
-							return;
+					if (idOfSon > minTraceID) {
+						/*
+						 * listToDelete = new ArrayList(); listToDelete.add(-2);
+						 * listToDelete.add(-2); return;
+						 */
+
+						listToDelete.add(idOfSon);
+						if (listToDelete.get(1) < idOfSon) {
+							listToDelete.set(1, idOfSon);
+							List<IStates> maxTraceIDStatesList = getFullHorizontalWire(
+									commonList, idOfSon, traceIDToNextTraceID
+											.get(idOfSon).intValue(),
+									agentIDSiteIDToTraceID);
+							if (checkFullHorizontalWires(minTraceIDStatesList,
+									maxTraceIDStatesList)) {
+								listToDelete.set(0, -2);
+								return;
+							}
 						}
+						createListToDelete(commonList,
+								reversedTraceIDToTraceID, minTraceID, idOfSon,
+								traceIDLastRule, minTraceIDStatesList,
+								traceIDToNextTraceID, agentIDSiteIDToTraceID);
 					}
-					createListToDelete(commonList, reversedTraceIDToTraceID,
-							minTraceID, idOfSon, traceIDLastRule,
-							minTraceIDStatesList, traceIDToNextTraceID,
-							agentIDSiteIDToTraceID);
 				}
 			}
-			if (listToDelete.get(0) == -2)
+			if (listToDelete.get(0) == -2 && listToDelete.get(1) < idOfFather)
 				return;
 			if (!listToDelete.contains(idOfFather)
 					&& (traceIDLastRule != idOfFather.intValue())) {
-				if (listToDelete.get(0) < idOfFather)
-					listToDelete.set(0, idOfFather);
+				if (listToDelete.get(1) < idOfFather)
+					listToDelete.set(1, idOfFather);
 				listToDelete.add(idOfFather);
 				List<IStates> maxTraceIDStatesList = getFullHorizontalWire(
 						commonList, idOfFather, traceIDToNextTraceID.get(
@@ -416,6 +428,7 @@ public final class CStoryTrees {
 		listToDelete = new ArrayList<Integer>();
 		listToDelete.add(-1);
 		listToDelete.add(minTraceID);
+		listToDelete.add(minTraceID);
 		convertTree(reversedTraceIDToTraceID);
 		createListToDelete(commonList, reversedTraceIDToTraceID, minTraceID,
 				minTraceID, traceIDLastRule, minTraceIDStatesList,
@@ -441,7 +454,8 @@ public final class CStoryTrees {
 						.getStep(), traceIDLastRule, agentIDSiteIDToTraceID,
 						traceIDToNextTraceID);
 				listToDeleteSize = listToDelete.size();
-				if (listToDelete.size() > 1 && listToDelete.get(0) == -2) {
+				if (listToDelete.size() > 2 && listToDelete.get(0) == -2) {
+					listToDelete.remove(0);
 					listToDelete.remove(0);
 					removeFromCommonList(listToDelete, commonList);
 					commonList = updateMainList(commonList);
@@ -451,7 +465,7 @@ public final class CStoryTrees {
 
 					while (mainSize != weakSize) {
 						mainSize = commonList.size();
-						//doPermutation(commonList);
+						// doPermutation(commonList);
 						noneCompressStoryTrace(commonList);
 						commonList = updateMainList(commonList);
 						weakSize = commonList.size();
@@ -465,7 +479,7 @@ public final class CStoryTrees {
 					break;
 				}
 			}
-			if (listToDeleteSize <= 1)
+			if (listToDeleteSize <= 2)
 				return commonList;
 		}
 	}
@@ -486,14 +500,15 @@ public final class CStoryTrees {
 			List<Integer> curList = traceIDToTraceID.get(nn.getStep());
 			if (curList != null) {
 				updatedList.add(nn);
-			}
+			} else
+				pushIntro(updatedList, nn, updatedList.size(),
+						new ArrayList<Integer>());
 		}
 		updateTraceIDToIndex(updatedList);
 		return updatedList;
 	}
 
-	private List<CNetworkNotation> doPermutation(
-			List<CNetworkNotation> commonList) {
+	private boolean doPermutation(List<CNetworkNotation> commonList) {
 
 		int size = commonList.size() - 1;
 
@@ -504,9 +519,35 @@ public final class CStoryTrees {
 			while (wasPermutation) {
 				CNetworkNotation nn = commonList.get(index);
 				CNetworkNotation nnNext = commonList.get(index - 1);
-				if (traceIDToTraceID.get(nnNext.getStep()).contains(
-						nn.getStep())||(traceIDToTraceIDWeak.get(nnNext.getStep())!=null && traceIDToTraceIDWeak.get(nnNext.getStep()).contains(
-								nn.getStep()))) {
+
+				// if (traceIDToTraceID.get(nnNext.getStep()) == null
+				// && traceIDToTraceID.get(nn.getStep()) == null) {
+				// wasPermutation = false;
+				// break;
+				// }
+				//
+				// if (traceIDToTraceID.get(nnNext.getStep()) == null
+				// && traceIDToTraceID.get(nn.getStep()).size() == 0) {
+				// wasPermutation = false;
+				// break;
+				// }
+				//
+				// if (traceIDToTraceID.get(nn.getStep()) == null
+				// && traceIDToTraceID.get(nnNext.getStep()).size() == 0) {
+				// wasPermutation = false;
+				// break;
+				// }
+				//
+				// if (traceIDToTraceID.get(nnNext.getStep()).size() == 0
+				// && traceIDToTraceID.get(nn.getStep()).size() == 0) {
+				// wasPermutation = false;
+				// break;
+				// }
+
+				if ((traceIDToTraceID.get(nnNext.getStep()) != null && traceIDToTraceID
+						.get(nnNext.getStep()).contains(nn.getStep()))
+						|| (traceIDToTraceIDWeak.get(nnNext.getStep()) != null && traceIDToTraceIDWeak
+								.get(nnNext.getStep()).contains(nn.getStep()))) {
 					wasPermutation = false;
 					break;
 				}
@@ -524,9 +565,10 @@ public final class CStoryTrees {
 			for (CNetworkNotation nn : commonList) {
 				nn.setStep(size--);
 			}
+			this.mainTraceID = commonList.get(0).getStep();
 		}
 
-		return commonList;
+		return fullPermutation;
 	}
 
 	private List<CNetworkNotation> weakCompressStoryTrace(
@@ -538,7 +580,7 @@ public final class CStoryTrees {
 
 			Map<Integer, Integer> traceIDToNextTraceID = new HashMap<Integer, Integer>();
 			Map<Long, Map<Integer, StoryChangeStateWithTrace>> agentIDSiteIDToTraceID = new HashMap<Long, Map<Integer, StoryChangeStateWithTrace>>();
-		//	commonList = doPermutation(commonList);
+			// commonList = doPermutation(commonList);
 			// deleting opposite rules which are neighbours in trace
 			weakCompressedList = updateMainList(commonList);
 			int mainSize = commonList.size();
@@ -548,7 +590,6 @@ public final class CStoryTrees {
 
 				while (mainSize != weakSize) {
 					mainSize = weakCompressedList.size();
-					doPermutation(weakCompressedList);
 					noneCompressStoryTrace(weakCompressedList);
 					weakCompressedList = updateMainList(weakCompressedList);
 					weakSize = weakCompressedList.size();
@@ -556,6 +597,24 @@ public final class CStoryTrees {
 
 				weakCompressedList = tryToRemoveBlock(weakCompressedList,
 						traceIDToNextTraceID, agentIDSiteIDToTraceID);
+				weakSize = weakCompressedList.size();
+				// if(weakSize)
+				// while (doPermutation(weakCompressedList)) {
+				if (doPermutation(weakCompressedList)) {
+					mainSize = weakCompressedList.size();
+					noneCompressStoryTrace(weakCompressedList);
+					weakCompressedList = updateMainList(weakCompressedList);
+					weakSize = weakCompressedList.size();
+					if (weakSize == mainSize) {
+						weakCompressedList = tryToRemoveBlock(
+								weakCompressedList, traceIDToNextTraceID,
+								agentIDSiteIDToTraceID);
+						weakSize = weakCompressedList.size();
+					}
+				}
+				// if (mainSize == weakSize)
+				// break;
+				// }
 
 				// // deleting equal blocks
 				// weakCompressedList = removeEqualLevels(weakCompressedList);
@@ -908,198 +967,10 @@ public final class CStoryTrees {
 		}
 	}
 
-	private List<CNetworkNotation> removeEqualLevels(
-			List<CNetworkNotation> nnList) {
-		Iterator<Integer> ruleIDIterator = ruleIDToTraceID.keySet().iterator();
-
-		while (ruleIDIterator.hasNext()) {
-			int ruleID = ruleIDIterator.next();
-			List<Integer> traceIDList = ruleIDToTraceID.get(ruleID);
-			if (traceIDList.size() > 1) {
-				Collections.sort(traceIDList);
-				List<CNetworkNotation> cList = removeEquivalentRules(
-						traceIDToIndex, nnList, traceIDList);
-				if (cList != null) {
-					nnList = new ArrayList<CNetworkNotation>();
-					nnList = cList;
-					traceIDToIndex = new HashMap<Integer, Integer>();
-					int ind = 0;
-					for (CNetworkNotation nn : nnList) {
-						traceIDToIndex.put(nn.getStep(), ind);
-						ind++;
-					}
-				}
-			}
-
-		}
-
-		return nnList;
-	}
-
-	private List<CNetworkNotation> removeEquivalentRules(
-			Map<Integer, Integer> traceIDToIndex,
-			List<CNetworkNotation> nnList, List<Integer> traceIDList) {
-		List<Integer> traceIDToRemoveBegin = new ArrayList<Integer>();
-		List<Integer> traceIDToRemoveEnd = new ArrayList<Integer>();
-		int size = traceIDList.size() - 1;
-
-		for (int i = 0; i <= size - 1; i++) {
-			int iToRemove = traceIDList.get(i);
-			CNetworkNotation nnToRemove = nnList.get(traceIDToIndex.get(
-					iToRemove).intValue());
-			for (int j = i + 1; j <= size; j++) {
-				int iToCheck = traceIDList.get(j);
-				CNetworkNotation nnToCheck = nnList.get(traceIDToIndex.get(
-						iToCheck).intValue());
-				if (isEqualNetworkNotations(nnToCheck, nnToRemove))
-					if (!hasLessTraceID(iToRemove, iToCheck))
-						if (!traceIDToRemoveBegin.contains(iToRemove)) {
-							traceIDToRemoveBegin.add(iToRemove);
-							traceIDToRemoveEnd.add(iToCheck);
-							break;
-						}
-			}
-		}
-
-		int sizeToRemove = traceIDToRemoveBegin.size();
-		if (sizeToRemove > 0) {
-			int end = traceIDToIndex.get(traceIDToRemoveEnd.get(
-					sizeToRemove - 1).intValue());
-			int begin = traceIDToIndex.get(traceIDToRemoveBegin.get(0)
-					.intValue());
-
-			List<CNetworkNotation> newList = new ArrayList<CNetworkNotation>();
-			for (int j = 0; j <= end; j++) {
-				CNetworkNotation nn = nnList.get(j);
-				newList.add(nn);
-			}
-
-			CNetworkNotation nnToCheck = nnList.get(end);
-			CNetworkNotation nnToRemove = nnList.get(begin);
-			int indexToCheck = traceIDToIndex.get(nnToCheck.getStep());
-			int indexToRemove = traceIDToIndex.get(nnToRemove.getStep());
-
-			// pushIntro(nnToCheck, nnToRemove, indexToCheck, indexToRemove);
-			copyTraceIDList(nnToRemove, nnToCheck);
-
-			for (int i = begin; i >= end + 1; i--) {
-				CNetworkNotation nn = nnList.get(i);
-				pushIntro(newList, nn, end, new ArrayList<Integer>());
-				removeTraceIDsFromMaps(nn);
-			}
-
-			for (int i = begin + 1; i < nnList.size(); i++) {
-				CNetworkNotation nn = nnList.get(i);
-				newList.add(nn);
-			}
-			return newList;
-		}
-		return null;
-	}
-
-	private void copyTraceIDList(CNetworkNotation pushingNN,
-			CNetworkNotation currentNN) {
-		List<Integer> list = traceIDToTraceID.get(pushingNN.getStep());
-		traceIDToTraceID.put(currentNN.getStep(), list);
-		List<Integer> weakList = traceIDToTraceIDWeak.get(pushingNN.getStep());
-		if (weakList == null || weakList.size() == 0)
-			traceIDToTraceIDWeak.remove(currentNN.getStep());
-		else
-			traceIDToTraceIDWeak.put(currentNN.getStep(), weakList);
-
-	}
-
-	private boolean hasLessTraceID(int upperBoundTraceID, int lowerBoundTraceID) {
-		Iterator<Integer> traceIDIterator = traceIDToTraceID.keySet()
-				.iterator();
-		int currentTraceId = traceIDIterator.next();
-
-		if (currentTraceId != upperBoundTraceID) {
-			while (traceIDIterator.hasNext()
-					&& currentTraceId < upperBoundTraceID)
-				currentTraceId = traceIDIterator.next();
-
-			while (traceIDIterator.hasNext()
-					&& currentTraceId < lowerBoundTraceID) {
-				currentTraceId = traceIDIterator.next();
-				for (int id : traceIDToTraceID.get(currentTraceId)) {
-					if (id < upperBoundTraceID)
-						return true;
-				}
-			}
-		} else
-			while (traceIDIterator.hasNext()
-					&& currentTraceId < lowerBoundTraceID)
-				currentTraceId = traceIDIterator.next();
-
-		while (traceIDIterator.hasNext()) {
-			currentTraceId = traceIDIterator.next();
-			for (int id : traceIDToTraceID.get(currentTraceId)) {
-				if (id < lowerBoundTraceID && id >= upperBoundTraceID)
-					return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean isOppositeBranch(int traceId, Integer mainTraceId,
-			List<CNetworkNotation> list, List<Integer> indexList,
-			List<Integer> indexListOpposite, List<Integer> weakList) {
-		List<Integer> traceIDList = traceIDToTraceID.get(traceId);
-		Collections.sort(traceIDList);
-
-		for (int i = traceIDList.size() - 1; i >= 0; i--) {
-			int trID = traceIDList.get(i);
-			if (traceIDList.size() == 1 && (traceId != mainTraceId)) {
-				if (!indexList.contains(trID) && !indexList.contains(traceId)) {
-					int index1 = traceIDToIndex.get(traceId);
-
-					int index2 = traceIDToIndex.get(trID);
-
-					if (!list.get(index1).isOpposite(list.get(index2))) {
-						List<Integer> listWeak = traceIDToTraceIDWeak
-								.get(traceId);
-						if (listWeak == null
-								|| (listWeak != null && listWeak.size() == 0)) {
-							indexList.add(trID);
-							indexList.add(traceId);
-							indexListOpposite.add(traceId);
-						}
-					}
-
-				}
-			}
-			isOppositeBranch(trID, mainTraceId, list, indexList,
-					indexListOpposite, weakList);
-		}
-
-		return true;
-	}
-
-	private boolean isEqualNetworkNotations(CNetworkNotation nn1,
-			CNetworkNotation nn2) {
-		if (nn1.getRule().getRuleID() != nn2.getRule().getRuleID())
-			return false;
-		Map<Long, AgentSitesFromRules> usedAgentsFromRules1 = nn1
-				.getUsedAgentsFromRules();
-		Map<Long, AgentSitesFromRules> usedAgentsFromRules2 = nn2
-				.getUsedAgentsFromRules();
-		if (usedAgentsFromRules1.size() != usedAgentsFromRules2.size())
-			return false;
-		Iterator<Long> iterator = usedAgentsFromRules1.keySet().iterator();
-		while (iterator.hasNext()) {
-			Long key = iterator.next();
-			if (!usedAgentsFromRules2.containsKey(key))
-				return false;
-		}
-
-		return true;
-	}
-
 	private void pushIntro(List<CNetworkNotation> weakCompressedList,
 			CNetworkNotation currentNN, int indexToBegin,
 			List<Integer> listToDelete) {
-		if (currentNN == null || !currentNN.isHasIntro())
+		if (currentNN == null)
 			return;
 
 		int indexIntroFromCurrent = 0;
@@ -1129,8 +1000,6 @@ public final class CStoryTrees {
 						for (Long agent : agentList) {
 							if (agent.longValue() == agentKey.longValue()) {
 
-								checkingNN.setHasIntro(true);
-
 								checkingNN.changeIntroCCAndAgentNotation(
 										indexToDel, agentListMain,
 										currentNN.agentsNotation
@@ -1149,8 +1018,6 @@ public final class CStoryTrees {
 
 		resetParameters(commonList);
 		isCausing(commonList.get(0), commonList, 1, 0);
-		if (ruleIDToTraceID.size() == 1)
-			commonList.get(0).setHasIntro(true);
 		pushTree();
 		updateTraceIDToIndex(commonList);
 	}
@@ -1371,7 +1238,7 @@ public final class CStoryTrees {
 		traceIDToText = new HashMap<Integer, String>();
 
 		List<Long> introAgents = new ArrayList<Long>();
-
+		int rrrr = 0;
 		for (int i = nnList.size() - 1; i >= 0; i--) {
 			int counter = 0;
 			int index = 0;
@@ -1379,20 +1246,23 @@ public final class CStoryTrees {
 			List<String> introStr = new ArrayList<String>();
 
 			for (List<Long> agentIDsList : nn.getIntroCC()) {
+				List<Long> currentIntroAgents = new ArrayList<Long>();
 				for (Long agentID : agentIDsList) {
 					if (nn.getUsedAgentsFromRules().containsKey(agentID))
 						if (!introAgents.contains(agentID)) {
-							introAgents.add(agentID);
+							currentIntroAgents.add(agentID);
 							counter++;
 						}
 				}
 				if (counter == agentIDsList.size()) {
+					introAgents.addAll(currentIntroAgents);
 					introStr.add(nn.getAgentsNotation().get(index));
-
+					rrrr++;
 				}
 				index++;
 				counter = 0;
 			}
+
 			traceIDToIntroString.put(nn.getStep(), introStr);
 		}
 
@@ -1483,36 +1353,109 @@ public final class CStoryTrees {
 		if (this.levelToTraceID.size() != treeIn.getLevelToTraceID().size())
 			return false;
 
-		Iterator<Integer> levelIterator = this.levelToTraceID.keySet()
-				.iterator();
+		if (!isIsomorphic(treeIn, mainTraceID, treeIn.getMainTraceID()))
+			return false;
 
-		while (levelIterator.hasNext()) {
-			int level = levelIterator.next();
-			List<Integer> list = this.levelToTraceID.get(level);
-			List<Integer> listIn = treeIn.getLevelToTraceID().get(level);
-			if (list.size() != listIn.size())
-				return false;
-			List<Integer> rules = new ArrayList<Integer>();
-			int intro = getRulesList(list, this, rules);
-			List<Integer> rulesIn = new ArrayList<Integer>();
-			int introIn = getRulesList(listIn, treeIn, rulesIn);
-			if (introIn != intro)
-				return false;
-
-			for (Integer ruleID : rules) {
-				if (!rulesIn.contains(ruleID))
-					return false;
-			}
-		}
 		this.isomorphicCount++;
 		return true;
 	}
 
-	private int getRulesList(List<Integer> traceList, CStoryTrees tree,
-			List<Integer> rules) {
+	private boolean isContainsRuleID(CStoryTrees treeIn,
+			List<Integer> childTraceIDListIn, int ruleID) {
+		for (Integer traceIDIn : childTraceIDListIn) {
+			int ruleIDIn = treeIn.traceIDToRuleID.get(traceIDIn);
+			if (ruleID == ruleIDIn)
+				return true;
+		}
+		return false;
+	}
+
+	private Integer getTraceIDFrom(CStoryTrees treeIn, Integer traceID,
+			List<Integer> childTraceIDListIn) {
+
+		int ruleID = this.traceIDToRuleID.get(traceID);
+		for (Integer traceIDIn : childTraceIDListIn) {
+			int ruleIDIn = treeIn.traceIDToRuleID.get(traceIDIn);
+			if (ruleID == ruleIDIn)
+				return traceIDIn;
+		}
+		return -1;
+	}
+
+	private boolean isEqualWeakLists(CStoryTrees treeIn,
+			List<Integer> childTraceIDListWeak,
+			List<Integer> childTraceIDListWeakIn) {
+
+		if (childTraceIDListWeak == null && childTraceIDListWeakIn == null)
+			return true;
+
+		if (childTraceIDListWeak == null && childTraceIDListWeakIn != null)
+			return false;
+
+		if (childTraceIDListWeak != null && childTraceIDListWeakIn == null)
+			return false;
+
+		if (childTraceIDListWeak.size() != childTraceIDListWeakIn.size())
+			return false;
+
+		for (Integer traceID : childTraceIDListWeak) {
+			Integer ruleID = traceIDToRuleID.get(traceID);
+			if (!isContainsRuleID(treeIn, childTraceIDListWeakIn, ruleID))
+				return false;
+		}
+
+		return true;
+	}
+
+	private boolean isIsomorphic(CStoryTrees treeIn, Integer rootTraceID,
+			Integer rootTraceIDIn) {
+		List<Integer> childTraceIDList = traceIDToTraceID.get(rootTraceID);
+		List<Integer> childTraceIDListIn = treeIn.getTraceIDToTraceID().get(
+				rootTraceIDIn);
+
+		if (childTraceIDList.size() != childTraceIDListIn.size())
+			return false;
+
+		for (Integer traceID : childTraceIDList) {
+			Integer ruleID = traceIDToRuleID.get(traceID);
+			if (!isContainsRuleID(treeIn, childTraceIDListIn, ruleID))
+				return false;
+		}
+
+		if (!isEqualsIntro(childTraceIDList, childTraceIDListIn, treeIn))
+			return false;
+
+		List<Integer> childTraceIDListWeak = traceIDToTraceIDWeak
+				.get(rootTraceID);
+		List<Integer> childTraceIDListWeakIn = treeIn.getTraceIDToTraceIDWeak()
+				.get(rootTraceIDIn);
+
+		if (!isEqualWeakLists(treeIn, childTraceIDListWeak,
+				childTraceIDListWeakIn))
+			return false;
+
+		for (Integer traceID : childTraceIDList) {
+			Integer traceIDIn = getTraceIDFrom(treeIn, traceID,
+					childTraceIDListIn);
+			if (!isIsomorphic(treeIn, traceID, traceIDIn))
+				return false;
+		}
+
+		return true;
+	}
+
+	private boolean isEqualsIntro(List<Integer> list, List<Integer> listIn,
+			CStoryTrees treeIn) {
+		int intro = getIntroList(list, this);
+		int introIn = getIntroList(listIn, treeIn);
+		if (introIn != intro)
+			return false;
+		return true;
+	}
+
+	private int getIntroList(List<Integer> traceList, CStoryTrees tree) {
 		int introCounter = 0;
 		for (Integer number : traceList) {
-			rules.add(tree.getTraceIDToRuleID().get(number));
 			if (tree.getTraceIDToIntroString().get(number) != null)
 				introCounter += tree.getTraceIDToIntroString().get(number)
 						.size();

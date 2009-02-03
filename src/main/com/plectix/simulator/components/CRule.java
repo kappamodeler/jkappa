@@ -61,7 +61,7 @@ public class CRule implements IRule, Serializable {
 		return inhibitedRule;
 	}
 
-	private List<IAgent> storyfiedAgents;
+//	private List<IAgent> storyfiedAgents;
 
 	public boolean isRHSEqualsLHS() {
 		return rHSEqualsLHS;
@@ -107,10 +107,6 @@ public class CRule implements IRule, Serializable {
 
 	public final void setData(String data) {
 		this.data = new String(data);
-	}
-
-	public void clearStorifiedAgents() {
-		this.storyfiedAgents.clear();
 	}
 
 //	public CRule(List<IConnectedComponent> left,
@@ -294,31 +290,11 @@ public class CRule implements IRule, Serializable {
 		agentAddList.put(key, value);
 	}
 
-	private final void storifyAgents(List<IInjection> injectionList,
-			boolean isLast) {
-		for (IInjection inj : injectionList)
-			if (inj != CInjection.EMPTY_INJECTION)
-				for (IAgentLink al : inj.getAgentLinkList())
-					if (!rHSEqualsLHS || isLast) {
-						if (!al.getAgentTo().isStorify())
-							storyfiedAgents.add(al.getAgentTo());
-						al.storifyAgent();
-					}
-	}
-
-	public List<IAgent> getStoryfiedAgents() {
-		return storyfiedAgents;
-	}
-
 	protected final void apply(List<IInjection> injectionList,
 			INetworkNotation netNotation, SimulationData simulationData,
 			boolean isLast) {
-		if (storyfiedAgents == null)
-			storyfiedAgents = new ArrayList<IAgent>();
-		if (netNotation != null) {
-			storifyAgents(injectionList, isLast);
-		}
 
+		
 		agentAddList = new HashMap<IAgent, IAgent>();
 		sitesConnectedWithDeleted = new ArrayList<ISite>();
 		sitesConnectedWithBroken = new ArrayList<ISite>();
