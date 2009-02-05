@@ -213,7 +213,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 			modification = new AbstractDeleteOnceModification(agentList, quantity);
 		}
 
-		System.out.println(modification);
+//		System.out.println(modification);
 		return modification;
 	}
 

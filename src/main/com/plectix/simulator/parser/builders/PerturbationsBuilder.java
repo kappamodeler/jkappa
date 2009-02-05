@@ -89,9 +89,6 @@ public class PerturbationsBuilder {
 			if (rateModification) {
 				AbstractRateModification modification = (AbstractRateModification) arg
 						.getModification();
-				System.out.println(arg);
-				System.out.println("%mod: $T > " + timeBound + " do " + findRule(modification
-						.getArgument()) + " := " + createRateExpression(modification));
 				return new CPerturbation(id, timeBound,
 						// TODO -1, we don't need it
 						CPerturbationType.TIME, -1, findRule(modification
