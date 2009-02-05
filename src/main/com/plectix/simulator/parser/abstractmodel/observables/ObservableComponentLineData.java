@@ -1,8 +1,9 @@
-package com.plectix.simulator.parser.abstractmodel;
+package com.plectix.simulator.parser.abstractmodel.observables;
 
 import java.util.Collections;
 import java.util.List;
 
+import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.util.StringUtil;
 
 public class ObservableComponentLineData extends ObservablesLineData{

@@ -8,6 +8,14 @@ import com.plectix.simulator.parser.KappaFileParagraph;
 import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.*;
 import com.plectix.simulator.parser.abstractmodel.perturbations.*;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.AbstractCondition;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.AbstractSpeciesCondition;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.AbstractTimeCondition;
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractAddOnceModification;
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractDeleteOnceModification;
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractModification;
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractOnceModification;
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractRateModification;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.parser.util.StringUtil;
 import com.plectix.simulator.simulator.SimulationArguments;
@@ -77,9 +85,9 @@ import com.plectix.simulator.simulator.SimulationArguments;
 				modification = checkOnce(st, perturbationStr);
 				if (modification == null) {
 					modification = parseRateExpression(st, perturbationStr);
-					perturbations.add(new AbstractPerturbation(pertubationID++,
-							condition, modification));
 				}
+				perturbations.add(new AbstractPerturbation(pertubationID++,
+						condition, modification));
 			} catch (ParseErrorException e) {
 				e.setLineDescription(perturbationStr);
 				throw e;
@@ -205,6 +213,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 			modification = new AbstractDeleteOnceModification(agentList, quantity);
 		}
 
+		System.out.println(modification);
 		return modification;
 	}
 

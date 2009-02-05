@@ -29,6 +29,7 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements T
 			mySimulator.getSimulationData().setSnapshotTime("0");
 			mySimulator.run(0);
 		} catch(Exception e) {
+			e.printStackTrace();
 			junit.framework.Assert.fail(e.getMessage());
 		}
 		init();

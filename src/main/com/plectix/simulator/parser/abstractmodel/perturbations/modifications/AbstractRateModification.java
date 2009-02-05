@@ -1,4 +1,6 @@
-package com.plectix.simulator.parser.abstractmodel.perturbations;
+package com.plectix.simulator.parser.abstractmodel.perturbations.modifications;
+
+import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpression;
 
 public class AbstractRateModification implements AbstractModification {
 	private final LinearExpression myExpression;
@@ -18,6 +20,11 @@ public class AbstractRateModification implements AbstractModification {
 	}
 	
 	public String toString() {
-		return "do " + "'" + myArgument + "'" + " := " + myExpression;
+		return "'" + myArgument + "'" + " := " + myExpression;
+	}
+
+	@Override
+	public ModificationType getType() {
+		return ModificationType.RATE;
 	}
 }

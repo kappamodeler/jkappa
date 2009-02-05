@@ -1,4 +1,4 @@
-package com.plectix.simulator.parser.abstractmodel.perturbations;
+package com.plectix.simulator.parser.abstractmodel.perturbations.modifications;
 
 import java.util.List;
 
@@ -9,8 +9,15 @@ public class AbstractDeleteOnceModification extends AbstractOnceModification {
 	public AbstractDeleteOnceModification(List<AbstractAgent> operand, double quant) {
 		super(operand, quant);
 	}
-	
-	public String toString() {
-		return "$DELETEONCE " + getQuantity() + " * " + getSubstance();
+
+	@Override
+	protected String actionOnceSymbol() {
+		return "DELETE";
 	}
+
+	@Override
+	public ModificationType getType() {
+		return ModificationType.DELETEONCE;
+	}
+	
 }

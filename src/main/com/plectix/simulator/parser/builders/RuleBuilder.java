@@ -11,8 +11,10 @@ import com.plectix.simulator.simulator.SimulationUtils;
 
 public class RuleBuilder {
 	private final SubstanceBuilder mySubstanceBuilder;
+	private final SimulationData myData;
 	
 	public RuleBuilder(SimulationData data) {
+		myData = data;
 		mySubstanceBuilder = new SubstanceBuilder(data);
 	}
 	
@@ -30,7 +32,7 @@ public class RuleBuilder {
 //		List<IConnectedComponent> rhsCCList = SimulationUtils.buildConnectedComponents(rhsAgents);
 //		CRule newRule = new CRule(lhsCCList, rhsCCList, name, rate, id, isStorify);
 		IRule newRule = SimulationUtils.buildRule(lhsAgents, rhsAgents, name, rate, id, isStorify);
-		
+		myData.generateNextRuleId();
 //		String one = ruleToString(rule);
 //		String two = ruleToString(newRule);
 //		if	(!one.equals(two)) { 

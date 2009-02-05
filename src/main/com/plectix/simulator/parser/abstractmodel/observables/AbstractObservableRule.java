@@ -1,4 +1,4 @@
-package com.plectix.simulator.parser.abstractmodel;
+package com.plectix.simulator.parser.abstractmodel.observables;
 
 public class AbstractObservableRule {
 	private final String ruleName;

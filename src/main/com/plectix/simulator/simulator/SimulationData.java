@@ -119,7 +119,8 @@ public class SimulationData {
 	private boolean argumentsSet = false;
 	private SimulationArguments simulationArguments = new SimulationArguments();
 	private IdGenerator myIdGenerator = new IdGenerator();
-
+	private IdGenerator myRuleIdGenerator = new IdGenerator();
+	
 	public SimulationData() {
 		super();
 	}
@@ -158,6 +159,10 @@ public class SimulationData {
 		return simulationArguments.isOcamlStyleObservableNames();
 	}
 
+	public final long generateNextRuleId() {
+		return myRuleIdGenerator.generateNextAgentId();
+	}
+	
 	public final long generateNextAgentId() {
 		return myIdGenerator.generateNextAgentId();
 //		return agentIdGenerator++;

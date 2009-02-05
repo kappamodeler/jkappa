@@ -29,6 +29,7 @@ public final class CPerturbation implements Serializable{
 	private boolean isDO = false;
 	private List<IPerturbationExpression> parametersRHS;
 
+	// time rate
 	public CPerturbation(int perturbationID, double time, CPerturbationType type,
 			double perturbationRate, IRule rule, boolean greater,
 			List<IPerturbationExpression> rateParameters) {
@@ -42,6 +43,8 @@ public final class CPerturbation implements Serializable{
 		this.parametersRHS = rateParameters;
 	}
 
+	// time once
+	// TODO remove greater
 	public CPerturbation(int perturbationID, double time, CPerturbationType type,
 			CRulePerturbation rule, boolean greater) {
 		this.perturbationID = perturbationID;
@@ -52,6 +55,7 @@ public final class CPerturbation implements Serializable{
 		this.greater = greater;
 	}
 
+	// species rate
 	public CPerturbation(int perturbationID, List<IObservablesComponent> obsID,
 			List<Double> parameters, int obsNameID, CPerturbationType type,
 			double perturbationRate, IRule rule, boolean greater,

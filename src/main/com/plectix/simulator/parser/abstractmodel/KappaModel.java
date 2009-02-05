@@ -2,6 +2,7 @@ package com.plectix.simulator.parser.abstractmodel;
 
 import java.util.*;
 
+import com.plectix.simulator.parser.abstractmodel.observables.AbstractObservables;
 import com.plectix.simulator.parser.util.IdGenerator;
 
 public class KappaModel {
@@ -63,6 +64,10 @@ public class KappaModel {
 	
 	public void setPerturbations(List<AbstractPerturbation> perturbations) {
 		myPerturbations = perturbations;
+	}
+	
+	public List<AbstractPerturbation> getPerturbations() {
+		return myPerturbations;
 	}
 	
 	public String toString() {

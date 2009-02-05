@@ -1,0 +1,23 @@
+'time' E(r?), R(l, r) -> E(r!1), R(l!1, r)
+'time2' E(r!1), E(r!2), R(l!1, r), R(l!2, r) -> E(r!1), E(r!2), R(l!1, r!3), R(l!2, r!3)
+'namenamename' E(r!1), E(r!2), R(l!1, r!3), R(l!2, r!3) -> E(r!1), E(r!2), R(l!1, r), R(l!2, r)
+
+%init: 5000 * (R(l, r), E(r))
+
+%obs: '1' E(r!_), F(i~                              t)
+%obs: '2' E(r!1), E(r!2), R(l!1,    r! 3), R(l!2, r!3)
+%obs: '3' R(l  , r)
+%obs: '4' E(r!1), R(l!1, r)
+
+%story: 'time'
+%story: 'time2'
+
+%mod: $T > 10.0 do 'time' := 5.0
+%mod: $T > 11.3 do 'time2' := 11.0 * 'time' + 2.0 * 'time2' + 'time2'
+%mod: ['1'] > 1.0 * ['2'] do 'time' := 5.0
+%mod: ['4'] < 7.0 * ['2'] + 4.0 * ['4'] do 'time' := 5.0 * 'time'
+%mod: ['4'] <             13.0 * ['1'] + 4.0 * ['3'] do 'time2' := 'time2'
+%mod: $T > 10 do $ADDONCE 10 * a()
+%mod: $T > 10 do $DELETEONCE 11.3 * a(x!1), b(i!1, u), c(x)
+%mod:  ['4'] <             13.0 * ['              		1']  + 4.0 * ['3'] do 'time2'  :=  'time2'
+%mod: $T>0.05 do 'rule' := -7 * 'rule' + 15

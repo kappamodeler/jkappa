@@ -1,8 +1,9 @@
-package com.plectix.simulator.parser.abstractmodel.perturbations;
+package com.plectix.simulator.parser.abstractmodel.perturbations.modifications;
 
 import java.util.List;
 
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
+import com.plectix.simulator.parser.util.StringUtil;
 
 public class AbstractAddOnceModification extends AbstractOnceModification {
 
@@ -10,7 +11,13 @@ public class AbstractAddOnceModification extends AbstractOnceModification {
 		super(operand, quant);
 	}
 	
-	public String toString() {
-		return "$ADDONCE " + getQuantity() + " * " + getSubstance();
+	@Override
+	protected String actionOnceSymbol() {
+		return "ADD";
+	}
+
+	@Override
+	public ModificationType getType() {
+		return ModificationType.ADDONCE;
 	}
 }

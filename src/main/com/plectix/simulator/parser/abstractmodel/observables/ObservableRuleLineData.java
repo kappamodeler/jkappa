@@ -1,4 +1,4 @@
-package com.plectix.simulator.parser.abstractmodel;
+package com.plectix.simulator.parser.abstractmodel.observables;
 
 public class ObservableRuleLineData extends ObservablesLineData {
 	private final String myRuleName;

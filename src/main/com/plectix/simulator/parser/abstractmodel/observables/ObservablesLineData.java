@@ -1,4 +1,4 @@
-package com.plectix.simulator.parser.abstractmodel;
+package com.plectix.simulator.parser.abstractmodel.observables;
 
 public abstract class ObservablesLineData  {
 	private final int id;

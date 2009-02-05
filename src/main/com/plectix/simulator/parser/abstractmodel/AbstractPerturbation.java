@@ -1,7 +1,7 @@
 package com.plectix.simulator.parser.abstractmodel;
 
-import com.plectix.simulator.parser.abstractmodel.perturbations.AbstractCondition;
-import com.plectix.simulator.parser.abstractmodel.perturbations.AbstractModification;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.AbstractCondition;
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractModification;
 
 public class AbstractPerturbation {
 	private final AbstractCondition myCondition;
@@ -27,6 +27,6 @@ public class AbstractPerturbation {
 	}
 	
 	public String toString() {
-		return "%mod: " + myCondition + " " + myModification;
+		return "%mod: " + myCondition + " do " + myModification;
 	}
 }

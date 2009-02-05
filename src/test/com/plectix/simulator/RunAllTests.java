@@ -7,14 +7,14 @@ import org.junit.runners.Suite.SuiteClasses;
 import com.plectix.simulator.injections.*;
 import com.plectix.simulator.stories.TestStories;
 import com.plectix.simulator.updates.*;
-import com.plectix.simulator.parser.*;
+import com.plectix.simulator.parser.newtests.*;
 import com.plectix.simulator.perturbations.*;
 
 @RunWith(value=Suite.class)
 @SuiteClasses(value = {
 		RunInjectionsTests.class, 
 		RunUpdateTests.class,
-		RunParserTests.class,
+		//RunParserTests.class,
 		RunPerturbationsTests.class,
 		TestStories.class,
 		RunParserTests.class

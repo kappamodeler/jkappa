@@ -11,6 +11,7 @@ import org.junit.*;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.DirectoryTestsRunner;
+import com.plectix.simulator.Initializator;
 import com.plectix.simulator.parser.FileReadingException;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
@@ -22,58 +23,48 @@ import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.FileComparator;
 import com.plectix.simulator.util.FileDirComparator;
 
-public class TestParser extends DirectoryTestsRunner {
-	private static final String myTestFileNamePrefix = RunParserTests.getFileNamePrefix();
-	private static final String myResultsDir = myTestFileNamePrefix + "results/";
-	private String myFileName;
-	private String myTestFilePath;
-	private String myResultFilePath;
-	
-	public TestParser(String fileName) {
-		myFileName = fileName;
-		myTestFilePath = myTestFileNamePrefix + myFileName;
-		myResultFilePath = myResultsDir + myFileName;
+public class TestParser {
+	private static final String myTestFileNamePrefix = RunParserTests
+			.getFileNamePrefix();
+	private static final String myResultsDir = myTestFileNamePrefix
+			+ "results/";
+	// path to unformatted source file
+	private final String mySourceFileName = myTestFileNamePrefix + "test_read_this.ka";
+	// path to formatted file
+	private final String myCompareFileName = myTestFileNamePrefix
+			+ "test_compare_with_this.ka";
+	private final String myResultFilePath = myResultsDir + "result.ka";
+
+	private void prepareResult() throws ParseException, FileReadingException,
+			ParseErrorException, FileNotFoundException {
+		PrintWriter pw = null;
+		try {
+			KappaFile kf = (new KappaFileReader(mySourceFileName)).parse();
+			SimulationArguments args = Initializator
+					.prepareDefaultArguments(mySourceFileName);
+			KappaModel model = new KappaModelCreator(args).createModel(kf);
+			pw = new PrintWriter(myResultFilePath);
+			pw.println(model.toString());
+		} finally {
+			if (pw != null) {
+				pw.close();
+			}
+		}
 	}
 
-	@Parameters
-	public static Collection<Object[]> regExValues() {
-		return DirectoryTestsRunner.getAllTestFileNames(myTestFileNamePrefix);
-	}
-
-	@Override
-	public String getPrefixFileName() {
-		return myTestFileNamePrefix;
-	}
-
-	private String parseFile(String fileName) throws ParseException, FileReadingException, ParseErrorException {
-		KappaFile kf = (new KappaFileReader(myTestFilePath)).parse();
-		SimulationArguments args = getInitializator().prepareDefaultArguments(myTestFilePath);
-		KappaModel model = new KappaModelCreator(args).createModel(kf);
-		return model.toString();
-	}
-	
 	@BeforeClass
 	public static void init() {
 		File resultDir = new File(myResultsDir);
 		resultDir.mkdir();
 	}
-	
+
 	@Before
 	public void parseFile() {
-		PrintWriter pw = null;
 		try {
-			File newResultFile = new File(myResultFilePath);
-			newResultFile.createNewFile();
-			String modelString = parseFile(myTestFilePath);
-			pw = new PrintWriter(newResultFile);
-			pw.println(modelString);
+			prepareResult();
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			Assert.fail(e.getMessage());
-		} finally {
-			if (pw != null) {
-				pw.close();
-			}
 		}
 	}
 
@@ -82,7 +73,8 @@ public class TestParser extends DirectoryTestsRunner {
 		Failer failer = new Failer();
 		int line;
 		try {
-			line = new FileComparator(myTestFilePath, myResultsDir + myFileName).compare();
+			line = new FileComparator(myCompareFileName, myResultFilePath)
+					.compare();
 			if (line != -1) {
 				failer.fail("Files differ in line " + line);
 			}

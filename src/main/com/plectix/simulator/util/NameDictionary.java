@@ -22,4 +22,8 @@ public final class NameDictionary {
 	public final String getName(int id) {
 		return idToNamesList.get(id);
 	}
+
+	public int getId(String argument) {
+		return namesToIdMap.get(argument);
+	}
 }

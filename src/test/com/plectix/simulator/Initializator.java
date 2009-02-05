@@ -46,16 +46,25 @@ public class Initializator {
 		return args;
 	}
 	
-	public SimulationArguments prepareDefaultArguments(String filePath) throws ParseException{
-		String[] testArgs = prepareTestArgs(filePath);
+	public static SimulationArguments prepareDefaultArguments(String filePath) throws ParseException{
+		String[] args = new String[2];
+		args[0] = "--compile";
+		args[1] = filePath;
 		SimulatorCommandLine commandLine = null;
-		commandLine = new SimulatorCommandLine(testArgs);
+		commandLine = new SimulatorCommandLine(args);
+		return commandLine.getSimulationArguments();
+	}
+	
+	public static SimulationArguments prepareSimulationArguments(String[] args) throws ParseException {
+		SimulatorCommandLine commandLine = null;
+		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
 	
 	public void reset(String filePath) {
 		try {
-			mySimulator.getSimulationData().setSimulationArguments(InfoType.OUTPUT, prepareDefaultArguments(filePath));
+			mySimulator.getSimulationData().setSimulationArguments(InfoType.OUTPUT, 
+					prepareSimulationArguments(prepareTestArgs(filePath)));
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);

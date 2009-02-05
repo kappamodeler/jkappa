@@ -1,4 +1,7 @@
-package com.plectix.simulator.parser.abstractmodel.perturbations;
+package com.plectix.simulator.parser.abstractmodel.perturbations.conditions;
+
+import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpression;
+import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpressionMonome;
 
 public class AbstractSpeciesCondition implements AbstractCondition {
 	private final LinearExpression myExpression;
@@ -23,6 +26,10 @@ public class AbstractSpeciesCondition implements AbstractCondition {
 		return myArgument;
 	}
 	
+	@Override
+	public ConditionType getType() {
+		return ConditionType.SPECIES;
+	}
 	
 	//--------------------TO STRINGS----------------------------
 	
@@ -48,7 +55,7 @@ public class AbstractSpeciesCondition implements AbstractCondition {
 					sb.append(" + ");
 				}
 			}
-			sb.append(monome.getMultiplier() + " * ['" + monome.getRuleName() + "']");
+			sb.append(monome.getMultiplier() + " * ['" + monome.getObsName() + "']");
 		}
 		return sb.toString();
 	}

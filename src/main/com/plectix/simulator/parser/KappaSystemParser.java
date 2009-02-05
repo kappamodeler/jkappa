@@ -30,6 +30,7 @@ import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
 import com.plectix.simulator.parser.builders.KappaSystemBuilder;
 import com.plectix.simulator.parser.builders.ObservablesBuilder;
+import com.plectix.simulator.parser.builders.PerturbationsBuilder;
 import com.plectix.simulator.parser.builders.RuleBuilder;
 import com.plectix.simulator.parser.builders.SolutionBuilder;
 import com.plectix.simulator.parser.builders.StoriesBuilder;
@@ -202,6 +203,8 @@ public class KappaSystemParser {
 //		}
 
 		List<CPerturbation> perturbations = createPertubations();
+//		List<CPerturbation> perturbations = 
+//			(new PerturbationsBuilder(simulationData)).build(model.getPerturbations());
 		simulationData.setPerturbations(perturbations);
 	}
 

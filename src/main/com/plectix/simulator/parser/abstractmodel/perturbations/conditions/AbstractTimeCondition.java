@@ -1,4 +1,4 @@
-package com.plectix.simulator.parser.abstractmodel.perturbations;
+package com.plectix.simulator.parser.abstractmodel.perturbations.conditions;
 
 public class AbstractTimeCondition implements AbstractCondition {
 	private final double myTimeBounds;
@@ -9,6 +9,11 @@ public class AbstractTimeCondition implements AbstractCondition {
 	
 	public double getBounds() {
 		return myTimeBounds;
+	}
+	
+	@Override
+	public ConditionType getType() {
+		return ConditionType.TIME;
 	}
 	
 	public String toString() {

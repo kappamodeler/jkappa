@@ -1,10 +1,11 @@
-package com.plectix.simulator.parser.abstractmodel.perturbations;
+package com.plectix.simulator.parser.abstractmodel.perturbations.modifications;
 
 import java.util.*;
 
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
+import com.plectix.simulator.parser.util.StringUtil;
 
-public class AbstractOnceModification implements AbstractModification {
+public abstract class AbstractOnceModification implements AbstractModification {
 	private final List<AbstractAgent> mySubstance;
 	// TODO $INF == -1
 	private final double myQuantity;
@@ -21,4 +22,10 @@ public class AbstractOnceModification implements AbstractModification {
 	public List<AbstractAgent> getSubstance() {
 		return mySubstance;
 	}
+	
+	public String toString() {
+		return "$" + actionOnceSymbol() + "ONCE " + getQuantity() + " * " + StringUtil.listToString(getSubstance());
+	}
+	
+	protected abstract String actionOnceSymbol();
 }

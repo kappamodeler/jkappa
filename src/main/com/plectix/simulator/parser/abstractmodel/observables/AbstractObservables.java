@@ -1,6 +1,9 @@
-package com.plectix.simulator.parser.abstractmodel;
+package com.plectix.simulator.parser.abstractmodel.observables;
 
 import java.util.*;
+
+import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
+import com.plectix.simulator.parser.abstractmodel.IAbstractComponent;
 
 public class AbstractObservables implements IAbstractComponent {
 	private final List<ObservableComponentLineData> myComponents 
