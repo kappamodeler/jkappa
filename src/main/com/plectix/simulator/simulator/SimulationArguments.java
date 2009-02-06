@@ -17,7 +17,8 @@ public class SimulationArguments {
 	public static final int DEFAULT_SEED = -1;
 	public static final long DEFAULT_MAX_CLASHES = 100;
 	public static final int DEFAULT_NUMBER_OF_POINTS = 1000;
-	public static final long DEFAULT_WALL_CLOCK_TIME_LIMIT = NUMBER_OF_MILLISECONDS_IN_DAY;
+	/** Maximum simulation time is 100 days */
+	public static final long DEFAULT_WALL_CLOCK_TIME_LIMIT = 100L* NUMBER_OF_MILLISECONDS_IN_DAY;
 	public static final String DEFAULT_XML_SESSION_NAME = "simplx.xml";
 	public static final String DEFAULT_SERIALIZATION_FILE_NAME = "~tmp.sd";
 
@@ -41,8 +42,11 @@ public class SimulationArguments {
 	}
 
 	public enum SerializationMode {
+		/** Corresponds to the "no_save_all' option of simplx.*/
 		NONE,
+		/** All data is read from the serialized data instead of the Kappa file */
 		READ,
+		/** All data is saved in serializationFileName */
 		SAVE
 	}
 	
@@ -374,6 +378,11 @@ public class SimulationArguments {
 		return genereteMap;
 	}
 	
+	/**
+	 * Corresponds to the "generate_map" option of simplx. 
+	 * 
+	 * @param genereteMapOption
+	 */
 	public final void setGenereteMap(boolean genereteMapOption) {
 		this.genereteMap = genereteMapOption;
 	}
@@ -382,17 +391,15 @@ public class SimulationArguments {
 		return contactMap;
 	}
 	
+	/**
+	 * Corresponds to the "contact_map" option of simplx. 
+	 * 
+	 * @param contactMapOption
+	 */
 	public final void setContactMap(boolean contactMapOption) {
 		this.contactMap = contactMapOption;
 	}
 	
-	public final boolean isNumberOfRuns() {
-		return numberOfRuns;
-	}
-	
-	public final void setNumberOfRuns(boolean numberOfRunsOption) {
-		this.numberOfRuns = numberOfRunsOption;
-	}
 	
 	public final boolean isStorify() {
 		return storify;
@@ -519,14 +526,26 @@ public class SimulationArguments {
 		return inputFilename;
 	}
 	
-	public final void setInputFilename(String inputFile) {
-		this.inputFilename = inputFile;
+	/**
+	 * The name of the Kappa file to simulate or to construct the maps for
+	 * 
+	 * @param inputFilename
+	 */
+	public final void setInputFilename(String inputFilename) {
+		this.inputFilename = inputFilename;
 	}
 	
 	public final String getSnapshotsTimeString() {
 		return snapshotsTimeString;
 	}
 	
+	/**
+	 * Takes snapshots of the solution at specified time units.
+	 * <br><br>
+	 * Corresponds to the "set_snapshot_time" option of simplx.
+	 * 
+	 * @param snapshotsTimeString
+	 */
 	public final void setSnapshotsTimeString(String snapshotsTimeString) {
 		this.snapshotsTimeString = snapshotsTimeString;
 	}
@@ -535,37 +554,29 @@ public class SimulationArguments {
 		return focusFilename;
 	}
 	
+	/**
+	 * Makes the contact map focus around the rules given through the focus file.
+	 * <br><br>
+	 * Corresponds to the "focus_on" option of simplx. 
+	 * 
+	 * @param focusFilename
+	 */
 	public final void setFocusFilename(String focusFilename) {
 		this.focusFilename = focusFilename;
 	}
 
-	public final SimulationType getSimulationType() {
-		return simulationType;
-	}
-	public final void setSimulationType(SimulationType simulationType) {
-		this.simulationType = simulationType;
-	}
-
-	public final SerializationMode getSerializationMode() {
-		return serializationMode;
-	}
-
-	public final void setSerializationMode(SerializationMode serializationMode) {
-		this.serializationMode = serializationMode;
-	}
-
-	public final StorifyMode getStorifyMode() {
-		return storifyMode;
-	}
-
-	public final void setStorifyMode(StorifyMode storifyMode) {
-		this.storifyMode = storifyMode;
-	}
 
 	public final String getCommandLineString() {
 		return commandLineString;
 	}
 
+	/**
+	 * Registers the command line arguments to be saved into the output XML file.
+	 * It is used internally when the application is run from the command line,
+	 * and not otherwise.
+	 * 
+	 * @param commandLineString
+	 */
 	public final void setCommandLineString(String commandLineString) {
 		this.commandLineString = commandLineString;
 	}
@@ -583,6 +594,97 @@ public class SimulationArguments {
 		this.noDumpStdoutStderr = noDumpStdoutStderr;
 	}
 
+	public final String getInputFile() {
+		return inputFile;
+	}
+
+	/**
+	 * The contents of the Kappa file to simulate or to construct the maps for
+	 * 
+	 * @param inputFile
+	 */
+	public final void setInputFile(String inputFile) {
+		this.inputFile = inputFile;
+	}
+	
+	public final int getIterations() {
+		return iterations;
+	}
+	
+	/**
+	 * Sets the number of simulation runs.
+	 * <br><br>
+	 * In {@link SimulationType#STORIFY} mode (with --storify option), it is the number of stories to be searched for.
+	 * In {@link SimulationType#AVERAGE_OF_RUNS}, we run the simulation 'iterations' times and we report the average, 
+	 * minimum, maximum, and standard deviation of those runs. This is not fully functional yet.
+	 * <br><br>
+	 * Corresponds to the "iteration" option of simplx.
+	 * <br><br>
+	 * 
+	 * @param iterations
+	 * @see SimulationType#AVERAGE_OF_RUNS
+	 */
+	public final void setIterations(int iterations) {
+		this.iterations = iterations;
+	}
+
+	public final boolean isNumberOfRuns() {
+		return numberOfRuns;
+	}
+	
+	/**
+	 * Sets the simulation mode to #SimulationType.AVERAGE_OF_RUNS.
+	 * 
+	 * @param numberOfRunsOption
+	 * @see SimulationType#AVERAGE_OF_RUNS
+	 * @see #setIterations(int)
+	 */
+	public final void setNumberOfRuns(boolean numberOfRunsOption) {
+		this.numberOfRuns = numberOfRunsOption;
+	}
+
+	public final SimulationType getSimulationType() {
+		return simulationType;
+	}
+	
+	/**
+	 * Sets the simulation mode.
+	 *  
+	 * @param simulationType
+	 * @see SimulationType
+	 */
+	public final void setSimulationType(SimulationType simulationType) {
+		this.simulationType = simulationType;
+	}
+
+	public final SerializationMode getSerializationMode() {
+		return serializationMode;
+	}
+
+	/**
+	 * Sets the serialization mode.
+	 *  
+	 * @param serializationMode
+	 * @see SerializationMode
+	 */
+	public final void setSerializationMode(SerializationMode serializationMode) {
+		this.serializationMode = serializationMode;
+	}
+
+	public final StorifyMode getStorifyMode() {
+		return storifyMode;
+	}
+	
+	/**
+	 * Sets the stories mode.
+	 *  
+	 * @param storifyMode
+	 * @see StorifyMode
+	 */
+	public final void setStorifyMode(StorifyMode storifyMode) {
+		this.storifyMode = storifyMode;
+	}
+	
 	public final boolean isHelp() {
 		return help;
 	}
@@ -609,22 +711,6 @@ public class SimulationArguments {
 	 */
 	public final void setVersion(boolean version) {
 		this.version = version;
-	}
-
-	public final String getInputFile() {
-		return inputFile;
-	}
-
-	public final void setInputFile(String inputFile) {
-		this.inputFile = inputFile;
-	}
-	
-	public final int getIterations() {
-		return iterations;
-	}
-	
-	public final void setIterations(int iterations) {
-		this.iterations = iterations;
 	}
 	
 	public boolean isShortConsoleOutput() {

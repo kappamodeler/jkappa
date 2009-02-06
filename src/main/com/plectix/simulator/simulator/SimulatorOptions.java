@@ -23,7 +23,7 @@ public enum SimulatorOptions {
 	STORIFY("storify", true, "Name of the kappa file to storify"),
 	EVENT("event", true, "Number of rule applications"),
 	RANDOMIZER_JAVA("randomizer", true,	"Use randomizer Java"),
-	NUMBER_OF_RUNS("number_of_runs", true, "Number of runs, generates tmp file"),
+	NUMBER_OF_RUNS("number_of_runs", false, "Number of runs, generates tmp file"),
 	SNAPSHOT_TIME("set_snapshot_time", true, 
 			"Takes a snapshot of solution at specified time unit"),
 	//TODO is this similar to "--debug debug mode (very verbose!)" ?
