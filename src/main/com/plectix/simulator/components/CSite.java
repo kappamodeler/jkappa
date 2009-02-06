@@ -17,13 +17,9 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 public final class CSite implements ISite, Serializable {
 	public static final int NO_INDEX = -1;
 
-	// TODO move to CInternalState?
-	private static final CInternalState EMPTY_STATE = new CInternalState(
-			NO_INDEX);
-
 	private final int nameId;
 	private final ILinkState linkState;
-	private IInternalState internalState = EMPTY_STATE;
+	private IInternalState internalState = CInternalState.EMPTY_STATE;
 	private boolean changed;
 	private IAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;

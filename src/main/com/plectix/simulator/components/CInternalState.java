@@ -7,6 +7,9 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class CInternalState extends CState implements IInternalState, Serializable {
 
+	public static final CInternalState EMPTY_STATE = new CInternalState(
+			CSite.NO_INDEX);
+	
 	private int nameId;
 
 	public CInternalState(int id) {
