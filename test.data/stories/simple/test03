@@ -1,0 +1,22 @@
+# Rules:
+#######
+
+'1' a(x) ->  b(x) @ 1.0
+'2' b(x) -> b1(x) @ 1.0
+'3' b1(x) -> c1(x) @ 1.0
+'4' c1(x)-> c(x) @ 1.0
+'5' c(x) -> d(x) @ 1.0
+'6' d(x) -> e(x) @ 1.0
+'7' e(x) -> e(x) @ 1.0
+
+
+
+# Initial conditions:
+%init: 1 * (a(x))
+
+# Simulation:
+%obs: b(x)
+%obs: a(x)
+%obs: c1(x)
+
+%story: '7'

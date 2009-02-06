@@ -21,7 +21,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	private final static String testDirectory = "test.data/stories/";
 
 	private final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
-	
+	private static String mode = "simple/";
 	private String FilePath = "";
 	private Simulator mySimulator;
 	private CStoryTrees storyTrees;
@@ -44,7 +44,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 
 	@Before
 	public void setup() {
-		init(getDirectory() + FilePath);
+		init(getDirectory()+ mode + FilePath);
 		mySimulator.getSimulationData().setTimeLength(time);
 		try {
 			mySimulator.runStories();
