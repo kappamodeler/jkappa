@@ -18,8 +18,8 @@ public class ObservablesBuilder {
 	private IObservables done;
 	private final SubstanceBuilder mySubstanceBuilder;
 	
-	public ObservablesBuilder(SimulationData data, SimulationArguments args) {
-		myArguments = args;
+	public ObservablesBuilder(SimulationData data) {
+		myArguments = data.getSimulationArguments();
 		done = data.getObservables();
 		mySubstanceBuilder = new SubstanceBuilder(data);
 	}

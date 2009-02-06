@@ -7,12 +7,12 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(value = Suite.class)
 @SuiteClasses(value = { 
-		TestParseRuleCorrection.class,
-		TestParseAgentCorrection.class,
-		TestParseAgents.class,
-		TestParseResult.class,
-		TestSuccessParsing.class,
-		TestParseStoriesCorrection.class
+//		TestParseRuleCorrection.class,
+//		TestParseAgentCorrection.class,
+//		TestParseAgents.class,
+//		TestParseResult.class,
+//		TestSuccessParsing.class,
+//		TestParseStoriesCorrection.class
 		})
 public class RunParserTests extends TestRunner {
 	private static final String myTestFileNamePrefix = "test.data/parser/";

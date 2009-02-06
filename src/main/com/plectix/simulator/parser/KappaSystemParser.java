@@ -150,33 +150,16 @@ public class KappaSystemParser {
 	public final void parse(InfoType outputType) throws ParseErrorException {
 		simulationData.addInfo(outputType,InfoType.INFO,"--Computing initial state");
 		
-		KappaSystemBuilder builder = new KappaSystemBuilder();
-		KappaModel model = (new KappaModelCreator(
-				simulationData.getSimulationArguments())).createModel(myKappaFile);
-//		builder.build(model, simulationData);
-		
-		SimulationArguments arguments = simulationData.getSimulationArguments();
-//		simulationData.setIdGenerator(generator);
-		
+//		KappaModel model = (new KappaModelCreator(
+//				simulationData.getSimulationArguments())).createModel(myKappaFile);
+//		simulationData.setInitialModel(model);
+//		new KappaSystemBuilder(simulationData).build();
+
 		// solution
 		if (simulationData.isParseSolution())
 			createSimData(CREATE_INIT);
 		
-//		if (arguments.getSimulationType() != SimulationArguments.SimulationType.GENERATE_MAP) { 
-//			AbstractSolution solution = model.getSolution();
-//			simulationData.setSolution((new SolutionBuilder(simulationData)).build(solution));
-//		}
-
-		// rules
 		List<IRule> rules = createRules(myKappaFile.getRules());
-		
-//		List<IRule> rules = new ArrayList<IRule>();
-//		for (AbstractRule abstractRule : model.getRules()) {
-//			RuleBuilder rb = new RuleBuilder(simulationData);
-//			IRule rule = rb.build(abstractRule);
-//			rules.add(rule);
-//		}
-		
 		simulationData.setRules(rules);
 
 		if ((simulationData.getStories() == null)
@@ -187,24 +170,8 @@ public class KappaSystemParser {
 			createSimData(CREATE_OBS);
 		}
 				
-//		if ((simulationData.getStories() == null)
-//				&& (arguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY)) {
-//			// stories
-//			simulationData.setStories(new CStories(simulationData));
-//			for (String storifiedName : (new StoriesBuilder()).build(model
-//					.getStories())) {
-//				simulationData.addStories(storifiedName);
-//			}
-//		} else {
-//			// observables
-//			IObservables observables = (new ObservablesBuilder(simulationData, arguments)).build(model
-//					.getObservables(), simulationData.getRules());
-//			simulationData.setObservables(observables);
-//		}
 
 		List<CPerturbation> perturbations = createPertubations();
-//		List<CPerturbation> perturbations = 
-//			(new PerturbationsBuilder(simulationData)).build(model.getPerturbations());
 		simulationData.setPerturbations(perturbations);
 	}
 

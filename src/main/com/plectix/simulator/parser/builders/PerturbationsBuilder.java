@@ -25,6 +25,7 @@ import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.Mo
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.util.Info.InfoType;
 
 public class PerturbationsBuilder {
 	private final SubstanceBuilder mySubstanceBuilder;
@@ -35,12 +36,13 @@ public class PerturbationsBuilder {
 		myData = data;
 	}
 
-	public List<CPerturbation> build(List<AbstractPerturbation> arg) throws ParseErrorException {
+	public List<CPerturbation> build(List<AbstractPerturbation> arg)
+			throws ParseErrorException {
 		List<CPerturbation> result = new ArrayList<CPerturbation>();
 		for (AbstractPerturbation perturbation : arg) {
-			CPerturbation res = convert(perturbation);
+			List<CPerturbation> res = convert(perturbation);
 			if (res != null) {
-				result.add(convert(perturbation));
+				result.addAll(res);
 			}
 		}
 		return result;
@@ -51,7 +53,7 @@ public class PerturbationsBuilder {
 		if (name == null) {
 			return null;
 		}
-		
+
 		for (IRule rule : myData.getRules()) {
 			if (name.equals(rule.getName())) {
 				return rule;
@@ -72,11 +74,13 @@ public class PerturbationsBuilder {
 		return result;
 	}
 
-	private CPerturbation convert(AbstractPerturbation arg) throws ParseErrorException {
+	private List<CPerturbation> convert(AbstractPerturbation arg)
+			throws ParseErrorException {
 		ModificationType modificationType = arg.getModification().getType();
+		List<CPerturbation> result = new ArrayList<CPerturbation>();
 		boolean rateModification = (modificationType == ModificationType.RATE);
 		boolean deleteOnceModification = (modificationType == ModificationType.DELETEONCE);
-//		boolean addOnceModification = (modificationType == ModificationType.ADDONCE);
+		boolean addOnceModification = (modificationType == ModificationType.ADDONCE);
 
 		int id = arg.getId();
 		// TODO worry about type conversion?
@@ -89,30 +93,43 @@ public class PerturbationsBuilder {
 			if (rateModification) {
 				AbstractRateModification modification = (AbstractRateModification) arg
 						.getModification();
-				return new CPerturbation(id, timeBound,
+				result.add(new CPerturbation(id, timeBound,
 						// TODO -1, we don't need it
 						CPerturbationType.TIME, -1, findRule(modification
 								.getArgument()), true,
-						createRateExpression(modification));
+						createRateExpression(modification)));
+				return result;
 			} else {
-				CRulePerturbation rule;
 				AbstractOnceModification modification = (AbstractOnceModification) arg
 						.getModification();
 				List<IAgent> agentList = mySubstanceBuilder
 						.buildAgents(modification.getSubstance());
 				List<IConnectedComponent> ccList = SimulationUtils
 						.buildConnectedComponents(agentList);
-				if (deleteOnceModification) {
-					rule = new CRulePerturbation(null, ccList, "", 0,
-							(int) myData.generateNextRuleId(), myData
-									.getSimulationArguments().isStorify());
-				} else { // addOnceModification
-					rule = new CRulePerturbation(ccList, null, "", 0,
-							(int) myData.generateNextRuleId(), myData
-									.getSimulationArguments().isStorify());
+				
+				for (IConnectedComponent cc : ccList) {
+					List<IConnectedComponent> ccL = new ArrayList<IConnectedComponent>();
+					ccL.add(cc);
+					CRulePerturbation rule;
+					if (addOnceModification) {
+						//TODO
+//						if (countToFile == Double.MAX_VALUE)
+//							throw new ParseErrorException(perturbationStr,
+//									"$ADDONCE has not used with $INF");
+						rule = new CRulePerturbation(null, ccL, "", 0,
+								(int) myData.generateNextRuleId(), myData
+										.getSimulationArguments().isStorify());
+					} else {
+						rule = new CRulePerturbation(ccL, null, "", 0,
+								(int) myData.generateNextRuleId(), myData
+										.getSimulationArguments().isStorify());
+					}
+					rule.setCount(modification.getQuantity());
+					myData.addRule(rule);
+					result.add(new CPerturbation(id, timeBound, CPerturbationType.ONCE,
+							rule, true));
 				}
-				return new CPerturbation(id, timeBound, CPerturbationType.ONCE,
-						rule, true);
+				return result;
 			}
 		}
 		case SPECIES: {
@@ -121,13 +138,14 @@ public class PerturbationsBuilder {
 			if (rateModification) {
 				AbstractRateModification modification = (AbstractRateModification) arg
 						.getModification();
-				
-				// old code "conversion" 
+
+				// old code "conversion"
 				List<IObservablesComponent> obsID = new ArrayList<IObservablesComponent>();
 				List<Double> parameters = new ArrayList<Double>();
 				double freeTerm = 0;
 				boolean freeTermNotZero = false;
-				for (LinearExpressionMonome monome : condition.getExpression().getPolynome()) {
+				for (LinearExpressionMonome monome : condition.getExpression()
+						.getPolynome()) {
 					if (monome.getObsName() != null) {
 						obsID.add(checkInObservables(monome.getObsName()));
 						parameters.add(monome.getMultiplier());
@@ -136,19 +154,22 @@ public class PerturbationsBuilder {
 						freeTermNotZero = true;
 					}
 				}
-				
+
 				if (freeTermNotZero) {
 					parameters.add(freeTerm);
 				}
 				IRule rule = findRule(modification.getArgument());
-				return new CPerturbation(id, obsID, parameters, 
-//						component.getNameID(),
-						ThreadLocalData.getNameDictionary().getId(condition.getArgument()),
-						CPerturbationType.NUMBER, 
-						-1., rule, condition.isGreater(),
-						createRateExpression(modification), myData
-								.getObservables());
+				IObservablesComponent component = checkInObservables(condition
+						.getArgument());
+				result.add(new CPerturbation(id, obsID, parameters, component
+						.getNameID(), CPerturbationType.NUMBER, -1., 
+						rule, condition.isGreater(), createRateExpression(modification), 
+						myData.getObservables()));
+				return result;
 			} else {
+				myData.addInfo(InfoType.OUTPUT, InfoType.WARNING, 
+						"WARNING - We cannot use species condition with 'ONCE' modification");
+//				throw new ParseErrorException("We cannot use species condition with 'ONCE' modification");
 				// TODO we've not implemented this feature :-(
 			}
 		}
@@ -161,10 +182,11 @@ public class PerturbationsBuilder {
 		IObservablesComponent obsId = null;
 		for (IObservablesComponent cc : myData.getObservables()
 				.getComponentList()) {
-			if ((cc.getName() != null) && (obsName.equals(cc.getName()))) {
-				return obsId;
+			if ((cc.getName() != null) && (cc.getName().equals(obsName))) {
+				return cc;
 			}
 		}
-		throw new ParseErrorException("'" + obsName	+ "' must be in observables!");
+		throw new ParseErrorException("'" + obsName
+				+ "' must be in observables!");
 	}
 }

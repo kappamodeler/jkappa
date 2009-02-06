@@ -411,20 +411,20 @@ public class CContactMap {
 		return added;
 	}
 
-	private void printInjections(IRule rule) {
-		System.out.println("ruleID = " + rule.getRuleID());
-		if(rule.getLeftHandSide().get(0) != CRule.EMPTY_LHS_CC)
-		for (IConnectedComponent cc : rule.getLeftHandSide()) {
-			List<IInjection> injList = new ArrayList<IInjection>();
-			injList.addAll(cc.getInjectionsList());
-			
-			System.out.println("injList size = "+injList.size());
-			for(IInjection inj : injList){
-			  for(IAgentLink al : inj.getAgentLinkList())
-				  System.out.println(al.getAgentTo().toString());
-			}
-		}
-	}
+//	private void printInjections(IRule rule) {
+//		System.out.println("ruleID = " + rule.getRuleID());
+//		if(rule.getLeftHandSide().get(0) != CRule.EMPTY_LHS_CC)
+//		for (IConnectedComponent cc : rule.getLeftHandSide()) {
+//			List<IInjection> injList = new ArrayList<IInjection>();
+//			injList.addAll(cc.getInjectionsList());
+//			
+//			System.out.println("injList size = "+injList.size());
+//			for(IInjection inj : injList){
+//			  for(IAgentLink al : inj.getAgentLinkList())
+//				  System.out.println(al.getAgentTo().toString());
+//			}
+//		}
+//	}
 
 	private void addToInvokedRules(List<IRule> rules, List<IRule> rulesToAdd) {
 		for (IRule rule : rulesToAdd) {

@@ -6,6 +6,7 @@ import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.AbstractRule;
 import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
@@ -24,44 +25,44 @@ public class KappaSystemBuilder {
 	// return system;
 	// }
 
-	public void build(KappaModel model, SimulationData data) {
-		SimulationArguments arguments = data.getSimulationArguments();
-		IdGenerator generator = data.getIdGenerator();
+	private final SimulationData myData;
+	
+	public KappaSystemBuilder(SimulationData data) {
+		myData = data;
+	}
+	
+	public void build() throws ParseErrorException {
+		KappaModel model = myData.getInitialModel();
+		SimulationArguments arguments = myData.getSimulationArguments();
 		
 		// solution
 		if (arguments.getSimulationType() != SimulationArguments.SimulationType.GENERATE_MAP) { 
 			AbstractSolution solution = model.getSolution();
-			data.setSolution((new SolutionBuilder(data)).build(solution));
+			myData.setSolution((new SolutionBuilder(myData)).build(solution));
 		}
 
-//		System.out.println("GENERATOR - " + generator.generateNextAgentId());
 		// rules
-		List<IRule> rules = new ArrayList<IRule>();
-		for (AbstractRule abstractRule : model.getRules()) {
-			IRule rule = (new RuleBuilder(data)).build(abstractRule);
-			rules.add(rule);
-		}
-		data.setRules(rules);
+		List<IRule> rules = (new RuleBuilder(myData)).build(model.getRules());
+		myData.setRules(rules);
 
-//		data.outputData();
-		
-		if ((data.getStories() == null)
+		if ((myData.getStories() == null)
 				&& (arguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY)) {
 			// stories
-			data.setStories(new CStories(data));
+			myData.setStories(new CStories(myData));
 			for (String storifiedName : (new StoriesBuilder()).build(model
 					.getStories())) {
-				data.addStories(storifiedName);
+				myData.addStories(storifiedName);
 			}
 		} else {
 			// observables
-			IObservables observables = (new ObservablesBuilder(data, arguments)).build(model
+			IObservables observables = (new ObservablesBuilder(myData)).build(model
 					.getObservables(), rules);
-			data.setObservables(observables);
+			myData.setObservables(observables);
 		}
 
-		data.setIdGenerator(generator);
-		
-//		data.setPerturbations(new ArrayList<CPerturbation>());
+		// perturbations
+		List<CPerturbation> perturbations = 
+			(new PerturbationsBuilder(myData)).build(model.getPerturbations());
+		myData.setPerturbations(perturbations);
 	}
 }

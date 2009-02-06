@@ -73,6 +73,8 @@ import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
 import com.plectix.simulator.parser.KappaSystemParser;
+import com.plectix.simulator.parser.abstractmodel.KappaModel;
+import com.plectix.simulator.parser.builders.RuleBuilder;
 import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.util.Info;
@@ -121,10 +123,21 @@ public class SimulationData {
 	private IdGenerator myIdGenerator = new IdGenerator();
 	private IdGenerator myRuleIdGenerator = new IdGenerator();
 	
+	
+	private KappaModel myInitialModel = null;
+	
 	public SimulationData() {
 		super();
 	}
 
+	public KappaModel getInitialModel() {
+		return myInitialModel;
+	}
+	
+	public void setInitialModel(KappaModel model) {
+		myInitialModel = model;
+	}
+	
 	public final void resetSimulation(InfoType outputType) {
 		if (!simulationArguments.isShortConsoleOutput())
 			outputType = InfoType.OUTPUT;
@@ -1516,6 +1529,7 @@ public class SimulationData {
 
 		KappaSystemParser parser = new KappaSystemParser(kappaFile, this);
 		List<IRule> ruleList = parser.createRules();
+//		List<IRule> ruleList = (new RuleBuilder(this)).build(myInitialModel.getRules());
 
 		if (ruleList != null && !ruleList.isEmpty()) {
 			contactMap.setFocusRule(ruleList.get(0));
