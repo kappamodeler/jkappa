@@ -15,7 +15,6 @@ import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
@@ -23,7 +22,6 @@ import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.simulator.Simulator;
 
 public class CContactMap {
 	public enum ContactMapMode {
