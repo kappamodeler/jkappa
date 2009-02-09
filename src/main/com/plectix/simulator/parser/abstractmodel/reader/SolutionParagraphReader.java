@@ -2,11 +2,13 @@ package com.plectix.simulator.parser.abstractmodel.reader;
 
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
-import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.*;
+import com.plectix.simulator.parser.exceptions.BadOptionException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.parser.exceptions.ParseErrorMessage;
+import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 
@@ -20,8 +22,8 @@ import com.plectix.simulator.simulator.SimulationArguments;
 		myArguments = getArguments();
 	}
 
-	public final AbstractSolution addComponent(KappaFileParagraph solutionParagraph)
-			throws ParseErrorException {
+	public final AbstractSolution readComponent(KappaFileParagraph solutionParagraph)
+			throws SimulationDataFormatException {
 		AbstractSolution solution = new AbstractSolution();
 		long count;
 		String line;
@@ -45,7 +47,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 					countInFile = Double.valueOf(result[0]) * rescale;
 				} catch (NumberFormatException e) {
 					throw new ParseErrorException(itemDS,
-							"Quantity must have numerical format: " + result[0]);
+							ParseErrorMessage.INTEGER_EXPECTED, result[0]);
 				}
 
 				// if (countInFile - Math.floor(countInFile) < 1e-16)
@@ -54,8 +56,8 @@ import com.plectix.simulator.simulator.SimulationArguments;
 					// count = (long) countInFile;
 					count = round;
 				} else {
-					throw new ParseErrorException(itemDS,
-							"Integer quantity expected, use '--rescale' option");
+					throw new BadOptionException(itemDS,
+							ParseErrorMessage.BAD_RESCALE);
 				}
 			}
 			line = result[length - 1].trim();

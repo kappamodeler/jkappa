@@ -2,8 +2,8 @@ package com.plectix.simulator.parser.abstractmodel.reader;
 
 import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
-import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.*;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 
@@ -14,7 +14,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 		super(model, arguments, factory);
 	}
 
-	public final AbstractStories addComponent(KappaFileParagraph storiesParagraph)
+	public final AbstractStories readComponent(KappaFileParagraph storiesParagraph)
 			throws ParseErrorException {
 		AbstractStories stories = new AbstractStories();
 

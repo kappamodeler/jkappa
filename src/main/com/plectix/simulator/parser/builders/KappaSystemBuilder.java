@@ -2,28 +2,17 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.*;
 
-import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.parser.ParseErrorException;
-import com.plectix.simulator.parser.abstractmodel.AbstractRule;
 import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.util.IdGenerator;
-import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.parser.exceptions.DocumentFormatException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 
 public class KappaSystemBuilder {
-	// public KappaSystem build(KappaModel model) {
-	// KappaSystem system = new KappaSystem();
-	//		
-	// system
-	//		
-	//		
-	// return system;
-	// }
 
 	private final SimulationData myData;
 	
@@ -31,7 +20,7 @@ public class KappaSystemBuilder {
 		myData = data;
 	}
 	
-	public void build() throws ParseErrorException {
+	public void build() throws ParseErrorException, DocumentFormatException {
 		KappaModel model = myData.getInitialModel();
 		SimulationArguments arguments = myData.getSimulationArguments();
 		

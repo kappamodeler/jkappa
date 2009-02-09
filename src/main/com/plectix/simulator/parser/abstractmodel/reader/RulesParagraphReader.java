@@ -2,27 +2,21 @@ package com.plectix.simulator.parser.abstractmodel.reader;
 
 import java.util.*;
 
-//import com.plectix.simulator.components.ConstraintData;
 import com.plectix.simulator.components.ConstraintData;
 import com.plectix.simulator.components.ConstraintExpression;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
-import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.AbstractRule;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
+import com.plectix.simulator.parser.exceptions.DocumentFormatException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.parser.exceptions.ParseErrorMessage;
 import com.plectix.simulator.parser.util.AgentFactory;
-import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.SimulationArguments;
-import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 /*package*/ class RulesParagraphReader extends KappaParagraphReader<Collection<AbstractRule>>{
-	// $INT == $INT | $INT <> $INT | $INT // ID
-//	private final static String NO_POLY = "NO_POLY";
-//	private final static String NO_HELIX = "NO_HELIX";
 
 	private final static byte RULE_TWO_WAY = 1;
 
@@ -31,9 +25,6 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 	private static final byte CC_ALL = -1;
 
 	private static final String CONSTRAINT_PATTERN_ITEM = "((\\$)+[0-9]+)+";
-	private static final String CONSTRAINT_PATTERN_EXPRESSION_EQUALS = "("
-			+ CONSTRAINT_PATTERN_ITEM + "\\=\\=" + CONSTRAINT_PATTERN_ITEM
-			+ ")+";
 	private static final String CONSTRAINT_PATTERN_EXPRESSION = "(("
 			+ CONSTRAINT_PATTERN_ITEM + "\\=\\=" + CONSTRAINT_PATTERN_ITEM
 			+ ")|(" + CONSTRAINT_PATTERN_ITEM + "\\<\\>"
@@ -55,7 +46,9 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 		myArguments = getArguments();
 	}
 	
-	public Collection<AbstractRule> addComponent(KappaFileParagraph rulesParagraph) throws ParseErrorException {
+	public Collection<AbstractRule> readComponent(
+			KappaFileParagraph rulesParagraph) throws ParseErrorException,
+			DocumentFormatException {
 		List<AbstractRule> rules = new ArrayList<AbstractRule>();
 		int ruleID = 0;
 		boolean isStorify = myArguments.isStorify();
@@ -75,8 +68,7 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1);
 				if (rulesStr.indexOf("'") == -1)
 					throw new ParseErrorException(ruleLine,
-							"Unexpected rule name (please use apostrophes) : "
-									+ rulesStr);
+							ParseErrorMessage.UNEXPECTED_RULE_NAME, rulesStr);
 				name = rulesStr.substring(0, rulesStr.indexOf("'")).trim();
 				rulesStr = rulesStr.substring(rulesStr.indexOf("'") + 1,
 						rulesStr.length()).trim();
@@ -109,7 +101,7 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 				} catch (Exception e) {
 					String details = rulesStr.substring(index).trim();
 					throw new ParseErrorException(ruleLine,
-							"Unexpected rule rate : " + details);
+							ParseErrorMessage.UNEXPECTED_RULE_RATE, details);
 				}
 				rulesStr = rulesStr.substring(0, index).trim();
 			}
@@ -143,14 +135,13 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 				if (index == -1) {
 					index = CC_LHS;
 				} else {
-					throw new ParseErrorException(ruleLine, "Unexpected line : "
-							+ ruleLine.getLine());
+					throw new ParseErrorException(ruleLine, ParseErrorMessage.UNEXPECTED_LINE,
+							ruleLine.getLine());
 				}
 			}
 
 			if (!rulesStr.contains("->")) {
-				throw new ParseErrorException(ruleLine,
-						"Rule should have '->' as separator");
+				throw new ParseErrorException(ruleLine, ParseErrorMessage.ARROW_EXPECTED);
 			}
 
 			String[] result = rulesStr.split("\\->");
@@ -238,27 +229,27 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 		return rules;
 	}
 	
-	//TODO such a shame! :-P redo!!
+	//TODO such a shame! :-P redo!! .. orevenremove 
 	private String checkConstraintsInRule(KappaFileLine rulesDS, String rulesStr,
 			int index, ConstraintData constraintLeftToRight,
 			ConstraintData constraintRightToLeft) throws ParseErrorException {
 		if (index == -1)
-			throw new ParseErrorException(rulesDS, "Unexpected line : "
-					+ rulesDS.getLine());
+			throw new ParseErrorException(rulesDS, ParseErrorMessage.UNEXPECTED_LINE,
+					rulesDS.getLine());
 		int indexConstraintStart = rulesStr.indexOf("{");
 		int indexConstraintEnd = rulesStr.indexOf("}");
 
 		if (indexConstraintEnd == -1 && indexConstraintStart == -1)
 			return rulesStr;
 		if (indexConstraintEnd == -1 || indexConstraintStart == -1)
-			throw new ParseErrorException(rulesDS,
-					"Unexpected constraints at line : " + rulesDS.getLine());
+			throw new ParseErrorException(rulesDS, ParseErrorMessage.UNEXPECTED_LINE,
+					rulesDS.getLine());
 
 		String st = rulesStr.substring(indexConstraintStart,
 				indexConstraintEnd + 1);
 		if (st.length() == 2)
-			throw new ParseErrorException(rulesDS,
-					"Unexpected constraints at line : " + rulesDS.getLine());
+			throw new ParseErrorException(rulesDS, ParseErrorMessage.UNEXPECTED_LINE,
+					rulesDS.getLine());
 
 		// System.out.println(st);
 		rulesStr = rulesStr.substring(0, indexConstraintStart)
@@ -278,8 +269,8 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 		while (line.hasMoreTokens()) {
 			constr = line.nextToken().trim();
 			if (!constr.matches(CONSTRAINT_PATTERN_EXPRESSION))
-				throw new ParseErrorException(rulesDS,
-						"Unexpected constraints at line : " + rulesDS.getLine());
+				throw new ParseErrorException(rulesDS, ParseErrorMessage.UNEXPECTED_LINE,
+						rulesDS.getLine());
 			byte type = -1;
 			long idLeft = -1;
 			long idRight = -1;
@@ -306,8 +297,8 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 					//idRight = Integer.valueOf(constr.substring(i).replace(CONSTRAINT_EXPRESSION_ID, ""));
 				}
 			} catch (Exception e) {
-				throw new ParseErrorException(rulesDS,
-						"Unexpected constraints at line : " + rulesDS.getLine());
+				throw new ParseErrorException(rulesDS, ParseErrorMessage.UNEXPECTED_LINE,
+						rulesDS.getLine());
 			}
 			constraintData.addExpression(new ConstraintExpression(type, idLeft,
 					idRight));

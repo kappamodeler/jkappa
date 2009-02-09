@@ -3,7 +3,8 @@ package com.plectix.simulator.parser.abstractmodel.perturbations;
 import java.util.StringTokenizer;
 
 import com.plectix.simulator.parser.KappaFileLine;
-import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.parser.exceptions.ParseErrorMessage;
 
 public abstract class SpecifiedLinearModificationParser {
 	
@@ -40,11 +41,12 @@ public abstract class SpecifiedLinearModificationParser {
 			} catch (NumberFormatException e) {
 				// free term as rule name
 				String name = parseName(item, perturbationStr);
+
 				if (name != null) {
 					return new LinearExpressionMonome(name, 1);
 				} else {
 					throw new ParseErrorException(perturbationStr,
-						"Linear expression parse error: wrong expression");
+						ParseErrorMessage.BAD_LINEAR_EXPRESSION);
 				}
 			}
 		} else {
@@ -54,7 +56,7 @@ public abstract class SpecifiedLinearModificationParser {
 						.trim());
 			} catch (NumberFormatException e) {
 				throw new ParseErrorException(perturbationStr,
-						"Linear expression parse error: value parameter expected before name");
+						ParseErrorMessage.BAD_LINEAR_EXPRESSION);
 			}
 			item = item.substring(item.indexOf("*") + 1).trim();
 

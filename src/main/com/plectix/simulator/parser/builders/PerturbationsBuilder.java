@@ -11,7 +11,6 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
 import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.AbstractPerturbation;
 import com.plectix.simulator.parser.abstractmodel.AbstractRule;
 import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpressionMonome;
@@ -22,6 +21,8 @@ import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.Ab
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractOnceModification;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractRateModification;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.ModificationType;
+import com.plectix.simulator.parser.exceptions.DocumentFormatException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.ThreadLocalData;
@@ -37,7 +38,7 @@ public class PerturbationsBuilder {
 	}
 
 	public List<CPerturbation> build(List<AbstractPerturbation> arg)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		List<CPerturbation> result = new ArrayList<CPerturbation>();
 		for (AbstractPerturbation perturbation : arg) {
 			List<CPerturbation> res = convert(perturbation);
@@ -75,7 +76,7 @@ public class PerturbationsBuilder {
 	}
 
 	private List<CPerturbation> convert(AbstractPerturbation arg)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		ModificationType modificationType = arg.getModification().getType();
 		List<CPerturbation> result = new ArrayList<CPerturbation>();
 		boolean rateModification = (modificationType == ModificationType.RATE);
@@ -178,7 +179,7 @@ public class PerturbationsBuilder {
 	}
 
 	private final IObservablesComponent checkInObservables(String obsName)
-			throws ParseErrorException {
+			throws DocumentFormatException {
 		IObservablesComponent obsId = null;
 		for (IObservablesComponent cc : myData.getObservables()
 				.getComponentList()) {
@@ -186,7 +187,7 @@ public class PerturbationsBuilder {
 				return cc;
 			}
 		}
-		throw new ParseErrorException("'" + obsName
+		throw new DocumentFormatException("'" + obsName
 				+ "' must be in observables!");
 	}
 }

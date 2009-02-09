@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.plectix.simulator.injections.*;
-import com.plectix.simulator.stories.TestStories;
+import com.plectix.simulator.stories.*;
 import com.plectix.simulator.updates.*;
 import com.plectix.simulator.parser.newtests.*;
 import com.plectix.simulator.perturbations.*;
@@ -16,7 +16,7 @@ import com.plectix.simulator.perturbations.*;
 		RunUpdateTests.class,
 		//RunParserTests.class,
 		RunPerturbationsTests.class,
-		TestStories.class,
+		RunTestStories.class,
 		RunParserTests.class
 		//TestJavaXMLCompare.class,
 	})

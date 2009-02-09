@@ -3,7 +3,8 @@ package com.plectix.simulator.parser.util;
 import java.util.List;
 
 import com.plectix.simulator.parser.KappaFileLine;
-import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.parser.exceptions.ParseErrorMessage;
 
 public class StringUtil {
 	/**
@@ -33,8 +34,7 @@ public class StringUtil {
 		if (index != -1) {
 			name = line.substring(0, line.indexOf("'"));
 		} else {
-			throw new ParseErrorException("Rule name or number expected : "
-					+ line);
+			throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_RULE_NAME);
 		}
 		return name;
 	}

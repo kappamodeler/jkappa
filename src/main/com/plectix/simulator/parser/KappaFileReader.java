@@ -2,6 +2,9 @@ package com.plectix.simulator.parser;
 
 import java.io.*;
 
+import com.plectix.simulator.parser.exceptions.DocumentFormatException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
+
 
 public class KappaFileReader extends Parser<KappaFile> {
 
@@ -16,7 +19,7 @@ public class KappaFileReader extends Parser<KappaFile> {
 
 	@Override
 	protected KappaFile unsafeParse() throws FileReadingException, 
-				ParseErrorException, IOException {
+				ParseErrorException, IOException, DocumentFormatException {
 		
 		KappaFile kappaFile = new KappaFile();
 
@@ -59,9 +62,9 @@ public class KappaFileReader extends Parser<KappaFile> {
 
 		}
 
-		if (kappaFile.hasNoRules())
-			throw new FileReadingException(
-					"There are no rules in the input data");
+		if (kappaFile.hasNoRules()) {
+			throw new DocumentFormatException("There are no rules in the input data");
+		}
 
 		return kappaFile;
 	}

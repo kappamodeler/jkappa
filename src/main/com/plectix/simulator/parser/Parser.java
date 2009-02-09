@@ -2,6 +2,8 @@ package com.plectix.simulator.parser;
 
 import java.io.*;
 
+import com.plectix.simulator.parser.exceptions.*;
+
 
 
 /*package*/ abstract class Parser<E> {
@@ -19,9 +21,9 @@ import java.io.*;
 		return myReader;
 	}
 	
-	protected abstract E unsafeParse() throws FileReadingException, IOException, ParseErrorException;
+	protected abstract E unsafeParse() throws SimulationDataFormatException, IOException;
 	
-	public E parse() throws FileReadingException, ParseErrorException {
+	public E parse() throws SimulationDataFormatException {
 		try {
 			return unsafeParse();
 		} catch(IOException e) {

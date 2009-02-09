@@ -1,7 +1,7 @@
 package com.plectix.simulator.parser.abstractmodel.perturbations;
 
 import com.plectix.simulator.parser.KappaFileLine;
-import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
 import com.plectix.simulator.parser.util.StringUtil;
 
 public class SpeciesExpressionParser extends SpecifiedLinearModificationParser {

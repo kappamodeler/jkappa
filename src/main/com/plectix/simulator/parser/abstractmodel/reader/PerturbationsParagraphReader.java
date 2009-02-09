@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
-import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.*;
 import com.plectix.simulator.parser.abstractmodel.perturbations.*;
 import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.AbstractCondition;
@@ -16,6 +15,9 @@ import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.Ab
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractModification;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractOnceModification;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractRateModification;
+import com.plectix.simulator.parser.exceptions.DocumentFormatException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.parser.exceptions.ParseErrorMessage;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.parser.util.StringUtil;
 import com.plectix.simulator.simulator.SimulationArguments;
@@ -31,9 +33,9 @@ import com.plectix.simulator.simulator.SimulationArguments;
 		myAgentFactory = factory;
 	}
 
-	public final List<AbstractPerturbation> addComponent(
+	public final List<AbstractPerturbation> readComponent(
 			KappaFileParagraph perturbationsParagraph)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		List<AbstractPerturbation> perturbations = new ArrayList<AbstractPerturbation>();
 		int pertubationID = 0;
 		for (KappaFileLine perturbationStr : perturbationsParagraph.getLines()) {
@@ -49,7 +51,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 					boolean greater = getGreater(st, 2);
 					if (!greater) {
 						throw new ParseErrorException(perturbationStr,
-								"Time condition syntax : '$T > x', where x means time boundary");
+								ParseErrorMessage.WRONG_TIME_PERTURBATION_SYNTAX);
 					}
 					st = st.substring(2).trim();
 					st = st.substring(1).trim();
@@ -60,7 +62,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 						timeStr = st.substring(0, index).trim();
 					} else {
 						throw new ParseErrorException(perturbationStr,
-								"'do' expected : " + st);
+								ParseErrorMessage.DO_EXPECTED);
 					}
 					double time = 0;
 
@@ -68,8 +70,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 						time = Double.valueOf(timeStr);
 					} catch (NumberFormatException e) {
 						throw new ParseErrorException(perturbationStr,
-								"Wrong 'time' modifier (real number expected) : "
-										+ timeStr);
+								ParseErrorMessage.WRONG_TIME_BOUNDARY, timeStr);
 					}
 
 					condition = new AbstractTimeCondition(time);
@@ -104,13 +105,13 @@ import com.plectix.simulator.simulator.SimulationArguments;
 			fail = Character.isLetter(st.charAt(0));
 		} else {
 			throw new ParseErrorException(perturbationStr,
-					"perturbation expected after 'do'");
+					ParseErrorMessage.MODIFICATION_EXPECTED);
 		}
 		StringUtil.checkString("'", st, perturbationStr);
 		st = st.substring(st.indexOf("'") + 1).trim();
 		if (fail) {
 			throw new ParseErrorException(perturbationStr,
-					"'do' expected before [" + st + "]");
+					ParseErrorMessage.DO_EXPECTED);
 		}
 		StringUtil.checkString("'", st, perturbationStr);
 		String ruleName = st.substring(0, st.indexOf("'")).trim();
@@ -148,21 +149,19 @@ import com.plectix.simulator.simulator.SimulationArguments;
 				expressionRHS, greater);
 	}
 
-	private final boolean getGreater(String st, int index)
+	private final boolean getGreater(String line, int beginIndex)
 			throws ParseErrorException {
-		st = st.substring(index).trim();
-		if (st.startsWith(">")) {
+		line = line.substring(beginIndex).trim();
+		if (line.startsWith(">")) {
 			return true;
-
-		} else if (st.startsWith("<")) {
+		} else if (line.startsWith("<")) {
 			return false;
 		} else
-			throw new ParseErrorException("Expected '>' or '<' (after '"
-					+ st.substring(0, index) + "') in [" + st + "]");
+			throw new ParseErrorException(ParseErrorMessage.SENSE_OF_INEQUALITY_EXPECTED, line);
 	}
 
 	private final AbstractOnceModification checkOnce(String st,
-			KappaFileLine perturbationStr) throws ParseErrorException {
+			KappaFileLine perturbationStr) throws ParseErrorException, DocumentFormatException {
 		int indexAdd = st.indexOf("$ADDONCE");
 		int indexDel = st.indexOf("$DELETEONCE");
 
@@ -170,7 +169,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 			return null;
 		if (indexAdd != -1 && indexDel != -1)
 			throw new ParseErrorException(perturbationStr,
-					"There can only be $ADDONCE or $DELETEONCE");
+					ParseErrorMessage.$ADDONCE_OR_$DELETEONCE);
 
 		boolean addOnce = false;
 
@@ -191,14 +190,14 @@ import com.plectix.simulator.simulator.SimulationArguments;
 				quantity = -1;
 				if (addOnce) {
 					throw new ParseErrorException(perturbationStr,
-							"$INF cannot be used within $ADDONCE");
+							ParseErrorMessage.$INF_USED_WITH_$ADDONCE);
 				}
 			} else {
 				try {
 					quantity = Double.valueOf(strCount);
 				} catch (NumberFormatException e) {
 					throw new ParseErrorException(perturbationStr,
-							"Quantity must be a number or a $INF (positive infinity): " + strCount);
+							ParseErrorMessage.ONCE_QUANTITY_FORMAT, strCount);
 				}	
 			}
 			line = line.substring(indexCount + 1);
@@ -213,7 +212,6 @@ import com.plectix.simulator.simulator.SimulationArguments;
 			modification = new AbstractDeleteOnceModification(agentList, quantity);
 		}
 
-//		System.out.println(modification);
 		return modification;
 	}
 

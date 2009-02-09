@@ -7,9 +7,11 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.plectix.simulator.components.CLinkStatus;
-import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.AbstractSite;
+import com.plectix.simulator.parser.exceptions.DocumentFormatException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.parser.exceptions.ParseErrorMessage;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
@@ -22,14 +24,11 @@ public class AgentFactory {
 
 	private final static String SYMBOL_CONNECTED_TRUE_VALUE = "_";
 	
-//	private final IdGenerator myIdGenerator = new IdGenerator();
-	
-	
 	public AgentFactory() {
 	}
 	
 	public final List<AbstractAgent> parseAgent(String line)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		line = line.replaceAll("[ 	]", "");
 		// if (!testLine(line))
 		// throw new ParseErrorException();
@@ -47,11 +46,10 @@ public class AgentFactory {
 			if (ccomp.indexOf("(") != -1) {
 				agent = new StringTokenizer(ccomp, "(");
 				if (agent.countTokens() == 0)
-					throw new ParseErrorException("Unexpected line : " + line);
+					throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_LINE, line);
 				ccomp = agent.nextToken(); // Agent name.
 				if (!ccomp.trim().matches(PATTERN_AGENT_SITE))
-					throw new ParseErrorException("Unexpected agent name : "
-							+ ccomp);
+					throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_AGENT_NAME, ccomp);
 
 				cagent = new AbstractAgent(ThreadLocalData.getNameDictionary()
 						.addName(ccomp));
@@ -63,19 +61,16 @@ public class AgentFactory {
 				}
 			} else {
 				if (cagent == null)
-					throw new ParseErrorException("Unexpected agent name : "
-							+ ccomp);
+					throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_AGENT_NAME, ccomp);
 				cagent.addSite(parseSome(ccomp, map)); // <------Agent
 			}
 		}
 		if (!map.isEmpty()) {
-//			AbstractSite errSite = (AbstractSite) map.values().toArray()[0];
-			throw new ParseErrorException("Wrong co-ordination of connections : " + line);
+			throw new DocumentFormatException(ParseErrorMessage.BAD_CONNECTIONS_COORDINATION, line);
 		}
 		if (!AgentFormatChecker.check(line))
-			throw new ParseErrorException("Unexpected line : " + line);
+			throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_LINE, line);
 		return listAgent;
-		// return Collections.unmodifiableList(listAgent);
 	}
 
 	private final AbstractSite parseSome(String line, Map<Integer, AbstractSite> map)
@@ -91,15 +86,14 @@ public class AgentFactory {
 			dt = parseLine(state, SitePropertyKey.CONNECTION);
 			state = dt.getSt1();
 			if (!AgentFormatChecker.checkState(state))
-				throw new ParseErrorException(
-						"Unexpected internal state name : " + line);
+				throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_INTERNAL_STATE, line);
 		} else {
 			dt = parseLine(line, SitePropertyKey.CONNECTION);
 			line = dt.getSt1();
 		}
 		connect = dt.getSt2();
 		if (!line.trim().matches(PATTERN_AGENT_SITE))
-			throw new ParseErrorException("Unexpected site name : " + line);
+			throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_SITE_NAME, line);
 
 		final int siteNameId = ThreadLocalData.getNameDictionary()
 				.addName(line);
@@ -111,8 +105,7 @@ public class AgentFactory {
 						state);
 				csite.setInternalState(nameId);
 			} else {
-				throw new ParseErrorException(
-						"Unexpected internal state name : " + line);
+				throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_INTERNAL_STATE, line);
 			}
 
 		if (connect != null)
@@ -135,13 +128,11 @@ public class AgentFactory {
 						map.put(index, csite);
 					}
 				} catch (Exception e) {
-					throw new ParseErrorException("Unexpected link state : "
-							+ line);
+					throw new ParseErrorException(ParseErrorMessage.CONNECTION_SYMBOL_EXPECTED, line);
 				}
-
 			}
 		if (csite == null)
-			throw new ParseErrorException("Unexpected line : " + line);
+			throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_LINE, line);
 		return csite;
 	}
 
@@ -167,8 +158,7 @@ public class AgentFactory {
 					String test = new String(st);
 					test = test.substring(i + 1);
 					if (test.length() == 0)
-						throw new ParseErrorException(
-								"Unexpected link state : " + st);
+						throw new ParseErrorException(ParseErrorMessage.CONNECTION_SYMBOL_EXPECTED, st);
 				}
 				break;
 			}

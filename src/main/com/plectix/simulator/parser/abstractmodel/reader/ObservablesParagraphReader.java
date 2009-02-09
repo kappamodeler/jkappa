@@ -2,12 +2,12 @@ package com.plectix.simulator.parser.abstractmodel.reader;
 
 import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
-import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.*;
 import com.plectix.simulator.parser.abstractmodel.observables.AbstractObservables;
+import com.plectix.simulator.parser.exceptions.DocumentFormatException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
-import com.plectix.simulator.simulator.SimulationUtils;
 
 /*package*/class ObservablesParagraphReader extends
 		KappaParagraphReader<AbstractObservables> {
@@ -17,8 +17,8 @@ import com.plectix.simulator.simulator.SimulationUtils;
 		super(model, arguments, factory);
 	}
 
-	public final AbstractObservables addComponent(KappaFileParagraph observablesParagraph)
-			throws ParseErrorException {
+	public final AbstractObservables readComponent(KappaFileParagraph observablesParagraph)
+			throws ParseErrorException, DocumentFormatException {
 		AbstractObservables observables = new AbstractObservables();
 		int obsId = 0;
 

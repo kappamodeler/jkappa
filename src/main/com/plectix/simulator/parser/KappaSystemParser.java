@@ -6,40 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CLinkStatus;
-import com.plectix.simulator.components.CPerturbation;
-import com.plectix.simulator.components.CPerturbationType;
-import com.plectix.simulator.components.CRulePerturbation;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.CSolution;
-import com.plectix.simulator.components.ConstraintData;
-import com.plectix.simulator.components.ConstraintExpression;
-import com.plectix.simulator.components.RateExpression;
+import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.stories.CStories;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IObservables;
-import com.plectix.simulator.interfaces.IObservablesComponent;
-import com.plectix.simulator.interfaces.IPerturbationExpression;
-import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.parser.abstractmodel.AbstractRule;
-import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
-import com.plectix.simulator.parser.builders.KappaSystemBuilder;
-import com.plectix.simulator.parser.builders.ObservablesBuilder;
-import com.plectix.simulator.parser.builders.PerturbationsBuilder;
-import com.plectix.simulator.parser.builders.RuleBuilder;
-import com.plectix.simulator.parser.builders.SolutionBuilder;
-import com.plectix.simulator.parser.builders.StoriesBuilder;
-import com.plectix.simulator.parser.util.IdGenerator;
-//import com.plectix.simulator.parser.builders.KappaSystemBuilder;
-import com.plectix.simulator.simulator.SimulationArguments;
-import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.parser.builders.*;
+import com.plectix.simulator.parser.exceptions.*;
+import com.plectix.simulator.simulator.*;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class KappaSystemParser {
@@ -97,9 +71,6 @@ public class KappaSystemParser {
 
 	// $INT == $INT | $INT <> $INT | $INT // ID
 	private static final String CONSTRAINT_PATTERN_ITEM = "((\\$)+[0-9]+)+";
-	private static final String CONSTRAINT_PATTERN_EXPRESSION_EQUALS = "("
-			+ CONSTRAINT_PATTERN_ITEM + "\\=\\=" + CONSTRAINT_PATTERN_ITEM
-			+ ")+";
 	private static final String CONSTRAINT_PATTERN_EXPRESSION = "(("
 			+ CONSTRAINT_PATTERN_ITEM + "\\=\\=" + CONSTRAINT_PATTERN_ITEM
 			+ ")|(" + CONSTRAINT_PATTERN_ITEM + "\\<\\>"
@@ -147,7 +118,7 @@ public class KappaSystemParser {
 		this.simulationData = simulationData;
 	}
 
-	public final void parse(InfoType outputType) throws ParseErrorException {
+	public final void parse(InfoType outputType) throws SimulationDataFormatException {
 		simulationData.addInfo(outputType,InfoType.INFO,"--Computing initial state");
 		
 //		KappaModel model = (new KappaModelCreator(
@@ -176,7 +147,7 @@ public class KappaSystemParser {
 	}
 
 	private final IObservablesComponent checkInObservables(String obsName)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		IObservablesComponent obsId = null;
 		for (IObservablesComponent cc : simulationData.getObservables()
 				.getComponentList()) {
@@ -188,14 +159,13 @@ public class KappaSystemParser {
 		if (obsId != null) {
 			return obsId;
 		} else {
-			throw new ParseErrorException("Rule '" + obsName
-					+ "' must be in observables!");
+			throw new DocumentFormatException("Rule '" + obsName + "' must be in observables!");
 		}
 	}
 
 	private final void parseExpressionMonomeBeforeDo(String arg,
 			KappaFileLine perturbationStr, List<Double> parameters,
-			List<IObservablesComponent> obsID) throws ParseErrorException {
+			List<IObservablesComponent> obsID) throws ParseErrorException, DocumentFormatException {
 
 		String item = arg;
 		if (item.indexOf("*") == -1) {
@@ -230,7 +200,7 @@ public class KappaSystemParser {
 	}
 
 	private final List<CPerturbation> createPertubations()
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		List<CPerturbation> perturbations = new ArrayList<CPerturbation>();
 		int pertubationID = 0;
 		for (KappaFileLine perturbationStr : myKappaFile.getPerturbations().getLines()) {
@@ -340,7 +310,7 @@ public class KappaSystemParser {
 
 	private final boolean checkOnce(String st, KappaFileLine perturbationStr,
 			List<CPerturbation> perturbations, int pertubationID, double time,
-			boolean greater) throws ParseErrorException {
+			boolean greater) throws ParseErrorException, DocumentFormatException {
 		int indexAdd = st.indexOf("$ADDONCE");
 		int indexDel = st.indexOf("$DELETEONCE");
 		if (indexAdd == -1 && indexDel == -1)
@@ -412,7 +382,7 @@ public class KappaSystemParser {
 	private final double parseExpressionMonomeAfterDo(String arg,
 			KappaFileLine perturbationStr,
 			List<IPerturbationExpression> rateExpression)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		String item = arg;
 		double freeTerm = 0;
 		if (item.indexOf("*") == -1) {
@@ -447,7 +417,7 @@ public class KappaSystemParser {
 
 	private final IRule getGreaterRule(String st, KappaFileLine perturbationStr,
 			List<IPerturbationExpression> rateExpression)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		boolean fail = false;
 		if (st.length() > 0) {
 			fail = Character.isLetter(st.charAt(0));
@@ -490,7 +460,7 @@ public class KappaSystemParser {
 
 	private final void addFreeRule(
 			List<IPerturbationExpression> rateExpression, String item)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		item = item.substring(item.indexOf("'") + 1).trim();
 		IRule curRule = getRuleWithEqualName(getName(item));
 		if (curRule != null) {
@@ -499,14 +469,14 @@ public class KappaSystemParser {
 	}
 
 	private final IRule getRuleWithEqualName(String ruleName)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		for (IRule rule : simulationData.getRules())
 			if ((rule.getName() != null) && (rule.getName().equals(ruleName))) {
 				return rule;
 			}
 
 		// TODO decide if error message is not necessary
-		throw new ParseErrorException("No such rule : " + ruleName);
+		throw new DocumentFormatException(ParseErrorMessage.NO_SUCH_RULE, ruleName);
 		// return null;
 	}
 
@@ -518,8 +488,7 @@ public class KappaSystemParser {
 		} else if (st.indexOf("<") == index) {
 			return false;
 		} else
-			throw new ParseErrorException("Expected '>' or '<' (after '"
-					+ st.substring(0, index) + "') in [" + st + "]");
+			throw new ParseErrorException(ParseErrorMessage.SENSE_OF_INEQUALITY_EXPECTED, st);
 	}
 
 	private final String getName(String line) throws ParseErrorException {
@@ -529,8 +498,7 @@ public class KappaSystemParser {
 		if (index != -1) {
 			name = line.substring(0, line.indexOf("'"));
 		} else {
-			throw new ParseErrorException("Rule name or number expected : "
-					+ line);
+			throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_RULE_NAME, line);
 		}
 		return name;
 	}
@@ -550,13 +518,13 @@ public class KappaSystemParser {
 
 	private int ruleID = 0;
 
-	public final List<IRule> createRules() throws ParseErrorException {
+	public final List<IRule> createRules() throws ParseErrorException, DocumentFormatException {
 		return createRules(myKappaFile.getRules());
 	}
 	
 	// historical issues =)
 	public final List<IRule> createRules(KappaFileParagraph rulesParagraph)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 
 		List<IRule> rules = new ArrayList<IRule>();
 		for (KappaFileLine ruleLine : rulesParagraph.getLines()) {
@@ -852,7 +820,7 @@ public class KappaSystemParser {
 	}
 
 	private final void createSimData(byte code)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		long count;
 		String line;
 		String[] result;
@@ -1001,7 +969,7 @@ public class KappaSystemParser {
 	}
 
 	public final List<IAgent> parseAgent(String line)
-			throws ParseErrorException {
+			throws ParseErrorException, DocumentFormatException {
 		line = line.replaceAll("[ 	]", "");
 		// if (!testLine(line))
 		// throw new ParseErrorException();
@@ -1018,11 +986,10 @@ public class KappaSystemParser {
 			if (ccomp.indexOf("(") != -1) {
 				agent = new StringTokenizer(ccomp, "(");
 				if (agent.countTokens() == 0)
-					throw new ParseErrorException("Unexpected line : " + line);
+					throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_LINE, line);
 				ccomp = agent.nextToken(); // Agent name.
 				if (!ccomp.trim().matches(PATTERN_AGENT_SITE))
-					throw new ParseErrorException("Unexpected agent name : "
-							+ ccomp);
+					throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_AGENT_NAME, ccomp);
 
 				cagent = new CAgent(ThreadLocalData.getNameDictionary()
 						.addName(ccomp), simulationData.generateNextAgentId());
@@ -1034,19 +1001,16 @@ public class KappaSystemParser {
 				}
 			} else {
 				if (cagent == null)
-					throw new ParseErrorException("Unexpected agent name : "
-							+ ccomp);
+					throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_AGENT_NAME, line);
 				cagent.addSite(parseSome(ccomp, map)); // <------Agent
 			}
 		}
 		if (!map.isEmpty()) {
 			CSite errSite = (CSite) map.values().toArray()[0];
-			throw new ParseErrorException("Unexpected Link State: '"
-					+ errSite.getName() + "' from Agent: '"
-					+ errSite.getAgentLink().getName() + "'");
+			throw new DocumentFormatException(ParseErrorMessage.BAD_CONNECTIONS_COORDINATION);
 		}
 		if (!testLine(line))
-			throw new ParseErrorException("Unexpected line : " + line);
+			throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_LINE, line);
 		return listAgent;
 		// return Collections.unmodifiableList(listAgent);
 	}
@@ -1066,15 +1030,14 @@ public class KappaSystemParser {
 			dt = parseLine(state, SitePropertyKey.CONNECTION);
 			state = dt.getSt1();
 			if (!state.matches(PATTERN_LINE_SITE_STATE))
-				throw new ParseErrorException(
-						"Unexpected internal state name : " + line);
+				throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_INTERNAL_STATE, line);
 		} else {
 			dt = parseLine(site, SitePropertyKey.CONNECTION);
 			site = dt.getSt1();
 		}
 		connect = dt.getSt2();
 		if (!site.trim().matches(PATTERN_AGENT_SITE))
-			throw new ParseErrorException("Unexpected site name : " + line);
+			throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_SITE_NAME, line);
 
 		final int siteNameId = ThreadLocalData.getNameDictionary()
 				.addName(site);
@@ -1086,8 +1049,7 @@ public class KappaSystemParser {
 						state);
 				csite.setInternalState(new CInternalState(nameId));
 			} else {
-				throw new ParseErrorException(
-						"Unexpected internal state name : " + line);
+				throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_INTERNAL_STATE, line);
 			}
 
 		if (connect != null)
@@ -1112,13 +1074,12 @@ public class KappaSystemParser {
 						map.put(index, csite);
 					}
 				} catch (Exception e) {
-					throw new ParseErrorException("Unexpected link state : "
-							+ line);
+					throw new ParseErrorException(ParseErrorMessage.CONNECTION_SYMBOL_EXPECTED, line);
 				}
 
 			}
 		if (csite == null)
-			throw new ParseErrorException("Unexpected line : " + line);
+			throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_LINE, line);
 		return csite;
 	}
 
@@ -1144,8 +1105,7 @@ public class KappaSystemParser {
 					String test = new String(st);
 					test = test.substring(i + 1);
 					if (test.length() == 0)
-						throw new ParseErrorException(
-								"Unexpected link state : " + st);
+						throw new ParseErrorException(ParseErrorMessage.CONNECTION_SYMBOL_EXPECTED, st);
 				}
 				break;
 			}
