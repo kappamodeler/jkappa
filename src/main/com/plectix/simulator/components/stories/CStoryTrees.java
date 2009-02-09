@@ -203,6 +203,10 @@ public final class CStoryTrees {
 
 			// if (states1.isEmpty() && states2.isEmpty())
 			// continue;
+			if (states1 == null && states2 == null)
+				continue;
+			if (states1 == null || states2 == null)
+				return false;
 
 			if (states1 != CStoryState.EMPTY_STATE
 					&& states2 != CStoryState.EMPTY_STATE
@@ -1182,6 +1186,15 @@ public final class CStoryTrees {
 
 	private boolean isOcamlStyleObsName;
 
+	private void fillAllAddedAgentIDs(List<Long> list,
+			List<CNetworkNotation> nnList) {
+		for (CNetworkNotation nn : nnList) {
+			List<Long> addedAgents = nn.getAddedAgentsID();
+			if (addedAgents != null)
+				list.addAll(addedAgents);
+		}
+	}
+
 	private void fillMaps(List<CNetworkNotation> nnList) {
 
 		levelToTraceID = new TreeMap<Integer, List<Integer>>();
@@ -1189,8 +1202,10 @@ public final class CStoryTrees {
 		traceIDToData = new HashMap<Integer, String>();
 		traceIDToText = new HashMap<Integer, String>();
 
+		List<Long> addedAgents = new ArrayList<Long>();
+		fillAllAddedAgentIDs(addedAgents, nnList);
+
 		List<Long> introAgents = new ArrayList<Long>();
-		int rrrr = 0;
 		for (int i = nnList.size() - 1; i >= 0; i--) {
 			int counter = 0;
 			int index = 0;
@@ -1201,15 +1216,15 @@ public final class CStoryTrees {
 				List<Long> currentIntroAgents = new ArrayList<Long>();
 				for (Long agentID : agentIDsList) {
 					if (nn.getUsedAgentsFromRules().containsKey(agentID))
-						if (!introAgents.contains(agentID)) {
-							currentIntroAgents.add(agentID);
-							counter++;
-						}
+						if (!addedAgents.contains(agentID))
+							if (!introAgents.contains(agentID)) {
+								currentIntroAgents.add(agentID);
+								counter++;
+							}
 				}
 				if (counter == agentIDsList.size()) {
 					introAgents.addAll(currentIntroAgents);
 					introStr.add(nn.getAgentsNotation().get(index));
-					rrrr++;
 				}
 				index++;
 				counter = 0;

@@ -39,8 +39,14 @@ public class CNetworkNotation implements INetworkNotation {
 	private Map<Long, AgentSites> changesOfAllUsedSites;
 	private Map<Long, AgentSites> changedAgentsFromSolution;
 	private Map<Long, AgentSitesFromRules> usedAgentsFromRules;
+	private List<Long> addedAgentsID;
 	List<String> agentsNotation;
 	List<List<Long>> introCC;
+	
+	
+	public List<Long> getAddedAgentsID() {
+		return addedAgentsID;
+	}
 
 	public boolean isLeaf() {
 		return leaf;
@@ -105,6 +111,11 @@ public class CNetworkNotation implements INetworkNotation {
 		this.agentsNotation = new ArrayList<String>();
 		this.introCC = new ArrayList<List<Long>>();
 		createAgentsNotation(injectionsList, data);
+	}
+
+	public void fillAddedAgentsID(SimulationData data){
+		IRule rule = data.getRulesByID(ruleID);
+		this.addedAgentsID = rule.getAgentsAddedID();
 	}
 
 	public final void changeIntroCCAndAgentNotation(int indexToDel,

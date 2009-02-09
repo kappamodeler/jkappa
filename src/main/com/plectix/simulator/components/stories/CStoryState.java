@@ -13,9 +13,9 @@ class CStoryState implements IStates {
 	public static final IStates EMPTY_STATE = new CStoryState();
 	
 	public CStoryState() {
-		idInternalState = -2;
-		idLinkAgent = -2;
-		idLinkSite = -2;
+		idInternalState = -1;
+		idLinkAgent = -1;
+		idLinkSite = -1;
 	}
 
 	public CStoryState(int idInternalState, long idLinkAgent, int idLinkSite) {

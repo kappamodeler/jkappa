@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -284,6 +285,18 @@ public class CRule implements IRule, Serializable {
 
 	public final IAgent getAgentAdd(IAgent key) {
 		return agentAddList.get(key);
+	}
+
+	public List<Long> getAgentsAddedID(){
+		if(agentAddList.size()==0)
+			return  null;
+		List<Long> list = new ArrayList<Long>();
+		Iterator<IAgent> iterator = agentAddList.keySet().iterator();
+		while(iterator.hasNext()){
+			IAgent agent = agentAddList.get(iterator.next());
+			list.add(agent.getId());
+		}
+		return list;
 	}
 
 	public final void putAgentAdd(IAgent key, IAgent value) {

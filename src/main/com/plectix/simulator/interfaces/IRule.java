@@ -79,4 +79,6 @@ public interface IRule {
 	public boolean includedInCollection(Collection<IRule> list);
 	
 	public boolean isInvokedRule();
+
+	public List<Long> getAgentsAddedID();
 }

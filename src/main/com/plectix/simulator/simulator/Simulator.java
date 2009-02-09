@@ -311,6 +311,7 @@ public class Simulator implements SimulatorInterface {
 					}
 					
 					rule.applyRuleForStories(injectionsList, netNotation, simulationData, false);
+					netNotation.fillAddedAgentsID(simulationData);
 					if (!rule.isRHSEqualsLHS()) {
 						stories.addToNetworkNotationStory(i, netNotation);
 					}
