@@ -116,16 +116,15 @@ public class SimulationData {
 	private double stepStories;
 	private double nextStepStories;
 
-//	private int agentIdGenerator = 0;
+	// private int agentIdGenerator = 0;
 
 	private boolean argumentsSet = false;
 	private SimulationArguments simulationArguments = new SimulationArguments();
 	private IdGenerator myIdGenerator = new IdGenerator();
 	private IdGenerator myRuleIdGenerator = new IdGenerator();
-	
-	
+
 	private KappaModel myInitialModel = null;
-	
+
 	public SimulationData() {
 		super();
 	}
@@ -133,11 +132,11 @@ public class SimulationData {
 	public KappaModel getInitialModel() {
 		return myInitialModel;
 	}
-	
+
 	public void setInitialModel(KappaModel model) {
 		myInitialModel = model;
 	}
-	
+
 	public final void resetSimulation(InfoType outputType) {
 		if (!simulationArguments.isShortConsoleOutput())
 			outputType = InfoType.OUTPUT;
@@ -151,9 +150,9 @@ public class SimulationData {
 		observables.resetLists();
 		solution.clearAgents();
 		solution.clearSolutionLines();
-		
+
 		myIdGenerator.reset();
-		
+
 		if (perturbations != null) {
 			perturbations.clear();
 		}
@@ -175,10 +174,10 @@ public class SimulationData {
 	public final long generateNextRuleId() {
 		return myRuleIdGenerator.generateNextAgentId();
 	}
-	
+
 	public final long generateNextAgentId() {
 		return myIdGenerator.generateNextAgentId();
-//		return agentIdGenerator++;
+		// return agentIdGenerator++;
 	}
 
 	public final void setSimulationArguments(InfoType outputType,
@@ -266,7 +265,7 @@ public class SimulationData {
 				e.printStackTrace(printStream);
 			}
 			e.printStackTrace();
-			//throw new IllegalArgumentException(e);
+			// throw new IllegalArgumentException(e);
 		}
 	}
 
@@ -296,7 +295,8 @@ public class SimulationData {
 	}
 
 	public final boolean isEndSimulation(double currentTime, long count) {
-		if (System.currentTimeMillis() - clockStamp > simulationArguments.getWallClockTimeLimit()) {
+		if (System.currentTimeMillis() - clockStamp > simulationArguments
+				.getWallClockTimeLimit()) {
 			println("Simulation is interrupted because the wall clock time has expired");
 			return true;
 		}
@@ -1086,7 +1086,8 @@ public class SimulationData {
 		if (simulationArguments.getSerializationMode() == SimulationArguments.SerializationMode.READ) {
 			ObjectInputStream ois;
 			try {
-				ois = new ObjectInputStream(new FileInputStream(simulationArguments.getSerializationFileName()));
+				ois = new ObjectInputStream(new FileInputStream(
+						simulationArguments.getSerializationFileName()));
 				solution = (CSolution) ois.readObject();
 				rules = (List<IRule>) ois.readObject();
 				observables = (IObservables) ois.readObject();
@@ -1106,7 +1107,8 @@ public class SimulationData {
 		if (simulationArguments.getSerializationMode() == SimulationArguments.SerializationMode.SAVE) {
 			try {
 				ObjectOutputStream oos = new ObjectOutputStream(
-						new FileOutputStream(simulationArguments.getSerializationFileName()));
+						new FileOutputStream(simulationArguments
+								.getSerializationFileName()));
 				oos.writeObject(solution);
 				oos.writeObject(rules);
 				oos.writeObject(observables);
@@ -1195,6 +1197,10 @@ public class SimulationData {
 		}
 
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
+			// TODO create Abstraction Contact Map
+			// contactMap.initAbstractSolution();
+			// contactMap.constructAbstractReachableRules(rules);
+			// contactMap.constructAbstractContactMap();
 			contactMap.constructReachableRules(rules);
 			contactMap.constructContactMap();
 		}
@@ -1529,7 +1535,8 @@ public class SimulationData {
 
 		KappaSystemParser parser = new KappaSystemParser(kappaFile, this);
 		List<IRule> ruleList = parser.createRules();
-//		List<IRule> ruleList = (new RuleBuilder(this)).build(myInitialModel.getRules());
+		// List<IRule> ruleList = (new
+		// RuleBuilder(this)).build(myInitialModel.getRules());
 
 		if (ruleList != null && !ruleList.isEmpty()) {
 			contactMap.setFocusRule(ruleList.get(0));
@@ -1624,13 +1631,13 @@ public class SimulationData {
 	}
 
 	public IdGenerator getIdGenerator() {
-		return myIdGenerator ;
+		return myIdGenerator;
 	}
 
 	public void setIdGenerator(IdGenerator generator) {
 		myIdGenerator = generator;
 	}
-	
+
 	public void setSolution(ISolution solution) {
 		this.solution = solution;
 	}

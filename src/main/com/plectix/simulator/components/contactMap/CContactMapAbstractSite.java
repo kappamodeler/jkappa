@@ -110,13 +110,34 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 			System.out.println("link site = "
 					+ ThreadLocalData.getNameDictionary().getName(
 							linkState.getLinkSiteNameID()));
-			if (linkState.getInternalStateNameID() != -1) 
-			System.out.println("link istate = "
-					+ ThreadLocalData.getNameDictionary().getName(
-							linkState.getInternalStateNameID()));
+			if (linkState.getInternalStateNameID() != -1)
+				System.out.println("link istate = "
+						+ ThreadLocalData.getNameDictionary().getName(
+								linkState.getInternalStateNameID()));
 		}
-		System.out.println("__________________________________________________________________________");
-		
+		System.out
+				.println("__________________________________________________________________________");
+
+	}
+
+	@Override
+	public String toString() {
+		String st = "site = " + getName();
+		if (internalState.getNameId() != -1)
+			st += " internal state = " + internalState.getName();
+		if (linkState.getLinkSiteNameID() != -1) {
+			st += " link agent = "
+					+ ThreadLocalData.getNameDictionary().getName(
+							linkState.getAgentNameID());
+			st += " link site = "
+					+ ThreadLocalData.getNameDictionary().getName(
+							linkState.getLinkSiteNameID());
+			if (linkState.getInternalStateNameID() != -1)
+				st += " link istate = "
+						+ ThreadLocalData.getNameDictionary().getName(
+								linkState.getInternalStateNameID());
+		}
+		return st;
 	}
 
 	public boolean includedInCollection(

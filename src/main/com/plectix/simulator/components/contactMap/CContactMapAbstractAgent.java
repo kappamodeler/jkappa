@@ -2,6 +2,7 @@ package com.plectix.simulator.components.contactMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +30,19 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		return st;
 	}
 	
+	public final boolean containsSite(IContactMapAbstractSite site){
+		List<IContactMapAbstractSite> list = siteMap.get(site.getNameId());
+		if(list==null)
+			return false;
+		for(IContactMapAbstractSite s : list)
+			if(s.equalz(site))
+				return true;
+		return false;
+	}
+	
 	public CContactMapAbstractAgent(IAgent agent) {
 		this.nameID = agent.getNameId();
-		this.siteMap = new TreeMap<Integer, List<IContactMapAbstractSite>>();
+		this.siteMap = new HashMap<Integer, List<IContactMapAbstractSite>>();
 	}
 
 	public final boolean addSites(IAgent agent) {

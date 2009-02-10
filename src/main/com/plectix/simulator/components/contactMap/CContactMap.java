@@ -42,9 +42,8 @@ public class CContactMap {
 	private SimulationData simulationData;
 	private ISolution solution;
 
-	public void setSimulationData(SimulationData simulationData) {
-		this.simulationData = simulationData;
-	}
+	private CContactMapAbstractSolution abstractSolution;
+	private List<CContactMapAbstractRule> abstractReachableRules;
 
 	private Map<Integer, IAgent> agentsFromSolution;
 	private HashMap<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap;
@@ -52,6 +51,10 @@ public class CContactMap {
 	private List<IConnectedComponent> unreachableCC;
 	private IRule focusRule;
 	private List<IAgent> agentsFromFocusedRule;
+
+	public void setSimulationData(SimulationData simulationData) {
+		this.simulationData = simulationData;
+	}
 
 	public IRule getFocusRule() {
 		return focusRule;
@@ -228,6 +231,12 @@ public class CContactMap {
 				}
 		}
 	}
+	
+	public void constructAbstractContactMap() {
+		// TODO
+		
+	}
+	
 
 	public void constructContactMap() {
 		for (IRule rule : reachableRules) {
@@ -503,6 +512,22 @@ public class CContactMap {
 				// }
 			}
 		}
+	}
+
+	public final void initAbstractSolution(){
+		this.abstractSolution = new CContactMapAbstractSolution(solution);
+	}
+	
+
+	public void constructAbstractReachableRules(List<IRule> rules){
+		// TODO constructAbstractReachableRules // ContactMap
+		List<CContactMapAbstractRule> listAbstractRules = new ArrayList<CContactMapAbstractRule>();
+		for(IRule rule : rules){
+			CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(abstractSolution,rule);
+			abstractRule.initAbstractRule();
+			listAbstractRules.add(abstractRule);
+		}
+		this.abstractReachableRules = listAbstractRules;
 	}
 
 	public void constructReachableRules(List<IRule> rules) {

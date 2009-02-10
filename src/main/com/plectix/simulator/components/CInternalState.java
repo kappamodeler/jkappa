@@ -29,6 +29,8 @@ public class CInternalState extends CState implements IInternalState, Serializab
 	}
 
 	public final String getName() {
+		if(nameId == CSite.NO_INDEX)
+			return "NO_INDEX";
 		return ThreadLocalData.getNameDictionary().getName(nameId);
 	}
 

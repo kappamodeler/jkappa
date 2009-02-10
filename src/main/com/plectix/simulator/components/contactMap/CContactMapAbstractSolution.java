@@ -1,5 +1,6 @@
 package com.plectix.simulator.components.contactMap;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class CContactMapAbstractSolution {
 	}
 
 	public CContactMapAbstractSolution(ISolution solution) {
-		this.abstractAgentMap = new TreeMap<Integer, IContactMapAbstractAgent>();
+		this.abstractAgentMap = new HashMap<Integer, IContactMapAbstractAgent>();
 		fillMapCCList(solution);
 	}
 
@@ -82,7 +83,7 @@ public class CContactMapAbstractSolution {
 		}
 		return wasAdded;
 	}
-	
+
 	public void print(){
 		Iterator<Integer> aIter = abstractAgentMap.keySet().iterator();
 		while (aIter.hasNext()) {

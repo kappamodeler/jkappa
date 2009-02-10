@@ -92,6 +92,18 @@ public class CRule implements IRule, Serializable {
 		// return super.toString();
 		return st;
 	}
+	
+	public final boolean isLHSisEmpty(){
+		if(leftHandSide.get(0)==EMPTY_LHS_CC)
+			return true;
+		return false;
+	}
+
+	public final boolean isRHSisEmpty(){
+		if(rightHandSide==null)
+			return true;
+		return false;
+	}
 
 	public final String getData(boolean isOcamlStyleObsName) {
 		if (data == null) {

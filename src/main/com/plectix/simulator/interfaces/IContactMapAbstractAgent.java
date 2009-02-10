@@ -7,4 +7,6 @@ public interface IContactMapAbstractAgent extends IAbstractAgent{
 	public boolean addSites(IAgent agent);
 	
 	public boolean equalz(IAbstractAgent obj);
+
+	public boolean containsSite(IContactMapAbstractSite site);
 }

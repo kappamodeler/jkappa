@@ -81,4 +81,8 @@ public interface IRule {
 	public boolean isInvokedRule();
 
 	public List<Long> getAgentsAddedID();
+
+	public boolean isLHSisEmpty();
+
+	public boolean isRHSisEmpty();
 }
