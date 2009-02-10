@@ -48,5 +48,4 @@ public enum ParseErrorMessage {
 	public String getMessage(String line) {
 		return myMessage + " : " + line;
 	}
-
 }

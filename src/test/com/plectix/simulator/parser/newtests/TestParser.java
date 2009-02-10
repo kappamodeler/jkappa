@@ -37,6 +37,7 @@ public class TestParser {
 					.prepareDefaultArguments(mySourceFileName);
 			KappaModel model = new KappaModelCreator(args).createModel(kf);
 			pw = new PrintWriter(myResultFilePath);
+			
 			pw.print(model.toString());
 		} finally {
 			if (pw != null) {

@@ -11,7 +11,7 @@ import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 
-/*package*/ abstract class KappaParagraphReader<E> {
+public abstract class KappaParagraphReader<E> {
 	private final KappaModel myModel;
 	private final SimulationArguments myArgs;
 	private final AgentFactory myAgentFactory;

@@ -16,7 +16,7 @@ import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
-/*package*/ class RulesParagraphReader extends KappaParagraphReader<Collection<AbstractRule>>{
+public class RulesParagraphReader extends KappaParagraphReader<Collection<AbstractRule>>{
 
 	private final static byte RULE_TWO_WAY = 1;
 
@@ -128,6 +128,10 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 
 			rulesStr = rulesStr.trim();
 			int y = rulesStr.indexOf("->");
+			if (y == -1) {
+				throw new ParseErrorException(ruleLine, ParseErrorMessage.ARROW_EXPECTED);
+			}
+			
 			if (y == 0) {
 				index = CC_RHS;
 			}
@@ -135,13 +139,9 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 				if (index == -1) {
 					index = CC_LHS;
 				} else {
-					throw new ParseErrorException(ruleLine, ParseErrorMessage.UNEXPECTED_LINE,
+					throw new ParseErrorException(ruleLine, ParseErrorMessage.ARROW_EXPECTED,
 							ruleLine.getLine());
 				}
-			}
-
-			if (!rulesStr.contains("->")) {
-				throw new ParseErrorException(ruleLine, ParseErrorMessage.ARROW_EXPECTED);
 			}
 
 			String[] result = rulesStr.split("\\->");
@@ -166,16 +166,9 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 				switch (index) {
 				case CC_LHS: {
 					left = parseAgent(lhs.trim());
-//					rules.add(SimulationUtils.buildRule(left, right, name,
-//							constraintLeftToRight, ruleID, simulationData
-//									.isStorify()));
 					rules.add(new AbstractRule(left, right, name, activity, ruleID, isStorify));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-//						rules.add(SimulationUtils.buildRule(right,
-//								parseAgent(lhs.trim()), nameOp,
-//								constraintRightToLeft, ruleID, simulationData
-//										.isStorify()));
 						 rules.add(new AbstractRule(right,
 						 parseAgent(lhs.trim()), nameOp, activity2, ruleID,
 						 isStorify));
@@ -184,16 +177,10 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 				}
 				case CC_RHS: {
 					right = parseAgent(rhs.trim());
-//					rules.add(SimulationUtils.buildRule(left, right, name,
-//							constraintLeftToRight, ruleID, simulationData
-//									.isStorify()));
 					rules.add(new AbstractRule(left, right, name,
 							 activity, ruleID, isStorify));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-//						rules.add(SimulationUtils.buildRule(parseAgent(rhs
-//								.trim()), left, nameOp, constraintRightToLeft,
-//								ruleID, simulationData.isStorify()));
 						rules.add(new AbstractRule(parseAgent(rhs.trim()), 
 								left, name, activity2, ruleID, isStorify));
 					}
@@ -202,17 +189,10 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 				case CC_ALL: {
 					left = parseAgent(lhs.trim());
 					right = parseAgent(rhs.trim());
-//					rules.add(SimulationUtils.buildRule(left, right, name,
-//							constraintLeftToRight, ruleID, simulationData
-//									.isStorify()));
 					rules.add(new AbstractRule(left, right, name,
 							 activity, ruleID, isStorify));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-//						rules.add(SimulationUtils.buildRule(parseAgent(rhs
-//								.trim()), parseAgent(lhs.trim()), nameOp,
-//								constraintRightToLeft, ruleID, simulationData
-//										.isStorify()));
 						rules.add(new AbstractRule(parseAgent(rhs.trim()), 
 								parseAgent(lhs.trim()), nameOp, activity2, ruleID, isStorify));
 					}
@@ -234,7 +214,7 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 			int index, ConstraintData constraintLeftToRight,
 			ConstraintData constraintRightToLeft) throws ParseErrorException {
 		if (index == -1)
-			throw new ParseErrorException(rulesDS, ParseErrorMessage.UNEXPECTED_LINE,
+			throw new ParseErrorException(rulesDS, ParseErrorMessage.ARROW_EXPECTED,
 					rulesDS.getLine());
 		int indexConstraintStart = rulesStr.indexOf("{");
 		int indexConstraintEnd = rulesStr.indexOf("}");
