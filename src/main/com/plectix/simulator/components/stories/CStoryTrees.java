@@ -28,7 +28,7 @@ public final class CStoryTrees {
 		return mainTraceID;
 	}
 
-	private NetworkNotationForCurrentStory nnCS;
+	//private NetworkNotationForCurrentStory nnCS;
 	private HashMap<Integer, List<Integer>> ruleIDToTraceID;
 	private TreeMap<Integer, Integer> traceIDToLevel;
 	private TreeMap<Integer, Integer> traceIDToRuleID;
@@ -37,7 +37,9 @@ public final class CStoryTrees {
 	private HashMap<Integer, String> traceIDToText;
 	private TreeMap<Integer, List<Integer>> traceIDToTraceID;
 	private TreeMap<Integer, List<Integer>> traceIDToTraceIDWeak;
-
+	private List<CNetworkNotation> networkNotationsList; 
+	
+	
 	private SimulationArguments.StorifyMode compressionMode;
 
 	public double getAverageTime() {
@@ -64,12 +66,12 @@ public final class CStoryTrees {
 		return isomorphicCount;
 	}
 
-	public CStoryTrees(int ruleId, NetworkNotationForCurrentStory nnCS,
+	public CStoryTrees(int ruleId, List<CNetworkNotation> nnList, double time, 
 			SimulationArguments.StorifyMode compressionMode,
 			boolean isOcamlStyleObsName) {
-		this.nnCS = nnCS;
+		this.networkNotationsList = nnList;
 		this.ruleId = ruleId;
-		this.averageTime = nnCS.getAverageTime();
+		this.averageTime = time;
 		this.compressionMode = compressionMode;
 		this.isOcamlStyleObsName = isOcamlStyleObsName;
 	}
@@ -120,7 +122,7 @@ public final class CStoryTrees {
 						clearMapsLists(newNN);
 					}
 				}
-			} 
+			}
 
 			index++;
 		}
@@ -440,7 +442,7 @@ public final class CStoryTrees {
 		List<CNetworkNotation> updatedList = new ArrayList<CNetworkNotation>();
 		for (CNetworkNotation nn : commonList) {
 			List<Integer> curList = traceIDToTraceID.get(nn.getStep());
-			if (curList != null) 
+			if (curList != null)
 				updatedList.add(nn);
 		}
 		updateTraceIDToIndex(updatedList);
@@ -847,18 +849,32 @@ public final class CStoryTrees {
 			traceIDToTraceIDWeak.remove(key);
 	}
 
-	private void noneCompressStoryTrace(List<CNetworkNotation> commonList) {
+	private List<CNetworkNotation> updateOnlyMainList(
+			List<CNetworkNotation> commonList) {
+		List<CNetworkNotation> updatedList = new ArrayList<CNetworkNotation>();
+
+		for (CNetworkNotation nn : commonList) {
+			List<Integer> curList = traceIDToTraceID.get(nn.getStep());
+			if (curList != null) 
+					updatedList.add(nn);
+		}
+		updateTraceIDToIndex(updatedList);
+		return updatedList;
+	}
+
+	private List<CNetworkNotation> noneCompressStoryTrace(List<CNetworkNotation> commonList) {
 
 		resetParameters(commonList);
 		isCausing(commonList.get(0), commonList, 1, 0);
 		pushTree();
-		updateTraceIDToIndex(commonList);
+		return updateOnlyMainList(commonList);
+		//updateTraceIDToIndex(commonList);
 	}
 
 	public final void getTreeFromList(List<CNetworkNotation> commonList) {
 		List<CNetworkNotation> nnList = commonList;
 		if (compressionMode == SimulationArguments.StorifyMode.NONE) {
-			noneCompressStoryTrace(commonList);
+			networkNotationsList = noneCompressStoryTrace(commonList);
 		} else if (compressionMode == SimulationArguments.StorifyMode.WEAK) {
 			nnList = weakCompressStoryTrace(commonList);
 		} else if (compressionMode == SimulationArguments.StorifyMode.STRONG) {
@@ -867,7 +883,7 @@ public final class CStoryTrees {
 			throw new IllegalArgumentException("Unknown StorifyMode: "
 					+ compressionMode);
 		}
-		fillMaps(nnList);
+		fillMaps();
 	}
 
 	private void isCausing(CNetworkNotation newNN,
@@ -1054,7 +1070,7 @@ public final class CStoryTrees {
 	}
 
 	public String getText(int index) {
-		return nnCS.getNetworkNotation(index).getRule().getName();
+		return networkNotationsList.get(index).getRule().getName();
 	}
 
 	private boolean isOcamlStyleObsName;
@@ -1086,8 +1102,7 @@ public final class CStoryTrees {
 		return false;
 	}
 
-	private void newForAddedAgentsMap(
-			Map<Long, List<Integer>> addedAgentsMap,
+	private void newForAddedAgentsMap(Map<Long, List<Integer>> addedAgentsMap,
 			Map<Long, List<Integer>> introAgentsMap,
 			Map<Long, CStoryIntro> addedIntros, String introString,
 			Integer traceID) {
@@ -1122,7 +1137,7 @@ public final class CStoryTrees {
 		}
 	}
 
-	private void fillMaps(List<CNetworkNotation> nnList) {
+	private void fillMaps() {
 
 		levelToTraceID = new TreeMap<Integer, List<Integer>>();
 		traceIDToData = new HashMap<Integer, String>();
@@ -1131,19 +1146,19 @@ public final class CStoryTrees {
 		storyIntros = new ArrayList<CStoryIntro>();
 
 		List<Long> addedAgents = new ArrayList<Long>();
-		fillAllAddedAgentIDs(addedAgents, nnList);
+		fillAllAddedAgentIDs(addedAgents, networkNotationsList);
 
 		Map<Long, List<Integer>> addedAgentsMap = new HashMap<Long, List<Integer>>();
 		Map<Long, CStoryIntro> addedIntros = new HashMap<Long, CStoryIntro>();
 
-		for (int i = nnList.size() - 1; i >= 0; i--) {
+		for (int i = networkNotationsList.size() - 1; i >= 0; i--) {
 			int index = 0;
-			CNetworkNotation nn = nnList.get(i);
-	
+			CNetworkNotation nn = networkNotationsList.get(i);
+
 			for (Map<Long, List<Integer>> introAgentsMap : nn.getIntroCCMap()) {
 				newForAddedAgentsMap(addedAgentsMap, introAgentsMap,
 						addedIntros, nn.getAgentsNotation().get(index), nn
-								.getStep()); 
+								.getStep());
 				index++;
 			}
 		}
@@ -1159,7 +1174,7 @@ public final class CStoryTrees {
 			}
 			list.add(traceID);
 
-			CNetworkNotation nn = nnList.get(traceIDToIndex.get(traceID)
+			CNetworkNotation nn = networkNotationsList.get(traceIDToIndex.get(traceID)
 					.intValue());
 			this.traceIDToRuleID.put(traceID, nn.getRule().getRuleID());
 			IRule rule = nn.getRule();
@@ -1238,7 +1253,7 @@ public final class CStoryTrees {
 	public final boolean isIsomorphic(CStoryTrees treeIn) {
 		if (this.levelToTraceID.size() != treeIn.getLevelToTraceID().size())
 			return false;
-	
+
 		if (!isIsomorphic(treeIn, mainTraceID, treeIn.getMainTraceID()))
 			return false;
 
