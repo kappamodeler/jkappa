@@ -30,6 +30,21 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		return st;
 	}
 	
+	public final List<IContactMapAbstractSite> getSites(){
+		List<IContactMapAbstractSite> list = new ArrayList<IContactMapAbstractSite>();
+		Iterator<Integer> iterator = siteMap.keySet().iterator();
+		while(iterator.hasNext()){
+			Integer key = iterator.next();
+			List<IContactMapAbstractSite> siteList = siteMap.get(key);
+			list.addAll(siteList);
+		}
+		return list;
+	}
+	
+	public final Map<Integer, List<IContactMapAbstractSite>> getSitesMap(){
+		return this.siteMap;
+	}
+	
 	public final boolean containsSite(IContactMapAbstractSite site){
 		List<IContactMapAbstractSite> list = siteMap.get(site.getNameId());
 		if(list==null)
@@ -42,6 +57,11 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 	
 	public CContactMapAbstractAgent(IAgent agent) {
 		this.nameID = agent.getNameId();
+		this.siteMap = new HashMap<Integer, List<IContactMapAbstractSite>>();
+	}
+	
+	public CContactMapAbstractAgent(int nameID) {
+		this.nameID = nameID;
 		this.siteMap = new HashMap<Integer, List<IContactMapAbstractSite>>();
 	}
 

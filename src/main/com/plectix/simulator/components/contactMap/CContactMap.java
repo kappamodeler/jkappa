@@ -16,6 +16,7 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
@@ -234,7 +235,31 @@ public class CContactMap {
 	
 	public void constructAbstractContactMap() {
 		// TODO
-		
+		boolean[] checkList = new boolean[abstractReachableRules.size()];
+		checkList[0] = true;
+		int index = 0;
+		while(isEnd(checkList)){
+			for(CContactMapAbstractRule rule : abstractReachableRules){
+				List<IContactMapAbstractSite> newData  = rule.getNewData();
+				if(abstractSolution.addNewData(newData))
+					checkList[index]=false;
+				index++;
+			}
+			checkList = resetCheckList(checkList);
+		}
+	}
+	
+	private boolean[] resetCheckList(boolean[] checkList){
+		for(boolean b : checkList)
+			b=false;
+		return  checkList;
+	}
+	
+	private boolean isEnd(boolean[] checkList){
+		for(boolean b : checkList)
+			if(b)
+				return true;
+		return false;
 	}
 	
 

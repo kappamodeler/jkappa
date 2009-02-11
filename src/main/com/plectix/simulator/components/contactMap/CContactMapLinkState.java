@@ -35,6 +35,15 @@ public class CContactMapLinkState {
 		}
 		this.statusLinkRank = linkState.getStatusLinkRank();
 	}
+	
+	public CContactMapLinkState(CContactMapLinkState linkState) {
+		if (linkState.getLinkSiteNameID() != -1) {
+			this.agentNameID = linkState.getAgentNameID();
+			this.linkSiteNameID = linkState.getLinkSiteNameID();
+			this.internalStateNameID = linkState.getInternalStateNameID();
+		}
+		this.statusLinkRank = linkState.getStatusLinkRank();
+	}
 
 	public boolean equalz(CContactMapLinkState linkState) {
 		if (this == linkState) {

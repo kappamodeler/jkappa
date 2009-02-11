@@ -29,9 +29,20 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	public CContactMapAbstractSite(ISite site, IContactMapAbstractAgent agent) {
 		this.nameId = site.getNameId();
 		this.linkAgent = agent;
-		this.internalState = site.getInternalState();
+		if(site.getInternalState() != CInternalState.EMPTY_STATE)
+			this.internalState = new CInternalState(site.getInternalState().getNameId());
 		this.linkState = new CContactMapLinkState(site.getLinkState());
 	}
+	
+	public CContactMapAbstractSite(IContactMapAbstractSite site) {
+		this.nameId = site.getNameId();
+		this.linkAgent = site.getAgentLink();
+		if(site.getInternalState() != CInternalState.EMPTY_STATE)
+			this.internalState = new CInternalState(site.getInternalState().getNameId());
+		this.linkState = new CContactMapLinkState(site.getLinkState());
+	}
+	
+	
 
 	public CContactMapAbstractSite(IContactMapAbstractAgent agent) {
 		this.nameId = NO_INDEX;
@@ -69,7 +80,35 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	public final IContactMapAbstractAgent getAgentLink() {
 		return linkAgent;
 	}
-
+	
+	public final void setAgentLink(IContactMapAbstractAgent linkAgent){
+		this.linkAgent = linkAgent;
+	}
+	
+	public final boolean equalsNameId(IContactMapAbstractSite site){
+		if (nameId != site.getNameId())
+			return false;
+		return true;
+	}
+	
+	public final boolean equalsLinkAgent(IContactMapAbstractSite site){
+		if (linkAgent.getNameId() != site.getAgentLink().getNameId())
+			return false;
+		return true;
+	}
+	
+	public final boolean equalsInternalState(IContactMapAbstractSite site){
+		if (internalState.getNameId() != site.getInternalState().getNameId())
+			return false;
+		return true;
+	}
+	
+	public final boolean equalsLinkState(IContactMapAbstractSite site){
+		if (!linkState.equalz(site.getLinkState()))
+			return false;
+		return true;
+	}
+	
 	public final boolean equalz(IAbstractSite obj) {
 		if (this == obj) {
 			return true;
@@ -123,6 +162,7 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	@Override
 	public String toString() {
 		String st = "site = " + getName();
+		st += " from agent = " + linkAgent.getName();
 		if (internalState.getNameId() != -1)
 			st += " internal state = " + internalState.getName();
 		if (linkState.getLinkSiteNameID() != -1) {

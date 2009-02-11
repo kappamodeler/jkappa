@@ -14,6 +14,7 @@ import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
+import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISolution;
@@ -92,5 +93,12 @@ public class CContactMapAbstractSolution {
 			((CContactMapAbstractAgent)cMAA).print();
 		}
 		System.out.println("***************************************************************************");
+	}
+
+	public boolean addNewData(List<IContactMapAbstractSite> newData) {
+		if(newData.isEmpty())
+			return false;
+		
+		return false;
 	}
 }
