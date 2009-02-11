@@ -1,22 +1,25 @@
 package com.plectix.simulator.components.stories;
 
+import java.util.Collection;
+
 import org.w3c.dom.Element;
 
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.interfaces.ISite;
+
 public class CStoryType {
-	
+
 	public enum StoryOutputType {
-		INTRO,
-		RULE,
-		OBS;
+		INTRO, RULE, OBS;
 	}
-	
+
 	public static final String STRING_INTRO = "INTRO";
 	public static final String STRING_RULE = "RULE";
 	public static final String STRING_OBS = "OBSERVABLE";
-	
+
 	public static final String RELATION_STRONG = "STRONG";
 	public static final String RELATION_WEAK = "WEAK";
-	
+
 	private StoryOutputType type;
 	private String text;
 
@@ -46,8 +49,8 @@ public class CStoryType {
 	private int id;
 	private int depth;
 
-	public CStoryType(StoryOutputType type, int traceID, int id, String text, String data,
-			int depth) {
+	public CStoryType(StoryOutputType type, int traceID, int id, String text,
+			String data, int depth) {
 		this.traceID = traceID;
 		this.id = id;
 		this.type = type;
@@ -68,5 +71,23 @@ public class CStoryType {
 		node.setAttribute("Relation", relationType);
 		node.setAttribute("FromNode", Integer.toString(this.id));
 		node.setAttribute("ToNode", Integer.toString(toNode));
+	}
+
+	public final boolean equalz(CStoryType type) {
+		if (this == type) {
+			return true;
+		}
+		if (this.id == type.getId())
+			return true;
+		return false;
+	}
+
+	public final boolean includedInCollection(Collection<CStoryType> collection) {
+		for (CStoryType st : collection) {
+			if (this.equalz(st)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

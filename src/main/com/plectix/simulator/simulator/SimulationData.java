@@ -57,6 +57,7 @@ import com.plectix.simulator.components.contactMap.CContactMapChangedSite;
 import com.plectix.simulator.components.contactMap.CContactMapEdge;
 import com.plectix.simulator.components.contactMap.CContactMap.ContactMapMode;
 import com.plectix.simulator.components.stories.CStories;
+import com.plectix.simulator.components.stories.CStoryIntro;
 import com.plectix.simulator.components.stories.CStoryTrees;
 import com.plectix.simulator.components.stories.CStoryType;
 import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
@@ -761,7 +762,7 @@ public class SimulationData {
 
 	private final void fillNodesLevelStoryTrees(
 			List<CStoryType> currentStTypeList, List<Element> nodes,
-			Document doc) {
+			Document doc, List<CStoryType> intros) {
 		Element node;
 		for (CStoryType stT : currentStTypeList) {
 			if (stT.getType() == StoryOutputType.OBS) {
@@ -773,9 +774,12 @@ public class SimulationData {
 				stT.fillNode(node, CStoryType.STRING_RULE);
 				nodes.add(node);
 			} else {
-				node = doc.createElement("Node");
-				stT.fillNode(node, CStoryType.STRING_INTRO);
-				nodes.add(node);
+				if (!stT.includedInCollection(intros)) {
+					node = doc.createElement("Node");
+					stT.fillNode(node, CStoryType.STRING_INTRO);
+					nodes.add(node);
+					intros.add(stT);
+				}
 			}
 		}
 	}
@@ -825,31 +829,31 @@ public class SimulationData {
 				.iterator();
 		int depth = storyTree.getLevelToTraceID().size();
 
-		while (iterator.hasNext()) {
-			int level = iterator.next();
-			List<Integer> list = storyTree.getLevelToTraceID().get(level);
-			List<CStoryType> listST = new ArrayList<CStoryType>();
-			allLevels.put(level, listST);
-			for (Integer traceID : list) {
-				List<String> introStringList = storyTree
-						.getTraceIDToIntroString().get(traceID);
+		List<CStoryIntro> storyIntroList = storyTree.getStoryIntros();
+		for (CStoryIntro stIntro : storyIntroList) {
+			for (Integer traceID : stIntro.getTraceIDs()) {
+
 				List<CStoryType> introList = traceIdToStoryTypeIntro
 						.get(traceID);
 
-				if (introStringList != null) {
-					if (introList == null) {
-						introList = new ArrayList<CStoryType>();
-						traceIdToStoryTypeIntro.put(traceID, introList);
-					}
-					for (String str : introStringList) {
-						CStoryType stT = new CStoryType(StoryOutputType.INTRO,
-								traceID, counter++, "intro:" + str, "", depth
-										- level - 1);
-						listST.add(stT);
-						introList.add(stT);
-					}
+				if (introList == null) {
+					introList = new ArrayList<CStoryType>();
+					traceIdToStoryTypeIntro.put(traceID, introList);
 				}
+				int level = storyTree.getTraceIDToLevel().get(traceID);
+				CStoryType stT = new CStoryType(StoryOutputType.INTRO, traceID,
+						counter, "intro:" + stIntro.getNotation(), "", depth
+								- level - 1);
+				introList.add(stT);
+
+				List<CStoryType> listST = allLevels.get(level);
+				if (listST == null) {
+					listST = new ArrayList<CStoryType>();
+					allLevels.put(level, listST);
+				}
+				listST.add(stT);
 			}
+			counter++;
 		}
 		iterator = storyTree.getLevelToTraceID().keySet().iterator();
 		int traceIDSize = storyTree.getTraceIDToLevel().size() + counter - 1;
@@ -900,10 +904,11 @@ public class SimulationData {
 		List<CStoryType> currentStTypeList = new ArrayList<CStoryType>();
 		iterator = allLevels.keySet().iterator();
 
+		List<CStoryType> intros = new ArrayList<CStoryType>();
 		while (iterator.hasNext()) {
 			int curKey = iterator.next();
 			currentStTypeList = allLevels.get(curKey);
-			fillNodesLevelStoryTrees(currentStTypeList, nodes, doc);
+			fillNodesLevelStoryTrees(currentStTypeList, nodes, doc, intros);
 
 			for (CStoryType stT : currentStTypeList) {
 				if (stT.getType() != StoryOutputType.INTRO) {

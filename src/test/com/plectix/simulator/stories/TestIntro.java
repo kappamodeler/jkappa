@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeMap;
 
+import com.plectix.simulator.components.stories.CStoryIntro;
 import com.plectix.simulator.components.stories.CStoryTrees;
 import com.plectix.simulator.components.stories.CStoryType;
 import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
@@ -35,32 +36,33 @@ public class TestIntro {
 				.iterator();
 		int depth = storyTree.getLevelToTraceID().size();
 
-		while (iterator.hasNext()) {
-			int level = iterator.next();
-			List<Integer> list = storyTree.getLevelToTraceID().get(level);
-			List<CStoryType> listST = new ArrayList<CStoryType>();
-			allLevels.put(level, listST);
-			for (Integer traceID : list) {
-				List<String> introStringList = storyTree
-						.getTraceIDToIntroString().get(traceID);
+		List<CStoryIntro> storyIntroList = storyTree.getStoryIntros();
+		for (CStoryIntro stIntro : storyIntroList) {
+			for (Integer traceID : stIntro.getTraceIDs()) {
+
 				List<CStoryType> introList = traceIdToStoryTypeIntro
 						.get(traceID);
 
-				if (introStringList != null) {
-					if (introList == null) {
-						introList = new ArrayList<CStoryType>();
-						traceIdToStoryTypeIntro.put(traceID, introList);
-					}
-					for (String str : introStringList) {
-						CStoryType stT = new CStoryType(StoryOutputType.INTRO,
-								traceID, counter++, "intro:" + str, "", depth
-										- level - 1);
-						listST.add(stT);
-						introList.add(stT);
-					}
+				if (introList == null) {
+					introList = new ArrayList<CStoryType>();
+					traceIdToStoryTypeIntro.put(traceID, introList);
 				}
+				int level = storyTree.getTraceIDToLevel().get(traceID);
+				CStoryType stT = new CStoryType(StoryOutputType.INTRO, traceID,
+						counter, "intro:" + stIntro.getNotation(), "", depth
+								- level - 1);
+				introList.add(stT);
+
+				List<CStoryType> listST = allLevels.get(level);
+				if (listST == null) {
+					listST = new ArrayList<CStoryType>();
+					allLevels.put(level, listST);
+				}
+				listST.add(stT);
 			}
+			counter++;
 		}
+		
 		checkIntroId(traceIdToStoryTypeIntro);
 		checkLeaves(traceIdToStoryTypeIntro);
 	}

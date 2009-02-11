@@ -1,9 +1,12 @@
 package com.plectix.simulator.interfaces;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ISite {
 
+	public boolean includedInCollection(Collection<ISite> collection);
+		
 	public ILinkState getLinkState();
 	
 	public boolean isChanged();

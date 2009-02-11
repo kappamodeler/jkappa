@@ -127,7 +127,7 @@ public class SimulatorCommandLine {
 				|| (hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
 			simulationArguments.setActivationMap(false);
 		}
-
+		
 		if (hasOption(SimulatorOptions.MERGE_MAPS)) {
 			simulationArguments.setInhibitionMap(true);
 		}
@@ -180,6 +180,11 @@ public class SimulatorCommandLine {
 			simulationArguments.setWallClockTimeLimit(getLongValue(SimulatorOptions.WALL_CLOCK_TIME_LIMIT));
 		}
 
+
+		if (hasOption(SimulatorOptions.CLOCK_PRECISION)) {
+            simulationArguments.setWallClockTimeLimit(getLongValue(SimulatorOptions.CLOCK_PRECISION)*1000);
+        }
+		
 		if (hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
 			simulationArguments.setOutputFinalState(true);
 		}

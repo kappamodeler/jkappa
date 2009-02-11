@@ -8,7 +8,9 @@ import java.util.Map;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CInjection;
+import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
@@ -41,9 +43,8 @@ public class CNetworkNotation implements INetworkNotation {
 	private Map<Long, AgentSitesFromRules> usedAgentsFromRules;
 	private List<Long> addedAgentsID;
 	List<String> agentsNotation;
-	List<List<Long>> introCC;
-	
-	
+	List<Map<Long, List<Integer>>> introCCMap;
+
 	public List<Long> getAddedAgentsID() {
 		return addedAgentsID;
 	}
@@ -102,66 +103,86 @@ public class CNetworkNotation implements INetworkNotation {
 			List<IInjection> injectionsList, SimulationData data) {
 		this.simulator = simulator;
 		this.step = step;
-		// this.rule = rule;
 		this.ruleID = rule.getRuleID();
 		leaf = false;
 		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();
 		this.changesOfAllUsedSites = new HashMap<Long, AgentSites>();
 		this.usedAgentsFromRules = new HashMap<Long, AgentSitesFromRules>();
 		this.agentsNotation = new ArrayList<String>();
-		this.introCC = new ArrayList<List<Long>>();
-		createAgentsNotation(injectionsList, data);
+		this.introCCMap = new ArrayList<Map<Long, List<Integer>>>();
+		createAgentsNotation(injectionsList, data, rule);
 	}
 
-	public void fillAddedAgentsID(SimulationData data){
+	public void fillAddedAgentsID(SimulationData data) {
 		IRule rule = data.getRulesByID(ruleID);
 		this.addedAgentsID = rule.getAgentsAddedID();
 	}
 
-	public final void changeIntroCCAndAgentNotation(int indexToDel,
-			List<Long> agentsList, String str) {
-		this.introCC.remove(indexToDel);
-		this.introCC.add(agentsList);
-		this.getAgentsNotation().remove(indexToDel);
-		this.getAgentsNotation().add(str);
-	}
+	private void fillIntroMap(IInjection inj, IConnectedComponent ccFromSolution) {
+		IConnectedComponent ccFromRule = inj.getConnectedComponent();
+		Map<Long, List<Integer>> currentMap = new HashMap<Long, List<Integer>>();
 
-	public final void changeIntroCC(Long agentToDelete, Long agent) {
-		for (List<Long> agentIDsListint : this.introCC) {
-			int index = agentIDsListint.indexOf(agentToDelete);
-			if (index >= 0) {
-				agentIDsListint.remove(index);
-				agentIDsListint.add(agent);
-				return;
+		for (IAgentLink agentLink : inj.getAgentLinkList()) {
+			IAgent agent = agentLink.getAgentTo();
+			long key = agent.getId();
+			IAgent agentFromRule = ccFromRule.getAgents().get(
+					agentLink.getIdAgentFrom());
+
+			List<Integer> currentList = new ArrayList<Integer>();
+			currentMap.put(key, currentList);
+
+			for (ISite site : agentFromRule.getSites()) {
+				currentList.add(site.getNameId());
 			}
 		}
+
+		ISolution solution = simulator.getSimulationData().getSolution();
+		List<IAgent> newAgentsList = solution.cloneAgentsList(ccFromSolution
+				.getAgents(), simulator.getSimulationData());
+
+		IAgent mainAgent = null;
+
+		for (int i = 0; i < ccFromSolution.getAgents().size(); i++) {
+			IAgent oldAgent = ccFromSolution.getAgents().get(i);
+			List<Integer> sites = currentMap.get(oldAgent.getId());
+			IAgent newAgent = newAgentsList.get(i);
+			if (sites != null) {
+				mainAgent = newAgent;
+
+				for (ISite site : newAgent.getSites()) {
+					if (!sites.contains(site.getNameId())) {
+						ISite connectionSite = site.getLinkState().getSite();
+						if (connectionSite != null) {
+							site.getLinkState().setFreeLinkState();
+							connectionSite.getLinkState().setFreeLinkState();
+						}
+					}
+				}
+
+			}
+		}
+
+		IConnectedComponent cc = solution.getConnectedComponent(mainAgent);
+		agentsNotation.add(SimulationUtils.printPartRule(cc, new int[] { 0 },
+				simulator.getSimulationData().isOcamlStyleObsName()));
+		introCCMap.add(currentMap);
+	}
+
+	public List<Map<Long, List<Integer>>> getIntroCCMap() {
+		return introCCMap;
 	}
 
 	private final void createAgentsNotation(List<IInjection> injectionsList,
-			SimulationData data) {
-
+			SimulationData data, IRule rule) {
 		ISolution solution = data.getSolution();
-
 		for (IInjection inj : injectionsList) {
 			if (inj != CInjection.EMPTY_INJECTION) {
 				IConnectedComponent cc = solution.getConnectedComponent(inj
 						.getAgentLinkList().get(0).getAgentTo());
-				agentsNotation.add(SimulationUtils.printPartRule(cc,
-						new int[] { 0 }, data.isOcamlStyleObsName()));
-				List<Long> agentIDsList = new ArrayList<Long>();
-
-				for (IAgent agent : cc.getAgents()) {
-					agentIDsList.add(agent.getId());
-				}
-				introCC.add(agentIDsList);
-
+				fillIntroMap(inj, cc);
 			}
 		}
 
-	}
-	
-	public List<List<Long>> getIntroCC() {
-		return introCC;
 	}
 
 	public final void checkLinkForNetworkNotation(StateType index, ISite site) {

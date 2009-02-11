@@ -2,6 +2,7 @@ package com.plectix.simulator.components;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -100,16 +101,16 @@ public final class CSite implements ISite, Serializable {
 			return true;
 		}
 
-		if (obj == null) { 
+		if (obj == null) {
 			return false;
 		}
 
 		if (!(obj instanceof CSite)) {
 			return false;
 		}
-		
+
 		CSite site = (CSite) obj;
-		
+
 		if (nameId != site.nameId) {
 			return false;
 		}
@@ -120,7 +121,14 @@ public final class CSite implements ISite, Serializable {
 			return linkAgent.equalz(site.getAgentLink());
 		}
 	}
-	
+	public final boolean includedInCollection(Collection<ISite> collection) {
+		for (ISite agent : collection) {
+			if (this.equalz(agent)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	public final void setLinkIndex(int index) {
 		this.linkIndex = index;
 	}
@@ -136,6 +144,8 @@ public final class CSite implements ISite, Serializable {
 	public final void clearLiftList() {
 		this.liftList.clear();
 	}
+
+	
 
 	public final void removeInjectionsFromCCToSite(IInjection inInjection) {
 
@@ -170,7 +180,7 @@ public final class CSite implements ISite, Serializable {
 	public final String getName() {
 		return ThreadLocalData.getNameDictionary().getName(nameId);
 	}
-	
+
 	public String toString() {
 		return linkAgent.getName() + "(" + getName() + ")";
 	}

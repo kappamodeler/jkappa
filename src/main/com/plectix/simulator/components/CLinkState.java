@@ -29,6 +29,12 @@ public final class CLinkState extends CState implements ILinkState, Serializable
 		this.linkStateID = linkSiteID;
 	}
 
+	public final void setFreeLinkState() {
+		statusLink = CLinkStatus.FREE;
+		linkSite = null;
+		linkStateID = NULL_INDEX;
+	}
+	
 	@Override
 	public boolean isRankRoot() {
 		if (statusLink == CLinkStatus.WILDCARD)

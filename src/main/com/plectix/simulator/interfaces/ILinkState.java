@@ -23,4 +23,5 @@ public interface ILinkState {
 
 	public int getLinkStateID();
 
+	public void setFreeLinkState();
 }
