@@ -128,7 +128,8 @@ public class KappaSystemParser {
 //		new KappaSystemBuilder(simulationData).build();
 
 		// solution
-		if (simulationData.getSimulationArguments().getSimulationType() == SimulationType.SIM)
+		if (simulationData.getSimulationArguments().getSimulationType() 
+				!= SimulationType.GENERATE_MAP)
 			createSimData(CREATE_INIT);
 		
 		List<IRule> rules = createRules(myKappaFile.getRules());
