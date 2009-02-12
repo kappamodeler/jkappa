@@ -49,5 +49,29 @@ public class CInternalState extends CState implements IInternalState, Serializab
 		}
 		return ((CInternalState) obj).nameId == nameId;
 	}
+	
+	public final boolean compareInternalStates(IInternalState solutionInternalState) {
+		if (this.nameId != CSite.NO_INDEX
+				&& solutionInternalState.getNameId() == CSite.NO_INDEX)
+			return false;
+		if (this.nameId == CSite.NO_INDEX
+				&& solutionInternalState.getNameId() != CSite.NO_INDEX)
+			return true;
+		if (!(this.nameId == solutionInternalState
+				.getNameId()))
+			return false;
 
+		return true;
+	}
+	
+	public final boolean fullEqualityInternalStates(IInternalState solutionInternalState) {
+		if (nameId == CSite.NO_INDEX
+				&& solutionInternalState.getNameId() == CSite.NO_INDEX)
+			return true;
+		if (nameId == solutionInternalState
+				.getNameId())
+			return true;
+
+		return false;
+	}
 }

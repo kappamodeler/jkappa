@@ -34,7 +34,7 @@ public class CContactMapAbstractAction {
 		// TODO createAtomicActions
 		boolean[] checkList = new boolean[rule.getRhsSites().size()];
 		for(IContactMapAbstractSite s : rule.getLhsSites()){
-			UCorrelationAbstractSite uSite = new UCorrelationAbstractSite(s,null);
+			UCorrelationAbstractSite uSite = new UCorrelationAbstractSite(s,null,ECorrelationType.CORRELATION_LHS_AND_RHS);
 			correlationSites.add(uSite);
 			IContactMapAbstractSite toSite = findCorrelation(s,uSite,checkList);
 			if(toSite == null)

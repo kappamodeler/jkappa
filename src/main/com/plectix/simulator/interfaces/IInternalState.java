@@ -12,4 +12,7 @@ public interface IInternalState {
 
 	public void setNameId(int nameInternalStateId);
 
+	public boolean compareInternalStates(IInternalState solutionInternalState);
+
+	public  boolean fullEqualityInternalStates(IInternalState solutionInternalState);
 }

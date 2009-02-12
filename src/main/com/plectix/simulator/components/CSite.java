@@ -121,6 +121,7 @@ public final class CSite implements ISite, Serializable {
 			return linkAgent.equalz(site.getAgentLink());
 		}
 	}
+
 	public final boolean includedInCollection(Collection<ISite> collection) {
 		for (ISite agent : collection) {
 			if (this.equalz(agent)) {
@@ -129,6 +130,7 @@ public final class CSite implements ISite, Serializable {
 		}
 		return false;
 	}
+
 	public final void setLinkIndex(int index) {
 		this.linkIndex = index;
 	}
@@ -144,8 +146,6 @@ public final class CSite implements ISite, Serializable {
 	public final void clearLiftList() {
 		this.liftList.clear();
 	}
-
-	
 
 	public final void removeInjectionsFromCCToSite(IInjection inInjection) {
 
@@ -184,4 +184,21 @@ public final class CSite implements ISite, Serializable {
 	public String toString() {
 		return linkAgent.getName() + "(" + getName() + ")";
 	}
+
+	public final boolean compareSites(ISite solutionSite, boolean fullEquality) {
+		ILinkState currentLinkState = linkState;
+		ILinkState solutionLinkState = solutionSite.getLinkState();
+
+		IInternalState currentInternalState = internalState;
+		IInternalState solutionInternalState = solutionSite.getInternalState();
+
+		if (!fullEquality)
+			return (currentLinkState.compareLinkStates(solutionLinkState) && currentInternalState
+					.compareInternalStates(solutionInternalState));
+		else
+			return (currentLinkState.fullEqualityLinkStates(solutionLinkState) && currentInternalState
+					.fullEqualityInternalStates(solutionInternalState));
+
+	}
+
 }

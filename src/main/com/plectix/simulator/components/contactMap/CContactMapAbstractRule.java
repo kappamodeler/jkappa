@@ -84,19 +84,47 @@ public class CContactMapAbstractRule {
 	public List<IContactMapAbstractSite> getNewData() {
 		List<IContactMapAbstractSite> newData = new ArrayList<IContactMapAbstractSite>();
 		int[] indexList = new int[lhsSites.size()];
-		List<List<IContactMapAbstractSite>> sitesLists = initMaxIndex();
+		List<List<IContactMapAbstractSite>> sitesLists = initSitesListsFromSolution();
+		if(sitesLists==null)
+			return null;
+		clearSitesLists(sitesLists);
 		int[] maxIndex = getMaxIndex(sitesLists);
 		// TODO getNewData
 
 		 while (!isEnd(indexList, maxIndex)) {
-
+			 List<UCorrelationAbstractSite> injList = createInjectionList(indexList, sitesLists);
+			 abstractAction.apply(injList);
+			 
 			 upIndexList(indexList, maxIndex);
 		}
 		 
 		return newData;
 	}
+	
+	private List<UCorrelationAbstractSite> createInjectionList(int[] indexList,List<List<IContactMapAbstractSite>> sitesLists){
+		List<IContactMapAbstractSite> listSites = new ArrayList<IContactMapAbstractSite>();
+		int index = 0;
+		for(int i : indexList)
+			listSites.add(sitesLists.get(index++).get(i));
+		List<UCorrelationAbstractSite> list = UCorrelationAbstractSite.createCorrelationSites(lhsSites, listSites, ECorrelationType.CORRELATION_LHS_AND_SOLUTION);
+		return list;
+	}
+	
+	private void clearSitesLists(List<List<IContactMapAbstractSite>> sitesLists){
+		int i=0;
+		for(List<IContactMapAbstractSite> list : sitesLists){
+			List<IContactMapAbstractSite> deleteList = new ArrayList<IContactMapAbstractSite>();
+			IContactMapAbstractSite site = lhsSites.get(i);
+			for(IContactMapAbstractSite s : list){
+				if(!site.isFit(s))
+					deleteList.add(s);
+			}
+			list.removeAll(deleteList);
+			i++;
+		}
+	}
 
-	private List<List<IContactMapAbstractSite>> initMaxIndex() {
+	private List<List<IContactMapAbstractSite>> initSitesListsFromSolution() {
 		List<List<IContactMapAbstractSite>> sitesLists = new ArrayList<List<IContactMapAbstractSite>>();
 		for (IContactMapAbstractSite s : lhsSites) {
 			Integer keyAgent = s.getAgentLink().getNameId();
@@ -128,7 +156,7 @@ public class CContactMapAbstractRule {
 		int[] mas = new int[sitesLists.size()];
 		int index = 0;
 		for (List<IContactMapAbstractSite> l : sitesLists)
-			mas[index++] = l.size();
+			mas[index++] = l.size()-1;
 		return mas;
 	}
 

@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.interfaces.IAbstractAgent;
@@ -29,20 +31,20 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	public CContactMapAbstractSite(ISite site, IContactMapAbstractAgent agent) {
 		this.nameId = site.getNameId();
 		this.linkAgent = agent;
-		if(site.getInternalState() != CInternalState.EMPTY_STATE)
-			this.internalState = new CInternalState(site.getInternalState().getNameId());
+		if (site.getInternalState() != CInternalState.EMPTY_STATE)
+			this.internalState = new CInternalState(site.getInternalState()
+					.getNameId());
 		this.linkState = new CContactMapLinkState(site.getLinkState());
 	}
-	
+
 	public CContactMapAbstractSite(IContactMapAbstractSite site) {
 		this.nameId = site.getNameId();
 		this.linkAgent = site.getAgentLink();
-		if(site.getInternalState() != CInternalState.EMPTY_STATE)
-			this.internalState = new CInternalState(site.getInternalState().getNameId());
+		if (site.getInternalState() != CInternalState.EMPTY_STATE)
+			this.internalState = new CInternalState(site.getInternalState()
+					.getNameId());
 		this.linkState = new CContactMapLinkState(site.getLinkState());
 	}
-	
-	
 
 	public CContactMapAbstractSite(IContactMapAbstractAgent agent) {
 		this.nameId = NO_INDEX;
@@ -80,35 +82,35 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	public final IContactMapAbstractAgent getAgentLink() {
 		return linkAgent;
 	}
-	
-	public final void setAgentLink(IContactMapAbstractAgent linkAgent){
+
+	public final void setAgentLink(IContactMapAbstractAgent linkAgent) {
 		this.linkAgent = linkAgent;
 	}
-	
-	public final boolean equalsNameId(IContactMapAbstractSite site){
+
+	public final boolean equalsNameId(IContactMapAbstractSite site) {
 		if (nameId != site.getNameId())
 			return false;
 		return true;
 	}
-	
-	public final boolean equalsLinkAgent(IContactMapAbstractSite site){
+
+	public final boolean equalsLinkAgent(IContactMapAbstractSite site) {
 		if (linkAgent.getNameId() != site.getAgentLink().getNameId())
 			return false;
 		return true;
 	}
-	
-	public final boolean equalsInternalState(IContactMapAbstractSite site){
+
+	public final boolean equalsInternalState(IContactMapAbstractSite site) {
 		if (internalState.getNameId() != site.getInternalState().getNameId())
 			return false;
 		return true;
 	}
-	
-	public final boolean equalsLinkState(IContactMapAbstractSite site){
+
+	public final boolean equalsLinkState(IContactMapAbstractSite site) {
 		if (!linkState.equalz(site.getLinkState()))
 			return false;
 		return true;
 	}
-	
+
 	public final boolean equalz(IAbstractSite obj) {
 		if (this == obj) {
 			return true;
@@ -188,6 +190,48 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 			}
 		}
 		return false;
+	}
+
+	private static boolean compareLinkStates(CContactMapLinkState currentState,
+			CContactMapLinkState solutionLinkState) {
+		if (currentState.isLeftBranchStatus()
+				&& solutionLinkState.isRightBranchStatus())
+			return false;
+		if (currentState.isRightBranchStatus()
+				&& solutionLinkState.isLeftBranchStatus())
+			return false;
+
+		if (currentState.getStatusLinkRank().smaller(
+				solutionLinkState.getStatusLinkRank()))
+			return true;
+
+		if (currentState.getStatusLinkRank() == solutionLinkState
+				.getStatusLinkRank()
+				&& currentState.getStatusLinkRank() == CLinkRank.BOUND)
+			if (currentState.equalz(solutionLinkState))
+				// if
+				// (currentState.getSite().equalz(solutionLinkState.getSite()))
+				return true;
+
+		if (currentState.getStatusLinkRank() == solutionLinkState
+				.getStatusLinkRank()
+				&& currentState.getStatusLinkRank() != CLinkRank.BOUND)
+			return true;
+
+		return false;
+	}
+
+	public boolean isFit(IContactMapAbstractSite s) {
+		if (!this.equalsLinkAgent(s))
+			return false;
+		if (!this.equalsNameId(s))
+			return false;
+		if (!internalState.compareInternalStates(s.getInternalState()))
+			return false;
+		if (!compareLinkStates(linkState, s.getLinkState()))
+			return false;
+
+		return true;
 	}
 
 }

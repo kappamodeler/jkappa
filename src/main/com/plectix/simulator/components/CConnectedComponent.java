@@ -13,8 +13,6 @@ import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.IInternalState;
-import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
@@ -241,7 +239,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 			ISite cc2Site = cc2Agent.getSite(cc1Site.getNameId());
 			if (cc2Site == null)
 				return false;
-			if (!compareSites(cc1Site, cc2Site, true))
+			if (!cc1Site.compareSites(cc2Site, true))
 				return false;
 		}
 		return true;
@@ -255,103 +253,13 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 			ISite solutionSite = solutionAgent.getSite(site.getNameId());
 			if (solutionSite == null)
 				return false;
-			if (!compareSites(site, solutionSite, false))
+			if (!site.compareSites(solutionSite, false))
 				return false;
 			injectedSites.add(solutionSite);
 		}
 		agentLinkList.add(new CAgentLink(currentAgent
 				.getIdInConnectedComponent(), solutionAgent));
 		return true;
-	}
-
-	private final boolean compareSites(ISite currentSite, ISite solutionSite,
-			boolean fullEquality) {
-		ILinkState currentLinkState = currentSite.getLinkState();
-		ILinkState solutionLinkState = solutionSite.getLinkState();
-
-		IInternalState currentInternalState = currentSite.getInternalState();
-		IInternalState solutionInternalState = solutionSite.getInternalState();
-
-		if (!fullEquality)
-			return (compareLinkStates(currentLinkState, solutionLinkState) && compareInternalStates(
-					currentInternalState, solutionInternalState));
-		else
-			return (fullEqualityLinkStates(currentLinkState, solutionLinkState) && fullEqualityInternalStates(
-					currentInternalState, solutionInternalState));
-
-	}
-
-	private final boolean compareInternalStates(
-			IInternalState currentInternalState,
-			IInternalState solutionInternalState) {
-		if (currentInternalState.getNameId() != CSite.NO_INDEX
-				&& solutionInternalState.getNameId() == CSite.NO_INDEX)
-			return false;
-		if (currentInternalState.getNameId() == CSite.NO_INDEX
-				&& solutionInternalState.getNameId() != CSite.NO_INDEX)
-			return true;
-		if (!(currentInternalState.getNameId() == solutionInternalState
-				.getNameId()))
-			return false;
-
-		return true;
-	}
-
-	private final boolean compareLinkStates(ILinkState currentState,
-			ILinkState solutionLinkState) {
-		if (currentState.isLeftBranchStatus()
-				&& solutionLinkState.isRightBranchStatus())
-			return false;
-		if (currentState.isRightBranchStatus()
-				&& solutionLinkState.isLeftBranchStatus())
-			return false;
-
-		if (currentState.getStatusLinkRank().smaller(solutionLinkState
-				.getStatusLinkRank()))
-			return true;
-
-		if (currentState.getStatusLinkRank() == solutionLinkState
-				.getStatusLinkRank()
-				&& currentState.getStatusLinkRank() == CLinkRank.BOUND)
-			if (currentState.getSite().equalz(solutionLinkState.getSite()))
-				return true;
-
-		if (currentState.getStatusLinkRank() == solutionLinkState
-				.getStatusLinkRank()
-				&& currentState.getStatusLinkRank() != CLinkRank.BOUND)
-			return true;
-
-		return false;
-	}
-
-	private final boolean fullEqualityInternalStates(
-			IInternalState currentInternalState,
-			IInternalState solutionInternalState) {
-		if (currentInternalState.getNameId() == CSite.NO_INDEX
-				&& solutionInternalState.getNameId() == CSite.NO_INDEX)
-			return true;
-		if (currentInternalState.getNameId() == solutionInternalState
-				.getNameId())
-			return true;
-
-		return false;
-	}
-
-	private final boolean fullEqualityLinkStates(ILinkState currentLinkState,
-			ILinkState solutionLinkState) {
-
-		if (currentLinkState.getStatusLinkRank() == solutionLinkState
-				.getStatusLinkRank()
-				&& currentLinkState.getStatusLinkRank() == CLinkRank.BOUND)
-			if (currentLinkState.getSite().equalz(solutionLinkState.getSite()))
-				return true;
-
-		if (currentLinkState.getStatusLinkRank() == solutionLinkState
-				.getStatusLinkRank()
-				&& currentLinkState.getStatusLinkRank() != CLinkRank.BOUND)
-			return true;
-
-		return false;
 	}
 
 	private final List<ISite> getConnectedSite(IAgent agentFrom, IAgent agentTo) {

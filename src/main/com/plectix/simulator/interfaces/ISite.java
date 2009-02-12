@@ -45,4 +45,6 @@ public interface ISite {
 	public void clearLift();
 
 	public boolean equalz(ISite siteThat);
+
+	public boolean compareSites(ISite solutionSite, boolean b);
 }

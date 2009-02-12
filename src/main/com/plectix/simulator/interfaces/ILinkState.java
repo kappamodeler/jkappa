@@ -24,4 +24,8 @@ public interface ILinkState {
 	public int getLinkStateID();
 
 	public void setFreeLinkState();
+
+	public boolean fullEqualityLinkStates(ILinkState solutionLinkState);
+
+	public boolean compareLinkStates(ILinkState solutionLinkState);
 }

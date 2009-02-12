@@ -1,11 +1,14 @@
 package com.plectix.simulator.components.contactMap;
 
 import com.plectix.simulator.components.CLinkRank;
+import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.ILinkState;
+import com.plectix.simulator.interfaces.ISite;
 
-public class CContactMapLinkState {
+public class CContactMapLinkState{
 	private CLinkRank statusLinkRank;
+	private CLinkStatus statusLink;
 	private int linkSiteNameID = CSite.NO_INDEX;
 	private int agentNameID = CSite.NO_INDEX;
 	private int internalStateNameID = CSite.NO_INDEX;
@@ -34,6 +37,7 @@ public class CContactMapLinkState {
 					.getNameId();
 		}
 		this.statusLinkRank = linkState.getStatusLinkRank();
+		this.statusLink = linkState.getStatusLink();
 	}
 	
 	public CContactMapLinkState(CContactMapLinkState linkState) {
@@ -67,5 +71,13 @@ public class CContactMapLinkState {
 			return false;
 
 		return true;
+	}
+	
+	public final boolean isLeftBranchStatus() {
+		return (statusLink == CLinkStatus.FREE) ? true : false;
+	}
+
+	public final boolean isRightBranchStatus() {
+		return (statusLink == CLinkStatus.BOUND) ? true : false;
 	}
 }

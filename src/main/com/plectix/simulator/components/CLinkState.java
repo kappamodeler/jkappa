@@ -90,4 +90,44 @@ public final class CLinkState extends CState implements ILinkState, Serializable
 	public final String getName() {
 		return null;
 	}
+	
+	public final boolean fullEqualityLinkStates(ILinkState solutionLinkState) {
+		if (this.getStatusLinkRank() == solutionLinkState
+				.getStatusLinkRank()
+				&& this.getStatusLinkRank() == CLinkRank.BOUND)
+			if (this.getSite().equalz(solutionLinkState.getSite()))
+				return true;
+
+		if (this.getStatusLinkRank() == solutionLinkState
+				.getStatusLinkRank()
+				&& this.getStatusLinkRank() != CLinkRank.BOUND)
+			return true;
+		return false;
+	}
+	
+	public boolean compareLinkStates(ILinkState solutionLinkState) {
+		if (this.isLeftBranchStatus()
+				&& solutionLinkState.isRightBranchStatus())
+			return false;
+		if (this.isRightBranchStatus()
+				&& solutionLinkState.isLeftBranchStatus())
+			return false;
+
+		if (this.getStatusLinkRank().smaller(
+				solutionLinkState.getStatusLinkRank()))
+			return true;
+
+		if (this.getStatusLinkRank() == solutionLinkState
+				.getStatusLinkRank()
+				&& this.getStatusLinkRank() == CLinkRank.BOUND)
+			if (this.getSite().equalz(solutionLinkState.getSite()))
+				return true;
+
+		if (this.getStatusLinkRank() == solutionLinkState
+				.getStatusLinkRank()
+				&& this.getStatusLinkRank() != CLinkRank.BOUND)
+			return true;
+
+		return false;
+	}
 }

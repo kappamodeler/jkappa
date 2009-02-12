@@ -23,4 +23,6 @@ public interface IContactMapAbstractSite extends IAbstractSite{
 	public boolean equalsInternalState(IContactMapAbstractSite site);
 	
 	public boolean equalsLinkState(IContactMapAbstractSite site);
+
+	public boolean isFit(IContactMapAbstractSite s);
 }
