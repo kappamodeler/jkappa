@@ -1,13 +1,10 @@
 package com.plectix.simulator.components.contactMap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.action.CActionType;
-import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
 public class CContactMapAbstractAction {
@@ -41,6 +38,7 @@ public class CContactMapAbstractAction {
 				uSite.setType(CActionType.DELETE);
 			else
 				uSite.setToSite(toSite);
+			uSite.initAtomicActionList();
 		}
 		findAddAction(checkList);
 	}
@@ -117,7 +115,9 @@ public class CContactMapAbstractAction {
 		return true;
 	}
 	
-	public void apply(List<UCorrelationAbstractSite> injList){
+	public List<IContactMapAbstractSite> apply(List<UCorrelationAbstractSite> injList){
 		// TODO apply
+		
+		return null;
 	}
 }

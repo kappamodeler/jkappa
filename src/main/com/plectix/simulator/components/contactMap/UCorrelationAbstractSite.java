@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
 public class UCorrelationAbstractSite {
@@ -11,6 +12,7 @@ public class UCorrelationAbstractSite {
 	private ECorrelationType correlationType;
 	private IContactMapAbstractSite fromSite;
 	private IContactMapAbstractSite toSite;
+	private List<CActionType> atomicActions;
 	
 	public UCorrelationAbstractSite(IContactMapAbstractSite fromSite,IContactMapAbstractSite toSite,ECorrelationType correlationType){
 		this.fromSite = fromSite;
@@ -51,5 +53,41 @@ public class UCorrelationAbstractSite {
 			list.add(new UCorrelationAbstractSite(s,toSites.get(i++),correlationType));
 		}
 		return list;
+	}
+	
+	public void initAtomicActionList(){
+		atomicActions = new ArrayList<CActionType>();
+		if(correlationType != ECorrelationType.CORRELATION_LHS_AND_RHS)
+			return;
+		
+		switch (type) {
+		case MODIFY:
+			atomicActions.add(CActionType.MODIFY);
+			break;
+		case ABSTRACT_BREAK_OR_BOUND:
+			findBreakBound();
+			break;
+		case ABSTRACT_BREAK_OR_BOUND_AND_MODIFY:
+			findBreakBound();
+			atomicActions.add(CActionType.MODIFY);
+			break;
+		case DELETE:
+			atomicActions.add(CActionType.DELETE);
+			break;
+		}
+	}
+	private void findBreakBound(){
+		CContactMapLinkState linkStateFrom = fromSite.getLinkState();
+		CContactMapLinkState linkStateTo = toSite.getLinkState();
+		if(linkStateFrom.getAgentNameID()!=CSite.NO_INDEX && linkStateTo.getAgentNameID()==CSite.NO_INDEX){
+			atomicActions.add(CActionType.BREAK);
+			return;
+		}
+		if(linkStateFrom.getAgentNameID()==CSite.NO_INDEX && linkStateTo.getAgentNameID()!=CSite.NO_INDEX){
+			atomicActions.add(CActionType.BOUND);
+			return;
+		}
+		atomicActions.add(CActionType.BREAK);
+		atomicActions.add(CActionType.BOUND);
 	}
 }

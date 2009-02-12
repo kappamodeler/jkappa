@@ -93,7 +93,7 @@ public class CContactMapAbstractRule {
 
 		 while (!isEnd(indexList, maxIndex)) {
 			 List<UCorrelationAbstractSite> injList = createInjectionList(indexList, sitesLists);
-			 abstractAction.apply(injList);
+			 newData.addAll(abstractAction.apply(injList));
 			 
 			 upIndexList(indexList, maxIndex);
 		}
