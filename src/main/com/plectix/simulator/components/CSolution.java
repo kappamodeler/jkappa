@@ -14,6 +14,7 @@ import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.util.IdGenerator;
+import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
 
 public final class CSolution implements ISolution, Serializable {
@@ -157,10 +158,10 @@ public final class CSolution implements ISolution, Serializable {
 
 	}
 	
-	public List<IAgent> cloneAgentsList(List<IAgent> agentList, SimulationData data) {
+	public List<IAgent> cloneAgentsList(List<IAgent> agentList, KappaSystem system) {
 		List<IAgent> newAgentsList = new ArrayList<IAgent>();
 		for (IAgent agent : agentList) {
-			IAgent newAgent = new CAgent(agent.getNameId(), data.generateNextAgentId());
+			IAgent newAgent = new CAgent(agent.getNameId(), system.generateNextAgentId());
 			for (ISite site : agent.getSites()) {
 				CSite newSite = new CSite(site.getNameId(), newAgent);
 				newSite.setLinkIndex(site.getLinkIndex());

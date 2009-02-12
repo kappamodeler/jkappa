@@ -118,14 +118,14 @@ public class TestAction {
 		
 		simulationData.setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
 		simulationData.readSimulatonFile(InfoType.OUTPUT);
-		simulationData.initialize(InfoType.OUTPUT);
+		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 		System.out.println(FilePath);
 	}
 
 	@Before
 	public void setup() {
 		myRunQuant++;
-		mySolutionAgentsStructure = mySimulator.getSimulationData()
+		mySolutionAgentsStructure = mySimulator.getSimulationData().getKappaSystem()
 				.getSolution().getAgents();
 		System.out.println();
 		System.out.println("test" + (myRunQuant - 1));
@@ -188,7 +188,7 @@ public class TestAction {
 		List<IConnectedComponent> rightCCList = myActiveRule.getRightHandSide();
 		List<IConnectedComponent> leftCCList = myActiveRule.getLeftHandSide();
 
-		csolution = mySimulator.getSimulationData().getSolution();
+		csolution = mySimulator.getSimulationData().getKappaSystem().getSolution();
 
 		List<IConnectedComponent> listSolutionCC = new ArrayList<IConnectedComponent>();
 		listSolutionCC = csolution.split();

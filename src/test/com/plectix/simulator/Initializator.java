@@ -91,10 +91,10 @@ public class Initializator {
 			
 			simulationData.setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
 			simulationData.readSimulatonFile(InfoType.OUTPUT);
-			simulationData.initialize(InfoType.OUTPUT);
+			simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 			
 			myFirstRun = false;
-			myObsComponents = mySimulator.getSimulationData().getObservables().getConnectedComponentList();
+			myObsComponents = mySimulator.getSimulationData().getKappaSystem().getObservables().getConnectedComponentList();
 		} else {
 			reset(filePath);
 		}

@@ -75,7 +75,7 @@ public class CDeleteAction extends CAction {
 		// injection.getConnectedComponent().getInjectionsList()
 		// .remove(injection);
 
-		simulationData.getSolution().removeAgent(agent);
+		simulationData.getKappaSystem().getSolution().removeAgent(agent);
 	}
 
 	@Override

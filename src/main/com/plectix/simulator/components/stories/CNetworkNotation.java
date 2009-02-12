@@ -84,7 +84,7 @@ public class CNetworkNotation implements INetworkNotation {
 	@Override
 	public String toString() {
 		String st = "ruleName="
-				+ simulator.getSimulationData().getRulesByID(ruleID).getName()
+				+ simulator.getSimulationData().getKappaSystem().getRulesByID(ruleID).getName()
 				+ " ";
 		st += "usedAgentsFromRules=" + usedAgentsFromRules.keySet().toString()
 				+ " ";
@@ -114,7 +114,7 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public void fillAddedAgentsID(SimulationData data) {
-		IRule rule = data.getRulesByID(ruleID);
+		IRule rule = data.getKappaSystem().getRulesByID(ruleID);
 		this.addedAgentsID = rule.getAgentsAddedID();
 	}
 
@@ -136,9 +136,9 @@ public class CNetworkNotation implements INetworkNotation {
 			}
 		}
 
-		ISolution solution = simulator.getSimulationData().getSolution();
+		ISolution solution = simulator.getSimulationData().getKappaSystem().getSolution();
 		List<IAgent> newAgentsList = solution.cloneAgentsList(ccFromSolution
-				.getAgents(), simulator.getSimulationData());
+				.getAgents(), simulator.getSimulationData().getKappaSystem());
 
 		IAgent mainAgent = null;
 
@@ -174,7 +174,7 @@ public class CNetworkNotation implements INetworkNotation {
 
 	private final void createAgentsNotation(List<IInjection> injectionsList,
 			SimulationData data, IRule rule) {
-		ISolution solution = data.getSolution();
+		ISolution solution = data.getKappaSystem().getSolution();
 		for (IInjection inj : injectionsList) {
 			if (inj != CInjection.EMPTY_INJECTION) {
 				IConnectedComponent cc = solution.getConnectedComponent(inj
@@ -292,7 +292,7 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public final IRule getRule() {
-		return simulator.getSimulationData().getRulesByID(ruleID);
+		return simulator.getSimulationData().getKappaSystem().getRulesByID(ruleID);
 	}
 
 	public final CNetworkNotation isNotOpposite(

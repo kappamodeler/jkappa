@@ -433,7 +433,7 @@ public class CContactMap {
 				rule.applyRule(newInjList, simulationData);
 				List<IRule> currentInvokedRules = new ArrayList<IRule>();
 				SimulationUtils.doNegativeUpdate(newInjList);
-				simulationData.doPositiveUpdateForContactMap(rule, newInjList,
+				simulationData.getKappaSystem().doPositiveUpdateForContactMap(rule, newInjList,
 						invokedRules);
 				// addToInvokedRules(invokedRules, currentInvokedRules);
 			
@@ -650,7 +650,7 @@ public class CContactMap {
 			IRule rule) {
 		List<IAgent> newAgents = new ArrayList<IAgent>();
 
-		newAgents = solution.cloneAgentsList(oldAgents, simulationData);
+		newAgents = solution.cloneAgentsList(oldAgents, simulationData.getKappaSystem());
 		solution.addAgents(newAgents);
 		List<IInjection> newInjList = new ArrayList<IInjection>();
 

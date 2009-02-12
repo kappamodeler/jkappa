@@ -59,7 +59,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	}
 
 	public List<IRule> getRules() {
-		return mySimulator.getSimulationData().getRules();
+		return mySimulator.getSimulationData().getKappaSystem().getRules();
 	}
 
 	public List<IInjection> getCurrentInjectionsList() {
@@ -80,7 +80,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	private void run() {
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.OUTPUT,mySimulator.getSimulationData());
 
-		mySimulator.getSimulationData().getObservables().calculateObs(currentTime,
+		mySimulator.getSimulationData().getKappaSystem().getObservables().calculateObs(currentTime,
 				1, mySimulator.getSimulationData().getSimulationArguments().isTime());
 		myActiveRule = ruleProbabilityCalculation.getRandomRule();
 
@@ -104,7 +104,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 			myActiveRule.applyRule(myCurrentInjectionsList, mySimulator.getSimulationData());
 			SimulationUtils.doNegativeUpdate(myCurrentInjectionsList);
 			if (isDoingPositive()) {
-				mySimulator.getSimulationData().doPositiveUpdate(myActiveRule,
+				mySimulator.getSimulationData().getKappaSystem().doPositiveUpdate(myActiveRule,
 						myCurrentInjectionsList);
 			}
 

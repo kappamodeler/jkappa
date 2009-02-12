@@ -26,7 +26,7 @@ public final class CSnapshot {
 
 	public CSnapshot(SimulationData simulationData,double snapshotTime) {
 		this.snapshotTime = snapshotTime;
-		ccList = simulationData.getSolution().split();
+		ccList = simulationData.getKappaSystem().getSolution().split();
 		totalAgents = 0;
 		totalConnectedComponents = ccList.size();
 		largestConnectedComponent = 0;

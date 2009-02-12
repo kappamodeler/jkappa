@@ -2,39 +2,24 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.*;
 
-import com.plectix.simulator.components.CPerturbation;
-import com.plectix.simulator.components.CPerturbationType;
-import com.plectix.simulator.components.CRulePerturbation;
-import com.plectix.simulator.components.RateExpression;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IObservablesComponent;
-import com.plectix.simulator.interfaces.IPerturbationExpression;
-import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.abstractmodel.AbstractPerturbation;
-import com.plectix.simulator.parser.abstractmodel.AbstractRule;
-import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpressionMonome;
-import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.AbstractCondition;
-import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.AbstractSpeciesCondition;
-import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.AbstractTimeCondition;
-import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractModification;
-import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractOnceModification;
-import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractRateModification;
-import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.ModificationType;
-import com.plectix.simulator.parser.exceptions.DocumentFormatException;
-import com.plectix.simulator.parser.exceptions.ParseErrorException;
-import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.simulator.ThreadLocalData;
-import com.plectix.simulator.util.Info.InfoType;
+import com.plectix.simulator.parser.abstractmodel.perturbations.*;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.*;
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.*;
+import com.plectix.simulator.parser.exceptions.*;
+import com.plectix.simulator.simulator.*;
 
 public class PerturbationsBuilder {
 	private final SubstanceBuilder mySubstanceBuilder;
-	private final SimulationData myData;
+	private final SimulationArguments myArguments;
+	private final KappaSystem myData;
 
 	public PerturbationsBuilder(SimulationData data) {
-		mySubstanceBuilder = new SubstanceBuilder(data);
-		myData = data;
+		myData = data.getKappaSystem();
+		myArguments = data.getSimulationArguments();
+		mySubstanceBuilder = new SubstanceBuilder(myData);
 	}
 
 	public List<CPerturbation> build(List<AbstractPerturbation> arg)
@@ -80,7 +65,7 @@ public class PerturbationsBuilder {
 		ModificationType modificationType = arg.getModification().getType();
 		List<CPerturbation> result = new ArrayList<CPerturbation>();
 		boolean rateModification = (modificationType == ModificationType.RATE);
-		boolean deleteOnceModification = (modificationType == ModificationType.DELETEONCE);
+//		boolean deleteOnceModification = (modificationType == ModificationType.DELETEONCE);
 		boolean addOnceModification = (modificationType == ModificationType.ADDONCE);
 
 		int id = arg.getId();
@@ -118,12 +103,10 @@ public class PerturbationsBuilder {
 //							throw new ParseErrorException(perturbationStr,
 //									"$ADDONCE has not used with $INF");
 						rule = new CRulePerturbation(null, ccL, "", 0,
-								(int) myData.generateNextRuleId(), myData
-										.getSimulationArguments().isStorify());
+								(int) myData.generateNextRuleId(), myArguments.isStorify());
 					} else {
 						rule = new CRulePerturbation(ccL, null, "", 0,
-								(int) myData.generateNextRuleId(), myData
-										.getSimulationArguments().isStorify());
+								(int) myData.generateNextRuleId(), myArguments.isStorify());
 					}
 					rule.setCount(modification.getQuantity());
 					myData.addRule(rule);
@@ -168,8 +151,8 @@ public class PerturbationsBuilder {
 						myData.getObservables()));
 				return result;
 			} else {
-				myData.addInfo(InfoType.OUTPUT, InfoType.WARNING, 
-						"WARNING - We cannot use species condition with 'ONCE' modification");
+//				myData.addInfo(InfoType.OUTPUT, InfoType.WARNING, 
+//						"WARNING - We cannot use species condition with 'ONCE' modification");
 //				throw new ParseErrorException("We cannot use species condition with 'ONCE' modification");
 				// TODO we've not implemented this feature :-(
 			}
@@ -180,7 +163,6 @@ public class PerturbationsBuilder {
 
 	private final IObservablesComponent checkInObservables(String obsName)
 			throws DocumentFormatException {
-		IObservablesComponent obsId = null;
 		for (IObservablesComponent cc : myData.getObservables()
 				.getComponentList()) {
 			if ((cc.getName() != null) && (cc.getName().equals(obsName))) {

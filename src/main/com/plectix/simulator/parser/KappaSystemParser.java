@@ -14,6 +14,7 @@ import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
 import com.plectix.simulator.parser.builders.*;
 import com.plectix.simulator.parser.exceptions.*;
 import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class KappaSystemParser {
@@ -127,15 +128,15 @@ public class KappaSystemParser {
 //		new KappaSystemBuilder(simulationData).build();
 
 		// solution
-		if (simulationData.isParseSolution())
+		if (simulationData.getSimulationArguments().getSimulationType() == SimulationType.SIM)
 			createSimData(CREATE_INIT);
 		
 		List<IRule> rules = createRules(myKappaFile.getRules());
-		simulationData.setRules(rules);
+		simulationData.getKappaSystem().setRules(rules);
 
-		if ((simulationData.getStories() == null)
+		if ((simulationData.getKappaSystem().getStories() == null)
 				&& (simulationData.getSimulationArguments().getSimulationType() == SimulationArguments.SimulationType.STORIFY)) {
-			simulationData.setStories(new CStories(simulationData));
+			simulationData.getKappaSystem().setStories(new CStories(simulationData));
 			createSimData(CREATE_STORY);
 		} else {
 			createSimData(CREATE_OBS);
@@ -143,13 +144,13 @@ public class KappaSystemParser {
 				
 
 		List<CPerturbation> perturbations = createPertubations();
-		simulationData.setPerturbations(perturbations);
+		simulationData.getKappaSystem().setPerturbations(perturbations);
 	}
 
 	private final IObservablesComponent checkInObservables(String obsName)
 			throws ParseErrorException, DocumentFormatException {
 		IObservablesComponent obsId = null;
-		for (IObservablesComponent cc : simulationData.getObservables()
+		for (IObservablesComponent cc : simulationData.getKappaSystem().getObservables()
 				.getComponentList()) {
 			if ((cc.getName() != null) && (cc.getName().equals(obsName))) {
 				obsId = cc;
@@ -293,7 +294,7 @@ public class KappaSystemParser {
 						CPerturbation pertubation = new CPerturbation(
 								pertubationID++, obsID, parameters, obsNameID,
 								CPerturbationType.NUMBER, perturbationRate,
-								rule, greater, rateExpression, simulationData
+								rule, greater, rateExpression, simulationData.getKappaSystem()
 										.getObservables());
 						perturbations.add(pertubation);
 
@@ -356,11 +357,11 @@ public class KappaSystemParser {
 					throw new ParseErrorException(perturbationStr,
 							"$ADDONCE has not used with $INF");
 				rp = new CRulePerturbation(null, ccL, "",
-						0, ruleID++, simulationData
+						0, ruleID++, simulationData.getSimulationArguments()
 								.isStorify());
 			} else {
 				rp = new CRulePerturbation(ccL, null, "",
-						0, ruleID++, simulationData
+						0, ruleID++, simulationData.getSimulationArguments()
 								.isStorify());
 			}
 			ruleList.add(rp);
@@ -369,7 +370,7 @@ public class KappaSystemParser {
 
 		for (CRulePerturbation rule : ruleList) {
 			rule.setCount(countToFile);
-			simulationData.addRule(rule);
+			simulationData.getKappaSystem().addRule(rule);
 
 			CPerturbation perturbation = new CPerturbation(pertubationID, time,
 					CPerturbationType.ONCE, rule, greater);
@@ -470,7 +471,7 @@ public class KappaSystemParser {
 
 	private final IRule getRuleWithEqualName(String ruleName)
 			throws ParseErrorException, DocumentFormatException {
-		for (IRule rule : simulationData.getRules())
+		for (IRule rule : simulationData.getKappaSystem().getRules())
 			if ((rule.getName() != null) && (rule.getName().equals(ruleName))) {
 				return rule;
 			}
@@ -644,7 +645,7 @@ public class KappaSystemParser {
 //									.isStorify()));
 					 rules.add(SimulationUtils.buildRule(left, right, name,
 					 activity,
-					 ruleID, simulationData.isStorify()));
+					 ruleID, simulationData.getSimulationArguments().isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 //						rules.add(SimulationUtils.buildRule(right,
@@ -653,7 +654,7 @@ public class KappaSystemParser {
 //										.isStorify()));
 						 rules.add(SimulationUtils.buildRule(right,
 						 parseAgent(lhs.trim()), nameOp, activity2, ruleID,
-						 simulationData.isStorify()));
+						 simulationData.getSimulationArguments().isStorify()));
 					}
 					break;
 				}
@@ -663,14 +664,14 @@ public class KappaSystemParser {
 //							constraintLeftToRight, ruleID, simulationData
 //									.isStorify()));
 					rules.add(SimulationUtils.buildRule(left, right, name,
-							 activity, ruleID, simulationData.isStorify()));
+							 activity, ruleID, simulationData.getSimulationArguments().isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 //						rules.add(SimulationUtils.buildRule(parseAgent(rhs
 //								.trim()), left, nameOp, constraintRightToLeft,
 //								ruleID, simulationData.isStorify()));
 						rules.add(SimulationUtils.buildRule(parseAgent(rhs.trim()), 
-								left, name, activity2, ruleID, simulationData.isStorify()));
+								left, name, activity2, ruleID, simulationData.getSimulationArguments().isStorify()));
 					}
 					break;
 				}
@@ -681,7 +682,7 @@ public class KappaSystemParser {
 //							constraintLeftToRight, ruleID, simulationData
 //									.isStorify()));
 					rules.add(SimulationUtils.buildRule(left, right, name,
-							 activity, ruleID, simulationData.isStorify()));
+							 activity, ruleID, simulationData.getSimulationArguments().isStorify()));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 //						rules.add(SimulationUtils.buildRule(parseAgent(rhs
@@ -689,7 +690,8 @@ public class KappaSystemParser {
 //								constraintRightToLeft, ruleID, simulationData
 //										.isStorify()));
 						rules.add(SimulationUtils.buildRule(parseAgent(rhs.trim()), 
-								parseAgent(lhs.trim()), nameOp, activity2, ruleID, simulationData.isStorify()));
+								parseAgent(lhs.trim()), nameOp, activity2, ruleID, 
+								simulationData.getSimulationArguments().isStorify()));
 					}
 					break;
 				}
@@ -884,24 +886,24 @@ public class KappaSystemParser {
 					if (countInFile > 0) {
 						line = line.replaceAll("[ 	]", "");
 						List<IAgent> listAgent = parseAgent(line);
-						simulationData.getSolution().addAgents(listAgent);
+						simulationData.getKappaSystem().getSolution().addAgents(listAgent);
 						if (simulationData.getSimulationArguments()
 								.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-							simulationData.getContactMap()
+							simulationData.getKappaSystem().getContactMap()
 									.addAgentFromSolution(listAgent);
-							simulationData.getContactMap().setSimulationData(
+							simulationData.getKappaSystem().getContactMap().setSimulationData(
 									simulationData);
 						} else {
 							for (int i = 1; i < count; i++) {
-								simulationData.getSolution().addAgents(
-										simulationData.getSolution()
+								simulationData.getKappaSystem().getSolution().addAgents(
+										simulationData.getKappaSystem().getSolution()
 												.cloneAgentsList(listAgent,
-														simulationData));
+														simulationData.getKappaSystem()));
 							}
 						}
 						if (simulationData.getSimulationArguments()
 								.getSimulationType() == SimulationArguments.SimulationType.COMPILE) {
-							((CSolution) simulationData.getSolution())
+							((CSolution) simulationData.getKappaSystem().getSolution())
 									.checkSolutionLinesAndAdd(line, count);
 
 						}
@@ -916,7 +918,7 @@ public class KappaSystemParser {
 						line = line.substring(line.indexOf("'") + 1,
 								line.length()).trim();
 					}
-					simulationData.addStories(name);
+					simulationData.getKappaSystem().addStories(name);
 					break;
 				}
 				case CREATE_OBS: {
@@ -932,10 +934,10 @@ public class KappaSystemParser {
 					}
 
 					if (line.length() == 0) {
-						simulationData.getObservables().addRulesName(name,
-								obsNameID, simulationData.getRules());
+						simulationData.getKappaSystem().getObservables().addRulesName(name,
+								obsNameID, simulationData.getKappaSystem().getRules());
 					} else
-						simulationData
+						simulationData.getKappaSystem()
 								.getObservables()
 								.addConnectedComponents(
 										SimulationUtils
@@ -992,7 +994,7 @@ public class KappaSystemParser {
 					throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_AGENT_NAME, ccomp);
 
 				cagent = new CAgent(ThreadLocalData.getNameDictionary()
-						.addName(ccomp), simulationData.generateNextAgentId());
+						.addName(ccomp), simulationData.getKappaSystem().generateNextAgentId());
 
 				listAgent.add(cagent);
 				while (agent.hasMoreTokens()) {

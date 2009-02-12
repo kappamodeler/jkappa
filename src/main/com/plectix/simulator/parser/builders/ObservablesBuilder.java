@@ -2,31 +2,22 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IObservables;
-import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.parser.abstractmodel.observables.AbstractObservables;
-import com.plectix.simulator.parser.abstractmodel.observables.ObservableComponentLineData;
-import com.plectix.simulator.parser.abstractmodel.observables.ObservableRuleLineData;
-import com.plectix.simulator.simulator.SimulationArguments;
-import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.parser.abstractmodel.observables.*;
+import com.plectix.simulator.simulator.*;
 
 public class ObservablesBuilder {
-	private final SimulationArguments myArguments;
-	private IObservables done;
+	private IObservables myExistingObservables;
 	private final SubstanceBuilder mySubstanceBuilder;
 	
 	public ObservablesBuilder(SimulationData data) {
-		myArguments = data.getSimulationArguments();
-		done = data.getObservables();
-		mySubstanceBuilder = new SubstanceBuilder(data);
+		KappaSystem system = data.getKappaSystem();
+		myExistingObservables = system.getObservables();
+		mySubstanceBuilder = new SubstanceBuilder(system);
 	}
 	
 	public IObservables build(AbstractObservables arg, List<IRule> rules) {
-//		CObservables observables = new CObservables();
-		IObservables observables = done;
+		IObservables observables = myExistingObservables;
 		
 		for (ObservableComponentLineData componentData : arg.getComponents()) {
 			List<IAgent> agentsList = mySubstanceBuilder.buildAgents(componentData.getAgents());

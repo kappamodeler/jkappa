@@ -17,7 +17,7 @@ public final class CProbabilityCalculation {
 	private double commonActivity;
 
 	public CProbabilityCalculation(InfoType outputType,SimulationData simulationData) {
-		this.rules = simulationData.getRules();
+		this.rules = simulationData.getKappaSystem().getRules();
 		rulesProbability = new double[rules.size()];
 
 		String randomizerPatch = simulationData.getSimulationArguments().getRandomizer();

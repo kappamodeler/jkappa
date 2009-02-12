@@ -9,18 +9,17 @@ import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.AbstractSite;
-import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.KappaSystem;
 
 public class SubstanceBuilder {
-	private final SimulationData myData;
+	private final KappaSystem myKappaSystem;
 
-	public SubstanceBuilder(SimulationData data) {
-		myData = data;
+	public SubstanceBuilder(KappaSystem system) {
+		myKappaSystem = system;
 	}
 
 	private IAgent buildAgent(AbstractAgent agent) {
-		CAgent resultAgent = new CAgent(agent.getNameId(), myData
-				.generateNextAgentId());
+		CAgent resultAgent = new CAgent(agent.getNameId(), myKappaSystem.generateNextAgentId());
 		for (AbstractSite site : agent.getSites()) {
 			ISite newSite = buildSite(site);
 			resultAgent.addSite(newSite);

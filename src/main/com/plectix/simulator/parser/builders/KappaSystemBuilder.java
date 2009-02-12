@@ -9,6 +9,7 @@ import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.exceptions.DocumentFormatException;
 import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 
@@ -23,35 +24,36 @@ public class KappaSystemBuilder {
 	public void build() throws ParseErrorException, DocumentFormatException {
 		KappaModel model = myData.getInitialModel();
 		SimulationArguments arguments = myData.getSimulationArguments();
+		KappaSystem kappaSystem = myData.getKappaSystem();
 		
 		// solution
 		if (arguments.getSimulationType() != SimulationArguments.SimulationType.GENERATE_MAP) { 
 			AbstractSolution solution = model.getSolution();
-			myData.setSolution((new SolutionBuilder(myData)).build(solution));
+			kappaSystem.setSolution((new SolutionBuilder(myData)).build(solution));
 		}
 
 		// rules
-		List<IRule> rules = (new RuleBuilder(myData)).build(model.getRules());
-		myData.setRules(rules);
+		List<IRule> rules = (new RuleBuilder(kappaSystem)).build(model.getRules());
+		kappaSystem.setRules(rules);
 
-		if ((myData.getStories() == null)
+		if ((kappaSystem.getStories() == null)
 				&& (arguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY)) {
 			// stories
-			myData.setStories(new CStories(myData));
+			kappaSystem.setStories(new CStories(myData));
 			for (String storifiedName : (new StoriesBuilder()).build(model
 					.getStories())) {
-				myData.addStories(storifiedName);
+				kappaSystem.addStories(storifiedName);
 			}
 		} else {
 			// observables
 			IObservables observables = (new ObservablesBuilder(myData)).build(model
 					.getObservables(), rules);
-			myData.setObservables(observables);
+			kappaSystem.setObservables(observables);
 		}
 
 		// perturbations
 		List<CPerturbation> perturbations = 
 			(new PerturbationsBuilder(myData)).build(model.getPerturbations());
-		myData.setPerturbations(perturbations);
+		kappaSystem.setPerturbations(perturbations);
 	}
 }

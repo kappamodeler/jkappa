@@ -25,7 +25,8 @@ public class CAddAction extends CAction {
 		/**
 		 * Done.
 		 */
-		IAgent agent = new CAgent(myToAgent.getNameId(), simulationData.generateNextAgentId());
+		IAgent agent = new CAgent(myToAgent.getNameId(), 
+				simulationData.getKappaSystem().generateNextAgentId());
 		
 		for (ISite site : myToAgent.getSites()) {
 			ISite siteAdd = new CSite(site.getNameId());
@@ -44,7 +45,7 @@ public class CAddAction extends CAction {
 		}
 		
 		getRightCComponent().addAgentFromSolutionForRHS(agent);
-		simulationData.getSolution().addAgent(agent);
+		simulationData.getKappaSystem().getSolution().addAgent(agent);
 
 		myRule.putAgentAdd(myToAgent, agent);
 		// toAgent.setIdInRuleSide(maxAgentID++);

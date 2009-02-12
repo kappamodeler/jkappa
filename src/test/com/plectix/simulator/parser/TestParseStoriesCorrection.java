@@ -99,7 +99,7 @@ public class TestParseStoriesCorrection {
 		
 		simulationData.setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
 		simulationData.readSimulatonFile(InfoType.OUTPUT);
-		simulationData.initialize(InfoType.OUTPUT);
+		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 	}
 
 	@Before
@@ -109,7 +109,7 @@ public class TestParseStoriesCorrection {
 
 	@Test
 	public void test() {
-		CStories stories = mySimulator.getSimulationData().getStories();
+		CStories stories = mySimulator.getSimulationData().getKappaSystem().getStories();
 		String file = FilePath.substring(FilePath.lastIndexOf("/")+1);
 		if (myExpectedData.get(file) == null) {
 			fail("File not find!");

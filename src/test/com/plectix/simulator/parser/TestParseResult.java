@@ -43,7 +43,7 @@ public class TestParseResult extends DirectoryTestsRunner {
 		Initializator initializator = getInitializator();
 		initializator.init(fullTestFilePath);
 		mySimulator = initializator.getSimulator();
-		myRule = mySimulator.getSimulationData().getRules().get(0);
+		myRule = mySimulator.getSimulationData().getKappaSystem().getRules().get(0);
 	}
 
 	@Parameters
@@ -92,7 +92,7 @@ public class TestParseResult extends DirectoryTestsRunner {
 
 	@Test
 	public void testInitQuant() {
-		int size = mySimulator.getSimulationData().getSolution().split().size();
+		int size = mySimulator.getSimulationData().getKappaSystem().getSolution().split().size();
 		Integer expected = myInitQuantData.get(myTestFileName);
 		if (expected == null) {
 			myFailer.fail("Missing data for " + myTestFileName + " file");

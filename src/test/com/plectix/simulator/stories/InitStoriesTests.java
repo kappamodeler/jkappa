@@ -84,7 +84,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 		
 		simulationData.setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
 		simulationData.readSimulatonFile(InfoType.OUTPUT);
-		simulationData.initialize(InfoType.OUTPUT);
+		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 	}
 
 	public static String getDirectory() {
@@ -92,7 +92,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	}
 
 	public CStories getStories() {
-		return mySimulator.getSimulationData().getStories();
+		return mySimulator.getSimulationData().getKappaSystem().getStories();
 	}
 
 	public CStoryTrees getStoryTrees() {
@@ -100,7 +100,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	}
 
 	public List<IRule> getRules() {
-		return mySimulator.getSimulationData().getRules();
+		return mySimulator.getSimulationData().getKappaSystem().getRules();
 	}
 
 }

@@ -51,7 +51,7 @@ public class Simulator implements SimulatorInterface {
 	private final void addIteration(int iteration_num) {
 		// TODO: This method should be rewritten!!!
 		List<List<RunningMetric>> runningMetrics = simulationData.getRunningMetrics();
-		int number_of_observables = simulationData.getObservables().getComponentListForXMLOutput().size();
+		int number_of_observables = simulationData.getKappaSystem().getObservables().getComponentListForXMLOutput().size();
 
 		if (iteration_num == 0) {
 			simulationData.getTimeStamps().add(currentTime);
@@ -63,9 +63,9 @@ public class Simulator implements SimulatorInterface {
 
 		for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 			// x is the value for the observable_num at the current time
-			double x = simulationData.getObservables()
+			double x = simulationData.getKappaSystem().getObservables()
 					.getComponentListForXMLOutput().get(observable_num)
-					.getSize(simulationData.getObservables());
+					.getSize(simulationData.getKappaSystem().getObservables());
 			if (timeStepCounter >= runningMetrics.get(observable_num).size()) {
 				runningMetrics.get(observable_num).add(new RunningMetric());
 			}
@@ -161,9 +161,9 @@ public class Simulator implements SimulatorInterface {
 					LOGGER.debug("positive update");
 				}
 
-				simulationData.doPositiveUpdate(rule, injectionsList);
+				simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
 
-				simulationData.getObservables().calculateObs(currentTime, count, simulationData.getSimulationArguments().isTime());
+				simulationData.getKappaSystem().getObservables().calculateObs(currentTime, count, simulationData.getSimulationArguments().isTime());
 			} else {
 				simulationData.addInfo(InfoType.NOT_OUTPUT,InfoType.INTERNAL, "Application of rule exp is clashing");
 				if (LOGGER.isDebugEnabled()) {
@@ -179,7 +179,7 @@ public class Simulator implements SimulatorInterface {
 		}
 		
 		simulationData.checkOutputFinalState(currentTime);
-		simulationData.getObservables().calculateObsLast(currentTime);
+		simulationData.getKappaSystem().getObservables().calculateObsLast(currentTime);
 		simulationData.setTimeLength(currentTime);
 		simulationData.setEvent(count);
 		
@@ -198,7 +198,7 @@ public class Simulator implements SimulatorInterface {
 		simulationData.setPrintStream(simulatorInputData.getPrintStream());
 		simulationData.setSimulationArguments(InfoType.OUTPUT,simulatorInputData.getSimulationArguments());
 		simulationData.readSimulatonFile(InfoType.OUTPUT);
-		simulationData.initialize(InfoType.OUTPUT);
+		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 		
 		simulationData.stopTimer(InfoType.OUTPUT,timer, "-Initialization:");
 		simulationData.setClockStamp(System.currentTimeMillis());
@@ -260,7 +260,7 @@ public class Simulator implements SimulatorInterface {
 	}
 
 	public final void runStories() throws Exception {
-		CStories stories = simulationData.getStories();
+		CStories stories = simulationData.getKappaSystem().getStories();
 		int count = 0;
 		if(simulationData.getSimulationArguments().isShortConsoleOutput())
 			simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
@@ -318,7 +318,7 @@ public class Simulator implements SimulatorInterface {
 					count++;
 
 					SimulationUtils.doNegativeUpdate(injectionsList);
-					simulationData.doPositiveUpdate(rule, injectionsList);
+					simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
 				} else {
 					clash++;
 					max_clash++;

@@ -2,31 +2,26 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.*;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CSolution;
-import com.plectix.simulator.components.SolutionLines;
-import com.plectix.simulator.interfaces.ISolution;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
-import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
-import com.plectix.simulator.parser.abstractmodel.SolutionLineData;
-import com.plectix.simulator.parser.util.IdGenerator;
-import com.plectix.simulator.simulator.SimulationArguments;
-import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.parser.abstractmodel.*;
+import com.plectix.simulator.simulator.*;
 
 public class SolutionBuilder {
-	private final SimulationData data;
+	private final KappaSystem myKappaSystem;
+	private final SimulationArguments myArguments;
 	private final SubstanceBuilder mySubstanceBuilder;
+	private final SimulationData myData;
 	
 	public SolutionBuilder(SimulationData data) {
-		this.data = data;
-		mySubstanceBuilder = new SubstanceBuilder(data);
+		myData = data;
+		myKappaSystem = data.getKappaSystem();
+		myArguments = data.getSimulationArguments();
+		mySubstanceBuilder = new SubstanceBuilder(myKappaSystem);
 	}
 	
 	public ISolution build(AbstractSolution arg) {
 		CSolution solution = new CSolution();
-
-		SimulationArguments arguments = data.getSimulationArguments();
 
 		for (SolutionLineData lineData : arg.getAgents()) {
 			List<IAgent> list = mySubstanceBuilder.buildAgents(lineData.getAgents());
@@ -34,17 +29,17 @@ public class SolutionBuilder {
 			
 			solution.addAgents(list);
 
-			if (arguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-				data.getContactMap().addAgentFromSolution(list);
-				data.getContactMap().setSimulationData(data);
+			if (myArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
+				myKappaSystem.getContactMap().addAgentFromSolution(list);
+				myKappaSystem.getContactMap().setSimulationData(myData);
 
 			} else {
 				for (int i = 1; i < quant; i++) {
 					solution.addAgents(solution.cloneAgentsList(list,
-							data));
+							myKappaSystem));
 				}
 			}
-			if (arguments.getSimulationType() == SimulationArguments.SimulationType.COMPILE) {
+			if (myArguments.getSimulationType() == SimulationArguments.SimulationType.COMPILE) {
 				for (SolutionLines line : arg.getSolutionLines()) {
 					solution.checkSolutionLinesAndAdd(line.getLine(), line.getCount());
 				}

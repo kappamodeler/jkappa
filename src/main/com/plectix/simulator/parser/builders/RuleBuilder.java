@@ -2,20 +2,17 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.*;
 
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
-import com.plectix.simulator.parser.abstractmodel.AbstractRule;
-import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.parser.abstractmodel.*;
+import com.plectix.simulator.simulator.*;
 
 public class RuleBuilder {
 	private final SubstanceBuilder mySubstanceBuilder;
-	private final SimulationData myData;
+	private final KappaSystem myKappaSystem;
 	
-	public RuleBuilder(SimulationData data) {
-		myData = data;
-		mySubstanceBuilder = new SubstanceBuilder(data);
+	public RuleBuilder(KappaSystem system) {
+		myKappaSystem = system;
+		mySubstanceBuilder = new SubstanceBuilder(system);
 	}
 	
 	public List<IRule> build(Collection<AbstractRule> rules) {
@@ -37,7 +34,7 @@ public class RuleBuilder {
 		List<IAgent> lhsAgents = mySubstanceBuilder.buildAgents(lhs);
 		List<IAgent> rhsAgents = mySubstanceBuilder.buildAgents(rhs);
 		IRule newRule = SimulationUtils.buildRule(lhsAgents, rhsAgents, name, rate, id, isStorify);
-		myData.generateNextRuleId();
+		myKappaSystem.generateNextRuleId();
 		return newRule;
 	}
 }
