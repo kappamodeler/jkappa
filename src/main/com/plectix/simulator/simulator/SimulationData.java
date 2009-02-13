@@ -2,13 +2,8 @@ package com.plectix.simulator.simulator;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.text.DateFormat;
@@ -43,41 +38,29 @@ import org.w3c.dom.Element;
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.action.CActionType;
-import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CPerturbation;
-import com.plectix.simulator.components.CPerturbationType;
-import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.CSolution;
-import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.SnapshotElement;
 import com.plectix.simulator.components.SolutionLines;
-import com.plectix.simulator.components.contactMap.CContactMap;
 import com.plectix.simulator.components.contactMap.CContactMapChangedSite;
 import com.plectix.simulator.components.contactMap.CContactMapEdge;
 import com.plectix.simulator.components.contactMap.CContactMap.ContactMapMode;
-import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.components.stories.CStoryIntro;
 import com.plectix.simulator.components.stories.CStoryTrees;
 import com.plectix.simulator.components.stories.CStoryType;
 import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
 import com.plectix.simulator.interfaces.IAction;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
 import com.plectix.simulator.parser.KappaSystemParser;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.builders.RuleBuilder;
-import com.plectix.simulator.parser.util.IdGenerator;
-import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
@@ -265,8 +248,7 @@ public class SimulationData {
 	
 
 	public final boolean isEndSimulation(double currentTime, long count) {
-		if (System.currentTimeMillis() - clockStamp > 1000 * simulationArguments
-				.getWallClockTimeLimit()) {
+		if (System.currentTimeMillis() - clockStamp > simulationArguments.getWallClockTimeLimit()) {
 			println("Simulation is interrupted because the wall clock time has expired");
 			return true;
 		}
@@ -279,6 +261,7 @@ public class SimulationData {
 				return false;
 			} else {
 				outputBar();
+				println();
 				return true;
 			}
 		} else if (count <= simulationArguments.getEvent()) {
@@ -289,6 +272,7 @@ public class SimulationData {
 			return false;
 		} else {
 			outputBar();
+			println();
 			return true;
 		}
 	}
@@ -301,7 +285,7 @@ public class SimulationData {
 
 	private void checkAndInitStoriesBar() {
 		if (simulationArguments.isStorify()) {
-			stepStories = simulationArguments.getIterations() / 100.;
+			stepStories = simulationArguments.getIterations() * 1.0 / simulationArguments.getClockPrecision();
 			nextStepStories = stepStories;
 		}
 	}
@@ -337,7 +321,7 @@ public class SimulationData {
 			if (stepStories >= 1)
 				r = 1;
 			else
-				r = 100 / simulationArguments.getIterations();
+				r = simulationArguments.getClockPrecision() * 1.0 / simulationArguments.getIterations();
 			while (r > 0) {
 				print("#");
 				r = r - 1;
@@ -348,14 +332,14 @@ public class SimulationData {
 
 	public final void setEvent(long event) {
 		checkAndInitStoriesBar();
-		step = event / 100;
+		step = event * 1.0 / simulationArguments.getClockPrecision();
 		nextStep = step;
 		simulationArguments.setEvent(event);
 	}
 
 	public final void setTimeLength(double timeLength) {
 		checkAndInitStoriesBar();
-		step = timeLength / 100;
+		step = timeLength / simulationArguments.getClockPrecision();
 		nextStep = step;
 		simulationArguments.setTimeLength(timeLength);
 		simulationArguments.setTime(true);
@@ -1012,10 +996,8 @@ public class SimulationData {
 							.get(st.getRuleID()).getName());
 					double percentage = ((double) st.getIsomorphicCount())
 							/ (double) simulationArguments.getIterations();
-					story.setAttribute("Percentage", Double
-							.toString(percentage * 100));
-					story.setAttribute("Average", Double.toString(st
-							.getAverageTime()
+					story.setAttribute("Percentage", Double.toString(percentage * 100));
+					story.setAttribute("Average", Double.toString(st.getAverageTime()
 							/ st.getIsomorphicCount()));
 					addConnection(story, st, doc, st.getRuleID());
 					simplxSession.appendChild(story);

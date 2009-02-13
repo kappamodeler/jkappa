@@ -188,6 +188,10 @@ public class SimulatorCommandLine {
 		if (hasOption(SimulatorOptions.WALL_CLOCK_TIME_LIMIT)) {
 			simulationArguments.setWallClockTimeLimit(getLongValue(SimulatorOptions.WALL_CLOCK_TIME_LIMIT));
 		}
+
+		if (hasOption(SimulatorOptions.CLOCK_PRECISION)) {
+			simulationArguments.setClockPrecision(getIntValue(SimulatorOptions.CLOCK_PRECISION));
+		}
 		
 		if (hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
 			simulationArguments.setOutputFinalState(true);

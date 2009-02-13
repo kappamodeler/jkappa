@@ -19,6 +19,7 @@ public class SimulationArguments {
 	public static final int DEFAULT_NUMBER_OF_POINTS = 1000;
 	/** Maximum simulation time is 100 days */
 	public static final long DEFAULT_WALL_CLOCK_TIME_LIMIT = 100L* NUMBER_OF_MILLISECONDS_IN_DAY;
+	public static final int DEFAULT_CLOCK_PRECISION = 60;
 	public static final String DEFAULT_XML_SESSION_NAME = "simplx.xml";
 	public static final String DEFAULT_SERIALIZATION_FILE_NAME = "~tmp.sd";
 
@@ -76,6 +77,7 @@ public class SimulationArguments {
 	private boolean forwardOnly = false;
 	private boolean ocamlStyleObservableNames = false;
 	private long wallClockTimeLimit = DEFAULT_WALL_CLOCK_TIME_LIMIT;
+	private int clockPrecision = DEFAULT_CLOCK_PRECISION;
 	private boolean outputFinalState = false;
 	private String xmlSessionPath = "";
 	private String serializationFileName = DEFAULT_SERIALIZATION_FILE_NAME;
@@ -476,6 +478,33 @@ public class SimulationArguments {
 	public final void setWallClockTimeLimit(long wallClockTimeLimit) {
 		this.wallClockTimeLimit = wallClockTimeLimit;
 	}
+
+	public final int getClockPrecision() {
+		return clockPrecision;
+	}
+	
+	/**
+	 * Registers the number of '#' characters to dump to the standard output.
+	 * <br><br>
+	 * The simulator outputs a certain amount of '#' characters during execution
+	 * in order for KappaFactory to display the progress bar.
+	 * <br><br>
+	 * For example, if the simulation would run for 4 time units (biological time)
+	 * and the clockPrecision is set to 60 
+	 * (i.e. 60 '#' characters are required at the standard output), 
+	 * then the simulator outputs a '#' character every 4/60 time units.
+	 * <br><br>
+	 * For stories, if the user requests N stories, then the simulator outputs 
+	 * N/clockPrecision '#' characters per story found.
+	 * <br><br?
+	 * The default value is {@value #DEFAULT_CLOCK_PRECISION}. 
+	 * 
+	 * @param clockPrecision
+	 * @see #DEFAULT_CLOCK_PRECISION
+	 */
+	public final void setClockPrecision(int clockPrecision) {
+		this.clockPrecision = clockPrecision;
+	}
 	
 	public final boolean isOutputFinalState() {
 		return outputFinalState;
@@ -725,4 +754,5 @@ public class SimulationArguments {
 	public void setShortConsoleOutput(boolean shortConsoleOutput) {
 		this.shortConsoleOutput = shortConsoleOutput;
 	}
+
 }

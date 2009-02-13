@@ -119,16 +119,9 @@ public enum SimulatorOptions {
 	RESET_ALL("reset_all", false, "Reset all"),
 	FOCUS_ON("focus_on", true, "(default: disabled) Focus contact maps around the given rules"),
 	DO_LOW_RES_CONTACT_MAP("do_low_res_contact_map", false, "(default: enabled)construct the low resolution contact map"),
+	CLOCK_PRECISION("clock_precision", true, "(def: 60) clock precision (number of ticks per run)"),
 	// Java specific options:
-
 	WALL_CLOCK_TIME_LIMIT("wall_clock_time_limit", true, "sets a wall clock time limit in milliseconds for the simulation"),
-	/*
-	 * old code
-	 * WALL_CLOCK_TIME_LIMIT("clock_precision", true, "sets a wall clock time limit in milliseconds for the simulation"),
-	 */
-
-	
-	
 	OCAML_STYLE_OBS_NAME("ocaml_style_obs_name", false,	"convert observable names to simplx variants"),
 	NO_DUMP_STDOUT_STDERR("no_dump_stdout_stderr", false, "don't dump information to stdout and/or stderr"),
 	SHORT_CONSOLE_OUTPUT("short_console_output", false, "Short console output"),
