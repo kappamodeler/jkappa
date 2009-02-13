@@ -176,10 +176,19 @@ public class SimulatorCommandLine {
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.AVERAGE_OF_RUNS);
 		}
 
+		/*
+		 * old code
+		 *
+		 * if (hasOption(SimulatorOptions.WALL_CLOCK_TIME_LIMIT)) {
+		 *  	simulationArguments.setWallClockTimeLimit(1000 * getLongValue(SimulatorOptions.WALL_CLOCK_TIME_LIMIT));
+		 * }
+		 *   
+		 */
+		
 		if (hasOption(SimulatorOptions.WALL_CLOCK_TIME_LIMIT)) {
-			simulationArguments.setWallClockTimeLimit(1000 * getLongValue(SimulatorOptions.WALL_CLOCK_TIME_LIMIT));
+			simulationArguments.setWallClockTimeLimit(getLongValue(SimulatorOptions.WALL_CLOCK_TIME_LIMIT));
 		}
-
+		
 		if (hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
 			simulationArguments.setOutputFinalState(true);
 		}

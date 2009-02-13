@@ -265,7 +265,7 @@ public class SimulationData {
 	
 
 	public final boolean isEndSimulation(double currentTime, long count) {
-		if (System.currentTimeMillis() - clockStamp > simulationArguments
+		if (System.currentTimeMillis() - clockStamp > 1000 * simulationArguments
 				.getWallClockTimeLimit()) {
 			println("Simulation is interrupted because the wall clock time has expired");
 			return true;
