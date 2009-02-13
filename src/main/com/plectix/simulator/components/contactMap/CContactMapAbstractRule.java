@@ -2,6 +2,7 @@ package com.plectix.simulator.components.contactMap;
 
 import java.util.*;
 
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
@@ -45,6 +46,8 @@ public class CContactMapAbstractRule {
 			Integer key = iterator.next();
 			IContactMapAbstractAgent agent = map.get(key);
 			List<IContactMapAbstractSite> listSites = agent.getSites();
+			if(listSites.isEmpty())
+				list.add(agent.getEmptySite());
 			list.addAll(listSites);
 		}
 		return list;
@@ -84,44 +87,56 @@ public class CContactMapAbstractRule {
 	public List<IContactMapAbstractSite> getNewData() {
 		List<IContactMapAbstractSite> newData = new ArrayList<IContactMapAbstractSite>();
 		int[] indexList = new int[lhsSites.size()];
+		if(lhsSites.size()==0){
+			newData.addAll(abstractAction.apply(new ArrayList<UCorrelationAbstractSite>(), solution));
+			return newData;
+		}
+		
 		List<List<IContactMapAbstractSite>> sitesLists = initSitesListsFromSolution();
-		if(sitesLists==null)
+		if (sitesLists == null)
 			return null;
-		clearSitesLists(sitesLists);
+		sitesLists = clearSitesLists(sitesLists);
 		int[] maxIndex = getMaxIndex(sitesLists);
 		// TODO getNewData
 
-		 while (!isEnd(indexList, maxIndex)) {
-			 List<UCorrelationAbstractSite> injList = createInjectionList(indexList, sitesLists);
-			 newData.addAll(abstractAction.apply(injList));
-			 
-			 upIndexList(indexList, maxIndex);
+		while (!isEnd(indexList, maxIndex)) {
+			List<UCorrelationAbstractSite> injList = createInjectionList(
+					indexList, sitesLists);
+			newData.addAll(abstractAction.apply(injList, solution));
+
+			upIndexList(indexList, maxIndex);
 		}
-		 
+
 		return newData;
 	}
-	
-	private List<UCorrelationAbstractSite> createInjectionList(int[] indexList,List<List<IContactMapAbstractSite>> sitesLists){
+
+	private List<UCorrelationAbstractSite> createInjectionList(int[] indexList,
+			List<List<IContactMapAbstractSite>> sitesLists) {
 		List<IContactMapAbstractSite> listSites = new ArrayList<IContactMapAbstractSite>();
 		int index = 0;
-		for(int i : indexList)
+		for (int i : indexList)
 			listSites.add(sitesLists.get(index++).get(i));
-		List<UCorrelationAbstractSite> list = UCorrelationAbstractSite.createCorrelationSites(lhsSites, listSites, ECorrelationType.CORRELATION_LHS_AND_SOLUTION);
+		List<UCorrelationAbstractSite> list = UCorrelationAbstractSite
+				.createCorrelationSites(lhsSites, listSites,
+						ECorrelationType.CORRELATION_LHS_AND_SOLUTION);
 		return list;
 	}
-	
-	private void clearSitesLists(List<List<IContactMapAbstractSite>> sitesLists){
-		int i=0;
-		for(List<IContactMapAbstractSite> list : sitesLists){
-			List<IContactMapAbstractSite> deleteList = new ArrayList<IContactMapAbstractSite>();
+
+	private List<List<IContactMapAbstractSite>> clearSitesLists(
+			List<List<IContactMapAbstractSite>> sitesLists) {
+		int i = 0;
+		List<List<IContactMapAbstractSite>> listOut = new ArrayList<List<IContactMapAbstractSite>>();
+		for (List<IContactMapAbstractSite> list : sitesLists) {
+			List<IContactMapAbstractSite> addList = new ArrayList<IContactMapAbstractSite>();
 			IContactMapAbstractSite site = lhsSites.get(i);
-			for(IContactMapAbstractSite s : list){
-				if(!site.isFit(s))
-					deleteList.add(s);
+			for (IContactMapAbstractSite s : list) {
+				if (site.isFit(s))
+					addList.add(s);
 			}
-			list.removeAll(deleteList);
+			listOut.add(addList);
 			i++;
 		}
+		return listOut;
 	}
 
 	private List<List<IContactMapAbstractSite>> initSitesListsFromSolution() {
@@ -156,7 +171,7 @@ public class CContactMapAbstractRule {
 		int[] mas = new int[sitesLists.size()];
 		int index = 0;
 		for (List<IContactMapAbstractSite> l : sitesLists)
-			mas[index++] = l.size()-1;
+			mas[index++] = l.size() - 1;
 		return mas;
 	}
 
@@ -164,13 +179,13 @@ public class CContactMapAbstractRule {
 		boolean end = true;
 		for (int i = 0; i < maxIndex.length; i++)
 			if (indexList[i] <= maxIndex[i])
-				end =false;
-			else{
+				end = false;
+			else {
 				end = true;
 				break;
 			}
-				
-		if(end)
+
+		if (end)
 			return true;
 		else
 			return false;

@@ -1,14 +1,18 @@
 package com.plectix.simulator.components.contactMap;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.swing.Icon;
 
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CLinkStatus;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAbstractAgent;
 import com.plectix.simulator.interfaces.IAbstractSite;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
@@ -19,7 +23,7 @@ import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class CContactMapAbstractSite implements IContactMapAbstractSite {
-	public static final int NO_INDEX = -1;
+	public static final int NO_INDEX = -1;	
 
 	private final int nameId;
 	private CContactMapLinkState linkState;
@@ -45,6 +49,18 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 					.getNameId());
 		this.linkState = new CContactMapLinkState(site.getLinkState());
 	}
+	
+	public IContactMapAbstractSite clone(){
+		IContactMapAbstractSite siteOut = new CContactMapAbstractSite(this);
+		return siteOut;
+	}
+
+	public static List<IContactMapAbstractSite> cloneAll(List<IContactMapAbstractSite> listIn){
+		List<IContactMapAbstractSite> listOut = new ArrayList<IContactMapAbstractSite>();
+		for(IContactMapAbstractSite s : listIn)
+			listOut.add(s.clone());
+		return listOut;
+	}
 
 	public CContactMapAbstractSite(IContactMapAbstractAgent agent) {
 		this.nameId = NO_INDEX;
@@ -64,6 +80,8 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	}
 
 	public String getName() {
+		if(nameId == CSite.NO_INDEX)
+			return "EMPTY_SITE";
 		return ThreadLocalData.getNameDictionary().getName(nameId);
 	}
 
@@ -165,6 +183,9 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	public String toString() {
 		String st = "site = " + getName();
 		st += " from agent = " + linkAgent.getName();
+		if(nameId == NO_INDEX)
+			return st;
+		
 		if (internalState.getNameId() != -1)
 			st += " internal state = " + internalState.getName();
 		if (linkState.getLinkSiteNameID() != -1) {

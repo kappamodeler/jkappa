@@ -32,6 +32,28 @@ public class CContactMapAbstractSolution {
 		fillMapCCList(solution);
 	}
 
+	public IContactMapAbstractSite findSite(Integer agentId,Integer siteId, int internalStateId, int agentLinkId, int siteLinkId, int internalStateLinkId){
+		IContactMapAbstractAgent agent = abstractAgentMap.get(agentId);
+		if(agent == null)
+			return null;
+		List<IContactMapAbstractSite> list = agent.getSitesMap().get(siteId);
+		if(list == null)
+			return null;
+		for(IContactMapAbstractSite s : list){
+			if(s.getInternalState().getNameId() != internalStateId)
+				continue;
+			CContactMapLinkState linkState = s.getLinkState();
+			if(linkState.getAgentNameID() != agentLinkId)
+				continue;
+			if(linkState.getInternalStateNameID() != internalStateLinkId)
+				continue;
+			if(linkState.getLinkSiteNameID() != siteLinkId)
+				continue;
+			return s;
+		}
+		return null;
+	}
+	
 	private boolean fillMapCCList(ISolution solution) {
 		Map<Long, IAgent> agentMap = solution.getAgents();
 		Iterator<Long> iterator = agentMap.keySet().iterator();
@@ -98,7 +120,18 @@ public class CContactMapAbstractSolution {
 	public boolean addNewData(List<IContactMapAbstractSite> newData) {
 		if(newData.isEmpty())
 			return false;
-		
-		return false;
+		boolean isAdd = false;
+		for(IContactMapAbstractSite s : newData){
+			if(addSite(s))
+				isAdd = true;
+		}
+		return isAdd;
+	}
+
+	private boolean addSite(IContactMapAbstractSite s) {
+		IContactMapAbstractAgent agent = abstractAgentMap.get(s.getAgentLink().getNameId());
+		if(agent == null)
+			agent = new CContactMapAbstractAgent(s.getAgentLink().getNameId());
+		return agent.addSite(s);
 	}
 }

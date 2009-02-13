@@ -16,4 +16,8 @@ public interface IContactMapAbstractAgent extends IAbstractAgent{
 	public List<IContactMapAbstractSite> getSites();
 
 	public Map<Integer, List<IContactMapAbstractSite>> getSitesMap();
+
+	public boolean addSite(IContactMapAbstractSite site);
+
+	public IContactMapAbstractSite getEmptySite();
 }

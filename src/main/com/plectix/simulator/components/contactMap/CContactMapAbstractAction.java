@@ -115,9 +115,19 @@ public class CContactMapAbstractAction {
 		return true;
 	}
 	
-	public List<IContactMapAbstractSite> apply(List<UCorrelationAbstractSite> injList){
+	public List<IContactMapAbstractSite> apply(List<UCorrelationAbstractSite> injList, CContactMapAbstractSolution solution){
 		// TODO apply
+		List<IContactMapAbstractSite> listOut = CContactMapAbstractSite.cloneAll(sitesToAdd);
+		int i=0;
+		for(UCorrelationAbstractSite corLHSandRHS : correlationSites){
+			UCorrelationAbstractSite corLHSandSolution = injList.get(i);
+			IContactMapAbstractSite newSite = corLHSandSolution.getToSite().clone();
+			listOut.addAll(corLHSandRHS.modifySiteFromSolution(newSite,solution));
+			listOut.add(newSite);
+			i++;
+		}
 		
-		return null;
+		
+		return listOut;
 	}
 }

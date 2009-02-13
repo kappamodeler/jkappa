@@ -3,6 +3,7 @@ package com.plectix.simulator.components.contactMap;
 import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.ISite;
 
@@ -27,6 +28,14 @@ public class CContactMapLinkState{
 
 	public int getInternalStateNameID() {
 		return internalStateNameID;
+	}
+	
+	public final void setFreeLinkState(){
+		statusLink = CLinkStatus.FREE;
+		statusLinkRank = CLinkRank.FREE;
+		linkSiteNameID = CSite.NO_INDEX;
+		agentNameID= CSite.NO_INDEX;
+		internalStateNameID = CSite.NO_INDEX;
 	}
 
 	public CContactMapLinkState(ILinkState linkState) {

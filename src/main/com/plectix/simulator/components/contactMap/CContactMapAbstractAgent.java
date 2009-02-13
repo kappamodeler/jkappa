@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAbstractAgent;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -22,47 +23,53 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 	private Map<Integer, List<IContactMapAbstractSite>> siteMap;
 	private long id = -1;
 	private int nameID = -1;
-	private final CContactMapAbstractSite myEmptySite = new CContactMapAbstractSite(this);
+	private final IContactMapAbstractSite myEmptySite;
 
 	@Override
 	public String toString() {
 		String st = getName();
 		return st;
 	}
-	
-	public final List<IContactMapAbstractSite> getSites(){
+
+	public IContactMapAbstractSite getEmptySite() {
+		return myEmptySite;
+	}
+
+	public final List<IContactMapAbstractSite> getSites() {
 		List<IContactMapAbstractSite> list = new ArrayList<IContactMapAbstractSite>();
 		Iterator<Integer> iterator = siteMap.keySet().iterator();
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			Integer key = iterator.next();
 			List<IContactMapAbstractSite> siteList = siteMap.get(key);
 			list.addAll(siteList);
 		}
 		return list;
 	}
-	
-	public final Map<Integer, List<IContactMapAbstractSite>> getSitesMap(){
+
+	public final Map<Integer, List<IContactMapAbstractSite>> getSitesMap() {
 		return this.siteMap;
 	}
-	
-	public final boolean containsSite(IContactMapAbstractSite site){
+
+	public final boolean containsSite(IContactMapAbstractSite site) {
 		List<IContactMapAbstractSite> list = siteMap.get(site.getNameId());
-		if(list==null)
+		if (list == null)
 			return false;
-		for(IContactMapAbstractSite s : list)
-			if(s.equalz(site))
+		for (IContactMapAbstractSite s : list)
+			if (s.equalz(site))
 				return true;
 		return false;
 	}
-	
+
 	public CContactMapAbstractAgent(IAgent agent) {
 		this.nameID = agent.getNameId();
 		this.siteMap = new HashMap<Integer, List<IContactMapAbstractSite>>();
+		this.myEmptySite = new CContactMapAbstractSite(this);
 	}
-	
+
 	public CContactMapAbstractAgent(int nameID) {
 		this.nameID = nameID;
 		this.siteMap = new HashMap<Integer, List<IContactMapAbstractSite>>();
+		this.myEmptySite = new CContactMapAbstractSite(this);
 	}
 
 	public final boolean addSites(IAgent agent) {
@@ -108,6 +115,21 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		return false;
 	}
 
+	public boolean addSite(IContactMapAbstractSite site) {
+		Integer key = site.getNameId();
+		List<IContactMapAbstractSite> list = siteMap.get(key);
+		if (list == null) {
+			list = new ArrayList<IContactMapAbstractSite>();
+			siteMap.put(key, list);
+		}
+
+		if (!site.includedInCollection(list)) {
+			list.add(site);
+			return true;
+		}
+		return false;
+	}
+
 	public long getHash() {
 		return id;
 	}
@@ -117,7 +139,7 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 	}
 
 	public String getName() {
-		if(nameID==-1)
+		if (nameID == -1)
 			return "-1";
 		return ThreadLocalData.getNameDictionary().getName(nameID);
 	}
@@ -126,18 +148,19 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		return nameID;
 	}
 
-	public void print(){
-		System.out.println("agent = "+ this.toString());
+	public void print() {
+		System.out.println("agent = " + this.toString());
 		Iterator<Integer> Iter = this.siteMap.keySet().iterator();
 		while (Iter.hasNext()) {
 			Integer Key = Iter.next();
 			List<IContactMapAbstractSite> cMASList = siteMap.get(Key);
-			for(IContactMapAbstractSite site: cMASList){
-				((CContactMapAbstractSite)site).print();
+			for (IContactMapAbstractSite site : cMASList) {
+				((CContactMapAbstractSite) site).print();
 			}
 		}
-		System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-		
+		System.out
+				.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+
 	}
-	
+
 }

@@ -232,36 +232,19 @@ public class CContactMap {
 				}
 		}
 	}
-	
+
 	public void constructAbstractContactMap() {
 		// TODO
-		boolean[] checkList = new boolean[abstractReachableRules.size()];
-		checkList[0] = true;
-		int index = 0;
-		while(isEnd(checkList)){
-			for(CContactMapAbstractRule rule : abstractReachableRules){
-				List<IContactMapAbstractSite> newData  = rule.getNewData();
-				if(abstractSolution.addNewData(newData))
-					checkList[index]=false;
-				index++;
+		boolean isEnd = false;
+		while (!isEnd) {
+			isEnd = true;
+			for (CContactMapAbstractRule rule : abstractReachableRules) {
+				List<IContactMapAbstractSite> newData = rule.getNewData();
+				if (abstractSolution.addNewData(newData))
+					isEnd = false;
 			}
-			checkList = resetCheckList(checkList);
 		}
 	}
-	
-	private boolean[] resetCheckList(boolean[] checkList){
-		for(boolean b : checkList)
-			b=false;
-		return  checkList;
-	}
-	
-	private boolean isEnd(boolean[] checkList){
-		for(boolean b : checkList)
-			if(b)
-				return true;
-		return false;
-	}
-	
 
 	public void constructContactMap() {
 		for (IRule rule : reachableRules) {
@@ -433,30 +416,30 @@ public class CContactMap {
 				rule.applyRule(newInjList, simulationData);
 				List<IRule> currentInvokedRules = new ArrayList<IRule>();
 				SimulationUtils.doNegativeUpdate(newInjList);
-				simulationData.getKappaSystem().doPositiveUpdateForContactMap(rule, newInjList,
-						invokedRules);
+				simulationData.getKappaSystem().doPositiveUpdateForContactMap(
+						rule, newInjList, invokedRules);
 				// addToInvokedRules(invokedRules, currentInvokedRules);
-			
+
 			}
 		}
 
 		return added;
 	}
 
-//	private void printInjections(IRule rule) {
-//		System.out.println("ruleID = " + rule.getRuleID());
-//		if(rule.getLeftHandSide().get(0) != CRule.EMPTY_LHS_CC)
-//		for (IConnectedComponent cc : rule.getLeftHandSide()) {
-//			List<IInjection> injList = new ArrayList<IInjection>();
-//			injList.addAll(cc.getInjectionsList());
-//			
-//			System.out.println("injList size = "+injList.size());
-//			for(IInjection inj : injList){
-//			  for(IAgentLink al : inj.getAgentLinkList())
-//				  System.out.println(al.getAgentTo().toString());
-//			}
-//		}
-//	}
+	// private void printInjections(IRule rule) {
+	// System.out.println("ruleID = " + rule.getRuleID());
+	// if(rule.getLeftHandSide().get(0) != CRule.EMPTY_LHS_CC)
+	// for (IConnectedComponent cc : rule.getLeftHandSide()) {
+	// List<IInjection> injList = new ArrayList<IInjection>();
+	// injList.addAll(cc.getInjectionsList());
+	//			
+	// System.out.println("injList size = "+injList.size());
+	// for(IInjection inj : injList){
+	// for(IAgentLink al : inj.getAgentLinkList())
+	// System.out.println(al.getAgentTo().toString());
+	// }
+	// }
+	// }
 
 	private void addToInvokedRules(List<IRule> rules, List<IRule> rulesToAdd) {
 		for (IRule rule : rulesToAdd) {
@@ -539,16 +522,16 @@ public class CContactMap {
 		}
 	}
 
-	public final void initAbstractSolution(){
+	public final void initAbstractSolution() {
 		this.abstractSolution = new CContactMapAbstractSolution(solution);
 	}
-	
 
-	public void constructAbstractReachableRules(List<IRule> rules){
+	public void constructAbstractReachableRules(List<IRule> rules) {
 		// TODO constructAbstractReachableRules // ContactMap
 		List<CContactMapAbstractRule> listAbstractRules = new ArrayList<CContactMapAbstractRule>();
-		for(IRule rule : rules){
-			CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(abstractSolution,rule);
+		for (IRule rule : rules) {
+			CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(
+					abstractSolution, rule);
 			abstractRule.initAbstractRule();
 			listAbstractRules.add(abstractRule);
 		}
@@ -578,13 +561,13 @@ public class CContactMap {
 				// if (rule.getLeftHandSide().get(0) == CRule.EMPTY_LHS_CC)
 				// //reachableRules.add(rule);
 				// else
-				 for (IConnectedComponent cc : rule.getLeftHandSide()) {
-				 if (cc != CRule.EMPTY_LHS_CC
-				 && cc.getInjectionsList().size() == 0) {
-				 unreachableCC.add(cc);
-				 }
-				
-				 }
+				for (IConnectedComponent cc : rule.getLeftHandSide()) {
+					if (cc != CRule.EMPTY_LHS_CC
+							&& cc.getInjectionsList().size() == 0) {
+						unreachableCC.add(cc);
+					}
+
+				}
 				// else {
 				// int injCounter = 0;
 				// for (IConnectedComponent cc : rule.getLeftHandSide()) {
@@ -650,7 +633,8 @@ public class CContactMap {
 			IRule rule) {
 		List<IAgent> newAgents = new ArrayList<IAgent>();
 
-		newAgents = solution.cloneAgentsList(oldAgents, simulationData.getKappaSystem());
+		newAgents = solution.cloneAgentsList(oldAgents, simulationData
+				.getKappaSystem());
 		solution.addAgents(newAgents);
 		List<IInjection> newInjList = new ArrayList<IInjection>();
 

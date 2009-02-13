@@ -1,6 +1,7 @@
 package com.plectix.simulator.interfaces;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.plectix.simulator.components.contactMap.CContactMapLinkState;
 
@@ -25,4 +26,6 @@ public interface IContactMapAbstractSite extends IAbstractSite{
 	public boolean equalsLinkState(IContactMapAbstractSite site);
 
 	public boolean isFit(IContactMapAbstractSite s);
+
+	public IContactMapAbstractSite clone();
 }
