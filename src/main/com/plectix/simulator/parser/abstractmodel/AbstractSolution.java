@@ -2,7 +2,7 @@ package com.plectix.simulator.parser.abstractmodel;
 
 import java.util.*;
 
-import com.plectix.simulator.components.SolutionLines;
+import com.plectix.simulator.components.solution.SolutionLines;
 
 public class AbstractSolution implements IAbstractComponent {
 	//Long - counter, List - connectedcomponent

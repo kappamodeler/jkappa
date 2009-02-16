@@ -1,7 +1,8 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.perturbations;
 
 import java.util.List;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.INetworkNotation;

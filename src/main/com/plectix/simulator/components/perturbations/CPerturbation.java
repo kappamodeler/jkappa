@@ -1,9 +1,10 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.perturbations;
 
 import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.*;
 
 public final class CPerturbation implements Serializable{

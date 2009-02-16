@@ -1,4 +1,4 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.perturbations;
 
 public enum CPerturbationType {
 	TIME,

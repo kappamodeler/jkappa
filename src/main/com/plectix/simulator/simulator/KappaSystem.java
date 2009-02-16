@@ -12,11 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.plectix.simulator.components.CObservables;
-import com.plectix.simulator.components.CPerturbation;
 import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CSolution;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.contactMap.CContactMap;
+import com.plectix.simulator.components.perturbations.CPerturbation;
+import com.plectix.simulator.components.solution.CSolution;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -100,7 +100,7 @@ public class KappaSystem {
 			contactMap.setSolution(this.solution);
 		}
 
-		Iterator<IAgent> iterator = solution.getAgents().values().iterator();
+		Iterator<IAgent> iterator = solution.getAgents().iterator();
 		observables.checkAutomorphisms();
 
 		if (args.isActivationMap()) {

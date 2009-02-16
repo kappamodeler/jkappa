@@ -2,7 +2,7 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.*;
 
-import com.plectix.simulator.components.CPerturbation;
+import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.abstractmodel.AbstractSolution;

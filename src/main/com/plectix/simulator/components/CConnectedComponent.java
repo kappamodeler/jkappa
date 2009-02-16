@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.injections.CLiftElement;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -229,6 +231,24 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return false;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof IConnectedComponent)) { 
+			return false;
+		}
+		if (this == obj) {
+			return true;
+		}
+		
+		IConnectedComponent arg = (IConnectedComponent) obj;
+		//TODO check
+		IAgent agent = arg.getAgents().get(0);
+		return this.isAutomorphism(agent);
+	}
+	
 	private final boolean fullEqualityOfAgents(IAgent cc1Agent, IAgent cc2Agent) {
 		if (cc1Agent == null || cc2Agent == null)
 			return false;

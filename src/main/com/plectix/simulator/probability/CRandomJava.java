@@ -1,4 +1,4 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.probability;
 
 import java.util.Random;
 

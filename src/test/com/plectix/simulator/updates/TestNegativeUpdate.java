@@ -9,6 +9,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 

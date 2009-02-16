@@ -7,6 +7,11 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.perturbations.CPerturbation;
+import com.plectix.simulator.components.perturbations.CPerturbationType;
+import com.plectix.simulator.components.perturbations.CRulePerturbation;
+import com.plectix.simulator.components.perturbations.RateExpression;
+import com.plectix.simulator.components.solution.CSolution;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;

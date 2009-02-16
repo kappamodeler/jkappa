@@ -1,4 +1,4 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.solution;
 
 public final class SolutionLines {
 	private final String line;

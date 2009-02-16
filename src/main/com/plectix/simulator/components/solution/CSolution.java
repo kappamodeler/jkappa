@@ -1,22 +1,16 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.solution;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.BitSet;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.ILinkState;
-import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.interfaces.ISolution;
-import com.plectix.simulator.parser.util.IdGenerator;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.simulator.SimulationData;
 
+@SuppressWarnings("serial")
 public final class CSolution implements ISolution, Serializable {
 	private final HashMap<Long, IAgent> agentMap;
 	private final List<SolutionLines> solutionLines;
@@ -24,19 +18,6 @@ public final class CSolution implements ISolution, Serializable {
 	public CSolution() {
 		agentMap = new HashMap<Long, IAgent>();
 		solutionLines = new ArrayList<SolutionLines>();
-	}
-
-	private final void depthSearch(IAgent agent2, List<IAgent> agentsList) {
-		for (ISite site : agent2.getSites()) {
-			ISite linkSite = site.getLinkState().getSite();
-			if (linkSite != null) {
-				IAgent agent = linkSite.getAgentLink();
-				if (!(agent.includedInCollection(agentsList))) {
-					agentsList.add(agent);
-					depthSearch(agent, agentsList);
-				}
-			}
-		}
 	}
 
 	public final void removeAgent(IAgent agent) {
@@ -61,15 +42,8 @@ public final class CSolution implements ISolution, Serializable {
 		}
 	}
 
-	public final List<IAgent> getConnectedAgents(IAgent inAgent) {
-		List<IAgent> agentsList = new ArrayList<IAgent>();
-		agentsList.add(inAgent);
-		depthSearch(inAgent, agentsList);
-		return agentsList;
-	}
-
-	public final Map<Long, IAgent> getAgents() {
-		return Collections.unmodifiableMap(agentMap);
+	public final Collection<IAgent> getAgents() {
+		return Collections.unmodifiableCollection(agentMap.values());
 	}
 
 	public final void clearAgents() {

@@ -21,4 +21,3 @@
 %mod: $T > 10.0 do $DELETEONCE 11.3 * a(x!1), b(i!1, u), c(x)
 %mod: ['4'] < 13.0 * ['1'] + 4.0 * ['3'] do 'time2' := 1.0 * 'time2'
 %mod: $T > 0.05 do 'rule' := -7.0 * 'rule' + 15.0
-

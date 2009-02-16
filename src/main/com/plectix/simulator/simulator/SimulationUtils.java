@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.ConstraintData;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;

@@ -9,7 +9,6 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.log4j.Logger;
 
-import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.controller.SimulatorInputData;
@@ -18,6 +17,7 @@ import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
+import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;

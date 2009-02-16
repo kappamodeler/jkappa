@@ -1,5 +1,6 @@
 package com.plectix.simulator.components.contactMap;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -8,8 +9,8 @@ import java.util.TreeMap;
 
 import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.action.CAddAction;
-import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -55,13 +56,10 @@ public class CContactMapAbstractSolution {
 	}
 	
 	private boolean fillMapCCList(ISolution solution) {
-		Map<Long, IAgent> agentMap = solution.getAgents();
-		Iterator<Long> iterator = agentMap.keySet().iterator();
+		Collection<IAgent> agentMap = solution.getAgents();
 		boolean wasAdded = false;
 
-		while (iterator.hasNext()) {
-			Long key = iterator.next();
-			IAgent agent = agentMap.get(key);
+		for (IAgent agent : agentMap) {
 			if (addAgentToMap(agent))
 				wasAdded = true;
 		}

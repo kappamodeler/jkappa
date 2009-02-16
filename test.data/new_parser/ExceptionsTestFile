@@ -1,4 +1,4 @@
 #RULES
 'name' a(), b()
-'' un() ->
+'un() ->
 'ds' a#() ->

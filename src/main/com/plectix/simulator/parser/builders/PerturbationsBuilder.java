@@ -3,6 +3,10 @@ package com.plectix.simulator.parser.builders;
 import java.util.*;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.perturbations.CPerturbation;
+import com.plectix.simulator.components.perturbations.CPerturbationType;
+import com.plectix.simulator.components.perturbations.CRulePerturbation;
+import com.plectix.simulator.components.perturbations.RateExpression;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.abstractmodel.AbstractPerturbation;
 import com.plectix.simulator.parser.abstractmodel.perturbations.*;

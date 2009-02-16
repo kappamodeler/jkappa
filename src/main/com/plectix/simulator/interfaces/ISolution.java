@@ -6,7 +6,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 
 public interface ISolution {
 
-	public Map<Long, IAgent> getAgents();
+	public Collection<IAgent> getAgents();
 	
 	public IConnectedComponent getConnectedComponent (IAgent agent);
 	

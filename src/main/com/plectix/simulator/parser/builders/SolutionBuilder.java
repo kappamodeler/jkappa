@@ -3,6 +3,8 @@ package com.plectix.simulator.parser.builders;
 import java.util.*;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.solution.CSolution;
+import com.plectix.simulator.components.solution.SolutionLines;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.abstractmodel.*;
 import com.plectix.simulator.simulator.*;

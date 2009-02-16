@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CInjection;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.CSolution;
+import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.solution.CSolution;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;

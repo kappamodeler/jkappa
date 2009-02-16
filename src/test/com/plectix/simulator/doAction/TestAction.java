@@ -21,13 +21,13 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.Initializator;
-import com.plectix.simulator.components.CProbabilityCalculation;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
@@ -47,7 +47,7 @@ public class TestAction {
 	private final static String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 	private ISolution csolution;
 
-	private static Map<Long, IAgent> mySolutionAgentsStructure;
+	private static Collection<IAgent> mySolutionAgentsStructure;
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
@@ -291,10 +291,10 @@ public class TestAction {
 	}
 
 	private void printSolution(String name,
-			Map<Long, IAgent> mySolutionAgentsStructure2) {
+			Collection<IAgent> mySolutionAgentsStructure2) {
 		System.out.print("solution   ");
 		System.out.println(name);
-		for (IAgent agent : mySolutionAgentsStructure2.values()) {
+		for (IAgent agent : mySolutionAgentsStructure2) {
 			System.out.print(agent.getName());
 			Collection<ISite> sitelist = new ArrayList<ISite>();
 			sitelist = agent.getSites();
