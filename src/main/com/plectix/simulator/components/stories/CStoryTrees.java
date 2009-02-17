@@ -1229,16 +1229,16 @@ public final class CStoryTrees {
 		return false;
 	}
 
-	private Integer getTraceIDFrom(CStoryTrees treeIn, Integer traceID,
+	private List<Integer> getTraceIDFrom(CStoryTrees treeIn, Integer traceID,
 			List<Integer> childTraceIDListIn) {
-
+		List<Integer> listIn = new ArrayList<Integer>();
 		int ruleID = this.traceIDToRuleID.get(traceID);
 		for (Integer traceIDIn : childTraceIDListIn) {
 			int ruleIDIn = treeIn.traceIDToRuleID.get(traceIDIn);
 			if (ruleID == ruleIDIn)
-				return traceIDIn;
+				listIn.add(traceIDIn);
 		}
-		return -1;
+		return listIn;
 	}
 
 	private boolean isEqualWeakLists(CStoryTrees treeIn,
@@ -1294,9 +1294,14 @@ public final class CStoryTrees {
 			return false;
 
 		for (Integer traceID : childTraceIDList) {
-			Integer traceIDIn = getTraceIDFrom(treeIn, traceID,
+			List<Integer> traceIDInList = getTraceIDFrom(treeIn, traceID,
 					childTraceIDListIn);
-			if (!isIsomorphic(treeIn, traceID, traceIDIn))
+			int counter = 0;
+			for (Integer traceIDIn : traceIDInList) {
+				if (isIsomorphic(treeIn, traceID, traceIDIn))
+					counter++;
+			}
+			if (counter == 0)
 				return false;
 		}
 
