@@ -13,6 +13,4 @@ public interface IStoriesSiteStates {
 	
 	public boolean isEqualsAfterState(IStoriesSiteStates checkSS);
 
-	public CStoriesSiteStates clone();
-	
 }
