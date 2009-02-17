@@ -245,6 +245,8 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	public boolean isFit(IContactMapAbstractSite s) {
 		if (!this.equalsLinkAgent(s))
 			return false;
+		if(nameId == CSite.NO_INDEX)
+			return true;
 		if (!this.equalsNameId(s))
 			return false;
 		if (!internalState.compareInternalStates(s.getInternalState()))
@@ -254,5 +256,20 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 
 		return true;
 	}
-
+	
+	public boolean isFit(int agentId,int siteId, int internalStateId, int agentLinkId, int siteLinkId, int internalStateLinkId) {
+		if(linkAgent.getNameId()!=agentId)
+			return false;
+		if(nameId!=siteId)
+			return false;
+		if(internalState.getNameId()!=internalStateId)
+			return false;
+		if(linkState.getAgentNameID()!=agentLinkId)
+			return false;
+		if(linkState.getLinkSiteNameID()!=siteLinkId)
+			return false;
+		if(linkState.getInternalStateNameID()!=internalStateLinkId)
+			return false;
+		return true;
+	}
 }

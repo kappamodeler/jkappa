@@ -46,7 +46,7 @@ public class CContactMapAbstractRule {
 			Integer key = iterator.next();
 			IContactMapAbstractAgent agent = map.get(key);
 			List<IContactMapAbstractSite> listSites = agent.getSites();
-			if(listSites.isEmpty())
+			if (listSites.isEmpty())
 				list.add(agent.getEmptySite());
 			list.addAll(listSites);
 		}
@@ -87,11 +87,12 @@ public class CContactMapAbstractRule {
 	public List<IContactMapAbstractSite> getNewData() {
 		List<IContactMapAbstractSite> newData = new ArrayList<IContactMapAbstractSite>();
 		int[] indexList = new int[lhsSites.size()];
-		if(lhsSites.size()==0){
-			newData.addAll(abstractAction.apply(new ArrayList<UCorrelationAbstractSite>(), solution));
+		if (lhsSites.size() == 0) {
+			newData.addAll(abstractAction.apply(
+					new ArrayList<UCorrelationAbstractSite>(), solution));
 			return newData;
 		}
-		
+
 		List<List<IContactMapAbstractSite>> sitesLists = initSitesListsFromSolution();
 		if (sitesLists == null)
 			return null;
@@ -117,7 +118,7 @@ public class CContactMapAbstractRule {
 		for (int i : indexList)
 			listSites.add(sitesLists.get(index++).get(i));
 		List<UCorrelationAbstractSite> list = UCorrelationAbstractSite
-				.createCorrelationSites(lhsSites, listSites,
+				.createCorrelationSites(abstractAction,lhsSites, listSites,
 						ECorrelationType.CORRELATION_LHS_AND_SOLUTION);
 		return list;
 	}
@@ -148,8 +149,11 @@ public class CContactMapAbstractRule {
 					.get(keyAgent);
 			if (agent == null)
 				return null;
-			List<IContactMapAbstractSite> sites = agent.getSitesMap().get(
-					keySite);
+			List<IContactMapAbstractSite> sites;
+			if (keySite == CSite.NO_INDEX)
+				sites = agent.getSites();
+			else
+				sites = agent.getSitesMap().get(keySite);
 			if (sites == null || sites.isEmpty())
 				return null;
 			sitesLists.add(sites);

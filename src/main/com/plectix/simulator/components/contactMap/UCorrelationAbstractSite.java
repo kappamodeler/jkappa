@@ -15,12 +15,14 @@ public class UCorrelationAbstractSite {
 	private IContactMapAbstractSite fromSite;
 	private IContactMapAbstractSite toSite;
 	private List<CActionType> atomicActions;
+	private CContactMapAbstractAction action;
 
-	public UCorrelationAbstractSite(IContactMapAbstractSite fromSite,
+	public UCorrelationAbstractSite(CContactMapAbstractAction action,IContactMapAbstractSite fromSite,
 			IContactMapAbstractSite toSite, ECorrelationType correlationType) {
 		this.fromSite = fromSite;
 		this.toSite = toSite;
 		this.correlationType = correlationType;
+		this.action = action;
 		if (correlationType == ECorrelationType.CORRELATION_LHS_AND_RHS)
 			this.type = CActionType.NONE;
 	}
@@ -50,13 +52,14 @@ public class UCorrelationAbstractSite {
 	}
 
 	public static List<UCorrelationAbstractSite> createCorrelationSites(
+			CContactMapAbstractAction action,
 			List<IContactMapAbstractSite> fromSites,
 			List<IContactMapAbstractSite> toSites,
 			ECorrelationType correlationType) {
 		List<UCorrelationAbstractSite> list = new ArrayList<UCorrelationAbstractSite>();
 		int i = 0;
 		for (IContactMapAbstractSite s : fromSites) {
-			list.add(new UCorrelationAbstractSite(s, toSites.get(i++),
+			list.add(new UCorrelationAbstractSite(action,s, toSites.get(i++),
 					correlationType));
 		}
 		return list;
@@ -159,7 +162,7 @@ public class UCorrelationAbstractSite {
 	}
 
 	private void doBound(IContactMapAbstractSite newSite) {
-
+		
 	}
 
 	private void doModify(IContactMapAbstractSite newSite) {
@@ -187,6 +190,8 @@ public class UCorrelationAbstractSite {
 				inSite.getLinkState().getInternalStateNameID(), inSite
 				.getAgentLink().getNameId(), inSite.getNameId(),
 				inSite.getInternalState().getNameId());
+		if(site == null)
+			return listOut;
 		IContactMapAbstractSite addSite = site.clone();
 		addSite.getLinkState().setFreeLinkState();
 		listOut.add(addSite);
