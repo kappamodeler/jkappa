@@ -816,17 +816,36 @@ public final class CStoryTrees {
 			}
 			list.add(nn.getStep());
 		}
-		Iterator<Integer> iterator = traceIDToTraceIDWeak.keySet().iterator();
-		List<Integer> deletingList = new ArrayList<Integer>();
-		while (iterator.hasNext()) {
-			int key = iterator.next();
-			List<Integer> weakList = traceIDToTraceIDWeak.get(key);
-			if (weakList == null || weakList.size() == 0)
-				deletingList.add(key);
-
+		
+		boolean delete = true;
+		while(delete){
+			delete = false;
+			Iterator<Integer> iterator = traceIDToTraceIDWeak.keySet().iterator();
+			while (iterator.hasNext()) {
+				int key = iterator.next();
+				List<Integer> weakList = traceIDToTraceIDWeak.get(key);
+				if (weakList == null || weakList.size() == 0){
+					traceIDToTraceIDWeak.remove(key);	
+					delete = true;
+					break;
+				}
+				else {
+					List<Integer> deletingList = new ArrayList<Integer>();
+					List<Integer> strongList = traceIDToTraceID.get(key);
+					for(int i=0; i< weakList.size();i++){
+						if(strongList.contains(weakList.get(i)))
+							deletingList.add(i);
+					}
+					if(deletingList.size()>0){
+						for(int i = deletingList.size()-1;i>=0;i--){
+							weakList.remove(deletingList.get(i));
+						}
+						delete = true;
+					}
+				}
+			}
 		}
-		for (Integer key : deletingList)
-			traceIDToTraceIDWeak.remove(key);
+		
 	}
 
 	private List<CNetworkNotation> updateOnlyMainList(
