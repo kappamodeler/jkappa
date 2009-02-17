@@ -4,23 +4,37 @@
 package com.plectix.simulator.components.stories;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.interfaces.IStoriesSiteStates;
 
 final class AgentSitesFromRules {
 	private HashMap<Integer, SitesFromRules> sites;
-	private NetworkNotationMode mode;
-	private int agentName;
+	private int agentNameID;
 
-	public int getAgentName() {
-		return agentName;
+	public int getAgentNameID() {
+		return agentNameID;
 	}
 
-	public AgentSitesFromRules(NetworkNotationMode mode, IAgent agent) {
-		this.mode = mode;
+	public AgentSitesFromRules(int agentNameID) {
 		sites = new HashMap<Integer, SitesFromRules>();
-		this.agentName = agent.getNameId();
+		this.agentNameID = agentNameID;
+	}
+	
+	public final AgentSitesFromRules clone(){
+		AgentSitesFromRules aSFR = new AgentSitesFromRules(this.agentNameID);
+		
+		Iterator<Integer> iterator = this.sites.keySet().iterator();
+
+		while (iterator.hasNext()) {
+			int key = iterator.next();
+			SitesFromRules sfr = this.sites.get(key);
+			aSFR.getSites().put(key, sfr.clone());
+		}
+		
+		return aSFR;
 	}
 	
 	public HashMap<Integer, SitesFromRules> getSites() {

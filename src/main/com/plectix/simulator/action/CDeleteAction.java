@@ -111,8 +111,7 @@ public class CDeleteAction extends CAction {
 	protected final void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
-			netNotation.checkLinkForNetworkNotationDel(index, site, true);
-			netNotation.checkLinkForNetworkNotationDel(index, site, false);
+			netNotation.checkLinkForNetworkNotationDel(index, site);
 		}
 	}
 	

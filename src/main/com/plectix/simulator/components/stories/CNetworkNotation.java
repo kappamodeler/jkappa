@@ -7,10 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.components.solution.CSolution;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
@@ -34,27 +32,21 @@ public class CNetworkNotation implements INetworkNotation {
 		NO_INTERSECTION, PART_INTERSECTION, FULL_INTERSECTION;
 	}
 
-	private boolean leaf;
 	private int step;
-	private final int ruleID;
+	private int ruleID;
 	private Simulator simulator;
 	private Map<Long, AgentSites> changesOfAllUsedSites;
-	private Map<Long, AgentSites> changedAgentsFromSolution;
 	private Map<Long, AgentSitesFromRules> usedAgentsFromRules;
 	private List<Long> addedAgentsID;
-	List<String> agentsNotation;
-	List<Map<Long, List<Integer>>> introCCMap;
+	private List<String> agentsNotation;
+	private List<Map<Long, List<Integer>>> introCCMap;
+
+	public Simulator getSimulator() {
+		return simulator;
+	}
 
 	public List<Long> getAddedAgentsID() {
 		return addedAgentsID;
-	}
-
-	public boolean isLeaf() {
-		return leaf;
-	}
-
-	public void setLeaf(boolean leaf) {
-		this.leaf = leaf;
 	}
 
 	public void setStep(int step) {
@@ -69,10 +61,6 @@ public class CNetworkNotation implements INetworkNotation {
 		return changesOfAllUsedSites;
 	}
 
-	public Map<Long, AgentSites> getChangedAgentsFromSolution() {
-		return changedAgentsFromSolution;
-	}
-
 	public Map<Long, AgentSitesFromRules> getUsedAgentsFromRules() {
 		return usedAgentsFromRules;
 	}
@@ -84,32 +72,35 @@ public class CNetworkNotation implements INetworkNotation {
 	@Override
 	public String toString() {
 		String st = "ruleName="
-				+ simulator.getSimulationData().getKappaSystem().getRulesByID(ruleID).getName()
-				+ " ";
+				+ simulator.getSimulationData().getKappaSystem().getRulesByID(
+						ruleID).getName() + " ";
 		st += "usedAgentsFromRules=" + usedAgentsFromRules.keySet().toString()
 				+ " ";
-		st += "changedAgentsFromSolution="
-				+ changedAgentsFromSolution.keySet().toString() + " ";
 		st += "changesOfAllUsedSites="
 				+ changesOfAllUsedSites.keySet().toString() + " ";
 		st += "step=" + step + " ";
 		st += "agentsNotation=" + agentsNotation.toString() + " ";
 
-		// return super.toString();
 		return st;
 	}
 
-	public CNetworkNotation(Simulator simulator, int step, IRule rule,
-			List<IInjection> injectionsList, SimulationData data) {
+	private void initParameters(Simulator simulator, int step, Integer ruleID) {
 		this.simulator = simulator;
 		this.step = step;
-		this.ruleID = rule.getRuleID();
-		leaf = false;
-		this.changedAgentsFromSolution = new HashMap<Long, AgentSites>();
+		this.ruleID = ruleID;
 		this.changesOfAllUsedSites = new HashMap<Long, AgentSites>();
 		this.usedAgentsFromRules = new HashMap<Long, AgentSitesFromRules>();
 		this.agentsNotation = new ArrayList<String>();
 		this.introCCMap = new ArrayList<Map<Long, List<Integer>>>();
+	}
+
+	public CNetworkNotation(Simulator simulator, int step, int ruleID) {
+		initParameters(simulator, step, ruleID);
+	}
+
+	public CNetworkNotation(Simulator simulator, int step, IRule rule,
+			List<IInjection> injectionsList, SimulationData data) {
+		initParameters(simulator, step, rule.getRuleID());
 		createAgentsNotation(injectionsList, data, rule);
 	}
 
@@ -136,7 +127,8 @@ public class CNetworkNotation implements INetworkNotation {
 			}
 		}
 
-		ISolution solution = simulator.getSimulationData().getKappaSystem().getSolution();
+		ISolution solution = simulator.getSimulationData().getKappaSystem()
+				.getSolution();
 		List<IAgent> newAgentsList = solution.cloneAgentsList(ccFromSolution
 				.getAgents(), simulator.getSimulationData().getKappaSystem());
 
@@ -172,6 +164,53 @@ public class CNetworkNotation implements INetworkNotation {
 		return introCCMap;
 	}
 
+	public final CNetworkNotation cloneNetworkNotation() {
+		CNetworkNotation newNN = new CNetworkNotation(this.simulator,
+				this.step, this.ruleID);
+		Iterator<Long> iterator = this.changesOfAllUsedSites.keySet()
+				.iterator();
+
+		while (iterator.hasNext()) {
+			Long key = iterator.next();
+			AgentSites as = this.changesOfAllUsedSites.get(key);
+			newNN.getChangesOfAllUsedSites().put(key, as.clone());
+		}
+
+		// clone introMap
+		newNN.introCCMap = new ArrayList<Map<Long, List<Integer>>>();// this.
+		for (Map<Long, List<Integer>> map : this.introCCMap) {
+			iterator = map.keySet().iterator();
+			Map<Long, List<Integer>> newMap = new HashMap<Long, List<Integer>>();
+
+			while (iterator.hasNext()) {
+				Long key = iterator.next();
+				List<Integer> list = map.get(key);
+				List<Integer> newList = new ArrayList<Integer>();
+
+				for (int number : list) {
+					newList.add(number);
+				}
+				newMap.put(key, newList);
+			}
+			newNN.introCCMap.add(newMap);
+		}
+		// clone usedAgentsFromRules
+		iterator = this.usedAgentsFromRules.keySet().iterator();
+
+		while (iterator.hasNext()) {
+			Long key = iterator.next();
+			AgentSitesFromRules aSFR = this.usedAgentsFromRules.get(key);
+			newNN.getUsedAgentsFromRules().put(key, aSFR.clone());
+		}
+		// clone agentsNotation
+		newNN.agentsNotation =new ArrayList<String>();
+		for(String str : this.agentsNotation){
+			newNN.agentsNotation.add(str.substring(0));
+		}
+		
+		return newNN;
+	}
+
 	private final void createAgentsNotation(List<IInjection> injectionsList,
 			SimulationData data, IRule rule) {
 		ISolution solution = data.getKappaSystem().getSolution();
@@ -187,13 +226,16 @@ public class CNetworkNotation implements INetworkNotation {
 
 	public final void checkLinkForNetworkNotation(StateType index, ISite site) {
 		if (site.getLinkState().getSite() == null)
-			this.addToAgents(site, new CStoriesSiteStates(index, -1, -1),
-					index, true);
+			this
+					.addToAgents(site, new CStoriesSiteStates(index, -1, -1),
+							index);
 		else
-			this.addToAgents(site, new CStoriesSiteStates(index, ((CAgent) site
-					.getLinkState().getSite().getAgentLink()).getHash(),
-					((CSite) site.getLinkState().getSite()).getNameId()),
-					index, true);
+			this
+					.addToAgents(site, new CStoriesSiteStates(index,
+							((CAgent) site.getLinkState().getSite()
+									.getAgentLink()).getHash(), ((CSite) site
+									.getLinkState().getSite()).getNameId()),
+							index);
 	}
 
 	public final boolean changedSitesContains(ISite site) {
@@ -210,42 +252,41 @@ public class CNetworkNotation implements INetworkNotation {
 	public final void checkLinkToUsedSites(StateType index, ISite site) {
 		if (site.getLinkState().getSite() == null)
 			this.addToAgents(site, new CStoriesSiteStates(index, site
-					.getInternalState().getNameId(), -1, -1), index, false);
+					.getInternalState().getNameId(), -1, -1), index);
 		else
-			this.addToAgents(site, new CStoriesSiteStates(index, site
-					.getInternalState().getNameId(), ((CAgent) site
-					.getLinkState().getSite().getAgentLink()).getHash(),
-					((CSite) site.getLinkState().getSite()).getNameId()),
-					index, false);
+			this
+					.addToAgents(site, new CStoriesSiteStates(index, site
+							.getInternalState().getNameId(),
+							((CAgent) site.getLinkState().getSite()
+									.getAgentLink()).getHash(), ((CSite) site
+									.getLinkState().getSite()).getNameId()),
+							index);
 	}
 
-	public final void checkLinkForNetworkNotationDel(StateType index,
-			ISite site, boolean toChangedAgents) {
+	public final void checkLinkForNetworkNotationDel(StateType index, ISite site) {
 		if (site.getLinkState().getSite() == null)
 			this.addToAgents(site, new CStoriesSiteStates(index, site
-					.getInternalState().getNameId(), -1, -1), index,
-					toChangedAgents);
+					.getInternalState().getNameId(), -1, -1), index);
 		else
-			this.addToAgents(site, new CStoriesSiteStates(index, site
-					.getInternalState().getNameId(), ((CAgent) site
-					.getLinkState().getSite().getAgentLink()).getHash(),
-					((CSite) site.getLinkState().getSite()).getNameId()),
-					index, toChangedAgents);
+			this
+					.addToAgents(site, new CStoriesSiteStates(index, site
+							.getInternalState().getNameId(),
+							((CAgent) site.getLinkState().getSite()
+									.getAgentLink()).getHash(), ((CSite) site
+									.getLinkState().getSite()).getNameId()),
+							index);
 	}
 
 	public final void addToAgents(ISite site, IStoriesSiteStates siteStates,
-			StateType index, boolean toChangedAgents) {
+			StateType index) {
 
 		Map<Long, AgentSites> map;
-		if (toChangedAgents)
-			map = changedAgentsFromSolution;
-		else
-			map = changesOfAllUsedSites;
+		map = changesOfAllUsedSites;
 		if (site != null) {
 			long key = site.getAgentLink().getHash();
 			AgentSites as = map.get(key);
 			if (as == null) {
-				as = new AgentSites(site.getAgentLink());
+				as = new AgentSites();
 				map.put(key, as);
 			}
 			as.addToSites(site.getNameId(), siteStates, index);
@@ -260,7 +301,7 @@ public class CNetworkNotation implements INetworkNotation {
 			long key = site.getAgentLink().getHash();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(key);
 			if (aSFR == null) {
-				aSFR = new AgentSitesFromRules(agentMode, site.getAgentLink());
+				aSFR = new AgentSitesFromRules(site.getAgentLink().getNameId());
 				usedAgentsFromRules.put(key, aSFR);
 			}
 			aSFR.addToSitesFromRules(site.getNameId(), internalStateMode,
@@ -275,7 +316,7 @@ public class CNetworkNotation implements INetworkNotation {
 			long key = site.getAgentLink().getHash();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(key);
 			if (aSFR == null) {
-				aSFR = new AgentSitesFromRules(agentMode, site.getAgentLink());
+				aSFR = new AgentSitesFromRules(site.getAgentLink().getNameId());
 				usedAgentsFromRules.put(key, aSFR);
 			}
 			NetworkNotationMode internalStateMode = NetworkNotationMode.NONE;
@@ -292,7 +333,8 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public final IRule getRule() {
-		return simulator.getSimulationData().getKappaSystem().getRulesByID(ruleID);
+		return simulator.getSimulationData().getKappaSystem().getRulesByID(
+				ruleID);
 	}
 
 	public final CNetworkNotation isNotOpposite(
@@ -320,48 +362,13 @@ public class CNetworkNotation implements INetworkNotation {
 		return true;
 	}
 
-	public final IntersectionType isIntersects(CNetworkNotation nn) {
-		Iterator<Long> iterator = this.changedAgentsFromSolution.keySet()
-				.iterator();
-		int counter = 0;
-		int fullCounter = 0;
-
-		while (iterator.hasNext()) {
-			Long key = iterator.next();
-
-			if (nn.changedAgentsFromSolution.containsKey(key)) {
-				IntersectionType it = checkSites(key, nn);
-
-				if (it == IntersectionType.FULL_INTERSECTION)
-					fullCounter++;
-				// if (it != IntersectionType.NO_INTERSECTION)
-				counter++;
-			}
-		}
-
-		if ((fullCounter == this.changedAgentsFromSolution.size())
-				&& (this.changedAgentsFromSolution.size() == nn.changedAgentsFromSolution
-						.size()))
-			return IntersectionType.FULL_INTERSECTION;
-
-		if (counter > 0)
-			return IntersectionType.PART_INTERSECTION;
-
-		return IntersectionType.NO_INTERSECTION;
-	}
-
 	public final IntersectionType isIntersects(CNetworkNotation nn,
 			boolean isAllUsedSites) {
 		Map<Long, AgentSites> mapThis;
 		Map<Long, AgentSites> mapCheck;
 
-		if (isAllUsedSites) {
-			mapThis = this.changesOfAllUsedSites;
-			mapCheck = nn.changesOfAllUsedSites;
-		} else {
-			mapThis = this.changedAgentsFromSolution;
-			mapCheck = nn.changedAgentsFromSolution;
-		}
+		mapThis = this.changesOfAllUsedSites;
+		mapCheck = nn.changesOfAllUsedSites;
 		Iterator<Long> iterator = mapThis.keySet().iterator();
 
 		int counter = 0;
@@ -423,56 +430,47 @@ public class CNetworkNotation implements INetworkNotation {
 		return IntersectionType.NO_INTERSECTION;
 	}
 
-	private final IntersectionType checkSites(long key, CNetworkNotation nn) {
-		Iterator<Integer> iterator = this.changedAgentsFromSolution.get(key)
-				.getSites().keySet().iterator();
-		int counter = 0;
-		int fullCounter = 0;
-
-		while (iterator.hasNext()) {
-			Integer keySite = iterator.next();
-			if (nn.changedAgentsFromSolution.get(key).getSites().containsKey(
-					keySite)) {
-				counter++;
-
-				if (CStoriesSiteStates.isEqual(this.changedAgentsFromSolution
-						.get(key).getSites().get(keySite).getAfterState(),
-						nn.changedAgentsFromSolution.get(key).getSites().get(
-								keySite).getBeforeState())) {
-					fullCounter++;
-				}
-			}
-		}
-
-		if ((fullCounter == this.changedAgentsFromSolution.get(key).getSites()
-				.size())
-				&& (this.changedAgentsFromSolution.get(key).getSites().size() == nn.changedAgentsFromSolution
-						.get(key).getSites().size()))
-			return IntersectionType.FULL_INTERSECTION;
-
-		if (counter > 0)
-			return IntersectionType.PART_INTERSECTION;
-
-		return IntersectionType.NO_INTERSECTION;
-	}
-
-	public final boolean isEqualsNetworkNotation(CNetworkNotation checkNN,
-			Long agentIDToDelete, Long checkAgentID) {
-		if (this.changedAgentsFromSolution.size() != checkNN
-				.getChangedAgentsFromSolution().size())
+	public final boolean isEqualsNetworkNotation(CNetworkNotation checkNN) {
+		if (this.changesOfAllUsedSites.size() != checkNN
+				.getChangesOfAllUsedSites().size())
 			return false;
-		Iterator<Long> agentIterator = this.changedAgentsFromSolution.keySet()
+		Iterator<Long> agentIterator = this.changesOfAllUsedSites.keySet()
 				.iterator();
 		while (agentIterator.hasNext()) {
 			Long agentID = agentIterator.next();
 
-			AgentSites as = this.changedAgentsFromSolution.get(agentIDToDelete);
+			AgentSites as = this.changesOfAllUsedSites.get(agentID);
+
+			AgentSites asToCheck = checkNN.getChangesOfAllUsedSites().get(
+					agentID);
+
+			if (asToCheck == null)
+				return false;
+
+			if (!as.isEqualsAgentSites(asToCheck))
+				return false;
+		}
+
+		return true;
+	}
+
+	public final boolean isEqualsNetworkNotation(CNetworkNotation checkNN,
+			Long agentIDToDelete, Long checkAgentID) {
+		if (this.changesOfAllUsedSites.size() != checkNN
+				.getChangesOfAllUsedSites().size())
+			return false;
+		Iterator<Long> agentIterator = this.changesOfAllUsedSites.keySet()
+				.iterator();
+		while (agentIterator.hasNext()) {
+			Long agentID = agentIterator.next();
+
+			AgentSites as = this.changesOfAllUsedSites.get(agentIDToDelete);
 			AgentSites asToCheck = null;
 			if (agentID.equals(agentIDToDelete)) {
-				asToCheck = checkNN.getChangedAgentsFromSolution().get(
-						checkAgentID);
+				asToCheck = checkNN.getChangesOfAllUsedSites()
+						.get(checkAgentID);
 			} else {
-				asToCheck = checkNN.getChangedAgentsFromSolution().get(agentID);
+				asToCheck = checkNN.getChangesOfAllUsedSites().get(agentID);
 			}
 
 			if (asToCheck == null)

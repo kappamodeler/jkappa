@@ -1,5 +1,6 @@
 package com.plectix.simulator.interfaces;
 
+import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 
 public interface IStoriesSiteStates {
@@ -12,4 +13,6 @@ public interface IStoriesSiteStates {
 	
 	public boolean isEqualsAfterState(IStoriesSiteStates checkSS);
 
+	public CStoriesSiteStates clone();
+	
 }

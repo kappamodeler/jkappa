@@ -99,7 +99,7 @@ public final class CStories {
 					if (nnCS.getNetworkNotationList().get(0).getRule()
 							.getRuleID() == key) {
 
-						CStoryTrees tree = new CStoryTrees(key,nnCS.getNetworkNotationList(),
+						CStoryTrees tree = new CStoryTrees(key,
 								nnCS.getAverageTime(),
 								simulationData.getSimulationArguments().getStorifyMode(), 
 								simulationData.isOcamlStyleObsName());

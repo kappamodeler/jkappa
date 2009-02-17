@@ -71,6 +71,13 @@ public final class CStoriesSiteStates implements IStoriesSiteStates {
 		this.beforeState = lastState;
 	}
 
+	public final CStoriesSiteStates clone(){
+		CStoriesSiteStates sss = new CStoriesSiteStates();
+		sss.setAfterState(this.afterState);
+		sss.setBeforeState(this.beforeState);
+		return sss;
+	} 
+	
 	public final void addInformation(StateType index, IStoriesSiteStates siteStates) {
 		switch (index) {
 		case AFTER:

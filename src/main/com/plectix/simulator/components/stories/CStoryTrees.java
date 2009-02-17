@@ -23,12 +23,6 @@ public final class CStoryTrees {
 	private double averageTime;
 	private int ruleId;
 	private int mainTraceID;
-
-	public int getMainTraceID() {
-		return mainTraceID;
-	}
-
-	//private NetworkNotationForCurrentStory nnCS;
 	private HashMap<Integer, List<Integer>> ruleIDToTraceID;
 	private TreeMap<Integer, Integer> traceIDToLevel;
 	private TreeMap<Integer, Integer> traceIDToRuleID;
@@ -37,9 +31,12 @@ public final class CStoryTrees {
 	private HashMap<Integer, String> traceIDToText;
 	private TreeMap<Integer, List<Integer>> traceIDToTraceID;
 	private TreeMap<Integer, List<Integer>> traceIDToTraceIDWeak;
-	private List<CNetworkNotation> networkNotationsList; 
-	
-	
+	private List<CNetworkNotation> networkNotationsList;
+
+	public int getMainTraceID() {
+		return mainTraceID;
+	}
+
 	private SimulationArguments.StorifyMode compressionMode;
 
 	public double getAverageTime() {
@@ -66,10 +63,10 @@ public final class CStoryTrees {
 		return isomorphicCount;
 	}
 
-	public CStoryTrees(int ruleId, List<CNetworkNotation> nnList, double time, 
+	public CStoryTrees(int ruleId, double time,
 			SimulationArguments.StorifyMode compressionMode,
 			boolean isOcamlStyleObsName) {
-		this.networkNotationsList = nnList;
+		this.networkNotationsList = new ArrayList<CNetworkNotation>();
 		this.ruleId = ruleId;
 		this.averageTime = time;
 		this.compressionMode = compressionMode;
@@ -101,30 +98,17 @@ public final class CStoryTrees {
 			List<CNetworkNotation> commonList) {
 		List<CNetworkNotation> updatedList = new ArrayList<CNetworkNotation>();
 
-		CNetworkNotation lastNN = null;
-		int index = 0;
-
 		for (CNetworkNotation nn : commonList) {
 			List<Integer> curList = traceIDToTraceID.get(nn.getStep());
 			if (curList != null) {
-				if (updatedList.size() <= 1) {
+				if (updatedList.size() <= 1)
 					updatedList.add(nn);
-					lastNN = nn;
-				} else {
+				else {
 					CNetworkNotation newNN = nn.isNotOpposite(updatedList);
-					if (newNN == null) {
+					if (newNN == null)
 						updatedList.add(nn);
-						lastNN = nn;
-					} else {
-						removeTraceIDsFromMaps(newNN);
-						removeTraceIDsFromMaps(nn);
-						clearMapsLists(nn);
-						clearMapsLists(newNN);
-					}
 				}
 			}
-
-			index++;
 		}
 
 		updateTraceIDToIndex(updatedList);
@@ -368,6 +352,7 @@ public final class CStoryTrees {
 			Map<Integer, Integer> traceIDToNextTraceID) {
 		List<IStates> minTraceIDStatesList = getFullHorizontalWire(commonList,
 				minTraceID, minTraceID, agentIDSiteIDToTraceID);
+
 		Map<Integer, List<Integer>> reversedTraceIDToTraceID = new TreeMap<Integer, List<Integer>>();
 		listToDelete = new ArrayList<Integer>();
 		listToDelete.add(-1);
@@ -382,9 +367,10 @@ public final class CStoryTrees {
 	}
 
 	private List<CNetworkNotation> tryToRemoveBlock(
-			List<CNetworkNotation> commonList,
-			Map<Integer, Integer> traceIDToNextTraceID,
-			Map<Long, Map<Integer, StoryChangeStateWithTrace>> agentIDSiteIDToTraceID) {
+			List<CNetworkNotation> commonList) {
+
+		Map<Integer, Integer> traceIDToNextTraceID = new HashMap<Integer, Integer>();
+		Map<Long, Map<Integer, StoryChangeStateWithTrace>> agentIDSiteIDToTraceID = new HashMap<Long, Map<Integer, StoryChangeStateWithTrace>>();
 		int traceIDLastRule = commonList.get(0).getStep();
 		int listToDeleteSize = 0;
 		agentIDSiteIDToTraceID = new HashMap<Long, Map<Integer, StoryChangeStateWithTrace>>();
@@ -401,21 +387,17 @@ public final class CStoryTrees {
 				if (listToDelete.size() > 2 && listToDelete.get(0) == -2) {
 					listToDelete.remove(0);
 					listToDelete.remove(0);
-					removeFromCommonList(listToDelete, commonList);
-					commonList = updateMainList(commonList);
+					commonList = removeFromCommonList(listToDelete, commonList);
 
 					int mainSize = commonList.size();
 					int weakSize = commonList.size() - 1;
 
 					while (mainSize != weakSize) {
 						mainSize = commonList.size();
-						// doPermutation(commonList);
-						noneCompressStoryTrace(commonList);
+						commonList = noneCompressStoryTrace(commonList);
 						commonList = updateMainList(commonList);
 						weakSize = commonList.size();
 					}
-					// noneCompressStoryTrace(commonList);
-					// commonList = updateMainList(commonList);
 					agentIDSiteIDToTraceID = new HashMap<Long, Map<Integer, StoryChangeStateWithTrace>>();
 					traceIDToNextTraceID = new HashMap<Integer, Integer>();
 					createWeakCompressionHelpMap(commonList,
@@ -430,27 +412,17 @@ public final class CStoryTrees {
 
 	private List<CNetworkNotation> removeFromCommonList(
 			List<Integer> traceIDList, List<CNetworkNotation> commonList) {
-		for (Integer traceID : traceIDList) {
-			removeTraceIDsFromMaps(traceID, -1);
-		}
-		for (Integer traceID : traceIDList) {
-			clearMap(this.traceIDToTraceID, traceID);
-			clearMap(this.traceIDToTraceIDWeak, traceID);
-			this.traceIDToLevel.remove(traceID);
-		}
-
 		List<CNetworkNotation> updatedList = new ArrayList<CNetworkNotation>();
 		for (CNetworkNotation nn : commonList) {
-			List<Integer> curList = traceIDToTraceID.get(nn.getStep());
-			if (curList != null)
+			if (!traceIDList.contains(nn.getStep()))
 				updatedList.add(nn);
 		}
-		updateTraceIDToIndex(updatedList);
 		return updatedList;
 	}
 
-	private boolean doPermutation(List<CNetworkNotation> commonList) {
-
+	private List<CNetworkNotation> doPermutation(
+			List<CNetworkNotation> commonList) {
+		List<CNetworkNotation> newList = new ArrayList<CNetworkNotation>();
 		int size = commonList.size() - 1;
 
 		boolean fullPermutation = false;
@@ -481,51 +453,46 @@ public final class CStoryTrees {
 		if (fullPermutation) {
 			for (CNetworkNotation nn : commonList) {
 				nn.setStep(size--);
+				newList.add(nn);
 			}
 			this.mainTraceID = commonList.get(0).getStep();
 		}
 
-		return fullPermutation;
+		return newList;
 	}
 
 	private List<CNetworkNotation> weakCompressStoryTrace(
 			List<CNetworkNotation> commonList) {
 		List<CNetworkNotation> weakCompressedList = new ArrayList<CNetworkNotation>();
-		noneCompressStoryTrace(commonList);
+		commonList = noneCompressStoryTrace(commonList);
+		weakCompressedList = updateMainList(commonList);
 
-		if (commonList.size() > 1) {
-
-			Map<Integer, Integer> traceIDToNextTraceID = new HashMap<Integer, Integer>();
-			Map<Long, Map<Integer, StoryChangeStateWithTrace>> agentIDSiteIDToTraceID = new HashMap<Long, Map<Integer, StoryChangeStateWithTrace>>();
-			// commonList = doPermutation(commonList);
-			// deleting opposite rules which are neighbours in trace
-			weakCompressedList = updateMainList(commonList);
-			int mainSize = commonList.size();
-			int weakSize = weakCompressedList.size();
+		if (weakCompressedList.size() > 1) {
+			int mainSize = weakCompressedList.size();
+			int weakSize = weakCompressedList.size() - 1;
 
 			while (true) {
 
 				while (mainSize != weakSize) {
 					mainSize = weakCompressedList.size();
-					noneCompressStoryTrace(weakCompressedList);
+					weakCompressedList = noneCompressStoryTrace(weakCompressedList);
 					weakCompressedList = updateMainList(weakCompressedList);
 					weakSize = weakCompressedList.size();
 				}
 
-				weakCompressedList = tryToRemoveBlock(weakCompressedList,
-						traceIDToNextTraceID, agentIDSiteIDToTraceID);
+				weakCompressedList = tryToRemoveBlock(weakCompressedList);
 				weakSize = weakCompressedList.size();
-				// if(weakSize)
-				// while (doPermutation(weakCompressedList)) {
-				if (doPermutation(weakCompressedList)) {
+
+				List<CNetworkNotation> currentList = doPermutation(weakCompressedList);
+
+				if (currentList.size() > 0) {
+					weakCompressedList = currentList;
 					mainSize = weakCompressedList.size();
-					noneCompressStoryTrace(weakCompressedList);
+					weakCompressedList = noneCompressStoryTrace(weakCompressedList);
 					weakCompressedList = updateMainList(weakCompressedList);
 					weakSize = weakCompressedList.size();
 					if (weakSize == mainSize) {
-						weakCompressedList = tryToRemoveBlock(
-								weakCompressedList, traceIDToNextTraceID,
-								agentIDSiteIDToTraceID);
+						weakCompressedList = tryToRemoveBlock(weakCompressedList);
 						weakSize = weakCompressedList.size();
 					}
 				}
@@ -536,7 +503,7 @@ public final class CStoryTrees {
 			return weakCompressedList;
 
 		}
-		return commonList;
+		return weakCompressedList;
 	}
 
 	private List<CNetworkNotation> strongCompressStoryTrace(
@@ -565,7 +532,7 @@ public final class CStoryTrees {
 					}
 					nnList.add(nn);
 
-					int agentNameID = asFR.getAgentName();// .getNameId();
+					int agentNameID = asFR.getAgentNameID();
 					List<Long> agentIDsList = agentNameIDToAgentID
 							.get(agentNameID);
 					if (agentIDsList == null) {
@@ -615,130 +582,180 @@ public final class CStoryTrees {
 				if (hasLink(nnListForChange, agentIDToDelete))
 					return currentList;
 
-				List<CNetworkNotation> listToCheck = new ArrayList<CNetworkNotation>();
-
+				List<CNetworkNotation> clonedList = new ArrayList<CNetworkNotation>();
 				for (CNetworkNotation nn : commonList) {
-					addToListToCheck(listToCheck, nn, agentIDToDelete, agentID);
+					clonedList.add(nn.cloneNetworkNotation());
 				}
 
-				currentList = replaceAgentsInTrace(commonList, agentIDToDelete,
+				TreeMap<Integer, List<Integer>> traceIDToTraceIDCloned = new TreeMap<Integer, List<Integer>>();
+				TreeMap<Integer, List<Integer>> traceIDToTraceIDWeakCloned = new TreeMap<Integer, List<Integer>>();
+				TreeMap<Integer, Integer> traceIDToLevelCloned = new TreeMap<Integer, Integer>();
+
+				cloneMap(traceIDToTraceIDCloned, traceIDToTraceID);
+				cloneMap(traceIDToTraceIDWeakCloned, traceIDToTraceIDWeak);
+
+				Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
+				while (iterator.hasNext()) {
+					int key = iterator.next();
+					int value = traceIDToLevel.get(key);
+					traceIDToLevelCloned.put(key, value);
+				}
+
+				currentList = replaceAgentsInTrace(clonedList, agentIDToDelete,
 						agentID, agentToNNs.get(agentIDToDelete),
 						nnListForChange);
 				if (currentList.size() > 0)
 					return currentList;
+				else {
+					traceIDToTraceID = traceIDToTraceIDCloned;
+					traceIDToTraceIDWeak = traceIDToTraceIDWeakCloned;
+					traceIDToLevel = traceIDToLevelCloned;
+					updateMainList(commonList);
+				}
 			}
 		}
 		return currentList;
 	}
 
-	private void addToListToCheck(List<CNetworkNotation> listNN,
-			CNetworkNotation nnToCheck, Long agentIDToDelete, Long checkAgentID) {
-		for (CNetworkNotation nn : listNN) {
-			if (!nn.isEqualsNetworkNotation(nnToCheck, agentIDToDelete,
-					checkAgentID))
-				listNN.add(nn);
+	private void cloneMap(TreeMap<Integer, List<Integer>> map,
+			TreeMap<Integer, List<Integer>> mapToClone) {
+		Iterator<Integer> iterator = mapToClone.keySet().iterator();
+		while (iterator.hasNext()) {
+			Integer key = iterator.next();
+			List<Integer> newList = new ArrayList<Integer>();
+			List<Integer> list = mapToClone.get(key);
+
+			for (int index : list) {
+				newList.add(index);
+			}
+			map.put(key, newList);
 		}
 	}
 
 	private List<CNetworkNotation> replaceAgentsInTrace(
-			List<CNetworkNotation> commonList, Long agentIDToDelete,
-			Long agentID, List<CNetworkNotation> nnListForDelete,
+			List<CNetworkNotation> commonList, long agentIDToDelete,
+			long agentID, List<CNetworkNotation> nnListForDelete,
 			List<CNetworkNotation> nnListForChange) {
 		List<CNetworkNotation> listToReturn = new ArrayList<CNetworkNotation>();
 
-		if (hasWrongIntersection(agentIDToDelete, agentID, nnListForDelete,
-				nnListForChange))
-			return listToReturn;
-
-		for (CNetworkNotation nn : nnListForDelete) {
-			Map<Long, AgentSites> changedAgentsFromSolution = nn
-					.getChangedAgentsFromSolution();
-			AgentSites aS = changedAgentsFromSolution.get(agentIDToDelete);
-			if (aS != null) {
-				changedAgentsFromSolution.put(agentID, aS);
-				changedAgentsFromSolution.remove(agentIDToDelete);
-			}
-
+		for (CNetworkNotation nn : commonList) {
 			Map<Long, AgentSitesFromRules> usedAgentsFromRules = nn
 					.getUsedAgentsFromRules();
 			AgentSitesFromRules aSFR = usedAgentsFromRules.get(agentIDToDelete);
-			usedAgentsFromRules.put(agentID, aSFR);
-			usedAgentsFromRules.remove(agentIDToDelete);
+			if (aSFR != null) {
 
-			Map<Long, AgentSites> changesOfAllUsedSites = nn
-					.getChangesOfAllUsedSites();
-			AgentSites aSCh = changesOfAllUsedSites.get(agentIDToDelete);
-			changesOfAllUsedSites.put(agentID, aSCh);
-			changesOfAllUsedSites.remove(agentIDToDelete);
+				usedAgentsFromRules.put(agentID, aSFR);
+				usedAgentsFromRules.remove(agentIDToDelete);
+
+				Map<Long, AgentSites> changesOfAllUsedSites = nn
+						.getChangesOfAllUsedSites();
+				Iterator<Long> iterator = changesOfAllUsedSites.keySet()
+						.iterator();
+				while (iterator.hasNext()) {
+					long key = iterator.next();
+					AgentSites aSCh = changesOfAllUsedSites.get(key);
+					if (key != agentIDToDelete) {
+						Map<Integer, IStoriesSiteStates> sitesMap = aSCh
+								.getSites();
+
+						Iterator<Integer> siteIterator = sitesMap.keySet()
+								.iterator();
+						while (siteIterator.hasNext()) {
+							int siteKey = siteIterator.next();
+							IStoriesSiteStates sss = sitesMap.get(siteKey);
+							if (sss.getAfterState().getIdLinkAgent() == agentIDToDelete)
+								sss.getAfterState().setIdLinkAgent(agentID);
+							if (sss.getBeforeState().getIdLinkAgent() == agentIDToDelete)
+								sss.getBeforeState().setIdLinkAgent(agentID);
+						}
+					}
+				}
+
+				AgentSites aSCh = changesOfAllUsedSites.get(agentIDToDelete);
+				changesOfAllUsedSites.put(agentID, aSCh);
+				changesOfAllUsedSites.remove(agentIDToDelete);
+
+				List<Map<Long, List<Integer>>> introMapList = nn
+						.getIntroCCMap();
+				for (Map<Long, List<Integer>> introMap : introMapList) {
+					List<Integer> introSitesList = introMap
+							.get(agentIDToDelete);
+					if (introSitesList != null) {
+						introMap.put(agentID, introSitesList);
+						introMap.remove(agentIDToDelete);
+					}
+				}
+			}
 		}
 
-		for (CNetworkNotation nn : commonList) {
-
-			listToReturn.add(nn);
-		}
+		listToReturn = hasViolationInTrace(commonList, agentID);
 
 		return listToReturn;
 	}
 
-	private boolean hasWrongIntersection(Long agentIDToDelete, Long agentID,
-			List<CNetworkNotation> nnListForDelete,
-			List<CNetworkNotation> nnListForChange) {
+	private List<CNetworkNotation> hasViolationInTrace(
+			List<CNetworkNotation> currentList, long agentID) {
+		List<CNetworkNotation> newList = new ArrayList<CNetworkNotation>();
+		currentList = weakCompressStoryTrace(currentList);
 
-		List<CNetworkNotation> mainList = new ArrayList<CNetworkNotation>();
-		List<Long> mainListAgentID = new ArrayList<Long>();
-
-		int counterForDelete = nnListForDelete.size() - 1;
-		int counterForChange = nnListForChange.size() - 1;
-
-		CNetworkNotation nnDelete = null;
-		CNetworkNotation nnChange = null;
-
-		while (true) {
-			if (counterForDelete >= 0)
-				nnDelete = nnListForDelete.get(counterForDelete);
-			if (counterForChange >= 0)
-				nnChange = nnListForChange.get(counterForChange);
-
-			if (nnDelete.getStep() < nnChange.getStep()) {
-				addToChangingList(nnDelete, agentIDToDelete, mainList,
-						mainListAgentID);
-				counterForDelete--;
-			} else {
-				addToChangingList(nnChange, agentID, mainList, mainListAgentID);
-				counterForChange--;
+		// trying to remove equals network notations
+		List<Integer> equalNNsToDelete = new ArrayList<Integer>();
+		for (int i = currentList.size() - 1; i > 0; i--) {
+			CNetworkNotation nn = currentList.get(i);
+			for (int j = i - 1; j >= 0; j--) {
+				CNetworkNotation nnNext = currentList.get(j);
+				if (nn.isEqualsNetworkNotation(nnNext)) {
+					equalNNsToDelete.add(j);
+				}
 			}
-
-			if (counterForDelete < 0 || counterForChange < 0)
-				break;
 		}
 
-		while (true) {
-			if (counterForDelete >= 0) {
-				nnDelete = nnListForDelete.get(counterForDelete);
-				addToChangingList(nnDelete, agentIDToDelete, mainList,
-						mainListAgentID);
-				counterForDelete--;
-			}
-			if (counterForChange >= 0) {
-				nnChange = nnListForChange.get(counterForChange);
-				addToChangingList(nnChange, agentID, mainList, mainListAgentID);
-				counterForChange--;
-			}
-
-			if (counterForDelete < 0 && counterForChange < 0)
-				break;
+		Collections.sort(equalNNsToDelete);
+		for (int j = equalNNsToDelete.size() - 1; j >= 0; j--) {
+			currentList.remove(equalNNsToDelete.get(j).intValue());
 		}
 
-		for (int i = 1; i < mainList.size(); i++) {
-			AgentSites aS = mainList.get(i - 1).getChangesOfAllUsedSites().get(
-					mainListAgentID.get(i - 1));
-			AgentSites aSNext = mainList.get(i).getChangesOfAllUsedSites().get(
-					mainListAgentID.get(i));
+		int index = currentList.size() - 1;
+		int indexNext = currentList.size() - 1;
+		while (true) {
+			index = indexNext;
+			CNetworkNotation nn = currentList.get(index);
+			AgentSites aS = nn.getChangesOfAllUsedSites().get(agentID);
+			if (aS != null)
+				index--;
+			else
+				while (aS == null && index > 0) {
+					nn = currentList.get(index);
+					aS = nn.getChangesOfAllUsedSites().get(agentID);
+					index--;
+				}
+			if (index < 0)
+				break;
+
+			CNetworkNotation nnNext = currentList.get(index);
+			AgentSites aSNext = nnNext.getChangesOfAllUsedSites().get(agentID);
+
+			if (aSNext != null)
+				indexNext = index;
+			else {
+				while (aSNext == null && index > 0) {
+					nnNext = currentList.get(index);
+					aSNext = nnNext.getChangesOfAllUsedSites().get(agentID);
+					index--;
+				}
+				indexNext = index + 1;
+			}
+			if (aSNext == null)
+				break;
+
 			if (!isSequentialTwoSiteMaps(aS, aSNext))
-				return true;
+				return newList;
 		}
 
-		return false;
+		for (CNetworkNotation nn : currentList)
+			newList.add(nn);
+
+		return newList;
 	}
 
 	private boolean isSequentialTwoSiteMaps(AgentSites aS, AgentSites aSNext) {
@@ -773,12 +790,6 @@ public final class CStoryTrees {
 		return true;
 	}
 
-	private void addToChangingList(CNetworkNotation nn, Long agentID,
-			List<CNetworkNotation> mainList, List<Long> mainListAgentID) {
-		mainList.add(nn);
-		mainListAgentID.add(agentID);
-	}
-
 	private boolean hasLink(List<CNetworkNotation> nnList, long agentID) {
 
 		for (CNetworkNotation nn : nnList) {
@@ -787,37 +798,6 @@ public final class CStoryTrees {
 		}
 
 		return false;
-	}
-
-	private void clearMapsLists(CNetworkNotation nn) {
-		Integer traceID = nn.getStep();
-		clearMap(this.ruleIDToTraceID, traceID);
-		clearMap(this.traceIDToTraceID, traceID);
-		clearMap(this.traceIDToTraceIDWeak, traceID);
-		this.traceIDToLevel.remove(traceID);
-	}
-
-	private void clearMap(Map<Integer, List<Integer>> map, Integer traceID) {
-		Iterator<Integer> iterator = map.keySet().iterator();
-		while (iterator.hasNext()) {
-			int key = iterator.next();
-			map.get(key).remove(traceID);
-		}
-	}
-
-	private void removeTraceIDsFromMaps(CNetworkNotation nn) {
-		Integer removingStep = nn.getStep();
-		Integer ruleID = nn.getRule().getRuleID();
-		removeTraceIDsFromMaps(removingStep, ruleID);
-	}
-
-	private void removeTraceIDsFromMaps(Integer removingStep, Integer ruleID) {
-		if (ruleID.intValue() != -1)
-			this.ruleIDToTraceID.get(ruleID).remove(removingStep);
-
-		this.traceIDToTraceID.remove(removingStep.intValue());
-		this.traceIDToTraceIDWeak.remove(removingStep.intValue());
-		this.traceIDToLevel.remove(removingStep.intValue());
 	}
 
 	private void updateTraceIDToIndex(List<CNetworkNotation> nnList) {
@@ -855,30 +835,31 @@ public final class CStoryTrees {
 
 		for (CNetworkNotation nn : commonList) {
 			List<Integer> curList = traceIDToTraceID.get(nn.getStep());
-			if (curList != null) 
-					updatedList.add(nn);
+			if (curList != null)
+				updatedList.add(nn);
 		}
 		updateTraceIDToIndex(updatedList);
 		return updatedList;
 	}
 
-	private List<CNetworkNotation> noneCompressStoryTrace(List<CNetworkNotation> commonList) {
+	private List<CNetworkNotation> noneCompressStoryTrace(
+			List<CNetworkNotation> commonList) {
 
 		resetParameters(commonList);
 		isCausing(commonList.get(0), commonList, 1, 0);
 		pushTree();
-		return updateOnlyMainList(commonList);
-		//updateTraceIDToIndex(commonList);
+		return commonList;
 	}
 
 	public final void getTreeFromList(List<CNetworkNotation> commonList) {
-		List<CNetworkNotation> nnList = commonList;
+
 		if (compressionMode == SimulationArguments.StorifyMode.NONE) {
 			networkNotationsList = noneCompressStoryTrace(commonList);
+			networkNotationsList = updateOnlyMainList(networkNotationsList);
 		} else if (compressionMode == SimulationArguments.StorifyMode.WEAK) {
-			nnList = weakCompressStoryTrace(commonList);
+			networkNotationsList = weakCompressStoryTrace(commonList);
 		} else if (compressionMode == SimulationArguments.StorifyMode.STRONG) {
-			nnList = strongCompressStoryTrace(commonList);
+			networkNotationsList = strongCompressStoryTrace(commonList);
 		} else {
 			throw new IllegalArgumentException("Unknown StorifyMode: "
 					+ compressionMode);
@@ -893,7 +874,6 @@ public final class CStoryTrees {
 
 		if (begin >= commonList.size()) {
 			addToMapRuleIDToTraceID(newNN, level);
-			newNN.setLeaf(true);
 			return;
 		}
 
@@ -929,7 +909,6 @@ public final class CStoryTrees {
 			}
 			if (aSFR.getSites().size() * 2 == leafIndex) {
 				addToMapRuleIDToTraceID(newNN, level);
-				newNN.setLeaf(true);
 			}
 		}
 		return;
@@ -1174,8 +1153,8 @@ public final class CStoryTrees {
 			}
 			list.add(traceID);
 
-			CNetworkNotation nn = networkNotationsList.get(traceIDToIndex.get(traceID)
-					.intValue());
+			CNetworkNotation nn = networkNotationsList.get(traceIDToIndex.get(
+					traceID).intValue());
 			this.traceIDToRuleID.put(traceID, nn.getRule().getRuleID());
 			IRule rule = nn.getRule();
 			traceIDToData.put(traceID, rule.getData(isOcamlStyleObsName));
@@ -1188,16 +1167,7 @@ public final class CStoryTrees {
 	}
 
 	private void addToMapRuleIDToTraceID(CNetworkNotation nn, int level) {
-		int ruleID = nn.getRule().getRuleID();
-		List<Integer> list = ruleIDToTraceID.get(ruleID);
-		if (list == null) {
-			list = new ArrayList<Integer>();
-			ruleIDToTraceID.put(ruleID, list);
-		}
 		int indexInTrace = nn.getStep();
-		if (!list.contains(indexInTrace)) {
-			list.add(indexInTrace);
-		}
 
 		List<Integer> traceIDsList = traceIDToTraceID.get(nn.getStep());
 		if (traceIDsList == null) {
@@ -1212,18 +1182,6 @@ public final class CStoryTrees {
 
 	private void addToConList(CNetworkNotation nn, CNetworkNotation nnToAdd,
 			int indexInTrace, int level) {
-		Integer key = nnToAdd.getRule().getRuleID();
-		List<Integer> intTraceList = ruleIDToTraceID.get(key);
-
-		if (intTraceList == null) {
-			intTraceList = new ArrayList<Integer>();
-			ruleIDToTraceID.put(key, intTraceList);
-		}
-
-		if (!intTraceList.contains(nnToAdd.getStep())) {
-			intTraceList.add(nnToAdd.getStep());
-		}
-
 		List<Integer> traceIDsList = traceIDToTraceID.get(nn.getStep());
 		if (traceIDsList == null) {
 			traceIDsList = new ArrayList<Integer>();

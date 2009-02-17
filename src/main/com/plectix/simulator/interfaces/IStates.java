@@ -5,6 +5,8 @@ public interface IStates {
 	public int getIdLinkSite();
 
 	public long getIdLinkAgent();
+	
+	public void setIdLinkAgent(long id);
 
 	public int getIdInternalState();
 

@@ -62,7 +62,7 @@ public class CRule implements IRule, Serializable {
 		return inhibitedRule;
 	}
 
-//	private List<IAgent> storyfiedAgents;
+	// private List<IAgent> storyfiedAgents;
 
 	public boolean isRHSEqualsLHS() {
 		return rHSEqualsLHS;
@@ -82,7 +82,7 @@ public class CRule implements IRule, Serializable {
 	private IConstraint constraints;
 	private int countAgentsLHS = 0;
 	private final boolean isStorify;
-//	private ConstraintData constraintData;
+	// private ConstraintData constraintData;
 	private double rate;
 
 	@Override
@@ -92,15 +92,15 @@ public class CRule implements IRule, Serializable {
 		// return super.toString();
 		return st;
 	}
-	
-	public final boolean isLHSisEmpty(){
-		if(leftHandSide.get(0)==EMPTY_LHS_CC)
+
+	public final boolean isLHSisEmpty() {
+		if (leftHandSide.get(0) == EMPTY_LHS_CC)
 			return true;
 		return false;
 	}
 
-	public final boolean isRHSisEmpty(){
-		if(rightHandSide==null)
+	public final boolean isRHSisEmpty() {
+		if (rightHandSide == null)
 			return true;
 		return false;
 	}
@@ -122,35 +122,35 @@ public class CRule implements IRule, Serializable {
 		this.data = new String(data);
 	}
 
-//	public CRule(List<IConnectedComponent> left,
-//			List<IConnectedComponent> right, String name,
-//			ConstraintData ruleRate, int ruleID, boolean isStorify) {
-//		this.leftHandSide = left;
-//		this.rightHandSide = right;
-//		this.isStorify = isStorify;
-//		this.constraintData = ruleRate;
-//		setConnectedComponentLinkRule(left);
-//		setConnectedComponentLinkRule(right);
-//		if (leftHandSide == null) {
-//			leftHandSide = new ArrayList<IConnectedComponent>();
-//			leftHandSide.add(EMPTY_LHS_CC);
-//		}
-//		for (IConnectedComponent cc : this.leftHandSide) {
-//			cc.initSpanningTreeMap();
-//		}
-//		if (ruleRate.getActivity() == Double.MAX_VALUE) {
-//			this.infinityRate = true;
-//			constraintData.setActivity(1);
-//			// this.ruleRate = 1;
-//		} else {
-//			// this.ruleRate = ruleRate.getActivity();
-//		}
-//
-//		this.name = name;
-//		this.ruleID = ruleID;
-//		calculateAutomorphismsNumber();
-//		indexingRHSAgents();
-//	}
+	// public CRule(List<IConnectedComponent> left,
+	// List<IConnectedComponent> right, String name,
+	// ConstraintData ruleRate, int ruleID, boolean isStorify) {
+	// this.leftHandSide = left;
+	// this.rightHandSide = right;
+	// this.isStorify = isStorify;
+	// this.constraintData = ruleRate;
+	// setConnectedComponentLinkRule(left);
+	// setConnectedComponentLinkRule(right);
+	// if (leftHandSide == null) {
+	// leftHandSide = new ArrayList<IConnectedComponent>();
+	// leftHandSide.add(EMPTY_LHS_CC);
+	// }
+	// for (IConnectedComponent cc : this.leftHandSide) {
+	// cc.initSpanningTreeMap();
+	// }
+	// if (ruleRate.getActivity() == Double.MAX_VALUE) {
+	// this.infinityRate = true;
+	// constraintData.setActivity(1);
+	// // this.ruleRate = 1;
+	// } else {
+	// // this.ruleRate = ruleRate.getActivity();
+	// }
+	//
+	// this.name = name;
+	// this.ruleID = ruleID;
+	// calculateAutomorphismsNumber();
+	// indexingRHSAgents();
+	// }
 
 	public CRule(List<IConnectedComponent> left,
 			List<IConnectedComponent> right, String name, double ruleRate,
@@ -171,9 +171,9 @@ public class CRule implements IRule, Serializable {
 		if (ruleRate == Double.MAX_VALUE) {
 			this.infinityRate = true;
 			// constraintData.setActivity(1);
-			 this.rate = 1;
+			this.rate = 1;
 		} else {
-			 this.rate = ruleRate;
+			this.rate = ruleRate;
 		}
 
 		this.name = name;
@@ -182,9 +182,9 @@ public class CRule implements IRule, Serializable {
 		indexingRHSAgents();
 	}
 
-//	public ConstraintData getConstraintData() {
-//		return constraintData;
-//	}
+	// public ConstraintData getConstraintData() {
+	// return constraintData;
+	// }
 
 	public final int getCountAgentsLHS() {
 		return countAgentsLHS;
@@ -200,14 +200,14 @@ public class CRule implements IRule, Serializable {
 
 	public final void setRuleRate(double ruleRate) {
 		if (ruleRate >= 0) {
-			 this.rate = ruleRate;
-//			constraintData.setActivity(ruleRate);
+			this.rate = ruleRate;
+			// constraintData.setActivity(ruleRate);
 		} else {
 			Logger logger = Logger.getLogger(this.getClass());
 			logger.info("warning : rate of the rule '" + name
 					+ "' was attempted to be set as negative");
-			 this.rate = 0;
-//			constraintData.setActivity(0);
+			this.rate = 0;
+			// constraintData.setActivity(0);
 		}
 	}
 
@@ -249,8 +249,8 @@ public class CRule implements IRule, Serializable {
 	}
 
 	public final double getRuleRate() {
-//		return constraintData.getActivity();
-		 return rate;
+		// return constraintData.getActivity();
+		return rate;
 	}
 
 	// private final void markedLHS() {
@@ -299,12 +299,12 @@ public class CRule implements IRule, Serializable {
 		return agentAddList.get(key);
 	}
 
-	public List<Long> getAgentsAddedID(){
-		if(agentAddList.size()==0)
-			return  null;
+	public List<Long> getAgentsAddedID() {
+		if (agentAddList.size() == 0)
+			return null;
 		List<Long> list = new ArrayList<Long>();
 		Iterator<IAgent> iterator = agentAddList.keySet().iterator();
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			IAgent agent = agentAddList.get(iterator.next());
 			list.add(agent.getId());
 		}
@@ -319,7 +319,6 @@ public class CRule implements IRule, Serializable {
 			INetworkNotation netNotation, SimulationData simulationData,
 			boolean isLast) {
 
-		
 		agentAddList = new HashMap<IAgent, IAgent>();
 		sitesConnectedWithDeleted = new ArrayList<ISite>();
 		sitesConnectedWithBroken = new ArrayList<ISite>();
@@ -941,7 +940,7 @@ public class CRule implements IRule, Serializable {
 		for (IConnectedComponent cc : this.leftHandSide) {
 			activity *= cc.getInjectionsList().size();
 		}
-//		activity *= constraintData.getActivity();
+		// activity *= constraintData.getActivity();
 		activity *= rate;
 		activity /= automorphismNumber;
 	}
@@ -1039,9 +1038,7 @@ public class CRule implements IRule, Serializable {
 		for (IInjection inj : injectionsList) {
 			for (ISite site : inj.getSiteList()) {
 				netNotation.checkLinkForNetworkNotationDel(StateType.BEFORE,
-						site, true);
-				netNotation.checkLinkForNetworkNotationDel(StateType.BEFORE,
-						site, false);
+						site);
 			}
 		}
 

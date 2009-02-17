@@ -1,13 +1,11 @@
 package com.plectix.simulator.action;
 
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.Simulator;
 
 public class CAddAction extends CAction {
 	private final CRule myRule;
@@ -75,9 +73,7 @@ public class CAddAction extends CAction {
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			netNotation.addToAgents(site, new CStoriesSiteStates(index, site
-					.getInternalState().getNameId()), index, true);
-			netNotation.addToAgents(site, new CStoriesSiteStates(index, site
-					.getInternalState().getNameId()), index, false);
+					.getInternalState().getNameId()), index);
 		}
 	}
 

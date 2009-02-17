@@ -65,9 +65,7 @@ public class CModifyAction extends CAction {
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {
 			netNotation.addToAgents(site, new CStoriesSiteStates(index,
-					site.getInternalState().getNameId()), index, true); 
-			netNotation.addToAgents(site, new CStoriesSiteStates(index,
-					site.getInternalState().getNameId()), index, false);
+					site.getInternalState().getNameId()), index);
 		}
 	}
 }

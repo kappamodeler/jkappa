@@ -18,6 +18,14 @@ final class SitesFromRules {
 		return linkStateMode;
 	}
 
+	public final SitesFromRules clone(){
+		SitesFromRules sfr = new SitesFromRules();
+		sfr.internalStateMode = internalStateMode;
+		sfr.linkStateMode = linkStateMode;
+		sfr.linkAgentNameID = linkAgentNameID;
+		return sfr;
+	} 
+
 	private int linkAgentNameID;
 
 	public SitesFromRules(NetworkNotationMode internalStateMode,
@@ -39,8 +47,6 @@ final class SitesFromRules {
 	public final void setLinkStateMode(
 			NetworkNotationMode linkStateMode, int linkAgentNameID) {
 		this.linkStateMode = linkStateMode;
-		// this.linkAgentNameID = linkAgentNameID;
-
 	}
 
 	public final boolean isCausing(SitesFromRules sfr, boolean isLink) {

@@ -41,6 +41,10 @@ class CStoryState implements IStates {
 		return idLinkAgent;
 	}
 
+	public void setIdLinkAgent(long idLinkAgent) {
+		this.idLinkAgent = idLinkAgent;
+	}
+
 	public final int getIdLinkSite() {
 		return idLinkSite;
 	}
