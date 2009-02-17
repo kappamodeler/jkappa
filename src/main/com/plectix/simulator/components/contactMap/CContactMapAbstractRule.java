@@ -8,6 +8,7 @@ import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.ISite;
 
 public class CContactMapAbstractRule {
 
@@ -33,9 +34,27 @@ public class CContactMapAbstractRule {
 			abstractCCList(rule.getLeftHandSide(), agentMapLeftHandSide);
 		if (!rule.isRHSisEmpty())
 			abstractCCList(rule.getRightHandSide(), agentMapRightHandSide);
-		this.lhsSites = initListsSites(agentMapLeftHandSide);
-		this.rhsSites = initListsSites(agentMapRightHandSide);
+		this.lhsSites = initListSites(rule.getLeftHandSide());
+		this.rhsSites = initListSites(rule.getRightHandSide());
+		// this.lhsSites = initListsSites(agentMapLeftHandSide);
+		// this.rhsSites = initListsSites(agentMapRightHandSide);
 		this.abstractAction = new CContactMapAbstractAction(this);
+	}
+
+	private List<IContactMapAbstractSite> initListSites(
+			List<IConnectedComponent> listIn) {
+		List<IContactMapAbstractSite> listOut = new ArrayList<IContactMapAbstractSite>();
+		if(listIn == null)
+			return listOut;
+		for (IConnectedComponent c : listIn)
+			for (IAgent a : c.getAgents())
+				for (ISite s : a.getSites()) {
+					IContactMapAbstractSite site = new CContactMapAbstractSite(
+							s, agentMapLeftHandSide.get(s.getAgentLink()
+									.getNameId()));
+					listOut.add(site);
+				}
+		return listOut;
 	}
 
 	private List<IContactMapAbstractSite> initListsSites(
@@ -118,7 +137,7 @@ public class CContactMapAbstractRule {
 		for (int i : indexList)
 			listSites.add(sitesLists.get(index++).get(i));
 		List<UCorrelationAbstractSite> list = UCorrelationAbstractSite
-				.createCorrelationSites(abstractAction,lhsSites, listSites,
+				.createCorrelationSites(abstractAction, lhsSites, listSites,
 						ECorrelationType.CORRELATION_LHS_AND_SOLUTION);
 		return list;
 	}
