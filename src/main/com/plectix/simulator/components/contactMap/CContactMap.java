@@ -523,7 +523,7 @@ public class CContactMap {
 	}
 
 	public final void initAbstractSolution() {
-		this.abstractSolution = new CContactMapAbstractSolution(solution);
+		this.abstractSolution = new CContactMapAbstractSolution(simulationData);
 	}
 
 	public void constructAbstractReachableRules(List<IRule> rules) {

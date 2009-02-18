@@ -240,7 +240,7 @@ public class CContactMapAbstractRule {
 		for (IContactMapAbstractSite s : lhsSites) {
 			Integer keyAgent = s.getAgentLink().getNameId();
 			Integer keySite = s.getNameId();
-			IContactMapAbstractAgent agent = solution.getAbstractAgentMap()
+			IContactMapAbstractAgent agent = solution.getAbstractAgentMapOld()
 					.get(keyAgent);
 			if (agent == null)
 				return null;

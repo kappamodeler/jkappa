@@ -169,6 +169,10 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		return id;
 	}
 
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		if (nameID == -1)
 			return "-1";

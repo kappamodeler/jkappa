@@ -1,5 +1,6 @@
 package com.plectix.simulator.components.contactMap;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,20 +20,65 @@ import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.simulator.SimulationData;
 
 public class CContactMapAbstractSolution {
 
-	private Map<Integer, IContactMapAbstractAgent> abstractAgentMap;
-
-	public Map<Integer, IContactMapAbstractAgent> getAbstractAgentMap() {
-		return abstractAgentMap;
+	private Map<Integer, IContactMapAbstractAgent> abstractAgentMapOld;
+	private Map<Long, IContactMapAbstractAgent> abstractAgentMap;
+	private Map<Integer,List<Long>> agentNameIdToAgentId;
+	private final SimulationData simulationData;
+	
+	public Map<Integer, IContactMapAbstractAgent> getAbstractAgentMapOld() {
+		return abstractAgentMapOld;
 	}
 
-	public CContactMapAbstractSolution(ISolution solution) {
-		this.abstractAgentMap = new HashMap<Integer, IContactMapAbstractAgent>();
-		fillMapCCList(solution);
+	public CContactMapAbstractSolution(SimulationData simulationData) {
+		this.abstractAgentMapOld = new HashMap<Integer, IContactMapAbstractAgent>();
+		this.abstractAgentMap = new HashMap<Long, IContactMapAbstractAgent>();
+		this.agentNameIdToAgentId = new HashMap<Integer, List<Long>>();
+		this.simulationData = simulationData;
+		fillMapCCList(simulationData.getKappaSystem().getSolution());
+		fillAgentMap(simulationData.getKappaSystem().getSolution());
 	}
 
+	private void fillAgentMap(ISolution solution) {
+		
+		Collection<IAgent> agentMap = solution.getAgents();
+		for (IAgent a : agentMap) {
+			IContactMapAbstractAgent abstractAgent = new CContactMapAbstractAgent(a);
+			abstractAgent.addSites(a);
+			addAgentToAgentsMap(abstractAgent);
+		}
+	}
+	
+	private boolean addAgentToAgentsMap(IContactMapAbstractAgent abstractAgent) {
+		Integer agentNameId = abstractAgent.getNameId();
+		List<Long> listAgentId = agentNameIdToAgentId.get(agentNameId);
+		if(listAgentId==null)
+			listAgentId = new ArrayList<Long>();
+			
+		boolean isAdd = true;
+		for(Long l : listAgentId){
+			IContactMapAbstractAgent checkAgent = abstractAgentMap.get(l);
+			if(checkAgent.equalz(abstractAgent)){
+				isAdd = false;
+				break;
+			}
+		}
+		
+		if(isAdd){
+			long id = simulationData.getKappaSystem().generateNextAgentId();
+			abstractAgent.setId(id);
+			listAgentId.add(id);
+			abstractAgentMap.put(id, abstractAgent);
+			agentNameIdToAgentId.put(agentNameId, listAgentId);
+			return true;
+		}
+
+		return false;
+	}
+	
 	public IContactMapAbstractSite findSite(Integer agentId,Integer siteId, int internalStateId, int agentLinkId, int siteLinkId, int internalStateLinkId){
 //		IContactMapAbstractAgent agent = abstractAgentMap.get(agentId);
 //		if(agent == null)
@@ -68,10 +114,10 @@ public class CContactMapAbstractSolution {
 
 	private boolean addAgentToMap(IAgent agent) {
 		Integer keyToPut = agent.getNameId();
-		IContactMapAbstractAgent cMAA = abstractAgentMap.get(keyToPut);
+		IContactMapAbstractAgent cMAA = abstractAgentMapOld.get(keyToPut);
 		if (cMAA == null) {
 			cMAA = new CContactMapAbstractAgent(agent);
-			abstractAgentMap.put(keyToPut, cMAA);
+			abstractAgentMapOld.put(keyToPut, cMAA);
 		}
 		if (cMAA.addSites(agent))
 			return true;
@@ -106,10 +152,10 @@ public class CContactMapAbstractSolution {
 	}
 
 	public void print(){
-		Iterator<Integer> aIter = abstractAgentMap.keySet().iterator();
+		Iterator<Integer> aIter = abstractAgentMapOld.keySet().iterator();
 		while (aIter.hasNext()) {
 			Integer aKey = aIter.next();
-			IContactMapAbstractAgent cMAA = abstractAgentMap.get(aKey);
+			IContactMapAbstractAgent cMAA = abstractAgentMapOld.get(aKey);
 			((CContactMapAbstractAgent)cMAA).print();
 		}
 		System.out.println("***************************************************************************");
@@ -127,7 +173,7 @@ public class CContactMapAbstractSolution {
 	}
 
 	private boolean addSite(IContactMapAbstractSite s) {
-		IContactMapAbstractAgent agent = abstractAgentMap.get(s.getAgentLink().getNameId());
+		IContactMapAbstractAgent agent = abstractAgentMapOld.get(s.getAgentLink().getNameId());
 		if(agent == null)
 			agent = new CContactMapAbstractAgent(s.getAgentLink().getNameId());
 		return agent.addSite(s);

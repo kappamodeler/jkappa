@@ -20,4 +20,6 @@ public interface IContactMapAbstractAgent extends IAbstractAgent{
 	public boolean addSite(IContactMapAbstractSite site);
 
 	public IContactMapAbstractSite getEmptySite();
+
+	public void setId(long id);
 }
