@@ -21,9 +21,14 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 	private Map<Integer, List<IContactMapAbstractSite>> siteMap;
+	private Map<Integer, IContactMapAbstractSite> sitesMap;
 	private long id = -1;
 	private int nameID = -1;
 	private final IContactMapAbstractSite myEmptySite;
+
+	public void setSitesMap(Map<Integer, IContactMapAbstractSite> sitesMap) {
+		this.sitesMap = sitesMap;
+	}
 
 	@Override
 	public String toString() {
@@ -46,8 +51,8 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		return list;
 	}
 
-	public final Map<Integer, List<IContactMapAbstractSite>> getSitesMap() {
-		return this.siteMap;
+	public final Map<Integer, IContactMapAbstractSite> getSitesMap() {
+		return this.sitesMap;
 	}
 
 	public final boolean containsSite(IContactMapAbstractSite site) {
@@ -64,6 +69,7 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		this.nameID = agent.getNameId();
 		this.siteMap = new HashMap<Integer, List<IContactMapAbstractSite>>();
 		this.myEmptySite = new CContactMapAbstractSite(this);
+		this.sitesMap = new HashMap<Integer, IContactMapAbstractSite>();
 	}
 
 	public CContactMapAbstractAgent(int nameID) {
@@ -96,7 +102,32 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 
 		CContactMapAbstractAgent agent = (CContactMapAbstractAgent) obj;
 
-		return nameID == agent.nameID;
+		if (nameID != agent.nameID)
+			return false;
+
+		if (this.sitesMap.size() != agent.getSitesMap().size())
+			return false;
+		
+		if(!isEqualSitesMaps(sitesMap, agent.getSitesMap()))
+			return false;
+		return true;
+	}
+
+	private boolean isEqualSitesMaps(Map<Integer, IContactMapAbstractSite> sitesMap1,
+			Map<Integer, IContactMapAbstractSite> sitesMap2) {
+		
+		Iterator<Integer> iterator = sitesMap1.keySet().iterator();
+		while(iterator.hasNext()){
+			int siteKey = iterator.next();
+			IContactMapAbstractSite site1 = sitesMap1.get(siteKey);
+			IContactMapAbstractSite site2 = sitesMap2.get(siteKey);
+			if(site2==null)
+				return false;
+			if(!site1.equalz(site2))
+				return false;
+		}
+		
+		return true;
 	}
 
 	public boolean addSite(ISite site) {

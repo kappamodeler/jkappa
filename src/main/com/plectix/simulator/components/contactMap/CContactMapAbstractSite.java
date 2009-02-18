@@ -147,9 +147,6 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		if (nameId != site.nameId)
 			return false;
 
-		if (!linkAgent.equalz(site.getAgentLink()))
-			return false;
-
 		if (internalState.getNameId() != site.getInternalState().getNameId())
 			return false;
 

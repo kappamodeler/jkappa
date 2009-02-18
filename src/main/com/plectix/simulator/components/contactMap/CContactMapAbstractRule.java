@@ -2,13 +2,17 @@ package com.plectix.simulator.components.contactMap;
 
 import java.util.*;
 
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
+import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.simulator.KappaSystem;
 
 public class CContactMapAbstractRule {
 
@@ -44,7 +48,7 @@ public class CContactMapAbstractRule {
 	private List<IContactMapAbstractSite> initListSites(
 			List<IConnectedComponent> listIn) {
 		List<IContactMapAbstractSite> listOut = new ArrayList<IContactMapAbstractSite>();
-		if(listIn == null)
+		if (listIn == null)
 			return listOut;
 		for (IConnectedComponent c : listIn)
 			for (IAgent a : c.getAgents())
@@ -130,6 +134,78 @@ public class CContactMapAbstractRule {
 		return newData;
 	}
 
+	public List<IAgent> getAgentsList(List<UCorrelationAbstractSite> injList,
+			KappaSystem system) {
+		List<IAgent> newAgentsList = new ArrayList<IAgent>();
+		Map<Long, IAgent> agentIDToAgent = new HashMap<Long, IAgent>();
+		Map<Long, List<IContactMapAbstractSite>> agentIDToAbstractSites = new HashMap<Long, List<IContactMapAbstractSite>>();
+
+		for (UCorrelationAbstractSite uCASite : injList) {
+			IContactMapAbstractSite abstractSite = uCASite.getToSite();
+			IContactMapAbstractAgent abstractAgent = abstractSite
+					.getAgentLink();
+
+			long key = abstractAgent.getId();
+
+			IAgent agent = agentIDToAgent.get(key);
+			List<IContactMapAbstractSite> abstractSitesList = agentIDToAbstractSites.get(key);
+			if (agent == null) {
+				agent = new CAgent(abstractAgent.getNameId(), system
+						.generateNextAgentId());
+				agentIDToAgent.put(key, agent);
+				abstractSitesList = new ArrayList<IContactMapAbstractSite>();
+				agentIDToAbstractSites.put(key, abstractSitesList);
+			}
+			CSite site = new CSite(abstractSite.getNameId(), agent);
+			site.setLinkIndex(CSite.NO_INDEX);
+			site.setInternalState(new CInternalState(abstractSite
+					.getInternalState().getNameId()));
+			agent.addSite(site);
+			abstractSitesList.add(abstractSite);
+		}
+
+		Iterator<Long> iterator = agentIDToAgent.keySet().iterator();
+		
+		while(iterator.hasNext()){
+			long key = iterator.next();
+			IAgent agent = agentIDToAgent.get(key);
+			List<IContactMapAbstractSite> abstractSitesList = agentIDToAbstractSites.get(key);
+			for (int i=0;i<agent.getSites().size();i++) {
+				ISite site = agent.getSite(i);
+				ILinkState ls = site.getLinkState();
+				IContactMapAbstractSite abstractSite = abstractSitesList.get(i);
+				
+				
+			}	
+			
+		}
+		
+		
+//		for (int i = 0; i < newAgentsList.size(); i++) {
+//			for (ISite siteNew : newAgentsList.get(i).getSites()) {
+//				ILinkState lsNew = siteNew.getLinkState();
+//				ILinkState lsOld = agentList.get(i)
+//						.getSite(siteNew.getNameId()).getLinkState();
+//				lsNew.setStatusLink(lsOld.getStatusLink());
+//				if (lsOld.getSite() != null) {
+//					CSite siteOldLink = (CSite) lsOld.getSite();
+//					int j = 0;
+//					for (j = 0; j < agentList.size(); j++) {
+//						if (agentList.get(j) == siteOldLink.getAgentLink())
+//							break;
+//					}
+//					int index = j;
+//					lsNew.setSite(newAgentsList.get(index).getSite(
+//							siteOldLink.getNameId()));
+//				}
+//
+//			}
+
+		//}
+
+		return Collections.unmodifiableList(newAgentsList);
+	}
+
 	private List<UCorrelationAbstractSite> createInjectionList(int[] indexList,
 			List<List<IContactMapAbstractSite>> sitesLists) {
 		List<IContactMapAbstractSite> listSites = new ArrayList<IContactMapAbstractSite>();
@@ -171,11 +247,11 @@ public class CContactMapAbstractRule {
 			List<IContactMapAbstractSite> sites;
 			if (keySite == CSite.NO_INDEX)
 				sites = agent.getSites();
-			else
-				sites = agent.getSitesMap().get(keySite);
-			if (sites == null || sites.isEmpty())
-				return null;
-			sitesLists.add(sites);
+//			else
+	//			sites = agent.getSiteMap().get(keySite);
+//			if (sites == null || sites.isEmpty())
+//				return null;
+//			sitesLists.add(sites);
 		}
 		return sitesLists;
 	}

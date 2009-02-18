@@ -34,24 +34,24 @@ public class CContactMapAbstractSolution {
 	}
 
 	public IContactMapAbstractSite findSite(Integer agentId,Integer siteId, int internalStateId, int agentLinkId, int siteLinkId, int internalStateLinkId){
-		IContactMapAbstractAgent agent = abstractAgentMap.get(agentId);
-		if(agent == null)
-			return null;
-		List<IContactMapAbstractSite> list = agent.getSitesMap().get(siteId);
-		if(list == null)
-			return null;
-		for(IContactMapAbstractSite s : list){
-			if(s.getInternalState().getNameId() != internalStateId)
-				continue;
-			CContactMapLinkState linkState = s.getLinkState();
-			if(linkState.getAgentNameID() != agentLinkId)
-				continue;
-			if(linkState.getInternalStateNameID() != internalStateLinkId)
-				continue;
-			if(linkState.getLinkSiteNameID() != siteLinkId)
-				continue;
-			return s;
-		}
+//		IContactMapAbstractAgent agent = abstractAgentMap.get(agentId);
+//		if(agent == null)
+//			return null;
+//		List<IContactMapAbstractSite> list = agent.getSiteMap().get(siteId);
+//		if(list == null)
+//			return null;
+//		for(IContactMapAbstractSite s : list){
+//			if(s.getInternalState().getNameId() != internalStateId)
+//				continue;
+//			CContactMapLinkState linkState = s.getLinkState();
+//			if(linkState.getAgentNameID() != agentLinkId)
+//				continue;
+//			if(linkState.getInternalStateNameID() != internalStateLinkId)
+//				continue;
+//			if(linkState.getLinkSiteNameID() != siteLinkId)
+//				continue;
+//			return s;
+//		}
 		return null;
 	}
 	
