@@ -8,11 +8,9 @@ public interface ISolution {
 
 	public Collection<IAgent> getAgents();
 	
-	public IConnectedComponent getConnectedComponent (IAgent agent);
-	
 	public List<IConnectedComponent> split();
 	
-	public void addAgents(List<IAgent> agents);
+	public void addConnectedComponent(IConnectedComponent component);
 
 	public void removeAgent(IAgent agent);
 
@@ -21,7 +19,8 @@ public interface ISolution {
 	public void clearAgents();
 
 	public void clearSolutionLines();
+
+	public void addConnectedComponents(List<IConnectedComponent> list);
 	
-	public List<IAgent> cloneAgentsList(List<IAgent> agentList, KappaSystem system);
-	
+	public void checkSolutionLinesAndAdd(String line, long count);
 }

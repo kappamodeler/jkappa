@@ -3,8 +3,7 @@ package com.plectix.simulator.parser.builders;
 import java.util.*;
 
 import com.plectix.simulator.components.*;
-import com.plectix.simulator.components.solution.CSolution;
-import com.plectix.simulator.components.solution.SolutionLines;
+import com.plectix.simulator.components.solution.*;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.abstractmodel.*;
 import com.plectix.simulator.simulator.*;
@@ -23,13 +22,14 @@ public class SolutionBuilder {
 	}
 	
 	public ISolution build(AbstractSolution arg) {
-		CSolution solution = new CSolution();
+		UniversalSolution solution = new UniversalSolution(OperationMode.FIRST);
 
 		for (SolutionLineData lineData : arg.getAgents()) {
 			List<IAgent> list = mySubstanceBuilder.buildAgents(lineData.getAgents());
 			long quant = lineData.getCount();
 			
-			solution.addAgents(list);
+			solution.addConnectedComponents(SimulationUtils.buildConnectedComponents(list));
+//			solution.addAgents(list);
 
 			if (myArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 				myKappaSystem.getContactMap().addAgentFromSolution(list);
@@ -37,8 +37,9 @@ public class SolutionBuilder {
 
 			} else {
 				for (int i = 1; i < quant; i++) {
-					solution.addAgents(solution.cloneAgentsList(list,
-							myKappaSystem));
+					List<IAgent> cloned = SolutionUtils.cloneAgentsList(list, myKappaSystem);
+//					solution.addAgents(cloned);
+					solution.addConnectedComponents(SimulationUtils.buildConnectedComponents(cloned));
 				}
 			}
 			if (myArguments.getSimulationType() == SimulationArguments.SimulationType.COMPILE) {

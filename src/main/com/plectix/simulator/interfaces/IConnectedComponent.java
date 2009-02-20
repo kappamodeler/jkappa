@@ -37,5 +37,7 @@ public interface IConnectedComponent {
 	public List<IAgent> getAgentFromSolutionForRHS();
 
 	public List<IAgent> getAgentsSortedByIdInRule();
+
+//	public String getHash();
 	
 }

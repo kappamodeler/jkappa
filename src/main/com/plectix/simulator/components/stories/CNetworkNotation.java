@@ -9,6 +9,7 @@ import java.util.Map;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
@@ -129,7 +130,7 @@ public class CNetworkNotation implements INetworkNotation {
 
 		ISolution solution = simulator.getSimulationData().getKappaSystem()
 				.getSolution();
-		List<IAgent> newAgentsList = solution.cloneAgentsList(ccFromSolution
+		List<IAgent> newAgentsList = SolutionUtils.cloneAgentsList(ccFromSolution
 				.getAgents(), simulator.getSimulationData().getKappaSystem());
 
 		IAgent mainAgent = null;
@@ -154,7 +155,7 @@ public class CNetworkNotation implements INetworkNotation {
 			}
 		}
 
-		IConnectedComponent cc = solution.getConnectedComponent(mainAgent);
+		IConnectedComponent cc = SolutionUtils.getConnectedComponent(mainAgent);
 		agentsNotation.add(SimulationUtils.printPartRule(cc, new int[] { 0 },
 				simulator.getSimulationData().isOcamlStyleObsName()));
 		introCCMap.add(currentMap);
@@ -216,7 +217,7 @@ public class CNetworkNotation implements INetworkNotation {
 		ISolution solution = data.getKappaSystem().getSolution();
 		for (IInjection inj : injectionsList) {
 			if (inj != CInjection.EMPTY_INJECTION) {
-				IConnectedComponent cc = solution.getConnectedComponent(inj
+				IConnectedComponent cc = SolutionUtils.getConnectedComponent(inj
 						.getAgentLinkList().get(0).getAgentTo());
 				fillIntroMap(inj, cc);
 			}

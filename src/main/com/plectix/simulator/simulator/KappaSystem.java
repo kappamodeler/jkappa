@@ -34,7 +34,7 @@ public class KappaSystem {
 	private CStories stories = null;
 	private List<CPerturbation> perturbations = null;
 	private IObservables observables = new CObservables();
-	private ISolution solution = new CSolution(); // soup of initial components
+	private ISolution solution;// = new CSolution(); // soup of initial components
 	private CContactMap contactMap = new CContactMap();
 	
 	private final IdGenerator myAgentsIdGenerator = new IdGenerator();
@@ -100,7 +100,6 @@ public class KappaSystem {
 			contactMap.setSolution(this.solution);
 		}
 
-		Iterator<IAgent> iterator = solution.getAgents().iterator();
 		observables.checkAutomorphisms();
 
 		if (args.isActivationMap()) {
@@ -131,8 +130,7 @@ public class KappaSystem {
 			mySimulationData.addInfo(outputType, InfoType.INFO, "--Inhibition map computed");
 		}
 
-		while (iterator.hasNext()) {
-			IAgent agent = iterator.next();
+		for (IAgent agent : solution.getAgents()) {
 			for (IRule rule : rules) {
 				for (IConnectedComponent cc : rule.getLeftHandSide()) {
 					if (cc != null) {

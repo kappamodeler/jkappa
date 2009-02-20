@@ -155,12 +155,14 @@ public class SimulationUtils {
 	}
 
 	public static final List<IConnectedComponent> buildConnectedComponents(
-			List<IAgent> agents) {
+			List<IAgent> listOfAgents) {
 
-		if (agents == null || agents.isEmpty()) {
+		if (listOfAgents == null || listOfAgents.isEmpty()) {
 			return null;
 		}
 
+		List<IAgent> agents = new ArrayList<IAgent>();
+		agents.addAll(listOfAgents);
 		List<IConnectedComponent> result = new ArrayList<IConnectedComponent>();
 
 		int index = 1;

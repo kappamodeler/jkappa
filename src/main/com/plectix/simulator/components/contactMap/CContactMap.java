@@ -13,6 +13,7 @@ import com.plectix.simulator.action.CAddAction;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -479,8 +480,7 @@ public class CContactMap {
 
 		IAgent agentToCheck = injList.get(0).getAgentLinkList().get(0)
 				.getAgentTo();
-		IConnectedComponent ccToCheck = solution
-				.getConnectedComponent(agentToCheck);
+		IConnectedComponent ccToCheck = SolutionUtils.getConnectedComponent(agentToCheck);
 		ccToCheck.initSpanningTreeMap();
 
 		for (List<IInjection> injConsideredList : commonCheckedInjList) {
@@ -621,7 +621,7 @@ public class CContactMap {
 
 		for (IInjection inj : oldInjList) {
 			IAgent agent = inj.getAgentLinkList().get(0).getAgentTo();
-			IConnectedComponent cc = solution.getConnectedComponent(agent);
+			IConnectedComponent cc = SolutionUtils.getConnectedComponent(agent);
 			if (cc != null)
 				oldAgents.addAll(cc.getAgents());
 		}
@@ -633,9 +633,9 @@ public class CContactMap {
 			IRule rule) {
 		List<IAgent> newAgents = new ArrayList<IAgent>();
 
-		newAgents = solution.cloneAgentsList(oldAgents, simulationData
+		newAgents = SolutionUtils.cloneAgentsList(oldAgents, simulationData
 				.getKappaSystem());
-		solution.addAgents(newAgents);
+		solution.addConnectedComponents(SimulationUtils.buildConnectedComponents(newAgents));
 		List<IInjection> newInjList = new ArrayList<IInjection>();
 
 		for (IAgent agent : newAgents)

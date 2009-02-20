@@ -12,6 +12,7 @@ import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.action.CAddAction;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -134,8 +135,7 @@ public class CContactMapAbstractSolution {
 		if(rule.getLeftHandSide().get(0) != CRule.EMPTY_LHS_CC)
 		for (IInjection inj : injList) {
 			IAgent agentToCheck = inj.getAgentLinkList().get(0).getAgentTo();
-			IConnectedComponent ccToCheck = solution
-					.getConnectedComponent(agentToCheck);
+			IConnectedComponent ccToCheck = SolutionUtils.getConnectedComponent(agentToCheck);
 			for (IAgent agent : ccToCheck.getAgents()) {
 				if (addAgentToMap(agent))
 					wasAdded = true;

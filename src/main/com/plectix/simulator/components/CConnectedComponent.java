@@ -31,6 +31,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	private List<ISite> injectedSites;
 	private int maxId = -1;
 	private IRule rule;
+	private boolean isEmpty = false;
 
 	public CConnectedComponent(byte empty) {
 		switch (empty) {
@@ -40,6 +41,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 			injectionsList = new TreeMap<Integer, IInjection>();
 			addInjection(CInjection.EMPTY_INJECTION, 0);
 			agentFromSolutionForRHS = new ArrayList<IAgent>();
+			isEmpty = true;
 			break;
 		}
 		}
@@ -231,24 +233,6 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return false;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof IConnectedComponent)) { 
-			return false;
-		}
-		if (this == obj) {
-			return true;
-		}
-		
-		IConnectedComponent arg = (IConnectedComponent) obj;
-		//TODO check
-		IAgent agent = arg.getAgents().get(0);
-		return this.isAutomorphism(agent);
-	}
-	
 	private final boolean fullEqualityOfAgents(IAgent cc1Agent, IAgent cc2Agent) {
 		if (cc1Agent == null || cc2Agent == null)
 			return false;
@@ -347,4 +331,55 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		Collections.sort(temp);
 		return Collections.unmodifiableList(temp);
 	}
+	
+	//-----------------------hash, toString, equals-----------------------------
+	
+	// TODO we can do it better! =)
+	/**
+	 * this methods takes agentNames in alphabetical order as a String, 
+	 * then allsiteNames in this order as String too 
+	 * and then concatenates these Strings.
+	 */
+//	public String getHash() {
+//		if (isEmpty) {
+//			return "EMPTY";
+//		}
+//		List<String> allNames = new ArrayList<String>();
+//		List<String> siteNames = new ArrayList<String>();
+//		for (IAgent agent : agentList) {
+//			allNames.add(agent.getName());
+//			for (ISite site : agent.getSites()) {
+//				siteNames.add(site.getName());
+//			}
+//		}
+//		Collections.sort(siteNames);
+//		Collections.sort(allNames);
+//		allNames.addAll(siteNames);
+//		StringBuffer sb = new StringBuffer();
+//		for (String name : allNames) {
+//			sb.append(name);
+//		}
+//		return sb.toString();
+//	}
+//	
+//	@Override
+//	public boolean equals(Object obj) {
+//		if (obj == null) {
+//			return false;
+//		}
+//		if (!(obj instanceof IConnectedComponent)) { 
+//			return false;
+//		}
+//		if (this == obj) {
+//			return true;
+//		}
+//		
+//		IConnectedComponent arg = (IConnectedComponent) obj;
+//		if (!this.getHash().equals(arg.getHash())) {
+//			return false;
+//		}
+//		//TODO check
+//		IAgent agent = arg.getAgents().get(0);
+//		return this.isAutomorphism(agent);
+//	}
 }
