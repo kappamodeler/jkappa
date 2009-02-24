@@ -105,7 +105,7 @@ public enum SimulatorOptions {
 	NO_ABSTRACTION("no_abstraction", false, "Deactivate complx abstraction (will slow down influence"
 			+ "map generation for large systems"),
 	OUTPUT_FINAL_STATE("output_final_state", false, 
-			"output final state (same as –set-snapshot-time for the last time unit)"),
+			"output final state (same as --set-snapshot-time for the last time unit)"),
 	//TODO several times!
 	SET_SNAPSHOT_TIME("set_snapshot_time", true, 
 			"takes a snapshot of solution at specified time unit (may use option several times)"),
