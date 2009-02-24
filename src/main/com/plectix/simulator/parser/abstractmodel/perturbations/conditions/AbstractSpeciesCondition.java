@@ -26,7 +26,6 @@ public class AbstractSpeciesCondition implements AbstractCondition {
 		return myArgument;
 	}
 	
-	@Override
 	public ConditionType getType() {
 		return ConditionType.SPECIES;
 	}

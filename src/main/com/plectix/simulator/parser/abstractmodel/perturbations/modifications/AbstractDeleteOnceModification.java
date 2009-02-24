@@ -15,7 +15,6 @@ public class AbstractDeleteOnceModification extends AbstractOnceModification {
 		return "DELETE";
 	}
 
-	@Override
 	public ModificationType getType() {
 		return ModificationType.DELETEONCE;
 	}

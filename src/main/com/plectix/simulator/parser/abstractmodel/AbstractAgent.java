@@ -28,7 +28,6 @@ public class AbstractAgent implements Comparable<AbstractAgent> {
 		return mySites;
 	}
 
-	@Override
 	public int compareTo(AbstractAgent o) {
 		return myName.compareTo(o.myName);
 	}
@@ -48,7 +47,6 @@ public class AbstractAgent implements Comparable<AbstractAgent> {
 			return mySite;
 		}
 		
-		@Override
 		public int compareTo(ComparableSite o) {
 			return mySite.getName().compareTo(o.mySite.getName());
 		}

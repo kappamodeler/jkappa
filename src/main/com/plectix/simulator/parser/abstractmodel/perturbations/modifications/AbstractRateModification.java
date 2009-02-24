@@ -23,7 +23,6 @@ public class AbstractRateModification implements AbstractModification {
 		return "'" + myArgument + "'" + " := " + myExpression;
 	}
 
-	@Override
 	public ModificationType getType() {
 		return ModificationType.RATE;
 	}

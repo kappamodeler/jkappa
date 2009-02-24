@@ -16,7 +16,6 @@ public class AbstractAddOnceModification extends AbstractOnceModification {
 		return "ADD";
 	}
 
-	@Override
 	public ModificationType getType() {
 		return ModificationType.ADDONCE;
 	}

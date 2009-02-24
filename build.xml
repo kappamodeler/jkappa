@@ -34,7 +34,7 @@
    	</fileset>
 
 	<path id="test.classpath">
-		<pathelement path="${build.dir}\test"/>
+		<pathelement path="${build.dir}/test"/>
 		<fileset refid="test.jars"/>
 	</path>
 	
@@ -236,7 +236,7 @@
         <echo message="Java: ${java.version} "/>
         <echo message="Ant Java: ${ant.java.version} "/>
 	    <echo message="${ant.project.name}: ${ant.file} "/>
-		<javac srcdir="${test.dir};${src.dir}" destdir="${build.dir}\test" debug="true" failonerror="true">
+		<javac srcdir="${test.dir};${src.dir}" destdir="${build.dir}/test" debug="true" failonerror="true">
 			<classpath refid="test.classpath"/>
 		</javac>
 	</target>

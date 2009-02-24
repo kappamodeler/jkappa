@@ -11,7 +11,6 @@ public class AbstractTimeCondition implements AbstractCondition {
 		return myTimeBounds;
 	}
 	
-	@Override
 	public ConditionType getType() {
 		return ConditionType.TIME;
 	}
