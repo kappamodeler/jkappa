@@ -27,7 +27,6 @@ public class Simulator1 implements SimulatorInterface {
 		return resultsData;
 	}
 
-	@Override
 	public SimulatorStatusInterface getStatus() {
 		// TODO Auto-generated method stub
 		return null;
