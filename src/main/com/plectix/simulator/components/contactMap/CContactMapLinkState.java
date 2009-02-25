@@ -95,7 +95,6 @@ public class CContactMapLinkState{
 	}
 	
 	protected CContactMapLinkState clone() {
-		// TODO CLONE
-		return new CContactMapLinkState();
+		return new CContactMapLinkState(this);
 	}
 }

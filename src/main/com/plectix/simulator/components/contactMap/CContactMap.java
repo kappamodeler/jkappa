@@ -241,8 +241,8 @@ public class CContactMap {
 			isEnd = true;
 			for (CContactMapAbstractRule rule : abstractReachableRules) {
 				List<IContactMapAbstractSite> newData = rule.getNewData();
-			//	if (abstractSolution.addNewData(newData))
-				//	isEnd = false;
+				if (abstractSolution.addNewData(newData))
+					isEnd = false;
 			}
 		}
 	}

@@ -48,16 +48,38 @@ public class CContactMapAbstractSolution {
 			IContactMapAbstractAgent newAgent = mapAgent.get(s.getAgentLink().getId());
 			if(newAgent == null){
 				newAgent = new CContactMapAbstractAgent(s.getAgentLink());
+				long id = simulationData.getKappaSystem().generateNextAgentId();
+				newAgent.setId(id);
 				listToAdd.add(newAgent);
+				mapAgent.put(s.getAgentLink().getId(), newAgent);
 			}
 			newAgent.modify(s);
 		}
 		
-		//clear listToAdd
+		List<IContactMapAbstractAgent> listToDelete = clearListToAdd(listToAdd);		
 		
-		if(listToAdd.isEmpty())
+		if(listToAdd.size() == listToDelete.size())
 			return false;
+		// TODO create true connections
+		
 		return true;
+	}
+	
+	private List<IContactMapAbstractAgent> clearListToAdd(List<IContactMapAbstractAgent> listToAdd){
+		List<IContactMapAbstractAgent> listToDelete = new ArrayList<IContactMapAbstractAgent>();
+		for(IContactMapAbstractAgent a : listToAdd){
+			List<Long> listAgentId = agentNameIdToAgentId.get(a.getNameId());
+			if(listAgentId == null)
+				continue;
+			for(Long l : listAgentId){
+				IContactMapAbstractAgent agentFromSolution = abstractAgentMap.get(l);
+				if(agentFromSolution.equalz(a)){
+					listToDelete.add(a);
+					break;
+				}
+			}
+		}
+		return listToDelete;
 	}
 
 	private void fillModelMapOfAgents() {

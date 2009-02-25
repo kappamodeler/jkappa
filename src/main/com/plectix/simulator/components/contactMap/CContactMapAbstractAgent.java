@@ -58,6 +58,7 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 
 	public CContactMapAbstractAgent(IContactMapAbstractAgent agentLink) {
 		this.myEmptySite = new CContactMapAbstractSite(this);
+		this.nameID = agentLink.getNameId();		 
 		
 		Iterator<Integer> iterator = agentLink.getSitesMap().keySet().iterator();
 		while (iterator.hasNext()){
