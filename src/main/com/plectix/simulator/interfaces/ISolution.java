@@ -2,6 +2,7 @@ package com.plectix.simulator.interfaces;
 
 import java.util.*;
 
+import com.plectix.simulator.components.solution.SolutionLines;
 import com.plectix.simulator.simulator.KappaSystem;
 
 public interface ISolution {
@@ -23,4 +24,6 @@ public interface ISolution {
 	public void addConnectedComponents(List<IConnectedComponent> list);
 	
 	public void checkSolutionLinesAndAdd(String line, long count);
+
+	public List<SolutionLines> getSolutionLines();
 }

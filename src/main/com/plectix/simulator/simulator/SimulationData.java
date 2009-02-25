@@ -44,7 +44,6 @@ import com.plectix.simulator.components.contactMap.CContactMapChangedSite;
 import com.plectix.simulator.components.contactMap.CContactMapEdge;
 import com.plectix.simulator.components.contactMap.CContactMap.ContactMapMode;
 import com.plectix.simulator.components.perturbations.CPerturbation;
-import com.plectix.simulator.components.solution.CSolution;
 import com.plectix.simulator.components.solution.SolutionLines;
 import com.plectix.simulator.components.stories.CStoryIntro;
 import com.plectix.simulator.components.stories.CStoryTrees;
@@ -547,8 +546,7 @@ public class SimulationData {
 
 	private final void outputSolution() {
 		println("INITIAL SOLUTION:");
-		for (SolutionLines sl : ((CSolution) myKappaSystem.getSolution())
-				.getSolutionLines()) {
+		for (SolutionLines sl : (myKappaSystem.getSolution()).getSolutionLines()) {
 			print("-");
 			print("" + sl.getCount());
 			print("*[");

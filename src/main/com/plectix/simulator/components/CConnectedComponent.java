@@ -61,13 +61,6 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		}
 	}
 
-	public final IAgent getAgentByIdFromSolution(int id, IInjection injection) {
-		for (IAgentLink agentL : injection.getAgentLinkList())
-			if (agentL.getIdAgentFrom() == id)
-				return agentL.getAgentTo();
-		return null;
-	}
-
 	public final void addAgentFromSolutionForRHS(IAgent agentFromSolutionForRHS) {
 		this.agentFromSolutionForRHS.add(agentFromSolutionForRHS);
 	}

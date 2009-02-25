@@ -379,10 +379,8 @@ public class CRule implements IRule, Serializable {
 		for (ChangedSite fs : fixedSites) {
 			CSite siteFromRule = (CSite) fs.getSite();
 			IInjection inj = getInjectionBySiteToFromLHS(siteFromRule);
-			IAgent agentToInSolution = inj.getConnectedComponent()
-					.getAgentByIdFromSolution(
-							siteFromRule.getAgentLink()
-									.getIdInConnectedComponent(), inj);
+			IAgent agentToInSolution = inj.getAgentFromImageById(
+					siteFromRule.getAgentLink().getIdInConnectedComponent());
 			ISite site;
 			if (siteFromRule.getNameId() == CSite.NO_INDEX)
 				site = agentToInSolution.getEmptySite();

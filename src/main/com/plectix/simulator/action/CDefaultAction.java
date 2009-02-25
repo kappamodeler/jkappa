@@ -23,8 +23,7 @@ public class CDefaultAction extends CAction {
 	
 	public final void doAction(IInjection injection, INetworkNotation netNotation, SimulationData simulationData) {
 		int agentIdInCC = getAgentIdInCCBySideId(myToAgent);
-		IAgent agentFromInSolution = getLeftCComponent()
-				.getAgentByIdFromSolution(agentIdInCC, injection);
+		IAgent agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 		getRightCComponent().addAgentFromSolutionForRHS(agentFromInSolution);
 	}
 	

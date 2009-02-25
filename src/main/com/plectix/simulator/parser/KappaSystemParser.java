@@ -11,7 +11,6 @@ import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.perturbations.CPerturbationType;
 import com.plectix.simulator.components.perturbations.CRulePerturbation;
 import com.plectix.simulator.components.perturbations.RateExpression;
-import com.plectix.simulator.components.solution.CSolution;
 import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.interfaces.*;

@@ -6,7 +6,7 @@ import java.util.*;
 import com.plectix.simulator.interfaces.*;
 
 @SuppressWarnings("serial")
-public final class CSolution extends PhysicalSolution implements Serializable {
+/*package*/ final class CSolution extends PhysicalSolution implements Serializable {
 	private final HashMap<Long, IAgent> agentMap = new HashMap<Long, IAgent>();;
 	
 	// we instantiate this type through UniversalSolution only

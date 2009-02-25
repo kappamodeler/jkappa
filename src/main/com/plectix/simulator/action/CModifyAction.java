@@ -29,8 +29,7 @@ public class CModifyAction extends CAction {
 		 * Done.
 		 */
 		int agentIdInCC = getAgentIdInCCBySideId(mySiteTo.getAgentLink());
-		IAgent agentFromInSolution = getLeftCComponent()
-				.getAgentByIdFromSolution(agentIdInCC, injection);
+		IAgent agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 
 		// /////////////////////////////////////////////
 		ISite injectedSite = agentFromInSolution.getSite(mySiteTo

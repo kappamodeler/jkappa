@@ -16,7 +16,6 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.contactMap.CContactMap;
 import com.plectix.simulator.components.perturbations.CPerturbation;
-import com.plectix.simulator.components.solution.CSolution;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -53,7 +52,7 @@ public class KappaSystem {
 			try {
 				ois = new ObjectInputStream(new FileInputStream(
 						args.getSerializationFileName()));
-				solution = (CSolution) ois.readObject();
+				solution = (ISolution) ois.readObject();
 				rules = (List<IRule>) ois.readObject();
 				observables = (IObservables) ois.readObject();
 				perturbations = (List<CPerturbation>) ois.readObject();

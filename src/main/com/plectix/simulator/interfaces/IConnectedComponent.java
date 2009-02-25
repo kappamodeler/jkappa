@@ -26,8 +26,6 @@ public interface IConnectedComponent {
 
 	public void clearAgentsFromSolutionForRHS();
 
-	public IAgent getAgentByIdFromSolution(int agentIdInCC, IInjection injection);
-
 	public IInjection getInjection(IAgent agent);
 
 	public void doPositiveUpdate(List<IConnectedComponent> rightHandSide);

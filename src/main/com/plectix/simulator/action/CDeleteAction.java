@@ -31,8 +31,7 @@ public class CDeleteAction extends CAction {
 		/**
 		 * Done.
 		 */
-		IAgent agent = getLeftCComponent().getAgentByIdFromSolution(
-				myFromAgent.getIdInConnectedComponent(), injection);
+		IAgent agent = injection.getAgentFromImageById(myFromAgent.getIdInConnectedComponent());
 		for (ISite site : agent.getSites()) {
 			removeSiteToConnectedWithDeleted(site);
 			ISite solutionSite = (ISite) site.getLinkState().getSite();

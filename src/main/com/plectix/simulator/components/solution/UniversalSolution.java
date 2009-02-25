@@ -70,4 +70,9 @@ public final class UniversalSolution implements ISolution {
 	public void checkSolutionLinesAndAdd(String line, long count) {
 		mySolution.checkSolutionLinesAndAdd(line, count);
 	}
+
+	@Override
+	public List<SolutionLines> getSolutionLines() {
+		return mySolution.getSolutionLines();
+	}
 }

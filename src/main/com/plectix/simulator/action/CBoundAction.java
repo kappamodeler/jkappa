@@ -40,8 +40,7 @@ public class CBoundAction extends CAction {
 		} else {
 			int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getAgentLink());
 
-			agentFromInSolution = getLeftCComponent()
-					.getAgentByIdFromSolution(agentIdInCC, injection);
+			agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 
 			// /////////////////////////////////////////////
 			ISite injectedSite = agentFromInSolution.getSite(mySiteFrom
@@ -61,8 +60,7 @@ public class CBoundAction extends CAction {
 		} else {
 			int agentIdInCC = getAgentIdInCCBySideId(mySiteTo.getAgentLink());
 			IInjection inj = myRule.getInjectionBySiteToFromLHS(mySiteTo);
-			agentToInSolution = getLeftCComponent()
-					.getAgentByIdFromSolution(agentIdInCC, inj);
+			agentToInSolution = inj.getAgentFromImageById(agentIdInCC);
 		}
 
 		agentFromInSolution.getSite(mySiteFrom.getNameId()).getLinkState()

@@ -63,6 +63,13 @@ public final class CInjection implements IInjection, Serializable {
 		return myId;
 	}
 
+	public final IAgent getAgentFromImageById(int id) {
+		for (IAgentLink agentL : agentLinkList)
+			if (agentL.getIdAgentFrom() == id)
+				return agentL.getAgentTo();
+		return null;
+	}
+	
 	public final List<ISite> getChangedSites() {
 		return Collections.unmodifiableList(changedSites);
 	}

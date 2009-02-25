@@ -32,8 +32,7 @@ public class CBreakAction extends CAction {
 	public final void doAction(IInjection injection, INetworkNotation netNotation, SimulationData simulationData) {
 		IAgent agentFromInSolution;
 		int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getAgentLink());
-		agentFromInSolution = getLeftCComponent().getAgentByIdFromSolution(
-				agentIdInCC, injection);
+		agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 
 		ISite injectedSite = agentFromInSolution.getSite(mySiteFrom.getNameId());
 
