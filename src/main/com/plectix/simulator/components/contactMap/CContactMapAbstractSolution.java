@@ -39,6 +39,27 @@ public class CContactMapAbstractSolution {
 		fillAgentMap(simulationData.getKappaSystem().getSolution());
 	}
 	
+	
+	public boolean addNewData(List<IContactMapAbstractSite> listIn){
+		Map<Long, IContactMapAbstractAgent> mapAgent = new HashMap<Long, IContactMapAbstractAgent>();
+		//Map<Long, List<IContactMapAbstractSite>> mapAgentToSites = new HashMap<Long, List<IContactMapAbstractAgent>>();
+		List<IContactMapAbstractAgent> listToAdd = new ArrayList<IContactMapAbstractAgent>();
+		for(IContactMapAbstractSite s : listIn){
+			IContactMapAbstractAgent newAgent = mapAgent.get(s.getAgentLink().getId());
+			if(newAgent == null){
+				newAgent = new CContactMapAbstractAgent(s.getAgentLink());
+				listToAdd.add(newAgent);
+			}
+			newAgent.modify(s);
+		}
+		
+		//clear listToAdd
+		
+		if(listToAdd.isEmpty())
+			return false;
+		return true;
+	}
+
 	private void fillModelMapOfAgents() {
 		Collection<IAgent> agentMap = simulationData.getKappaSystem()
 				.getSolution().getAgents();
@@ -56,7 +77,7 @@ public class CContactMapAbstractSolution {
 	private void fillModelMapByAgentList(Collection<IAgent> listIn) {
 		for (IAgent a : listIn) {
 			IContactMapAbstractAgent modelAgent = agentNameIdToAgent.get(a
-					.getName());
+					.getNameId());
 			if (modelAgent == null) {
 				modelAgent = new CContactMapAbstractAgent(a);
 				agentNameIdToAgent.put(a.getNameId(), modelAgent);
@@ -64,6 +85,7 @@ public class CContactMapAbstractSolution {
 
 			for (ISite s : a.getSites()) {
 				IContactMapAbstractSite as = new CContactMapAbstractSite(s);
+				as.setAgentLink(modelAgent);
 				modelAgent.addModelSite(as);
 			}
 		}
@@ -105,6 +127,21 @@ public class CContactMapAbstractSolution {
 		}
 
 		return false;
+	}
+
+	public final List<IContactMapAbstractAgent> getListOfAgentsByNameID(
+			int nameID) {
+		List<Long> listIDs = agentNameIdToAgentId.get(nameID);
+		if (listIDs == null)
+			return null;
+		List<IContactMapAbstractAgent> agentsList = new ArrayList<IContactMapAbstractAgent>();
+
+		for (long id : listIDs) {
+			IContactMapAbstractAgent agent = abstractAgentMap.get(id);
+			agentsList.add(agent);
+		}
+
+		return agentsList;
 	}
 
 	public IContactMapAbstractSite findSite(Integer agentId, Integer siteId,

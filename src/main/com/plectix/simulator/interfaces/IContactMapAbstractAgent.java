@@ -17,5 +17,8 @@ public interface IContactMapAbstractAgent extends IAbstractAgent{
 	public void setId(long id);
 	
 	public void addModelSite(IContactMapAbstractSite siteToAdd);
-	
+
+	public IContactMapAbstractSite getSite(int nameID);
+
+	public void modify(IContactMapAbstractSite s);	
 }

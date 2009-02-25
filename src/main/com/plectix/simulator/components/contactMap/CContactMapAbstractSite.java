@@ -43,6 +43,7 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 
 	public CContactMapAbstractSite(ISite site) {
 		this.nameId = site.getNameId();
+		this.linkState = new CContactMapLinkState();
 	}
 	
 	public CContactMapAbstractSite(IContactMapAbstractSite site) {
@@ -211,7 +212,7 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		
 		if (internalState.getNameId() != -1)
 			st += " internal state = " + internalState.getName();
-		if (linkState.getLinkSiteNameID() != -1) {
+		if (linkState!=null && linkState.getLinkSiteNameID() != -1) {
 			st += " link agent = "
 					+ ThreadLocalData.getNameDictionary().getName(
 							linkState.getAgentNameID());
@@ -294,5 +295,10 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		if(linkState.getInternalStateNameID()!=internalStateLinkId)
 			return false;
 		return true;
+	}
+
+	@Override
+	public void setLinkState(CContactMapLinkState linkState) {
+		this.linkState = linkState;
 	}
 }

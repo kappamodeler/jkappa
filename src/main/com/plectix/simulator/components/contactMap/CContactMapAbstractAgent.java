@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAbstractAgent;
 import com.plectix.simulator.interfaces.IAgent;
@@ -54,6 +55,23 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		this.myEmptySite = new CContactMapAbstractSite(this);
 		this.sitesMap = new HashMap<Integer, IContactMapAbstractSite>();
 	}
+
+	public CContactMapAbstractAgent(IContactMapAbstractAgent agentLink) {
+		this.myEmptySite = new CContactMapAbstractSite(this);
+		
+		Iterator<Integer> iterator = agentLink.getSitesMap().keySet().iterator();
+		while (iterator.hasNext()){
+			int key = iterator.next();
+			IContactMapAbstractSite abstractSite = agentLink.getSitesMap().get(key);
+			IContactMapAbstractSite newSite = abstractSite.clone();
+			newSite.setAgentLink(this);
+			sitesMap.put(key, newSite);			
+		}
+	}
+
+	public final IContactMapAbstractSite getSite(int nameID){
+        return this.sitesMap.get(nameID);
+   }
 
 	public final void addSites(IAgent agent,
 			Map<Integer, IContactMapAbstractAgent> agentNameIdToAgent) {
@@ -162,6 +180,13 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		System.out
 				.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
+	}
+
+	public void modify(IContactMapAbstractSite s) {
+		IContactMapAbstractSite site = sitesMap.get(s.getNameId());
+		if(s.getInternalState()!= CInternalState.EMPTY_STATE)
+			site.setInternalState(new CInternalState(s.getInternalState().getNameId()));
+		site.setLinkState(s.getLinkState().clone());
 	}
 
 }

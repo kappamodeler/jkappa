@@ -21,7 +21,6 @@ public class CContactMapAbstractRule {
 	private Map<Integer, IContactMapAbstractAgent> agentMapRightHandSide;
 	private List<IContactMapAbstractSite> lhsSites;
 	private List<IContactMapAbstractSite> rhsSites;
-	
 
 	private IRule rule;
 	private CContactMapAbstractAction abstractAction;
@@ -69,10 +68,10 @@ public class CContactMapAbstractRule {
 		while (iterator.hasNext()) {
 			Integer key = iterator.next();
 			IContactMapAbstractAgent agent = map.get(key);
-//			List<IContactMapAbstractSite> listSites = agent.getSites();
-//			if (listSites.isEmpty())
-//				list.add(agent.getEmptySite());
-//			list.addAll(listSites);
+			// List<IContactMapAbstractSite> listSites = agent.getSites();
+			// if (listSites.isEmpty())
+			// list.add(agent.getEmptySite());
+			// list.addAll(listSites);
 		}
 		return list;
 	}
@@ -87,7 +86,7 @@ public class CContactMapAbstractRule {
 					cMAA = new CContactMapAbstractAgent(agent);
 					map.put(key, cMAA);
 				}
-				//cMAA.addSites(agent);
+				// cMAA.addSites(agent);
 			}
 		}
 	}
@@ -149,7 +148,8 @@ public class CContactMapAbstractRule {
 			long key = abstractAgent.getId();
 
 			IAgent agent = agentIDToAgent.get(key);
-			List<IContactMapAbstractSite> abstractSitesList = agentIDToAbstractSites.get(key);
+			List<IContactMapAbstractSite> abstractSitesList = agentIDToAbstractSites
+					.get(key);
 			if (agent == null) {
 				agent = new CAgent(abstractAgent.getNameId(), system
 						.generateNextAgentId());
@@ -166,43 +166,42 @@ public class CContactMapAbstractRule {
 		}
 
 		Iterator<Long> iterator = agentIDToAgent.keySet().iterator();
-		
-		while(iterator.hasNext()){
+
+		while (iterator.hasNext()) {
 			long key = iterator.next();
 			IAgent agent = agentIDToAgent.get(key);
-			List<IContactMapAbstractSite> abstractSitesList = agentIDToAbstractSites.get(key);
-			for (int i=0;i<agent.getSites().size();i++) {
+			List<IContactMapAbstractSite> abstractSitesList = agentIDToAbstractSites
+					.get(key);
+			for (int i = 0; i < agent.getSites().size(); i++) {
 				ISite site = agent.getSite(i);
 				ILinkState ls = site.getLinkState();
 				IContactMapAbstractSite abstractSite = abstractSitesList.get(i);
-				
-				
-			}	
-			
-		}
-		
-		
-//		for (int i = 0; i < newAgentsList.size(); i++) {
-//			for (ISite siteNew : newAgentsList.get(i).getSites()) {
-//				ILinkState lsNew = siteNew.getLinkState();
-//				ILinkState lsOld = agentList.get(i)
-//						.getSite(siteNew.getNameId()).getLinkState();
-//				lsNew.setStatusLink(lsOld.getStatusLink());
-//				if (lsOld.getSite() != null) {
-//					CSite siteOldLink = (CSite) lsOld.getSite();
-//					int j = 0;
-//					for (j = 0; j < agentList.size(); j++) {
-//						if (agentList.get(j) == siteOldLink.getAgentLink())
-//							break;
-//					}
-//					int index = j;
-//					lsNew.setSite(newAgentsList.get(index).getSite(
-//							siteOldLink.getNameId()));
-//				}
-//
-//			}
 
-		//}
+			}
+
+		}
+
+		// for (int i = 0; i < newAgentsList.size(); i++) {
+		// for (ISite siteNew : newAgentsList.get(i).getSites()) {
+		// ILinkState lsNew = siteNew.getLinkState();
+		// ILinkState lsOld = agentList.get(i)
+		// .getSite(siteNew.getNameId()).getLinkState();
+		// lsNew.setStatusLink(lsOld.getStatusLink());
+		// if (lsOld.getSite() != null) {
+		// CSite siteOldLink = (CSite) lsOld.getSite();
+		// int j = 0;
+		// for (j = 0; j < agentList.size(); j++) {
+		// if (agentList.get(j) == siteOldLink.getAgentLink())
+		// break;
+		// }
+		// int index = j;
+		// lsNew.setSite(newAgentsList.get(index).getSite(
+		// siteOldLink.getNameId()));
+		// }
+		//
+		// }
+
+		// }
 
 		return Collections.unmodifiableList(newAgentsList);
 	}
@@ -241,18 +240,34 @@ public class CContactMapAbstractRule {
 		for (IContactMapAbstractSite s : lhsSites) {
 			Integer keyAgent = s.getAgentLink().getNameId();
 			Integer keySite = s.getNameId();
-			IContactMapAbstractAgent agent = solution.getAbstractAgentMapOld()
-					.get(keyAgent);
-			if (agent == null)
+			List<IContactMapAbstractAgent> list = solution
+					.getListOfAgentsByNameID(keyAgent);
+
+			List<IContactMapAbstractSite> sitesList = new ArrayList<IContactMapAbstractSite>();
+			if (list != null) {
+				for (IContactMapAbstractAgent agent : list) {
+					IContactMapAbstractSite site = agent.getSite(keySite);
+					if (site != null)
+						sitesList.add(site);
+				}
+			}
+
+			if (sitesList.size() == 0)
 				return null;
-			List<IContactMapAbstractSite> sites;
-//			if (keySite == CSite.NO_INDEX)
-//				sites = agent.getSites();
-//			else
-	//			sites = agent.getSiteMap().get(keySite);
-//			if (sites == null || sites.isEmpty())
-//				return null;
-//			sitesLists.add(sites);
+			sitesLists.add(sitesList);
+			// IContactMapAbstractAgent agent =
+			// solution.getAbstractAgentMapOld()
+			// .get(keyAgent);
+			// if (agent == null)
+			// return null;
+			// List<IContactMapAbstractSite> sites;
+			// if (keySite == CSite.NO_INDEX)
+			// sites = agent.getSites();
+			// else
+			// sites = agent.getSiteMap().get(keySite);
+			// if (sites == null || sites.isEmpty())
+			// return null;
+			// sitesLists.add(sites);
 		}
 		return sitesLists;
 	}

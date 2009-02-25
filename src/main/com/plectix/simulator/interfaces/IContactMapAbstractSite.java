@@ -32,4 +32,6 @@ public interface IContactMapAbstractSite extends IAbstractSite {
 
 	public boolean isFit(int agentId, int siteId, int internalStateId,
 			int agentLinkId, int siteLinkId, int internalStateLinkId);
+
+	public void setLinkState(CContactMapLinkState clone);
 }

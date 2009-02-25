@@ -38,6 +38,10 @@ public class CContactMapLinkState{
 		internalStateNameID = CSite.NO_INDEX;
 	}
 
+	public CContactMapLinkState() {
+        setFreeLinkState();
+	}
+
 	public CContactMapLinkState(ILinkState linkState) {
 		if (linkState.getSite() != null) {
 			this.agentNameID = linkState.getSite().getAgentLink().getNameId();
@@ -88,5 +92,10 @@ public class CContactMapLinkState{
 
 	public final boolean isRightBranchStatus() {
 		return (statusLink == CLinkStatus.BOUND) ? true : false;
+	}
+	
+	protected CContactMapLinkState clone() {
+		// TODO CLONE
+		return new CContactMapLinkState();
 	}
 }
