@@ -21,6 +21,7 @@ public class CContactMapAbstractRule {
 	private Map<Integer, IContactMapAbstractAgent> agentMapRightHandSide;
 	private List<IContactMapAbstractSite> lhsSites;
 	private List<IContactMapAbstractSite> rhsSites;
+	
 
 	private IRule rule;
 	private CContactMapAbstractAction abstractAction;
@@ -68,10 +69,10 @@ public class CContactMapAbstractRule {
 		while (iterator.hasNext()) {
 			Integer key = iterator.next();
 			IContactMapAbstractAgent agent = map.get(key);
-			List<IContactMapAbstractSite> listSites = agent.getSites();
-			if (listSites.isEmpty())
-				list.add(agent.getEmptySite());
-			list.addAll(listSites);
+//			List<IContactMapAbstractSite> listSites = agent.getSites();
+//			if (listSites.isEmpty())
+//				list.add(agent.getEmptySite());
+//			list.addAll(listSites);
 		}
 		return list;
 	}
@@ -86,7 +87,7 @@ public class CContactMapAbstractRule {
 					cMAA = new CContactMapAbstractAgent(agent);
 					map.put(key, cMAA);
 				}
-				cMAA.addSites(agent);
+				//cMAA.addSites(agent);
 			}
 		}
 	}
@@ -245,8 +246,8 @@ public class CContactMapAbstractRule {
 			if (agent == null)
 				return null;
 			List<IContactMapAbstractSite> sites;
-			if (keySite == CSite.NO_INDEX)
-				sites = agent.getSites();
+//			if (keySite == CSite.NO_INDEX)
+//				sites = agent.getSites();
 //			else
 	//			sites = agent.getSiteMap().get(keySite);
 //			if (sites == null || sites.isEmpty())

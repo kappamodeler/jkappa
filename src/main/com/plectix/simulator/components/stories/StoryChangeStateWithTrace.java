@@ -5,9 +5,6 @@ import java.util.List;
 
 import com.plectix.simulator.interfaces.IStates;
 
-/**
- * Will be separated soon. Do not replace it.
- * */
 class StoryChangeStateWithTrace {
 	private List<Integer> traceIDList;
 	private List<IStates> storyStatesList;

@@ -41,6 +41,10 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		this.linkState = new CContactMapLinkState(site.getLinkState());
 	}
 
+	public CContactMapAbstractSite(ISite site) {
+		this.nameId = site.getNameId();
+	}
+	
 	public CContactMapAbstractSite(IContactMapAbstractSite site) {
 		this.nameId = site.getNameId();
 		this.linkAgent = site.getAgentLink();
@@ -156,6 +160,28 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		return true;
 	}
 
+	public final boolean equalByName(IAbstractSite obj) {
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj == null) {
+			return false;
+		}
+
+		if (!(obj instanceof CContactMapAbstractSite)) {
+			return false;
+		}
+
+		CContactMapAbstractSite site = (CContactMapAbstractSite) obj;
+
+		if (nameId != site.nameId)
+			return false;
+
+		return true;
+	}
+
+	
 	public void print() {
 		System.out.println("site = " + getName());
 		System.out.println("internal state = " + internalState.getName());
@@ -203,7 +229,7 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	public boolean includedInCollection(
 			Collection<IContactMapAbstractSite> collection) {
 		for (IContactMapAbstractSite site : collection) {
-			if (this.equalz(site)) {
+			if (this.equalByName(site)) {
 				return true;
 			}
 		}

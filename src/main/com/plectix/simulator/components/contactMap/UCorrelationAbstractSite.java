@@ -177,9 +177,9 @@ public class UCorrelationAbstractSite {
 		IContactMapAbstractAgent agent = solution.getAbstractAgentMapOld().get(newSite.getAgentLink().getNameId());
 		if(agent == null)
 			return listOut;
-		for(IContactMapAbstractSite s : agent.getSites()){
-			listOut.addAll(breakLinkedSite(s, solution));
-		}
+//		for(IContactMapAbstractSite s : agent.getSites()){
+//			listOut.addAll(breakLinkedSite(s, solution));
+//		}
 		return listOut;
 	}
 	

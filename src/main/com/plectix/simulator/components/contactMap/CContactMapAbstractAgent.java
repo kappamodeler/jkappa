@@ -20,7 +20,6 @@ import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
-	private Map<Integer, List<IContactMapAbstractSite>> siteMap;
 	private Map<Integer, IContactMapAbstractSite> sitesMap;
 	private long id = -1;
 	private int nameID = -1;
@@ -40,51 +39,50 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		return myEmptySite;
 	}
 
-	public final List<IContactMapAbstractSite> getSites() {
-		List<IContactMapAbstractSite> list = new ArrayList<IContactMapAbstractSite>();
-		Iterator<Integer> iterator = siteMap.keySet().iterator();
-		while (iterator.hasNext()) {
-			Integer key = iterator.next();
-			List<IContactMapAbstractSite> siteList = siteMap.get(key);
-			list.addAll(siteList);
-		}
-		return list;
-	}
-
 	public final Map<Integer, IContactMapAbstractSite> getSitesMap() {
 		return this.sitesMap;
 	}
 
-	public final boolean containsSite(IContactMapAbstractSite site) {
-		List<IContactMapAbstractSite> list = siteMap.get(site.getNameId());
-		if (list == null)
-			return false;
-		for (IContactMapAbstractSite s : list)
-			if (s.equalz(site))
-				return true;
-		return false;
-	}
-
 	public CContactMapAbstractAgent(IAgent agent) {
 		this.nameID = agent.getNameId();
-		this.siteMap = new HashMap<Integer, List<IContactMapAbstractSite>>();
 		this.myEmptySite = new CContactMapAbstractSite(this);
 		this.sitesMap = new HashMap<Integer, IContactMapAbstractSite>();
 	}
 
 	public CContactMapAbstractAgent(int nameID) {
 		this.nameID = nameID;
-		this.siteMap = new HashMap<Integer, List<IContactMapAbstractSite>>();
 		this.myEmptySite = new CContactMapAbstractSite(this);
+		this.sitesMap = new HashMap<Integer, IContactMapAbstractSite>();
 	}
 
-	public final boolean addSites(IAgent agent) {
-		boolean wasAdded = false;
+	public final void addSites(IAgent agent,
+			Map<Integer, IContactMapAbstractAgent> agentNameIdToAgent) {
+
+		IContactMapAbstractAgent abstractModelAgent = agentNameIdToAgent.get(agent.getNameId());
+		
 		for (ISite site : agent.getSites()) {
-			if (addSite(site))
-				wasAdded = true;
+			Integer key = site.getNameId();
+			IContactMapAbstractSite abstractSite = new CContactMapAbstractSite(site, this);
+				sitesMap.put(key, abstractSite);
 		}
-		return wasAdded;
+
+		Iterator<Integer> iterator = abstractModelAgent.getSitesMap().keySet().iterator();
+		while (iterator.hasNext()){
+			int key = iterator.next();
+			IContactMapAbstractSite abstractSite = this.sitesMap.get(key);
+			if(abstractSite==null){
+				IContactMapAbstractSite modelSite = abstractModelAgent.getSitesMap().get(key);
+				this.sitesMap.put(key, modelSite);
+			}
+		}
+	}
+
+	public final void addModelSite(IContactMapAbstractSite siteToAdd) {
+		int nameID = siteToAdd.getNameId();
+		IContactMapAbstractSite site = this.sitesMap.get(nameID);
+		if (site == null) {
+			this.sitesMap.put(nameID, siteToAdd);
+		}
 	}
 
 	public final boolean equalz(IAbstractAgent obj) {
@@ -107,58 +105,28 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 
 		if (this.sitesMap.size() != agent.getSitesMap().size())
 			return false;
-		
-		if(!isEqualSitesMaps(sitesMap, agent.getSitesMap()))
+
+		if (!isEqualSitesMaps(sitesMap, agent.getSitesMap()))
 			return false;
 		return true;
 	}
 
-	private boolean isEqualSitesMaps(Map<Integer, IContactMapAbstractSite> sitesMap1,
+	private boolean isEqualSitesMaps(
+			Map<Integer, IContactMapAbstractSite> sitesMap1,
 			Map<Integer, IContactMapAbstractSite> sitesMap2) {
-		
+
 		Iterator<Integer> iterator = sitesMap1.keySet().iterator();
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			int siteKey = iterator.next();
 			IContactMapAbstractSite site1 = sitesMap1.get(siteKey);
 			IContactMapAbstractSite site2 = sitesMap2.get(siteKey);
-			if(site2==null)
+			if (site2 == null)
 				return false;
-			if(!site1.equalz(site2))
+			if (!site1.equalz(site2))
 				return false;
 		}
-		
+
 		return true;
-	}
-
-	public boolean addSite(ISite site) {
-		Integer key = site.getNameId();
-		List<IContactMapAbstractSite> list = siteMap.get(key);
-		if (list == null) {
-			list = new ArrayList<IContactMapAbstractSite>();
-			siteMap.put(key, list);
-		}
-
-		CContactMapAbstractSite cMAS = new CContactMapAbstractSite(site, this);
-		if (!cMAS.includedInCollection(list)) {
-			list.add(cMAS);
-			return true;
-		}
-		return false;
-	}
-
-	public boolean addSite(IContactMapAbstractSite site) {
-		Integer key = site.getNameId();
-		List<IContactMapAbstractSite> list = siteMap.get(key);
-		if (list == null) {
-			list = new ArrayList<IContactMapAbstractSite>();
-			siteMap.put(key, list);
-		}
-
-		if (!site.includedInCollection(list)) {
-			list.add(site);
-			return true;
-		}
-		return false;
 	}
 
 	public long getHash() {
@@ -185,13 +153,11 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 
 	public void print() {
 		System.out.println("agent = " + this.toString());
-		Iterator<Integer> Iter = this.siteMap.keySet().iterator();
+		Iterator<Integer> Iter = this.sitesMap.keySet().iterator();
 		while (Iter.hasNext()) {
 			Integer Key = Iter.next();
-			List<IContactMapAbstractSite> cMASList = siteMap.get(Key);
-			for (IContactMapAbstractSite site : cMASList) {
+			IContactMapAbstractSite site = sitesMap.get(Key);
 				((CContactMapAbstractSite) site).print();
-			}
 		}
 		System.out
 				.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
