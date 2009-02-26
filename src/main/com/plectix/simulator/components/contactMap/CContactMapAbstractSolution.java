@@ -94,7 +94,7 @@ public class CContactMapAbstractSolution {
 
 	private boolean addAgentToAgentsMap(IContactMapAbstractAgent a) {
 		List<IContactMapAbstractAgent> agentsFromSolution = agentNameIdToAgentsList
-				.get(a.getId());
+				.get(a.getNameId());
 
 		if (agentsFromSolution == null) {
 			agentsFromSolution = new ArrayList<IContactMapAbstractAgent>();
