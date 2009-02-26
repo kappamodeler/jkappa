@@ -272,6 +272,7 @@ public class CContactMapAbstractRule {
 		return sitesLists;
 	}
 
+
 	private void upIndexList(int[] indexList, int[] maxIndex) {
 		indexList[indexList.length - 1] = indexList[indexList.length - 1] + 1;
 		for (int i = indexList.length - 1; i >= 1; i--) {

@@ -1,22 +1,14 @@
 package com.plectix.simulator.components.contactMap;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAbstractAgent;
 import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
@@ -58,39 +50,49 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 
 	public CContactMapAbstractAgent(IContactMapAbstractAgent agentLink) {
 		this.myEmptySite = new CContactMapAbstractSite(this);
-		this.nameID = agentLink.getNameId();		 
-		
-		Iterator<Integer> iterator = agentLink.getSitesMap().keySet().iterator();
-		while (iterator.hasNext()){
+		this.nameID = agentLink.getNameId();
+
+		Iterator<Integer> iterator = agentLink.getSitesMap().keySet()
+				.iterator();
+		while (iterator.hasNext()) {
 			int key = iterator.next();
-			IContactMapAbstractSite abstractSite = agentLink.getSitesMap().get(key);
+			IContactMapAbstractSite abstractSite = agentLink.getSitesMap().get(
+					key);
 			IContactMapAbstractSite newSite = abstractSite.clone();
 			newSite.setAgentLink(this);
-			sitesMap.put(key, newSite);			
+			sitesMap.put(key, newSite);
 		}
 	}
 
-	public final IContactMapAbstractSite getSite(int nameID){
-        return this.sitesMap.get(nameID);
-   }
+	public final IContactMapAbstractSite getSite(int nameID) {
+		return this.sitesMap.get(nameID);
+	}
+
+	public final void addSite(IContactMapAbstractSite newSite) {
+		this.sitesMap.put(newSite.getNameId(), newSite);
+	}
 
 	public final void addSites(IAgent agent,
 			Map<Integer, IContactMapAbstractAgent> agentNameIdToAgent) {
 
-		IContactMapAbstractAgent abstractModelAgent = agentNameIdToAgent.get(agent.getNameId());
-		
+		IContactMapAbstractAgent abstractModelAgent = agentNameIdToAgent
+				.get(agent.getNameId());
+
 		for (ISite site : agent.getSites()) {
 			Integer key = site.getNameId();
-			IContactMapAbstractSite abstractSite = new CContactMapAbstractSite(site, this);
-				sitesMap.put(key, abstractSite);
+			IContactMapAbstractSite abstractSite = new CContactMapAbstractSite(
+					site, this);
+			sitesMap.put(key, abstractSite);
 		}
 
-		Iterator<Integer> iterator = abstractModelAgent.getSitesMap().keySet().iterator();
-		while (iterator.hasNext()){
+		Iterator<Integer> iterator = abstractModelAgent.getSitesMap().keySet()
+				.iterator();
+		while (iterator.hasNext()) {
 			int key = iterator.next();
 			IContactMapAbstractSite abstractSite = this.sitesMap.get(key);
-			if(abstractSite==null){
-				IContactMapAbstractSite modelSite = abstractModelAgent.getSitesMap().get(key);
+			if (abstractSite == null) {
+				IContactMapAbstractSite modelSite = abstractModelAgent
+						.getSitesMap().get(key);
 				this.sitesMap.put(key, modelSite);
 			}
 		}
@@ -148,6 +150,25 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		return true;
 	}
 
+	public final boolean isFit(IContactMapAbstractAgent agentIn) {
+		if (this.nameID != agentIn.getNameId())
+			return false;
+
+		Iterator<Integer> sitesIterator = this.sitesMap.keySet().iterator();
+
+		while (sitesIterator.hasNext()) {
+			int key = sitesIterator.next();
+			IContactMapAbstractSite site = this.sitesMap.get(key);
+			IContactMapAbstractSite siteIn = agentIn.getSite(site.getNameId());
+			if (siteIn == null)
+				return false;
+			if (!site.isFit(siteIn))
+				return false;
+		}
+
+		return true;
+	}
+
 	public long getHash() {
 		return id;
 	}
@@ -176,7 +197,7 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		while (Iter.hasNext()) {
 			Integer Key = Iter.next();
 			IContactMapAbstractSite site = sitesMap.get(Key);
-				((CContactMapAbstractSite) site).print();
+			((CContactMapAbstractSite) site).print();
 		}
 		System.out
 				.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
@@ -185,8 +206,9 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 
 	public void modify(IContactMapAbstractSite s) {
 		IContactMapAbstractSite site = sitesMap.get(s.getNameId());
-		if(s.getInternalState()!= CInternalState.EMPTY_STATE)
-			site.setInternalState(new CInternalState(s.getInternalState().getNameId()));
+		if (s.getInternalState() != CInternalState.EMPTY_STATE)
+			site.setInternalState(new CInternalState(s.getInternalState()
+					.getNameId()));
 		site.setLinkState(s.getLinkState().clone());
 	}
 

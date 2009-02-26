@@ -20,5 +20,9 @@ public interface IContactMapAbstractAgent extends IAbstractAgent{
 
 	public IContactMapAbstractSite getSite(int nameID);
 
-	public void modify(IContactMapAbstractSite s);	
+	public void modify(IContactMapAbstractSite s);
+	
+	public void addSite(IContactMapAbstractSite newSite);
+	
+	public boolean isFit(IContactMapAbstractAgent agent);
 }

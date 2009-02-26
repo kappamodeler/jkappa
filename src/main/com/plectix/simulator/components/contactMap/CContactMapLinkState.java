@@ -7,12 +7,21 @@ import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.ISite;
 
-public class CContactMapLinkState{
+public class CContactMapLinkState {
 	private CLinkRank statusLinkRank;
 	private CLinkStatus statusLink;
 	private int linkSiteNameID = CSite.NO_INDEX;
 	private int agentNameID = CSite.NO_INDEX;
+	private int agentID = CSite.NO_INDEX;
 	private int internalStateNameID = CSite.NO_INDEX;
+
+	public int getAgentID() {
+		return agentID;
+	}
+
+	public void setAgentID(int agentID) {
+		this.agentID = agentID;
+	}
 
 	public CLinkRank getStatusLinkRank() {
 		return statusLinkRank;
@@ -29,17 +38,17 @@ public class CContactMapLinkState{
 	public int getInternalStateNameID() {
 		return internalStateNameID;
 	}
-	
-	public final void setFreeLinkState(){
+
+	public final void setFreeLinkState() {
 		statusLink = CLinkStatus.FREE;
 		statusLinkRank = CLinkRank.FREE;
 		linkSiteNameID = CSite.NO_INDEX;
-		agentNameID= CSite.NO_INDEX;
+		agentNameID = CSite.NO_INDEX;
 		internalStateNameID = CSite.NO_INDEX;
 	}
 
 	public CContactMapLinkState() {
-        setFreeLinkState();
+		setFreeLinkState();
 	}
 
 	public CContactMapLinkState(ILinkState linkState) {
@@ -52,7 +61,7 @@ public class CContactMapLinkState{
 		this.statusLinkRank = linkState.getStatusLinkRank();
 		this.statusLink = linkState.getStatusLink();
 	}
-	
+
 	public CContactMapLinkState(CContactMapLinkState linkState) {
 		if (linkState.getLinkSiteNameID() != -1) {
 			this.agentNameID = linkState.getAgentNameID();
@@ -85,7 +94,32 @@ public class CContactMapLinkState{
 
 		return true;
 	}
-	
+
+	public final boolean compareLinkStates(
+			CContactMapLinkState solutionLinkState) {
+		if (this.isLeftBranchStatus()
+				&& solutionLinkState.isRightBranchStatus())
+			return false;
+		if (this.isRightBranchStatus()
+				&& solutionLinkState.isLeftBranchStatus())
+			return false;
+
+		if (this.getStatusLinkRank().smaller(
+				solutionLinkState.getStatusLinkRank()))
+			return true;
+
+		if (this.getStatusLinkRank() == solutionLinkState.getStatusLinkRank()
+				&& this.getStatusLinkRank() == CLinkRank.BOUND)
+			if (this.equalz(solutionLinkState))
+				return true;
+
+		if (this.getStatusLinkRank() == solutionLinkState.getStatusLinkRank()
+				&& this.getStatusLinkRank() != CLinkRank.BOUND)
+			return true;
+
+		return false;
+	}
+
 	public final boolean isLeftBranchStatus() {
 		return (statusLink == CLinkStatus.FREE) ? true : false;
 	}
@@ -93,7 +127,7 @@ public class CContactMapLinkState{
 	public final boolean isRightBranchStatus() {
 		return (statusLink == CLinkStatus.BOUND) ? true : false;
 	}
-	
+
 	protected CContactMapLinkState clone() {
 		return new CContactMapLinkState(this);
 	}

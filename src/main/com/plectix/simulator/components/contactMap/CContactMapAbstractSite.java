@@ -237,45 +237,12 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		return false;
 	}
 
-	private static boolean compareLinkStates(CContactMapLinkState currentState,
-			CContactMapLinkState solutionLinkState) {
-		if (currentState.isLeftBranchStatus()
-				&& solutionLinkState.isRightBranchStatus())
-			return false;
-		if (currentState.isRightBranchStatus()
-				&& solutionLinkState.isLeftBranchStatus())
-			return false;
-
-		if (currentState.getStatusLinkRank().smaller(
-				solutionLinkState.getStatusLinkRank()))
-			return true;
-
-		if (currentState.getStatusLinkRank() == solutionLinkState
-				.getStatusLinkRank()
-				&& currentState.getStatusLinkRank() == CLinkRank.BOUND)
-			if (currentState.equalz(solutionLinkState))
-				// if
-				// (currentState.getSite().equalz(solutionLinkState.getSite()))
-				return true;
-
-		if (currentState.getStatusLinkRank() == solutionLinkState
-				.getStatusLinkRank()
-				&& currentState.getStatusLinkRank() != CLinkRank.BOUND)
-			return true;
-
-		return false;
-	}
-
 	public boolean isFit(IContactMapAbstractSite s) {
-		if (!this.equalsLinkAgent(s))
-			return false;
 		if(nameId == CSite.NO_INDEX)
 			return true;
-		if (!this.equalsNameId(s))
-			return false;
 		if (!internalState.compareInternalStates(s.getInternalState()))
 			return false;
-		if (!compareLinkStates(linkState, s.getLinkState()))
+		if (!linkState.compareLinkStates(s.getLinkState()))
 			return false;
 
 		return true;
