@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
 public class CContactMapAbstractAction {
 	private Map<Integer, List<IContactMapAbstractSite>> siteMap;
 	private CContactMapAbstractRule rule;
 	private List<IContactMapAbstractSite> sitesToAdd;
-	private List<UCorrelationAbstractSite> correlationSites;
+	private List<UCorrelationAbstractAgent> correlationSites;
 	
 //	NONE(-1),
 //	BREAK(0),
@@ -23,22 +24,22 @@ public class CContactMapAbstractAction {
 	public CContactMapAbstractAction(CContactMapAbstractRule rule){
 		this.rule = rule;
 		this.sitesToAdd = new ArrayList<IContactMapAbstractSite>();
-		correlationSites = new ArrayList<UCorrelationAbstractSite>();
+		correlationSites = new ArrayList<UCorrelationAbstractAgent>();
 		createAtomicActions();
 	}
 
 	private void createAtomicActions(){
 		// TODO createAtomicActions
 		boolean[] checkList = new boolean[rule.getRhsSites().size()];
-		for(IContactMapAbstractSite s : rule.getLhsSites()){
-			UCorrelationAbstractSite uSite = new UCorrelationAbstractSite(this,s,null,ECorrelationType.CORRELATION_LHS_AND_RHS);
-			correlationSites.add(uSite);
-			IContactMapAbstractSite toSite = findCorrelation(s,uSite,checkList);
-			if(toSite == null)
-				uSite.setType(CActionType.DELETE);
+		for(IContactMapAbstractAgent a : rule.getLhsAgent()){
+			UCorrelationAbstractAgent uAgent = new UCorrelationAbstractAgent(this,a,null,ECorrelationType.CORRELATION_LHS_AND_RHS);
+			correlationSites.add(uAgent);
+			IContactMapAbstractAgent toAgent = findCorrelation(a,uAgent,checkList);
+			if(toAgent == null)
+				uAgent.setType(CActionType.DELETE);
 			else
-				uSite.setToSite(toSite);
-			uSite.initAtomicActionList();
+				uAgent.setToAgent(toAgent);
+			uAgent.initAtomicActionList();
 		}
 		findAddAction(checkList);
 	}
@@ -54,55 +55,57 @@ public class CContactMapAbstractAction {
 		}
 	}
 
-	private IContactMapAbstractSite findCorrelation(IContactMapAbstractSite site,UCorrelationAbstractSite uSite,boolean[] checkList){
+	private IContactMapAbstractAgent findCorrelation(IContactMapAbstractAgent agent,UCorrelationAbstractAgent uAgent,boolean[] checkList){
 		int i=0;
-		for(IContactMapAbstractSite s : rule.getRhsSites()){
-			if(site.equalz(s) && !checkList[i]){
-				checkList[i] = true;
-				return site;
-			}
-			i++;
-		}
+		// TODO
 		
-		i=0;
-		for(IContactMapAbstractSite s : rule.getRhsSites()){
-			i++;
-			if(!isPartEqualSite(s, site) || checkList[i-1])
-				continue;
-			if(s.equalsLinkState(site)){
-				if(!s.equalsInternalState(site)){
-					IContactMapAbstractSite nSite = new CContactMapAbstractSite(s);
-					uSite.setType(CActionType.MODIFY);
-					checkList[i-1]=true;
-					return nSite;
-				}
-			}
-		}
-		
-		i=0;
-		for(IContactMapAbstractSite s : rule.getRhsSites()){
-			i++;
-			if(!isPartEqualSite(s, site) || checkList[i-1])
-				continue;
-			if(s.equalsInternalState(site)){
-				if(!s.equalsLinkState(site)){
-					IContactMapAbstractSite nSite = new CContactMapAbstractSite(s);
-					uSite.setType(CActionType.ABSTRACT_BREAK_OR_BOUND);
-					checkList[i-1]=true;
-					return nSite;
-				}
-			}
-		}
-		
-		i=0;
-		for(IContactMapAbstractSite s : rule.getRhsSites()){
-			i++;
-			if(!isPartEqualSite(s, site) || checkList[i-1])
-				continue;
-			IContactMapAbstractSite nSite = new CContactMapAbstractSite(s);
-			uSite.setType(CActionType.ABSTRACT_BREAK_OR_BOUND_AND_MODIFY);
-			return nSite;
-		}
+//		for(IContactMapAbstractSite s : rule.getRhsSites()){
+//			if(site.equalz(s) && !checkList[i]){
+//				checkList[i] = true;
+//				return site;
+//			}
+//			i++;
+//		}
+//		
+//		i=0;
+//		for(IContactMapAbstractSite s : rule.getRhsSites()){
+//			i++;
+//			if(!isPartEqualSite(s, site) || checkList[i-1])
+//				continue;
+//			if(s.equalsLinkState(site)){
+//				if(!s.equalsInternalState(site)){
+//					IContactMapAbstractSite nSite = new CContactMapAbstractSite(s);
+//					uSite.setType(CActionType.MODIFY);
+//					checkList[i-1]=true;
+//					return nSite;
+//				}
+//			}
+//		}
+//		
+//		i=0;
+//		for(IContactMapAbstractSite s : rule.getRhsSites()){
+//			i++;
+//			if(!isPartEqualSite(s, site) || checkList[i-1])
+//				continue;
+//			if(s.equalsInternalState(site)){
+//				if(!s.equalsLinkState(site)){
+//					IContactMapAbstractSite nSite = new CContactMapAbstractSite(s);
+//					uSite.setType(CActionType.ABSTRACT_BREAK_OR_BOUND);
+//					checkList[i-1]=true;
+//					return nSite;
+//				}
+//			}
+//		}
+//		
+//		i=0;
+//		for(IContactMapAbstractSite s : rule.getRhsSites()){
+//			i++;
+//			if(!isPartEqualSite(s, site) || checkList[i-1])
+//				continue;
+//			IContactMapAbstractSite nSite = new CContactMapAbstractSite(s);
+//			uSite.setType(CActionType.ABSTRACT_BREAK_OR_BOUND_AND_MODIFY);
+//			return nSite;
+//		}
 		
 		return null;
 	}
@@ -115,17 +118,17 @@ public class CContactMapAbstractAction {
 		return true;
 	}
 	
-	public List<IContactMapAbstractSite> apply(List<UCorrelationAbstractSite> injList, CContactMapAbstractSolution solution){
+	public List<IContactMapAbstractSite> apply(List<UCorrelationAbstractAgent> injList, CContactMapAbstractSolution solution){
 		// TODO apply
 		List<IContactMapAbstractSite> listOut = CContactMapAbstractSite.cloneAll(sitesToAdd);
-		int i=0;
-		for(UCorrelationAbstractSite corLHSandRHS : correlationSites){
-			UCorrelationAbstractSite corLHSandSolution = injList.get(i);
-			IContactMapAbstractSite newSite = corLHSandSolution.getToSite().clone();
-			listOut.addAll(corLHSandRHS.modifySiteFromSolution(newSite,solution));
-			listOut.add(newSite);
-			i++;
-		}
+//		int i=0;
+//		for(UCorrelationAbstractAgent corLHSandRHS : correlationSites){
+//			UCorrelationAbstractAgent corLHSandSolution = injList.get(i);
+//			IContactMapAbstractSite newSite = corLHSandSolution.getToSite().clone();
+//			listOut.addAll(corLHSandRHS.modifySiteFromSolution(newSite,solution));
+//			listOut.add(newSite);
+//			i++;
+//		}
 		return listOut;
 	}
 }

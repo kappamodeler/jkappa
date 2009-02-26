@@ -9,38 +9,38 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
-public class UCorrelationAbstractSite {
+public class UCorrelationAbstractAgent {
 	private CActionType type;
 	private ECorrelationType correlationType;
-	private IContactMapAbstractSite fromSite;
-	private IContactMapAbstractSite toSite;
+	private IContactMapAbstractAgent fromAgent;
+	private IContactMapAbstractAgent toAgent;
 	private List<CActionType> atomicActions;
 	private CContactMapAbstractAction action;
 
-	public UCorrelationAbstractSite(CContactMapAbstractAction action,IContactMapAbstractSite fromSite,
-			IContactMapAbstractSite toSite, ECorrelationType correlationType) {
-		this.fromSite = fromSite;
-		this.toSite = toSite;
+	public UCorrelationAbstractAgent(CContactMapAbstractAction action,IContactMapAbstractAgent fromAgent,
+			IContactMapAbstractAgent toAgent, ECorrelationType correlationType) {
+		this.fromAgent = fromAgent;
+		this.toAgent = toAgent;
 		this.correlationType = correlationType;
 		this.action = action;
 		if (correlationType == ECorrelationType.CORRELATION_LHS_AND_RHS)
 			this.type = CActionType.NONE;
 	}
 
-	public IContactMapAbstractSite getFromSite() {
-		return fromSite;
+	public IContactMapAbstractAgent getFromAgent() {
+		return fromAgent;
 	}
 
-	public void setFromSite(IContactMapAbstractSite fromSite) {
-		this.fromSite = fromSite;
+	public void setFromAgent(IContactMapAbstractAgent fromAgent) {
+		this.fromAgent = fromAgent;
 	}
 
-	public IContactMapAbstractSite getToSite() {
-		return toSite;
+	public IContactMapAbstractAgent getToAgent() {
+		return toAgent;
 	}
 
-	public void setToSite(IContactMapAbstractSite toSite) {
-		this.toSite = toSite;
+	public void setToAgent(IContactMapAbstractAgent toAgent) {
+		this.toAgent = toAgent;
 	}
 
 	public CActionType getType() {
@@ -51,15 +51,15 @@ public class UCorrelationAbstractSite {
 		this.type = type;
 	}
 
-	public static List<UCorrelationAbstractSite> createCorrelationSites(
+	public static List<UCorrelationAbstractAgent> createCorrelationSites(
 			CContactMapAbstractAction action,
-			List<IContactMapAbstractSite> fromSites,
-			List<IContactMapAbstractSite> toSites,
+			List<IContactMapAbstractAgent> fromAgent,
+			List<IContactMapAbstractAgent> toAgent,
 			ECorrelationType correlationType) {
-		List<UCorrelationAbstractSite> list = new ArrayList<UCorrelationAbstractSite>();
+		List<UCorrelationAbstractAgent> list = new ArrayList<UCorrelationAbstractAgent>();
 		int i = 0;
-		for (IContactMapAbstractSite s : fromSites) {
-			list.add(new UCorrelationAbstractSite(action,s, toSites.get(i++),
+		for (IContactMapAbstractAgent a : fromAgent) {
+			list.add(new UCorrelationAbstractAgent(action,a, toAgent.get(i++),
 					correlationType));
 		}
 		return list;
@@ -88,26 +88,26 @@ public class UCorrelationAbstractSite {
 	}
 
 	private void findBreakBound() {
-		CContactMapLinkState linkStateFrom = fromSite.getLinkState();
-		CContactMapLinkState linkStateTo = toSite.getLinkState();
-		if (linkStateFrom.getAgentNameID() != CSite.NO_INDEX
-				&& linkStateTo.getAgentNameID() == CSite.NO_INDEX) {
-			atomicActions.add(CActionType.BREAK);
-			return;
-		}
-		if (linkStateFrom.getStatusLinkRank() == CLinkRank.SEMI_LINK
-				&& linkStateTo.getStatusLinkRank() == CLinkRank.FREE) {
-			atomicActions.add(CActionType.BREAK);
-			return;
-		}
-
-		if (linkStateFrom.getAgentNameID() == CSite.NO_INDEX
-				&& linkStateTo.getAgentNameID() != CSite.NO_INDEX) {
-			atomicActions.add(CActionType.BOUND);
-			return;
-		}
-		atomicActions.add(CActionType.BREAK);
-		atomicActions.add(CActionType.BOUND);
+//		CContactMapLinkState linkStateFrom = fromAgent.getLinkState();
+//		CContactMapLinkState linkStateTo = toAgent.getLinkState();
+//		if (linkStateFrom.getAgentNameID() != CSite.NO_INDEX
+//				&& linkStateTo.getAgentNameID() == CSite.NO_INDEX) {
+//			atomicActions.add(CActionType.BREAK);
+//			return;
+//		}
+//		if (linkStateFrom.getStatusLinkRank() == CLinkRank.SEMI_LINK
+//				&& linkStateTo.getStatusLinkRank() == CLinkRank.FREE) {
+//			atomicActions.add(CActionType.BREAK);
+//			return;
+//		}
+//
+//		if (linkStateFrom.getAgentNameID() == CSite.NO_INDEX
+//				&& linkStateTo.getAgentNameID() != CSite.NO_INDEX) {
+//			atomicActions.add(CActionType.BOUND);
+//			return;
+//		}
+//		atomicActions.add(CActionType.BREAK);
+//		atomicActions.add(CActionType.BOUND);
 	}
 
 	public List<IContactMapAbstractSite> modifySiteFromSolution(
@@ -138,15 +138,17 @@ public class UCorrelationAbstractSite {
 			IContactMapAbstractSite newSite,
 			CContactMapAbstractSolution solution) {
 		List<IContactMapAbstractSite> listOut = new ArrayList<IContactMapAbstractSite>();
-		CLinkRank linkRank = fromSite.getLinkState().getStatusLinkRank();
-		if (linkRank == CLinkRank.BOUND) {
-			newSite.getLinkState().setFreeLinkState();
-			return listOut;
-		}
-		if (linkRank == CLinkRank.BOUND_OR_FREE) {
-			if (newSite.getLinkState().getLinkSiteNameID() == CSite.NO_INDEX)
-				return listOut;
-		}
+		// TODO
+		
+//		CLinkRank linkRank = fromAgent.getLinkState().getStatusLinkRank();
+//		if (linkRank == CLinkRank.BOUND) {
+//			newSite.getLinkState().setFreeLinkState();
+//			return listOut;
+//		}
+//		if (linkRank == CLinkRank.BOUND_OR_FREE) {
+//			if (newSite.getLinkState().getLinkSiteNameID() == CSite.NO_INDEX)
+//				return listOut;
+//		}
 
 //		IContactMapAbstractSite site = solution.findSite(newSite.getLinkState()
 //				.getAgentNameID(), newSite.getLinkState().getLinkSiteNameID(),
@@ -166,8 +168,10 @@ public class UCorrelationAbstractSite {
 	}
 
 	private void doModify(IContactMapAbstractSite newSite) {
-		newSite.getInternalState().setNameId(
-				toSite.getInternalState().getNameId());
+		
+		//TODO
+//		newSite.getInternalState().setNameId(
+//				toAgent.getInternalState().getNameId());
 	}
 
 	private List<IContactMapAbstractSite> doDelete(
