@@ -33,7 +33,7 @@ public class CContactMapAbstractAction {
 	private void createAtomicActions(){
 		// TODO createAtomicActions
 		boolean[] checkList = new boolean[rule.getRhsAgents().size()];
-		for(IContactMapAbstractAgent a : rule.getLhsAgent()){
+		for(IContactMapAbstractAgent a : rule.getLhsAgents()){
 			UCorrelationAbstractAgent uAgent = new UCorrelationAbstractAgent(this,a,null,ECorrelationType.CORRELATION_LHS_AND_RHS);
 			correlationSites.add(uAgent);
 			IContactMapAbstractAgent toAgent = findCorrelation(a,uAgent,checkList);

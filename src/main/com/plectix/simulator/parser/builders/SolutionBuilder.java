@@ -32,7 +32,7 @@ public class SolutionBuilder {
 //			solution.addAgents(list);
 
 			if (myArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-				myKappaSystem.getContactMap().addAgentFromSolution(list);
+				//myKappaSystem.getContactMap().addAgentFromSolution(list);
 				myKappaSystem.getContactMap().setSimulationData(myData);
 
 			} else {

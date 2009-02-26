@@ -7,9 +7,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
+import com.plectix.simulator.interfaces.IContactMapAbstractRule;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
@@ -17,35 +19,83 @@ import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.SimulationData;
 
 public class CContactMapAbstractSolution {
-
-	private Map<Integer, IContactMapAbstractAgent> abstractAgentMapOld;
-	private Map<Long, IContactMapAbstractAgent> abstractAgentMap;
-//	private Map<Integer, List<Long>> agentNameIdToAgentId;
 	private Map<Integer, IContactMapAbstractAgent> agentNameIdToAgent;
 	private Map<Integer, List<IContactMapAbstractAgent>> agentNameIdToAgentsList;
+	private HashMap<Integer, Map<Integer, List<CContactMapAbstractEdge>>> agentNameIDToSiteNameIDToRulesID;
 	private final SimulationData simulationData;
 
-	public Map<Integer, IContactMapAbstractAgent> getAbstractAgentMapOld() {
-		return abstractAgentMapOld;
-	}
-
 	public CContactMapAbstractSolution(SimulationData simulationData) {
-		this.abstractAgentMapOld = new HashMap<Integer, IContactMapAbstractAgent>();
-		this.abstractAgentMap = new HashMap<Long, IContactMapAbstractAgent>();
 		this.agentNameIdToAgent = new HashMap<Integer, IContactMapAbstractAgent>();
 		this.agentNameIdToAgentsList = new HashMap<Integer, List<IContactMapAbstractAgent>>();
-//		this.agentNameIdToAgentId = new HashMap<Integer, List<Long>>();
+		this.agentNameIDToSiteNameIDToRulesID = new HashMap<Integer, Map<Integer, List<CContactMapAbstractEdge>>>();
 		this.simulationData = simulationData;
 		fillModelMapOfAgents();
-		// ==================
 		fillAgentMap(simulationData.getKappaSystem().getSolution());
 	}
 
-	public boolean addNewData(List<IContactMapAbstractAgent> listIn) {
+	public Map<Integer, List<IContactMapAbstractAgent>> getAgentNameIdToAgentsList() {
+		return agentNameIdToAgentsList;
+	}
+
+	private void addToAppliedRulesMap(IContactMapAbstractRule rule,
+			IContactMapAbstractAgent agent) {
+		int agentKey = agent.getNameId();
+		Map<Integer, List<CContactMapAbstractEdge>> edgesMap = this.agentNameIDToSiteNameIDToRulesID
+				.get(agentKey);
+		Iterator<Integer> siteIterator = agent.getSitesMap().keySet()
+				.iterator();
+
+		while (siteIterator.hasNext()) {
+			int siteNameID = siteIterator.next();
+			IContactMapAbstractSite site = agent.getSitesMap().get(siteNameID);
+			int siteToNameID = site.getLinkState().getLinkSiteNameID();
+			if (siteToNameID != CSite.NO_INDEX) {
+				if (edgesMap == null) {
+					edgesMap = new HashMap<Integer, List<CContactMapAbstractEdge>>();
+					List<CContactMapAbstractEdge> edgeList = new ArrayList<CContactMapAbstractEdge>();
+					CContactMapAbstractEdge edge = new CContactMapAbstractEdge(
+							site);
+					edgeList.add(edge);
+					edgesMap.put(site.getNameId(), edgeList);
+					this.agentNameIDToSiteNameIDToRulesID.put(agentKey,
+							edgesMap);
+					if (rule != null)
+						edge.addRules(rule);
+				} else {
+					int siteKey = site.getNameId();
+					List<CContactMapAbstractEdge> edgeList = edgesMap
+							.get(siteKey);
+					CContactMapAbstractEdge edge = new CContactMapAbstractEdge(
+							site);
+					boolean wasInList = false;
+					for (CContactMapAbstractEdge checkedEdge : edgeList) {
+						if (edge.equalz(checkedEdge)) {
+							checkedEdge.addRules(rule);
+							wasInList = true;
+							break;
+						}
+					}
+					if (!wasInList) {
+						edgeList.add(edge);
+						if (rule != null)
+							edge.addRules(rule);
+					}
+				}
+			}
+		}
+	}
+
+	public boolean addNewData(List<IContactMapAbstractAgent> listIn,
+			IContactMapAbstractRule rule) {
+		if (listIn == null)
+			return false;
+
 		boolean isAdd = false;
-		for (IContactMapAbstractAgent a : listIn)
+		for (IContactMapAbstractAgent a : listIn) {
 			if (addAgentToAgentsMap(a))
 				isAdd = true;
+			addToAppliedRulesMap(rule, a);
+		}
 
 		return isAdd;
 	}
@@ -84,32 +134,34 @@ public class CContactMapAbstractSolution {
 	private void fillAgentMap(ISolution solution) {
 
 		Collection<IAgent> agentMap = solution.getAgents();
-		for (IAgent a : agentMap) {
+		for (IAgent agent : agentMap) {
 			IContactMapAbstractAgent abstractAgent = new CContactMapAbstractAgent(
-					a);
-			abstractAgent.addSites(a, this.agentNameIdToAgent);
+					agent);
+			abstractAgent.addSites(agent, this.agentNameIdToAgent);
 			addAgentToAgentsMap(abstractAgent);
 		}
 	}
 
-	private boolean addAgentToAgentsMap(IContactMapAbstractAgent a) {
+	public boolean addAgentToAgentsMap(IContactMapAbstractAgent abstractAgent) {
 		List<IContactMapAbstractAgent> agentsFromSolution = agentNameIdToAgentsList
-				.get(a.getNameId());
+				.get(abstractAgent.getNameId());
 
 		if (agentsFromSolution == null) {
 			agentsFromSolution = new ArrayList<IContactMapAbstractAgent>();
-			agentNameIdToAgentsList.put(a.getNameId(), agentsFromSolution);
-		} else if (a.includedInCollection(agentsFromSolution))
+			agentNameIdToAgentsList.put(abstractAgent.getNameId(), agentsFromSolution);
+		} else if (abstractAgent.includedInCollection(agentsFromSolution))
 			return false;
 
-		agentsFromSolution.add(a);
+		agentsFromSolution.add(abstractAgent);
+		addToAppliedRulesMap(null, abstractAgent);
 
 		return true;
 	}
 
 	public final List<IContactMapAbstractAgent> getListOfAgentsByNameID(
 			int nameID) {
-		List<IContactMapAbstractAgent> listAgents = agentNameIdToAgentsList.get(nameID);
+		List<IContactMapAbstractAgent> listAgents = agentNameIdToAgentsList
+				.get(nameID);
 		if (listAgents == null)
 			return null;
 		return listAgents;
@@ -140,13 +192,15 @@ public class CContactMapAbstractSolution {
 	}
 
 	public void print() {
-		Iterator<Integer> aIter = abstractAgentMapOld.keySet().iterator();
-		while (aIter.hasNext()) {
-			Integer aKey = aIter.next();
-			IContactMapAbstractAgent cMAA = abstractAgentMapOld.get(aKey);
-			((CContactMapAbstractAgent) cMAA).print();
-		}
-		System.out
-				.println("***************************************************************************");
+		// Iterator<Integer> aIter = abstractAgentMapOld.keySet().iterator();
+		// while (aIter.hasNext()) {
+		// Integer aKey = aIter.next();
+		// IContactMapAbstractAgent cMAA = abstractAgentMapOld.get(aKey);
+		// ((CContactMapAbstractAgent) cMAA).print();
+		// }
+		// System.out
+		// .println(
+		// "***************************************************************************"
+		// );
 	}
 }

@@ -156,9 +156,14 @@ public class KappaSystem {
 		}
 
 		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-			contactMap.constructReachableRules(rules);
-			contactMap.constructContactMap();
-		}
+            
+            contactMap.initAbstractSolution();
+            contactMap.constructAbstractRules(rules);
+            contactMap.constructAbstractContactMap();
+            
+//            contactMap.constructReachableRules(rules);
+//            contactMap.constructContactMap();
+       }
 
 	}
 	

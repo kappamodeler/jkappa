@@ -7,6 +7,7 @@ import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
+import com.plectix.simulator.interfaces.IContactMapAbstractRule;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.IRule;
@@ -14,27 +15,67 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.KappaSystem;
 
-public class CContactMapAbstractRule {
+public class CContactMapAbstractRule implements IContactMapAbstractRule{
 
 	private CContactMapAbstractSolution solution;
 	private List<IContactMapAbstractAgent> lhsAgents;
 	private List<IContactMapAbstractAgent> rhsAgents;
-
-	private IRule rule;
 	private CContactMapAbstractAction abstractAction;
+	private IRule rule;
+
+	public IRule getRule() {
+		return rule;
+	}
 
 	public CContactMapAbstractRule(CContactMapAbstractSolution solution,
 			IRule rule) {
 		this.solution = solution;
 		this.rule = rule;
 	}
-
+	
+	public CContactMapAbstractRule(IRule rule) {
+		this.rule = rule;
+		this.lhsAgents = initListSites(rule.getLeftHandSide());
+		this.rhsAgents = initListSites(rule.getRightHandSide());
+	}
+	
 	public void initAbstractRule() {
 		this.lhsAgents = initListSites(rule.getLeftHandSide());
 		this.rhsAgents = initListSites(rule.getRightHandSide());
 		// this.lhsSites = initListsSites(agentMapLeftHandSide);
 		// this.rhsSites = initListsSites(agentMapRightHandSide);
 		this.abstractAction = new CContactMapAbstractAction(this);
+	}
+	
+	public final boolean equalz(IContactMapAbstractRule obj){
+		if (this == obj) {
+			return true;
+		}
+
+		if (obj == null) {
+			return false;
+		}
+
+		if (!(obj instanceof CContactMapAbstractRule)) {
+			return false;
+		}
+
+		CContactMapAbstractRule chRule = (CContactMapAbstractRule) obj;
+
+		if (this.rule.getRuleID() != chRule.getRule().getRuleID())
+			return false;
+
+		return true;
+	}
+	
+	public final boolean includedInCollection(
+			Collection<IContactMapAbstractRule> collection) {
+		for (IContactMapAbstractRule rule : collection) {
+			if (this.equalz(rule)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private List<IContactMapAbstractAgent> initListSites(
@@ -96,7 +137,7 @@ public class CContactMapAbstractRule {
 	// return agentMapRightHandSide;
 	// }
 
-	public List<IContactMapAbstractAgent> getLhsAgent() {
+	public List<IContactMapAbstractAgent> getLhsAgents() {
 		return lhsAgents;
 	}
 
