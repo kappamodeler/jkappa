@@ -20,8 +20,9 @@ public class CContactMapAbstractSolution {
 
 	private Map<Integer, IContactMapAbstractAgent> abstractAgentMapOld;
 	private Map<Long, IContactMapAbstractAgent> abstractAgentMap;
-	private Map<Integer, List<Long>> agentNameIdToAgentId;
+//	private Map<Integer, List<Long>> agentNameIdToAgentId;
 	private Map<Integer, IContactMapAbstractAgent> agentNameIdToAgent;
+	private Map<Integer, List<IContactMapAbstractAgent>> agentNameIdToAgentsList;
 	private final SimulationData simulationData;
 
 	public Map<Integer, IContactMapAbstractAgent> getAbstractAgentMapOld() {
@@ -32,54 +33,21 @@ public class CContactMapAbstractSolution {
 		this.abstractAgentMapOld = new HashMap<Integer, IContactMapAbstractAgent>();
 		this.abstractAgentMap = new HashMap<Long, IContactMapAbstractAgent>();
 		this.agentNameIdToAgent = new HashMap<Integer, IContactMapAbstractAgent>();
-		this.agentNameIdToAgentId = new HashMap<Integer, List<Long>>();
+		this.agentNameIdToAgentsList = new HashMap<Integer, List<IContactMapAbstractAgent>>();
+//		this.agentNameIdToAgentId = new HashMap<Integer, List<Long>>();
 		this.simulationData = simulationData;
 		fillModelMapOfAgents();
 		// ==================
 		fillAgentMap(simulationData.getKappaSystem().getSolution());
 	}
-	
-	
-	public boolean addNewData(List<IContactMapAbstractSite> listIn){
-		Map<Long, IContactMapAbstractAgent> mapAgent = new HashMap<Long, IContactMapAbstractAgent>();
-		//Map<Long, List<IContactMapAbstractSite>> mapAgentToSites = new HashMap<Long, List<IContactMapAbstractAgent>>();
-		List<IContactMapAbstractAgent> listToAdd = new ArrayList<IContactMapAbstractAgent>();
-		for(IContactMapAbstractSite s : listIn){
-			IContactMapAbstractAgent newAgent = mapAgent.get(s.getAgentLink().getId());
-			if(newAgent == null){
-				newAgent = new CContactMapAbstractAgent(s.getAgentLink());
-				long id = simulationData.getKappaSystem().generateNextAgentId();
-				newAgent.setId(id);
-				listToAdd.add(newAgent);
-				mapAgent.put(s.getAgentLink().getId(), newAgent);
-			}
-			newAgent.modify(s);
-		}
-		
-		List<IContactMapAbstractAgent> listToDelete = clearListToAdd(listToAdd);		
-		
-		if(listToAdd.size() == listToDelete.size())
-			return false;
-		// TODO create true connections
-		
-		return true;
-	}
-	
-	private List<IContactMapAbstractAgent> clearListToAdd(List<IContactMapAbstractAgent> listToAdd){
-		List<IContactMapAbstractAgent> listToDelete = new ArrayList<IContactMapAbstractAgent>();
-		for(IContactMapAbstractAgent a : listToAdd){
-			List<Long> listAgentId = agentNameIdToAgentId.get(a.getNameId());
-			if(listAgentId == null)
-				continue;
-			for(Long l : listAgentId){
-				IContactMapAbstractAgent agentFromSolution = abstractAgentMap.get(l);
-				if(agentFromSolution.equalz(a)){
-					listToDelete.add(a);
-					break;
-				}
-			}
-		}
-		return listToDelete;
+
+	public boolean addNewData(List<IContactMapAbstractAgent> listIn) {
+		boolean isAdd = false;
+		for (IContactMapAbstractAgent a : listIn)
+			if (addAgentToAgentsMap(a))
+				isAdd = true;
+
+		return isAdd;
 	}
 
 	private void fillModelMapOfAgents() {
@@ -124,46 +92,27 @@ public class CContactMapAbstractSolution {
 		}
 	}
 
-	private boolean addAgentToAgentsMap(IContactMapAbstractAgent abstractAgent) {
-		Integer agentNameId = abstractAgent.getNameId();
-		List<Long> listAgentId = agentNameIdToAgentId.get(agentNameId);
-		if (listAgentId == null)
-			listAgentId = new ArrayList<Long>();
+	private boolean addAgentToAgentsMap(IContactMapAbstractAgent a) {
+		List<IContactMapAbstractAgent> agentsFromSolution = agentNameIdToAgentsList
+				.get(a.getId());
 
-		boolean isAdd = true;
-		for (Long l : listAgentId) {
-			IContactMapAbstractAgent checkAgent = abstractAgentMap.get(l);
-			if (checkAgent.equalz(abstractAgent)) {
-				isAdd = false;
-				break;
-			}
-		}
+		if (agentsFromSolution == null) {
+			agentsFromSolution = new ArrayList<IContactMapAbstractAgent>();
+			agentNameIdToAgentsList.put(a.getNameId(), agentsFromSolution);
+		} else if (a.includedInCollection(agentsFromSolution))
+			return false;
 
-		if (isAdd) {
-			long id = simulationData.getKappaSystem().generateNextAgentId();
-			abstractAgent.setId(id);
-			listAgentId.add(id);
-			abstractAgentMap.put(id, abstractAgent);
-			agentNameIdToAgentId.put(agentNameId, listAgentId);
-			return true;
-		}
+		agentsFromSolution.add(a);
 
-		return false;
+		return true;
 	}
 
 	public final List<IContactMapAbstractAgent> getListOfAgentsByNameID(
 			int nameID) {
-		List<Long> listIDs = agentNameIdToAgentId.get(nameID);
-		if (listIDs == null)
+		List<IContactMapAbstractAgent> listAgents = agentNameIdToAgentsList.get(nameID);
+		if (listAgents == null)
 			return null;
-		List<IContactMapAbstractAgent> agentsList = new ArrayList<IContactMapAbstractAgent>();
-
-		for (long id : listIDs) {
-			IContactMapAbstractAgent agent = abstractAgentMap.get(id);
-			agentsList.add(agent);
-		}
-
-		return agentsList;
+		return listAgents;
 	}
 
 	public IContactMapAbstractSite findSite(Integer agentId, Integer siteId,

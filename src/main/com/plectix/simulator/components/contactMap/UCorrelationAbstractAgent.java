@@ -110,35 +110,35 @@ public class UCorrelationAbstractAgent {
 //		atomicActions.add(CActionType.BOUND);
 	}
 
-	public List<IContactMapAbstractSite> modifySiteFromSolution(
-			IContactMapAbstractSite newSite,
+	public List<IContactMapAbstractAgent> modifySiteFromSolution(
+			IContactMapAbstractAgent newAgent,
 			CContactMapAbstractSolution solution) {
 		if (correlationType != ECorrelationType.CORRELATION_LHS_AND_RHS)
 			return null;
-		List<IContactMapAbstractSite> listOut = new ArrayList<IContactMapAbstractSite>();
+		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
 		for (CActionType t : atomicActions) {
 			switch (t) {
 			case BREAK:
-				listOut.addAll(doBreak(newSite, solution));
+				listOut.addAll(doBreak(newAgent, solution));
 				break;
 			case DELETE:
-				return doDelete(newSite,solution);
+				return doDelete(newAgent,solution);
 			case BOUND:
-				doBound(newSite);
+				doBound(newAgent);
 				break;
 			case MODIFY:
-				doModify(newSite);
+				doModify(newAgent);
 				break;
 			}
 		}
 		return listOut;
 	}
 
-	private List<IContactMapAbstractSite> doBreak(
-			IContactMapAbstractSite newSite,
+	private List<IContactMapAbstractAgent> doBreak(
+			IContactMapAbstractAgent newAgent,
 			CContactMapAbstractSolution solution) {
-		List<IContactMapAbstractSite> listOut = new ArrayList<IContactMapAbstractSite>();
-		// TODO
+		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
+		// TODO BRK
 		
 //		CLinkRank linkRank = fromAgent.getLinkState().getStatusLinkRank();
 //		if (linkRank == CLinkRank.BOUND) {
@@ -158,29 +158,32 @@ public class UCorrelationAbstractAgent {
 //		IContactMapAbstractSite addSite = site.clone();
 //		addSite.getLinkState().setFreeLinkState();
 //		listOut.add(addSite);
-		listOut.addAll(breakLinkedSite(newSite, solution));
-		newSite.getLinkState().setFreeLinkState();
+		
+//		listOut.addAll(breakLinkedSite(newSite, solution));
+//		newSite.getLinkState().setFreeLinkState();
 		return listOut;
 	}
 
-	private void doBound(IContactMapAbstractSite newSite) {
-		
+	private void doBound(IContactMapAbstractAgent newAgent) {
+		// TODO BND
 	}
 
-	private void doModify(IContactMapAbstractSite newSite) {
+	private void doModify(IContactMapAbstractAgent newAgent) {
 		
-		//TODO
+		//TODO MOD
 //		newSite.getInternalState().setNameId(
 //				toAgent.getInternalState().getNameId());
 	}
 
-	private List<IContactMapAbstractSite> doDelete(
-			IContactMapAbstractSite newSite,
+	private List<IContactMapAbstractAgent> doDelete(
+			IContactMapAbstractAgent newAgent,
 			CContactMapAbstractSolution solution) {
-		List<IContactMapAbstractSite> listOut = new ArrayList<IContactMapAbstractSite>();
-		IContactMapAbstractAgent agent = solution.getAbstractAgentMapOld().get(newSite.getAgentLink().getNameId());
-		if(agent == null)
-			return listOut;
+		// TODO DELL
+		
+		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
+//		IContactMapAbstractAgent agent = solution.getAbstractAgentMapOld().get(newSite.getAgentLink().getNameId());
+//		if(agent == null)
+//			return listOut;
 //		for(IContactMapAbstractSite s : agent.getSites()){
 //			listOut.addAll(breakLinkedSite(s, solution));
 //		}

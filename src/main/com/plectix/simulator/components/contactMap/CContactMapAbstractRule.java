@@ -100,12 +100,12 @@ public class CContactMapAbstractRule {
 		return lhsAgents;
 	}
 
-	public List<IContactMapAbstractAgent> getRhsSites() {
+	public List<IContactMapAbstractAgent> getRhsAgents() {
 		return rhsAgents;
 	}
 
-	public List<IContactMapAbstractSite> getNewData() {
-		List<IContactMapAbstractSite> newData = new ArrayList<IContactMapAbstractSite>();
+	public List<IContactMapAbstractAgent> getNewData() {
+		List<IContactMapAbstractAgent> newData = new ArrayList<IContactMapAbstractAgent>();
 		int[] indexList = new int[lhsAgents.size()];
 		if (lhsAgents.size() == 0) {
 			newData.addAll(abstractAction.apply(

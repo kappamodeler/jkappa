@@ -1,5 +1,6 @@
 package com.plectix.simulator.interfaces;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +26,9 @@ public interface IContactMapAbstractAgent extends IAbstractAgent{
 	public void addSite(IContactMapAbstractSite newSite);
 	
 	public boolean isFit(IContactMapAbstractAgent agent);
+
+	public IContactMapAbstractAgent clone();
+
+	public boolean includedInCollection(
+			Collection<IContactMapAbstractAgent> collection);
 }

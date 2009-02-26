@@ -11,7 +11,7 @@ import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 public class CContactMapAbstractAction {
 	private Map<Integer, List<IContactMapAbstractSite>> siteMap;
 	private CContactMapAbstractRule rule;
-	private List<IContactMapAbstractSite> sitesToAdd;
+	private List<IContactMapAbstractAgent> agentsToAdd;
 	private List<UCorrelationAbstractAgent> correlationSites;
 	
 //	NONE(-1),
@@ -23,14 +23,16 @@ public class CContactMapAbstractAction {
 	
 	public CContactMapAbstractAction(CContactMapAbstractRule rule){
 		this.rule = rule;
-		this.sitesToAdd = new ArrayList<IContactMapAbstractSite>();
+		this.agentsToAdd = new ArrayList<IContactMapAbstractAgent>();
 		correlationSites = new ArrayList<UCorrelationAbstractAgent>();
-		createAtomicActions();
+		
+		// TODO
+//		createAtomicActions();
 	}
 
 	private void createAtomicActions(){
 		// TODO createAtomicActions
-		boolean[] checkList = new boolean[rule.getRhsSites().size()];
+		boolean[] checkList = new boolean[rule.getRhsAgents().size()];
 		for(IContactMapAbstractAgent a : rule.getLhsAgent()){
 			UCorrelationAbstractAgent uAgent = new UCorrelationAbstractAgent(this,a,null,ECorrelationType.CORRELATION_LHS_AND_RHS);
 			correlationSites.add(uAgent);
@@ -48,8 +50,8 @@ public class CContactMapAbstractAction {
 		int i=0;
 		for(boolean b : checkList){
 			if(!b){
-				IContactMapAbstractSite nSite = new CContactMapAbstractSite(rule.getRhsSites().get(i));
-				sitesToAdd.add(nSite);
+				IContactMapAbstractAgent nAgent = new CContactMapAbstractAgent(rule.getRhsAgents().get(i));
+				agentsToAdd.add(nAgent);
 			}
 			i++;
 		}
@@ -118,17 +120,17 @@ public class CContactMapAbstractAction {
 		return true;
 	}
 	
-	public List<IContactMapAbstractSite> apply(List<UCorrelationAbstractAgent> injList, CContactMapAbstractSolution solution){
+	public List<IContactMapAbstractAgent> apply(List<UCorrelationAbstractAgent> injList, CContactMapAbstractSolution solution){
 		// TODO apply
-		List<IContactMapAbstractSite> listOut = CContactMapAbstractSite.cloneAll(sitesToAdd);
-//		int i=0;
-//		for(UCorrelationAbstractAgent corLHSandRHS : correlationSites){
-//			UCorrelationAbstractAgent corLHSandSolution = injList.get(i);
-//			IContactMapAbstractSite newSite = corLHSandSolution.getToSite().clone();
-//			listOut.addAll(corLHSandRHS.modifySiteFromSolution(newSite,solution));
-//			listOut.add(newSite);
-//			i++;
-//		}
+		List<IContactMapAbstractAgent> listOut = CContactMapAbstractAgent.cloneAll(agentsToAdd);
+		int i=0;
+		for(UCorrelationAbstractAgent corLHSandRHS : correlationSites){
+			UCorrelationAbstractAgent corLHSandSolution = injList.get(i);
+			IContactMapAbstractAgent newAgent = corLHSandSolution.getToAgent().clone();
+			listOut.addAll(corLHSandRHS.modifySiteFromSolution(newAgent,solution));
+			listOut.add(newAgent);
+			i++;
+		}
 		return listOut;
 	}
 }

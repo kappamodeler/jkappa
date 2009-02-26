@@ -1,7 +1,10 @@
 package com.plectix.simulator.components.contactMap;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.components.CInternalState;
@@ -212,4 +215,25 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		site.setLinkState(s.getLinkState().clone());
 	}
 
+	public static List<IContactMapAbstractAgent> cloneAll(
+			List<IContactMapAbstractAgent> listIn) {
+		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
+		for (IContactMapAbstractAgent a : listIn)
+			listOut.add(a.clone());
+		return listOut;
+	}
+
+	public IContactMapAbstractAgent clone() {
+		return new CContactMapAbstractAgent(this);
+	}
+
+	public final boolean includedInCollection(
+			Collection<IContactMapAbstractAgent> collection) {
+		for (IContactMapAbstractAgent agent : collection) {
+			if (this.equalz(agent)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

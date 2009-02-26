@@ -17,6 +17,7 @@ import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
@@ -240,7 +241,7 @@ public class CContactMap {
 		while (!isEnd) {
 			isEnd = true;
 			for (CContactMapAbstractRule rule : abstractReachableRules) {
-				List<IContactMapAbstractSite> newData = rule.getNewData();
+				List<IContactMapAbstractAgent> newData = rule.getNewData();
 				if (abstractSolution.addNewData(newData))
 					isEnd = false;
 			}
