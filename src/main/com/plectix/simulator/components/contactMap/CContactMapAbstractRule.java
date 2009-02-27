@@ -207,7 +207,7 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 			Integer keyAgent = a.getNameId();
 			List<IContactMapAbstractAgent> list = solution
 					.getListOfAgentsByNameID(keyAgent);
-			if(list.isEmpty())
+			if(list==null || list.isEmpty())
 				return null;
 			agentsLists.add(list);
 		}

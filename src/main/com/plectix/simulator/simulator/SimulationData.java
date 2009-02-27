@@ -40,6 +40,8 @@ import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.SnapshotElement;
+import com.plectix.simulator.components.contactMap.CContactMapAbstractAgent;
+import com.plectix.simulator.components.contactMap.CContactMapAbstractEdge;
 import com.plectix.simulator.components.contactMap.CContactMapChangedSite;
 import com.plectix.simulator.components.contactMap.CContactMapEdge;
 import com.plectix.simulator.components.contactMap.CContactMap.ContactMapMode;
@@ -50,6 +52,7 @@ import com.plectix.simulator.components.stories.CStoryTrees;
 import com.plectix.simulator.components.stories.CStoryType;
 import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
 import com.plectix.simulator.interfaces.IAction;
+import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
@@ -108,9 +111,9 @@ public class SimulationData {
 		return myKappaSystem;
 	}
 
-//	public void setKappaSystem(KappaSystem system) {
-//		myKappaSystem = system;
-//	}
+	// public void setKappaSystem(KappaSystem system) {
+	// myKappaSystem = system;
+	// }
 
 	public KappaModel getInitialModel() {
 		return myInitialModel;
@@ -230,7 +233,7 @@ public class SimulationData {
 			KappaFile kappaFile = kappaFileReader.parse();
 
 			KappaSystemParser parser = new KappaSystemParser(kappaFile, this);
-//			parser.setForwarding(simulationArguments.isForwardOnly());
+			// parser.setForwarding(simulationArguments.isForwardOnly());
 			parser.parse(outputType);
 		} catch (Exception e) {
 			println("Error in file \"" + simulationArguments.getInputFilename()
@@ -244,10 +247,9 @@ public class SimulationData {
 		}
 	}
 
-	
-
 	public final boolean isEndSimulation(double currentTime, long count) {
-		if (System.currentTimeMillis() - clockStamp > simulationArguments.getWallClockTimeLimit()) {
+		if (System.currentTimeMillis() - clockStamp > simulationArguments
+				.getWallClockTimeLimit()) {
 			println("Simulation is interrupted because the wall clock time has expired");
 			return true;
 		}
@@ -276,15 +278,14 @@ public class SimulationData {
 		}
 	}
 
-	
-
 	public final void resetBar() {
 		nextStep = step;
 	}
 
 	private void checkAndInitStoriesBar() {
 		if (simulationArguments.isStorify()) {
-			stepStories = simulationArguments.getIterations() * 1.0 / simulationArguments.getClockPrecision();
+			stepStories = simulationArguments.getIterations() * 1.0
+					/ simulationArguments.getClockPrecision();
 			nextStepStories = stepStories;
 		}
 	}
@@ -313,14 +314,15 @@ public class SimulationData {
 			}
 		}
 	}
-	
+
 	public void checkStoriesBar(int i) {
 		if (i >= nextStepStories) {
 			double r;
 			if (stepStories >= 1)
 				r = 1;
 			else
-				r = simulationArguments.getClockPrecision() * 1.0 / simulationArguments.getIterations();
+				r = simulationArguments.getClockPrecision() * 1.0
+						/ simulationArguments.getIterations();
 			while (r > 0) {
 				print("#");
 				r = r - 1;
@@ -357,8 +359,6 @@ public class SimulationData {
 		}
 
 	}
-
-	
 
 	private final void fillNodesLevelStoryTrees(
 			List<CStoryType> currentStTypeList, List<Element> nodes,
@@ -415,12 +415,6 @@ public class SimulationData {
 		}
 	}
 
-	
-
-	
-
-	
-
 	public final void stopTimer(InfoType outputType, PlxTimer timer,
 			String message) {
 		if (timer == null) {
@@ -469,12 +463,14 @@ public class SimulationData {
 	}
 
 	private final void setFocusOn(String fileNameFocusOn) throws Exception {
-//		KappaFileReader kappaFileReader = new KappaFileReader(fileNameFocusOn);
-//		KappaFile kappaFile = kappaFileReader.parse();
-//		KappaSystemParser parser = new KappaSystemParser(kappaFile, this);
-//		List<IRule> ruleList = parser.createRules();
+		// KappaFileReader kappaFileReader = new
+		// KappaFileReader(fileNameFocusOn);
+		// KappaFile kappaFile = kappaFileReader.parse();
+		// KappaSystemParser parser = new KappaSystemParser(kappaFile, this);
+		// List<IRule> ruleList = parser.createRules();
 
-		List<IRule> ruleList = (new RuleBuilder(myKappaSystem)).build(myInitialModel.getRules());
+		List<IRule> ruleList = (new RuleBuilder(myKappaSystem))
+				.build(myInitialModel.getRules());
 
 		if (ruleList != null && !ruleList.isEmpty()) {
 			myKappaSystem.getContactMap().setFocusRule(ruleList.get(0));
@@ -482,13 +478,12 @@ public class SimulationData {
 		}
 	}
 
-	// **************************************************************************
+	//**************************************************************************
 	//
 	// INFO OUTPUT
 	// 
 	// TODO separate info output
-	
-	
+
 	public final void addInfo(InfoType outputType, InfoType type, String message) {
 		if (!simulationArguments.isShortConsoleOutput())
 			outputType = InfoType.OUTPUT;
@@ -506,8 +501,8 @@ public class SimulationData {
 
 		infoList.add(info);
 	}
-	
-	// **************************************************************************
+
+	//**************************************************************************
 	//
 	// CONSOLE OUTPUT
 	// 
@@ -546,7 +541,8 @@ public class SimulationData {
 
 	private final void outputSolution() {
 		println("INITIAL SOLUTION:");
-		for (SolutionLines sl : (myKappaSystem.getSolution()).getSolutionLines()) {
+		for (SolutionLines sl : (myKappaSystem.getSolution())
+				.getSolutionLines()) {
 			print("-");
 			print("" + sl.getCount());
 			print("*[");
@@ -725,7 +721,7 @@ public class SimulationData {
 				|| !simulationArguments.isStorify())
 			print("#");
 	}
-	
+
 	public final void createTMPReport() {
 		// model.getSimulationData().updateData();
 		PlxTimer timer = new PlxTimer();
@@ -786,7 +782,7 @@ public class SimulationData {
 				+ " sec. CPU");
 	}
 
-	// **************************************************************************
+	//**************************************************************************
 	// 
 	// XML OUTPUT
 	// 
@@ -851,10 +847,12 @@ public class SimulationData {
 			contactMapElement.setAttribute("Name",
 					"Low remyKappaSystem.getSolution()");
 
-			Map<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap 
-					= myKappaSystem.getContactMap().getAgentsInContactMap();
-			Map<Integer, Map<Integer, List<CContactMapEdge>>> bondsInContactMap 
-					= myKappaSystem.getContactMap().getBondsInContactMap();
+			Map<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap = myKappaSystem
+					.getContactMap().getAbstractSolution()
+					.getAgentsInContactMap();
+			Map<Integer, Map<Integer, List<CContactMapAbstractEdge>>> bondsInContactMap = myKappaSystem
+					.getContactMap().getAbstractSolution()
+					.getEdgesInContactMap();
 
 			List<Integer> agentIDWasRead = new ArrayList<Integer>();
 
@@ -885,25 +883,29 @@ public class SimulationData {
 			while (agentIterator.hasNext()) {
 				int agentKey = agentIterator.next();
 				agentIDWasRead.add(agentKey);
-				Map<Integer, List<CContactMapEdge>> edgesMap = bondsInContactMap
+				Map<Integer, List<CContactMapAbstractEdge>> edgesMap = bondsInContactMap
 						.get(agentKey);
 				Iterator<Integer> siteIterator = edgesMap.keySet().iterator();
 				while (siteIterator.hasNext()) {
 					int siteKey = siteIterator.next();
-					List<CContactMapEdge> edgesList = edgesMap.get(siteKey);
-					for (CContactMapEdge edge : edgesList) {
+					List<CContactMapAbstractEdge> edgesList = edgesMap
+							.get(siteKey);
+					for (CContactMapAbstractEdge edge : edgesList) {
 						Element bond = doc.createElement("Bond");
-						ISite vertexTo = edge.getVertexTo();
-						ISite vertexFrom = edge.getVertexFrom();
-						if (!agentIDWasRead.contains(vertexTo.getAgentLink()
-								.getNameId())) {
-
+						int vertexToSiteNameID = edge.getVertexToSiteNameID();
+						int vertexToAgentNameID = edge.getVertexToAgentNameID();
+						IContactMapAbstractSite vertexFrom = edge
+								.getVertexFrom();
+						if (!agentIDWasRead.contains(vertexToAgentNameID)) {
 							bond.setAttribute("FromAgent", vertexFrom
 									.getAgentLink().getName());
 							bond.setAttribute("FromSite", vertexFrom.getName());
-							bond.setAttribute("ToAgent", vertexTo
-									.getAgentLink().getName());
-							bond.setAttribute("ToSite", vertexTo.getName());
+							bond.setAttribute("ToAgent", ThreadLocalData
+									.getNameDictionary().getName(
+											vertexToAgentNameID));
+							bond.setAttribute("ToSite", ThreadLocalData
+									.getNameDictionary().getName(
+											vertexToSiteNameID));
 
 							if (edge.getRules().size() != 0) {
 								for (int ruleID : edge.getRules()) {
@@ -994,8 +996,10 @@ public class SimulationData {
 							.get(st.getRuleID()).getName());
 					double percentage = ((double) st.getIsomorphicCount())
 							/ (double) simulationArguments.getIterations();
-					story.setAttribute("Percentage", Double.toString(percentage * 100));
-					story.setAttribute("Average", Double.toString(st.getAverageTime()
+					story.setAttribute("Percentage", Double
+							.toString(percentage * 100));
+					story.setAttribute("Average", Double.toString(st
+							.getAverageTime()
 							/ st.getIsomorphicCount()));
 					addConnection(story, st, doc, st.getRuleID());
 					simplxSession.appendChild(story);
@@ -1083,7 +1087,7 @@ public class SimulationData {
 				.toString(site.isLinkState()));
 		agent.appendChild(siteNode);
 	}
-	
+
 	private final void appendInfo(Element simplxSession, Document doc) {
 		Element log = doc.createElement("Log");
 
@@ -1098,7 +1102,7 @@ public class SimulationData {
 
 		simplxSession.appendChild(log);
 	}
-	
+
 	private final Element createElement(IObservablesComponent obs, Document doc) {
 		Element node = doc.createElement("Plot");
 		String obsName = obs.getName();
@@ -1114,7 +1118,7 @@ public class SimulationData {
 		}
 		return node;
 	}
-	
+
 	private final void addConnection(Element story, CStoryTrees storyTree,
 			Document doc, int item) {
 
@@ -1234,7 +1238,7 @@ public class SimulationData {
 		for (Element el : connections)
 			story.appendChild(el);
 	}
-	
+
 	private final void writeToXML(Source source, PlxTimer timerOutput)
 			throws ParserConfigurationException, TransformerException {
 		TransformerFactory trFactory = TransformerFactory.newInstance();
@@ -1340,7 +1344,7 @@ public class SimulationData {
 		}
 	}
 
-	// **************************************************************************
+	//**************************************************************************
 	//
 	// GETTERS AND SETTERS
 	// 
@@ -1377,11 +1381,11 @@ public class SimulationData {
 	public List<Double> getSnapshotTimes() {
 		return Collections.unmodifiableList(snapshotTimes);
 	}
-	
+
 	public void setSnapshotTimes(List<Double> snapshotTimes) {
 		this.snapshotTimes = snapshotTimes;
 	}
-	
+
 	public final List<List<RunningMetric>> getRunningMetrics() {
 		return runningMetrics;
 	}
