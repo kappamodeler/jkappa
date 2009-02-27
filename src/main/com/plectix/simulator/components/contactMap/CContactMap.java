@@ -125,6 +125,7 @@ public class CContactMap {
 			break;
 
 		case AGENT_OR_RULE:
+			//TODO add edges to contact map for agents from agentNameIdToAgentsList which are not in focus; 
 			break;
 		}
 		
