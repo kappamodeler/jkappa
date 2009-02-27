@@ -62,7 +62,10 @@ import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
 import com.plectix.simulator.parser.KappaSystemParser;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
+import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
+import com.plectix.simulator.parser.abstractmodel.reader.RulesParagraphReader;
 import com.plectix.simulator.parser.builders.RuleBuilder;
+import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
@@ -463,14 +466,17 @@ public class SimulationData {
 	}
 
 	private final void setFocusOn(String fileNameFocusOn) throws Exception {
-		// KappaFileReader kappaFileReader = new
-		// KappaFileReader(fileNameFocusOn);
-		// KappaFile kappaFile = kappaFileReader.parse();
-		// KappaSystemParser parser = new KappaSystemParser(kappaFile, this);
-		// List<IRule> ruleList = parser.createRules();
+		 KappaFileReader kappaFileReader = new KappaFileReader(fileNameFocusOn);
+		 KappaFile kappaFile = kappaFileReader.parse();
+		 KappaModel model = (new KappaModelCreator(simulationArguments)).createModel(kappaFile);
+		 List<IRule> ruleList = (new RuleBuilder(new KappaSystem(this))).
+		 	build(new RulesParagraphReader(model, simulationArguments, new AgentFactory()).readComponent(kappaFile.getRules()));
+		 
+		 myKappaSystem.getContactMap().setSimulationData(this);
+//		 List<IRule> ruleList = parser.createRules();
 
-		List<IRule> ruleList = (new RuleBuilder(myKappaSystem))
-				.build(myInitialModel.getRules());
+//		List<IRule> ruleList = (new RuleBuilder(myKappaSystem))
+//				.build(myInitialModel.getRules());
 
 		if (ruleList != null && !ruleList.isEmpty()) {
 			myKappaSystem.getContactMap().setFocusRule(ruleList.get(0));
