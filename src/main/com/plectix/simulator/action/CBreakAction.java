@@ -48,7 +48,8 @@ public class CBreakAction extends CAction {
 			linkSite.getLinkState().setSite(null);
 			linkSite.getLinkState().setStatusLink(CLinkStatus.FREE);
 			if (mySiteTo != null) {
-				linkSite.setLinkIndex(mySiteTo.getLinkIndex());
+//				linkSite.setLinkIndex(mySiteTo.getLinkIndex());
+				linkSite.setLinkIndex(-1);
 			}
 			injection.addToChangedSites(linkSite);
 			getRightCComponent().addAgentFromSolutionForRHS(linkSite
@@ -76,8 +77,8 @@ public class CBreakAction extends CAction {
 			addRuleSitesToNetworkNotation(false, netNotation, linkSite);
 		}
 		// /////////////////////////////////////////////
-		agentFromInSolution.getSite(mySiteFrom.getNameId()).setLinkIndex(
-				mySiteFrom.getLinkIndex());
+		agentFromInSolution.getSite(mySiteFrom.getNameId()).
+			setLinkIndex(-1);
 	}
 
 	private final void addSiteToConnectedWithBroken(ISite checkedSite) {
