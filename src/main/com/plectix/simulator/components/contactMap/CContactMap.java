@@ -111,15 +111,23 @@ public class CContactMap {
 
 	public void constructAbstractContactMap() {
 		// TODO
-		boolean isEnd = false;
-		while (!isEnd) {
-			isEnd = true;
-			for (CContactMapAbstractRule rule : abstractRules) {
-				List<IContactMapAbstractAgent> newData = rule.getNewData();
-				if (abstractSolution.addNewData(newData, rule))
-					isEnd = false;
+		switch (mode) {
+		case MODEL:
+			boolean isEnd = false;
+			while (!isEnd) {
+				isEnd = true;
+				for (CContactMapAbstractRule rule : abstractRules) {
+					List<IContactMapAbstractAgent> newData = rule.getNewData();
+					if (abstractSolution.addNewData(newData, rule))
+						isEnd = false;
+				}
 			}
+			break;
+
+		case AGENT_OR_RULE:
+			break;
 		}
+		
 
 		Map<Integer, List<IContactMapAbstractAgent>> abstractAgentMap = abstractSolution
 				.getAgentNameIdToAgentsList();
