@@ -162,9 +162,7 @@ public class CContactMap {
 				for (IContactMapAbstractAgent agent : this.agentsFromFocusedRule)
 					if (agent.includedInCollectionByName(agentsFromRule)) {
 						abstractSolution.addAgentToAgentsMap(agent);
-						//abstractSolution.addAgentsToAgentsMap(agentsFromRule);
 						abstractSolution.addAgentsBoundedWithFocusedAgent(agent,agentsFromRule);
-						
 						break;
 					}
 			}

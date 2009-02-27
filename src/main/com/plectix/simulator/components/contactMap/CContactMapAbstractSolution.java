@@ -76,6 +76,11 @@ public class CContactMapAbstractSolution {
 				} else {
 					List<CContactMapAbstractEdge> edgeList = edgesMap
 							.get(siteKey);
+					if(edgeList==null){
+						edgeList = new ArrayList<CContactMapAbstractEdge>();
+						edgesMap.put(siteKey, edgeList);
+					}
+					
 					CContactMapAbstractEdge edge = new CContactMapAbstractEdge(
 							site);
 					boolean wasInList = false;
@@ -203,7 +208,7 @@ public class CContactMapAbstractSolution {
 				int key = iterator.next();
 				IContactMapAbstractSite siteFromRule = sitesMapFromRule.get(key);
 				CContactMapLinkState ls = siteFromRule.getLinkState();
-				if(ls.getLinkSiteNameID()==agent.getNameId())
+				if(ls.getAgentNameID()==agent.getNameId() || agentFromRule.getNameId()==agent.getNameId())
 					 addAgentToAgentsMap(agentFromRule);
 			} 
 		}

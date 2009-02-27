@@ -856,7 +856,7 @@ public class SimulationData {
 			Map<Integer, Map<Integer, List<CContactMapAbstractEdge>>> bondsInContactMap = myKappaSystem
 					.getContactMap().getAbstractSolution()
 					.getEdgesInContactMap();
-
+			//	TODO error : twice times creates bounds
 			List<Integer> agentIDWasRead = new ArrayList<Integer>();
 
 			Iterator<Integer> agentIterator = agentsInContactMap.keySet()
@@ -865,6 +865,7 @@ public class SimulationData {
 			while (agentIterator.hasNext()) {
 				Element agent = doc.createElement("Agent");
 				int agentKey = agentIterator.next();
+				agentIDWasRead.add(agentKey);
 				Map<Integer, CContactMapChangedSite> sitesMap = agentsInContactMap
 						.get(agentKey);
 				Iterator<Integer> siteIterator = sitesMap.keySet().iterator();
@@ -885,7 +886,6 @@ public class SimulationData {
 			agentIterator = bondsInContactMap.keySet().iterator();
 			while (agentIterator.hasNext()) {
 				int agentKey = agentIterator.next();
-				agentIDWasRead.add(agentKey);
 				Map<Integer, List<CContactMapAbstractEdge>> edgesMap = bondsInContactMap
 						.get(agentKey);
 				Iterator<Integer> siteIterator = edgesMap.keySet().iterator();
@@ -899,7 +899,7 @@ public class SimulationData {
 						int vertexToAgentNameID = edge.getVertexToAgentNameID();
 						IContactMapAbstractSite vertexFrom = edge
 								.getVertexFrom();
-						if (!agentIDWasRead.contains(vertexToAgentNameID)) {
+					//	if (!agentIDWasRead.contains(vertexToAgentNameID)) {
 							bond.setAttribute("FromAgent", vertexFrom
 									.getAgentLink().getName());
 							bond.setAttribute("FromSite", vertexFrom.getName());
@@ -919,7 +919,7 @@ public class SimulationData {
 								}
 							}
 							contactMapElement.appendChild(bond);
-						}
+					//	}
 					}
 				}
 			}
