@@ -162,6 +162,9 @@ public class CContactMap {
 				for (IContactMapAbstractAgent agent : this.agentsFromFocusedRule)
 					if (agent.includedInCollectionByName(agentsFromRule)) {
 						abstractSolution.addAgentToAgentsMap(agent);
+						//abstractSolution.addAgentsToAgentsMap(agentsFromRule);
+						abstractSolution.addAgentsBoundedWithFocusedAgent(agent,agentsFromRule);
+						
 						break;
 					}
 			}
@@ -173,7 +176,7 @@ public class CContactMap {
 			List<IContactMapAbstractAgent> agentsList) {
 		CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(rule);
 		List<IContactMapAbstractAgent> agents = new ArrayList<IContactMapAbstractAgent>();
-		if (!rule.getLeftHandSide().equals(CConnectedComponent.EMPTY)) {
+		if (rule.getLeftHandSide().get(0)!=CRule.EMPTY_LHS_CC) {
 			agents = abstractRule.getLhsAgents();
 			addAgentsToListFromRule(agents, agentsList);
 		}

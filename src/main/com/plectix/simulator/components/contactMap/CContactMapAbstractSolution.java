@@ -186,6 +186,29 @@ public class CContactMapAbstractSolution {
 
 		return true;
 	}
+	
+	public final void addAgentsToAgentsMap(List<IContactMapAbstractAgent> agentsFromRule) {
+		for(IContactMapAbstractAgent agent : agentsFromRule)
+			addAgentToAgentsMap(agent); 
+		
+	}
+	
+	public void addAgentsBoundedWithFocusedAgent(
+			IContactMapAbstractAgent agent,
+			List<IContactMapAbstractAgent> agentsFromRule) {
+		for(IContactMapAbstractAgent agentFromRule : agentsFromRule){
+			Map<Integer, IContactMapAbstractSite> sitesMapFromRule = agentFromRule.getSitesMap();
+			Iterator<Integer> iterator = sitesMapFromRule.keySet().iterator();
+			while(iterator.hasNext()){
+				int key = iterator.next();
+				IContactMapAbstractSite siteFromRule = sitesMapFromRule.get(key);
+				CContactMapLinkState ls = siteFromRule.getLinkState();
+				if(ls.getLinkSiteNameID()==agent.getNameId())
+					 addAgentToAgentsMap(agentFromRule);
+			} 
+		}
+		
+	}
 
 	public final List<IContactMapAbstractAgent> getListOfAgentsByNameID(
 			int nameID) {
@@ -232,4 +255,6 @@ public class CContactMapAbstractSolution {
 		// "***************************************************************************"
 		// );
 	}
+
+	
 }
