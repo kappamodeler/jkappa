@@ -96,7 +96,7 @@ public class KappaSystem {
 
 		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 			// contactMap.addCreatedAgentsToSolution(this.solution, rules);
-			contactMap.setSolution(this.solution);
+			//contactMap.setSolution(this.solution);
 		}
 
 		observables.checkAutomorphisms();
