@@ -11,6 +11,7 @@ import java.util.TreeMap;
 import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.action.CAddAction;
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.injections.CInjection;
@@ -74,37 +75,38 @@ public class CContactMap {
 		for (IContactMapAbstractAgent agent : agentsFromFocusedRule) {
 			if (agent.equalz(checkingAgent))
 				return true;
-//			for (ISite site : ((CAgent) checkingAgent).getSites()) {
-//				ISite linkSite = site.getLinkState().getSite();
-//				if (linkSite != null)
-//					if (linkSite.getAgentLink().equalz(agent))
-//						// if (linkSite.getAgentLink().equals(agent))
-//						return true;
-//
-//			}
+			// for (ISite site : ((CAgent) checkingAgent).getSites()) {
+			// ISite linkSite = site.getLinkState().getSite();
+			// if (linkSite != null)
+			// if (linkSite.getAgentLink().equalz(agent))
+			// // if (linkSite.getAgentLink().equals(agent))
+			// return true;
+			//
+			// }
 		}
 		return false;
 	}
 
-	private void addToAgentsInContactMap(IContactMapAbstractAgent agent, IRule rule, boolean isLHS) {
+	private void addToAgentsInContactMap(IContactMapAbstractAgent agent,
+			IRule rule, boolean isLHS) {
 		// TODO
 		if (mode == ContactMapMode.AGENT_OR_RULE
 				&& !checkConnectionWithFocused(agent)) {
 			return;
 		}
-//		for (ISite site : agent.getSites()) {
-//			boolean internalState = false;
-//			boolean linkState = false;
-//			if (!isLHS) {
-//				if (site.getInternalState().getNameId() != -1)
-//					internalState = true;
-//				if (site.getLinkState().getSite() != null)
-//					linkState = true;
-//			}
-//			CContactMapChangedSite chSite = new CContactMapChangedSite(site,
-//					internalState, linkState);
-//			addToAgentsInContactMap(chSite, rule);
-//		}
+		// for (ISite site : agent.getSites()) {
+		// boolean internalState = false;
+		// boolean linkState = false;
+		// if (!isLHS) {
+		// if (site.getInternalState().getNameId() != -1)
+		// internalState = true;
+		// if (site.getLinkState().getSite() != null)
+		// linkState = true;
+		// }
+		// CContactMapChangedSite chSite = new CContactMapChangedSite(site,
+		// internalState, linkState);
+		// addToAgentsInContactMap(chSite, rule);
+		// }
 	}
 
 	public void constructAbstractContactMap() {
@@ -150,7 +152,7 @@ public class CContactMap {
 				List<IContactMapAbstractAgent> agentsFromRule = new ArrayList<IContactMapAbstractAgent>();
 				fillAgentsFromRule(rule, agentsFromRule);
 				for (IContactMapAbstractAgent agent : this.agentsFromFocusedRule)
-					if (agent.includedInCollection(agentsFromRule)) {
+					if (agent.includedInCollectionByName(agentsFromRule)) {
 						abstractSolution.addAgentToAgentsMap(agent);
 						break;
 					}
@@ -163,8 +165,10 @@ public class CContactMap {
 			List<IContactMapAbstractAgent> agentsList) {
 		CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(rule);
 		List<IContactMapAbstractAgent> agents = new ArrayList<IContactMapAbstractAgent>();
-		agents = abstractRule.getLhsAgents();
-		addAgentsToListFromRule(agents, agentsList);
+		if (!rule.getLeftHandSide().equals(CConnectedComponent.EMPTY)) {
+			agents = abstractRule.getLhsAgents();
+			addAgentsToListFromRule(agents, agentsList);
+		}
 		agents = abstractRule.getRhsAgents();
 		addAgentsToListFromRule(agents, agentsList);
 	}

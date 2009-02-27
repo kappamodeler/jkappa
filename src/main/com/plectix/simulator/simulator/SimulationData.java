@@ -466,18 +466,15 @@ public class SimulationData {
 	}
 
 	private final void setFocusOn(String fileNameFocusOn) throws Exception {
-		 KappaFileReader kappaFileReader = new KappaFileReader(fileNameFocusOn);
-		 KappaFile kappaFile = kappaFileReader.parse();
-		 KappaModel model = (new KappaModelCreator(simulationArguments)).createModel(kappaFile);
-		 List<IRule> ruleList = (new RuleBuilder(new KappaSystem(this))).
-		 	build(new RulesParagraphReader(model, simulationArguments, new AgentFactory()).readComponent(kappaFile.getRules()));
-		 
-		 myKappaSystem.getContactMap().setSimulationData(this);
-//		 List<IRule> ruleList = parser.createRules();
+		KappaFileReader kappaFileReader = new KappaFileReader(fileNameFocusOn);
+		KappaFile kappaFile = kappaFileReader.parse();
+		KappaModel model = (new KappaModelCreator(simulationArguments))
+				.createModel(kappaFile);
+		List<IRule> ruleList = (new RuleBuilder(new KappaSystem(this)))
+				.build(new RulesParagraphReader(model, simulationArguments,
+						new AgentFactory()).readComponent(kappaFile.getRules()));
 
-//		List<IRule> ruleList = (new RuleBuilder(myKappaSystem))
-//				.build(myInitialModel.getRules());
-
+		myKappaSystem.getContactMap().setSimulationData(this);
 		if (ruleList != null && !ruleList.isEmpty()) {
 			myKappaSystem.getContactMap().setFocusRule(ruleList.get(0));
 			myKappaSystem.getContactMap().setMode(ContactMapMode.AGENT_OR_RULE);

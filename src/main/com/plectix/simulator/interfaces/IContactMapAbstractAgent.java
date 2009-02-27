@@ -4,11 +4,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public interface IContactMapAbstractAgent extends IAbstractAgent{
-	
+public interface IContactMapAbstractAgent extends IAbstractAgent {
+
 	public void addSites(IAgent agent,
 			Map<Integer, IContactMapAbstractAgent> agentNameIdToAgent);
-	
+
 	public boolean equalz(IAbstractAgent obj);
 
 	public Map<Integer, IContactMapAbstractSite> getSitesMap();
@@ -16,19 +16,22 @@ public interface IContactMapAbstractAgent extends IAbstractAgent{
 	public IContactMapAbstractSite getEmptySite();
 
 	public void setId(long id);
-	
+
 	public void addModelSite(IContactMapAbstractSite siteToAdd);
 
 	public IContactMapAbstractSite getSite(int nameID);
 
 	public void modify(IContactMapAbstractSite s);
-	
+
 	public void addSite(IContactMapAbstractSite newSite);
-	
+
 	public boolean isFit(IContactMapAbstractAgent agent);
 
 	public IContactMapAbstractAgent clone();
 
 	public boolean includedInCollection(
+			Collection<IContactMapAbstractAgent> collection);
+
+	public boolean includedInCollectionByName(
 			Collection<IContactMapAbstractAgent> collection);
 }

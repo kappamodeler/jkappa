@@ -109,6 +109,16 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		}
 	}
 
+	public final boolean includedInCollectionByName(
+			Collection<IContactMapAbstractAgent> collection) {
+		for (IContactMapAbstractAgent agent : collection) {
+			if (this.getNameId() == agent.getNameId()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public final boolean equalz(IAbstractAgent obj) {
 		if (this == obj) {
 			return true;
