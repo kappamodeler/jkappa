@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.plectix.simulator.doAction.*;
 import com.plectix.simulator.injections.*;
 import com.plectix.simulator.stories.*;
 import com.plectix.simulator.updates.*;
@@ -17,7 +18,8 @@ import com.plectix.simulator.perturbations.*;
 		//RunParserTests.class,
 		RunPerturbationsTests.class,
 		RunTestStories.class,
-		RunParserTests.class
+		RunParserTests.class,
+		TestAction.class
 		//TestJavaXMLCompare.class,
 	})
 public class RunAllTests {

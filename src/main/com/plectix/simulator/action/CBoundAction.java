@@ -66,6 +66,9 @@ public class CBoundAction extends CAction {
 		agentFromInSolution.getSite(mySiteFrom.getNameId()).getLinkState()
 				.setSite(agentToInSolution.getSite(mySiteTo.getNameId()));
 
+		agentToInSolution.getSite(mySiteTo.getNameId()).getLinkState()
+		.setSite(agentFromInSolution.getSite(mySiteFrom.getNameId()));
+
 		addToNetworkNotation(StateType.AFTER, netNotation,
 				agentFromInSolution.getSite(mySiteFrom.getNameId()));
 
