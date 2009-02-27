@@ -34,6 +34,11 @@ public class CContactMap {
 	}
 
 	private ContactMapMode mode = ContactMapMode.MODEL;
+	private SimulationData simulationData;
+	private CContactMapAbstractSolution abstractSolution;
+	private IRule focusRule;
+	private List<CContactMapAbstractRule> abstractRules;
+	private List<IContactMapAbstractAgent> agentsFromFocusedRule;
 
 	public ContactMapMode getMode() {
 		return mode;
@@ -43,24 +48,9 @@ public class CContactMap {
 		this.mode = mode;
 	}
 
-	// private List<IRule> reachableRules;
-	private SimulationData simulationData;
-	private ISolution solution;
-
-	private CContactMapAbstractSolution abstractSolution;
 	public CContactMapAbstractSolution getAbstractSolution() {
 		return abstractSolution;
 	}
-
-	private List<CContactMapAbstractRule> abstractRules;
-
-	private Map<Integer, IAgent> agentsFromSolution;
-	//private HashMap<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap;
-	//private HashMap<Integer, Map<Integer, List<CContactMapEdge>>> edgesInContactMap;
-
-	private List<IConnectedComponent> unreachableCC;
-	private IRule focusRule;
-	private List<IContactMapAbstractAgent> agentsFromFocusedRule;
 
 	public void setSimulationData(SimulationData simulationData) {
 		this.simulationData = simulationData;
@@ -74,49 +64,9 @@ public class CContactMap {
 		this.focusRule = focusRule;
 	}
 
-//	public Map<Integer, Map<Integer, CContactMapChangedSite>> getAgentsInContactMap() {
-//		return agentsInContactMap;
-//	}
-//
-//	public Map<Integer, Map<Integer, List<CContactMapEdge>>> getBondsInContactMap() {
-//		return edgesInContactMap;
-//	}
-
 	public CContactMap() {
-		// reachableRules = new ArrayList<IRule>();
-		unreachableCC = new ArrayList<IConnectedComponent>();
-		agentsFromSolution = new HashMap<Integer, IAgent>();
-//		edgesInContactMap = new HashMap<Integer, Map<Integer, List<CContactMapEdge>>>();
-//		agentsInContactMap = new HashMap<Integer, Map<Integer, CContactMapChangedSite>>();
 		agentsFromFocusedRule = new ArrayList<IContactMapAbstractAgent>();
 	}
-
-//	private void addToAgentsInContactMap(CContactMapChangedSite site, IRule rule) {
-//		int agentKey = site.getSite().getAgentLink().getNameId();
-//		Map<Integer, CContactMapChangedSite> chSiteMap = agentsInContactMap
-//				.get(agentKey);
-//		if (chSiteMap == null) {
-//			chSiteMap = new HashMap<Integer, CContactMapChangedSite>();
-//			chSiteMap.put(site.getSite().getNameId(), site);
-//			agentsInContactMap.put(agentKey, chSiteMap);
-//		} else {
-//			int siteKey = site.getSite().getNameId();
-//			CContactMapChangedSite chSite = chSiteMap.get(siteKey);
-//			if (chSite == null) {
-//				chSiteMap.put(siteKey, site);
-//			} else {
-//				if (!chSite.isInternalState())
-//					chSite.setInternalState(site.isInternalState());
-//				if (!chSite.isLinkState())
-//					chSite.setLinkState(site.isLinkState());
-//				if (site.isLinkState())
-//					chSite.addRules(rule);
-//				return;
-//			}
-//		}
-//		if (site.isLinkState())
-//			site.addRules(rule);
-//	}
 
 	private boolean checkConnectionWithFocused(
 			IContactMapAbstractAgent checkingAgent) {
@@ -226,9 +176,5 @@ public class CContactMap {
 				agentsForAdding.add(agent);
 			}
 		}
-	}
-
-	public void setSolution(ISolution solution) {
-		this.solution = solution;
 	}
 }
