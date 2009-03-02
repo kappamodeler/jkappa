@@ -66,6 +66,7 @@ import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
 import com.plectix.simulator.parser.abstractmodel.reader.RulesParagraphReader;
 import com.plectix.simulator.parser.builders.RuleBuilder;
 import com.plectix.simulator.parser.util.AgentFactory;
+import com.plectix.simulator.util.BoundContactMap;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
@@ -883,6 +884,7 @@ public class SimulationData {
 				contactMapElement.appendChild(agent);
 			}
 
+			List<BoundContactMap> boundList = new ArrayList<BoundContactMap>();
 			agentIterator = bondsInContactMap.keySet().iterator();
 			while (agentIterator.hasNext()) {
 				int agentKey = agentIterator.next();
@@ -899,6 +901,12 @@ public class SimulationData {
 						int vertexToAgentNameID = edge.getVertexToAgentNameID();
 						IContactMapAbstractSite vertexFrom = edge
 								.getVertexFrom();
+						BoundContactMap b = new BoundContactMap(vertexFrom.getAgentLink().getNameId(),ThreadLocalData
+								.getNameDictionary().getId(vertexFrom.getName()),vertexToAgentNameID,vertexToSiteNameID);
+						if(!boundList.contains(b))
+							boundList.add(b);
+						else
+							continue;
 					//	if (!agentIDWasRead.contains(vertexToAgentNameID)) {
 							bond.setAttribute("FromAgent", vertexFrom
 									.getAgentLink().getName());
