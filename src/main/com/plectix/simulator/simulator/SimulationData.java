@@ -857,7 +857,6 @@ public class SimulationData {
 			Map<Integer, Map<Integer, List<CContactMapAbstractEdge>>> bondsInContactMap = myKappaSystem
 					.getContactMap().getAbstractSolution()
 					.getEdgesInContactMap();
-			//	TODO error : twice times creates bounds
 			List<Integer> agentIDWasRead = new ArrayList<Integer>();
 
 			Iterator<Integer> agentIterator = agentsInContactMap.keySet()

@@ -163,7 +163,35 @@ public class CContactMap {
 				for (IContactMapAbstractAgent agent : this.agentsFromFocusedRule)
 					if (agent.includedInCollectionByName(agentsFromRule)) {
 						abstractSolution.addAgentToAgentsMap(agent);
-						abstractSolution.addAgentsBoundedWithFocusedAgent(agent,agentsFromRule);
+						abstractSolution.addAgentsBoundedWithFocusedAgent(agent,agentsFromRule,null);
+						break;
+					}
+			}
+			List<Integer> agentNameIdList = new ArrayList<Integer>(); 
+			List<IContactMapAbstractAgent> addAgentList = new ArrayList<IContactMapAbstractAgent>();
+			Iterator<Integer> iterator  = abstractSolution.getAgentNameIdToAgentsList().keySet().iterator();
+			while(iterator.hasNext()){
+				Integer key = iterator.next();
+				agentNameIdList.add(key);
+				addAgentList.add(abstractSolution.getAgentNameIdToAgent().get(key));				
+				
+			}
+			for(IContactMapAbstractAgent a : agentsFromFocusedRule){
+				for(IContactMapAbstractAgent a2 : addAgentList)
+					if(a2.getNameId() == a.getNameId()){
+						addAgentList.remove(a2);						
+						break;
+					}
+			}
+			
+			
+			for(IRule rule : rules){
+				List<IContactMapAbstractAgent> agentsFromRule = new ArrayList<IContactMapAbstractAgent>();
+				fillAgentsFromRule(rule, agentsFromRule);
+				for (IContactMapAbstractAgent agent : addAgentList)
+					if (agent.includedInCollectionByName(agentsFromRule)) {
+						abstractSolution.addAgentToAgentsMap(agent);
+						abstractSolution.addAgentsBoundedWithFocusedAgent(agent,agentsFromRule,agentNameIdList);
 						break;
 					}
 			}
