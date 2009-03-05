@@ -1,5 +1,10 @@
 package com.plectix.simulator.util;
 
+import java.util.Collection;
+import java.util.List;
+
+import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
+
 public class BoundContactMap {
 	private int agentNameIdFrom;
 	private int agentNameIdTo;
@@ -14,13 +19,13 @@ public class BoundContactMap {
 		this.siteNameIdTo = siteNameIdTo;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
+
+	public boolean equalz(Object obj) {
 		if (!(obj instanceof BoundContactMap))
 			return false;
 
 		BoundContactMap from = (BoundContactMap) obj;
-		if(agentNameIdFrom == from.getAgentNameIdTo() && siteNameIdFrom == from.getSiteNameIdTo() && siteNameIdTo == from.getSiteNameIdFrom())
+		if(agentNameIdFrom == from.getAgentNameIdTo() && agentNameIdTo == from.getAgentNameIdFrom() && siteNameIdFrom == from.getSiteNameIdTo() && siteNameIdTo == from.getSiteNameIdFrom())
 			return true;
 		
 //		if (!(((agentNameIdFrom == from.getAgentNameIdFrom()) && (agentNameIdTo == from
@@ -28,6 +33,16 @@ public class BoundContactMap {
 //				.getAgentNameIdTo()) && (agentNameIdTo == from
 //				.getAgentNameIdFrom()))))
 //			return false;		
+		return false;
+	}
+	
+	public final boolean includedInCollection(
+			List<BoundContactMap> collection) {
+		for (BoundContactMap b : collection) {
+			if (this.equalz(b)) {
+				return true;
+			}
+		}
 		return false;
 	}
 

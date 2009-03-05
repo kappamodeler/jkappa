@@ -204,7 +204,7 @@ public class CContactMapAbstractSolution {
 	
 	public void addAgentsBoundedWithFocusedAgent(
 			IContactMapAbstractAgent agent,
-			List<IContactMapAbstractAgent> agentsFromRule,List<Integer> agentNameIdList) {
+			List<IContactMapAbstractAgent> agentsFromRule) {
 		for(IContactMapAbstractAgent agentFromRule : agentsFromRule){
 			Map<Integer, IContactMapAbstractSite> sitesMapFromRule = agentFromRule.getSitesMap();
 			Iterator<Integer> iterator = sitesMapFromRule.keySet().iterator();
@@ -213,7 +213,7 @@ public class CContactMapAbstractSolution {
 				IContactMapAbstractSite siteFromRule = sitesMapFromRule.get(key);
 				CContactMapLinkState ls = siteFromRule.getLinkState();
 				if(ls.getAgentNameID()==agent.getNameId() || agentFromRule.getNameId()==agent.getNameId())
-					if((agentNameIdList == null) || (agentNameIdList.contains(agentFromRule.getNameId())))
+//					if((agentNameIdList == null) || (agentNameIdList.contains(agentFromRule.getNameId())))
 					 addAgentToAgentsMap(agentFromRule);
 			} 
 		}

@@ -902,7 +902,7 @@ public class SimulationData {
 								.getVertexFrom();
 						BoundContactMap b = new BoundContactMap(vertexFrom.getAgentLink().getNameId(),ThreadLocalData
 								.getNameDictionary().getId(vertexFrom.getName()),vertexToAgentNameID,vertexToSiteNameID);
-						if(!boundList.contains(b))
+						if(!b.includedInCollection(boundList))//(!boundList.contains(b))
 							boundList.add(b);
 						else
 							continue;
