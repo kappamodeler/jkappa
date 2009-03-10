@@ -8,37 +8,52 @@ import org.apache.commons.cli.ParseException;
 import org.junit.*;
 
 import com.plectix.simulator.Initializator;
+import com.plectix.simulator.TestRunner;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
+import com.plectix.simulator.parser.exceptions.DocumentFormatException;
 import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
-import com.plectix.simulator.simulator.SimulationArguments;
+import com.plectix.simulator.simulator.*;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.FileComparator;
 
-public class TestParser {
+public class TestParser extends TestRunner {
+	private static final String ABSTRACT = "abstract";
 	private static final String myTestFileNamePrefix = RunParserTests
 			.getFileNamePrefix();
-	private static final String myResultsDir = myTestFileNamePrefix
-			+ "results/";
-	// path to unformatted source file
-	private final String mySourceFileName = myTestFileNamePrefix + "test_read_this.ka";
-	// path to formatted file
-	private final String myCompareFileName = myTestFileNamePrefix
-			+ "test_compare_with_this.ka";
-	private final String myResultFilePath = myResultsDir + "result.ka";
 
-	private void prepareResult() throws SimulationDataFormatException, FileNotFoundException, ParseException {
+	private static final String resultsDir = myTestFileNamePrefix + "results/";
+	private static final String sourceDir = myTestFileNamePrefix + "source/";
+	private static final String compareDir = myTestFileNamePrefix + "compare/";
+
+	private final String fileWithPerturbations = "perturbations.ka";
+	private final String fileWithStories = "stories.ka";
+
+	private boolean isStorify;
+
+	private void prepareResult(String fileName, boolean isStorify)
+			throws SimulationDataFormatException, FileNotFoundException,
+			ParseException {
 		PrintWriter pw = null;
 		try {
-			KappaFile kf = (new KappaFileReader(mySourceFileName)).parse();
+			KappaFile kf = (new KappaFileReader(sourceDir + fileName)).parse();
 			SimulationArguments args = Initializator
-					.prepareDefaultArguments(mySourceFileName);
+					.prepareDefaultArguments(sourceDir + fileName);
 			KappaModel model = new KappaModelCreator(args).createModel(kf);
-			pw = new PrintWriter(myResultFilePath);
-			
+			pw = new PrintWriter(resultsDir + ABSTRACT + fileName);
 			pw.print(model.toString());
+			pw.close();
+
+			TestSimulationData dataTest = new TestSimulationData(model,
+					isStorify);
+			dataTest.build();
+			pw = new PrintWriter(resultsDir + fileName);
+			pw.print(dataTest.getData());
+
+		} catch (DocumentFormatException e) {
+			e.printStackTrace();
 		} finally {
 			if (pw != null) {
 				pw.close();
@@ -48,27 +63,28 @@ public class TestParser {
 
 	@BeforeClass
 	public static void init() {
-		File resultDir = new File(myResultsDir);
+		File resultDir = new File(resultsDir);
 		resultDir.mkdir();
 	}
 
 	@Before
 	public void parseFile() {
 		try {
-			prepareResult();
+			isStorify = false;
+			prepareResult(fileWithPerturbations, isStorify);
+			isStorify = true;
+			prepareResult(fileWithStories, isStorify);
 		} catch (Exception e) {
-			// e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}
 	}
 
-	@Test
-	public void test() {
+	private void test(String fileName) {
 		Failer failer = new Failer();
 		int line;
 		try {
-			line = new FileComparator(myCompareFileName, myResultFilePath)
-					.compare();
+			line = new FileComparator(compareDir + fileName, resultsDir
+					+ fileName).compare();
 			if (line != -1) {
 				failer.fail("Files differ in line " + line);
 			}
@@ -77,12 +93,38 @@ public class TestParser {
 		}
 	}
 
+	@Test
+	public void testAbstractPerturbations() {
+		String fileName = ABSTRACT + fileWithPerturbations;
+		test(fileName);
+	}
+
+	@Test
+	public void testAbstractStory() {
+		String fileName = ABSTRACT + fileWithStories;
+		test(fileName);
+	}
+
+	@Test
+	public void testPerturbations() {
+		String fileName = fileWithPerturbations;
+		test(fileName);
+
+	}
+
+	@Test
+	public void testStory() {
+		String fileName = fileWithStories;
+		test(fileName);
+	}
+
 	// @AfterClass
 	public static void clear() {
-		String dirName = myResultsDir;
+		String dirName = resultsDir;
 		File fileDir = new File(dirName);
 		for (String fileName : fileDir.list()) {
 			(new File(fileName)).delete();
 		}
 	}
+
 }
