@@ -1,0 +1,49 @@
+'time' E(r?), R(l, r) -> E(r!1), R(l!1, r)
+'time2' E(r!1), E(r!2), R(l!1, r), R(l!2, r) -> E(r!1), E(r!2), R(l!1, r!3), R(l!2, r!3)
+'namenamename' E(r!1), E(r!2), R(l!1, r!3), R(l!2, r!3) -> E(r!1), E(r!2), R(l!1, r), R(l!2, r)
+'space' E(r!1), E(r!1), R(l!2, r), R(l!2, r) -> E(r!1), E(r!2), R(l!1, r!3), R(l!2, r!3)
+'tab' E(r!_), R(l, r) -> E(r!1), R(l!1, r)
+'rule' E(r), R(l, r) -> E(r!1), R(l, r!1)
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' E(r~u), R(r~p) -> E(r!1000000000), R(r!1000000000)
+'TABline' E(x!1), R(x!1) -> E(x~p), R(a, b, c, d, e, x)
+'q Ref1' L(p!1, q), R(a, b!1) -> L(p!2, q!1), R(a!1, b!2)
+'q Ref1_op' L(p!2, q!1), R(a!1, b!2) -> L(p!1, q), R(a, b!1)
+'q Ref2' L(l!1, q), R(a, b!1) -> L(l!1, q!2), R(a!2, b!1)
+'q Ref2_op' L(l!1, q!2), R(a!2, b!1) -> L(l!1, q), R(a, b!1)
+'MEK_Scaf#1' MEK(S1~u, S2, s), Scaf(m) -> MEK(S1~u, S2, s!1), Scaf(m!1)
+'MEK_Scaf#2' MEK(S1, S2~u, s), Scaf(m) -> MEK(S1, S2~u, s!1), Scaf(m!1)
+'ErbB1_ErbB4' ErbB1(C, CR, L~ext, N), ErbB4(C, CR, L~ext!_, N) -> ErbB1(C, CR!1, L~ext, N), ErbB4(C, CR!1, L~ext!_, N)
+'ErbB1_ErbB4_op' ErbB1(C, CR!1, L~ext, N), ErbB4(C, CR!1, L~ext!_, N) -> ErbB1(C, CR, L~ext, N), ErbB4(C, CR, L~ext!_, N)
+'MEK_ERK@185' ERK(T185~u), MEK(S218~p, S222~p, s) -> ERK(T185~u!1), MEK(S218~p, S222~p, s!1)
+'MEK_ERK@185_op' ERK(T185~u!1), MEK(S218~p, S222~p, s!1) -> ERK(T185~u), MEK(S218~p, S222~p, s)
+'ERK@185' ERK(T185~u!1), MEK(S218~p, S222~p, s!1) -> ERK(T185~p!1), MEK(S218~p, S222~p, s!1)
+'MEK_ERK@187' ERK(Y187~u), MEK(S218~p, S222~p, s) -> ERK(Y187~u!1), MEK(S218~p, S222~p, s!1)
+'MEK_ERK@187_op' ERK(Y187~u!1), MEK(S218~p, S222~p, s!1) -> ERK(Y187~u), MEK(S218~p, S222~p, s)
+'ERK@187' ERK(Y187~u!1), MEK(S218~p, S222~p, s!1) -> ERK(Y187~p!1), MEK(S218~p, S222~p, s!1)
+
+%init: 5000 * (E(r), R(l, r))
+%init: 100 * (a(x), b(x))
+%init: 1000 * (d(x, y))
+%init: 1 * (ERK(Y187!1), MEK(S218~p, S222~p, s!1))
+
+%obs: 'rule'
+%obs: 'time'
+%obs: 'time2'
+%obs: '1' E(r!_), F(i~t)
+%obs: '2' E(r!1), E(r!2), R(l!1, r!3), R(l!2, r!3)
+%obs: '3' R(l, r)
+%obs: '4' E(r!1), R(l!1, r)
+%obs: '5' E(x!1), R(x!1)
+%obs: '6' E(r!1), R(l!1, r)
+%obs: MEK(S1~u, s!1), Scaf(m!1, r!_)
+%obs: MEK(S1~p, s!1), Scaf(m!1, r!_)
+%obs: MEK(S1, S2~u, s!1), Scaf(m!1)
+%obs: ERK(T185~p?, Y187~p?)
+%obs: MEK(S218~p?, S222~p?)
+
+%story: 'MEK_ERK@187_op'
+%story: 'TABline'
+%story: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+%story: 'time'
+%story: 'time2'
+

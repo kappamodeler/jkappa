@@ -20,44 +20,42 @@
 'MEK_ERK@187' ERK(Y187~u),MEK(S218~p,S222~p,s)->ERK(Y187~u!0),MEK(S218~p,S222~p,s!0)
 'MEK_ERK@187_op' ERK(Y187~u!0),MEK(S218~p,S222~p,s!0)->ERK(Y187~u),MEK(S218~p,S222~p,s)
 'ERK@187' ERK(Y187~u!0),MEK(S218~p,S222~p,s!0)->ERK(Y187~p!0),MEK(S218~p,S222~p,s!0)
+'' ->a()
+'' a(x!0),b(i!0,u)->
+'' c(x)->
 
+%init: 5000 * (E(r))
+%init: 1 * (ERK(Y187!1), MEK(S218~p, S222~p, s!1))
+%init: 5000 * (R(l, r))
+%init: 100 * (a(x))
+%init: 100 * (b(x))
+%init: 1000 * (d(x, y))
 
-%init: 5000 * (R(l, r), E(r))
-%init: 100 * a(x), b(x)
-%init      				:        1000    *       d ( x ,  y )
-%init: \\
-MEK(s!1,S218~p,S222~p),ERK(Y187!1)
-
-%obs: '1' E(r!_), F(i~                              t)
-%obs: '2' E(r!1), E(r!2), R(l!1,    r! 3), R(l!2, r!3)
-%obs: '3' R(l  , r)
+%obs: '1' E(r!_)
+%obs: '1' F(i~t)
+%obs: '2' E(r!1), R(l!1, r!3), R(l!2, r!3), E(r!2)
+%obs: '3' R(l, r)
 %obs: '4' E(r!1), R(l!1, r)
-%obs: '5' 						E	(	x	!	1	)	,	 R	(	x	!	1	)
-%obs: '                       6              ' E(r!1), R(l!1, r)
-%obs: MEK(s!1,S1~u) , Scaf(r!_,m!1)
-%obs: MEK(s!1,S1~p), Scaf(r!_,m!1)
-%obs: MEK(s!1,S1,S2~u), Scaf(m!1)
-%obs: ERK(T185~p?,Y187~p?)
-%obs:\\
- MEK(S218~p?,S222~p?)
- %obs: 'time' E(r?),R(l, r)->E(r!0),R(l!0,r)
+%obs: '5' E(x!1), R(x!1)
+%obs: '6' E(r!1), R(l!1, r)
+%obs: MEK(s!1, S1~u), Scaf(r!_, m!1)
+%obs: MEK(s!1, S1~p), Scaf(r!_, m!1)
+%obs: MEK(s!1, S1, S2~u), Scaf(m!1)
+%obs: ERK(Y187~p?, T185~p?)
+%obs: MEK(S218~p?, S222~p?)
+%obs: 'rule'
+%obs: 'time'
+%obs: 'time2'
 
-%story: 'time'
-%story: '          time2'                 \\
-
-%story:                                                 	 	 	 	 	 	 	 	  'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-%story: 	'		tabline				'
-%story: \\
-'MEK_ERK@187_op'
-
+%mod: ['4'] > 1.2 * ['1'] do 'time' := 5.0
 %mod: $T > 10.0 do 'time' := 5.0
-%mod: $T > 11.3 do 'time2' := 11.0 * 'time' + 2.0 * 'time2' + 'time2'
-%mod: ['1'] > 1.0 * ['2'] do 'time' := 5.0
-%mod: ['4'] < 7.0 * ['2'] + 4.0 * ['4'] do 'time' := 5.0 * 'time'
-%mod: ['4'] <             13.0 * ['1'] + 4.0 * ['3'] do 'time2' := 'time2'
-%mod: $T > 10 do $ADDONCE 10 * a()
-%mod: $T > 10 do $DELETEONCE 11.3 * a(x!1), b(i!1, u), c(x)
-%mod:  ['4'] <             13.0 * ['              		1']  + 4.0 * ['3'] do 'time2'  :=  'time2'
-%mod: $T>0.05 do 'rule' := -7 * 'rule' + 15
-%mod: $T>1 do \\
-'rule' := -7 * 'rule' + 15
+%mod: $T > 11.3 do 'time2' := 11.0 * 'time' + 2.0 * 'time2' + 1.0 * 'time2'
+%mod: $T > 0.05 do 'rule' := - 7.0 * 'rule' + 15.0
+%mod: ['1'] > 1.0 * ['1'] do 'time' := 5.0
+%mod: ['4'] < 7.0 * ['1'] + 4.0 * ['4'] do 'time' := 5.0 * 'time'
+%mod: ['4'] < 13.0 * ['1'] + 4.0 * ['3'] do 'time2' := 1.0 * 'time2'
+%mod: $T > 10.0 do  $ADDONCE a()
+%mod: $T > 5.0 do  $DELETEONCE a(x!1), b(u, i!1)
+%mod: $T > 5.0 do  $DELETEONCE c(x)
+%mod: ['4'] < 13.0 * ['1'] + 4.0 * ['3'] do 'time2' := 1.0 * 'time2'
+%mod: $T > 1.0 do 'rule' := - 7.0 * 'rule' + 15.0
