@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
@@ -20,7 +19,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.plectix.simulator.Initializator;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
@@ -42,7 +40,6 @@ public class TestAction {
 	private static int myRunQuant = 0;
 	private static int myTestQuant = 70;
 	private static boolean myFirstRun = true;
-	private static SimulatorCommandLine commandLine;
 	private static String FilePath = "";
 	private final static String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 	private ISolution csolution;
@@ -119,7 +116,7 @@ public class TestAction {
 		simulationData.setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
 		simulationData.readSimulatonFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
-		System.out.println(FilePath);
+//		System.out.println(FilePath);
 	}
 
 	@Before
@@ -127,9 +124,9 @@ public class TestAction {
 		myRunQuant++;
 		mySolutionAgentsStructure = mySimulator.getSimulationData().getKappaSystem()
 				.getSolution().getAgents();
-		System.out.println();
-		System.out.println("test" + (myRunQuant - 1));
-		printSolution("before action", mySolutionAgentsStructure);
+//		System.out.println();
+//		System.out.println("test" + (myRunQuant - 1));
+//		printSolution("before action", mySolutionAgentsStructure);
 		run();
 	}
 
@@ -147,7 +144,7 @@ public class TestAction {
 
 		if (myActiveRule == null) {
 			mySimulator.getSimulationData().setTimeLength(currentTime);
-			System.out.println("there's no active rules");
+//			System.out.println("there's no active rules");
 			System.exit(0);
 		}
 
@@ -196,15 +193,15 @@ public class TestAction {
 
 		IConnectedComponent foundCC;
 
-		printSolution("after action", mySolutionAgentsStructure);
+//		printSolution("after action", mySolutionAgentsStructure);
 
 		if (rightCCList != null) {
 			for (IConnectedComponent ccRight : rightCCList) {
 				foundCC = null;
 				foundCC = findCC(ccRight, listSolutionCC);
 				if (foundCC == null) {
-					System.out.println(" - not found connected component:");
-					printCC(ccRight);
+//					System.out.println(" - not found connected component:");
+//					printCC(ccRight);
 					fail();
 				} else {
 					listToRemove.add(foundCC);
@@ -243,75 +240,75 @@ public class TestAction {
 
 		mySolutionAgentsStructure = null;
 	}
+//
+//	private void printCC(IConnectedComponent connectedComponent) {
+//		List<IAgent> list = new ArrayList<IAgent>();
+//		list = connectedComponent.getAgents();
+//		for (IAgent agent : list) {
+//			System.out.print(agent.getName() + "(");
+//			Collection<ISite> sitelist = new ArrayList<ISite>();
+//			sitelist = agent.getSites();
+//			for (ISite site : sitelist) {
+//				System.out.print(site.getName());
+//				System.out.print("~");
+//				System.out.print(site.getInternalState().getNameId());
+//				if (site.getLinkIndex() != -1) {
+//					System.out.print("!");
+//					System.out.print(site.getLinkIndex());
+//				}
+//				System.out.print(" ");
+//			}
+//			System.out.print(")   ");
+//		}
+//		System.out.println();
+//
+//	}
 
-	private void printCC(IConnectedComponent connectedComponent) {
-		List<IAgent> list = new ArrayList<IAgent>();
-		list = connectedComponent.getAgents();
-		for (IAgent agent : list) {
-			System.out.print(agent.getName() + "(");
-			Collection<ISite> sitelist = new ArrayList<ISite>();
-			sitelist = agent.getSites();
-			for (ISite site : sitelist) {
-				System.out.print(site.getName());
-				System.out.print("~");
-				System.out.print(site.getInternalState().getNameId());
-				if (site.getLinkIndex() != -1) {
-					System.out.print("!");
-					System.out.print(site.getLinkIndex());
-				}
-				System.out.print(" ");
-			}
-			System.out.print(")   ");
-		}
-		System.out.println();
-
-	}
-
-	private void printListAgents(List<IConnectedComponent> listCC, String string) {
-		System.out.println(string);
-		List<IAgent> listAgents = new ArrayList<IAgent>();
-		for (IConnectedComponent connectedComponent : listCC) {
-			listAgents = connectedComponent.getAgents();
-			for (IAgent agent : listAgents) {
-				System.out.print(agent.getName());
-				Collection<ISite> sitelist = new ArrayList<ISite>();
-				sitelist = agent.getSites();
-				System.out.print("(");
-				for (ISite site : sitelist) {
-					System.out.print(site.getName());
-					System.out.print("~");
-					System.out.print(site.getInternalState().getNameId());
-					System.out.print("!");
-					System.out.print(site.getLinkIndex());
-					System.out.print(" ");
-				}
-				System.out.println(") ");
-			}
-		}
-	}
-
-	private void printSolution(String name,
-			Collection<IAgent> mySolutionAgentsStructure2) {
-		System.out.print("solution   ");
-		System.out.println(name);
-		for (IAgent agent : mySolutionAgentsStructure2) {
-			System.out.print(agent.getName());
-			Collection<ISite> sitelist = new ArrayList<ISite>();
-			sitelist = agent.getSites();
-			System.out.print("(");
-			for (ISite site : sitelist) {
-				System.out.print(site.getName());
-				System.out.print("~");
-				System.out.print(site.getInternalState().getNameId());
-				if (site.getLinkIndex() != -1) {
-					System.out.print("!");
-					System.out.print(site.getLinkIndex());
-				}
-				System.out.print(" ");
-			}
-			System.out.println(") ");
-		}
-	}
+//	private void printListAgents(List<IConnectedComponent> listCC, String string) {
+//		System.out.println(string);
+//		List<IAgent> listAgents = new ArrayList<IAgent>();
+//		for (IConnectedComponent connectedComponent : listCC) {
+//			listAgents = connectedComponent.getAgents();
+//			for (IAgent agent : listAgents) {
+//				System.out.print(agent.getName());
+//				Collection<ISite> sitelist = new ArrayList<ISite>();
+//				sitelist = agent.getSites();
+//				System.out.print("(");
+//				for (ISite site : sitelist) {
+//					System.out.print(site.getName());
+//					System.out.print("~");
+//					System.out.print(site.getInternalState().getNameId());
+//					System.out.print("!");
+//					System.out.print(site.getLinkIndex());
+//					System.out.print(" ");
+//				}
+//				System.out.println(") ");
+//			}
+//		}
+//	}
+//
+//	private void printSolution(String name,
+//			Collection<IAgent> mySolutionAgentsStructure2) {
+//		System.out.print("solution   ");
+//		System.out.println(name);
+//		for (IAgent agent : mySolutionAgentsStructure2) {
+//			System.out.print(agent.getName());
+//			Collection<ISite> sitelist = new ArrayList<ISite>();
+//			sitelist = agent.getSites();
+//			System.out.print("(");
+//			for (ISite site : sitelist) {
+//				System.out.print(site.getName());
+//				System.out.print("~");
+//				System.out.print(site.getInternalState().getNameId());
+//				if (site.getLinkIndex() != -1) {
+//					System.out.print("!");
+//					System.out.print(site.getLinkIndex());
+//				}
+//				System.out.print(" ");
+//			}
+//			System.out.println(") ");
+//		}
+//	}
 
 	private IConnectedComponent findCC(IConnectedComponent cCRight,
 			List<IConnectedComponent> listCC) {
