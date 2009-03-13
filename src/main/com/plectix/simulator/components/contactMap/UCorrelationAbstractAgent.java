@@ -1,6 +1,7 @@
 package com.plectix.simulator.components.contactMap;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.plectix.simulator.action.CActionType;
@@ -64,26 +65,35 @@ public class UCorrelationAbstractAgent {
 		}
 		return list;
 	}
-
-	public void initAtomicActionList() {
-		atomicActions = new ArrayList<CActionType>();
-		if (correlationType != ECorrelationType.CORRELATION_LHS_AND_RHS)
-			return;
-
-		switch (type) {
-		case MODIFY:
-			atomicActions.add(CActionType.MODIFY);
-			break;
-		case ABSTRACT_BREAK_OR_BOUND:
-			findBreakBound();
-			break;
-		case ABSTRACT_BREAK_OR_BOUND_AND_MODIFY:
-			findBreakBound();
-			atomicActions.add(CActionType.MODIFY);
-			break;
-		case DELETE:
-			atomicActions.add(CActionType.DELETE);
-			break;
+	
+	public void initAtomicAction(){
+		// TODO
+		Iterator<Integer> iterator = fromAgent.getSitesMap().keySet().iterator();
+		while(iterator.hasNext()){
+			Integer key = iterator.next();
+			if(toAgent == null){
+				fromAgent.shouldAdd();
+				continue;
+			}
+				
+			IContactMapAbstractSite siteFrom = fromAgent.getSitesMap().get(key);
+			IContactMapAbstractSite siteTo = toAgent.getSitesMap().get(key);
+			
+			if(siteFrom.getInternalState().getNameId() != siteTo.getInternalState().getNameId()){
+				fromAgent.shouldAdd();
+				toAgent.shouldAdd();
+				// TODO action MOD
+			}
+			
+			CContactMapLinkState lsFrom = siteFrom.getLinkState();
+			CContactMapLinkState lsTo = siteTo.getLinkState();
+			
+			if(lsFrom.getAgentNameID()!=lsTo.getAgentNameID() || (lsFrom.getLinkSiteNameID()!= lsTo.getLinkSiteNameID()) ){
+				fromAgent.shouldAdd();
+				toAgent.shouldAdd();
+			}
+			
+			
 		}
 	}
 

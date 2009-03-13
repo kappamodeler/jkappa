@@ -20,6 +20,7 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 	private long id = -1;
 	private int nameID = -1;
 	private final IContactMapAbstractSite myEmptySite;
+	private boolean add = false;
 
 	public void setSitesMap(Map<Integer, IContactMapAbstractSite> sitesMap) {
 		this.sitesMap = sitesMap;
@@ -29,6 +30,14 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 	public String toString() {
 		String st = getName();
 		return st;
+	}
+	
+	public boolean isAdd(){
+		return add;
+	}
+
+	public void shouldAdd(){
+		add = true;
 	}
 
 	public IContactMapAbstractSite getEmptySite() {
@@ -54,6 +63,7 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 	public CContactMapAbstractAgent(IContactMapAbstractAgent agentLink) {
 		this.myEmptySite = new CContactMapAbstractSite(this);
 		this.nameID = agentLink.getNameId();
+		this.sitesMap = new HashMap<Integer, IContactMapAbstractSite>();
 
 		Iterator<Integer> iterator = agentLink.getSitesMap().keySet()
 				.iterator();
@@ -246,4 +256,5 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		}
 		return false;
 	}
+
 }

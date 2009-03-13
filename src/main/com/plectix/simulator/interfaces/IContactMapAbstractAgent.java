@@ -34,4 +34,8 @@ public interface IContactMapAbstractAgent extends IAbstractAgent {
 
 	public boolean includedInCollectionByName(
 			Collection<IContactMapAbstractAgent> collection);
+
+	public boolean isAdd();
+
+	public void shouldAdd();
 }

@@ -96,46 +96,23 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 			}
 		return listOut;
 	}
+	
+	public List<IContactMapAbstractAgent> getFocusedAgents(){
+		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
+		listOut.addAll(getAddAgents(lhsAgents));
+		listOut.addAll(getAddAgents(rhsAgents));
+		return listOut;
+	}
 
-	// private List<IContactMapAbstractSite> initListsSites(
-	// Map<Integer, IContactMapAbstractAgent> map) {
-	// List<IContactMapAbstractSite> list = new
-	// ArrayList<IContactMapAbstractSite>();
-	// Iterator<Integer> iterator = map.keySet().iterator();
-	// while (iterator.hasNext()) {
-	// Integer key = iterator.next();
-	// IContactMapAbstractAgent agent = map.get(key);
-	// // List<IContactMapAbstractSite> listSites = agent.getSites();
-	// // if (listSites.isEmpty())
-	// // list.add(agent.getEmptySite());
-	// // list.addAll(listSites);
-	// }
-	// return list;
-	// }
-	//
-	// private void abstractCCList(List<IConnectedComponent> ccList,
-	// Map<Integer, IContactMapAbstractAgent> map) {
-	// for (IConnectedComponent cc : ccList) {
-	// for (IAgent agent : cc.getAgents()) {
-	// Integer key = agent.getNameId();
-	// IContactMapAbstractAgent cMAA = map.get(key);
-	// if (cMAA == null) {
-	// cMAA = new CContactMapAbstractAgent(agent);
-	// map.put(key, cMAA);
-	// }
-	// // cMAA.addSites(agent);
-	// }
-	// }
-	// }
-
-	// public Map<Integer, IContactMapAbstractAgent> getAgentMapLeftHandSide() {
-	// return agentMapLeftHandSide;
-	// }
-	//
-	// public Map<Integer, IContactMapAbstractAgent> getAgentMapRightHandSide()
-	// {
-	// return agentMapRightHandSide;
-	// }
+	private List<IContactMapAbstractAgent> getAddAgents(List<IContactMapAbstractAgent> listIn){
+		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
+		if(listIn.isEmpty() || listIn.get(0).getNameId() == CSite.NO_INDEX)
+			return listOut;
+		for(IContactMapAbstractAgent a : listIn)
+			if(a.isAdd())
+				listOut.add(a);
+		return listOut;
+	}
 
 	public List<IContactMapAbstractAgent> getLhsAgents() {
 		return lhsAgents;

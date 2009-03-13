@@ -1,33 +1,14 @@
 package com.plectix.simulator.components.contactMap;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
-import com.plectix.simulator.action.CActionType;
-import com.plectix.simulator.action.CAddAction;
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.components.solution.SolutionUtils;
-import com.plectix.simulator.interfaces.IAbstractSite;
-import com.plectix.simulator.interfaces.IAction;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
-import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRule;
-import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulationUtils;
 
 public class CContactMap {
 	public enum ContactMapMode {
@@ -155,19 +136,10 @@ public class CContactMap {
 			break;
 
 		case AGENT_OR_RULE:
-			fillAgentsFromRule((CRule) this.focusRule,
+			CContactMapAbstractRule abstractRule = fillFocusAgentsFromRule((CRule) this.focusRule,
 					this.agentsFromFocusedRule);
 			constructAbstractCard(rules, agentsFromFocusedRule);
-//			for (IRule rule : rules) {
-//				List<IContactMapAbstractAgent> agentsFromRule = new ArrayList<IContactMapAbstractAgent>();
-//				fillAgentsFromRule(rule, agentsFromRule);
-//				for (IContactMapAbstractAgent agent : this.agentsFromFocusedRule)
-//					if (agent.includedInCollectionByName(agentsFromRule)) {
-//						abstractSolution.addAgentToAgentsMap(agent);
-//						abstractSolution.addAgentsBoundedWithFocusedAgent(agent,agentsFromRule);
-//						break;
-//					}
-//			}
+
 			List<IContactMapAbstractAgent> addAgentList = new ArrayList<IContactMapAbstractAgent>();
 			Iterator<Integer> iterator  = abstractSolution.getAgentNameIdToAgent().keySet().iterator();
 			while(iterator.hasNext()){
@@ -216,6 +188,16 @@ public class CContactMap {
 				}
 		}
 	}
+	
+	private CContactMapAbstractRule fillFocusAgentsFromRule(IRule rule,
+			List<IContactMapAbstractAgent> agentsList) {
+		CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(rule);
+		abstractRule.initAbstractRule();
+		List<IContactMapAbstractAgent> list = abstractRule.getFocusedAgents();
+		addAgentsToListFromRule(list, agentsList);
+		return abstractRule;
+	}
+	
 
 	private void fillAgentsFromRule(IRule rule,
 			List<IContactMapAbstractAgent> agentsList) {
