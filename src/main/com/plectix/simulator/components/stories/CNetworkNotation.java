@@ -95,10 +95,12 @@ public class CNetworkNotation implements INetworkNotation {
 		this.introCCMap = new ArrayList<Map<Long, List<Integer>>>();
 	}
 
+	// TODO: Make sure that CNetworkNotation works with long event number, not integer
 	public CNetworkNotation(Simulator simulator, int step, int ruleID) {
 		initParameters(simulator, step, ruleID);
 	}
 
+	// TODO: Make sure that CNetworkNotation works with long event number, not integer
 	public CNetworkNotation(Simulator simulator, int step, IRule rule,
 			List<IInjection> injectionsList, SimulationData data) {
 		initParameters(simulator, step, rule.getRuleID());

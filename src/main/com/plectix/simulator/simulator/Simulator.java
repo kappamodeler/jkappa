@@ -26,26 +26,38 @@ public class Simulator implements SimulatorInterface {
 
 	private static final String NAME = "Java Simulator JSIM";
 	
+	private static final String STATUS_RUNNING = "Running";
+	
+	private static final String STATUS_WRAPPING = "Wrapping the simulation results";
+	
+	private static final String STATUS_IDLE = "Idle";
+	
 	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
 
 	private double currentTime = 0.0;
+	
+	private long currentEventNumber = 0;
 
 	private boolean isIteration = false;
 
 	private int timeStepCounter = 0;
 	
 	private SimulationData simulationData = new SimulationData();
+	
+	private SimulatorStatus simulatorStatus = new SimulatorStatus();
 
 	private SimulatorResultsData simulatorResultsData = new SimulatorResultsData();
-	
 
+	
 	public Simulator() {
 		super();
+		simulatorStatus.setStatusMessage(STATUS_IDLE);
 	}
 
 	public SimulatorStatusInterface getStatus() {
-		// TODO Need to implement this class for streaming data...
-		return null;
+		simulatorStatus.setCurrentTime(currentTime);
+		simulatorStatus.setCurrentEventNumber(currentEventNumber);
+		return simulatorStatus;
 	}
 	
 	private final void addIteration(int iteration_num) {
@@ -116,11 +128,12 @@ public class Simulator implements SimulatorInterface {
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.OUTPUT,simulationData);
 
 		long clash = 0;
-		long count = 0;
+		currentEventNumber = 0;
 		long max_clash = 0;
 		boolean isEndRules = false;
+		simulatorStatus.setStatusMessage(STATUS_RUNNING);
 		
-		while (!simulationData.isEndSimulation(currentTime, count)
+		while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
 				&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {
 			while (simulationData.checkSnapshots(currentTime)) {
 				simulationData.createSnapshots(currentTime);				
@@ -151,7 +164,7 @@ public class Simulator implements SimulatorInterface {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("negative update");
 
-				count++;
+				currentEventNumber++;
 				rule.applyRule(injectionsList, simulationData);
 
 				SimulationUtils.doNegativeUpdate(injectionsList);
@@ -163,7 +176,7 @@ public class Simulator implements SimulatorInterface {
 
 				simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
 
-				simulationData.getKappaSystem().getObservables().calculateObs(currentTime, count, simulationData.getSimulationArguments().isTime());
+				simulationData.getKappaSystem().getObservables().calculateObs(currentTime, currentEventNumber, simulationData.getSimulationArguments().isTime());
 			} else {
 				simulationData.addInfo(InfoType.NOT_OUTPUT,InfoType.INTERNAL, "Application of rule exp is clashing");
 				if (LOGGER.isDebugEnabled()) {
@@ -177,18 +190,22 @@ public class Simulator implements SimulatorInterface {
 				addIteration(iteration_num);
 			}
 		}
+
+		simulatorStatus.setStatusMessage(STATUS_WRAPPING);
 		
 		simulationData.checkOutputFinalState(currentTime);
 		simulationData.getKappaSystem().getObservables().calculateObsLast(currentTime);
 		simulationData.setTimeLength(currentTime);
-		simulationData.setEvent(count);
+		simulationData.setEvent(currentEventNumber);
 		
 		endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
 		Source source = addCompleteSource();
 		
 		if (!isIteration) {
-			simulationData.outputData(source, count);
+			simulationData.outputData(source, currentEventNumber);
 		}
+
+		simulatorStatus.setStatusMessage(STATUS_IDLE);
 	}
 
 	public final void run(SimulatorInputData simulatorInputData) throws Exception {
@@ -261,12 +278,14 @@ public class Simulator implements SimulatorInterface {
 
 	public final void runStories() throws Exception {
 		CStories stories = simulationData.getKappaSystem().getStories();
-		int count = 0;
+		currentEventNumber = 0;
 		if(simulationData.getSimulationArguments().isShortConsoleOutput())
 			simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
 		simulationData.resetBar();
 		PlxTimer timerAllStories = new PlxTimer();
 		timerAllStories.startTimer();
+
+		simulatorStatus.setStatusMessage(STATUS_RUNNING);
 		for (int i = 0; i < simulationData.getSimulationArguments().getIterations(); i++) {
 			PlxTimer timer=null;
 			if(!simulationData.getSimulationArguments().isShortConsoleOutput()){
@@ -280,7 +299,7 @@ public class Simulator implements SimulatorInterface {
 			long max_clash = 0;
 			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.NOT_OUTPUT,simulationData);
 		    
-		    while (!simulationData.isEndSimulation(currentTime, count)
+		    while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
 					&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {
 				
 				simulationData.checkPerturbation(currentTime);
@@ -298,13 +317,14 @@ public class Simulator implements SimulatorInterface {
 					currentTime += ruleProbabilityCalculation.getTimeValue();
 				}
 				if (!rule.isClash(injectionsList)) {
-					CNetworkNotation netNotation = new CNetworkNotation(this,count, rule, injectionsList, simulationData);
+					// TODO: Make sure that CNetworkNotation works with long event number, not integer
+					CNetworkNotation netNotation = new CNetworkNotation(this, (int)currentEventNumber, rule, injectionsList, simulationData);
 					max_clash = 0;
 					if (stories.checkRule(rule.getRuleID(), i)) {
 						rule.applyLastRuleForStories(injectionsList,netNotation);
 						rule.applyRuleForStories(injectionsList, netNotation, simulationData, true);
 						stories.addToNetworkNotationStoryStorifyRule(i, netNotation, currentTime);
-						count++;
+						currentEventNumber++;
 						isEndRules = true;
 						simulationData.printlnBar();
 						break;
@@ -315,7 +335,7 @@ public class Simulator implements SimulatorInterface {
 					if (!rule.isRHSEqualsLHS()) {
 						stories.addToNetworkNotationStory(i, netNotation);
 					}
-					count++;
+					currentEventNumber++;
 
 					SimulationUtils.doNegativeUpdate(injectionsList);
 					simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
@@ -325,7 +345,7 @@ public class Simulator implements SimulatorInterface {
 				}
 			}
 			simulationData.checkStoriesBar(i);
-			count = 0;
+			currentEventNumber = 0;
 			stories.handling(i);
 			if(!simulationData.getSimulationArguments().isShortConsoleOutput())
 				endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
@@ -335,6 +355,9 @@ public class Simulator implements SimulatorInterface {
 				resetSimulation(InfoType.NOT_OUTPUT);
 			}
 		}
+
+		simulatorStatus.setStatusMessage(STATUS_WRAPPING);
+		
 		if(simulationData.getSimulationArguments().isShortConsoleOutput()){
 			simulationData.println("#");
 			endOfSimulation(InfoType.OUTPUT, false, timerAllStories);
@@ -344,7 +367,9 @@ public class Simulator implements SimulatorInterface {
 		stories.merge();
 		endOfMerge(mergeTimer);
 		Source source = addCompleteSource();
-		simulationData.outputData(source, count);
+		simulationData.outputData(source, currentEventNumber);
+		
+		simulatorStatus.setStatusMessage(STATUS_IDLE);
 	}
 	
 	//////////////////////////////////////////////////////////////////////////

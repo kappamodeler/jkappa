@@ -2,11 +2,13 @@ package com.plectix.simulator.controller;
 
 public interface SimulatorStatusInterface {
 
-	public String getStatus();
+	public String getStatusMessage();
 	
 	public int getIterationNumber();
 	
 	public double getCurrentTime();
+	
+	public double getCurrentEventNumber();
 	
 	public int getNumberOfObservables();
 	
