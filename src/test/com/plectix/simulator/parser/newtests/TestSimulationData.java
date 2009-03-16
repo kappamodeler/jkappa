@@ -86,10 +86,10 @@ public class TestSimulationData {
 				sb.append("'" + obsComponent.getName() + "' ");
 
 			for (int i = 0; i < obsComponent.getAgents().size() - 1; i++) {
-				sb.append(obsComponent.getAgents().get(i) + ", ");
+				sb.append(Converter.toString(obsComponent.getAgents().get(i)) + ", ");
 			}
-			sb.append(obsComponent.getAgents().get(
-					obsComponent.getAgents().size() - 1)
+			sb.append(Converter.toString(obsComponent.getAgents().get(
+					obsComponent.getAgents().size() - 1))
 					+ "\n");
 		}
 

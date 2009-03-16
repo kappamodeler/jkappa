@@ -55,6 +55,20 @@ public class Initializator {
 		return commandLine.getSimulationArguments();
 	}
 	
+	public static SimulationArguments prepareStorifyArguments(String filePath) throws ParseException{
+		String[] args = new String[7];
+		args[0] = "--storify";
+		args[1] = filePath;
+		args[2] = "--event";
+		args[3] = "1000";
+		args[4] = "--no_compress_stories";
+		args[5] = "--iteration";
+		args[6] = "10";
+		SimulatorCommandLine commandLine = null;
+		commandLine = new SimulatorCommandLine(args);
+		return commandLine.getSimulationArguments();
+	}
+	
 	public static SimulationArguments prepareSimulationArguments(String[] args) throws ParseException {
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);

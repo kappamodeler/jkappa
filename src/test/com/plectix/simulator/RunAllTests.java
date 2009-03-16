@@ -19,7 +19,8 @@ import com.plectix.simulator.perturbations.*;
 		RunPerturbationsTests.class,
 		RunTestStories.class,
 		RunParserTests.class,
-		TestAction.class
+//		TestAction.class
+		RunActionTest.class
 		//TestJavaXMLCompare.class,
 	})
 public class RunAllTests {

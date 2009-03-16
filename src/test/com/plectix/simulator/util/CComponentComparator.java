@@ -37,7 +37,7 @@ public class CComponentComparator {
 	}
 	
 	
-	public IConnectedComponent findCC(IConnectedComponent c,
+	public static IConnectedComponent findCC(IConnectedComponent c,
 			List<IConnectedComponent> list) {
 		int size = c.getAgents().size();
 		for (IConnectedComponent tmpC : list) {
@@ -49,7 +49,7 @@ public class CComponentComparator {
 		return null;
 	}
 
-	private boolean compareCC(IConnectedComponent cCRight,
+	private static boolean compareCC(IConnectedComponent cCRight,
 			IConnectedComponent cc) {
 		List<IAgent> listCC = new ArrayList<IAgent>();
 		listCC = cCRight.getAgents();
@@ -68,7 +68,7 @@ public class CComponentComparator {
 		return true;
 	}
 
-	private boolean findAgentInCC(IAgent agentToFind, IConnectedComponent cc) {
+	private static boolean findAgentInCC(IAgent agentToFind, IConnectedComponent cc) {
 		String name = agentToFind.getName();
 		for (IAgent agent2 : cc.getAgents()) {
 			if (name.equals(agent2.getName())) {
@@ -80,7 +80,7 @@ public class CComponentComparator {
 		return false;
 	}
 
-	private boolean checkSites(IAgent agent1, IAgent agent2) {
+	private static boolean checkSites(IAgent agent1, IAgent agent2) {
 		boolean flag = false;
 		Collection<ISite> agent1Sites = new ArrayList<ISite>();
 		Collection<ISite> agent2Sites = new ArrayList<ISite>();

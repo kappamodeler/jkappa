@@ -31,9 +31,8 @@ public class TestIntro {
 	private final void buildIntroMap(CStoryTrees storyTree) {
 		HashMap<Integer, List<CStoryType>> allLevels = new HashMap<Integer, List<CStoryType>>();
 		HashMap<Integer, List<CStoryType>> traceIdToStoryTypeIntro = new HashMap<Integer, List<CStoryType>>();
+
 		int counter = 0;
-		Iterator<Integer> iterator = storyTree.getLevelToTraceID().keySet()
-				.iterator();
 		int depth = storyTree.getLevelToTraceID().size();
 
 		List<CStoryIntro> storyIntroList = storyTree.getStoryIntros();
@@ -63,7 +62,7 @@ public class TestIntro {
 			counter++;
 		}
 		
-		checkIntroId(traceIdToStoryTypeIntro);
+//		checkIntroId(traceIdToStoryTypeIntro);
 		checkLeaves(traceIdToStoryTypeIntro);
 	}
 
@@ -84,9 +83,11 @@ public class TestIntro {
 			for (CStoryType intro : introMap.get(id)) {
 				if (!introList.contains(intro.getId())) {
 					introList.add(intro.getId());
-				} else
+				} else{
 					fail("intro id");
+				}
 			}
 		}
 	}
+
 }

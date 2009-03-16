@@ -46,6 +46,8 @@ public class Converter {
 	
 	public static String toString(IConnectedComponent c) {
 		StringBuffer sb = new StringBuffer();
+		if (c==null)
+			return "null";
 		boolean first = true;
 		TreeMap<String, List<IAgent>> agents = new TreeMap<String, List<IAgent>>();
 		IAgent empty = new CAgent(CAgent.EMPTY, CAgent.EMPTY);
