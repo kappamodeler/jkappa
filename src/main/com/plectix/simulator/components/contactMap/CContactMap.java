@@ -176,8 +176,6 @@ public class CContactMap {
 
 	private void constructAbstractCard(List<IRule> rules,List<IContactMapAbstractAgent> addAgentList){
 		for(IRule rule : rules){
-			if(rule.getRuleID() == 99)
-				System.out.println();
 			List<IContactMapAbstractAgent> agentsFromRule = new ArrayList<IContactMapAbstractAgent>();
 			fillAgentsFromRule(rule, agentsFromRule);
 			for (IContactMapAbstractAgent agent : addAgentList)
