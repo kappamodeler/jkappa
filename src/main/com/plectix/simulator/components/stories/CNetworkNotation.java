@@ -132,8 +132,7 @@ public class CNetworkNotation implements INetworkNotation {
 
 		ISolution solution = simulator.getSimulationData().getKappaSystem()
 				.getSolution();
-		List<IAgent> newAgentsList = SolutionUtils.cloneAgentsList(ccFromSolution
-				.getAgents(), simulator.getSimulationData().getKappaSystem());
+		List<IAgent> newAgentsList = solution.cloneAgentsList(ccFromSolution.getAgents());
 
 		IAgent mainAgent = null;
 

@@ -1,6 +1,7 @@
 package com.plectix.simulator.action;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
@@ -19,11 +20,12 @@ public class CAddAction extends CAction {
 		createBound();
 	}
 
-	public void doAction(IInjection injection, INetworkNotation netNotation, SimulationData simulationData) {
+	public void doAction(RuleApplicationPool pool, IInjection injection, 
+			INetworkNotation netNotation, SimulationData simulationData) {
 		/**
 		 * Done.
 		 */
-		IAgent agent = new CAgent(myToAgent.getNameId(), 
+		IAgent agent = new CAgent(myToAgent.getNameId(),
 				simulationData.getKappaSystem().generateNextAgentId());
 		
 		for (ISite site : myToAgent.getSites()) {
@@ -43,7 +45,7 @@ public class CAddAction extends CAction {
 		}
 		
 		getRightCComponent().addAgentFromSolutionForRHS(agent);
-		simulationData.getKappaSystem().getSolution().addAgent(agent);
+		pool.addAgent(agent);
 
 		myRule.putAgentAdd(myToAgent, agent);
 		// toAgent.setIdInRuleSide(maxAgentID++);

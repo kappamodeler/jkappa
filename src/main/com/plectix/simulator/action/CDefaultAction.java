@@ -1,6 +1,7 @@
 package com.plectix.simulator.action;
 
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
@@ -21,7 +22,8 @@ public class CDefaultAction extends CAction {
 		setType(CActionType.NONE);
 	}
 	
-	public final void doAction(IInjection injection, INetworkNotation netNotation, SimulationData simulationData) {
+	public final void doAction(RuleApplicationPool pool, IInjection injection, 
+			INetworkNotation netNotation, SimulationData simulationData) {
 		int agentIdInCC = getAgentIdInCCBySideId(myToAgent);
 		IAgent agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 		getRightCComponent().addAgentFromSolutionForRHS(agentFromInSolution);

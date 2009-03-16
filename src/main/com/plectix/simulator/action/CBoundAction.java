@@ -1,6 +1,7 @@
 package com.plectix.simulator.action;
 
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
@@ -27,7 +28,8 @@ public class CBoundAction extends CAction {
 		setType(CActionType.BOUND);
 	}
 
-	public final void doAction(IInjection injection, INetworkNotation netNotation, SimulationData simulationData) {
+	public final void doAction(RuleApplicationPool pool, IInjection injection, 
+			INetworkNotation netNotation, SimulationData simulationData) {
 		//	TODO remove copypaste
 		/**
 		 * Done.

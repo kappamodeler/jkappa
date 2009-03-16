@@ -16,6 +16,7 @@ import com.plectix.simulator.action.CAddAction;
 import com.plectix.simulator.action.CDefaultAction;
 import com.plectix.simulator.action.CDeleteAction;
 import com.plectix.simulator.components.contactMap.ChangedSite;
+import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IAction;
@@ -31,6 +32,7 @@ import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
 
@@ -323,6 +325,9 @@ public class CRule implements IRule, Serializable {
 		sitesConnectedWithDeleted = new ArrayList<ISite>();
 		sitesConnectedWithBroken = new ArrayList<ISite>();
 		this.injList = injectionList;
+		ISolution solution = simulationData.getKappaSystem().getSolution(); 
+		RuleApplicationPool pool = solution.prepareRuleApplicationPool(injectionList);
+		
 		if (rightHandSide != null) {
 			for (IConnectedComponent cc : rightHandSide) {
 				cc.clearAgentsFromSolutionForRHS();
@@ -331,13 +336,15 @@ public class CRule implements IRule, Serializable {
 
 		for (IAction action : actionList) {
 			if (action.getLeftCComponent() == null) {
-				action.doAction(null, netNotation, simulationData);
+				action.doAction(pool, null, netNotation, simulationData);
 			} else {
-				action.doAction(injectionList.get(leftHandSide.indexOf(action
+				action.doAction(pool, injectionList.get(leftHandSide.indexOf(action
 						.getLeftCComponent())), netNotation, simulationData);
 			}
 		}
 
+		solution.applyRule(pool);
+		
 		if (netNotation != null) {
 			addFixedSitesToNN(netNotation);
 		}

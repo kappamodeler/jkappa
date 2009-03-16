@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.abstractmodel.observables.*;
+import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.*;
 
 public class ObservablesBuilder {

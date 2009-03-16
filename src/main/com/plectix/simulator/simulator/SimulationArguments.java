@@ -755,4 +755,7 @@ public class SimulationArguments {
 		this.shortConsoleOutput = shortConsoleOutput;
 	}
 
+	public boolean isSolutionRead() {
+		return simulationType != SimulationType.GENERATE_MAP;
+	}
 }

@@ -9,9 +9,10 @@ import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.AbstractSite;
+import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.KappaSystem;
 
-public class SubstanceBuilder {
+/*package*/ class SubstanceBuilder {
 	private final KappaSystem myKappaSystem;
 
 	public SubstanceBuilder(KappaSystem system) {

@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.interfaces.*;
 
-public final class CInjection implements IInjection, Serializable {
+public class CInjection implements IInjection, Serializable {
 
 	public static final IInjection EMPTY_INJECTION = new CInjection();
 
@@ -90,7 +91,19 @@ public final class CInjection implements IInjection, Serializable {
 		this.sitesList = siteList;
 	}
 
-	public final CConnectedComponent getConnectedComponent() {
+	public final IConnectedComponent getConnectedComponent() {
 		return connectedComponent;
+	}
+	
+	public final IConnectedComponent getImage() {
+//		List<IAgent> list = new ArrayList<IAgent>();
+//		if (agentLinkList == null || agentLinkList.isEmpty()) {
+//			return list;
+//		}
+//		for (IAgentLink agentL : agentLinkList) {
+//			list.add(agentL.getAgentTo());
+//		}
+//		return list;
+		return SolutionUtils.getConnectedComponent((agentLinkList.get(0).getAgentTo())); 
 	}
 }

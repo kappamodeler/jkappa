@@ -4,6 +4,7 @@ import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
@@ -27,7 +28,8 @@ public class CDeleteAction extends CAction {
 		setType(CActionType.DELETE);
 	}
 
-	public final void doAction(IInjection injection, INetworkNotation netNotation, SimulationData simulationData) {
+	public final void doAction(RuleApplicationPool pool, IInjection injection, 
+			INetworkNotation netNotation, SimulationData simulationData) {
 		/**
 		 * Done.
 		 */
@@ -74,7 +76,7 @@ public class CDeleteAction extends CAction {
 		// injection.getConnectedComponent().getInjectionsList()
 		// .remove(injection);
 
-		simulationData.getKappaSystem().getSolution().removeAgent(agent);
+		pool.removeAgent(agent);
 	}
 
 	@Override

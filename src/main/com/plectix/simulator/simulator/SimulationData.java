@@ -138,7 +138,7 @@ public class SimulationData {
 
 		myKappaSystem.clearRules();
 		myKappaSystem.getObservables().resetLists();
-		myKappaSystem.getSolution().clearAgents();
+		myKappaSystem.getSolution().clear();
 		myKappaSystem.getSolution().clearSolutionLines();
 
 		myKappaSystem.resetIdGenerators();

@@ -9,6 +9,7 @@ import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.exceptions.DocumentFormatException;
 import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
@@ -27,7 +28,7 @@ public class KappaSystemBuilder {
 		KappaSystem kappaSystem = myData.getKappaSystem();
 		
 		// solution
-		if (arguments.getSimulationType() != SimulationArguments.SimulationType.GENERATE_MAP) { 
+		if (arguments.isSolutionRead()) { 
 			AbstractSolution solution = model.getSolution();
 			kappaSystem.setSolution((new SolutionBuilder(myData)).build(solution));
 		}

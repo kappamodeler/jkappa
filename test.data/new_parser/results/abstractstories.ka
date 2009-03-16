@@ -26,7 +26,9 @@
 %init: 1000 * (d(x, y))
 %init: 1 * (ERK(Y187!1), MEK(S218~p, S222~p, s!1))
 
+%obs: 'rule'
 %obs: 'time'
+%obs: 'time2'
 %obs: '1' E(r!_), F(i~t)
 %obs: '2' E(r!1), E(r!2), R(l!1, r!3), R(l!2, r!3)
 %obs: '3' R(l, r)
@@ -40,18 +42,8 @@
 %obs: MEK(S218~p?, S222~p?)
 
 %story: 'MEK_ERK@187_op'
+%story: 'TABline'
 %story: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-%story: 'tabline'
 %story: 'time'
 %story: 'time2'
 
-%mod: $T > 10.0 do 'time' := 5.0
-%mod: $T > 11.3 do 'time2' := 11.0 * 'time' + 2.0 * 'time2' + 1.0 * 'time2'
-%mod: ['1'] > 1.0 * ['2'] do 'time' := 5.0
-%mod: ['4'] < 7.0 * ['2'] + 4.0 * ['4'] do 'time' := 5.0 * 'time'
-%mod: ['4'] < 13.0 * ['1'] + 4.0 * ['3'] do 'time2' := 1.0 * 'time2'
-%mod: $T > 10.0 do $ADDONCE 10.0 * a()
-%mod: $T > 10.0 do $DELETEONCE 11.3 * a(x!1), b(i!1, u), c(x)
-%mod: ['4'] < 13.0 * ['1'] + 4.0 * ['3'] do 'time2' := 1.0 * 'time2'
-%mod: $T > 0.05 do 'rule' := -7.0 * 'rule' + 15.0
-%mod: $T > 1.0 do 'rule' := -7.0 * 'rule' + 15.0

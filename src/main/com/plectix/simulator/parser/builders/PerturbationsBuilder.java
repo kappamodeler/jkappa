@@ -13,6 +13,7 @@ import com.plectix.simulator.parser.abstractmodel.perturbations.*;
 import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.*;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.*;
 import com.plectix.simulator.parser.exceptions.*;
+import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.*;
 
 public class PerturbationsBuilder {

@@ -23,4 +23,6 @@ public interface IInjection {
 	public boolean checkSiteExistanceAmongChangedSites(ISite site);
 
 	public IAgent getAgentFromImageById(int agentIdInCC);
+
+	public IConnectedComponent getImage();
 }

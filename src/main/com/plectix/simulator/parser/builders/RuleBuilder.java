@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.abstractmodel.*;
+import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.*;
 
 public class RuleBuilder {

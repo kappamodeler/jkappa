@@ -139,7 +139,7 @@ public class CContactMapAbstractSolution {
 
 	private void fillModelMapOfAgents() {
 		Collection<IAgent> agentMap = simulationData.getKappaSystem()
-				.getSolution().getAgents();
+				.getSolution().getStraightStorageAgents();
 		fillModelMapByAgentList(agentMap);
 
 		for (IRule rule : simulationData.getKappaSystem().getRules()) {
@@ -170,7 +170,7 @@ public class CContactMapAbstractSolution {
 
 	private void fillAgentMap(ISolution solution) {
 
-		Collection<IAgent> agentMap = solution.getAgents();
+		Collection<IAgent> agentMap = solution.getStraightStorageAgents();
 		for (IAgent agent : agentMap) {
 			IContactMapAbstractAgent abstractAgent = new CContactMapAbstractAgent(
 					agent);

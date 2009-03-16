@@ -3,69 +3,50 @@ package com.plectix.simulator.components.solution;
 import java.io.Serializable;
 import java.util.*;
 
+import com.plectix.simulator.action.*;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.KappaSystem;
 
 @SuppressWarnings("serial")
-/*package*/ final class CSolution extends PhysicalSolution implements Serializable {
-	private final HashMap<Long, IAgent> agentMap = new HashMap<Long, IAgent>();;
+/*package*/ final class CSolution extends ComplexSolution implements Serializable {
+	private final StraightStorage myStraightStorage;
 	
 	// we instantiate this type through UniversalSolution only
-	CSolution() {
+	CSolution(KappaSystem system) {
+		super(system);
+		myStraightStorage = this.getStraightStorage();
 	}
 
 	//---------------ADDERS---------------------------------
 	
-	// method for add-action only!
-	public final void addAgent(IAgent agent) {
-		if (agent != null) {
-			long key = agent.getHash();
-			agentMap.put(key, agent);
-		}
-	}
-	
 	public final void addConnectedComponent(IConnectedComponent component) {
-		if (component == null)
-			return;
-		for (IAgent agent : component.getAgents()) {
-			this.addAgent(agent);
-		}
-	}
-
-	//----------------REMOVERS---------------------------------
-	
-	// method for delete-action only!
-	public final void removeAgent(IAgent agent) {
-		if (agent == null) {
-			return;
-		}
-		agentMap.remove(agent.getHash());
+		myStraightStorage.addConnectedComponent(component);
 	}
 
 	//-----------------GETTERS----------------------------------
 	
-	public final Collection<IAgent> getAgents() {
-		return Collections.unmodifiableCollection(agentMap.values());
+	public final Collection<IAgent> getStraightStorageAgents() {
+		return myStraightStorage.getAgents();
 	}
 
-	public final List<IConnectedComponent> split() {
-		BitSet bitset = new BitSet(1024);
-		List<IConnectedComponent> ccList = new ArrayList<IConnectedComponent>();
-		for (IAgent agent : agentMap.values()) {
-			int index = (int) agent.getId();
-			if (!bitset.get(index)) {
-				IConnectedComponent cc = SolutionUtils.getConnectedComponent(agent);
-				for (IAgent agentCC : cc.getAgents()) {
-					bitset.set((int) agentCC.getId(), true);
-				}
-				ccList.add(cc);
-			}
-		}
-		return ccList;
+	public final Collection<IAgent> getSuperStorageAgents() {
+		return null;
 	}
-
-	//---------------------CLEANING------------------------
 	
-	public final void clearAgents() {
-		agentMap.clear();
+	public final List<IConnectedComponent> split() {
+		return myStraightStorage.split();
+	}
+
+	//----------------RULE APPLICATION---------------------------
+	
+	@Override
+	public RuleApplicationPool prepareRuleApplicationPool(
+			List<IInjection> injections) {
+		return myStraightStorage.prepareRuleApplicationPool(injections);
+	}
+
+	@Override
+	public void applyRule(RuleApplicationPool pool) {
+		myStraightStorage.applyRule(pool);
 	}
 }

@@ -123,7 +123,7 @@ public class TestAction {
 	public void setup() {
 		myRunQuant++;
 		mySolutionAgentsStructure = mySimulator.getSimulationData().getKappaSystem()
-				.getSolution().getAgents();
+				.getSolution().getStraightStorageAgents();
 //		System.out.println();
 //		System.out.println("test" + (myRunQuant - 1));
 //		printSolution("before action", mySolutionAgentsStructure);

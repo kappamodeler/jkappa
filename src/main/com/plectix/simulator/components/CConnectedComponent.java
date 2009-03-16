@@ -11,6 +11,8 @@ import java.util.TreeMap;
 
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.injections.CLiftElement;
+import com.plectix.simulator.components.injections.SuperInjection;
+import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -32,7 +34,8 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	private int maxId = -1;
 	private IRule rule;
 	private boolean isEmpty = false;
-
+	private SuperSubstance mySubstance = null;
+	
 	public CConnectedComponent(byte empty) {
 		switch (empty) {
 		case EMPTY: {
@@ -53,6 +56,10 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		agentFromSolutionForRHS = new ArrayList<IAgent>();
 	}
 
+	public void setSuperSubstance(SuperSubstance substance) {
+		mySubstance = substance;
+	}
+	
 	private final void addInjection(IInjection inj, int id) {
 		if (inj != null) {
 			maxId = Math.max(maxId, id);
@@ -116,21 +123,12 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		}
 	}
 
-	public final void setInjections(IAgent agent) {
-		if (unify(agent)) {
-			IInjection injection = new CInjection(this, injectedSites,
-					agentLinkList);
-			addInjection(injection, maxId + 1);
-			addLiftsToCurrentChangedStates(injection);
-		}
-	}
-
 	public final void setInjection(IInjection inj) {
 		addInjection(inj, maxId + 1);
 		addLiftsToCurrentChangedStates(inj);
 	}
 
-	public final IInjection getInjection(IAgent agent) {
+	public final IInjection createInjection(IAgent agent) {
 		if (unify(agent)) {
 			CInjection injection = new CInjection(this, injectedSites,
 					agentLinkList);
@@ -145,7 +143,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 			return;
 		for (IConnectedComponent cc : connectedComponentList) {
 			for (IAgent agent : cc.getAgentFromSolutionForRHS()) {
-				IInjection inj = getInjection(agent);
+				IInjection inj = createInjection(agent);
 				if (inj != null) {
 					if (!agent.isAgentHaveLinkToConnectedComponent(this, inj))
 						setInjection(inj);
@@ -333,27 +331,32 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * then allsiteNames in this order as String too 
 	 * and then concatenates these Strings.
 	 */
-//	public String getHash() {
-//		if (isEmpty) {
-//			return "EMPTY";
-//		}
-//		List<String> allNames = new ArrayList<String>();
-//		List<String> siteNames = new ArrayList<String>();
-//		for (IAgent agent : agentList) {
-//			allNames.add(agent.getName());
-//			for (ISite site : agent.getSites()) {
-//				siteNames.add(site.getName());
-//			}
-//		}
-//		Collections.sort(siteNames);
-//		Collections.sort(allNames);
-//		allNames.addAll(siteNames);
-//		StringBuffer sb = new StringBuffer();
-//		for (String name : allNames) {
-//			sb.append(name);
-//		}
-//		return sb.toString();
-//	}
+	public String getHash() {
+		if (isEmpty) {
+			return "EMPTY";
+		}
+		List<String> siteNames = new ArrayList<String>();
+		// TreeMap means this collection sorted by key anytime 
+		Map<String, String> agentStrings = new TreeMap<String, String>();
+		for (IAgent agent : agentList) {
+			StringBuffer sb = new StringBuffer();
+			for (ISite site : agent.getSites()) {
+				siteNames.add(site.getName());
+			}
+			Collections.sort(siteNames);
+			for (ISite site : agent.getSites()) {
+				sb.append(site.getName());
+			}
+			agentStrings.put(agent.getName(), sb.toString());
+		}
+		StringBuffer sb = new StringBuffer();
+		for (String key : agentStrings.keySet()) {
+			sb.append(key + agentStrings.get(key));
+		}
+		
+		//TODO write connections here
+		return sb.toString();
+	}
 //	
 //	@Override
 //	public boolean equals(Object obj) {

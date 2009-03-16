@@ -22,8 +22,9 @@ public class SolutionBuilder {
 	}
 	
 	public ISolution build(AbstractSolution arg) {
-		UniversalSolution solution = new UniversalSolution(OperationMode.FIRST);
+		UniversalSolution solution = new UniversalSolution(OperationMode.FIRST, myKappaSystem);
 
+		
 		for (SolutionLineData lineData : arg.getAgents()) {
 			List<IAgent> list = mySubstanceBuilder.buildAgents(lineData.getAgents());
 			long quant = lineData.getCount();
@@ -37,7 +38,7 @@ public class SolutionBuilder {
 
 			} else {
 				for (int i = 1; i < quant; i++) {
-					List<IAgent> cloned = SolutionUtils.cloneAgentsList(list, myKappaSystem);
+					List<IAgent> cloned = solution.cloneAgentsList(list);
 //					solution.addAgents(cloned);
 					solution.addConnectedComponents(SimulationUtils.buildConnectedComponents(cloned));
 				}
