@@ -63,7 +63,7 @@ public class TestStories extends InitStoriesTests {
 				}
 			}
 		}
-		if (!myTraceList.isEmpty())
+		if (!myTraceList.isEmpty()) 
 			myFailer.assertTrue("Not found the graph", false);
 	}
 
@@ -152,7 +152,7 @@ public class TestStories extends InitStoriesTests {
 			BufferedReader bfr = new BufferedReader(reader);
 			line = bfr.readLine();
 			while (line != null) {
-				if (!line.isEmpty()) {
+				if (line.length() != 0) {
 					keys = line.split(" ");
 					key = Integer.valueOf(keys[0]);
 					for (int i = 1; i < keys.length; i++) {
