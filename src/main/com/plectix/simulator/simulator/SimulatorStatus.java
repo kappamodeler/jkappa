@@ -21,41 +21,34 @@ public class SimulatorStatus implements SimulatorStatusInterface {
 		this.statusMessage = statusMessage;
 	}
 	
-	@Override
 	public final double getCurrentTime() {
 		return currentTime;
 	}
 
-	@Override
 	public double getCurrentEventNumber() {
 		return currentEventNumber;
 	}
 	
-	@Override
 	public final String getStatusMessage() {
 		return statusMessage;
 	}
 
 
-	@Override
 	public final int getIterationNumber() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public final int getNumberOfObservables() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public final int getObservableCount(int i) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public final String getObservableName(int i) {
 		// TODO Auto-generated method stub
 		return null;

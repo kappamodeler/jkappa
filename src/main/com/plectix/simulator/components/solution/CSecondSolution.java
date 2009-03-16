@@ -17,25 +17,21 @@ import com.plectix.simulator.simulator.KappaSystem;
 		myStraightStorage = new StraightStorage();
 	}
 
-	@Override
 	public void addConnectedComponent(IConnectedComponent component) {
 		getStraightStorage().addConnectedComponent(component);
 	}
 
-	@Override
 	public List<IConnectedComponent> split() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public StandardRuleApplicationPool prepareRuleApplicationPool(
 			List<IInjection> injections) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public void applyRule(RuleApplicationPool pool) {
 		// TODO Auto-generated method stub
 		
@@ -43,12 +39,10 @@ import com.plectix.simulator.simulator.KappaSystem;
 
 	//-----------------AGENTS GETTERS---------------------------
 	
-	@Override
 	public Collection<IAgent> getSuperStorageAgents() {
 		return mySuperStorage.getAgents();
 	}
 
-	@Override
 	public Collection<IAgent> getStraightStorageAgents() {
 		return myStraightStorage.getAgents();
 	}

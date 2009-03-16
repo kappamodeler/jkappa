@@ -16,7 +16,6 @@ import com.plectix.simulator.simulator.KappaSystem;
 	SuperStorage() {
 	}
 
-	@Override
 	public void addConnectedComponent(IConnectedComponent component) {
 		String hash = component.getHash();
 		Set<SuperSubstance> set = myStorage.get(hash);
@@ -42,7 +41,6 @@ import com.plectix.simulator.simulator.KappaSystem;
 		}
 	}
 
-	@Override
 	public void removeConnectedComponent(IConnectedComponent component) {
 		String hash = component.getHash();
 		Set<SuperSubstance> set = myStorage.get(hash);
@@ -56,12 +54,10 @@ import com.plectix.simulator.simulator.KappaSystem;
 		}
 	}
 	
-	@Override
 	public void clear() {
 		myStorage.clear();
 	}
 
-	@Override
 	public List<IConnectedComponent> split() {
 		List<IConnectedComponent> list = new ArrayList<IConnectedComponent>();
 		for (Set<SuperSubstance> set : myStorage.values()) {
@@ -72,12 +68,10 @@ import com.plectix.simulator.simulator.KappaSystem;
 		return list;
 	}
 
-	@Override
 	public StandardRuleApplicationPool prepareRuleApplicationPool(List<IInjection> injections) {
 		return new StandardRuleApplicationPool(injections);
 	}
 
-	@Override
 	public void applyRule(RuleApplicationPool pool) {
 //		for (IConnectedComponent component : pool.getInitialComponents()) {
 //			this.removeConnectedComponent(component);
@@ -87,7 +81,6 @@ import com.plectix.simulator.simulator.KappaSystem;
 //		}
 	}
 
-	@Override
 	public Collection<IAgent> getAgents() {
 		return agentMap.values();
 	}

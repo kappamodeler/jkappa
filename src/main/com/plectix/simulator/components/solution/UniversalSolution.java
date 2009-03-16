@@ -52,53 +52,43 @@ public final class UniversalSolution implements ISolution {
 		return mySolution.split();
 	}
 
-	@Override
 	public void addConnectedComponents(List<IConnectedComponent> list) {
 		mySolution.addConnectedComponents(list);
 	}
 
-	@Override
 	public void checkSolutionLinesAndAdd(String line, long count) {
 		mySolution.checkSolutionLinesAndAdd(line, count);
 	}
 
-	@Override
 	public void clearSolutionLines() {
 		mySolution.clearSolutionLines();
 	}
 
-	@Override
 	public List<IAgent> cloneAgentsList(List<IAgent> agents) {
 		return mySolution.cloneAgentsList(agents);
 	}
 
-	@Override
 	public KappaSystem getKappaSystem() {
 		return mySolution.getKappaSystem();
 	}
 
-	@Override
 	public List<SolutionLines> getSolutionLines() {
 		return mySolution.getSolutionLines();
 	}
 
-	@Override
 	public void applyRule(RuleApplicationPool pool) {
 		mySolution.applyRule(pool);
 	}
 
-	@Override
 	public RuleApplicationPool prepareRuleApplicationPool(
 			List<IInjection> injections) {
 		return mySolution.prepareRuleApplicationPool(injections);
 	}
 
-	@Override
 	public Collection<IAgent> getSuperStorageAgents() {
 		return mySolution.getSuperStorageAgents();
 	}
 	
-	@Override
 	public Collection<IAgent> getStraightStorageAgents() {
 		return mySolution.getStraightStorageAgents();
 	}

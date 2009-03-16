@@ -39,13 +39,11 @@ import com.plectix.simulator.simulator.KappaSystem;
 
 	//----------------RULE APPLICATION---------------------------
 	
-	@Override
 	public RuleApplicationPool prepareRuleApplicationPool(
 			List<IInjection> injections) {
 		return myStraightStorage.prepareRuleApplicationPool(injections);
 	}
 
-	@Override
 	public void applyRule(RuleApplicationPool pool) {
 		myStraightStorage.applyRule(pool);
 	}

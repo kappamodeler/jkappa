@@ -203,7 +203,6 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 
 	}
 
-	@Override
 	public String toString() {
 		String st = "site = " + getName();
 		st += " from agent = " + linkAgent.getName();
@@ -264,7 +263,6 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		return true;
 	}
 
-	@Override
 	public void setLinkState(CContactMapLinkState linkState) {
 		this.linkState = linkState;
 	}

@@ -73,12 +73,10 @@ import com.plectix.simulator.simulator.KappaSystem;
 
 	//	--------------------------------------------------------------------
 	
-	@Override
 	public RuleApplicationPool prepareRuleApplicationPool(List<IInjection> injections) {
 		return new TransparentRuleApplicationPool(this);
 	}
 	
-	@Override
 	public void applyRule(RuleApplicationPool pool) {
 		// empty! we have "real-time" adds and removes here
 	}

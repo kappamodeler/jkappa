@@ -43,97 +43,81 @@ public class SuperSubstance implements ISolutionComponent {
 		return myComponent;
 	}
 
-	@Override
 	public void addAgentFromSolutionForRHS(IAgent agent) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void clearAgentsFromSolutionForRHS() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void doPositiveUpdate(List<IConnectedComponent> rightHandSide) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public List<IAgent> getAgentFromSolutionForRHS() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public List<IAgent> getAgents() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public List<IAgent> getAgentsSortedByIdInRule() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public IInjection getFirstInjection() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public IInjection createInjection(IAgent agent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public Collection<IInjection> getInjectionsList() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public IInjection getRandomInjection(IRandom random) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
 	public void initSpanningTreeMap() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public boolean isAutomorphism(IAgent agent) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
 	public void removeInjection(IInjection injection) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void setInjection(IInjection inj) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void setRule(IRule rule) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public boolean unify(IAgent agent) {
 		// TODO Auto-generated method stub
 		return false;
