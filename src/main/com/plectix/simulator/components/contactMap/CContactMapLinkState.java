@@ -12,17 +12,33 @@ public class CContactMapLinkState {
 	private CLinkStatus statusLink;
 	private int linkSiteNameID = CSite.NO_INDEX;
 	private int agentNameID = CSite.NO_INDEX;
-	private int agentID = CSite.NO_INDEX;
+//	private int agentID = CSite.NO_INDEX;
 	private int internalStateNameID = CSite.NO_INDEX;
 
-	public int getAgentID() {
-		return agentID;
+//	public int getAgentID() {
+//		return agentID;
+//	}
+//
+//	public void setAgentID(int agentID) {
+//		this.agentID = agentID;
+//	}
+	
+	public void setStatusLink(CLinkStatus status){
+		this.statusLink= status;
+		if(status == CLinkStatus.BOUND)
+			statusLinkRank = CLinkRank.BOUND;
+		else
+			statusLinkRank = CLinkRank.FREE;
 	}
-
-	public void setAgentID(int agentID) {
-		this.agentID = agentID;
+	
+	public void setLinkSiteNameID(int id){
+		this.linkSiteNameID = id;
 	}
-
+	
+	public void setAgentNameID(int id){
+		this.agentNameID = id;
+	}
+	
 	public CLinkRank getStatusLinkRank() {
 		return statusLinkRank;
 	}

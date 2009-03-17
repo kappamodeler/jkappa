@@ -64,8 +64,12 @@ public class CContactMapAbstractAction {
 				addAgentToDelete(lhsAgent);
 				addAgentToAdd(rhsAgent);
 			}
-			
 		}
+		for(int j = i; j<rhs.size(); j++){
+			IContactMapAbstractAgent rhsAgent = rhs.get(j);
+			addAgentToAdd(rhsAgent);
+		}
+		
 	}
 	
 	private boolean isFit(IContactMapAbstractAgent a1, IContactMapAbstractAgent a2){
