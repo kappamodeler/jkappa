@@ -54,6 +54,10 @@ public class CContactMapLinkState {
 	public int getInternalStateNameID() {
 		return internalStateNameID;
 	}
+	
+	public void setInternalStateNameID(int id){
+		this.internalStateNameID = id;
+	}
 
 	public final void setFreeLinkState() {
 		statusLink = CLinkStatus.FREE;

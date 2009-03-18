@@ -91,7 +91,7 @@ public class CContactMapAbstractAction {
 
 	private void addAgentToDelete(IContactMapAbstractAgent agentIn){
 		UCorrelationAbstractAgent ua = new UCorrelationAbstractAgent(this,agentIn,null,ECorrelationType.CORRELATION_LHS_AND_RHS);
-		ua.setType(CActionType.DELETE);
+//		ua.setType(CActionType.DELETE);
 		ua.initAtomicAction();
 		correlationAgents.add(ua);
 		agentIn.shouldAdd();
