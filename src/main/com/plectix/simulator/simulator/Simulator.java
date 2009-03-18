@@ -9,6 +9,7 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.log4j.Logger;
 
+import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.controller.SimulatorInputData;
@@ -216,8 +217,9 @@ public class Simulator implements SimulatorInterface {
 		simulationData.setSimulationArguments(InfoType.OUTPUT,simulatorInputData.getSimulationArguments());
 		simulationData.readSimulatonFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
-		
-		simulationData.stopTimer(InfoType.OUTPUT,timer, "-Initialization:");
+
+		simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO, "JSIM: Build on " + BuildConstants.BUILD_DATE + "  SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
+		simulationData.stopTimer(InfoType.OUTPUT, timer, "-Initialization:");
 		simulationData.setClockStamp(System.currentTimeMillis());
 		
 		if (simulationData.getSimulationArguments().isCompile()) {

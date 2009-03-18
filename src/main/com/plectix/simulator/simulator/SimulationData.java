@@ -489,8 +489,9 @@ public class SimulationData {
 	// TODO separate info output
 
 	public final void addInfo(InfoType outputType, InfoType type, String message) {
-		if (!simulationArguments.isShortConsoleOutput())
+		if (!simulationArguments.isShortConsoleOutput()) {
 			outputType = InfoType.OUTPUT;
+		}
 		addInfo(new Info(outputType, type, message, printStream));
 	}
 
