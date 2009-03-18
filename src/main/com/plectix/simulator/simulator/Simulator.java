@@ -27,6 +27,10 @@ public class Simulator implements SimulatorInterface {
 
 	private static final String NAME = "Java Simulator JSIM";
 	
+	private static final String INTRO_MESSAGE = "JSIM: Build on " + BuildConstants.BUILD_DATE 
+											  + ", SVN Revision " + BuildConstants.BUILD_SVN_REVISION
+											  + ", JRE: " + System.getProperty("java.vendor") + " " + System.getProperty("java.version");
+	
 	private static final String STATUS_RUNNING = "Running";
 	
 	private static final String STATUS_WRAPPING = "Wrapping the simulation results";
@@ -210,6 +214,9 @@ public class Simulator implements SimulatorInterface {
 	}
 
 	public final void run(SimulatorInputData simulatorInputData) throws Exception {
+		// add info about JSIM:
+		simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO, INTRO_MESSAGE);
+	
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
 
@@ -218,7 +225,6 @@ public class Simulator implements SimulatorInterface {
 		simulationData.readSimulatonFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 
-		simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO, "JSIM: Build on " + BuildConstants.BUILD_DATE + "  SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
 		simulationData.stopTimer(InfoType.OUTPUT, timer, "-Initialization:");
 		simulationData.setClockStamp(System.currentTimeMillis());
 		
