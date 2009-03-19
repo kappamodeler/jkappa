@@ -119,19 +119,19 @@ public class SimulationService {
 
 
 	/**
-	 * Returns the current simulation time for <code>jobID</code> or
-	 * <code>Double.NaN</code> if the job doesn't exist.
+	 * Returns the current simulation status for <code>jobID</code> or
+	 * <code>null</code> if the job doesn't exist.
 	 * 
 	 * @param jobID
-	 * @return the current time
+	 * @return the current status
 	 */
-	public double getCurrentTime(long jobID) {
+	public SimulatorStatusInterface getSimulatorStatus(long jobID) {
 		SimulatorFutureTask futureTask = callablesMap.get(jobID);
 		if (futureTask == null) {
-			return Double.NaN;
+			return null;
 		}
 		
-		return futureTask.getSimulator().getCurrentTime();
+		return futureTask.getSimulator().getStatus();
 	}
 	
 	/**

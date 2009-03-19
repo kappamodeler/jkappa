@@ -4,54 +4,59 @@ import com.plectix.simulator.controller.SimulatorStatusInterface;
 
 public class SimulatorStatus implements SimulatorStatusInterface {
 
-	private double currentTime = Double.NaN;
 	private long currentEventNumber = 0;
+
+	private double currentTime = Double.NaN;
+	private double progress = Double.NaN;
 
 	private String statusMessage = null;
 
-	protected final void setCurrentTime(double currentTime) {
-		this.currentTime = currentTime;
-	}
-
-	protected final void setCurrentEventNumber(long currentEventNumber) {
-		this.currentEventNumber = currentEventNumber;
-	}
-
-	protected final void setStatusMessage(String statusMessage) {
-		this.statusMessage = statusMessage;
+	public final double getCurrentEventNumber() {
+		return currentEventNumber;
 	}
 	
 	public final double getCurrentTime() {
 		return currentTime;
 	}
 
-	public double getCurrentEventNumber() {
-		return currentEventNumber;
+	public final int getIterationNumber() {
+		throw new RuntimeException("This method is not implemented yet!");
+	}
+
+	public final int getNumberOfObservables() {
+		throw new RuntimeException("This method is not implemented yet!");
 	}
 	
+	public final int getObservableCount(int i) {
+		throw new RuntimeException("This method is not implemented yet!");
+	}
+
+	public final String getObservableName(int i) {
+		throw new RuntimeException("This method is not implemented yet!");
+	}
+	
+	public final double getProgress() {
+		return progress ;
+	}
+
 	public final String getStatusMessage() {
 		return statusMessage;
 	}
 
-
-	public final int getIterationNumber() {
-		// TODO Auto-generated method stub
-		return 0;
+	protected final void setCurrentEventNumber(long currentEventNumber) {
+		this.currentEventNumber = currentEventNumber;
 	}
 
-	public final int getNumberOfObservables() {
-		// TODO Auto-generated method stub
-		return 0;
+	protected final void setCurrentTime(double currentTime) {
+		this.currentTime = currentTime;
 	}
 
-	public final int getObservableCount(int i) {
-		// TODO Auto-generated method stub
-		return 0;
+	protected final void setProgress(double progress) {
+		this.progress = progress;
 	}
 
-	public final String getObservableName(int i) {
-		// TODO Auto-generated method stub
-		return null;
+	protected final void setStatusMessage(String statusMessage) {
+		this.statusMessage = statusMessage;
 	}
 
 

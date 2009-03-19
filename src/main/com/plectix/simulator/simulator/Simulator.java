@@ -42,6 +42,8 @@ public class Simulator implements SimulatorInterface {
 	private double currentTime = 0.0;
 	
 	private long currentEventNumber = 0;
+	
+	private int currentIterationNumber = 0;
 
 	private boolean isIteration = false;
 
@@ -62,6 +64,26 @@ public class Simulator implements SimulatorInterface {
 	public SimulatorStatusInterface getStatus() {
 		simulatorStatus.setCurrentTime(currentTime);
 		simulatorStatus.setCurrentEventNumber(currentEventNumber);
+		
+		// let's compute our progress:
+		double progress = simulatorStatus.getProgress();
+		if (Double.isNaN(progress) || progress < 1.0) {
+			SimulationArguments simulationArguments = simulationData.getSimulationArguments();
+			if (simulationArguments.isTime()) {
+				progress = currentTime / simulationArguments.getTimeLength();
+			} else {
+				progress = currentEventNumber * 1.0 / simulationArguments.getEvent();
+			}
+
+			if (simulationArguments.isStorify()) {
+				progress = (progress + currentIterationNumber ) / simulationArguments.getIterations();
+				if (progress > 1.0) {
+					progress = 1.0;
+				}
+			}
+			simulatorStatus.setProgress(progress);
+		}
+		
 		return simulatorStatus;
 	}
 	
@@ -144,6 +166,7 @@ public class Simulator implements SimulatorInterface {
 				// TODO: Do any necessary clean-up and collect data we can return
 				simulationData.println("Simulation is interrupted because the thread is cancelled");
 				simulatorResultsData.setCancelled(true);
+				simulatorStatus.setProgress(1.0);
 				break;
 			}
 			
@@ -301,7 +324,7 @@ public class Simulator implements SimulatorInterface {
 		timerAllStories.startTimer();
 
 		simulatorStatus.setStatusMessage(STATUS_RUNNING);
-		for (int i = 0; i < simulationData.getSimulationArguments().getIterations(); i++) {
+		for (currentIterationNumber = 0; currentIterationNumber < simulationData.getSimulationArguments().getIterations(); currentIterationNumber++) {
 			PlxTimer timer=null;
 			if(!simulationData.getSimulationArguments().isShortConsoleOutput()){
 				simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
@@ -320,6 +343,7 @@ public class Simulator implements SimulatorInterface {
 					// TODO: Do any necessary clean-up and collect data we can return
 					simulationData.println("Simulation is interrupted because the thread is cancelled");
 					simulatorResultsData.setCancelled(true);
+					simulatorStatus.setProgress(1.0);
 					break;
 				}
 				
@@ -341,10 +365,10 @@ public class Simulator implements SimulatorInterface {
 					// TODO: Make sure that CNetworkNotation works with long event number, not integer
 					CNetworkNotation netNotation = new CNetworkNotation(this, (int)currentEventNumber, rule, injectionsList, simulationData);
 					max_clash = 0;
-					if (stories.checkRule(rule.getRuleID(), i)) {
+					if (stories.checkRule(rule.getRuleID(), currentIterationNumber)) {
 						rule.applyLastRuleForStories(injectionsList,netNotation);
 						rule.applyRuleForStories(injectionsList, netNotation, simulationData, true);
-						stories.addToNetworkNotationStoryStorifyRule(i, netNotation, currentTime);
+						stories.addToNetworkNotationStoryStorifyRule(currentIterationNumber, netNotation, currentTime);
 						currentEventNumber++;
 						isEndRules = true;
 						simulationData.printlnBar();
@@ -354,7 +378,7 @@ public class Simulator implements SimulatorInterface {
 					rule.applyRuleForStories(injectionsList, netNotation, simulationData, false);
 					netNotation.fillAddedAgentsID(simulationData);
 					if (!rule.isRHSEqualsLHS()) {
-						stories.addToNetworkNotationStory(i, netNotation);
+						stories.addToNetworkNotationStory(currentIterationNumber, netNotation);
 					}
 					currentEventNumber++;
 
@@ -366,15 +390,15 @@ public class Simulator implements SimulatorInterface {
 				}
 			} // end of simulation here...
 		    
-			simulationData.checkStoriesBar(i);
+			simulationData.checkStoriesBar(currentIterationNumber);
 			currentEventNumber = 0;
-			stories.handling(i);
+			stories.handling(currentIterationNumber);
 			
 			if(!simulationData.getSimulationArguments().isShortConsoleOutput()) {
 				endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
 			}
 			
-			if (i < simulationData.getSimulationArguments().getIterations() - 1) {
+			if (currentIterationNumber < simulationData.getSimulationArguments().getIterations() - 1) {
 				resetSimulation(InfoType.NOT_OUTPUT);
 			}
 			
@@ -383,6 +407,7 @@ public class Simulator implements SimulatorInterface {
 				// TODO: Do any necessary clean-up and collect data we can return
 				simulationData.println("Simulation is interrupted because the thread is cancelled");
 				simulatorResultsData.setCancelled(true);
+				simulatorStatus.setProgress(1.0);
 				break;
 			}
 		}
@@ -393,6 +418,7 @@ public class Simulator implements SimulatorInterface {
 			simulationData.println("#");
 			endOfSimulation(InfoType.OUTPUT, false, timerAllStories);
 		}
+		
 		PlxTimer mergeTimer= new PlxTimer();
 		mergeTimer.startTimer();
 		stories.merge();

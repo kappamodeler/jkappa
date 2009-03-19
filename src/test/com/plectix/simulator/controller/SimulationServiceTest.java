@@ -29,7 +29,10 @@ public class SimulationServiceTest implements SimulatorCallableListener {
 		*/
 		
 		for (int i= 0; i< 1000; i++) {
-			System.err.println("--> Job " + jobID + " currentTime= " + service.getCurrentTime(jobID));
+			SimulatorStatusInterface status = service.getSimulatorStatus(jobID);
+			if (status != null) {
+				System.err.println("--> Job " + jobID + " currentTime= " + status.getCurrentTime() + " progress = " + status.getProgress());
+			}
 			System.err.println("--> Job " + jobID + " is " + (service.isDone(jobID)?"":"NOT ") + "done");
 
 			if (i == 10) {
