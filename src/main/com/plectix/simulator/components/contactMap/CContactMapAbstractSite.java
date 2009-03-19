@@ -23,7 +23,7 @@ import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class CContactMapAbstractSite implements IContactMapAbstractSite {
-	public static final int NO_INDEX = -1;	
+	public static final int NO_INDEX = -1;
 
 	private final int nameId;
 	private CContactMapLinkState linkState;
@@ -45,7 +45,7 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		this.nameId = site.getNameId();
 		this.linkState = new CContactMapLinkState();
 	}
-	
+
 	public CContactMapAbstractSite(IContactMapAbstractSite site) {
 		this.nameId = site.getNameId();
 		this.linkAgent = site.getAgentLink();
@@ -54,15 +54,16 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 					.getNameId());
 		this.linkState = new CContactMapLinkState(site.getLinkState());
 	}
-	
-	public IContactMapAbstractSite clone(){
+
+	public IContactMapAbstractSite clone() {
 		IContactMapAbstractSite siteOut = new CContactMapAbstractSite(this);
 		return siteOut;
 	}
 
-	public static List<IContactMapAbstractSite> cloneAll(List<IContactMapAbstractSite> listIn){
+	public static List<IContactMapAbstractSite> cloneAll(
+			List<IContactMapAbstractSite> listIn) {
 		List<IContactMapAbstractSite> listOut = new ArrayList<IContactMapAbstractSite>();
-		for(IContactMapAbstractSite s : listIn)
+		for (IContactMapAbstractSite s : listIn)
 			listOut.add(s.clone());
 		return listOut;
 	}
@@ -85,7 +86,7 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	}
 
 	public String getName() {
-		if(nameId == CSite.NO_INDEX)
+		if (nameId == CSite.NO_INDEX)
 			return "EMPTY_SITE";
 		return ThreadLocalData.getNameDictionary().getName(nameId);
 	}
@@ -182,7 +183,6 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		return true;
 	}
 
-	
 	public void print() {
 		System.out.println("site = " + getName());
 		System.out.println("internal state = " + internalState.getName());
@@ -206,12 +206,12 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	public String toString() {
 		String st = "site = " + getName();
 		st += " from agent = " + linkAgent.getName();
-		if(nameId == NO_INDEX)
+		if (nameId == NO_INDEX)
 			return st;
-		
+
 		if (internalState.getNameId() != -1)
 			st += " internal state = " + internalState.getName();
-		if (linkState!=null && linkState.getLinkSiteNameID() != -1) {
+		if (linkState != null && linkState.getLinkSiteNameID() != -1) {
 			st += " link agent = "
 					+ ThreadLocalData.getNameDictionary().getName(
 							linkState.getAgentNameID());
@@ -237,7 +237,7 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	}
 
 	public boolean isFit(IContactMapAbstractSite s) {
-		if(nameId == CSite.NO_INDEX)
+		if (nameId == CSite.NO_INDEX)
 			return true;
 		if (!internalState.compareInternalStates(s.getInternalState()))
 			return false;
@@ -246,19 +246,20 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 
 		return true;
 	}
-	
-	public boolean isFit(int agentId,int siteId, int internalStateId, int agentLinkId, int siteLinkId, int internalStateLinkId) {
-		if(linkAgent.getNameId()!=agentId)
+
+	public boolean isFit(int agentId, int siteId, int internalStateId,
+			int agentLinkId, int siteLinkId, int internalStateLinkId) {
+		if (linkAgent.getNameId() != agentId)
 			return false;
-		if(nameId!=siteId)
+		if (nameId != siteId)
 			return false;
-		if(internalState.getNameId()!=internalStateId)
+		if (internalState.getNameId() != internalStateId)
 			return false;
-		if(linkState.getAgentNameID()!=agentLinkId)
+		if (linkState.getAgentNameID() != agentLinkId)
 			return false;
-		if(linkState.getLinkSiteNameID()!=siteLinkId)
+		if (linkState.getLinkSiteNameID() != siteLinkId)
 			return false;
-		if(linkState.getInternalStateNameID()!=internalStateLinkId)
+		if (linkState.getInternalStateNameID() != internalStateLinkId)
 			return false;
 		return true;
 	}

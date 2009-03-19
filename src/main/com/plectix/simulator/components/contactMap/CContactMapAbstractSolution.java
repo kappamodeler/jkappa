@@ -129,9 +129,10 @@ public class CContactMapAbstractSolution {
 
 		boolean isAdd = false;
 		for (IContactMapAbstractAgent a : listIn) {
-			if (addAgentToAgentsMap(a))
+			if (addAgentToAgentsMap(a)){
 				isAdd = true;
-			addToEdgesAndAgentsMap(rule, a);
+				addToEdgesAndAgentsMap(rule, a);
+			}
 		}
 
 		return isAdd;
@@ -223,7 +224,7 @@ public class CContactMapAbstractSolution {
 	public final List<IContactMapAbstractAgent> getListOfAgentsByNameID(
 			int nameID) {
 		List<IContactMapAbstractAgent> listAgents = agentNameIdToAgentsList
-				.get(nameID);
+				.get(Integer.valueOf(nameID));
 		if (listAgents == null)
 			return null;
 		return listAgents;

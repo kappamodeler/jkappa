@@ -92,6 +92,7 @@ public class CContactMap {
 
 	public void constructAbstractContactMap() {
 		// TODO
+		// int i = 0;
 		switch (mode) {
 		case MODEL:
 			boolean isEnd = false;
@@ -99,20 +100,43 @@ public class CContactMap {
 				isEnd = true;
 				for (CContactMapAbstractRule rule : abstractRules) {
 					List<IContactMapAbstractAgent> newData = rule.getNewData();
-					if (abstractSolution.addNewData(newData, rule))
+					// if(newData != null && newData.size()>100000)
+					// System.out.println();
+					//Gab1(PH!_,PR!1),Grb2(SH3c!1,SH3n!2),SoS(PR!2,GEF),Ras(s~gdp
+					// )
+					if (abstractSolution.addNewData(newData, rule)) {
 						isEnd = false;
+						// clear();
+					}
+					// i++;
 				}
 			}
 			break;
 
 		case AGENT_OR_RULE:
-			//TODO add edges to contact map for agents from agentNameIdToAgentsList which are not in focus; 
+			// TODO add edges to contact map for agents from
+			// agentNameIdToAgentsList which are not in focus;
 			break;
 		}
-		
 
 		Map<Integer, List<IContactMapAbstractAgent>> abstractAgentMap = abstractSolution
 				.getAgentNameIdToAgentsList();
+	}
+
+	private void clear() {
+		Iterator<Integer> iterator = abstractSolution
+				.getAgentNameIdToAgentsList().keySet().iterator();
+		while (iterator.hasNext()) {
+			Integer key = iterator.next();
+
+			List<IContactMapAbstractAgent> listAgents = abstractSolution
+					.getAgentNameIdToAgentsList().get(key);
+			List<IContactMapAbstractAgent> listClear = new ArrayList<IContactMapAbstractAgent>();
+			for (IContactMapAbstractAgent a : listAgents)
+				if (!a.includedInCollection(listClear))
+					listClear.add(a);
+			abstractSolution.getAgentNameIdToAgentsList().put(key, listClear);
+		}
 	}
 
 	public void constructContactMap() {
@@ -136,57 +160,63 @@ public class CContactMap {
 			break;
 
 		case AGENT_OR_RULE:
-			CContactMapAbstractRule abstractRule = fillFocusAgentsFromRule((CRule) this.focusRule,
-					this.agentsFromFocusedRule);
+			CContactMapAbstractRule abstractRule = fillFocusAgentsFromRule(
+					(CRule) this.focusRule, this.agentsFromFocusedRule);
 			constructAbstractCard(rules, agentsFromFocusedRule);
 
 			List<IContactMapAbstractAgent> addAgentList = new ArrayList<IContactMapAbstractAgent>();
-			Iterator<Integer> iterator  = abstractSolution.getAgentNameIdToAgent().keySet().iterator();
-			while(iterator.hasNext()){
+			Iterator<Integer> iterator = abstractSolution
+					.getAgentNameIdToAgent().keySet().iterator();
+			while (iterator.hasNext()) {
 				Integer key = iterator.next();
-				addAgentList.add(abstractSolution.getAgentNameIdToAgent().get(key));				
+				addAgentList.add(abstractSolution.getAgentNameIdToAgent().get(
+						key));
 			}
-			
-			List<Integer> agentNameIdList = new ArrayList<Integer>(); 
-			iterator = abstractSolution.getAgentNameIdToAgentsList().keySet().iterator();
-			while(iterator.hasNext())
+
+			List<Integer> agentNameIdList = new ArrayList<Integer>();
+			iterator = abstractSolution.getAgentNameIdToAgentsList().keySet()
+					.iterator();
+			while (iterator.hasNext())
 				agentNameIdList.add(iterator.next());
-			
+
 			constructAbstractCard(rules, addAgentList);
-			
+
 			clearCard(agentNameIdList);
 			break;
 		}
 	}
-	
-	private void clearCard(List<Integer> agentNameIdList){
-		Iterator<Integer> iterator  = abstractSolution.getAgentNameIdToAgentsList().keySet().iterator();
+
+	private void clearCard(List<Integer> agentNameIdList) {
+		Iterator<Integer> iterator = abstractSolution
+				.getAgentNameIdToAgentsList().keySet().iterator();
 		List<Integer> listToDell = new ArrayList<Integer>();
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			Integer key = iterator.next();
-			if(!agentNameIdList.contains(key))
+			if (!agentNameIdList.contains(key))
 				listToDell.add(key);
 		}
-		for(Integer i : listToDell){
+		for (Integer i : listToDell) {
 			abstractSolution.getAgentNameIdToAgentsList().remove(i);
 			abstractSolution.getEdgesInContactMap().remove(i);
 			abstractSolution.getAgentsInContactMap().remove(i);
 		}
 	}
 
-	private void constructAbstractCard(List<IRule> rules,List<IContactMapAbstractAgent> addAgentList){
-		for(IRule rule : rules){
+	private void constructAbstractCard(List<IRule> rules,
+			List<IContactMapAbstractAgent> addAgentList) {
+		for (IRule rule : rules) {
 			List<IContactMapAbstractAgent> agentsFromRule = new ArrayList<IContactMapAbstractAgent>();
 			fillAgentsFromRule(rule, agentsFromRule);
 			for (IContactMapAbstractAgent agent : addAgentList)
 				if (agent.includedInCollectionByName(agentsFromRule)) {
 					abstractSolution.addAgentToAgentsMap(agent);
-					abstractSolution.addAgentsBoundedWithFocusedAgent(agent,agentsFromRule);
-//					break;
+					abstractSolution.addAgentsBoundedWithFocusedAgent(agent,
+							agentsFromRule);
+					// break;
 				}
 		}
 	}
-	
+
 	private CContactMapAbstractRule fillFocusAgentsFromRule(IRule rule,
 			List<IContactMapAbstractAgent> agentsList) {
 		CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(rule);
@@ -195,13 +225,12 @@ public class CContactMap {
 		addAgentsToListFromRule(list, agentsList);
 		return abstractRule;
 	}
-	
 
 	private void fillAgentsFromRule(IRule rule,
 			List<IContactMapAbstractAgent> agentsList) {
 		CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(rule);
 		List<IContactMapAbstractAgent> agents = new ArrayList<IContactMapAbstractAgent>();
-		if (rule.getLeftHandSide().get(0)!=CRule.EMPTY_LHS_CC) {
+		if (rule.getLeftHandSide().get(0) != CRule.EMPTY_LHS_CC) {
 			agents = abstractRule.getLhsAgents();
 			addAgentsToListFromRule(agents, agentsList);
 		}

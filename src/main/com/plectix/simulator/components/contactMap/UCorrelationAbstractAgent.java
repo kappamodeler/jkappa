@@ -173,8 +173,12 @@ public class UCorrelationAbstractAgent {
 		IContactMapAbstractSite siteTo = toAgent.getSitesMap().get(key);
 		IContactMapAbstractSite siteNew = newAgent.getSitesMap().get(key);
 
-		CContactMapLinkState lsTo = siteTo.getLinkState();
+		// CContactMapLinkState lsTo = siteTo.getLinkState();
 		CContactMapLinkState lsNew = siteNew.getLinkState();
+
+		if (type.getSiteFrom().getLinkState().getStatusLinkRank() == CLinkRank.BOUND_OR_FREE
+				|| type.getSiteFrom().getLinkState().getStatusLinkRank() == CLinkRank.SEMI_LINK)
+			listOut.addAll(breakAllAgentsWithSite(newAgent, siteNew, solution));
 
 		// if (lsNew.getAgentNameID() != lsTo.getAgentNameID()
 		// || lsNew.getLinkSiteNameID() != lsTo.getLinkSiteNameID()) {
@@ -183,6 +187,39 @@ public class UCorrelationAbstractAgent {
 		// lsNew.setLinkSiteNameID(CSite.NO_INDEX);
 		// lsNew.setStatusLink(CLinkStatus.FREE);
 		// }
+		return listOut;
+	}
+
+	private List<IContactMapAbstractAgent> breakAllAgentsWithSite(
+			IContactMapAbstractAgent agentNew, IContactMapAbstractSite siteNew,
+			CContactMapAbstractSolution solution) {
+		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
+		List<IContactMapAbstractAgent> agentsList = solution
+				.getAgentNameIdToAgentsList().get(
+						siteNew.getLinkState().getAgentNameID());
+		if (agentsList == null)
+			return listOut;
+		for (IContactMapAbstractAgent a : agentsList) {
+			IContactMapAbstractSite siteFromSolution = a.getSite(siteNew
+					.getLinkState().getLinkSiteNameID());
+			CContactMapLinkState lsFromSolution = siteFromSolution
+					.getLinkState();
+
+			if (lsFromSolution.getAgentNameID() != agentNew.getNameId())
+				continue;
+			if (lsFromSolution.getLinkSiteNameID() != siteNew.getNameId())
+				continue;
+			if (lsFromSolution.getInternalStateNameID() != CSite.NO_INDEX
+					&& siteNew.getInternalState().getNameId() != CSite.NO_INDEX
+					&& lsFromSolution.getInternalStateNameID() != siteNew
+							.getInternalState().getNameId())
+				continue;
+			IContactMapAbstractAgent agentToAdd = a.clone();
+			agentToAdd.getSite(siteFromSolution.getNameId()).getLinkState()
+					.setFreeLinkState();
+			listOut.add(agentToAdd);
+		}
+
 		return listOut;
 	}
 
@@ -223,17 +260,10 @@ public class UCorrelationAbstractAgent {
 		Iterator<Integer> iterator = newAgent.getSitesMap().keySet().iterator();
 		while (iterator.hasNext()) {
 			Integer key = iterator.next();
-			CContactMapLinkState ls = newAgent.getSitesMap().get(key)
-					.getLinkState();
-			if (ls.getAgentNameID() == CSite.NO_INDEX)
+			IContactMapAbstractSite siteNew = newAgent.getSite(key);
+			if (siteNew.getLinkState().getAgentNameID() == CSite.NO_INDEX)
 				continue;
-			List<IContactMapAbstractAgent> agentlist = solution
-					.getAgentNameIdToAgentsList().get(ls.getAgentNameID());
-			if (agentlist == null || agentlist.isEmpty())
-				continue;
-
-			// TODO ...
-
+			listOut.addAll(breakAllAgentsWithSite(newAgent, siteNew, solution));
 		}
 
 		// IContactMapAbstractAgent agent =

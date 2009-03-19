@@ -115,10 +115,18 @@ public class CContactMapAbstractAction {
 		for(UCorrelationAbstractAgent corLHSandRHS : correlationAgents){
 			UCorrelationAbstractAgent corLHSandSolution = injList.get(i);
 			IContactMapAbstractAgent newAgent = corLHSandSolution.getToAgent().clone();
-			listOut.addAll(corLHSandRHS.modifySiteFromSolution(newAgent,solution));
-			listOut.add(newAgent);
+//			listOut.addAll(corLHSandRHS.modifySiteFromSolution(newAgent,solution));
+			addToList(corLHSandRHS.modifySiteFromSolution(newAgent,solution), listOut);
+			if(!newAgent.includedInCollection(listOut))
+				listOut.add(newAgent);
 			i++;
 		}
 		return listOut;
+	}
+	
+	private void addToList(List<IContactMapAbstractAgent> listIn, List<IContactMapAbstractAgent> listTo){
+		for(IContactMapAbstractAgent a : listIn)
+			if(!a.includedInCollection(listTo))
+				listTo.add(a);
 	}
 }
