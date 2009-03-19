@@ -28,7 +28,7 @@ public class Simulator implements SimulatorInterface {
 	private static final String NAME = "Java Simulator JSIM";
 	
 	private static final String INTRO_MESSAGE = "JSIM: Build on " + BuildConstants.BUILD_DATE 
-											  + ", SVN Revision " + BuildConstants.BUILD_SVN_REVISION
+											  + " from SVN Revision " + BuildConstants.BUILD_SVN_REVISION
 											  + ", JRE: " + System.getProperty("java.vendor") + " " + System.getProperty("java.version");
 	
 	private static final String STATUS_RUNNING = "Running";
@@ -140,6 +140,13 @@ public class Simulator implements SimulatorInterface {
 		
 		while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
 				&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {
+			if (Thread.interrupted())  {
+				// TODO: Do any necessary clean-up and collect data we can return
+				simulationData.println("Simulation is interrupted because the thread is cancelled");
+				simulatorResultsData.setCancelled(true);
+				break;
+			}
+			
 			while (simulationData.checkSnapshots(currentTime)) {
 				simulationData.createSnapshots(currentTime);				
 			}
@@ -309,6 +316,12 @@ public class Simulator implements SimulatorInterface {
 		    
 		    while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
 					&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {
+				if (Thread.interrupted())  {
+					// TODO: Do any necessary clean-up and collect data we can return
+					simulationData.println("Simulation is interrupted because the thread is cancelled");
+					simulatorResultsData.setCancelled(true);
+					break;
+				}
 				
 				simulationData.checkPerturbation(currentTime);
 				IRule rule = ruleProbabilityCalculation.getRandomRule();
@@ -351,16 +364,26 @@ public class Simulator implements SimulatorInterface {
 					clash++;
 					max_clash++;
 				}
-			}
+			} // end of simulation here...
+		    
 			simulationData.checkStoriesBar(i);
 			currentEventNumber = 0;
 			stories.handling(i);
-			if(!simulationData.getSimulationArguments().isShortConsoleOutput())
-				endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
 			
-				
+			if(!simulationData.getSimulationArguments().isShortConsoleOutput()) {
+				endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
+			}
+			
 			if (i < simulationData.getSimulationArguments().getIterations() - 1) {
 				resetSimulation(InfoType.NOT_OUTPUT);
+			}
+			
+			// check whether the thread is interrupted above or since then...
+			if (simulatorResultsData.isCancelled() || Thread.interrupted())  {
+				// TODO: Do any necessary clean-up and collect data we can return
+				simulationData.println("Simulation is interrupted because the thread is cancelled");
+				simulatorResultsData.setCancelled(true);
+				break;
 			}
 		}
 

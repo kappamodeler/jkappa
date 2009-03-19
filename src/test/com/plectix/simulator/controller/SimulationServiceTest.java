@@ -5,29 +5,31 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.cli.ParseException;
 
+import com.plectix.simulator.simulator.DefaultSimulatorFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 
 public class SimulationServiceTest implements SimulatorCallableListener {
 
 	public static void main(String[] args) throws InterruptedException, ParseException {	
-		SimulationService service = new SimulationService(new Simulator1.Simulator1Factory());
+		// SimulationService service = new SimulationService(new Simulator1.Simulator1Factory());
+		SimulationService service = new SimulationService(new DefaultSimulatorFactory());
 		
 		SimulatorCommandLine commandLine = new SimulatorCommandLine(args);
 		SimulationArguments simulationArguments = commandLine.getSimulationArguments();
 		long jobID = service.submit(new SimulatorInputData(simulationArguments), new SimulationServiceTest());
-		long jobID2 = service.submit(new SimulatorInputData(simulationArguments), null);
+		/*
+		 * long jobID2 = service.submit(new SimulatorInputData(simulationArguments), null);
 		
 		SimulatorResultsData results = service.getSimulatorResultsData(jobID2, 5, TimeUnit.SECONDS);
 		Exception e = results.getSimulatorExitReport().getException();
 		if (e != null) {
 			e.printStackTrace();
 		}
+		*/
 		
 		for (int i= 0; i< 1000; i++) {
-			System.err.println("ID: " + jobID + " currentTime= " + service.getCurrentTime(jobID));
-
-
+			System.err.println("--> Job " + jobID + " currentTime= " + service.getCurrentTime(jobID));
 			System.err.println("--> Job " + jobID + " is " + (service.isDone(jobID)?"":"NOT ") + "done");
 
 			if (i == 10) {
@@ -35,7 +37,7 @@ public class SimulationServiceTest implements SimulatorCallableListener {
 				service.cancel(jobID, true, true);
 				System.err.println("Killed ID: " + jobID);
 				System.err.println("--> Job " + jobID + " is " + (service.isDone(jobID)?"":"NOT ") + "done");
-				break;
+				// break;
 			}
 
 			Thread.sleep(750);

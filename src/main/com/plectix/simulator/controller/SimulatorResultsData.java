@@ -12,6 +12,8 @@ import javax.xml.transform.Source;
  */
 public class SimulatorResultsData {
 
+	private boolean isCancelled = false;
+
 	private SimulatorCallableExitReport simulatorCallableExitReport = new SimulatorCallableExitReport();
 	
 	private List<Source> myResultSource = null;
@@ -49,5 +51,13 @@ public class SimulatorResultsData {
 	public final void setSimulatorExitReport(SimulatorCallableExitReport simulatorCallableExitReport) {
 		this.simulatorCallableExitReport = simulatorCallableExitReport;
 	}
+
 	
+	public final boolean isCancelled() {
+		return isCancelled;
+	}
+
+	public final void setCancelled(boolean isCancelled) {
+		this.isCancelled = isCancelled;
+	}
 }

@@ -40,10 +40,8 @@ import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.SnapshotElement;
-import com.plectix.simulator.components.contactMap.CContactMapAbstractAgent;
 import com.plectix.simulator.components.contactMap.CContactMapAbstractEdge;
 import com.plectix.simulator.components.contactMap.CContactMapChangedSite;
-import com.plectix.simulator.components.contactMap.CContactMapEdge;
 import com.plectix.simulator.components.contactMap.CContactMap.ContactMapMode;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.solution.SolutionLines;
@@ -251,12 +249,13 @@ public class SimulationData {
 		}
 	}
 
-	public final boolean isEndSimulation(double currentTime, long count) {
+	public final boolean isEndSimulation(double currentTime, long count) {  
 		if (System.currentTimeMillis() - clockStamp > simulationArguments
 				.getWallClockTimeLimit()) {
 			println("Simulation is interrupted because the wall clock time has expired");
 			return true;
 		}
+		
 		if (simulationArguments.isTime()) {
 			if (currentTime <= simulationArguments.getTimeLength()) {
 				if (currentTime >= nextStep) {
