@@ -38,4 +38,6 @@ public interface IContactMapAbstractAgent extends IAbstractAgent {
 	public boolean isAdd();
 
 	public void shouldAdd();
+
+	public String getKey();
 }

@@ -119,25 +119,25 @@ public class CContactMap {
 			break;
 		}
 
-		Map<Integer, List<IContactMapAbstractAgent>> abstractAgentMap = abstractSolution
-				.getAgentNameIdToAgentsList();
+//		Map<Integer, List<IContactMapAbstractAgent>> abstractAgentMap = abstractSolution
+//				.getAgentNameIdToAgentsList();
 	}
 
-	private void clear() {
-		Iterator<Integer> iterator = abstractSolution
-				.getAgentNameIdToAgentsList().keySet().iterator();
-		while (iterator.hasNext()) {
-			Integer key = iterator.next();
-
-			List<IContactMapAbstractAgent> listAgents = abstractSolution
-					.getAgentNameIdToAgentsList().get(key);
-			List<IContactMapAbstractAgent> listClear = new ArrayList<IContactMapAbstractAgent>();
-			for (IContactMapAbstractAgent a : listAgents)
-				if (!a.includedInCollection(listClear))
-					listClear.add(a);
-			abstractSolution.getAgentNameIdToAgentsList().put(key, listClear);
-		}
-	}
+//	private void clear() {
+//		Iterator<Integer> iterator = abstractSolution
+//				.getAgentNameIdToAgentsList().keySet().iterator();
+//		while (iterator.hasNext()) {
+//			Integer key = iterator.next();
+//
+//			List<IContactMapAbstractAgent> listAgents = abstractSolution
+//					.getAgentNameIdToAgentsList().get(key);
+//			List<IContactMapAbstractAgent> listClear = new ArrayList<IContactMapAbstractAgent>();
+//			for (IContactMapAbstractAgent a : listAgents)
+//				if (!a.includedInCollection(listClear))
+//					listClear.add(a);
+//			abstractSolution.getAgentNameIdToAgentsList().put(key, listClear);
+//		}
+//	}
 
 	public void constructContactMap() {
 	}

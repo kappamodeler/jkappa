@@ -106,10 +106,14 @@ public class CContactMapLinkState {
 		if (this.agentNameID != linkState.getAgentNameID())
 			return false;
 
-		if (this.internalStateNameID != linkState.getInternalStateNameID())
-			return false;
 
 		if (this.linkSiteNameID != linkState.getLinkSiteNameID())
+			return false;
+		
+		if(internalStateNameID == CSite.NO_INDEX || linkState.getInternalStateNameID() == CSite.NO_INDEX)
+			return true;
+		
+		if (this.internalStateNameID != linkState.getInternalStateNameID())
 			return false;
 
 		return true;

@@ -39,6 +39,10 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 	public void shouldAdd(){
 		add = true;
 	}
+	
+	public String getKey(){
+		return this.toString()+" "+sitesMap.toString();
+	}
 
 	public IContactMapAbstractSite getEmptySite() {
 		return myEmptySite;
