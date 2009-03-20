@@ -146,103 +146,6 @@ public class Simulator implements SimulatorInterface {
 		simulationData.resetSimulation(outputType);
 	}
 
-	public final void run(int iteration_num) throws Exception {
-		simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
-		
-		PlxTimer timer = new PlxTimer();
-		timer.startTimer();
-		
-		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.OUTPUT,simulationData);
-
-		long clash = 0;
-		currentEventNumber = 0;
-		long max_clash = 0;
-		boolean isEndRules = false;
-		simulatorStatus.setStatusMessage(STATUS_RUNNING);
-		
-		while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
-				&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {
-			if (Thread.interrupted())  {
-				// TODO: Do any necessary clean-up and collect data we can return
-				simulationData.println("Simulation is interrupted because the thread is cancelled");
-				simulatorResultsData.setCancelled(true);
-				simulatorStatus.setProgress(1.0);
-				break;
-			}
-			
-			while (simulationData.checkSnapshots(currentTime)) {
-				simulationData.createSnapshots(currentTime);				
-			}
-			
-			simulationData.checkPerturbation(currentTime);
-			IRule rule = ruleProbabilityCalculation.getRandomRule();
-
-			if (rule == null) {
-				isEndRules = true;
-				simulationData.setTimeLength(currentTime);
-				simulationData.println("#");
-				break;
-			}
-			
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("Rule: " + rule.getName());
-			}
-
-			List<IInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
-			if (!rule.isInfinityRate()) {
-				currentTime += ruleProbabilityCalculation.getTimeValue();
-			}
-
-			if (!rule.isClash(injectionsList)) {
-				// negative update
-				max_clash = 0;
-				if (LOGGER.isDebugEnabled())
-					LOGGER.debug("negative update");
-
-				currentEventNumber++;
-				rule.applyRule(injectionsList, simulationData);
-
-				SimulationUtils.doNegativeUpdate(injectionsList);
-				
-				// positive update
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("positive update");
-				}
-
-				simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
-
-				simulationData.getKappaSystem().getObservables().calculateObs(currentTime, currentEventNumber, simulationData.getSimulationArguments().isTime());
-			} else {
-				simulationData.addInfo(InfoType.NOT_OUTPUT,InfoType.INTERNAL, "Application of rule exp is clashing");
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("Clash");
-				}
-				clash++;
-				max_clash++;
-			}
-
-			if (isIteration) {
-				addIteration(iteration_num);
-			}
-		}
-
-		simulatorStatus.setStatusMessage(STATUS_WRAPPING);
-		
-		simulationData.checkOutputFinalState(currentTime);
-		simulationData.getKappaSystem().getObservables().calculateObsLast(currentTime);
-		simulationData.setTimeLength(currentTime);
-		simulationData.setEvent(currentEventNumber);
-		
-		endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
-		Source source = addCompleteSource();
-		
-		if (!isIteration) {
-			simulationData.outputData(source, currentEventNumber);
-		}
-
-		simulatorStatus.setStatusMessage(STATUS_IDLE);
-	}
-
 	public final void run(SimulatorInputData simulatorInputData) throws Exception {
 		// add info about JSIM:
 		simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO, INTRO_MESSAGE);
@@ -277,6 +180,103 @@ public class Simulator implements SimulatorInterface {
 		}
 		
 		simulationData.println("-------" + simulatorResultsData.getResultSource());
+	}
+
+	public final void run(int iteration_num) throws Exception {
+		simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
+		
+		PlxTimer timer = new PlxTimer();
+		timer.startTimer();
+		
+		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.OUTPUT,simulationData);
+	
+		long clash = 0;
+		currentEventNumber = 0;
+		long max_clash = 0;
+		boolean isEndRules = false;
+		simulatorStatus.setStatusMessage(STATUS_RUNNING);
+		
+		while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
+				&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {
+			if (Thread.interrupted())  {
+				// TODO: Do any necessary clean-up and collect data we can return
+				simulationData.println("Simulation is interrupted because the thread is cancelled");
+				simulatorResultsData.setCancelled(true);
+				simulatorStatus.setProgress(1.0);
+				break;
+			}
+			
+			while (simulationData.checkSnapshots(currentTime)) {
+				simulationData.createSnapshots(currentTime);				
+			}
+			
+			simulationData.checkPerturbation(currentTime);
+			IRule rule = ruleProbabilityCalculation.getRandomRule();
+	
+			if (rule == null) {
+				isEndRules = true;
+				simulationData.setTimeLength(currentTime);
+				simulationData.println("#");
+				break;
+			}
+			
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Rule: " + rule.getName());
+			}
+	
+			List<IInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
+			if (!rule.isInfinityRate()) {
+				currentTime += ruleProbabilityCalculation.getTimeValue();
+			}
+	
+			if (!rule.isClash(injectionsList)) {
+				// negative update
+				max_clash = 0;
+				if (LOGGER.isDebugEnabled())
+					LOGGER.debug("negative update");
+	
+				currentEventNumber++;
+				rule.applyRule(injectionsList, simulationData);
+	
+				SimulationUtils.doNegativeUpdate(injectionsList);
+				
+				// positive update
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("positive update");
+				}
+	
+				simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
+	
+				simulationData.getKappaSystem().getObservables().calculateObs(currentTime, currentEventNumber, simulationData.getSimulationArguments().isTime());
+			} else {
+				simulationData.addInfo(InfoType.NOT_OUTPUT,InfoType.INTERNAL, "Application of rule exp is clashing");
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Clash");
+				}
+				clash++;
+				max_clash++;
+			}
+	
+			if (isIteration) {
+				addIteration(iteration_num);
+			}
+		}
+	
+		simulatorStatus.setStatusMessage(STATUS_WRAPPING);
+		
+		simulationData.checkOutputFinalState(currentTime);
+		simulationData.getKappaSystem().getObservables().calculateObsLast(currentTime);
+		simulationData.setTimeLength(currentTime);
+		simulationData.setEvent(currentEventNumber);
+		
+		endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
+		Source source = addCompleteSource();
+		
+		if (!isIteration) {
+			simulationData.outputData(source, currentEventNumber);
+		}
+	
+		simulatorStatus.setStatusMessage(STATUS_IDLE);
 	}
 
 	public final void runIterations() throws Exception {

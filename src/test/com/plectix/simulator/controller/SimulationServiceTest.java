@@ -17,7 +17,7 @@ public class SimulationServiceTest implements SimulatorCallableListener {
 		
 		SimulatorCommandLine commandLine = new SimulatorCommandLine(args);
 		SimulationArguments simulationArguments = commandLine.getSimulationArguments();
-		long jobID = service.submit(new SimulatorInputData(simulationArguments), new SimulationServiceTest());
+		long jobID = service.submit(new SimulatorInputData(simulationArguments), null); // new SimulationServiceTest());
 		/*
 		 * long jobID2 = service.submit(new SimulatorInputData(simulationArguments), null);
 		
@@ -40,13 +40,17 @@ public class SimulationServiceTest implements SimulatorCallableListener {
 				service.cancel(jobID, true, true);
 				System.err.println("Killed ID: " + jobID);
 				System.err.println("--> Job " + jobID + " is " + (service.isDone(jobID)?"":"NOT ") + "done");
-				// break;
+				System.err.println("Sleeping another second...");
+				Thread.sleep(1000);
+				break;
 			}
 
 			Thread.sleep(750);
 		}
 		
-		System.exit(0);
+		System.err.println("Shutting the service down...");
+		service.shutdown();
+		// System.exit(0);
 	}
 
 	public void finished(SimulatorCallable simulatorCallable) {
