@@ -5,40 +5,50 @@ import java.util.*;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.util.Converter;
 
-/*package*/ class SuperStorage implements IStorage {
-	private Map<String, Set<SuperSubstance>> myStorage = 
-		new TreeMap<String, Set<SuperSubstance>>();
-	
-	private final HashMap<Long, IAgent> agentMap = new HashMap<Long, IAgent>();;
-	
-	SuperStorage() {
+public class SuperStorage implements IStorage {
+	private Map<String, Set<SuperSubstance>> myStorage = new TreeMap<String, Set<SuperSubstance>>();
+
+	private List<SuperSubstance> myComponents = new ArrayList<SuperSubstance>();
+
+	// private final HashMap<Long, IAgent> agentMap = new HashMap<Long,
+	// IAgent>();;
+	private final ISolution mySolution;
+
+	SuperStorage(ISolution solution) {
+		mySolution = solution;
 	}
 
-	public void addConnectedComponent(IConnectedComponent component) {
-		String hash = component.getHash();
+	public void addSuperSubstance(SuperSubstance substanceToAdd) {
+		myComponents.add(substanceToAdd);
+		String hash = substanceToAdd.getComponent().getHash();
 		Set<SuperSubstance> set = myStorage.get(hash);
 		if (set == null) {
 			set = new HashSet<SuperSubstance>();
-			set.add(new SuperSubstance(component));
+			set.add(substanceToAdd);
+			myComponents.add(substanceToAdd);
 			myStorage.put(hash, set);
 		} else {
 			boolean found = false;
 			for (SuperSubstance substance : set) {
-				if (substance.matches(component)) {
+				if (substance.matches(substanceToAdd.getComponent())) {
 					substance.add();
 					found = true;
 					break;
 				}
 			}
 			if (!found) {
-				set.add(new SuperSubstance(component));
+				set.add(substanceToAdd);
+				myComponents.add(substanceToAdd);
 			}
 		}
-		for (IAgent agent : component.getAgents()) {
-			agentMap.put(agent.getHash(), agent);
-		}
+	}
+	
+	public void addConnectedComponent(IConnectedComponent component) {
+		addSuperSubstance(new SuperSubstance(component));
 	}
 
 	public void removeConnectedComponent(IConnectedComponent component) {
@@ -53,7 +63,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 			}
 		}
 	}
-	
+
 	public void clear() {
 		myStorage.clear();
 	}
@@ -62,26 +72,50 @@ import com.plectix.simulator.simulator.KappaSystem;
 		List<IConnectedComponent> list = new ArrayList<IConnectedComponent>();
 		for (Set<SuperSubstance> set : myStorage.values()) {
 			for (SuperSubstance substance : set) {
-				list.add(substance.getConnectedComponent());
+				list.add(substance.getComponent());
 			}
 		}
 		return list;
 	}
 
-	public StandardRuleApplicationPool prepareRuleApplicationPool(List<IInjection> injections) {
-		return new StandardRuleApplicationPool(injections);
+	public IConnectedComponent extractComponent(IInjection inj) {
+		SuperSubstance image = inj.getSuperSubstance();
+		if (image != null) {
+			IConnectedComponent component = this.extract(image);
+			return component;
+		} else {
+			return null;
+		}
+	}
+
+	private IConnectedComponent extract(SuperSubstance image) {
+		if (!image.isEmpty()) {
+			IConnectedComponent component = image.extract();
+			image.setComponent(mySolution.cloneConnectedComponent(component));
+			return component;
+		} else {
+			return null;
+		}
 	}
 
 	public void applyRule(RuleApplicationPool pool) {
-//		for (IConnectedComponent component : pool.getInitialComponents()) {
-//			this.removeConnectedComponent(component);
-//		}
-//		for (IConnectedComponent component : pool.getCurrentComponents()) {
-//			this.addConnectedComponent(component);
-//		}
 	}
 
-	public Collection<IAgent> getAgents() {
-		return agentMap.values();
+	public List<SuperSubstance> getComponents() {
+		return Collections.unmodifiableList(myComponents);
 	}
+	
+	//-------------------------to String---------------------
+	
+//	public String toString() {
+//		TreeMap<String, Long> map = new TreeMap<String, Long>();
+//		for (SuperSubstance ss : myComponents) {
+//			map.put(Converter.toString(ss.getComponent()), ss.getQuantity());
+//		}
+//		StringBuffer sb = new StringBuffer();
+//		for (String key : map.keySet()) {
+//			sb.append("%init " + map.get(key) + " * " + key + "\n");
+//		}
+//		return sb.toString();
+//	}
 }

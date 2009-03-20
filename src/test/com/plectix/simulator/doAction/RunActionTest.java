@@ -37,20 +37,20 @@ public class RunActionTest extends InitTestAction {
 		activeRule = getActiveRule();
 		List<IConnectedComponent> lhs = activeRule.getLeftHandSide();
 		SimulationData simulationData = getSimulationData();
-		List<IConnectedComponent> firstsolution = simulationData.getKappaSystem()
-				.getSolution().split();
-
-		if (lhs == null){
-			if (firstsolution != null){
-				fail("uncorrect init");
-			}
-		}else {
-			if (firstsolution.size() != (2 * lhs.size()))
-				fail("uncorrect init");
-		}
-
-		compareWithSolution(lhs, firstsolution, "init");
-		compareWithSolution(lhs, firstsolution, "init");
+//		List<IConnectedComponent> firstsolution = simulationData.getKappaSystem()
+//				.getSolution().split();
+//
+//		if (lhs == null){
+//			if (firstsolution != null){
+//				fail("uncorrect init");
+//			}
+//		} else {
+//			if (firstsolution.size() != (2 * lhs.size()))
+//				fail("uncorrect init");
+//		}
+//
+//		compareWithSolution(lhs, firstsolution, "init");
+//		compareWithSolution(lhs, firstsolution, "init");
 
 		apply(injectionsList);
 		activeRule = getActiveRule();
@@ -77,13 +77,13 @@ public class RunActionTest extends InitTestAction {
 	}
 
 	private void compareWithSolution(List<IConnectedComponent> listCC,
-			List<IConnectedComponent> solutionCC, String name) {
+			List<IConnectedComponent> solutionCC, String ruleName) {
 		IConnectedComponent foundCC;
 		if (listCC != null) {
 			for (IConnectedComponent cc : listCC) {
 				foundCC = null;
 				if ((foundCC = CComponentComparator.findCC(cc, solutionCC)) == null) {
-					fail("Not found connected component from " + name + ":"
+					fail("Not found connected component from " + ruleName + ":"
 							+ Converter.toString(cc));
 				} else{
 					solutionCC.remove(foundCC);

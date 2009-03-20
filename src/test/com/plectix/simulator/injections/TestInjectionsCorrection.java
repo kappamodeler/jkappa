@@ -33,7 +33,9 @@ public class TestInjectionsCorrection extends TestInjections {
 	}
 
 	public boolean testCC(IObservablesConnectedComponent c) {
-		
+		if (c.getName().startsWith("scary")) {
+			return true;
+		}
 		SortedSet<Long> solutionLinkingForCurrentObs = new TreeSet<Long>();
 
 		Collection<IInjection> injectionsList = c.getInjectionsList();

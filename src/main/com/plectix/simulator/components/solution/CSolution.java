@@ -6,6 +6,7 @@ import java.util.*;
 import com.plectix.simulator.action.*;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.simulator.SimulationUtils;
 
 @SuppressWarnings("serial")
 /*package*/ final class CSolution extends ComplexSolution implements Serializable {
@@ -41,10 +42,21 @@ import com.plectix.simulator.simulator.KappaSystem;
 	
 	public RuleApplicationPool prepareRuleApplicationPool(
 			List<IInjection> injections) {
-		return myStraightStorage.prepareRuleApplicationPool(injections);
+		return new TransparentRuleApplicationPool(myStraightStorage);
 	}
 
 	public void applyRule(RuleApplicationPool pool) {
 		myStraightStorage.applyRule(pool);
+	}
+
+	public void addInitialConnectedComponents(long quant, List<IAgent> components) {
+		for (IAgent agent : components) {
+			myStraightStorage.addAgent(agent);
+		}
+		for (int i = 1; i < quant; i++) {
+			for (IAgent agent : this.cloneAgentsList(components)) {
+				myStraightStorage.addAgent(agent);
+			}
+		}
 	}
 }

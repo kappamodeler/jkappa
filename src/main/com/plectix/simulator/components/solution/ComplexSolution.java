@@ -1,10 +1,12 @@
 package com.plectix.simulator.components.solution;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ISolutionComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 
@@ -15,15 +17,26 @@ import com.plectix.simulator.simulator.KappaSystem;
 	public ComplexSolution(KappaSystem system) {
 		super(system);
 		myStraightStorage = new StraightStorage();
-		mySuperStorage = new SuperStorage();
+		mySuperStorage = new SuperStorage(this);
 	}
 
-	protected StraightStorage getStraightStorage() {
+	public StraightStorage getStraightStorage() {
 		return myStraightStorage;
 	}
 	
-	protected SuperStorage getSuperStorage() {
+	public SuperStorage getSuperStorage() {
 		return mySuperStorage;
+	}
+	
+	public List<IConnectedComponent> split() {
+		List<IConnectedComponent> list = new ArrayList<IConnectedComponent>();
+		if (mySuperStorage != null) {
+			list.addAll(mySuperStorage.split());
+		}
+		if (myStraightStorage != null) {
+			list.addAll(myStraightStorage.split());
+		}
+		return list;
 	}
 	
 	public void clear() {

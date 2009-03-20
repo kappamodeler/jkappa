@@ -3,8 +3,10 @@ package com.plectix.simulator.components.injections;
 import java.io.Serializable;
 import java.util.*;
 
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.solution.SolutionUtils;
+import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.*;
 
 public class CInjection implements IInjection, Serializable {
@@ -16,7 +18,8 @@ public class CInjection implements IInjection, Serializable {
 	private List<ISite> changedSites;
 	private int myId = 0;
 	private CConnectedComponent connectedComponent;
-
+	private SuperSubstance myImageComponent = null;
+	
 	private CInjection() {
 
 	}
@@ -95,15 +98,28 @@ public class CInjection implements IInjection, Serializable {
 		return connectedComponent;
 	}
 	
-	public final IConnectedComponent getImage() {
-//		List<IAgent> list = new ArrayList<IAgent>();
-//		if (agentLinkList == null || agentLinkList.isEmpty()) {
-//			return list;
-//		}
-//		for (IAgentLink agentL : agentLinkList) {
-//			list.add(agentL.getAgentTo());
-//		}
-//		return list;
-		return SolutionUtils.getConnectedComponent((agentLinkList.get(0).getAgentTo())); 
+	public void setSuperSubstance(SuperSubstance substance) {
+		this.myImageComponent = substance;
+	}
+	
+	public final SuperSubstance getSuperSubstance() {
+		return myImageComponent;
+	}
+	
+	public boolean isEmpty() {
+		return this == CInjection.EMPTY_INJECTION;
+	}
+	
+	public IAgent getImageAgent() {
+		if (agentLinkList != null) {
+			for (IAgentLink agentL : agentLinkList) {
+				return agentL.getAgentTo();
+			}
+		}
+		return null;
+	}
+
+	public boolean isSuper() {
+		return this.myImageComponent != null;
 	}
 }

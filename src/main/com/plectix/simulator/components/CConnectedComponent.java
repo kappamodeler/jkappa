@@ -11,7 +11,6 @@ import java.util.TreeMap;
 
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.injections.CLiftElement;
-import com.plectix.simulator.components.injections.SuperInjection;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IAgentLink;
@@ -20,6 +19,7 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.util.Converter;
 
 public class CConnectedComponent implements IConnectedComponent, Serializable {
 
@@ -58,6 +58,10 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 
 	public void setSuperSubstance(SuperSubstance substance) {
 		mySubstance = substance;
+	}
+	
+	public SuperSubstance getSubstance() {
+		return mySubstance;
 	}
 	
 	private final void addInjection(IInjection inj, int id) {
@@ -128,7 +132,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		addLiftsToCurrentChangedStates(inj);
 	}
 
-	public final IInjection createInjection(IAgent agent) {
+	public final CInjection createInjection(IAgent agent) {
 		if (unify(agent)) {
 			CInjection injection = new CInjection(this, injectedSites,
 					agentLinkList);
@@ -149,7 +153,6 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 						setInjection(inj);
 				}
 			}
-
 		}
 	}
 

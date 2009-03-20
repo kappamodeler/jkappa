@@ -5,4 +5,4 @@
 
 %obs: 'a' a()
 
-%mod: ['a'] > 30 do 'rule' := 5
+%mod: ['a'] > 20 do 'rule' := 5

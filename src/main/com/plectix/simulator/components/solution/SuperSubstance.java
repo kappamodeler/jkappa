@@ -3,28 +3,43 @@ package com.plectix.simulator.components.solution;
 import java.util.Collection;
 import java.util.List;
 
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.KappaSystem;
 
 public class SuperSubstance implements ISolutionComponent {
-	private int myQuantity = 0;
-	private final IConnectedComponent myComponent;
+	private long myQuantity = 0;
+	private IConnectedComponent myComponent;
 	
 	//TODO build hash only with first needed
 	private String hash;
 	
 	public SuperSubstance(IConnectedComponent component) {
 		myComponent = component;
+		myComponent.setSuperSubstance(this);
+	}
+	
+	public SuperSubstance(long quant, IConnectedComponent component) {
+		myComponent = component;
+		myQuantity = quant;
+		myComponent.setSuperSubstance(this);
 	}
 	
 	// TODO catch exception
 	public IConnectedComponent extract() {
 		if (isEmpty()) { 
-			throw new UnsupportedOperationException();
+			return null;
 		}
 		myQuantity--;
-//		IConnectedComponent copy = ;.................
 		return myComponent;
+	}
+	
+	public void setComponent(IConnectedComponent component) {
+		myComponent = component;
+	}
+	
+	public List<IAgent> getAgents() {
+		return myComponent.getAgents();
 	}
 	
 	public boolean isEmpty() {
@@ -39,7 +54,7 @@ public class SuperSubstance implements ISolutionComponent {
 		return myComponent.equals(component);
 	}
 	
-	public IConnectedComponent getConnectedComponent() {
+	public IConnectedComponent getComponent() {
 		return myComponent;
 	}
 
@@ -63,11 +78,6 @@ public class SuperSubstance implements ISolutionComponent {
 		return null;
 	}
 
-	public List<IAgent> getAgents() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public List<IAgent> getAgentsSortedByIdInRule() {
 		// TODO Auto-generated method stub
 		return null;
@@ -79,7 +89,6 @@ public class SuperSubstance implements ISolutionComponent {
 	}
 
 	public IInjection createInjection(IAgent agent) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -135,5 +144,9 @@ public class SuperSubstance implements ISolutionComponent {
 		}
 		SuperSubstance arg = (SuperSubstance)obj;
 		return arg.myComponent.equals(arg.myComponent);
+	}
+
+	public long getQuantity() {
+		return myQuantity;
 	}
 }

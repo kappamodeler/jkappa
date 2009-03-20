@@ -9,11 +9,10 @@ import com.plectix.simulator.interfaces.IAgent;
 		myStorage = storage;
 	}
 	
-	public IStorage getStorage() {
+	public StraightStorage getStorage() {
 		return myStorage;
 	}
 
-	
 	public void removeAgent(IAgent agent) {
 		myStorage.removeAgent(agent);
 	}

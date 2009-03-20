@@ -6,6 +6,7 @@ import java.util.TreeMap;
 
 import com.plectix.simulator.components.ObservablesRuleComponent;
 import com.plectix.simulator.components.perturbations.CPerturbation;
+import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservables;
@@ -63,12 +64,15 @@ public class TestSimulationData {
 		TreeMap<String, Integer> initMap = new TreeMap<String, Integer>();
 		Integer count = 0;
 		ISolution solution = simulationData.getKappaSystem().getSolution();
-		for (IConnectedComponent cc : solution.split()) {
+		for (IConnectedComponent cc : solution.getStraightStorage().split()) {
 			count = 0;
 			String c = Converter.toString(cc);
 			if (initMap.containsKey(c))
 				count = initMap.get(c);
 			initMap.put(c, ++count);
+		}
+		for (SuperSubstance ss : solution.getSuperStorage().getComponents()) {
+			initMap.put(Converter.toString(ss.getComponent()), (int)ss.getQuantity());
 		}
 
 		for (String cc : initMap.keySet()) {

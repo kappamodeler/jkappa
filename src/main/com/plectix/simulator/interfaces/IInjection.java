@@ -2,6 +2,8 @@ package com.plectix.simulator.interfaces;
 
 import java.util.*;
 
+import com.plectix.simulator.components.solution.SuperSubstance;
+
 public interface IInjection {
 	
 	public List<ISite> getSiteList();
@@ -24,5 +26,13 @@ public interface IInjection {
 
 	public IAgent getAgentFromImageById(int agentIdInCC);
 
-	public IConnectedComponent getImage();
+	public void setSuperSubstance(SuperSubstance mySubstance);
+
+	public SuperSubstance getSuperSubstance();
+
+	public IAgent getImageAgent();
+	
+	public boolean isSuper();
+
+	public boolean isEmpty();
 }

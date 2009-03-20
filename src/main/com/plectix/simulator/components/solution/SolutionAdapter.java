@@ -61,6 +61,14 @@ import com.plectix.simulator.simulator.KappaSystem;
 		return new CConnectedComponent(cloneAgentsList(component.getAgents()));
 	}
 	
+	public List<IConnectedComponent> cloneConnectedComponents(List<IConnectedComponent> components) {
+		List<IConnectedComponent> cloned = new ArrayList<IConnectedComponent>();
+		for (IConnectedComponent component : components) {
+			cloned.add(cloneConnectedComponent(component));			
+		}
+		return cloned;
+	}
+	
 	public List<IAgent> cloneAgentsList(List<IAgent> agentList) {
 		List<IAgent> newAgentsList = new ArrayList<IAgent>();
 		for (IAgent agent : agentList) {

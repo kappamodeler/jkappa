@@ -31,7 +31,7 @@ import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.util.IdGenerator;
-import com.plectix.simulator.simulator.initialization.StraightStorageInjectionBuilder;
+import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.Info.InfoType;
 
@@ -140,8 +140,9 @@ public class KappaSystem {
 
 		//!!!!!!!!INJECTIONS!!!!!!!!!
 		if (args.isSolutionRead()) {
-			(new StraightStorageInjectionBuilder(this)).build();
+			(new InjectionsBuilder(this)).build();
 		}
+		
 		//!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {

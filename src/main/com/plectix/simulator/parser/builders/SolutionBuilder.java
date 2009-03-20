@@ -22,26 +22,19 @@ public class SolutionBuilder {
 	}
 	
 	public ISolution build(AbstractSolution arg) {
-		UniversalSolution solution = new UniversalSolution(OperationMode.FIRST, myKappaSystem);
+		ISolution solution = (new SolutionFactory()).produce(OperationMode.FIRST, myKappaSystem);
 
 		
 		for (SolutionLineData lineData : arg.getAgents()) {
 			List<IAgent> list = mySubstanceBuilder.buildAgents(lineData.getAgents());
 			long quant = lineData.getCount();
 			
-			solution.addConnectedComponents(SimulationUtils.buildConnectedComponents(list));
-//			solution.addAgents(list);
-
 			if (myArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 				//myKappaSystem.getContactMap().addAgentFromSolution(list);
 				myKappaSystem.getContactMap().setSimulationData(myData);
-
+				solution.addInitialConnectedComponents(1, list);
 			} else {
-				for (int i = 1; i < quant; i++) {
-					List<IAgent> cloned = solution.cloneAgentsList(list);
-//					solution.addAgents(cloned);
-					solution.addConnectedComponents(SimulationUtils.buildConnectedComponents(cloned));
-				}
+				solution.addInitialConnectedComponents(quant, list);
 			}
 			if (myArguments.getSimulationType() == SimulationArguments.SimulationType.COMPILE) {
 				for (SolutionLines line : arg.getSolutionLines()) {

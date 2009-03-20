@@ -3,6 +3,8 @@ package com.plectix.simulator.interfaces;
 import java.util.Collection;
 import java.util.List;
 
+import com.plectix.simulator.components.injections.CInjection;
+
 public interface ISolutionComponent {
 	public boolean unify(IAgent agent);
 	

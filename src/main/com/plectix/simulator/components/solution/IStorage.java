@@ -8,14 +8,14 @@ public interface IStorage {
 
 	public void addConnectedComponent(IConnectedComponent component);
 	
-	public void removeConnectedComponent(IConnectedComponent component);
+//	public void removeConnectedComponent(IConnectedComponent component);
 	
-	public Collection<IAgent> getAgents();
+//	public Collection<IAgent> getAgents();
 
 	public List<IConnectedComponent> split();
 
-	public RuleApplicationPool prepareRuleApplicationPool(List<IInjection> injections);
-		
+	public IConnectedComponent extractComponent(IInjection inj);
+	
 	public void clear();
 
 	void applyRule(RuleApplicationPool pool);

@@ -5,8 +5,9 @@ import java.util.*;
 import com.plectix.simulator.action.*;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.util.Converter;
 
-/*package*/ class StraightStorage implements IStorage {
+public class StraightStorage implements IStorage {
 	private final HashMap<Long, IAgent> agentMap = new HashMap<Long, IAgent>();;
 	
 	// we instantiate this type through UniversalSolution only
@@ -19,7 +20,9 @@ import com.plectix.simulator.simulator.KappaSystem;
 	protected final void addAgent(IAgent agent) {
 		if (agent != null) {
 			long key = agent.getHash();
-			agentMap.put(key, agent);
+			if (agent != agentMap.get(key)) {
+				agentMap.put(key, agent);
+			}
 		}
 	}
 	
@@ -41,13 +44,13 @@ import com.plectix.simulator.simulator.KappaSystem;
 		agentMap.remove(agent.getHash());
 	}
 	
-	public final void removeConnectedComponent(IConnectedComponent component) {
-		if (component == null)
-			return;
-		for (IAgent agent : component.getAgents()) {
-			this.removeAgent(agent);
-		}
-	}
+//	public final void removeConnectedComponent(IConnectedComponent component) {
+//		if (component == null)
+//			return;
+//		for (IAgent agent : component.getAgents()) {
+//			this.removeAgent(agent);
+//		}
+//	}
 
 	//-----------------GETTERS----------------------------------
 	
@@ -73,8 +76,20 @@ import com.plectix.simulator.simulator.KappaSystem;
 
 	//	--------------------------------------------------------------------
 	
-	public RuleApplicationPool prepareRuleApplicationPool(List<IInjection> injections) {
-		return new TransparentRuleApplicationPool(this);
+	public IConnectedComponent extractComponent(IInjection inj) {
+		if (inj.isEmpty()) {
+			return null;
+		}
+		SuperSubstance image = inj.getSuperSubstance();
+		if (image == null) {
+			IConnectedComponent component = SolutionUtils.getConnectedComponent(inj.getImageAgent());
+			for (IAgent agent : component.getAgents()) {
+				this.removeAgent(agent);
+			}
+			return component;
+		} else {
+			return null;
+		}
 	}
 	
 	public void applyRule(RuleApplicationPool pool) {
@@ -86,4 +101,13 @@ import com.plectix.simulator.simulator.KappaSystem;
 	public final void clear() {
 		agentMap.clear();
 	}
+	
+//	public String toString() {
+//		TreeMap<String, Long> map = new TreeMap<String, Long>();
+//		StringBuffer sb = new StringBuffer();
+//		for (IConnectedComponent component : split()) {
+//			sb.append("%init " + 1 + " * " + component + "\n");
+//		}
+//		return sb.toString();
+//	}
 }
