@@ -62,21 +62,23 @@ public class Simulator implements SimulatorInterface {
 	}
 
 	public SimulatorStatusInterface getStatus() {
+		// save the current state in the status object and use them below (just in case they are changed by the running thread)
 		simulatorStatus.setCurrentTime(currentTime);
 		simulatorStatus.setCurrentEventNumber(currentEventNumber);
+		simulatorStatus.setCurrentIterationNumber(currentIterationNumber);
 		
 		// let's compute our progress:
 		double progress = simulatorStatus.getProgress();
 		if (Double.isNaN(progress) || progress < 1.0) {
 			SimulationArguments simulationArguments = simulationData.getSimulationArguments();
 			if (simulationArguments.isTime()) {
-				progress = currentTime / simulationArguments.getTimeLength();
+				progress = simulatorStatus.getCurrentTime() / simulationArguments.getTimeLength();
 			} else {
-				progress = currentEventNumber * 1.0 / simulationArguments.getEvent();
+				progress = simulatorStatus.getCurrentEventNumber() * 1.0 / simulationArguments.getEvent();
 			}
 
 			if (simulationArguments.isStorify()) {
-				progress = (progress + currentIterationNumber ) / simulationArguments.getIterations();
+				progress = (progress + simulatorStatus.getCurrentIterationNumber()) / simulationArguments.getIterations();
 				if (progress > 1.0) {
 					progress = 1.0;
 				}

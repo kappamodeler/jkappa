@@ -11,7 +11,7 @@ public interface SimulatorStatusInterface {
 	 */
 	public double getProgress();
 	
-	public int getIterationNumber();
+	public int getCurrentIterationNumber();
 
 	/**
 	 * Returns the current simulation time 

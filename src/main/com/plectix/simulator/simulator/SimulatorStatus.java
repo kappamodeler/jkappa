@@ -6,45 +6,51 @@ public class SimulatorStatus implements SimulatorStatusInterface {
 
 	private long currentEventNumber = 0;
 
+	private int currentIterationNumber = 0;
+	
 	private double currentTime = Double.NaN;
-	private double progress = Double.NaN;
 
+	private double progress = Double.NaN;
 	private String statusMessage = null;
 
 	public final double getCurrentEventNumber() {
 		return currentEventNumber;
+	}
+
+	public final int getCurrentIterationNumber() {
+		return currentIterationNumber;
 	}
 	
 	public final double getCurrentTime() {
 		return currentTime;
 	}
 
-	public final int getIterationNumber() {
-		throw new RuntimeException("This method is not implemented yet!");
-	}
-
 	public final int getNumberOfObservables() {
 		throw new RuntimeException("This method is not implemented yet!");
 	}
-	
+
 	public final int getObservableCount(int i) {
 		throw new RuntimeException("This method is not implemented yet!");
 	}
-
+	
 	public final String getObservableName(int i) {
 		throw new RuntimeException("This method is not implemented yet!");
 	}
-	
+
 	public final double getProgress() {
 		return progress ;
 	}
-
+	
 	public final String getStatusMessage() {
 		return statusMessage;
 	}
 
 	protected final void setCurrentEventNumber(long currentEventNumber) {
 		this.currentEventNumber = currentEventNumber;
+	}
+
+	protected final void setCurrentIterationNumber(int currentIterationNumber) {
+		this.currentIterationNumber = currentIterationNumber;
 	}
 
 	protected final void setCurrentTime(double currentTime) {
