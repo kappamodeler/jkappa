@@ -61,7 +61,7 @@ public class Simulator implements SimulatorInterface {
 		simulatorStatus.setStatusMessage(STATUS_IDLE);
 	}
 
-	public SimulatorStatusInterface getStatus() {
+	public final SimulatorStatusInterface getStatus() {
 		// save the current state in the status object and use them below (just in case they are changed by the running thread)
 		simulatorStatus.setCurrentTime(currentTime);
 		simulatorStatus.setCurrentEventNumber(currentEventNumber);
