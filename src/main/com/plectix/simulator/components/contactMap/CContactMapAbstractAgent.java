@@ -215,15 +215,15 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 	}
 
 	public void print() {
-		System.out.println("agent = " + this.toString());
+//		System.out.println("agent = " + this.toString());
 		Iterator<Integer> Iter = this.sitesMap.keySet().iterator();
 		while (Iter.hasNext()) {
 			Integer Key = Iter.next();
 			IContactMapAbstractSite site = sitesMap.get(Key);
 			((CContactMapAbstractSite) site).print();
 		}
-		System.out
-				.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+//		System.out
+//				.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
 	}
 

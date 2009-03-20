@@ -184,22 +184,22 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	}
 
 	public void print() {
-		System.out.println("site = " + getName());
-		System.out.println("internal state = " + internalState.getName());
-		if (linkState.getLinkSiteNameID() != -1) {
-			System.out.println("link agent = "
-					+ ThreadLocalData.getNameDictionary().getName(
-							linkState.getAgentNameID()));
-			System.out.println("link site = "
-					+ ThreadLocalData.getNameDictionary().getName(
-							linkState.getLinkSiteNameID()));
-			if (linkState.getInternalStateNameID() != -1)
-				System.out.println("link istate = "
-						+ ThreadLocalData.getNameDictionary().getName(
-								linkState.getInternalStateNameID()));
-		}
-		System.out
-				.println("__________________________________________________________________________");
+////		System.out.println("site = " + getName());
+////		System.out.println("internal state = " + internalState.getName());
+//		if (linkState.getLinkSiteNameID() != -1) {
+//			System.out.println("link agent = "
+//					+ ThreadLocalData.getNameDictionary().getName(
+//							linkState.getAgentNameID()));
+//			System.out.println("link site = "
+//					+ ThreadLocalData.getNameDictionary().getName(
+//							linkState.getLinkSiteNameID()));
+//			if (linkState.getInternalStateNameID() != -1)
+//				System.out.println("link istate = "
+//						+ ThreadLocalData.getNameDictionary().getName(
+//								linkState.getInternalStateNameID()));
+//		}
+//		System.out
+//				.println("__________________________________________________________________________");
 
 	}
 

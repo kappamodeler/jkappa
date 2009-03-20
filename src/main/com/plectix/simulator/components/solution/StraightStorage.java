@@ -2,10 +2,7 @@ package com.plectix.simulator.components.solution;
 
 import java.util.*;
 
-import com.plectix.simulator.action.*;
 import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.util.Converter;
 
 public class StraightStorage implements IStorage {
 	private final HashMap<Long, IAgent> agentMap = new HashMap<Long, IAgent>();;

@@ -79,7 +79,6 @@ public class CDeleteAction extends CAction {
 		pool.removeAgent(agent);
 	}
 
-	@Override
 	public final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, ISite site) {
 		if (netNotation != null) {

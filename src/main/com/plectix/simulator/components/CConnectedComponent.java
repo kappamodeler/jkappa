@@ -19,7 +19,6 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.util.Converter;
 
 public class CConnectedComponent implements IConnectedComponent, Serializable {
 

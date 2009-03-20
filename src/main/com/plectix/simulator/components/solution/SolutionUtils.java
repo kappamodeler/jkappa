@@ -4,8 +4,6 @@ import java.util.*;
 
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.util.Converter;
 
 public class SolutionUtils {
 	public static final IConnectedComponent getConnectedComponent(IAgent agent) {

@@ -2,12 +2,9 @@ package com.plectix.simulator.components.solution;
 
 import java.util.*;
 
-import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ISolution;
-import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.util.Converter;
 
 public class SuperStorage implements IStorage {
 	private Map<String, Set<SuperSubstance>> myStorage = new TreeMap<String, Set<SuperSubstance>>();
@@ -104,18 +101,4 @@ public class SuperStorage implements IStorage {
 	public List<SuperSubstance> getComponents() {
 		return Collections.unmodifiableList(myComponents);
 	}
-	
-	//-------------------------to String---------------------
-	
-//	public String toString() {
-//		TreeMap<String, Long> map = new TreeMap<String, Long>();
-//		for (SuperSubstance ss : myComponents) {
-//			map.put(Converter.toString(ss.getComponent()), ss.getQuantity());
-//		}
-//		StringBuffer sb = new StringBuffer();
-//		for (String key : map.keySet()) {
-//			sb.append("%init " + map.get(key) + " * " + key + "\n");
-//		}
-//		return sb.toString();
-//	}
 }

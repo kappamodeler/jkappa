@@ -7,7 +7,6 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.util.Converter;
 
 /*package*/ class CSecondSolution extends ComplexSolution {
 	private final SuperStorage mySuperStorage;
@@ -49,19 +48,5 @@ import com.plectix.simulator.util.Converter;
 		for (IConnectedComponent component : SimulationUtils.buildConnectedComponents(agentsList)) {
 			mySuperStorage.addSuperSubstance(new SuperSubstance(quant, component));	
 		}	
-	}
-	
-	//----------------------TO STRING----------------------------
-	
-	public String toString() {
-		TreeMap<String, Long> map = new TreeMap<String, Long>();
-		for (SuperSubstance ss : mySuperStorage.getComponents()) {
-			map.put(Converter.toString(ss.getComponent()), ss.getQuantity());
-		}
-		StringBuffer sb = new StringBuffer();
-		for (String key : map.keySet()) {
-			sb.append("%init " + map.get(key) + " * " + key + "\n");
-		}
-		return sb.toString();
 	}
 }
