@@ -22,9 +22,15 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 	private List<IContactMapAbstractAgent> rhsAgents;
 	private CContactMapAbstractAction abstractAction;
 	private IRule rule;
+	private  HashSet<IContactMapAbstractSite> deletedSites;
+	private int[] lastMaxIndex;
 
 	public IRule getRule() {
 		return rule;
+	}
+	
+	public HashSet<IContactMapAbstractSite> getDeletedSites(){
+		return deletedSites;
 	}
 
 	public CContactMapAbstractRule(CContactMapAbstractSolution solution,
@@ -45,8 +51,9 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 		// this.lhsSites = initListsSites(agentMapLeftHandSide);
 		// this.rhsSites = initListsSites(agentMapRightHandSide);
 		this.abstractAction = new CContactMapAbstractAction(this);
+		deletedSites = new HashSet<IContactMapAbstractSite>();
 	}
-	
+
 	public final boolean equalz(IContactMapAbstractRule obj){
 		if (this == obj) {
 			return true;
@@ -125,9 +132,10 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 	public List<IContactMapAbstractAgent> getNewData() {
 		List<IContactMapAbstractAgent> newData = new ArrayList<IContactMapAbstractAgent>();
 		int[] indexList = new int[lhsAgents.size()];
+		List<String> addListString = new ArrayList<String>();
 		if (lhsAgents.size() == 0) {
 			newData.addAll(abstractAction.apply(
-					new ArrayList<UCorrelationAbstractAgent>(), solution));
+					new ArrayList<UCorrelationAbstractAgent>(), solution,addListString));
 			return newData;
 		}
 
@@ -136,12 +144,16 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 			return null;
 		agentsLists = clearAgentsLists(agentsLists);
 		int[] maxIndex = getMaxIndex(agentsLists);
+		
+		if(lastMaxIndex!=null && lastMaxIndex.equals(maxIndex))
+			return newData;
+		lastMaxIndex = maxIndex;
 		// TODO getNewData
 
 		while (!isEnd(indexList, maxIndex)) {
 			List<UCorrelationAbstractAgent> injList = createInjectionList(
 					indexList, agentsLists);
-			newData.addAll(abstractAction.apply(injList, solution));
+			newData.addAll(abstractAction.apply(injList, solution,addListString));
 
 			upIndexList(indexList, maxIndex);
 		}

@@ -92,7 +92,6 @@ public class CContactMap {
 
 	public void constructAbstractContactMap() {
 		// TODO
-		// int i = 0;
 		switch (mode) {
 		case MODEL:
 			boolean isEnd = false;
@@ -100,15 +99,10 @@ public class CContactMap {
 				isEnd = true;
 				for (CContactMapAbstractRule rule : abstractRules) {
 					List<IContactMapAbstractAgent> newData = rule.getNewData();
-					// if(newData != null && newData.size()>100000)
-					// System.out.println();
-					//Gab1(PH!_,PR!1),Grb2(SH3c!1,SH3n!2),SoS(PR!2,GEF),Ras(s~gdp
-					// )
 					if (abstractSolution.addNewData(newData, rule)) {
 						isEnd = false;
 						// clear();
 					}
-					// i++;
 				}
 			}
 			break;

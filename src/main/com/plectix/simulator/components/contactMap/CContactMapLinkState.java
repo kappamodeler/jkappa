@@ -12,35 +12,53 @@ public class CContactMapLinkState {
 	private CLinkStatus statusLink;
 	private int linkSiteNameID = CSite.NO_INDEX;
 	private int agentNameID = CSite.NO_INDEX;
-//	private int agentID = CSite.NO_INDEX;
+	// private int agentID = CSite.NO_INDEX;
 	private int internalStateNameID = CSite.NO_INDEX;
 
-//	public int getAgentID() {
-//		return agentID;
-//	}
-//
-//	public void setAgentID(int agentID) {
-//		this.agentID = agentID;
-//	}
-	
-	public void setStatusLink(CLinkStatus status){
-		this.statusLink= status;
-		if(status == CLinkStatus.BOUND)
+	// public int getAgentID() {
+	// return agentID;
+	// }
+	//
+	// public void setAgentID(int agentID) {
+	// this.agentID = agentID;
+	// }
+
+	public void setStatusLink(CLinkStatus status) {
+		this.statusLink = status;
+		if (status == CLinkStatus.BOUND)
 			statusLinkRank = CLinkRank.BOUND;
 		else
 			statusLinkRank = CLinkRank.FREE;
 	}
-	
-	public void setLinkSiteNameID(int id){
+
+	public void setLinkSiteNameID(int id) {
 		this.linkSiteNameID = id;
 	}
-	
-	public void setAgentNameID(int id){
+
+	public void setAgentNameID(int id) {
 		this.agentNameID = id;
 	}
+
+	// public CLinkRank getStatusLinkRank() {
+	// return statusLinkRank;
+	// }
+
+	public final CLinkRank getStatusLinkRank() {
+		switch (statusLink) {
+		case BOUND:
+			if (linkSiteNameID != CSite.NO_INDEX)
+				return CLinkRank.BOUND;
+			else
+				return CLinkRank.SEMI_LINK;
+		case WILDCARD:
+			return CLinkRank.BOUND_OR_FREE;
+		default:
+			return CLinkRank.FREE;
+		}
+	}
 	
-	public CLinkRank getStatusLinkRank() {
-		return statusLinkRank;
+	public CLinkStatus getStatusLink(){
+		return statusLink;
 	}
 
 	public int getLinkSiteNameID() {
@@ -54,8 +72,8 @@ public class CContactMapLinkState {
 	public int getInternalStateNameID() {
 		return internalStateNameID;
 	}
-	
-	public void setInternalStateNameID(int id){
+
+	public void setInternalStateNameID(int id) {
 		this.internalStateNameID = id;
 	}
 
@@ -88,6 +106,7 @@ public class CContactMapLinkState {
 			this.linkSiteNameID = linkState.getLinkSiteNameID();
 			this.internalStateNameID = linkState.getInternalStateNameID();
 		}
+		this.statusLink = linkState.getStatusLink();
 		this.statusLinkRank = linkState.getStatusLinkRank();
 	}
 
@@ -106,13 +125,13 @@ public class CContactMapLinkState {
 		if (this.agentNameID != linkState.getAgentNameID())
 			return false;
 
-
 		if (this.linkSiteNameID != linkState.getLinkSiteNameID())
 			return false;
-		
-		if(internalStateNameID == CSite.NO_INDEX || linkState.getInternalStateNameID() == CSite.NO_INDEX)
+
+		if (internalStateNameID == CSite.NO_INDEX
+				|| linkState.getInternalStateNameID() == CSite.NO_INDEX)
 			return true;
-		
+
 		if (this.internalStateNameID != linkState.getInternalStateNameID())
 			return false;
 

@@ -50,6 +50,7 @@ public class CContactMapAbstractAction {
 		}
 
 		int i = 0;
+//		boolean[] checking = new boolean[lhs.size()];
 		for (IContactMapAbstractAgent lhsAgent : lhs) {
 			if (i >= rhs.size()) {
 				addAgentToDelete(lhsAgent);
@@ -114,11 +115,11 @@ public class CContactMapAbstractAction {
 
 	public List<IContactMapAbstractAgent> apply(
 			List<UCorrelationAbstractAgent> injList,
-			CContactMapAbstractSolution solution) {
+			CContactMapAbstractSolution solution, List<String> addListString) {
 		// TODO apply
 		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
 		addToList(CContactMapAbstractAgent.cloneAll(agentsToAdd), listOut,
-				solution);
+				solution, addListString);
 		int i = 0;
 		for (UCorrelationAbstractAgent corLHSandRHS : correlationAgents) {
 			UCorrelationAbstractAgent corLHSandSolution = injList.get(i);
@@ -127,11 +128,10 @@ public class CContactMapAbstractAction {
 
 			// listOut.addAll(corLHSandRHS.modifySiteFromSolution(newAgent,
 			// solution));
-			addToList(corLHSandRHS.modifySiteFromSolution(newAgent, solution),
-					listOut, solution);
-			if (!solution.getAgentsMap().containsKey(newAgent.getKey()))
-				listOut.add(newAgent);
-			// if(!newAgent.includedInCollection(listOut))
+			addToList(corLHSandRHS.modifySiteFromSolution(newAgent, solution,rule.getDeletedSites()),
+					listOut, solution, addListString);
+			// if (!solution.getAgentsMap().containsKey(newAgent.getKey()))
+			// listOut.add(newAgent);
 			i++;
 		}
 		return listOut;
@@ -139,10 +139,15 @@ public class CContactMapAbstractAction {
 
 	private void addToList(List<IContactMapAbstractAgent> listIn,
 			List<IContactMapAbstractAgent> listTo,
-			CContactMapAbstractSolution solution) {
-		for (IContactMapAbstractAgent a : listIn)
-			if (!solution.getAgentsMap().containsKey(a.getKey()))
+			CContactMapAbstractSolution solution, List<String> addListString) {
+		for (IContactMapAbstractAgent a : listIn) {
+			String key = a.getKey();
+			if (!solution.getAgentsMap().containsKey(key)
+					&& !addListString.contains(key)) {
 				listTo.add(a);
+				addListString.add(key);
+			}
+		}
 		// if(!a.includedInCollection(listTo))
 		// listTo.add(a);
 	}
