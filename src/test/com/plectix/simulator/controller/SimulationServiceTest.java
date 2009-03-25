@@ -50,7 +50,9 @@ public class SimulationServiceTest implements SimulatorCallableListener {
 		
 		System.err.println("Shutting the service down...");
 		service.shutdown();
-		// System.exit(0);
+		
+		// System.err.println("Calling main again...");
+		// main(args);
 	}
 
 	public void finished(SimulatorCallable simulatorCallable) {

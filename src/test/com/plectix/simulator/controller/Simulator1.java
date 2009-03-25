@@ -14,10 +14,6 @@ public class Simulator1 implements SimulatorInterface {
 	public Simulator1() {
 		super();
 	}
-	
-	public double getCurrentTime() {
-		return currentTime;
-	}
 
 	public String getName() {
 		return NAME;

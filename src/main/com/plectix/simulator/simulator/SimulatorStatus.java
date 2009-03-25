@@ -2,6 +2,17 @@ package com.plectix.simulator.simulator;
 
 import com.plectix.simulator.controller.SimulatorStatusInterface;
 
+/**
+ * This object holds data to report the status of the Simulator for periodical updates.
+ * <br>
+ * 
+ * It is not thread-safe because we assume that only one thread which is separate than the
+ * simulation thread calls its get methods and requests its update from the Simulator (which
+ * in turn calls the set methods). Therefore, the same thread calls all the method below. 
+ * Make sure that simulation thread doesn't use this object.
+ * 
+ * @author ecemis
+ */
 public class SimulatorStatus implements SimulatorStatusInterface {
 
 	private long currentEventNumber = 0;
@@ -13,6 +24,10 @@ public class SimulatorStatus implements SimulatorStatusInterface {
 	private double progress = Double.NaN;
 	private String statusMessage = null;
 
+	protected SimulatorStatus() {
+		super();
+	}
+	
 	public final double getCurrentEventNumber() {
 		return currentEventNumber;
 	}
@@ -64,6 +79,4 @@ public class SimulatorStatus implements SimulatorStatusInterface {
 	protected final void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
 	}
-
-
 }

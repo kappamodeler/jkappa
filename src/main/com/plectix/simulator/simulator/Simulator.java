@@ -39,10 +39,13 @@ public class Simulator implements SimulatorInterface {
 	
 	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
 
+	/** Use synchronized (statusLock) when changing the value of this variable */
 	private double currentTime = 0.0;
 	
+	/** Use synchronized (statusLock) when changing the value of this variable */
 	private long currentEventNumber = 0;
 	
+	/** Use synchronized (statusLock) when changing the value of this variable */
 	private int currentIterationNumber = 0;
 
 	private boolean isIteration = false;
@@ -54,19 +57,28 @@ public class Simulator implements SimulatorInterface {
 	private SimulatorStatus simulatorStatus = new SimulatorStatus();
 
 	private SimulatorResultsData simulatorResultsData = new SimulatorResultsData();
-
+	
+	/** Object to lock when we are reading variables to compute the current status */
+	private Object statusLock = new Object();
 	
 	public Simulator() {
 		super();
 		simulatorStatus.setStatusMessage(STATUS_IDLE);
 	}
 
+	/**
+	 * We assume that this method is called from a separate thread than the simulation thread.
+	 * We also assume that there can be only one thread calling this method at a time.
+	 * 
+	 */
 	public final SimulatorStatusInterface getStatus() {
-		// save the current state in the status object and use them below (just in case they are changed by the running thread)
-		simulatorStatus.setCurrentTime(currentTime);
-		simulatorStatus.setCurrentEventNumber(currentEventNumber);
-		simulatorStatus.setCurrentIterationNumber(currentIterationNumber);
-		
+		synchronized (statusLock) {
+			// save the current state variables in the status object and use them below
+			simulatorStatus.setCurrentTime(currentTime);
+			simulatorStatus.setCurrentEventNumber(currentEventNumber);
+			simulatorStatus.setCurrentIterationNumber(currentIterationNumber);
+		}
+
 		// let's compute our progress:
 		double progress = simulatorStatus.getProgress();
 		if (Double.isNaN(progress) || progress < 1.0) {
@@ -85,7 +97,7 @@ public class Simulator implements SimulatorInterface {
 			}
 			simulatorStatus.setProgress(progress);
 		}
-		
+
 		return simulatorStatus;
 	}
 	
@@ -144,7 +156,9 @@ public class Simulator implements SimulatorInterface {
 	}
 
 	public final void resetSimulation(InfoType outputType) {
-		currentTime = 0.0;
+		synchronized (statusLock) {
+			currentTime = 0.0;
+		}
 		simulationData.resetSimulation(outputType);
 	}
 
@@ -192,8 +206,10 @@ public class Simulator implements SimulatorInterface {
 		
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.OUTPUT,simulationData);
 	
+		synchronized (statusLock) {
+			currentEventNumber = 0;
+		}
 		long clash = 0;
-		currentEventNumber = 0;
 		long max_clash = 0;
 		boolean isEndRules = false;
 		simulatorStatus.setStatusMessage(STATUS_RUNNING);
@@ -228,7 +244,9 @@ public class Simulator implements SimulatorInterface {
 	
 			List<IInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
 			if (!rule.isInfinityRate()) {
-				currentTime += ruleProbabilityCalculation.getTimeValue();
+				synchronized (statusLock) {
+					currentTime += ruleProbabilityCalculation.getTimeValue();
+				}
 			}
 	
 			if (!rule.isClash(injectionsList)) {
@@ -237,7 +255,9 @@ public class Simulator implements SimulatorInterface {
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("negative update");
 	
-				currentEventNumber++;
+				synchronized (statusLock) {
+					currentEventNumber++;
+				}
 				rule.applyRule(injectionsList, simulationData);
 	
 				SimulationUtils.doNegativeUpdate(injectionsList);
@@ -318,15 +338,25 @@ public class Simulator implements SimulatorInterface {
 
 	public final void runStories() throws Exception {
 		CStories stories = simulationData.getKappaSystem().getStories();
-		currentEventNumber = 0;
-		if(simulationData.getSimulationArguments().isShortConsoleOutput())
+		
+		synchronized (statusLock) {
+			currentEventNumber = 0;
+		}
+		
+		if(simulationData.getSimulationArguments().isShortConsoleOutput()) {
 			simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
+		}
+		
 		simulationData.resetBar();
 		PlxTimer timerAllStories = new PlxTimer();
 		timerAllStories.startTimer();
 
 		simulatorStatus.setStatusMessage(STATUS_RUNNING);
-		for (currentIterationNumber = 0; currentIterationNumber < simulationData.getSimulationArguments().getIterations(); currentIterationNumber++) {
+		synchronized (statusLock) {
+			currentIterationNumber = 0;
+		}
+		
+		while (currentIterationNumber < simulationData.getSimulationArguments().getIterations()) {
 			PlxTimer timer=null;
 			if(!simulationData.getSimulationArguments().isShortConsoleOutput()){
 				simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
@@ -361,7 +391,9 @@ public class Simulator implements SimulatorInterface {
 				List<IInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
 				
 				if (!rule.isInfinityRate()) {
-					currentTime += ruleProbabilityCalculation.getTimeValue();
+					synchronized (statusLock) {
+						currentTime += ruleProbabilityCalculation.getTimeValue();
+					}
 				}
 				if (!rule.isClash(injectionsList)) {
 					// TODO: Make sure that CNetworkNotation works with long event number, not integer
@@ -371,7 +403,9 @@ public class Simulator implements SimulatorInterface {
 						rule.applyLastRuleForStories(injectionsList,netNotation);
 						rule.applyRuleForStories(injectionsList, netNotation, simulationData, true);
 						stories.addToNetworkNotationStoryStorifyRule(currentIterationNumber, netNotation, currentTime);
-						currentEventNumber++;
+						synchronized (statusLock) {
+							currentEventNumber++;
+						}
 						isEndRules = true;
 						simulationData.printlnBar();
 						break;
@@ -382,7 +416,9 @@ public class Simulator implements SimulatorInterface {
 					if (!rule.isRHSEqualsLHS()) {
 						stories.addToNetworkNotationStory(currentIterationNumber, netNotation);
 					}
-					currentEventNumber++;
+					synchronized (statusLock) {
+						currentEventNumber++;
+					}
 
 					SimulationUtils.doNegativeUpdate(injectionsList);
 					simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
@@ -390,10 +426,13 @@ public class Simulator implements SimulatorInterface {
 					clash++;
 					max_clash++;
 				}
+				
 			} // end of simulation here...
 		    
 			simulationData.checkStoriesBar(currentIterationNumber);
-			currentEventNumber = 0;
+			synchronized (statusLock) {
+				currentEventNumber = 0;
+			}
 			stories.handling(currentIterationNumber);
 			
 			if(!simulationData.getSimulationArguments().isShortConsoleOutput()) {
@@ -412,7 +451,11 @@ public class Simulator implements SimulatorInterface {
 				simulatorStatus.setProgress(1.0);
 				break;
 			}
-		}
+			
+			synchronized (statusLock) {
+				currentIterationNumber++;
+			}
+		} // end of iteration here...
 
 		simulatorStatus.setStatusMessage(STATUS_WRAPPING);
 		
@@ -436,10 +479,6 @@ public class Simulator implements SimulatorInterface {
 	//                    GETTERS AND SETTERS
 	//
 	//
-
-	public final double getCurrentTime() {
-		return currentTime;
-	}
 
 	public final String getName() {
 		return NAME;

@@ -13,13 +13,6 @@ public interface SimulatorInterface {
      * @throws Exception 
      */
     public void run(SimulatorInputData simulatorInputData) throws Exception;
-
-    /**
-     * Returns the current simulation time.
-     * 
-     * @return the current simulation time
-     */
-    public double getCurrentTime();
     
     /**
      * Returns the status of the simulation, including the latest data.
