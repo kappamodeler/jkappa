@@ -128,7 +128,7 @@ public class CContactMapAbstractAction {
 
 			// listOut.addAll(corLHSandRHS.modifySiteFromSolution(newAgent,
 			// solution));
-			addToList(corLHSandRHS.modifySiteFromSolution(newAgent, solution,rule.getDeletedSites()),
+			addToList(corLHSandRHS.modifySiteFromSolution(newAgent, solution),
 					listOut, solution, addListString);
 			// if (!solution.getAgentsMap().containsKey(newAgent.getKey()))
 			// listOut.add(newAgent);

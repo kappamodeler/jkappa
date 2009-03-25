@@ -2,35 +2,26 @@ package com.plectix.simulator.components.contactMap;
 
 import java.util.*;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractRule;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.simulator.KappaSystem;
 
-public class CContactMapAbstractRule implements IContactMapAbstractRule{
+public class CContactMapAbstractRule implements IContactMapAbstractRule {
 
 	private CContactMapAbstractSolution solution;
 	private List<IContactMapAbstractAgent> lhsAgents;
 	private List<IContactMapAbstractAgent> rhsAgents;
 	private CContactMapAbstractAction abstractAction;
 	private IRule rule;
-	private  HashSet<IContactMapAbstractSite> deletedSites;
 	private int[] lastMaxIndex;
 
 	public IRule getRule() {
 		return rule;
-	}
-	
-	public HashSet<IContactMapAbstractSite> getDeletedSites(){
-		return deletedSites;
 	}
 
 	public CContactMapAbstractRule(CContactMapAbstractSolution solution,
@@ -38,23 +29,20 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 		this.solution = solution;
 		this.rule = rule;
 	}
-	
+
 	public CContactMapAbstractRule(IRule rule) {
 		this.rule = rule;
 		this.lhsAgents = initListSites(rule.getLeftHandSide());
 		this.rhsAgents = initListSites(rule.getRightHandSide());
 	}
-	
+
 	public void initAbstractRule() {
 		this.lhsAgents = initListSites(rule.getLeftHandSide());
 		this.rhsAgents = initListSites(rule.getRightHandSide());
-		// this.lhsSites = initListsSites(agentMapLeftHandSide);
-		// this.rhsSites = initListsSites(agentMapRightHandSide);
 		this.abstractAction = new CContactMapAbstractAction(this);
-		deletedSites = new HashSet<IContactMapAbstractSite>();
 	}
 
-	public final boolean equalz(IContactMapAbstractRule obj){
+	public final boolean equalz(IContactMapAbstractRule obj) {
 		if (this == obj) {
 			return true;
 		}
@@ -74,7 +62,7 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 
 		return true;
 	}
-	
+
 	public final boolean includedInCollection(
 			Collection<IContactMapAbstractRule> collection) {
 		for (IContactMapAbstractRule rule : collection) {
@@ -88,6 +76,7 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 	private List<IContactMapAbstractAgent> initListSites(
 			List<IConnectedComponent> listIn) {
 		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
+		Map<Integer, IContactMapAbstractAgent> map = new HashMap<Integer, IContactMapAbstractAgent>();
 		if (listIn == null)
 			return listOut;
 		for (IConnectedComponent c : listIn)
@@ -99,24 +88,33 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 							s, newAgent);
 					newAgent.addSite(newSite);
 				}
-				listOut.add(newAgent);
+				map.put(a.getIdInRuleSide(), newAgent);
 			}
+
+		List<Integer> indexList = new ArrayList<Integer>();
+		Iterator<Integer> iterator = map.keySet().iterator();
+		while (iterator.hasNext())
+			indexList.add(iterator.next());
+		Collections.sort(indexList);
+		for (Integer i : indexList)
+			listOut.add(map.get(i));
 		return listOut;
 	}
-	
-	public List<IContactMapAbstractAgent> getFocusedAgents(){
+
+	public List<IContactMapAbstractAgent> getFocusedAgents() {
 		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
 		listOut.addAll(getAddAgents(lhsAgents));
 		listOut.addAll(getAddAgents(rhsAgents));
 		return listOut;
 	}
 
-	private List<IContactMapAbstractAgent> getAddAgents(List<IContactMapAbstractAgent> listIn){
+	private List<IContactMapAbstractAgent> getAddAgents(
+			List<IContactMapAbstractAgent> listIn) {
 		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
-		if(listIn.isEmpty() || listIn.get(0).getNameId() == CSite.NO_INDEX)
+		if (listIn.isEmpty() || listIn.get(0).getNameId() == CSite.NO_INDEX)
 			return listOut;
-		for(IContactMapAbstractAgent a : listIn)
-			if(a.isAdd())
+		for (IContactMapAbstractAgent a : listIn)
+			if (a.isAdd())
 				listOut.add(a);
 		return listOut;
 	}
@@ -135,7 +133,8 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 		List<String> addListString = new ArrayList<String>();
 		if (lhsAgents.size() == 0) {
 			newData.addAll(abstractAction.apply(
-					new ArrayList<UCorrelationAbstractAgent>(), solution,addListString));
+					new ArrayList<UCorrelationAbstractAgent>(), solution,
+					addListString));
 			return newData;
 		}
 
@@ -144,8 +143,8 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 			return null;
 		agentsLists = clearAgentsLists(agentsLists);
 		int[] maxIndex = getMaxIndex(agentsLists);
-		
-		if(lastMaxIndex!=null && lastMaxIndex.equals(maxIndex))
+
+		if (lastMaxIndex != null && lastMaxIndex.equals(maxIndex))
 			return newData;
 		lastMaxIndex = maxIndex;
 		// TODO getNewData
@@ -153,7 +152,8 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 		while (!isEnd(indexList, maxIndex)) {
 			List<UCorrelationAbstractAgent> injList = createInjectionList(
 					indexList, agentsLists);
-			newData.addAll(abstractAction.apply(injList, solution,addListString));
+			newData.addAll(abstractAction.apply(injList, solution,
+					addListString));
 
 			upIndexList(indexList, maxIndex);
 		}
@@ -161,8 +161,8 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 		return newData;
 	}
 
-	private List<UCorrelationAbstractAgent> createInjectionList(int[] indexList,
-			List<List<IContactMapAbstractAgent>> agentsLists) {
+	private List<UCorrelationAbstractAgent> createInjectionList(
+			int[] indexList, List<List<IContactMapAbstractAgent>> agentsLists) {
 		List<IContactMapAbstractAgent> listAgents = new ArrayList<IContactMapAbstractAgent>();
 		int index = 0;
 		for (int i : indexList)
@@ -196,13 +196,12 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule{
 			Integer keyAgent = a.getNameId();
 			List<IContactMapAbstractAgent> list = solution
 					.getListOfAgentsByNameID(keyAgent);
-			if(list==null || list.isEmpty())
+			if (list == null || list.isEmpty())
 				return null;
 			agentsLists.add(list);
 		}
 		return agentsLists;
 	}
-
 
 	private void upIndexList(int[] indexList, int[] maxIndex) {
 		indexList[indexList.length - 1] = indexList[indexList.length - 1] + 1;

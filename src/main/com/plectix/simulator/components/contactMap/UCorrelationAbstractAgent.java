@@ -145,16 +145,16 @@ public class UCorrelationAbstractAgent {
 
 	public List<IContactMapAbstractAgent> modifySiteFromSolution(
 			IContactMapAbstractAgent newAgent,
-			CContactMapAbstractSolution solution,HashSet<IContactMapAbstractSite> deletedSites) {
+			CContactMapAbstractSolution solution){
 		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
 		for (CContactMapAtomicAction t : atomicActionList) {
 			switch (t.getType()) {
 			case BREAK:
-				listOut.addAll(doBreak(newAgent, solution, t,deletedSites));
+				listOut.addAll(doBreak(newAgent, solution, t));
 				listOut.add(newAgent);			
 				break;
 			case DELETE:
-				return doDelete(newAgent, solution,deletedSites);
+				return doDelete(newAgent, solution);
 			case BOUND:
 				doBound(newAgent, t);
 				listOut.add(newAgent);			
@@ -170,7 +170,7 @@ public class UCorrelationAbstractAgent {
 
 	private List<IContactMapAbstractAgent> doBreak(
 			IContactMapAbstractAgent newAgent,
-			CContactMapAbstractSolution solution, CContactMapAtomicAction type,HashSet<IContactMapAbstractSite> deletedSites) {
+			CContactMapAbstractSolution solution, CContactMapAtomicAction type){
 		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
 		// TODO BRK
 		Integer key = type.getSiteFrom().getNameId();
@@ -182,7 +182,7 @@ public class UCorrelationAbstractAgent {
 
 		if (type.getSiteFrom().getLinkState().getStatusLinkRank() == CLinkRank.BOUND_OR_FREE
 				|| type.getSiteFrom().getLinkState().getStatusLinkRank() == CLinkRank.SEMI_LINK)
-			listOut.addAll(breakAllAgentsWithSite(newAgent, siteNew, solution,deletedSites));
+			listOut.addAll(breakAllAgentsWithSite(newAgent, siteNew, solution));
 
 		// if (lsNew.getAgentNameID() != lsTo.getAgentNameID()
 		// || lsNew.getLinkSiteNameID() != lsTo.getLinkSiteNameID()) {
@@ -196,7 +196,7 @@ public class UCorrelationAbstractAgent {
 
 	private List<IContactMapAbstractAgent> breakAllAgentsWithSite(
 			IContactMapAbstractAgent agentNew, IContactMapAbstractSite siteNew,
-			CContactMapAbstractSolution solution, HashSet<IContactMapAbstractSite> deletedSites) {
+			CContactMapAbstractSolution solution){
 		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
 		List<IContactMapAbstractAgent> agentsList = solution
 				.getAgentNameIdToAgentsList().get(
@@ -207,9 +207,6 @@ public class UCorrelationAbstractAgent {
 			int linkSiteNameID = siteNew.getLinkState().getLinkSiteNameID();
 			IContactMapAbstractSite siteFromSolution = a.getSite(linkSiteNameID);
 			
-			if(deletedSites.contains(siteFromSolution))
-				continue;
-			deletedSites.add(siteFromSolution);
 			CContactMapLinkState lsFromSolution = siteFromSolution
 					.getLinkState();
 
@@ -261,7 +258,7 @@ public class UCorrelationAbstractAgent {
 
 	private List<IContactMapAbstractAgent> doDelete(
 			IContactMapAbstractAgent newAgent,
-			CContactMapAbstractSolution solution,HashSet<IContactMapAbstractSite> deletedSites) {
+			CContactMapAbstractSolution solution){
 		// TODO DELL
 
 		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
@@ -271,7 +268,7 @@ public class UCorrelationAbstractAgent {
 			IContactMapAbstractSite siteNew = newAgent.getSite(key);
 			if (siteNew.getLinkState().getAgentNameID() == CSite.NO_INDEX)
 				continue;
-			listOut.addAll(breakAllAgentsWithSite(newAgent, siteNew, solution,deletedSites));
+			listOut.addAll(breakAllAgentsWithSite(newAgent, siteNew, solution));
 		}
 
 		// IContactMapAbstractAgent agent =

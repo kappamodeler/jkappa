@@ -10,8 +10,6 @@ public interface IContactMapAbstractRule {
 
 	public IRule getRule();
 
-	public HashSet<IContactMapAbstractSite> getDeletedSites();
-
 	public boolean includedInCollection(
 			Collection<IContactMapAbstractRule> collection);
 }
