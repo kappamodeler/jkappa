@@ -47,7 +47,7 @@ public final class AgentInvariant {
 	}
 	
 	/**
-	 * Returns the sites of this Agent sorted using {@link SiteComparator.SITE_COMPARATOR}
+	 * Returns the sites of this Agent sorted using {@link SiteComparator}
 	 * 
 	 * @return
 	 */
@@ -183,7 +183,20 @@ public final class AgentInvariant {
 	
 
 	/**
-	 * This class compares two AgentInvariants with respect to invariants
+	 * This class compares two AgentInvariants with respect to some "graph theoretical invariants".
+	 * The invariants selected here is not a "complete" set.
+	 * No "perfect" set of invariants is known that will distinguish all possible graph symmetries. 
+	 * We can add more invariants or eliminate some to fine tune the algorithm's performance.
+	 * 
+	 * <br><br>
+	 * Here is the comparison rules:
+	 * 
+	 * <ul>
+	 * <li> The Agent with less connections comes before
+	 * <li> If two Agents have the same number of connections, then the Agent with less sites comes before
+	 * <li> If two Agents are still equivalent, then the Agents are sorted according to their names
+	 * <li> If two Agents are still equivalent, we compare their Sites using {@link SiteComparator}
+	 * </ul>
 	 * 
 	 * @author ecemis
 	 */
@@ -229,7 +242,15 @@ public final class AgentInvariant {
 
 	/**
 	 * This class compares two AgentInvariants with respect 
-	 * to their new Ranks and then to their product of neighbor primes if their ranks are equal.
+	 * to their Ranks and to their product of neighbor primes.
+	 * 
+	 * <br><br>
+	 * Here is the comparison rules:
+	 * 
+	 * <ul>
+	 * <li> The Agent with lowest rank comes before
+	 * <li> If two Agents have the same rank, then the Agent with the lowest product of primes comes before
+	 * </ul>
 	 * 
 	 * @author ecemis
 	 *

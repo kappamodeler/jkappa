@@ -11,11 +11,91 @@ import org.apache.log4j.Logger;
 
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.string.AgentInvariant.AgentInvariantRankComparator;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.ISite;
 
+/**
+ * This class creates a unique String from a ConnectedComponent's list of Agents. 
+ * 
+ * <br><br>
+ * Here is a brief description of the algorithm:
+ * <br><br>
+ * We first sort the Agents according to some "graph theoretical invariants" 
+ * using {@link AgentInvariant.AgentInvariantComparator}. Please see that class for sorting rules.
+ * 
+ * <br><br>
+ * If no Agents are "equal" according to these initial sorting rules, we are done. 
+ * We can print the Agents in that order which should be unique.
+ * 
+ * <br><br>
+ * But no "perfect" set of invariants is known that will distinguish all possible graph symmetries. 
+ * Even though the initial sorting would discriminate Agents in most cases, there would still be
+ * some cases that some Agents would have equivalent invariants. Some of these equivalent cases
+ * are real symmetries and some are not. For example, consider the following polymer:
+ * 
+ * <br><br>
+ * <center><tt>A-A-A-A-A-A-A-A</tt></center>
+ * 
+ * <br><br>
+ * The initial sorting will create two categories: The Agents at both ends will be in the first
+ * category. The Agents in the middle will be in the second category. The Agents at the ends 
+ * are really symmetrical. But the Agents in the middle are not all symmetrical, some are closer
+ * to the ends than the others. And once we choose which end to start writing the unique String,
+ * then none of the Agents are symmetrical anymore. 
+ * 
+ * <br><br>
+ * If we have any equivalent Agent, we proceed as follows until we discriminate all equivalent cases:
+ * First, we assign a rank to each agent. The initial ranks for the above example is:
+ * 
+ * <br><br>
+ * <center><tt>1-2-2-2-2-2-2-1</tt></center> 
+ * 
+ * <br><br>
+ * Then, we compute the product of prime numbers corresponding to the rank of the Agent's neighbors.
+ * For example, if an Agent whose neighbors' ranks are 2, 2, 5 then the product of their corresponding
+ * primes is 3 x 3 x 11 = 99. According to the prime factorization theorem, this procedure will always
+ * provide an unambiguous result for any set of input ranks.
+ * 
+ * <br><br>
+ * After computing the product of primes for each Agent, we resort the Agents using 
+ * {@link AgentInvariant.AgentInvariantRankComparator} and re-rank them. Note that
+ * this resorting preserves the previous ranks but only discriminates equivalent cases.
+ * If no Agents have equivalent ranks, we are done.
+ * 
+ * <br><br>
+ * If there are real symmetries (hence equivalent ranks such as the end Agents in the polymer example above), 
+ * then these resorting would not change the previous ranks. This situation is called an "invariant partitioning".
+ * In order to "break ties", the algorithm proceeds by doubling all ranks and reducing the first Agent with
+ * the equivalent rank by one. These new ranks are treated as a new invariant set, and the previous steps
+ * of computing the product of prime numbers and resorting is repeated until there are no more equivalent
+ * ranks.
+ * 
+ * <br><br>
+ * Some properties of the algorithm:
+ * 
+ * <ul>
+ * <li>
+ * It uses the passed ConnectedComponent in one statement: <code>connectedComponent.getAgents()</code> 
+ * and works with the returned list of Agents. No other data member in CConnectedComponent is used.
+ * <li>
+ * It doesn't change this list of Agents, e.g. it doesn't reorder them in any way, it works on its separate copy. 
+ * <li>
+ * It doesn't change the list of Sites in Agents either, it works on its separate copy.
+ * The only things that the algorithm changes is <code>linkIndex</code> of Sites in the ConnectedComponent. 
+ * The initial values are not read. It calls <code>site.setLinkIndex()</code> on all sites and sets 
+ * the <code>linkIndex</code> data to -1 or a positive integer it computes. 
+ * </ul>
+ * 
+ * <br>
+ * The class doesn't have any data member and uses static private methods only. Therefore it can (and I think should) be used as a singleton.
+ * 
+ * <br><br>
+ * 
+ * @author ecemis
+ */
 public class ConnectedComponentToSmilesString implements ConnectedComponentToStringInterface {
 
 	private static final Logger LOGGER = Logger.getLogger(ConnectedComponentToSmilesString.class);
