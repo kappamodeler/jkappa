@@ -68,8 +68,8 @@ import com.plectix.simulator.interfaces.ISite;
  * <br><br>
  * If there are real symmetries (hence equivalent ranks such as the end Agents in the polymer example above), 
  * then these resorting would not change the previous ranks. This situation is called an "invariant partitioning".
- * In order to "break ties", the algorithm proceeds by doubling all ranks and reducing the first Agent with
- * the equivalent rank by one. These new ranks are treated as a new invariant set, and the previous steps
+ * In order to "break ties", the algorithm proceeds by doubling all ranks and reducing the rank of the first Agent 
+ * with the equivalent rank by one. These new ranks are treated as a new invariant set, and the previous steps
  * of computing the product of prime numbers and resorting is repeated until there are no more equivalent
  * ranks.
  * 
