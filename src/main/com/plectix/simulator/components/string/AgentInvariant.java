@@ -18,7 +18,7 @@ public final class AgentInvariant {
 
 	public static final AgentInvariantComparator AGENT_INVARIANT_COMPARATOR = new AgentInvariantComparator();
 
-	public static final AgentInvariantRANKComparator AGENT_INVARIANT_RANK_COMPARATOR = new AgentInvariantRANKComparator();
+	public static final AgentInvariantRankComparator AGENT_INVARIANT_RANK_COMPARATOR = new AgentInvariantRankComparator();
 	
 	private int rankOld = 0; // 0 means not set yet
 	private int rankNew = 0; // 0 means not set yet
@@ -46,6 +46,11 @@ public final class AgentInvariant {
 		}
 	}
 	
+	/**
+	 * Returns the sites of this Agent sorted using {@link SiteComparator.SITE_COMPARATOR}
+	 * 
+	 * @return
+	 */
 	public final List<ISite> getSortedSites() {
 		if (sortedSites == null) {
 			sortedSites = new ArrayList<ISite>(agent.getSites());
@@ -55,6 +60,11 @@ public final class AgentInvariant {
 		return sortedSites;
 	}
 
+	/**
+	 * Compile a list of AgentInvariants which are bound to this AgentInvariant 
+	 * 
+	 * @param agentToAgentInvariantMap
+	 */
 	public final void computeNeighbors(Map<IAgent, AgentInvariant> agentToAgentInvariantMap) {
 		if (neighborAgentList == null) {
 			neighborAgentList = new ArrayList<AgentInvariant>();
@@ -71,6 +81,9 @@ public final class AgentInvariant {
 		}
 	}
 	
+	/**
+	 * Computes the product of prime numbers corresponding to neighbor Agents' ranks.
+	 */
 	public final void computeProductOfNeighborPrimes() {
 		if (neighborAgentList == null) {
 			throw new RuntimeException("neighborAgentList is not initialized yet!");
@@ -82,42 +95,88 @@ public final class AgentInvariant {
 		}
 	}
 
+	/**
+	 * Copies the new Rank to the old Rank.
+	 */
 	public final void saveRank() {
 		rankOld = rankNew;
 	}
 
+	/**
+	 * Checks whether the new Rank is equal to the old Rank or not
+	 * 
+	 * @return
+	 */
 	public final boolean areRanksEqual() {
 		return rankNew == rankOld;
 	}
 
+	/**
+	 * Multiplies the new Rank by 2
+	 */
 	public final void doubleRankNew() {
 		rankNew *= 2;
 	}
 	
+	/**
+	 * Returns the number of sites of this Agent.
+	 * 
+	 * @return
+	 */
 	public final int getNumberOfSites() {
 		return agent.getSites().size();
 	}
 
+	/**
+	 * Returns the name of this Agent.
+	 * 
+	 * @return
+	 */
 	public final String getName() {
 		return agent.getName();
 	}
 
+	/**
+	 * Returns the Agent in this AgentInvariant.
+	 * 
+	 * @return
+	 */
 	public final IAgent getAgent() {
 		return agent;
 	}
 
+	/**
+	 * Returns the product of neighbor primes computed with {@link #computeProductOfNeighborPrimes()}
+	 * 
+	 * @return
+	 */
 	public final long getProductOfNeighborPrimes() {
 		return productOfNeighborPrimes;
 	}
 	
+	/**
+	 * Returns the new Rank of this Agent
+	 * 
+	 * @return
+	 */
 	public final int getRankNew() {
 		return rankNew;
 	}
 
+	/**
+	 * Sets the new Rank of this Agent.
+	 * 
+	 * @param rank
+	 */
 	public final void setRankNew(int rank) {
 		rankNew = rank;
 	}
 	
+	/**
+	 * Returns the number of connections of this Agent.
+	 * 
+	 * @return
+	 */
 	public final int getNumberOfConnections() {
 		return numberOfConnections;
 	}
@@ -167,9 +226,16 @@ public final class AgentInvariant {
 			return 0;
 		}
 	}
-	
-	public static final class AgentInvariantRANKComparator implements Comparator<AgentInvariant> {
-		private AgentInvariantRANKComparator() {
+
+	/**
+	 * This class compares two AgentInvariants with respect 
+	 * to their new Ranks and then to their product of neighbor primes if their ranks are equal.
+	 * 
+	 * @author ecemis
+	 *
+	 */
+	public static final class AgentInvariantRankComparator implements Comparator<AgentInvariant> {
+		private AgentInvariantRankComparator() {
 			super();
 		}
 
@@ -182,6 +248,5 @@ public final class AgentInvariant {
 			return Double.compare(o1.getProductOfNeighborPrimes(), o1.getProductOfNeighborPrimes());
 		}
 	}
-
 
 }
