@@ -40,12 +40,12 @@ public class PerturbationsBuilder {
 	}
 
 	// TODO throw document format exception
-	private IRule findRule(String name) {
+	private CRule findRule(String name) {
 		if (name == null) {
 			return null;
 		}
 
-		for (IRule rule : myData.getRules()) {
+		for (CRule rule : myData.getRules()) {
 			if (name.equals(rule.getName())) {
 				return rule;
 			}
@@ -58,7 +58,7 @@ public class PerturbationsBuilder {
 		List<IPerturbationExpression> result = new ArrayList<IPerturbationExpression>();
 		for (LinearExpressionMonome monome : modification.getExpression()
 				.getPolynome()) {
-			IRule foundedRule = findRule(monome.getObsName());
+			CRule foundedRule = findRule(monome.getObsName());
 			double multiplier = monome.getMultiplier();
 			result.add(new RateExpression(foundedRule, multiplier));
 		}
@@ -147,7 +147,7 @@ public class PerturbationsBuilder {
 				if (freeTermNotZero) {
 					parameters.add(freeTerm);
 				}
-				IRule rule = findRule(modification.getArgument());
+				CRule rule = findRule(modification.getArgument());
 				IObservablesComponent component = checkInObservables(condition
 						.getArgument());
 				result.add(new CPerturbation(id, obsID, parameters, component

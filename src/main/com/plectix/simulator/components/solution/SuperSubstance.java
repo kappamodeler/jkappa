@@ -3,6 +3,7 @@ package com.plectix.simulator.components.solution;
 import java.util.Collection;
 import java.util.List;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.KappaSystem;
@@ -122,7 +123,7 @@ public class SuperSubstance implements ISolutionComponent {
 		
 	}
 
-	public void setRule(IRule rule) {
+	public void setRule(CRule rule) {
 		// TODO Auto-generated method stub
 		
 	}

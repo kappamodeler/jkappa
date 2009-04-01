@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.IAgent;
@@ -14,7 +15,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractRule;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.SimulationData;
@@ -164,7 +165,7 @@ public class CContactMapAbstractSolution {
 	private void fillModelMapOfAgents(Collection<IAgent> agents) {
 		fillModelMapByAgentList(agents);
 
-		for (IRule rule : simulationData.getKappaSystem().getRules()) {
+		for (CRule rule : simulationData.getKappaSystem().getRules()) {
 			for (IConnectedComponent cc : rule.getLeftHandSide())
 				fillModelMapByAgentList(cc.getAgents());
 			if (rule.getRightHandSide() != null)

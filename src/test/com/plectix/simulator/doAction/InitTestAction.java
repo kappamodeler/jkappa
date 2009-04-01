@@ -9,9 +9,10 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.plectix.simulator.DirectoryTestsRunner;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.simulator.SimulationData;
@@ -23,7 +24,7 @@ public class InitTestAction extends DirectoryTestsRunner{
 	private static Simulator mySimulator;
 	private final Logger LOGGER = Logger.getLogger(InitTestAction.class);
 	private double currentTime = 0.;
-	private IRule myActiveRule;
+	private CRule myActiveRule;
 	private static int myRunQuant = 0;
 	private static int myTestQuant = 70;
 	private static String FilePath = "";
@@ -149,7 +150,7 @@ public class InitTestAction extends DirectoryTestsRunner{
 		return testDirectory;
 	}
 	
-	public IRule getActiveRule(){
+	public CRule getActiveRule(){
 		return myActiveRule;
 	}
 	

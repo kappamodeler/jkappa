@@ -9,4 +9,6 @@ public interface IConnectedComponent extends ISolutionComponent {
 	public void setSuperSubstance(SuperSubstance superSubstance);
 
 	public SuperSubstance getSubstance();
+
+	public boolean isEmpty();
 }

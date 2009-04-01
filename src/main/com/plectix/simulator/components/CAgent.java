@@ -39,7 +39,7 @@ public final class CAgent implements IAgent, Serializable {
 		return Collections.unmodifiableMap(siteMap);
 	}
 
-	public int getIdInRuleSide() {
+	public int getIdInRuleHandside() {
 		return idInRuleSide;
 	}
 
@@ -257,6 +257,6 @@ public final class CAgent implements IAgent, Serializable {
 	}
 
 	public int compareTo(IAgent o) {
-		return idInRuleSide - o.getIdInRuleSide();
+		return idInRuleSide - o.getIdInRuleHandside();
 	}
 }

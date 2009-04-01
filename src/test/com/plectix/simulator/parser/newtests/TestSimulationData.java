@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.TreeMap;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesRuleComponent;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.solution.SuperSubstance;
@@ -12,7 +13,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.builders.KappaSystemBuilder;
@@ -54,9 +55,9 @@ public class TestSimulationData {
 	public String getData() {
 		StringBuffer sb = new StringBuffer();
 		// rules
-		List<IRule> rules = simulationData.getKappaSystem().getRules();
-		for (IRule rule : rules) {
-			sb.append("'" + rule.getName() + "' " + rule.getData(true) + "\n");
+		List<CRule> rules = simulationData.getKappaSystem().getRules();
+		for (CRule rule : rules) {
+			sb.append("'" + rule.getName() + "' " + SimulationData.getData(rule, true) + "\n");
 		}
 		sb.append("\n");
 

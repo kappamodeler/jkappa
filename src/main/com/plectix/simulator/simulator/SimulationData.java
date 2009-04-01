@@ -38,6 +38,7 @@ import org.w3c.dom.Element;
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.SnapshotElement;
 import com.plectix.simulator.components.contactMap.CContactMapAbstractEdge;
@@ -54,7 +55,7 @@ import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
@@ -470,7 +471,7 @@ public class SimulationData {
 		KappaFile kappaFile = kappaFileReader.parse();
 		KappaModel model = (new KappaModelCreator(simulationArguments))
 				.createModel(kappaFile);
-		List<IRule> ruleList = (new RuleBuilder(new KappaSystem(this)))
+		List<CRule> ruleList = (new RuleBuilder(new KappaSystem(this)))
 				.build(new RulesParagraphReader(model, simulationArguments,
 						new AgentFactory()).readComponent(kappaFile.getRules()));
 
@@ -556,7 +557,7 @@ public class SimulationData {
 	}
 
 	private final void outputRules() {
-		for (IRule rule : myKappaSystem.getRules()) {
+		for (CRule rule : myKappaSystem.getRules()) {
 			// int countAgentsInLHS = rule.getCountAgentsLHS();
 			// int indexNewAgent = countAgentsInLHS;
 
@@ -565,19 +566,19 @@ public class SimulationData {
 				case BREAK: {
 					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
 							.getSite());
-					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() < siteTo
-							.getAgentLink().getIdInRuleSide()) {
+					if (action.getSiteFrom().getAgentLink().getIdInRuleHandside() < siteTo
+							.getAgentLink().getIdInRuleHandside()) {
 						// BRK (#0,a) (#1,x)
 						print("BRK (#");
 						print(""
 								+ (action.getSiteFrom().getAgentLink()
-										.getIdInRuleSide() - 1));
+										.getIdInRuleHandside() - 1));
 						print(",");
 						print(action.getSiteFrom().getName());
 						print(") ");
 						print("(#");
 						print(""
-								+ (siteTo.getAgentLink().getIdInRuleSide() - 1));
+								+ (siteTo.getAgentLink().getIdInRuleHandside() - 1));
 						print(",");
 						print(siteTo.getName());
 						print(") ");
@@ -588,14 +589,14 @@ public class SimulationData {
 				case DELETE: {
 					// DEL #0
 					print("DEL #");
-					println("" + (action.getAgentFrom().getIdInRuleSide() - 1));
+					println("" + (action.getAgentFrom().getIdInRuleHandside() - 1));
 					break;
 				}
 				case ADD: {
 					// ADD a#0(x)
 					print("ADD " + action.getAgentTo().getName() + "#");
 
-					print("" + (action.getAgentTo().getIdInRuleSide() - 1));
+					print("" + (action.getAgentTo().getIdInRuleHandside() - 1));
 					print("(");
 					int i = 1;
 					for (ISite site : action.getAgentTo().getSites()) {
@@ -614,19 +615,19 @@ public class SimulationData {
 					// BND (#1,x) (#0,a)
 					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
 							.getSite());
-					if (action.getSiteFrom().getAgentLink().getIdInRuleSide() > siteTo
-							.getAgentLink().getIdInRuleSide()) {
+					if (action.getSiteFrom().getAgentLink().getIdInRuleHandside() > siteTo
+							.getAgentLink().getIdInRuleHandside()) {
 						print("BND (#");
 						print(""
 								+ (action.getSiteFrom().getAgentLink()
-										.getIdInRuleSide() - 1));
+										.getIdInRuleHandside() - 1));
 						print(",");
 						print(action.getSiteFrom().getName());
 						print(") ");
 						print("(#");
 						print(""
 								+ (action.getSiteTo().getAgentLink()
-										.getIdInRuleSide() - 1));
+										.getIdInRuleHandside() - 1));
 						print(",");
 						print(siteTo.getName());
 						print(") ");
@@ -639,7 +640,7 @@ public class SimulationData {
 					print("MOD (#");
 					print(""
 							+ (action.getSiteFrom().getAgentLink()
-									.getIdInRuleSide() - 1));
+									.getIdInRuleHandside() - 1));
 					print(",");
 					print(action.getSiteFrom().getName());
 					print(") with ");
@@ -1263,7 +1264,7 @@ public class SimulationData {
 	}
 
 	private final void printMap(Document doc, String mapType,
-			Element influenceMap, IRule rule, List<IRule> rulesToPrint,
+			Element influenceMap, CRule rule, List<CRule> rulesToPrint,
 			List<IObservablesConnectedComponent> obsToPrint) {
 		int rulesNumber = myKappaSystem.getRules().size() + 1;
 		for (int j = obsToPrint.size() - 1; j >= 0; j--) {
@@ -1330,6 +1331,21 @@ public class SimulationData {
 		return Long.valueOf(value).toString();
 	}
 
+	/**
+	 * This method creates string representation of given rule, which using in XML output
+	 * 
+	 * @param rule 
+	 * @param isOcamlStyleObsName <tt>true</tt> if option <code>--ocaml-style-obs-name</code> is enabled,
+	 * otherwise <tt>false</tt>
+	 * @return string representation of given rule 
+	 */
+	public static final String getData(CRule rule, boolean isOcamlStyleObsName) {
+		String line = SimulationUtils.printPartRule(rule.getLeftHandSide(), isOcamlStyleObsName);
+		line += "->";
+		line += SimulationUtils.printPartRule(rule.getRightHandSide(), isOcamlStyleObsName);
+		return line;
+	}
+	
 	private final void addRulesToXML(Element influenceMap,
 			int rulesAndObsNumber, Document doc) {
 		for (int i = myKappaSystem.getRules().size() - 1; i >= 0; i--) {
@@ -1345,11 +1361,8 @@ public class SimulationData {
 						.getName());
 				node.setAttribute("Id", Integer.toString(rulesAndObsNumber--));
 			}
-			node.setAttribute("Data", myKappaSystem.getRules().get(i).getData(
-					isOcamlStyleObsName()));
-			node
-					.setAttribute("Name", myKappaSystem.getRules().get(i)
-							.getName());
+			node.setAttribute("Data", getData(myKappaSystem.getRules().get(i), isOcamlStyleObsName()));
+			node.setAttribute("Name", myKappaSystem.getRules().get(i).getName());
 			influenceMap.appendChild(node);
 		}
 	}

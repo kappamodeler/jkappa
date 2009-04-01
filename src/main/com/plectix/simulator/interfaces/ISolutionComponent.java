@@ -3,6 +3,7 @@ package com.plectix.simulator.interfaces;
 import java.util.Collection;
 import java.util.List;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 
 public interface ISolutionComponent {
@@ -18,7 +19,7 @@ public interface ISolutionComponent {
 
 	public Collection<IInjection> getInjectionsList();
 
-	public void setRule(IRule rule);
+	public void setRule(CRule rule);
 
 	public boolean isAutomorphism(IAgent agent);
 

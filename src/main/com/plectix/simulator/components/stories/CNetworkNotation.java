@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.SolutionUtils;
@@ -16,7 +17,7 @@ import com.plectix.simulator.interfaces.IAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.INetworkNotation;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
@@ -101,14 +102,14 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	// TODO: Make sure that CNetworkNotation works with long event number, not integer
-	public CNetworkNotation(Simulator simulator, int step, IRule rule,
+	public CNetworkNotation(Simulator simulator, int step, CRule rule,
 			List<IInjection> injectionsList, SimulationData data) {
 		initParameters(simulator, step, rule.getRuleID());
 		createAgentsNotation(injectionsList, data, rule);
 	}
 
 	public void fillAddedAgentsID(SimulationData data) {
-		IRule rule = data.getKappaSystem().getRulesByID(ruleID);
+		CRule rule = data.getKappaSystem().getRulesByID(ruleID);
 		this.addedAgentsID = rule.getAgentsAddedID();
 	}
 
@@ -214,7 +215,7 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	private final void createAgentsNotation(List<IInjection> injectionsList,
-			SimulationData data, IRule rule) {
+			SimulationData data, CRule rule) {
 		ISolution solution = data.getKappaSystem().getSolution();
 		for (IInjection inj : injectionsList) {
 			if (inj != CInjection.EMPTY_INJECTION) {
@@ -334,7 +335,7 @@ public class CNetworkNotation implements INetworkNotation {
 		}
 	}
 
-	public final IRule getRule() {
+	public final CRule getRule() {
 		return simulator.getSimulationData().getKappaSystem().getRulesByID(
 				ruleID);
 	}

@@ -10,6 +10,7 @@ import javax.xml.transform.TransformerException;
 import org.apache.log4j.Logger;
 
 import com.plectix.simulator.BuildConstants;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.controller.SimulatorInputData;
@@ -17,7 +18,7 @@ import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
@@ -229,7 +230,7 @@ public class Simulator implements SimulatorInterface {
 			}
 			
 			simulationData.checkPerturbation(currentTime);
-			IRule rule = ruleProbabilityCalculation.getRandomRule();
+			CRule rule = ruleProbabilityCalculation.getRandomRule();
 	
 			if (rule == null) {
 				isEndRules = true;
@@ -243,7 +244,7 @@ public class Simulator implements SimulatorInterface {
 			}
 	
 			List<IInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
-			if (!rule.isInfinityRate()) {
+			if (!rule.isInfiniteRated()) {
 				synchronized (statusLock) {
 					currentTime += ruleProbabilityCalculation.getTimeValue();
 				}
@@ -380,7 +381,7 @@ public class Simulator implements SimulatorInterface {
 				}
 				
 				simulationData.checkPerturbation(currentTime);
-				IRule rule = ruleProbabilityCalculation.getRandomRule();
+				CRule rule = ruleProbabilityCalculation.getRandomRule();
 
 				if (rule == null) {
 					simulationData.setTimeLength(currentTime);
@@ -390,7 +391,7 @@ public class Simulator implements SimulatorInterface {
 
 				List<IInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
 				
-				if (!rule.isInfinityRate()) {
+				if (!rule.isInfiniteRated()) {
 					synchronized (statusLock) {
 						currentTime += ruleProbabilityCalculation.getTimeValue();
 					}

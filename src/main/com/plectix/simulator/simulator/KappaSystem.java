@@ -27,7 +27,7 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.util.IdGenerator;
@@ -36,7 +36,7 @@ import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class KappaSystem {
-	private List<IRule> rules = null;
+	private List<CRule> rules = null;
 	private CStories stories = null;
 	private List<CPerturbation> perturbations = null;
 	private IObservables observables = new CObservables();
@@ -61,7 +61,7 @@ public class KappaSystem {
 				ois = new ObjectInputStream(new FileInputStream(args
 						.getSerializationFileName()));
 				solution = (ISolution) ois.readObject();
-				rules = (List<IRule>) ois.readObject();
+				rules = (List<CRule>) ois.readObject();
 				observables = (IObservables) ois.readObject();
 				perturbations = (List<CPerturbation>) ois.readObject();
 				mySimulationData.setSnapshotTimes((List<Double>) ois
@@ -99,7 +99,7 @@ public class KappaSystem {
 
 		observables.init(args.getTimeLength(), args.getInitialTime(), args
 				.getEvent(), args.getPoints(), args.isTime());
-		List<IRule> rules = getRules();
+		List<CRule> rules = getRules();
 
 		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 			// contactMap.addCreatedAgentsToSolution(this.solution, rules);
@@ -114,9 +114,9 @@ public class KappaSystem {
 					"--Abstracting activation map...");
 
 			timer.startTimer();
-			for (IRule rule : rules) {
-				rule.createActivatedRulesList(rules);
-				rule.createActivatedObservablesList(observables);
+			for (CRule rule : rules) {
+				rule.updateActivatedRulesList(rules);
+				rule.initializeActivatedObservablesList(observables);
 			}
 			mySimulationData.stopTimer(outputType, timer, "--Abstraction:");
 			mySimulationData.addInfo(outputType, InfoType.INFO,
@@ -129,9 +129,9 @@ public class KappaSystem {
 					"--Abstracting inhibition map...");
 
 			timer.startTimer();
-			for (IRule rule : rules) {
-				rule.createInhibitedRulesList(rules);
-				rule.createInhibitedObservablesList(observables);
+			for (CRule rule : rules) {
+				rule.updateInhibitedRulesList(rules);
+				rule.initializeInhibitedObservablesList(observables);
 			}
 			mySimulationData.stopTimer(outputType, timer, "--Abstraction:");
 			mySimulationData.addInfo(outputType, InfoType.INFO,
@@ -158,10 +158,10 @@ public class KappaSystem {
 
 	// ---------------------POSITIVE UPDATE-----------------------------
 
-	public final void doPositiveUpdate(IRule rule,
+	public final void doPositiveUpdate(CRule rule,
 			List<IInjection> currentInjectionsList) {
 		if (mySimulationData.getSimulationArguments().isActivationMap()) {
-			SimulationUtils.positiveUpdate(rule.getActivatedRule(), rule
+			SimulationUtils.positiveUpdate(rule.getActivatedRules(), rule
 					.getActivatedObservable(), rule);
 		} else {
 			SimulationUtils.positiveUpdate(getRules(), observables
@@ -173,8 +173,8 @@ public class KappaSystem {
 		doPositiveUpdateForDeletedAgents(freeAgents);
 	}
 
-	public final void doPositiveUpdateForContactMap(IRule rule,
-			List<IInjection> currentInjectionsList, List<IRule> invokedRules) {
+	public final void doPositiveUpdateForContactMap(CRule rule,
+			List<IInjection> currentInjectionsList, List<CRule> invokedRules) {
 		SimulationUtils.positiveUpdateForContactMap(getRules(), rule,
 				invokedRules);
 		List<IAgent> freeAgents = SimulationUtils
@@ -184,7 +184,7 @@ public class KappaSystem {
 
 	private final void doPositiveUpdateForDeletedAgents(List<IAgent> agentsList) {
 		for (IAgent agent : agentsList) {
-			for (IRule rule : getRules()) {
+			for (CRule rule : getRules()) {
 				for (IConnectedComponent cc : rule.getLeftHandSide()) {
 					IInjection inj = cc.createInjection(agent);
 					if (inj != null) {
@@ -205,9 +205,9 @@ public class KappaSystem {
 	}
 
 	private final void doPositiveUpdateForDeletedAgentsForContactMap(
-			List<IAgent> agentsList, List<IRule> rules) {
+			List<IAgent> agentsList, List<CRule> rules) {
 		for (IAgent agent : agentsList) {
-			for (IRule rule : getRules()) {
+			for (CRule rule : getRules()) {
 				for (IConnectedComponent cc : rule.getLeftHandSide()) {
 					IInjection inj = cc.createInjection(agent);
 					if (inj != null) {
@@ -215,7 +215,7 @@ public class KappaSystem {
 							cc.setInjection(inj);
 					}
 				}
-				if (rule.isInvokedRule() && !rule.includedInCollection(rules)) {
+				if (rule.canBeApplied() && !rule.includedInCollection(rules)) {
 					rules.add(rule);
 				}
 			}
@@ -250,12 +250,12 @@ public class KappaSystem {
 
 	// ----------------------GETTERS-------------------------------
 
-	public final List<IRule> getRules() {
+	public final List<CRule> getRules() {
 		return Collections.unmodifiableList(rules);
 	}
 
-	public final IRule getRulesByID(int ruleID) {
-		for (IRule rule : rules)
+	public final CRule getRulesByID(int ruleID) {
+		for (CRule rule : rules)
 			if (rule.getRuleID() == ruleID)
 				return rule;
 		return null;
@@ -291,7 +291,7 @@ public class KappaSystem {
 
 	// ----------------------SETTERS / ADDERS-------------------------------
 
-	public final void setRules(List<IRule> rules) {
+	public final void setRules(List<CRule> rules) {
 		this.rules = rules;
 	}
 
@@ -314,7 +314,7 @@ public class KappaSystem {
 	public final void addStories(String name) {
 		byte index = 0;
 		List<Integer> ruleIDs = new ArrayList<Integer>();
-		for (IRule rule : rules) {
+		for (CRule rule : rules) {
 			if ((rule.getName() != null)
 					&& (rule.getName().startsWith(name) && ((name.length() == rule
 							.getName().length()) || ((rule.getName()

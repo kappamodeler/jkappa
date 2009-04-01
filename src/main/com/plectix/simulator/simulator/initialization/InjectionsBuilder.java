@@ -1,12 +1,13 @@
 package com.plectix.simulator.simulator.initialization;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.interfaces.ISolutionComponent;
 import com.plectix.simulator.simulator.KappaSystem;
@@ -22,7 +23,7 @@ public class InjectionsBuilder {
 	}
 
 	private void walkInjectingComponents(InjectionSettingStrategy strategy, IAgent solutionAgent) {
-		for (IRule rule : myKappaSystem.getRules()) {
+		for (CRule rule : myKappaSystem.getRules()) {
 			for (IConnectedComponent cc : rule.getLeftHandSide()) {
 				if (cc != null) {
 					strategy.process(cc, solutionAgent);

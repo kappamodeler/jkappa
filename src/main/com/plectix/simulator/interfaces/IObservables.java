@@ -2,6 +2,8 @@ package com.plectix.simulator.interfaces;
 
 import java.util.List;
 
+import com.plectix.simulator.components.CRule;
+
 public interface IObservables {
 
 	public List<IObservablesComponent> getComponentList();
@@ -29,7 +31,7 @@ public interface IObservables {
 			List<IConnectedComponent> buildConnectedComponents, String name,
 			String line, int obsNameID);
 
-	public boolean addRulesName(String name, int obsNameID, List<IRule> rules);
+	public boolean addRulesName(String name, int obsNameID, List<CRule> rules);
 
 	public List<Double> getCountTimeList();
 

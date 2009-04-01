@@ -6,7 +6,7 @@ import org.junit.*;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.QuantityDataParser;
 
@@ -15,7 +15,7 @@ public class TestTimeCondition extends TestPerturbation {
 	private String myTestFileName = "";
 	private static final String myPrefixFileName = "test.data/perturbations/";
 	private Failer myFailer = new Failer(); 
-	private IRule myActiveRule;
+	private CRule myActiveRule;
 	private static Map<String, Integer> myExpectedData;
 	
 	@BeforeClass
@@ -46,7 +46,7 @@ public class TestTimeCondition extends TestPerturbation {
 	@Test
 	public void test() {
 		myActiveRule = getRuleByName("rule");
-		double rate = myActiveRule.getRuleRate();
+		double rate = myActiveRule.getRate();
 		if (myExpectedData.get(myTestFileName) == null) {
 			myFailer.fail("Unhandled test "  + myTestFileName);
 		} else {

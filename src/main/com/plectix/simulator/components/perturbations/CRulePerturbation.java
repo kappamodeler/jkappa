@@ -6,7 +6,7 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.INetworkNotation;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.simulator.SimulationData;
 
 public final class CRulePerturbation extends CRule {
@@ -14,9 +14,9 @@ public final class CRulePerturbation extends CRule {
 	private int count;
 	private boolean inf = false;
 
-	public CRulePerturbation(IRule rule, boolean isStorify) {
+	public CRulePerturbation(CRule rule, boolean isStorify) {
 		super(rule.getLeftHandSide(), rule.getRightHandSide(), rule.getName(),
-				rule.getRuleRate(), rule.getRuleID(), isStorify);
+				rule.getRate(), rule.getRuleID(), isStorify);
 	}
 
 //	public CRulePerturbation(List<IConnectedComponent> left,

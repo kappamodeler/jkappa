@@ -6,7 +6,7 @@ import java.util.List;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IContactMapAbstractRule;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.ISite;
 
 public class CContactMapChangedSite {

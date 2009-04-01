@@ -36,7 +36,7 @@ public class CBoundAction extends CAction {
 		 */
 
 		IAgent agentFromInSolution;
-		if (mySiteFrom.getAgentLink().getIdInRuleSide() > myRule.getAgentsFromConnectedComponent(
+		if (mySiteFrom.getAgentLink().getIdInRuleHandside() > myRule.getAgentsFromConnectedComponent(
 				myRule.getLeftHandSide()).size()) {
 			agentFromInSolution = myRule.getAgentAdd(mySiteFrom.getAgentLink());
 		} else {
@@ -56,7 +56,7 @@ public class CBoundAction extends CAction {
 		}
 
 		IAgent agentToInSolution;
-		if (mySiteTo.getAgentLink().getIdInRuleSide() > myRule.getAgentsFromConnectedComponent(
+		if (mySiteTo.getAgentLink().getIdInRuleHandside() > myRule.getAgentsFromConnectedComponent(
 				myRule.getLeftHandSide()).size()) {
 			agentToInSolution = myRule.getAgentAdd(mySiteTo.getAgentLink());
 		} else {

@@ -2,7 +2,8 @@ package com.plectix.simulator.components.contactMap;
 
 import java.util.*;
 
-import com.plectix.simulator.interfaces.IRule;
+
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.ISite;
 
 public class CContactMapEdge {
@@ -40,7 +41,7 @@ public class CContactMapEdge {
 		rules.clear();
 	}
 	
-	public void addRules(IRule rule) {
+	public void addRules(CRule rule) {
 		if (rule != null) {
 			int value = rule.getRuleID();
 			if (!rules.contains(value))

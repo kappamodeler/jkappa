@@ -2,6 +2,7 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.*;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.interfaces.*;
@@ -34,7 +35,7 @@ public class KappaSystemBuilder {
 		}
 
 		// rules
-		List<IRule> rules = (new RuleBuilder(kappaSystem)).build(model.getRules());
+		List<CRule> rules = (new RuleBuilder(kappaSystem)).build(model.getRules());
 		kappaSystem.setRules(rules);
 
 		if ((kappaSystem.getStories() == null)

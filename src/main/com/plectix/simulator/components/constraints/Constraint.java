@@ -1,12 +1,13 @@
 package com.plectix.simulator.components.constraints;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IConstraint;
-import com.plectix.simulator.interfaces.IRule;
+
 
 /*package*/ abstract class Constraint implements IConstraint {
 
-	public boolean acceptRule(IRule rule, IConnectedComponent cc1, IConnectedComponent cc2) {
+	public boolean acceptRule(CRule rule, IConnectedComponent cc1, IConnectedComponent cc2) {
 		if (!ruleIsMatching(rule)) {
 			return false;
 		} else {
@@ -14,7 +15,7 @@ import com.plectix.simulator.interfaces.IRule;
 		}
 	}
 
-	public abstract boolean ruleIsMatching(IRule rule);
+	public abstract boolean ruleIsMatching(CRule rule);
 
-	protected abstract boolean acceptMatchingRule(IRule rule, IConnectedComponent cc1, IConnectedComponent cc2);
+	protected abstract boolean acceptMatchingRule(CRule rule, IConnectedComponent cc1, IConnectedComponent cc2);
 }

@@ -137,7 +137,7 @@ public class KappaSystemParser {
 //				!= SimulationType.GENERATE_MAP)
 //			createSimData(CREATE_INIT);
 //		
-//		List<IRule> rules = createRules(myKappaFile.getRules());
+//		List<CRule> rules = createRules(myKappaFile.getRules());
 //		simulationData.getKappaSystem().setRules(rules);
 //
 //		if ((simulationData.getKappaSystem().getStories() == null)
@@ -243,7 +243,7 @@ public class KappaSystemParser {
 //					st = st.substring(index + 2).trim();
 //
 //					this.perturbationRate = -1.;
-//					IRule rule = null;
+//					CRule rule = null;
 //					if (!checkOnce(st, perturbationStr, perturbations,
 //							pertubationID, time, greater)) {
 //						rule = getGreaterRule(st, perturbationStr,
@@ -274,7 +274,7 @@ public class KappaSystemParser {
 //					checkString("do", st, perturbationStr);
 //					String pertStr = st.substring(st.indexOf("do") + 2);
 //					this.perturbationRate = -1.;
-//					IRule rule = getGreaterRule(pertStr, perturbationStr,
+//					CRule rule = getGreaterRule(pertStr, perturbationStr,
 //							rateExpression);
 //
 //					st = st.substring(0, st.indexOf("do")).trim();
@@ -415,14 +415,14 @@ public class KappaSystemParser {
 //			checkString("'", item, perturbationStr);
 //			item = item.substring(item.indexOf("'") + 1).trim();
 //
-//			IRule curRule = getRuleWithEqualName(getName(item));
+//			CRule curRule = getRuleWithEqualName(getName(item));
 //
 //			rateExpression.add(new RateExpression(curRule, curValue));
 //		}
 //		return freeTerm;
 //	}
 //
-//	private final IRule getGreaterRule(String st, KappaFileLine perturbationStr,
+//	private final CRule getGreaterRule(String st, KappaFileLine perturbationStr,
 //			List<IPerturbationExpression> rateExpression)
 //			throws ParseErrorException, DocumentFormatException {
 //		boolean fail = false;
@@ -469,15 +469,15 @@ public class KappaSystemParser {
 //			List<IPerturbationExpression> rateExpression, String item)
 //			throws ParseErrorException, DocumentFormatException {
 //		item = item.substring(item.indexOf("'") + 1).trim();
-//		IRule curRule = getRuleWithEqualName(getName(item));
+//		CRule curRule = getRuleWithEqualName(getName(item));
 //		if (curRule != null) {
 //			rateExpression.add(new RateExpression(curRule, 1.0));
 //		}
 //	}
 //
-//	private final IRule getRuleWithEqualName(String ruleName)
+//	private final CRule getRuleWithEqualName(String ruleName)
 //			throws ParseErrorException, DocumentFormatException {
-//		for (IRule rule : simulationData.getKappaSystem().getRules())
+//		for (CRule rule : simulationData.getKappaSystem().getRules())
 //			if ((rule.getName() != null) && (rule.getName().equals(ruleName))) {
 //				return rule;
 //			}
@@ -525,15 +525,15 @@ public class KappaSystemParser {
 //
 //	private int ruleID = 0;
 //
-//	public final List<IRule> createRules() throws ParseErrorException, DocumentFormatException {
+//	public final List<CRule> createRules() throws ParseErrorException, DocumentFormatException {
 //		return createRules(myKappaFile.getRules());
 //	}
 //	
 //	// historical issues =)
-//	public final List<IRule> createRules(KappaFileParagraph rulesParagraph)
+//	public final List<CRule> createRules(KappaFileParagraph rulesParagraph)
 //			throws ParseErrorException, DocumentFormatException {
 //
-//		List<IRule> rules = new ArrayList<IRule>();
+//		List<CRule> rules = new ArrayList<CRule>();
 //		for (KappaFileLine ruleLine : rulesParagraph.getLines()) {
 //
 //			String rulesStr = ruleLine.getLine();

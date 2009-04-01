@@ -7,7 +7,7 @@ import com.plectix.simulator.components.perturbations.CPerturbationType;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.ISite;
 
 public class PerturbationReader {
@@ -44,7 +44,7 @@ public class PerturbationReader {
 		case ONCE: {
 			expression.append(timeCondition(perturbation));
 			expression.append(" $");
-			boolean isAdd = perturbation.getPerturbationRule().isLHSisEmpty();
+			boolean isAdd = perturbation.getPerturbationRule().leftHandSideIsEmpty();
 			expression.append((isAdd)? "ADDONCE ":"DELETEONCE ");
 			List<IConnectedComponent> listCC = (isAdd)? perturbation.getPerturbationRule().getRightHandSide():
 				perturbation.getPerturbationRule().getLeftHandSide();

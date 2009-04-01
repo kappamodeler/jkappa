@@ -6,17 +6,17 @@ import java.util.*;
 import com.plectix.simulator.interfaces.*;
 
 public final class ObservablesRuleComponent implements IObservablesRuleComponent, Serializable {
-	private final IRule rule;
+	private final CRule rule;
 	private final int nameID;
 	private final List<Long> countList = new ArrayList<Long>();
 	private long lastInjectionsQuantity = -1;
 	
-	public ObservablesRuleComponent(IRule rule, int nameID) {
+	public ObservablesRuleComponent(CRule rule, int nameID) {
 		this.rule = rule;
 		this.nameID = nameID;
 	}
 	
-	public final IRule getRule() {
+	public final CRule getRule() {
 		return rule;
 	}
 
@@ -56,7 +56,7 @@ public final class ObservablesRuleComponent implements IObservablesRuleComponent
 	}
 
 	public double getSize(IObservables obs) {
-		return rule.getRuleRate();
+		return rule.getRate();
 	}
 
 	public String getItem(int index, IObservables obs) {

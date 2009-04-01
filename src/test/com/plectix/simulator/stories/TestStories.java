@@ -13,8 +13,9 @@ import java.util.TreeMap;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.stories.CStoryTrees;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.util.Failer;
 
 public class TestStories extends InitStoriesTests {
@@ -28,7 +29,7 @@ public class TestStories extends InitStoriesTests {
 
 	private String fileName = "";
 
-	private static List<IRule> rules;
+	private static List<CRule> rules;
 
 	private List<TreeMap<Integer, List<Integer>>> myTraceList;
 	private TreeMap<Integer, List<Integer>> trace;
@@ -83,7 +84,7 @@ public class TestStories extends InitStoriesTests {
 
 	private String getRuleNameById(Integer key) {
 		Integer ruleId = traceRule.get(key);
-		for (IRule rule : rules) {
+		for (CRule rule : rules) {
 			if (rule.getRuleID() == ruleId)
 				return rule.getName();
 		}

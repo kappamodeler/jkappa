@@ -10,10 +10,11 @@ import org.junit.Before;
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.ISite;
 import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.simulator.SimulationUtils;
@@ -25,7 +26,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	private Simulator mySimulator;
 	private final Logger LOGGER = Logger.getLogger(Simulator.class);
 	private double currentTime = 0.;
-	private IRule myActiveRule;
+	private CRule myActiveRule;
 
 	private String myTestFileName = "";
 
@@ -54,11 +55,11 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		init();
 	}
 
-	public IRule getActiveRule() {
+	public CRule getActiveRule() {
 		return myActiveRule;
 	}
 
-	public List<IRule> getRules() {
+	public List<CRule> getRules() {
 		return mySimulator.getSimulationData().getKappaSystem().getRules();
 	}
 
@@ -115,6 +116,6 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	}
 
 	public static boolean lhsIsEmpty(List<IConnectedComponent> lh) {
-		return (lh.size() == 1) && (lh.contains(CRule.EMPTY_LHS_CC));
+		return (lh.size() == 1) && (lh.contains(CConnectedComponent.EMPTY));
 	}
 }

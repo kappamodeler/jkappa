@@ -6,7 +6,8 @@ import org.junit.Before;
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.Test;
-import com.plectix.simulator.interfaces.IRule;
+
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.simulator.Simulator;
 
 public abstract class TestPerturbation extends DirectoryTestsRunner implements Test {
@@ -39,8 +40,8 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements T
 	public abstract String getPrefixFileName();
 	public abstract void init();
 	
-	public IRule getRuleByName(String name) {
-		for (IRule rule : mySimulator.getSimulationData().getKappaSystem().getRules()) {
+	public CRule getRuleByName(String name) {
+		for (CRule rule : mySimulator.getSimulationData().getKappaSystem().getRules()) {
 			if (name.equals(rule.getName())) {
 				return rule;
 			}

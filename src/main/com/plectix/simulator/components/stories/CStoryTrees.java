@@ -8,12 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.IStates;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 import com.plectix.simulator.simulator.SimulationArguments;
+import com.plectix.simulator.simulator.SimulationData;
 
 public final class CStoryTrees {
 	public static final byte IS_CAUSE = 2;
@@ -1175,8 +1177,8 @@ public final class CStoryTrees {
 			CNetworkNotation nn = networkNotationsList.get(traceIDToIndex.get(
 					traceID).intValue());
 			this.traceIDToRuleID.put(traceID, nn.getRule().getRuleID());
-			IRule rule = nn.getRule();
-			traceIDToData.put(traceID, rule.getData(isOcamlStyleObsName));
+			CRule rule = nn.getRule();
+			traceIDToData.put(traceID, SimulationData.getData(rule, isOcamlStyleObsName));
 			traceIDToText.put(traceID, rule.getName());
 		}
 	}

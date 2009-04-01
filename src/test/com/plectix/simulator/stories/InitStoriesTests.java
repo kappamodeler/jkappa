@@ -10,9 +10,10 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.components.stories.CStoryTrees;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
@@ -85,7 +86,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 		return storyTrees;
 	}
 
-	public List<IRule> getRules() {
+	public List<CRule> getRules() {
 		return mySimulator.getSimulationData().getKappaSystem().getRules();
 	}
 

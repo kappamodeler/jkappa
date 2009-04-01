@@ -17,36 +17,33 @@ import com.plectix.simulator.interfaces.IAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.IRandom;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.ISite;
 
 public class CConnectedComponent implements IConnectedComponent, Serializable {
-
-	public static final byte EMPTY = 0;
-
-	private List<IAgent> agentList;
+	private static final long serialVersionUID = -2233812055480299501L;
+	
+	public static CConnectedComponent EMPTY = new CConnectedComponent();
+	
+	private final List<IAgent> agentList;
 	private Map<Integer, List<CSpanningTree>> spanningTreeMap;
 	private List<IAgent> agentFromSolutionForRHS;
 	private List<IAgentLink> agentLinkList;
-	private Map<Integer, IInjection> injectionsList;
+	private final Map<Integer, IInjection> injectionsList;
 	private List<ISite> injectedSites;
 	private int maxId = -1;
-	private IRule rule;
-	private boolean isEmpty = false;
+	private CRule rule;
 	private SuperSubstance mySubstance = null;
-	
-	public CConnectedComponent(byte empty) {
-		switch (empty) {
-		case EMPTY: {
-			agentList = new ArrayList<IAgent>();
-			agentList.add(new CAgent(CAgent.EMPTY, CAgent.EMPTY));
-			injectionsList = new TreeMap<Integer, IInjection>();
-			addInjection(CInjection.EMPTY_INJECTION, 0);
-			agentFromSolutionForRHS = new ArrayList<IAgent>();
-			isEmpty = true;
-			break;
-		}
-		}
+
+	/**
+	 * Empty ConnectedComponent constructor
+	 */
+	private CConnectedComponent() {
+		agentList = new ArrayList<IAgent>();
+		agentList.add(new CAgent(CAgent.EMPTY, CAgent.EMPTY));
+		injectionsList = new TreeMap<Integer, IInjection>();
+		addInjection(CInjection.EMPTY_INJECTION, 0);
+		agentFromSolutionForRHS = new ArrayList<IAgent>();
 	}
 
 	public CConnectedComponent(List<IAgent> connectedAgents) {
@@ -55,14 +52,18 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		agentFromSolutionForRHS = new ArrayList<IAgent>();
 	}
 
+	public boolean isEmpty() {
+		return this == EMPTY;
+	}
+	
 	public void setSuperSubstance(SuperSubstance substance) {
 		mySubstance = substance;
 	}
-	
+
 	public SuperSubstance getSubstance() {
 		return mySubstance;
 	}
-	
+
 	private final void addInjection(IInjection inj, int id) {
 		if (inj != null) {
 			maxId = Math.max(maxId, id);
@@ -294,11 +295,11 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return true;
 	}
 
-	public final IRule getRule() {
+	public final CRule getRule() {
 		return rule;
 	}
 
-	public final void setRule(IRule rule) {
+	public final void setRule(CRule rule) {
 		this.rule = rule;
 	}
 
@@ -324,21 +325,19 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		Collections.sort(temp);
 		return Collections.unmodifiableList(temp);
 	}
-	
-	//-----------------------hash, toString, equals-----------------------------
-	
+
+	// -----------------------hash, toString,
+	// equals-----------------------------
+
 	// TODO we can do it better! =)
 	/**
-	 * this methods takes agentNames in alphabetical order as a String, 
-	 * then allsiteNames in this order as String too 
-	 * and then concatenates these Strings.
+	 * this methods takes agentNames in alphabetical order as a String, then
+	 * allsiteNames in this order as String too and then concatenates these
+	 * Strings.
 	 */
 	public String getHash() {
-		if (isEmpty) {
-			return "EMPTY";
-		}
 		List<String> siteNames = new ArrayList<String>();
-		// TreeMap means this collection sorted by key anytime 
+		// TreeMap means this collection sorted by key anytime
 		Map<String, String> agentStrings = new TreeMap<String, String>();
 		for (IAgent agent : agentList) {
 			StringBuffer sb = new StringBuffer();
@@ -355,29 +354,29 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		for (String key : agentStrings.keySet()) {
 			sb.append(key + agentStrings.get(key));
 		}
-		
-		//TODO write connections here
+
+		// TODO write connections here
 		return sb.toString();
 	}
-//	
-//	@Override
-//	public boolean equals(Object obj) {
-//		if (obj == null) {
-//			return false;
-//		}
-//		if (!(obj instanceof IConnectedComponent)) { 
-//			return false;
-//		}
-//		if (this == obj) {
-//			return true;
-//		}
-//		
-//		IConnectedComponent arg = (IConnectedComponent) obj;
-//		if (!this.getHash().equals(arg.getHash())) {
-//			return false;
-//		}
-//		//TODO check
-//		IAgent agent = arg.getAgents().get(0);
-//		return this.isAutomorphism(agent);
-//	}
+	//	
+	// @Override
+	// public boolean equals(Object obj) {
+	// if (obj == null) {
+	// return false;
+	// }
+	// if (!(obj instanceof IConnectedComponent)) {
+	// return false;
+	// }
+	// if (this == obj) {
+	// return true;
+	// }
+	//		
+	// IConnectedComponent arg = (IConnectedComponent) obj;
+	// if (!this.getHash().equals(arg.getHash())) {
+	// return false;
+	// }
+	// //TODO check
+	// IAgent agent = arg.getAgents().get(0);
+	// return this.isAutomorphism(agent);
+	// }
 }

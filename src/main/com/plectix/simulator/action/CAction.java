@@ -76,7 +76,7 @@ import com.plectix.simulator.interfaces.*;
 	protected final int getAgentIdInCCBySideId(IAgent toAgent2) {
 		for (IConnectedComponent cc : myRule.getLeftHandSide())
 			for (IAgent agentL : cc.getAgents())
-				if (agentL.getIdInRuleSide() == toAgent2.getIdInRuleSide()) {
+				if (agentL.getIdInRuleHandside() == toAgent2.getIdInRuleHandside()) {
 					if (leftConnectedComponent == null)
 						leftConnectedComponent = cc;
 					return agentL.getIdInConnectedComponent();
@@ -147,8 +147,8 @@ import com.plectix.simulator.interfaces.*;
 			ISite rConnectSite = (ISite) toSite.getLinkState().getSite();
 			if (lConnectSite == null || rConnectSite == null)
 				continue;
-			if ((lConnectSite.getAgentLink().getIdInRuleSide() == rConnectSite
-					.getAgentLink().getIdInRuleSide())
+			if ((lConnectSite.getAgentLink().getIdInRuleHandside() == rConnectSite
+					.getAgentLink().getIdInRuleHandside())
 					&& (lConnectSite.equalz(rConnectSite)))
 				continue;
 			list.add(new CBreakAction(myRule, fromSite, toSite,

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.*;
 
@@ -24,7 +25,7 @@ public final class CPerturbation implements Serializable{
 	private List<IPerturbationExpression> parametersLHS;
 	private double perturbationRate;
 	private double ruleRate;
-	private IRule rule;
+	private CRule rule;
 	private int perturbationID;
 	private boolean greater = true;
 	private boolean isDO = false;
@@ -32,14 +33,14 @@ public final class CPerturbation implements Serializable{
 
 	// time rate
 	public CPerturbation(int perturbationID, double time, CPerturbationType type,
-			double perturbationRate, IRule rule, boolean greater,
+			double perturbationRate, CRule rule, boolean greater,
 			List<IPerturbationExpression> rateParameters) {
 		this.perturbationID = perturbationID;
 		this.timeCondition = time;
 		this.type = type;
 		this.perturbationRate = perturbationRate;
 		this.rule = rule;
-		this.ruleRate = rule.getRuleRate();
+		this.ruleRate = rule.getRate();
 		this.greater = greater;
 		this.parametersRHS = rateParameters;
 	}
@@ -52,14 +53,14 @@ public final class CPerturbation implements Serializable{
 		this.timeCondition = time;
 		this.type = type;
 		this.rule = rule;
-		this.ruleRate = rule.getRuleRate();
+		this.ruleRate = rule.getRate();
 		this.greater = greater;
 	}
 
 	// species rate
 	public CPerturbation(int perturbationID, List<IObservablesComponent> obsID,
 			List<Double> parameters, int obsNameID, CPerturbationType type,
-			double perturbationRate, IRule rule, boolean greater,
+			double perturbationRate, CRule rule, boolean greater,
 			List<IPerturbationExpression> rateParameters, IObservables observables) {
 		this.perturbationID = perturbationID;
 		this.obsNameID = obsNameID;
@@ -68,7 +69,7 @@ public final class CPerturbation implements Serializable{
 		this.type = type;
 		this.perturbationRate = perturbationRate;
 		this.rule = rule;
-		this.ruleRate = rule.getRuleRate();
+		this.ruleRate = rule.getRate();
 		this.greater = greater;
 		this.parametersRHS = rateParameters;
 	}
@@ -81,7 +82,7 @@ public final class CPerturbation implements Serializable{
 		return this.parametersLHS;
 	}
 
-	public final IRule getPerturbationRule() {
+	public final CRule getPerturbationRule() {
 		return this.rule;
 	}
 

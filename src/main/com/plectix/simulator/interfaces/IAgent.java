@@ -29,7 +29,7 @@ public interface IAgent extends Comparable<IAgent> {
 
 	public ISite getEmptySite();
 
-	public int getIdInRuleSide();
+	public int getIdInRuleHandside();
 
 	public void setIdInRuleSide(int counter);
 

@@ -10,16 +10,17 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.util.CComponentComparator;
 import com.plectix.simulator.util.Converter;
 
 @RunWith(value = Parameterized.class)
 public class RunActionTest extends InitTestAction {
-	private IRule activeRule;
+	private CRule activeRule;
 	private static String FilePath = "test.data/actions/";
 
 	@Parameters

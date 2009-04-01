@@ -12,8 +12,9 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.util.Converter;
 import com.plectix.simulator.util.Failer;
@@ -27,7 +28,7 @@ public class TestParseResult extends DirectoryTestsRunner {
 			+ "rules/";
 	private String myTestFileName;
 	private Simulator mySimulator;
-	private IRule myRule;
+	private CRule myRule;
 	private static final Map<String, RuleStructure> myRulesCCData = (new RuleCCDataParser(
 			myTestFileNamePrefix + "RulesCCData")).parse();
 	private static final Map<String, Integer> myInitQuantData = (new QuantityDataParser(

@@ -9,7 +9,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservables;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationUtils;
 
@@ -44,8 +44,8 @@ public class CObservables implements IObservables, Serializable {
 	}
 
 	public final boolean addRulesName(String name, int obsRuleNameID,
-			List<IRule> rules) {
-		for (IRule rule : rules) {
+			List<CRule> rules) {
+		for (CRule rule : rules) {
 			if ((rule.getName() != null) && (rule.getName().equals(name))) {
 				ObservablesRuleComponent obsRC = new ObservablesRuleComponent(
 						rule, obsRuleNameID);

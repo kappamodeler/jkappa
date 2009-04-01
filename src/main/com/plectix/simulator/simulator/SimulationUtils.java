@@ -17,7 +17,6 @@ import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ILiftElement;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
-import com.plectix.simulator.interfaces.IRule;
 import com.plectix.simulator.interfaces.ISite;
 
 public class SimulationUtils {
@@ -45,7 +44,7 @@ public class SimulationUtils {
 			length = length + cc.getAgents().size();
 		int index = 1;
 		for (IConnectedComponent cc : ccList) {
-			if (cc == CRule.EMPTY_LHS_CC)
+			if (cc.isEmpty())
 				return line;
 			line += printPartRule(cc, indexLink, isOcamlStyleObsName);
 			if (index < ccList.size())
@@ -65,7 +64,7 @@ public class SimulationUtils {
 		length = cc.getAgents().size();
 
 		int j = 1;
-		if (cc == CRule.EMPTY_LHS_CC)
+		if (cc.isEmpty())
 			return line;
 
 		List<IAgent> sortedAgents = cc.getAgentsSortedByIdInRule();
@@ -89,9 +88,9 @@ public class SimulationUtils {
 					if (site.getLinkState().getStatusLinkRank() == CLinkRank.SEMI_LINK) {
 						siteStr = siteStr + "!_";
 						// line = line + "!_";
-					} else if (site.getAgentLink().getIdInRuleSide() < ((ISite) site
+					} else if (site.getAgentLink().getIdInRuleHandside() < ((ISite) site
 							.getLinkState().getSite()).getAgentLink()
-							.getIdInRuleSide()) {
+							.getIdInRuleHandside()) {
 						((ISite) site.getLinkState().getSite()).getLinkState()
 								.setLinkStateID(index[0]);
 						siteStr = siteStr + "!" + index[0];
@@ -229,14 +228,14 @@ public class SimulationUtils {
 		agents.remove(i);
 	}
 
-//	public static final IRule buildRule(List<IAgent> left, List<IAgent> right,
+//	public static final CRule buildRule(List<IAgent> left, List<IAgent> right,
 //			String name, ConstraintData activity, int ruleID, boolean isStorify) {
 //		return new CRule(buildConnectedComponents(left),
 //				buildConnectedComponents(right), name, activity, ruleID,
 //				isStorify);
 //	}
 	
-	public static final IRule buildRule(List<IAgent> left, List<IAgent> right,
+	public static final CRule buildRule(List<IAgent> left, List<IAgent> right,
 			String name, double activity, int ruleID, boolean isStorify) {
 		return new CRule(buildConnectedComponents(left),
 				buildConnectedComponents(right), name, activity, ruleID,
@@ -288,7 +287,7 @@ public class SimulationUtils {
 		}
 	}
 	
-	public final static void doNegativeUpdateForContactMap(List<IInjection> injectionsList, IRule rule) {
+	public final static void doNegativeUpdateForContactMap(List<IInjection> injectionsList, CRule rule) {
 		for (IInjection injection : injectionsList) {
 			if (injection != CInjection.EMPTY_INJECTION) {
 				for (ISite site : injection.getChangedSites()) {
@@ -313,7 +312,7 @@ public class SimulationUtils {
 	}
 
 	public final static List<IAgent> doNegativeUpdateForDeletedAgents(
-			IRule rule, List<IInjection> injectionsList) {
+			CRule rule, List<IInjection> injectionsList) {
 		List<IAgent> freeAgents = new ArrayList<IAgent>();
 		for (IInjection injection : injectionsList) {
 			for (ISite checkedSite : rule.getSitesConnectedWithDeleted()) {
@@ -369,9 +368,9 @@ public class SimulationUtils {
 		return st;
 	}
 
-	public final static void positiveUpdate(List<IRule> rulesList,
-			List<IObservablesConnectedComponent> list, IRule rule) {
-		for (IRule rules : rulesList) {
+	public final static void positiveUpdate(List<CRule> rulesList,
+			List<IObservablesConnectedComponent> list, CRule rule) {
+		for (CRule rules : rulesList) {
 			// if(rules!=rule)
 			for (IConnectedComponent cc : rules.getLeftHandSide()) {
 				cc.doPositiveUpdate(rule.getRightHandSide());
@@ -383,16 +382,16 @@ public class SimulationUtils {
 		}
 	}
 
-	public final static void positiveUpdateForContactMap(List<IRule> rulesList,
-			IRule rule, List<IRule> invokedRulesList) {
-		for (IRule rules : rulesList) {
+	public final static void positiveUpdateForContactMap(List<CRule> rulesList,
+			CRule rule, List<CRule> invokedRulesList) {
+		for (CRule rules : rulesList) {
 		//	if (rule != rules)
 			int g=0;
 				for (IConnectedComponent cc : rules.getLeftHandSide()) {
 					cc.doPositiveUpdate(rule.getRightHandSide());
 				}
 			
-			if (rules.isInvokedRule()
+			if (rules.canBeApplied()
 					&& !rules.includedInCollection(invokedRulesList)) {
 				invokedRulesList.add(rules);
 			}

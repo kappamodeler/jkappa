@@ -2,6 +2,7 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.List;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.abstractmodel.observables.*;
 import com.plectix.simulator.parser.util.IdGenerator;
@@ -17,7 +18,7 @@ public class ObservablesBuilder {
 		mySubstanceBuilder = new SubstanceBuilder(system);
 	}
 	
-	public IObservables build(AbstractObservables arg, List<IRule> rules) {
+	public IObservables build(AbstractObservables arg, List<CRule> rules) {
 		IObservables observables = myExistingObservables;
 		
 		for (ObservableComponentLineData componentData : arg.getComponents()) {

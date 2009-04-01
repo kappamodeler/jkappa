@@ -2,12 +2,13 @@ package com.plectix.simulator.components.contactMap;
 
 import java.util.*;
 
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractRule;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-import com.plectix.simulator.interfaces.IRule;
+
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.ISite;
 
@@ -17,20 +18,20 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule {
 	private List<IContactMapAbstractAgent> lhsAgents;
 	private List<IContactMapAbstractAgent> rhsAgents;
 	private CContactMapAbstractAction abstractAction;
-	private IRule rule;
+	private CRule rule;
 	private int[] lastMaxIndex;
 
-	public IRule getRule() {
+	public CRule getRule() {
 		return rule;
 	}
 
 	public CContactMapAbstractRule(CContactMapAbstractSolution solution,
-			IRule rule) {
+			CRule rule) {
 		this.solution = solution;
 		this.rule = rule;
 	}
 
-	public CContactMapAbstractRule(IRule rule) {
+	public CContactMapAbstractRule(CRule rule) {
 		this.rule = rule;
 		this.lhsAgents = initListSites(rule.getLeftHandSide());
 		this.rhsAgents = initListSites(rule.getRightHandSide());
@@ -88,7 +89,7 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule {
 							s, newAgent);
 					newAgent.addSite(newSite);
 				}
-				map.put(a.getIdInRuleSide(), newAgent);
+				map.put(a.getIdInRuleHandside(), newAgent);
 			}
 
 		List<Integer> indexList = new ArrayList<Integer>();
