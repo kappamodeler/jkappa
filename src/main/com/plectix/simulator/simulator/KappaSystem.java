@@ -25,7 +25,7 @@ import com.plectix.simulator.interfaces.IAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IInjection;
 import com.plectix.simulator.interfaces.ILinkState;
-import com.plectix.simulator.interfaces.IObservables;
+
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 
 import com.plectix.simulator.interfaces.ISite;
@@ -39,7 +39,7 @@ public class KappaSystem {
 	private List<CRule> rules = null;
 	private CStories stories = null;
 	private List<CPerturbation> perturbations = null;
-	private IObservables observables = new CObservables();
+	private CObservables observables = new CObservables();
 	private ISolution solution;// = new CSolution(); // soup of initial
 	// components
 	private CContactMap contactMap = new CContactMap();
@@ -62,7 +62,7 @@ public class KappaSystem {
 						.getSerializationFileName()));
 				solution = (ISolution) ois.readObject();
 				rules = (List<CRule>) ois.readObject();
-				observables = (IObservables) ois.readObject();
+				observables = (CObservables) ois.readObject();
 				perturbations = (List<CPerturbation>) ois.readObject();
 				mySimulationData.setSnapshotTimes((List<Double>) ois
 						.readObject());
@@ -265,7 +265,7 @@ public class KappaSystem {
 		return solution;
 	}
 
-	public final IObservables getObservables() {
+	public final CObservables getObservables() {
 		return observables;
 	}
 
@@ -303,7 +303,7 @@ public class KappaSystem {
 		this.solution = solution;
 	}
 
-	public void setObservables(IObservables observables) {
+	public void setObservables(CObservables observables) {
 		this.observables = observables;
 	}
 

@@ -55,11 +55,11 @@ public final class ObservablesRuleComponent implements IObservablesRuleComponent
 		return nameID;
 	}
 
-	public double getSize(IObservables obs) {
+	public double getSize(CObservables obs) {
 		return rule.getRate();
 	}
 
-	public String getItem(int index, IObservables obs) {
+	public String getItem(int index, CObservables obs) {
 		return countList.get(index).toString();
 	}
 
@@ -82,7 +82,7 @@ public final class ObservablesRuleComponent implements IObservablesRuleComponent
 		return true;
 	}
 
-	public long getValue(int index, IObservables obs) {
+	public long getValue(int index, CObservables obs) {
 		return countList.get(index);
 	}
 

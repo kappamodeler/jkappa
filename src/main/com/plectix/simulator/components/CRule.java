@@ -760,7 +760,7 @@ public class CRule implements Serializable {
 	 * This methods check out observable components which are activated by this rule
 	 * @param observables all observable components in current simulation
 	 */
-	public final void initializeActivatedObservablesList(IObservables observables) {
+	public final void initializeActivatedObservablesList(CObservables observables) {
 		activatedObservable = new ArrayList<IObservablesConnectedComponent>();
 		activatedObservableForXMLOutput = new ArrayList<IObservablesConnectedComponent>();
 		for (IObservablesConnectedComponent obsCC : observables
@@ -780,7 +780,7 @@ public class CRule implements Serializable {
 	 * This methods check out observable components which are inhibited by this rule
 	 * @param observables all observable components in current simulation
 	 */
-	public final void initializeInhibitedObservablesList(IObservables observables) {
+	public final void initializeInhibitedObservablesList(CObservables observables) {
 		inhibitedObservable = new ArrayList<IObservablesConnectedComponent>();
 		for (IObservablesConnectedComponent obsCC : observables
 				.getConnectedComponentList()) {

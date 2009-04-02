@@ -2,6 +2,7 @@ package com.plectix.simulator.components.perturbations;
 
 import java.io.Serializable;
 
+import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.*;
 
@@ -31,7 +32,7 @@ public final class RateExpression implements IPerturbationExpression, Serializab
 	// return this.rule.getRuleRate() * this.value;
 	// }
 
-	public final double getMultiplication(IObservables obs) {
+	public final double getMultiplication(CObservables obs) {
 		if (this.rule == null)
 			return this.value;
 		return this.rule.getRate() * this.value;

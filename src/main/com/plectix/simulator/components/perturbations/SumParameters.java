@@ -5,6 +5,7 @@ package com.plectix.simulator.components.perturbations;
 
 import java.io.Serializable;
 
+import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.interfaces.*;
 
 /*package*/ final class SumParameters implements IPerturbationExpression, Serializable {
@@ -41,7 +42,7 @@ import com.plectix.simulator.interfaces.*;
 	// return multiply * this.parameter;
 	// }
 
-	public final double getMultiplication(IObservables obs) {
+	public final double getMultiplication(CObservables obs) {
 		double multiply = 0.;
 		multiply = this.observableID.getSize(obs);
 		return multiply * this.parameter;

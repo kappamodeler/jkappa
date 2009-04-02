@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.*;
@@ -61,10 +62,10 @@ public final class CPerturbation implements Serializable{
 	public CPerturbation(int perturbationID, List<IObservablesComponent> obsID,
 			List<Double> parameters, int obsNameID, CPerturbationType type,
 			double perturbationRate, CRule rule, boolean greater,
-			List<IPerturbationExpression> rateParameters, IObservables observables) {
+			List<IPerturbationExpression> rateParameters, CObservables observables) {
 		this.perturbationID = perturbationID;
 		this.obsNameID = obsNameID;
-		IObservables obs = observables;
+		CObservables obs = observables;
 		fillParameters(obsID, parameters, obs);
 		this.type = type;
 		this.perturbationRate = perturbationRate;
@@ -119,7 +120,7 @@ public final class CPerturbation implements Serializable{
 	}
 
 	private final void fillParameters(List<IObservablesComponent> obsID,
-			List<Double> parameters, IObservables obs) {
+			List<Double> parameters, CObservables obs) {
 		this.parametersLHS = new ArrayList<IPerturbationExpression>();
 		for (int i = 0; i < obsID.size(); i++) {
 
@@ -174,7 +175,7 @@ public final class CPerturbation implements Serializable{
 		}
 	}
 
-	public final boolean checkCondition(IObservables observables) {
+	public final boolean checkCondition(CObservables observables) {
 		double obsSize = observables.getComponentList().get(obsNameID)
 				.getSize(observables);
 
@@ -198,7 +199,7 @@ public final class CPerturbation implements Serializable{
 		return false;
 	}
 
-	private final double calculateSum(IObservables observables) {
+	private final double calculateSum(CObservables observables) {
 		double sum = 0.0;
 		for (int i = 0; i < this.parametersLHS.size() - 1; i++) {
 			sum += this.parametersLHS.get(i).getMultiplication(observables);

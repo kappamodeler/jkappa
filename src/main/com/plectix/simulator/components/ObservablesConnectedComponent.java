@@ -76,7 +76,7 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 		return name;
 	}
 
-	public final double getSize(IObservables obs) {
+	public final double getSize(CObservables obs) {
 		if (this.isUnique())
 			return getInjectionsList().size();
 		long value = 1;
@@ -87,7 +87,7 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 		return value;
 	}
 
-	public final String getItem(int index, IObservables obs) {
+	public final String getItem(int index, CObservables obs) {
 		if (index >= countList.size())
 			index = countList.size() - 1;
 		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
@@ -101,7 +101,7 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 		return unique;
 	}
 
-	public final long getValue(int index, IObservables obs) {
+	public final long getValue(int index, CObservables obs) {
 		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
 			return countList.get(index);
 		} else

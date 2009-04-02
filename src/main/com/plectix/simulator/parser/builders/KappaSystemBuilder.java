@@ -2,6 +2,7 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.*;
 
+import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.stories.CStories;
@@ -48,7 +49,7 @@ public class KappaSystemBuilder {
 			}
 		} else {
 			// observables
-			IObservables observables = (new ObservablesBuilder(myData)).build(model
+			CObservables observables = (new ObservablesBuilder(myData)).build(model
 					.getObservables(), rules);
 			kappaSystem.setObservables(observables);
 		}

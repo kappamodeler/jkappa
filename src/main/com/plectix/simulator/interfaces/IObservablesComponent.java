@@ -1,5 +1,7 @@
 package com.plectix.simulator.interfaces;
 
+import com.plectix.simulator.components.CObservables;
+
 public interface IObservablesComponent {
 //	public final static byte TYPE_CONNECTED_COMPONENT = 0;
 //	public final static byte TYPE_RULE_COMPONENT = 1;
@@ -17,11 +19,11 @@ public interface IObservablesComponent {
 
 //	public byte getType();
 
-	public double getSize(IObservables obs);
+	public double getSize(CObservables obs);
 
-	public String getItem(int index, IObservables obs);
+	public String getItem(int index, CObservables obs);
 
-	public long getValue(int index, IObservables obs);
+	public long getValue(int index, CObservables obs);
 
 	public void updateLastValue();
 	

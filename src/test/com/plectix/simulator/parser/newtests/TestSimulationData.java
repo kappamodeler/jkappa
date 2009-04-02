@@ -4,13 +4,14 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.TreeMap;
 
+import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesRuleComponent;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IObservables;
+
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 
@@ -83,7 +84,7 @@ public class TestSimulationData {
 		sb.append("\n");
 
 		// observables
-		IObservables obs = simulationData.getKappaSystem().getObservables();
+		CObservables obs = simulationData.getKappaSystem().getObservables();
 		for (IObservablesConnectedComponent obsComponent : obs
 				.getConnectedComponentList()) {
 			sb.append("%obs: ");

@@ -38,6 +38,7 @@ import org.w3c.dom.Element;
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.SnapshotElement;
@@ -52,7 +53,7 @@ import com.plectix.simulator.components.stories.CStoryType;
 import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
 import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-import com.plectix.simulator.interfaces.IObservables;
+
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 
@@ -1305,7 +1306,7 @@ public class SimulationData {
 		}
 	}
 
-	private final void appendData(IObservables obs,
+	private final void appendData(CObservables obs,
 			List<IObservablesComponent> list, CDATASection cdata, int index) {
 		String enter = "\n";
 		cdata.appendData(myKappaSystem.getObservables().getCountTimeList().get(
@@ -1318,7 +1319,7 @@ public class SimulationData {
 		cdata.appendData(enter);
 	}
 
-	private final String getItem(IObservables obs, int index,
+	private final String getItem(CObservables obs, int index,
 			IObservablesComponent oCC) {
 		if (oCC.isUnique())
 			return oCC.getItem(index, obs);
