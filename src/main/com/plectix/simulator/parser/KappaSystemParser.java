@@ -344,7 +344,7 @@ public class KappaSystemParser {
 //		}
 //		line = line.substring(indexCount + 1);
 //
-//		List<IAgent> agentList = parseAgent(line);
+//		List<CAgent> agentList = parseAgent(line);
 //		List<IConnectedComponent> ccList = SimulationUtils
 //				.buildConnectedComponents(agentList);
 //
@@ -637,8 +637,8 @@ public class KappaSystemParser {
 //				rhs = result[1];
 //			}
 //
-//			List<IAgent> left = null;
-//			List<IAgent> right = null;
+//			List<CAgent> left = null;
+//			List<CAgent> right = null;
 //			String nameOp = null;
 //			if (name != null)
 //				nameOp = name + "_op";
@@ -891,7 +891,7 @@ public class KappaSystemParser {
 //				case CREATE_INIT: {
 //					if (countInFile > 0) {
 //						line = line.replaceAll("[ 	]", "");
-//						List<IAgent> listAgent = parseAgent(line);
+//						List<CAgent> listAgent = parseAgent(line);
 //						simulationData.getKappaSystem().getSolution().addAgents(listAgent);
 //						if (simulationData.getSimulationArguments()
 //								.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
@@ -975,7 +975,7 @@ public class KappaSystemParser {
 //		return true;
 //	}
 //
-//	public final List<IAgent> parseAgent(String line)
+//	public final List<CAgent> parseAgent(String line)
 //			throws ParseErrorException, DocumentFormatException {
 //		line = line.replaceAll("[ 	]", "");
 //		// if (!testLine(line))
@@ -986,7 +986,7 @@ public class KappaSystemParser {
 //		StringTokenizer agent;
 //		String ccomp;
 //		String site;
-//		List<IAgent> listAgent = new ArrayList<IAgent>();
+//		List<CAgent> listAgent = new ArrayList<CAgent>();
 //		CAgent cagent = null;
 //		while (st.hasMoreTokens()) {
 //			ccomp = st.nextToken().trim();
@@ -1069,12 +1069,12 @@ public class KappaSystemParser {
 //			} else {
 //				try {
 //					int index = Integer.valueOf(connect);
-//					CSite isite = map.get(index);
-//					if (isite != null) {
-//						isite.getLinkState().setSite(csite);
-//						csite.getLinkState().setSite(isite);
+//					CSite CSite = map.get(index);
+//					if (CSite != null) {
+//						CSite.getLinkState().setSite(csite);
+//						csite.getLinkState().setSite(CSite);
 //
-//						isite.setLinkIndex(index);
+//						CSite.setLinkIndex(index);
 //						csite.setLinkIndex(index);
 //						map.remove(index);
 //					} else {

@@ -116,12 +116,12 @@ public class AgentFactory {
 			} else {
 				try {
 					int index = Integer.valueOf(connect);
-					AbstractSite isite = map.get(index);
-					if (isite != null) {
-						isite.getLinkState().setSite(csite);
-						csite.getLinkState().setSite(isite);
+					AbstractSite CSite = map.get(index);
+					if (CSite != null) {
+						CSite.getLinkState().setSite(csite);
+						csite.getLinkState().setSite(CSite);
 
-						isite.setLinkIndex(index);
+						CSite.setLinkIndex(index);
 						csite.setLinkIndex(index);
 						map.remove(index);
 					} else {

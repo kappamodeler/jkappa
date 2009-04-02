@@ -2,3 +2,7 @@ Classes with full javadoc
 
 - CRule
 - CObservables
+- CAgent
+- CSite
+
+other ones are unfinished and need to be checked

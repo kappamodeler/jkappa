@@ -7,7 +7,7 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IContactMapAbstractRule;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
 public class CContactMapChangedSite {
 	// TODO need to be implement one interface with ChangedSite

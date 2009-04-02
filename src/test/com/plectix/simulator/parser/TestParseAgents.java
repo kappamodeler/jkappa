@@ -21,7 +21,7 @@ public class TestParseAgents extends DirectoryTestsRunner {
 	private final SubstanceConstructor mySubstanceConstructor = new SubstanceConstructor();
 	private String myTestFileName;
 	private EasyFileReader myReader;
-	private List<IAgent> myActualAgents = new ArrayList<IAgent>();
+	private List<CAgent> myActualAgents = new ArrayList<CAgent>();
 	private IConnectedComponent myCC;
 	private String myExpectedCC;
 
@@ -62,8 +62,7 @@ public class TestParseAgents extends DirectoryTestsRunner {
 				return false;
 			}
 
-			return (new SiteCollectionsComparator()).areEqual(aa.getSiteMap()
-					.values(), bb.getSiteMap().values());
+			return (new SiteCollectionsComparator()).areEqual(aa.getSites(), bb.getSites());
 		}
 	};
 
@@ -85,7 +84,7 @@ public class TestParseAgents extends DirectoryTestsRunner {
 		return DirectoryTestsRunner.getAllTestFileNames(myTestFileNamePrefix);
 	}
 
-	private ISite parseSite(String line) {
+	private CSite parseSite(String line) {
 		boolean wildcard = line.endsWith("?");
 		boolean bounded = line.contains("!");
 		boolean internal = line.contains("~");
@@ -129,8 +128,8 @@ public class TestParseAgents extends DirectoryTestsRunner {
 		myFailer.loadTestFile(myTestFileName);
 
 		String line = "";
-		IAgent currentAgent;
-		List<ISite> currentSites = new ArrayList<ISite>();
+		CAgent currentAgent;
+		List<CSite> currentSites = new ArrayList<CSite>();
 		String agentName = "";
 
 		while (line != null) {

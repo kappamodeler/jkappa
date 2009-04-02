@@ -4,6 +4,8 @@ import java.util.*;
 
 import org.junit.*;
 
+import com.plectix.simulator.components.CAgentLink;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
@@ -38,9 +40,9 @@ public class TestInjectionsCorrection extends TestInjections {
 		}
 		SortedSet<Long> solutionLinkingForCurrentObs = new TreeSet<Long>();
 
-		Collection<IInjection> injectionsList = c.getInjectionsList();
-		for (IInjection injection : injectionsList) {
-			for (IAgentLink agentLink : injection.getAgentLinkList()) {
+		Collection<CInjection> injectionsList = c.getInjectionsList();
+		for (CInjection injection : injectionsList) {
+			for (CAgentLink agentLink : injection.getAgentLinkList()) {
 				solutionLinkingForCurrentObs
 						.add(agentLink.getAgentTo().getId());
 			}

@@ -2,6 +2,7 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.*;
 
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.abstractmodel.*;
@@ -33,8 +34,8 @@ public class RuleBuilder {
 		int id = rule.getID();
 		boolean isStorify = rule.isStorify();
 		
-		List<IAgent> lhsAgents = mySubstanceBuilder.buildAgents(lhs);
-		List<IAgent> rhsAgents = mySubstanceBuilder.buildAgents(rhs);
+		List<CAgent> lhsAgents = mySubstanceBuilder.buildAgents(lhs);
+		List<CAgent> rhsAgents = mySubstanceBuilder.buildAgents(rhs);
 		CRule newRule = SimulationUtils.buildRule(lhsAgents, rhsAgents, name, rate, id, isStorify);
 		myKappaSystem.generateNextRuleId();
 		return newRule;

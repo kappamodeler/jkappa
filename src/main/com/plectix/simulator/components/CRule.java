@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import com.plectix.simulator.action.*;
 import com.plectix.simulator.components.contactMap.ChangedSite;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
@@ -46,8 +47,8 @@ public class CRule implements Serializable {
 	private final List<IConnectedComponent> rightHandside;
 	private final String ruleName;
 	private final boolean isStorify;
-	private List<ISite> sitesConnectedWithDeleted;
-	private List<ISite> sitesConnectedWithBroken;
+	private List<CSite> sitesConnectedWithDeleted;
+	private List<CSite> sitesConnectedWithBroken;
 	private boolean rHSEqualsLHS;
 
 	private int automorphismNumber = 1;
@@ -62,9 +63,9 @@ public class CRule implements Serializable {
 
 	private int ruleID;
 	private List<IAction> actionList;
-	private Map<IAgent, IAgent> agentAddList;
-	private List<IInjection> injList;
-	private List<ISite> changedActivatedSites;
+	private Map<CAgent, CAgent> agentAddList;
+	private List<CInjection> injList;
+	private List<CSite> changedActivatedSites;
 	private List<ChangedSite> changedInhibitedSites;
 	private List<ChangedSite> fixedSites;
 	private double activity = 0.;
@@ -198,7 +199,7 @@ public class CRule implements Serializable {
 	 * @param isLast is <tt>true</tt> if and only if this application is the latest in current simulation,
 	 * otherwise false 
 	 */
-	public void applyRuleForStories(List<IInjection> injectionList,
+	public void applyRuleForStories(List<CInjection> injectionList,
 			INetworkNotation netNotation, SimulationData simulationData,
 			boolean isLast) {
 		apply(injectionList, netNotation, simulationData, isLast);
@@ -209,7 +210,7 @@ public class CRule implements Serializable {
 	 * @param injectionList list of injections, which point to substances this rule will be applied to
 	 * @param simulationData simulation data
 	 */
-	public void applyRule(List<IInjection> injectionList, SimulationData simulationData) {
+	public void applyRule(List<CInjection> injectionList, SimulationData simulationData) {
 		apply(injectionList, null, simulationData, false);
 	}
 
@@ -220,7 +221,7 @@ public class CRule implements Serializable {
 	 * of the unknown agent
 	 * @return agent in solution, which was added with the latest application of this rule
 	 */
-	public final IAgent getAgentAdd(IAgent rhsAgent) {
+	public final CAgent getAgentAdd(CAgent rhsAgent) {
 		return agentAddList.get(rhsAgent);
 	}
 
@@ -232,9 +233,9 @@ public class CRule implements Serializable {
 		if (agentAddList.size() == 0)
 			return null;
 		List<Long> list = new ArrayList<Long>();
-		Iterator<IAgent> iterator = agentAddList.keySet().iterator();
+		Iterator<CAgent> iterator = agentAddList.keySet().iterator();
 		while (iterator.hasNext()) {
-			IAgent agent = agentAddList.get(iterator.next());
+			CAgent agent = agentAddList.get(iterator.next());
 			list.add(agent.getId());
 		}
 		return list;
@@ -246,7 +247,7 @@ public class CRule implements Serializable {
 	 * @param rhsAgent agent from the right handside of the rule
 	 * @param agentFromSolution agent from solution
 	 */
-	public final void putAgentAdd(IAgent rhsAgent, IAgent agentFromSolution) {
+	public final void putAgentAdd(CAgent rhsAgent, CAgent agentFromSolution) {
 		agentAddList.put(rhsAgent, agentFromSolution);
 	}
 
@@ -258,13 +259,13 @@ public class CRule implements Serializable {
 	 * @param isLast is <tt>true</tt> if and only if this application is the latest in current simulation,
 	 * otherwise false 
 	 */
-	protected final void apply(List<IInjection> injectionList,
+	protected final void apply(List<CInjection> injectionList,
 			INetworkNotation netNotation, SimulationData simulationData,
 			boolean isLast) {
 
-		agentAddList = new HashMap<IAgent, IAgent>();
-		sitesConnectedWithDeleted = new ArrayList<ISite>();
-		sitesConnectedWithBroken = new ArrayList<ISite>();
+		agentAddList = new HashMap<CAgent, CAgent>();
+		sitesConnectedWithDeleted = new ArrayList<CSite>();
+		sitesConnectedWithBroken = new ArrayList<CSite>();
 		this.injList = injectionList;
 		ISolution solution = simulationData.getKappaSystem().getSolution(); 
 		RuleApplicationPool pool = solution.prepareRuleApplicationPool(injectionList);
@@ -296,10 +297,10 @@ public class CRule implements Serializable {
 	 * @param injectionsList list of injections, which point to substances this rule will be applied to
 	 * @param netNotation INetworkNotation object which keep information about rule application
 	 */
-	public final void applyLastRuleForStories(List<IInjection> injectionsList,
+	public final void applyLastRuleForStories(List<CInjection> injectionsList,
 			INetworkNotation netNotation) {
-		for (IInjection inj : injectionsList) {
-			for (ISite site : inj.getSiteList()) {
+		for (CInjection inj : injectionsList) {
+			for (CSite site : inj.getSiteList()) {
 				netNotation.checkLinkForNetworkNotationDel(StateType.BEFORE,
 						site);
 			}
@@ -313,7 +314,7 @@ public class CRule implements Serializable {
 	 * @param site site from solution
 	 */
 	private final void addNewSiteToNetworkNotation(
-			INetworkNotation netNotation, ISite site) {
+			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
 			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
@@ -334,7 +335,7 @@ public class CRule implements Serializable {
 	 * @param netNotation network notation
 	 */
 	private final void addFixedSitesToNetworkNotation(INetworkNotation netNotation) {
-		for (ISite siteInSolution : this.sitesConnectedWithBroken) {
+		for (CSite siteInSolution : this.sitesConnectedWithBroken) {
 			addNewSiteToNetworkNotation(netNotation, siteInSolution);
 			if (!netNotation.changedSitesContains(siteInSolution)) {
 				netNotation.checkLinkToUsedSites(StateType.BEFORE,
@@ -344,7 +345,7 @@ public class CRule implements Serializable {
 			}
 		}
 
-		for (ISite siteInSolution : this.sitesConnectedWithDeleted) {
+		for (CSite siteInSolution : this.sitesConnectedWithDeleted) {
 			addNewSiteToNetworkNotation(netNotation, siteInSolution);
 			if (!netNotation.changedSitesContains(siteInSolution)) {
 				netNotation.checkLinkToUsedSites(StateType.BEFORE,
@@ -356,14 +357,14 @@ public class CRule implements Serializable {
 
 		for (ChangedSite fs : fixedSites) {
 			CSite siteFromRule = (CSite) fs.getSite();
-			IInjection inj = getInjectionBySiteToFromLHS(siteFromRule);
-			IAgent agentToInSolution = inj.getAgentFromImageById(
+			CInjection inj = getInjectionBySiteToFromLHS(siteFromRule);
+			CAgent agentToInSolution = inj.getAgentFromImageById(
 					siteFromRule.getAgentLink().getIdInConnectedComponent());
-			ISite site;
+			CSite site;
 			if (siteFromRule.getNameId() == CSite.NO_INDEX)
-				site = agentToInSolution.getEmptySite();
+				site = agentToInSolution.getDefaultSite();
 			else
-				site = agentToInSolution.getSite(siteFromRule.getNameId());
+				site = agentToInSolution.getSiteById(siteFromRule.getNameId());
 			// add fixed agents
 			netNotation.addFixedSitesFromRules(site, NetworkNotationMode.TEST,
 					fs.isInternalState(), fs.isLinkState());
@@ -379,14 +380,14 @@ public class CRule implements Serializable {
 	 * and needed for initialization
 	 */
 	private final void markRHSAgents() {
-		List<IAgent> rhsAgents = new ArrayList<IAgent>();
-		List<IAgent> lhsAgents = new ArrayList<IAgent>();
+		List<CAgent> rhsAgents = new ArrayList<CAgent>();
+		List<CAgent> lhsAgents = new ArrayList<CAgent>();
 		fixedSites = new ArrayList<ChangedSite>();
 
 		if (leftHandside.get(0).isEmpty()) {
 			int indexAgentRHS = 0;
 			for (IConnectedComponent cc : rightHandside)
-				for (IAgent agent : cc.getAgents())
+				for (CAgent agent : cc.getAgents())
 					if (agent.getIdInRuleHandside() == CAgent.UNMARKED)
 						agent.setIdInRuleSide(indexAgentRHS++);
 			return;
@@ -405,7 +406,7 @@ public class CRule implements Serializable {
 		sortAgentsByIdInRuleHandside(lhsAgents);
 
 		int index = 0;
-		for (IAgent lhsAgent : lhsAgents) {
+		for (CAgent lhsAgent : lhsAgents) {
 			if ((index < rhsAgents.size()) && !(rhsAgents.get(index).equalz(lhsAgent) 
 					&& rhsAgents.get(index).siteMapsAreEqual(lhsAgent))) {
 				break;
@@ -429,9 +430,9 @@ public class CRule implements Serializable {
 	 * @param lhsAgent agent from left handside
 	 * @param rhsAgent agent from right handside
 	 */
-	private final void fillFixedSites(IAgent lhsAgent, IAgent rhsAgent) {
-		for (ISite lhsSite : lhsAgent.getSites()) {
-			ISite rhsSite = rhsAgent.getSite(lhsSite.getNameId());
+	private final void fillFixedSites(CAgent lhsAgent, CAgent rhsAgent) {
+		for (CSite lhsSite : lhsAgent.getSites()) {
+			CSite rhsSite = rhsAgent.getSiteById(lhsSite.getNameId());
 			ChangedSite fixedSite = new ChangedSite(lhsSite);
 			if (lhsSite.getInternalState().equals(rhsSite.getInternalState())
 					&& lhsSite.getInternalState().getNameId() != CSite.NO_INDEX) {
@@ -454,7 +455,7 @@ public class CRule implements Serializable {
 				fixedSites.add(fixedSite);
 		}
 		if (lhsAgent.getSites().size() == 0 && rhsAgent.getSites().size() == 0) {
-			ChangedSite fixedSite = new ChangedSite(lhsAgent.getEmptySite());
+			ChangedSite fixedSite = new ChangedSite(lhsAgent.getDefaultSite());
 			fixedSite.setLinkState(true);
 			fixedSites.add(fixedSite);
 		}
@@ -464,9 +465,9 @@ public class CRule implements Serializable {
 	 * This method sorts agents by id in rule's handside
 	 * @param list list of agents to be sorted
 	 */
-	private final void sortAgentsByIdInRuleHandside(List<IAgent> list) {
-		IAgent left;
-		IAgent right;
+	private final void sortAgentsByIdInRuleHandside(List<CAgent> list) {
+		CAgent left;
+		CAgent right;
 		for (int i = 0; i < list.size() - 1; i++) {
 			for (int j = i + 1; j < list.size(); j++) {
 				left = list.get(i);
@@ -503,10 +504,10 @@ public class CRule implements Serializable {
 	 * @return <tt>true</tt> if there's agents that are included both in right handside 
 	 * of the current rule and in another rules, otherwise <tt>false</tt>
 	 */
-	private boolean hasAgentIntersection(List<IAgent> agentsFromAnotherRules) {
+	private boolean hasAgentIntersection(List<CAgent> agentsFromAnotherRules) {
 		if (rightHandside != null)
 			for (IConnectedComponent cc : rightHandside)
-				for (IAgent agentRight : cc.getAgents())
+				for (CAgent agentRight : cc.getAgents())
 					if (agentRight.includedInCollection(agentsFromAnotherRules))
 						return true;
 		return false;
@@ -518,19 +519,19 @@ public class CRule implements Serializable {
 	 * @return <tt>true</tt> if there's agent from the given list which is activates by this rule,
 	 * otherwise <tt>false</tt>
 	 */
-	private final boolean isActivated(List<IAgent> agentsFromAnotherRules) {
+	private final boolean isActivated(List<CAgent> agentsFromAnotherRules) {
 		if (this.rightHandside == null)
 			return false;
 		int allIntersectsSites = 0;
 		if (!hasAgentIntersection(agentsFromAnotherRules))
 			return false;
 
-		for (IAgent agent : agentsFromAnotherRules) {
+		for (CAgent agent : agentsFromAnotherRules) {
 			if (checkRulesNullAgents(agent))
 				return true;
 
-			for (ISite site : agent.getSites()) {
-				for (ISite changedSite : changedActivatedSites) {
+			for (CSite site : agent.getSites()) {
+				for (CSite changedSite : changedActivatedSites) {
 					if (changedSite.equalz(site)) {
 						allIntersectsSites++;
 						IInternalState currentInternalState = changedSite
@@ -546,8 +547,8 @@ public class CRule implements Serializable {
 				}
 			}
 
-			for (ISite site : agent.getSites()) {
-				for (ISite changedSite : changedActivatedSites) {
+			for (CSite site : agent.getSites()) {
+				for (CSite changedSite : changedActivatedSites) {
 					if (changedSite.equalz(site)) {
 						ILinkState currentLinkState = changedSite
 								.getLinkState();
@@ -595,15 +596,15 @@ public class CRule implements Serializable {
 	 * @return <tt>true</tt> if there's agent from the given list which is inhibited by this rule,
 	 * otherwise <tt>false</tt>
 	 */
-	private final boolean isInhibited(List<IAgent> agentsFromAnotherRules) {
-		for (IAgent agent : agentsFromAnotherRules) {
+	private final boolean isInhibited(List<CAgent> agentsFromAnotherRules) {
+		for (CAgent agent : agentsFromAnotherRules) {
 			if (this.leftHandside != null && checkRulesNullAgents(agent))
 				return true;
 
 			if (!hasAgentIntersection(agentsFromAnotherRules))
 				return false;
 
-			for (ISite site : agent.getSites()) {
+			for (CSite site : agent.getSites()) {
 				for (ChangedSite changedSite : changedInhibitedSites) {
 					if (changedSite.getSite().equalz(site)) {
 						// if (changedSite.getSite().equals(site)) {
@@ -684,10 +685,10 @@ public class CRule implements Serializable {
 	/**
 	 * Util method 
 	 */
-	private final boolean checkRulesNullAgents(IAgent agent) {
+	private final boolean checkRulesNullAgents(CAgent agent) {
 		if (this.rightHandside != null) {
 			for (IConnectedComponent cc : this.getRightHandSide())
-				for (IAgent agentFromRule : cc.getAgents())
+				for (CAgent agentFromRule : cc.getAgents())
 					if (agent.equalz(agentFromRule))
 						if (agentFromRule.getSites().isEmpty() || agent.getSites().isEmpty())
 							return true;
@@ -797,7 +798,7 @@ public class CRule implements Serializable {
 	 * @param internalState
 	 * @param linkState
 	 */
-	public final void addInhibitedChangedSite(ISite fromSite,
+	public final void addInhibitedChangedSite(CSite fromSite,
 			boolean internalState, boolean linkState) {
 		for (ChangedSite inSite : changedInhibitedSites)
 			if (inSite.getSite() == fromSite) {
@@ -832,22 +833,22 @@ public class CRule implements Serializable {
 	 * This methods creates atomic-actions list for this rule
 	 */
 	private final void createActionList() {
-		changedActivatedSites = new ArrayList<ISite>();
+		changedActivatedSites = new ArrayList<CSite>();
 		changedInhibitedSites = new ArrayList<ChangedSite>();
 		actionList = new ArrayList<IAction>();
 
 		if (rightHandside != null)
 			for (IConnectedComponent cc : rightHandside)
-				for (IAgent agentRight : cc.getAgents())
-					for (ISite site : agentRight.getSites()) {
+				for (CAgent agentRight : cc.getAgents())
+					for (CSite site : agentRight.getSites()) {
 						changedActivatedSites.add(site);
 					}
 
 		if (rightHandside == null) {
 			for (IConnectedComponent ccL : leftHandside)
-				for (IAgent lAgent : ccL.getAgents()) {
+				for (CAgent lAgent : ccL.getAgents()) {
 					actionList.add(new CDeleteAction(this, lAgent, ccL));
-					for (ISite site : lAgent.getSites()) {
+					for (CSite site : lAgent.getSites()) {
 						changedInhibitedSites.add(new ChangedSite(site, true, true));
 					}
 				}
@@ -862,7 +863,7 @@ public class CRule implements Serializable {
 		}
 		
 		for (IConnectedComponent ccR : rightHandside) {
-			for (IAgent rAgent : ccR.getAgents()) {
+			for (CAgent rAgent : ccR.getAgents()) {
 				if ((lhsAgentsQuantity == 0) || (rAgent.getIdInRuleHandside() > lhsAgentsQuantity)) {
 					actionList.add(new CAddAction(this, rAgent, ccR));
 					// fillChangedSites(rAgent);
@@ -873,7 +874,7 @@ public class CRule implements Serializable {
 		if (leftHandside.get(0).isEmpty())
 			return;
 		for (IConnectedComponent ccL : leftHandside)
-			for (IAgent lAgent : ccL.getAgents()) {
+			for (CAgent lAgent : ccL.getAgents()) {
 				this.isAgentFromLHSHasFoundInRHS(lAgent, ccL);
 			}
 	}
@@ -883,10 +884,10 @@ public class CRule implements Serializable {
 	 * @param lAgent given agent
 	 * @param ccL connected component which contains lAgent
 	 */
-	private final void isAgentFromLHSHasFoundInRHS(IAgent lAgent,
+	private final void isAgentFromLHSHasFoundInRHS(CAgent lAgent,
 			IConnectedComponent ccL) {
 		for (IConnectedComponent ccR : rightHandside) {
-			for (IAgent rAgent : ccR.getAgents()) {
+			for (CAgent rAgent : ccR.getAgents()) {
 				if (lAgent.getIdInRuleHandside() == rAgent.getIdInRuleHandside()) {
 					IAction newAction = new CDefaultAction(this, lAgent,
 							rAgent, ccL, ccR);
@@ -904,13 +905,13 @@ public class CRule implements Serializable {
 	 * @param ccList list of connected components
 	 * @return list of agents, included in ccList
 	 */
-	public final List<IAgent> getAgentsFromConnectedComponent(
+	public final List<CAgent> getAgentsFromConnectedComponent(
 			List<IConnectedComponent> ccList) {
-		List<IAgent> agentList = new ArrayList<IAgent>();
+		List<CAgent> agentList = new ArrayList<CAgent>();
 		if (ccList.get(0).getAgents().get(0).getIdInRuleHandside() == CAgent.UNMARKED)
 			return agentList;
 		for (IConnectedComponent cc : ccList)
-			for (IAgent agent : cc.getAgents())
+			for (CAgent agent : cc.getAgents())
 				agentList.add(agent);
 
 		return agentList;
@@ -938,7 +939,7 @@ public class CRule implements Serializable {
 	 */
 	public final boolean canBeApplied() {
 		int injCounter = 0;
-		List<IInjection> injList = new ArrayList<IInjection>();
+		List<CInjection> injList = new ArrayList<CInjection>();
 		for (IConnectedComponent cc : this.getLeftHandSide()) {
 			if (!cc.isEmpty() && cc.getInjectionsList().size() != 0) {
 				injCounter++;
@@ -1019,10 +1020,10 @@ public class CRule implements Serializable {
 	 * @param injections list of injections with power = 2
 	 * @return <tt>true</tt> if injections are in clash, otherwise <tt>false</tt>
 	 */
-	public final boolean isClash(List<IInjection> injections) {
+	public final boolean isClash(List<CInjection> injections) {
 		if (injections.size() == 2) {
-			for (ISite siteCC1 : injections.get(0).getSiteList())
-				for (ISite siteCC2 : injections.get(1).getSiteList())
+			for (CSite siteCC1 : injections.get(0).getSiteList())
+				for (CSite siteCC2 : injections.get(1).getSiteList())
 					if (siteCC1.getAgentLink().getId() == siteCC2
 							.getAgentLink().getId())
 						return true;
@@ -1039,7 +1040,7 @@ public class CRule implements Serializable {
 		if (this.leftHandside.size() == 2) {
 			if (this.leftHandside.get(0).getInjectionsList().size() == 1
 					&& this.leftHandside.get(1).getInjectionsList().size() == 1) {
-				List<IInjection> injList = new ArrayList<IInjection>();
+				List<CInjection> injList = new ArrayList<CInjection>();
 				injList.add(this.leftHandside.get(0).getFirstInjection());
 				injList.add(this.leftHandside.get(1).getFirstInjection());
 				return isClash(injList);
@@ -1055,11 +1056,11 @@ public class CRule implements Serializable {
 	 * @return injection from the injection-list from the latest application of this rule,
 	 * which points to connected component, including siteTo
 	 */
-	public final IInjection getInjectionBySiteToFromLHS(ISite siteTo) {
+	public final CInjection getInjectionBySiteToFromLHS(CSite siteTo) {
 		int sideId = siteTo.getAgentLink().getIdInRuleHandside();
 		int i = 0;
 		for (IConnectedComponent cc : leftHandside) {
-			for (IAgent agent : cc.getAgents())
+			for (CAgent agent : cc.getAgents())
 				if (agent.getIdInRuleHandside() == sideId)
 					return injList.get(i);
 			i++;
@@ -1067,23 +1068,23 @@ public class CRule implements Serializable {
 		return null;
 	}
 
-	public final List<ISite> getSitesConnectedWithBroken() {
+	public final List<CSite> getSitesConnectedWithBroken() {
 		return Collections.unmodifiableList(sitesConnectedWithBroken);
 	}
 
-	public final void addSiteConnectedWithBroken(ISite site) {
+	public final void addSiteConnectedWithBroken(CSite site) {
 		sitesConnectedWithBroken.add(site);
 	}
 
-	public final List<ISite> getSitesConnectedWithDeleted() {
+	public final List<CSite> getSitesConnectedWithDeleted() {
 		return Collections.unmodifiableList(sitesConnectedWithDeleted);
 	}
 
-	public final void addSiteConnectedWithDeleted(ISite site) {
+	public final void addSiteConnectedWithDeleted(CSite site) {
 		sitesConnectedWithDeleted.add(site);
 	}
 
-	public final ISite getSiteConnectedWithDeleted(int index) {
+	public final CSite getSiteConnectedWithDeleted(int index) {
 		return sitesConnectedWithDeleted.get(index);
 	}
 

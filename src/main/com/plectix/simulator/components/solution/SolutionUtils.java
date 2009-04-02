@@ -6,12 +6,12 @@ import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.*;
 
 public class SolutionUtils {
-	public static final IConnectedComponent getConnectedComponent(IAgent agent) {
-		List<IAgent> agentList = new ArrayList<IAgent>();
+	public static final IConnectedComponent getConnectedComponent(CAgent agent) {
+		List<CAgent> agentList = new ArrayList<CAgent>();
 		agentList.add(agent);
 		agentList = getAdjacentAgents(agent, agentList);
 		int index = 0;
-		for (IAgent agentIn : agentList) {
+		for (CAgent agentIn : agentList) {
 			agentIn.setIdInRuleSide(index);
 			agentIn.setIdInConnectedComponent(index++);
 		}
@@ -19,12 +19,12 @@ public class SolutionUtils {
 		return new CConnectedComponent(agentList);
 	}
 
-	private static final List<IAgent> getAdjacentAgents(IAgent agent, List<IAgent> agentList2) {
-		List<IAgent> agentList = agentList2;
-		List<IAgent> agentAddList = new ArrayList<IAgent>();
+	private static final List<CAgent> getAdjacentAgents(CAgent agent, List<CAgent> agentList2) {
+		List<CAgent> agentList = agentList2;
+		List<CAgent> agentAddList = new ArrayList<CAgent>();
 
-		for (ISite site : agent.getSites()) {
-			ISite siteLink = site.getLinkState().getSite();
+		for (CSite site : agent.getSites()) {
+			CSite siteLink = site.getLinkState().getSite();
 			if ((site.getLinkState().getSite() != null)
 					&& (!SolutionUtils.agentListContains(agentList, siteLink.getAgentLink()))) {
 				agentAddList.add(siteLink.getAgentLink());
@@ -33,14 +33,14 @@ public class SolutionUtils {
 			}
 		}
 
-		for (IAgent agentFromList : agentAddList)
+		for (CAgent agentFromList : agentAddList)
 			agentList = getAdjacentAgents(agentFromList, agentList);
 
 		return agentList;
 	}
 	
-	public static final boolean agentListContains(List<IAgent> agentList, IAgent agent) {
-		for (IAgent agents : agentList)
+	public static final boolean agentListContains(List<CAgent> agentList, CAgent agent) {
+		for (CAgent agents : agentList)
 			if (agent.getId() == agents.getId())
 				return true;
 		return false;

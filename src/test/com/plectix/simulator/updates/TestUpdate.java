@@ -12,10 +12,11 @@ import com.plectix.simulator.Initializator;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
 
-import com.plectix.simulator.interfaces.ISite;
+
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.Simulator;
@@ -30,7 +31,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 
 	private String myTestFileName = "";
 
-	private List<IInjection> myCurrentInjectionsList;
+	private List<CInjection> myCurrentInjectionsList;
 
 	protected TestUpdate(String fileName) {
 		super();
@@ -63,14 +64,14 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		return mySimulator.getSimulationData().getKappaSystem().getRules();
 	}
 
-	public List<IInjection> getCurrentInjectionsList() {
+	public List<CInjection> getCurrentInjectionsList() {
 		return myCurrentInjectionsList;
 	}
 
-	private boolean isClash(List<IInjection> injections) {
+	private boolean isClash(List<CInjection> injections) {
 		if (injections.size() == 2) {
-			for (ISite siteCC1 : injections.get(0).getSiteList())
-				for (ISite siteCC2 : injections.get(1).getSiteList())
+			for (CSite siteCC1 : injections.get(0).getSiteList())
+				for (CSite siteCC2 : injections.get(1).getSiteList())
 					if (siteCC1.getAgentLink().getId() == siteCC2
 							.getAgentLink().getId())
 						return true;

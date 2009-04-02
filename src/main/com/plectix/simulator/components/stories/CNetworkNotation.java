@@ -12,13 +12,13 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IAgentLink;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
+
 import com.plectix.simulator.interfaces.INetworkNotation;
 
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 import com.plectix.simulator.simulator.SimulationData;
@@ -103,7 +103,7 @@ public class CNetworkNotation implements INetworkNotation {
 
 	// TODO: Make sure that CNetworkNotation works with long event number, not integer
 	public CNetworkNotation(Simulator simulator, int step, CRule rule,
-			List<IInjection> injectionsList, SimulationData data) {
+			List<CInjection> injectionsList, SimulationData data) {
 		initParameters(simulator, step, rule.getRuleID());
 		createAgentsNotation(injectionsList, data, rule);
 	}
@@ -113,40 +113,40 @@ public class CNetworkNotation implements INetworkNotation {
 		this.addedAgentsID = rule.getAgentsAddedID();
 	}
 
-	private void fillIntroMap(IInjection inj, IConnectedComponent ccFromSolution) {
+	private void fillIntroMap(CInjection inj, IConnectedComponent ccFromSolution) {
 		IConnectedComponent ccFromRule = inj.getConnectedComponent();
 		Map<Long, List<Integer>> currentMap = new HashMap<Long, List<Integer>>();
 
-		for (IAgentLink agentLink : inj.getAgentLinkList()) {
-			IAgent agent = agentLink.getAgentTo();
+		for (CAgentLink agentLink : inj.getAgentLinkList()) {
+			CAgent agent = agentLink.getAgentTo();
 			long key = agent.getId();
-			IAgent agentFromRule = ccFromRule.getAgents().get(
+			CAgent agentFromRule = ccFromRule.getAgents().get(
 					agentLink.getIdAgentFrom());
 
 			List<Integer> currentList = new ArrayList<Integer>();
 			currentMap.put(key, currentList);
 
-			for (ISite site : agentFromRule.getSites()) {
+			for (CSite site : agentFromRule.getSites()) {
 				currentList.add(site.getNameId());
 			}
 		}
 
 		ISolution solution = simulator.getSimulationData().getKappaSystem()
 				.getSolution();
-		List<IAgent> newAgentsList = solution.cloneAgentsList(ccFromSolution.getAgents());
+		List<CAgent> newAgentsList = solution.cloneAgentsList(ccFromSolution.getAgents());
 
-		IAgent mainAgent = null;
+		CAgent mainAgent = null;
 
 		for (int i = 0; i < ccFromSolution.getAgents().size(); i++) {
-			IAgent oldAgent = ccFromSolution.getAgents().get(i);
+			CAgent oldAgent = ccFromSolution.getAgents().get(i);
 			List<Integer> sites = currentMap.get(oldAgent.getId());
-			IAgent newAgent = newAgentsList.get(i);
+			CAgent newAgent = newAgentsList.get(i);
 			if (sites != null) {
 				mainAgent = newAgent;
 
-				for (ISite site : newAgent.getSites()) {
+				for (CSite site : newAgent.getSites()) {
 					if (!sites.contains(site.getNameId())) {
-						ISite connectionSite = site.getLinkState().getSite();
+						CSite connectionSite = site.getLinkState().getSite();
 						if (connectionSite != null) {
 							site.getLinkState().setFreeLinkState();
 							connectionSite.getLinkState().setFreeLinkState();
@@ -214,10 +214,10 @@ public class CNetworkNotation implements INetworkNotation {
 		return newNN;
 	}
 
-	private final void createAgentsNotation(List<IInjection> injectionsList,
+	private final void createAgentsNotation(List<CInjection> injectionsList,
 			SimulationData data, CRule rule) {
 		ISolution solution = data.getKappaSystem().getSolution();
-		for (IInjection inj : injectionsList) {
+		for (CInjection inj : injectionsList) {
 			if (inj != CInjection.EMPTY_INJECTION) {
 				IConnectedComponent cc = SolutionUtils.getConnectedComponent(inj
 						.getAgentLinkList().get(0).getAgentTo());
@@ -227,7 +227,7 @@ public class CNetworkNotation implements INetworkNotation {
 
 	}
 
-	public final void checkLinkForNetworkNotation(StateType index, ISite site) {
+	public final void checkLinkForNetworkNotation(StateType index, CSite site) {
 		if (site.getLinkState().getSite() == null)
 			this
 					.addToAgents(site, new CStoriesSiteStates(index, -1, -1),
@@ -241,8 +241,8 @@ public class CNetworkNotation implements INetworkNotation {
 							index);
 	}
 
-	public final boolean changedSitesContains(ISite site) {
-		IAgent agent = site.getAgentLink();
+	public final boolean changedSitesContains(CSite site) {
+		CAgent agent = site.getAgentLink();
 		AgentSites as = changesOfAllUsedSites.get(agent.getId());
 		if (as != null) {
 			IStoriesSiteStates sss = as.getSites().get(site.getNameId());
@@ -252,7 +252,7 @@ public class CNetworkNotation implements INetworkNotation {
 		return false;
 	}
 
-	public final void checkLinkToUsedSites(StateType index, ISite site) {
+	public final void checkLinkToUsedSites(StateType index, CSite site) {
 		if (site.getLinkState().getSite() == null)
 			this.addToAgents(site, new CStoriesSiteStates(index, site
 					.getInternalState().getNameId(), -1, -1), index);
@@ -266,7 +266,7 @@ public class CNetworkNotation implements INetworkNotation {
 							index);
 	}
 
-	public final void checkLinkForNetworkNotationDel(StateType index, ISite site) {
+	public final void checkLinkForNetworkNotationDel(StateType index, CSite site) {
 		if (site.getLinkState().getSite() == null)
 			this.addToAgents(site, new CStoriesSiteStates(index, site
 					.getInternalState().getNameId(), -1, -1), index);
@@ -280,7 +280,7 @@ public class CNetworkNotation implements INetworkNotation {
 							index);
 	}
 
-	public final void addToAgents(ISite site, IStoriesSiteStates siteStates,
+	public final void addToAgents(CSite site, IStoriesSiteStates siteStates,
 			StateType index) {
 
 		Map<Long, AgentSites> map;
@@ -296,7 +296,7 @@ public class CNetworkNotation implements INetworkNotation {
 		}
 	}
 
-	public final void addToAgentsFromRules(ISite site,
+	public final void addToAgentsFromRules(CSite site,
 			NetworkNotationMode agentMode,
 			NetworkNotationMode internalStateMode,
 			NetworkNotationMode linkStateMode) {
@@ -312,7 +312,7 @@ public class CNetworkNotation implements INetworkNotation {
 		}
 	}
 
-	public final void addFixedSitesFromRules(ISite site,
+	public final void addFixedSitesFromRules(CSite site,
 			NetworkNotationMode agentMode, boolean internalState,
 			boolean linkState) {
 		if (site != null) {

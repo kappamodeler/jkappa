@@ -4,13 +4,13 @@ import java.util.*;
 
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractRule;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
 public class CContactMapAbstractRule implements IContactMapAbstractRule {
 
@@ -81,10 +81,10 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule {
 		if (listIn == null)
 			return listOut;
 		for (IConnectedComponent c : listIn)
-			for (IAgent a : c.getAgents()) {
+			for (CAgent a : c.getAgents()) {
 				IContactMapAbstractAgent newAgent = new CContactMapAbstractAgent(
 						a);
-				for (ISite s : a.getSites()) {
+				for (CSite s : a.getSites()) {
 					IContactMapAbstractSite newSite = new CContactMapAbstractSite(
 							s, newAgent);
 					newAgent.addSite(newSite);

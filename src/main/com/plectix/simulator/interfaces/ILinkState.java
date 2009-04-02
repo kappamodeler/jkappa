@@ -2,10 +2,16 @@ package com.plectix.simulator.interfaces;
 
 import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CLinkStatus;
+import com.plectix.simulator.components.CSite;
 
+/**
+ * Interface LinkState.
+ * @author avokhmin
+ *
+ */
 public interface ILinkState {
 
-	public ISite getSite();
+	public CSite getSite();
 
 	public CLinkRank getStatusLinkRank();
 
@@ -15,7 +21,7 @@ public interface ILinkState {
 
 	public boolean isRightBranchStatus();
 
-	public void setSite(ISite site);
+	public void setSite(CSite site);
 
 	public void setStatusLink(CLinkStatus statusLinkFree);
 

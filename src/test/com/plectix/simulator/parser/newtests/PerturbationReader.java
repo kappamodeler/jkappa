@@ -4,11 +4,11 @@ import java.util.List;
 
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.perturbations.CPerturbationType;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
 
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
 public class PerturbationReader {
 
@@ -50,7 +50,7 @@ public class PerturbationReader {
 				perturbation.getPerturbationRule().getLeftHandSide();
 			for (IConnectedComponent cC : listCC) {
 				int i = 0;
-				for (IAgent agent : cC.getAgents()) {
+				for (CAgent agent : cC.getAgents()) {
 					expression.append(agentExpression(agent));
 					if (++i<cC.getAgents().size())
 						expression.append(", ");
@@ -66,11 +66,11 @@ public class PerturbationReader {
 		return expression.toString();
 	}
 
-	private StringBuffer agentExpression(IAgent agent) {
+	private StringBuffer agentExpression(CAgent agent) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(agent.getName() + "(");
 		int i = 0;
-		for (ISite site : agent.getSites()) {
+		for (CSite site : agent.getSites()) {
 			sb.append(site.getName());
 			if (site.getInternalState().getNameId() != -1){
 				sb.append("~" + site.getInternalState().getNameId());

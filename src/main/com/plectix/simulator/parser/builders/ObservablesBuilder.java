@@ -2,6 +2,7 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.List;
 
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.*;
@@ -23,7 +24,7 @@ public class ObservablesBuilder {
 		CObservables observables = myExistingObservables;
 		
 		for (ObservableComponentLineData componentData : arg.getComponents()) {
-			List<IAgent> agentsList = mySubstanceBuilder.buildAgents(componentData.getAgents());
+			List<CAgent> agentsList = mySubstanceBuilder.buildAgents(componentData.getAgents());
 			String obsName = componentData.getName();
 			int id = componentData.getId();
 			

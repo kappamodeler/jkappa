@@ -11,8 +11,9 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
+
 
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.util.CComponentComparator;
@@ -34,7 +35,7 @@ public class RunActionTest extends InitTestAction {
 
 	@Test
 	public void test() {
-		List<IInjection> injectionsList = run();
+		List<CInjection> injectionsList = run();
 		activeRule = getActiveRule();
 		List<IConnectedComponent> lhs = activeRule.getLeftHandSide();
 		SimulationData simulationData = getSimulationData();

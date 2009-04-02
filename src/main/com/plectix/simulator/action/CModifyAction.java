@@ -1,22 +1,23 @@
 package com.plectix.simulator.action;
 
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
+
 import com.plectix.simulator.interfaces.INetworkNotation;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
 
 public class CModifyAction extends CAction {
-	private final ISite mySiteTo;
+	private final CSite mySiteTo;
 	private final int myInternalStateNameId;
 	
-	public CModifyAction(CRule rule, ISite siteFrom, ISite siteTo, IConnectedComponent ccL,
+	public CModifyAction(CRule rule, CSite siteFrom, CSite siteTo, IConnectedComponent ccL,
 			IConnectedComponent ccR) {
 		super(rule, null, null, ccL, ccR);
 		mySiteTo = siteTo;
@@ -25,16 +26,16 @@ public class CModifyAction extends CAction {
 		setType(CActionType.MODIFY);
 	}
 	
-	public final void doAction(RuleApplicationPool pool, IInjection injection, 
+	public final void doAction(RuleApplicationPool pool, CInjection injection, 
 			INetworkNotation netNotation, SimulationData simulationData) {
 		/**
 		 * Done.
 		 */
 		int agentIdInCC = getAgentIdInCCBySideId(mySiteTo.getAgentLink());
-		IAgent agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
+		CAgent agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 
 		// /////////////////////////////////////////////
-		ISite injectedSite = agentFromInSolution.getSite(mySiteTo
+		CSite injectedSite = agentFromInSolution.getSiteById(mySiteTo
 				.getNameId());
 		addToNetworkNotation(StateType.BEFORE,
 				netNotation, injectedSite);
@@ -50,7 +51,7 @@ public class CModifyAction extends CAction {
 	}
 	
 	public final void addRuleSitesToNetworkNotation(boolean existInRule,
-			INetworkNotation netNotation, ISite site) {
+			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
 			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
@@ -63,7 +64,7 @@ public class CModifyAction extends CAction {
 	}
 	
 	protected final void addToNetworkNotation(StateType index,
-			INetworkNotation netNotation, ISite site) {
+			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			netNotation.addToAgents(site, new CStoriesSiteStates(index,
 					site.getInternalState().getNameId()), index);

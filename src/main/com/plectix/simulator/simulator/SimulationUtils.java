@@ -11,13 +11,13 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.ConstraintData;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.injections.CLiftElement;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.ILiftElement;
+
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
 public class SimulationUtils {
 
@@ -67,15 +67,15 @@ public class SimulationUtils {
 		if (cc.isEmpty())
 			return line;
 
-		List<IAgent> sortedAgents = cc.getAgentsSortedByIdInRule();
+		List<CAgent> sortedAgents = cc.getAgentsSortedByIdInRule();
 
-		for (IAgent agent : sortedAgents) {
+		for (CAgent agent : sortedAgents) {
 			line = line + agent.getName();
 			line = line + "(";
 
 			List<String> sitesList = new ArrayList<String>();
 
-			for (ISite site : agent.getSites()) {
+			for (CSite site : agent.getSites()) {
 				String siteStr = new String(site.getName());
 				// line = line + site.getName();
 				if ((site.getInternalState() != null)
@@ -88,10 +88,10 @@ public class SimulationUtils {
 					if (site.getLinkState().getStatusLinkRank() == CLinkRank.SEMI_LINK) {
 						siteStr = siteStr + "!_";
 						// line = line + "!_";
-					} else if (site.getAgentLink().getIdInRuleHandside() < ((ISite) site
+					} else if (site.getAgentLink().getIdInRuleHandside() < ((CSite) site
 							.getLinkState().getSite()).getAgentLink()
 							.getIdInRuleHandside()) {
-						((ISite) site.getLinkState().getSite()).getLinkState()
+						((CSite) site.getLinkState().getSite()).getLinkState()
 								.setLinkStateID(index[0]);
 						siteStr = siteStr + "!" + index[0];
 						index[0]++;
@@ -154,23 +154,23 @@ public class SimulationUtils {
 	}
 
 	public static final List<IConnectedComponent> buildConnectedComponents(
-			List<IAgent> listOfAgents) {
+			List<CAgent> listOfAgents) {
 
 		if (listOfAgents == null || listOfAgents.isEmpty()) {
 			return null;
 		}
 
-		List<IAgent> agents = new ArrayList<IAgent>();
+		List<CAgent> agents = new ArrayList<CAgent>();
 		agents.addAll(listOfAgents);
 		List<IConnectedComponent> result = new ArrayList<IConnectedComponent>();
 
 		int index = 1;
-		for (IAgent agent : agents)
+		for (CAgent agent : agents)
 			agent.setIdInRuleSide(index++);
 
 		while (!agents.isEmpty()) {
 
-			List<IAgent> connectedAgents = new ArrayList<IAgent>();
+			List<CAgent> connectedAgents = new ArrayList<CAgent>();
 
 			findConnectedComponent(agents.get(0), agents, connectedAgents);
 
@@ -181,15 +181,15 @@ public class SimulationUtils {
 		return result;
 	}
 
-	private static final void findConnectedComponent(IAgent rootAgent,
-			List<IAgent> hsRulesList, List<IAgent> agentsList) {
+	private static final void findConnectedComponent(CAgent rootAgent,
+			List<CAgent> hsRulesList, List<CAgent> agentsList) {
 		agentsList.add(rootAgent);
 		rootAgent.setIdInConnectedComponent(agentsList.size() - 1);
 		removeAgent(hsRulesList, rootAgent);
 		// hsRulesList.remove(rootAgent);
-		for (ISite site : rootAgent.getSites()) {
+		for (CSite site : rootAgent.getSites()) {
 			if (site.getLinkIndex() != CSite.NO_INDEX) {
-				IAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
+				CAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
 				if (linkedAgent != null) {
 					if (!isAgentInList(agentsList, linkedAgent))
 						findConnectedComponent(linkedAgent, hsRulesList,
@@ -199,8 +199,8 @@ public class SimulationUtils {
 		}
 	}
 
-	private static final boolean isAgentInList(List<IAgent> list, IAgent agent) {
-		for (IAgent lagent : list) {
+	private static final boolean isAgentInList(List<CAgent> list, CAgent agent) {
+		for (CAgent lagent : list) {
 			if (lagent == agent) {
 				return true;
 			}
@@ -208,9 +208,9 @@ public class SimulationUtils {
 		return false;
 	}
 
-	private static final IAgent findLink(List<IAgent> agents, int linkIndex) {
-		for (IAgent tmp : agents) {
-			for (ISite s : tmp.getSites()) {
+	private static final CAgent findLink(List<CAgent> agents, int linkIndex) {
+		for (CAgent tmp : agents) {
+			for (CSite s : tmp.getSites()) {
 				if (s.getLinkIndex() == linkIndex) {
 					return tmp;
 				}
@@ -219,7 +219,7 @@ public class SimulationUtils {
 		return null;
 	}
 
-	private static final void removeAgent(List<IAgent> agents, IAgent agent) {
+	private static final void removeAgent(List<CAgent> agents, CAgent agent) {
 		int i = 0;
 		for (i = 0; i < agents.size(); i++) {
 			if (agents.get(i) == agent)
@@ -228,14 +228,14 @@ public class SimulationUtils {
 		agents.remove(i);
 	}
 
-//	public static final CRule buildRule(List<IAgent> left, List<IAgent> right,
+//	public static final CRule buildRule(List<CAgent> left, List<CAgent> right,
 //			String name, ConstraintData activity, int ruleID, boolean isStorify) {
 //		return new CRule(buildConnectedComponents(left),
 //				buildConnectedComponents(right), name, activity, ruleID,
 //				isStorify);
 //	}
 	
-	public static final CRule buildRule(List<IAgent> left, List<IAgent> right,
+	public static final CRule buildRule(List<CAgent> left, List<CAgent> right,
 			String name, double activity, int ruleID, boolean isStorify) {
 		return new CRule(buildConnectedComponents(left),
 				buildConnectedComponents(right), name, activity, ruleID,
@@ -254,7 +254,7 @@ public class SimulationUtils {
 		return argsNew;
 	}
 
-	public final static void addToAgentList(List<IAgent> list, IAgent agent) {
+	public final static void addToAgentList(List<CAgent> list, CAgent agent) {
 
 		// if (list.contains(agent)) {
 		if (agent.includedInCollection(list)) {
@@ -263,18 +263,18 @@ public class SimulationUtils {
 		list.add(agent);
 	}
 
-	public final static void doNegativeUpdate(List<IInjection> injectionsList) {
-		for (IInjection injection : injectionsList) {
+	public final static void doNegativeUpdate(List<CInjection> injectionsList) {
+		for (CInjection injection : injectionsList) {
 			if (injection != CInjection.EMPTY_INJECTION) {
-				for (ISite site : injection.getChangedSites()) {
-					site.getAgentLink().getEmptySite()
-							.removeInjectionsFromCCToSite(injection);
-					site.getAgentLink().getEmptySite().clearLiftList();
-					site.removeInjectionsFromCCToSite(injection);
+				for (CSite site : injection.getChangedSites()) {
+					site.getAgentLink().getDefaultSite()
+							.clearIncomingInjections(injection);
+					site.getAgentLink().getDefaultSite().clearLiftList();
+					site.clearIncomingInjections(injection);
 					site.clearLiftList();
 				}
 				if (injection.getChangedSites().size() != 0) {
-					for (ISite site : injection.getSiteList()) {
+					for (CSite site : injection.getSiteList()) {
 						if (!injection
 								.checkSiteExistanceAmongChangedSites(site)) {
 							site.removeInjectionFromLift(injection);
@@ -287,18 +287,18 @@ public class SimulationUtils {
 		}
 	}
 	
-	public final static void doNegativeUpdateForContactMap(List<IInjection> injectionsList, CRule rule) {
-		for (IInjection injection : injectionsList) {
+	public final static void doNegativeUpdateForContactMap(List<CInjection> injectionsList, CRule rule) {
+		for (CInjection injection : injectionsList) {
 			if (injection != CInjection.EMPTY_INJECTION) {
-				for (ISite site : injection.getChangedSites()) {
-					site.getAgentLink().getEmptySite()
-							.removeInjectionsFromCCToSite(injection);
-					site.getAgentLink().getEmptySite().clearLiftList();
-					site.removeInjectionsFromCCToSite(injection);
+				for (CSite site : injection.getChangedSites()) {
+					site.getAgentLink().getDefaultSite()
+							.clearIncomingInjections(injection);
+					site.getAgentLink().getDefaultSite().clearLiftList();
+					site.clearIncomingInjections(injection);
 					site.clearLiftList();
 				}
 				if (injection.getChangedSites().size() != 0) {
-					for (ISite site : injection.getSiteList()) {
+					for (CSite site : injection.getSiteList()) {
 						if (!injection
 								.checkSiteExistanceAmongChangedSites(site)) {
 							site.removeInjectionFromLift(injection);
@@ -311,24 +311,24 @@ public class SimulationUtils {
 		}
 	}
 
-	public final static List<IAgent> doNegativeUpdateForDeletedAgents(
-			CRule rule, List<IInjection> injectionsList) {
-		List<IAgent> freeAgents = new ArrayList<IAgent>();
-		for (IInjection injection : injectionsList) {
-			for (ISite checkedSite : rule.getSitesConnectedWithDeleted()) {
+	public final static List<CAgent> doNegativeUpdateForDeletedAgents(
+			CRule rule, List<CInjection> injectionsList) {
+		List<CAgent> freeAgents = new ArrayList<CAgent>();
+		for (CInjection injection : injectionsList) {
+			for (CSite checkedSite : rule.getSitesConnectedWithDeleted()) {
 				if (!injection.checkSiteExistanceAmongChangedSites(checkedSite)) {
 
-					IAgent checkedAgent = checkedSite.getAgentLink();
+					CAgent checkedAgent = checkedSite.getAgentLink();
 					addToAgentList(freeAgents, checkedAgent);
-					for (ILiftElement lift : checkedAgent.getEmptySite()
+					for (CLiftElement lift : checkedAgent.getDefaultSite()
 							.getLift()) {
 						lift.getConnectedComponent().removeInjection(
 								lift.getInjection());
 					}
-					checkedAgent.getEmptySite().clearLiftList();
-					for (ILiftElement lift : checkedSite.getLift()) {
+					checkedAgent.getDefaultSite().clearLiftList();
+					for (CLiftElement lift : checkedSite.getLift()) {
 
-						for (ISite site : lift.getInjection().getSiteList()) {
+						for (CSite site : lift.getInjection().getSiteList()) {
 							if (site != checkedSite)
 								site.removeInjectionFromLift(lift
 										.getInjection());
@@ -341,8 +341,8 @@ public class SimulationUtils {
 				}
 			}
 		}
-		for (ISite checkedSite : rule.getSitesConnectedWithBroken()) {
-			IAgent checkedAgent = checkedSite.getAgentLink();
+		for (CSite checkedSite : rule.getSitesConnectedWithBroken()) {
+			CAgent checkedAgent = checkedSite.getAgentLink();
 			addToAgentList(freeAgents, checkedAgent);
 		}
 		return freeAgents;

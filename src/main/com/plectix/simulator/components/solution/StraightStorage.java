@@ -2,10 +2,12 @@ package com.plectix.simulator.components.solution;
 
 import java.util.*;
 
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 
 public class StraightStorage implements IStorage {
-	private final HashMap<Long, IAgent> agentMap = new HashMap<Long, IAgent>();;
+	private final HashMap<Long, CAgent> agentMap = new HashMap<Long, CAgent>();;
 	
 	// we instantiate this type through UniversalSolution only
 	StraightStorage() {
@@ -14,7 +16,7 @@ public class StraightStorage implements IStorage {
 	//---------------ADDERS---------------------------------
 	
 	// FOR APPLICATION POOL USAGE ONLY!
-	protected final void addAgent(IAgent agent) {
+	protected final void addAgent(CAgent agent) {
 		if (agent != null) {
 			long key = agent.getHash();
 			if (agent != agentMap.get(key)) {
@@ -26,7 +28,7 @@ public class StraightStorage implements IStorage {
 	public final void addConnectedComponent(IConnectedComponent component) {
 		if (component == null)
 			return;
-		for (IAgent agent : component.getAgents()) {
+		for (CAgent agent : component.getAgents()) {
 			this.addAgent(agent);
 		}
 	}
@@ -34,7 +36,7 @@ public class StraightStorage implements IStorage {
 	//----------------REMOVERS---------------------------------
 	
 	// FOR APPLICATION POOL USAGE ONLY!
-	protected final void removeAgent(IAgent agent) {
+	protected final void removeAgent(CAgent agent) {
 		if (agent == null) {
 			return;
 		}
@@ -44,25 +46,25 @@ public class StraightStorage implements IStorage {
 //	public final void removeConnectedComponent(IConnectedComponent component) {
 //		if (component == null)
 //			return;
-//		for (IAgent agent : component.getAgents()) {
+//		for (CAgent agent : component.getAgents()) {
 //			this.removeAgent(agent);
 //		}
 //	}
 
 	//-----------------GETTERS----------------------------------
 	
-	public final Collection<IAgent> getAgents() {
+	public final Collection<CAgent> getAgents() {
 		return Collections.unmodifiableCollection(agentMap.values());
 	}
 
 	public final List<IConnectedComponent> split() {
 		BitSet bitset = new BitSet(1024);
 		List<IConnectedComponent> ccList = new ArrayList<IConnectedComponent>();
-		for (IAgent agent : agentMap.values()) {
+		for (CAgent agent : agentMap.values()) {
 			int index = (int) agent.getId();
 			if (!bitset.get(index)) {
 				IConnectedComponent cc = SolutionUtils.getConnectedComponent(agent);
-				for (IAgent agentCC : cc.getAgents()) {
+				for (CAgent agentCC : cc.getAgents()) {
 					bitset.set((int) agentCC.getId(), true);
 				}
 				ccList.add(cc);
@@ -73,14 +75,14 @@ public class StraightStorage implements IStorage {
 
 	//	--------------------------------------------------------------------
 	
-	public IConnectedComponent extractComponent(IInjection inj) {
+	public IConnectedComponent extractComponent(CInjection inj) {
 		if (inj.isEmpty()) {
 			return null;
 		}
 		SuperSubstance image = inj.getSuperSubstance();
 		if (image == null) {
 			IConnectedComponent component = SolutionUtils.getConnectedComponent(inj.getImageAgent());
-			for (IAgent agent : component.getAgents()) {
+			for (CAgent agent : component.getAgents()) {
 				this.removeAgent(agent);
 			}
 			return component;

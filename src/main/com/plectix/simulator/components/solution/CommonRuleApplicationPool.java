@@ -2,8 +2,8 @@ package com.plectix.simulator.components.solution;
 
 import java.util.*;
 
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IInjection;
+import com.plectix.simulator.components.CAgent;
+
 import com.plectix.simulator.interfaces.ISolution;
 
 public abstract class CommonRuleApplicationPool extends RuleApplicationPool {

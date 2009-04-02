@@ -57,7 +57,7 @@ import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
 import com.plectix.simulator.parser.KappaSystemParser;
@@ -565,7 +565,7 @@ public class SimulationData {
 			for (IAction action : rule.getActionList()) {
 				switch (CActionType.getById(action.getTypeId())) {
 				case BREAK: {
-					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
+					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
 							.getSite());
 					if (action.getSiteFrom().getAgentLink().getIdInRuleHandside() < siteTo
 							.getAgentLink().getIdInRuleHandside()) {
@@ -600,7 +600,7 @@ public class SimulationData {
 					print("" + (action.getAgentTo().getIdInRuleHandside() - 1));
 					print("(");
 					int i = 1;
-					for (ISite site : action.getAgentTo().getSites()) {
+					for (CSite site : action.getAgentTo().getSites()) {
 						print(site.getName());
 						if ((site.getInternalState() != null)
 								&& (site.getInternalState().getNameId() >= 0))
@@ -614,7 +614,7 @@ public class SimulationData {
 				}
 				case BOUND: {
 					// BND (#1,x) (#0,a)
-					ISite siteTo = ((ISite) action.getSiteFrom().getLinkState()
+					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
 							.getSite());
 					if (action.getSiteFrom().getAgentLink().getIdInRuleHandside() > siteTo
 							.getAgentLink().getIdInRuleHandside()) {

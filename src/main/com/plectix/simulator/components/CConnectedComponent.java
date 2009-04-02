@@ -12,26 +12,59 @@ import java.util.TreeMap;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.injections.CLiftElement;
 import com.plectix.simulator.components.solution.SuperSubstance;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.IAgentLink;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
+
 import com.plectix.simulator.interfaces.IRandom;
 
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
+/**
+ * Basic ConnectedComponent class.
+ * @author avokhmin
+ *
+ */
 public class CConnectedComponent implements IConnectedComponent, Serializable {
 	private static final long serialVersionUID = -2233812055480299501L;
 	
+	/**
+	 * "EMPTY" ConnectedComponent i.e. without Agents.
+	 */
 	public static CConnectedComponent EMPTY = new CConnectedComponent();
-	
-	private final List<IAgent> agentList;
+
+	/**
+	 * agents generates ConnectedComponent.
+	 */
+	private final List<CAgent> agentList;
+
+	/**
+	 * Spanning Tree Map.<br>
+	 * <b>key</b> - id agent's in ConnectedComponent<br>
+	 * <b>List of {@link CSpanningTree}</b> - list for check.
+	 */
 	private Map<Integer, List<CSpanningTree>> spanningTreeMap;
-	private List<IAgent> agentFromSolutionForRHS;
-	private List<IAgentLink> agentLinkList;
-	private final Map<Integer, IInjection> injectionsList;
-	private List<ISite> injectedSites;
+	private List<CAgent> agentFromSolutionForRHS;
+	
+	/**
+	 * Util. Uses for create {@link CInjection}
+	 */
+	private List<CAgentLink> agentLinkList;
+	private final Map<Integer, CInjection> injectionsList;
+
+	/**
+	 * Util. Uses for create {@link CInjection}
+	 */
+	private List<CSite> injectedSites;
+
+	/**
+	 * counter {@link CInjection} current ConnectedComponent.
+	 */
 	private int maxId = -1;
+
+	/**
+	 * Link to rule from this ConnectidComponent
+	 */
 	private CRule rule;
 	private SuperSubstance mySubstance = null;
 
@@ -39,19 +72,26 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * Empty ConnectedComponent constructor
 	 */
 	private CConnectedComponent() {
-		agentList = new ArrayList<IAgent>();
-		agentList.add(new CAgent(CAgent.EMPTY, CAgent.EMPTY));
-		injectionsList = new TreeMap<Integer, IInjection>();
+		agentList = new ArrayList<CAgent>();
+		agentList.add(new CAgent());
+		injectionsList = new TreeMap<Integer, CInjection>();
 		addInjection(CInjection.EMPTY_INJECTION, 0);
-		agentFromSolutionForRHS = new ArrayList<IAgent>();
+		agentFromSolutionForRHS = new ArrayList<CAgent>();
 	}
 
-	public CConnectedComponent(List<IAgent> connectedAgents) {
+	/**
+	 * Constructor ConnectedComponent with <b>connectedAgents</b> agents.
+	 * @param connectedAgents - <code>List of {@link CAgent}</code> value - agents generates ConnectedComponent. 
+	 */
+	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
-		injectionsList = new TreeMap<Integer, IInjection>();
-		agentFromSolutionForRHS = new ArrayList<IAgent>();
+		injectionsList = new TreeMap<Integer, CInjection>();
+		agentFromSolutionForRHS = new ArrayList<CAgent>();
 	}
 
+	/**
+	 * Returns <tt>true</tt>, if this ConnectedComponent does "EMPTY", otherwise <tt>false</tt>.
+	 */
 	public boolean isEmpty() {
 		return this == EMPTY;
 	}
@@ -64,7 +104,12 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return mySubstance;
 	}
 
-	private final void addInjection(IInjection inj, int id) {
+	/**
+	 * Adds injection to current ConnectedComponent.
+	 * @param inj - new injection
+	 * @param id - id of <b>inj</b>
+	 */
+	private final void addInjection(CInjection inj, int id) {
 		if (inj != null) {
 			maxId = Math.max(maxId, id);
 			inj.setId(id);
@@ -72,7 +117,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		}
 	}
 
-	public final void addAgentFromSolutionForRHS(IAgent agentFromSolutionForRHS) {
+	public final void addAgentFromSolutionForRHS(CAgent agentFromSolutionForRHS) {
 		this.agentFromSolutionForRHS.add(agentFromSolutionForRHS);
 	}
 
@@ -80,11 +125,15 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		agentFromSolutionForRHS.clear();
 	}
 
-	public final List<IAgent> getAgentFromSolutionForRHS() {
+	public final List<CAgent> getAgentFromSolutionForRHS() {
 		return Collections.unmodifiableList(agentFromSolutionForRHS);
 	}
 
-	public final void removeInjection(IInjection injection) {
+	/**
+	 * Removes <b>injection</b> from current ConnectedComponent.
+	 * @param injection - Injection for removes.
+	 */
+	public final void removeInjection(CInjection injection) {
 		if (injection == null) {
 			return;
 		}
@@ -95,7 +144,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 			if (injection != injectionsList.get(id)) {
 				return;
 			}
-			IInjection inj = injectionsList.remove(maxId);
+			CInjection inj = injectionsList.remove(maxId);
 			if (id != maxId) {
 				addInjection(inj, id);
 			}
@@ -103,13 +152,16 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		}
 	}
 
+	/**
+	 * Initializing Spanning Tree Map.
+	 */
 	public final void initSpanningTreeMap() {
 		CSpanningTree spTree;
 		spanningTreeMap = new HashMap<Integer, List<CSpanningTree>>();
 		if (agentList.isEmpty())
 			return;
 
-		for (IAgent agentAdd : agentList) {
+		for (CAgent agentAdd : agentList) {
 			spTree = new CSpanningTree(agentList.size(), agentAdd);
 			List<CSpanningTree> list = spanningTreeMap
 					.get(agentAdd.getNameId());
@@ -121,18 +173,18 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		}
 	}
 
-	private final void addLiftsToCurrentChangedStates(IInjection injection) {
-		for (ISite changedSite : injectedSites) {
+	private final void addLiftsToCurrentChangedStates(CInjection injection) {
+		for (CSite changedSite : injectedSites) {
 			changedSite.addToLift(new CLiftElement(this, injection));
 		}
 	}
 
-	public final void setInjection(IInjection inj) {
+	public final void setInjection(CInjection inj) {
 		addInjection(inj, maxId + 1);
 		addLiftsToCurrentChangedStates(inj);
 	}
 
-	public final CInjection createInjection(IAgent agent) {
+	public final CInjection createInjection(CAgent agent) {
 		if (unify(agent)) {
 			CInjection injection = new CInjection(this, injectedSites,
 					agentLinkList);
@@ -146,23 +198,23 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		if (connectedComponentList == null)
 			return;
 		for (IConnectedComponent cc : connectedComponentList) {
-			for (IAgent agent : cc.getAgentFromSolutionForRHS()) {
-				IInjection inj = createInjection(agent);
+			for (CAgent agent : cc.getAgentFromSolutionForRHS()) {
+				CInjection inj = this.createInjection(agent);
 				if (inj != null) {
-					if (!agent.isAgentHaveLinkToConnectedComponent(this, inj))
+					if (!agent.hasSimilarInjection(inj))
 						setInjection(inj);
 				}
 			}
 		}
 	}
 
-	public final List<IAgent> getAgents() {
+	public final List<CAgent> getAgents() {
 		return Collections.unmodifiableList(agentList);
 	}
 
-	public final boolean unify(IAgent agent) {
-		injectedSites = new ArrayList<ISite>();
-		agentLinkList = new ArrayList<IAgentLink>();
+	public final boolean unify(CAgent agent) {
+		injectedSites = new ArrayList<CSite>();
+		agentLinkList = new ArrayList<CAgentLink>();
 
 		if (spanningTreeMap == null)
 			return false;
@@ -179,7 +231,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 			if (tree != null) {
 				tree.resetNewVertex();
 				if (agentList.get(tree.getRootIndex()).getSites().isEmpty()) {
-					injectedSites.add(agent.getEmptySite());
+					injectedSites.add(agent.getDefaultSite());
 					agentLinkList.add(new CAgentLink(0, agent));
 					return true;
 				} else {
@@ -199,7 +251,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return false;
 	}
 
-	public final boolean isAutomorphism(IAgent agent) {
+	public final boolean isAutomorphism(CAgent agent) {
 		if (spanningTreeMap == null)
 			return false;
 
@@ -227,31 +279,31 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return false;
 	}
 
-	private final boolean fullEqualityOfAgents(IAgent cc1Agent, IAgent cc2Agent) {
+	private final boolean fullEqualityOfAgents(CAgent cc1Agent, CAgent cc2Agent) {
 		if (cc1Agent == null || cc2Agent == null)
 			return false;
 		if (cc1Agent.getSites().size() != cc2Agent.getSites().size())
 			return false;
 
-		for (ISite cc1Site : cc1Agent.getSites()) {
-			ISite cc2Site = cc2Agent.getSite(cc1Site.getNameId());
+		for (CSite cc1Site : cc1Agent.getSites()) {
+			CSite cc2Site = cc2Agent.getSiteById(cc1Site.getNameId());
 			if (cc2Site == null)
 				return false;
-			if (!cc1Site.compareSites(cc2Site, true))
+			if (!cc1Site.expandedEqualz(cc2Site, true))
 				return false;
 		}
 		return true;
 	}
 
-	private final boolean compareAgents(IAgent currentAgent,
-			IAgent solutionAgent) {
+	private final boolean compareAgents(CAgent currentAgent,
+			CAgent solutionAgent) {
 		if (currentAgent == null || solutionAgent == null)
 			return false;
-		for (ISite site : currentAgent.getSites()) {
-			ISite solutionSite = solutionAgent.getSite(site.getNameId());
+		for (CSite site : currentAgent.getSites()) {
+			CSite solutionSite = solutionAgent.getSiteById(site.getNameId());
 			if (solutionSite == null)
 				return false;
-			if (!site.compareSites(solutionSite, false))
+			if (!site.expandedEqualz(solutionSite, false))
 				return false;
 			injectedSites.add(solutionSite);
 		}
@@ -260,11 +312,11 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return true;
 	}
 
-	private final List<ISite> getConnectedSite(IAgent agentFrom, IAgent agentTo) {
-		List<ISite> siteList = new ArrayList<ISite>();
+	private final List<CSite> getConnectedSite(CAgent agentFrom, CAgent agentTo) {
+		List<CSite> siteList = new ArrayList<CSite>();
 
-		for (ISite sF : agentFrom.getSites()) {
-			for (ISite sT : agentTo.getSites()) {
+		for (CSite sF : agentFrom.getSites()) {
+			for (CSite sT : agentTo.getSites()) {
 				if (sF == sT.getLinkState().getSite()) {
 					siteList.add(sF);
 				}
@@ -275,16 +327,16 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	}
 
 	// is there injection or not and create lifts
-	private final boolean spanningTreeViewer(IAgent agent,
+	private final boolean spanningTreeViewer(CAgent agent,
 			CSpanningTree spTree, int rootVertex, boolean fullEquality) {
 		spTree.setTrue(rootVertex);
 		for (Integer v : spTree.getVertexes()[rootVertex]) {
-			IAgent cAgent = agentList.get(v);// get next agent from spanning
+			CAgent cAgent = agentList.get(v);// get next agent from spanning
 			if (!(spTree
 					.getNewVertexElement(cAgent.getIdInConnectedComponent()))) {
-				List<ISite> sitesFrom = getConnectedSite(agentList
+				List<CSite> sitesFrom = getConnectedSite(agentList
 						.get(rootVertex), agentList.get(v));
-				IAgent sAgent = agent.findLinkAgent(cAgent, sitesFrom);
+				CAgent sAgent = agent.findLinkAgent(cAgent, sitesFrom);
 				if (fullEquality && !(fullEqualityOfAgents(cAgent, sAgent)))
 					return false;
 				if (!fullEquality && !compareAgents(cAgent, sAgent))
@@ -303,24 +355,24 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		this.rule = rule;
 	}
 
-	public final Collection<IInjection> getInjectionsList() {
+	public final Collection<CInjection> getInjectionsList() {
 		return Collections.unmodifiableCollection(injectionsList.values());
 	}
 
-	public final IInjection getRandomInjection(IRandom random) {
+	public final CInjection getRandomInjection(IRandom random) {
 		int index;
-		IInjection inj = null;
+		CInjection inj = null;
 		index = random.getInteger(maxId + 1);
 		inj = injectionsList.get(index);
 		return inj;
 	}
 
-	public final IInjection getFirstInjection() {
+	public final CInjection getFirstInjection() {
 		return injectionsList.get(0);
 	}
 
-	public final List<IAgent> getAgentsSortedByIdInRule() {
-		List<IAgent> temp = new ArrayList<IAgent>();
+	public final List<CAgent> getAgentsSortedByIdInRule() {
+		List<CAgent> temp = new ArrayList<CAgent>();
 		temp.addAll(agentList);
 		Collections.sort(temp);
 		return Collections.unmodifiableList(temp);
@@ -339,13 +391,13 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		List<String> siteNames = new ArrayList<String>();
 		// TreeMap means this collection sorted by key anytime
 		Map<String, String> agentStrings = new TreeMap<String, String>();
-		for (IAgent agent : agentList) {
+		for (CAgent agent : agentList) {
 			StringBuffer sb = new StringBuffer();
-			for (ISite site : agent.getSites()) {
+			for (CSite site : agent.getSites()) {
 				siteNames.add(site.getName());
 			}
 			Collections.sort(siteNames);
-			for (ISite site : agent.getSites()) {
+			for (CSite site : agent.getSites()) {
 				sb.append(site.getName());
 			}
 			agentStrings.put(agent.getName(), sb.toString());
@@ -358,25 +410,4 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		// TODO write connections here
 		return sb.toString();
 	}
-	//	
-	// @Override
-	// public boolean equals(Object obj) {
-	// if (obj == null) {
-	// return false;
-	// }
-	// if (!(obj instanceof IConnectedComponent)) {
-	// return false;
-	// }
-	// if (this == obj) {
-	// return true;
-	// }
-	//		
-	// IConnectedComponent arg = (IConnectedComponent) obj;
-	// if (!this.getHash().equals(arg.getHash())) {
-	// return false;
-	// }
-	// //TODO check
-	// IAgent agent = arg.getAgents().get(0);
-	// return this.isAutomorphism(agent);
-	// }
 }

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.action.*;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationUtils;
@@ -26,11 +28,11 @@ import com.plectix.simulator.simulator.SimulationUtils;
 
 	//-----------------GETTERS----------------------------------
 	
-	public final Collection<IAgent> getStraightStorageAgents() {
+	public final Collection<CAgent> getStraightStorageAgents() {
 		return myStraightStorage.getAgents();
 	}
 
-	public final Collection<IAgent> getSuperStorageAgents() {
+	public final Collection<CAgent> getSuperStorageAgents() {
 		return null;
 	}
 	
@@ -41,7 +43,7 @@ import com.plectix.simulator.simulator.SimulationUtils;
 	//----------------RULE APPLICATION---------------------------
 	
 	public RuleApplicationPool prepareRuleApplicationPool(
-			List<IInjection> injections) {
+			List<CInjection> injections) {
 		return new TransparentRuleApplicationPool(myStraightStorage);
 	}
 
@@ -49,12 +51,12 @@ import com.plectix.simulator.simulator.SimulationUtils;
 		myStraightStorage.applyRule(pool);
 	}
 
-	public void addInitialConnectedComponents(long quant, List<IAgent> components) {
-		for (IAgent agent : components) {
+	public void addInitialConnectedComponents(long quant, List<CAgent> components) {
+		for (CAgent agent : components) {
 			myStraightStorage.addAgent(agent);
 		}
 		for (int i = 1; i < quant; i++) {
-			for (IAgent agent : this.cloneAgentsList(components)) {
+			for (CAgent agent : this.cloneAgentsList(components)) {
 				myStraightStorage.addAgent(agent);
 			}
 		}

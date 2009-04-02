@@ -4,8 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CSite;
 
 /*package*/ final class CSpanningTree implements Serializable {
 
@@ -14,7 +14,7 @@ import com.plectix.simulator.interfaces.ISite;
 	private final boolean[] newVertex;
 
 	@SuppressWarnings("unchecked")
-	public CSpanningTree(int N, IAgent agent) {
+	public CSpanningTree(int N, CAgent agent) {
 		this.newVertex = new boolean[N];
 		this.vertexes = new ArrayList[N];
 		rootIndex = agent.getIdInConnectedComponent();
@@ -59,12 +59,12 @@ import com.plectix.simulator.interfaces.ISite;
 	 * linked list. The first element of some vertexes list is always the id of
 	 * this vertex (it needs in future tree usage).
 	 */
-	private final void depthFirstSearch(IAgent rootAgent) {
+	private final void depthFirstSearch(CAgent rootAgent) {
 		newVertex[rootAgent.getIdInConnectedComponent()] = false;
-		for (ISite site : rootAgent.getSites()) {
-			ISite linkSite = (CSite) site.getLinkState().getSite();
+		for (CSite site : rootAgent.getSites()) {
+			CSite linkSite = (CSite) site.getLinkState().getSite();
 			if (linkSite != null) {
-				IAgent agent = linkSite.getAgentLink();
+				CAgent agent = linkSite.getAgentLink();
 				Integer vertexIndex = agent.getIdInConnectedComponent();
 				if (newVertex[vertexIndex]) {
 					vertexes[rootAgent.getIdInConnectedComponent()]

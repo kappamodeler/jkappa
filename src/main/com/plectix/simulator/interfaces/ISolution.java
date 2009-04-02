@@ -2,6 +2,8 @@ package com.plectix.simulator.interfaces;
 
 import java.util.*;
 
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.solution.StandardRuleApplicationPool;
 import com.plectix.simulator.components.solution.SolutionLines;
@@ -27,11 +29,11 @@ public interface ISolution {
 
 	public List<SolutionLines> getSolutionLines();
 
-	public List<IAgent> cloneAgentsList(List<IAgent> agents);
+	public List<CAgent> cloneAgentsList(List<CAgent> agents);
 
 	public KappaSystem getKappaSystem();
 	
-	public RuleApplicationPool prepareRuleApplicationPool(List<IInjection> injections);
+	public RuleApplicationPool prepareRuleApplicationPool(List<CInjection> injections);
 	
 	public void applyRule(RuleApplicationPool pool);
 
@@ -42,5 +44,5 @@ public interface ISolution {
 	public SuperStorage getSuperStorage();
 
 	public void addInitialConnectedComponents(long quant,
-			List<IAgent> agents);
+			List<CAgent> agents);
 }

@@ -19,6 +19,11 @@ public final class NameDictionary {
 		return id;
 	}
 	
+	/**
+	 * Name dictionary.
+	 * @param id - id of name
+	 * @return Strting by id
+	 */
 	public final String getName(int id) {
 		return idToNamesList.get(id);
 	}

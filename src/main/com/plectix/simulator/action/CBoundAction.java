@@ -1,24 +1,25 @@
 package com.plectix.simulator.action;
 
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
+
 import com.plectix.simulator.interfaces.INetworkNotation;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
 
 public class CBoundAction extends CAction {
-	private final ISite mySiteFrom;
-	private final ISite mySiteTo;
+	private final CSite mySiteFrom;
+	private final CSite mySiteTo;
 	private CRule myRule;
 	
-	public CBoundAction(CRule rule, ISite siteFrom, ISite siteTo, IConnectedComponent ccL,
+	public CBoundAction(CRule rule, CSite siteFrom, CSite siteTo, IConnectedComponent ccL,
 			IConnectedComponent ccR) {
 		super(rule, null, null, ccL, ccR);
 		myRule = rule;
@@ -28,14 +29,14 @@ public class CBoundAction extends CAction {
 		setType(CActionType.BOUND);
 	}
 
-	public final void doAction(RuleApplicationPool pool, IInjection injection, 
+	public final void doAction(RuleApplicationPool pool, CInjection injection, 
 			INetworkNotation netNotation, SimulationData simulationData) {
 		//	TODO remove copypaste
 		/**
 		 * Done.
 		 */
 
-		IAgent agentFromInSolution;
+		CAgent agentFromInSolution;
 		if (mySiteFrom.getAgentLink().getIdInRuleHandside() > myRule.getAgentsFromConnectedComponent(
 				myRule.getLeftHandSide()).size()) {
 			agentFromInSolution = myRule.getAgentAdd(mySiteFrom.getAgentLink());
@@ -45,7 +46,7 @@ public class CBoundAction extends CAction {
 			agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 
 			// /////////////////////////////////////////////
-			ISite injectedSite = agentFromInSolution.getSite(mySiteFrom
+			CSite injectedSite = agentFromInSolution.getSiteById(mySiteFrom
 					.getNameId());
 			injection.addToChangedSites(injectedSite);
 
@@ -55,34 +56,34 @@ public class CBoundAction extends CAction {
 			// /////////////////////////////////////////////
 		}
 
-		IAgent agentToInSolution;
+		CAgent agentToInSolution;
 		if (mySiteTo.getAgentLink().getIdInRuleHandside() > myRule.getAgentsFromConnectedComponent(
 				myRule.getLeftHandSide()).size()) {
 			agentToInSolution = myRule.getAgentAdd(mySiteTo.getAgentLink());
 		} else {
 			int agentIdInCC = getAgentIdInCCBySideId(mySiteTo.getAgentLink());
-			IInjection inj = myRule.getInjectionBySiteToFromLHS(mySiteTo);
+			CInjection inj = myRule.getInjectionBySiteToFromLHS(mySiteTo);
 			agentToInSolution = inj.getAgentFromImageById(agentIdInCC);
 		}
 
-		agentFromInSolution.getSite(mySiteFrom.getNameId()).getLinkState()
-				.setSite(agentToInSolution.getSite(mySiteTo.getNameId()));
+		agentFromInSolution.getSiteById(mySiteFrom.getNameId()).getLinkState()
+				.setSite(agentToInSolution.getSiteById(mySiteTo.getNameId()));
 
-		agentToInSolution.getSite(mySiteTo.getNameId()).getLinkState()
-		.setSite(agentFromInSolution.getSite(mySiteFrom.getNameId()));
+		agentToInSolution.getSiteById(mySiteTo.getNameId()).getLinkState()
+		.setSite(agentFromInSolution.getSiteById(mySiteFrom.getNameId()));
 
 		addToNetworkNotation(StateType.AFTER, netNotation,
-				agentFromInSolution.getSite(mySiteFrom.getNameId()));
+				agentFromInSolution.getSiteById(mySiteFrom.getNameId()));
 
-		agentFromInSolution.getSite(mySiteFrom.getNameId()).setLinkIndex(
+		agentFromInSolution.getSiteById(mySiteFrom.getNameId()).setLinkIndex(
 				mySiteFrom.getLinkIndex());
-		agentToInSolution.getSite(mySiteTo.getNameId()).setLinkIndex(
+		agentToInSolution.getSiteById(mySiteTo.getNameId()).setLinkIndex(
 				mySiteTo.getLinkIndex());
 
 	}
 
 	public final void addRuleSitesToNetworkNotation(boolean existInRule,
-			INetworkNotation netNotation, ISite site) {
+			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
 			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
@@ -96,7 +97,7 @@ public class CBoundAction extends CAction {
 	}
 
 	protected final void addToNetworkNotation(StateType index,
-			INetworkNotation netNotation, ISite site) {
+			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			netNotation.checkLinkForNetworkNotation(index, site);
 			netNotation.checkLinkToUsedSites(index, site);

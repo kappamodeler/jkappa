@@ -9,9 +9,9 @@ import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.NameDictionary;
 
@@ -19,8 +19,8 @@ public class SubstanceConstructor {
 	private final NameDictionary nameDictionary = ThreadLocalData.getNameDictionary();
 	private int myAgentIndexGenerator;
 	
-	public ISite createSite(String name, String internalStateName, String linkIndex) {
-		ISite site = new CSite(nameDictionary.addName(name));
+	public CSite createSite(String name, String internalStateName, String linkIndex) {
+		CSite site = new CSite(nameDictionary.addName(name));
 		if (internalStateName != null) { 
 			site.setInternalState(new CInternalState(nameDictionary.addName(internalStateName)));
 		}
@@ -37,27 +37,27 @@ public class SubstanceConstructor {
 		return site;
 	}
 	
-	public IAgent createAgent(String name, List<ISite> sites) {
-		IAgent agent = new CAgent(nameDictionary.addName(name), myAgentIndexGenerator++);
-		for (ISite site : sites) {
+	public CAgent createAgent(String name, List<CSite> sites) {
+		CAgent agent = new CAgent(nameDictionary.addName(name), myAgentIndexGenerator++);
+		for (CSite site : sites) {
 			agent.addSite(site);
 		}
 		return agent;
 	}
 	
-	private void bound(ISite site1, ISite site2) {
+	private void bound(CSite site1, CSite site2) {
 		site1.getLinkState().setSite(site2);
 		site2.getLinkState().setSite(site1);
 	}
 	
-	public IConnectedComponent createCC(List<IAgent> list) {
+	public IConnectedComponent createCC(List<CAgent> list) {
 		IConnectedComponent cc = new CConnectedComponent(list);
-		HashMap<Integer, ISite> map = new HashMap<Integer, ISite>();
-		for (IAgent agent : cc.getAgents()) {
-			for (ISite site : agent.getSites()) {
+		HashMap<Integer, CSite> map = new HashMap<Integer, CSite>();
+		for (CAgent agent : cc.getAgents()) {
+			for (CSite site : agent.getSites()) {
 				int linkIndex = site.getLinkIndex();
 				if (linkIndex != -1) {
-					ISite boundedSite = map.get(linkIndex); 
+					CSite boundedSite = map.get(linkIndex); 
 					if (boundedSite != null) {
 						bound(site, boundedSite);
 						map.remove(linkIndex);

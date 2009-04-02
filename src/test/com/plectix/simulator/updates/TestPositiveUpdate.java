@@ -35,8 +35,8 @@ public class TestPositiveUpdate extends TestUpdate {
 		SortedSet<Long> solutionLinkingForCurrentObs = new TreeSet<Long>();
 
 		for (IObservablesConnectedComponent cc : getInitializator().getObservables()) {
-			for (IInjection injection : cc.getInjectionsList()) {
-				for (IAgentLink agentLink : injection.getAgentLinkList()) {
+			for (CInjection injection : cc.getInjectionsList()) {
+				for (CAgentLink agentLink : injection.getAgentLinkList()) {
 					solutionLinkingForCurrentObs.add(agentLink.getAgentTo()
 							.getId());
 				}
@@ -52,7 +52,7 @@ public class TestPositiveUpdate extends TestUpdate {
 	public void testLHS() {
 		List<IConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
 		for (IConnectedComponent cc : leftHand) {
-			Collection<IInjection> componentInjections = cc.getInjectionsList();
+			Collection<CInjection> componentInjections = cc.getInjectionsList();
 			if (!lhsIsEmpty(leftHand)) {
 				myFailer.assertSizeEquality("LHS injections", componentInjections,
 						myLHSInjectionsQuantity.get(myTestFileName));

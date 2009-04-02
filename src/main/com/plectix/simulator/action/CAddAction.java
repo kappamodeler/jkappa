@@ -1,6 +1,7 @@
 package com.plectix.simulator.action;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
@@ -10,9 +11,9 @@ import com.plectix.simulator.simulator.SimulationData;
 
 public class CAddAction extends CAction {
 	private final CRule myRule;
-	private final IAgent myToAgent;
+	private final CAgent myToAgent;
 	
-	public CAddAction(CRule rule, IAgent toAgent, IConnectedComponent ccR) {
+	public CAddAction(CRule rule, CAgent toAgent, IConnectedComponent ccR) {
 		super(rule, null, toAgent, null, ccR);
 		myRule = rule;
 		myToAgent = toAgent;
@@ -20,18 +21,18 @@ public class CAddAction extends CAction {
 		createBound();
 	}
 
-	public void doAction(RuleApplicationPool pool, IInjection injection, 
+	public void doAction(RuleApplicationPool pool, CInjection injection, 
 			INetworkNotation netNotation, SimulationData simulationData) {
 		/**
 		 * Done.
 		 */
-		IAgent agent = new CAgent(myToAgent.getNameId(),
+		CAgent agent = new CAgent(myToAgent.getNameId(),
 				simulationData.getKappaSystem().generateNextAgentId());
 		
-		for (ISite site : myToAgent.getSites()) {
-			ISite siteAdd = new CSite(site.getNameId());
+		for (CSite site : myToAgent.getSites()) {
+			CSite siteAdd = new CSite(site.getNameId());
 			siteAdd.setInternalState(new CInternalState(site.getInternalState()
-					.getStateNameId()));
+					.getNameId()));
 			agent.addSite(siteAdd);
 			addToNetworkNotation(StateType.AFTER, netNotation,
 					siteAdd);
@@ -39,9 +40,9 @@ public class CAddAction extends CAction {
 		}
 		if (myToAgent.getSites().size() == 0) {
 			addToNetworkNotation(StateType.AFTER, netNotation,
-					agent.getEmptySite());
+					agent.getDefaultSite());
 			addRuleSitesToNetworkNotation(false, netNotation, agent
-					.getEmptySite());
+					.getDefaultSite());
 		}
 		
 		getRightCComponent().addAgentFromSolutionForRHS(agent);
@@ -52,7 +53,7 @@ public class CAddAction extends CAction {
 	}
 
 	public final void addRuleSitesToNetworkNotation(boolean existInRule,
-			INetworkNotation netNotation, ISite site) {
+			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
 			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
@@ -72,7 +73,7 @@ public class CAddAction extends CAction {
 	}
 
 	protected final void addToNetworkNotation(StateType index,
-			INetworkNotation netNotation, ISite site) {
+			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			netNotation.addToAgents(site, new CStoriesSiteStates(index, site
 					.getInternalState().getNameId()), index);
@@ -80,7 +81,7 @@ public class CAddAction extends CAction {
 	}
 
 	private final void createBound() {
-		for (ISite site : myToAgent.getSites()) {
+		for (CSite site : myToAgent.getSites()) {
 			if (site.getLinkState().getSite() != null) {
 				myRule
 						.addAction(new CBoundAction(myRule, site, (site

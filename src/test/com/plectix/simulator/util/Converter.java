@@ -5,7 +5,7 @@ import com.plectix.simulator.interfaces.*;
 import java.util.*;
 
 public class Converter {
-	public static String toString(ISite site) {
+	public static String toString(CSite site) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(site.getName());
 		if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
@@ -21,14 +21,14 @@ public class Converter {
 		return sb.toString();
 	}
 	
-	public static String toString(IAgent agent) {
+	public static String toString(CAgent agent) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(agent.getName());
 		sb.append("(");
 		boolean first = true;
 		
-		TreeMap<String, ISite> sites = new TreeMap<String, ISite>();
-		for (ISite site : agent.getSites()) {
+		TreeMap<String, CSite> sites = new TreeMap<String, CSite>();
+		for (CSite site : agent.getSites()) {
 			sites.put(site.getName(), site);
 		}
 		
@@ -49,11 +49,11 @@ public class Converter {
 		if (c==null)
 			return "null";
 		boolean first = true;
-		TreeMap<String, List<IAgent>> agents = new TreeMap<String, List<IAgent>>();
-		IAgent empty = new CAgent(CAgent.EMPTY, CAgent.EMPTY);
-		List<IAgent> list;
+		TreeMap<String, List<CAgent>> agents = new TreeMap<String, List<CAgent>>();
+		CAgent empty = new CAgent();
+		List<CAgent> list;
 		String agentString; 
-		for (IAgent agent : c.getAgents()) {
+		for (CAgent agent : c.getAgents()) {
 			if (empty.equalz(agent)) {
 				return "";
 			}
@@ -62,7 +62,7 @@ public class Converter {
 			
 			list = agents.get(agentString);
 			if (list == null) {
-				list = new ArrayList<IAgent>();
+				list = new ArrayList<CAgent>();
 				agents.put(agentString, list);
 			}
 			list.add(agent);
@@ -70,7 +70,7 @@ public class Converter {
 		}
 		
 		for (String name : agents.keySet()) {
-			for (IAgent agent : agents.get(name)) {
+			for (CAgent agent : agents.get(name)) {
 				if (!first) {
 					sb.append(", ");
 				} else {

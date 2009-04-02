@@ -19,16 +19,17 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.contactMap.CContactMap;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.stories.CStories;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
+
 import com.plectix.simulator.interfaces.ILinkState;
 
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
@@ -159,7 +160,7 @@ public class KappaSystem {
 	// ---------------------POSITIVE UPDATE-----------------------------
 
 	public final void doPositiveUpdate(CRule rule,
-			List<IInjection> currentInjectionsList) {
+			List<CInjection> currentInjectionsList) {
 		if (mySimulationData.getSimulationArguments().isActivationMap()) {
 			SimulationUtils.positiveUpdate(rule.getActivatedRules(), rule
 					.getActivatedObservable(), rule);
@@ -168,36 +169,36 @@ public class KappaSystem {
 					.getConnectedComponentList(), rule);
 		}
 
-		List<IAgent> freeAgents = SimulationUtils
+		List<CAgent> freeAgents = SimulationUtils
 				.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
 		doPositiveUpdateForDeletedAgents(freeAgents);
 	}
 
 	public final void doPositiveUpdateForContactMap(CRule rule,
-			List<IInjection> currentInjectionsList, List<CRule> invokedRules) {
+			List<CInjection> currentInjectionsList, List<CRule> invokedRules) {
 		SimulationUtils.positiveUpdateForContactMap(getRules(), rule,
 				invokedRules);
-		List<IAgent> freeAgents = SimulationUtils
+		List<CAgent> freeAgents = SimulationUtils
 				.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
 		doPositiveUpdateForDeletedAgentsForContactMap(freeAgents, invokedRules);
 	}
 
-	private final void doPositiveUpdateForDeletedAgents(List<IAgent> agentsList) {
-		for (IAgent agent : agentsList) {
+	private final void doPositiveUpdateForDeletedAgents(List<CAgent> agentsList) {
+		for (CAgent agent : agentsList) {
 			for (CRule rule : getRules()) {
 				for (IConnectedComponent cc : rule.getLeftHandSide()) {
-					IInjection inj = cc.createInjection(agent);
+					CInjection inj = cc.createInjection(agent);
 					if (inj != null) {
-						if (!agent.isAgentHaveLinkToConnectedComponent(cc, inj))
+						if (!agent.hasSimilarInjection(inj))
 							cc.setInjection(inj);
 					}
 				}
 			}
 			for (IObservablesConnectedComponent obsCC : observables
 					.getConnectedComponentList()) {
-				IInjection inj = obsCC.createInjection(agent);
+				CInjection inj = obsCC.createInjection(agent);
 				if (inj != null) {
-					if (!agent.isAgentHaveLinkToConnectedComponent(obsCC, inj))
+					if (!agent.hasSimilarInjection(inj))
 						obsCC.setInjection(inj);
 				}
 			}
@@ -205,13 +206,13 @@ public class KappaSystem {
 	}
 
 	private final void doPositiveUpdateForDeletedAgentsForContactMap(
-			List<IAgent> agentsList, List<CRule> rules) {
-		for (IAgent agent : agentsList) {
+			List<CAgent> agentsList, List<CRule> rules) {
+		for (CAgent agent : agentsList) {
 			for (CRule rule : getRules()) {
 				for (IConnectedComponent cc : rule.getLeftHandSide()) {
-					IInjection inj = cc.createInjection(agent);
+					CInjection inj = cc.createInjection(agent);
 					if (inj != null) {
-						if (!agent.isAgentHaveLinkToConnectedComponent(cc, inj))
+						if (!agent.hasSimilarInjection(inj))
 							cc.setInjection(inj);
 					}
 				}

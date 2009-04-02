@@ -1,14 +1,14 @@
 package com.plectix.simulator.components.contactMap;
 import java.io.Serializable;
 
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
 public class ChangedSite implements Serializable{
-	private final ISite site;
+	private final CSite site;
 	private boolean linkState;
 	private boolean internalState;
 
-	public ISite getSite() {
+	public CSite getSite() {
 		return site;
 	}
 
@@ -28,13 +28,13 @@ public class ChangedSite implements Serializable{
 		this.internalState = internalState;
 	}
 
-	public ChangedSite(ISite site) {
+	public ChangedSite(CSite site) {
 		this.site = site;
 		this.linkState = false;
 		this.internalState = false;
 	}
 
-	public ChangedSite(ISite site, boolean internalState, boolean linkState) {
+	public ChangedSite(CSite site, boolean internalState, boolean linkState) {
 		this.site = site;
 		this.linkState = linkState;
 		this.internalState = internalState;

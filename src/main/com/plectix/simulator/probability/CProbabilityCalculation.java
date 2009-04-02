@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
+
 import com.plectix.simulator.interfaces.IRandom;
 
 import com.plectix.simulator.simulator.SimulationData;
@@ -45,8 +46,8 @@ public final class CProbabilityCalculation {
 		}
 	}
 
-	public final List<IInjection> getSomeInjectionList(CRule rule) {
-		List<IInjection> list = new ArrayList<IInjection>();
+	public final List<CInjection> getSomeInjectionList(CRule rule) {
+		List<CInjection> list = new ArrayList<CInjection>();
 		for (IConnectedComponent cc : rule.getLeftHandSide()) {
 			list.add(cc.getRandomInjection(random));
 		}

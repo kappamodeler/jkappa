@@ -3,6 +3,7 @@ package com.plectix.simulator.components.solution;
 import java.util.*;
 
 import com.plectix.simulator.action.*;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationUtils;
@@ -15,11 +16,11 @@ public class StandardRuleApplicationPool extends RuleApplicationPool {
 		myTempStorage = storage;
 	}
 
-	public void addAgent(IAgent agent) {
+	public void addAgent(CAgent agent) {
 		myTempStorage.addAgent(agent);
 	}
 
-	public void removeAgent(IAgent agent) {
+	public void removeAgent(CAgent agent) {
 		myTempStorage.removeAgent(agent);
 	}
 

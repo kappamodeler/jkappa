@@ -3,6 +3,7 @@ package com.plectix.simulator.components.solution;
 import java.util.Collection;
 import java.util.List;
 
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
@@ -39,7 +40,7 @@ public class SuperSubstance implements ISolutionComponent {
 		myComponent = component;
 	}
 	
-	public List<IAgent> getAgents() {
+	public List<CAgent> getAgents() {
 		return myComponent.getAgents();
 	}
 	
@@ -59,7 +60,7 @@ public class SuperSubstance implements ISolutionComponent {
 		return myComponent;
 	}
 
-	public void addAgentFromSolutionForRHS(IAgent agent) {
+	public void addAgentFromSolutionForRHS(CAgent agent) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -74,31 +75,31 @@ public class SuperSubstance implements ISolutionComponent {
 		
 	}
 
-	public List<IAgent> getAgentFromSolutionForRHS() {
+	public List<CAgent> getAgentFromSolutionForRHS() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public List<IAgent> getAgentsSortedByIdInRule() {
+	public List<CAgent> getAgentsSortedByIdInRule() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public IInjection getFirstInjection() {
+	public CInjection getFirstInjection() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public IInjection createInjection(IAgent agent) {
+	public CInjection createInjection(CAgent agent) {
 		return null;
 	}
 
-	public Collection<IInjection> getInjectionsList() {
+	public Collection<CInjection> getInjectionsList() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public IInjection getRandomInjection(IRandom random) {
+	public CInjection getRandomInjection(IRandom random) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -108,17 +109,17 @@ public class SuperSubstance implements ISolutionComponent {
 		
 	}
 
-	public boolean isAutomorphism(IAgent agent) {
+	public boolean isAutomorphism(CAgent agent) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	public void removeInjection(IInjection injection) {
+	public void removeInjection(CInjection injection) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	public void setInjection(IInjection inj) {
+	public void setInjection(CInjection inj) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -128,7 +129,7 @@ public class SuperSubstance implements ISolutionComponent {
 		
 	}
 
-	public boolean unify(IAgent agent) {
+	public boolean unify(CAgent agent) {
 		// TODO Auto-generated method stub
 		return false;
 	}

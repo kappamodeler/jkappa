@@ -4,23 +4,23 @@ import java.util.*;
 
 
 import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
 public class CContactMapEdge {
-	private ISite vertexFrom;
-	public ISite getVertexFrom() {
+	private CSite vertexFrom;
+	public CSite getVertexFrom() {
 		return vertexFrom;
 	}
 
-	public void setVertexFrom(ISite vertexFrom) {
+	public void setVertexFrom(CSite vertexFrom) {
 		this.vertexFrom = vertexFrom;
 	}
 
-	public ISite getVertexTo() {
+	public CSite getVertexTo() {
 		return vertexTo;
 	}
 
-	public void setVertexTo(ISite vertexTo) {
+	public void setVertexTo(CSite vertexTo) {
 		this.vertexTo = vertexTo;
 	}
 
@@ -28,10 +28,10 @@ public class CContactMapEdge {
 		return rules;
 	}
 
-	private ISite vertexTo;
+	private CSite vertexTo;
 	private List<Integer> rules;
 
-	public CContactMapEdge(ISite vertexFrom, ISite vertexTo) {
+	public CContactMapEdge(CSite vertexFrom, CSite vertexTo) {
 		this.vertexFrom = vertexFrom;
 		this.vertexTo = vertexTo;
 		rules = new ArrayList<Integer>();

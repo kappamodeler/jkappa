@@ -11,6 +11,7 @@ import org.junit.runners.*;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 
 @RunWith(value = Parameterized.class)
@@ -50,8 +51,8 @@ public class TestInjectionsAgentLinking extends TestInjections {
 		myObsAgentsOrder = obsAgentsOrder;
 	}
 
-	private IAgent getAgentFromCCById(IConnectedComponent cc, int id) {
-		for (IAgent agent : cc.getAgents()) {
+	private CAgent getAgentFromCCById(IConnectedComponent cc, int id) {
+		for (CAgent agent : cc.getAgents()) {
 			if (agent.getIdInConnectedComponent() == id) {
 				return agent;
 			}
@@ -87,13 +88,13 @@ public class TestInjectionsAgentLinking extends TestInjections {
 			}
 			name.append(myNumber);
 			if (name.toString().equals(c.getName())) {
-				Collection<IInjection> injectionsList = c.getInjectionsList();
+				Collection<CInjection> injectionsList = c.getInjectionsList();
 
-				for (IInjection injection : injectionsList) {
+				for (CInjection injection : injectionsList) {
 					IConnectedComponent cc = injection.getConnectedComponent();
-					for (IAgentLink link : injection.getAgentLinkList()) {
+					for (CAgentLink link : injection.getAgentLinkList()) {
 						int from = link.getIdAgentFrom();
-						IAgent agentFrom = getAgentFromCCById(cc, from);
+						CAgent agentFrom = getAgentFromCCById(cc, from);
 						int to = (int) link.getAgentTo().getId();
 						
 

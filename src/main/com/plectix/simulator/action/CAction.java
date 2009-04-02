@@ -8,14 +8,14 @@ import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.*;
 
 /*package*/abstract class CAction implements IAction, Serializable {
-	private final IAgent fromAgent;
-	private final IAgent toAgent;
+	private final CAgent fromAgent;
+	private final CAgent toAgent;
 	private final CRule myRule;
 	private final IConnectedComponent rightConnectedComponent;
 	private IConnectedComponent leftConnectedComponent;
 	private CActionType myType;
-	private ISite siteTo = null;
-	private ISite siteFrom = null;
+	private CSite siteTo = null;
+	private CSite siteFrom = null;
 	private int nameInternalStateId;
 
 	/**
@@ -25,7 +25,7 @@ import com.plectix.simulator.interfaces.*;
 	 * @param toAgent
 	 */
 
-	protected CAction(CRule rule, IAgent fromAgent, IAgent toAgent,
+	protected CAction(CRule rule, CAgent fromAgent, CAgent toAgent,
 			IConnectedComponent ccL, IConnectedComponent ccR) {
 		this.fromAgent = fromAgent;
 		this.toAgent = toAgent;
@@ -34,7 +34,7 @@ import com.plectix.simulator.interfaces.*;
 		this.myRule = rule;
 	}
 
-	protected final void setSiteSet(ISite from, ISite to) {
+	protected final void setSiteSet(CSite from, CSite to) {
 		siteTo = to;
 		siteFrom = from;
 	}
@@ -43,11 +43,11 @@ import com.plectix.simulator.interfaces.*;
 		myType = type;
 	}
 
-	public final ISite getSiteFrom() {
+	public final CSite getSiteFrom() {
 		return siteFrom;
 	}
 
-	public final ISite getSiteTo() {
+	public final CSite getSiteTo() {
 		return siteTo;
 	}
 
@@ -55,11 +55,11 @@ import com.plectix.simulator.interfaces.*;
 		return myType.getId();
 	}
 
-	public final IAgent getAgentFrom() {
+	public final CAgent getAgentFrom() {
 		return fromAgent;
 	}
 
-	public final IAgent getAgentTo() {
+	public final CAgent getAgentTo() {
 		return toAgent;
 	}
 
@@ -68,14 +68,14 @@ import com.plectix.simulator.interfaces.*;
 	}
 
 	protected abstract void addToNetworkNotation(StateType index,
-			INetworkNotation netNotation, ISite site);
+			INetworkNotation netNotation, CSite site);
 
 	protected abstract void addRuleSitesToNetworkNotation(boolean existInRule,
-			INetworkNotation netNotation, ISite site);
+			INetworkNotation netNotation, CSite site);
 
-	protected final int getAgentIdInCCBySideId(IAgent toAgent2) {
+	protected final int getAgentIdInCCBySideId(CAgent toAgent2) {
 		for (IConnectedComponent cc : myRule.getLeftHandSide())
-			for (IAgent agentL : cc.getAgents())
+			for (CAgent agentL : cc.getAgents())
 				if (agentL.getIdInRuleHandside() == toAgent2.getIdInRuleHandside()) {
 					if (leftConnectedComponent == null)
 						leftConnectedComponent = cc;
@@ -102,10 +102,10 @@ import com.plectix.simulator.interfaces.*;
 
 		List<IAction> list = new ArrayList<IAction>();
 
-		for (ISite fromSite : fromAgent.getSites()) {
-			ISite toSite = toAgent.getSite(fromSite.getNameId());
-			if (fromSite.getInternalState().getStateNameId() != toSite
-					.getInternalState().getStateNameId()) {
+		for (CSite fromSite : fromAgent.getSites()) {
+			CSite toSite = toAgent.getSiteById(fromSite.getNameId());
+			if (fromSite.getInternalState().getNameId() != toSite
+					.getInternalState().getNameId()) {
 				list.add(new CModifyAction(myRule, fromSite, toSite,
 						leftConnectedComponent, rightConnectedComponent));
 				//if (!isChangedSiteContains(toSite))
@@ -143,8 +143,8 @@ import com.plectix.simulator.interfaces.*;
 				continue;
 			}
 
-			ISite lConnectSite = (ISite) fromSite.getLinkState().getSite();
-			ISite rConnectSite = (ISite) toSite.getLinkState().getSite();
+			CSite lConnectSite = (CSite) fromSite.getLinkState().getSite();
+			CSite rConnectSite = (CSite) toSite.getLinkState().getSite();
 			if (lConnectSite == null || rConnectSite == null)
 				continue;
 			if ((lConnectSite.getAgentLink().getIdInRuleHandside() == rConnectSite
@@ -153,7 +153,7 @@ import com.plectix.simulator.interfaces.*;
 				continue;
 			list.add(new CBreakAction(myRule, fromSite, toSite,
 					leftConnectedComponent, rightConnectedComponent));
-			list.add(new CBoundAction(myRule, toSite, (ISite) toSite
+			list.add(new CBoundAction(myRule, toSite, (CSite) toSite
 					.getLinkState().getSite(), leftConnectedComponent,
 					rightConnectedComponent));
 				//myRule.addChangedSite(toSite);

@@ -8,10 +8,10 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.ILinkState;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.KappaSystem;
 
@@ -69,11 +69,11 @@ import com.plectix.simulator.simulator.KappaSystem;
 		return cloned;
 	}
 	
-	public List<IAgent> cloneAgentsList(List<IAgent> agentList) {
-		List<IAgent> newAgentsList = new ArrayList<IAgent>();
-		for (IAgent agent : agentList) {
-			IAgent newAgent = new CAgent(agent.getNameId(), mySystem.generateNextAgentId());
-			for (ISite site : agent.getSites()) {
+	public List<CAgent> cloneAgentsList(List<CAgent> agentList) {
+		List<CAgent> newAgentsList = new ArrayList<CAgent>();
+		for (CAgent agent : agentList) {
+			CAgent newAgent = new CAgent(agent.getNameId(), mySystem.generateNextAgentId());
+			for (CSite site : agent.getSites()) {
 				CSite newSite = new CSite(site.getNameId(), newAgent);
 				newSite.setLinkIndex(site.getLinkIndex());
 				newSite.setInternalState(new CInternalState(site
@@ -85,10 +85,10 @@ import com.plectix.simulator.simulator.KappaSystem;
 			newAgentsList.add(newAgent);
 		}
 		for (int i = 0; i < newAgentsList.size(); i++) {
-			for (ISite siteNew : newAgentsList.get(i).getSites()) {
+			for (CSite siteNew : newAgentsList.get(i).getSites()) {
 				ILinkState lsNew = siteNew.getLinkState();
 				ILinkState lsOld = agentList.get(i)
-						.getSite(siteNew.getNameId()).getLinkState();
+						.getSiteById(siteNew.getNameId()).getLinkState();
 				lsNew.setStatusLink(lsOld.getStatusLink());
 				if (lsOld.getSite() != null) {
 					CSite siteOldLink = (CSite) lsOld.getSite();
@@ -98,7 +98,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 							break;
 					}
 					int index = j;
-					lsNew.setSite(newAgentsList.get(index).getSite(
+					lsNew.setSite(newAgentsList.get(index).getSiteById(
 							siteOldLink.getNameId()));
 				}
 			}

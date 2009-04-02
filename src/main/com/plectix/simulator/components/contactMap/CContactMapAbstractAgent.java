@@ -9,10 +9,10 @@ import java.util.Map;
 
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.interfaces.IAbstractAgent;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
@@ -52,7 +52,7 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		return this.sitesMap;
 	}
 
-	public CContactMapAbstractAgent(IAgent agent) {
+	public CContactMapAbstractAgent(CAgent agent) {
 		this.nameID = agent.getNameId();
 		this.myEmptySite = new CContactMapAbstractSite(this);
 		this.sitesMap = new HashMap<Integer, IContactMapAbstractSite>();
@@ -89,13 +89,13 @@ public class CContactMapAbstractAgent implements IContactMapAbstractAgent {
 		this.sitesMap.put(newSite.getNameId(), newSite);
 	}
 
-	public final void addSites(IAgent agent,
+	public final void addSites(CAgent agent,
 			Map<Integer, IContactMapAbstractAgent> agentNameIdToAgent) {
 
 		IContactMapAbstractAgent abstractModelAgent = agentNameIdToAgent
 				.get(agent.getNameId());
 
-		for (ISite site : agent.getSites()) {
+		for (CSite site : agent.getSites()) {
 			Integer key = site.getNameId();
 			IContactMapAbstractSite abstractSite = new CContactMapAbstractSite(
 					site, this);

@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.components.CLinkStatus;
-import com.plectix.simulator.interfaces.IAgent;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.util.PrimeNumbers;
 
 public final class AgentInvariant {
@@ -26,17 +26,17 @@ public final class AgentInvariant {
 	private long productOfNeighborPrimes = 0;
 
 	private int numberOfConnections = 0;
-	private IAgent agent = null;  // this is set in the constructor
-	private List<ISite> sortedSites = null;  // we don't initialize this list if we don't have to...
+	private CAgent agent = null;  // this is set in the constructor
+	private List<CSite> sortedSites = null;  // we don't initialize this list if we don't have to...
 	private List<AgentInvariant> neighborAgentList = null;  // we don't initialize this list if we don't have to...
 	
-	public AgentInvariant(IAgent agent) {
+	public AgentInvariant(CAgent agent) {
 		if (agent == null) {
 			throw new RuntimeException("Agent can not be null!");
 		}
 		this.agent = agent;
 			
-		for (ISite site : agent.getSites()) {
+		for (CSite site : agent.getSites()) {
 			if (site.getLinkState().getStatusLink() == CLinkStatus.BOUND) {
 				numberOfConnections++;
 			} else if (site.getLinkState().getStatusLink() != CLinkStatus.FREE) {
@@ -51,9 +51,9 @@ public final class AgentInvariant {
 	 * 
 	 * @return
 	 */
-	public final List<ISite> getSortedSites() {
+	public final List<CSite> getSortedSites() {
 		if (sortedSites == null) {
-			sortedSites = new ArrayList<ISite>(agent.getSites());
+			sortedSites = new ArrayList<CSite>(agent.getSites());
 			// here they will be sorted by name since they are on the same Agent:
 			Collections.sort(sortedSites, SiteComparator.SITE_COMPARATOR);
 		}
@@ -65,12 +65,12 @@ public final class AgentInvariant {
 	 * 
 	 * @param agentToAgentInvariantMap
 	 */
-	public final void computeNeighbors(Map<IAgent, AgentInvariant> agentToAgentInvariantMap) {
+	public final void computeNeighbors(Map<CAgent, AgentInvariant> agentToAgentInvariantMap) {
 		if (neighborAgentList == null) {
 			neighborAgentList = new ArrayList<AgentInvariant>();
 		}
 		
-		for (ISite site : agent.getSites()) {
+		for (CSite site : agent.getSites()) {
 			if (site.getLinkState().getStatusLink() == CLinkStatus.BOUND) {
 				AgentInvariant neighbor = agentToAgentInvariantMap.get(site.getLinkState().getSite().getAgentLink()); 
 				if (neighbor == null) {
@@ -141,7 +141,7 @@ public final class AgentInvariant {
 	 * 
 	 * @return
 	 */
-	public final IAgent getAgent() {
+	public final CAgent getAgent() {
 		return agent;
 	}
 
@@ -226,8 +226,8 @@ public final class AgentInvariant {
 			
 			// agent names are the same... and the number of connections are also the same...
 			// so let's compare sites:
-			List<ISite> sortedSites1 = o1.getSortedSites();
-			List<ISite> sortedSites2 = o2.getSortedSites();
+			List<CSite> sortedSites1 = o1.getSortedSites();
+			List<CSite> sortedSites2 = o2.getSortedSites();
 			for (int i= 0; i < sortedSites1.size(); i++) {
 				result = SiteComparator.SITE_COMPARATOR.compare(sortedSites1.get(i), sortedSites2.get(i));
 				if (result != 0) {

@@ -4,39 +4,40 @@ import com.plectix.simulator.components.CLinkState;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.injections.CLiftElement;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.ILiftElement;
+
 import com.plectix.simulator.interfaces.INetworkNotation;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
 
 public class CDeleteAction extends CAction {
 	private final CRule myRule;
-	private final IAgent myFromAgent;
+	private final CAgent myFromAgent;
 	
-	public CDeleteAction(CRule rule, IAgent fromAgent, IConnectedComponent ccL) {
+	public CDeleteAction(CRule rule, CAgent fromAgent, IConnectedComponent ccL) {
 		super(rule, fromAgent, null, ccL, null);
 		myFromAgent = fromAgent;
 		myRule = rule;
 		setType(CActionType.DELETE);
 	}
 
-	public final void doAction(RuleApplicationPool pool, IInjection injection, 
+	public final void doAction(RuleApplicationPool pool, CInjection injection, 
 			INetworkNotation netNotation, SimulationData simulationData) {
 		/**
 		 * Done.
 		 */
-		IAgent agent = injection.getAgentFromImageById(myFromAgent.getIdInConnectedComponent());
-		for (ISite site : agent.getSites()) {
+		CAgent agent = injection.getAgentFromImageById(myFromAgent.getIdInConnectedComponent());
+		for (CSite site : agent.getSites()) {
 			removeSiteToConnectedWithDeleted(site);
-			ISite solutionSite = (ISite) site.getLinkState().getSite();
+			CSite solutionSite = (CSite) site.getLinkState().getSite();
 
 			if (solutionSite != null) {
 				addToNetworkNotation(StateType.BEFORE,
@@ -54,23 +55,23 @@ public class CDeleteAction extends CAction {
 			}
 		}
 
-		for (ILiftElement lift : agent.getEmptySite().getLift()) {
-			agent.getEmptySite().removeInjectionsFromCCToSite(
+		for (CLiftElement lift : agent.getDefaultSite().getLift()) {
+			agent.getDefaultSite().clearIncomingInjections(
 					lift.getInjection());
 			lift.getInjection().getConnectedComponent().removeInjection(
 					lift.getInjection());
 		}
 
-		for (ISite site : agent.getSites()) {
+		for (CSite site : agent.getSites()) {
 			addToNetworkNotation(StateType.BEFORE, netNotation,
 					site);
 			addRuleSitesToNetworkNotation(true, netNotation, site);
-			for (ILiftElement lift : site.getLift()) {
-				site.removeInjectionsFromCCToSite(lift.getInjection());
+			for (CLiftElement lift : site.getLift()) {
+				site.clearIncomingInjections(lift.getInjection());
 				lift.getInjection().getConnectedComponent().removeInjection(
 						lift.getInjection());
 			}
-			site.clearLift();
+			site.clearLiftList();
 			injection.removeSiteFromSitesList(site);
 		}
 		// injection.getConnectedComponent().getInjectionsList()
@@ -80,7 +81,7 @@ public class CDeleteAction extends CAction {
 	}
 
 	public final void addRuleSitesToNetworkNotation(boolean existInRule,
-			INetworkNotation netNotation, ISite site) {
+			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
 			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
@@ -88,7 +89,7 @@ public class CDeleteAction extends CAction {
 
 			if (existInRule) {
 				agentMode = NetworkNotationMode.TEST_OR_MODIFY;
-				ISite siteFromRule = myFromAgent.getSite(site.getNameId());
+				CSite siteFromRule = myFromAgent.getSiteById(site.getNameId());
 
 				if (siteFromRule != null)
 					linkStateMode = NetworkNotationMode.TEST_OR_MODIFY;
@@ -109,14 +110,14 @@ public class CDeleteAction extends CAction {
 	}
 	
 	protected final void addToNetworkNotation(StateType index,
-			INetworkNotation netNotation, ISite site) {
+			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			netNotation.checkLinkForNetworkNotationDel(index, site);
 		}
 	}
 	
-	private final void addSiteToConnectedWithDeleted(ISite checkedSite) {
-		for (ISite site : myRule.getSitesConnectedWithDeleted()) {
+	private final void addSiteToConnectedWithDeleted(CSite checkedSite) {
+		for (CSite site : myRule.getSitesConnectedWithDeleted()) {
 			if (site == checkedSite) {
 				return;
 			}
@@ -124,7 +125,7 @@ public class CDeleteAction extends CAction {
 		myRule.addSiteConnectedWithDeleted(checkedSite);
 	}
 	
-	private final void removeSiteToConnectedWithDeleted(ISite checkedSite) {
+	private final void removeSiteToConnectedWithDeleted(CSite checkedSite) {
 		int size = myRule.getSitesConnectedWithDeleted().size();
 		for (int i = 0; i < size; i++) {
 			if (myRule.getSiteConnectedWithDeleted(i) == checkedSite) {

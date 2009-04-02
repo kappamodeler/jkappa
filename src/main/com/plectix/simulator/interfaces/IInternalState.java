@@ -1,5 +1,10 @@
 package com.plectix.simulator.interfaces;
 
+/**
+ * Interface of InternalState.
+ * @author avokhmin
+ *
+ */
 public interface IInternalState {
 
 	public int getNameId();
@@ -7,8 +12,6 @@ public interface IInternalState {
 	public String getName();
 
 	public boolean isRankRoot();
-
-	public int getStateNameId();
 
 	public void setNameId(int nameInternalStateId);
 

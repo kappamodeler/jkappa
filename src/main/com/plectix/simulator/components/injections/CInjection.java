@@ -4,18 +4,24 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.*;
 
-public class CInjection implements IInjection, Serializable {
+/**
+ * Class implements Injection.
+ * @author avokhmin
+ */
+public class CInjection implements Serializable {
 
-	public static final IInjection EMPTY_INJECTION = new CInjection();
+	public static final CInjection EMPTY_INJECTION = new CInjection();
 
-	private List<IAgentLink> agentLinkList;
-	private List<ISite> sitesList = new ArrayList<ISite>();
-	private List<ISite> changedSites;
+	private List<CAgentLink> agentLinkList;
+	private List<CSite> sitesList = new ArrayList<CSite>();
+	private List<CSite> changedSites;
 	private int myId = 0;
 	private CConnectedComponent connectedComponent;
 	private SuperSubstance myImageComponent = null;
@@ -25,16 +31,16 @@ public class CInjection implements IInjection, Serializable {
 	}
 
 	public CInjection(CConnectedComponent connectedComponent,
-			List<ISite> sitesList, List<IAgentLink> agentLinkList) {
+			List<CSite> sitesList, List<CAgentLink> agentLinkList) {
 		this.connectedComponent = connectedComponent;
 		this.sitesList = sitesList;
 		this.agentLinkList = agentLinkList;
-		this.changedSites = new ArrayList<ISite>();
+		this.changedSites = new ArrayList<CSite>();
 	}
 
-	public final void removeSiteFromSitesList(ISite site) {
+	public final void removeSiteFromSitesList(CSite site) {
 		int index = 0;
-		for (ISite siteL : this.sitesList) {
+		for (CSite siteL : this.sitesList) {
 			if (site == siteL) {
 				this.sitesList.remove(index);
 				return;
@@ -43,7 +49,7 @@ public class CInjection implements IInjection, Serializable {
 		}
 	}
 
-	public final void addToChangedSites(ISite site) {
+	public final void addToChangedSites(CSite site) {
 		if (!(checkSiteExistanceAmongChangedSites(site)))
 			this.changedSites.add(site);
 	}
@@ -52,8 +58,8 @@ public class CInjection implements IInjection, Serializable {
 		changedSites.clear();
 	}
 
-	public final boolean checkSiteExistanceAmongChangedSites(ISite site) {
-		for (ISite chSite : this.changedSites)
+	public final boolean checkSiteExistanceAmongChangedSites(CSite site) {
+		for (CSite chSite : this.changedSites)
 			if (chSite == site)
 				return true;
 		return false;
@@ -67,30 +73,30 @@ public class CInjection implements IInjection, Serializable {
 		return myId;
 	}
 
-	public final IAgent getAgentFromImageById(int id) {
-		for (IAgentLink agentL : agentLinkList)
+	public final CAgent getAgentFromImageById(int id) {
+		for (CAgentLink agentL : agentLinkList)
 			if (agentL.getIdAgentFrom() == id)
 				return agentL.getAgentTo();
 		return null;
 	}
 	
-	public final List<ISite> getChangedSites() {
+	public final List<CSite> getChangedSites() {
 		return Collections.unmodifiableList(changedSites);
 	}
 
-	public final void setChangedSites(List<ISite> changedSites) {
+	public final void setChangedSites(List<CSite> changedSites) {
 		this.changedSites = changedSites;
 	}
 
-	public final List<IAgentLink> getAgentLinkList() {
+	public final List<CAgentLink> getAgentLinkList() {
 		return Collections.unmodifiableList(agentLinkList);
 	}
 
-	public final List<ISite> getSiteList() {
+	public final List<CSite> getSiteList() {
 		return Collections.unmodifiableList(sitesList);
 	}
 
-	public final void setSiteList(List<ISite> siteList) {
+	public final void setSiteList(List<CSite> siteList) {
 		this.sitesList = siteList;
 	}
 
@@ -110,15 +116,35 @@ public class CInjection implements IInjection, Serializable {
 		return this == CInjection.EMPTY_INJECTION;
 	}
 	
-	public IAgent getImageAgent() {
+	public CAgent getImageAgent() {
 		if (agentLinkList != null) {
-			for (IAgentLink agentL : agentLinkList) {
+			for (CAgentLink agentL : agentLinkList) {
 				return agentL.getAgentTo();
 			}
 		}
 		return null;
 	}
 
+	public boolean compareInjectedLists(List<CInjection> list) {
+		int counter = 0;
+		for (CInjection injection : list) {
+			if (injection.getSiteList().size() == sitesList.size()) {
+				for (CSite site : injection.getSiteList()) {
+					if (sitesList.contains(site))
+						counter++;
+					else {
+						counter = 0;
+						break;
+					}
+				}
+				if (counter == injection.getSiteList().size())
+					return true;
+				counter = 0;
+			}
+		}
+		return false;
+	}
+	
 	public boolean isSuper() {
 		return this.myImageComponent != null;
 	}

@@ -26,7 +26,7 @@ public class SolutionBuilder {
 
 		
 		for (SolutionLineData lineData : arg.getAgents()) {
-			List<IAgent> list = mySubstanceBuilder.buildAgents(lineData.getAgents());
+			List<CAgent> list = mySubstanceBuilder.buildAgents(lineData.getAgents());
 			long quant = lineData.getCount();
 			
 			if (myArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {

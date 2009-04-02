@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.interfaces.ILinkState;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
 /**
  * This class compares two Sites. Here is the comparison rules:
@@ -20,7 +20,7 @@ import com.plectix.simulator.interfaces.ISite;
  * 
  * @author ecemis
  */
-public final class SiteComparator implements Comparator<ISite> {
+public final class SiteComparator implements Comparator<CSite> {
 
 	public static final SiteComparator SITE_COMPARATOR = new SiteComparator();
 	
@@ -32,7 +32,7 @@ public final class SiteComparator implements Comparator<ISite> {
 	}
 	
 	
-	public final int compare(ISite o1, ISite o2) {
+	public final int compare(CSite o1, CSite o2) {
 		// first compare the site names:
 		int result = o1.getName().compareTo(o2.getName());
 		if (result != 0) {
@@ -49,8 +49,8 @@ public final class SiteComparator implements Comparator<ISite> {
 		
 		// so let's compare their link sites:
 		
-		ISite linkSite1 = getLinkSite(o1);
-		ISite linkSite2 = getLinkSite(o2);
+		CSite linkSite1 = getLinkSite(o1);
+		CSite linkSite2 = getLinkSite(o2);
 		
 		if (linkSite1 == null) {
 			if (linkSite2 == null) {
@@ -84,11 +84,11 @@ public final class SiteComparator implements Comparator<ISite> {
 			}
 		}
 			
-		// we assume that the agents have the same name, so we can't use the agentLink to, IAgent agentLink = o1.getAgentLink();	
+		// we assume that the agents have the same name, so we can't use the agentLink to, CAgent agentLink = o1.getAgentLink();	
 		// can't use linkIndex as an invariant: int linkIndex = o1.getLinkIndex();
 	}
 
-	private static final ISite getLinkSite(ISite site) {
+	private static final CSite getLinkSite(CSite site) {
 		ILinkState linkState = site.getLinkState();
 		CLinkStatus statusLink = linkState.getStatusLink();
 		
@@ -115,7 +115,7 @@ public final class SiteComparator implements Comparator<ISite> {
 	 * 
 	 * @param site
 	 */
-	public final String makeStringToCompare(ISite site) {
+	public final String makeStringToCompare(CSite site) {
 		return site.getName() + "~" + site.getInternalState().getName() + "!"
 			+ ( site.getLinkState().getStatusLink() == CLinkStatus.FREE ?
 				"FREE"

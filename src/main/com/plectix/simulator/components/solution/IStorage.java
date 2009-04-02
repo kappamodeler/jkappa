@@ -2,6 +2,7 @@ package com.plectix.simulator.components.solution;
 
 import java.util.*;
 
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 
 public interface IStorage {
@@ -10,11 +11,11 @@ public interface IStorage {
 	
 //	public void removeConnectedComponent(IConnectedComponent component);
 	
-//	public Collection<IAgent> getAgents();
+//	public Collection<CAgent> getAgents();
 
 	public List<IConnectedComponent> split();
 
-	public IConnectedComponent extractComponent(IInjection inj);
+	public IConnectedComponent extractComponent(CInjection inj);
 	
 	public void clear();
 

@@ -1,11 +1,11 @@
 package com.plectix.simulator.components.solution;
 
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 
 public abstract class RuleApplicationPool {
-	public abstract void addAgent(IAgent agent);
+	public abstract void addAgent(CAgent agent);
 
-	public abstract void removeAgent(IAgent agent);
+	public abstract void removeAgent(CAgent agent);
 	
 	public abstract StraightStorage getStorage();
 }

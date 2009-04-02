@@ -5,7 +5,7 @@ import java.util.Collection;
 import org.w3c.dom.Element;
 
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
 public class CStoryType {
 

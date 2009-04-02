@@ -2,9 +2,10 @@ package com.plectix.simulator.components.solution;
 
 import java.util.*;
 
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
+
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationUtils;
 
@@ -22,9 +23,9 @@ import com.plectix.simulator.simulator.SimulationUtils;
 		myStraightStorage.addConnectedComponent(component);
 	}
 
-	public RuleApplicationPool prepareRuleApplicationPool(List<IInjection> injections) {
+	public RuleApplicationPool prepareRuleApplicationPool(List<CInjection> injections) {
 		StraightStorage storage = new StraightStorage();
-		for (IInjection injection : injections) {
+		for (CInjection injection : injections) {
 			if (injection.isSuper()) {
 				storage.addConnectedComponent(mySuperStorage.extractComponent(injection));
 			} else {
@@ -37,14 +38,14 @@ import com.plectix.simulator.simulator.SimulationUtils;
 	
 	public void applyRule(RuleApplicationPool pool) {
 		// we can skip checking that getStorage() returns temporary storage
-		for (IAgent agent : pool.getStorage().getAgents()) {
+		for (CAgent agent : pool.getStorage().getAgents()) {
 			myStraightStorage.addAgent(agent);
 		}
 	}
 
 	//-----------------AGENTS GETTERS---------------------------
 	
-	public void addInitialConnectedComponents(long quant, List<IAgent> agentsList) {
+	public void addInitialConnectedComponents(long quant, List<CAgent> agentsList) {
 		for (IConnectedComponent component : SimulationUtils.buildConnectedComponents(agentsList)) {
 			mySuperStorage.addSuperSubstance(new SuperSubstance(quant, component));	
 		}	

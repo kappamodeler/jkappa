@@ -10,10 +10,11 @@ import org.junit.Before;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
 
-import com.plectix.simulator.interfaces.ISite;
+
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
@@ -98,7 +99,7 @@ public class InitTestAction extends DirectoryTestsRunner{
 		}
 	}
 
-	protected List<IInjection> run() {
+	protected List<CInjection> run() {
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
 				InfoType.OUTPUT,mySimulator.getSimulationData());
 		myActiveRule = ruleProbabilityCalculation.getRandomRule();
@@ -111,7 +112,7 @@ public class InitTestAction extends DirectoryTestsRunner{
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug("Rule: " + myActiveRule.getName());
 
-		List<IInjection> injectionsList = ruleProbabilityCalculation
+		List<CInjection> injectionsList = ruleProbabilityCalculation
 				.getSomeInjectionList(myActiveRule);
 
 		currentTime += ruleProbabilityCalculation.getTimeValue();
@@ -120,7 +121,7 @@ public class InitTestAction extends DirectoryTestsRunner{
 		return injectionsList;
 	}
 
-	protected void apply(List<IInjection> injectionsList) {
+	protected void apply(List<CInjection> injectionsList) {
 		if (!isClash(injectionsList)) {
 			// negative update
 			if (LOGGER.isDebugEnabled())
@@ -134,10 +135,10 @@ public class InitTestAction extends DirectoryTestsRunner{
 		}
 	}
 
-	private boolean isClash(List<IInjection> injections) {
+	private boolean isClash(List<CInjection> injections) {
 		if (injections.size() == 2) {
-			for (ISite siteCC1 : injections.get(0).getSiteList())
-				for (ISite siteCC2 : injections.get(1).getSiteList())
+			for (CSite siteCC1 : injections.get(0).getSiteList())
+				for (CSite siteCC2 : injections.get(1).getSiteList())
 					if (siteCC1.getAgentLink().getId() == siteCC2
 							.getAgentLink().getId())
 						return true;

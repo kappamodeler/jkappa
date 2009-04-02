@@ -23,7 +23,7 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 	private final boolean unique;
 	private int lastInjectionsQuantity = -1;
 	
-	public ObservablesConnectedComponent(List<IAgent> connectedAgents,
+	public ObservablesConnectedComponent(List<CAgent> connectedAgents,
 			String name, String line, int nameID, boolean unique) {
 		super(connectedAgents);
 		this.unique = unique;

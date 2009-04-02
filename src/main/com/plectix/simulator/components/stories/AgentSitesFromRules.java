@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 
 final class AgentSitesFromRules {

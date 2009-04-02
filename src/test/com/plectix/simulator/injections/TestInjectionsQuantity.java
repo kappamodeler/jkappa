@@ -8,6 +8,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.*;
 import org.junit.runner.RunWith;
 
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
@@ -47,9 +48,9 @@ public class TestInjectionsQuantity extends TestInjections  {
 		if (!exists) {
 			myFailer.fail("There's no component with name " + ccName);
 		}
-		Collection<IInjection> injectionsList = myCurrentCC.getInjectionsList();
+		Collection<CInjection> injectionsList = myCurrentCC.getInjectionsList();
 		long quant = 0;
-		for (IInjection injection : myCurrentCC.getInjectionsList()) {
+		for (CInjection injection : myCurrentCC.getInjectionsList()) {
 			if (injection.isSuper()) {
 				quant += injection.getSuperSubstance().getQuantity();
 			} else {

@@ -11,13 +11,14 @@ import org.apache.log4j.Logger;
 
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.controller.SimulatorStatusInterface;
-import com.plectix.simulator.interfaces.IInjection;
+
 
 import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.util.PlxTimer;
@@ -49,7 +50,7 @@ public class Simulator implements SimulatorInterface {
 	/** Use synchronized (statusLock) when changing the value of this variable */
 	private int currentIterationNumber = 0;
 
-	private boolean isIteration = false;
+	private boolean CSiteration = false;
 
 	private int timeStepCounter = 0;
 	
@@ -243,7 +244,7 @@ public class Simulator implements SimulatorInterface {
 				LOGGER.debug("Rule: " + rule.getName());
 			}
 	
-			List<IInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
+			List<CInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
 			if (!rule.isInfiniteRated()) {
 				synchronized (statusLock) {
 					currentTime += ruleProbabilityCalculation.getTimeValue();
@@ -280,7 +281,7 @@ public class Simulator implements SimulatorInterface {
 				max_clash++;
 			}
 	
-			if (isIteration) {
+			if (CSiteration) {
 				addIteration(iteration_num);
 			}
 		}
@@ -295,7 +296,7 @@ public class Simulator implements SimulatorInterface {
 		endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
 		Source source = addCompleteSource();
 		
-		if (!isIteration) {
+		if (!CSiteration) {
 			simulationData.outputData(source, currentEventNumber);
 		}
 	
@@ -303,7 +304,7 @@ public class Simulator implements SimulatorInterface {
 	}
 
 	public final void runIterations() throws Exception {
-		isIteration = true;
+		CSiteration = true;
 		int seed = simulationData.getSimulationArguments().getSeed();
 		List<Double> timeStamps = new ArrayList<Double>();
 		List<List<RunningMetric>> runningMetrics = new ArrayList<List<RunningMetric>>();
@@ -389,7 +390,7 @@ public class Simulator implements SimulatorInterface {
 					break;
 				}
 
-				List<IInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
+				List<CInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
 				
 				if (!rule.isInfiniteRated()) {
 					synchronized (statusLock) {

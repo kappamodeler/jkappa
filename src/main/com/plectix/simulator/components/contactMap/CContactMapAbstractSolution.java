@@ -10,13 +10,13 @@ import java.util.Map;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.solution.SuperSubstance;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractRule;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.SimulationData;
 
@@ -43,13 +43,13 @@ public class CContactMapAbstractSolution {
 		this.edgesInContactMap = new HashMap<Integer, Map<Integer, List<CContactMapAbstractEdge>>>();
 		this.agentsInContactMap = new HashMap<Integer, Map<Integer, CContactMapChangedSite>>();
 		this.simulationData = simulationData;
-		Collection<IAgent> agents = prepareSolutionAgents();
+		Collection<CAgent> agents = prepareSolutionAgents();
 		fillModelMapOfAgents(agents);
 		fillAgentMap(agents);
 	}
 
-	private Collection<IAgent> prepareSolutionAgents() {
-		Collection<IAgent> agents = new ArrayList<IAgent>();
+	private Collection<CAgent> prepareSolutionAgents() {
+		Collection<CAgent> agents = new ArrayList<CAgent>();
 		ISolution solution = simulationData.getKappaSystem().getSolution();
 		if (solution.getStraightStorage() != null) {
 			agents.addAll(solution.getStraightStorage().getAgents());
@@ -162,7 +162,7 @@ public class CContactMapAbstractSolution {
 		return isAdd;
 	}
 
-	private void fillModelMapOfAgents(Collection<IAgent> agents) {
+	private void fillModelMapOfAgents(Collection<CAgent> agents) {
 		fillModelMapByAgentList(agents);
 
 		for (CRule rule : simulationData.getKappaSystem().getRules()) {
@@ -174,8 +174,8 @@ public class CContactMapAbstractSolution {
 		}
 	}
 
-	private void fillModelMapByAgentList(Collection<IAgent> listIn) {
-		for (IAgent a : listIn) {
+	private void fillModelMapByAgentList(Collection<CAgent> listIn) {
+		for (CAgent a : listIn) {
 			IContactMapAbstractAgent modelAgent = agentNameIdToAgent.get(a
 					.getNameId());
 			if (modelAgent == null) {
@@ -183,7 +183,7 @@ public class CContactMapAbstractSolution {
 				agentNameIdToAgent.put(a.getNameId(), modelAgent);
 			}
 
-			for (ISite s : a.getSites()) {
+			for (CSite s : a.getSites()) {
 				IContactMapAbstractSite as = new CContactMapAbstractSite(s);
 				as.setAgentLink(modelAgent);
 				modelAgent.addModelSite(as);
@@ -191,9 +191,9 @@ public class CContactMapAbstractSolution {
 		}
 	}
 
-	private void fillAgentMap(Collection<IAgent> agents) {
+	private void fillAgentMap(Collection<CAgent> agents) {
 
-		for (IAgent agent : agents) {
+		for (CAgent agent : agents) {
 			IContactMapAbstractAgent abstractAgent = new CContactMapAbstractAgent(
 					agent);
 			abstractAgent.addSites(agent, this.agentNameIdToAgent);

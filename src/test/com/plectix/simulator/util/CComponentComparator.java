@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
 public class CComponentComparator {
 	
@@ -51,15 +51,15 @@ public class CComponentComparator {
 
 	private static boolean compareCC(IConnectedComponent cCRight,
 			IConnectedComponent cc) {
-		List<IAgent> listCC = new ArrayList<IAgent>();
+		List<CAgent> listCC = new ArrayList<CAgent>();
 		listCC = cCRight.getAgents();
-		for (IAgent agent : listCC) {
+		for (CAgent agent : listCC) {
 			if (!findAgentInCC(agent, cc)) {
 				return false;
 			}
 		}
 		listCC = cc.getAgents();
-		for (IAgent agent : listCC) {
+		for (CAgent agent : listCC) {
 			if (!findAgentInCC(agent, cCRight)) {
 
 				return false;
@@ -68,9 +68,9 @@ public class CComponentComparator {
 		return true;
 	}
 
-	private static boolean findAgentInCC(IAgent agentToFind, IConnectedComponent cc) {
+	private static boolean findAgentInCC(CAgent agentToFind, IConnectedComponent cc) {
 		String name = agentToFind.getName();
-		for (IAgent agent2 : cc.getAgents()) {
+		for (CAgent agent2 : cc.getAgents()) {
 			if (name.equals(agent2.getName())) {
 				if (checkSites(agentToFind, agent2)) {
 					return true;
@@ -80,19 +80,19 @@ public class CComponentComparator {
 		return false;
 	}
 
-	private static boolean checkSites(IAgent agent1, IAgent agent2) {
+	private static boolean checkSites(CAgent agent1, CAgent agent2) {
 		boolean flag = false;
-		Collection<ISite> agent1Sites = new ArrayList<ISite>();
-		Collection<ISite> agent2Sites = new ArrayList<ISite>();
+		Collection<CSite> agent1Sites = new ArrayList<CSite>();
+		Collection<CSite> agent2Sites = new ArrayList<CSite>();
 		agent1Sites = agent1.getSites();
 		agent2Sites = agent2.getSites();
 		String sName;
 		int sIntState;
-		for (ISite site1 : agent1Sites) {
+		for (CSite site1 : agent1Sites) {
 			flag = false;
 			sName = site1.getName();
 			sIntState = site1.getInternalState().getNameId();
-			for (ISite site2 : agent2Sites) {
+			for (CSite site2 : agent2Sites) {
 				if (sName.equals(site2.getName())
 						&& (site2.getInternalState().getNameId() == sIntState)
 						&& (site2.getLinkIndex() == site1.getLinkIndex())) {

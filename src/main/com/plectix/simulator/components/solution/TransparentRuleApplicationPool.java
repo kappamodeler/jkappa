@@ -1,6 +1,6 @@
 package com.plectix.simulator.components.solution;
 
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 
 /*package*/class TransparentRuleApplicationPool extends RuleApplicationPool {
 	private final StraightStorage myStorage;
@@ -13,11 +13,11 @@ import com.plectix.simulator.interfaces.IAgent;
 		return myStorage;
 	}
 
-	public void removeAgent(IAgent agent) {
+	public void removeAgent(CAgent agent) {
 		myStorage.removeAgent(agent);
 	}
 
-	public void addAgent(IAgent agent) {
+	public void addAgent(CAgent agent) {
 		myStorage.addAgent(agent);
 	}
 }

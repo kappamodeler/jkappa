@@ -2,8 +2,9 @@ package com.plectix.simulator.components.solution;
 
 import java.util.*;
 
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
+
 import com.plectix.simulator.interfaces.ISolution;
 
 public class SuperStorage implements IStorage {
@@ -11,8 +12,8 @@ public class SuperStorage implements IStorage {
 
 	private List<SuperSubstance> myComponents = new ArrayList<SuperSubstance>();
 
-	// private final HashMap<Long, IAgent> agentMap = new HashMap<Long,
-	// IAgent>();;
+	// private final HashMap<Long, CAgent> agentMap = new HashMap<Long,
+	// CAgent>();;
 	private final ISolution mySolution;
 
 	SuperStorage(ISolution solution) {
@@ -75,7 +76,7 @@ public class SuperStorage implements IStorage {
 		return list;
 	}
 
-	public IConnectedComponent extractComponent(IInjection inj) {
+	public IConnectedComponent extractComponent(CInjection inj) {
 		SuperSubstance image = inj.getSuperSubstance();
 		if (image != null) {
 			IConnectedComponent component = this.extract(image);

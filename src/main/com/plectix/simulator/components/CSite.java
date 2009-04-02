@@ -6,110 +6,151 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.IInternalState;
-import com.plectix.simulator.interfaces.ILiftElement;
-import com.plectix.simulator.interfaces.ILinkState;
-import com.plectix.simulator.interfaces.ISite;
-import com.plectix.simulator.simulator.ThreadLocalData;
 
-public final class CSite implements ISite, Serializable {
+import com.plectix.simulator.interfaces.IInternalState;
+import com.plectix.simulator.interfaces.ILinkState;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.injections.CLiftElement;
+
+/**
+ * This class implements Site entity.
+ * 
+ * @author avokhmin
+ */
+@SuppressWarnings("serial")
+public final class CSite implements Serializable {
 	public static final int NO_INDEX = -1;
 
 	private final int nameId;
 	private final ILinkState linkState;
 	private IInternalState internalState = CInternalState.EMPTY_STATE;
 	private boolean changed;
-	private IAgent linkAgent = null;
+	private CAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;
 
-	private List<ILiftElement> liftList = new ArrayList<ILiftElement>();
+	private List<CLiftElement> liftList = new ArrayList<CLiftElement>();
 
-	public CSite(int id) {
-		this.nameId = id;
+	/**
+	 * Constructor by id
+	 * @param nameId nameId of new site.
+	 */
+	public CSite(int nameId) {
+		this.nameId = nameId;
 		linkState = new CLinkState(CLinkStatus.FREE);
 	}
 
-	public CSite(int id, IAgent agent) {
+	//------------------------GETTERS AND SETTERS------------------------------
+	
+	/**
+	 * Constructor by id and "parent" agent
+	 * @param id nameId of new site.
+	 * @param agent "parent" agent 
+	 */
+	public CSite(int id, CAgent agent) {
 		this.nameId = id;
 		linkState = new CLinkState(CLinkStatus.FREE);
 		linkAgent = agent;
 	}
 
-	public final void setLift(List<ILiftElement> lift) {
+	/**
+	 * This method sets list of lift elements for this site
+	 * @param lift new value
+	 */
+	public final void setLift(List<CLiftElement> lift) {
 		this.liftList = lift;
 	}
 
-	// TODO
-	public final void addToLift(ILiftElement liftElement) {
+	/**
+	 * Adds <code>liftElement</code> to <code>liftList</code>.
+	 * @param liftElement lift element to add
+	 */
+	public final void addToLift(CLiftElement liftElement) {
 		this.liftList.add(liftElement);
 	}
 
-	public final List<ILiftElement> getLift() {
+	/**
+	 * This method returns list of lift elements of this site
+	 * @return list of lift elements of this site
+	 */
+	public final List<CLiftElement> getLift() {
 		return Collections.unmodifiableList(liftList);
 	}
 
-	public final void clearLift() {
-		liftList.clear();
-	}
-
-	public final boolean isConnectedComponentInLift(IConnectedComponent inCC) {
-		for (ILiftElement liftElement : this.liftList)
-			if (liftElement.getConnectedComponent() == inCC)
-				return true;
-		return false;
-	}
-
-	public final List<IInjection> getInjectionFromLift(IConnectedComponent inCC) {
-		List<IInjection> list = new ArrayList<IInjection>();
-		for (ILiftElement liftElement : this.liftList)
+	/**
+	 * This method returns list of injections from given connected component, which point to this site
+	 * @param inCC given connected component
+	 * @return list of injections from given connected component, which point to this site
+	 */
+	public final List<CInjection> getInjectionFromLift(IConnectedComponent inCC) {
+		List<CInjection> list = new ArrayList<CInjection>();
+		for (CLiftElement liftElement : this.liftList)
 			if (liftElement.getConnectedComponent() == inCC)
 				list.add(liftElement.getInjection());
 		return Collections.unmodifiableList(list);
 	}
 
+	/**
+	 * Returns link state of this site.
+	 * @return link state of this site.
+	 */
 	public final ILinkState getLinkState() {
 		return linkState;
 	}
 
-	public final void setAgentLink(IAgent agent) {
+	/**
+	 * This method sets link to the "parent" agent. 
+	 * @param agent "parent" agent
+	 */
+	public final void setAgentLink(CAgent agent) {
 		if (agent == null)
 			return;
 		this.linkAgent = agent;
 	}
 
-	public final IAgent getAgentLink() {
+	/**
+	 * This method returns agent, which is parent for this site
+	 * @return agent, which is parent for this site 
+	 */
+	public final CAgent getAgentLink() {
 		return linkAgent;
 	}
 
+	/**
+	 * This method sets internal state for current site.
+	 * @param internalState new value
+	 */
 	public final void setInternalState(IInternalState internalState) {
 		this.internalState = internalState;
 	}
 
+	/**
+	 * This method returns internal state for current site.
+	 * @return internal state for current site.
+	 */
 	public final IInternalState getInternalState() {
 		return internalState;
 	}
 
-	public final boolean isChanged() {
-		return changed;
-	}
-
-	public final boolean equalz(ISite obj) {
-		if (this == obj) {
+	/**
+	 * This method returns <tt>true</tt>, if current site equals 
+	 * to given site (by nameId and {@link CAgent#equalz(CAgent) equalz}, 
+	 * otherwise <tt>false</tt>).
+	 * @param site given site 
+	 * @return <tt>true</tt>, if current site equals to given site,
+	 * otherwise <tt>false</tt>)
+	 */
+	public final boolean equalz(CSite site) {
+		if (this == site) {
 			return true;
 		}
 
-		if (obj == null) {
+		if (site == null) {
 			return false;
 		}
-
-		if (!(obj instanceof CSite)) {
-			return false;
-		}
-
-		CSite site = (CSite) obj;
 
 		if (nameId != site.nameId) {
 			return false;
@@ -122,70 +163,15 @@ public final class CSite implements ISite, Serializable {
 		}
 	}
 
-	public final boolean includedInCollection(Collection<ISite> collection) {
-		for (ISite agent : collection) {
-			if (this.equalz(agent)) {
-				return true;
-			}
-		}
-		return false;
-	}
 
-	public final void setLinkIndex(int index) {
-		this.linkIndex = index;
-	}
-
-	public final int getLinkIndex() {
-		return linkIndex;
-	}
-
-	public final int getNameId() {
-		return nameId;
-	}
-
-	public final void clearLiftList() {
-		this.liftList.clear();
-	}
-
-	public final void removeInjectionsFromCCToSite(IInjection inInjection) {
-
-		for (ILiftElement liftElement : this.liftList) {
-			IInjection injection = liftElement.getInjection();
-			if (injection != inInjection) {
-				for (ISite site : injection.getSiteList()) {
-					if (this != site)
-						site.removeInjectionFromLift(injection);
-				}
-				liftElement.getConnectedComponent().removeInjection(injection);
-			}
-		}
-		/*
-		 * for (CLiftElement liftElement : this.liftList) { CInjection injection
-		 * = liftElement.getInjection(); if (injection != inInjection) { for
-		 * (CSite site : injection.getChangedSites()) { if (this != site)
-		 * site.removeInjectionFromLift(injection); }
-		 * liftElement.getConnectedComponent().getInjectionsList().remove(
-		 * injection); } }
-		 */
-	}
-
-	public final void removeInjectionFromLift(IInjection injection) {
-		for (ILiftElement liftElement : this.liftList)
-			if (injection == liftElement.getInjection()) {
-				this.liftList.remove(liftElement);
-				return;
-			}
-	}
-
-	public final String getName() {
-		return ThreadLocalData.getNameDictionary().getName(nameId);
-	}
-
-	public String toString() {
-		return linkAgent.getName() + "(" + getName() + ")";
-	}
-
-	public final boolean compareSites(ISite solutionSite, boolean fullEquality) {
+	/**
+	 * This method compares this site to a given one, according to it's internal states,
+	 * link states. This one has boolean flag which is working mode for this method.  
+	 * @param solutionSite given site
+	 * @param fullEquality working mode of this method
+	 * @return <tt>true</tt> if current site equals given site, otherwise <tt>false</tt>.
+	 */
+	public final boolean expandedEqualz(CSite solutionSite, boolean fullEquality) {
 		ILinkState currentLinkState = linkState;
 		ILinkState solutionLinkState = solutionSite.getLinkState();
 
@@ -200,5 +186,98 @@ public final class CSite implements ISite, Serializable {
 					.fullEqualityInternalStates(solutionInternalState));
 
 	}
+	
+	/**
+	 * This method is some kind of override {@link Collection#contains(Object) contains}.
+	 * We need it just because we haven't override default {@link Object#equals(Object) equals},
+	 * but we use our own {@link CSite#equalz(CSite) equalz}. So we had to create util
+	 * method for checking current agent in given collection 
+	 * @param collection given collection
+	 */
+	public final boolean includedInCollection(Collection<CSite> collection) {
+		for (CSite agent : collection) {
+			if (this.equalz(agent)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
+	/**
+	 * This method sets link index to this site<br>
+	 * For example site "x" of agent C in (A(x!1), B(y!2, y!1), C(x!2)) has link index == 2
+	 * @param index new value
+	 */
+	public final void setLinkIndex(int index) {
+		this.linkIndex = index;
+	}
+
+	/**
+	 * This method returns link index to this site<br>
+	 * For example site "x" of agent C in (A(x!1), B(y!2, y!1), C(x!2)) has link index == 2
+	 * @return link index to this site
+	 */
+	public final int getLinkIndex() {
+		return linkIndex;
+	}
+
+	/**
+	 * This method returns name-id of this site
+	 * @see com.plectix.simulator.util.NameDictionary NameDictionary
+	 * @return name-id of this site
+	 */
+	public final int getNameId() {
+		return nameId;
+	}
+
+	/**
+	 * This method returns name of this site
+	 * @see com.plectix.simulator.util.NameDictionary NameDictionary
+	 * @return name of this site
+	 */
+	public final String getName() {
+		return ThreadLocalData.getNameDictionary().getName(nameId);
+	}
+
+	/**
+	 * This method clears list of lift elements
+	 */
+	public final void clearLiftList() {
+		this.liftList.clear();
+	}
+
+	/**
+	 * This method clears all injections, pointing to this site except one.
+	 * @param inInjection excepted injection
+	 */
+	public final void clearIncomingInjections(CInjection inInjection) {
+		for (CLiftElement liftElement : this.liftList) {
+			CInjection injection = liftElement.getInjection();
+			if (injection != inInjection) {
+				for (CSite site : injection.getSiteList()) {
+					if (this != site) {
+						site.removeInjectionFromLift(injection);
+					}
+				}
+				liftElement.getConnectedComponent().removeInjection(injection);
+			}
+		}
+	}
+
+	/**
+	 * This method finds and removes injection from injections of lift elements 
+	 * @param injection injection to remove
+	 */
+	public final void removeInjectionFromLift(CInjection injection) {
+		for (CLiftElement liftElement : this.liftList) {
+			if (injection == liftElement.getInjection()) {
+				this.liftList.remove(liftElement);
+				return;
+			}
+		}
+	}
+
+	public String toString() {
+		return linkAgent.getName() + "(" + getName() + ")";
+	}
 }

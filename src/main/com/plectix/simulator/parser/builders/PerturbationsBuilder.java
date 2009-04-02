@@ -93,7 +93,7 @@ public class PerturbationsBuilder {
 			} else {
 				AbstractOnceModification modification = (AbstractOnceModification) arg
 						.getModification();
-				List<IAgent> agentList = mySubstanceBuilder
+				List<CAgent> agentList = mySubstanceBuilder
 						.buildAgents(modification.getSubstance());
 				List<IConnectedComponent> ccList = SimulationUtils
 						.buildConnectedComponents(agentList);

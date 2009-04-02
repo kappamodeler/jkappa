@@ -5,7 +5,7 @@ import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.ILinkState;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
 public class CContactMapLinkState {
 	private CLinkRank statusLinkRank;

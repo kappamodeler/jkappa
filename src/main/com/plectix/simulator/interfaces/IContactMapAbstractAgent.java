@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.plectix.simulator.components.CAgent;
+
 public interface IContactMapAbstractAgent extends IAbstractAgent {
 
-	public void addSites(IAgent agent,
+	public void addSites(CAgent agent,
 			Map<Integer, IContactMapAbstractAgent> agentNameIdToAgent);
 
 	public boolean equalz(IAbstractAgent obj);

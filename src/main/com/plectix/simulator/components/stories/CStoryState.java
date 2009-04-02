@@ -1,7 +1,7 @@
 package com.plectix.simulator.components.stories;
 
 import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.IInjection;
+
 import com.plectix.simulator.interfaces.IStates;
 
 class CStoryState implements IStates {

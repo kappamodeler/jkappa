@@ -12,10 +12,10 @@ import org.apache.log4j.Logger;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.string.AgentInvariant.AgentInvariantRankComparator;
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.ILinkState;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 
 /**
  * This class creates a unique String from a ConnectedComponent's list of Agents. 
@@ -101,14 +101,14 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 	private static final Logger LOGGER = Logger.getLogger(ConnectedComponentToSmilesString.class);
 	
 	public final String toUniqueString(IConnectedComponent connectedComponent) {
-		List<IAgent> agentList = connectedComponent.getAgents();
+		List<CAgent> agentList = connectedComponent.getAgents();
 
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("ConnectedComponent has " + agentList.size() + " Agents");
 		}
 		
 		List<AgentInvariant> agentInvariantList = new ArrayList<AgentInvariant>(agentList.size());
-		for (IAgent agent : agentList) {
+		for (CAgent agent : agentList) {
 			agentInvariantList.add(new AgentInvariant(agent));
 		}
 		
@@ -185,7 +185,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 	private static final String toKappa(List<AgentInvariant> agentInvariantList) {
 		// set all link indices to -1
 		for (AgentInvariant agentInvariant : agentInvariantList) {
-			for (ISite site : agentInvariant.getSortedSites()) {
+			for (CSite site : agentInvariant.getSortedSites()) {
 				site.setLinkIndex(-1);
 			}
 		}
@@ -194,11 +194,11 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 		
 		int linkIndexCounter = 0;
 		for (AgentInvariant agentInvariant : agentInvariantList) {
-			IAgent agent = agentInvariant.getAgent();
+			CAgent agent = agentInvariant.getAgent();
 			stringBuffer.append(agent.getName() + "(");
 			
 			 boolean firstSite = true;
-		     for (ISite site : agentInvariant.getSortedSites()) {
+		     for (CSite site : agentInvariant.getSortedSites()) {
 		            if (firstSite) {
 		                firstSite = false;
 		            } else {
@@ -314,7 +314,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 	}
 	
 	private static final void computeNeighbors(List<AgentInvariant> agentInvariantList) {
-		Map<IAgent, AgentInvariant> agentToAgentInvariantMap = new HashMap<IAgent, AgentInvariant>(agentInvariantList.size());
+		Map<CAgent, AgentInvariant> agentToAgentInvariantMap = new HashMap<CAgent, AgentInvariant>(agentInvariantList.size());
 		for (AgentInvariant agentInvariant : agentInvariantList) {
 			agentToAgentInvariantMap.put(agentInvariant.getAgent(), agentInvariant);
 		}

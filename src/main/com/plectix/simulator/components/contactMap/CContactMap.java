@@ -56,8 +56,8 @@ public class CContactMap {
 		for (IContactMapAbstractAgent agent : agentsFromFocusedRule) {
 			if (agent.equalz(checkingAgent))
 				return true;
-			// for (ISite site : ((CAgent) checkingAgent).getSites()) {
-			// ISite linkSite = site.getLinkState().getSite();
+			// for (CSite site : ((CAgent) checkingAgent).getSites()) {
+			// CSite linkSite = site.getLinkState().getSite();
 			// if (linkSite != null)
 			// if (linkSite.getAgentLink().equalz(agent))
 			// // if (linkSite.getAgentLink().equals(agent))
@@ -75,7 +75,7 @@ public class CContactMap {
 				&& !checkConnectionWithFocused(agent)) {
 			return;
 		}
-		// for (ISite site : agent.getSites()) {
+		// for (CSite site : agent.getSites()) {
 		// boolean internalState = false;
 		// boolean linkState = false;
 		// if (!isLHS) {

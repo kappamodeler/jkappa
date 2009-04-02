@@ -3,19 +3,24 @@ package com.plectix.simulator.components;
 import java.io.Serializable;
 import java.util.*;
 
-import com.plectix.simulator.interfaces.IAgent;
+import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.injections.CLiftElement;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IInjection;
-import com.plectix.simulator.interfaces.ISite;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
-public final class CAgent implements IAgent, Serializable {
+/**
+ * This class implements Agent entity.
+ * @author avokhmin
+ *
+ */
+public final class CAgent implements Comparable<CAgent>, Serializable {
 	/**
 	 * idInConnectedComponent is the unique id in ConnectedComponent id is an
 	 * unique id for agent
 	 */
 	public static final int UNMARKED = -1;
-	public static final byte EMPTY = -1;
 
 	private int idInConnectedComponent;
 	private int idInRuleSide = UNMARKED;
@@ -23,47 +28,48 @@ public final class CAgent implements IAgent, Serializable {
 	private long id = -1;
 
 	// TODO: is this field static or not???
-	private final ISite myEmptySite = new CSite(CSite.NO_INDEX, this);
-	private TreeMap<Integer, ISite> siteMap = new TreeMap<Integer, ISite>();
+	private final CSite myDefaultSite = new CSite(CSite.NO_INDEX, this);
+	private TreeMap<Integer, CSite> siteMap = new TreeMap<Integer, CSite>();
 
+	/**
+	 * Constructor of Agent.
+	 * @param nameId name id of the new agent
+	 * @param agentID unique id of the new agent
+	 */
 	public CAgent(int nameId, long agentID) {
 		id = agentID;
 		this.nameId = nameId;
 	}
-
-	public ISite getEmptySite() {
-		return myEmptySite;
+	
+	/**
+	 * Empty Agent constructor
+	 */
+	public CAgent() {
+		id = -1;
+		this.nameId = -1;
 	}
 
-	public Map<Integer, ISite> getSiteMap() {
-		return Collections.unmodifiableMap(siteMap);
+	/**
+	 * This method returns default site from current agent
+	 * @return default site from current agent
+	 */
+	public CSite getDefaultSite() {
+		return myDefaultSite;
 	}
 
-	public int getIdInRuleHandside() {
-		return idInRuleSide;
-	}
-
-	public void setIdInRuleSide(int idInRuleSide) {
-		this.idInRuleSide = idInRuleSide;
-	}
-
-	public boolean isAgentHaveLinkToConnectedComponent(IConnectedComponent cc) {
-		for (ISite site : siteMap.values()) {
-			if (site.getAgentLink().getEmptySite().isConnectedComponentInLift(
-					cc))
-				return true;
-			if (site.isConnectedComponentInLift(cc))
-				return true;
-		}
-		return false;
-	}
-
-	public boolean isAgentHaveLinkToConnectedComponent(IConnectedComponent cc,
-			IInjection injection) {
-		if (checkSites(this.getEmptySite(), injection, cc))
+	/**
+	 * This method returns <tt>true</tt>, if this agent already has injection equaivalent 
+	 * to the given one, <tt>false</tt>
+	 * @param injection given injection
+	 * @return <tt>true</tt>, if this agent already has injection equivalent 
+	 * to the given one, <tt>false</tt>
+	 */
+	public boolean hasSimilarInjection(CInjection injection) {
+		IConnectedComponent cc = injection.getConnectedComponent();
+		if (checkSites(this.getDefaultSite(), injection, cc))
 			return true;
-		for (ISite site : siteMap.values()) {
-			if (checkSites(site.getAgentLink().getEmptySite(), injection, cc))
+		for (CSite site : siteMap.values()) {
+			if (checkSites(site.getAgentLink().getDefaultSite(), injection, cc))
 				return true;
 			if (checkSites(site, injection, cc))
 				return true;
@@ -71,110 +77,79 @@ public final class CAgent implements IAgent, Serializable {
 		return false;
 	}
 
-	private boolean checkSites(ISite site, IInjection injection,
+	/**
+	 * This is utility for finding similar injections, used in {@link #hasSimilarInjection(CInjection)}
+	 */
+	private boolean checkSites(CSite site, CInjection injection,
 			IConnectedComponent cc) {
-		List<IInjection> sitesInjections = site.getInjectionFromLift(cc);
+		List<CInjection> sitesInjections = site.getInjectionFromLift(cc);
 		if (sitesInjections.size() != 0) {
-			if (compareInjectedLists(sitesInjections, injection))
+			if (injection.compareInjectedLists(sitesInjections))
 				return true;
-		}
-		return false;
-	}
-
-	private boolean isSiteInList(List<ISite> sitesList, ISite site) {
-		for (ISite siteList : sitesList) {
-			if (site == siteList
-					&& site.getInternalState().equals(
-							siteList.getInternalState())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean compareInjectedLists(List<IInjection> list, IInjection two) {
-		int counter = 0;
-		for (IInjection one : list) {
-			if (one.getSiteList().size() == two.getSiteList().size()) {
-				for (ISite siteOne : one.getSiteList()) {
-					if (isSiteInList(two.getSiteList(), siteOne))
-						counter++;
-					else {
-						counter = 0;
-						break;
-					}
-				}
-				if (counter == one.getSiteList().size())
-					return true;
-				counter = 0;
-			}
 		}
 		return false;
 	}
 
 	/**
-	 * returns linked agent of this from solution which is equal to input
-	 * parameter
+	 * 
+	 * This method finds and agent, which is connected with this through the given site-collection 
+	 * @param agent given agent 
+	 * @param siteCollection collection of sites
+	 * @return agent (if there's one), which connected with current agent through the given sites,
+	 * otherwise <tt>null</tt>
 	 */
-
-	public final IAgent findLinkAgent(IAgent agentFromCC, List<ISite> siteFromCC) {
-		if (agentFromCC == null || siteFromCC.size() == 0)
+	public final CAgent findLinkAgent(CAgent agent, List<CSite> siteCollection) {
+		if (agent == null || siteCollection.size() == 0)
 			return null;
-		IAgent agent = (CAgent) this.getSite(siteFromCC.get(0).getNameId())
+		CAgent imageAgent = (CAgent) this.getSiteById(siteCollection.get(0).getNameId())
 				.getLinkState().getSite().getAgentLink();
-		for (ISite siteF : siteFromCC) {
-			IAgent agent2 = (CAgent) this.getSite(siteF.getNameId())
+		for (CSite siteF : siteCollection) {
+			CAgent agent2 = (CAgent) this.getSiteById(siteF.getNameId())
 					.getLinkState().getSite().getAgentLink();
-			if (agent != agent2)
+			if (imageAgent != agent2)
 				return null;
 		}
-		if (agent.equalz(agentFromCC))
-			return agent;
+		if (imageAgent.equalz(agent))
+			return imageAgent;
 
 		return null;
 	}
 
-	public final void addSite(ISite site) {
+	
+	/**
+	 * This method adds site to this agent
+	 * @param site site we want to add
+	 */
+	public final void addSite(CSite site) {
 		site.setAgentLink(this);
 		siteMap.put(site.getNameId(), site);
 	}
-
-	public final int getIdInConnectedComponent() {
-		return idInConnectedComponent;
-	}
-
-	public final void setIdInConnectedComponent(int index) {
-		idInConnectedComponent = index;
-	}
-
-	public final Collection<ISite> getSites() {
-		return Collections.unmodifiableCollection(siteMap.values());
-	}
-
-	public final long getId() {
-		return id;
-	}
-
-	public final boolean equalz(IAgent obj) {
-		if (this == obj) {
+	
+	/**
+	 * This method indicates whether name ids of given agent is equal to name id of current one.
+	 * @param agent given agent
+	 */
+	public final boolean equalz(CAgent agent) {
+		if (this == agent) {
 			return true;
 		}
 		
-		if (obj == null) {
+		if (agent == null) {
 			return false;
 		}
-			
-		if (!(obj instanceof CAgent)) {
-			return false;
-		}
-
-		CAgent agent = (CAgent) obj;
 		
 		return nameId == agent.nameId;
 	}
 	
-	public boolean includedInCollection(Collection<IAgent> collection) {
-		for (IAgent agent : collection) {
+	/**
+	 * This method is some kind of override {@link Collection#contains(Object) contains}.
+	 * We need it just because we haven't override default {@link Object#equals(Object) equals},
+	 * but we use our own {@link CAgent#equalz(CAgent) equalz}. So we had to create util
+	 * method for checking current agent in given collection 
+	 * @param collection given collection
+	 */
+	public boolean includedInCollection(Collection<CAgent> collection) {
+		for (CAgent agent : collection) {
 			if (this.equalz(agent)) {
 				return true;
 			}
@@ -182,21 +157,30 @@ public final class CAgent implements IAgent, Serializable {
 		return false;
 	}
 	
-	public boolean siteMapsAreEqual(IAgent agent) {
+	/**
+	 * This method returns <tt>true</tt>, if sites from current agent are 
+	 * {@link com.plectix.simulator.interfaces.CSite#equalz(CSite) equal} to sites 
+	 * of the given agent, otherwise <tt>false</tt>
+	 * @param agent given agent
+	 * @return <tt>true</tt>, if sites from current agent are 
+	 * {@link com.plectix.simulator.interfaces.CSite#equalz(CSite) equal} to sites 
+	 * of the given agent, otherwise <tt>false</tt>
+	 */
+	public boolean siteMapsAreEqual(CAgent agent) {
 		if (agent == null) {
 			return false;
 		}
 		
-		Set<ISite> listThis = new HashSet<ISite>();
-		Set<ISite> listThat = new HashSet<ISite>();
+		Set<CSite> listThis = new HashSet<CSite>();
+		Set<CSite> listThat = new HashSet<CSite>();
 		
 		listThis.addAll(siteMap.values());
-		listThat.addAll(agent.getSiteMap().values());
+		listThat.addAll(agent.getSites());
 		
-		for (ISite siteThis : siteMap.values()) {
+		for (CSite siteThis : siteMap.values()) {
 			boolean containsCurrent = false;
-			ISite foundedSiteThat = null;
-			for (ISite siteThat : listThat) {
+			CSite foundedSiteThat = null;
+			for (CSite siteThat : listThat) {
 				if (siteThis.equalz(siteThat)) {
 					foundedSiteThat = siteThat;
 					containsCurrent = true;
@@ -214,27 +198,94 @@ public final class CAgent implements IAgent, Serializable {
 		return listThis.isEmpty() && listThat.isEmpty();
 	}
 	
-	public final ISite getSite(int siteNameId) {
+	//-------------------------GETTERS AND SETTERS---------------------------------------
+	
+	/**
+	 * This method returns this agent's ordering number in left/right handside of rule
+	 * (if there is one), use only for create atomic actions for Rule.
+	 * @return ordering number in rule's handside, if there is such rule, or
+	 * -1 if there isn't
+	 */
+	public int getIdInRuleHandside() {
+		return idInRuleSide;
+	}
+
+	public void setIdInRuleSide(int idInRuleSide) {
+		this.idInRuleSide = idInRuleSide;
+	}
+	
+	/**
+	 * This method searches site with similar id as given in current agent 
+	 * @param siteNameId site id to search
+	 * @return site, that has similar id as given, or null, if there's no such
+	 */
+	public final CSite getSiteById(int siteNameId) {
 		return siteMap.get(siteNameId);
 	}
 
+	/**
+	 * This method returns name-id of this agent
+	 * @see com.plectix.simulator.util.NameDictionary NameDictionary
+	 * @return name-id of this agent
+	 */
 	public final int getNameId() {
 		return nameId;
 	}
 
+	/**
+	 * This method returns name of this agent
+	 * @see com.plectix.simulator.util.NameDictionary NameDictionary
+	 * @return name of this agent
+	 */
 	public final String getName() {
 		return ThreadLocalData.getNameDictionary().getName(nameId);
 	}
 
-	public long getHash() {
+	/**
+	 * This method returns order number of this agent in connected component, 
+	 * used only for create atomic actions for rule.
+	 */
+	public final int getIdInConnectedComponent() {
+		return idInConnectedComponent;
+	}
+
+	/**
+	 * This method sets order number of this agent in connected component, 
+	 * used only for create atomic actions for rule.
+	 * @param index new value
+	 */
+	public final void setIdInConnectedComponent(int index) {
+		idInConnectedComponent = index;
+	}
+
+	/**
+	 * This method returns collection of current agent's sites
+	 */
+	public final Collection<CSite> getSites() {
+		return Collections.unmodifiableCollection(siteMap.values());
+	}
+
+	/**
+	 * This method returns unique id of current agent
+	 * @return id of current agent
+	 */
+	public final long getId() {
 		return id;
 	}
 
-	@Override
+	/**
+	 * This method returns something like a hashCode for the agent.
+	 * We use it to keep agents in more convenient storage, which we can remove from fast enough. 
+	 * @return hash code of this agent
+	 */
+	public long getHash() {
+		return id;
+	}
+	
 	public String toString() {
 		StringBuffer sb = new StringBuffer(getName() + "(");
 		boolean first = true;
-		for (ISite site : siteMap.values()) {
+		for (CSite site : siteMap.values()) {
 			if (!first) {
 				sb.append(", ");
 			} else {
@@ -256,7 +307,7 @@ public final class CAgent implements IAgent, Serializable {
 		return sb.toString();
 	}
 
-	public int compareTo(IAgent o) {
+	public int compareTo(CAgent o) {
 		return idInRuleSide - o.getIdInRuleHandside();
 	}
 }
