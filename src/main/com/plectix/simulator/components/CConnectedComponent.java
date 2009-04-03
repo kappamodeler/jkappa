@@ -293,11 +293,6 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return false;
 	}
 
-	/**
-	 * This method returns <tt>true</tt> if current ConnectedComponent
-	 * does "Automorphiñ's" by given agent, otherwise <tt>false</tt>
-	 * @param agent given agent
-	 */
 	public final boolean isAutomorphism(CAgent agent) {
 		if (spanningTreeMap == null)
 			return false;
