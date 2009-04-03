@@ -5,6 +5,12 @@ import java.util.*;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.SimulationData;
 
+/**
+ * Class implements snapshots elements.<br>
+ * Creates image of current state Solution.
+ * @author avokhmin
+ *
+ */
 public final class CSnapshot {
 
 	private int totalAgents;
@@ -16,14 +22,19 @@ public final class CSnapshot {
 	private List<SnapshotElement> snapshotElements;
 	private double snapshotTime;
 
+	/**
+	 * this method returns time, when did do image of current state Solution.
+	 */
 	public double getSnapshotTime() {
 		return snapshotTime;
 	}
 
-	public void setSnapshotTime(double snapshotTime) {
-		this.snapshotTime = snapshotTime;
-	}
-
+	/**
+	 * Default constructor.<br>
+	 * Creates image of current state Solution.
+	 * @param simulationData given simulation data
+	 * @param snapshotTime given time, when creating image. 
+	 */
 	public CSnapshot(SimulationData simulationData,double snapshotTime) {
 		this.snapshotTime = snapshotTime;
 		ccList = simulationData.getKappaSystem().getSolution().split();
@@ -59,26 +70,44 @@ public final class CSnapshot {
 			se.setConnectedComponent(null);
 	}
 
+	/**
+	 * This method returns all SnapshotElements. Uses for create xml.
+	 */
 	public final List<SnapshotElement> getSnapshotElements() {
 		return Collections.unmodifiableList(snapshotElements);
 	}
 
+	/**
+	 * This method returns total count of agents. 
+	 */
 	public final int getTotalAgents() {
 		return totalAgents;
 	}
 
+	/**
+	 * This method returns total connection components.
+	 */
 	public final int getTotalConnectedComponents() {
 		return totalConnectedComponents;
 	}
 
-	public final int getSmollestConnectedComponent() {
+	/**
+	 * This method returns connected components, witch has smallest agents number.
+	 */
+	public final int getSmallestConnectedComponent() {
 		return smollestConnectedComponent;
 	}
 
+	/**
+	 * This method returns connected components, witch has largest agents number.
+	 */
 	public final int getLargestConnectedComponent() {
 		return largestConnectedComponent;
 	}
 
+	/**
+	 * This method returns unique connected components.
+	 */
 	public final int getUniqueConnectedComponent() {
 		return uniqueConnectedComponent;
 	}

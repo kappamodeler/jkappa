@@ -44,6 +44,10 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * <b>List of {@link CSpanningTree}</b> - list for check.
 	 */
 	private Map<Integer, List<CSpanningTree>> spanningTreeMap;
+	
+	/**
+	 * Uses for connect ConnectedComponent from rule and agents from solution.
+	 */
 	private List<CAgent> agentFromSolutionForRHS;
 	
 	/**
@@ -81,7 +85,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 
 	/**
 	 * Constructor ConnectedComponent with <b>connectedAgents</b> agents.
-	 * @param connectedAgents - <code>List of {@link CAgent}</code> value - agents generates ConnectedComponent. 
+	 * @param connectedAgents <code>List of {@link CAgent}</code> value - agents generates ConnectedComponent. 
 	 */
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
@@ -106,8 +110,8 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 
 	/**
 	 * Adds injection to current ConnectedComponent.
-	 * @param inj - new injection
-	 * @param id - id of <b>inj</b>
+	 * @param inj new injection
+	 * @param id id of <b>inj</b>
 	 */
 	private final void addInjection(CInjection inj, int id) {
 		if (inj != null) {
@@ -117,21 +121,34 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		}
 	}
 
+	/**
+	 * Util method.<br>
+	 * This method adds agents from solution, when apply rule.
+	 * @param new agent
+	 */
 	public final void addAgentFromSolutionForRHS(CAgent agentFromSolutionForRHS) {
 		this.agentFromSolutionForRHS.add(agentFromSolutionForRHS);
 	}
 
+	/**
+	 * Util method.<br>
+	 * This method clears list of agent from solution
+	 */
 	public final void clearAgentsFromSolutionForRHS() {
 		agentFromSolutionForRHS.clear();
 	}
 
+	/**
+	 * Util method.<br>
+	 * This method returns list of agents from solution.
+	 */
 	public final List<CAgent> getAgentFromSolutionForRHS() {
 		return Collections.unmodifiableList(agentFromSolutionForRHS);
 	}
 
 	/**
 	 * Removes <b>injection</b> from current ConnectedComponent.
-	 * @param injection - Injection for removes.
+	 * @param injection Injection for removes.
 	 */
 	public final void removeInjection(CInjection injection) {
 		if (injection == null) {
@@ -173,17 +190,30 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		}
 	}
 
+	/**
+	 * Util. Uses for {@link #setInjection(CInjection)}
+	 * @param injection new injection
+	 */
 	private final void addLiftsToCurrentChangedStates(CInjection injection) {
 		for (CSite changedSite : injectedSites) {
 			changedSite.addToLift(new CLiftElement(this, injection));
 		}
 	}
 
+	/**
+	 * Sets new injection for current ConnectedComponent.
+	 * @param inj new injection
+	 */
 	public final void setInjection(CInjection inj) {
 		addInjection(inj, maxId + 1);
 		addLiftsToCurrentChangedStates(inj);
 	}
 
+	/**
+	 * Returns new injection for current ConnectedComponent by input agent.<br>
+	 * If injection can't be create, returns "null".
+	 * @param agent given agent
+	 */
 	public final CInjection createInjection(CAgent agent) {
 		if (unify(agent)) {
 			CInjection injection = new CInjection(this, injectedSites,
@@ -193,6 +223,10 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return null;
 	}
 
+	/**
+	 * Implements positive update for current ConnectedComponent by given list of ConnectedComponents.
+	 * @param connectedComponentList given list of ConnectedComponents
+	 */
 	public final void doPositiveUpdate(
 			List<IConnectedComponent> connectedComponentList) {
 		if (connectedComponentList == null)
@@ -208,10 +242,18 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		}
 	}
 
+	/**
+	 * This method returns all agents from current ConnectedComponent
+	 */
 	public final List<CAgent> getAgents() {
 		return Collections.unmodifiableList(agentList);
 	}
 
+	/**
+	 * Implements unify current ConnectedComponent to given agent.
+	 * @param agent given agent
+	 * @return <tt>true</tt> if successful attempt, otherwise <tt>false</tt>
+	 */
 	public final boolean unify(CAgent agent) {
 		injectedSites = new ArrayList<CSite>();
 		agentLinkList = new ArrayList<CAgentLink>();
@@ -251,6 +293,11 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return false;
 	}
 
+	/**
+	 * This method returns <tt>true</tt> if current ConnectedComponent
+	 * does "Automorphiñ's" by given agent, otherwise <tt>false</tt>
+	 * @param agent given agent
+	 */
 	public final boolean isAutomorphism(CAgent agent) {
 		if (spanningTreeMap == null)
 			return false;
@@ -279,6 +326,12 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return false;
 	}
 
+	/**
+	 * This method returns <tt>true</tt> if givens agents does "Full Equality", otherwise <tt>false</tt>
+	 * @param cc1Agent given agent
+	 * @param cc2Agent given agent
+	 * @see CSite#expandedEqualz(CSite, boolean)
+	 */
 	private final boolean fullEqualityOfAgents(CAgent cc1Agent, CAgent cc2Agent) {
 		if (cc1Agent == null || cc2Agent == null)
 			return false;
@@ -295,6 +348,13 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return true;
 	}
 
+	/**
+	 * Util method. Uses for compare agents
+	 * @param currentAgent given agent from current ConnectedComponent
+	 * @param solutionAgent given agent from solution
+	 * @return returns <tt>true</tt> if givens agents doesn't "Full Equality", otherwise <tt>false</tt>
+	 * @see CSite#expandedEqualz(CSite, boolean)
+	 */
 	private final boolean compareAgents(CAgent currentAgent,
 			CAgent solutionAgent) {
 		if (currentAgent == null || solutionAgent == null)
@@ -312,6 +372,12 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return true;
 	}
 
+	/**
+	 * Util method, uses in {@link #spanningTreeViewer(CAgent, CSpanningTree, int, boolean)}.
+	 * @param agentFrom given agent
+	 * @param agentTo given agent
+	 * @return Returns list of connect sites between given agents
+	 */
 	private final List<CSite> getConnectedSite(CAgent agentFrom, CAgent agentTo) {
 		List<CSite> siteList = new ArrayList<CSite>();
 
@@ -326,7 +392,14 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return siteList;
 	}
 
-	// is there injection or not and create lifts
+	/**
+	 * Util method. Uses in {@link #isAutomorphism(CAgent)} and {@link #unify(CAgent)}.
+	 * @param agent
+	 * @param spTree
+	 * @param rootVertex
+	 * @param fullEquality
+	 * @return if successful attempt, otherwise <tt>false</tt>
+	 */
 	private final boolean spanningTreeViewer(CAgent agent,
 			CSpanningTree spTree, int rootVertex, boolean fullEquality) {
 		spTree.setTrue(rootVertex);
@@ -347,18 +420,34 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return true;
 	}
 
+	/**
+	 * This method returns rule, contains current ConnectedComponent
+	 */
 	public final CRule getRule() {
 		return rule;
 	}
 
+	/**
+	 * This method sets rule, where contains current ConnectedComponent.
+	 * @param rule given rule
+	 */
 	public final void setRule(CRule rule) {
 		this.rule = rule;
 	}
 
+	/**
+	 * This method returns all injections from current ConnectedComponents.
+	 * @return list of injections
+	 */
 	public final Collection<CInjection> getInjectionsList() {
 		return Collections.unmodifiableCollection(injectionsList.values());
 	}
 
+	/**
+	 * This method returns "random" injection from current ConnectedComponent
+	 * @param random given random generator
+	 * @return random injection 
+	 */
 	public final CInjection getRandomInjection(IRandom random) {
 		int index;
 		CInjection inj = null;
@@ -367,10 +456,18 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return inj;
 	}
 
+	/**
+	 * This method returns first injection from current ConnectedComponent.
+	 * Uses only for checks "Clash" in "Infinite Rule".
+	 */
 	public final CInjection getFirstInjection() {
 		return injectionsList.get(0);
 	}
 
+	/**
+	 * This method returns sorts agent from current ConnectedComponent by "idInRuleSide".
+	 * @return collection of agents 
+	 */
 	public final List<CAgent> getAgentsSortedByIdInRule() {
 		List<CAgent> temp = new ArrayList<CAgent>();
 		temp.addAll(agentList);

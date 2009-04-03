@@ -7,10 +7,19 @@ import java.util.List;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CSite;
 
-/*package*/ @SuppressWarnings("serial")
+/**
+ * It's specific class, uses for "unify" connected component to something.
+ * @author avokhmin
+ *
+ */
+@SuppressWarnings("serial")
 final class CSpanningTree implements Serializable {
 
 	private final List<Integer>[] vertexes;
+	
+	/**
+	 * Index of agent in connected component, for which creates SpanningTree.
+	 */
 	private final int rootIndex;
 	private final boolean[] newVertex;
 
@@ -28,28 +37,49 @@ final class CSpanningTree implements Serializable {
 
 	}
 
+	/**
+	 * This method resets checks array.
+	 */
 	public final void resetNewVertex() {
 		for (int i = 0; i < newVertex.length; i++) {
 			newVertex[i] = false;
 		}
 	}
 
+	/**
+	 *	This method returns value from checks array by given index. 
+	 * @param index given index
+	 */
 	public final boolean getNewVertexElement(int index) {
 		return newVertex[index];
 	}
 
+	/**
+	 * This method returns root index from current SpanningTree.
+	 */
 	public final int getRootIndex() {
 		return rootIndex;
 	}
 
+	/**
+	 * This method returns list of vertex for Depth-first search.
+	 */
 	public final List<Integer>[] getVertexes() {
 		return vertexes;
 	}
 
+	/**
+	 * This method sets "index" value from checks array to <code>false</code>
+	 * @param index given index
+	 */
 	public final void setFalse(int index) {
 		newVertex[index] = false;
 	}
 
+	/**
+	 * This method sets "index" value from checks array to <code>true</code>
+	 * @param index given index
+	 */
 	public final void setTrue(int index) {
 		newVertex[index] = true;
 	}
