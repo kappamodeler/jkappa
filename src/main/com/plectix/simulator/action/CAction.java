@@ -136,15 +136,15 @@ import com.plectix.simulator.interfaces.*;
 			if ((fromSite.getLinkState().getStatusLink() == CLinkStatus.FREE)
 					&& (toSite.getLinkState().getStatusLink() == CLinkStatus.BOUND)) {
 				list.add(new CBoundAction(myRule, toSite, toSite.getLinkState()
-						.getSite(), leftConnectedComponent,
+						.getConnectedSite(), leftConnectedComponent,
 						rightConnectedComponent));
 				//	myRule.addChangedSite(toSite);
 					myRule.addInhibitedChangedSite(fromSite, false, true);
 				continue;
 			}
 
-			CSite lConnectSite = (CSite) fromSite.getLinkState().getSite();
-			CSite rConnectSite = (CSite) toSite.getLinkState().getSite();
+			CSite lConnectSite = (CSite) fromSite.getLinkState().getConnectedSite();
+			CSite rConnectSite = (CSite) toSite.getLinkState().getConnectedSite();
 			if (lConnectSite == null || rConnectSite == null)
 				continue;
 			if ((lConnectSite.getAgentLink().getIdInRuleHandside() == rConnectSite
@@ -154,7 +154,7 @@ import com.plectix.simulator.interfaces.*;
 			list.add(new CBreakAction(myRule, fromSite, toSite,
 					leftConnectedComponent, rightConnectedComponent));
 			list.add(new CBoundAction(myRule, toSite, (CSite) toSite
-					.getLinkState().getSite(), leftConnectedComponent,
+					.getLinkState().getConnectedSite(), leftConnectedComponent,
 					rightConnectedComponent));
 				//myRule.addChangedSite(toSite);
 				myRule.addInhibitedChangedSite(fromSite, false, true);

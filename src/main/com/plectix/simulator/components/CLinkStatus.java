@@ -1,14 +1,14 @@
 package com.plectix.simulator.components;
 
 /**
- * Status of LinkState.
- * <p>
- * Example:
- * <blockquote><pre>
- * A(x) - agent "A" with site "x", LinkStatus of "x" does "FREE".
- * A(x!_) or A(x!1),.. - agent "A" with site "x", LinkStatus of "x" does "BOUND".
- * A(x?) - agent "A" with site "x", LinkStatus of "x" does "WILDCARD".
- * </blockquote></pre> 
+ * This enumeration implements status of link. <br>
+ * "Bound" status means that this site connected with another site.<br>
+ * "Free" status means that this site is free from connections.<br>
+ * "Wildcard" status means that we no know nothing about this site's connections.<br><br>
+ * In Kappa file we have: <br>
+ * <li>A(x) - link-status of site "x" is "FREE".</li><br>
+ * <li>A(x!_) or A(x!1),.. - link-status of site "x" is "BOUND".</li><br>
+ * <li>A(x?) - link-status of site "x" is "WILDCARD".</li><br>
  * @author avokhmin
  */
 public enum CLinkStatus {

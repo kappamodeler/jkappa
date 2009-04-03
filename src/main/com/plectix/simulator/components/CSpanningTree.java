@@ -7,7 +7,8 @@ import java.util.List;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CSite;
 
-/*package*/ final class CSpanningTree implements Serializable {
+/*package*/ @SuppressWarnings("serial")
+final class CSpanningTree implements Serializable {
 
 	private final List<Integer>[] vertexes;
 	private final int rootIndex;
@@ -62,7 +63,7 @@ import com.plectix.simulator.components.CSite;
 	private final void depthFirstSearch(CAgent rootAgent) {
 		newVertex[rootAgent.getIdInConnectedComponent()] = false;
 		for (CSite site : rootAgent.getSites()) {
-			CSite linkSite = (CSite) site.getLinkState().getSite();
+			CSite linkSite = (CSite) site.getLinkState().getConnectedSite();
 			if (linkSite != null) {
 				CAgent agent = linkSite.getAgentLink();
 				Integer vertexIndex = agent.getIdInConnectedComponent();

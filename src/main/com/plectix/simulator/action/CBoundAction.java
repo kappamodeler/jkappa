@@ -67,10 +67,10 @@ public class CBoundAction extends CAction {
 		}
 
 		agentFromInSolution.getSiteById(mySiteFrom.getNameId()).getLinkState()
-				.setSite(agentToInSolution.getSiteById(mySiteTo.getNameId()));
+				.connectSite(agentToInSolution.getSiteById(mySiteTo.getNameId()));
 
 		agentToInSolution.getSiteById(mySiteTo.getNameId()).getLinkState()
-		.setSite(agentFromInSolution.getSiteById(mySiteFrom.getNameId()));
+		.connectSite(agentFromInSolution.getSiteById(mySiteFrom.getNameId()));
 
 		addToNetworkNotation(StateType.AFTER, netNotation,
 				agentFromInSolution.getSiteById(mySiteFrom.getNameId()));

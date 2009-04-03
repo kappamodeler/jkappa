@@ -10,7 +10,6 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.interfaces.IInternalState;
-import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.components.injections.CInjection;
@@ -26,7 +25,7 @@ public final class CSite implements Serializable {
 	public static final int NO_INDEX = -1;
 
 	private final int nameId;
-	private final ILinkState linkState;
+	private final CLink linkState;
 	private IInternalState internalState = CInternalState.EMPTY_STATE;
 	private boolean changed;
 	private CAgent linkAgent = null;
@@ -40,7 +39,7 @@ public final class CSite implements Serializable {
 	 */
 	public CSite(int nameId) {
 		this.nameId = nameId;
-		linkState = new CLinkState(CLinkStatus.FREE);
+		linkState = new CLink(CLinkStatus.FREE);
 	}
 
 	//------------------------GETTERS AND SETTERS------------------------------
@@ -52,7 +51,7 @@ public final class CSite implements Serializable {
 	 */
 	public CSite(int id, CAgent agent) {
 		this.nameId = id;
-		linkState = new CLinkState(CLinkStatus.FREE);
+		linkState = new CLink(CLinkStatus.FREE);
 		linkAgent = agent;
 	}
 
@@ -97,7 +96,7 @@ public final class CSite implements Serializable {
 	 * Returns link state of this site.
 	 * @return link state of this site.
 	 */
-	public final ILinkState getLinkState() {
+	public final CLink getLinkState() {
 		return linkState;
 	}
 
@@ -172,17 +171,17 @@ public final class CSite implements Serializable {
 	 * @return <tt>true</tt> if current site equals given site, otherwise <tt>false</tt>.
 	 */
 	public final boolean expandedEqualz(CSite solutionSite, boolean fullEquality) {
-		ILinkState currentLinkState = linkState;
-		ILinkState solutionLinkState = solutionSite.getLinkState();
+		CLink currentLinkState = linkState;
+		CLink solutionLinkState = solutionSite.getLinkState();
 
 		IInternalState currentInternalState = internalState;
 		IInternalState solutionInternalState = solutionSite.getInternalState();
 
 		if (!fullEquality)
-			return (currentLinkState.compareLinkStates(solutionLinkState) && currentInternalState
+			return (currentLinkState.compare(solutionLinkState) && currentInternalState
 					.compareInternalStates(solutionInternalState));
 		else
-			return (currentLinkState.fullEqualityLinkStates(solutionLinkState) && currentInternalState
+			return (currentLinkState.equalz(solutionLinkState) && currentInternalState
 					.fullEqualityInternalStates(solutionInternalState));
 
 	}

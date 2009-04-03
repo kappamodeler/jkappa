@@ -317,7 +317,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 
 		for (CSite sF : agentFrom.getSites()) {
 			for (CSite sT : agentTo.getSites()) {
-				if (sF == sT.getLinkState().getSite()) {
+				if (sF == sT.getLinkState().getConnectedSite()) {
 					siteList.add(sF);
 				}
 			}

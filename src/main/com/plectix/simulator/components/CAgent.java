@@ -3,11 +3,8 @@ package com.plectix.simulator.components;
 import java.io.Serializable;
 import java.util.*;
 
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.components.injections.CLiftElement;
-import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.injections.*;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
@@ -15,6 +12,7 @@ import com.plectix.simulator.simulator.ThreadLocalData;
  * @author avokhmin
  *
  */
+@SuppressWarnings("serial")
 public final class CAgent implements Comparable<CAgent>, Serializable {
 	/**
 	 * idInConnectedComponent is the unique id in ConnectedComponent id is an
@@ -102,10 +100,10 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 		if (agent == null || siteCollection.size() == 0)
 			return null;
 		CAgent imageAgent = (CAgent) this.getSiteById(siteCollection.get(0).getNameId())
-				.getLinkState().getSite().getAgentLink();
+				.getLinkState().getConnectedSite().getAgentLink();
 		for (CSite siteF : siteCollection) {
 			CAgent agent2 = (CAgent) this.getSiteById(siteF.getNameId())
-					.getLinkState().getSite().getAgentLink();
+					.getLinkState().getConnectedSite().getAgentLink();
 			if (imageAgent != agent2)
 				return null;
 		}

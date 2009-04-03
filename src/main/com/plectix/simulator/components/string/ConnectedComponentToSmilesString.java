@@ -9,13 +9,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.string.AgentInvariant.AgentInvariantRankComparator;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.ILinkState;
-import com.plectix.simulator.components.CSite;
 
 /**
  * This class creates a unique String from a ConnectedComponent's list of Agents. 
@@ -211,7 +210,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 		            	stringBuffer.append("~" + site.getInternalState().getName());
 		            }
 		            
-		    		ILinkState linkState = site.getLinkState();
+		    		CLink linkState = site.getLinkState();
 		    		CLinkStatus statusLink = linkState.getStatusLink();
 		    		
 		    		if (statusLink == CLinkStatus.BOUND) {
@@ -221,7 +220,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 		    				// let's now set this site's link index
 		    				site.setLinkIndex(linkIndexCounter);
 		    				// let's find the site we are bound to and set its index too..
-			    			linkState.getSite().setLinkIndex(linkIndexCounter);
+			    			linkState.getConnectedSite().setLinkIndex(linkIndexCounter);
 		    			} 
 		    			// let's dump our link index:
 		    			stringBuffer.append("!" + site.getLinkIndex());

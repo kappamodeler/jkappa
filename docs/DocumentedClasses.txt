@@ -1,8 +1,10 @@
 Classes with full javadoc
 
-- CRule
-- CObservables
-- CAgent
-- CSite
+- com.plectix.simulator.components.CRule
+- com.plectix.simulator.components.CObservables
+- com.plectix.simulator.components.CAgent
+- com.plectix.simulator.components.CSite
+- com.plectix.simulator.components.CLink
+- com.plectix.simulator.components.CAgentLink
 
 other ones are unfinished and need to be checked

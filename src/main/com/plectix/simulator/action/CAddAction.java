@@ -82,10 +82,10 @@ public class CAddAction extends CAction {
 
 	private final void createBound() {
 		for (CSite site : myToAgent.getSites()) {
-			if (site.getLinkState().getSite() != null) {
+			if (site.getLinkState().getConnectedSite() != null) {
 				myRule
 						.addAction(new CBoundAction(myRule, site, (site
-								.getLinkState().getSite()), null,
+								.getLinkState().getConnectedSite()), null,
 								getRightCComponent()));
 			}
 		}

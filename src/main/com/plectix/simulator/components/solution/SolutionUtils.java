@@ -24,8 +24,8 @@ public class SolutionUtils {
 		List<CAgent> agentAddList = new ArrayList<CAgent>();
 
 		for (CSite site : agent.getSites()) {
-			CSite siteLink = site.getLinkState().getSite();
-			if ((site.getLinkState().getSite() != null)
+			CSite siteLink = site.getLinkState().getConnectedSite();
+			if ((site.getLinkState().getConnectedSite() != null)
 					&& (!SolutionUtils.agentListContains(agentList, siteLink.getAgentLink()))) {
 				agentAddList.add(siteLink.getAgentLink());
 				agentList.add(siteLink.getAgentLink());

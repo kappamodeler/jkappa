@@ -89,9 +89,9 @@ public class SimulationUtils {
 						siteStr = siteStr + "!_";
 						// line = line + "!_";
 					} else if (site.getAgentLink().getIdInRuleHandside() < ((CSite) site
-							.getLinkState().getSite()).getAgentLink()
+							.getLinkState().getConnectedSite()).getAgentLink()
 							.getIdInRuleHandside()) {
-						((CSite) site.getLinkState().getSite()).getLinkState()
+						site.getLinkState().getConnectedSite().getLinkState()
 								.setLinkStateID(index[0]);
 						siteStr = siteStr + "!" + index[0];
 						index[0]++;

@@ -10,7 +10,7 @@ import javax.swing.Icon;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkRank;
-import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IAbstractAgent;
@@ -18,8 +18,6 @@ import com.plectix.simulator.interfaces.IAbstractSite;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.interfaces.IInternalState;
-import com.plectix.simulator.interfaces.ILinkState;
-import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class CContactMapAbstractSite implements IContactMapAbstractSite {

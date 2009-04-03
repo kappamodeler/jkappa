@@ -146,10 +146,10 @@ public class CNetworkNotation implements INetworkNotation {
 
 				for (CSite site : newAgent.getSites()) {
 					if (!sites.contains(site.getNameId())) {
-						CSite connectionSite = site.getLinkState().getSite();
+						CSite connectionSite = site.getLinkState().getConnectedSite();
 						if (connectionSite != null) {
-							site.getLinkState().setFreeLinkState();
-							connectionSite.getLinkState().setFreeLinkState();
+							site.getLinkState().setFree();
+							connectionSite.getLinkState().setFree();
 						}
 					}
 				}
@@ -228,16 +228,16 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public final void checkLinkForNetworkNotation(StateType index, CSite site) {
-		if (site.getLinkState().getSite() == null)
+		if (site.getLinkState().getConnectedSite() == null)
 			this
 					.addToAgents(site, new CStoriesSiteStates(index, -1, -1),
 							index);
 		else
 			this
 					.addToAgents(site, new CStoriesSiteStates(index,
-							((CAgent) site.getLinkState().getSite()
+							((CAgent) site.getLinkState().getConnectedSite()
 									.getAgentLink()).getHash(), ((CSite) site
-									.getLinkState().getSite()).getNameId()),
+									.getLinkState().getConnectedSite()).getNameId()),
 							index);
 	}
 
@@ -253,30 +253,30 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public final void checkLinkToUsedSites(StateType index, CSite site) {
-		if (site.getLinkState().getSite() == null)
+		if (site.getLinkState().getConnectedSite() == null)
 			this.addToAgents(site, new CStoriesSiteStates(index, site
 					.getInternalState().getNameId(), -1, -1), index);
 		else
 			this
 					.addToAgents(site, new CStoriesSiteStates(index, site
 							.getInternalState().getNameId(),
-							((CAgent) site.getLinkState().getSite()
+							((CAgent) site.getLinkState().getConnectedSite()
 									.getAgentLink()).getHash(), ((CSite) site
-									.getLinkState().getSite()).getNameId()),
+									.getLinkState().getConnectedSite()).getNameId()),
 							index);
 	}
 
 	public final void checkLinkForNetworkNotationDel(StateType index, CSite site) {
-		if (site.getLinkState().getSite() == null)
+		if (site.getLinkState().getConnectedSite() == null)
 			this.addToAgents(site, new CStoriesSiteStates(index, site
 					.getInternalState().getNameId(), -1, -1), index);
 		else
 			this
 					.addToAgents(site, new CStoriesSiteStates(index, site
 							.getInternalState().getNameId(),
-							((CAgent) site.getLinkState().getSite()
+							((CAgent) site.getLinkState().getConnectedSite()
 									.getAgentLink()).getHash(), ((CSite) site
-									.getLinkState().getSite()).getNameId()),
+									.getLinkState().getConnectedSite()).getNameId()),
 							index);
 	}
 

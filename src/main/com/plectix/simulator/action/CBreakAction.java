@@ -1,6 +1,6 @@
 package com.plectix.simulator.action;
 
-import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
@@ -43,12 +43,12 @@ public class CBreakAction extends CAction {
 				injectedSite);
 		addRuleSitesToNetworkNotation(true, netNotation, injectedSite);
 
-		CSite linkSite = (CSite) injectedSite.getLinkState().getSite();
-		if ((mySiteFrom.getLinkState().getSite() == null) && (linkSite != null)) {
+		CSite linkSite = (CSite) injectedSite.getLinkState().getConnectedSite();
+		if ((mySiteFrom.getLinkState().getConnectedSite() == null) && (linkSite != null)) {
 			addToNetworkNotation(StateType.BEFORE, netNotation,
 					linkSite);
 
-			linkSite.getLinkState().setSite(null);
+			linkSite.getLinkState().connectSite(null);
 			linkSite.getLinkState().setStatusLink(CLinkStatus.FREE);
 			if (mySiteTo != null) {
 //				linkSite.setLinkIndex(mySiteTo.getLinkIndex());
@@ -63,7 +63,7 @@ public class CBreakAction extends CAction {
 		}
 
 		agentFromInSolution.getSiteById(mySiteFrom.getNameId()).getLinkState()
-				.setSite(null);
+				.connectSite(null);
 		agentFromInSolution.getSiteById(mySiteFrom.getNameId()).getLinkState()
 				.setStatusLink(CLinkStatus.FREE);
 		// /////////////////////////////////////////////
@@ -75,7 +75,7 @@ public class CBreakAction extends CAction {
 		/**
 		 * Break a bond for this rules: A(x!_)->A(x)
 		 */
-		if (mySiteFrom.getLinkState().getSite() == null && linkSite != null) {
+		if (mySiteFrom.getLinkState().getConnectedSite() == null && linkSite != null) {
 			addSiteToConnectedWithBroken(linkSite);
 			addRuleSitesToNetworkNotation(false, netNotation, linkSite);
 		}

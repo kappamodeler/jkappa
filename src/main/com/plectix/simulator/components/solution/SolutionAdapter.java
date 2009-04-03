@@ -7,11 +7,9 @@ import java.util.List;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.ILinkState;
-import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.KappaSystem;
 
@@ -86,19 +84,19 @@ import com.plectix.simulator.simulator.KappaSystem;
 		}
 		for (int i = 0; i < newAgentsList.size(); i++) {
 			for (CSite siteNew : newAgentsList.get(i).getSites()) {
-				ILinkState lsNew = siteNew.getLinkState();
-				ILinkState lsOld = agentList.get(i)
+				CLink lsNew = siteNew.getLinkState();
+				CLink lsOld = agentList.get(i)
 						.getSiteById(siteNew.getNameId()).getLinkState();
 				lsNew.setStatusLink(lsOld.getStatusLink());
-				if (lsOld.getSite() != null) {
-					CSite siteOldLink = (CSite) lsOld.getSite();
+				if (lsOld.getConnectedSite() != null) {
+					CSite siteOldLink = (CSite) lsOld.getConnectedSite();
 					int j = 0;
 					for (j = 0; j < agentList.size(); j++) {
 						if (agentList.get(j) == siteOldLink.getAgentLink())
 							break;
 					}
 					int index = j;
-					lsNew.setSite(newAgentsList.get(index).getSiteById(
+					lsNew.connectSite(newAgentsList.get(index).getSiteById(
 							siteOldLink.getNameId()));
 				}
 			}

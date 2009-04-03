@@ -11,26 +11,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CObservables;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.contactMap.CContactMap;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.stories.CStories;
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-
-import com.plectix.simulator.interfaces.ILinkState;
-
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 import com.plectix.simulator.util.PlxTimer;

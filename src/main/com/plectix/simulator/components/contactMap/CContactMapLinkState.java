@@ -1,10 +1,8 @@
 package com.plectix.simulator.components.contactMap;
 
 import com.plectix.simulator.components.CLinkRank;
+import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.components.CSite;
 
 public class CContactMapLinkState {
@@ -15,13 +13,26 @@ public class CContactMapLinkState {
 	// private int agentID = CSite.NO_INDEX;
 	private int internalStateNameID = CSite.NO_INDEX;
 
-	// public int getAgentID() {
-	// return agentID;
-	// }
-	//
-	// public void setAgentID(int agentID) {
-	// this.agentID = agentID;
-	// }
+	public CContactMapLinkState(CLink linkState) {
+		if (linkState.getConnectedSite() != null) {
+			this.agentNameID = linkState.getConnectedSite().getAgentLink().getNameId();
+			this.linkSiteNameID = linkState.getConnectedSite().getNameId();
+			this.internalStateNameID = linkState.getConnectedSite().getInternalState()
+					.getNameId();
+		}
+		this.statusLinkRank = linkState.getStatusLinkRank();
+		this.statusLink = linkState.getStatusLink();
+	}
+
+	public CContactMapLinkState(CContactMapLinkState linkState) {
+		if (linkState.getLinkSiteNameID() != -1) {
+			this.agentNameID = linkState.getAgentNameID();
+			this.linkSiteNameID = linkState.getLinkSiteNameID();
+			this.internalStateNameID = linkState.getInternalStateNameID();
+		}
+		this.statusLink = linkState.getStatusLink();
+		this.statusLinkRank = linkState.getStatusLinkRank();
+	}
 
 	public void setStatusLink(CLinkStatus status) {
 		this.statusLink = status;
@@ -87,27 +98,6 @@ public class CContactMapLinkState {
 
 	public CContactMapLinkState() {
 		setFreeLinkState();
-	}
-
-	public CContactMapLinkState(ILinkState linkState) {
-		if (linkState.getSite() != null) {
-			this.agentNameID = linkState.getSite().getAgentLink().getNameId();
-			this.linkSiteNameID = linkState.getSite().getNameId();
-			this.internalStateNameID = linkState.getSite().getInternalState()
-					.getNameId();
-		}
-		this.statusLinkRank = linkState.getStatusLinkRank();
-		this.statusLink = linkState.getStatusLink();
-	}
-
-	public CContactMapLinkState(CContactMapLinkState linkState) {
-		if (linkState.getLinkSiteNameID() != -1) {
-			this.agentNameID = linkState.getAgentNameID();
-			this.linkSiteNameID = linkState.getLinkSiteNameID();
-			this.internalStateNameID = linkState.getInternalStateNameID();
-		}
-		this.statusLink = linkState.getStatusLink();
-		this.statusLinkRank = linkState.getStatusLinkRank();
 	}
 
 	public boolean equalz(CContactMapLinkState linkState) {

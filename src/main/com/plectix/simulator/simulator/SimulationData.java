@@ -566,7 +566,7 @@ public class SimulationData {
 				switch (CActionType.getById(action.getTypeId())) {
 				case BREAK: {
 					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
-							.getSite());
+							.getConnectedSite());
 					if (action.getSiteFrom().getAgentLink().getIdInRuleHandside() < siteTo
 							.getAgentLink().getIdInRuleHandside()) {
 						// BRK (#0,a) (#1,x)
@@ -615,7 +615,7 @@ public class SimulationData {
 				case BOUND: {
 					// BND (#1,x) (#0,a)
 					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
-							.getSite());
+							.getConnectedSite());
 					if (action.getSiteFrom().getAgentLink().getIdInRuleHandside() > siteTo
 							.getAgentLink().getIdInRuleHandside()) {
 						print("BND (#");

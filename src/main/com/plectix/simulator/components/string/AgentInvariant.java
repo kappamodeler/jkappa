@@ -72,7 +72,7 @@ public final class AgentInvariant {
 		
 		for (CSite site : agent.getSites()) {
 			if (site.getLinkState().getStatusLink() == CLinkStatus.BOUND) {
-				AgentInvariant neighbor = agentToAgentInvariantMap.get(site.getLinkState().getSite().getAgentLink()); 
+				AgentInvariant neighbor = agentToAgentInvariantMap.get(site.getLinkState().getConnectedSite().getAgentLink()); 
 				if (neighbor == null) {
 					throw new RuntimeException("Could not find neighbor Agent in map!");
 				}

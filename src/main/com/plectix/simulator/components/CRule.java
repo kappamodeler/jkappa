@@ -438,17 +438,17 @@ public class CRule implements Serializable {
 					&& lhsSite.getInternalState().getNameId() != CSite.NO_INDEX) {
 				fixedSite.setInternalState(true);
 			}
-			if (lhsSite.getLinkState().getSite() == null
-					&& rhsSite.getLinkState().getSite() == null) {
+			if (lhsSite.getLinkState().getConnectedSite() == null
+					&& rhsSite.getLinkState().getConnectedSite() == null) {
 				fixedSite.setLinkState(true);
 			}
-			if (lhsSite.getLinkState().getSite() != null
-					&& rhsSite.getLinkState().getSite() != null) {
-				if (lhsSite.getLinkState().getSite().equalz(
-						rhsSite.getLinkState().getSite())
-						&& lhsSite.getLinkState().getSite().getAgentLink()
+			if (lhsSite.getLinkState().getConnectedSite() != null
+					&& rhsSite.getLinkState().getConnectedSite() != null) {
+				if (lhsSite.getLinkState().getConnectedSite().equalz(
+						rhsSite.getLinkState().getConnectedSite())
+						&& lhsSite.getLinkState().getConnectedSite().getAgentLink()
 								.getIdInRuleHandside() == rhsSite.getLinkState()
-								.getSite().getAgentLink().getIdInRuleHandside())
+								.getConnectedSite().getAgentLink().getIdInRuleHandside())
 					fixedSite.setLinkState(true);
 			}
 			if (fixedSite.isLinkState() || fixedSite.isInternalState())
@@ -550,12 +550,12 @@ public class CRule implements Serializable {
 			for (CSite site : agent.getSites()) {
 				for (CSite changedSite : changedActivatedSites) {
 					if (changedSite.equalz(site)) {
-						ILinkState currentLinkState = changedSite
+						CLink currentLinkState = changedSite
 								.getLinkState();
-						ILinkState linkState = site.getLinkState();
+						CLink linkState = site.getLinkState();
 
-						if (currentLinkState.isLeftBranchStatus()
-								&& linkState.isLeftBranchStatus())
+						if (currentLinkState.hasFreeStatus()
+								&& linkState.hasFreeStatus())
 							continue;
 
 						if (linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
@@ -569,19 +569,19 @@ public class CRule implements Serializable {
 								&& linkState.getStatusLinkRank() == CLinkRank.SEMI_LINK)
 							continue;
 
-						if (currentLinkState.isLeftBranchStatus()
-								&& (!(linkState.isLeftBranchStatus())))
+						if (currentLinkState.hasFreeStatus()
+								&& (!(linkState.hasFreeStatus())))
 							return false;
 
-						if ((!(currentLinkState.isLeftBranchStatus()))
-								&& linkState.isLeftBranchStatus())
+						if ((!(currentLinkState.hasFreeStatus()))
+								&& linkState.hasFreeStatus())
 							return false;
 
 						if (currentLinkState.getStatusLinkRank() == linkState
 								.getStatusLinkRank()
 								&& currentLinkState.getStatusLinkRank() == CLinkRank.BOUND)
-							if (!(currentLinkState.getSite().equalz(linkState
-									.getSite())))
+							if (!(currentLinkState.getConnectedSite().equalz(linkState
+									.getConnectedSite())))
 								return false;
 					}
 				}
@@ -613,9 +613,9 @@ public class CRule implements Serializable {
 								.getSite().getInternalState();
 						IInternalState internalState = site.getInternalState();
 
-						ILinkState currentLinkState = changedSite.getSite()
+						CLink currentLinkState = changedSite.getSite()
 								.getLinkState();
-						ILinkState linkState = site.getLinkState();
+						CLink linkState = site.getLinkState();
 
 						if (!changedSite.isInternalState()
 								&& changedSite.isLinkState()) {
@@ -666,8 +666,8 @@ public class CRule implements Serializable {
 	/**
 	 * This method helps to avoid code duplication
 	 */
-	private boolean checkInhibitedLinkStates(ILinkState currentLinkState,
-			ILinkState linkState) {
+	private boolean checkInhibitedLinkStates(CLink currentLinkState,
+			CLink linkState) {
 		if (currentLinkState.getStatusLinkRank() == CLinkRank.FREE
 				&& linkState.getStatusLinkRank() == CLinkRank.FREE)
 			return true;
@@ -676,7 +676,7 @@ public class CRule implements Serializable {
 			return true;
 		if (currentLinkState.getStatusLinkRank() == CLinkRank.BOUND
 				&& linkState.getStatusLinkRank() == CLinkRank.BOUND)
-			if (currentLinkState.getSite().equalz(linkState.getSite()))
+			if (currentLinkState.getConnectedSite().equalz(linkState.getConnectedSite()))
 				// if (currentLinkState.getSite().equals(linkState.getSite()))
 				return true;
 		return false;

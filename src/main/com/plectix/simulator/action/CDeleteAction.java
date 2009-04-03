@@ -1,6 +1,6 @@
 package com.plectix.simulator.action;
 
-import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
@@ -37,14 +37,14 @@ public class CDeleteAction extends CAction {
 		CAgent agent = injection.getAgentFromImageById(myFromAgent.getIdInConnectedComponent());
 		for (CSite site : agent.getSites()) {
 			removeSiteToConnectedWithDeleted(site);
-			CSite solutionSite = (CSite) site.getLinkState().getSite();
+			CSite solutionSite = (CSite) site.getLinkState().getConnectedSite();
 
 			if (solutionSite != null) {
 				addToNetworkNotation(StateType.BEFORE,
 						netNotation, solutionSite);
 
 				addSiteToConnectedWithDeleted(solutionSite);
-				solutionSite.getLinkState().setSite(null);
+				solutionSite.getLinkState().connectSite(null);
 				solutionSite.getLinkState().setStatusLink(
 						CLinkStatus.FREE);
 				solutionSite.setLinkIndex(-1);

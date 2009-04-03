@@ -2,8 +2,8 @@ package com.plectix.simulator.components.string;
 
 import java.util.Comparator;
 
+import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
-import com.plectix.simulator.interfaces.ILinkState;
 import com.plectix.simulator.components.CSite;
 
 /**
@@ -89,11 +89,11 @@ public final class SiteComparator implements Comparator<CSite> {
 	}
 
 	private static final CSite getLinkSite(CSite site) {
-		ILinkState linkState = site.getLinkState();
+		CLink linkState = site.getLinkState();
 		CLinkStatus statusLink = linkState.getStatusLink();
 		
 		if (statusLink == CLinkStatus.BOUND) {
-			return linkState.getSite();
+			return linkState.getConnectedSite();
 		} else if (statusLink == CLinkStatus.FREE) {
 			return null;
 		} else {
@@ -119,9 +119,9 @@ public final class SiteComparator implements Comparator<CSite> {
 		return site.getName() + "~" + site.getInternalState().getName() + "!"
 			+ ( site.getLinkState().getStatusLink() == CLinkStatus.FREE ?
 				"FREE"
-			    : ("BOUND-" + site.getLinkState().getSite().getName() 
-			    		+ "-" + site.getLinkState().getSite().getInternalState().getName()
-			    		+ "-" + site.getLinkState().getSite().getAgentLink().getName())
+			    : ("BOUND-" + site.getLinkState().getConnectedSite().getName() 
+			    		+ "-" + site.getLinkState().getConnectedSite().getInternalState().getName()
+			    		+ "-" + site.getLinkState().getConnectedSite().getAgentLink().getName())
 			    );
 	}
 }

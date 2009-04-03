@@ -1,5 +1,10 @@
 package com.plectix.simulator.components;
 
+/**
+ * This class will implement rule's rate entity, in fact, only to avoid using
+ * "$INF"'s representation as MAX_DOUBLE  
+ * @author evlasov
+ */
 public class CRuleRate {
 //	private boolean myIsInfinite = false;
 //	private double myValue = 1.0;

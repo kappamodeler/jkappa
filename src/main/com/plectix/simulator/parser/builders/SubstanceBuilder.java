@@ -52,8 +52,8 @@ import com.plectix.simulator.simulator.KappaSystem;
 				if (connectedSite == null) {
 					map.put(index, site);
 				} else {
-					connectedSite.getLinkState().setSite(site);
-					site.getLinkState().setSite(connectedSite);
+					connectedSite.getLinkState().connectSite(site);
+					site.getLinkState().connectSite(connectedSite);
 					map.remove(site.getLinkIndex());
 				}
 			}

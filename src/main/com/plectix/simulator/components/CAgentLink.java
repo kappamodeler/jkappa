@@ -2,44 +2,41 @@ package com.plectix.simulator.components;
 
 import java.io.Serializable;
 
-import com.plectix.simulator.interfaces.*;
-
 /**
- * Auxiliary class, uses for more easy interpretation {@link CInjection} ("Atomic" injection).
+ * Auxiliary class used for easier work with injection. For each injection we
+ * have set of corresponding pairs (agent, agent), which shows us detailed injection structure.
+ * This class implements a pair of corresponding agents.
+ *  
  * @see CInjection
  * @see CAgent
  * @author avokhmin
  */
+@SuppressWarnings("serial")
 public final class CAgentLink implements Serializable {
-	/**
-	 * {@link Integer} value - id of Agent from injection.
-	 */
 	private final int idAgentFrom;
+	private final CAgent agentTo;
 
 	/**
-	 * {@link CAgent} value - agent from solution.
+	 * Constructor. Creates CAgentLink with 2 existing agents
+	 * @param agentFromId id of the first agent, the one that parent injection built from
+	 * @param agentTo second agent, the one that parent injection points to
 	 */
-	private final CAgent agentTo;
-	
-	/**
-	 * Standard constructor.
-	 * @param idAgentFrom - {@link Integer} value - id of Agent from injection.
-	 * @param agentTo - {@link CAgent} value - agent from solution.
-	 */
-	public CAgentLink(int idAgentFrom, CAgent agentTo) {
-		this.idAgentFrom = idAgentFrom;
+	public CAgentLink(int agentFromId, CAgent agentTo) {
+		this.idAgentFrom = agentFromId;
 		this.agentTo = agentTo;
 	}
 	
 	/**
-	 * Returns {@link Integer} value - id of Agent from injection.
+	 * This method returns id of agent which parent injection built from
+	 * @return id of agent which parent injection built from
 	 */
 	public final int getIdAgentFrom() {
 		return idAgentFrom;
 	}
 
 	/**
-	 * Returns {@link CAgent} value - agent from solution.
+	 * This method returns agent which parent injection points to
+	 * @return agent which parent injection points to
 	 */
 	public final CAgent getAgentTo() {
 		return agentTo;

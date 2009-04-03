@@ -6,7 +6,7 @@ import java.util.List;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CLinkState;
+import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CAgent;
@@ -46,8 +46,8 @@ public class SubstanceConstructor {
 	}
 	
 	private void bound(CSite site1, CSite site2) {
-		site1.getLinkState().setSite(site2);
-		site2.getLinkState().setSite(site1);
+		site1.getLinkState().connectSite(site2);
+		site2.getLinkState().connectSite(site1);
 	}
 	
 	public IConnectedComponent createCC(List<CAgent> list) {
