@@ -7,7 +7,6 @@ import java.io.Serializable;
  * have set of corresponding pairs (agent, agent), which shows us detailed injection structure.
  * This class implements a pair of corresponding agents.
  *  
- * @see CInjection
  * @see CAgent
  * @author avokhmin
  */

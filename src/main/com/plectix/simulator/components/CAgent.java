@@ -157,11 +157,11 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 	
 	/**
 	 * This method returns <tt>true</tt>, if sites from current agent are 
-	 * {@link com.plectix.simulator.interfaces.CSite#equalz(CSite) equal} to sites 
+	 * {@link com.plectix.simulator.components.CSite#equalz(CSite) equal} to sites 
 	 * of the given agent, otherwise <tt>false</tt>
 	 * @param agent given agent
 	 * @return <tt>true</tt>, if sites from current agent are 
-	 * {@link com.plectix.simulator.interfaces.CSite#equalz(CSite) equal} to sites 
+	 * {@link com.plectix.simulator.components.CSite#equalz(CSite) equal} to sites 
 	 * of the given agent, otherwise <tt>false</tt>
 	 */
 	public boolean siteMapsAreEqual(CAgent agent) {

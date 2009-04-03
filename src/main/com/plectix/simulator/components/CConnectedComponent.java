@@ -124,7 +124,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	/**
 	 * Util method.<br>
 	 * This method adds agents from solution, when apply rule.
-	 * @param new agent
+	 * @param agentFromSolutionForRHS new agent
 	 */
 	public final void addAgentFromSolutionForRHS(CAgent agentFromSolutionForRHS) {
 		this.agentFromSolutionForRHS.add(agentFromSolutionForRHS);
