@@ -6,6 +6,7 @@ Classes with full javadoc
 - com.plectix.simulator.components.CSite
 - com.plectix.simulator.components.CLink
 - com.plectix.simulator.components.CAgentLink
+- com.plectix.simulator.components.CConnectedComponent
 
 other ones are unfinished and need to be checked
 

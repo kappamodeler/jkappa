@@ -925,7 +925,7 @@ public class CRule implements Serializable {
 			if (this.leftHandside.size() == 2) {
 				if (this.leftHandside.get(0).getAgents().size() == this.leftHandside
 						.get(1).getAgents().size())
-					if (this.leftHandside.get(0).isAutomorphism(
+					if (this.leftHandside.get(0).isAutomorphicTo(
 							this.leftHandside.get(1).getAgents().get(0)))
 						automorphismNumber = 2;
 			}

@@ -109,7 +109,7 @@ public class SuperSubstance implements ISolutionComponent {
 		
 	}
 
-	public boolean isAutomorphism(CAgent agent) {
+	public boolean isAutomorphicTo(CAgent agent) {
 		// TODO Auto-generated method stub
 		return false;
 	}

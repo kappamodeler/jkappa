@@ -285,7 +285,7 @@ public class CObservables implements Serializable {
 					if (!(oCC == oCCIn)
 							&& oCCIn.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
 						if (oCC.getAgents().size() == oCCIn.getAgents().size())
-							if (oCC.isAutomorphism(oCCIn.getAgents().get(0))) {
+							if (oCC.isAutomorphicTo(oCCIn.getAgents().get(0))) {
 								int index = connectedComponentList.indexOf(oCC);
 								oCC.addAutomorphicObservables(index);
 								oCCIn.setMainAutomorphismNumber(index);

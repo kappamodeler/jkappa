@@ -77,14 +77,8 @@ public final class ObservablesRuleComponent implements IObservablesRuleComponent
 		return countList.get(index).toString();
 	}
 
-	public void addAutomorphicObservables(int index) {
-	}
-
 	public int getMainAutomorphismNumber() {
 		return 0;
-	}
-
-	public void setMainAutomorphismNumber(int index) {
 	}
 
 	public boolean isUnique() {

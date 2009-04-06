@@ -7,7 +7,15 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 
+//TODO should we leave this interface or delete it?
 public interface ISolutionComponent {
+	/**
+	 * This method indicates if this connected component can be put into other 
+	 * one which contains given agent. 
+	 * @param agent agent from the second component
+	 * @return this connected component represents the same substance
+	 * as the second one, otherwise <tt>false</tt>
+	 */
 	public boolean unify(CAgent agent);
 	
 	public List<CAgent> getAgents();
@@ -22,7 +30,14 @@ public interface ISolutionComponent {
 
 	public void setRule(CRule rule);
 
-	public boolean isAutomorphism(CAgent agent);
+	/**
+	 * This method indicates if this connected component represents the same substance
+	 * as the second one, which contains given agent. 
+	 * @param agent agent from the second component
+	 * @return this connected component represents the same substance
+	 * as the second one, otherwise <tt>false</tt>
+	 */
+	public boolean isAutomorphicTo(CAgent agent);
 
 	public void initSpanningTreeMap();
 
@@ -39,7 +54,5 @@ public interface ISolutionComponent {
 	public List<CAgent> getAgentFromSolutionForRHS();
 
 	public List<CAgent> getAgentsSortedByIdInRule();
-
-//	public String getHash();
 	
 }

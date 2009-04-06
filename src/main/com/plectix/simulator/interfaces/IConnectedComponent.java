@@ -8,14 +8,27 @@ import com.plectix.simulator.components.solution.SuperSubstance;
  */
 public interface IConnectedComponent extends ISolutionComponent {
 
-	public String  getHash();
+	/**
+	 * This method returns string representation of this connected component  
+	 * @return
+	 */
+	public String getHash();
 
+	/**
+	 * Sets parent super substance
+	 * @param superSubstance new parent super substance
+	 */
 	public void setSuperSubstance(SuperSubstance superSubstance);
 
+	/**
+	 * Returns parent super substance 
+	 * @return parent super substance
+	 */
 	public SuperSubstance getSubstance();
 
 	/**
-	 * Returns <tt>true</tt>, if this ConnectedComponent does "EMPTY", otherwise <tt>false</tt>.
+	 * This method indicates emptiness of this connected component
+	 * @return <tt>true</tt>, if this ConnectedComponent is empty, otherwise <tt>false</tt>.
 	 */
 	public boolean isEmpty();
 }
