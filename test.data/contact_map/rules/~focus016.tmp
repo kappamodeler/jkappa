@@ -1,0 +1,1 @@
+ErbB4(CR!1,N,C),ErbB2(CR!1,N,C) <-> ErbB4(CR!1,N!2,C),ErbB2(CR!1,N,C!2)

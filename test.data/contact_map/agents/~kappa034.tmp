@@ -1,0 +1,7 @@
+'Rule1'H() -> HRG(r)
+'HRG_ErbB3'HRG(r~ext),ErbB3(L~ext,CR) <-> HRG(r~ext!1),ErbB3(L~ext!1,CR)
+'HRG_ErbB4'HRG(r~ext),ErbB4(L~ext,CR) <-> HRG(r~ext!1),ErbB4(L~ext!1,CR)
+'HRG_HER3'HRG(r),HER3(L,CR) -> HRG(r!1),HER3(L!1,CR)
+'HRG_HER4'HRG(r),HER4(L,CR) -> HRG(r!1),HER4(L!1,CR)
+'HRG_HER3_op'HRG(r!1),HER3(L!1) -> HRG(r),HER3(L)
+'HRG_HER4_op'HRG(r!1),HER4(L!1) -> HRG(r),HER4(L)

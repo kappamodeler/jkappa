@@ -1,0 +1,8 @@
+'Raf1_Fyn@S338_SH2'Raf1(S338~p),Fyn(SH2) <-> Raf1(S338~p!1),Fyn(SH2!1)
+'Raf1_p@Y341'Raf1(S338~p!1,Y341~u),Fyn(SH2!1) -> Raf1(S338~p!1,Y341~p),Fyn(SH2!1)
+'Raf1_p@Y340'Raf1(S338~p!1,Y340~u),Fyn(SH2!1) -> Raf1(S338~p!1,Y340~p),Fyn(SH2!1)
+'Raf1_Src@S_SH2'Raf1(S338~p),Src(SH2) <-> Raf1(S338~p!1),Src(SH2!1)
+'Rap1_Raf1@X_RBD'Rap1(X~gtp),Raf1(RBD) -> Rap1(X~gtp!1),Raf1(RBD!1)
+'Raf_p@Y341'Rap1(X~gtp),Raf1(RBD,Y341~u) -> Rap1(X~gtp!1),Raf1(RBD!1,Y341~p)
+'Raf1_Ras@CR1_rafts'Raf1(Y341~p,CR1),Ras(rafts) -> Raf1(Y341~p,CR1!1),Ras(rafts!1)
+'Raf1_p@S338'Raf1(Y341~p,CR1!1,S338~u),Ras(rafts!1) -> Raf1(Y341~p,CR1!1,S338~p),Ras(rafts!1)

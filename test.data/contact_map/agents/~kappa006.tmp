@@ -1,0 +1,4 @@
+'Ack_Cdc42@SH3_X'Ack(SH3),Cdc42(x~gtp) -> Ack(SH3!1),Cdc42(x~gtp!1)
+'Pak_Cdc42'Pak(PBD),Cdc42(S1,X~gtp) <-> Pak(PBD!1),Cdc42(S1!1,X~gtp)
+'Pak1_p@T423'Cdc42(X~gtp,S1!1),Pak1(T423~u,PBD!1) -> Cdc42(X~gtp,S1!1),Pak1(T423~u,PBD!1)
+'MLK3_Cdc42@CRIB_X'MLK3(CRIB),Cdc42(x~gtp) -> MLK3(CRIB!1),Cdc42(x~gtp!1)

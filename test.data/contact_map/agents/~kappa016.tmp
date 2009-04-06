@@ -1,0 +1,4 @@
+'Rac1_CHN1@X_GAP'CHN1(GAP),Rac1(X~gtp) <-> CHN1(GAP!1),Rac1(X~gtp!1)
+'Rac1_u@X'CHN1(GAP!1),Rac1(X~gtp!1) -> CHN1(GAP!1),Rac1(X~gdp!1)
+'Rac1_CHN2@X_GAP'CHN2(GAP),Rac1(X~gtp) <-> CHN2(GAP!2),Rac1(X~gtp!2)
+'Rac1_gdp1@X_GAP'CHN2(GAP!1),Rac1(X~gtp!1) -> CHN2(GAP!1),Rac1(X~gdp!1)

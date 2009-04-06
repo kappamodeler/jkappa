@@ -1,0 +1,8 @@
+'Bcr_p21Rac@C_X'Bcr(C),Rac(S1) <-> Bcr(C!1),Rac(S1!1)
+'p21Rac_u@X'Bcr(C!1),Rac(S1!1,X~gtp) -> Bcr(C!1),Rac(S1!1,X~gdp)
+'Vav_Rac@DH_X~u'PI(three~p,four~p,five~p!1),Vav(PH!1,DH,X~p),Rac(X~u) <-> PI(three~p,four~p,five~p!1),Vav(PH!1,DH!2,X~p),Rac(X~u!2)
+'Rac_p@X'Rac(X~gdp!1),Vav(DH!1,PH!2,X~p),PI(three~p,four~p,five~p!2) -> Rac(X~gtp!1),Vav(DH!1,PH!2,X~p),PI(three~p,four~p,five~p!2)
+'Sos_Rac@DH_X~u'PI(three~p,four~p,five~p!1),Sos(PH!1,DH,X~p),Rac(X~u) <-> PI(three~p,four~p,five~p!1),Sos(PH!1,DH!2,X~p),Rac(X~u!2)
+'Vav2_Rac@DH_S1'Vav2(DH,Y142~p,Y159~p,Y172~p),Rac(S1) <-> Vav2(DH!1,Y142~p,Y159~p,Y172~p),Rac(S1!1)
+'Pak_Rac'Pak1(PBD),Rac(S1,X~gtp) <-> Pak1(PBD!1),Rac(S1!1,X~gtp)
+'Vav1_Rac@DH_X'Vav1(DH,Y142~p),Rac(X~gdp) -> Vav1(DH!1,Y142~p),Rac(X~gdp!1)

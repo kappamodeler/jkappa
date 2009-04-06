@@ -1,0 +1,8 @@
+'Rule1'E() -> EGF(r~ext)
+'EGF_ErbB1'EGF(r~ext),ErbB1(L~ext,CR) <-> EGF(r~ext!1),ErbB1(L~ext!1,CR)
+'EGF_EGFRe'EGF(r~ext),EGFR(L~ext,CR) -> EGF(r~ext!1),EGFR(L~ext!1,CR)
+'EGF_EGFRi'EGF(r~int),EGFR(L~int,CR) -> EGF(r~int!1),EGFR(L~int!1,CR)
+'EGF_EGFR_op'EGF(r!1),EGFR(L!1) -> EGF(r),EGFR(L)
+'EGF_mono'EGF(r~ext!1),EGFR(L~ext!1,CR) -> EGF(r~int!1),EGFR(L~int!1,CR)
+'EGF_di'EGF(r~ext!1),EGFR(L~ext!1,CR!2),EGF(r~ext!3),EGFR(L~ext!3,CR!2) -> EGF(r~int!1),EGFR(L~int!1,CR!2),EGF(r~int!3),EGFR(L~int!3,CR!2)
+'deg_EGF'EGF(r~int) ->
