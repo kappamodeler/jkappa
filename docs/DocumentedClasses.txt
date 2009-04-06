@@ -8,3 +8,15 @@ Classes with full javadoc
 - com.plectix.simulator.components.CAgentLink
 
 other ones are unfinished and need to be checked
+
+
+--------------------------------------------------
+- CConnectedComponent
+- CInternalState
+- CLinkRank
+- CLinkStatus
+- CSnapshot
+- CSpanningTree
+- ObservablesConnectedComponent
+- ObservablesRuleComponent
+- SnapshotElement
