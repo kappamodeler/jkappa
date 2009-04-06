@@ -10,7 +10,7 @@ public interface IConnectedComponent extends ISolutionComponent {
 
 	/**
 	 * This method returns string representation of this connected component  
-	 * @return
+	 * @return string representation of this connected component
 	 */
 	public String getHash();
 

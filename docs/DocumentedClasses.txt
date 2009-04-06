@@ -7,6 +7,7 @@ Classes with full javadoc
 - com.plectix.simulator.components.CLink
 - com.plectix.simulator.components.CAgentLink
 - com.plectix.simulator.components.CConnectedComponent
+- com.plectix.simulator.components.ObservablesConnectedComponent
 
 other ones are unfinished and need to be checked
 
@@ -17,7 +18,6 @@ other ones are unfinished and need to be checked
 - CLinkStatus
 - CSnapshot
 - CSpanningTree
-- ObservablesConnectedComponent
 - ObservablesRuleComponent
 - SnapshotElement
 - CPerturbationType

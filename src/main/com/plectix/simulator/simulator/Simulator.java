@@ -230,7 +230,7 @@ public class Simulator implements SimulatorInterface {
 				simulationData.createSnapshots(currentTime);				
 			}
 			
-			simulationData.checkPerturbation(currentTime);
+			simulationData.getKappaSystem().checkPerturbation(currentTime);
 			CRule rule = ruleProbabilityCalculation.getRandomRule();
 	
 			if (rule == null) {
@@ -381,7 +381,7 @@ public class Simulator implements SimulatorInterface {
 					break;
 				}
 				
-				simulationData.checkPerturbation(currentTime);
+				simulationData.getKappaSystem().checkPerturbation(currentTime);
 				CRule rule = ruleProbabilityCalculation.getRandomRule();
 
 				if (rule == null) {

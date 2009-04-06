@@ -12,9 +12,12 @@ import com.plectix.simulator.simulator.*;
  * 
  * In fact such objects are rules and substances.
  * 
+ * @see ObservablesConnectedComponent
+ * @see ObservablesRuleComponent
  * @author evlasov
  *
  */
+@SuppressWarnings("serial")
 public class CObservables implements Serializable {
 	private boolean ocamlStyleObsName = false;
 	private final List<Double> countTimeList = new ArrayList<Double>();;

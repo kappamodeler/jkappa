@@ -23,7 +23,7 @@ public interface IObservablesComponent {
 	public String getName();
 
 	/**
-	 * This method returns the line of this observable, uses for output to xml.
+	 * This method returns the line of this observable, used for output to xml.
 	 * @return the line of this observable
 	 */
 	public String getLine();

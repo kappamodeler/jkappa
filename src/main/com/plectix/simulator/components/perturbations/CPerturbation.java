@@ -42,7 +42,7 @@ public final class CPerturbation implements Serializable{
 	 * @param perturbationID given unique id
 	 * @param time given time condition
 	 * @param rule given rule for modify
-	 * @param given rate expression
+	 * @param rateParameters given rate expression
 	 * @see CPerturbationType
 	 */
 	public CPerturbation(int perturbationID, double time,

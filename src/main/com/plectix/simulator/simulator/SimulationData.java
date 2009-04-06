@@ -295,31 +295,6 @@ public class SimulationData {
 		}
 	}
 
-	public final void checkPerturbation(double currentTime) {
-		List<CPerturbation> perturbations = myKappaSystem.getPerturbations();
-		if (perturbations.size() != 0) {
-			for (CPerturbation pb : perturbations) {
-				switch (pb.getType()) {
-				case TIME: {
-					if (!pb.isDo())
-						pb.checkCondition(currentTime);
-					break;
-				}
-				case NUMBER: {
-					pb.checkCondition(myKappaSystem.getObservables());
-					break;
-				}
-				case ONCE: {
-					if (!pb.isDo())
-						pb.checkConditionOnce(currentTime);
-					break;
-				}
-				}
-
-			}
-		}
-	}
-
 	public void checkStoriesBar(int i) {
 		if (i >= nextStepStories) {
 			double r;

@@ -1,17 +1,14 @@
-/**
- * 
- */
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.plectix.simulator.interfaces.*;
 
 /**
- * This class describes observables of ConnectedComponent storage.
+ * This class implements observable connected component. In fact, this is connected component
+ * from observables list. <br>
  * In general we have kappa file line like
  * <br><br>
  * <code>'observableName' connectedComponents</code>,
@@ -19,6 +16,7 @@ import com.plectix.simulator.interfaces.*;
  * <br>
  * <li><code>observableName</code> - name of this observable</li>
  * <li><code>connectedComponents</code> - list of substances</li>
+ * @see CObservables
  * @author avokhmin
  *
  */
@@ -26,6 +24,11 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 		implements IObservablesConnectedComponent, Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * If we have several automorphic components in observables list, than
+	 * we should fix the only canonical one. NO_INDEX has -1 value for these and the other
+	 * value (number of automorphism) for others.  
+	 */
 	public static final int NO_INDEX = -1;
 	
 	private int mainAutomorphismNumber = NO_INDEX;
@@ -38,18 +41,18 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 	private int lastInjectionsQuantity = -1;
 	
 	/**
-	 * Constructor ObservablesConnectedComponent with <b>connectedAgents</b> agents.<br>
+	 * Constructor. Creates ObservablesConnectedComponent from the list of connected agents.<br>
 	 * For example, we have kappa file line such as :<br> 
 	 * <code>'name' A(x)</code> - This one means unique observable.<br>
 	 * <code>'name' A(x),B(x)</code> - This one means observable group, 
 	 * and we should create 2 "ObservablesConnectedComponent" with same "name", 
 	 * "line", "nameId".
-	 * @param connectedAgents agents we want to add
+	 * @param connectedAgents list of agents to create component from 
 	 * @param name name of current observable
-	 * @param line full string line from kappa file.
+	 * @param line kappa file line becoming this observable.
 	 * @param nameID unique id of current observable.
-	 * @param unique <tt>true</tt> if current observable connectedComponent not 
-	 * include to group, otherwise <tt>false</tt>
+	 * @param unique <tt>false</tt> if this observable connected component is already included in
+	 * observables list, otherwise <tt>false</tt>
 	 */
 	public ObservablesConnectedComponent(List<CAgent> connectedAgents,
 			String name, String line, int nameID, boolean unique) {
