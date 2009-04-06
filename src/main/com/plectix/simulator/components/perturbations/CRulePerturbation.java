@@ -10,28 +10,37 @@ import com.plectix.simulator.interfaces.INetworkNotation;
 
 import com.plectix.simulator.simulator.SimulationData;
 
+/**
+ * This class implements rule of perturbation.
+ * @author avokhmin
+ *
+ */
+@SuppressWarnings("serial")
 public final class CRulePerturbation extends CRule {
 
 	private int count;
 	private boolean inf = false;
 
-	public CRulePerturbation(CRule rule, boolean isStorify) {
-		super(rule.getLeftHandSide(), rule.getRightHandSide(), rule.getName(),
-				rule.getRate(), rule.getRuleID(), isStorify);
-	}
-
-//	public CRulePerturbation(List<IConnectedComponent> left,
-//			List<IConnectedComponent> right, String name, ConstraintData ruleRate,
-//			int ruleID, boolean isStorify) {
-//		super(left, right, name, ruleRate, ruleID, isStorify);
-//	}
-	
+	/**
+	 * The CRulePerturbation constructor.
+	 * 
+	 * @param leftHandsideComponents left handside of the rule, list of connected components
+	 * @param rightHandsideComponents right handside of the rule, list of connected components
+	 * @param ruleName name of the rule 
+	 * @param ruleRate rate of the rule
+	 * @param ruleID unique rule identificator
+	 * @param isStorify <tt>true</tt> if simulator run in storify mode, <tt>false</tt> otherwise
+	 */
 	public CRulePerturbation(List<IConnectedComponent> left,
 			List<IConnectedComponent> right, String name, double ruleRate,
 			int ruleID, boolean isStorify) {
 		super(left, right, name, ruleRate, ruleID, isStorify);
 	}
 
+	/**
+	 * This method sets count of apply this rule.
+	 * @param count given count
+	 */
 	public final void setCount(double count) {
 		if (count == Double.MAX_VALUE) {
 			inf = true;
@@ -55,6 +64,9 @@ public final class CRulePerturbation extends CRule {
 		count--;
 	}
 
+	/**
+	 * Util method. Check a need to apply this and {@link #downRule()} if it need.
+	 */
 	private final void check() {
 		if (!inf) {
 			if (count <= 1)
@@ -65,6 +77,9 @@ public final class CRulePerturbation extends CRule {
 		}
 	}
 
+	/**
+	 * Util method. Switch off current rule.
+	 */
 	private final void downRule() {
 		setRuleRate(0.0);
 		setInfinityRate(false);

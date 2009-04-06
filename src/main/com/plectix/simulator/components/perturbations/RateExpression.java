@@ -22,15 +22,8 @@ public final class RateExpression implements IPerturbationExpression, Serializab
 	}
 
 	public final String getValueToString() {
-		//return Double.valueOf(value).toString();
 		return value + "";
 	}
-
-	// public double getMultiplication() {
-	// if (this.rule == null)
-	// return this.value;
-	// return this.rule.getRuleRate() * this.value;
-	// }
 
 	public final double getMultiplication(CObservables obs) {
 		if (this.rule == null)

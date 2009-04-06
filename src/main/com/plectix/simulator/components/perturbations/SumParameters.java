@@ -32,15 +32,8 @@ import com.plectix.simulator.interfaces.*;
 	}
 
 	public final String getValueToString() {
-		//return Double.valueOf(parameter).toString();
 		return parameter + "";
 	}
-
-	// public double getMultiply(CObservables observables) {
-	// double multiply = 0.;
-	// multiply = this.observableID.getSize();
-	// return multiply * this.parameter;
-	// }
 
 	public final double getMultiplication(CObservables obs) {
 		double multiply = 0.;

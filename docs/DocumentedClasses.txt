@@ -22,3 +22,4 @@ other ones are unfinished and need to be checked
 - SnapshotElement
 - CPerturbationType
 - CPerturbation
+- com.plectix.simulator.components.perturbations.CRulePerturbation
