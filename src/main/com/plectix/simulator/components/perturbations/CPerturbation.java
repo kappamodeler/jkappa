@@ -177,7 +177,7 @@ public final class CPerturbation implements Serializable{
 
 	public final boolean checkCondition(CObservables observables) {
 		double obsSize = observables.getComponentList().get(obsNameID)
-				.getSize(observables);
+				.getCurrentState(observables);
 
 		if ((greater && (obsSize > calculateSum(observables)))
 				|| (!(greater) && (obsSize < calculateSum(observables)))) {

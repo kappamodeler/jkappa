@@ -5,29 +5,43 @@ import java.util.*;
 
 import com.plectix.simulator.interfaces.*;
 
+/**
+ * This class describes observables of rule storage.
+ * In general we have kappa file line like
+ * <br><br>
+ * <code>'observableName'</code>,
+ * where 
+ * <br>
+ * <li><code>observableName</code> - name of this observable rule</li>
+ * @author avokhmin
+ *
+ */
 public final class ObservablesRuleComponent implements IObservablesRuleComponent, Serializable {
 	private final CRule rule;
 	private final int nameID;
 	private final List<Long> countList = new ArrayList<Long>();
 	private long lastInjectionsQuantity = -1;
 	
+	/**
+	 * Constructor ObservablesRuleComponent<br>
+	 * For example, we have kappa file line such as :<br> 
+	 * <code>'name'</code> - This one means rule observable.<br>
+	 * @param rule given rule
+	 * @param nameID given name id
+	 */
 	public ObservablesRuleComponent(CRule rule, int nameID) {
 		this.rule = rule;
 		this.nameID = nameID;
 	}
 	
-	public final CRule getRule() {
-		return rule;
-	}
-
-	public final List<Long> getCountList() {
-		return Collections.unmodifiableList(countList);
-	}
-
 	public final void updateLastValue() {
 		lastInjectionsQuantity = getCount();
 	}
 
+	/**
+	 * This method calculates current state of observables. Util method.
+	 * @return current state of observables.
+	 */
 	private final long getCount() {
 		long count = 1;
 
@@ -55,34 +69,29 @@ public final class ObservablesRuleComponent implements IObservablesRuleComponent
 		return nameID;
 	}
 
-	public double getSize(CObservables obs) {
+	public double getCurrentState(CObservables obs) {
 		return rule.getRate();
 	}
 
-	public String getItem(int index, CObservables obs) {
+	public String getStringItem(int index, CObservables obs) {
 		return countList.get(index).toString();
 	}
 
 	public void addAutomorphicObservables(int index) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public int getMainAutomorphismNumber() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	public void setMainAutomorphismNumber(int index) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public boolean isUnique() {
 		return true;
 	}
 
-	public long getValue(int index, CObservables obs) {
+	public long getLongItem(int index, CObservables obs) {
 		return countList.get(index);
 	}
 

@@ -1322,12 +1322,12 @@ public class SimulationData {
 	private final String getItem(CObservables obs, int index,
 			IObservablesComponent oCC) {
 		if (oCC.isUnique())
-			return oCC.getItem(index, obs);
+			return oCC.getStringItem(index, obs);
 		long value = 1;
 		for (IObservablesConnectedComponent cc : obs
 				.getConnectedComponentList())
 			if (cc.getNameID() == oCC.getNameID())
-				value *= cc.getValue(index, obs);
+				value *= cc.getLongItem(index, obs);
 
 		return Long.valueOf(value).toString();
 	}

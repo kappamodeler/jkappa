@@ -44,7 +44,7 @@ import com.plectix.simulator.interfaces.*;
 
 	public final double getMultiplication(CObservables obs) {
 		double multiply = 0.;
-		multiply = this.observableID.getSize(obs);
+		multiply = this.observableID.getCurrentState(obs);
 		return multiply * this.parameter;
 	}
 

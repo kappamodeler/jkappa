@@ -14,5 +14,8 @@ public interface IConnectedComponent extends ISolutionComponent {
 
 	public SuperSubstance getSubstance();
 
+	/**
+	 * Returns <tt>true</tt>, if this ConnectedComponent does "EMPTY", otherwise <tt>false</tt>.
+	 */
 	public boolean isEmpty();
 }

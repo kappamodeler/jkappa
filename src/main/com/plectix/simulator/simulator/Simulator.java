@@ -120,7 +120,7 @@ public class Simulator implements SimulatorInterface {
 			// x is the value for the observable_num at the current time
 			double x = simulationData.getKappaSystem().getObservables()
 					.getComponentListForXMLOutput().get(observable_num)
-					.getSize(simulationData.getKappaSystem().getObservables());
+					.getCurrentState(simulationData.getKappaSystem().getObservables());
 			if (timeStepCounter >= runningMetrics.get(observable_num).size()) {
 				runningMetrics.get(observable_num).add(new RunningMetric());
 			}

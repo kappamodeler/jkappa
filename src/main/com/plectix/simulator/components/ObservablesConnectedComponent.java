@@ -10,8 +10,22 @@ import java.util.List;
 
 import com.plectix.simulator.interfaces.*;
 
+/**
+ * This class describes observables of ConnectedComponent storage.
+ * In general we have kappa file line like
+ * <br><br>
+ * <code>'observableName' connectedComponents</code>,
+ * where 
+ * <br>
+ * <li><code>observableName</code> - name of this observable</li>
+ * <li><code>connectedComponents</code> - list of substances</li>
+ * @author avokhmin
+ *
+ */
 public final class ObservablesConnectedComponent extends CConnectedComponent
 		implements IObservablesConnectedComponent, Serializable {
+	private static final long serialVersionUID = 1L;
+
 	public static final int NO_INDEX = -1;
 	
 	private int mainAutomorphismNumber = NO_INDEX;
@@ -23,6 +37,20 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 	private final boolean unique;
 	private int lastInjectionsQuantity = -1;
 	
+	/**
+	 * Constructor ObservablesConnectedComponent with <b>connectedAgents</b> agents.<br>
+	 * For example, we have kappa file line such as :<br> 
+	 * <code>'name' A(x)</code> - This one means unique observable.<br>
+	 * <code>'name' A(x),B(x)</code> - This one means observable group, 
+	 * and we should create 2 "ObservablesConnectedComponent" with same "name", 
+	 * "line", "nameId".
+	 * @param connectedAgents agents we want to add
+	 * @param name name of current observable
+	 * @param line full string line from kappa file.
+	 * @param nameID unique id of current observable.
+	 * @param unique <tt>true</tt> if current observable connectedComponent not 
+	 * include to group, otherwise <tt>false</tt>
+	 */
 	public ObservablesConnectedComponent(List<CAgent> connectedAgents,
 			String name, String line, int nameID, boolean unique) {
 		super(connectedAgents);
@@ -45,20 +73,12 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 		this.mainAutomorphismNumber = mainAutomorphismNumber;
 	}
 
-	public final List<Integer> getAutomorphicObservables() {
-		return Collections.unmodifiableList(automorphicObservables);
-	}
-
 	public final void addAutomorphicObservables(int automorphicObservable) {
 		this.automorphicObservables.add(automorphicObservable);
 	}
 
 	public final String getLine() {
 		return line;
-	}
-
-	public final List<Integer> getCountList() {
-		return Collections.unmodifiableList(countList);
 	}
 
 	public final void updateLastValue() {
@@ -76,7 +96,7 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 		return name;
 	}
 
-	public final double getSize(CObservables obs) {
+	public final double getCurrentState(CObservables obs) {
 		if (this.isUnique())
 			return getInjectionsList().size();
 		long value = 1;
@@ -87,13 +107,13 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 		return value;
 	}
 
-	public final String getItem(int index, CObservables obs) {
+	public final String getStringItem(int index, CObservables obs) {
 		if (index >= countList.size())
 			index = countList.size() - 1;
 		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
 			return countList.get(index).toString();
 		} else
-			return obs.getComponentList().get(mainAutomorphismNumber).getItem(
+			return obs.getComponentList().get(mainAutomorphismNumber).getStringItem(
 					index, obs);
 	}
 
@@ -101,11 +121,11 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 		return unique;
 	}
 
-	public final long getValue(int index, CObservables obs) {
+	public final long getLongItem(int index, CObservables obs) {
 		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
 			return countList.get(index);
 		} else
-			return obs.getComponentList().get(mainAutomorphismNumber).getValue(
+			return obs.getComponentList().get(mainAutomorphismNumber).getLongItem(
 					index, obs);
 	}
 }
