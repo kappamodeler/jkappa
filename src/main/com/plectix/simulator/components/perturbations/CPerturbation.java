@@ -9,6 +9,11 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.*;
 
+/**
+ * This class implements Perturbation entity.
+ * @author avokhmin
+ * @see CPerturbationType
+ */
 public final class CPerturbation implements Serializable{
 
 	public final static byte TYPE_TIME = 0;
@@ -32,85 +37,134 @@ public final class CPerturbation implements Serializable{
 	private boolean isDO = false;
 	private List<IPerturbationExpression> parametersRHS;
 
-	// time rate
-	public CPerturbation(int perturbationID, double time, CPerturbationType type,
-			double perturbationRate, CRule rule, boolean greater,
+	/**
+	 * Constructor of perturbation for "TIME condition".
+	 * @param perturbationID given unique id
+	 * @param time given time condition
+	 * @param rule given rule for modify
+	 * @param given rate expression
+	 * @see CPerturbationType
+	 */
+	public CPerturbation(int perturbationID, double time,
+			CRule rule,
 			List<IPerturbationExpression> rateParameters) {
 		this.perturbationID = perturbationID;
 		this.timeCondition = time;
-		this.type = type;
-		this.perturbationRate = perturbationRate;
+		this.type = CPerturbationType.TIME;
+		this.perturbationRate = -1;
 		this.rule = rule;
 		this.ruleRate = rule.getRate();
-		this.greater = greater;
+		this.greater = true;
 		this.parametersRHS = rateParameters;
 	}
 
-	// time once
-	// TODO remove greater
-	public CPerturbation(int perturbationID, double time, CPerturbationType type,
-			CRulePerturbation rule, boolean greater) {
+	/**
+	 * Constructor of perturbation for "Once modification".
+	 * @param perturbationID given unique id
+	 * @param time given time condition
+	 * @param rule given specially rule
+	 * @see CPerturbationType
+	 */
+	public CPerturbation(int perturbationID, double time,
+			CRulePerturbation rule) {
 		this.perturbationID = perturbationID;
 		this.timeCondition = time;
-		this.type = type;
+		this.type = CPerturbationType.ONCE;
 		this.rule = rule;
 		this.ruleRate = rule.getRate();
-		this.greater = greater;
+		this.greater = true;
 	}
 
-	// species rate
+	/**
+	 * Constructor of perturbation for "NUMBER modification".
+	 * @param perturbationID given unique id
+	 * @param obsID given list of observable components for checks to apply.
+	 * @param parameters given list of correction factor for <b>obsID</b>
+	 * @param obsNameID given id of watch observable.
+	 * @param rule given rule for modify
+	 * @param greater <tt>true</tt> if at line we have 
+	 * <code>"%mod: ['a'] <b>></b> 100.0 ..."</code>,<br>
+	 * else if  <code>"%mod: ['a'] <b><</b> 100.0 ..."</code>, <tt>false</tt>
+	 * @param rateParameters given list of rate parameters for right handSide.
+	 * @param observables observables storage. 
+	 */
 	public CPerturbation(int perturbationID, List<IObservablesComponent> obsID,
-			List<Double> parameters, int obsNameID, CPerturbationType type,
-			double perturbationRate, CRule rule, boolean greater,
+			List<Double> parameters, int obsNameID,
+			CRule rule, boolean greater,
 			List<IPerturbationExpression> rateParameters, CObservables observables) {
 		this.perturbationID = perturbationID;
 		this.obsNameID = obsNameID;
 		CObservables obs = observables;
 		fillParameters(obsID, parameters, obs);
-		this.type = type;
-		this.perturbationRate = perturbationRate;
+		this.type = CPerturbationType.NUMBER;
+		this.perturbationRate = -1.;
 		this.rule = rule;
 		this.ruleRate = rule.getRate();
 		this.greater = greater;
 		this.parametersRHS = rateParameters;
 	}
 	
+	/**
+	 * This method returns unique id of this.
+	 * @return unique id of this.
+	 */
 	public final int getObsNameID() {
 		return this.obsNameID;
 	}
 
+	/**
+	 * This method returns perturbation expressions from left handSide.
+	 * @return perturbation expressions from left handSide.
+	 */
 	public final List<IPerturbationExpression> getLHSParametersList() {
 		return this.parametersLHS;
 	}
 
+	/**
+	 * This method returns rule for modify
+	 * @return rule for modify
+	 */
 	public final CRule getPerturbationRule() {
 		return this.rule;
 	}
 
-	public final double getPerturbationRate() {
-		return this.perturbationRate;
-	}
-
+	/**
+	 * This method returns greater from this.
+	 * @return greater
+	 */
 	public final boolean getGreater() {
 		return this.greater;
 	}
 
+	/**
+	 * This method returns time condition
+	 * @return time condition
+	 */
 	public final double getTimeCondition() {
 		return this.timeCondition;
 	}
 
+	/**
+	 * This method returns perturbation expressions from right handSide.
+	 * @return perturbation expressions from right handSide
+	 */
 	public final List<IPerturbationExpression> getRHSParametersList() {
 		return Collections.unmodifiableList(parametersRHS);
 	}
 
-	// public void setRHSParameters(List<RateExpression> rateParameters) {
-	// this.RHSParameters = rateParameters;
-	// }
-
+	/**
+	 * This method return <tt>true</tt> if this did apply, otherwise <tt>false</tt>
+	 * @return <tt>true</tt> if this did apply, otherwise <tt>false</tt>
+	 */
 	public final boolean isDo() {
 		return this.isDO;
 	}
 
+	/**
+	 * This method checks a need to apply "ONCE modification". 
+	 * @param currentTime given time for checks
+	 * @see CPerturbationType
+	 */
 	public final void checkConditionOnce(double currentTime) {
 		if (currentTime > this.timeCondition) {
 			rule.setInfinityRate(true);
@@ -119,6 +173,12 @@ public final class CPerturbation implements Serializable{
 		}
 	}
 
+	/**
+	 * Util method. Initialization left handSide perturbation expression.
+	 * @param obsID given list of observable components for checks to apply.
+	 * @param parameters given list of correction factor for <b>obsID</b>
+	 * @param obs observables storage. 
+	 */
 	private final void fillParameters(List<IObservablesComponent> obsID,
 			List<Double> parameters, CObservables obs) {
 		this.parametersLHS = new ArrayList<IPerturbationExpression>();
@@ -158,6 +218,11 @@ public final class CPerturbation implements Serializable{
 		}
 	}
 
+	/**
+	 * This method checks a need to apply "TIME modification". 
+	 * @param currentTime given time for checks
+	 * @see CPerturbationType
+	 */
 	public final boolean checkCondition(double currentTime) {
 		if (currentTime > this.timeCondition) {
 			fillPerturbationRate();
@@ -168,6 +233,9 @@ public final class CPerturbation implements Serializable{
 		return false;
 	}
 
+	/**
+	 * Util method. Calculates new perturbation rate.
+	 */
 	private final void fillPerturbationRate() {
 		this.perturbationRate = 0;
 		for (IPerturbationExpression re : this.parametersRHS) {
@@ -175,6 +243,11 @@ public final class CPerturbation implements Serializable{
 		}
 	}
 
+	/**
+	 * This method checks a need to apply "NUMBER modification". 
+	 * @param observables observables storage. 
+	 * @see CPerturbationType
+	 */
 	public final boolean checkCondition(CObservables observables) {
 		double obsSize = observables.getComponentList().get(obsNameID)
 				.getCurrentState(observables);
@@ -199,6 +272,11 @@ public final class CPerturbation implements Serializable{
 		return false;
 	}
 
+	/**
+	 * Util method. Calculates left handSide expressions.
+	 * @param observables observables storage.
+	 * @return amount of left handSide expressions.
+	 */
 	private final double calculateSum(CObservables observables) {
 		double sum = 0.0;
 		for (int i = 0; i < this.parametersLHS.size() - 1; i++) {

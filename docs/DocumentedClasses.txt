@@ -12,7 +12,6 @@ other ones are unfinished and need to be checked
 
 
 --------------------------------------------------
-- CConnectedComponent
 - CInternalState
 - CLinkRank
 - CLinkStatus
@@ -21,3 +20,5 @@ other ones are unfinished and need to be checked
 - ObservablesConnectedComponent
 - ObservablesRuleComponent
 - SnapshotElement
+- CPerturbationType
+- CPerturbation

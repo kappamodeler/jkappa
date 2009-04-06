@@ -85,9 +85,8 @@ public class PerturbationsBuilder {
 				AbstractRateModification modification = (AbstractRateModification) arg
 						.getModification();
 				result.add(new CPerturbation(id, timeBound,
-						// TODO -1, we don't need it
-						CPerturbationType.TIME, -1, findRule(modification
-								.getArgument()), true,
+						findRule(modification
+								.getArgument()),
 						createRateExpression(modification)));
 				return result;
 			} else {
@@ -115,8 +114,8 @@ public class PerturbationsBuilder {
 					}
 					rule.setCount(modification.getQuantity());
 					myData.addRule(rule);
-					result.add(new CPerturbation(id, timeBound, CPerturbationType.ONCE,
-							rule, true));
+					result.add(new CPerturbation(id, timeBound,
+							rule));
 				}
 				return result;
 			}
@@ -151,7 +150,7 @@ public class PerturbationsBuilder {
 				IObservablesComponent component = checkInObservables(condition
 						.getArgument());
 				result.add(new CPerturbation(id, obsID, parameters, component
-						.getNameID(), CPerturbationType.NUMBER, -1., 
+						.getNameID(), 
 						rule, condition.isGreater(), createRateExpression(modification), 
 						myData.getObservables()));
 				return result;
