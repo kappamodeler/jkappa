@@ -24,7 +24,7 @@ import com.plectix.simulator.util.Info.InfoType;
 
 @RunWith(value=Suite.class)
 @SuiteClasses(value = {
-		TestInfluenceMap.class, 
+		TestInfluenceMap.class
 	})
 public class InitTestInfluenceMap {
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
