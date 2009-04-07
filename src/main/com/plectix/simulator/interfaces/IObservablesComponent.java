@@ -2,6 +2,12 @@ package com.plectix.simulator.interfaces;
 
 import com.plectix.simulator.components.CObservables;
 
+/**
+ * This class implements standard interface for Observable Components
+ * (include general methods for Connected/Rule components).
+ * @author avokhmin
+ *
+ */
 public interface IObservablesComponent {
 //	public final static byte TYPE_CONNECTED_COMPONENT = 0;
 //	public final static byte TYPE_RULE_COMPONENT = 1;

@@ -78,8 +78,8 @@ public final class CPerturbation implements Serializable{
 	/**
 	 * Constructor of perturbation for "NUMBER modification".
 	 * @param perturbationID given unique id
-	 * @param obsID given list of observable components for checks to apply.
-	 * @param parameters given list of correction factor for <b>obsID</b>
+	 * @param obsComponents given list of observable components for checks to apply.
+	 * @param parameters given list of correction factor for <b>obsComponents</b>
 	 * @param obsNameID given id of watch observable.
 	 * @param rule given rule for modify
 	 * @param greater <tt>true</tt> if at line we have 
@@ -88,14 +88,14 @@ public final class CPerturbation implements Serializable{
 	 * @param rateParameters given list of rate parameters for right handSide.
 	 * @param observables observables storage. 
 	 */
-	public CPerturbation(int perturbationID, List<IObservablesComponent> obsID,
+	public CPerturbation(int perturbationID, List<IObservablesComponent> obsComponents,
 			List<Double> parameters, int obsNameID,
 			CRule rule, boolean greater,
 			List<IPerturbationExpression> rateParameters, CObservables observables) {
 		this.perturbationID = perturbationID;
 		this.obsNameID = obsNameID;
 		CObservables obs = observables;
-		fillParameters(obsID, parameters, obs);
+		fillParameters(obsComponents, parameters, obs);
 		this.type = CPerturbationType.NUMBER;
 		this.perturbationRate = -1.;
 		this.rule = rule;

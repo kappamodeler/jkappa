@@ -23,3 +23,8 @@ other ones are unfinished and need to be checked
 - CPerturbationType
 - CPerturbation
 - com.plectix.simulator.components.perturbations.CRulePerturbation
+- com.plectix.simulator.interfaces.IPerturbationExpression
+- com.plectix.simulator.interfaces.IObservablesComponent
+- com.plectix.simulator.components.perturbations.RateExpression
+- com.plectix.simulator.components.perturbations.SumParameters
+- 

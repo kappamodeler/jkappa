@@ -6,10 +6,20 @@ import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.*;
 
+/**
+ * This class implements rate parameters for right handSide in "perturbation expression".
+ * @author avokhmin
+ * @see CPerturbation
+ */
 public final class RateExpression implements IPerturbationExpression, Serializable {
 	private final CRule rule;
 	private double value;
 
+	/**
+	 * Constructor of RateExpression with given <b>rule</b> and <b>value</b> - correction factor.
+	 * @param rule given rule
+	 * @param value given correction factor
+	 */
 	public RateExpression(CRule rule, double value) {
 		this.rule = rule;
 		this.value = value;

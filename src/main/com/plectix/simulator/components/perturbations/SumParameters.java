@@ -8,26 +8,30 @@ import java.io.Serializable;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.interfaces.*;
 
-/*package*/ final class SumParameters implements IPerturbationExpression, Serializable {
-	/**
-	 * 
-	 */
-	private final IObservablesComponent observableID;
+/**
+ * This class implements rate parameters for left handSide in "perturbation expression".
+ * @author avokhmin
+ * @see CPerturbation
+ */
+final class SumParameters implements IPerturbationExpression, Serializable {
+	private final IObservablesComponent observableComponent;
 	private double parameter;
 	
-	public SumParameters(IObservablesComponent observableID, double parameter) {
-		this.observableID = observableID;
+	/**
+	 * Constructor of SumParameters with given <b>observableComponent</b> and
+	 * <b>parameter</b> - correction factor.
+	 * @param observableComponent given observableComponent
+	 * @param parameter given correction factor
+	 */
+	public SumParameters(IObservablesComponent observableComponent, double parameter) {
+		this.observableComponent = observableComponent;
 		this.parameter = parameter;
 	}
 
 	
-	public final IObservablesComponent getObservablesComponent() {
-		return this.observableID;
-	}
-
 	public final String getName() {
-		if (observableID != null)
-			return observableID.getName();
+		if (observableComponent != null)
+			return observableComponent.getName();
 		return null;
 	}
 
@@ -37,7 +41,7 @@ import com.plectix.simulator.interfaces.*;
 
 	public final double getMultiplication(CObservables obs) {
 		double multiply = 0.;
-		multiply = this.observableID.getCurrentState(obs);
+		multiply = this.observableComponent.getCurrentState(obs);
 		return multiply * this.parameter;
 	}
 
@@ -49,12 +53,15 @@ import com.plectix.simulator.interfaces.*;
 		this.parameter = value;
 	}
 	
+	/**
+	 * Override standard "equals". Uses for simplification similar this.
+	 */
 	@Override
 	public final boolean equals(Object obj) {
 		if (!(obj instanceof SumParameters))
 			return false;
 		SumParameters sp = (SumParameters) obj;
-		if (observableID != sp.observableID)
+		if (observableComponent != sp.observableComponent)
 			return false;
 		return true;
 	}
