@@ -62,7 +62,7 @@ public class CRule implements Serializable {
 	private List<IObservablesConnectedComponent> inhibitedObservable;
 
 	private int ruleID;
-	private List<IAction> actionList;
+	private List<CAction> actionList;
 	private Map<CAgent, CAgent> agentAddList;
 	private List<CInjection> injList;
 	private List<CSite> changedActivatedSites;
@@ -113,7 +113,7 @@ public class CRule implements Serializable {
 		sortActionList();
 		if (isStorify) {
 			rHSEqualsLHS = true;
-			for (IAction action : actionList) {
+			for (CAction action : actionList) {
 				if (action.getTypeId() != CActionType.NONE.getId()) {
 					rHSEqualsLHS = false;
 					break;
@@ -276,7 +276,7 @@ public class CRule implements Serializable {
 			}
 		}
 
-		for (IAction action : actionList) {
+		for (CAction action : actionList) {
 			if (action.getLeftCComponent() == null) {
 				action.doAction(pool, null, netNotation, simulationData);
 			} else {
@@ -488,8 +488,8 @@ public class CRule implements Serializable {
 			for (int j = 0; j < actionList.size(); j++) {
 				if (actionList.get(i).getTypeId() < actionList.get(j)
 						.getTypeId()) {
-					IAction actionMin = actionList.get(j);
-					IAction actionR = actionList.get(i);
+					CAction actionMin = actionList.get(j);
+					CAction actionR = actionList.get(i);
 					actionList.set(j, actionR);
 					actionList.set(i, actionMin);
 				}
@@ -835,7 +835,7 @@ public class CRule implements Serializable {
 	private final void createActionList() {
 		changedActivatedSites = new ArrayList<CSite>();
 		changedInhibitedSites = new ArrayList<ChangedSite>();
-		actionList = new ArrayList<IAction>();
+		actionList = new ArrayList<CAction>();
 
 		if (rightHandside != null)
 			for (IConnectedComponent cc : rightHandside)
@@ -889,7 +889,7 @@ public class CRule implements Serializable {
 		for (IConnectedComponent ccR : rightHandside) {
 			for (CAgent rAgent : ccR.getAgents()) {
 				if (lAgent.getIdInRuleHandside() == rAgent.getIdInRuleHandside()) {
-					IAction newAction = new CDefaultAction(this, lAgent,
+					CAction newAction = new CDefaultAction(this, lAgent,
 							rAgent, ccL, ccR);
 					actionList.add(newAction);
 					actionList.addAll(newAction.createAtomicActions());
@@ -1092,7 +1092,7 @@ public class CRule implements Serializable {
 		sitesConnectedWithDeleted.remove(index);
 	}
 
-	public final void addAction(IAction action) {
+	public final void addAction(CAction action) {
 		actionList.add(action);
 	}
 
@@ -1198,7 +1198,7 @@ public class CRule implements Serializable {
 	 * Returns list of actions, which this rule performs
 	 * @return list of actions, which this rule performs
 	 */
-	public final List<IAction> getActionList() {
+	public final List<CAction> getActionList() {
 		return Collections.unmodifiableList(actionList);
 	}
 

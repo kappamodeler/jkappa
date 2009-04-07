@@ -27,4 +27,6 @@ other ones are unfinished and need to be checked
 - com.plectix.simulator.interfaces.IObservablesComponent
 - com.plectix.simulator.components.perturbations.RateExpression
 - com.plectix.simulator.components.perturbations.SumParameters
+- com.plectix.simulator.action.CAction
+- com.plectix.simulator.action.CActionType
 - 

@@ -4,10 +4,18 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.SimulationData;
 
-/*package*/abstract class CAction implements IAction, Serializable {
+/**
+ * Implements standard abstract class atomic action.
+ * @author avokhmin
+ * @see CActionType
+ */
+public abstract class CAction implements Serializable {
 	private final CAgent fromAgent;
 	private final CAgent toAgent;
 	private final CRule myRule;
@@ -16,7 +24,6 @@ import com.plectix.simulator.interfaces.*;
 	private CActionType myType;
 	private CSite siteTo = null;
 	private CSite siteFrom = null;
-	private int nameInternalStateId;
 
 	/**
 	 * Default constructor, create AtomicCAction and add to "actionList".
@@ -24,7 +31,6 @@ import com.plectix.simulator.interfaces.*;
 	 * @param fromAgent
 	 * @param toAgent
 	 */
-
 	protected CAction(CRule rule, CAgent fromAgent, CAgent toAgent,
 			IConnectedComponent ccL, IConnectedComponent ccR) {
 		this.fromAgent = fromAgent;
@@ -34,38 +40,16 @@ import com.plectix.simulator.interfaces.*;
 		this.myRule = rule;
 	}
 
-	protected final void setSiteSet(CSite from, CSite to) {
-		siteTo = to;
-		siteFrom = from;
-	}
+	/**
+	 * This method apply current action by given data.
+	 * @param pool
+	 * @param injection given injection
+	 * @param netNotation given network notation ("null" if it not "STORY" simulation mode).
+	 * @param simulationData given simulation data
+	 */
+	public abstract void doAction(RuleApplicationPool pool, CInjection injection, 
+			INetworkNotation netNotation,  SimulationData simulationData);
 
-	protected final void setType(CActionType type) {
-		myType = type;
-	}
-
-	public final CSite getSiteFrom() {
-		return siteFrom;
-	}
-
-	public final CSite getSiteTo() {
-		return siteTo;
-	}
-
-	public final int getTypeId() {
-		return myType.getId();
-	}
-
-	public final CAgent getAgentFrom() {
-		return fromAgent;
-	}
-
-	public final CAgent getAgentTo() {
-		return toAgent;
-	}
-
-	public final Integer getNameInternalStateId() {
-		return nameInternalStateId;
-	}
 
 	protected abstract void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, CSite site);
@@ -73,10 +57,17 @@ import com.plectix.simulator.interfaces.*;
 	protected abstract void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, CSite site);
 
-	protected final int getAgentIdInCCBySideId(CAgent toAgent2) {
+	/**
+	 * This method returns {@link CAgent#getIdInConnectedComponent()} from left
+	 * handSide by given agent from right handSide rule.
+	 * @param toAgentRight given agent
+	 * @return {@link CAgent#getIdInConnectedComponent()}
+	 */
+	protected final int getAgentIdInCCBySideId(CAgent toAgentRight) {
+		// TODO May be should optimize?
 		for (IConnectedComponent cc : myRule.getLeftHandSide())
 			for (CAgent agentL : cc.getAgents())
-				if (agentL.getIdInRuleHandside() == toAgent2.getIdInRuleHandside()) {
+				if (agentL.getIdInRuleHandside() == toAgentRight.getIdInRuleHandside()) {
 					if (leftConnectedComponent == null)
 						leftConnectedComponent = cc;
 					return agentL.getIdInConnectedComponent();
@@ -84,15 +75,11 @@ import com.plectix.simulator.interfaces.*;
 		return -1;
 	}
 
-	public final IConnectedComponent getRightCComponent() {
-		return rightConnectedComponent;
-	}
-
-	public final IConnectedComponent getLeftCComponent() {
-		return leftConnectedComponent;
-	}
-
-	public final List<IAction> createAtomicActions() {
+	/**
+	 * This method analyses current action and creates new actions, if possible. 
+	 * @return collection of new actions
+	 */
+	public final List<CAction> createAtomicActions() {
 		// TODO it is very strange place. is there any case, where
 		// fromAgent.getSites() == null ???
 		if (fromAgent.getSites() == null) {
@@ -100,7 +87,7 @@ import com.plectix.simulator.interfaces.*;
 			return null;
 		}
 
-		List<IAction> list = new ArrayList<IAction>();
+		List<CAction> list = new ArrayList<CAction>();
 
 		for (CSite fromSite : fromAgent.getSites()) {
 			CSite toSite = toAgent.getSiteById(fromSite.getNameId());
@@ -162,4 +149,78 @@ import com.plectix.simulator.interfaces.*;
 		return Collections.unmodifiableList(list);
 	}
 
+//=======================GETTERS AND SETTERS========================
+
+	/**
+	 * This method sets "siteFrom" and "siteTo".
+	 * @param from given "siteFrom"
+	 * @param to given "siteTo"
+	 */
+	protected final void setSiteSet(CSite from, CSite to) {
+		siteTo = to;
+		siteFrom = from;
+	}
+
+	/**
+	 * This method sets type current action.
+	 * @param type given type
+	 * @see CActionType
+	 */
+	protected final void setType(CActionType type) {
+		myType = type;
+	}
+
+	/**
+	 * Util methiod. Uses for correlation sites.
+	 */
+	public final CSite getSiteFrom() {
+		return siteFrom;
+	}
+
+	/**
+	 * Util methiod. Uses for correlation sites.
+	 */
+	public final CSite getSiteTo() {
+		return siteTo;
+	}
+
+	/**
+	 * This method returns type of current action.
+	 * @return type of current action.
+	 * @see CActionType
+	 */
+	public final int getTypeId() {
+		return myType.getId();
+	}
+
+	/**
+	 * Util methiod. Uses for correlation agents.
+	 */
+	public final CAgent getAgentFrom() {
+		return fromAgent;
+	}
+
+	/**
+	 * Util methiod. Uses for correlation agents.
+	 */
+	public final CAgent getAgentTo() {
+		return toAgent;
+	}
+	
+	/**
+	 * This method returns connected component from right handSide rule,
+	 * where contains "site to" and "agent to", (may be "null").
+	 */
+	public final IConnectedComponent getRightCComponent() {
+		return rightConnectedComponent;
+	}
+
+	/**
+	 * This method returns connected component from left handSide rule,
+	 * where contains "site from" and "agent from", (may be "null").
+	 */
+	public final IConnectedComponent getLeftCComponent() {
+		return leftConnectedComponent;
+	}
+	
 }

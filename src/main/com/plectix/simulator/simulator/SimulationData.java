@@ -37,6 +37,7 @@ import org.w3c.dom.Element;
 
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.SimulationMain;
+import com.plectix.simulator.action.CAction;
 import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
@@ -51,7 +52,6 @@ import com.plectix.simulator.components.stories.CStoryIntro;
 import com.plectix.simulator.components.stories.CStoryTrees;
 import com.plectix.simulator.components.stories.CStoryType;
 import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
-import com.plectix.simulator.interfaces.IAction;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
 import com.plectix.simulator.interfaces.IObservablesComponent;
@@ -537,7 +537,7 @@ public class SimulationData {
 			// int countAgentsInLHS = rule.getCountAgentsLHS();
 			// int indexNewAgent = countAgentsInLHS;
 
-			for (IAction action : rule.getActionList()) {
+			for (CAction action : rule.getActionList()) {
 				switch (CActionType.getById(action.getTypeId())) {
 				case BREAK: {
 					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
