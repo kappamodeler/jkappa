@@ -1,0 +1,18 @@
+Here are some important information about this project:
+
+*) The project is developed using Eclipse IDE and .project and .classpath files are checked into SVN. Therefore compiling and running the project under Eclipse is straightforward.
+
+*) The project is automatically built by Plectix's integration server each time any project file is committed to SVN. It is also deployed to the test server. Therefore all developers need to make sure the whole build process is fine before checking in any code. The integration server runs "ant all" command, so compiling/running the project under Eclipse is not enough.
+
+*) Javadocs are also automatically built by the integration server so they are updated each time any project file is committed to SVN. Everyone in Plectix has access to them at https://integration.plectix.com/hudson/job/jsim/javadoc/index.html
+
+*) The source folders are src/main and src/test. The source folder src/main should be self contained. In other words, no class under src/main should depend on a class under src/test. 
+
+*) The file paths must be specified with caution. Plectix uses Mac OS X on its desktops and Linux OS on its servers (Windows is not the only OS in the world!). Java provides File.separatorChar character which should be used instead of '/' or '\'. 
+
+*) Constants should be declared as "public static final ..." at the top of a class and never inside methods. E.g. it is bad practice to hard code any specific paths. They must be declared as "public static final String" at the top of their respective classes.
+
+*) Catch blocks should never be left empty. 
+
+*) The project uses log4j for logging. Therefore, developers should refrain from writing to stdout or stderr, especially from classes under src/main.
+
