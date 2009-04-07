@@ -3,7 +3,6 @@ package com.plectix.simulator.components.perturbations;
 import java.io.Serializable;
 import java.util.*;
 
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
@@ -14,6 +13,7 @@ import com.plectix.simulator.interfaces.*;
  * @author avokhmin
  * @see CPerturbationType
  */
+@SuppressWarnings("serial")
 public final class CPerturbation implements Serializable{
 
 	public final static byte TYPE_TIME = 0;

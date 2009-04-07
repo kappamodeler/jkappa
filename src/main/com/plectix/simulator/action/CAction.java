@@ -15,6 +15,7 @@ import com.plectix.simulator.simulator.SimulationData;
  * @author avokhmin
  * @see CActionType
  */
+@SuppressWarnings("serial")
 public abstract class CAction implements Serializable {
 	private final CAgent fromAgent;
 	private final CAgent toAgent;
@@ -28,8 +29,10 @@ public abstract class CAction implements Serializable {
 	/**
 	 * Default constructor, create AtomicCAction and add to "actionList".
 	 * 
-	 * @param fromAgent
-	 * @param toAgent
+	 * @param fromAgent agent from left handSide
+	 * @param toAgent agent from right handSide
+	 * @param ccL given connected component, contains <b>fromAgent</b>
+	 * @param ccR given connected component, contains <b>toAgent</b>
 	 */
 	protected CAction(CRule rule, CAgent fromAgent, CAgent toAgent,
 			IConnectedComponent ccL, IConnectedComponent ccR) {
@@ -50,10 +53,21 @@ public abstract class CAction implements Serializable {
 	public abstract void doAction(RuleApplicationPool pool, CInjection injection, 
 			INetworkNotation netNotation,  SimulationData simulationData);
 
-
+	/**
+	 * Util method. Adds information about given "site" to given "netNotation".
+	 * @param index type adds information
+	 * @param netNotation given network notation
+	 * @param site given site
+	 */
 	protected abstract void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, CSite site);
 
+	/**
+	 * Util method. Initial unconfigured state.
+	 * @param existInRule key, <tt>true</tt> if given site exist in rule, otherwise <tt>false</tt>
+	 * @param netNotation given network notation
+	 * @param site given site
+	 */
 	protected abstract void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, CSite site);
 

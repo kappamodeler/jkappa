@@ -1072,6 +1072,10 @@ public class CRule implements Serializable {
 		return Collections.unmodifiableList(sitesConnectedWithBroken);
 	}
 
+	/**
+	 * This method adds given site util list.
+	 * @param site given site
+	 */
 	public final void addSiteConnectedWithBroken(CSite site) {
 		sitesConnectedWithBroken.add(site);
 	}

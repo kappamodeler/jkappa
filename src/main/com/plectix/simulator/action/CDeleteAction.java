@@ -1,23 +1,20 @@
 package com.plectix.simulator.action;
 
-import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.injections.CLiftElement;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
-import com.plectix.simulator.components.stories.CNetworkNotation;
-import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.interfaces.INetworkNotation;
-import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
 
+@SuppressWarnings("serial")
 public class CDeleteAction extends CAction {
 	private final CRule myRule;
 	private final CAgent myFromAgent;
@@ -80,7 +77,7 @@ public class CDeleteAction extends CAction {
 		pool.removeAgent(agent);
 	}
 
-	public final void addRuleSitesToNetworkNotation(boolean existInRule,
+	protected final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			NetworkNotationMode agentMode = NetworkNotationMode.NONE;

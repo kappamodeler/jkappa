@@ -3,7 +3,6 @@ package com.plectix.simulator.action;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
-import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.components.CAgent;
@@ -13,6 +12,7 @@ import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
 
+@SuppressWarnings("serial")
 public class CDefaultAction extends CAction {
 	private final CAgent myToAgent;
 	
@@ -30,7 +30,7 @@ public class CDefaultAction extends CAction {
 		getRightCComponent().addAgentFromSolutionForRHS(agentFromInSolution);
 	}
 	
-	public final void addRuleSitesToNetworkNotation(boolean existInRule,
+	protected final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			NetworkNotationMode agentMode = NetworkNotationMode.NONE;

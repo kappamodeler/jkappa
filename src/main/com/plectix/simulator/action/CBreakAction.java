@@ -1,12 +1,9 @@
 package com.plectix.simulator.action;
 
-import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
-import com.plectix.simulator.components.stories.CNetworkNotation;
-import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.components.CAgent;
@@ -16,11 +13,25 @@ import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
 
+/**
+ * Class implements "BREAK" action type.
+ * @author avokhmin
+ * @see CActionType
+ */
+@SuppressWarnings("serial")
 public class CBreakAction extends CAction {
 	private final CSite mySiteFrom;
 	private final CSite mySiteTo;
 	private final CRule myRule;
-	
+
+	/**
+	 * 
+	 * @param rule
+	 * @param siteFrom
+	 * @param siteTo
+	 * @param ccL
+	 * @param ccR
+	 */
 	public CBreakAction(CRule rule, CSite siteFrom, CSite siteTo,
 			IConnectedComponent ccL, IConnectedComponent ccR) {
 		super(rule, null, null, ccL, ccR);
@@ -84,6 +95,10 @@ public class CBreakAction extends CAction {
 			setLinkIndex(-1);
 	}
 
+	/**
+	 * Util method. Uses for fill {@link CRule#addSiteConnectedWithBroken(CSite)}.
+	 * @param checkedSite given site.
+	 */
 	private final void addSiteToConnectedWithBroken(CSite checkedSite) {
 		for (CSite site : myRule.getSitesConnectedWithBroken()) {
 			if (site == checkedSite) {
@@ -93,7 +108,7 @@ public class CBreakAction extends CAction {
 		myRule.addSiteConnectedWithBroken(checkedSite);
 	}
 
-	public final void addRuleSitesToNetworkNotation(boolean existInRule,
+	protected final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			NetworkNotationMode agentMode = NetworkNotationMode.NONE;

@@ -3,8 +3,6 @@ package com.plectix.simulator.action;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
-import com.plectix.simulator.components.stories.CNetworkNotation;
-import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.components.CAgent;
@@ -14,11 +12,44 @@ import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
 
+/**
+ * Class implements "BOUND" action type.
+ * @author avokhmin
+ * @see CActionType
+ */
+@SuppressWarnings("serial")
 public class CBoundAction extends CAction {
 	private final CSite mySiteFrom;
 	private final CSite mySiteTo;
 	private CRule myRule;
-	
+
+	/**
+	 * Constructor of CBoundAction.<br>
+	 * Example:<br>
+	 * <code>A(x)->A(x!1),B(y!1)</code>, creates 2 <code>BOUND</code> actions
+	 * and <code>ADD</code> action.<br>
+	 * <li>relative to site "x" from agent "A":<br>
+	 * <code>siteFrom</code> - site "x" from agent "A" from right handSide.<br>
+	 * <code>siteTo</code> - site "y" from agent "B" from right handSide.<br>
+	 * <code>ccL</code> - connected component "A(x)" from left handSide.<br>
+	 * <code>ccR</code> - connected component "A(x!1),B(y!1)" from right handSide.<br>
+	 * <code>rule</code> - rule "A(x)->A(x!1),B(y!1)".<br>
+	 * </li>
+	 * <br>
+	 * <li>relative to site "y" from agent "B":<br>
+	 * <code>siteFrom</code> - site "y" from agent "B" from right handSide.<br>
+	 * <code>siteTo</code> - site "x" from agent "A" from right handSide.<br>
+	 * <code>ccL</code> - connected component "NULL" from left handSide.<br>
+	 * <code>ccR</code> - connected component "A(x!1),B(y!1)" from right handSide.<br>
+	 * <code>rule</code> - this rule "A(x)->A(x!1),B(y!1)".<br>
+	 * </li>
+	 * 
+	 * @param rule  given rule
+	 * @param siteFrom given site from right handSide
+	 * @param siteTo given site from right handSide
+	 * @param ccL given connected component from left handSide (may be null)
+	 * @param ccR given connected component from right handSide
+	 */
 	public CBoundAction(CRule rule, CSite siteFrom, CSite siteTo, IConnectedComponent ccL,
 			IConnectedComponent ccR) {
 		super(rule, null, null, ccL, ccR);
@@ -82,7 +113,7 @@ public class CBoundAction extends CAction {
 
 	}
 
-	public final void addRuleSitesToNetworkNotation(boolean existInRule,
+	protected final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			NetworkNotationMode agentMode = NetworkNotationMode.NONE;

@@ -13,6 +13,7 @@ import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
 
+@SuppressWarnings("serial")
 public class CModifyAction extends CAction {
 	private final CSite mySiteTo;
 	private final int myInternalStateNameId;
@@ -50,7 +51,7 @@ public class CModifyAction extends CAction {
 		// /////////////////////////////////////////////
 	}
 	
-	public final void addRuleSitesToNetworkNotation(boolean existInRule,
+	protected final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			NetworkNotationMode agentMode = NetworkNotationMode.NONE;

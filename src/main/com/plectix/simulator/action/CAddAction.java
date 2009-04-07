@@ -9,10 +9,31 @@ import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
 
+/**
+ * Class implements "ADD" action type.
+ * @author avokhmin
+ * @see CActionType
+ */
+@SuppressWarnings("serial")
 public class CAddAction extends CAction {
 	private final CRule myRule;
 	private final CAgent myToAgent;
-	
+
+	/**
+	 * Constructor of CAddAction.<br>
+	 * Example:<br>
+	 * <code>->A(x)</code>, creates <code>ADD</code> action.<br>
+	 * <code>rule</code> - rule "->A(x)";<br>
+	 * <code>ccR</code> - connected component "A(x)" from right handSide;<br>
+	 * <code>toAgent</code> - agent "A(x)" from right handSide;<br>
+	 * other fields from extended {@link CAction} - "null" ("fromAgent", "ccL"). 
+	 * 
+	 * @param rule given rule
+	 * @param toAgent given agent from right handSide rule
+	 * @param ccR given connected component, contains <b>toAgent</b>
+	 * @see {@link CAction#CAction(CRule, CAgent, CAgent, IConnectedComponent,
+	 * IConnectedComponent) extended constructor}
+	 */
 	public CAddAction(CRule rule, CAgent toAgent, IConnectedComponent ccR) {
 		super(rule, null, toAgent, null, ccR);
 		myRule = rule;
@@ -52,7 +73,7 @@ public class CAddAction extends CAction {
 		// toAgent.setIdInRuleSide(maxAgentID++);
 	}
 
-	public final void addRuleSitesToNetworkNotation(boolean existInRule,
+	protected final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
 			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
@@ -80,6 +101,9 @@ public class CAddAction extends CAction {
 		}
 	}
 
+	/**
+	 * Util method. Find and add "BOUND" action with current add agent.
+	 */
 	private final void createBound() {
 		for (CSite site : myToAgent.getSites()) {
 			if (site.getLinkState().getConnectedSite() != null) {
