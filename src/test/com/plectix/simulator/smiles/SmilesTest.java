@@ -27,7 +27,7 @@ public class SmilesTest {
 
 	public void test() {
 		int size = ccomponent.getAgents().size();
-		connectedComponentToSmilesString = new ConnectedComponentToSmilesString();
+		connectedComponentToSmilesString = ConnectedComponentToSmilesString.getInstance();
 		uniqueKappaString = connectedComponentToSmilesString
 				.toUniqueString(ccomponent);
 		if(size == 1) 

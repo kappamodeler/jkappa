@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.string.AgentInvariant.AgentInvariantRankComparator;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
@@ -98,6 +97,16 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 public class ConnectedComponentToSmilesString implements ConnectedComponentToStringInterface {
 
 	private static final Logger LOGGER = Logger.getLogger(ConnectedComponentToSmilesString.class);
+	
+	private static final ConnectedComponentToSmilesString INSTANCE = new ConnectedComponentToSmilesString();
+	
+	private ConnectedComponentToSmilesString() {
+		super();
+	}
+	
+	public static final ConnectedComponentToSmilesString getInstance() {
+		return INSTANCE;
+	}
 	
 	public final String toUniqueString(IConnectedComponent connectedComponent) {
 		List<CAgent> agentList = connectedComponent.getAgents();
