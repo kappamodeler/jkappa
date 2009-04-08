@@ -1,6 +1,5 @@
 package com.plectix.simulator.interfaces;
 
-import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 
 public interface IStoriesSiteStates {

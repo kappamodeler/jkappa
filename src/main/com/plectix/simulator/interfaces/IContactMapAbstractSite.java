@@ -1,7 +1,6 @@
 package com.plectix.simulator.interfaces;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.plectix.simulator.components.contactMap.CContactMapLinkState;
 

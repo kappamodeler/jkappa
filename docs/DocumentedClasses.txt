@@ -35,4 +35,7 @@ other ones are unfinished and need to be checked
 - com.plectix.simulator.action.CDeleteAction
 - com.plectix.simulator.action.CModifyAction
 - com.plectix.simulator.action.CDefaultAction
+- com.plectix.simulator.interfaces.IObservablesConnectedComponent
+- com.plectix.simulator.interfaces.IObservablesRuleComponent
+- com.plectix.simulator.interfaces.IRandom
 - 
