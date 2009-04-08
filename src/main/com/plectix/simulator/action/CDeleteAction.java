@@ -14,11 +14,29 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.simulator.SimulationData;
 
+/**
+ * Class implements "DELETE" action type.
+ * @author avokhmin
+ * @see CActionType
+ */
 @SuppressWarnings("serial")
 public class CDeleteAction extends CAction {
 	private final CRule myRule;
 	private final CAgent myFromAgent;
-	
+
+	/**
+	 * Constructor of CDeleteAction.<br>
+	 * <br>
+	 * Example:<br>
+	 * <code>A(x)-></code>, creates <code>DELETE</code> action.<br>
+	 * <code>fromAgent</code> - agent "A(x)" from left handSide;<br>
+	 * <code>ccL</code> - connected component "A(x)" from left handSide.<br>
+	 * <code>rule</code> - rule "A(x)->".<br>
+	 * 
+	 * @param rule given rule
+	 * @param fromAgent given agent from left handSide rule
+	 * @param ccL given connected component, contains <b>fromAgent</b>
+	 */
 	public CDeleteAction(CRule rule, CAgent fromAgent, IConnectedComponent ccL) {
 		super(rule, fromAgent, null, ccL, null);
 		myFromAgent = fromAgent;
@@ -112,7 +130,11 @@ public class CDeleteAction extends CAction {
 			netNotation.checkLinkForNetworkNotationDel(index, site);
 		}
 	}
-	
+
+	/**
+	 * Util method. Uses for fill {@link CRule#addSiteConnectedWithBroken(CSite)}.
+	 * @param checkedSite given site.
+	 */
 	private final void addSiteToConnectedWithDeleted(CSite checkedSite) {
 		for (CSite site : myRule.getSitesConnectedWithDeleted()) {
 			if (site == checkedSite) {
@@ -121,7 +143,11 @@ public class CDeleteAction extends CAction {
 		}
 		myRule.addSiteConnectedWithDeleted(checkedSite);
 	}
-	
+
+	/**
+	 * Util method. Uses for removed <b>checkSite</b> from util list in rule.
+	 * @param checkedSite given site
+	 */
 	private final void removeSiteToConnectedWithDeleted(CSite checkedSite) {
 		int size = myRule.getSitesConnectedWithDeleted().size();
 		for (int i = 0; i < size; i++) {

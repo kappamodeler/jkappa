@@ -25,12 +25,27 @@ public class CBreakAction extends CAction {
 	private final CRule myRule;
 
 	/**
+	 * Constructor of CBreakAction.<br>
+	 * <br>
+	 * Example:<br>
+	 * <code>A(x!1),B(y!1)->A(x),B(y)</code>, creates 2 <code>BREAK</code> actions.<br> 
+	 * <li>relative to site "x" from agent "A":<br>
+	 * <code>siteFrom</code> - site "x" from agent "A" from left handSide.<br>
+	 * <code>siteTo</code> - site "x" from agent "A" from right handSide.<br>
+	 * <code>ccL</code> - connected component "A(x!1),B(y!1)" from left handSide.<br>
+	 * <code>ccR</code> - connected component "A(x)" from right handSide.<br>
+	 * <code>rule</code> - rule "A(x!1),B(y!1)->A(x),B(y)".<br>
+	 * </li>
 	 * 
-	 * @param rule
-	 * @param siteFrom
-	 * @param siteTo
-	 * @param ccL
-	 * @param ccR
+	 * <li>relative to site "y" from agent "B":<br>
+	 * similarly.
+	 * </li>
+	 * 
+	 * @param rule  given rule
+	 * @param siteFrom given site from left handSide
+	 * @param siteTo given site from right handSide
+	 * @param ccL given connected component from left handSide
+	 * @param ccR given connected component from right handSide
 	 */
 	public CBreakAction(CRule rule, CSite siteFrom, CSite siteTo,
 			IConnectedComponent ccL, IConnectedComponent ccR) {

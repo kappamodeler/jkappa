@@ -25,6 +25,7 @@ public class CBoundAction extends CAction {
 
 	/**
 	 * Constructor of CBoundAction.<br>
+	 * <br>
 	 * Example:<br>
 	 * <code>A(x)->A(x!1),B(y!1)</code>, creates 2 <code>BOUND</code> actions
 	 * and <code>ADD</code> action.<br>

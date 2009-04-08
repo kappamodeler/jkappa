@@ -21,6 +21,7 @@ public class CAddAction extends CAction {
 
 	/**
 	 * Constructor of CAddAction.<br>
+	 * <br>
 	 * Example:<br>
 	 * <code>->A(x)</code>, creates <code>ADD</code> action.<br>
 	 * <code>rule</code> - rule "->A(x)";<br>

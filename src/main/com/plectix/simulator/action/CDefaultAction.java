@@ -12,10 +12,32 @@ import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
 
+/**
+ * Class implements "NONE" action type.
+ * @author avokhmin
+ * @see CActionType
+ */
 @SuppressWarnings("serial")
 public class CDefaultAction extends CAction {
 	private final CAgent myToAgent;
-	
+
+	/**
+	 * Constructor of CDefaultAction.<br>
+	 * <br>
+	 * Example:<br>
+	 * <code>A(x)->A(x)</code>, creates <code>NONE</code> action.<br> 
+	 * <code>siteFrom</code> - site "x" from agent "A" from left handSide.<br>
+	 * <code>siteTo</code> - site "x" from agent "A" from right handSide.<br>
+	 * <code>ccL</code> - connected component "A(x)" from left handSide.<br>
+	 * <code>ccR</code> - connected component "A(x)" from right handSide.<br>
+	 * <code>rule</code> - rule "A(x)->A(x)".<br>
+	 * 
+	 * @param rule  given rule
+	 * @param siteFrom given site from left handSide
+	 * @param siteTo given site from right handSide
+	 * @param ccL given connected component from left handSide
+	 * @param ccR given connected component from right handSide
+	 */
 	public CDefaultAction(CRule rule, CAgent fromAgent, CAgent toAgent,
 			IConnectedComponent ccL, IConnectedComponent ccR) {
 		super(rule, fromAgent, toAgent, ccL, ccR);

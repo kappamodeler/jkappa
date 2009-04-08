@@ -13,11 +13,33 @@ import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
 
+/**
+ * Class implements "MODIFY" action type.
+ * @author avokhmin
+ * @see CActionType
+ */
 @SuppressWarnings("serial")
 public class CModifyAction extends CAction {
 	private final CSite mySiteTo;
 	private final int myInternalStateNameId;
-	
+
+	/**
+	 * Constructor of CModifyAction.<br>
+	 * <br>
+	 * Example:<br>
+	 * <code>A(x~q)->A(x~fi)</code>, creates <code>MODIFY</code> action.<br> 
+	 * <code>siteFrom</code> - site "x" from agent "A" from left handSide.<br>
+	 * <code>siteTo</code> - site "x" from agent "A" from right handSide.<br>
+	 * <code>ccL</code> - connected component "A(x~q)" from left handSide.<br>
+	 * <code>ccR</code> - connected component "A(x~fi)" from right handSide.<br>
+	 * <code>rule</code> - rule "A(x~q)->A(x~fi)".<br>
+	 * 
+	 * @param rule  given rule
+	 * @param siteFrom given site from left handSide
+	 * @param siteTo given site from right handSide
+	 * @param ccL given connected component from left handSide
+	 * @param ccR given connected component from right handSide
+	 */
 	public CModifyAction(CRule rule, CSite siteFrom, CSite siteTo, IConnectedComponent ccL,
 			IConnectedComponent ccR) {
 		super(rule, null, null, ccL, ccR);
