@@ -20,12 +20,14 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.Simulator;
+import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.Info.InfoType;
 
 public abstract class TestUpdate extends DirectoryTestsRunner {
 
 	private Simulator mySimulator;
-	private final Logger LOGGER = Logger.getLogger(Simulator.class);
+	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(Simulator.class);
 	private double currentTime = 0.;
 	private CRule myActiveRule;
 

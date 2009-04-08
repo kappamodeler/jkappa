@@ -19,11 +19,13 @@ import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
+import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class InitTestAction extends DirectoryTestsRunner{
 	private static Simulator mySimulator;
-	private final Logger LOGGER = Logger.getLogger(InitTestAction.class);
+	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(InitTestAction.class);
 	private double currentTime = 0.;
 	private CRule myActiveRule;
 	private static int myRunQuant = 0;

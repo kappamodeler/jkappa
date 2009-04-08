@@ -21,6 +21,7 @@ import com.plectix.simulator.controller.SimulatorStatusInterface;
 
 
 import com.plectix.simulator.probability.CProbabilityCalculation;
+import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
@@ -39,7 +40,7 @@ public class Simulator implements SimulatorInterface {
 	
 	private static final String STATUS_IDLE = "Idle";
 	
-	private static final Logger LOGGER = Logger.getLogger(Simulator.class);
+	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(Simulator.class);
 
 	/** Use synchronized (statusLock) when changing the value of this variable */
 	private double currentTime = 0.0;

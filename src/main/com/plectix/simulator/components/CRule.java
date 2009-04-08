@@ -13,6 +13,8 @@ import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotation
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.util.PlxLogger;
 
 /**
  * This class is an implementation of 'rule' entity. 
@@ -42,6 +44,8 @@ import com.plectix.simulator.simulator.SimulationData;
  */
 public class CRule implements Serializable {
 	private static final long serialVersionUID = 6045806917402381525L;
+	
+	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(CRule.class);
 	
 	private final List<IConnectedComponent> leftHandside;
 	private final List<IConnectedComponent> rightHandside;
@@ -1175,8 +1179,7 @@ public class CRule implements Serializable {
 		if (ruleRate >= 0) {
 			this.rate = ruleRate;
 		} else {
-			Logger logger = Logger.getLogger(this.getClass());
-			logger.info("warning : rate of the rule '" + ruleName
+			LOGGER.info("warning : rate of the rule '" + ruleName
 					+ "' was attempted to be set as negative");
 			this.rate = 0;
 		}

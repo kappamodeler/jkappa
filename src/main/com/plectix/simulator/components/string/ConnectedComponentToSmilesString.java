@@ -9,11 +9,13 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.util.PlxLogger;
 
 /**
  * This class creates a unique String from a ConnectedComponent's list of Agents. 
@@ -96,7 +98,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
  */
 public class ConnectedComponentToSmilesString implements ConnectedComponentToStringInterface {
 
-	private static final Logger LOGGER = Logger.getLogger(ConnectedComponentToSmilesString.class);
+	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(ConnectedComponentToSmilesString.class);
 	
 	private static final ConnectedComponentToSmilesString INSTANCE = new ConnectedComponentToSmilesString();
 	
