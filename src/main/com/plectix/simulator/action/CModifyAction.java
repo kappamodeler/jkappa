@@ -44,7 +44,7 @@ public class CModifyAction extends CAction {
 			IConnectedComponent ccR) {
 		super(rule, null, null, ccL, ccR);
 		mySiteTo = siteTo;
-		setSiteSet(siteFrom, siteTo);
+		setActionApplicationSites(siteFrom, siteTo);
 		myInternalStateNameId = siteTo.getInternalState().getNameId();
 		setType(CActionType.MODIFY);
 	}

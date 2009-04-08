@@ -11,7 +11,7 @@ import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
 
 /**
- * Implements standard abstract class atomic action.
+ * This class implements "atomic action".
  * @author avokhmin
  * @see CActionType
  */
@@ -27,12 +27,14 @@ public abstract class CAction implements Serializable {
 	private CSite siteFrom = null;
 
 	/**
-	 * Default constructor, create AtomicCAction and add to "actionList".
+	 * Constructor. Creates atomic action, transforming choosen agent from left handside
+	 * to the other one from right handside of the fixed rule
 	 * 
-	 * @param fromAgent agent from left handSide
-	 * @param toAgent agent from right handSide
-	 * @param ccL given connected component, contains <b>fromAgent</b>
-	 * @param ccR given connected component, contains <b>toAgent</b>
+	 * @param rule fixed rule
+	 * @param fromAgent agent from left handSide of the rule
+	 * @param toAgent agent from right handSide of the rule
+	 * @param ccL given connected component, containing <b>fromAgent</b>
+	 * @param ccR given connected component, containing <b>toAgent</b>
 	 */
 	protected CAction(CRule rule, CAgent fromAgent, CAgent toAgent,
 			IConnectedComponent ccL, IConnectedComponent ccR) {
@@ -44,36 +46,37 @@ public abstract class CAction implements Serializable {
 	}
 
 	/**
-	 * This method apply current action by given data.
-	 * @param pool
-	 * @param injection given injection
-	 * @param netNotation given network notation ("null" if it not "STORY" simulation mode).
-	 * @param simulationData given simulation data
+	 * This method apply current action in fixed rule application pool.
+	 * @param pool rule application pool, storage where we get changeable substances from 
+	 * and where we put the result
+	 * @param injection injection, pointing to agents which we should take for application.
+	 * @param netNotation network notation ("null" if it not "STORY" simulation mode).
+	 * @param simulationData simulation data
 	 */
 	public abstract void doAction(RuleApplicationPool pool, CInjection injection, 
 			INetworkNotation netNotation,  SimulationData simulationData);
 
 	/**
-	 * Util method. Adds information about given "site" to given "netNotation".
-	 * @param index type adds information
-	 * @param netNotation given network notation
+	 * Util method. Adds information about given site to given network notation
+	 * @param index information type
+	 * @param netNotation network notation
 	 * @param site given site
 	 */
 	protected abstract void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, CSite site);
 
 	/**
-	 * Util method. Initial unconfigured state.
-	 * @param existInRule key, <tt>true</tt> if given site exist in rule, otherwise <tt>false</tt>
+	 * Util method. Initializes unconfigured state.
+	 * @param siteExistsInRule key, <tt>true</tt> if given site exists in rule, otherwise <tt>false</tt>
 	 * @param netNotation given network notation
 	 * @param site given site
 	 */
-	protected abstract void addRuleSitesToNetworkNotation(boolean existInRule,
+	protected abstract void addRuleSitesToNetworkNotation(boolean siteExistsInRule,
 			INetworkNotation netNotation, CSite site);
 
 	/**
-	 * This method returns {@link CAgent#getIdInConnectedComponent()} from left
-	 * handSide by given agent from right handSide rule.
+	 * This method returns takes agent from left handside of the rule by it's image - agent from right
+	 * handside, and then returns it's id in connected component
 	 * @param toAgentRight given agent
 	 * @return {@link CAgent#getIdInConnectedComponent()}
 	 */
@@ -166,18 +169,18 @@ public abstract class CAction implements Serializable {
 //=======================GETTERS AND SETTERS========================
 
 	/**
-	 * This method sets "siteFrom" and "siteTo".
-	 * @param from given "siteFrom"
-	 * @param to given "siteTo"
+	 * This method sets sites, which this action should be applied to.
+	 * @param from site from the left handside of the rule
+	 * @param to site from the right handside of the rule
 	 */
-	protected final void setSiteSet(CSite from, CSite to) {
+	protected final void setActionApplicationSites(CSite from, CSite to) {
 		siteTo = to;
 		siteFrom = from;
 	}
 
 	/**
-	 * This method sets type current action.
-	 * @param type given type
+	 * This method sets type of current action.
+	 * @param type type to be set
 	 * @see CActionType
 	 */
 	protected final void setType(CActionType type) {
@@ -185,14 +188,16 @@ public abstract class CAction implements Serializable {
 	}
 
 	/**
-	 * Util methiod. Uses for correlation sites.
+	 * This method returns site from the left handside of the rule, which this action 
+	 * should be applied to.
 	 */
 	public final CSite getSiteFrom() {
 		return siteFrom;
 	}
 
 	/**
-	 * Util methiod. Uses for correlation sites.
+	 * This method returns site from the right handside of the rule, which this action 
+	 * should be applied to.
 	 */
 	public final CSite getSiteTo() {
 		return siteTo;
@@ -200,7 +205,7 @@ public abstract class CAction implements Serializable {
 
 	/**
 	 * This method returns type of current action.
-	 * @return type of current action.
+	 * @return id of action's type
 	 * @see CActionType
 	 */
 	public final int getTypeId() {
@@ -208,14 +213,14 @@ public abstract class CAction implements Serializable {
 	}
 
 	/**
-	 * Util methiod. Uses for correlation agents.
+	 * Util method, used for output only.
 	 */
 	public final CAgent getAgentFrom() {
 		return fromAgent;
 	}
 
 	/**
-	 * Util methiod. Uses for correlation agents.
+	 * Util method, used for output only.
 	 */
 	public final CAgent getAgentTo() {
 		return toAgent;
@@ -223,7 +228,7 @@ public abstract class CAction implements Serializable {
 	
 	/**
 	 * This method returns connected component from right handSide rule,
-	 * where contains "site to" and "agent to", (may be "null").
+	 * which this action should be applied to (may be "null").
 	 */
 	public final IConnectedComponent getRightCComponent() {
 		return rightConnectedComponent;
@@ -231,7 +236,7 @@ public abstract class CAction implements Serializable {
 
 	/**
 	 * This method returns connected component from left handSide rule,
-	 * where contains "site from" and "agent from", (may be "null").
+	 * which this action should be applied to (may be "null").
 	 */
 	public final IConnectedComponent getLeftCComponent() {
 		return leftConnectedComponent;

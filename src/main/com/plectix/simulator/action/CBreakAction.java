@@ -53,7 +53,7 @@ public class CBreakAction extends CAction {
 		myRule = rule;
 		mySiteFrom = siteFrom;
 		mySiteTo = siteTo;
-		setSiteSet(mySiteFrom, mySiteTo);
+		setActionApplicationSites(mySiteFrom, mySiteTo);
 		setType(CActionType.BREAK);
 	}
 

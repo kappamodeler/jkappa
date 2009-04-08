@@ -57,7 +57,7 @@ public class CBoundAction extends CAction {
 		myRule = rule;
 		mySiteFrom = siteFrom;
 		mySiteTo = siteTo;
-		setSiteSet(mySiteFrom, mySiteTo);
+		setActionApplicationSites(mySiteFrom, mySiteTo);
 		setType(CActionType.BOUND);
 	}
 
