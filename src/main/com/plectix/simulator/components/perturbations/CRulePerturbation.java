@@ -24,9 +24,6 @@ public final class CRulePerturbation extends CRule {
 	/**
 	 * The CRulePerturbation constructor.
 	 * 
-	 * @param leftHandsideComponents left handside of the rule, list of connected components
-	 * @param rightHandsideComponents right handside of the rule, list of connected components
-	 * @param ruleName name of the rule 
 	 * @param ruleRate rate of the rule
 	 * @param ruleID unique rule identificator
 	 * @param isStorify <tt>true</tt> if simulator run in storify mode, <tt>false</tt> otherwise

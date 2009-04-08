@@ -72,7 +72,6 @@ public interface ISolution {
 	/**
 	 * This method clones given connected component.
 	 * @param component given connected component
-	 * @return 
 	 */
 	public IConnectedComponent cloneConnectedComponent(IConnectedComponent component);
 	

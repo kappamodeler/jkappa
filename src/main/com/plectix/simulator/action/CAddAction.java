@@ -32,8 +32,6 @@ public class CAddAction extends CAction {
 	 * @param rule given rule
 	 * @param toAgent given agent from right handSide rule
 	 * @param ccR given connected component, contains <b>toAgent</b>
-	 * @see {@link CAction#CAction(CRule, CAgent, CAgent, IConnectedComponent,
-	 * IConnectedComponent) extended constructor}
 	 */
 	public CAddAction(CRule rule, CAgent toAgent, IConnectedComponent ccR) {
 		super(rule, null, toAgent, null, ccR);

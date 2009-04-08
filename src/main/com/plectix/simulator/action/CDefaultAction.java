@@ -32,11 +32,6 @@ public class CDefaultAction extends CAction {
 	 * <code>ccR</code> - connected component "A(x)" from right handSide.<br>
 	 * <code>rule</code> - rule "A(x)->A(x)".<br>
 	 * 
-	 * @param rule  given rule
-	 * @param siteFrom given site from left handSide
-	 * @param siteTo given site from right handSide
-	 * @param ccL given connected component from left handSide
-	 * @param ccR given connected component from right handSide
 	 */
 	public CDefaultAction(CRule rule, CAgent fromAgent, CAgent toAgent,
 			IConnectedComponent ccL, IConnectedComponent ccR) {
