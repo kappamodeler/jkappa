@@ -14,5 +14,15 @@ Here are some important information about this project:
 
 *) Catch blocks should never be left empty. 
 
-*) The project uses log4j for logging. Therefore, developers should refrain from writing to stdout or stderr, especially from classes under src/main.
+*) The project uses PlxLogger class for logging. Therefore, developers should refrain from writing to stdout or stderr, especially from classes under src/main. 
+
+This class wraps log4j's Logger class. The recommended usage is as follows: Define a STATIC member at the top of your class, e.g. in the Simulator class we have:
+
+    private static final PlxLogger LOGGER = ThreadLocalData.getLogger(Simulator.class);
+
+and then check the debug level before output call. For example, for debugging:
+
+    if (LOGGER.isDebugEnabled()) {
+       LOGGER.debug("Rule: " + rule.getName());
+    }
 
