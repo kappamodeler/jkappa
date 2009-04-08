@@ -1,5 +1,6 @@
 package com.plectix.simulator.stories;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.TreeMap;
@@ -14,9 +15,11 @@ import com.plectix.simulator.components.stories.CStoryTrees;
 
 @RunWith(value = Parameterized.class)
 public class TestStoryTrees extends InitStoriesTests{
-
+	
+	private static final String separator = File.separator;
+	private static final String testFileNamePrefix = "test.data" + separator + "stories" + separator;
+	
 	private TreeMap<Integer,List<Integer>> trace; 
-	private static final String testFileNamePrefix = "test.data/stories/";
 	private String filePath = "";
 
 

@@ -16,49 +16,56 @@ public class SmilesTest {
 
 	private CConnectedComponent ccomponent;
 	private String uniqueKappaString;
-	private int line;
 	private ConnectedComponentToSmilesString connectedComponentToSmilesString;
 	private Failer failer = new Failer();
 
-	public SmilesTest(CConnectedComponent cc, int i) {
+	public SmilesTest(CConnectedComponent cc) {
 		ccomponent = cc;
-		line = i + 1;
 	}
 
-	public void test() {
+	public String test() {
+		String message = "";
 		int size = ccomponent.getAgents().size();
 		connectedComponentToSmilesString = ConnectedComponentToSmilesString.getInstance();
 		uniqueKappaString = connectedComponentToSmilesString
 				.toUniqueString(ccomponent);
-		if(size == 1) 
-			testSites();
-		else {
-			testAgents(size);
-//			testLinkIndexes();
+		if(size == 1) {
+//			testSites();
 		}
+		else {
+			message = testAgents(size).toString()+ testLinkIndexes();
+		}
+		return message;
+		
 	}
 
-
-	
-	private void testAgents(int size) {
+	private StringBuffer testAgents(int size) {
 		List<CAgent> list = copy(ccomponent.getAgents());
-
+		StringBuffer fails = new StringBuffer();
 		if (size == 2) {
 			list = reverse(list);
-			String smilesString = connectedComponentToSmilesString
-					.toUniqueString(new CConnectedComponent(list));
-			failer.assertEquals(line + ": \n" + uniqueKappaString + ",\n"
-					+ smilesString, uniqueKappaString, smilesString);
-
+			checkit(list, fails);
+			
 		} else if (size > 2) {
 			for (int i = 0; i < size; i++) {
 				Collections.shuffle(list);
-				String smilesString = connectedComponentToSmilesString
-						.toUniqueString(new CConnectedComponent(list));
-				failer.assertEquals("line " + line + ": ", uniqueKappaString, smilesString);
+				if (!checkit(list, fails))
+					break;
 			}
 		}
+		return fails;
+	}
 
+	private boolean checkit(List<CAgent> list, StringBuffer fails) {
+		String smilesString = connectedComponentToSmilesString
+				.toUniqueString(new CConnectedComponent(list));
+		
+		if (!smilesString.equals(uniqueKappaString)){
+			fails.append("\ntestAgents:\nexpected\t" + uniqueKappaString + 
+						  ",\nbut\t\t"	+ smilesString + "\n");
+			return false;
+		}
+		return true;
 	}
 	
 	private void testSites() {
@@ -81,54 +88,40 @@ public class SmilesTest {
 			}
 			String smilesString = connectedComponentToSmilesString
 					.toUniqueString(new CConnectedComponent(list));
-			failer.assertEquals(line + ": \n" + uniqueKappaString + ",\n"
+			failer.assertEquals("\n" + uniqueKappaString + ",\n"
 					+ smilesString, uniqueKappaString, smilesString);
 		}
 
 	}
-
 	
-	private void testLinkIndexes() {
-		HashMap<Integer, List<CSite>> links = new HashMap<Integer, List<CSite>>();
-		List<CSite> sites = new ArrayList<CSite>();
+	private String testLinkIndexes() {
+		StringBuffer fails = new StringBuffer();
+		HashMap<Integer, Integer> links = new HashMap<Integer, Integer>();
+		Random rnd = new Random();
+		int r;
 		for (CAgent agent : ccomponent.getAgents()) {
 			for (CSite site : agent.getSites()) {
 				int index = site.getLinkIndex();
 				if (index!=-1){
-					if (links.containsKey(index)){
-						sites = links.get(links.get(index));
+					if (!links.containsKey(index)){
+						r = rnd.nextInt(100);
+						links.put(index, r);
 					} else {
-						sites = new ArrayList<CSite>();
+						r = links.get(index);
 					}
-					sites.add(site);
-					links.put(index, sites);
+					site.setLinkIndex(r);
 				}
 			}
 		}
-		Random rnd = new Random();
-		for (Integer linkIndex : links.keySet()) {
-			Integer r = rnd.nextInt(1000);
-			while (links.containsKey(r))
-				r = rnd.nextInt(1000);
-			sites = links.get(linkIndex);
-			links.remove(linkIndex);
-			links.put(r, sites);
-		}
-		for (Integer linkIndex : links.keySet()) {
-			for (CSite site : links.get(linkIndex)) {
-				site.setLinkIndex(linkIndex);
-			}
-		}
-		
 		String smilesString = connectedComponentToSmilesString
 			.toUniqueString(ccomponent);
-		failer.assertEquals(line + ": \n" + uniqueKappaString + ",\n"
-				+ smilesString, uniqueKappaString, smilesString);
-		
-		
+		if (!smilesString.equals(uniqueKappaString))
+			fails.append("\ntestLinkIndex:\nexpected\t" + uniqueKappaString + 
+					  ",\nbut\t\t"	+ smilesString + "\n");
+		return fails.toString();
 	}
 
-
+	
 	private List<CAgent> reverse(List<CAgent> list) {
 		ArrayList<CAgent> reverse = new ArrayList<CAgent>(2);
 		reverse.add(list.get(1));

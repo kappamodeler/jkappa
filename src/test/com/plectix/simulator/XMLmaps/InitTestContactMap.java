@@ -9,7 +9,7 @@ import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class InitTestContactMap {
-	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
+//	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 	private static Simulator mySimulator;
 	private static String sessionPath;
 	private static String mycount;
@@ -34,7 +34,7 @@ public class InitTestContactMap {
 	}
 
 	public static void init(String dir, String dirResult, String count) {
-		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
+//		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		mySimulator = new Simulator();
 		directory = dir;
 		sessionPath = dirResult;

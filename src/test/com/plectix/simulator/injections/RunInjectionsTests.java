@@ -1,5 +1,7 @@
 package com.plectix.simulator.injections;
 
+import java.io.File;
+
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -15,9 +17,10 @@ import com.plectix.simulator.*;
 		TestInjectionsAgentLinking.class
 	})
 public class RunInjectionsTests extends TestRunner {
+	private static final String separator = File.separator;
 	@BeforeClass
 	public static void setup() {
-		String fullTestFilePath = "test.data/TheGreatTestFile";
+		String fullTestFilePath = "test.data" + separator +"TheGreatTestFile";
 		getInitializator().init(fullTestFilePath);
 	}
 }

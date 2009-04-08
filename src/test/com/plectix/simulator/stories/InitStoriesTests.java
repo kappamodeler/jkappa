@@ -22,7 +22,6 @@ import com.plectix.simulator.util.Info.InfoType;
 public class InitStoriesTests extends DirectoryTestsRunner {
 	private static String testDirectory = "";
 
-	private final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 	private String FileName = "";
 	private Simulator mySimulator;
 	private CStoryTrees storyTrees;
@@ -56,7 +55,6 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	}
 
 	public void init(String filePath) {
-		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		mySimulator = new Simulator();
 
 		SimulationData simulationData = mySimulator.getSimulationData();

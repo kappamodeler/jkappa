@@ -1,5 +1,6 @@
 package com.plectix.simulator.updates;
 
+import java.io.File;
 import java.util.*;
 
 import org.junit.runners.Parameterized.Parameters;
@@ -12,12 +13,16 @@ import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
 
 public class TestPositiveUpdate extends TestUpdate {
+
+	private static final String separator = File.separator;
+	private static final String myPrefixFileName = "test.data" + separator
+			+ "positiveUpdate" + separator;
+
 	private String myTestFileName = "";
 	private Map<String, Integer> myObsInjectionsQuantity;
 	private Map<String, Integer> myLHSInjectionsQuantity;
-	private static final String myPrefixFileName = "test.data/positiveUpdate/";
-	private Failer myFailer = new Failer(); 
-		
+	private Failer myFailer = new Failer();
+
 	@Parameters
 	public static Collection<Object[]> regExValues() {
 		return getAllTestFileNames(myPrefixFileName);
@@ -30,11 +35,13 @@ public class TestPositiveUpdate extends TestUpdate {
 	}
 
 	@Test
-	// we can only check for quantity of injections, meaning correct injections setting
+	// we can only check for quantity of injections, meaning correct injections
+	// setting
 	public void testObs() {
 		SortedSet<Long> solutionLinkingForCurrentObs = new TreeSet<Long>();
 
-		for (IObservablesConnectedComponent cc : getInitializator().getObservables()) {
+		for (IObservablesConnectedComponent cc : getInitializator()
+				.getObservables()) {
 			for (CInjection injection : cc.getInjectionsList()) {
 				for (CAgentLink agentLink : injection.getAgentLinkList()) {
 					solutionLinkingForCurrentObs.add(agentLink.getAgentTo()
@@ -42,42 +49,47 @@ public class TestPositiveUpdate extends TestUpdate {
 				}
 			}
 		}
-		
-		myFailer.assertSizeEquality("Observatory injections", solutionLinkingForCurrentObs,
-				myObsInjectionsQuantity.get(myTestFileName));
+
+		myFailer.assertSizeEquality("Observatory injections",
+				solutionLinkingForCurrentObs, myObsInjectionsQuantity
+						.get(myTestFileName));
 	}
 
 	@Test
-	// the same way, we're checking common injections quantity for all the cc from lhs
+	// the same way, we're checking common injections quantity for all the cc
+	// from lhs
 	public void testLHS() {
 		List<IConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
 		for (IConnectedComponent cc : leftHand) {
 			Collection<CInjection> componentInjections = cc.getInjectionsList();
 			if (!lhsIsEmpty(leftHand)) {
-				myFailer.assertSizeEquality("LHS injections", componentInjections,
-						myLHSInjectionsQuantity.get(myTestFileName));
+				myFailer.assertSizeEquality("LHS injections",
+						componentInjections, myLHSInjectionsQuantity
+								.get(myTestFileName));
 			} else {
-				myFailer.assertTrue("LHS injections", (componentInjections.size() == 1)
-						&& (componentInjections.contains(CInjection.EMPTY_INJECTION)));
+				myFailer.assertTrue("LHS injections", (componentInjections
+						.size() == 1)
+						&& (componentInjections
+								.contains(CInjection.EMPTY_INJECTION)));
 			}
 		}
 	}
-	
+
 	@Override
 	public boolean isDoingPositive() {
 		return true;
 	}
-	
+
 	@Override
 	public String getPrefixFileName() {
 		return myPrefixFileName;
 	}
-	
+
 	@Override
 	public void init() {
-		myObsInjectionsQuantity = (new QuantityDataParser (myPrefixFileName 
-				+ "ObsInjectionsData")).parse(); 
-		myLHSInjectionsQuantity = (new QuantityDataParser (myPrefixFileName 
+		myObsInjectionsQuantity = (new QuantityDataParser(myPrefixFileName
+				+ "ObsInjectionsData")).parse();
+		myLHSInjectionsQuantity = (new QuantityDataParser(myPrefixFileName
 				+ "LHSInjectionsData")).parse();
 	}
 }

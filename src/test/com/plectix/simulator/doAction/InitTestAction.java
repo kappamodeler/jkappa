@@ -29,7 +29,6 @@ public class InitTestAction extends DirectoryTestsRunner{
 	private static int myRunQuant = 0;
 	private static int myTestQuant = 70;
 	private static String FilePath = "";
-	private final static String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 	private static String testDirectory;
 
 
@@ -53,7 +52,6 @@ public class InitTestAction extends DirectoryTestsRunner{
 
 	@Before
 	public void init() {
-		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		mySimulator = new Simulator();
 		
 		String[] testArgs = prepareTestArgs(FilePath);

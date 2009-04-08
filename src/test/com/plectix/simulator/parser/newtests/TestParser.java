@@ -23,10 +23,10 @@ public class TestParser extends TestRunner {
 	private static final String ABSTRACT = "abstract";
 	private static final String myTestFileNamePrefix = RunParserTests
 			.getFileNamePrefix();
-
-	private static final String resultsDir = myTestFileNamePrefix + "results/";
-	private static final String sourceDir = myTestFileNamePrefix + "source/";
-	private static final String compareDir = myTestFileNamePrefix + "compare/";
+	private static final String separator = File.separator;
+	private static final String resultsDir = myTestFileNamePrefix + "results" + separator;
+	private static final String sourceDir = myTestFileNamePrefix + "source" + separator;
+	private static final String compareDir = myTestFileNamePrefix + "compare" + separator;
 
 	private final String fileWithPerturbations = "perturbations.ka";
 	private final String fileWithStories = "stories.ka";

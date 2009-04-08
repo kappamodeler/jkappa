@@ -20,11 +20,12 @@ import com.plectix.simulator.util.Failer;
 
 public class TestStories extends InitStoriesTests {
 
-	private Collection<List<CStoryTrees>> trees;
-	private static String path = "test.data/stories/";
-	private static String results = "results/";
-	private static String simple = "simple/";
+	private static final String separator = File.separator;
+	private static final String path = "test.data" + separator + "stories" + separator;
+	private static final String results = "results" + separator;
+	private static final String simple = "simple" + separator;
 
+	private Collection<List<CStoryTrees>> trees;
 	private Failer myFailer = new Failer();
 
 	private String fileName = "";

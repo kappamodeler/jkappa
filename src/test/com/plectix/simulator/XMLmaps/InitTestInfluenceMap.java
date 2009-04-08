@@ -27,7 +27,7 @@ import com.plectix.simulator.util.Info.InfoType;
 		TestInfluenceMap.class
 	})
 public class InitTestInfluenceMap {
-	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
+//	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
 	private static Process process;
 	private static Scanner scanner;
@@ -44,48 +44,48 @@ public class InitTestInfluenceMap {
 	@BeforeClass
 	public static void setup() {
 
-		String filePath = "large_systems-sysepi.ka";
-		String prefix = "C:\\Documents and Settings\\lopatkinat\\workspace\\simulator\\";
-		String patch = "plectix\\windows\\simplx.exe" + 
-						" --generate-map " +  "plectix\\windows\\" +
-						filePath + 
-						" --time 10 --seed 1 --merge-maps";
-		patch = "plectix\\windows\\simplx.exe  --generate-map plectix\\windows\\Example.ka";
-
-		patch = "plectix\\windows\\simplx.exe";
-//		gererateXML(patch);
-		setup("plectix\\windows\\" + filePath, time );	
+//		String filePath = "large_systems-sysepi.ka";
+//		String prefix = "C:\\Documents and Settings\\lopatkinat\\workspace\\simulator\\";
+//		String patch = "plectix\\windows\\simplx.exe" + 
+//						" --generate-map " +  "plectix\\windows\\" +
+//						filePath + 
+//						" --time 10 --seed 1 --merge-maps";
+//		patch = "plectix\\windows\\simplx.exe  --generate-map plectix\\windows\\Example.ka";
+//
+//		patch = "plectix\\windows\\simplx.exe";
+////		gererateXML(patch);
+//		setup("plectix\\windows\\" + filePath, time );	
 	
 	}
 	
 
-	private static void gererateXML(String patch) {
-		Runtime runtime = Runtime.getRuntime();
-		List<String> command = new ArrayList<String>();
-		command.add("plectix\\windows\\simplx.exe");
-		command.add(" --generate-map ");
-		command.add("plectix\\windows\\Example.ka ");
-		command.add(" --merge-maps ");
-		
-		String prefix = "\"C:\\Documents and Settings\\lopatkinat\\workspace\\simulator\\";
-		
-		ProcessBuilder processBuilder = new ProcessBuilder(command);
-		processBuilder = processBuilder.command(command);
-		try {
-			process = runtime.exec(prefix + 
-					"plectix\\windows\\simplx.exe\" " +
-					"--generate-map " + prefix +
-					"plectix\\windows\\Example.ka\"" +
-					" --merge-maps");
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		InputStream inputStream2 = process.getInputStream();
-		scanner = new Scanner(inputStream2);
-		writer = new PrintWriter(process.getOutputStream());
-	}
+//	private static void gererateXML(String patch) {
+//		Runtime runtime = Runtime.getRuntime();
+//		List<String> command = new ArrayList<String>();
+//		command.add("plectix\\windows\\simplx.exe");
+//		command.add(" --generate-map ");
+//		command.add("plectix\\windows\\Example.ka ");
+//		command.add(" --merge-maps ");
+//		
+//		String prefix = "\"C:\\Documents and Settings\\lopatkinat\\workspace\\simulator\\";
+//		
+//		ProcessBuilder processBuilder = new ProcessBuilder(command);
+//		processBuilder = processBuilder.command(command);
+//		try {
+//			process = runtime.exec(prefix + 
+//					"plectix\\windows\\simplx.exe\" " +
+//					"--generate-map " + prefix +
+//					"plectix\\windows\\Example.ka\"" +
+//					" --merge-maps");
+//
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//
+//		InputStream inputStream2 = process.getInputStream();
+//		scanner = new Scanner(inputStream2);
+//		writer = new PrintWriter(process.getOutputStream());
+//	}
 	
 	public static void setup(String fileName, double time) {
 		String fullTestFilePath = fileName;
@@ -121,7 +121,7 @@ public class InitTestInfluenceMap {
 	
 	
 	public static void init(String filePath) {
-			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
+//			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 			mySimulator = new Simulator();
 			String[] testArgs = prepareTestArgs(filePath);
 

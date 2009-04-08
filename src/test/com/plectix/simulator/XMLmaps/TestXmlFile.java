@@ -23,7 +23,7 @@ public class TestXmlFile {
 	
 	private SAXParserFactory parserFactory;
 	private SAXParser parserxml;
-	private String prefix= "C:\\Documents and Settings\\lopatkinat\\workspace\\simulator\\";
+//	private String prefix= "C:\\Documents and Settings\\lopatkinat\\workspace\\simulator\\";
 	private File xmlFileJava;
 	private File xmlFilePlectix;
 	private ArrayList<Node> nodesMustInclude;
@@ -37,8 +37,8 @@ public class TestXmlFile {
 	public void Test(){
 	System.out.println("Test:");
 		parserFactory = SAXParserFactory.newInstance();
-		xmlFileJava = new File(prefix + "simplexTest.xml");
-		xmlFilePlectix = new File(prefix + "plectix\\windows\\simplx.xml");
+//		xmlFileJava = new File(prefix + "simplexTest.xml");
+//		xmlFilePlectix = new File(prefix + "plectix\\windows\\simplx.xml");
 		connectionsToFind = new ArrayList<Connection>();
 		connectionsMustInclude = new ArrayList<Connection>();
 		try {
@@ -70,11 +70,8 @@ public class TestXmlFile {
 		checkNodes();	
 		
 		checkConnections();
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println("in java");
+
+//		System.out.println("in java");
 		checkConnections2();
 		if (flag){
 			fail();
@@ -87,7 +84,7 @@ public class TestXmlFile {
 		for (Node node : nodesToFind) {
 			if (!findNode(node, nodesMustInclude)){
 //				fail();
-				printNode(node);
+//				printNode(node);
 				findNodeById(node.getId());
 			}
 		}
@@ -148,55 +145,55 @@ public class TestXmlFile {
 //		if (!flag){
 //			flag = true;
 //		}
-		printConnection(connection);
+//		printConnection(connection);
 		return false;
 	}
 
-	private void printNodes(ArrayList<Node> nodes) {
-		System.out.println();
-		for (Node node : nodes) {
-			printNode(node);
-		}
-	}
+//	private void printNodes(ArrayList<Node> nodes) {
+//		System.out.println();
+//		for (Node node : nodes) {
+//			printNode(node);
+//		}
+//	}
 
-	private void printNode(Node node) {
-		System.out.println("" +
-				  "<node " 
-				+ " ID='" + node.getId()
-				+ "' Data='"+ node.getData() 
-				+ "' Name='" + node.getName()
-				+ "' Text='" + node.getText()
-				+ "' Type='" + node.getType()
-				+"'>");
-	}
+//	private void printNode(Node node) {
+//		System.out.println("" +
+//				  "<node " 
+//				+ " ID='" + node.getId()
+//				+ "' Data='"+ node.getData() 
+//				+ "' Name='" + node.getName()
+//				+ "' Text='" + node.getText()
+//				+ "' Type='" + node.getType()
+//				+"'>");
+//	}
 	
 	private void findNodeById(String id){
 		boolean flag = false;
 		for (Node node : nodesMustInclude) {
 			if (node.getId().equals(id)){
 //				System.out.print(" --");
-				printNode(node);
+//				printNode(node);
 				flag = true;
 			}
 		}
-		if (!flag)	System.out.println("there is no such node");
+//		if (!flag)	System.out.println("there is no such node");
 	}
 //
-	private void printConnections(ArrayList<Connection> connectionList) {
-		System.out.println();
-		for (Connection connection : connectionList) {
-			printConnection(connection);
-		}
-		
-	}
-	
-	private void printConnection(Connection connection) {
-		System.out.println("<connection"
-				+ " FromNode='" + connection.getFromNode()
-				+ "' ToNode='" + connection.getToNode()
-				+ "' Relation='" + connection.getRelation()
-				+ "'>");
-	}
+//	private void printConnections(ArrayList<Connection> connectionList) {
+//		System.out.println();
+//		for (Connection connection : connectionList) {
+//			printConnection(connection);
+//		}
+//		
+//	}
+//	
+//	private void printConnection(Connection connection) {
+//		System.out.println("<connection"
+//				+ " FromNode='" + connection.getFromNode()
+//				+ "' ToNode='" + connection.getToNode()
+//				+ "' Relation='" + connection.getRelation()
+//				+ "'>");
+//	}
 
 //	private void printXMLFile(String path) {
 //		BufferedReader in;

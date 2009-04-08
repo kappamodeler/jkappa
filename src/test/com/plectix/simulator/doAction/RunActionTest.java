@@ -2,6 +2,7 @@ package com.plectix.simulator.doAction;
 
 import static org.junit.Assert.fail;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,8 +22,9 @@ import com.plectix.simulator.util.Converter;
 
 @RunWith(value = Parameterized.class)
 public class RunActionTest extends InitTestAction {
+	private static final String separator = File.separator;
+	private static String FilePath = "test.data" + separator + "actions" + separator;
 	private CRule activeRule;
-	private static String FilePath = "test.data/actions/";
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {

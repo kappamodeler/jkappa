@@ -16,8 +16,10 @@ import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.MessageConstructor;
 
 public class ExceptionsTest {
-	private final String mySourceFilePath = "test.data/new_parser/ExceptionsTestFile";
-	private final String myExceptionsDataFilePath = "test.data/new_parser/ExceptionsTestData";
+	private static final String separator = File.separator;
+	private static final String prefix = "test.data" + separator + "new_parser" + separator;
+	private static final String mySourceFilePath = prefix + "ExceptionsTestFile";
+	private static final String myExceptionsDataFilePath = prefix + "ExceptionsTestData";
 	private final KappaModel myModel = new KappaModel();
 	private final AgentFactory myAgentFactory = new AgentFactory();
 	private final Map<Integer, String> myExceptionsData = new HashMap<Integer, String>();

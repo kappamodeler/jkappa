@@ -1,5 +1,6 @@
 package com.plectix.simulator.perturbations;
 
+import java.io.File;
 import java.util.*;
 
 import org.junit.*;
@@ -12,8 +13,9 @@ import com.plectix.simulator.util.QuantityDataParser;
 
 public class TestTimeCondition extends TestPerturbation {
 	
+	private static final String separator = File.separator;
+	private static final String myPrefixFileName = "test.data" + separator + "perturbations" + separator;
 	private String myTestFileName = "";
-	private static final String myPrefixFileName = "test.data/perturbations/";
 	private Failer myFailer = new Failer(); 
 	private CRule myActiveRule;
 	private static Map<String, Integer> myExpectedData;

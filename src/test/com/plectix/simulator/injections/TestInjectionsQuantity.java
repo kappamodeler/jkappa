@@ -1,6 +1,7 @@
 package com.plectix.simulator.injections;
 
 
+import java.io.File;
 import java.util.*;
 
 import org.junit.*;
@@ -14,6 +15,7 @@ import com.plectix.simulator.util.*;
 
 @RunWith(Parameterized.class)
 public class TestInjectionsQuantity extends TestInjections  {
+	private static final String separator = File.separator;
 	private String myNameParameter;
 	private static Map<String, Integer> myDataMap = new TreeMap<String, Integer>();
 	private IObservablesConnectedComponent myCurrentCC;
@@ -26,7 +28,7 @@ public class TestInjectionsQuantity extends TestInjections  {
 	@Parameters
 	public static Collection<Object[]> regExValues() {
 		myDataMap = (new QuantityDataParser(
-			"test.data/InjectionsQuantityData")).parse();
+			"test.data" + separator + "InjectionsQuantityData")).parse();
 		LinkedList<Object[]> parameters = new LinkedList<Object[]>();
 		int i = 0;
 		for (String name : myDataMap.keySet()) {

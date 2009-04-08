@@ -23,11 +23,14 @@ import org.xml.sax.SAXException;
 @RunWith(value = Parameterized.class)
 public class TestContactMap{
 	
+	private static final String separator = File.separator;
+	private static final String prefixSourse= "test.data" + separator + "contact_map" + separator + "rules" + separator;
+	private static final String prefixResult= "test.data" + separator + "contact_map" + separator + "results" + separator;
+	
 	private static int length = 20;
+	
 	private SAXParserFactory parserFactory;
 	private SAXParser parserxml;
-	private String prefixSourse= "test.data\\contact_map\\rules\\";
-	private String prefixResult= "test.data\\contact_map\\results\\";
 	private File sessionJava;
 	private File sessionSimplex;
 	private SAXHandler handler;

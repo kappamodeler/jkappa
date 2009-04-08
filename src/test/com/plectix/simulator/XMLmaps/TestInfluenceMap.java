@@ -46,18 +46,18 @@ public class TestInfluenceMap {
 	public static void setup() {
 
 		String filePath = "large_systems-sysepi.ka";
-		String prefix = "C:\\Documents and Settings\\lopatkinat\\workspace\\simulator\\";
-		String patch = "plectix\\windows\\simplx.exe" + 
-						" --generate-map " +  "plectix\\windows\\" +
-						filePath + 
-						" --time 10 --seed 1 --merge-maps";
-		patch = "plectix\\windows\\simplx.exe  --generate-map plectix\\windows\\Example.ka";
-
-		patch = "plectix\\windows\\simplx.exe";
+//		String prefix = "C:\\Documents and Settings\\lopatkinat\\workspace\\simulator\\";
+//		String patch = "plectix\\windows\\simplx.exe" + 
+//						" --generate-map " +  "plectix\\windows\\" +
+//						filePath + 
+//						" --time 10 --seed 1 --merge-maps";
+//		patch = "plectix\\windows\\simplx.exe  --generate-map plectix\\windows\\Example.ka";
+//
+//		patch = "plectix\\windows\\simplx.exe";
 //		gererateXML(patch);
 	
 //		launchBat(prefix + "plectix\\windows\\launch.bat");
-		setup("plectix\\windows\\" + filePath, time );	
+//		setup("plectix\\windows\\" + filePath, time );	
 	
 	}
 	
