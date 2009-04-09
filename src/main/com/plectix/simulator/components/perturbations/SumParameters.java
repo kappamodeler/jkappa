@@ -13,6 +13,7 @@ import com.plectix.simulator.interfaces.*;
  * @author avokhmin
  * @see CPerturbation
  */
+@SuppressWarnings("serial")
 final class SumParameters implements IPerturbationExpression, Serializable {
 	private final IObservablesComponent observableComponent;
 	private double parameter;

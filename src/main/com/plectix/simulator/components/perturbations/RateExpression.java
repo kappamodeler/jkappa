@@ -11,6 +11,7 @@ import com.plectix.simulator.interfaces.*;
  * @author avokhmin
  * @see CPerturbation
  */
+@SuppressWarnings("serial")
 public final class RateExpression implements IPerturbationExpression, Serializable {
 	private final CRule rule;
 	private double value;

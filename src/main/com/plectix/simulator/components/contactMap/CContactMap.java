@@ -3,93 +3,70 @@ package com.plectix.simulator.components.contactMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 
 import com.plectix.simulator.simulator.SimulationData;
 
+/**
+ * Class implements contact map.
+ * @author avokhmin
+ *
+ */
 public class CContactMap {
-	public enum ContactMapMode {
-		MODEL, AGENT_OR_RULE;
-	}
-
-	private ContactMapMode mode = ContactMapMode.MODEL;
+	private EContactMapMode mode = EContactMapMode.MODEL;
 	private SimulationData simulationData;
 	private CContactMapAbstractSolution abstractSolution;
 	private CRule focusRule;
 	private List<CContactMapAbstractRule> abstractRules;
 	private List<IContactMapAbstractAgent> agentsFromFocusedRule;
 
-	public ContactMapMode getMode() {
-		return mode;
-	}
-
-	public void setMode(ContactMapMode mode) {
+	/**
+	 * This method sets mode of create contact map.
+	 * @param mode given mode
+	 * @see EContactMapMode
+	 */
+	public void setMode(EContactMapMode mode) {
 		this.mode = mode;
 	}
 
+	/**
+	 * This method returns abstract solution.
+	 * @return abstract solution.
+	 */
 	public CContactMapAbstractSolution getAbstractSolution() {
 		return abstractSolution;
 	}
 
+	/**
+	 * This method sets simulation data.
+	 * @param simulationData given simulation data
+	 */
 	public void setSimulationData(SimulationData simulationData) {
 		this.simulationData = simulationData;
 	}
 
-	public CRule getFocusRule() {
-		return focusRule;
-	}
-
+	/**
+	 * This method sets "focus rule".
+	 * @param focusRule given rule
+	 * @see EContactMapMode
+	 */
 	public void setFocusRule(CRule focusRule) {
 		this.focusRule = focusRule;
 	}
 
+	/**
+	 * Default constructor of contact map. 
+	 */
 	public CContactMap() {
 		agentsFromFocusedRule = new ArrayList<IContactMapAbstractAgent>();
 	}
 
-	private boolean checkConnectionWithFocused(
-			IContactMapAbstractAgent checkingAgent) {
-		// TODO
-		for (IContactMapAbstractAgent agent : agentsFromFocusedRule) {
-			if (agent.equalz(checkingAgent))
-				return true;
-			// for (CSite site : ((CAgent) checkingAgent).getSites()) {
-			// CSite linkSite = site.getLinkState().getSite();
-			// if (linkSite != null)
-			// if (linkSite.getAgentLink().equalz(agent))
-			// // if (linkSite.getAgentLink().equals(agent))
-			// return true;
-			//
-			// }
-		}
-		return false;
-	}
-
-	private void addToAgentsInContactMap(IContactMapAbstractAgent agent,
-			CRule rule, boolean isLHS) {
-		// TODO
-		if (mode == ContactMapMode.AGENT_OR_RULE
-				&& !checkConnectionWithFocused(agent)) {
-			return;
-		}
-		// for (CSite site : agent.getSites()) {
-		// boolean internalState = false;
-		// boolean linkState = false;
-		// if (!isLHS) {
-		// if (site.getInternalState().getNameId() != -1)
-		// internalState = true;
-		// if (site.getLinkState().getSite() != null)
-		// linkState = true;
-		// }
-		// CContactMapChangedSite chSite = new CContactMapChangedSite(site,
-		// internalState, linkState);
-		// addToAgentsInContactMap(chSite, rule);
-		// }
-	}
-
+	/**
+	 * This method creates abstract contact map
+	 * (need uses with create contact map by <code>MODEL</code>).
+	 */
 	public void constructAbstractContactMap() {
 		// TODO
 		switch (mode) {
@@ -133,13 +110,18 @@ public class CContactMap {
 //		}
 //	}
 
-	public void constructContactMap() {
-	}
-
+	/**
+	 * This method initializes abstract solution.
+	 */
 	public final void initAbstractSolution() {
 		this.abstractSolution = new CContactMapAbstractSolution(simulationData);
 	}
 
+	/**
+	 * This method initializes abstract rules.<br>
+	 * For <code>AGENT_OR_RULE</code> mode, creates abstract contact map. 
+	 * @param rules given rules
+	 */
 	public void constructAbstractRules(List<CRule> rules) {
 		switch (mode) {
 		case MODEL:
@@ -154,7 +136,8 @@ public class CContactMap {
 			break;
 
 		case AGENT_OR_RULE:
-			CContactMapAbstractRule abstractRule = fillFocusAgentsFromRule(
+//					CContactMapAbstractRule abstractRule = fillFocusAgentsFromRule(
+			fillFocusAgentsFromRule(
 					(CRule) this.focusRule, this.agentsFromFocusedRule);
 			constructAbstractCard(rules, agentsFromFocusedRule);
 
@@ -180,6 +163,10 @@ public class CContactMap {
 		}
 	}
 
+	/**
+	 * Util method. Clears unnecessary information in contact map.
+	 * @param agentNameIdList
+	 */
 	private void clearCard(List<Integer> agentNameIdList) {
 		Iterator<Integer> iterator = abstractSolution
 				.getAgentNameIdToAgentsList().keySet().iterator();
@@ -196,6 +183,11 @@ public class CContactMap {
 		}
 	}
 
+	/**
+	 * Util method. Construct abstract contact map by given rules for guiven agents 
+	 * @param rules given rules
+	 * @param addAgentList given agents
+	 */
 	private void constructAbstractCard(List<CRule> rules,
 			List<IContactMapAbstractAgent> addAgentList) {
 		for (CRule rule : rules) {
@@ -211,15 +203,25 @@ public class CContactMap {
 		}
 	}
 
-	private CContactMapAbstractRule fillFocusAgentsFromRule(CRule rule,
+	/**
+	 * Util method. Fills given agents to given "focus rule"
+	 * @param rule given rule
+	 * @param agentsList given agents
+	 */
+	private void fillFocusAgentsFromRule(CRule rule,
 			List<IContactMapAbstractAgent> agentsList) {
 		CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(rule);
 		abstractRule.initAbstractRule();
 		List<IContactMapAbstractAgent> list = abstractRule.getFocusedAgents();
 		addAgentsToListFromRule(list, agentsList);
-		return abstractRule;
+//		return abstractRule;
 	}
 
+	/**
+	 * Util method. Fills given agents to given rule.
+	 * @param rule
+	 * @param agentsList
+	 */
 	private void fillAgentsFromRule(CRule rule,
 			List<IContactMapAbstractAgent> agentsList) {
 		CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(rule);
@@ -232,6 +234,11 @@ public class CContactMap {
 		addAgentsToListFromRule(agents, agentsList);
 	}
 
+	/**
+	 * Util method. Find intersection of sets and add to <b>agentsForAdding</b>
+	 * @param agents given agents for checks
+	 * @param agentsForAdding given agents for adds
+	 */
 	private void addAgentsToListFromRule(List<IContactMapAbstractAgent> agents,
 			List<IContactMapAbstractAgent> agentsForAdding) {
 		for (IContactMapAbstractAgent agent : agents) {

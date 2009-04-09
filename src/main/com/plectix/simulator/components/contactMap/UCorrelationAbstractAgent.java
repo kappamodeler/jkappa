@@ -13,7 +13,7 @@ public class UCorrelationAbstractAgent {
 
 	public UCorrelationAbstractAgent(CContactMapAbstractAction action,
 			IContactMapAbstractAgent fromAgent,
-			IContactMapAbstractAgent toAgent, ECorrelationType correlationType) {
+			IContactMapAbstractAgent toAgent) {
 		this.fromAgent = fromAgent;
 		this.toAgent = toAgent;
 	}
@@ -37,13 +37,11 @@ public class UCorrelationAbstractAgent {
 	public static List<UCorrelationAbstractAgent> createCorrelationSites(
 			CContactMapAbstractAction action,
 			List<IContactMapAbstractAgent> fromAgent,
-			List<IContactMapAbstractAgent> toAgent,
-			ECorrelationType correlationType) {
+			List<IContactMapAbstractAgent> toAgent) {
 		List<UCorrelationAbstractAgent> list = new ArrayList<UCorrelationAbstractAgent>();
 		int i = 0;
 		for (IContactMapAbstractAgent a : fromAgent) {
-			list.add(new UCorrelationAbstractAgent(action, a, toAgent.get(i++),
-					correlationType));
+			list.add(new UCorrelationAbstractAgent(action, a, toAgent.get(i++)));
 		}
 		return list;
 	}
@@ -166,7 +164,7 @@ public class UCorrelationAbstractAgent {
 		List<IContactMapAbstractAgent> listOut = new ArrayList<IContactMapAbstractAgent>();
 		// TODO BRK
 		Integer key = type.getSiteFrom().getNameId();
-		IContactMapAbstractSite siteTo = toAgent.getSitesMap().get(key);
+//		IContactMapAbstractSite siteTo = toAgent.getSitesMap().get(key);
 		IContactMapAbstractSite siteNew = newAgent.getSitesMap().get(key);
 
 		// CContactMapLinkState lsTo = siteTo.getLinkState();
@@ -274,19 +272,19 @@ public class UCorrelationAbstractAgent {
 		return listOut;
 	}
 
-	private List<IContactMapAbstractSite> breakLinkedSite(
-			IContactMapAbstractSite inSite, CContactMapAbstractSolution solution) {
-		List<IContactMapAbstractSite> listOut = new ArrayList<IContactMapAbstractSite>();
-		IContactMapAbstractSite site = solution.findSite(inSite.getLinkState()
-				.getAgentNameID(), inSite.getLinkState().getLinkSiteNameID(),
-				inSite.getLinkState().getInternalStateNameID(), inSite
-						.getAgentLink().getNameId(), inSite.getNameId(), inSite
-						.getInternalState().getNameId());
-		if (site == null)
-			return listOut;
-		IContactMapAbstractSite addSite = site.clone();
-		addSite.getLinkState().setFreeLinkState();
-		listOut.add(addSite);
-		return listOut;
-	}
+//	private List<IContactMapAbstractSite> breakLinkedSite(
+//			IContactMapAbstractSite inSite, CContactMapAbstractSolution solution) {
+//		List<IContactMapAbstractSite> listOut = new ArrayList<IContactMapAbstractSite>();
+//		IContactMapAbstractSite site = solution.findSite(inSite.getLinkState()
+//				.getAgentNameID(), inSite.getLinkState().getLinkSiteNameID(),
+//				inSite.getLinkState().getInternalStateNameID(), inSite
+//						.getAgentLink().getNameId(), inSite.getNameId(), inSite
+//						.getInternalState().getNameId());
+//		if (site == null)
+//			return listOut;
+//		IContactMapAbstractSite addSite = site.clone();
+//		addSite.getLinkState().setFreeLinkState();
+//		listOut.add(addSite);
+//		return listOut;
+//	}
 }

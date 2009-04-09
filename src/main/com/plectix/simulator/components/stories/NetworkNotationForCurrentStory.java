@@ -54,10 +54,10 @@ class NetworkNotationForCurrentStory {
 			networkNotationList.add(networkNotation);
 	}
 
-	// TODO separate
-	private class CStoryVertexes {
-		AgentSites aSites;
-	}
+//	// TODO separate
+//	private class CStoryVertexes {
+//		AgentSites aSites;
+//	}
 
 	public void handling() {
 		List<CNetworkNotation> nnList = new ArrayList<CNetworkNotation>();

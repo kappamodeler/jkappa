@@ -4,13 +4,13 @@ import java.io.Serializable;
 
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.*;
 
 /**
  * Class implements LiftElement, contains in Site. 
  * @author avokhmin
  * @see CSite
  */
+@SuppressWarnings("serial")
 public final class CLiftElement implements Serializable {
 	
 	private final CConnectedComponent connectedComponent;

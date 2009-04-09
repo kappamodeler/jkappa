@@ -45,7 +45,7 @@ import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.SnapshotElement;
 import com.plectix.simulator.components.contactMap.CContactMapAbstractEdge;
 import com.plectix.simulator.components.contactMap.CContactMapChangedSite;
-import com.plectix.simulator.components.contactMap.CContactMap.ContactMapMode;
+import com.plectix.simulator.components.contactMap.EContactMapMode;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.solution.SolutionLines;
 import com.plectix.simulator.components.stories.CStoryIntro;
@@ -454,7 +454,7 @@ public class SimulationData {
 		myKappaSystem.getContactMap().setSimulationData(this);
 		if (ruleList != null && !ruleList.isEmpty()) {
 			myKappaSystem.getContactMap().setFocusRule(ruleList.get(0));
-			myKappaSystem.getContactMap().setMode(ContactMapMode.AGENT_OR_RULE);
+			myKappaSystem.getContactMap().setMode(EContactMapMode.AGENT_OR_RULE);
 		}
 	}
 

@@ -3,15 +3,11 @@ package com.plectix.simulator.components.contactMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-
-import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
 public class CContactMapAbstractAction {
-	private Map<Integer, List<IContactMapAbstractSite>> siteMap;
 	private CContactMapAbstractRule rule;
 	private List<IContactMapAbstractAgent> agentsToAdd;
 	private List<UCorrelationAbstractAgent> correlationAgents;
@@ -59,8 +55,7 @@ public class CContactMapAbstractAction {
 			IContactMapAbstractAgent rhsAgent = rhs.get(i++);
 			if (isFit(lhsAgent, rhsAgent)) {
 				UCorrelationAbstractAgent ua = new UCorrelationAbstractAgent(
-						this, lhsAgent, rhsAgent,
-						ECorrelationType.CORRELATION_LHS_AND_RHS);
+						this, lhsAgent, rhsAgent);
 				ua.initAtomicAction();
 				correlationAgents.add(ua);
 			} else {
@@ -95,7 +90,7 @@ public class CContactMapAbstractAction {
 
 	private void addAgentToDelete(IContactMapAbstractAgent agentIn) {
 		UCorrelationAbstractAgent ua = new UCorrelationAbstractAgent(this,
-				agentIn, null, ECorrelationType.CORRELATION_LHS_AND_RHS);
+				agentIn, null);
 		// ua.setType(CActionType.DELETE);
 		ua.initAtomicAction();
 		correlationAgents.add(ua);

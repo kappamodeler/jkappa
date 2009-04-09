@@ -26,7 +26,7 @@ public final class CSite implements Serializable {
 	private final int nameId;
 	private final CLink linkState;
 	private CInternalState internalState = CInternalState.EMPTY_STATE;
-	private boolean changed;
+//	private boolean changed;
 	private CAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;
 

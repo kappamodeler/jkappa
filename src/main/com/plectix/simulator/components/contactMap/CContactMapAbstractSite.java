@@ -2,18 +2,10 @@ package com.plectix.simulator.components.contactMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.swing.Icon;
-
-import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CLinkRank;
-import com.plectix.simulator.components.CLink;
-import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.IAbstractAgent;
 import com.plectix.simulator.interfaces.IAbstractSite;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;

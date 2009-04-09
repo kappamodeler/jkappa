@@ -3,8 +3,6 @@ package com.plectix.simulator.components;
 import java.io.Serializable;
 import java.util.*;
 
-import org.apache.log4j.Logger;
-
 import com.plectix.simulator.action.*;
 import com.plectix.simulator.components.contactMap.ChangedSite;
 import com.plectix.simulator.components.injections.CInjection;

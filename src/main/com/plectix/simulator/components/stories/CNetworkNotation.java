@@ -12,13 +12,11 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.interfaces.INetworkNotation;
 
-import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 import com.plectix.simulator.simulator.SimulationData;
@@ -216,7 +214,7 @@ public class CNetworkNotation implements INetworkNotation {
 
 	private final void createAgentsNotation(List<CInjection> injectionsList,
 			SimulationData data, CRule rule) {
-		ISolution solution = data.getKappaSystem().getSolution();
+//		ISolution solution = data.getKappaSystem().getSolution();
 		for (CInjection inj : injectionsList) {
 			if (inj != CInjection.EMPTY_INJECTION) {
 				IConnectedComponent cc = SolutionUtils.getConnectedComponent(inj

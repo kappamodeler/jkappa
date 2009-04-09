@@ -10,7 +10,6 @@ import com.plectix.simulator.interfaces.IContactMapAbstractRule;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.components.CSite;
 
 public class CContactMapAbstractRule implements IContactMapAbstractRule {
 
@@ -169,8 +168,7 @@ public class CContactMapAbstractRule implements IContactMapAbstractRule {
 		for (int i : indexList)
 			listAgents.add(agentsLists.get(index++).get(i));
 		List<UCorrelationAbstractAgent> list = UCorrelationAbstractAgent
-				.createCorrelationSites(abstractAction, lhsAgents, listAgents,
-						ECorrelationType.CORRELATION_LHS_AND_SOLUTION);
+				.createCorrelationSites(abstractAction, lhsAgents, listAgents);
 		return list;
 	}
 

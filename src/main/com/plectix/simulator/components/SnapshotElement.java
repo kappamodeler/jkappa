@@ -2,7 +2,6 @@ package com.plectix.simulator.components;
 
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.simulator.Simulator;
 
 /**
  * Class implements snapshot element.

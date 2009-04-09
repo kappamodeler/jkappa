@@ -10,7 +10,6 @@ public class CContactMapLinkState {
 	private CLinkStatus statusLink;
 	private int linkSiteNameID = CSite.NO_INDEX;
 	private int agentNameID = CSite.NO_INDEX;
-	// private int agentID = CSite.NO_INDEX;
 	private int internalStateNameID = CSite.NO_INDEX;
 
 	public CContactMapLinkState(CLink linkState) {

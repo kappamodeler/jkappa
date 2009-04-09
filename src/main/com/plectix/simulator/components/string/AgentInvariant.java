@@ -12,8 +12,6 @@ import java.util.Map;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.simulator.ThreadLocalData;
-import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.PrimeNumbers;
 
 public final class AgentInvariant {

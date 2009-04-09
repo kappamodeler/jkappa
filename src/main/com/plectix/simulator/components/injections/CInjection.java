@@ -7,7 +7,6 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.*;
 
@@ -15,6 +14,7 @@ import com.plectix.simulator.interfaces.*;
  * Class implements Injection.
  * @author avokhmin
  */
+@SuppressWarnings("serial")
 public class CInjection implements Serializable {
 
 	public static final CInjection EMPTY_INJECTION = new CInjection();

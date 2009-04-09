@@ -3,6 +3,7 @@ import java.io.Serializable;
 
 import com.plectix.simulator.components.CSite;
 
+@SuppressWarnings("serial")
 public class ChangedSite implements Serializable{
 	private final CSite site;
 	private boolean linkState;

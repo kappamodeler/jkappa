@@ -259,7 +259,7 @@ public final class CStoryTrees {
 
 	}
 
-	List<Integer> listToDelete;
+	private List<Integer> listToDelete;
 
 	private void createListToDelete(
 			List<CNetworkNotation> commonList,
@@ -286,7 +286,7 @@ public final class CStoryTrees {
 			if (listToDelete.get(0) == -2 && listToDelete.get(1) < idOfFather)
 				return;
 			if (traceIDLastRule == idOfFather.intValue()) {
-				listToDelete = new ArrayList();
+				listToDelete = new ArrayList<Integer>();
 				listToDelete.add(-2);
 				listToDelete.add(-2);
 				return;
