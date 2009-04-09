@@ -49,7 +49,9 @@ public class RunSmilesTest{
              	 "twoagents", 
              	 "ring", 
              	 "tworings",  
-             	 "polymer" 
+             	 "polymer", 
+             	 "branchstructure",
+             	 "polyhedron"
              	 };
     	 List<CConnectedComponent> cclist;
     	 Collection<Object[]> data = new ArrayList<Object[]>();
