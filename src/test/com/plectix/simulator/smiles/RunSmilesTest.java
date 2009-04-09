@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CInternalState;
@@ -70,6 +71,7 @@ public class RunSmilesTest{
     	 cc = c;
     	 line = linecount;
     	 filepath = filename;
+    	 SimulationMain.initializeLogging();
 	 }
 
 	public static List<CConnectedComponent> readFile(String filepath) {

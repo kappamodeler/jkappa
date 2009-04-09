@@ -101,6 +101,7 @@ public final class SiteComparator implements Comparator<CSite> {
 			throw new RuntimeException("Unexpected State: Link state is neither BOUND nor FREE.");
 		}
 	}
+	
 
 	/**
 	 * We can also use the Strings made from this method to compare Sites... 

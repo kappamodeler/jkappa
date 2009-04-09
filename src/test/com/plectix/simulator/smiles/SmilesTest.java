@@ -10,16 +10,25 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
+import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.Failer;
+import com.plectix.simulator.util.PlxLogger;
 
 public class SmilesTest {
 
+	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(SmilesTest.class);
+	
+	private static final int SIZE_MULTIPLIER = 2;
+	
 	private CConnectedComponent ccomponent;
 	private String uniqueKappaString;
 	private ConnectedComponentToSmilesString connectedComponentToSmilesString;
 	private Failer failer = new Failer();
 
 	public SmilesTest(CConnectedComponent cc) {
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("New ConnectedComponent with " + cc.getAgents().size() + " agents");
+		}
 		ccomponent = cc;
 	}
 
@@ -27,8 +36,10 @@ public class SmilesTest {
 		String message = "";
 		int size = ccomponent.getAgents().size();
 		connectedComponentToSmilesString = ConnectedComponentToSmilesString.getInstance();
-		uniqueKappaString = connectedComponentToSmilesString
-				.toUniqueString(ccomponent);
+		uniqueKappaString = connectedComponentToSmilesString.toUniqueString(ccomponent);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("uniqueKappaString " + uniqueKappaString);
+		}
 		if(size == 1) {
 //			testSites();
 		}
@@ -47,7 +58,7 @@ public class SmilesTest {
 			checkit(list, fails);
 			
 		} else if (size > 2) {
-			for (int i = 0; i < size; i++) {
+			for (int i = 0; i < SIZE_MULTIPLIER * size; i++) {
 				Collections.shuffle(list);
 				if (!checkit(list, fails))
 					break;
@@ -57,13 +68,19 @@ public class SmilesTest {
 	}
 
 	private boolean checkit(List<CAgent> list, StringBuffer fails) {
-		String smilesString = connectedComponentToSmilesString
-				.toUniqueString(new CConnectedComponent(list));
-		
+		String smilesString = connectedComponentToSmilesString.toUniqueString(new CConnectedComponent(list));
+	
 		if (!smilesString.equals(uniqueKappaString)){
-			fails.append("\ntestAgents:\nexpected\t" + uniqueKappaString + 
-						  ",\nbut\t\t"	+ smilesString + "\n");
+			String message = "\ntestAgents:\nexpected\t" + uniqueKappaString + ",\nbut\t\t"	+ smilesString + "\n";
+			fails.append(message);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug(message + " -> checkit returns false!");
+			}
 			return false;
+		}
+		
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("checkit returns true");
 		}
 		return true;
 	}
@@ -113,11 +130,17 @@ public class SmilesTest {
 				}
 			}
 		}
-		String smilesString = connectedComponentToSmilesString
-			.toUniqueString(ccomponent);
-		if (!smilesString.equals(uniqueKappaString))
+		String smilesString = connectedComponentToSmilesString.toUniqueString(ccomponent);
+		
+		if (!smilesString.equals(uniqueKappaString)) {
 			fails.append("\ntestLinkIndex:\nexpected\t" + uniqueKappaString + 
 					  ",\nbut\t\t"	+ smilesString + "\n");
+		}
+
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("testLinkIndexes returns " + fails.toString());
+		}
+		
 		return fails.toString();
 	}
 

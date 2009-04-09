@@ -12,6 +12,8 @@ import java.util.Map;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.PrimeNumbers;
 
 public final class AgentInvariant {
@@ -20,8 +22,11 @@ public final class AgentInvariant {
 
 	public static final AgentInvariantRankComparator AGENT_INVARIANT_RANK_COMPARATOR = new AgentInvariantRankComparator();
 	
+	public static final AgentInvariantNeighborSiteComparator AGENT_INVARIANT_NEIGHBOR_SITE_COMPARATOR = new AgentInvariantNeighborSiteComparator();
+	
 	private int rankOld = 0; // 0 means not set yet
 	private int rankNew = 0; // 0 means not set yet
+	private int rankTemp = 0; // 0 means not set yet
 	
 	private long productOfNeighborPrimes = 0;
 
@@ -66,9 +71,11 @@ public final class AgentInvariant {
 	 * @param agentToAgentInvariantMap
 	 */
 	public final void computeNeighbors(Map<CAgent, AgentInvariant> agentToAgentInvariantMap) {
-		if (neighborAgentList == null) {
-			neighborAgentList = new ArrayList<AgentInvariant>();
+		if (neighborAgentList != null) {
+			return;
 		}
+
+		neighborAgentList = new ArrayList<AgentInvariant>();
 		
 		for (CSite site : agent.getSites()) {
 			if (site.getLinkState().getStatusLink() == CLinkStatus.BOUND) {
@@ -171,6 +178,24 @@ public final class AgentInvariant {
 	public final void setRankNew(int rank) {
 		rankNew = rank;
 	}
+
+	/**
+	 * Returns the temporary Rank of this Agent
+	 * 
+	 * @return
+	 */
+	public final int getRankTemp() {
+		return rankTemp;
+	}
+
+	/**
+	 * Sets the temporary Rank of this Agent.
+	 * 
+	 * @param rank
+	 */
+	public final void setRankTemp(int rank) {
+		rankTemp = rank;
+	}
 	
 	/**
 	 * Returns the number of connections of this Agent.
@@ -180,7 +205,17 @@ public final class AgentInvariant {
 	public final int getNumberOfConnections() {
 		return numberOfConnections;
 	}
-	
+
+	private static final CSite getConnectionSite(AgentInvariant thisAgent, AgentInvariant neighborAgent) {
+		for (CSite site : thisAgent.getAgent().getSites()) {
+			if (site.getLinkState().getStatusLink() == CLinkStatus.BOUND) {
+				if (site.getLinkState().getConnectedSite().getAgentLink() == neighborAgent.getAgent()) {
+					return site;
+				}
+			}
+		}
+		throw new RuntimeException("Agents are not neighbors!");
+	}
 
 	/**
 	 * This class compares two AgentInvariants with respect to some "graph theoretical invariants".
@@ -259,14 +294,77 @@ public final class AgentInvariant {
 		private AgentInvariantRankComparator() {
 			super();
 		}
-
+		
 		public final int compare(AgentInvariant o1, AgentInvariant o2) {
 			int result = Double.compare(o1.getRankNew(), o2.getRankNew());
 			if (result != 0) {
 				return result;
 			}
 			
-			return Double.compare(o1.getProductOfNeighborPrimes(), o1.getProductOfNeighborPrimes());
+			return Double.compare(o1.getProductOfNeighborPrimes(), o2.getProductOfNeighborPrimes());
+		}
+	}
+	
+	public static final class AgentInvariantNeighborSiteComparator implements Comparator<AgentInvariant> {
+		private AgentInvariantNeighborSiteComparator() {
+			super();
+		}
+
+		public final int compare(AgentInvariant o1, AgentInvariant o2) {
+			int result = Double.compare(o1.neighborAgentList.size(), o2.neighborAgentList.size());
+			if (result != 0) {
+				return result;
+			}
+				
+			List<AgentInvariant> neighborAgentList1 = new ArrayList<AgentInvariant>(o1.neighborAgentList);
+			List<AgentInvariant> neighborAgentList2 = new ArrayList<AgentInvariant>(o2.neighborAgentList);
+			
+			Collections.sort(neighborAgentList1, AGENT_INVARIANT_RANK_COMPARATOR);
+			Collections.sort(neighborAgentList2, AGENT_INVARIANT_RANK_COMPARATOR);
+			
+			for (int i= 0; i < neighborAgentList1.size(); i++) {
+				if (i+1 != neighborAgentList1.size()) {
+					final boolean neighborAgentList1IsRandom = AGENT_INVARIANT_RANK_COMPARATOR.compare(neighborAgentList1.get(i), neighborAgentList1.get(i+1)) == 0;
+					final boolean neighborAgentList2IsRandom = AGENT_INVARIANT_RANK_COMPARATOR.compare(neighborAgentList2.get(i), neighborAgentList2.get(i+1)) == 0;
+					
+					if (neighborAgentList1IsRandom) {
+						if (neighborAgentList2IsRandom) {
+							// can not compare randomly!
+							return 0;
+						} else {
+							return +1;
+						}
+					} else {
+						if (neighborAgentList2IsRandom) {
+							return -1;
+						} else {
+							// compare below...
+						}
+					}
+				}
+				
+				result = AGENT_INVARIANT_RANK_COMPARATOR.compare(neighborAgentList1.get(i), neighborAgentList2.get(i));
+				if (result != 0) {
+					return result;
+				}
+				
+				if (neighborAgentList1.get(i).getRankNew() >= o1.getRankNew()) {
+					return 0;
+				}
+				
+				// Let's find the sites connected to that neighbor:
+				CSite site1 = getConnectionSite(o1, neighborAgentList1.get(i));
+				CSite site2 = getConnectionSite(o2, neighborAgentList2.get(i));
+				
+				// some part of the following comparison is redundant. but at least we don't duplicate any code!
+				result = SiteComparator.SITE_COMPARATOR.compare(site1, site2);
+				if (result != 0) {
+					return result;
+				}	
+			}
+			
+			// could not differentiate ;-(
+			return 0;
 		}
 	}
 

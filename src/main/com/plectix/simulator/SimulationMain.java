@@ -15,6 +15,8 @@ import com.plectix.simulator.util.PlxLogger;
 public class SimulationMain  {
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
+	private static boolean loggingInitialized = false;
+	
 	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(SimulationMain.class);
 
 	private static final PrintStream DEFAULT_OUTPUT_STREAM = System.err;
@@ -31,6 +33,10 @@ public class SimulationMain  {
 	}
 
 	public static final void initializeLogging() {
+		if (loggingInitialized) {
+			return;
+		}
+		
 		// Initialize log4j
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		
@@ -66,6 +72,8 @@ public class SimulationMain  {
 				+ System.getProperties().get("java.specification.vendor"));
 		
 		LOGGER.info("Timezone: " + System.getProperties().get("user.timezone"));
+		
+		loggingInitialized = true;
 	}
 
 }

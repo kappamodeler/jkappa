@@ -25,5 +25,7 @@ and then check the debug level before output call. For example, for debugging:
     if (LOGGER.isDebugEnabled()) {
        LOGGER.debug("Rule: " + rule.getName());
     }
+    
+Logging is configured automatically in the main simulation. To configure it in a test class, use the static SimulationMain.initializeLogging() call.
 
 *) The file and folder names should not include the following characters: " &\/`'!$^*()[]<>?" (the first one is white space).
