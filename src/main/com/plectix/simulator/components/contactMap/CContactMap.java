@@ -219,8 +219,8 @@ public class CContactMap {
 
 	/**
 	 * Util method. Fills given agents to given rule.
-	 * @param rule
-	 * @param agentsList
+	 * @param rule given rule
+	 * @param agentsList given agents
 	 */
 	private void fillAgentsFromRule(CRule rule,
 			List<IContactMapAbstractAgent> agentsList) {
@@ -235,7 +235,7 @@ public class CContactMap {
 	}
 
 	/**
-	 * Util method. Find intersection of sets and add to <b>agentsForAdding</b>
+	 * Util method. Find sets difference and add to <b>agentsForAdding</b>
 	 * @param agents given agents for checks
 	 * @param agentsForAdding given agents for adds
 	 */

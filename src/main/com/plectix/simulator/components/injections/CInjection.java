@@ -39,21 +39,31 @@ public class CInjection implements Serializable {
 	}
 
 	public final void removeSiteFromSitesList(CSite site) {
-		int index = 0;
-		for (CSite siteL : this.sitesList) {
-			if (site == siteL) {
-				this.sitesList.remove(index);
-				return;
-			}
-			index++;
-		}
+		sitesList.remove(site);
+//		int index = 0;
+//		for (CSite siteL : this.sitesList) {
+//			if (site == siteL) {
+//				this.sitesList.remove(index);
+//				return;
+//			}
+//			index++;
+//		}
 	}
 
+	/**
+	 * This method adds given site to util list.<br>
+	 * This list uses in NegativeUpdate.
+	 * @param site given site
+	 */
 	public final void addToChangedSites(CSite site) {
 		if (!(checkSiteExistanceAmongChangedSites(site)))
 			this.changedSites.add(site);
 	}
 
+	/**
+	 * This method clears util list.<br>
+	 * This list uses in NegativeUpdate.
+	 */
 	public final void clearChangedSites() {
 		changedSites.clear();
 	}
@@ -65,10 +75,18 @@ public class CInjection implements Serializable {
 		return false;
 	}
 
+	/**
+	 * This method sets unique id.
+	 * @param id
+	 */
 	public final void setId(int id) {
 		myId = id;
 	}
 
+	/**
+	 * This method returns unique id.
+	 * @return unique id.
+	 */
 	public final int getId() {
 		return myId;
 	}
@@ -84,20 +102,12 @@ public class CInjection implements Serializable {
 		return Collections.unmodifiableList(changedSites);
 	}
 
-	public final void setChangedSites(List<CSite> changedSites) {
-		this.changedSites = changedSites;
-	}
-
 	public final List<CAgentLink> getAgentLinkList() {
 		return Collections.unmodifiableList(agentLinkList);
 	}
 
 	public final List<CSite> getSiteList() {
 		return Collections.unmodifiableList(sitesList);
-	}
-
-	public final void setSiteList(List<CSite> siteList) {
-		this.sitesList = siteList;
 	}
 
 	public final IConnectedComponent getConnectedComponent() {
