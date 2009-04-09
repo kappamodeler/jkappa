@@ -538,9 +538,9 @@ public class CRule implements Serializable {
 				for (CSite changedSite : changedActivatedSites) {
 					if (changedSite.equalz(site)) {
 						allIntersectsSites++;
-						IInternalState currentInternalState = changedSite
+						CInternalState currentInternalState = changedSite
 								.getInternalState();
-						IInternalState internalState = site.getInternalState();
+						CInternalState internalState = site.getInternalState();
 						if (!(currentInternalState.isRankRoot())
 								&& !(internalState.isRankRoot())) {
 							if (internalState.getNameId() != currentInternalState
@@ -613,9 +613,9 @@ public class CRule implements Serializable {
 					if (changedSite.getSite().equalz(site)) {
 						// if (changedSite.getSite().equals(site)) {
 
-						IInternalState currentInternalState = changedSite
+						CInternalState currentInternalState = changedSite
 								.getSite().getInternalState();
-						IInternalState internalState = site.getInternalState();
+						CInternalState internalState = site.getInternalState();
 
 						CLink currentLinkState = changedSite.getSite()
 								.getLinkState();

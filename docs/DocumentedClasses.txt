@@ -1,5 +1,6 @@
 Classes with full javadoc
 
+- com.plectix.simulator.action.CAction
 - com.plectix.simulator.components.CRule
 - com.plectix.simulator.components.CObservables
 - com.plectix.simulator.components.CAgent
@@ -8,17 +9,16 @@ Classes with full javadoc
 - com.plectix.simulator.components.CAgentLink
 - com.plectix.simulator.components.CConnectedComponent
 - com.plectix.simulator.components.ObservablesConnectedComponent
-- com.plectix.simulator.action.CAction
-
-other ones are unfinished and need to be checked
-
-
+- com.plectix.simulator.components.CInternalState
+- com.plectix.simulator.components.CLinkRank
+- com.plectix.simulator.components.CLinkStatus
+- com.plectix.simulator.components.CSnapshot
+- com.plectix.simulator.components.CSpanningTree
+- com.plectix.simulator.components.ObservablesRuleComponent
 --------------------------------------------------
-- CInternalState
-- CLinkRank
-- CLinkStatus
-- CSnapshot
-- CSpanningTree
+
+these ones are unfinished and need to be checked :
+
 - ObservablesRuleComponent
 - SnapshotElement
 - CPerturbationType

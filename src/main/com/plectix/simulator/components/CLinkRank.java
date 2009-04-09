@@ -1,14 +1,13 @@
 package com.plectix.simulator.components;
 
 /**
- * Class implements link rank of LinkState.<br>
- * Examples:
- * <blockquote><pre>
- * A(x) - link rank of site "x" does "FREE"<br>
- * A(x!1),B(y!1) - link rank of site "x" does "BOUND"<br>
- * A(x!_) - link rank of site "x" does "SEMI_LINK"<br>
- * A(x?) - link rank of site "x" does "BOUND_OR_FREE"<br>
- * </blockquote></pre>
+ * Class implements link rank of the link.<br>
+ * For example:
+ * <li>A(x) - link rank of site "x" does "FREE"</li>
+ * <li>A(x!1),B(y!1) - link rank of site "x" does "BOUND"</li>
+ * <li>A(x!_) - link rank of site "x" does "SEMI_LINK"</li>
+ * <li>A(x?) - link rank of site "x" does "BOUND_OR_FREE"</li>
+ * @see CLink
  * @author avokhmin
  *
  */
@@ -25,12 +24,12 @@ public enum CLinkRank {
 	}
 	
 	/**
-	 * This method compares current LinkRank with given.
+	 * This method compares current rank with given.
 	 * @param arg given LinkRank
-	 * @return <tt>true</tt> if current LinkRank less priority with given linkRank,
+	 * @return <tt>true</tt> if current rank has less priority with given linkRank,
 	 * otherwise <tt>false</tt>
 	 */
-	public boolean smaller(CLinkRank arg) {
+	public boolean lessPriority(CLinkRank arg) {
 		return myOrderNumber < arg.myOrderNumber;
 	}
 }

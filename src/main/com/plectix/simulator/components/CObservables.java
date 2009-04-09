@@ -311,8 +311,8 @@ public class CObservables implements Serializable {
 		List<Integer> map = new ArrayList<Integer>();
 		List<IObservablesComponent> list = new ArrayList<IObservablesComponent>();
 		for (IObservablesComponent cc : componentList) {
-			if (!map.contains(cc.getNameID())) {
-				map.add(cc.getNameID());
+			if (!map.contains(cc.getId())) {
+				map.add(cc.getId());
 				list.add(cc);
 			}
 		}
@@ -328,8 +328,8 @@ public class CObservables implements Serializable {
 		List<Integer> map = new ArrayList<Integer>();
 		List<IObservablesConnectedComponent> list = new ArrayList<IObservablesConnectedComponent>();
 		for (IObservablesConnectedComponent cc : connectedComponentList) {
-			if (!map.contains(cc.getNameID())) {
-				map.add(cc.getNameID());
+			if (!map.contains(cc.getId())) {
+				map.add(cc.getId());
 				list.add(cc);
 			}
 		}

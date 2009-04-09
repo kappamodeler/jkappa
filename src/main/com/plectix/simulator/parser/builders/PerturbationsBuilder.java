@@ -150,7 +150,7 @@ public class PerturbationsBuilder {
 				IObservablesComponent component = checkInObservables(condition
 						.getArgument());
 				result.add(new CPerturbation(id, obsID, parameters, component
-						.getNameID(), 
+						.getId(), 
 						rule, condition.isGreater(), createRateExpression(modification), 
 						myData.getObservables()));
 				return result;

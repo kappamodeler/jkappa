@@ -17,7 +17,6 @@ import com.plectix.simulator.interfaces.IAbstractAgent;
 import com.plectix.simulator.interfaces.IAbstractSite;
 import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
 import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-import com.plectix.simulator.interfaces.IInternalState;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class CContactMapAbstractSite implements IContactMapAbstractSite {
@@ -26,7 +25,7 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 	private final int nameId;
 	private CContactMapLinkState linkState;
 
-	private IInternalState internalState = CInternalState.EMPTY_STATE;
+	private CInternalState internalState = CInternalState.EMPTY_STATE;
 	private IContactMapAbstractAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;
 
@@ -71,7 +70,7 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		this.linkAgent = agent;
 	}
 
-	public IInternalState getInternalState() {
+	public CInternalState getInternalState() {
 		return internalState;
 	}
 
@@ -93,7 +92,7 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		return nameId;
 	}
 
-	public void setInternalState(IInternalState internalState) {
+	public void setInternalState(CInternalState internalState) {
 		this.internalState = internalState;
 	}
 

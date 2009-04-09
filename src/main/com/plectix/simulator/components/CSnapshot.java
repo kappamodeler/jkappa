@@ -6,40 +6,31 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.SimulationData;
 
 /**
- * Class implements snapshots elements.<br>
- * Creates image of current state Solution.
+ * Class implements snapshots elements, which are used for saving information on solution state
+ * in fixed time moments. 
  * @author avokhmin
  *
  */
 public final class CSnapshot {
 
+	//TODO REMOVE UNNECESSARY FIELDS
 	private int totalAgents;
-	private final int totalConnectedComponents;
 	private int smollestConnectedComponent;
 	private int largestConnectedComponent;
 	private int uniqueConnectedComponent;
 	private List<IConnectedComponent> ccList;
 	private List<SnapshotElement> snapshotElements;
-	private double snapshotTime;
+	private final double snapshotTime;
 
 	/**
-	 * this method returns time, when did do image of current state Solution.
-	 */
-	public double getSnapshotTime() {
-		return snapshotTime;
-	}
-
-	/**
-	 * Default constructor.<br>
-	 * Creates image of current state Solution.
-	 * @param simulationData given simulation data
-	 * @param snapshotTime given time, when creating image. 
+	 * Constructor. Initializes snapshot element using current simulation data.
+	 * @param simulationData simulation data
+	 * @param snapshotTime time of snapshot 
 	 */
 	public CSnapshot(SimulationData simulationData,double snapshotTime) {
 		this.snapshotTime = snapshotTime;
 		ccList = simulationData.getKappaSystem().getSolution().split();
 		totalAgents = 0;
-		totalConnectedComponents = ccList.size();
 		largestConnectedComponent = 0;
 		smollestConnectedComponent = Integer.MAX_VALUE;
 		uniqueConnectedComponent = 0;
@@ -71,44 +62,17 @@ public final class CSnapshot {
 	}
 
 	/**
-	 * This method returns all SnapshotElements. Uses for create xml.
+	 * This method returns time, when this snapshot was done
+	 * @return time when current snapshot was done
+	 */
+	public double getSnapshotTime() {
+		return snapshotTime;
+	}
+	
+	/**
+	 * This method returns all SnapshotElements.
 	 */
 	public final List<SnapshotElement> getSnapshotElements() {
 		return Collections.unmodifiableList(snapshotElements);
-	}
-
-	/**
-	 * This method returns total count of agents. 
-	 */
-	public final int getTotalAgents() {
-		return totalAgents;
-	}
-
-	/**
-	 * This method returns total connection components.
-	 */
-	public final int getTotalConnectedComponents() {
-		return totalConnectedComponents;
-	}
-
-	/**
-	 * This method returns connected components, witch has smallest agents number.
-	 */
-	public final int getSmallestConnectedComponent() {
-		return smollestConnectedComponent;
-	}
-
-	/**
-	 * This method returns connected components, witch has largest agents number.
-	 */
-	public final int getLargestConnectedComponent() {
-		return largestConnectedComponent;
-	}
-
-	/**
-	 * This method returns unique connected components.
-	 */
-	public final int getUniqueConnectedComponent() {
-		return uniqueConnectedComponent;
 	}
 }

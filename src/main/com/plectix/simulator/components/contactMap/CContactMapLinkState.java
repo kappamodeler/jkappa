@@ -137,7 +137,7 @@ public class CContactMapLinkState {
 				&& solutionLinkState.isLeftBranchStatus())
 			return false;
 
-		if (this.getStatusLinkRank().smaller(
+		if (this.getStatusLinkRank().lessPriority(
 				solutionLinkState.getStatusLinkRank()))
 			return true;
 

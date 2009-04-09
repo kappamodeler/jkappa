@@ -12,10 +12,8 @@ import com.plectix.simulator.interfaces.*;
  * In general we have kappa file line like
  * <br><br>
  * <code>'observableName' connectedComponents</code>,
- * where 
- * <br>
- * <li><code>observableName</code> - name of this observable</li>
- * <li><code>connectedComponents</code> - list of substances</li>
+ * where : <br><code>observableName</code> - name of this observable
+ * <br><code>connectedComponents</code> - list of substances
  * @see CObservables
  * @author avokhmin
  *
@@ -52,7 +50,7 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 	 * @param line kappa file line becoming this observable.
 	 * @param nameID unique id of current observable.
 	 * @param unique <tt>false</tt> if this observable connected component is already included in
-	 * observables list, otherwise <tt>false</tt>
+	 * observables list, otherwise <tt>true</tt>
 	 */
 	public ObservablesConnectedComponent(List<CAgent> connectedAgents,
 			String name, String line, int nameID, boolean unique) {
@@ -64,7 +62,7 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 		this.nameID = nameID;
 	}
 
-	public final int getNameID() {
+	public final int getId() {
 		return nameID;
 	}
 
@@ -105,7 +103,7 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 		long value = 1;
 		for (IObservablesConnectedComponent cc : obs
 				.getConnectedComponentList())
-			if (cc.getNameID() == this.getNameID())
+			if (cc.getId() == this.getId())
 				value *= cc.getInjectionsList().size();
 		return value;
 	}

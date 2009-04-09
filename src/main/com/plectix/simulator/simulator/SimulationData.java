@@ -1248,7 +1248,7 @@ public class SimulationData {
 			node.setAttribute("FromNode", Integer
 					.toString(rule.getRuleID() + 1));
 			node.setAttribute("ToNode", Integer.toString(obsToPrint.get(j)
-					.getNameID()
+					.getId()
 					+ rulesNumber));
 			node.setAttribute("Relation", mapType);
 			influenceMap.appendChild(node);
@@ -1301,7 +1301,7 @@ public class SimulationData {
 		long value = 1;
 		for (IObservablesConnectedComponent cc : obs
 				.getConnectedComponentList())
-			if (cc.getNameID() == oCC.getNameID())
+			if (cc.getId() == oCC.getId())
 				value *= cc.getLongItem(index, obs);
 
 		return Long.valueOf(value).toString();

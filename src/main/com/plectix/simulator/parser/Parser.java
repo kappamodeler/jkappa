@@ -9,12 +9,8 @@ import com.plectix.simulator.parser.exceptions.*;
 /*package*/ abstract class Parser<E> {
 	private EasyFileReader myReader;
 	
-	public Parser(String path) {
-		try{
-			myReader = new EasyFileReader(path);
-		} catch(FileNotFoundException e) {
-			System.err.println(e.getMessage());
-		}
+	public Parser(String path) throws FileNotFoundException {
+		myReader = new EasyFileReader(path);
 	}
 	
 	protected EasyFileReader getFileReader() {

@@ -150,7 +150,7 @@ public final class CLink implements Serializable {
 				&& otherLink.hasFreeStatus())
 			return false;
 
-		if (this.getStatusLinkRank().smaller(
+		if (this.getStatusLinkRank().lessPriority(
 				otherLink.getStatusLinkRank()))
 			return true;
 

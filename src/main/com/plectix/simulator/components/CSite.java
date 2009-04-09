@@ -9,7 +9,6 @@ import java.util.List;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
-import com.plectix.simulator.interfaces.IInternalState;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.components.injections.CInjection;
@@ -26,7 +25,7 @@ public final class CSite implements Serializable {
 
 	private final int nameId;
 	private final CLink linkState;
-	private IInternalState internalState = CInternalState.EMPTY_STATE;
+	private CInternalState internalState = CInternalState.EMPTY_STATE;
 	private boolean changed;
 	private CAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;
@@ -122,7 +121,7 @@ public final class CSite implements Serializable {
 	 * This method sets internal state for current site.
 	 * @param internalState new value
 	 */
-	public final void setInternalState(IInternalState internalState) {
+	public final void setInternalState(CInternalState internalState) {
 		this.internalState = internalState;
 	}
 
@@ -130,7 +129,7 @@ public final class CSite implements Serializable {
 	 * This method returns internal state for current site.
 	 * @return internal state for current site.
 	 */
-	public final IInternalState getInternalState() {
+	public final CInternalState getInternalState() {
 		return internalState;
 	}
 
@@ -174,15 +173,15 @@ public final class CSite implements Serializable {
 		CLink currentLinkState = linkState;
 		CLink solutionLinkState = solutionSite.getLinkState();
 
-		IInternalState currentInternalState = internalState;
-		IInternalState solutionInternalState = solutionSite.getInternalState();
+		CInternalState currentInternalState = internalState;
+		CInternalState solutionInternalState = solutionSite.getInternalState();
 
 		if (!fullEquality)
 			return (currentLinkState.compare(solutionLinkState) && currentInternalState
 					.compareInternalStates(solutionInternalState));
 		else
 			return (currentLinkState.equalz(solutionLinkState) && currentInternalState
-					.fullEqualityInternalStates(solutionInternalState));
+					.equalz(solutionInternalState));
 
 	}
 	

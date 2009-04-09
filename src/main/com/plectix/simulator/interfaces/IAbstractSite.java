@@ -1,13 +1,14 @@
 package com.plectix.simulator.interfaces;
 
+import com.plectix.simulator.components.CInternalState;
 
 public interface IAbstractSite {
 	
-	public IInternalState getInternalState();
+	public CInternalState getInternalState();
 	
 	public int getNameId();
 	
-	public void setInternalState(IInternalState internalState);
+	public void setInternalState(CInternalState internalState);
 
 	public int getLinkIndex();
 

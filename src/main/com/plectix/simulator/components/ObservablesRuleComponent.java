@@ -6,32 +6,32 @@ import java.util.*;
 import com.plectix.simulator.interfaces.*;
 
 /**
- * This class describes observables of rule storage.
+ * This class implements rule observable. This one is the object which affected by fixed rule,
+ * which lets us keep an eye on that rule during the simulation.
  * In general we have kappa file line like
  * <br><br>
- * <code>'observableName'</code>,
- * where 
- * <br>
- * <li><code>observableName</code> - name of this observable rule</li>
+ * <code>%obs 'observableRuleName'</code>
+ * <br><br>
+ * where <code>observableRuleName</code> is the name of the fixed rule.<br>
+ * This line means that the rule with that name is now in observables.
  * @author avokhmin
  *
  */
+@SuppressWarnings("serial")
 public final class ObservablesRuleComponent implements IObservablesRuleComponent, Serializable {
 	private final CRule rule;
-	private final int nameID;
+	private final int id;
 	private final List<Long> countList = new ArrayList<Long>();
 	private long lastInjectionsQuantity = -1;
 	
 	/**
-	 * Constructor ObservablesRuleComponent<br>
-	 * For example, we have kappa file line such as :<br> 
-	 * <code>'name'</code> - This one means rule observable.<br>
-	 * @param rule given rule
-	 * @param nameID given name id
+	 * Constructor. Creates observable rule using existing rule.
+	 * @param rule rule to create component from
+	 * @param id id of this component in observables
 	 */
-	public ObservablesRuleComponent(CRule rule, int nameID) {
+	public ObservablesRuleComponent(CRule rule, int id) {
 		this.rule = rule;
-		this.nameID = nameID;
+		this.id = id;
 	}
 	
 	public final void updateLastValue() {
@@ -65,8 +65,8 @@ public final class ObservablesRuleComponent implements IObservablesRuleComponent
 		return rule.getName();
 	}
 
-	public final int getNameID() {
-		return nameID;
+	public final int getId() {
+		return id;
 	}
 
 	public double getCurrentState(CObservables obs) {
@@ -75,10 +75,6 @@ public final class ObservablesRuleComponent implements IObservablesRuleComponent
 
 	public String getStringItem(int index, CObservables obs) {
 		return countList.get(index).toString();
-	}
-
-	public int getMainAutomorphismNumber() {
-		return 0;
 	}
 
 	public boolean isUnique() {

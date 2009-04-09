@@ -2,61 +2,63 @@ package com.plectix.simulator.components;
 
 import java.io.Serializable;
 
-import com.plectix.simulator.interfaces.IInternalState;
 import com.plectix.simulator.simulator.ThreadLocalData;
 /**
- * Class implements Internal State of Site.
+ * This class implements internal state of fixed site.
+ * In fact, this is just a wrapping object for internal state's string, which we'll further call
+ * internal state's name.
  * @author avokhmin
  *
  */
 @SuppressWarnings("serial")
-public class CInternalState implements IInternalState, Serializable {
+public class CInternalState implements Serializable {
 
+	/**
+	 * This field represents internal state of default (i.e. empty) site, which is the one and only 
+	 */
 	public static final CInternalState EMPTY_STATE = new CInternalState(
 			CSite.NO_INDEX);
-	/**
-	 *	Means free state of InternalState.
-	 */
 	private static final int FREE_STATE = CSite.NO_INDEX;
 
-	/**
-	 * <code>{@link Integer}</code> value - nameId current InternalState.
-	 * If (nameId == CSite.NO_INDEX) or (nameId == -1), should to undeer
-	 */
 	private int nameId;
 
 	/**
-	 * Standard constructor of InternalState.
-	 * @param id - <code>{@link Integer}</code> value - nameId InternalState.
+	 * Constructor. Creates internal state by name.
+	 * @param id id of internal state's name in Name Dictionary
 	 */
 	public CInternalState(int id) {
 		this.nameId = id;
 	}
 
 	/**
-	 * Returns <tt>true</tt> value, if current InternalState hasn't get state (nameId = -1, Free InternalState), otherwise <tt>false</tt>.
+	 * This method indicates if current internal state represents an empty one, which has 
+	 * nameId == FREE_STATE == -1, i.e. there's no internal state in fact.
+	 * @return <tt>true</tt>, if current internal state represents an empty one, 
+	 * otherwise <tt>false</tt>.
 	 */
 	public final boolean isRankRoot() {
 		return nameId == FREE_STATE;
 	}
 
 	/**
-	 * Sets nameId current InternalState.
-	 * @param id - <code>{@link Integer}</code> value.
+	 * This method changes current nameId on the given one
+	 * @param id new value of this internal state's nameId
 	 */
 	public final void setNameId(int id) {
 		this.nameId = id;
 	}
 
 	/**
-	 * Returns <code>{@link Integer}</code> value - nameId current InternalState.
+	 * This method returns id of current internal state's name
+	 * @return current internal state's name id
 	 */
 	public final int getNameId() {
 		return nameId;
 	}
 
 	/**
-	 * Returns <code>{@link String}</code> value -  alphabetic representation method of current InternalState.
+	 * This method returns internal state's name
+	 * @return current internal state's name or "NO_INDEX" if this state's empty
 	 */
 	public final String getName() {
 		if(nameId == FREE_STATE)
@@ -65,7 +67,6 @@ public class CInternalState implements IInternalState, Serializable {
 	}
 
 	// TODO is this method needed ?
-	@Override
 	public final boolean equals(Object obj) {
 		if (this == obj) {
 			return true;
@@ -78,58 +79,43 @@ public class CInternalState implements IInternalState, Serializable {
 	
 	// TODO Comment
 	/**
-	 *	Examples:
-     * <blockquote><pre>
-     * A(x) - agent "A" with site "x", InternalState of site "x" does "FREE_STATE".
-     * A(x~p) - agent "A" with site "x", InternalState of site "x" doesn't "FREE_STATE".
-     * <p>
-     * this.nameId != FREE_STATE, solutionInternalState.nameId == FREE_STATE;
-     * this.compareInternalStates(solutionInternalState) returns "false"
-     * <p>
-     * this.nameId == FREE_STATE, solutionInternalState.nameId != FREE_STATE;
-     * this.compareInternalStates(solutionInternalState) returns "true"
-     * <p>
-     * this.nameId != solutionInternalState.nameId returns "false"
-     * <p>
-     * in a different way returns "true"
-     * </pre></blockquote>
+	 * This method tries to "insert" this internal state to the other one.<br><br>
+	 * Internal state p is insertable in state q if:
+     * <li>
+     * p is an empty state (empty state can be inserted to any other)
+     * </li><li>
+     * name id's of these sites are equal
+     * </li>
+     * Other ways lead to "false".
+     * </blockquote>
      * 
-     * @param solutionInternalState - <code>{@link IInternalState}</code> value - compares InternalState.
+     * @param solutionInternalState state to compare to 
+     * @return <tt>true</tt> if this state can be inserted to a given one, otherwise <tt>false</tt>
 	 */
-	public final boolean compareInternalStates(IInternalState solutionInternalState) {
-		if (this.nameId != FREE_STATE
-				&& solutionInternalState.getNameId() == FREE_STATE)
-			return false;
-		if (this.nameId == FREE_STATE
-				&& solutionInternalState.getNameId() != FREE_STATE)
+	public final boolean compareInternalStates(CInternalState solutionInternalState) {
+//		if (this.nameId != FREE_STATE
+//				&& solutionInternalState.getNameId() == FREE_STATE)
+//			return false;
+		if (this.nameId == FREE_STATE)
+//				&& solutionInternalState.getNameId() != FREE_STATE)
 			return true;
-		if (!(this.nameId == solutionInternalState
-				.getNameId()))
-			return false;
+//		if (!(this.nameId == solutionInternalState
+//				.getNameId()))
+//			return false;
 
-		return true;
+		return this.nameId == solutionInternalState.getNameId();
 	}
 	
 	/**
-	 *	Examples:
-     * <blockquote><pre>
-     * A(x) - agent "A" with site "x", InternalState of site "x" does "FREE_STATE".
-     * A(x~p) - agent "A" with site "x", InternalState of site "x" doesn't "FREE_STATE".
-     * <p>
-     * this.nameId == FREE_STATE, solutionInternalState.nameId == FREE_STATE;
-     * this.compareInternalStates(solutionInternalState) returns "true"
-     * <p>
-     * this.nameId == solutionInternalState.nameId returns "true"
-     * <p>
-     * in a different way returns "false"
-     * </pre></blockquote>
-	 * @param solutionInternalState - <code>{@link IInternalState}</code> value - compares InternalState.
+	 * This method checks this state for having the same name as the other one.
+	 * @param otherInternalState state to compare to
+	 * @return <tt>true</tt> if the states has similar names, otherwise <tt>false</tt>
 	 */
-	public final boolean fullEqualityInternalStates(IInternalState solutionInternalState) {
-		if (nameId == FREE_STATE
-				&& solutionInternalState.getNameId() == FREE_STATE)
-			return true;
-		if (nameId == solutionInternalState
+	public final boolean equalz(CInternalState otherInternalState) {
+//		if (nameId == FREE_STATE
+//				&& solutionInternalState.getNameId() == FREE_STATE)
+//			return true;
+		if (nameId == otherInternalState
 				.getNameId())
 			return true;
 

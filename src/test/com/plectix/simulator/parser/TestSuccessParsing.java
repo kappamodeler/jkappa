@@ -23,8 +23,8 @@ public class TestSuccessParsing {
 	public void testParseAgents() {
 		String fileName = myTestFileNamePrefix + "ParsePerturbationsTestFile";
 		Simulator mySimulator = new Simulator();
-		KappaFileReader reader = new KappaFileReader(fileName);
 		try {
+			KappaFileReader reader = new KappaFileReader(fileName);
 			myParser = new KappaSystemParser(reader.parse(), mySimulator.getSimulationData());
 		} catch(Exception e) {
 			myFailer.fail("File Reading Error : " + e);

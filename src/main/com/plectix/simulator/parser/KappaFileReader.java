@@ -13,7 +13,7 @@ public class KappaFileReader extends Parser<KappaFile> {
 	private static final String STRING_STORIFY_PREFIX = "%story"; // 8;
 	private static final String STRING_MOD_PREFIX = "%mod"; // 6;
 	
-	public KappaFileReader(String path) {
+	public KappaFileReader(String path) throws FileNotFoundException {
 		super(path);
 	}
 

@@ -3,15 +3,13 @@ package com.plectix.simulator.interfaces;
 import com.plectix.simulator.components.CObservables;
 
 /**
- * This class implements standard interface for Observable Components
- * (include general methods for Connected/Rule components).
+ * This interface describes observable component entity.
+ * In fact, it can be connected components or rule.
+ * @see CObservables
  * @author avokhmin
  *
  */
 public interface IObservablesComponent {
-//	public final static byte TYPE_CONNECTED_COMPONENT = 0;
-//	public final static byte TYPE_RULE_COMPONENT = 1;
-
 	public final static boolean CALCULATE_WITH_REPLASE_LAST = true;
 	public final static boolean CALCULATE_WITH_NOT_REPLASE_LAST = false;
 
@@ -35,16 +33,15 @@ public interface IObservablesComponent {
 	public String getLine();
 
 	/**
-	 * this methor returns the unique nameId of this observable group.
-	 * @return the unique nameId of this observable group.
+	 * This method returns unique id of this observable component
+	 * @return unique nameId of this observable component.
 	 */
-	public int getNameID();
+	public int getId();
 
 	/**
 	 * This method returns current state of observable. <br>
-	 * If this observable for rule, then returns current rule rate.<br> 
-	 * If this observable for connected components group (may be one), 
-	 * then returns multiply injections.
+	 * If this observable is for the rule, then state means this rule's rate.<br> 
+	 * If this observable is for connected components group, then returns multiply injections.
 	 * @param obs observables storage. 
 	 * @return current state of observable.
 	 */

@@ -1,18 +1,10 @@
 package com.plectix.simulator.components.contactMap;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.action.CActionType;
-import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CLinkRank;
-import com.plectix.simulator.components.CLinkStatus;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
-import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-import com.plectix.simulator.interfaces.IInternalState;
+import com.plectix.simulator.components.*;
+import com.plectix.simulator.interfaces.*;
 
 public class UCorrelationAbstractAgent {
 	private IContactMapAbstractAgent fromAgent;
@@ -247,11 +239,11 @@ public class UCorrelationAbstractAgent {
 	private void doModify(IContactMapAbstractAgent newAgent,
 			CContactMapAtomicAction type) {
 		Integer key = type.getSiteFrom().getNameId();
-		IInternalState stateTo = toAgent.getSitesMap().get(key)
+		CInternalState stateTo = toAgent.getSitesMap().get(key)
 				.getInternalState();
 		if (stateTo.getNameId() == CSite.NO_INDEX)
 			return;
-		IInternalState stateNew = newAgent.getSitesMap().get(key)
+		CInternalState stateNew = newAgent.getSitesMap().get(key)
 				.getInternalState();
 		stateNew.setNameId(stateTo.getNameId());
 	}
