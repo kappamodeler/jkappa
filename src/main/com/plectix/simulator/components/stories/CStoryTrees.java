@@ -665,7 +665,8 @@ public final class CStoryTrees {
 						while (siteIterator.hasNext()) {
 							int siteKey = siteIterator.next();
 							IStoriesSiteStates sss = sitesMap.get(siteKey);
-							if (sss.getAfterState().getIdLinkAgent() == agentIDToDelete)
+//							if (sss.getAfterState().getIdLinkAgent() == agentIDToDelete)
+							if (sss.getAfterState()!= null && sss.getAfterState().getIdLinkAgent() == agentIDToDelete)
 								sss.getAfterState().setIdLinkAgent(agentID);
 							if (sss.getBeforeState().getIdLinkAgent() == agentIDToDelete)
 								sss.getBeforeState().setIdLinkAgent(agentID);
