@@ -6,7 +6,7 @@ Here are some important information about this project:
 
 *) Javadocs are also automatically built by the integration server so they are updated each time any project file is committed to SVN. Everyone in Plectix has access to them at https://integration.plectix.com/hudson/job/jsim/javadoc/index.html
 
-*) The source folders are src/main and src/test. The source folder src/main should be self contained. In other words, no class under src/main should depend on a class under src/test. 
+*) The source folders are src/main and src/test. The source folder src/main should be self contained. In other words, no class under src/main should depend on a class under src/test. The classes under src/test are test classes and their utility classes which are not used by src/main.
 
 *) The file paths must be specified with caution. Plectix uses Mac OS X on its desktops and Linux OS on its servers (Windows is not the only OS in the world!). Java provides File.separatorChar character which should be used instead of '/' or '\'. 
 
@@ -26,3 +26,4 @@ and then check the debug level before output call. For example, for debugging:
        LOGGER.debug("Rule: " + rule.getName());
     }
 
+*) The file and folder names should not include the following characters: " &\/`'!$^*()[]<>?" (the first one is white space).
