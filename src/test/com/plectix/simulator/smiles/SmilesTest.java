@@ -11,14 +11,14 @@ import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.util.DecimalFormatter;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.PlxLogger;
+import com.plectix.simulator.util.PlxTimer;
 
 public class SmilesTest {
 
 	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(SmilesTest.class);
-	
-	private static final int SIZE_MULTIPLIER = 2;
 	
 	private CConnectedComponent ccomponent;
 	private String uniqueKappaString;
@@ -58,10 +58,22 @@ public class SmilesTest {
 			checkit(list, fails);
 			
 		} else if (size > 2) {
-			for (int i = 0; i < SIZE_MULTIPLIER * size; i++) {
+			int numberOfTrials = size * size;
+			PlxTimer plxTimer = new PlxTimer();
+			plxTimer.startTimer();
+			for (int i = 0; i < numberOfTrials; i++) {
 				Collections.shuffle(list);
 				if (!checkit(list, fails))
 					break;
+			}
+			
+			plxTimer.stopTimer();
+			
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("Timing: CC has " + size + " agents -> " + numberOfTrials 
+						+ " iterations took "+ DecimalFormatter.format(1000.0 * plxTimer.getThreadTimeInSeconds(), 6) + " msecs -> " 
+						+ DecimalFormatter.format(1000.0 * plxTimer.getThreadTimeInSeconds()/numberOfTrials, 6) + " msecs/string -> "
+						+ DecimalFormatter.format(1000.0 * plxTimer.getThreadTimeInSeconds()/numberOfTrials/size, 6) + " msecs/string/agent ");
 			}
 		}
 		return fails;

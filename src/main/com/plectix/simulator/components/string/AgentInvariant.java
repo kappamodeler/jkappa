@@ -75,12 +75,13 @@ public final class AgentInvariant {
 
 		neighborAgentList = new ArrayList<AgentInvariant>();
 		
-		for (CSite site : agent.getSites()) {
+		for (CSite site : getSortedSites()) {
 			if (site.getLinkState().getStatusLink() == CLinkStatus.BOUND) {
 				AgentInvariant neighbor = agentToAgentInvariantMap.get(site.getLinkState().getConnectedSite().getAgentLink()); 
 				if (neighbor == null) {
 					throw new RuntimeException("Could not find neighbor Agent in map!");
 				}
+				// all the neighbors are sorted in the alphabetical order of the sites they are connected to
 				neighborAgentList.add(neighbor);
 			}
 		}
@@ -96,8 +97,22 @@ public final class AgentInvariant {
 		
 		productOfNeighborPrimes = 1;
 		for (AgentInvariant agentInvariant : neighborAgentList) {
-			productOfNeighborPrimes *= PrimeNumbers.FIRST_8242[agentInvariant.getRankNew() - 1];
+			productOfNeighborPrimes *= PrimeNumbers.FIRST_8242[agentInvariant.getRankNew() + agentInvariant.getNeighborRank(this) - 1];
 		}
+	}
+
+	/**
+	 * Returns the index of this neighbor in the neighbor list
+	 * 
+	 * @param neighborAgent
+	 * @return
+	 */
+	private int getNeighborRank(AgentInvariant neighborAgent) {
+		final int index = neighborAgentList.indexOf(neighborAgent);
+		if (index == -1) {
+			throw new RuntimeException("Given agent is not a neighbor!");
+		}
+		return index;
 	}
 
 	/**
@@ -311,6 +326,7 @@ public final class AgentInvariant {
 		public final int compare(AgentInvariant o1, AgentInvariant o2) {
 			int result = Double.compare(o1.neighborAgentList.size(), o2.neighborAgentList.size());
 			if (result != 0) {
+				// this case should never happen! but it doesn't hurt to have it here...
 				return result;
 			}
 				

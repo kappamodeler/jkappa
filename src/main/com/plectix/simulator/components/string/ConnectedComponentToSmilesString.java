@@ -16,7 +16,7 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.PlxLogger;
 
 /**
- * This class creates a unique String from a ConnectedComponent's list of Agents. 
+ * This class is Singleton that creates a unique String from a ConnectedComponent's list of Agents. 
  * 
  * <br><br>
  * Here is a brief description of the algorithm:
@@ -69,7 +69,7 @@ import com.plectix.simulator.util.PlxLogger;
  * In order to "break ties", the algorithm proceeds by doubling all ranks and reducing the rank of the first Agent 
  * with the equivalent rank by one. These new ranks are treated as a new invariant set, and the previous steps
  * of computing the product of prime numbers and resorting is repeated until there are no more equivalent
- * ranks.
+ * ranks. 
  * 
  * <br><br>
  * Some properties of the algorithm:
@@ -88,7 +88,7 @@ import com.plectix.simulator.util.PlxLogger;
  * </ul>
  * 
  * <br>
- * The class doesn't have any data member and uses static private methods only. Therefore it can (and I think should) be used as a singleton.
+ * The class doesn't have any data member and uses static private methods only. Therefore the access to the public method is through a Singleton.
  * 
  * <br><br>
  * 
@@ -254,6 +254,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 		// The SMILES algorithm is not explained well here...
 		// It doubles all ranks and reduces the value of the first node, which is tied, by one.
 		// The set is then treated as a new invariant set...
+		// But here biology differs from chemistry, we have site names which makes the problem harder in some ways
 
 		List<AgentInvariant> equivalantAgents = new ArrayList<AgentInvariant>();
 		int nodetoTieIndex = -1;
@@ -262,8 +263,9 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 			
 			if (nodetoTieIndex == -1) {
 				if (AgentInvariant.AGENT_INVARIANT_RANK_COMPARATOR.compare(agentInvariantCurrent, agentInvariantList.get(i-1)) == 0) {
-					// this node is selected randomly cause all these nodes are symmetrical...
+					// this node is the first node in a series of symmetrical Agents...
 					nodetoTieIndex = i-1;
+					equivalantAgents.add(agentInvariantList.get(i-1));
 					equivalantAgents.add(agentInvariantCurrent);
 				}
 			} else {
@@ -275,42 +277,39 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 			}
 		}
 		
+		if (equivalantAgents.size() < 2) {
+			throw new RuntimeException("Unexpected number of equivalent Agents: " + equivalantAgents.size());
+		}
+		
+		// Let's double the ranks...
 		for (int i = 0; i < agentInvariantList.size(); i++) {
 			agentInvariantList.get(i).doubleRankNew();
 		}	
 		
-		// let's lower the rank of this node by one...
-		agentInvariantList.get(nodetoTieIndex).setRankNew(agentInvariantList.get(nodetoTieIndex).getRankNew() - 1);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug("----> breakTies: Number of agents with equivalent ranks: " + equivalantAgents.size() + " -> " + getRanksAsString(equivalantAgents));
+		}
 		
-		if (equivalantAgents.size() > 1) {
-			// we should differentiate them here!
+		// we should differentiate them here!
 
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug("----> breakTies: Number of agents with equivalent ranks: " + equivalantAgents.size() + " -> " + getRanksAsString(equivalantAgents));
-			}
-			
-			int previousRank = equivalantAgents.get(0).getRankNew();
-			sortAndComputeRanks(equivalantAgents, AgentInvariant.AGENT_INVARIANT_NEIGHBOR_SITE_COMPARATOR);
-			
-			if (equivalantAgents.get(0) == equivalantAgents.get(1)) {
-				LOGGER.fatal("----> We have equivalent ranks while breaking ties: " + getRanksAsString(equivalantAgents));
+		int previousRank = equivalantAgents.get(0).getRankNew();
+		sortAndComputeRanks(equivalantAgents, AgentInvariant.AGENT_INVARIANT_NEIGHBOR_SITE_COMPARATOR);
 
-				// restore ranks:
-				for (int i = 0; i < equivalantAgents.size(); i++) {
-					equivalantAgents.get(i).setRankNew(previousRank);
-				}
-			} else if (LOGGER.isDebugEnabled()) {
+		// let's lower the rank of the first node by one...
+		equivalantAgents.get(0).setRankNew(previousRank -1);
+		
+		for (int i = 1; i < equivalantAgents.size(); i++) {
+			equivalantAgents.get(i).setRankNew(previousRank);
+		}
+
+		if (LOGGER.isDebugEnabled()) {
+			if (equivalantAgents.get(0).getRankNew() == equivalantAgents.get(1).getRankNew()) {
+				LOGGER.debug("----> We have equivalent ranks while breaking ties: " + getRanksAsString(equivalantAgents));
+			} else {
 				LOGGER.debug("----> breakTies: Successfully differentiated: " + getRanksAsString(equivalantAgents));
-
-				equivalantAgents.get(0).setRankNew(previousRank);
-				for (int i = 1; i < equivalantAgents.size(); i++) {
-					equivalantAgents.get(i).setRankNew(previousRank+1);
-				}
-				for (int i = nodetoTieIndex + equivalantAgents.size() + 1; i < agentInvariantList.size(); i++) {
-					agentInvariantList.get(i).setRankNew(1 + agentInvariantList.get(i).getRankNew());
-				}
 			}
 		}
+
 	}
 
 	private static final void saveRanks(List<AgentInvariant> agentInvariantList) {
@@ -337,6 +336,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 	private static final boolean sortAndComputeRanks(List<AgentInvariant> agentInvariantList, Comparator<AgentInvariant> agentInvariantComparator) {
 		Collections.sort(agentInvariantList, agentInvariantComparator);
 		
+		boolean rankEquivalence = false;
 		int rankCounter = 1;
 		agentInvariantList.get(0).setRankTemp(rankCounter);
 		
@@ -344,9 +344,11 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 			AgentInvariant agentInvariantPrevious = agentInvariantList.get(i-1);
 			AgentInvariant agentInvariantCurrent = agentInvariantList.get(i);
 			
-			if (agentInvariantComparator.compare(agentInvariantPrevious, agentInvariantCurrent) != 0) {
+			if (agentInvariantComparator.compare(agentInvariantPrevious, agentInvariantCurrent) == 0) {
+				rankEquivalence = true;
+			} else {
 				// they are not equal so let's increase the rank
-				rankCounter++;
+				rankCounter += agentInvariantPrevious.getNumberOfConnections();
 			}
 			
 			agentInvariantCurrent.setRankTemp(rankCounter);
@@ -356,11 +358,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 			agentInvariant.setRankNew(agentInvariant.getRankTemp());
 		}
 		
-		if (agentInvariantList.size() == rankCounter) {
-			return false;
-		} else {
-			return true;
-		}
+		return rankEquivalence;
 	}
 	
 	private static final void computeNeighbors(List<AgentInvariant> agentInvariantList) {
