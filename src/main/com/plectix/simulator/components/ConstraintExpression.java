@@ -1,5 +1,11 @@
 package com.plectix.simulator.components;
 
+/**
+ * This class could be used to implements constraints.
+ * This feature is in progress now and probably this class will be removed 
+ * @author evlasov
+ *
+ */
 public class ConstraintExpression {
 	public final static byte TYPE_CONSTRAINT_EXPRESSION_EQUALS = 0;
 	public final static byte TYPE_CONSTRAINT_EXPRESSION_NOT_EQUALS = 1;

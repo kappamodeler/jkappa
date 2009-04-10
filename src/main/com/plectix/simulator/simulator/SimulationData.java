@@ -1005,7 +1005,7 @@ public class SimulationData {
 						.getSnapshotElements();
 				for (SnapshotElement se : snapshotElementList) {
 					Element species = doc.createElement("Species");
-					species.setAttribute("Kappa", se.getCcName());
+					species.setAttribute("Kappa", se.getComponentsName());
 					species.setAttribute("Number", String
 							.valueOf(se.getCount()));
 					snapshotElement.appendChild(species);

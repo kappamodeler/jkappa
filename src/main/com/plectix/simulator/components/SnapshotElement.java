@@ -4,60 +4,58 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.SimulationUtils;
 
 /**
- * Class implements snapshot element.
+ * This class implements snapshot element entity.
  * @author avokhmin
  *
  */
 public final class SnapshotElement {
 	private int count;
-	private IConnectedComponent cc;
-	private String ccName;
+	private IConnectedComponent component;
+	private final String ccName;
 
 	/**
-	 * Default constructor.
-	 * @param cc2 given ConnectedComponent
-	 * @param isOcamlStyleObsName type creates name's of new SnapshotElement.
+	 * Constructor. Creates snapshot-element with existing connected component
+	 * @param connectedComponent given ConnectedComponent
+	 * @param isOcamlStyleObsName <tt>true</tt> if we use O'caml styled observables names, 
+	 * otherwise <tt>false</tt>
 	 */
-	public SnapshotElement(IConnectedComponent cc2, boolean isOcamlStyleObsName) {
+	public SnapshotElement(IConnectedComponent connectedComponent, boolean isOcamlStyleObsName) {
 		count = 1;
-		this.cc = cc2;
-		this.cc.initSpanningTreeMap();
-		parseCC(isOcamlStyleObsName);
+		component = connectedComponent;
+		component.initSpanningTreeMap();
+		ccName = SimulationUtils.printPartRule(component, new int[] {0}, isOcamlStyleObsName);
 	}
 	
 	/**
-	 * This method returns count SnapshotElement. 
+	 * This method returns counter of this snapshot element
+	 * @return counter of this snapshot element
 	 */
 	public final int getCount() {
 		return count;
 	}
 
 	/**
-	 * This method returns name of current SnapshotElement. 
+	 * This method returns name of current snapshot element
+	 * @return name of current snapshot element
 	 */
-	public final String getCcName() {
+	public final String getComponentsName() {
 		return ccName;
 	}
 
 	/**
-	 * This method creates name of current SnapshotElement.
-	 * @param isOcamlStyleObsName type creates name's of new SnapshotElement.
+	 * This method compares current connected component with the given one and
+	 * increments counter for this snapshot element, if they are Automorphic's  
+	 * @param connectedComponent given connected component
+	 * @return <tt>true</tt> if given connected component is automorphic to current,  
+	 * otherwise <tt>false</tt>
 	 */
-	private final void parseCC(boolean isOcamlStyleObsName) {
-		ccName = SimulationUtils.printPartRule(cc, new int[] {0}, isOcamlStyleObsName);
-	}
-
-	/**
-	 * This method compare current connected component with given and Up "count", if they are Automorphic's  
-	 * @param ccEx given connected component
-	 * @return <tt>true</tt> if given connected component Automorphic's current,  otherwise <tt>false</tt>
-	 */
-	public final boolean exists(IConnectedComponent ccEx) {
-		if (cc == ccEx)
+	public final boolean exists(IConnectedComponent connectedComponent) {
+		if (component == connectedComponent)
 			return true;
-		ccEx.initSpanningTreeMap();
+		connectedComponent.initSpanningTreeMap();
 		//if (cc.isAutomorphism(ccEx.getAgents().get(0))) {
-		if (cc.unify(ccEx.getAgents().get(0)) && ccEx.unify(cc.getAgents().get(0))) {
+		if (component.unify(connectedComponent.getAgents().get(0)) 
+				&& connectedComponent.unify(component.getAgents().get(0))) {
 			count++;
 			return true;
 		}
@@ -66,10 +64,10 @@ public final class SnapshotElement {
 	}
 
 	/**
-	 * This method sets given connected component to current SnapshotElement.
-	 * @param cc given connected component.
+	 * This method sets connected component of this snapshot element.
+	 * @param component new values of connected component.
 	 */
-	public final void setConnectedComponent(IConnectedComponent cc) {
-		this.cc = cc;
+	public final void eraseConnectedComponent() {
+		component = null;
 	}
 }

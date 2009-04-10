@@ -58,7 +58,7 @@ public final class CSnapshot {
 
 		ccList.clear();
 		for (SnapshotElement se : snapshotElements)
-			se.setConnectedComponent(null);
+			se.eraseConnectedComponent();
 	}
 
 	/**

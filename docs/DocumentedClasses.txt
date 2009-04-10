@@ -15,12 +15,11 @@ Classes with full javadoc
 - com.plectix.simulator.components.CSnapshot
 - com.plectix.simulator.components.CSpanningTree
 - com.plectix.simulator.components.ObservablesRuleComponent
+- com.plectix.simulator.components.SnapshotElement
 --------------------------------------------------
 
 these ones are unfinished and need to be checked :
 
-- ObservablesRuleComponent
-- SnapshotElement
 - CPerturbationType
 - CPerturbation
 - com.plectix.simulator.components.perturbations.CRulePerturbation

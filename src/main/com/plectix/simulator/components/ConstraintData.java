@@ -3,6 +3,12 @@ package com.plectix.simulator.components;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class could be used to implements constraints.
+ * This feature is in progress now and probably this class will be removed 
+ * @author evlasov
+ *
+ */
 public class ConstraintData {
 	public final static byte TYPE_CONSTRAINT_NORMAL = 0;
 	public final static byte TYPE_CONSTRAINT_NO_POLY = 1;
