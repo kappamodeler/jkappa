@@ -122,11 +122,11 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 		return unique;
 	}
 
-	public final long getLongItem(int index, CObservables obs) {
+	public final double getItem(int index, CObservables obs) {
 		if (mainAutomorphismNumber == ObservablesConnectedComponent.NO_INDEX) {
 			return countList.get(index);
 		} else
-			return obs.getComponentList().get(mainAutomorphismNumber).getLongItem(
+			return obs.getComponentList().get(mainAutomorphismNumber).getItem(
 					index, obs);
 	}
 }

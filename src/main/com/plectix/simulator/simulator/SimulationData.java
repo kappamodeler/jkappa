@@ -1302,9 +1302,9 @@ public class SimulationData {
 		for (IObservablesConnectedComponent cc : obs
 				.getConnectedComponentList())
 			if (cc.getId() == oCC.getId())
-				value *= cc.getLongItem(index, obs);
+				value *= cc.getItem(index, obs);
 
-		return Long.valueOf(value).toString();
+		return Double.valueOf(value).toString();
 	}
 
 	/**

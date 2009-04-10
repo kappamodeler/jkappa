@@ -61,7 +61,7 @@ public interface IObservablesComponent {
 	 * @param obs observables storage.
 	 * @return current state of observable on given <b>step</b>
 	 */
-	public long getLongItem(int step, CObservables obs);
+	public double getItem(int step, CObservables obs);
 
 	/**
 	 * This method updates last state of observable. Util method.

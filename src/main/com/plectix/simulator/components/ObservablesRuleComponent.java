@@ -21,8 +21,8 @@ import com.plectix.simulator.interfaces.*;
 public final class ObservablesRuleComponent implements IObservablesRuleComponent, Serializable {
 	private final CRule rule;
 	private final int id;
-	private final List<Long> countList = new ArrayList<Long>();
-	private long lastInjectionsQuantity = -1;
+	private final List<Double> countList = new ArrayList<Double>();
+	private double lastInjectionsQuantity = -1;
 	
 	/**
 	 * Constructor. Creates observable rule using existing rule.
@@ -42,8 +42,8 @@ public final class ObservablesRuleComponent implements IObservablesRuleComponent
 	 * This method calculates current state of observables. Util method.
 	 * @return current state of observables.
 	 */
-	private final long getCount() {
-		long count = 1;
+	private final double getCount() {
+		double count = rule.getRate();
 
 		for (IConnectedComponent cc : rule.getLeftHandSide())
 			count *= cc.getInjectionsList().size();
@@ -81,8 +81,7 @@ public final class ObservablesRuleComponent implements IObservablesRuleComponent
 		return true;
 	}
 
-	public long getLongItem(int index, CObservables obs) {
+	public double getItem(int index, CObservables obs) {
 		return countList.get(index);
 	}
-
 }
