@@ -20,6 +20,8 @@ public class SmilesTest {
 
 	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(SmilesTest.class);
 	
+	private static final int MAXIMUM_NUMBER_OF_SHUFFLES = 1000;
+	
 	private CConnectedComponent ccomponent;
 	private String uniqueKappaString;
 	private ConnectedComponentToSmilesString connectedComponentToSmilesString;
@@ -58,7 +60,7 @@ public class SmilesTest {
 			checkit(list, fails);
 			
 		} else if (size > 2) {
-			int numberOfTrials = size * size;
+			int numberOfTrials = Math.min(size * size, MAXIMUM_NUMBER_OF_SHUFFLES);
 			PlxTimer plxTimer = new PlxTimer();
 			plxTimer.startTimer();
 			for (int i = 0; i < numberOfTrials; i++) {
