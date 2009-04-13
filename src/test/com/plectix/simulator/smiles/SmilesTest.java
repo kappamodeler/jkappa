@@ -12,7 +12,6 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.DecimalFormatter;
-import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.PlxTimer;
 
@@ -25,7 +24,6 @@ public class SmilesTest {
 	private CConnectedComponent ccomponent;
 	private String uniqueKappaString;
 	private ConnectedComponentToSmilesString connectedComponentToSmilesString;
-	private Failer failer = new Failer();
 
 	public SmilesTest(CConnectedComponent cc) {
 		if (LOGGER.isDebugEnabled()) {
@@ -82,15 +80,9 @@ public class SmilesTest {
 		if (!smilesString.equals(uniqueKappaString)){
 			String message = "\ntestAgents:\nexpected\t" + uniqueKappaString + ",\nbut\t\t"	+ smilesString + "\n";
 			fails.append(message);
-			if (LOGGER.isDebugEnabled()) {
-				LOGGER.debug(message + " -> checkit returns false!");
-			}
 			return false;
 		}
 		
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("checkit returns true");
-		}
 		return true;
 	}
 	
@@ -120,10 +112,6 @@ public class SmilesTest {
 					  ",\nbut\t\t"	+ smilesString + "\n");
 		}
 
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug("testLinkIndexes returns " + fails.toString());
-		}
-		
 		return fails.toString();
 	}
 
