@@ -3,14 +3,15 @@ package com.plectix.simulator.components.solution;
 import java.util.*;
 
 import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.interfaces.ISolution;
 
 public class SuperStorage implements IStorage {
-	private Map<String, Set<SuperSubstance>> myStorage = new TreeMap<String, Set<SuperSubstance>>();
-
-	private List<SuperSubstance> myComponents = new ArrayList<SuperSubstance>();
+	private Map<String, SuperSubstance> myStorage = new TreeMap<String, SuperSubstance>();
+	
+//	private List<SuperSubstance> myComponents = new ArrayList<SuperSubstance>();
 
 	// private final HashMap<Long, CAgent> agentMap = new HashMap<Long,
 	// CAgent>();;
@@ -21,28 +22,32 @@ public class SuperStorage implements IStorage {
 	}
 
 	public void addSuperSubstance(SuperSubstance substanceToAdd) {
-		myComponents.add(substanceToAdd);
-		String hash = substanceToAdd.getComponent().getHash();
-		Set<SuperSubstance> set = myStorage.get(hash);
-		if (set == null) {
-			set = new HashSet<SuperSubstance>();
-			set.add(substanceToAdd);
-			myComponents.add(substanceToAdd);
-			myStorage.put(hash, set);
-		} else {
-			boolean found = false;
-			for (SuperSubstance substance : set) {
-				if (substance.matches(substanceToAdd.getComponent())) {
-					substance.add();
-					found = true;
-					break;
-				}
-			}
-			if (!found) {
-				set.add(substanceToAdd);
-				myComponents.add(substanceToAdd);
-			}
+//		myComponents.add(substanceToAdd);
+		String hash = ConnectedComponentToSmilesString.getInstance()
+			.toUniqueString(substanceToAdd.getComponent());
+		if (myStorage.get(hash) == null) {
+			myStorage.put(hash, substanceToAdd);
 		}
+//		Set<SuperSubstance> set = myStorage.get(hash);
+//		if (set == null) {
+//			set = new HashSet<SuperSubstance>();
+//			set.add(substanceToAdd);
+//			myComponents.add(substanceToAdd);
+//			myStorage.put(hash, set);
+//		} else {
+//			boolean found = false;
+//			for (SuperSubstance substance : set) {
+//				if (substance.matches(substanceToAdd.getComponent())) {
+//					substance.add();
+//					found = true;
+//					break;
+//				}
+//			}
+//			if (!found) {
+//				set.add(substanceToAdd);
+//				myComponents.add(substanceToAdd);
+//			}
+//		}
 	}
 	
 	public void addConnectedComponent(IConnectedComponent component) {
@@ -50,16 +55,18 @@ public class SuperStorage implements IStorage {
 	}
 
 	public void removeConnectedComponent(IConnectedComponent component) {
-		String hash = component.getHash();
-		Set<SuperSubstance> set = myStorage.get(hash);
-		if (set != null) {
-			for (SuperSubstance substance : set) {
-				if (substance.matches(component)) {
-					substance.extract();
-					break;
-				}
-			}
-		}
+		String hash = ConnectedComponentToSmilesString.getInstance().toUniqueString(component);
+		SuperSubstance substance = myStorage.remove(hash);
+		substance.extract();
+//		Set<SuperSubstance> set = myStorage.get(hash);
+//		if (set != null) {
+//			for (SuperSubstance substance : set) {
+//				if (substance.matches(component)) {
+//					substance.extract();
+//					break;
+//				}
+//			}
+//		}
 	}
 
 	public void clear() {
@@ -68,10 +75,8 @@ public class SuperStorage implements IStorage {
 
 	public List<IConnectedComponent> split() {
 		List<IConnectedComponent> list = new ArrayList<IConnectedComponent>();
-		for (Set<SuperSubstance> set : myStorage.values()) {
-			for (SuperSubstance substance : set) {
-				list.add(substance.getComponent());
-			}
+		for (SuperSubstance substance : myStorage.values()) {
+			list.add(substance.getComponent());
 		}
 		return list;
 	}
@@ -99,7 +104,8 @@ public class SuperStorage implements IStorage {
 	public void applyRule(RuleApplicationPool pool) {
 	}
 
-	public List<SuperSubstance> getComponents() {
-		return Collections.unmodifiableList(myComponents);
+	public Collection<SuperSubstance> getComponents() {
+//		return Collections.unmodifiableList(myComponents);
+		return Collections.unmodifiableCollection(myStorage.values());
 	}
 }

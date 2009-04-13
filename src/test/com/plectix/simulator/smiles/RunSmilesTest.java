@@ -51,7 +51,8 @@ public class RunSmilesTest{
              	 "tworings",  
              	 "polymer", 
              	 "branchstructure",
-             	 "polyhedron"
+             	 "polyhedron",
+    			 "fullerene"
              	 };
     	 List<CConnectedComponent> cclist;
     	 Collection<Object[]> data = new ArrayList<Object[]>();

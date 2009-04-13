@@ -9,12 +9,6 @@ import com.plectix.simulator.components.solution.SuperSubstance;
 public interface IConnectedComponent extends ISolutionComponent {
 
 	/**
-	 * This method returns string representation of this connected component  
-	 * @return string representation of this connected component
-	 */
-	public String getHash();
-
-	/**
 	 * Sets parent super substance
 	 * @param superSubstance new parent super substance
 	 */

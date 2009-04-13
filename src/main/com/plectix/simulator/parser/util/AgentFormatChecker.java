@@ -25,8 +25,14 @@ package com.plectix.simulator.parser.util;
 			line = line.substring(0, line.length() - 1);
 		}
 
-		if (!line.matches(PATTERN_LINE)) {
-			return false;
+		String[] agents = line.split("\\)");
+		for (String agent : agents) {
+			if (agent.trim().startsWith(",")) {
+				agent = agent.substring(1);
+			}
+			if (!(agent.trim() + ")").matches(PATTERN_LINE_AGENT)) {
+				return false;
+			}
 		}
 		return true;
 	}

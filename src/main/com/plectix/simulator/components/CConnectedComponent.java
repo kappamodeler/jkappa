@@ -431,31 +431,31 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 
 	// -----------------------hash, toString, equals-----------------------------
 
-	/**
-	 * This methods takes agentNames in alphabetical order as a String, then
-	 * allsiteNames in this order as String too and then concatenates these
-	 * Strings.
-	 */
-	//TODO IMPLEMENT
-	public String getHash() {
-		StringBuffer sb = new StringBuffer();
-//		List<String> siteNames = new ArrayList<String>();
-//		// TreeMap means this collection sorted by key anytime
-//		Map<String, String> agentStrings = new TreeMap<String, String>();
-//		for (CAgent agent : agentList) {
-//			StringBuffer sb = new StringBuffer();
-//			for (CSite site : agent.getSites()) {
-//				siteNames.add(site.getName());
-//			}
-//			Collections.sort(siteNames);
-//			for (CSite site : agent.getSites()) {
-//				sb.append(site.getName());
-//			}
-//			agentStrings.put(agent.getName(), sb.toString());
-//		}
-//		for (String key : agentStrings.keySet()) {
-//			sb.append(key + agentStrings.get(key));
-//		}
-		return sb.toString();
-	}
+//	/**
+//	 * This methods takes agentNames in alphabetical order as a String, then
+//	 * allsiteNames in this order as String too and then concatenates these
+//	 * Strings.
+//	 */
+//	//TODO IMPLEMENT
+//	public String getHash() {
+//		StringBuffer sb = new StringBuffer();
+////		List<String> siteNames = new ArrayList<String>();
+////		// TreeMap means this collection sorted by key anytime
+////		Map<String, String> agentStrings = new TreeMap<String, String>();
+////		for (CAgent agent : agentList) {
+////			StringBuffer sb = new StringBuffer();
+////			for (CSite site : agent.getSites()) {
+////				siteNames.add(site.getName());
+////			}
+////			Collections.sort(siteNames);
+////			for (CSite site : agent.getSites()) {
+////				sb.append(site.getName());
+////			}
+////			agentStrings.put(agent.getName(), sb.toString());
+////		}
+////		for (String key : agentStrings.keySet()) {
+////			sb.append(key + agentStrings.get(key));
+////		}
+//		return sb.toString();
+//	}
 }
