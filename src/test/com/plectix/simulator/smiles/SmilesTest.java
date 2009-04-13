@@ -42,12 +42,7 @@ public class SmilesTest {
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug("uniqueKappaString " + uniqueKappaString);
 		}
-		if(size == 1) {
-//			testSites();
-		}
-		else {
-			message = testAgents(size).toString()+ testLinkIndexes();
-		}
+		message = testAgents(size).toString()+ testLinkIndexes();
 		return message;
 		
 	}
@@ -97,32 +92,6 @@ public class SmilesTest {
 			LOGGER.debug("checkit returns true");
 		}
 		return true;
-	}
-	
-	private void testSites() {
-		int max = 0;
-		for (CAgent agent : ccomponent.getAgents()) {
-			if (max < agent.getSites().size())
-				max = agent.getSites().size();
-		}
-		for (int i = 0; i < max; i++) {
-			List<CAgent> list = new ArrayList<CAgent>();
-			for (CAgent agent : ccomponent.getAgents()) {
-				List<CSite> sites = copy(new ArrayList<CSite>(agent.getSites()));
-				Collections.shuffle(sites);
-				CAgent a = new CAgent(agent.getNameId(), 1);
-
-				for (int j = 0; j < sites.size(); j++) {
-					a.addSite(sites.get(j));
-				}
-				list.add(a);
-			}
-			String smilesString = connectedComponentToSmilesString
-					.toUniqueString(new CConnectedComponent(list));
-			failer.assertEquals("\n" + uniqueKappaString + ",\n"
-					+ smilesString, uniqueKappaString, smilesString);
-		}
-
 	}
 	
 	private String testLinkIndexes() {

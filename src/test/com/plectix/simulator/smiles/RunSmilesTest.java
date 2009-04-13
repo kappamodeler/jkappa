@@ -45,12 +45,12 @@ public class RunSmilesTest{
 	 @Parameters
      public static Collection<Object[]> data() {
     	 String[] files = new String[] { 
-    			 "singleagent", 
-             	 "twoagents", 
+    			 "twoagents", 
              	 "ring", 
              	 "tworings",  
              	 "polymer", 
              	 "branchstructure",
+             	 "cubane",
              	 "polyhedron",
     			 "fullerene"
              	 };
