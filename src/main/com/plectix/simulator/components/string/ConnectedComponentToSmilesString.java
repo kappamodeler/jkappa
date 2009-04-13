@@ -229,12 +229,12 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 		    		
 		    		if (statusLink == CLinkStatus.BOUND) {
 		    			if (site.getLinkIndex() == -1) {
-		    				// the initial count is zero so let's increment it
-		    				linkIndexCounter++;
 		    				// let's now set this site's link index
 		    				site.setLinkIndex(linkIndexCounter);
 		    				// let's find the site we are bound to and set its index too..
 			    			linkState.getConnectedSite().setLinkIndex(linkIndexCounter);
+		    				// let's increment the link count:
+		    				linkIndexCounter++;
 		    			} 
 		    			// let's dump our link index:
 		    			stringBuffer.append("!" + site.getLinkIndex());
