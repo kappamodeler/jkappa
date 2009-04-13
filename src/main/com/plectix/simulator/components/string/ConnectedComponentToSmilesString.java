@@ -122,12 +122,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 		
 		if (agentInvariantList.size() == 1) {
 			// there is only one agent so we don't need any ranking!
-			try {
 			return toKappa(agentInvariantList);
-			}catch(Exception e){
-				System.out.println("noeay");
-				return "NOWAI";
-			}
 		}
 		
 		// The following sets the new ranks for each AgentInvariant
