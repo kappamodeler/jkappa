@@ -52,7 +52,8 @@ public class RunSmilesTest{
              	 "branchstructure",
              	 "cubane",
              	 "polyhedron",
-    			 "fullerene"
+    			 "fullerene", 
+    			 "fusedrings"
              	 };
     	 List<CConnectedComponent> cclist;
     	 Collection<Object[]> data = new ArrayList<Object[]>();
@@ -74,7 +75,7 @@ public class RunSmilesTest{
     	 cc = c;
     	 line = linecount;
     	 filepath = filename;
-    	 SimulationMain.initializeLogging();
+//    	 SimulationMain.initializeLogging();
 	 }
 
 	public static List<CConnectedComponent> readFile(String filepath) {
