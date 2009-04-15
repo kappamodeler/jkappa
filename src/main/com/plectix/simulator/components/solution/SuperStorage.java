@@ -7,6 +7,7 @@ import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 
 public class SuperStorage implements IStorage {
 	private Map<String, SuperSubstance> myStorage = new TreeMap<String, SuperSubstance>();
@@ -21,52 +22,33 @@ public class SuperStorage implements IStorage {
 		mySolution = solution;
 	}
 
-	public void addSuperSubstance(SuperSubstance substanceToAdd) {
-//		myComponents.add(substanceToAdd);
+	public void tryAdd(SuperSubstance substanceToAdd) {
 		String hash = ConnectedComponentToSmilesString.getInstance()
 			.toUniqueString(substanceToAdd.getComponent());
 		if (myStorage.get(hash) == null) {
 			myStorage.put(hash, substanceToAdd);
 		}
-//		Set<SuperSubstance> set = myStorage.get(hash);
-//		if (set == null) {
-//			set = new HashSet<SuperSubstance>();
-//			set.add(substanceToAdd);
-//			myComponents.add(substanceToAdd);
-//			myStorage.put(hash, set);
-//		} else {
-//			boolean found = false;
-//			for (SuperSubstance substance : set) {
-//				if (substance.matches(substanceToAdd.getComponent())) {
-//					substance.add();
-//					found = true;
-//					break;
-//				}
-//			}
-//			if (!found) {
-//				set.add(substanceToAdd);
-//				myComponents.add(substanceToAdd);
-//			}
-//		}
+	}
+	
+	public void addAndReplace(SuperSubstance substanceToAdd) {
+		String hash = ConnectedComponentToSmilesString.getInstance()
+			.toUniqueString(substanceToAdd.getComponent());
+		SuperSubstance previousEntry = myStorage.get(hash);
+		if (previousEntry == null) {
+			myStorage.put(hash, substanceToAdd);
+		} else {
+			previousEntry.add(substanceToAdd.getQuantity());
+		}
 	}
 	
 	public void addConnectedComponent(IConnectedComponent component) {
-		addSuperSubstance(new SuperSubstance(component));
+		tryAdd(new SuperSubstance(component));
 	}
 
 	public void removeConnectedComponent(IConnectedComponent component) {
 		String hash = ConnectedComponentToSmilesString.getInstance().toUniqueString(component);
 		SuperSubstance substance = myStorage.remove(hash);
 		substance.extract();
-//		Set<SuperSubstance> set = myStorage.get(hash);
-//		if (set != null) {
-//			for (SuperSubstance substance : set) {
-//				if (substance.matches(component)) {
-//					substance.extract();
-//					break;
-//				}
-//			}
-//		}
 	}
 
 	public void clear() {
@@ -83,8 +65,9 @@ public class SuperStorage implements IStorage {
 
 	public IConnectedComponent extractComponent(CInjection inj) {
 		SuperSubstance image = inj.getSuperSubstance();
-		if (image != null) {
+		if (image != null && !image.isEmpty()) {
 			IConnectedComponent component = this.extract(image);
+			component.burnInjections();
 			return component;
 		} else {
 			return null;
@@ -95,12 +78,17 @@ public class SuperStorage implements IStorage {
 		if (!image.isEmpty()) {
 			IConnectedComponent component = image.extract();
 			image.setComponent(mySolution.cloneConnectedComponent(component));
+			setInjectionsForTheRestOfSubstance(image);
 			return component;
 		} else {
 			return null;
 		}
 	}
 
+	private void setInjectionsForTheRestOfSubstance(SuperSubstance substance) {
+		(new InjectionsBuilder(mySolution.getKappaSystem())).build(substance);
+	}
+	
 	public void applyRule(RuleApplicationPool pool) {
 	}
 

@@ -139,22 +139,4 @@ public class TestContactMap{
 		}
 		return false;
 	}
-
-
-	private void printAgents(ArrayList<Agent> agents) {
-		for (Agent agent : agents) {
-			System.out.println("<Agent Name = " + agent.getName() + " >");
-			for (Site site : agent.getSites().getList()) {
-				System.out.println("  <Site Name = " + site.getName() + 
-						" CanChangeState = " + site.getCanChangeState() +  
-						" CanBeBound = " + site.getCanBeBound() + " >");
-				for (Integer id : site.getRules()) {
-					System.out.println("    <Rule Id = " + id + " >");
-				}
-				System.out.println("</Site>");
-			}
-			System.out.println("</Agent>");
-		}
-	}
-
 }

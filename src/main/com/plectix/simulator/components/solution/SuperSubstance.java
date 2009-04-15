@@ -52,6 +52,10 @@ public class SuperSubstance implements ISolutionComponent {
 		myQuantity++;
 	}
 	
+	public void add(long quant) {
+		myQuantity += quant;
+	}
+	
 	public boolean matches(IConnectedComponent component) {
 		return myComponent.equals(component);
 	}

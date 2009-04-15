@@ -396,6 +396,14 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return Collections.unmodifiableCollection(injectionsList.values());
 	}
 
+	public int getCommonPower() {
+		int commonPower = 0;
+		for (CInjection inj : injectionsList.values()) {
+			commonPower += inj.getPower();
+		}
+		return commonPower;
+	}
+	
 	/**
 	 * This method returns random injection from current connected component
 	 * @param random random number generator
@@ -403,10 +411,22 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 */
 	public final CInjection getRandomInjection(IRandom random) {
 		int index;
-		CInjection inj = null;
-		index = random.getInteger(maxId + 1);
-		inj = injectionsList.get(index);
-		return inj;
+//		index = random.getInteger(maxId + 1);
+		
+		index = random.getInteger(getCommonPower());
+		
+//		return injectionsList.get(index);
+		
+		int findIndex = 0;
+		for (Integer injId : injectionsList.keySet()) {
+			CInjection injection = injectionsList.get(injId);
+			findIndex += injection.getPower();
+			if (findIndex >= index) {
+				return injection;
+			}
+		}
+		// impossible
+		return null;
 	}
 
 	/**
@@ -429,6 +449,16 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return temp;
 	}
 
+	
+	public void burnInjections() {
+		for (CAgent agent : agentList) {
+			for (CSite site : agent.getSites()) {
+				for (CLiftElement lift : site.getLift()) {
+					lift.getInjection().setSimple();
+				}
+			}
+		}
+	}
 	// -----------------------hash, toString, equals-----------------------------
 
 //	/**

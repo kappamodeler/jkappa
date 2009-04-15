@@ -24,7 +24,7 @@
 %init: 100 * a(x), b(x)
 %init      				:        1000    *       d ( x ,  y )
 %init: \\
-MEK(s!1,S218~p,S222~p),ERK(Y187!1)
+MEK(s!0,S218~p,S222~p),ERK(Y187!0)
 
 %obs: 'rule'
 %obs: '1' E(r!_), F(i~                              t)

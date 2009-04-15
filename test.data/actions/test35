@@ -1,5 +1,5 @@
-'test_BND_05' A(x), B(x, y!_)  -> A(x!1), B(x, y!1)
-%init: 2 * (B(x, y!_), A(x))
+'test_BND_05' A(x), B(x, y)  -> A(x!1), B(x, y!1)
+%init: 2 * (B(x, y), A(x))
 %obs: '3050' A(x!1), B(x, y!1)
 %obs: '3052' A(x)
 %obs: '3053' B(x, y!_)

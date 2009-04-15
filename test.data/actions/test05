@@ -1,4 +1,4 @@
-'test_MOD_05' A(x~q!_) -> A(x~fi!_) 
-%init: 2 * A(x~q!_)
+'test_MOD_05' A(x~q) -> A(x~fi) 
+%init: 2 * A(x~q)
 %obs: '0050' A(x~q!_)
 %obs: '0051' A(x~fi!_)

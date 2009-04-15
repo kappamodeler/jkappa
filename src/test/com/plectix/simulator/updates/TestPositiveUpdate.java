@@ -48,6 +48,8 @@ public class TestPositiveUpdate extends TestUpdate {
 							.getId());
 				}
 			}
+//			myFailer.assertEquals("Observables injections",
+//					myObsInjectionsQuantity.get(myTestFileName), cc.getCommonPower());
 		}
 
 		myFailer.assertSizeEquality("Observatory injections",
@@ -63,9 +65,9 @@ public class TestPositiveUpdate extends TestUpdate {
 		for (IConnectedComponent cc : leftHand) {
 			Collection<CInjection> componentInjections = cc.getInjectionsList();
 			if (!lhsIsEmpty(leftHand)) {
-				myFailer.assertSizeEquality("LHS injections",
-						componentInjections, myLHSInjectionsQuantity
-								.get(myTestFileName));
+				myFailer.assertEquals("LHS injections",
+						myLHSInjectionsQuantity.get(myTestFileName), 
+						cc.getCommonPower());
 			} else {
 				myFailer.assertTrue("LHS injections", (componentInjections
 						.size() == 1)

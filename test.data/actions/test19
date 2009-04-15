@@ -1,4 +1,4 @@
-'test_ADD_11' B(x, y!2), C(x!2) -> B(x,y!1), C(x), A(x!1)
+'test_ADD_11' B(x, y!0), C(x!0) -> B(x,y!0), C(x), A(x!0)
 %init: 2 * (B(x,y!2), C(x!2))
 %obs: '1110' A(x!1), B(x, y!1)
 %obs: '1111' C(x)

@@ -962,7 +962,7 @@ public class CRule implements Serializable {
 	public final void calcultateActivity() {
 		activity = 1.;
 		for (IConnectedComponent cc : this.leftHandside) {
-			activity *= cc.getInjectionsList().size();
+			activity *= cc.getCommonPower();
 		}
 		// activity *= constraintData.getActivity();
 		activity *= rate;

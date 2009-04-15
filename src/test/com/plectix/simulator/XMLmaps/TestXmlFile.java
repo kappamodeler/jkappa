@@ -35,14 +35,14 @@ public class TestXmlFile {
 
 	@Test
 	public void Test(){
-	System.out.println("Test:");
+//	System.out.println("Test:");
 		parserFactory = SAXParserFactory.newInstance();
 //		xmlFileJava = new File(prefix + "simplexTest.xml");
 //		xmlFilePlectix = new File(prefix + "plectix\\windows\\simplx.xml");
 		connectionsToFind = new ArrayList<Connection>();
 		connectionsMustInclude = new ArrayList<Connection>();
 		try {
-			System.out.println("xmlFilePlectix: connectionsToFind");
+//			System.out.println("xmlFilePlectix: connectionsToFind");
 			parserxml = parserFactory.newSAXParser();
 			handler = new SAXHandler();
 			parserxml.parse(xmlFilePlectix, handler);
@@ -50,7 +50,7 @@ public class TestXmlFile {
 			connectionsToFind =  handler.getConnections();
 			
 			
-			System.out.println("xmlFileJava:connectionsMustInclude");
+//			System.out.println("xmlFileJava:connectionsMustInclude");
 			parserxml = parserFactory.newSAXParser();
 			handler = new SAXHandler();
 			parserxml.parse(xmlFileJava, handler);

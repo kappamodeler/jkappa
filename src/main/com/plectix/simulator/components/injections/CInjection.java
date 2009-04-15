@@ -25,6 +25,7 @@ public class CInjection implements Serializable {
 	private int myId = 0;
 	private CConnectedComponent connectedComponent;
 	private SuperSubstance myImageComponent = null;
+	private long myPower = 1;
 	
 	private CInjection() {
 
@@ -116,6 +117,7 @@ public class CInjection implements Serializable {
 	
 	public void setSuperSubstance(SuperSubstance substance) {
 		this.myImageComponent = substance;
+		myPower = substance.getQuantity();
 	}
 	
 	public final SuperSubstance getSuperSubstance() {
@@ -155,7 +157,16 @@ public class CInjection implements Serializable {
 		return false;
 	}
 	
+	public long getPower() {
+		return myPower;
+	}
+	
 	public boolean isSuper() {
+		// or myPower == 1
 		return this.myImageComponent != null;
+	}
+
+	public void setSimple() {
+		myPower = 1;
 	}
 }

@@ -24,7 +24,7 @@
 %init: 5000 * (E(r), R(l, r))
 %init: 100 * (a(x), b(x))
 %init: 1000 * (d(x, y))
-%init: 1 * (ERK(Y187!1), MEK(S218~p, S222~p, s!1))
+%init: 1 * (ERK(Y187!0), MEK(S218~p, S222~p, s!0))
 
 %obs: 'rule'
 %obs: 'time'

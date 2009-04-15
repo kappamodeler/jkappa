@@ -9,6 +9,7 @@ import java.util.List;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 
 public class CComponentComparator {
 	
@@ -51,21 +52,28 @@ public class CComponentComparator {
 
 	private static boolean compareCC(IConnectedComponent cCRight,
 			IConnectedComponent cc) {
-		List<CAgent> listCC = new ArrayList<CAgent>();
-		listCC = cCRight.getAgents();
-		for (CAgent agent : listCC) {
-			if (!findAgentInCC(agent, cc)) {
-				return false;
-			}
+//		List<CAgent> listCC = new ArrayList<CAgent>();
+//		listCC = cCRight.getAgents();
+//		for (CAgent agent : listCC) {
+//			if (!findAgentInCC(agent, cc)) {
+//				return false;
+//			}
+//		}
+//		listCC = cc.getAgents();
+//		for (CAgent agent : listCC) {
+//			if (!findAgentInCC(agent, cCRight)) {
+//
+//				return false;
+//			}
+//		}
+//		return true;
+		String firstString = ConnectedComponentToSmilesString.getInstance().toUniqueString(cCRight);
+		String secondString = ConnectedComponentToSmilesString.getInstance().toUniqueString(cc);
+		if (firstString != null) {
+			return firstString.equals(secondString);
+		} else {
+			return secondString == null;
 		}
-		listCC = cc.getAgents();
-		for (CAgent agent : listCC) {
-			if (!findAgentInCC(agent, cCRight)) {
-
-				return false;
-			}
-		}
-		return true;
 	}
 
 	private static boolean findAgentInCC(CAgent agentToFind, IConnectedComponent cc) {

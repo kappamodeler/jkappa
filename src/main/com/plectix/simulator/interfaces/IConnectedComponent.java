@@ -25,4 +25,8 @@ public interface IConnectedComponent extends ISolutionComponent {
 	 * @return <tt>true</tt>, if this ConnectedComponent is empty, otherwise <tt>false</tt>.
 	 */
 	public boolean isEmpty();
+
+	public int getCommonPower();
+
+	public void burnInjections();
 }

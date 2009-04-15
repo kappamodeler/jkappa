@@ -44,9 +44,9 @@ public class TestNegativeUpdate extends TestUpdate {
 			Collection<CInjection> componentInjections = cc.getInjectionsList();
 			if (!lhsIsEmpty(leftHand)) {
 
-				myFailer.assertSizeEquality("LHS injections",
-						componentInjections, myLHSInjectionsQuantity
-								.get(myTestFileName));
+				myFailer.assertEquals("LHS injections",
+						myLHSInjectionsQuantity.get(myTestFileName), 
+						cc.getCommonPower());
 				for (CInjection injection : getCurrentInjectionsList()) {
 
 					assertFalse(cc.getInjectionsList().contains(injection));
@@ -68,11 +68,8 @@ public class TestNegativeUpdate extends TestUpdate {
 	public void testObs() {
 		for (IObservablesConnectedComponent cc : getInitializator()
 				.getObservables()) {
-			Collection<CInjection> componentInjections = cc.getInjectionsList();
-
-			myFailer.assertSizeEquality("Observables injections",
-					componentInjections, myObsInjectionsQuantity
-							.get(myTestFileName));
+			myFailer.assertEquals("Observables injections",
+					myObsInjectionsQuantity.get(myTestFileName), cc.getCommonPower());
 		}
 	}
 

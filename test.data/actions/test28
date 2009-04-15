@@ -1,4 +1,4 @@
-'test_DEL_09' A(x!1, y!2), B(x!1), C(x!2) -> B(x), C(x) 
+'test_DEL_09' A(x!0, y!1), B(x!0), C(x!1) -> B(x), C(x) 
 %init:  2 * (A(x!1, y!2), B(x!1),  C(x!2))
 %obs: '2090' A(x!1, y!2), B(x!1), C(x!2)
 %obs: '2092' C(x)

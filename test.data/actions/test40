@@ -1,4 +1,4 @@
-'test_BRK_03' A(x!1), B(x!1)->A(x), B(x)
+'test_BRK_03' A(x!0), B(x!0)->A(x), B(x)
 %init: 2 * (A(x!1),B(x!1))
 %obs: '4030' A(x!1),B(x!1)
 %obs: '4031' A(x)

@@ -1,5 +1,7 @@
 package com.plectix.simulator.simulator.initialization;
 
+import java.util.Collection;
+
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.solution.SuperSubstance;
@@ -9,7 +11,6 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 
 import com.plectix.simulator.interfaces.ISolution;
-import com.plectix.simulator.interfaces.ISolutionComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 
 public class InjectionsBuilder {
@@ -51,6 +52,20 @@ public class InjectionsBuilder {
 			for (CAgent agent : substance.getComponent().getAgents()) {
 				this.walkInjectingComponents(strategy, agent);
 			}
+		}
+	}
+	
+	public void build(SuperSubstance substance) {
+		InjectionSettingStrategy strategy = new SuperInjectionSettingStrategy(substance);
+		for (CAgent agent : substance.getComponent().getAgents()) {
+			walkInjectingComponents(strategy, agent);
+		}
+	}
+	
+	public void build(Collection<CAgent> agents) {
+		InjectionSettingStrategy strategy = new StraightInjectionSettingStrategy();
+		for (CAgent agent : agents) {
+			walkInjectingComponents(strategy, agent);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-'test_DEL_07' A(x~q!1), B(x!1) -> B(x)
+'test_DEL_07' A(x~q!0), B(x!0) -> B(x)
 %init: 2 * (A(x~q!1), B(x!1))
 %obs: '2070' A(x~q!1), B(x!1)
 %obs: '2072' B(x)
