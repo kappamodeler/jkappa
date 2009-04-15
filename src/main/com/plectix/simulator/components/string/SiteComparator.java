@@ -33,6 +33,20 @@ public final class SiteComparator implements Comparator<CSite> {
 	
 	
 	public final int compare(CSite o1, CSite o2) {
+		if (o1 == null) {
+			if (o2 == null) {
+				return 0;
+			} else {
+				return -1;
+			}
+		} else {
+			if (o2 == null) {
+				return 1;
+			} else {
+				// don't handle this case here... go below...
+			}
+		}
+		
 		// first compare the site names:
 		int result = o1.getName().compareTo(o2.getName());
 		if (result != 0) {
@@ -94,11 +108,13 @@ public final class SiteComparator implements Comparator<CSite> {
 		
 		if (statusLink == CLinkStatus.BOUND) {
 			return linkState.getConnectedSite();
+		} else if (statusLink == CLinkStatus.WILDCARD) {
+			return null;
 		} else if (statusLink == CLinkStatus.FREE) {
 			return null;
 		} else {
-			// we expect that the site will be either BOUND or FREE. throw exception otherwise:
-			throw new RuntimeException("Unexpected State: Link state is neither BOUND nor FREE.");
+			// we expect that the site will be either BOUND, WILDCARD, or FREE. throw exception otherwise:
+			throw new RuntimeException("Unexpected State: Link state is neither BOUND nor WILDCARD nor FREE.");
 		}
 	}
 	
@@ -108,7 +124,7 @@ public final class SiteComparator implements Comparator<CSite> {
 	 * I don't know which one would be faster...
 	 * 
 	 * <br><br>
-	 * Example: <code>EGFR(Y1016~u!1),PTP(s!1)</code?
+	 * Example: <code>EGFR(Y1016~u!1),PTP(s!1)</code>
 	 * 
 	 * <br>
 	 * Here we will make the following Strings: "<code>Y1016~u!BOUND-s-NO_INDEX-PTP</code>" 
@@ -117,12 +133,26 @@ public final class SiteComparator implements Comparator<CSite> {
 	 * @param site
 	 */
 	public final String makeStringToCompare(CSite site) {
-		return site.getName() + "~" + site.getInternalState().getName() + "!"
-			+ ( site.getLinkState().getStatusLink() == CLinkStatus.FREE ?
-				"FREE"
-			    : ("BOUND-" + site.getLinkState().getConnectedSite().getName() 
-			    		+ "-" + site.getLinkState().getConnectedSite().getInternalState().getName()
-			    		+ "-" + site.getLinkState().getConnectedSite().getAgentLink().getName())
-			    );
+		String result = site.getName() + "~" + site.getInternalState().getName() + "!";
+
+		CLink linkState = site.getLinkState();
+		CLinkStatus statusLink = linkState.getStatusLink();
+		if (statusLink == CLinkStatus.BOUND) {
+			CSite connectedSite = site.getLinkState().getConnectedSite();
+			if (connectedSite == null) {
+				return result + "_";
+			} else {
+				return result + "BOUND-" + connectedSite.getName() 
+	    		+ "-" + connectedSite.getInternalState().getName()
+	    		+ "-" + connectedSite.getAgentLink().getName();
+			}
+		} else if (statusLink == CLinkStatus.WILDCARD) {
+			return result + "WILD";
+		} else if (statusLink == CLinkStatus.FREE) {
+			return result + "FREE";
+		} else {
+			// we expect that the site will be either BOUND, WILDCARD, or FREE. throw exception otherwise:
+			throw new RuntimeException("Unexpected State: Link state is neither BOUND nor WILDCARD nor FREE.");
+		}
 	}
 }

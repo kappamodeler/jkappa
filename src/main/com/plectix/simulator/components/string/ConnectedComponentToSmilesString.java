@@ -224,18 +224,30 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 		    		
 		    		if (statusLink == CLinkStatus.BOUND) {
 		    			if (site.getLinkIndex() == -1) {
-		    				// let's now set this site's link index
-		    				site.setLinkIndex(linkIndexCounter);
-		    				// let's find the site we are bound to and set its index too..
-			    			linkState.getConnectedSite().setLinkIndex(linkIndexCounter);
-		    				// let's increment the link count:
-		    				linkIndexCounter++;
-		    			} 
-		    			// let's dump our link index:
-		    			stringBuffer.append("!" + site.getLinkIndex());
+		    				// let's find the site we are bound to
+		    				CSite connectedSite = linkState.getConnectedSite();
+		    				if (connectedSite == null) {
+		    					// we don't know what Agent we are bound to!
+		    					stringBuffer.append("!_");
+		    				} else {
+			    				// let's now set this site's link index
+			    				site.setLinkIndex(linkIndexCounter);
+			    				// also set the link index of the site we are bound to...
+			    				connectedSite.setLinkIndex(linkIndexCounter);
+			    				// let's increment the link count:
+			    				linkIndexCounter++;
+			    				// let's dump it:
+			    				stringBuffer.append("!" + site.getLinkIndex());
+		    				}
+		    			} else {
+			    			// let's dump our link index:
+		    				stringBuffer.append("!" + site.getLinkIndex());
+		    			}
+		    		} else if (statusLink == CLinkStatus.WILDCARD) {
+		    			stringBuffer.append("?");
 		    		} else if (statusLink != CLinkStatus.FREE) {
-		    			// we expect that the site will be either BOUND or FREE. throw exception otherwise:
-		    			throw new RuntimeException("Unexpected State: Link state is neither BOUND nor FREE.");
+		    			// we expect that the site will be either BOUND, WILDCARD or FREE. throw exception otherwise:
+		    			throw new RuntimeException("Unexpected State: Link state is neither BOUND, nor WILDCARD, nor FREE.");
 		    		} 
 		        }
 

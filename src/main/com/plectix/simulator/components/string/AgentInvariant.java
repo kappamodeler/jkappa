@@ -29,6 +29,7 @@ public final class AgentInvariant {
 	private long productOfNeighborPrimes = 0;
 
 	private int numberOfConnections = 0;
+	private int numberOfWildcards = 0;
 	private CAgent agent = null;  // this is set in the constructor
 	private List<CSite> sortedSites = null;  // we don't initialize this list if we don't have to...
 	private List<AgentInvariant> neighborAgentList = null;  // we don't initialize this list if we don't have to...
@@ -42,9 +43,11 @@ public final class AgentInvariant {
 		for (CSite site : agent.getSites()) {
 			if (site.getLinkState().getStatusLink() == CLinkStatus.BOUND) {
 				numberOfConnections++;
+			} else if (site.getLinkState().getStatusLink() == CLinkStatus.WILDCARD) {
+				numberOfWildcards++;
 			} else if (site.getLinkState().getStatusLink() != CLinkStatus.FREE) {
-				// we expect that the site will be either BOUND or FREE. throw exception otherwise:
-				throw new RuntimeException("Unexpected State: Link state is neither BOUND not FREE.");
+				// we expect that the site will be either BOUND, WILDCARD, or FREE. throw exception otherwise:
+				throw new RuntimeException("Unexpected State: Link state is neither BOUND nor WILDCARD nor FREE.");
 			}
 		}
 	}
@@ -77,12 +80,15 @@ public final class AgentInvariant {
 		
 		for (CSite site : getSortedSites()) {
 			if (site.getLinkState().getStatusLink() == CLinkStatus.BOUND) {
-				AgentInvariant neighbor = agentToAgentInvariantMap.get(site.getLinkState().getConnectedSite().getAgentLink()); 
-				if (neighbor == null) {
-					throw new RuntimeException("Could not find neighbor Agent in map!");
+				CSite connectedSite = site.getLinkState().getConnectedSite();
+				if (connectedSite != null) {
+					AgentInvariant neighbor = agentToAgentInvariantMap.get(connectedSite.getAgentLink()); 
+					if (neighbor == null) {
+						throw new RuntimeException("Could not find neighbor Agent in map!");
+					}
+					// all the neighbors are sorted in the alphabetical order of the sites they are connected to
+					neighborAgentList.add(neighbor);
 				}
-				// all the neighbors are sorted in the alphabetical order of the sites they are connected to
-				neighborAgentList.add(neighbor);
 			}
 		}
 	}
@@ -219,10 +225,23 @@ public final class AgentInvariant {
 		return numberOfConnections;
 	}
 
+	/**
+	 * Returns the number of wildcard sites of this Agent.
+	 * 
+	 * @return
+	 */
+	public final int getNumberOfWildcards() {
+		return numberOfWildcards;
+	}
+
 	private static final CSite getConnectionSite(AgentInvariant thisAgent, AgentInvariant neighborAgent) {
 		for (CSite site : thisAgent.getAgent().getSites()) {
 			if (site.getLinkState().getStatusLink() == CLinkStatus.BOUND) {
-				if (site.getLinkState().getConnectedSite().getAgentLink() == neighborAgent.getAgent()) {
+				CSite connectedSite = site.getLinkState().getConnectedSite();
+				if (connectedSite == null) {
+					return null;
+				}
+				if (connectedSite.getAgentLink() == neighborAgent.getAgent()) {
 					return site;
 				}
 			}
@@ -254,8 +273,27 @@ public final class AgentInvariant {
 		}
 
 		public final int compare(AgentInvariant o1, AgentInvariant o2) {
+			if (o1 == null) {
+				if (o2 == null) {
+					return 0;
+				} else {
+					return -1;
+				}
+			} else {
+				if (o2 == null) {
+					return 1;
+				} else {
+					// don't handle this case here... go below...
+				}
+			}
+			
 			// first compare the number of connections
 			int result = Double.compare(o1.getNumberOfConnections(), o2.getNumberOfConnections());
+			if (result != 0) {
+				return result;
+			}
+			
+			result = Double.compare(o1.getNumberOfWildcards(), o2.getNumberOfWildcards());
 			if (result != 0) {
 				return result;
 			}
@@ -324,6 +362,20 @@ public final class AgentInvariant {
 		}
 
 		public final int compare(AgentInvariant o1, AgentInvariant o2) {
+			if (o1 == null) {
+				if (o2 == null) {
+					return 0;
+				} else {
+					return -1;
+				}
+			} else {
+				if (o2 == null) {
+					return 1;
+				} else {
+					// don't handle this case here... go below...
+				}
+			}
+			
 			int result = Double.compare(o1.neighborAgentList.size(), o2.neighborAgentList.size());
 			if (result != 0) {
 				// this case should never happen! but it doesn't hurt to have it here...
