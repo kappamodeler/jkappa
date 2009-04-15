@@ -70,12 +70,11 @@ public class RunSmilesTest{
              return data;
      }
 
-
      public RunSmilesTest(CConnectedComponent c, int linecount, String filename) {
     	 cc = c;
     	 line = linecount;
     	 filepath = filename;
-//    	 SimulationMain.initializeLogging();
+    	 SimulationMain.initializeLogging();
 	 }
 
 	public static List<CConnectedComponent> readFile(String filepath) {
