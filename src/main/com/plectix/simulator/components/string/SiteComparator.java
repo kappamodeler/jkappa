@@ -7,7 +7,7 @@ import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 
 /**
- * This class compares two Sites. Here is the comparison rules:
+ * This class compares two Sites. We assume that the Agent Names are the same. Here is the comparison rules:
  * 
  * <ul>
  * <li> First we compare the Site names.
@@ -32,7 +32,7 @@ public final class SiteComparator implements Comparator<CSite> {
 	}
 	
 	
-	public final int compare(CSite o1, CSite o2) {
+	public final int compare(final CSite o1, final CSite o2) {
 		if (o1 == null) {
 			if (o2 == null) {
 				return 0;
@@ -102,7 +102,7 @@ public final class SiteComparator implements Comparator<CSite> {
 		// can't use linkIndex as an invariant: int linkIndex = o1.getLinkIndex();
 	}
 
-	private static final CSite getLinkSite(CSite site) {
+	private static final CSite getLinkSite(final CSite site) {
 		CLink linkState = site.getLinkState();
 		CLinkStatus statusLink = linkState.getStatusLink();
 		

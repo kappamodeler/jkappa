@@ -108,7 +108,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 		return INSTANCE;
 	}
 	
-	public final String toUniqueString(IConnectedComponent connectedComponent) {
+	public final String toUniqueString(final IConnectedComponent connectedComponent) {
 		List<CAgent> agentList = connectedComponent.getAgents();
 
 		if (LOGGER.isDebugEnabled()) {
@@ -190,7 +190,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 		// we can never be here cause there is no break from the infinite loop above...
 	}
 	
-	private static final String toKappa(List<AgentInvariant> agentInvariantList) {
+	private static final String toKappa(final List<AgentInvariant> agentInvariantList) {
 		// set all link indices to -1
 		for (AgentInvariant agentInvariant : agentInvariantList) {
 			for (CSite site : agentInvariant.getSortedSites()) {
@@ -324,13 +324,13 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 
 	}
 
-	private static final void saveRanks(List<AgentInvariant> agentInvariantList) {
+	private static final void saveRanks(final List<AgentInvariant> agentInvariantList) {
 		for (AgentInvariant agentInvariant : agentInvariantList) {
 			agentInvariant.saveRank();
 		}
 	}
 	
-	private static final String getRanksAsString(List<AgentInvariant> agentInvariantList) {
+	private static final String getRanksAsString(final List<AgentInvariant> agentInvariantList) {
 		StringBuffer stringBuffer = new StringBuffer();
 		for (AgentInvariant agentInvariant : agentInvariantList) {
 			stringBuffer.append(agentInvariant.getRankNew() + "(" + agentInvariant.getProductOfNeighborPrimes() + ")-"); 
@@ -345,7 +345,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 	 * @param agentInvariantComparator
 	 * @return
 	 */
-	private static final boolean sortAndComputeRanks(List<AgentInvariant> agentInvariantList, Comparator<AgentInvariant> agentInvariantComparator) {
+	private static final boolean sortAndComputeRanks(final List<AgentInvariant> agentInvariantList, final Comparator<AgentInvariant> agentInvariantComparator) {
 		Collections.sort(agentInvariantList, agentInvariantComparator);
 		
 		boolean rankEquivalence = false;
@@ -373,7 +373,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 		return rankEquivalence;
 	}
 	
-	private static final void computeNeighbors(List<AgentInvariant> agentInvariantList) {
+	private static final void computeNeighbors(final List<AgentInvariant> agentInvariantList) {
 		Map<CAgent, AgentInvariant> agentToAgentInvariantMap = new HashMap<CAgent, AgentInvariant>(agentInvariantList.size());
 		for (AgentInvariant agentInvariant : agentInvariantList) {
 			agentToAgentInvariantMap.put(agentInvariant.getAgent(), agentInvariant);

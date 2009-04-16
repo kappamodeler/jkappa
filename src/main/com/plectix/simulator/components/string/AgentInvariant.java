@@ -113,7 +113,7 @@ public final class AgentInvariant {
 	 * @param neighborAgent
 	 * @return
 	 */
-	private int getNeighborRank(AgentInvariant neighborAgent) {
+	private final int getNeighborRank(AgentInvariant neighborAgent) {
 		final int index = neighborAgentList.indexOf(neighborAgent);
 		if (index == -1) {
 			throw new RuntimeException("Given agent is not a neighbor!");
@@ -272,7 +272,7 @@ public final class AgentInvariant {
 			super();
 		}
 
-		public final int compare(AgentInvariant o1, AgentInvariant o2) {
+		public final int compare(final AgentInvariant o1, final AgentInvariant o2) {
 			if (o1 == null) {
 				if (o2 == null) {
 					return 0;
@@ -361,7 +361,7 @@ public final class AgentInvariant {
 			super();
 		}
 
-		public final int compare(AgentInvariant o1, AgentInvariant o2) {
+		public final int compare(final AgentInvariant o1, final AgentInvariant o2) {
 			if (o1 == null) {
 				if (o2 == null) {
 					return 0;
