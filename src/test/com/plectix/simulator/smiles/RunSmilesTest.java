@@ -24,82 +24,71 @@ import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.AbstractSite;
-import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
-import com.plectix.simulator.parser.abstractmodel.SolutionLineData;
 import com.plectix.simulator.parser.exceptions.DocumentFormatException;
 import com.plectix.simulator.parser.exceptions.ParseErrorException;
 import com.plectix.simulator.parser.util.AgentFactory;
 
 @RunWith(Parameterized.class)
-public class RunSmilesTest{
-	
+public class RunSmilesTest {
+
 	private static final String separator = File.separator;
-	private static final String prefix = "test.data"+ separator + "smiles" + separator;
+	private static final String prefix = "test.data" + separator + "smiles"
+			+ separator;
 
 	private static long id = 0;
 
 	private String filepath;
-	private CConnectedComponent cc;
-	private int line;
-	
-	 @Parameters
-     public static Collection<Object[]> data() {
-    	 String[] files = new String[] { 
-    			 "twoagents", 
-             	 "ring", 
-             	 "tworings",  
-             	 "polymer", 
-             	 "branchstructure",
-             	 "cubane",
-             	 "polyhedron",
-    			 "fullerene", 
-    			 "fusedrings"
-             	 };
-    	 List<CConnectedComponent> cclist;
-    	 Collection<Object[]> data = new ArrayList<Object[]>();
-    	 for (String string : files) {
-			cclist = readFile(prefix + string);
-			for (int i = 0; i < cclist.size(); i++) {
-				Object[] obj = new Object[3];
-				obj[0] = cclist.get(i);
-				obj[1] = i;
-				obj[2] = string;
-				data.add(obj);
-			}
+
+	@Parameters
+	public static Collection<Object[]> data() {
+		String[] files = new String[] { 
+				"twoagents", 
+				"ring", 
+				"tworings",
+				"polymer", 
+				"branchstructure", 
+				"cubane", 
+				"polyhedron",
+				"fullerene", 
+				"fusedrings" };
+		Collection<Object[]> data = new ArrayList<Object[]>();
+		for (String string : files) {
+			Object[] obj = new Object[1];
+			obj[0] = string;
+			data.add(obj);
 		}
-             return data;
-     }
+		return data;
+	}
 
-     public RunSmilesTest(CConnectedComponent c, int linecount, String filename) {
-    	 cc = c;
-    	 line = linecount;
-    	 filepath = filename;
-    	 SimulationMain.initializeLogging();
-	 }
+	public RunSmilesTest(String filename) {
+		filepath = prefix + filename;
+		SimulationMain.initializeLogging();
+	}
 
-	public static List<CConnectedComponent> readFile(String filepath) {
-    	String line = "";
-    	List<CConnectedComponent> cclist = new ArrayList<CConnectedComponent>();
+	@Test
+	public void test() {
+		String line = "";
+		int lineCounter = 0;
+		AgentFactory af = new AgentFactory();
+		CConnectedComponent cc;
+		StringBuffer fails;
+		SmilesTest smilestest;
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(filepath));
 			line = br.readLine();
-			AgentFactory af = new AgentFactory();
-			List<AbstractAgent> list = new ArrayList<AbstractAgent>();
-			AbstractSolution asolution = new AbstractSolution();
-			cclist = new ArrayList<CConnectedComponent>();
-			while(line != null){
-				if (line.charAt(0)!='#'){
-					list = af.parseAgent(line);
-					asolution.addAgents(1, list);
-				}
+			
+			while (line != null) {
+				lineCounter++;
+				cc = new CConnectedComponent(buildAgents(af.parseAgent(line)));
+				fails = new StringBuffer();
+				smilestest = new SmilesTest(cc);
+				fails.append(smilestest.test());
+				if (fails.length() > 0)
+					org.junit.Assert.fail("\nfile: " + filepath + "\nline: "
+							+ lineCounter + fails.toString());
+
 				line = br.readLine();
 			}
-		
-			for (SolutionLineData lineData : asolution.getAgents()) {
-				List<CAgent> agents = buildAgents(lineData.getAgents());
-				cclist.add(new CConnectedComponent(agents));
-			}
-			
 		} catch (FileNotFoundException e) {
 			org.junit.Assert.fail("wrong file path: " + filepath);
 		} catch (IOException e) {
@@ -109,28 +98,17 @@ public class RunSmilesTest{
 		} catch (DocumentFormatException e) {
 			e.printStackTrace();
 		}
-		return cclist;
-		
+
 	}
-		
-    
-    @Test
-    public void test(){
-    	StringBuffer fails = new StringBuffer();
-		SmilesTest smilestest = new SmilesTest(cc);
-		fails.append(smilestest.test());
-    	if (fails.length()>0)
-    		org.junit.Assert.fail("\nfile: " + filepath + "\nline: " + line + fails.toString());
-    }
-    
-	/// SubstanceBuilder
+
+	// / SubstanceBuilder
 	public static List<CAgent> buildAgents(List<AbstractAgent> agents) {
 		if (agents == null) {
 			return null;
 		}
 
 		List<CAgent> result = new LinkedList<CAgent>();
-		
+
 		for (AbstractAgent agent : agents) {
 			CAgent newAgent = buildAgent(agent);
 			result.add(newAgent);
@@ -153,28 +131,29 @@ public class RunSmilesTest{
 				}
 			}
 		}
-		
+
 		return result;
 	}
- 
+
 	private static CAgent buildAgent(AbstractAgent agent) {
-		CAgent resultAgent = new CAgent(agent.getNameId(), generateNextAgentId());
+		CAgent resultAgent = new CAgent(agent.getNameId(),
+				generateNextAgentId());
 		for (AbstractSite site : agent.getSites()) {
 			CSite newSite = buildSite(site);
 			resultAgent.addSite(newSite);
-		} 
-		
+		}
+
 		return resultAgent;
 	}
-	
+
 	private static long generateNextAgentId() {
 		return ++id;
 	}
 
-
 	private static CSite buildSite(AbstractSite site) {
 		CSite newSite = new CSite(site.getNameId());
-		newSite.getLinkState().setStatusLink(site.getLinkState().getStatusLink());
+		newSite.getLinkState().setStatusLink(
+				site.getLinkState().getStatusLink());
 		newSite.setLinkIndex(site.getLinkIndex());
 		int internalStateNameId = site.getInternalStateNameId();
 		if (internalStateNameId != CSite.NO_INDEX) {
@@ -182,6 +161,5 @@ public class RunSmilesTest{
 		}
 		return newSite;
 	}
-		
 
 }
