@@ -63,7 +63,7 @@ public class Initializator {
 		args[3] = "1000";
 		args[4] = "--no_compress_stories";
 		args[5] = "--iteration";
-		args[6] = "10";
+		args[6] = "100";
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
