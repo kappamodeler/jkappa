@@ -70,6 +70,10 @@ public class SimulatorCommandLine {
 		if (hasOption(SimulatorOptions.SHORT_CONSOLE_OUTPUT)) {
 			simulationArguments.setShortConsoleOutput(true);
 		}
+		
+		if (hasOption(SimulatorOptions.OPERATION_MODE)) {
+			simulationArguments.setOperationMode(getValue(SimulatorOptions.OPERATION_MODE));
+		}
 
 		if (hasOption(SimulatorOptions.XML_SESSION_NAME)) {
 			simulationArguments.setXmlSessionName(getValue(SimulatorOptions.XML_SESSION_NAME));

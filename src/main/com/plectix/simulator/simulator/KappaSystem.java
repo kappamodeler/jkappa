@@ -265,11 +265,11 @@ public class KappaSystem {
 	}
 
 	public final long generateNextRuleId() {
-		return myRuleIdGenerator.generateNextAgentId();
+		return myRuleIdGenerator.generateNext();
 	}
 
 	public final long generateNextAgentId() {
-		return myAgentsIdGenerator.generateNextAgentId();
+		return myAgentsIdGenerator.generateNext();
 	}
 
 	public final List<CPerturbation> getPerturbations() {

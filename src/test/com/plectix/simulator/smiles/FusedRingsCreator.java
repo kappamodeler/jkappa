@@ -15,7 +15,7 @@ public class FusedRingsCreator {
 		for (int i = 2; i < 9; i++) {
 			count += createFusedRings(i);
 		}
-		System.out.println("\nThere are " + count + " fused rings");
+//		System.out.println("\nThere are " + count + " fused rings");
 	}
 
 	private static int createFusedRings(int quantity) {
@@ -28,7 +28,7 @@ public class FusedRingsCreator {
 				ccomp += addRing(i, j, quantity, numberOfAgentsName);
 			}
 			count++;
-			System.out.println(ccomp.substring(0, ccomp.length() - 1));
+//			System.out.println(ccomp.substring(0, ccomp.length() - 1));
 			ccomp = "";
 		}
 		return count;

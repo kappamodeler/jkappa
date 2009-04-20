@@ -41,11 +41,13 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	private Map<Integer, List<CSpanningTree>> spanningTreeMap;
 	private List<CAgent> agentFromSolutionForRHS;
 	private List<CAgentLink> agentLinkList;
-	private final Map<Integer, CInjection> injectionsList;
 	private List<CSite> injectedSites;
-	private int maxId = -1;
 	private CRule rule;
 	private SuperSubstance mySubstance = null;
+	//TODO think on longs and ints
+//	private int myCommonPower = 0;
+	// for the better searching
+	private CInjectionStorage myInjections = new CInjectionStorage();
 
 	/**
 	 * private empty connected component constructor
@@ -53,8 +55,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	private CConnectedComponent() {
 		agentList = new ArrayList<CAgent>();
 		agentList.add(new CAgent());
-		injectionsList = new TreeMap<Integer, CInjection>();
-		addInjection(CInjection.EMPTY_INJECTION, 0);
+		myInjections.addInjection(CInjection.EMPTY_INJECTION, 0);
 		agentFromSolutionForRHS = new ArrayList<CAgent>();
 	}
 
@@ -64,7 +65,6 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 */
 	public CConnectedComponent(List<CAgent> connectedAgents) {
 		agentList = connectedAgents;
-		injectionsList = new TreeMap<Integer, CInjection>();
 		agentFromSolutionForRHS = new ArrayList<CAgent>();
 	}
 
@@ -113,12 +113,8 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @param inj injection to register
 	 * @param id id of injection
 	 */
-	private final void addInjection(CInjection inj, int id) {
-		if (inj != null) {
-			maxId = Math.max(maxId, id);
-			inj.setId(id);
-			injectionsList.put(id, inj);
-		}
+	private final void addInjection(CInjection inj) {
+		myInjections.addInjection(inj);
 	}
 
 	/**
@@ -126,22 +122,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @param injection injection to remove
 	 */
 	public final void removeInjection(CInjection injection) {
-		if (injection == null) {
-			return;
-		}
-
-		int id = injection.getId();
-
-		if (injectionsList.get(id) != null) {
-			if (injection != injectionsList.get(id)) {
-				return;
-			}
-			CInjection inj = injectionsList.remove(maxId);
-			if (id != maxId) {
-				addInjection(inj, id);
-			}
-			maxId--;
-		}
+		myInjections.removeInjection(injection);
 	}
 
 	/**
@@ -171,7 +152,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @param injection injection to be set
 	 */
 	public final void setInjection(CInjection injection) {
-		addInjection(injection, maxId + 1);
+		addInjection(injection);
 		for (CSite changedSite : injectedSites) {
 			changedSite.addToLift(new CLiftElement(this, injection));
 		}
@@ -393,15 +374,23 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @return list of injections from this connected component
 	 */
 	public final Collection<CInjection> getInjectionsList() {
-		return Collections.unmodifiableCollection(injectionsList.values());
+		return myInjections.getList();
 	}
 
 	public int getCommonPower() {
-		int commonPower = 0;
-		for (CInjection inj : injectionsList.values()) {
-			commonPower += inj.getPower();
-		}
-		return commonPower;
+		return myInjections.getCommonPower();
+	}
+	
+	public void increaseInjection(CInjection inj) {
+		myInjections.getRandomizer().increaseInjection(inj);
+	}
+	
+	public void decreaseInjection(CInjection inj) {
+		myInjections.getRandomizer().decreaseInjection(inj);
+	}
+	
+	public void simplifyInjection(CInjection inj) {
+		myInjections.getRandomizer().simplifyInjection(inj);
 	}
 	
 	/**
@@ -410,23 +399,9 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @return random injection from current connected component
 	 */
 	public final CInjection getRandomInjection(IRandom random) {
-		int index;
-//		index = random.getInteger(maxId + 1);
-		
-		index = random.getInteger(getCommonPower());
-		
-//		return injectionsList.get(index);
-		
-		int findIndex = 0;
-		for (Integer injId : injectionsList.keySet()) {
-			CInjection injection = injectionsList.get(injId);
-			findIndex += injection.getPower();
-			if (findIndex >= index) {
-				return injection;
-			}
-		}
-		// impossible
-		return null;
+//		int randomId = myInjections.getRandomizer().getRandomInjection(random);
+		int randomId = random.getInteger(myInjections.getList().size());
+		return myInjections.getInjection(randomId);
 	}
 
 	/**
@@ -435,7 +410,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @return first injection from list of injections
 	 */
 	public final CInjection getFirstInjection() {
-		return injectionsList.get(0);
+		return myInjections.getInjection(0);
 	}
 
 	/**
@@ -460,6 +435,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		}
 	}
 	// -----------------------hash, toString, equals-----------------------------
+
 
 //	/**
 //	 * This methods takes agentNames in alphabetical order as a String, then

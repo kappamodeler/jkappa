@@ -7,8 +7,10 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.util.Converter;
 
 /**
  * Class implements Injection.
@@ -28,7 +30,6 @@ public class CInjection implements Serializable {
 	private long myPower = 1;
 	
 	private CInjection() {
-
 	}
 
 	public CInjection(CConnectedComponent connectedComponent,
@@ -41,14 +42,6 @@ public class CInjection implements Serializable {
 
 	public final void removeSiteFromSitesList(CSite site) {
 		sitesList.remove(site);
-//		int index = 0;
-//		for (CSite siteL : this.sitesList) {
-//			if (site == siteL) {
-//				this.sitesList.remove(index);
-//				return;
-//			}
-//			index++;
-//		}
 	}
 
 	/**
@@ -162,11 +155,26 @@ public class CInjection implements Serializable {
 	}
 	
 	public boolean isSuper() {
-		// or myPower == 1
 		return this.myImageComponent != null;
 	}
 
 	public void setSimple() {
-		myPower = 1;
+//		System.out.println(connectedComponent.getCommonPower() + " before - " + this);
+		if (isSuper()) {
+			connectedComponent.simplifyInjection(this);
+			myPower = 1;
+			myImageComponent = null;
+		}
+//		System.out.println(connectedComponent.getCommonPower() + " after - " + this);
+	}
+	
+	public String toString() {
+		if (isSuper()) {
+			return myPower + " * " + Converter.toString(connectedComponent) + " -> " 
+			+ Converter.toString(myImageComponent.getComponent()) + "\n";
+		} else {
+			return myPower + " * " + Converter.toString(connectedComponent) + " -> " 
+			+ Converter.toString(SolutionUtils.getConnectedComponent(getImageAgent())) + "\n";
+		}
 	}
 }

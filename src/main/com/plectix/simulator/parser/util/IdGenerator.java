@@ -11,8 +11,12 @@ public class IdGenerator {
 		id = start;
 	}
 
-	public long generateNextAgentId() {
+	public long generateNext() {
 		return id++;
+	}
+	
+	public void low() {
+		id--;
 	}
 	
 	public void reset() {

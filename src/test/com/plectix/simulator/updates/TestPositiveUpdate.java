@@ -38,23 +38,24 @@ public class TestPositiveUpdate extends TestUpdate {
 	// we can only check for quantity of injections, meaning correct injections
 	// setting
 	public void testObs() {
-		SortedSet<Long> solutionLinkingForCurrentObs = new TreeSet<Long>();
+		int solutionLinkingForCurrentObs = 0;
 
 		for (IObservablesConnectedComponent cc : getInitializator()
 				.getObservables()) {
 			for (CInjection injection : cc.getInjectionsList()) {
-				for (CAgentLink agentLink : injection.getAgentLinkList()) {
-					solutionLinkingForCurrentObs.add(agentLink.getAgentTo()
-							.getId());
+				if (injection.isSuper()) {
+					solutionLinkingForCurrentObs += injection.getAgentLinkList().size() 
+							* injection.getPower();
+				} else {
+					solutionLinkingForCurrentObs += injection.getAgentLinkList().size();
 				}
 			}
 //			myFailer.assertEquals("Observables injections",
 //					myObsInjectionsQuantity.get(myTestFileName), cc.getCommonPower());
 		}
 
-		myFailer.assertSizeEquality("Observatory injections",
-				solutionLinkingForCurrentObs, myObsInjectionsQuantity
-						.get(myTestFileName));
+		myFailer.assertEquals("Observatory injections", myObsInjectionsQuantity
+				.get(myTestFileName), solutionLinkingForCurrentObs);
 	}
 
 	@Test

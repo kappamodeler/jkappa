@@ -51,14 +51,14 @@ public class TestInjectionsQuantity extends TestInjections  {
 			myFailer.fail("There's no component with name " + ccName);
 		}
 		Collection<CInjection> injectionsList = myCurrentCC.getInjectionsList();
-		long quant = 0;
-		for (CInjection injection : myCurrentCC.getInjectionsList()) {
-			if (injection.isSuper()) {
-				quant += injection.getSuperSubstance().getQuantity();
-			} else {
-				quant++;
-			}
-		}
+		long quant = myCurrentCC.getCommonPower();
+//		for (CInjection injection : myCurrentCC.getInjectionsList()) {
+//			if (injection.isSuper()) {
+//				quant += injection.getSuperSubstance().getQuantity();
+//			} else {
+//				quant++;
+//			}
+//		}
 			
 		if (injectionsList != null) {
 			myFailer.assertEquals("failed on " + ccName, (long)expectedQuantity, quant);

@@ -22,7 +22,17 @@ public class SolutionBuilder {
 	}
 	
 	public ISolution build(AbstractSolution arg) {
-		ISolution solution = (new SolutionFactory()).produce(OperationMode.FIRST, myKappaSystem);
+		ISolution solution;
+		switch(myArguments.getOperationMode()) {
+		case SECOND:{
+			solution = (new SolutionFactory()).produce(OperationMode.SECOND, myKappaSystem);
+			break;
+		}
+		default:{
+			solution = (new SolutionFactory()).produce(OperationMode.FIRST, myKappaSystem);
+			break;
+		}
+		}
 
 		
 		for (SolutionLineData lineData : arg.getAgents()) {

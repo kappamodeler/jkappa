@@ -67,6 +67,7 @@ public class SuperStorage implements IStorage {
 		SuperSubstance image = inj.getSuperSubstance();
 		if (image != null && !image.isEmpty()) {
 			IConnectedComponent component = this.extract(image);
+//			inj.notifyComponentWhenPowerDecreases();
 			component.burnInjections();
 			return component;
 		} else {

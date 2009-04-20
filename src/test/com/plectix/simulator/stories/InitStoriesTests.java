@@ -50,6 +50,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 		try {
 			mySimulator.runStories();
 		} catch (Exception e) {
+			e.printStackTrace();
 			junit.framework.Assert.fail(e.getMessage());
 		}
 	}

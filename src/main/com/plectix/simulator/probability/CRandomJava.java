@@ -30,5 +30,4 @@ import com.plectix.simulator.util.Info.InfoType;
 	public final int getInteger(int limit) {
 		return rand.nextInt(limit);
 	}
-
 }

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.nio.CharBuffer;
 
+import com.plectix.simulator.components.solution.OperationMode;
 import com.plectix.simulator.util.PersistenceUtils;
 
 public class SimulationArguments {
@@ -89,7 +90,7 @@ public class SimulationArguments {
 	private SimulationType simulationType = SimulationType.NONE;
 	private StorifyMode storifyMode = StorifyMode.NONE;
 	private SerializationMode serializationMode = SerializationMode.NONE;
-	
+	private OperationMode operationMode = OperationMode.FIRST;
 	
 	public SimulationArguments() {
 		super();
@@ -757,5 +758,13 @@ public class SimulationArguments {
 
 	public boolean isSolutionRead() {
 		return simulationType != SimulationType.GENERATE_MAP;
+	}
+
+	public void setOperationMode(String value) {
+		operationMode = OperationMode.getValue(value);
+	}
+
+	public OperationMode getOperationMode() {
+		return operationMode;
 	}
 }
