@@ -37,4 +37,13 @@ these ones are unfinished and need to be checked :
 - com.plectix.simulator.interfaces.IObservablesConnectedComponent
 - com.plectix.simulator.interfaces.IObservablesRuleComponent
 - com.plectix.simulator.interfaces.IRandom
+
+- com.plectix.simulator.components.contactMap.CContactMap
+- com.plectix.simulator.components.contactMap.CContactMapAbstractAction
+- com.plectix.simulator.components.contactMap.CContactMapAbstractAgent
+- com.plectix.simulator.components.contactMap.CContactMapAbstractRule
+- com.plectix.simulator.components.contactMap.CContactMapAbstractSite
+- com.plectix.simulator.components.contactMap.CContactMapAtomicAction
+- com.plectix.simulator.components.contactMap.CContactMapLinkState
+
 - 

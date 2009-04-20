@@ -44,6 +44,7 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.SnapshotElement;
 import com.plectix.simulator.components.contactMap.CContactMapAbstractEdge;
+import com.plectix.simulator.components.contactMap.CContactMapAbstractSite;
 import com.plectix.simulator.components.contactMap.CContactMapChangedSite;
 import com.plectix.simulator.components.contactMap.EContactMapMode;
 import com.plectix.simulator.components.perturbations.CPerturbation;
@@ -52,7 +53,6 @@ import com.plectix.simulator.components.stories.CStoryIntro;
 import com.plectix.simulator.components.stories.CStoryTrees;
 import com.plectix.simulator.components.stories.CStoryType;
 import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
-import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
@@ -875,7 +875,7 @@ public class SimulationData {
 						Element bond = doc.createElement("Bond");
 						int vertexToSiteNameID = edge.getVertexToSiteNameID();
 						int vertexToAgentNameID = edge.getVertexToAgentNameID();
-						IContactMapAbstractSite vertexFrom = edge
+						CContactMapAbstractSite vertexFrom = edge
 								.getVertexFrom();
 						BoundContactMap b = new BoundContactMap(vertexFrom.getAgentLink().getNameId(),ThreadLocalData
 								.getNameDictionary().getId(vertexFrom.getName()),vertexToAgentNameID,vertexToSiteNameID);

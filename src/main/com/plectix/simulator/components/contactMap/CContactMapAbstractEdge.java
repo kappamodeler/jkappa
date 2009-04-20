@@ -3,20 +3,17 @@ package com.plectix.simulator.components.contactMap;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IContactMapAbstractRule;
-import com.plectix.simulator.interfaces.IContactMapAbstractSite;
-
 public class CContactMapAbstractEdge {
-	private IContactMapAbstractSite vertexFrom;
+	private CContactMapAbstractSite vertexFrom;
 	private int vertexToSiteNameID;
 	private int vertexToAgentNameID;
 	private List<Integer> rules;
 
-	public IContactMapAbstractSite getVertexFrom() {
+	public CContactMapAbstractSite getVertexFrom() {
 		return vertexFrom;
 	}
 
-	public void setVertexFrom(IContactMapAbstractSite vertexFrom) {
+	public void setVertexFrom(CContactMapAbstractSite vertexFrom) {
 		this.vertexFrom = vertexFrom;
 	}
 
@@ -32,7 +29,7 @@ public class CContactMapAbstractEdge {
 		return rules;
 	}
 
-	public CContactMapAbstractEdge(IContactMapAbstractSite vertexFrom) {
+	public CContactMapAbstractEdge(CContactMapAbstractSite vertexFrom) {
 		this.vertexFrom = vertexFrom;
 		CContactMapLinkState ls = vertexFrom.getLinkState();
 		this.vertexToAgentNameID = ls.getAgentNameID();
@@ -66,7 +63,7 @@ public class CContactMapAbstractEdge {
 	}
 	
 	
-	public void addRules(IContactMapAbstractRule rule) {
+	public void addRules(CContactMapAbstractRule rule) {
 		if (rule != null) {
 			int value = rule.getRule().getRuleID();
 			if (!rules.contains(value))

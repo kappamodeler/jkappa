@@ -4,7 +4,11 @@ import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CLink;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
-
+/**
+ * This class implements link state. Uses in Contact map.
+ * @author avokhmin
+ *
+ */
 public class CContactMapLinkState {
 	private CLinkRank statusLinkRank;
 	private CLinkStatus statusLink;
@@ -12,6 +16,10 @@ public class CContactMapLinkState {
 	private int agentNameID = CSite.NO_INDEX;
 	private int internalStateNameID = CSite.NO_INDEX;
 
+	/**
+	 * Constructor of CContactMapLinkState.
+	 * @param linkState given link state for abstraction
+	 */
 	public CContactMapLinkState(CLink linkState) {
 		if (linkState.getConnectedSite() != null) {
 			this.agentNameID = linkState.getConnectedSite().getAgentLink().getNameId();
@@ -23,6 +31,10 @@ public class CContactMapLinkState {
 		this.statusLink = linkState.getStatusLink();
 	}
 
+	/**
+	 * Constructor of CContactMapLinkState
+	 * @param linkState given link state
+	 */
 	public CContactMapLinkState(CContactMapLinkState linkState) {
 		if (linkState.getLinkSiteNameID() != -1) {
 			this.agentNameID = linkState.getAgentNameID();
@@ -33,6 +45,10 @@ public class CContactMapLinkState {
 		this.statusLinkRank = linkState.getStatusLinkRank();
 	}
 
+	/**
+	 * Sets status of this link to a given one
+	 * @param status new value
+	 */
 	public void setStatusLink(CLinkStatus status) {
 		this.statusLink = status;
 		if (status == CLinkStatus.BOUND)
@@ -41,18 +57,27 @@ public class CContactMapLinkState {
 			statusLinkRank = CLinkRank.FREE;
 	}
 
+	/**
+	 * This method sets id of link site
+	 * @param id given id
+	 */
 	public void setLinkSiteNameID(int id) {
 		this.linkSiteNameID = id;
 	}
 
+	/**
+	 * This method sets id of link agent
+	 * @param id given id
+	 */
 	public void setAgentNameID(int id) {
 		this.agentNameID = id;
 	}
 
-	// public CLinkRank getStatusLinkRank() {
-	// return statusLinkRank;
-	// }
-
+	/**
+	 * Returns the rank of the status link (according to the Simulation Engine
+	 * Specification part 2). We use this one to compare links.
+	 * @return status-rank of this link
+	 */
 	public final CLinkRank getStatusLinkRank() {
 		switch (statusLink) {
 		case BOUND:
@@ -66,27 +91,50 @@ public class CContactMapLinkState {
 			return CLinkRank.FREE;
 		}
 	}
-	
+
+	/**
+	 * This method returns current status of this link
+	 * @return current status of this link
+	 */
 	public CLinkStatus getStatusLink(){
 		return statusLink;
 	}
 
+	/**
+	 * This method returns id of link site
+	 * @return id of link site
+	 */
 	public int getLinkSiteNameID() {
 		return linkSiteNameID;
 	}
 
+	/**
+	 * This method returns id of link agent
+	 * @return id of link agent
+	 */
 	public int getAgentNameID() {
 		return agentNameID;
 	}
 
+	/**
+	 * This method returns id of internal state link site
+	 * @return id of internal state link site
+	 */
 	public int getInternalStateNameID() {
 		return internalStateNameID;
 	}
 
+	/**
+	 * This method sets id of internal state link site
+	 * @param id given id
+	 */
 	public void setInternalStateNameID(int id) {
 		this.internalStateNameID = id;
 	}
 
+	/**
+	 * This method sets this link free
+	 */
 	public final void setFreeLinkState() {
 		statusLink = CLinkStatus.FREE;
 		statusLinkRank = CLinkRank.FREE;
@@ -95,10 +143,25 @@ public class CContactMapLinkState {
 		internalStateNameID = CSite.NO_INDEX;
 	}
 
+	/**
+	 * Constructor of CContactMapLinkState
+	 */
 	public CContactMapLinkState() {
 		setFreeLinkState();
 	}
 
+	/**
+	 * This method returns <tt>true</tt> if current link state equals to given link state, otherwise <tt>false</tt> <br>
+	 * Equals by:
+	 * <li><b>statusLinkRank</b></li>
+	 * <li>link agent nameId</li>
+	 * <li>link site nameId</li>
+	 * <li>internal state from link site<br>
+	 *  if internal state from current/given link state does "EMPTY" returns <tt>true</tt>, otherwise compare their id.
+	 * </li>
+	 * @param linkState given state for checks
+	 * @return <tt>true</tt> if current state equals to given state, otherwise <tt>false</tt>
+	 */
 	public boolean equalz(CContactMapLinkState linkState) {
 		if (this == linkState) {
 			return true;
@@ -127,6 +190,13 @@ public class CContactMapLinkState {
 		return true;
 	}
 
+	/**
+	 * This method compares this link with the other one and returns true or false, according
+	 * to the fixed order of link-status ranks. 
+	 * @see CLinkRank
+	 * @param solutionLinkState the other link to compare to
+	 * @return <tt>true</tt> if this link's status-rank is "smaller" then status rank of the other link 
+	 */
 	public final boolean compareLinkStates(
 			CContactMapLinkState solutionLinkState) {
 		if (this.isLeftBranchStatus()
@@ -152,15 +222,12 @@ public class CContactMapLinkState {
 		return false;
 	}
 
-	public final boolean isLeftBranchStatus() {
+	private final boolean isLeftBranchStatus() {
 		return (statusLink == CLinkStatus.FREE) ? true : false;
 	}
 
-	public final boolean isRightBranchStatus() {
+	private final boolean isRightBranchStatus() {
 		return (statusLink == CLinkStatus.BOUND) ? true : false;
 	}
 
-	protected CContactMapLinkState clone() {
-		return new CContactMapLinkState(this);
-	}
 }

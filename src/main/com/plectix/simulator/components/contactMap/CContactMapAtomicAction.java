@@ -1,28 +1,39 @@
 package com.plectix.simulator.components.contactMap;
 
 import com.plectix.simulator.action.CActionType;
-import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 
+/**
+ * Util class. Used for save information about type of modification.
+ * @author avokhmin
+ *
+ */
 class CContactMapAtomicAction {
-	private IContactMapAbstractSite siteFrom;
-	private IContactMapAbstractSite siteTo;
+	private CContactMapAbstractSite site;
 	private CActionType type;
 
+	/**
+	 * Constructor of CContactMapAtomicAction.
+	 * @param type type of modification
+	 * @param site given site
+	 */
 	public CContactMapAtomicAction(CActionType type,
-			IContactMapAbstractSite siteFrom, IContactMapAbstractSite siteTo) {
+			CContactMapAbstractSite site) {
 		this.type = type;
-		this.siteFrom = siteFrom;
-		this.siteTo = siteTo;
+		this.site = site;
 	}
 
-	public IContactMapAbstractSite getSiteFrom() {
-		return siteFrom;
+	/**
+	 * This method returns site
+	 * @return site
+	 */
+	public CContactMapAbstractSite getSite() {
+		return site;
 	}
 
-	public IContactMapAbstractSite getSiteTo() {
-		return siteTo;
-	}
-
+	/**
+	 * This method returns type of modifications
+	 * @return type of modifications
+	 */
 	public CActionType getType() {
 		return type;
 	}

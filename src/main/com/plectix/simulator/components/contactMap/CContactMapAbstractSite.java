@@ -1,27 +1,27 @@
 package com.plectix.simulator.components.contactMap;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.IAbstractSite;
-import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
-import com.plectix.simulator.interfaces.IContactMapAbstractSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
-public class CContactMapAbstractSite implements IContactMapAbstractSite {
+/**
+ * This method implements abstract site.
+ * @author avokhmin
+ *
+ */
+public class CContactMapAbstractSite{
 	public static final int NO_INDEX = -1;
-
 	private final int nameId;
 	private CContactMapLinkState linkState;
-
 	private CInternalState internalState = CInternalState.EMPTY_STATE;
-	private IContactMapAbstractAgent linkAgent = null;
-	private int linkIndex = NO_INDEX;
+	private CContactMapAbstractAgent linkAgent = null;
 
-	public CContactMapAbstractSite(CSite site, IContactMapAbstractAgent agent) {
+	/**
+	 * Constructor of CContactMapAbstractSite
+	 * @param site given site for abstraction
+	 * @param agent "parent" agent
+	 */
+	public CContactMapAbstractSite(CSite site, CContactMapAbstractAgent agent) {
 		this.nameId = site.getNameId();
 		this.linkAgent = agent;
 		if (site.getInternalState() != CInternalState.EMPTY_STATE)
@@ -30,12 +30,20 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		this.linkState = new CContactMapLinkState(site.getLinkState());
 	}
 
+	/**
+	 * Constructor of CContactMapAbstractSite
+	 * @param site given site for abstraction
+	 */
 	public CContactMapAbstractSite(CSite site) {
 		this.nameId = site.getNameId();
 		this.linkState = new CContactMapLinkState();
 	}
 
-	public CContactMapAbstractSite(IContactMapAbstractSite site) {
+	/**
+	 * Constructor of CContactMapAbstractSite
+	 * @param site given abstract site
+	 */
+	private CContactMapAbstractSite(CContactMapAbstractSite site) {
 		this.nameId = site.getNameId();
 		this.linkAgent = site.getAgentLink();
 		if (site.getInternalState() != CInternalState.EMPTY_STATE)
@@ -44,100 +52,77 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		this.linkState = new CContactMapLinkState(site.getLinkState());
 	}
 
-	public IContactMapAbstractSite clone() {
-		IContactMapAbstractSite siteOut = new CContactMapAbstractSite(this);
+	public CContactMapAbstractSite clone() {
+		CContactMapAbstractSite siteOut = new CContactMapAbstractSite(this);
 		return siteOut;
 	}
 
-	public static List<IContactMapAbstractSite> cloneAll(
-			List<IContactMapAbstractSite> listIn) {
-		List<IContactMapAbstractSite> listOut = new ArrayList<IContactMapAbstractSite>();
-		for (IContactMapAbstractSite s : listIn)
-			listOut.add(s.clone());
-		return listOut;
-	}
-
-	public CContactMapAbstractSite(IContactMapAbstractAgent agent) {
-		this.nameId = NO_INDEX;
-		this.linkAgent = agent;
-	}
-
+	/**
+	 * This method returns internal state for current site.
+	 * @return internal state for current site.
+	 */
 	public CInternalState getInternalState() {
 		return internalState;
 	}
 
-	public int getLinkIndex() {
-		return linkIndex;
-	}
-
+	/**
+	 * Returns link state of this site.
+	 * @return link state of this site.
+	 */
 	public CContactMapLinkState getLinkState() {
 		return linkState;
 	}
 
+	/**
+	 * This method returns name of this site
+	 * @see com.plectix.simulator.util.NameDictionary NameDictionary
+	 * @return name of this agent
+	 */
 	public String getName() {
 		if (nameId == CSite.NO_INDEX)
 			return "EMPTY_SITE";
 		return ThreadLocalData.getNameDictionary().getName(nameId);
 	}
 
+	/**
+	 * This method returns name-id of this site
+	 * @return name-id of this site
+	 */
 	public int getNameId() {
 		return nameId;
 	}
 
-	public void setInternalState(CInternalState internalState) {
-		this.internalState = internalState;
-	}
-
-	public void setLinkIndex(int valueOf) {
-		this.linkIndex = valueOf;
-	}
-
-	public final IContactMapAbstractAgent getAgentLink() {
+	/**
+	 * This method returns agent, which is parent for this site
+	 * @return agent, which is parent for this site 
+	 */
+	public final CContactMapAbstractAgent getAgentLink() {
 		return linkAgent;
 	}
 
-	public final void setAgentLink(IContactMapAbstractAgent linkAgent) {
+	/**
+	 * This method sets link to the "parent" agent. 
+	 * @param linkAgent "parent" agent
+	 */
+	public final void setAgentLink(CContactMapAbstractAgent linkAgent) {
 		this.linkAgent = linkAgent;
 	}
 
-	public final boolean equalsNameId(IContactMapAbstractSite site) {
-		if (nameId != site.getNameId())
-			return false;
-		return true;
-	}
-
-	public final boolean equalsLinkAgent(IContactMapAbstractSite site) {
-		if (linkAgent.getNameId() != site.getAgentLink().getNameId())
-			return false;
-		return true;
-	}
-
-	public final boolean equalsInternalState(IContactMapAbstractSite site) {
-		if (internalState.getNameId() != site.getInternalState().getNameId())
-			return false;
-		return true;
-	}
-
-	public final boolean equalsLinkState(IContactMapAbstractSite site) {
-		if (!linkState.equalz(site.getLinkState()))
-			return false;
-		return true;
-	}
-
-	public final boolean equalz(IAbstractSite obj) {
-		if (this == obj) {
+	/**
+	 * This method returns <tt>true</tt>, if current site equals 
+	 * to given site (by nameId, internal and link state), otherwise <tt>false</tt>.
+	 * @param site given site
+	 * @return <tt>true</tt>, if current site equals 
+	 * to given site (by nameId, internal and link state), otherwise <tt>false</tt>.
+	 */
+	public final boolean equalz(CContactMapAbstractSite site) {
+		if (this == site) {
 			return true;
 		}
 
-		if (obj == null) {
+		if (site == null) {
 			return false;
 		}
-
-		if (!(obj instanceof CContactMapAbstractSite)) {
-			return false;
-		}
-
-		CContactMapAbstractSite site = (CContactMapAbstractSite) obj;
 
 		if (nameId != site.nameId)
 			return false;
@@ -151,45 +136,24 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		return true;
 	}
 
-	public final boolean equalByName(IAbstractSite obj) {
-		if (this == obj) {
+	/**
+	 * This method returns <tt>true</tt> if <b>nameId</b> current site equals <b>nameId</b> given site, otherwise <tt>false</tt>.
+	 * @param site given site
+	 * @return <tt>true</tt> if <b>nameId</b> current site equals <b>nameId</b> given site, otherwise <tt>false</tt>.
+	 */
+	public final boolean equalByName(CContactMapAbstractSite site) {
+		if (this == site) {
 			return true;
 		}
 
-		if (obj == null) {
+		if (site == null) {
 			return false;
 		}
-
-		if (!(obj instanceof CContactMapAbstractSite)) {
-			return false;
-		}
-
-		CContactMapAbstractSite site = (CContactMapAbstractSite) obj;
 
 		if (nameId != site.nameId)
 			return false;
 
 		return true;
-	}
-
-	public void print() {
-////		System.out.println("site = " + getName());
-////		System.out.println("internal state = " + internalState.getName());
-//		if (linkState.getLinkSiteNameID() != -1) {
-//			System.out.println("link agent = "
-//					+ ThreadLocalData.getNameDictionary().getName(
-//							linkState.getAgentNameID()));
-//			System.out.println("link site = "
-//					+ ThreadLocalData.getNameDictionary().getName(
-//							linkState.getLinkSiteNameID()));
-//			if (linkState.getInternalStateNameID() != -1)
-//				System.out.println("link istate = "
-//						+ ThreadLocalData.getNameDictionary().getName(
-//								linkState.getInternalStateNameID()));
-//		}
-//		System.out
-//				.println("__________________________________________________________________________");
-
 	}
 
 	public String toString() {
@@ -215,17 +179,12 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		return st;
 	}
 
-	public boolean includedInCollection(
-			Collection<IContactMapAbstractSite> collection) {
-		for (IContactMapAbstractSite site : collection) {
-			if (this.equalByName(site)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean isFit(IContactMapAbstractSite s) {
+	/**
+	 * This method returns <tt>true</tt> if current site does fit to given site, otherwise <tt>false</tt>.
+	 * @param s given site
+	 * @return <tt>true</tt> if current site does fit to given site, otherwise <tt>false</tt>.
+	 */
+	public boolean isFit(CContactMapAbstractSite s) {
 		if (nameId == CSite.NO_INDEX)
 			return true;
 		if (!internalState.compareInternalStates(s.getInternalState()))
@@ -236,24 +195,4 @@ public class CContactMapAbstractSite implements IContactMapAbstractSite {
 		return true;
 	}
 
-	public boolean isFit(int agentId, int siteId, int internalStateId,
-			int agentLinkId, int siteLinkId, int internalStateLinkId) {
-		if (linkAgent.getNameId() != agentId)
-			return false;
-		if (nameId != siteId)
-			return false;
-		if (internalState.getNameId() != internalStateId)
-			return false;
-		if (linkState.getAgentNameID() != agentLinkId)
-			return false;
-		if (linkState.getLinkSiteNameID() != siteLinkId)
-			return false;
-		if (linkState.getInternalStateNameID() != internalStateLinkId)
-			return false;
-		return true;
-	}
-
-	public void setLinkState(CContactMapLinkState linkState) {
-		this.linkState = linkState;
-	}
 }

@@ -3,8 +3,6 @@ package com.plectix.simulator.util;
 import java.util.Collection;
 import java.util.List;
 
-import com.plectix.simulator.interfaces.IContactMapAbstractAgent;
-
 public class BoundContactMap {
 	private int agentNameIdFrom;
 	private int agentNameIdTo;
