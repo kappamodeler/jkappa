@@ -7,10 +7,8 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.util.Converter;
 
 /**
  * Class implements Injection.
