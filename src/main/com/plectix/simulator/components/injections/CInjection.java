@@ -159,22 +159,10 @@ public class CInjection implements Serializable {
 	}
 
 	public void setSimple() {
-//		System.out.println(connectedComponent.getCommonPower() + " before - " + this);
 		if (isSuper()) {
 			connectedComponent.simplifyInjection(this);
 			myPower = 1;
 			myImageComponent = null;
-		}
-//		System.out.println(connectedComponent.getCommonPower() + " after - " + this);
-	}
-	
-	public String toString() {
-		if (isSuper()) {
-			return myPower + " * " + Converter.toString(connectedComponent) + " -> " 
-			+ Converter.toString(myImageComponent.getComponent()) + "\n";
-		} else {
-			return myPower + " * " + Converter.toString(connectedComponent) + " -> " 
-			+ Converter.toString(SolutionUtils.getConnectedComponent(getImageAgent())) + "\n";
 		}
 	}
 }
