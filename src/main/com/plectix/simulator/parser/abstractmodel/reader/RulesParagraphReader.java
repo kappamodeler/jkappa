@@ -78,7 +78,7 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 			if (index != -1) {
 				try {
 					String activStr = rulesStr.substring(index + 1).trim();
-					String inf = new String(new Double(Double.MAX_VALUE)
+					String inf = new String(new Double(Double.POSITIVE_INFINITY)
 							.toString());
 					activStr = activStr.replaceAll("\\$INF", inf);
 					if (activStr.indexOf(",") != -1) {

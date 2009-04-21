@@ -36,7 +36,10 @@ public abstract class SpecifiedLinearModificationParser {
 		if (item.indexOf("*") == -1) {
 			try {
 				// free term as double
-				coef = Double.valueOf(item);
+				if(item.equals("$INF"))
+					coef = Double.POSITIVE_INFINITY;
+				else
+					coef = Double.valueOf(item);
 				return new LinearExpressionMonome(null, coef);
 			} catch (NumberFormatException e) {
 				// free term as rule name

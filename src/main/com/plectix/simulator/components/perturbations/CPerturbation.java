@@ -225,12 +225,29 @@ public final class CPerturbation implements Serializable{
 	 */
 	public final boolean checkCondition(double currentTime) {
 		if (currentTime > this.timeCondition) {
-			fillPerturbationRate();
-			this.rule.setRuleRate(this.perturbationRate);
+			checkAndSetRuleRate();
+//			fillPerturbationRate();
+//			if(perturbationRate == Double.POSITIVE_INFINITY){
+//				this.rule.setRuleRate(1);
+//				this.rule.setInfinityRate(true);
+//			}else				
+//				this.rule.setRuleRate(this.perturbationRate);
 			this.isDO = true;
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Util method. Calculates and sets rule rate.
+	 */
+	private final void checkAndSetRuleRate(){
+		fillPerturbationRate();
+		if(perturbationRate == Double.POSITIVE_INFINITY){
+			this.rule.setRuleRate(1);
+			this.rule.setInfinityRate(true);
+		}else				
+			this.rule.setRuleRate(this.perturbationRate);
 	}
 
 	/**
@@ -254,8 +271,14 @@ public final class CPerturbation implements Serializable{
 
 		if ((greater && (obsSize > calculateSum(observables)))
 				|| (!(greater) && (obsSize < calculateSum(observables)))) {
-			fillPerturbationRate();
-			this.rule.setRuleRate(this.perturbationRate);
+			checkAndSetRuleRate();
+//			fillPerturbationRate();
+//			if(perturbationRate == Double.POSITIVE_INFINITY){
+//				this.rule.setRuleRate(1);
+//				this.rule.setInfinityRate(true);
+//			}else				
+//				this.rule.setRuleRate(this.perturbationRate);
+//			this.rule.setRuleRate(this.perturbationRate);
 			return true;
 		}
 		if (greater) {

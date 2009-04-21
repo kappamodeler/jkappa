@@ -100,7 +100,8 @@ public class CRule implements Serializable {
 		for (IConnectedComponent cc : this.leftHandside) {
 			cc.initSpanningTreeMap();
 		}
-		if (ruleRate == Double.MAX_VALUE) {
+//		if (ruleRate == Double.MAX_VALUE) {
+		if (ruleRate == Double.POSITIVE_INFINITY) {
 			this.infiniteRate = true;
 			this.rate = 1;
 		} else {

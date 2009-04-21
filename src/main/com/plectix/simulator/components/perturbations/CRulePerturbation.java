@@ -39,7 +39,8 @@ public final class CRulePerturbation extends CRule {
 	 * @param count given count
 	 */
 	public final void setCount(double count) {
-		if (count == Double.MAX_VALUE) {
+//		if (count == Double.MAX_VALUE) {
+		if (count == Double.POSITIVE_INFINITY) {
 			inf = true;
 			this.count = -1;
 		} else
