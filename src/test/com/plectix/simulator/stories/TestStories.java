@@ -42,7 +42,7 @@ public class TestStories extends InitStoriesTests {
 	}
 
 	public TestStories(String testFileName) {
-		super(path + simple, testFileName);
+		super(path + simple, testFileName, true);
 		fileName = testFileName;
 	}
 
@@ -66,7 +66,21 @@ public class TestStories extends InitStoriesTests {
 			}
 		}
 		if (!myTraceList.isEmpty()) 
-			myFailer.assertTrue("Not found the graph", false);
+			myFailer.assertTrue("Not found the graph" + tostring(myTraceList), false);
+	}
+
+	private String tostring(List<TreeMap<Integer, List<Integer>>> mapList) {
+		StringBuffer sb = new StringBuffer();
+		for (TreeMap<Integer, List<Integer>> treeMap : mapList) {
+			sb.append("\n");
+			for (Integer key : treeMap.keySet()) {
+				sb.append("\n" + key);
+				for (Integer value : treeMap.get(key)) {
+					sb.append(" " + value);
+				}
+			}
+		}
+		return sb.toString();
 	}
 
 	private String getMap(TreeMap<Integer, List<Integer>> map) {

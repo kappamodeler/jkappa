@@ -1,0 +1,18 @@
+# Rules:
+#######
+
+'1' in(x) ->  a(x), b(x) @ 1.0
+'2' a(x) ->  c(x) @ 1.0
+'3' b(x) ->  c(x) @ 1.0
+'4' c(x) ->   @ 1.0
+
+
+# Initial conditions:
+%init: 1 * (in(x))
+
+# Simulation:
+%obs: b(x)
+%obs: a(x)
+%obs: c(x)
+
+%story: '4'

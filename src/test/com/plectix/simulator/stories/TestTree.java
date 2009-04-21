@@ -10,16 +10,16 @@ import java.util.TreeMap;
 public class TestTree {
 
 	private TreeMap<Integer,List<Integer>> trace; 
-	private HashMap<Integer, Integer> color;
+	private HashMap<Integer, Byte> color;
 	
-	private Integer white = 0;
-	private Integer grey = 1;
-	private Integer black = 2;
+	private Byte white = 0x00;
+	private Byte grey = 0x01;
+	private Byte black = 0x02;
 	
 	
 	TestTree(TreeMap<Integer,List<Integer>> traceIdToTraceId){
 		trace = traceIdToTraceId;
-		color = new HashMap<Integer, Integer>();
+		color = new HashMap<Integer, Byte>();
 	}
 	
 

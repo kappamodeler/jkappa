@@ -1,0 +1,16 @@
+#####  debugging-polymere.ka
+
+'start' Root(x),P(l) -> Root(x!1),P(l!1)
+'grow' P(l!_,r),P(l) -> P(l!_,r!1),P(l!1)
+'cut' Root(x!1),P(l!2,r?),P(l!1,r!2) -> Root(x!1),P(l!1,r?)
+'add' Root(x!1),P(l!1,r?) -> Root(x!1),P(l!2,r?),P(l!1,r!2)
+
+%init: 1 * Root(x)  
+%init: 100 * P(l,r)
+
+%obs: P(l!_,r!_)
+
+%story: 'add'
+%story: 'cut'
+%story: 'grow'
+

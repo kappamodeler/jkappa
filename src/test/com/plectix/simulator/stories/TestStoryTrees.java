@@ -20,7 +20,7 @@ public class TestStoryTrees extends InitStoriesTests{
 	private static final String testFileNamePrefix = "test.data" + separator + "stories" + separator;
 	
 	private TreeMap<Integer,List<Integer>> trace; 
-	private String filePath = "";
+//	private String filePath = "";
 
 
 	@Parameters
@@ -29,8 +29,8 @@ public class TestStoryTrees extends InitStoriesTests{
 	}
 
 	public TestStoryTrees(String testFilePath) {
-		super(testFileNamePrefix, testFilePath);
-		filePath = testFilePath;
+		super(testFileNamePrefix, testFilePath, false);
+//		filePath = testFilePath;
 	}
 	
 	@Test

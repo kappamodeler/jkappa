@@ -27,6 +27,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	private CStoryTrees storyTrees;
 
 	private double time = 10;
+	private boolean isSlow;
 
 	@Override
 	public String getPrefixFileName() {
@@ -38,9 +39,10 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 		return getAllTestFileNames(getDirectory());
 	}
 
-	public InitStoriesTests(String path, String fileName) {
+	public InitStoriesTests(String path, String fileName, boolean isSlow) {
 		testDirectory = path;
 		FileName = fileName;
+		this.isSlow = isSlow;
 	}
 
 	@Before
@@ -62,7 +64,11 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 
 		SimulationArguments args = null;
 		try {
-			args = Initializator.prepareStorifyArguments(filePath);
+			if (!isSlow)
+				args = Initializator.prepareStorifyArguments(filePath);
+			else 
+				args = Initializator.prepareStorifyArgumentsSlow(filePath);
+				
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);
