@@ -163,7 +163,6 @@ public class FullereneCreator {
 			final FullereneVertex thisVertex = this;
 			
 			Collections.sort(verticesCopy, new Comparator<FullereneVertex>() {
-				@Override
 				public int compare(final FullereneVertex o1, final FullereneVertex o2) {
 					return Double.compare(thisVertex.computeDistanceSquareTo(o1), thisVertex.computeDistanceSquareTo(o2));
 				} });
