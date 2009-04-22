@@ -30,11 +30,11 @@ public class Initializator {
 		boolean rescale = (myRescale != null);
 		String[] args;
 		if (!rescale) {
-			args = new String[7];
-		} else {
 			args = new String[9];
-			args[7] = "-rescale";
-			args[8] = "" + myRescale;
+		} else {
+			args = new String[11];
+			args[9] = "-rescale";
+			args[10] = "" + myRescale;
 		}
 		args[0] = "--debug";
 		args[1] = "--sim";
@@ -43,6 +43,8 @@ public class Initializator {
 		args[4] = "5";
 		args[5] = "--seed";
 		args[6] = "10";
+		args[7] = "--operation-mode";
+		args[8] = "1";
 		return args;
 	}
 	

@@ -30,19 +30,6 @@ public class CInjectionsRandomizer {
 		}
 	}
 
-	public final void decreaseInjection(CInjection inj) {
-		if (inj != null) {
-			int id = inj.getId();
-			List<Long> finderValue = injectionsToIndexes.get(id);
-			if (finderValue != null) {
-				safelyRemoveFirst(finderValue);
-				if (finderValue.isEmpty()) {
-					injectionsToIndexes.remove(id);
-				}
-			}
-		}
-	}
-	
 	public final void increaseInjection(CInjection inj) {
 		if (inj != null) {
 			int id = inj.getId();

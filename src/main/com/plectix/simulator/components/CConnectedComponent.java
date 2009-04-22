@@ -12,6 +12,7 @@ import java.util.TreeMap;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.injections.CLiftElement;
 import com.plectix.simulator.components.solution.SuperSubstance;
+import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -385,10 +386,6 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		myInjections.getRandomizer().increaseInjection(inj);
 	}
 	
-	public void decreaseInjection(CInjection inj) {
-		myInjections.getRandomizer().decreaseInjection(inj);
-	}
-	
 	public void simplifyInjection(CInjection inj) {
 		myInjections.getRandomizer().simplifyInjection(inj);
 	}
@@ -431,6 +428,10 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 				for (CLiftElement lift : site.getLift()) {
 					lift.getInjection().setSimple();
 				}
+			}
+			// default-site case
+			for (CLiftElement lift : agent.getDefaultSite().getLift()) {
+				lift.getInjection().setSimple();
 			}
 		}
 	}
