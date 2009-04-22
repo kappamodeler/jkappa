@@ -13,19 +13,16 @@ public class CAbstractSuperSolution extends ComplexSolution {
 		super(system);
 	}
 
-	@Override
 	public void addConnectedComponent(IConnectedComponent component) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void addInitialConnectedComponents(long quant, List<CAgent> agents) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void applyRule(RuleApplicationPool pool) {
 		// TODO Auto-generated method stub
 
