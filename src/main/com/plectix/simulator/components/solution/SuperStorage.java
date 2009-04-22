@@ -11,11 +11,6 @@ import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 
 public class SuperStorage implements IStorage {
 	private Map<String, SuperSubstance> myStorage = new TreeMap<String, SuperSubstance>();
-	
-//	private List<SuperSubstance> myComponents = new ArrayList<SuperSubstance>();
-
-	// private final HashMap<Long, CAgent> agentMap = new HashMap<Long,
-	// CAgent>();;
 	private final ISolution mySolution;
 
 	SuperStorage(ISolution solution) {
@@ -30,9 +25,8 @@ public class SuperStorage implements IStorage {
 		}
 	}
 	
-	public void addAndReplace(SuperSubstance substanceToAdd) {
-		String hash = ConnectedComponentToSmilesString.getInstance()
-			.toUniqueString(substanceToAdd.getComponent());
+	public void addOrEvenIncrement(SuperSubstance substanceToAdd) {
+		String hash = substanceToAdd.getComponent().getHash();
 		SuperSubstance previousEntry = myStorage.get(hash);
 		if (previousEntry == null) {
 			myStorage.put(hash, substanceToAdd);
@@ -45,11 +39,11 @@ public class SuperStorage implements IStorage {
 		tryAdd(new SuperSubstance(component));
 	}
 
-	public void removeConnectedComponent(IConnectedComponent component) {
-		String hash = ConnectedComponentToSmilesString.getInstance().toUniqueString(component);
-		SuperSubstance substance = myStorage.remove(hash);
-		substance.extract();
-	}
+//	public void removeConnectedComponent(IConnectedComponent component) {
+//		String hash = ConnectedComponentToSmilesString.getInstance().toUniqueString(component);
+//		SuperSubstance substance = myStorage.remove(hash);
+//		substance.extract();
+//	}
 
 	public void clear() {
 		myStorage.clear();
@@ -67,8 +61,10 @@ public class SuperStorage implements IStorage {
 		SuperSubstance image = inj.getSuperSubstance();
 		if (image != null && !image.isEmpty()) {
 			IConnectedComponent component = this.extract(image);
-//			inj.notifyComponentWhenPowerDecreases();
 			component.burnInjections();
+			if (image.isEmpty()) {
+				image.getComponent().deleteAllInjections();
+			}
 			return component;
 		} else {
 			return null;

@@ -10,7 +10,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 
-/*package*/ class CSecondSolution extends ComplexSolution {
+/*package*/ class CSecondSolution extends CAbstractSuperSolution {
 	private final SuperStorage mySuperStorage;
 	private final StraightStorage myStraightStorage;
 	
@@ -24,20 +24,6 @@ import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 		myStraightStorage.addConnectedComponent(component);
 	}
 
-	public RuleApplicationPool prepareRuleApplicationPool(List<CInjection> injections) {
-		StraightStorage storage = new StraightStorage();
-		for (CInjection injection : injections) {
-			if (injection.isSuper()) {
-//				injection.setSimple();
-				storage.addConnectedComponent(mySuperStorage.extractComponent(injection));
-			} else {
-				storage.addConnectedComponent(myStraightStorage.extractComponent(injection));
-			}
-		}
-		StandardRuleApplicationPool pool = new StandardRuleApplicationPool(storage);
-		return pool;
-	}
-	
 	public void applyRule(RuleApplicationPool pool) {
 		// we can skip checking that getStorage() returns temporary storage
 		Collection<CAgent> agents = pool.getStorage().getAgents();
@@ -50,7 +36,7 @@ import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 	
 	public void addInitialConnectedComponents(long quant, List<CAgent> agentsList) {
 		for (IConnectedComponent component : SimulationUtils.buildConnectedComponents(agentsList)) {
-			mySuperStorage.addAndReplace(new SuperSubstance(quant, component));	
+			mySuperStorage.addOrEvenIncrement(new SuperSubstance(quant, component));	
 		}	
 	}
 }

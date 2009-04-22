@@ -15,7 +15,7 @@ public final class SolutionFactory {
 			return new CSecondSolution(system);
 		}
 		case THIRD: {
-			return new CSolution(system);
+			return new CThirdSolution(system);
 		}
 		case FOURTH: {
 			// TODO

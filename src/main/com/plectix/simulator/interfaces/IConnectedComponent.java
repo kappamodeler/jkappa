@@ -29,4 +29,8 @@ public interface IConnectedComponent extends ISolutionComponent {
 	public int getCommonPower();
 
 	public void burnInjections();
+
+	public String getHash();
+
+	public void deleteAllInjections();
 }

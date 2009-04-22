@@ -1,14 +1,11 @@
 package com.plectix.simulator.simulator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.ConstraintData;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.injections.CLiftElement;
@@ -17,7 +14,6 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
-import com.plectix.simulator.components.CSite;
 
 public class SimulationUtils {
 
@@ -154,7 +150,7 @@ public class SimulationUtils {
 	}
 
 	public static final List<IConnectedComponent> buildConnectedComponents(
-			List<CAgent> listOfAgents) {
+			Collection<CAgent> listOfAgents) {
 
 		if (listOfAgents == null || listOfAgents.isEmpty()) {
 			return null;

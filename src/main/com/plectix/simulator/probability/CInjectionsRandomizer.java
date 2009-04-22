@@ -43,7 +43,7 @@ public class CInjectionsRandomizer {
 			finderValue.add(index);
 		}
 	}
-	
+
 	private final void safelyRemoveFirst(List<Long> indexesToDelete) {
 		long indexToDelete = indexesToDelete.get(0);
 		indexGenerator.low();
@@ -51,10 +51,11 @@ public class CInjectionsRandomizer {
 		indexesToDelete.remove(indexGenerator.check());
 		indexesToInjections.remove(indexGenerator.check());
 	}
-	
+
 	/**
-	 * This method swaps to indexes in injectionsFinder, keeping in mind, that the first
-	 * would be deleted
+	 * This method swaps to indexes in injectionsFinder, keeping in mind, that
+	 * the first would be deleted
+	 * 
 	 * @param index1
 	 * @param index2
 	 */
@@ -66,7 +67,7 @@ public class CInjectionsRandomizer {
 				return;
 			}
 			indexesToInjections.put(index1, id2);
-//			indexesToInjections.put(index2, id1);
+			// indexesToInjections.put(index2, id1);
 			List<Long> firstIdsIndexes = injectionsToIndexes.get(id1);
 			firstIdsIndexes.remove(index1);
 			firstIdsIndexes.add(index2);
@@ -75,7 +76,7 @@ public class CInjectionsRandomizer {
 			secondIdsIndexes.add(index1);
 		}
 	}
-	
+
 	public final void removeInjection(CInjection inj) {
 		if (inj != null) {
 			int id = inj.getId();
@@ -91,7 +92,7 @@ public class CInjectionsRandomizer {
 	}
 
 	public int getRandomInjection(IRandom random) {
-		long index = (long)random.getInteger(indexesToInjections.size());
+		long index = (long) random.getInteger(indexesToInjections.size());
 		return indexesToInjections.get(index);
 	}
 
@@ -104,7 +105,7 @@ public class CInjectionsRandomizer {
 			int id = inj.getId();
 			List<Long> finderValue = injectionsToIndexes.get(id);
 			if (finderValue != null) {
-				while (finderValue.size() != 1) {
+				while (finderValue.size() > 1) {
 					safelyRemoveFirst(finderValue);
 				}
 			}

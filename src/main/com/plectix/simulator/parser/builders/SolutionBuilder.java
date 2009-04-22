@@ -24,8 +24,12 @@ public class SolutionBuilder {
 	public ISolution build(AbstractSolution arg) {
 		ISolution solution;
 		switch(myArguments.getOperationMode()) {
-		case SECOND:{
+		case SECOND: {
 			solution = (new SolutionFactory()).produce(OperationMode.SECOND, myKappaSystem);
+			break;
+		}
+		case THIRD: {
+			solution = (new SolutionFactory()).produce(OperationMode.THIRD, myKappaSystem);
 			break;
 		}
 		default:{

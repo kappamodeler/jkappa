@@ -6,25 +6,32 @@ import java.util.List;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.KappaSystem;
 
-public class SuperSubstance implements ISolutionComponent {
+public class SuperSubstance {
 	private long myQuantity = 0;
 	private IConnectedComponent myComponent;
 	
 	//TODO build hash only with first needed
-	private String hash;
+	private String myHash;
 	
 	public SuperSubstance(IConnectedComponent component) {
 		myComponent = component;
 		myComponent.setSuperSubstance(this);
+		refreshHash();
 	}
 	
 	public SuperSubstance(long quant, IConnectedComponent component) {
 		myComponent = component;
 		myQuantity = quant;
 		myComponent.setSuperSubstance(this);
+		refreshHash();
+	}
+	
+	private void refreshHash() {
+		myHash = ConnectedComponentToSmilesString.getInstance().toUniqueString(myComponent);
 	}
 	
 	// TODO catch exception
@@ -38,6 +45,7 @@ public class SuperSubstance implements ISolutionComponent {
 	
 	public void setComponent(IConnectedComponent component) {
 		myComponent = component;
+		refreshHash();
 	}
 	
 	public List<CAgent> getAgents() {
@@ -57,99 +65,11 @@ public class SuperSubstance implements ISolutionComponent {
 	}
 	
 	public boolean matches(IConnectedComponent component) {
-		return myComponent.equals(component);
+		return component.getHash().equals(myHash);
 	}
 	
 	public IConnectedComponent getComponent() {
 		return myComponent;
-	}
-
-	public void addAgentFromSolutionForRHS(CAgent agent) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void clearAgentsFromSolutionForRHS() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void doPositiveUpdate(List<IConnectedComponent> rightHandSide) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public List<CAgent> getAgentFromSolutionForRHS() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<CAgent> getAgentsSortedByIdInRule() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public CInjection getFirstInjection() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public CInjection createInjection(CAgent agent) {
-		return null;
-	}
-
-	public Collection<CInjection> getInjectionsList() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public CInjection getRandomInjection(IRandom random) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void initSpanningTreeMap() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public boolean isAutomorphicTo(CAgent agent) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public void removeInjection(CInjection injection) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setInjection(CInjection inj) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void setRule(CRule rule) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public boolean unify(CAgent agent) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
-	public boolean equals(Object obj) {
-		if (obj == this) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof SuperSubstance)) {
-			return false;
-		}
-		SuperSubstance arg = (SuperSubstance)obj;
-		return arg.myComponent.equals(arg.myComponent);
 	}
 
 	public long getQuantity() {
