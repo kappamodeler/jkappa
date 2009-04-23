@@ -22,7 +22,7 @@ public interface ISolution {
 	 * This method adds given connected component to current solution.
 	 * @param component given connected component
 	 */
-	public void addConnectedComponent(IConnectedComponent component);
+//	public void addConnectedComponent(IConnectedComponent component);
 
 	/**
 	 * This method clears current solution.
@@ -39,7 +39,7 @@ public interface ISolution {
 	 * This method adds given connected components to current solution.
 	 * @param list given connected components
 	 */
-	public void addConnectedComponents(List<IConnectedComponent> list);
+//	public void addConnectedComponents(List<IConnectedComponent> list);
 
 	/**
 	 * This method checks given information and adds if no found.

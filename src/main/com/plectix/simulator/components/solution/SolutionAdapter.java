@@ -21,14 +21,6 @@ import com.plectix.simulator.simulator.KappaSystem;
 		mySystem = system;
 	}
 	
-	public final void addConnectedComponents(List<IConnectedComponent> list) {
-		if (list == null)
-			return;
-		for (IConnectedComponent component : list) {
-			this.addConnectedComponent(component);
-		}
-	}
-	
 	//TODO REMOVE
 	public final void checkSolutionLinesAndAdd(String line, long count) {
 		line = line.replaceAll("[ 	]", "");

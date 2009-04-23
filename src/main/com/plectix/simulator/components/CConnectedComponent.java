@@ -38,15 +38,13 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 */
 	public static CConnectedComponent EMPTY = new CConnectedComponent();
 
-	private final List<CAgent> agentList;
+	private final List<CAgent> agentList = new ArrayList<CAgent>();;
 	private Map<Integer, List<CSpanningTree>> spanningTreeMap;
 	private List<CAgent> agentFromSolutionForRHS;
 	private List<CAgentLink> agentLinkList;
 	private List<CSite> injectedSites;
 	private CRule rule;
 	private SuperSubstance mySubstance = null;
-	//TODO think on longs and ints
-//	private int myCommonPower = 0;
 	// for the better searching
 	private CInjectionStorage myInjections = new CInjectionStorage();
 
@@ -54,7 +52,6 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * private empty connected component constructor
 	 */
 	private CConnectedComponent() {
-		agentList = new ArrayList<CAgent>();
 		agentList.add(new CAgent());
 		myInjections.addInjection(CInjection.EMPTY_INJECTION, 0);
 		agentFromSolutionForRHS = new ArrayList<CAgent>();
@@ -64,8 +61,8 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * Main constructor. Creates connected component with given list of connected agents.
 	 * @param connectedAgents list of agents, which can be source for the new connected component 
 	 */
-	public CConnectedComponent(List<CAgent> connectedAgents) {
-		agentList = connectedAgents;
+	public CConnectedComponent(Collection<CAgent> connectedAgents) {
+		agentList.addAll(connectedAgents);
 		agentFromSolutionForRHS = new ArrayList<CAgent>();
 	}
 
@@ -382,12 +379,8 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return myInjections.getCommonPower();
 	}
 	
-	public void increaseInjection(CInjection inj) {
-		myInjections.getRandomizer().increaseInjection(inj);
-	}
-	
 	public void simplifyInjection(CInjection inj) {
-		myInjections.getRandomizer().simplifyInjection(inj);
+		myInjections.simplifyInjection(inj);
 	}
 	
 	/**
@@ -396,9 +389,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @return random injection from current connected component
 	 */
 	public final CInjection getRandomInjection(IRandom random) {
-//		int randomId = myInjections.getRandomizer().getRandomInjection(random);
-		int randomId = random.getInteger(myInjections.getList().size());
-		return myInjections.getInjection(randomId);
+		return myInjections.getRandomInjection(random);
 	}
 
 	/**

@@ -8,7 +8,7 @@ import com.plectix.simulator.parser.util.IdGenerator;
 
 public class CInjectionsRandomizer {
 	// id to index
-	public final Map<Integer, List<Long>> injectionsToIndexes = new TreeMap<Integer, List<Long>>();
+	public final Map<Integer, SortedSet<Long>> injectionsToIndexes = new TreeMap<Integer, SortedSet<Long>>();
 	// index to id
 	private final Map<Long, Integer> indexesToInjections = new TreeMap<Long, Integer>();
 
@@ -20,7 +20,7 @@ public class CInjectionsRandomizer {
 			if (injectionsToIndexes.get(id) != null) {
 				removeInjection(inj);
 			}
-			List<Long> finderValue = new ArrayList<Long>();
+			SortedSet<Long> finderValue = new TreeSet<Long>();
 			injectionsToIndexes.put(id, finderValue);
 			for (long i = 0; i < inj.getPower(); i++) {
 				long index = indexGenerator.generateNext();
@@ -33,9 +33,9 @@ public class CInjectionsRandomizer {
 	public final void increaseInjection(CInjection inj) {
 		if (inj != null) {
 			int id = inj.getId();
-			List<Long> finderValue = injectionsToIndexes.get(id);
+			SortedSet<Long> finderValue = injectionsToIndexes.get(id);
 			if (finderValue == null) {
-				finderValue = new ArrayList<Long>();
+				finderValue = new TreeSet<Long>();
 				injectionsToIndexes.put(id, finderValue);
 			}
 			long index = indexGenerator.generateNext();
@@ -44,12 +44,19 @@ public class CInjectionsRandomizer {
 		}
 	}
 
-	private final void safelyRemoveFirst(List<Long> indexesToDelete) {
-		long indexToDelete = indexesToDelete.get(0);
-		indexGenerator.low();
-		swap(indexToDelete, indexGenerator.check());
-		indexesToDelete.remove(indexGenerator.check());
-		indexesToInjections.remove(indexGenerator.check());
+	private final void removeAnyIndex(SortedSet<Long> indexesToDelete) {
+		if (!indexesToDelete.isEmpty()) {
+			long indexToDelete = indexesToDelete.first();
+			indexGenerator.low();
+			long lastIndex = indexGenerator.check();
+			int idOfThisIndex = indexesToInjections.get(indexToDelete);
+			int idOfLastIndex = indexesToInjections.get(lastIndex);
+			if (idOfThisIndex != idOfLastIndex) {
+				swap(indexToDelete, lastIndex);
+			}
+			indexesToDelete.remove(lastIndex);
+			indexesToInjections.remove(lastIndex);
+		}
 	}
 
 	/**
@@ -57,21 +64,17 @@ public class CInjectionsRandomizer {
 	 * the first would be deleted
 	 * 
 	 * @param index1
-	 * @param index2
+	 * @param last
 	 */
 	private final void swap(long index1, long index2) {
 		if (index1 != index2) {
-			int id1 = indexesToInjections.get(index1);
-			int id2 = indexesToInjections.get(index2);
-			if (id1 == id2) {
-				return;
-			}
-			indexesToInjections.put(index1, id2);
-			// indexesToInjections.put(index2, id1);
-			List<Long> firstIdsIndexes = injectionsToIndexes.get(id1);
+			int idOfIndex1 = indexesToInjections.get(index1);
+			int idOfIndex2 = indexesToInjections.get(index2);
+			indexesToInjections.put(index1, idOfIndex2);
+			SortedSet<Long> firstIdsIndexes = injectionsToIndexes.get(idOfIndex1);
 			firstIdsIndexes.remove(index1);
-			firstIdsIndexes.add(index2);
-			List<Long> secondIdsIndexes = injectionsToIndexes.get(id2);
+//			firstIdsIndexes.add(index2);
+			SortedSet<Long> secondIdsIndexes = injectionsToIndexes.get(idOfIndex2);
 			secondIdsIndexes.remove(index2);
 			secondIdsIndexes.add(index1);
 		}
@@ -80,11 +83,10 @@ public class CInjectionsRandomizer {
 	public final void removeInjection(CInjection inj) {
 		if (inj != null) {
 			int id = inj.getId();
-			List<Long> finderValue = injectionsToIndexes.get(id);
-			if (finderValue != null) {
-				List<Long> indexesToDelete = injectionsToIndexes.get(id);
+			SortedSet<Long> indexesToDelete = injectionsToIndexes.get(id);
+			if (indexesToDelete != null) {
 				while (!indexesToDelete.isEmpty()) {
-					safelyRemoveFirst(indexesToDelete);
+					removeAnyIndex(indexesToDelete);
 				}
 				injectionsToIndexes.remove(id);
 			}
@@ -103,10 +105,10 @@ public class CInjectionsRandomizer {
 	public void simplifyInjection(CInjection inj) {
 		if (inj != null) {
 			int id = inj.getId();
-			List<Long> finderValue = injectionsToIndexes.get(id);
+			SortedSet<Long> finderValue = injectionsToIndexes.get(id);
 			if (finderValue != null) {
 				while (finderValue.size() > 1) {
-					safelyRemoveFirst(finderValue);
+					removeAnyIndex(finderValue);
 				}
 			}
 		}

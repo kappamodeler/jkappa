@@ -69,11 +69,16 @@ public class CInjectionStorage {
 		return Collections.unmodifiableCollection(injections.values());
 	}
 	
-	public CInjectionsRandomizer getRandomizer() {
-		return injectionsRandomizer;
+	public CInjection getRandomInjection(IRandom random) {
+		int randomId = injectionsRandomizer.getRandomInjection(random);
+		return injections.get(randomId);
 	}
 	
 	public int getCommonPower() {
 		return injectionsRandomizer.getCommonPower();
+	}
+	
+	public void simplifyInjection(CInjection inj) {
+		injectionsRandomizer.simplifyInjection(inj);
 	}
 }

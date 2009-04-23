@@ -20,22 +20,12 @@ import com.plectix.simulator.simulator.SimulationUtils;
 		myStraightStorage = this.getStraightStorage();
 	}
 
-	//---------------ADDERS---------------------------------
-	
-	public final void addConnectedComponent(IConnectedComponent component) {
-		myStraightStorage.addConnectedComponent(component);
-	}
-
 	//-----------------GETTERS----------------------------------
 	
 	public final Collection<CAgent> getStraightStorageAgents() {
 		return myStraightStorage.getAgents();
 	}
 
-	public final Collection<CAgent> getSuperStorageAgents() {
-		return null;
-	}
-	
 	public final List<IConnectedComponent> split() {
 		return myStraightStorage.split();
 	}
@@ -48,7 +38,6 @@ import com.plectix.simulator.simulator.SimulationUtils;
 	}
 
 	public void applyRule(RuleApplicationPool pool) {
-		myStraightStorage.applyRule(pool);
 	}
 
 	public void addInitialConnectedComponents(long quant, List<CAgent> components) {
