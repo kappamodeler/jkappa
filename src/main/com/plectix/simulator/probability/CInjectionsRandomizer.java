@@ -8,9 +8,9 @@ import com.plectix.simulator.parser.util.IdGenerator;
 
 public class CInjectionsRandomizer {
 	// id to index
-	public final Map<Integer, SortedSet<Long>> injectionsToIndexes = new TreeMap<Integer, SortedSet<Long>>();
+	private final Map<Integer, SortedSet<Long>> injectionsToIndexes = new HashMap<Integer, SortedSet<Long>>();
 	// index to id
-	private final Map<Long, Integer> indexesToInjections = new TreeMap<Long, Integer>();
+	private final Map<Long, Integer> indexesToInjections = new HashMap<Long, Integer>();
 
 	private IdGenerator indexGenerator = new IdGenerator();
 

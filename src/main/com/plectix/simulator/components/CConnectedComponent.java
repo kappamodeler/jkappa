@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.injections.CInjectionStorage;
 import com.plectix.simulator.components.injections.CLiftElement;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;

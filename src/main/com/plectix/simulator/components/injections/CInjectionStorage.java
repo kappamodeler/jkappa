@@ -1,17 +1,12 @@
-package com.plectix.simulator.components;
+package com.plectix.simulator.components.injections;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
-import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IRandom;
-import com.plectix.simulator.probability.CInjectionsRandomizer;
 
 public class CInjectionStorage {
-	private final Map<Integer, CInjection> injections = new TreeMap<Integer, CInjection>();
-	private final CInjectionsRandomizer injectionsRandomizer = new CInjectionsRandomizer();
+	private final Map<Integer, CInjection> injections = new HashMap<Integer, CInjection>();
+//	private final CInjectionsRandomizer injectionsRandomizer = new CInjectionsRandomizer();
 	private int maxId = -1;
 	
 	/**
@@ -24,7 +19,7 @@ public class CInjectionStorage {
 			maxId = Math.max(maxId, id);
 			inj.setId(id);
 			injections.put(id, inj);
-			injectionsRandomizer.addInjection(inj);
+//			injectionsRandomizer.addInjection(inj);
 		}
 	}
 	
@@ -33,7 +28,7 @@ public class CInjectionStorage {
 			maxId++;
 			inj.setId(maxId);
 			injections.put(maxId, inj);
-			injectionsRandomizer.addInjection(inj);
+//			injectionsRandomizer.addInjection(inj);
 		}
 	}
 
@@ -53,7 +48,7 @@ public class CInjectionStorage {
 				return;
 			}
 			CInjection inj = injections.remove(maxId);
-			injectionsRandomizer.removeInjection(inj);
+//			injectionsRandomizer.removeInjection(inj);
 			if (id != maxId) {
 				addInjection(inj, id);
 			}
@@ -70,15 +65,17 @@ public class CInjectionStorage {
 	}
 	
 	public CInjection getRandomInjection(IRandom random) {
-		int randomId = injectionsRandomizer.getRandomInjection(random);
+//		int randomId = injectionsRandomizer.getRandomInjection(random);
+		int randomId = random.getInteger(injections.size());
 		return injections.get(randomId);
 	}
 	
 	public int getCommonPower() {
-		return injectionsRandomizer.getCommonPower();
+//		return injectionsRandomizer.getCommonPower();
+		return injections.size();
 	}
 	
 	public void simplifyInjection(CInjection inj) {
-		injectionsRandomizer.simplifyInjection(inj);
+//		injectionsRandomizer.simplifyInjection(inj);
 	}
 }
