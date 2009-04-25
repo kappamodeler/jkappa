@@ -201,7 +201,8 @@ public class Simulator implements SimulatorInterface {
 		// Let's see if we monitor peak memory usage
 		PeakMemoryUsage peakMemoryUsage = MemoryUtil.getPeakMemoryUsage();
 		if (peakMemoryUsage != null) {
-			simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO, "-Peak Memory Usage (in bytes): " + peakMemoryUsage);
+			simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO, "-Peak Memory Usage (in bytes): " + peakMemoryUsage 
+					+ " [period= " + simulationData.getSimulationArguments().getMonitorPeakMemory() + " milliseconds]");
 		}
 		
 		// Output XML data:

@@ -162,8 +162,7 @@ public class SimulationData {
 		return simulationArguments.isOcamlStyleObservableNames();
 	}
 
-	public final void setSimulationArguments(InfoType outputType,
-			SimulationArguments arguments) {
+	public final void setSimulationArguments(InfoType outputType, SimulationArguments arguments) {
 		this.simulationArguments = arguments;
 
 		if (simulationArguments.isNoDumpStdoutStderr()) {
@@ -197,7 +196,7 @@ public class SimulationData {
 		}
 		
 		if (simulationArguments.getMonitorPeakMemory() > 0) {
-			println("Turning memory monitoring on");
+			println("Turning memory monitoring on using a period of " + simulationArguments.getMonitorPeakMemory() + " milliseconds");
 			MemoryUtil.monitorPeakMemoryUsage(simulationArguments.getMonitorPeakMemory());
 		}
 

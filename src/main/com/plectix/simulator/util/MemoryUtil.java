@@ -8,27 +8,15 @@ import java.util.TimerTask;
 
 public class MemoryUtil {
 	private static PeakMemoryUsage peakMemoryUsage = null;
-	private static Timer peakMemoryTimer = null;
-	
-	private static final TimerTask PEAK_MEMORY_TIMER_TASK = new TimerTask() {
-		@Override
-		public void run() {
-			peakMemoryUsage.update();
-		} 
-	};
-	
-	public static final PeakMemoryUsage getPeakMemoryUsage() {
-		peakMemoryTimer.cancel();
-		peakMemoryTimer = null;
-		peakMemoryUsage.update();
-		return peakMemoryUsage;
-	}
 	
 	/**
-	 * Turns on monitoring of peak memory usage.
+	 * Turns on monitoring of peak memory usage. This method is not thread-safe and it is
+	 * designed to be called when the application is just launched. The information
+	 * must be retrieved with {@link #getPeakMemoryUsage()} method.
 	 * 
 	 * @param period time in milliseconds between successive memory monitoring operations
 	 * @return <true> if monitoring is turned on with this call, <false> if it was already turned on
+	 * @see #getPeakMemoryUsage()
 	 */
 	public static final boolean monitorPeakMemoryUsage(long period) {
 		if (peakMemoryUsage != null) {
@@ -36,10 +24,32 @@ public class MemoryUtil {
 			return false;
 		}
 		
-		peakMemoryUsage = new PeakMemoryUsage();
-		peakMemoryTimer = new Timer();
-		peakMemoryTimer.scheduleAtFixedRate(PEAK_MEMORY_TIMER_TASK, 0, period);
+		peakMemoryUsage = new PeakMemoryUsage(period);
 		return true;
+	}
+
+	/**
+	 * Turns off monitoring of peak memory usage and returns the usage information.
+	 * Monitoring must be turned off before calling this method
+	 * using {@link #monitorPeakMemoryUsage(long)}.
+	 * 
+	 * This method is not thread-safe and it is designed to be called just before 
+	 * the application quits (as opposed to monitoring the usage continuously).
+	 * 
+	 * @return the peak memory usage since {@link #monitorPeakMemoryUsage(long)} is called,
+	 * or <code>null</code> if the monitoring is not already turned on
+	 * @see #monitorPeakMemoryUsage(long)
+	 */
+	public static final PeakMemoryUsage getPeakMemoryUsage() {
+		if (peakMemoryUsage == null) {
+			// monitoring is off! 
+			return null;
+		}
+		
+		final PeakMemoryUsage ret = peakMemoryUsage;
+		peakMemoryUsage.stopTimer();
+		peakMemoryUsage = null;
+		return ret;
 	}
 	
 	public static final void dumpUsedMemoryInfoPeriodically(final PrintStream printStream, long period) {
@@ -70,12 +80,30 @@ public class MemoryUtil {
 		private long heap = 0;
 		private long nonHeap = 0;
 		private long total = 0;
+
+		private Timer peakMemoryTimer = new Timer();
 		
-		protected PeakMemoryUsage() {
+		protected PeakMemoryUsage(long period) {
 			super();
+			peakMemoryTimer.scheduleAtFixedRate(new TimerTask() {
+				@Override
+				public void run() {
+					peakMemoryUsage.update();
+				} 
+			}, 0, period);
 		}
 		
-		public void update() {
+		protected final boolean stopTimer() {
+			if (peakMemoryTimer == null) {
+				return false;
+			}
+			peakMemoryTimer.cancel();
+			peakMemoryTimer = null;
+			update();
+			return true;
+		}
+		
+		public final void update() {
 			MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
 			long currentHeap = mbean.getHeapMemoryUsage().getUsed();
 			long currentNonHeap = mbean.getNonHeapMemoryUsage().getUsed();
@@ -87,7 +115,7 @@ public class MemoryUtil {
 		}
 		
 		@Override
-		public String toString() {
+		public final String toString() {
 			return "Heap= " + heap + " NonHeap= " + nonHeap + " Total= " + total;
 		}
 
