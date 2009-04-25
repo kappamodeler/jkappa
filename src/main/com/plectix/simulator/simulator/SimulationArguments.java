@@ -20,6 +20,7 @@ public class SimulationArguments {
 	public static final int DEFAULT_NUMBER_OF_POINTS = 1000;
 	/** Maximum simulation time is 100 days */
 	public static final long DEFAULT_WALL_CLOCK_TIME_LIMIT = 100L* NUMBER_OF_MILLISECONDS_IN_DAY;
+	public static final long DEFAULT_MONITOR_PEAK_MEMORY = -1;
 	public static final int DEFAULT_CLOCK_PRECISION = 60;
 	public static final String DEFAULT_XML_SESSION_NAME = "simplx.xml";
 	public static final String DEFAULT_SERIALIZATION_FILE_NAME = "~tmp.sd";
@@ -78,6 +79,7 @@ public class SimulationArguments {
 	private boolean forwardOnly = false;
 	private boolean ocamlStyleObservableNames = false;
 	private long wallClockTimeLimit = DEFAULT_WALL_CLOCK_TIME_LIMIT;
+	private long monitorPeakMemory = DEFAULT_MONITOR_PEAK_MEMORY;
 	private int clockPrecision = DEFAULT_CLOCK_PRECISION;
 	private boolean outputFinalState = false;
 	private String xmlSessionPath = "";
@@ -480,6 +482,22 @@ public class SimulationArguments {
 		this.wallClockTimeLimit = wallClockTimeLimit;
 	}
 
+	public final long getMonitorPeakMemory() {
+		return monitorPeakMemory;
+	}
+	
+	/**
+	 * Registers a period time in milliseconds to monitor peak memory usage. 
+	 * The monitoring is not turned on if the given value is negative.
+	 * The default value is {@value #DEFAULT_MONITOR_PEAK_MEMORY}.
+	 * 
+	 * @param monitorPeakMemory
+	 * @see #DEFAULT_MONITOR_PEAK_MEMORY
+	 */
+	public final void setMonitorPeakMemory(long monitorPeakMemory) {
+		this.monitorPeakMemory = monitorPeakMemory;
+	}
+	
 	public final int getClockPrecision() {
 		return clockPrecision;
 	}

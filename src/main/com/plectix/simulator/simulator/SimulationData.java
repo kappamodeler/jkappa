@@ -68,6 +68,7 @@ import com.plectix.simulator.parser.builders.RuleBuilder;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.util.BoundContactMap;
 import com.plectix.simulator.util.Info;
+import com.plectix.simulator.util.MemoryUtil;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
@@ -194,6 +195,11 @@ public class SimulationData {
 		if (simulationArguments.getCommandLineString() != null) {
 			println("Java " + simulationArguments.getCommandLineString());
 		}
+		
+		if (simulationArguments.getMonitorPeakMemory() > 0) {
+			println("Turning memory monitoring on");
+			MemoryUtil.monitorPeakMemoryUsage(simulationArguments.getMonitorPeakMemory());
+		}
 
 		addInfo(outputType, InfoType.INFO, "-Initialization...");
 
@@ -252,8 +258,7 @@ public class SimulationData {
 	}
 
 	public final boolean isEndSimulation(double currentTime, long count) {  
-		if (System.currentTimeMillis() - clockStamp > simulationArguments
-				.getWallClockTimeLimit()) {
+		if (System.currentTimeMillis() - clockStamp > simulationArguments.getWallClockTimeLimit()) {
 			println("Simulation is interrupted because the wall clock time has expired");
 			return true;
 		}

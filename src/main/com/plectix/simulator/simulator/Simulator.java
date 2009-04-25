@@ -7,8 +7,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
-import org.apache.log4j.Logger;
-
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
@@ -18,13 +16,13 @@ import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.controller.SimulatorStatusInterface;
-
-
 import com.plectix.simulator.probability.CProbabilityCalculation;
+import com.plectix.simulator.util.MemoryUtil;
 import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
+import com.plectix.simulator.util.MemoryUtil.PeakMemoryUsage;
 
 public class Simulator implements SimulatorInterface {
 
@@ -187,10 +185,12 @@ public class Simulator implements SimulatorInterface {
 		
 		if (!simulationData.getSimulationArguments().isDebugInit()) {
 			if (simulationData.getSimulationArguments().isGenereteMap() || simulationData.getSimulationArguments().isContactMap() ) {
-				Source source = addCompleteSource();
-				simulationData.outputData(source, 0);
+				// nothing to do in this case... outputData is called below...
 			} else if (simulationData.getSimulationArguments().isNumberOfRuns()) {
-				runIterations();
+				// this mode needs to be re-implemented
+				// runIterations();
+				// throw an Exception for now:
+				throw new RuntimeException("Iterations mode is not supported at this point!");
 			} else if (simulationData.getSimulationArguments().isStorify()) {
 				runStories();
 			} else {
@@ -198,11 +198,24 @@ public class Simulator implements SimulatorInterface {
 			}
 		}
 		
-		simulationData.println("-------" + simulatorResultsData.getResultSource());
+		// Let's see if we monitor peak memory usage
+		PeakMemoryUsage peakMemoryUsage = MemoryUtil.getPeakMemoryUsage();
+		if (peakMemoryUsage != null) {
+			peakMemoryUsage.update();
+			simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO, "-Peak Memory Usage (in bytes): " + peakMemoryUsage);
+		}
+		
+		// Output XML data:
+		Source source = addCompleteSource();
+		simulationData.outputData(source, currentEventNumber);
+		
+		simulatorStatus.setStatusMessage(STATUS_IDLE);
+		
+		// simulationData.println("-------" + simulatorResultsData.getResultSource());
 	}
 
 	public final void run(int iteration_num) throws Exception {
-		simulationData.addInfo(InfoType.OUTPUT,InfoType.INFO, "-Simulation...");
+		simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO, "-Simulation...");
 		
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
@@ -294,14 +307,7 @@ public class Simulator implements SimulatorInterface {
 		simulationData.setTimeLength(currentTime);
 		simulationData.setEvent(currentEventNumber);
 		
-		endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
-		Source source = addCompleteSource();
-		
-		if (!CSiteration) {
-			simulationData.outputData(source, currentEventNumber);
-		}
-	
-		simulatorStatus.setStatusMessage(STATUS_IDLE);
+		endOfSimulation(InfoType.OUTPUT, isEndRules, timer);
 	}
 
 	public final void runIterations() throws Exception {
@@ -471,10 +477,6 @@ public class Simulator implements SimulatorInterface {
 		mergeTimer.startTimer();
 		stories.merge();
 		endOfMerge(mergeTimer);
-		Source source = addCompleteSource();
-		simulationData.outputData(source, currentEventNumber);
-		
-		simulatorStatus.setStatusMessage(STATUS_IDLE);
 	}
 	
 	//////////////////////////////////////////////////////////////////////////

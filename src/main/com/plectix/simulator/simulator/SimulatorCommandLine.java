@@ -193,6 +193,10 @@ public class SimulatorCommandLine {
 			simulationArguments.setWallClockTimeLimit(getLongValue(SimulatorOptions.WALL_CLOCK_TIME_LIMIT));
 		}
 
+		if (hasOption(SimulatorOptions.MONITOR_PEAK_MEMORY)) {
+			simulationArguments.setMonitorPeakMemory(getLongValue(SimulatorOptions.MONITOR_PEAK_MEMORY));
+		}
+
 		if (hasOption(SimulatorOptions.CLOCK_PRECISION)) {
 			simulationArguments.setClockPrecision(getIntValue(SimulatorOptions.CLOCK_PRECISION));
 		}
