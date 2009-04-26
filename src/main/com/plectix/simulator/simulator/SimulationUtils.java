@@ -29,9 +29,8 @@ public class SimulationUtils {
 		return stringBuffer.toString();
 	}
 
-	public static final String printPartRule(List<IConnectedComponent> ccList,
-			boolean isOcamlStyleObsName) {
-		String line = new String();
+	public static final String printPartRule(List<IConnectedComponent> ccList, boolean isOcamlStyleObsName) {
+		String line = "";
 		int[] indexLink = new int[] { 0 };
 		int length = 0;
 		if (ccList == null)
@@ -51,9 +50,8 @@ public class SimulationUtils {
 		return line;
 	}
 
-	public static final String printPartRule(IConnectedComponent cc,
-			int[] index, boolean isOcamlStyleObsName) {
-		String line = new String();
+	public static final String printPartRule(IConnectedComponent cc, int[] index, boolean isOcamlStyleObsName) {
+		String line = "";
 		int length = 0;
 		if (cc == null)
 			return line;
@@ -344,9 +342,8 @@ public class SimulationUtils {
 		return freeAgents;
 	}
 
-	public final static String perturbationParametersToString(
-			List<IPerturbationExpression> sumParameters) {
-		String st = new String();
+	public final static String perturbationParametersToString(List<IPerturbationExpression> sumParameters) {
+		String st = "";
 
 		int index = 1;
 		for (IPerturbationExpression parameters : sumParameters) {

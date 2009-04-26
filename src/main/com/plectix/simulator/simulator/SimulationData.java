@@ -638,7 +638,7 @@ public class SimulationData {
 			line = line
 					+ SimulationUtils.printPartRule(rule.getRightHandSide(),
 							isOcamlStyleObsName());
-			String ch = new String();
+			String ch = "";
 			for (int j = 0; j < line.length(); j++)
 				ch = ch + "-";
 

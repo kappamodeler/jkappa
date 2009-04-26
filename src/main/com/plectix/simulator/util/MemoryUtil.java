@@ -30,7 +30,7 @@ public class MemoryUtil {
 
 	/**
 	 * Turns off monitoring of peak memory usage and returns the usage information.
-	 * Monitoring must be turned off before calling this method
+	 * Monitoring must be turned on before calling this method
 	 * using {@link #monitorPeakMemoryUsage(long)}.
 	 * 
 	 * This method is not thread-safe and it is designed to be called just before 
@@ -70,17 +70,17 @@ public class MemoryUtil {
 
 	public static final String getUsedMemory() {
 	       MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
-	       return new String("Memory: "
+	       return "Memory: "
 	    		   + mbean.getNonHeapMemoryUsage().getUsed() + " "
-	    		   + mbean.getHeapMemoryUsage().getUsed()
-	       );
+	    		   + mbean.getHeapMemoryUsage().getUsed();
 	}
 	
 	public static class PeakMemoryUsage {
 		private long heap = 0;
 		private long nonHeap = 0;
 		private long total = 0;
-
+		
+		private MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
 		private Timer peakMemoryTimer = new Timer();
 		
 		protected PeakMemoryUsage(long period) {
@@ -104,7 +104,6 @@ public class MemoryUtil {
 		}
 		
 		public final void update() {
-			MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
 			long currentHeap = mbean.getHeapMemoryUsage().getUsed();
 			long currentNonHeap = mbean.getNonHeapMemoryUsage().getUsed();
 			synchronized (this) {
