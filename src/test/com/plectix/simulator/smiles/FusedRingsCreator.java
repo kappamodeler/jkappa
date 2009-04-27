@@ -19,66 +19,67 @@ public class FusedRingsCreator {
 	}
 
 	private static int createFusedRings(int quantity) {
-		String ccomp = "";
+		StringBuffer ccomp = new StringBuffer();
 		int count = 0;
 		linkcounter = 0;
 		int numberOfAgentsName = 10;
 		for (int j = 5; j < 13; j++) {
 			for (int i = 0; i < quantity; i++) {
-				ccomp += addRing(i, j, quantity, numberOfAgentsName);
+				ccomp.append(addRing(i, j, quantity, numberOfAgentsName));
 			}
 			count++;
 //			System.out.println(ccomp.substring(0, ccomp.length() - 1));
-			ccomp = "";
+			ccomp = null;
+			ccomp = new StringBuffer();
 		}
 		return count;
 	}
 
 	private static String createAgent(int n, List<Integer> links) {
-		String str = "(";
+		StringBuffer sb = new StringBuffer("(");
 		for (int i = 0; i < links.size(); i++) {
-			str += SITE_NAMES[i] + "!" + links.get(i);
-			str += (i == links.size() - 1) ? ")," : ",";
+			sb.append(SITE_NAMES[i] + "!" + links.get(i));
+			sb.append((i == links.size() - 1) ? ")," : ",");
 		}
-		return AGENT_NAMES[n] + str;
+		return AGENT_NAMES[n] + sb.toString();
 	}
 
 	private static String addRing(int number, int vertices, int quantity,
 			int numberOfAgentsName) {
-		String ring = "";
+		StringBuffer ring = new StringBuffer();
 		if (number == 0) {
 			linkcounter = 0;
 			for (int i = 0; i < vertices - 2; i++) {
-				ring += createAgent(linkcounter % numberOfAgentsName, Arrays
-						.asList(linkcounter, ++linkcounter));
+				ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
+						.asList(linkcounter, ++linkcounter)));
 			}
-			ring += createAgent(linkcounter % numberOfAgentsName, Arrays
-					.asList(linkcounter, ++linkcounter, linkcounter + 1));
-			ring += createAgent(linkcounter % numberOfAgentsName, Arrays
-					.asList(0, linkcounter, linkcounter + 2));
+			ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
+					.asList(linkcounter, ++linkcounter, linkcounter + 1)));
+			ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
+					.asList(0, linkcounter, linkcounter + 2)));
 		} else if (number < quantity - 1) {
 			for (int i = 0; i < vertices - 4; i++) {
-				ring += createAgent(linkcounter % numberOfAgentsName, Arrays
-						.asList(++linkcounter, linkcounter + 2));
+				ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
+						.asList(++linkcounter, linkcounter + 2)));
 			}
 
-			ring += createAgent(linkcounter % numberOfAgentsName, Arrays
-					.asList(++linkcounter, linkcounter + 2, linkcounter + 3));
-			ring += createAgent(linkcounter % numberOfAgentsName, Arrays
-					.asList(++linkcounter, ++linkcounter, linkcounter + 2));
+			ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
+					.asList(++linkcounter, linkcounter + 2, linkcounter + 3)));
+			ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
+					.asList(++linkcounter, ++linkcounter, linkcounter + 2)));
 		} else if (number == quantity - 1) {
-			ring += createAgent(linkcounter % numberOfAgentsName, Arrays
-					.asList(++linkcounter, linkcounter + 2));
+			ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
+					.asList(++linkcounter, linkcounter + 2)));
 			++linkcounter;
 			for (int i = 1; i < vertices - 3; i++) {
-				ring += createAgent(linkcounter % numberOfAgentsName, Arrays
-						.asList(++linkcounter, linkcounter + 1));
+				ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
+						.asList(++linkcounter, linkcounter + 1)));
 			}
-			ring += createAgent(linkcounter % numberOfAgentsName, Arrays
-					.asList(++linkcounter, linkcounter - vertices + 3));
+			ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
+					.asList(++linkcounter, linkcounter - vertices + 3)));
 
 		}
-		return ring;
+		return ring.toString();
 	}
 
 }

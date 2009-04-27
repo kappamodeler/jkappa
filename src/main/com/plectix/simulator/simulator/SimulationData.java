@@ -635,24 +635,24 @@ public class SimulationData {
 
 			}
 
-			String line = SimulationUtils.printPartRule(rule.getLeftHandSide(),
-					isOcamlStyleObsName());
-			line = line + "->";
-			line = line
-					+ SimulationUtils.printPartRule(rule.getRightHandSide(),
-							isOcamlStyleObsName());
-			String ch = "";
-			for (int j = 0; j < line.length(); j++)
-				ch = ch + "-";
+			StringBuffer sb = new StringBuffer();
+			sb.append(SimulationUtils.printPartRule(rule.getLeftHandSide(),
+					isOcamlStyleObsName()));
+			sb.append("->");
+			sb.append(SimulationUtils.printPartRule(rule.getRightHandSide(),
+							isOcamlStyleObsName()));
+			StringBuffer ch = new StringBuffer();
+			for (int j = 0; j < sb.length(); j++)
+				ch.append("-");
 
-			println(ch);
+			println(ch.toString());
 			if (rule.getName() != null) {
 				print(rule.getName());
 				print(": ");
 			}
-			print(line);
+			print(sb.toString());
 			println();
-			println(ch);
+			println(ch.toString());
 			println();
 			println();
 		}
@@ -668,40 +668,35 @@ public class SimulationData {
 	}
 
 	private final String perturbationToString(CPerturbation perturbation) {
-		String st = "-";
-		String greater;
-		if (perturbation.getGreater()) {
-			greater = "> ";
-		} else {
-			greater = "< ";
-		}
-
+		StringBuffer sb = new StringBuffer();
+		sb.append("-");
+		String greater = (perturbation.getGreater()) ? "> ": "< ";
 		switch (perturbation.getType()) {
 		case TIME: {
-			st += "Whenever current time ";
-			st += greater;
-			st += perturbation.getTimeCondition();
+			sb.append("Whenever current time ");
+			sb.append(greater);
+			sb.append(perturbation.getTimeCondition());
 			break;
 		}
 		case NUMBER: {
-			st += "Whenever [";
-			st += myKappaSystem.getObservables().getComponentList().get(
-					perturbation.getObsNameID()).getName();
-			st += "] ";
-			st += greater;
-			st += SimulationUtils.perturbationParametersToString(perturbation
-					.getLHSParametersList());
+			sb.append("Whenever [");
+			sb.append(myKappaSystem.getObservables().getComponentList().get(
+					perturbation.getObsNameID()).getName());
+			sb.append("] ");
+			sb.append(greater);
+			sb.append(SimulationUtils.perturbationParametersToString(perturbation
+					.getLHSParametersList()));
 			break;
 		}
 		}
 
-		st += " do kin(";
-		st += perturbation.getPerturbationRule().getName();
-		st += "):=";
-		st += SimulationUtils.perturbationParametersToString(perturbation
-				.getRHSParametersList());
+		sb.append(" do kin(");
+		sb.append(perturbation.getPerturbationRule().getName());
+		sb.append("):=");
+		sb.append(SimulationUtils.perturbationParametersToString(perturbation
+				.getRHSParametersList()));
 
-		return st;
+		return sb.toString();
 	}
 
 	private void outputBar() {
@@ -739,21 +734,22 @@ public class SimulationData {
 						.size(); timeStepCounter++) {
 					if (timeStamps.get(timeStepCounter) > timeNext) {
 						timeNext += timeSampleMin;
-						String st = timeStamps.get(timeStepCounter)
-								+ " "
-								+ runningMetrics.get(observable_num).get(
-										timeStepCounter).getMin()
-								+ " "
-								+ runningMetrics.get(observable_num).get(
-										timeStepCounter).getMax()
-								+ " "
-								+ runningMetrics.get(observable_num).get(
-										timeStepCounter).getMean()
-								+ " "
-								+ runningMetrics.get(observable_num).get(
-										timeStepCounter).getStd();
+						StringBuffer sb = new StringBuffer();
+						sb.append(timeStamps.get(timeStepCounter));
+						sb.append(" ");
+						sb.append(runningMetrics.get(observable_num).get(
+										timeStepCounter).getMin());
+						sb.append(" ");
+						sb.append(runningMetrics.get(observable_num).get(
+										timeStepCounter).getMax());
+						sb.append(" ");
+						sb.append(runningMetrics.get(observable_num).get(
+										timeStepCounter).getMean());
+						sb.append(" ");
+						sb.append(runningMetrics.get(observable_num).get(
+										timeStepCounter).getStd());
 
-						writer.write(st);
+						writer.write(sb.toString());
 						writer.newLine();
 					}
 				}
@@ -1317,10 +1313,11 @@ public class SimulationData {
 	 * @return string representation of given rule 
 	 */
 	public static final String getData(CRule rule, boolean isOcamlStyleObsName) {
-		String line = SimulationUtils.printPartRule(rule.getLeftHandSide(), isOcamlStyleObsName);
-		line += "->";
-		line += SimulationUtils.printPartRule(rule.getRightHandSide(), isOcamlStyleObsName);
-		return line;
+		StringBuffer sb = new StringBuffer();
+		sb.append(SimulationUtils.printPartRule(rule.getLeftHandSide(), isOcamlStyleObsName));
+		sb.append("->");
+		sb.append(SimulationUtils.printPartRule(rule.getRightHandSide(), isOcamlStyleObsName));
+		return sb.toString();
 	}
 	
 	private final void addRulesToXML(Element influenceMap,

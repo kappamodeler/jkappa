@@ -157,26 +157,27 @@ public class CContactMapAbstractSite{
 	}
 
 	public String toString() {
-		String st = "site = " + getName();
-		st += " from agent = " + linkAgent.getName();
+		StringBuffer sb = new StringBuffer();
+		sb.append("site = " + getName());
+		sb.append(" from agent = " + linkAgent.getName());
 		if (nameId == NO_INDEX)
-			return st;
+			return sb.toString();
 
 		if (internalState.getNameId() != -1)
-			st += " internal state = " + internalState.getName();
+			sb.append(" internal state = " + internalState.getName());
 		if (linkState != null && linkState.getLinkSiteNameID() != -1) {
-			st += " link agent = "
+			sb.append(" link agent = "
 					+ ThreadLocalData.getNameDictionary().getName(
-							linkState.getAgentNameID());
-			st += " link site = "
+							linkState.getAgentNameID()));
+			sb.append(" link site = "
 					+ ThreadLocalData.getNameDictionary().getName(
-							linkState.getLinkSiteNameID());
+							linkState.getLinkSiteNameID()));
 			if (linkState.getInternalStateNameID() != -1)
-				st += " link istate = "
+				sb.append(" link istate = "
 						+ ThreadLocalData.getNameDictionary().getName(
-								linkState.getInternalStateNameID());
+								linkState.getInternalStateNameID()));
 		}
-		return st;
+		return sb.toString();
 	}
 
 	/**

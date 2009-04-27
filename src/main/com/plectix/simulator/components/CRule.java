@@ -913,9 +913,10 @@ public class CRule implements Serializable {
 		List<CAgent> agentList = new ArrayList<CAgent>();
 		if (ccList.get(0).getAgents().get(0).getIdInRuleHandside() == CAgent.UNMARKED)
 			return agentList;
-		for (IConnectedComponent cc : ccList)
+		for (IConnectedComponent cc : ccList){
 			for (CAgent agent : cc.getAgents())
 				agentList.add(agent);
+		}
 
 		return agentList;
 	}

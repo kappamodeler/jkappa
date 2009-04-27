@@ -30,42 +30,42 @@ public class SimulationUtils {
 	}
 
 	public static final String printPartRule(List<IConnectedComponent> ccList, boolean isOcamlStyleObsName) {
-		String line = "";
+		StringBuffer sb = new StringBuffer();
 		int[] indexLink = new int[] { 0 };
 		int length = 0;
 		if (ccList == null)
-			return line;
+			return sb.toString();
 		for (IConnectedComponent cc : ccList)
 			length = length + cc.getAgents().size();
 		int index = 1;
 		for (IConnectedComponent cc : ccList) {
 			if (cc.isEmpty())
-				return line;
-			line += printPartRule(cc, indexLink, isOcamlStyleObsName);
+				return sb.toString();
+			sb.append(printPartRule(cc, indexLink, isOcamlStyleObsName));
 			if (index < ccList.size())
-				line += ",";
+				sb.append(",");
 			index++;
 
 		}
-		return line;
+		return sb.toString();
 	}
 
 	public static final String printPartRule(IConnectedComponent cc, int[] index, boolean isOcamlStyleObsName) {
-		String line = "";
+		StringBuffer sb = new StringBuffer();
 		int length = 0;
 		if (cc == null)
-			return line;
+			return sb.toString();
 		length = cc.getAgents().size();
 
 		int j = 1;
 		if (cc.isEmpty())
-			return line;
+			return sb.toString();
 
 		List<CAgent> sortedAgents = cc.getAgentsSortedByIdInRule();
 
 		for (CAgent agent : sortedAgents) {
-			line = line + agent.getName();
-			line = line + "(";
+			sb.append(agent.getName());
+			sb.append("(");
 
 			List<String> sitesList = new ArrayList<String>();
 
@@ -112,30 +112,25 @@ public class SimulationUtils {
 				sitesList.add(siteStr);
 			}
 
-			line = line
-					+ getSitesLine(sortSitesStr(sitesList, isOcamlStyleObsName));
-			if (length > j) {
-				line = line + "),";
-			} else {
-				line = line + ")";
-			}
+			sb.append(getSitesLine(sortSitesStr(sitesList, isOcamlStyleObsName)));
+			sb.append((length > j) ? "),":")");
 			sitesList.clear();
 			j++;
 		}
 
-		return line;
+		return sb.toString();
 	}
 
 	private static final String getSitesLine(List<String> list) {
-		String line = new String("");
+		StringBuffer sb = new StringBuffer();
 		if (list.size() == 0)
-			return line;
+			return sb.toString();
 		for (int i = 0; i < list.size() - 1; i++) {
-			line = line + list.get(i) + ",";
+			sb.append(list.get(i) + ",");
 		}
-		line = line + list.get(list.size() - 1);
+		sb.append(list.get(list.size() - 1));
 
-		return line;
+		return sb.toString();
 	}
 
 	private static final List<String> sortSitesStr(List<String> list,
@@ -343,22 +338,22 @@ public class SimulationUtils {
 	}
 
 	public final static String perturbationParametersToString(List<IPerturbationExpression> sumParameters) {
-		String st = "";
+		StringBuffer sb = new StringBuffer();
 
 		int index = 1;
 		for (IPerturbationExpression parameters : sumParameters) {
-			st += parameters.getValueToString();
+			sb.append(parameters.getValueToString());
 			if (parameters.getName() != null) {
-				st += "*[";
-				st += parameters.getName();
-				st += "]";
+				sb.append("*[");
+				sb.append(parameters.getName());
+				sb.append("]");
 			}
 			if (index < sumParameters.size())
-				st += " + ";
+				sb.append(" + ");
 			index++;
 		}
 
-		return st;
+		return sb.toString();
 	}
 
 	public final static void positiveUpdate(List<CRule> rulesList,
