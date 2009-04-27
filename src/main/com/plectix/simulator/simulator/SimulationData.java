@@ -67,6 +67,7 @@ import com.plectix.simulator.parser.abstractmodel.reader.RulesParagraphReader;
 import com.plectix.simulator.parser.builders.RuleBuilder;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.util.BoundContactMap;
+import com.plectix.simulator.util.DecimalFormatter;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.MemoryUtil;
 import com.plectix.simulator.util.PlxTimer;
@@ -79,6 +80,8 @@ public class SimulationData {
 	private final static String TYPE_POSITIVE_MAP = "POSITIVE";
 
 	private static final double DEFAULT_NUMBER_OF_POINTS = 1000;
+	
+	private static final int NUMBER_OF_SIGNIFICANT_DIGITS = 6;
 
 	private List<Double> timeStamps = null;
 	private List<List<RunningMetric>> runningMetrics = null;
@@ -1026,18 +1029,13 @@ public class SimulationData {
 			Element simulation = doc.createElement("Simulation");
 			simulation.setAttribute("TotalEvents", Long
 					.toString(simulationArguments.getEvent()));
-			simulation.setAttribute("TotalTime", Double
-					.toString(simulationArguments.getTimeLength()));
-			simulation.setAttribute("InitTime", Double
-					.toString(simulationArguments.getInitialTime()));
+			simulation.setAttribute("TotalTime", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(simulationArguments.getTimeLength(), NUMBER_OF_SIGNIFICANT_DIGITS));
+			simulation.setAttribute("InitTime", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(simulationArguments.getInitialTime(), NUMBER_OF_SIGNIFICANT_DIGITS));
 
-			simulation.setAttribute("TimeSample", Double.valueOf(
-					myKappaSystem.getObservables().getTimeSampleMin())
-					.toString());
+			simulation.setAttribute("TimeSample", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(myKappaSystem.getObservables().getTimeSampleMin(), NUMBER_OF_SIGNIFICANT_DIGITS));
 			simplxSession.appendChild(simulation);
 
-			List<IObservablesComponent> list = myKappaSystem.getObservables()
-					.getComponentListForXMLOutput();
+			List<IObservablesComponent> list = myKappaSystem.getObservables().getComponentListForXMLOutput();
 			for (int i = list.size() - 1; i >= 0; i--) {
 				Element node = createElement(list.get(i), doc);
 				simulation.appendChild(node);
@@ -1053,8 +1051,7 @@ public class SimulationData {
 
 			csv.appendChild(cdata);
 			simulation.appendChild(csv);
-			stopTimer(InfoType.OUTPUT, timer,
-					"-Building xml tree for data points:");
+			stopTimer(InfoType.OUTPUT, timer, "-Building xml tree for data points:");
 		}
 
 		appendInfo(simplxSession, doc);
@@ -1285,11 +1282,9 @@ public class SimulationData {
 		}
 	}
 
-	private final void appendData(CObservables obs,
-			List<IObservablesComponent> list, CDATASection cdata, int index) {
+	private final void appendData(CObservables obs, List<IObservablesComponent> list, CDATASection cdata, int index) {
 		String enter = "\n";
-		cdata.appendData(myKappaSystem.getObservables().getCountTimeList().get(
-				index).toString());
+		cdata.appendData(DecimalFormatter.toStringWithSetNumberOfSignificantDigits(myKappaSystem.getObservables().getCountTimeList().get(index), NUMBER_OF_SIGNIFICANT_DIGITS));
 		for (int j = list.size() - 1; j >= 0; j--) {
 			cdata.appendData(",");
 			IObservablesComponent oCC = list.get(j);
@@ -1298,15 +1293,17 @@ public class SimulationData {
 		cdata.appendData(enter);
 	}
 
-	private final String getItem(CObservables obs, int index,
-			IObservablesComponent oCC) {
-		if (oCC.isUnique())
+	private final String getItem(CObservables obs, int index, IObservablesComponent oCC) {
+		if (oCC.isUnique()) {
 			return oCC.getStringItem(index, obs);
+		}
+		
 		long value = 1;
-		for (IObservablesConnectedComponent cc : obs
-				.getConnectedComponentList())
-			if (cc.getId() == oCC.getId())
+		for (IObservablesConnectedComponent cc : obs.getConnectedComponentList()) {
+			if (cc.getId() == oCC.getId()) {
 				value *= cc.getItem(index, obs);
+			}
+		}
 
 		return Double.valueOf(value).toString();
 	}

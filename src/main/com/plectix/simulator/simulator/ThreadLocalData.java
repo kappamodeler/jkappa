@@ -1,5 +1,7 @@
 package com.plectix.simulator.simulator;
 
+import java.text.DecimalFormat;
+
 import com.plectix.simulator.util.NameDictionary;
 import com.plectix.simulator.util.PlxLogger;
 
@@ -14,16 +16,46 @@ public class ThreadLocalData {
 	
 	private static ThreadLocal<PlxLogger> plxLogger = null;
 
-    private static final ThreadLocal<NameDictionary> nameDictionary = new ThreadLocal<NameDictionary> () {
-            @Override 
-            protected NameDictionary initialValue() {
-                return new NameDictionary();
-        }
-    };
+	private static final ThreadLocal<NameDictionary> nameDictionary = new ThreadLocal<NameDictionary> () {
+		@Override 
+		protected NameDictionary initialValue() {
+			return new NameDictionary();
+		}
+	};
+
+	private static final ThreadLocal<DecimalFormat[]> decimalFormatters = new ThreadLocal<DecimalFormat[]>() {
+		@Override 
+		protected DecimalFormat[] initialValue() {
+			return new DecimalFormat[] {
+					new DecimalFormat("0"),
+					new DecimalFormat("0.#"),
+					new DecimalFormat("0.##"),
+					new DecimalFormat("0.###"),
+					new DecimalFormat("0.####"),
+					new DecimalFormat("0.#####"),
+					new DecimalFormat("0.######"),
+					new DecimalFormat("0.#######"),
+					new DecimalFormat("0.########"),
+					new DecimalFormat("0.#########"),
+					new DecimalFormat("0.##########"),
+					new DecimalFormat("0.###########")
+			};
+		}
+	};
 
     public static final NameDictionary getNameDictionary() {
 		return nameDictionary.get();
-	}
+    }
+
+    public static final DecimalFormat getDecimalFormat(int i) {
+    	DecimalFormat[] decimalFormats = decimalFormatters.get();
+    	if (i < 0) {
+    		i = 0;
+    	} else if (i >= decimalFormats.length) {
+    		i = decimalFormats.length - 1;
+    	}
+    	return decimalFormats[i];
+    }
 
 	public static final void setLogger(final PlxLogger logger) {		
 		plxLogger = new ThreadLocal<PlxLogger>() {

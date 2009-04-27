@@ -1,30 +1,25 @@
 package com.plectix.simulator.util;
 
-import java.text.DecimalFormat;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class DecimalFormatter {
 	
-    private static final DecimalFormat[] FORMATTERS = new DecimalFormat[] {
-        new DecimalFormat("0"),
-        new DecimalFormat("0.#"),
-        new DecimalFormat("0.##"),
-        new DecimalFormat("0.###"),
-        new DecimalFormat("0.####"),
-        new DecimalFormat("0.#####"),
-        new DecimalFormat("0.######"),
-        new DecimalFormat("0.#######"),
-        new DecimalFormat("0.########")
-    };
-
-    /**
-     *
-     */
-    public static final String format(double d, int i) {
-            if (i < 0) {
-                    i = 0;
-            } else if (i >= FORMATTERS.length) {
-                    i = FORMATTERS.length - 1;
-            }
-            return FORMATTERS[i].format(d);
+    public static final String toStringWithSetNumberOfFractionDigits(double d, int numberOfFractionDigits) {
+    	return ThreadLocalData.getDecimalFormat(numberOfFractionDigits).format(d);
     }
+
+    public static final String toStringWithSetNumberOfSignificantDigits(double d, int numberOfSignificantDigits) {
+    	return findNumberOfSignificantDigits(d, 1, numberOfSignificantDigits);
+    }
+    
+    private static final String findNumberOfSignificantDigits(double d, int upperLimit, int numberOfSignificantDigitsLeft) {
+    	if (numberOfSignificantDigitsLeft <= 0) {
+    		return ThreadLocalData.getDecimalFormat(0).format(d);
+    	}
+    	if (d < upperLimit) {
+    		return ThreadLocalData.getDecimalFormat(numberOfSignificantDigitsLeft).format(d);
+    	}
+    	return findNumberOfSignificantDigits(d, 10*upperLimit, numberOfSignificantDigitsLeft-1);
+    }
+    
 }

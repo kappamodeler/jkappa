@@ -66,9 +66,9 @@ public class SmilesTest {
 			
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Timing: CC has " + size + " agents -> " + numberOfTrials 
-						+ " iterations took "+ DecimalFormatter.format(1000.0 * plxTimer.getThreadTimeInSeconds(), 6) + " msecs -> " 
-						+ DecimalFormatter.format(1000.0 * plxTimer.getThreadTimeInSeconds()/numberOfTrials, 6) + " msecs/string -> "
-						+ DecimalFormatter.format(1000.0 * plxTimer.getThreadTimeInSeconds()/numberOfTrials/size, 6) + " msecs/string/agent ");
+						+ " iterations took "+ DecimalFormatter.toStringWithSetNumberOfFractionDigits(1000.0 * plxTimer.getThreadTimeInSeconds(), 6) + " msecs -> " 
+						+ DecimalFormatter.toStringWithSetNumberOfFractionDigits(1000.0 * plxTimer.getThreadTimeInSeconds()/numberOfTrials, 6) + " msecs/string -> "
+						+ DecimalFormatter.toStringWithSetNumberOfFractionDigits(1000.0 * plxTimer.getThreadTimeInSeconds()/numberOfTrials/size, 6) + " msecs/string/agent ");
 			}
 		}
 		return fails;
