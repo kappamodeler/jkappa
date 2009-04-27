@@ -77,10 +77,9 @@ public class TestIntro {
 	}
 
 	private void checkIntroId(HashMap<Integer, List<CStoryType>> introMap) {
-
 		List<Integer> introList = new ArrayList<Integer>();
-		for (Integer id : introMap.keySet()) {
-			for (CStoryType intro : introMap.get(id)) {
+		for (List<CStoryType> introValue : introMap.values()) {
+			for (CStoryType intro : introValue) {
 				if (!introList.contains(intro.getId())) {
 					introList.add(intro.getId());
 				} else{

@@ -32,13 +32,13 @@ public class Converter {
 			sites.put(site.getName(), site);
 		}
 		
-		for (String name : sites.keySet()) {
+		for (CSite site : sites.values()) {
 			if (!first) {
 				sb.append(", ");
 			} else {
 				first = false;
 			}
-			sb.append(toString(sites.get(name)));
+			sb.append(toString(site));
 		}
 		sb.append(")");
 		return sb.toString();
@@ -49,7 +49,7 @@ public class Converter {
 		if (c==null)
 			return "null";
 		boolean first = true;
-		TreeMap<String, List<CAgent>> agents = new TreeMap<String, List<CAgent>>();
+		Map<String, List<CAgent>> agents = new TreeMap<String, List<CAgent>>();
 		CAgent empty = new CAgent();
 		List<CAgent> list;
 		String agentString; 
@@ -69,8 +69,8 @@ public class Converter {
 			
 		}
 		
-		for (String name : agents.keySet()) {
-			for (CAgent agent : agents.get(name)) {
+		for (List<CAgent> agentList : agents.values()) {
+			for (CAgent agent : agentList) {
 				if (!first) {
 					sb.append(", ");
 				} else {

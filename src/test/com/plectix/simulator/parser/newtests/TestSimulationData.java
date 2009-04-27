@@ -2,6 +2,7 @@ package com.plectix.simulator.parser.newtests;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import com.plectix.simulator.components.CObservables;
@@ -77,9 +78,9 @@ public class TestSimulationData {
 			initMap.put(Converter.toString(ss.getComponent()), (int)ss.getQuantity());
 		}
 
-		for (String cc : initMap.keySet()) {
-			sb.append("%init: " + initMap.get(cc) + " * (");
-			sb.append(cc + ")\n");
+		for (Map.Entry<String, Integer> entry : initMap.entrySet()) {
+			sb.append("%init: " + entry.getValue() + " * (");
+			sb.append(entry.getKey() + ")\n");
 		}
 		sb.append("\n");
 

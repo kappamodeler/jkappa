@@ -168,45 +168,39 @@ public class CNetworkNotation implements INetworkNotation {
 	public final CNetworkNotation cloneNetworkNotation() {
 		CNetworkNotation newNN = new CNetworkNotation(this.simulator,
 				this.step, this.ruleID);
-		Iterator<Long> iterator = this.changesOfAllUsedSites.keySet()
-				.iterator();
 
-		while (iterator.hasNext()) {
-			Long key = iterator.next();
-			AgentSites as = this.changesOfAllUsedSites.get(key);
-			newNN.getChangesOfAllUsedSites().put(key, as.clone());
+		for (Map.Entry<Long, AgentSites> entry : changesOfAllUsedSites.entrySet()) {
+			AgentSites as = entry.getValue();
+			newNN.getChangesOfAllUsedSites().put(entry.getKey(), as.clone());
 		}
 
 		// clone introMap
 		newNN.introCCMap = new ArrayList<Map<Long, List<Integer>>>();// this.
 		for (Map<Long, List<Integer>> map : this.introCCMap) {
-			iterator = map.keySet().iterator();
 			Map<Long, List<Integer>> newMap = new HashMap<Long, List<Integer>>();
 
-			while (iterator.hasNext()) {
-				Long key = iterator.next();
-				List<Integer> list = map.get(key);
+			for (Map.Entry<Long, List<Integer>> entry : map.entrySet()) {
+				List<Integer> list = entry.getValue();
 				List<Integer> newList = new ArrayList<Integer>();
 
 				for (int number : list) {
 					newList.add(number);
 				}
-				newMap.put(key, newList);
+				newMap.put(entry.getKey(), newList);
 			}
 			newNN.introCCMap.add(newMap);
 		}
+		
 		// clone usedAgentsFromRules
-		iterator = this.usedAgentsFromRules.keySet().iterator();
-
-		while (iterator.hasNext()) {
-			Long key = iterator.next();
-			AgentSitesFromRules aSFR = this.usedAgentsFromRules.get(key);
-			newNN.getUsedAgentsFromRules().put(key, aSFR.clone());
+		for (Map.Entry<Long, AgentSitesFromRules> entry : usedAgentsFromRules.entrySet()) {
+			AgentSitesFromRules aSFR = entry.getValue();
+			newNN.getUsedAgentsFromRules().put(entry.getKey(), aSFR.clone());
 		}
+		
 		// clone agentsNotation
-		newNN.agentsNotation =new ArrayList<String>();
+		newNN.agentsNotation = new ArrayList<String>();
 		for(String str : this.agentsNotation){
-			newNN.agentsNotation.add(str.substring(0));
+			newNN.agentsNotation.add(str);
 		}
 		
 		return newNN;

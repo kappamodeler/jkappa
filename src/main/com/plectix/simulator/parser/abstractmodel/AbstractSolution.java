@@ -26,8 +26,7 @@ public class AbstractSolution implements IAbstractComponent {
 	public final void checkSolutionLinesAndAdd(String line, long count) {
 		line = line.replaceAll("[ 	]", "");
 		while (line.indexOf("(") == 0) {
-			line = line.substring(1);
-			line = line.substring(0, line.length() - 1);
+			line = line.substring(1, line.length() - 1);
 		}
 		for (SolutionLines sl : mySolutionLines) {
 			if (sl.getLine().equals(line)) {

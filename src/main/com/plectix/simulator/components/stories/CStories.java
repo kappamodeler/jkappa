@@ -8,24 +8,15 @@ public final class CStories {
 
 	private int iterations = 10;
 
-	private final List<CStory> stories;
+	private final List<Integer> aplliedRulesIds;
 	private final List<NetworkNotationForCurrentStory> networkNotationForCurrentStory;
 	private final HashMap<Integer, List<CStoryTrees>> trees;
-
-	// TODO separate
-	private class CStory {
-		private int ruleID;
-
-		public CStory(int ruleID) {
-			this.ruleID = ruleID;
-		}
-	}
 
 	private SimulationData simulationData;
 
 	public CStories(SimulationData simData) {
 		this.iterations = simData.getSimulationArguments().getIterations();
-		this.stories = new ArrayList<CStory>();
+		this.aplliedRulesIds = new ArrayList<Integer>();
 		this.trees = new HashMap<Integer, List<CStoryTrees>>();
 		this.networkNotationForCurrentStory = new ArrayList<NetworkNotationForCurrentStory>();
 		for (int i = 0; i < iterations; i++)
@@ -35,9 +26,9 @@ public final class CStories {
 	}
 
 	public int getRuleIdAtStories(int index){
-		if(index>=stories.size()|| index<0)
+		if(index >= aplliedRulesIds.size() || index < 0)
 			return -1;
-		return stories.get(index).ruleID;
+		return aplliedRulesIds.get(index);
 	}
 
 	public final Collection<List<CStoryTrees>> getTrees() {
@@ -52,16 +43,13 @@ public final class CStories {
 	}
 
 	public final void addToStories(List<Integer> ruleIDs) {
-		for (int i = 0; i < ruleIDs.size(); i++) {
-			this.stories.add(new CStory(ruleIDs.get(i)));
+		for (Integer ruleId : ruleIDs) {
+			this.aplliedRulesIds.add(ruleId);
 		}
 	}
 
 	public final void addToNetworkNotationStory(int index,
 			CNetworkNotation networkNotation) {
-		// this.networkNotationForCurrentStory.get(index)
-		// .addToNetworkNotationList(networkNotation);
-
 		NetworkNotationForCurrentStory.addToNetworkNotationList(
 				networkNotation, this.networkNotationForCurrentStory.get(index)
 						.getNetworkNotationList());
@@ -75,19 +63,17 @@ public final class CStories {
 				currentTime);
 	}
 
-	public final boolean checkRule(int checkRuleID, int index) {
-		for (CStory story : this.stories)
-			if (story.ruleID == checkRuleID) {
-				this.networkNotationForCurrentStory.get(index).setEndOfStory(
-						true);
-				return true;
-			}
-		return false;
+	public final boolean checkRule(int ruleToBeChecked, int index) {
+		if (aplliedRulesIds.contains(ruleToBeChecked)) {
+			networkNotationForCurrentStory.get(index).setEndOfStory();
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public final void merge() {
-		for (int i = 0; i < stories.size(); i++) {
-			int key = stories.get(i).ruleID;
+		for (Integer key : aplliedRulesIds) {
 			List<CStoryTrees> treeList = trees.get(key);
 			if (treeList == null) {
 				treeList = new ArrayList<CStoryTrees>();
@@ -95,7 +81,7 @@ public final class CStories {
 			}
 
 			for (NetworkNotationForCurrentStory nnCS : networkNotationForCurrentStory) {
-				if (nnCS.getNetworkNotationList().size() != 0)
+				if (!nnCS.getNetworkNotationList().isEmpty())
 					if (nnCS.getNetworkNotationList().get(0).getRule()
 							.getRuleID() == key) {
 
@@ -105,7 +91,7 @@ public final class CStories {
 								simulationData.isOcamlStyleObsName());
 						tree.getTreeFromList(nnCS.getNetworkNotationList());
 
-						if (treeList.size() == 0)
+						if (treeList.isEmpty())
 							treeList.add(tree);
 						else {
 							boolean isAdd = true;

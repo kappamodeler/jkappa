@@ -7,9 +7,13 @@ import com.plectix.simulator.components.stories.CNetworkNotation.IntersectionTyp
 
 class NetworkNotationForCurrentStory {
 	private List<CNetworkNotation> networkNotationList;
-	private boolean endOfStory;
+	private boolean endOfStory = false;;
 	private double averageTime;
 
+	public NetworkNotationForCurrentStory() {
+		networkNotationList = new ArrayList<CNetworkNotation>();
+	}
+	
 	public double getAverageTime(){
 		return averageTime;
 	}
@@ -22,8 +26,8 @@ class NetworkNotationForCurrentStory {
 		return endOfStory;
 	}
 
-	public final void setEndOfStory(boolean endOfStory) {
-		this.endOfStory = endOfStory;
+	public final void setEndOfStory() {
+		this.endOfStory = true;
 	}
 
 	public final List<CNetworkNotation> getNetworkNotationList() {
@@ -37,15 +41,9 @@ class NetworkNotationForCurrentStory {
 		return null;
 	}
 
-	public NetworkNotationForCurrentStory() {
-		networkNotationList = new ArrayList<CNetworkNotation>();
-		endOfStory = false;
-	}
-
 	public static void addToNetworkNotationList(CNetworkNotation networkNotation,
 			List<CNetworkNotation> networkNotationList) {
-	//	if (networkNotation.isNotOpposite(networkNotationList))
-		if (networkNotation.isNotOpposite(networkNotationList)==null)
+		if (networkNotation.isNotOpposite(networkNotationList) == null)
 			networkNotationList.add(networkNotation);
 	}
 
@@ -53,11 +51,6 @@ class NetworkNotationForCurrentStory {
 			CNetworkNotation networkNotation) {
 			networkNotationList.add(networkNotation);
 	}
-
-//	// TODO separate
-//	private class CStoryVertexes {
-//		AgentSites aSites;
-//	}
 
 	public void handling() {
 		List<CNetworkNotation> nnList = new ArrayList<CNetworkNotation>();
@@ -79,14 +72,9 @@ class NetworkNotationForCurrentStory {
 	private final boolean isIntersects(CNetworkNotation nn,
 			List<CNetworkNotation> nnList) {
 
-//		for (int i = nnList.size()-1;i>=0;i--) {
-//			  CNetworkNotation nnFromList = nnList.get(i);
 		int counter =0;
 		for (CNetworkNotation nnFromList : nnList) {
 			
-//			if (!((nnFromList.isIntersects(nn) == IntersectionType.NO_INTERSECTION) && (nn
-//					.isIntersects(nnFromList) == IntersectionType.NO_INTERSECTION)))
-				
 			if (((nnFromList.isIntersects(nn, true) != IntersectionType.NO_INTERSECTION) || (nn
 						.isIntersects(nnFromList, true) != IntersectionType.NO_INTERSECTION)))
 				counter++;

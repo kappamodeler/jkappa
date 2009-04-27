@@ -1,14 +1,7 @@
 package com.plectix.simulator.stories;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.TreeMap;
+import java.io.*;
+import java.util.*;
 
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
@@ -73,9 +66,9 @@ public class TestStories extends InitStoriesTests {
 		StringBuffer sb = new StringBuffer();
 		for (TreeMap<Integer, List<Integer>> treeMap : mapList) {
 			sb.append("\n");
-			for (Integer key : treeMap.keySet()) {
-				sb.append("\n" + key);
-				for (Integer value : treeMap.get(key)) {
+			for (Map.Entry<Integer, List<Integer>> treeMapEntry : treeMap.entrySet()) {
+				sb.append("\n" + treeMapEntry.getKey());
+				for (Integer value : treeMapEntry.getValue()) {
 					sb.append(" " + value);
 				}
 			}
@@ -85,12 +78,14 @@ public class TestStories extends InitStoriesTests {
 
 	private String getMap(TreeMap<Integer, List<Integer>> map) {
 		StringBuffer sb = new StringBuffer();
-		for (Integer key : map.keySet()) {
-			sb.append("*" + key + "* ");
-			if (map.get(key).isEmpty())
+		for (Map.Entry<Integer, List<Integer>> entry : map.entrySet()) {
+			sb.append("*" + entry.getKey() + "* ");
+			if (entry.getValue().isEmpty()) {
 				sb.append("-> empty");
-			for (Integer integer : map.get(key)) {
-				sb.append("->" + integer);
+			} else {
+				for (Integer integer : entry.getValue()) {
+					sb.append("->" + integer);
+				}
 			}
 			sb.append("\n");
 		}
@@ -111,11 +106,12 @@ public class TestStories extends InitStoriesTests {
 		if (trace2.size() != treeMap.size())
 			return false;
 
-		for (Integer key : trace2.keySet()) {
-			if (!treeMap.keySet().contains(key))
+		for (Map.Entry<Integer, List<Integer>> entry : trace2.entrySet()) {
+			if (!treeMap.keySet().contains(entry.getKey())) {
 				return false;
-			else if (!isEqual(trace2.get(key), treeMap.get(key)))
+			} else if (!isEqual(entry.getValue(), treeMap.get(entry.getKey()))) {
 				return false;
+			}
 		}
 		return true;
 	}
@@ -134,12 +130,12 @@ public class TestStories extends InitStoriesTests {
 			TreeMap<Integer, List<Integer>> trace2) {
 		List<Integer> list;
 		TreeMap<Integer, List<Integer>> trace = new TreeMap<Integer, List<Integer>>();
-		for (Integer key : trace2.keySet()) {
+		for (Map.Entry<Integer, List<Integer>> entry : trace2.entrySet()) {
 			list = new ArrayList<Integer>();
-			for (Integer i : trace2.get(key)) {
+			for (Integer i : entry.getValue()) {
 				list.add(Integer.valueOf(getRuleNameById(i)));
 			}
-			trace.put(Integer.valueOf(getRuleNameById(key)), list);
+			trace.put(Integer.valueOf(getRuleNameById(entry.getKey())), list);
 		}
 		return trace;
 	}

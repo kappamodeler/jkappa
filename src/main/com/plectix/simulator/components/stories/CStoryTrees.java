@@ -153,17 +153,14 @@ public final class CStoryTrees {
 				traceIDToNextTraceID.put(nn.getStep(), commonList.get(i - 1)
 						.getStep());
 
-			Iterator<Long> agentIterator = changesOfAllUsedSites.keySet()
-					.iterator();
-			while (agentIterator.hasNext()) {
-				Long keyAgent = agentIterator.next();
-				AgentSites as = changesOfAllUsedSites.get(keyAgent);
+			for (Map.Entry<Long, AgentSites> entry : changesOfAllUsedSites.entrySet()) {
+				AgentSites as = entry.getValue();
 				Map<Integer, IStoriesSiteStates> sitesMap = as.getSites();
 				Iterator<Integer> siteIterator = sitesMap.keySet().iterator();
 				while (siteIterator.hasNext()) {
 					Integer keySite = siteIterator.next();
 					IStoriesSiteStates sSS = sitesMap.get(keySite);
-					addToWeakCompressionHelpMap(keyAgent, keySite,
+					addToWeakCompressionHelpMap(entry.getKey(), keySite,
 							nn.getStep(), sSS.getBeforeState(),
 							agentIDSiteIDToTraceID);
 
@@ -199,13 +196,10 @@ public final class CStoryTrees {
 			Map<Long, Map<Integer, StoryChangeStateWithTrace>> agentIDSiteIDToTraceID) {
 
 		List<IStates> list = new ArrayList<IStates>();
-		Iterator<Long> agentIterator = agentIDSiteIDToTraceID.keySet()
-				.iterator();
-
-		while (agentIterator.hasNext()) {
-			Long keyAgent = agentIterator.next();
-			Map<Integer, StoryChangeStateWithTrace> storyChangeStateWithTraceMap = agentIDSiteIDToTraceID
-					.get(keyAgent);
+		
+		for (Map.Entry<Long, Map<Integer, StoryChangeStateWithTrace>> entry :  
+			agentIDSiteIDToTraceID.entrySet()) {
+			Map<Integer, StoryChangeStateWithTrace> storyChangeStateWithTraceMap = entry.getValue();
 			Iterator<Integer> siteIterator = storyChangeStateWithTraceMap
 					.keySet().iterator();
 
@@ -214,7 +208,7 @@ public final class CStoryTrees {
 				StoryChangeStateWithTrace scswt = storyChangeStateWithTraceMap
 						.get(keySite);
 				boolean isEmpty = false;
-				if (isEmptyIntersection(commonList, keyAgent, keySite, traceID)) {
+				if (isEmptyIntersection(commonList, entry.getKey(), keySite, traceID)) {
 					isEmpty = true;
 				}
 				list.add(scswt.getStoryStateByTraceID(nextTraceID, isEmpty));
@@ -621,16 +615,12 @@ public final class CStoryTrees {
 
 	private void cloneMap(TreeMap<Integer, List<Integer>> map,
 			TreeMap<Integer, List<Integer>> mapToClone) {
-		Iterator<Integer> iterator = mapToClone.keySet().iterator();
-		while (iterator.hasNext()) {
-			Integer key = iterator.next();
+		for (Map.Entry<Integer, List<Integer>> entry : mapToClone.entrySet()) {
 			List<Integer> newList = new ArrayList<Integer>();
-			List<Integer> list = mapToClone.get(key);
-
-			for (int index : list) {
+			for (int index : entry.getValue()) {
 				newList.add(index);
 			}
-			map.put(key, newList);
+			map.put(entry.getKey(), newList);
 		}
 	}
 
@@ -1107,11 +1097,10 @@ public final class CStoryTrees {
 			Map<Long, List<Integer>> introAgentsMap,
 			Map<Long, CStoryIntro> addedIntros, String introString,
 			Integer traceID) {
-		Iterator<Long> iterator = introAgentsMap.keySet().iterator();
-		while (iterator.hasNext()) {
-			Long key = iterator.next();
+		for (Map.Entry<Long, List<Integer>> entry : introAgentsMap.entrySet()) {
+			Long key = entry.getKey();
+			List<Integer> introSites = entry.getValue();
 			List<Integer> addedSites = addedAgentsMap.get(key);
-			List<Integer> introSites = introAgentsMap.get(key);
 
 			if (addedSites != null) {
 				if (!isEqualLists(addedSites, introSites)) {
