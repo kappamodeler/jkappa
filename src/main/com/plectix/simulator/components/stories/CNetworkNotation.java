@@ -2,6 +2,7 @@ package com.plectix.simulator.components.stories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -400,12 +401,12 @@ public class CNetworkNotation implements INetworkNotation {
 				.iterator();
 		int counter = 0;
 		int fullCounter = 0;
-
+//		HashSet<Integer> checkedList = new HashSet<Integer>();
 		while (iterator.hasNext()) {
 			Integer keySite = iterator.next();
 			if (mapCheck.get(key).getSites().containsKey(keySite)) {
 				counter++;
-
+//				checkedList.add(keySite);
 				if (CStoriesSiteStates.isEqual(mapThis.get(key).getSites().get(
 						keySite).getAfterState(), mapCheck.get(key).getSites()
 						.get(keySite).getBeforeState())) {
@@ -414,10 +415,21 @@ public class CNetworkNotation implements INetworkNotation {
 			}
 		}
 
-		if ((fullCounter == mapThis.get(key).getSites().size())
-				&& (mapThis.get(key).getSites().size() == mapCheck.get(key)
-						.getSites().size()))
-			return IntersectionType.FULL_INTERSECTION;
+		if (fullCounter == mapThis.get(key).getSites().size()){
+			if(mapThis.get(key).getSites().size() == mapCheck.get(key)
+					.getSites().size())
+				return IntersectionType.FULL_INTERSECTION;
+//			iterator = mapCheck.get(key).getSites().keySet().iterator();
+//			while(iterator.hasNext()){
+//				Integer chKey = iterator.next();
+//				if(checkedList.contains(chKey))
+//					continue;
+//				IStoriesSiteStates chSite = mapCheck.get(key).getSites().get(chKey);
+//				if(!chSite.getAfterState().equalz(chSite.getBeforeState()))
+//					return IntersectionType.PART_INTERSECTION;
+//			}
+//			return IntersectionType.FULL_INTERSECTION;
+		}
 
 		if (counter > 0)
 			return IntersectionType.PART_INTERSECTION;

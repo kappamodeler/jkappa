@@ -3,6 +3,7 @@ package com.plectix.simulator.components.stories;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.TreeMap;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
+import com.plectix.simulator.components.stories.events.CWireMap;
 
 import com.plectix.simulator.interfaces.IStates;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
@@ -92,6 +94,8 @@ public final class CStoryTrees {
 		list.add(newNN.getStep());
 		this.ruleIDToTraceID.put(newNN.getRule().getRuleID(), list);
 		this.mainTraceID = commonList.get(0).getStep();
+//		this.testSet = new HashSet<Integer>();
+//		this.key = 0;
 	}
 
 	private Map<Integer, Integer> traceIDToIndex;
@@ -865,6 +869,7 @@ public final class CStoryTrees {
 
 	public final void getTreeFromList(List<CNetworkNotation> commonList) {
 
+//		CWireMap cw = new CWireMap(commonList);
 		if (compressionMode == SimulationArguments.StorifyMode.NONE) {
 			networkNotationsList = noneCompressStoryTrace(commonList);
 			networkNotationsList = updateOnlyMainList(networkNotationsList);
@@ -879,6 +884,10 @@ public final class CStoryTrees {
 		fillMaps();
 	}
 
+//	private HashSet<Integer> testSet;
+//	private int key = 0;
+	
+	
 	private void isCausing(CNetworkNotation newNN,
 			List<CNetworkNotation> commonList, int begin, int level) {
 		Iterator<Long> agentIterator = newNN.getUsedAgentsFromRules().keySet()
@@ -888,6 +897,10 @@ public final class CStoryTrees {
 			addToMapRuleIDToTraceID(newNN, level);
 			return;
 		}
+		
+//		if(testSet.contains(newNN.getStep()))
+//			return;
+		
 
 		while (agentIterator.hasNext()) {
 			Long agentKey = agentIterator.next();
@@ -923,6 +936,7 @@ public final class CStoryTrees {
 				addToMapRuleIDToTraceID(newNN, level);
 			}
 		}
+//		testSet.add(newNN.getStep());
 		return;
 	}
 

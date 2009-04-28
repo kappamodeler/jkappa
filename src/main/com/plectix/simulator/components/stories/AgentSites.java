@@ -6,7 +6,7 @@ import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.IStates;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 
-final class AgentSites{
+public final class AgentSites{
 	private Map<Integer, IStoriesSiteStates> sites;
 
 	public Map<Integer, IStoriesSiteStates> getSites() {
