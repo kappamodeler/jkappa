@@ -8,11 +8,6 @@ import com.plectix.simulator.parser.exceptions.ParseErrorException;
 
 public class KappaFileReader extends Parser<KappaFile> {
 
-	private static final String STRING_INITIAL_CONDITIONS_PREFIX = "%init"; //7;
-	private static final String STRING_SIMULATION_PREFIX = "%obs"; // 6;
-	private static final String STRING_STORIFY_PREFIX = "%story"; // 8;
-	private static final String STRING_MOD_PREFIX = "%mod"; // 6;
-	
 	public KappaFileReader(String path) throws FileNotFoundException {
 		super(path);
 	}
@@ -40,24 +35,21 @@ public class KappaFileReader extends Parser<KappaFile> {
 				line = line + nextLine;
 			}
 
-			if (line.startsWith(STRING_MOD_PREFIX)) {
-				String significant = handleModifier(index, line,
-						STRING_MOD_PREFIX);
+			KappaParagraphModifier modifier = KappaParagraphModifier.getValue(line);
+			String significant = null;
+			if (modifier != null)
+				significant = handleModifier(index, line, modifier);
+			
+			if (modifier == KappaParagraphModifier.MOD_PREFIX) {
 				kappaFile.addPerturbationLine(new KappaFileLine(index, significant));
-			} else if (line.startsWith("%story")) {
-				String significant = handleModifier(index, line,
-						STRING_STORIFY_PREFIX);
+			} else if (modifier == KappaParagraphModifier.STORIFY_PREFIX) {
 				kappaFile.addStoryLine(new KappaFileLine(index, significant));
-			} else if (line.startsWith(STRING_SIMULATION_PREFIX)) {
-				String significant = handleModifier(index, line,
-						STRING_SIMULATION_PREFIX);
+			} else if (modifier == KappaParagraphModifier.SIMULATION_PREFIX) {
 				kappaFile.addObservableLine(new KappaFileLine(index, significant));
-			} else if (line.startsWith(STRING_INITIAL_CONDITIONS_PREFIX)) {
-				String significant = handleModifier(index, line,
-						STRING_INITIAL_CONDITIONS_PREFIX);
+			} else if (modifier == KappaParagraphModifier.INITIAL_CONDITIONS_PREFIX) {
 				kappaFile.addInitialSolutionLine(new KappaFileLine(index, significant));
 			} else if (line.trim().length() > 0) {
-				kappaFile.addRuleLine(new KappaFileLine(index, new String(line)));
+				kappaFile.addRuleLine(new KappaFileLine(index, line));
 			}
 
 		}
@@ -96,8 +88,9 @@ public class KappaFileReader extends Parser<KappaFile> {
 		return line;
 	}
 
-	private final String handleModifier(int index, String line, String modifier)
+	private final String handleModifier(int index, String line, KappaParagraphModifier mod)
 			throws ParseErrorException {
+		String modifier = mod.getString();
 
 		String significant = line;
 

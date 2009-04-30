@@ -2,15 +2,9 @@ package com.plectix.simulator.stories;
 
 import static org.junit.Assert.fail;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TreeMap;
+import java.util.*;
 
-import com.plectix.simulator.components.stories.CStoryIntro;
-import com.plectix.simulator.components.stories.CStoryTrees;
-import com.plectix.simulator.components.stories.CStoryType;
+import com.plectix.simulator.components.stories.*;
 import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
 
 public class TestIntro {
@@ -67,9 +61,9 @@ public class TestIntro {
 	}
 
 	private void checkLeaves(HashMap<Integer, List<CStoryType>> introMap) {
-		for (Integer key : trace.keySet()) {
-			if (trace.get(key).isEmpty()) {
-				if (!introMap.keySet().contains(key))
+		for (Map.Entry<Integer, List<Integer>> entry : trace.entrySet()) {
+			if (entry.getValue().isEmpty()) {
+				if (!introMap.keySet().contains(entry.getKey()))
 					fail("leaf is empty");
 			}
 		}

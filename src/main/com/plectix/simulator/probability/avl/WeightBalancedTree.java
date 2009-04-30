@@ -50,11 +50,7 @@ public class WeightBalancedTree<E extends Ponderable> {
 	
 	public void removeElement(E element) {
 		removeElementRecursively(element);
-		if (myRoot != null) {
-			if (myRoot.getBalance() > 1) {
-				restoreBalance();
-			}
-		}
+		checkBalance();
 	}
 	
 	private void removeElementRecursively(E element) {
@@ -92,6 +88,14 @@ public class WeightBalancedTree<E extends Ponderable> {
 	
 	private void restoreBalance() {
 		
+	}
+	
+	private void checkBalance() {
+		if (myRoot != null) {
+			if (myRoot.getBalance() > 1) {
+				restoreBalance();
+			}
+		}
 	}
 	
 	public WeightedNode<E> getRoot() {

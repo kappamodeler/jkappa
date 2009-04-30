@@ -125,10 +125,10 @@ public class CObservables implements Serializable {
 		if ((size > 0)
 				&& (Math.abs(countTimeList.get(size - 1) - time) < 1e-16)) {
 			if (isTime) {
-				calculateAll(IObservablesComponent.CALCULATE_WITH_REPLASE_LAST);
+				calculateAll(true);
 			} else {
 				updateLastValueAll(time);
-				calculateAll(IObservablesComponent.CALCULATE_WITH_NOT_REPLASE_LAST);
+				calculateAll(false);
 				countTimeList.add(time);
 				changeLastTime = false;
 			}
@@ -142,7 +142,7 @@ public class CObservables implements Serializable {
 				updateLastValueAll(time);
 			}
 			countTimeList.add(lastTime);
-			calculateAll(IObservablesComponent.CALCULATE_WITH_NOT_REPLASE_LAST);
+			calculateAll(false);
 			lastTime = time;
 			changeLastTime = false;
 			return;
@@ -176,7 +176,7 @@ public class CObservables implements Serializable {
 					timeNext = count + timeSampleMin;
 					updateLastValueAll(time);
 					countTimeList.add(time);
-					calculateAll(IObservablesComponent.CALCULATE_WITH_NOT_REPLASE_LAST);
+					calculateAll(false);
 					changeTimeNext = true;
 				}
 			if (time < initialTime)
@@ -223,7 +223,7 @@ public class CObservables implements Serializable {
 			return;
 		updateLastValueAll(time);
 		countTimeList.add(time);
-		calculateAll(IObservablesComponent.CALCULATE_WITH_NOT_REPLASE_LAST);
+		calculateAll(false);
 	}
 
 	//--------------------------ADDERS------------------------------------------

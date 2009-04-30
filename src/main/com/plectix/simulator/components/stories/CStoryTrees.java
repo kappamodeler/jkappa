@@ -1,18 +1,11 @@
 package com.plectix.simulator.components.stories;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.Map.Entry;
 
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
-import com.plectix.simulator.components.stories.events.CWireMap;
 
 import com.plectix.simulator.interfaces.IStates;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
@@ -20,9 +13,6 @@ import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 
 public final class CStoryTrees {
-	public static final byte IS_CAUSE = 2;
-	public static final byte IS_NONE = 1;
-	public static final byte IS_NOT_CAUSE = 0;
 	private int isomorphicCount = 1;
 	private double averageTime;
 	private int ruleId;
@@ -160,14 +150,11 @@ public final class CStoryTrees {
 			for (Map.Entry<Long, AgentSites> entry : changesOfAllUsedSites.entrySet()) {
 				AgentSites as = entry.getValue();
 				Map<Integer, IStoriesSiteStates> sitesMap = as.getSites();
-				Iterator<Integer> siteIterator = sitesMap.keySet().iterator();
-				while (siteIterator.hasNext()) {
-					Integer keySite = siteIterator.next();
-					IStoriesSiteStates sSS = sitesMap.get(keySite);
-					addToWeakCompressionHelpMap(entry.getKey(), keySite,
+				for (Entry<Integer, IStoriesSiteStates> siteMapEntry : sitesMap.entrySet()) {
+					IStoriesSiteStates sSS = siteMapEntry.getValue();
+					addToWeakCompressionHelpMap(entry.getKey(), siteMapEntry.getKey(),
 							nn.getStep(), sSS.getBeforeState(),
 							agentIDSiteIDToTraceID);
-
 				}
 			}
 		}
@@ -204,19 +191,15 @@ public final class CStoryTrees {
 		for (Map.Entry<Long, Map<Integer, StoryChangeStateWithTrace>> entry :  
 			agentIDSiteIDToTraceID.entrySet()) {
 			Map<Integer, StoryChangeStateWithTrace> storyChangeStateWithTraceMap = entry.getValue();
-			Iterator<Integer> siteIterator = storyChangeStateWithTraceMap
-					.keySet().iterator();
 
-			while (siteIterator.hasNext()) {
-				Integer keySite = siteIterator.next();
-				StoryChangeStateWithTrace scswt = storyChangeStateWithTraceMap
-						.get(keySite);
+			for (Map.Entry<Integer, StoryChangeStateWithTrace> storyChangeEntry : 
+				storyChangeStateWithTraceMap.entrySet()) {
+				StoryChangeStateWithTrace scswt = storyChangeEntry.getValue();
 				boolean isEmpty = false;
-				if (isEmptyIntersection(commonList, entry.getKey(), keySite, traceID)) {
+				if (isEmptyIntersection(commonList, entry.getKey(), storyChangeEntry.getKey(), traceID)) {
 					isEmpty = true;
 				}
 				list.add(scswt.getStoryStateByTraceID(nextTraceID, isEmpty));
-
 			}
 		}
 
@@ -239,11 +222,9 @@ public final class CStoryTrees {
 
 	private void convertTree(
 			Map<Integer, List<Integer>> reversedTraceIDToTraceID) {
-		Iterator<Integer> iterator = traceIDToTraceID.keySet().iterator();
 
-		while (iterator.hasNext()) {
-			Integer key = iterator.next();
-			List<Integer> listOfSons = traceIDToTraceID.get(key);
+		for (Map.Entry<Integer, List<Integer>> entry : traceIDToTraceID.entrySet()) {
+			List<Integer> listOfSons = entry.getValue();
 			Collections.sort(listOfSons);
 			for (Integer son : listOfSons) {
 				List<Integer> list = reversedTraceIDToTraceID.get(son);
@@ -251,10 +232,9 @@ public final class CStoryTrees {
 					list = new ArrayList<Integer>();
 					reversedTraceIDToTraceID.put(son, list);
 				}
-				list.add(key);
+				list.add(entry.getKey());
 			}
 		}
-
 	}
 
 	private List<Integer> listToDelete;
@@ -518,12 +498,9 @@ public final class CStoryTrees {
 
 			for (CNetworkNotation nn : strongCompressedList) {
 
-				Iterator<Long> agentIDIterator = nn.getUsedAgentsFromRules()
-						.keySet().iterator();
-				while (agentIDIterator.hasNext()) {
-					long agentID = agentIDIterator.next();
-					AgentSitesFromRules asFR = nn.getUsedAgentsFromRules().get(
-							agentID);
+				for (Map.Entry<Long,AgentSitesFromRules> entry : nn.getUsedAgentsFromRules().entrySet()) {
+					long agentID = entry.getKey();
+					AgentSitesFromRules asFR = entry.getValue();
 
 					List<CNetworkNotation> nnList = agentToNNs.get(agentID);
 					if (nnList == null) {
@@ -543,12 +520,8 @@ public final class CStoryTrees {
 						agentIDsList.add(agentID);
 				}
 			}
-			Iterator<Integer> iterator = agentNameIDToAgentID.keySet()
-					.iterator();
 			counter = 0;
-			while (iterator.hasNext()) {
-				int key = iterator.next();
-				List<Long> agentIDs = agentNameIDToAgentID.get(key);
+			for (List<Long> agentIDs : agentNameIDToAgentID.values()) {
 				if (agentIDs.size() > 1) {
 					List<CNetworkNotation> currentList = canChange(agentIDs,
 							strongCompressedList, agentToNNs);
@@ -594,12 +567,7 @@ public final class CStoryTrees {
 				cloneMap(traceIDToTraceIDCloned, traceIDToTraceID);
 				cloneMap(traceIDToTraceIDWeakCloned, traceIDToTraceIDWeak);
 
-				Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
-				while (iterator.hasNext()) {
-					int key = iterator.next();
-					int value = traceIDToLevel.get(key);
-					traceIDToLevelCloned.put(key, value);
-				}
+				traceIDToLevelCloned.putAll(traceIDToLevel);
 
 				currentList = replaceAgentsInTrace(clonedList, agentIDToDelete,
 						agentID, agentToNNs.get(agentIDToDelete),
@@ -645,20 +613,14 @@ public final class CStoryTrees {
 
 				Map<Long, AgentSites> changesOfAllUsedSites = nn
 						.getChangesOfAllUsedSites();
-				Iterator<Long> iterator = changesOfAllUsedSites.keySet()
-						.iterator();
-				while (iterator.hasNext()) {
-					long key = iterator.next();
-					AgentSites aSCh = changesOfAllUsedSites.get(key);
+				for (Map.Entry<Long, AgentSites> entry : changesOfAllUsedSites.entrySet()) {
+					long key = entry.getKey();
+					AgentSites aSCh = entry.getValue();
 					if (key != agentIDToDelete) {
 						Map<Integer, IStoriesSiteStates> sitesMap = aSCh
 								.getSites();
 
-						Iterator<Integer> siteIterator = sitesMap.keySet()
-								.iterator();
-						while (siteIterator.hasNext()) {
-							int siteKey = siteIterator.next();
-							IStoriesSiteStates sss = sitesMap.get(siteKey);
+						for (IStoriesSiteStates sss : sitesMap.values()) {
 //							if (sss.getAfterState().getIdLinkAgent() == agentIDToDelete)
 							if (sss.getAfterState()!= null && sss.getAfterState().getIdLinkAgent() == agentIDToDelete)
 								sss.getAfterState().setIdLinkAgent(agentID);
@@ -756,13 +718,11 @@ public final class CStoryTrees {
 	}
 
 	private boolean isSequentialTwoSiteMaps(AgentSites aS, AgentSites aSNext) {
-		Iterator<Integer> iterator = aS.getSites().keySet().iterator();
-
-		while (iterator.hasNext()) {
-			Integer key = iterator.next();
+		for (Map.Entry<Integer, IStoriesSiteStates> entry : aS.getSites().entrySet()) {
+			Integer key = entry.getKey();
 
 			if (aSNext.getSites().containsKey(key)) {
-				IStoriesSiteStates sss = aS.getSites().get(key);
+				IStoriesSiteStates sss = entry.getValue();
 				IStoriesSiteStates sssNext = aSNext.getSites().get(key);
 
 				IStates state = sss.getAfterState();
@@ -817,20 +777,18 @@ public final class CStoryTrees {
 		boolean delete = true;
 		while(delete){
 			delete = false;
-			Iterator<Integer> iterator = traceIDToTraceIDWeak.keySet().iterator();
-			while (iterator.hasNext()) {
-				int key = iterator.next();
-				List<Integer> weakList = traceIDToTraceIDWeak.get(key);
+			for (Map.Entry<Integer, List<Integer>> entry : traceIDToTraceIDWeak.entrySet()) {
+				List<Integer> weakList = entry.getValue();
 				if (weakList == null || weakList.size() == 0){
-					traceIDToTraceIDWeak.remove(key);	
+					traceIDToTraceIDWeak.remove(entry.getKey());	
 					delete = true;
 					break;
 				}
 				else {
 					List<Integer> deletingList = new ArrayList<Integer>();
-					List<Integer> strongList = traceIDToTraceID.get(key);
+					List<Integer> strongList = traceIDToTraceID.get(entry.getKey());
 					for(int i=0; i< weakList.size();i++){
-						if(strongList.contains(weakList.get(i)))
+						if (strongList.contains(weakList.get(i)))
 							deletingList.add(i);
 					}
 					if(deletingList.size()>0){
@@ -890,8 +848,6 @@ public final class CStoryTrees {
 	
 	private void isCausing(CNetworkNotation newNN,
 			List<CNetworkNotation> commonList, int begin, int level) {
-		Iterator<Long> agentIterator = newNN.getUsedAgentsFromRules().keySet()
-				.iterator();
 
 		if (begin >= commonList.size()) {
 			addToMapRuleIDToTraceID(newNN, level);
@@ -901,36 +857,32 @@ public final class CStoryTrees {
 //		if(testSet.contains(newNN.getStep()))
 //			return;
 		
-
-		while (agentIterator.hasNext()) {
-			Long agentKey = agentIterator.next();
-			AgentSitesFromRules aSFR = newNN.getUsedAgentsFromRules().get(
-					agentKey);
-			Iterator<Integer> siteIterator = aSFR.getSites().keySet()
-					.iterator();
+		for (Map.Entry<Long, AgentSitesFromRules> entry : newNN.getUsedAgentsFromRules().entrySet()) {
+			Long agentKey = entry.getKey();
+			AgentSitesFromRules aSFR = entry.getValue();
 			int leafIndex = 0;
-			while (siteIterator.hasNext()) {
-				Integer siteKey = siteIterator.next();
-				SitesFromRules sFR = aSFR.getSites().get(siteKey);
+			for (Map.Entry<Integer, SitesFromRules> entrySFR : aSFR.getSites().entrySet()) {
+				Integer siteKey = entrySFR.getKey();
+				SitesFromRules sFR = entrySFR.getValue();
 				boolean isLink = true;
 				List<Integer> weakTraceIDs = new ArrayList<Integer>();
-				byte isCause = isCausing(newNN, commonList, begin, isLink,
+				boolean isCause = isCausing(newNN, commonList, begin, isLink,
 						agentKey, siteKey, sFR, level, weakTraceIDs);
-				if (isCause == IS_NOT_CAUSE) {
+				if (!isCause) {
 					leafIndex++;
-				}
-				if (isCause == IS_CAUSE)
+				} else {
 					putToWeakRelationMap(newNN.getStep(), weakTraceIDs);
+				}
 				isLink = false;
 
 				weakTraceIDs = new ArrayList<Integer>();
 				isCause = isCausing(newNN, commonList, begin, isLink, agentKey,
 						siteKey, sFR, level, weakTraceIDs);
-				if (isCause == IS_NOT_CAUSE) {
+				if (!isCause) {
 					leafIndex++;
-				}
-				if (isCause == IS_CAUSE)
+				} else {
 					putToWeakRelationMap(newNN.getStep(), weakTraceIDs);
+				}
 			}
 			if (aSFR.getSites().size() * 2 == leafIndex) {
 				addToMapRuleIDToTraceID(newNN, level);
@@ -940,7 +892,7 @@ public final class CStoryTrees {
 		return;
 	}
 
-	private byte isCausing(CNetworkNotation newNN,
+	private boolean isCausing(CNetworkNotation newNN,
 			List<CNetworkNotation> commonList, int begin, boolean isLink,
 			Long agentKey, int siteKey, SitesFromRules sFR, int level,
 			List<Integer> weakTraceIDs) {
@@ -965,7 +917,7 @@ public final class CStoryTrees {
 								weakTraceIDs.remove(comparableNN.getStep());
 						}
 						isCausing(comparableNN, commonList, i + 1, level);
-						return IS_CAUSE;
+						return true;
 					}
 					if (!isLink
 							&& sFRComparable.getInternalStateMode() == NetworkNotationMode.TEST
@@ -994,7 +946,7 @@ public final class CStoryTrees {
 				}
 			}
 		}
-		return IS_NOT_CAUSE;
+		return false;
 	}
 
 	private void putToWeakRelationMap(int traceIDKey, List<Integer> traceIDList) {
@@ -1029,6 +981,7 @@ public final class CStoryTrees {
 		return transitivity;
 	}
 
+	//TODO keySet iterator
 	private void pushTree() {
 		Iterator<Integer> traceIterator = traceIDToTraceID.keySet().iterator();
 
@@ -1167,10 +1120,9 @@ public final class CStoryTrees {
 			}
 		}
 
-		Iterator<Integer> iterator = traceIDToLevel.keySet().iterator();
-		while (iterator.hasNext()) {
-			int traceID = iterator.next();
-			int level = traceIDToLevel.get(traceID);
+		for (Map.Entry<Integer, Integer> entry : traceIDToLevel.entrySet()) {
+			int traceID = entry.getKey();
+			int level = entry.getValue();
 			List<Integer> list = levelToTraceID.get(level);
 			if (list == null) {
 				list = new ArrayList<Integer>();

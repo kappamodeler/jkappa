@@ -53,13 +53,9 @@ class UCorrelationAbstractAgent {
 					CActionType.DELETE, null));
 			return;
 		}
-		Iterator<Integer> iterator = fromAgent.getSitesMap().keySet()
-				.iterator();
-		while (iterator.hasNext()) {
-			Integer key = iterator.next();
-
-			CContactMapAbstractSite siteFrom = fromAgent.getSitesMap().get(key);
-			CContactMapAbstractSite siteTo = toAgent.getSitesMap().get(key);
+		for (Map.Entry<Integer, CContactMapAbstractSite> entry : fromAgent.getSitesMap().entrySet()) {
+			CContactMapAbstractSite siteFrom = entry.getValue();
+			CContactMapAbstractSite siteTo = toAgent.getSitesMap().get(entry.getKey());
 
 			if (siteFrom.getInternalState().getNameId() != siteTo
 					.getInternalState().getNameId()) {
@@ -251,10 +247,7 @@ class UCorrelationAbstractAgent {
 		// TODO DELL
 
 		List<CContactMapAbstractAgent> listOut = new ArrayList<CContactMapAbstractAgent>();
-		Iterator<Integer> iterator = newAgent.getSitesMap().keySet().iterator();
-		while (iterator.hasNext()) {
-			Integer key = iterator.next();
-			CContactMapAbstractSite siteNew = newAgent.getSite(key);
+		for (CContactMapAbstractSite siteNew : newAgent.getSitesMap().values()) {
 			if (siteNew.getLinkState().getAgentNameID() == CSite.NO_INDEX)
 				continue;
 			listOut.addAll(breakAllAgentsWithSite(newAgent, siteNew, solution));

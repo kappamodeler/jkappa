@@ -14,7 +14,7 @@ package com.plectix.simulator.parser.util;
 		+ "*|(" + PATTERN_LINE_SITE_STATE + "((\\,)"
 		+ PATTERN_LINE_SITE_STATE + ")*)*)" + "(\\))" + ")";
 
-	public static final String PATTERN_LINE = "(" + PATTERN_LINE_AGENT
+	private static final String PATTERN_LINE = "(" + PATTERN_LINE_AGENT
 		+ "((\\,)" + PATTERN_LINE_AGENT + ")*)";
 
 	public static boolean check(String line) {

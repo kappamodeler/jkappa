@@ -236,9 +236,8 @@ public class CRule implements Serializable {
 		if (agentAddList.size() == 0)
 			return null;
 		List<Long> list = new ArrayList<Long>();
-		Iterator<CAgent> iterator = agentAddList.keySet().iterator();
-		while (iterator.hasNext()) {
-			CAgent agent = agentAddList.get(iterator.next());
+		        
+		for (CAgent agent : agentAddList.values()) {
 			list.add(agent.getId());
 		}
 		return list;

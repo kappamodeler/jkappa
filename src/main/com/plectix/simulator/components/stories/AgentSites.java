@@ -28,24 +28,18 @@ public final class AgentSites{
 	
 	public final void changeLinkAgents(Long agentIDToDelete,
 			Long agentID){
-		Iterator<Integer> iterator = sites.keySet().iterator();
-		while (iterator.hasNext()) {
-            int key = iterator.next();
-            IStoriesSiteStates checkSS =sites.get(key);
-            if(checkSS.getAfterState().getIdLinkAgent()==agentIDToDelete)
+		for (IStoriesSiteStates checkSS : sites.values()) {
+            if (checkSS.getAfterState().getIdLinkAgent() == agentIDToDelete)
             	checkSS.getAfterState().setIdLinkAgent(agentID);
-            
 		}
 	}	
 	
 	public final AgentSites clone(){
 		AgentSites as = new AgentSites();
-		Iterator<Integer> iterator = this.sites.keySet().iterator();
 
-		while (iterator.hasNext()) {
-			int key = iterator.next();
-			IStoriesSiteStates sss = this.sites.get(key);
-			as.getSites().put(key, ((CStoriesSiteStates)sss).clone());
+		for (Map.Entry<Integer, IStoriesSiteStates> entry : sites.entrySet()) {
+			IStoriesSiteStates sss = entry.getValue();
+			as.getSites().put(entry.getKey(), ((CStoriesSiteStates)sss).clone());
 		}
 		
 		return as;
@@ -55,11 +49,9 @@ public final class AgentSites{
 		if(sites.size()!=checkAS.getSites().size())
 			return false;
 		
-		Iterator<Integer> iterator = sites.keySet().iterator();
-		while (iterator.hasNext()) {
-            int key = iterator.next();
-            IStoriesSiteStates checkSS =checkAS.getSites().get(key);
-            IStoriesSiteStates ss = sites.get(key);
+		for (Map.Entry<Integer, IStoriesSiteStates> entry : sites.entrySet()) {
+			IStoriesSiteStates checkSS = checkAS.getSites().get(entry.getKey());
+            IStoriesSiteStates ss = entry.getValue();
             if(checkSS==null)
             	return false;
             

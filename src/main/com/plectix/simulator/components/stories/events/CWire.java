@@ -3,10 +3,6 @@ package com.plectix.simulator.components.stories.events;
 import java.util.TreeMap;
 
 public class CWire {
-	public static final byte TYPE_LINK_STATE = 1;
-	public static final byte TYPE_INTERNAL_STATE = 2;
-	public static final byte TYPE_AGENT = 3;
-
 	private final long agentNameId;
 	private final int siteNameId;
 	private TreeMap<Long, AEvent> eventsMap;

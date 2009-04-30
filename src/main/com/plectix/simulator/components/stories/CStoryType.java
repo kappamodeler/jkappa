@@ -4,18 +4,14 @@ import java.util.Collection;
 
 import org.w3c.dom.Element;
 
+import com.plectix.simulator.simulator.xml.EntityModifier;
+import com.plectix.simulator.simulator.xml.RelationModifier;
+
 public class CStoryType {
 
 	public enum StoryOutputType {
 		INTRO, RULE, OBS;
 	}
-
-	public static final String STRING_INTRO = "INTRO";
-	public static final String STRING_RULE = "RULE";
-	public static final String STRING_OBS = "OBSERVABLE";
-
-	public static final String RELATION_STRONG = "STRONG";
-	public static final String RELATION_WEAK = "WEAK";
 
 	private StoryOutputType type;
 	private String text;
@@ -56,16 +52,16 @@ public class CStoryType {
 		this.depth = depth;
 	}
 
-	public void fillNode(Element node, String strType) {
+	public void fillNode(Element node, EntityModifier strType) {
 		node.setAttribute("Id", Integer.toString(id));
-		node.setAttribute("Type", strType);
+		node.setAttribute("Type", strType.getString());
 		node.setAttribute("Text", text);
 		node.setAttribute("Data", data);
 		node.setAttribute("Depth", Integer.toString(depth));
 	}
 
-	public void fillConnection(Element node, int toNode, String relationType) {
-		node.setAttribute("Relation", relationType);
+	public void fillConnection(Element node, int toNode, RelationModifier modifier) {
+		node.setAttribute("Relation", modifier.getString());
 		node.setAttribute("FromNode", Integer.toString(this.id));
 		node.setAttribute("ToNode", Integer.toString(toNode));
 	}

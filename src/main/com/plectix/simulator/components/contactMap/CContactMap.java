@@ -88,25 +88,7 @@ public class CContactMap {
 			break;
 		}
 
-//		Map<Integer, List<CContactMapAbstractAgent>> abstractAgentMap = abstractSolution
-//				.getAgentNameIdToAgentsList();
 	}
-
-//	private void clear() {
-//		Iterator<Integer> iterator = abstractSolution
-//				.getAgentNameIdToAgentsList().keySet().iterator();
-//		while (iterator.hasNext()) {
-//			Integer key = iterator.next();
-//
-//			List<CContactMapAbstractAgent> listAgents = abstractSolution
-//					.getAgentNameIdToAgentsList().get(key);
-//			List<CContactMapAbstractAgent> listClear = new ArrayList<CContactMapAbstractAgent>();
-//			for (CContactMapAbstractAgent a : listAgents)
-//				if (!a.includedInCollection(listClear))
-//					listClear.add(a);
-//			abstractSolution.getAgentNameIdToAgentsList().put(key, listClear);
-//		}
-//	}
 
 	/**
 	 * This method initializes abstract solution.
@@ -139,20 +121,19 @@ public class CContactMap {
 					(CRule) this.focusRule, this.agentsFromFocusedRule);
 			constructAbstractCard(rules, agentsFromFocusedRule);
 
+//			TODO wait and remove!
+//			Iterator<Integer> iterator = abstractSolution
+//					.getAgentNameIdToAgent().keySet().iterator();
+//			while (iterator.hasNext()) {
+//				Integer key = iterator.next();
+//				addAgentList.add(abstractSolution.getAgentNameIdToAgent().get(
+//						key));
+//			}
 			List<CContactMapAbstractAgent> addAgentList = new ArrayList<CContactMapAbstractAgent>();
-			Iterator<Integer> iterator = abstractSolution
-					.getAgentNameIdToAgent().keySet().iterator();
-			while (iterator.hasNext()) {
-				Integer key = iterator.next();
-				addAgentList.add(abstractSolution.getAgentNameIdToAgent().get(
-						key));
-			}
+			addAgentList.addAll(abstractSolution.getAgentNameIdToAgent().values());
 
 			List<Integer> agentNameIdList = new ArrayList<Integer>();
-			iterator = abstractSolution.getAgentNameIdToAgentsList().keySet()
-					.iterator();
-			while (iterator.hasNext())
-				agentNameIdList.add(iterator.next());
+			agentNameIdList.addAll(abstractSolution.getAgentNameIdToAgentsList().keySet());
 
 			constructAbstractCard(rules, addAgentList);
 
@@ -166,15 +147,14 @@ public class CContactMap {
 	 * @param agentNameIdList
 	 */
 	private void clearCard(List<Integer> agentNameIdList) {
-		Iterator<Integer> iterator = abstractSolution
-				.getAgentNameIdToAgentsList().keySet().iterator();
-		List<Integer> listToDell = new ArrayList<Integer>();
-		while (iterator.hasNext()) {
-			Integer key = iterator.next();
+		List<Integer> namesOfAgentsToDelete = new ArrayList<Integer>();
+
+		for (Integer key : abstractSolution.getAgentNameIdToAgentsList().keySet()) {
 			if (!agentNameIdList.contains(key))
-				listToDell.add(key);
+				namesOfAgentsToDelete.add(key);
 		}
-		for (Integer i : listToDell) {
+		
+		for (Integer i : namesOfAgentsToDelete) {
 			abstractSolution.getAgentNameIdToAgentsList().remove(i);
 			abstractSolution.getEdgesInContactMap().remove(i);
 			abstractSolution.getAgentsInContactMap().remove(i);

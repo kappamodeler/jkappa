@@ -2,10 +2,10 @@ package com.plectix.simulator.components.stories;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
@@ -365,16 +365,13 @@ public class CNetworkNotation implements INetworkNotation {
 
 		mapThis = this.changesOfAllUsedSites;
 		mapCheck = nn.changesOfAllUsedSites;
-		Iterator<Long> iterator = mapThis.keySet().iterator();
 
 		int counter = 0;
 		int fullCounter = 0;
 
-		while (iterator.hasNext()) {
-			Long key = iterator.next();
-
-			if (mapCheck.containsKey(key)) {
-				IntersectionType it = checkSites(key, mapThis, mapCheck);
+		for (Map.Entry<Long, AgentSites> entry : mapThis.entrySet()) {
+			if (mapCheck.containsKey(entry.getKey())) {
+				IntersectionType it = checkSites(entry, mapThis, mapCheck);
 				// IntersectionType it = checkSites(key, nn);
 				if (it == IntersectionType.FULL_INTERSECTION)
 					fullCounter++;
@@ -395,41 +392,28 @@ public class CNetworkNotation implements INetworkNotation {
 		return IntersectionType.NO_INTERSECTION;
 	}
 
-	private final IntersectionType checkSites(long key,
+	private final IntersectionType checkSites(Map.Entry<Long, AgentSites> entryOfMapThis,
 			Map<Long, AgentSites> mapThis, Map<Long, AgentSites> mapCheck) {
-		Iterator<Integer> iterator = mapThis.get(key).getSites().keySet()
-				.iterator();
+		Long key = entryOfMapThis.getKey();
+		AgentSites value = entryOfMapThis.getValue();
+		
 		int counter = 0;
 		int fullCounter = 0;
-//		HashSet<Integer> checkedList = new HashSet<Integer>();
-		while (iterator.hasNext()) {
-			Integer keySite = iterator.next();
-			if (mapCheck.get(key).getSites().containsKey(keySite)) {
+		
+		for (Map.Entry<Integer, IStoriesSiteStates> entry : value.getSites().entrySet()) {
+			if (mapCheck.get(key).getSites().containsKey(entry.getKey())) {
 				counter++;
-//				checkedList.add(keySite);
-				if (CStoriesSiteStates.isEqual(mapThis.get(key).getSites().get(
-						keySite).getAfterState(), mapCheck.get(key).getSites()
-						.get(keySite).getBeforeState())) {
+
+				if (CStoriesSiteStates.isEqual(entry.getValue().getAfterState(), 
+						mapCheck.get(key).getSites().get(entry.getKey()).getBeforeState())) {
 					fullCounter++;
 				}
 			}
 		}
 
-		if (fullCounter == mapThis.get(key).getSites().size()){
-			if(mapThis.get(key).getSites().size() == mapCheck.get(key)
-					.getSites().size())
-				return IntersectionType.FULL_INTERSECTION;
-//			iterator = mapCheck.get(key).getSites().keySet().iterator();
-//			while(iterator.hasNext()){
-//				Integer chKey = iterator.next();
-//				if(checkedList.contains(chKey))
-//					continue;
-//				IStoriesSiteStates chSite = mapCheck.get(key).getSites().get(chKey);
-//				if(!chSite.getAfterState().equalz(chSite.getBeforeState()))
-//					return IntersectionType.PART_INTERSECTION;
-//			}
-//			return IntersectionType.FULL_INTERSECTION;
-		}
+		if ((fullCounter == value.getSites().size())
+				&& (value.getSites().size() == mapCheck.get(key).getSites().size()))
+			return IntersectionType.FULL_INTERSECTION;
 
 		if (counter > 0)
 			return IntersectionType.PART_INTERSECTION;
@@ -441,20 +425,14 @@ public class CNetworkNotation implements INetworkNotation {
 		if (this.changesOfAllUsedSites.size() != checkNN
 				.getChangesOfAllUsedSites().size())
 			return false;
-		Iterator<Long> agentIterator = this.changesOfAllUsedSites.keySet()
-				.iterator();
-		while (agentIterator.hasNext()) {
-			Long agentID = agentIterator.next();
-
-			AgentSites as = this.changesOfAllUsedSites.get(agentID);
-
+		for (Map.Entry<Long, AgentSites> entry : changesOfAllUsedSites.entrySet()) {
 			AgentSites asToCheck = checkNN.getChangesOfAllUsedSites().get(
-					agentID);
+					entry.getKey());
 
 			if (asToCheck == null)
 				return false;
 
-			if (!as.isEqualsAgentSites(asToCheck))
+			if (!entry.getValue().isEqualsAgentSites(asToCheck))
 				return false;
 		}
 

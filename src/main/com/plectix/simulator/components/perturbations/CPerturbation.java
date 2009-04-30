@@ -16,10 +16,6 @@ import com.plectix.simulator.interfaces.*;
 @SuppressWarnings("serial")
 public final class CPerturbation implements Serializable{
 
-	public final static byte TYPE_TIME = 0;
-	public final static byte TYPE_NUMBER = 1;
-	public final static byte TYPE_ONCE = 2;
-
 	private CPerturbationType type;
 
 	public CPerturbationType getType() {

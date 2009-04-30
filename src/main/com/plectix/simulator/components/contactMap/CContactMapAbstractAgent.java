@@ -78,15 +78,10 @@ public class CContactMapAbstractAgent{
 		this.nameID = agentLink.getNameId();
 		this.sitesMap = new HashMap<Integer, CContactMapAbstractSite>();
 
-		Iterator<Integer> iterator = agentLink.getSitesMap().keySet()
-				.iterator();
-		while (iterator.hasNext()) {
-			int key = iterator.next();
-			CContactMapAbstractSite abstractSite = agentLink.getSitesMap().get(
-					key);
-			CContactMapAbstractSite newSite = abstractSite.clone();
+		for (Map.Entry<Integer, CContactMapAbstractSite> entry : agentLink.getSitesMap().entrySet()) {
+			CContactMapAbstractSite newSite = entry.getValue().clone();
 			newSite.setAgentLink(this);
-			sitesMap.put(key, newSite);
+			sitesMap.put(entry.getKey(), newSite);
 		}
 	}
 
@@ -126,15 +121,10 @@ public class CContactMapAbstractAgent{
 			sitesMap.put(key, abstractSite);
 		}
 
-		Iterator<Integer> iterator = abstractModelAgent.getSitesMap().keySet()
-				.iterator();
-		while (iterator.hasNext()) {
-			int key = iterator.next();
-			CContactMapAbstractSite abstractSite = this.sitesMap.get(key);
+		for (Map.Entry<Integer, CContactMapAbstractSite> entry : abstractModelAgent.getSitesMap().entrySet()) {
+			CContactMapAbstractSite abstractSite = this.sitesMap.get(entry.getKey());
 			if (abstractSite == null) {
-				CContactMapAbstractSite modelSite = abstractModelAgent
-						.getSitesMap().get(key);
-				this.sitesMap.put(key, modelSite);
+				this.sitesMap.put(entry.getKey(), entry.getValue());
 			}
 		}
 	}
@@ -202,14 +192,8 @@ public class CContactMapAbstractAgent{
 			Map<Integer, CContactMapAbstractSite> sitesMap1,
 			Map<Integer, CContactMapAbstractSite> sitesMap2) {
 
-		Iterator<Integer> iterator = sitesMap1.keySet().iterator();
-		while (iterator.hasNext()) {
-			int siteKey = iterator.next();
-			CContactMapAbstractSite site1 = sitesMap1.get(siteKey);
-			CContactMapAbstractSite site2 = sitesMap2.get(siteKey);
-			if (site2 == null)
-				return false;
-			if (!site1.equalz(site2))
+		for (Map.Entry<Integer, CContactMapAbstractSite> entry : sitesMap1.entrySet()) {
+			if (!entry.getValue().equalz(sitesMap2.get(entry.getKey())))
 				return false;
 		}
 
@@ -225,11 +209,7 @@ public class CContactMapAbstractAgent{
 		if (this.nameID != agentIn.getNameId())
 			return false;
 
-		Iterator<Integer> sitesIterator = this.sitesMap.keySet().iterator();
-
-		while (sitesIterator.hasNext()) {
-			int key = sitesIterator.next();
-			CContactMapAbstractSite site = this.sitesMap.get(key);
+		for (CContactMapAbstractSite site : sitesMap.values()) {
 			CContactMapAbstractSite siteIn = agentIn.getSite(site.getNameId());
 			if (siteIn == null)
 				return false;

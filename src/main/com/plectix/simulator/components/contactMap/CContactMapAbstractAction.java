@@ -3,6 +3,8 @@ package com.plectix.simulator.components.contactMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+
 import com.plectix.simulator.components.CSite;
 
 /**
@@ -90,15 +92,13 @@ class CContactMapAbstractAction {
 			return false;
 		if (a1.getSitesMap().size() != a2.getSitesMap().size())
 			return false;
-		Iterator<Integer> iterator = a1.getSitesMap().keySet().iterator();
-		while (iterator.hasNext()) {
-			Integer key = iterator.next();
-			CContactMapAbstractSite s1 = a1.getSitesMap().get(key);
-			CContactMapAbstractSite s2 = a2.getSitesMap().get(key);
+		
+		for (Map.Entry<Integer, CContactMapAbstractSite> entry : a1.getSitesMap().entrySet()) {
+			CContactMapAbstractSite s1 = entry.getValue();
+			CContactMapAbstractSite s2 = a2.getSitesMap().get(entry.getKey());
 			if ((s2 == null) || (s1.getNameId() != s2.getNameId()))
 				return false;
 		}
-
 		return true;
 	}
 

@@ -66,6 +66,8 @@ import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
 import com.plectix.simulator.parser.abstractmodel.reader.RulesParagraphReader;
 import com.plectix.simulator.parser.builders.RuleBuilder;
 import com.plectix.simulator.parser.util.AgentFactory;
+import com.plectix.simulator.simulator.xml.EntityModifier;
+import com.plectix.simulator.simulator.xml.RelationModifier;
 import com.plectix.simulator.util.BoundContactMap;
 import com.plectix.simulator.util.DecimalFormatter;
 import com.plectix.simulator.util.Info;
@@ -354,16 +356,16 @@ public class SimulationData {
 		for (CStoryType stT : currentStTypeList) {
 			if (stT.getType() == StoryOutputType.OBS) {
 				node = doc.createElement("Node");
-				stT.fillNode(node, CStoryType.STRING_OBS);
+				stT.fillNode(node, EntityModifier.OBS);
 				nodes.add(node);
 			} else if (stT.getType() == StoryOutputType.RULE) {
 				node = doc.createElement("Node");
-				stT.fillNode(node, CStoryType.STRING_RULE);
+				stT.fillNode(node, EntityModifier.RULE);
 				nodes.add(node);
 			} else {
 				if (!stT.includedInCollection(intros)) {
 					node = doc.createElement("Node");
-					stT.fillNode(node, CStoryType.STRING_INTRO);
+					stT.fillNode(node, EntityModifier.INTRO);
 					nodes.add(node);
 					intros.add(stT);
 				}
@@ -378,7 +380,7 @@ public class SimulationData {
 			for (CStoryType stT : introList) {
 				node = doc.createElement("Connection");
 				stT.fillConnection(node, toStoryType.getId(),
-						CStoryType.RELATION_STRONG);
+						RelationModifier.STRONG);
 				connections.add(node);
 			}
 		}
@@ -387,7 +389,7 @@ public class SimulationData {
 	private final void fillRuleListStoryConnections(CStoryType toStoryType,
 			HashMap<Integer, CStoryType> traceIdToStoryTypeRule,
 			List<Integer> rIDs, List<Element> connections, Document doc,
-			String relationType) {
+			RelationModifier modifier) {
 		if (rIDs.size() != 0) {
 			Element node;
 			for (int rID : rIDs) {
@@ -396,7 +398,7 @@ public class SimulationData {
 				if (st == null) {
 					println();
 				}
-				st.fillConnection(node, toStoryType.getId(), relationType);
+				st.fillConnection(node, toStoryType.getId(), modifier);
 				connections.add(node);
 			}
 		}
@@ -839,41 +841,32 @@ public class SimulationData {
 					.getEdgesInContactMap();
 			List<Integer> agentIDWasRead = new ArrayList<Integer>();
 
-			Iterator<Integer> agentIterator = agentsInContactMap.keySet()
-					.iterator();
-
-			while (agentIterator.hasNext()) {
+			for (Map.Entry<Integer, Map<Integer, CContactMapChangedSite>> entry : 
+				agentsInContactMap.entrySet()) {
+				
 				Element agent = doc.createElement("Agent");
-				int agentKey = agentIterator.next();
-				agentIDWasRead.add(agentKey);
-				Map<Integer, CContactMapChangedSite> sitesMap = agentsInContactMap
-						.get(agentKey);
-				Iterator<Integer> siteIterator = sitesMap.keySet().iterator();
-				int siteKey = siteIterator.next();
-				CContactMapChangedSite chSite = sitesMap.get(siteKey);
+				agentIDWasRead.add(entry.getKey());
+				Map<Integer, CContactMapChangedSite> sitesMap = entry.getValue();
+				Iterator<Map.Entry<Integer, CContactMapChangedSite>> siteIterator = 
+					sitesMap.entrySet().iterator();
+				Map.Entry<Integer, CContactMapChangedSite> siteEntry = siteIterator.next();
+				CContactMapChangedSite chSite = siteEntry.getValue();
 				agent.setAttribute("Name", chSite.getSite().getAgentLink()
 						.getName());
 				addSiteToContactMapAgent(chSite, agent, doc);
 
 				while (siteIterator.hasNext()) {
-					siteKey = siteIterator.next();
-					chSite = sitesMap.get(siteKey);
-					addSiteToContactMapAgent(chSite, agent, doc);
+					siteEntry = siteIterator.next();
+					addSiteToContactMapAgent(siteEntry.getValue(), agent, doc);
 				}
 				contactMapElement.appendChild(agent);
 			}
 
 			List<BoundContactMap> boundList = new ArrayList<BoundContactMap>();
-			agentIterator = bondsInContactMap.keySet().iterator();
-			while (agentIterator.hasNext()) {
-				int agentKey = agentIterator.next();
-				Map<Integer, List<CContactMapAbstractEdge>> edgesMap = bondsInContactMap
-						.get(agentKey);
-				Iterator<Integer> siteIterator = edgesMap.keySet().iterator();
-				while (siteIterator.hasNext()) {
-					int siteKey = siteIterator.next();
-					List<CContactMapAbstractEdge> edgesList = edgesMap
-							.get(siteKey);
+			for (Map<Integer, List<CContactMapAbstractEdge>> edgesMap : bondsInContactMap.values()) {
+				
+				for (List<CContactMapAbstractEdge> edgesList : edgesMap.values()) {
+					
 					for (CContactMapAbstractEdge edge : edgesList) {
 						Element bond = doc.createElement("Bond");
 						int vertexToSiteNameID = edge.getVertexToSiteNameID();
@@ -1113,8 +1106,6 @@ public class SimulationData {
 
 		int counter = 0;
 
-		Iterator<Integer> iterator = storyTree.getLevelToTraceID().keySet()
-				.iterator();
 		int depth = storyTree.getLevelToTraceID().size();
 
 		List<CStoryIntro> storyIntroList = storyTree.getStoryIntros();
@@ -1143,11 +1134,11 @@ public class SimulationData {
 			}
 			counter++;
 		}
-		iterator = storyTree.getLevelToTraceID().keySet().iterator();
 		int traceIDSize = storyTree.getTraceIDToLevel().size() + counter - 1;
-		while (iterator.hasNext()) {
-			int level = iterator.next();
-			List<Integer> list = storyTree.getLevelToTraceID().get(level);
+		
+		for (Map.Entry<Integer, List<Integer>> entry : storyTree.getLevelToTraceID().entrySet()) {
+			int level = entry.getKey();
+			List<Integer> list = entry.getValue();
 			List<CStoryType> listST = allLevels.get(level);
 			StoryOutputType type;
 			if (level == 0)
@@ -1189,13 +1180,12 @@ public class SimulationData {
 		TreeMap<Integer, List<Integer>> traceIDToTraceIDsWeak = storyTree
 				.getTraceIDToTraceIDWeak();
 
-		List<CStoryType> currentStTypeList = new ArrayList<CStoryType>();
-		iterator = allLevels.keySet().iterator();
-
+//		List<CStoryType> currentStTypeList = new ArrayList<CStoryType>();
+		
 		List<CStoryType> intros = new ArrayList<CStoryType>();
-		while (iterator.hasNext()) {
-			int curKey = iterator.next();
-			currentStTypeList = allLevels.get(curKey);
+		for (List<CStoryType> currentStTypeList : allLevels.values()) {
+//			int curKey = entry.getKey();
+//			currentStTypeList = allLevels.get(curKey);
 			fillNodesLevelStoryTrees(currentStTypeList, nodes, doc, intros);
 
 			for (CStoryType stT : currentStTypeList) {
@@ -1207,12 +1197,12 @@ public class SimulationData {
 					int trID = stT.getTraceID();
 					List<Integer> rIDs = traceIDToTraceIDs.get(trID);
 					fillRuleListStoryConnections(stT, traceIdToStoryTypeRule,
-							rIDs, connections, doc, CStoryType.RELATION_STRONG);
+							rIDs, connections, doc, RelationModifier.STRONG);
 					rIDs = traceIDToTraceIDsWeak.get(trID);
 					if (rIDs != null)
 						fillRuleListStoryConnections(stT,
 								traceIdToStoryTypeRule, rIDs, connections, doc,
-								CStoryType.RELATION_WEAK);
+								RelationModifier.WEAK);
 				}
 			}
 		}

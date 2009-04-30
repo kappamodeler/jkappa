@@ -10,7 +10,6 @@ import com.plectix.simulator.simulator.ThreadLocalData;
  *
  */
 public class CContactMapAbstractSite{
-	public static final int NO_INDEX = -1;
 	private final int nameId;
 	private CContactMapLinkState linkState;
 	private CInternalState internalState = CInternalState.EMPTY_STATE;
@@ -160,7 +159,8 @@ public class CContactMapAbstractSite{
 		StringBuffer sb = new StringBuffer();
 		sb.append("site = " + getName());
 		sb.append(" from agent = " + linkAgent.getName());
-		if (nameId == NO_INDEX)
+		// TODO seems that we haven't got this case anytime
+		if (nameId == -1)
 			return sb.toString();
 
 		if (internalState.getNameId() != -1)

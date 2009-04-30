@@ -10,9 +10,6 @@ import com.plectix.simulator.components.CObservables;
  *
  */
 public interface IObservablesComponent {
-	public final static boolean CALCULATE_WITH_REPLASE_LAST = true;
-	public final static boolean CALCULATE_WITH_NOT_REPLASE_LAST = false;
-
 	/**
 	 * This method saves current observable state (quantity, activity, etc).  
 	 * @param replaceLast <tt>true</tt> if we need to overwrite the latest information, or <tt>false</tt>

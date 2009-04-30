@@ -5,6 +5,7 @@ package com.plectix.simulator.components.stories;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 
@@ -24,12 +25,9 @@ final class AgentSitesFromRules {
 	public final AgentSitesFromRules clone(){
 		AgentSitesFromRules aSFR = new AgentSitesFromRules(this.agentNameID);
 		
-		Iterator<Integer> iterator = this.sites.keySet().iterator();
-
-		while (iterator.hasNext()) {
-			int key = iterator.next();
-			SitesFromRules sfr = this.sites.get(key);
-			aSFR.getSites().put(key, sfr.clone());
+		for (Map.Entry<Integer, SitesFromRules> entry : sites.entrySet()) {
+			SitesFromRules sfr = entry.getValue();
+			aSFR.getSites().put(entry.getKey(), sfr.clone());
 		}
 		
 		return aSFR;

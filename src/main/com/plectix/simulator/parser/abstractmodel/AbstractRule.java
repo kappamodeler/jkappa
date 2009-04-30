@@ -10,8 +10,6 @@ public class AbstractRule implements IAbstractComponent {
 	private final List<AbstractAgent> myRHS;
 	private final double myRate;
 	private final int myId;
-//	private static final IConnectedComponent EMPTY_LHS_CC = new CConnectedComponent(
-//			CConnectedComponent.EMPTY);
 	private final boolean myIsStorify;
 	
 	public AbstractRule(List<AbstractAgent> left,

@@ -77,14 +77,10 @@ public class CContactMapAbstractSolution {
 		Map<Integer, List<CContactMapAbstractEdge>> edgesMap = this.edgesInContactMap
 				.get(agentKey);
 
-		Iterator<Integer> siteIterator = agent.getSitesMap().keySet()
-				.iterator();
 		Map<Integer, CContactMapChangedSite> sitesMap = this.agentsInContactMap
 				.get(agentKey);
 
-		while (siteIterator.hasNext()) {
-			int siteNameID = siteIterator.next();
-			CContactMapAbstractSite site = agent.getSitesMap().get(siteNameID);
+		for (CContactMapAbstractSite site : agent.getSitesMap().values()) {
 			int siteToNameID = site.getLinkState().getLinkSiteNameID();
 			int siteKey = site.getNameId();
 			if (siteToNameID != CSite.NO_INDEX) {
@@ -223,11 +219,7 @@ public class CContactMapAbstractSolution {
 		for (CContactMapAbstractAgent agentFromRule : agentsFromRule) {
 			Map<Integer, CContactMapAbstractSite> sitesMapFromRule = agentFromRule
 					.getSitesMap();
-			Iterator<Integer> iterator = sitesMapFromRule.keySet().iterator();
-			while (iterator.hasNext()) {
-				int key = iterator.next();
-				CContactMapAbstractSite siteFromRule = sitesMapFromRule
-						.get(key);
+			for (CContactMapAbstractSite siteFromRule : sitesMapFromRule.values()) {
 				CContactMapLinkState ls = siteFromRule.getLinkState();
 				if (ls.getAgentNameID() == agent.getNameId()
 						|| agentFromRule.getNameId() == agent.getNameId())

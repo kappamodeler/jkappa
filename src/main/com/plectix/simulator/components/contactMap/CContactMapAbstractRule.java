@@ -88,9 +88,8 @@ class CContactMapAbstractRule{
 			}
 
 		List<Integer> indexList = new ArrayList<Integer>();
-		Iterator<Integer> iterator = map.keySet().iterator();
-		while (iterator.hasNext())
-			indexList.add(iterator.next());
+		
+		indexList.addAll(map.keySet());
 		Collections.sort(indexList);
 		for (Integer i : indexList)
 			listOut.add(map.get(i));
