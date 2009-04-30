@@ -1,8 +1,8 @@
 package com.plectix.simulator.probability.avl;
 
-import com.plectix.simulator.probability.Ponderable;
+import com.plectix.simulator.probability.WeightedItem;
 
-public class BinaryTree<E extends Ponderable> {
+public class BinaryTree<E extends WeightedItem> {
 	private BinaryTreeNode<E> myRoot = null;
 	
 	public void addElement(E element) {

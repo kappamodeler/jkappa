@@ -1,8 +1,8 @@
 package com.plectix.simulator.probability.avl;
 
-import com.plectix.simulator.probability.Ponderable;
+import com.plectix.simulator.probability.WeightedItem;
 
-public class BinaryTreeNode<E extends Ponderable> {
+public class BinaryTreeNode<E extends WeightedItem> {
 	private E myElement;
 	private BinaryTree<E> myLeftSubTree = new BinaryTree<E>();
 	private BinaryTree<E> myRightSubTree = new BinaryTree<E>();
@@ -23,7 +23,7 @@ public class BinaryTreeNode<E extends Ponderable> {
 		this.myRightSubTree = myRightSubTree;
 	}
 	
-	public int getWeight() {
+	public double getWeight() {
 		return myElement.getWeight();
 	}
 	

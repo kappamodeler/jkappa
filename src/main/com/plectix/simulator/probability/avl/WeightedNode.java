@@ -1,12 +1,13 @@
 package com.plectix.simulator.probability.avl;
 
-import com.plectix.simulator.probability.Ponderable;
+import com.plectix.simulator.probability.WeightedItem;
 
-/*package*/ class WeightedNode<E extends Ponderable> {
+/*package*/ class WeightedNode<E extends WeightedItem> {
 	private E myElement;
 	private WeightBalancedTree<E> myLeftSubTree = new WeightBalancedTree<E>();
 	private WeightBalancedTree<E> myRightSubTree = new WeightBalancedTree<E>();
 	private WeightedNode<E> myParent;
+	private int myBalance = 0;
 	
 	public WeightedNode(E element, WeightedNode<E> parent) {
 		myParent = parent;
@@ -27,7 +28,7 @@ import com.plectix.simulator.probability.Ponderable;
 			myRightSubTree.getRoot().myParent = this;
 	}
 	
-	public int getWeight() {
+	public double getWeight() {
 		return myElement.getWeight();
 	}
 	
@@ -101,7 +102,16 @@ import com.plectix.simulator.probability.Ponderable;
 	}
 	
 	public int getBalance() {
-		return Math.abs(myLeftSubTree.getHeight() - myRightSubTree.getHeight());
+//		return Math.abs(myLeftSubTree.getHeight() - myRightSubTree.getHeight());
+		return myBalance ;
+	}
+	
+	public void incBalance() {
+		myBalance++;
+	}
+
+	public void decBalance() {
+		myBalance--;
 	}
 	
 	private void giveOtherSonToTheFather(WeightedNode<E> newSon) {
