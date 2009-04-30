@@ -3,10 +3,10 @@ package com.plectix.simulator.probability;
 import java.util.Collection;
 
 
-public interface WeightedItemSelector {
+public interface WeightedItemSelector<E extends WeightedItem> {
 
-	public abstract void updatedItems(Collection<WeightedItem> changedWeightedItemList);
+	public abstract void updatedItems(Collection<E> changedWeightedItemList);
 
-	public abstract WeightedItem select();
+	public abstract E select();
 
 }

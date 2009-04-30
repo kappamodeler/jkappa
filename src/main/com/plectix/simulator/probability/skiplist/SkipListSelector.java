@@ -16,7 +16,7 @@ import com.plectix.simulator.probability.WeightedItemSelector;
  * 
  * @author ecemis
  */
-public class SkipListSelector implements WeightedItemSelector {
+public class SkipListSelector<E extends WeightedItem> implements WeightedItemSelector<E> {
 	private static final double P = 0.5;
 	
 	private double totalWeight = 0.0;
@@ -24,10 +24,10 @@ public class SkipListSelector implements WeightedItemSelector {
 	/** currentLevel is -1 if there is no item stored */
 	private int currentLevel = -1;
 	
-	private final SkipListItem head = new SkipListItem();
-	private final SkipListItem tail = new SkipListItem();
+	private final SkipListItem<E> head = new SkipListItem<E>();
+	private final SkipListItem<E> tail = new SkipListItem<E>();
 
-	private final Map<WeightedItem, SkipListItem> weightedItemToSkipListItemMap = new HashMap<WeightedItem, SkipListItem>();
+	private final Map<E, SkipListItem<E>> weightedItemToSkipListItemMap = new HashMap<E, SkipListItem<E>>();
 	
 	private IRandom random = null;
 	
@@ -36,7 +36,7 @@ public class SkipListSelector implements WeightedItemSelector {
 		this.random = random;
 	}
 
-	public final WeightedItem select() {
+	public final E select() {
 		if (currentLevel == -1) {
 			return null;
 		}
@@ -44,12 +44,15 @@ public class SkipListSelector implements WeightedItemSelector {
 		return search(head, currentLevel, totalWeight * random.getDouble()).getWeightedItem();
 	}
 
-	public void updatedItems(Collection<WeightedItem> changedWeightedItemList) {
-		for (WeightedItem weightedItem : changedWeightedItemList) {
-			final SkipListItem skipListItem = weightedItemToSkipListItemMap.get(weightedItem);
+	public void updatedItems(Collection<E> changedWeightedItemList) {
+		for (E weightedItem : changedWeightedItemList) {
+			final SkipListItem<E> skipListItem = weightedItemToSkipListItemMap.get(weightedItem);
 			if (skipListItem == null) {
 				// this item is new, we need to add
-				weightedItemToSkipListItemMap.put(weightedItem, addWeightedItem(weightedItem));
+				SkipListItem<E> newItem = addWeightedItem(weightedItem);
+				if (newItem != null) {
+					weightedItemToSkipListItemMap.put(weightedItem, newItem);
+				}
 			} else {
 				// this item is old... what is the new weight?
 				final double newWeight = weightedItem.getWeight();
@@ -63,13 +66,13 @@ public class SkipListSelector implements WeightedItemSelector {
 		}
 	}
 
-	private final void deleteItem(SkipListItem skipListItem) {
+	private final void deleteItem(SkipListItem<E> skipListItem) {
 		final double weightDiff = -skipListItem.getSum(0);
 		final int level = skipListItem.getLevel();
 		
 		for (int i= 0; i < level; i++) {
-			final SkipListItem previousItemAtThatLevel = skipListItem.getBackwardPointer(i);
-			final SkipListItem nextItemAtThatItem = skipListItem.getForwardPointer(i);
+			final SkipListItem<E> previousItemAtThatLevel = skipListItem.getBackwardPointer(i);
+			final SkipListItem<E> nextItemAtThatItem = skipListItem.getForwardPointer(i);
 			previousItemAtThatLevel.setForwardPointer(i, nextItemAtThatItem);
 			nextItemAtThatItem.setBackwardPointer(i, previousItemAtThatLevel);
 			if (i != 0) {
@@ -81,7 +84,7 @@ public class SkipListSelector implements WeightedItemSelector {
 		skipListItem.clean();
 	}
 
-	private final void updateWeight(SkipListItem skipListItem, double newWeight) {
+	private final void updateWeight(SkipListItem<E> skipListItem, double newWeight) {
 		final double weightDiff = newWeight - skipListItem.getSum(0);
 		
 		int lastUpdatedLevel = skipListItem.getLevel() - 1;
@@ -90,7 +93,7 @@ public class SkipListSelector implements WeightedItemSelector {
 		}
 		
 		while (lastUpdatedLevel < currentLevel) {
-			final SkipListItem nextItemAtThatLevel = skipListItem.getForwardPointer(lastUpdatedLevel);
+			final SkipListItem<E> nextItemAtThatLevel = skipListItem.getForwardPointer(lastUpdatedLevel);
 			for (int i= lastUpdatedLevel+1; i < nextItemAtThatLevel.getLevel(); i++) {
 				nextItemAtThatLevel.incrementSum(i, weightDiff);
 			}
@@ -107,17 +110,20 @@ public class SkipListSelector implements WeightedItemSelector {
 		return ret;
 	}
 	
-	private final SkipListItem addWeightedItem(WeightedItem weightedItem) {
-		final SkipListItem newItem = new SkipListItem();
+	private final SkipListItem<E> addWeightedItem(E weightedItem) {
 		final double newWeight = weightedItem.getWeight();
+		if (newWeight <= 0) {
+			return null;
+		}
 
+		final SkipListItem<E> newItem = new SkipListItem<E>();
 		totalWeight += newWeight;
 		newItem.setWeightedItem(weightedItem);
 		
 		int level = getRandomLevel();
 		for (int i = 0; i < level + 1; i++) {
 			if (i <= currentLevel) {
-				final SkipListItem oldLastItem = tail.getBackwardPointer(i);
+				final SkipListItem<E> oldLastItem = tail.getBackwardPointer(i);
 				oldLastItem.setForwardPointer(i, newItem);
 				tail.setBackwardPointer(i, newItem);
 				newItem.addPointersAndSum(oldLastItem, tail, tail.getSum(i) + newWeight);
@@ -142,14 +148,14 @@ public class SkipListSelector implements WeightedItemSelector {
 		return newItem;
 	}
 	
-	private final SkipListItem search(SkipListItem skipListItem, int level, double randomValue) {
+	private final SkipListItem<E> search(SkipListItem<E> skipListItem, int level, double randomValue) {
 		// Originally I wrote this method with tail-recursion but then rewrote it with iteration to have it more efficient
 		while (true) {
 			if (randomValue == 0) {
 				return skipListItem.getForwardPointer(0);
 			}
 
-			SkipListItem nextItemAtThatLevel = skipListItem.getForwardPointer(level);
+			SkipListItem<E> nextItemAtThatLevel = skipListItem.getForwardPointer(level);
 			while (nextItemAtThatLevel == tail) {
 				level--;
 				nextItemAtThatLevel = skipListItem.getForwardPointer(level);

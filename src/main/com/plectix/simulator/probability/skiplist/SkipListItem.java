@@ -9,11 +9,11 @@ import java.util.List;
 import com.plectix.simulator.probability.WeightedItem;
 
 
-public final class SkipListItem {
-	private WeightedItem weightedItem = null;
+public final class SkipListItem<E extends WeightedItem> {
+	private E weightedItem = null;
 	private List<Double> sums = new ArrayList<Double>();
-	private List<SkipListItem> forwardpointers = new ArrayList<SkipListItem>();
-	private List<SkipListItem> backPointers = new ArrayList<SkipListItem>();
+	private List<SkipListItem<E>> forwardpointers = new ArrayList<SkipListItem<E>>();
+	private List<SkipListItem<E>> backPointers = new ArrayList<SkipListItem<E>>();
 	
 	public SkipListItem() {
 		super();
@@ -30,7 +30,7 @@ public final class SkipListItem {
 		backPointers.clear();
 	}
 	
-	public final boolean addPointersAndSum(SkipListItem backwardPointer, SkipListItem forwardPointer, double sum) {
+	public final boolean addPointersAndSum(SkipListItem<E> backwardPointer, SkipListItem<E> forwardPointer, double sum) {
 		backPointers.add(backwardPointer);
 		forwardpointers.add(forwardPointer);
 		return sums.add(sum);
@@ -48,27 +48,27 @@ public final class SkipListItem {
 		sums.set(index, 0.0);
 	}
 	
-	public final SkipListItem getForwardPointer(int index) {
+	public final SkipListItem<E> getForwardPointer(int index) {
 		return forwardpointers.get(index);
 	}
 
-	public final SkipListItem getBackwardPointer(int index) {
+	public final SkipListItem<E> getBackwardPointer(int index) {
 		return backPointers.get(index);
 	}
 	
-	public final void setForwardPointer(int index, SkipListItem skipListItem) {
+	public final void setForwardPointer(int index, SkipListItem<E> skipListItem) {
 		forwardpointers.set(index, skipListItem);
 	}
 
-	public final void setBackwardPointer(int index, SkipListItem skipListItem) {
+	public final void setBackwardPointer(int index, SkipListItem<E> skipListItem) {
 		backPointers.set(index, skipListItem);
 	}
 	
-	public final WeightedItem getWeightedItem() {
+	public final E getWeightedItem() {
 		return weightedItem;
 	}
 	
-	public final void setWeightedItem(WeightedItem weightedItem) {
+	public final void setWeightedItem(E weightedItem) {
 		this.weightedItem = weightedItem;
 	}
 
