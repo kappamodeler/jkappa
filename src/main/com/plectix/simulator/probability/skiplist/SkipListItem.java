@@ -23,7 +23,7 @@ public final class SkipListItem<E extends WeightedItem> {
 		return forwardpointers.size();
 	}
 
-	public void clean() {
+	public void clear() {
 		weightedItem = null;
 		sums.clear();
 		forwardpointers.clear();
@@ -34,6 +34,16 @@ public final class SkipListItem<E extends WeightedItem> {
 		backPointers.add(backwardPointer);
 		forwardpointers.add(forwardPointer);
 		return sums.add(sum);
+	}
+	
+	public final void removePointersAndSum(int level) {
+		final int size = sums.size();
+		if (level == size) {
+			throw new RuntimeException("Trying to remove index " + level + " while size is " + size); 
+		}
+		backPointers.subList(level, size).clear();
+		forwardpointers.subList(level, size).clear();
+		sums.subList(level, size).clear();
 	}
 	
 	public final double getSum(int index) {

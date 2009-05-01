@@ -44,61 +44,26 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 		return search(head, currentLevel, totalWeight * random.getDouble()).getWeightedItem();
 	}
 
-	public void updatedItems(Collection<E> changedWeightedItemList) {
+	public final void updatedItems(Collection<E> changedWeightedItemList) {
 		for (E weightedItem : changedWeightedItemList) {
 			final SkipListItem<E> skipListItem = weightedItemToSkipListItemMap.get(weightedItem);
 			if (skipListItem == null) {
-				// this item is new, we need to add
-				SkipListItem<E> newItem = addWeightedItem(weightedItem);
-				if (newItem != null) {
-					weightedItemToSkipListItemMap.put(weightedItem, newItem);
+				if (weightedItem.getWeight() > 0.0) {
+					// this item is new, we need to add
+					weightedItemToSkipListItemMap.put(weightedItem, addWeightedItem(weightedItem));
 				}
 			} else {
 				// this item is old... what is the new weight?
 				final double newWeight = weightedItem.getWeight();
 				if (newWeight <= 0.0) {
 					deleteItem(skipListItem);
+					// let's clean this item to make sure that we'll have NullPointerException if there are any bugs
+					skipListItem.clear();
 					weightedItemToSkipListItemMap.remove(weightedItem);
 				} else {
 					updateWeight(skipListItem, newWeight);
 				}
 			}
-		}
-	}
-
-	private final void deleteItem(SkipListItem<E> skipListItem) {
-		final double weightDiff = -skipListItem.getSum(0);
-		final int level = skipListItem.getLevel();
-		
-		for (int i= 0; i < level; i++) {
-			final SkipListItem<E> previousItemAtThatLevel = skipListItem.getBackwardPointer(i);
-			final SkipListItem<E> nextItemAtThatItem = skipListItem.getForwardPointer(i);
-			previousItemAtThatLevel.setForwardPointer(i, nextItemAtThatItem);
-			nextItemAtThatItem.setBackwardPointer(i, previousItemAtThatLevel);
-			if (i != 0) {
-				nextItemAtThatItem.incrementSum(i, skipListItem.getSum(i) + weightDiff);
-			}
-		}
-		
-		// let's clean this item to make sure that we'll have NullPointerException if there are any bugs
-		skipListItem.clean();
-	}
-
-	private final void updateWeight(SkipListItem<E> skipListItem, double newWeight) {
-		final double weightDiff = newWeight - skipListItem.getSum(0);
-		
-		int lastUpdatedLevel = skipListItem.getLevel() - 1;
-		for (int i= 0; i <= lastUpdatedLevel; i++) {
-			skipListItem.incrementSum(i, weightDiff);
-		}
-		
-		while (lastUpdatedLevel < currentLevel) {
-			final SkipListItem<E> nextItemAtThatLevel = skipListItem.getForwardPointer(lastUpdatedLevel);
-			for (int i= lastUpdatedLevel+1; i < nextItemAtThatLevel.getLevel(); i++) {
-				nextItemAtThatLevel.incrementSum(i, weightDiff);
-			}
-			lastUpdatedLevel = nextItemAtThatLevel.getLevel()-1;
-			skipListItem = nextItemAtThatLevel;
 		}
 	}
 
@@ -112,16 +77,13 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 	
 	private final SkipListItem<E> addWeightedItem(E weightedItem) {
 		final double newWeight = weightedItem.getWeight();
-		if (newWeight <= 0) {
-			return null;
-		}
-
-		final SkipListItem<E> newItem = new SkipListItem<E>();
 		totalWeight += newWeight;
+		
+		final SkipListItem<E> newItem = new SkipListItem<E>();
 		newItem.setWeightedItem(weightedItem);
 		
 		int level = getRandomLevel();
-		for (int i = 0; i < level + 1; i++) {
+		for (int i = 0; i <= level; i++) {
 			if (i <= currentLevel) {
 				final SkipListItem<E> oldLastItem = tail.getBackwardPointer(i);
 				oldLastItem.setForwardPointer(i, newItem);
@@ -136,7 +98,7 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 			}
 		}
 		
-		for (int i= level+1; i < currentLevel +1; i++) {
+		for (int i= level+1; i <= currentLevel ; i++) {
 			tail.incrementSum(i, newWeight);
 		}
 		
@@ -148,15 +110,78 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 		return newItem;
 	}
 	
+	private final void deleteItem(SkipListItem<E> skipListItem) {
+		final double weightDiff = -skipListItem.getSum(0);
+		totalWeight += weightDiff;
+		
+		int lastUpdatedLevel = skipListItem.getLevel() - 1;
+
+		// System.err.println(dumpLevels() + " --> deleting an item with level " + lastUpdatedLevel);
+		
+		for (int i= 0; i <= lastUpdatedLevel; i++) {
+			final SkipListItem<E> previousItemAtThatLevel = skipListItem.getBackwardPointer(i);
+			final SkipListItem<E> nextItemAtThatLevel = skipListItem.getForwardPointer(i);
+			previousItemAtThatLevel.setForwardPointer(i, nextItemAtThatLevel);
+			nextItemAtThatLevel.setBackwardPointer(i, previousItemAtThatLevel);
+			if (i != 0) {
+				nextItemAtThatLevel.incrementSum(i, skipListItem.getSum(i) + weightDiff);
+			}
+			
+			if (previousItemAtThatLevel == head && nextItemAtThatLevel == tail) {
+				// we have to delete that level and up			
+				// System.err.println("========= DELETING ALL LEVELS AT OR ABOVE: " + i);
+				head.removePointersAndSum(i);
+				tail.removePointersAndSum(i);
+				currentLevel = head.getLevel() - 1;
+				// System.err.println(dumpLevels());
+				return;
+			} 
+		}
+
+		adjustWeightsForward(skipListItem, weightDiff, lastUpdatedLevel);
+	}
+
+	private final void updateWeight(SkipListItem<E> skipListItem, double newWeight) {
+		final double weightDiff = newWeight - skipListItem.getSum(0);
+		if (weightDiff == 0.0) {
+			// there is no weight change!
+			return;
+		}
+		totalWeight += weightDiff;
+		
+		int lastUpdatedLevel = skipListItem.getLevel() - 1;
+		for (int i= 0; i <= lastUpdatedLevel; i++) {
+			skipListItem.incrementSum(i, weightDiff);
+		}
+		
+		adjustWeightsForward(skipListItem, weightDiff, lastUpdatedLevel);
+	}
+	
+	private final void adjustWeightsForward(SkipListItem<E> skipListItem, final double weightDiff, int lastUpdatedLevel) {
+		while (lastUpdatedLevel < currentLevel) {
+			final SkipListItem<E> nextItemAtThatLevel = skipListItem.getForwardPointer(lastUpdatedLevel);
+			for (int i= lastUpdatedLevel+1; i < nextItemAtThatLevel.getLevel(); i++) {
+				nextItemAtThatLevel.incrementSum(i, weightDiff);
+			}
+			lastUpdatedLevel = nextItemAtThatLevel.getLevel()-1;
+			skipListItem = nextItemAtThatLevel;
+		}
+	}
+
 	private final SkipListItem<E> search(SkipListItem<E> skipListItem, int level, double randomValue) {
 		// Originally I wrote this method with tail-recursion but then rewrote it with iteration to have it more efficient
 		while (true) {
-			if (randomValue == 0) {
+			if (randomValue == 0.0) {
 				return skipListItem.getForwardPointer(0);
 			}
 
 			SkipListItem<E> nextItemAtThatLevel = skipListItem.getForwardPointer(level);
 			while (nextItemAtThatLevel == tail) {
+				if (level == 0) {
+					// we can be here if there are some round-off errors!!!
+					// let's return the last item then!!!
+					return skipListItem;
+				}
 				level--;
 				nextItemAtThatLevel = skipListItem.getForwardPointer(level);
 			}
@@ -172,6 +197,37 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 			randomValue -= nextItemAtThatLevel.getSum(level);
 			skipListItem = nextItemAtThatLevel;
 		}
+	}  
+	
+	public final String levelsToString() {
+		StringBuffer stringBuffer = new StringBuffer();
+		for (SkipListItem<E> skipListItem = head; skipListItem != null; skipListItem = skipListItem.getForwardPointer(0)) {
+			if (skipListItem == head) {
+				stringBuffer.append("H");
+			}
+			stringBuffer.append(skipListItem.getLevel());
+			if (skipListItem == tail) {
+				stringBuffer.append("T");
+			}
+			stringBuffer.append("-");
+		}
+		stringBuffer.append("(currentLevel=" + currentLevel + ") (totalWeight=" + totalWeight + ")");
+		return stringBuffer.toString();
 	}
-
+	
+	public final String weightsToString() {
+		StringBuffer stringBuffer = new StringBuffer();
+		for (SkipListItem<E> skipListItem = head; skipListItem != null; skipListItem = skipListItem.getForwardPointer(0)) {
+			if (skipListItem == head) {
+				stringBuffer.append("H");
+			}
+			stringBuffer.append(skipListItem.getSum(0));
+			if (skipListItem == tail) {
+				stringBuffer.append("T");
+			}
+			stringBuffer.append("-");
+		}
+		stringBuffer.append("(totalWeight=" + totalWeight + ")");
+		return stringBuffer.toString();
+	}
 }
