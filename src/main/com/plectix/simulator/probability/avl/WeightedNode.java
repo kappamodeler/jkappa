@@ -2,107 +2,88 @@ package com.plectix.simulator.probability.avl;
 
 import com.plectix.simulator.probability.WeightedItem;
 
-/*package*/ class WeightedNode<E extends WeightedItem> {
+public class WeightedNode<E extends WeightedItem> {
 	private E myElement;
-	private WeightBalancedTree<E> myLeftSubTree = new WeightBalancedTree<E>();
-	private WeightBalancedTree<E> myRightSubTree = new WeightBalancedTree<E>();
-	private WeightedNode<E> myParent;
+	private WeightedNode<E> myLeftChild;
+	private WeightedNode<E> myRightChild;
+	private WeightedNode<E> myParent = null;
 	private int myBalance = 0;
+	private final WeightBalancedTree<E> myTree;
 	
-	public WeightedNode(E element, WeightedNode<E> parent) {
-		myParent = parent;
+	public WeightedNode(E element, WeightBalancedTree<E> tree) {
 		myElement = element;
+		myTree = tree;
 	}
 	
 	//---------------GETTERS AND SETTERS------------------------
-	
-	public void setLeftSubTree(WeightBalancedTree<E> leftSubTree) {
-		myLeftSubTree = leftSubTree;
-		if (!myLeftSubTree.isEmpty())
-			myLeftSubTree.getRoot().myParent = this;
-	}
-
-	public void setRightSubTree(WeightBalancedTree<E> rightSubTree) {
-		myRightSubTree = rightSubTree;
-		if (!myRightSubTree.isEmpty())
-			myRightSubTree.getRoot().myParent = this;
-	}
 	
 	public double getWeight() {
 		return myElement.getWeight();
 	}
 	
-	public WeightBalancedTree<E> getLeftSubTree() {
-		return myLeftSubTree;
+	public WeightedNode<E> getLeftChild() {
+		return myLeftChild;
 	}
 	
-	public WeightBalancedTree<E> getRightSubTree() {
-		return myRightSubTree;
-	}
-
-	public E getElement() {
-		return myElement;
+	public WeightedNode<E> getRightChild() {
+		return myRightChild;
 	}
 	
-	public void setElement(E element) {
-		myElement = element;
-	}
-
-	public boolean hasNoLeftChild() {
-		return myLeftSubTree.isEmpty();
+	public void setLeftChild(WeightedNode<E> child) {
+		if (child != null) {
+			child.myParent = this;
+		}
+		myLeftChild = child;
 	}
 	
-	public boolean hasNoRightChild() {
-		return myRightSubTree.isEmpty();
+	public void setRightChild(WeightedNode<E> child) {
+		if (child != null) {
+			child.myParent = this;
+		}
+		myRightChild = child;
 	}
-
+	
 	public WeightedNode<E> getParent() {
 		return myParent;
 	}
-
-	public void forgetChild(WeightedNode<E> childLink) {
-		if (myRightSubTree.getRoot() == childLink) {
-			myRightSubTree = null;
-		} else if (myLeftSubTree.getRoot() == childLink) {
-			myLeftSubTree = null;
-		}
-	}
 	
 	public boolean isRightChild() {
-		boolean thisIsRightChild = false;
-		if (myParent.myRightSubTree.getRoot() == this) {
-			thisIsRightChild = true;
+		if (myParent == null) {
+			return false;
 		}
-		return thisIsRightChild;
+		return myParent.myRightChild == this;
 	}
 	
 	public boolean isLeftChild() {
-		boolean thisIsLeftChild = false;
-		if (myParent.myLeftSubTree.getRoot() == this) {
-			thisIsLeftChild = true;
+		if (myParent == null) {
+			return false;
 		}
-		return thisIsLeftChild;
+		return myParent.myLeftChild == this;
 	}
-	                               
-	public void erase() {
-		boolean thisIsRightChild = isRightChild();
-		if (!myRightSubTree.isEmpty()) {
-			if (thisIsRightChild) {
-				myParent.myRightSubTree = myRightSubTree;
-			} else {
-				myParent.myLeftSubTree = myRightSubTree;
-			}
-		} else if (!myLeftSubTree.isEmpty()) {
-			if (thisIsRightChild) {
-				myParent.myRightSubTree = myLeftSubTree;
-			} else {
-				myParent.myLeftSubTree = myLeftSubTree;
-			}
+	
+	public Orientation whichChild() {
+		if (myParent == null) {
+			return Orientation.UNKNOWN;
+		}
+		if (myParent.myRightChild == this) {
+			return Orientation.RIGHT;
+		} else if (myParent.myLeftChild == this) {
+			return Orientation.LEFT;
+		} else {
+			// should be impossible
+			return Orientation.UNKNOWN;
 		}
 	}
 	
+	public void setChild(Orientation orientation, WeightedNode<E> child) {
+		if (orientation == Orientation.LEFT) {
+			this.setLeftChild(child);
+		} else if (orientation == Orientation.RIGHT) {
+			this.setRightChild(child);
+		}
+	}
+	                               
 	public int getBalance() {
-//		return Math.abs(myLeftSubTree.getHeight() - myRightSubTree.getHeight());
 		return myBalance ;
 	}
 	
@@ -114,61 +95,47 @@ import com.plectix.simulator.probability.WeightedItem;
 		myBalance--;
 	}
 	
-	private void giveOtherSonToTheFather(WeightedNode<E> newSon) {
-		if (this.isLeftChild()) {
-			myParent.setLeftSubTree(new WeightBalancedTree<E>(newSon));
-		} else {
-			myParent.setRightSubTree(new WeightBalancedTree<E>(newSon));
+	public void forgetParent() {
+		myParent = null;
+	}
+
+	public WeightBalancedTree<E> getTree() {
+		return myTree;
+	}
+
+	public void setBalance(int i) {
+		myBalance = i;
+	}
+
+	public WeightedNode<E> getChild(Orientation orientation) {
+		if (orientation == Orientation.LEFT) {
+			return myLeftChild;
+		} else if (orientation == Orientation.RIGHT) {
+			return myRightChild;
+		}
+		// impossible
+		return null;
+	}
+
+	public E getElement() {
+		return myElement;
+	}
+
+	public boolean isLeave() {
+		return myLeftChild == null && myRightChild == null;
+	}
+
+	public void forgetChild(Orientation orientation) {
+		if (orientation == Orientation.LEFT) {
+			myLeftChild = null;
+		} else if (orientation == Orientation.RIGHT) {
+			myRightChild = null;
 		}
 	}
 	
-	public void doLL() {
-		WeightedNode<E> v = myLeftSubTree.getRoot();
-		WeightBalancedTree<E> betha = v.myRightSubTree;
-		// v becomes a new son of this's father
-		this.giveOtherSonToTheFather(v);
-		
-		this.setLeftSubTree(betha);
-		v.setRightSubTree(new WeightBalancedTree<E>(this));
-	}
-	
-	public void doRR() {
-		WeightedNode<E> v = myRightSubTree.getRoot();
-		WeightBalancedTree<E> betha = v.myLeftSubTree;
-		// v becomes a new son of this's father
-		this.giveOtherSonToTheFather(v);
-		
-		this.setRightSubTree(betha);
-		v.setLeftSubTree(new WeightBalancedTree<E>(this));
-	}
-
-	public void doLR() {
-		WeightedNode<E> v = myLeftSubTree.getRoot();
-		WeightedNode<E> w = v.myRightSubTree.getRoot();
-		
-		WeightBalancedTree<E> betha1 = w.myLeftSubTree;
-		WeightBalancedTree<E> betha2 = w.myRightSubTree;
-		
-		this.giveOtherSonToTheFather(w);
-		
-		this.setLeftSubTree(betha2);
-		v.setRightSubTree(betha1);
-		w.setRightSubTree(new WeightBalancedTree<E>(this));
-		w.setLeftSubTree(new WeightBalancedTree<E>(v));
-	}
-
-	public void doRL() {
-		WeightedNode<E> v = myRightSubTree.getRoot();
-		WeightedNode<E> w = v.myLeftSubTree.getRoot();
-		
-		WeightBalancedTree<E> betha1 = w.myLeftSubTree;
-		WeightBalancedTree<E> betha2 = w.myRightSubTree;
-		
-		this.giveOtherSonToTheFather(w);
-		
-		this.setRightSubTree(betha1);
-		v.setLeftSubTree(betha2);
-		w.setLeftSubTree(new WeightBalancedTree<E>(this));
-		w.setRightSubTree(new WeightBalancedTree<E>(v));
+	public void swapElements(WeightedNode<E> otherNode) {
+		E thisElement = myElement;
+		myElement = otherNode.getElement();
+		otherNode.myElement = thisElement;
 	}
 }
