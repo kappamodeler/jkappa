@@ -11,7 +11,7 @@ import com.plectix.simulator.util.Info.InfoType;
 
 	private final Random rand;
 
-	public CRandomJava(InfoType outputType,SimulationData data) {
+	public CRandomJava(InfoType outputType, SimulationData data) {
 		int seed = data.getSimulationArguments().getSeed();
 		if (seed == SimulationArguments.DEFAULT_SEED) {
 			rand = new Random();
@@ -29,5 +29,9 @@ import com.plectix.simulator.util.Info.InfoType;
 
 	public final int getInteger(int limit) {
 		return rand.nextInt(limit);
+	}
+	
+	public final void setSeed(long seed) {
+		rand.setSeed(seed);
 	}
 }

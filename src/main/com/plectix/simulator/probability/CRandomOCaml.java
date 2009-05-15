@@ -82,4 +82,9 @@ import com.plectix.simulator.simulator.Simulator;
 		printToWriter("3");
 	}
 
+	@Override
+	public void setSeed(long seed) {
+		throw new RuntimeException("This function is not implemented yet! Aborting...");
+	}
+
 }
