@@ -7,7 +7,7 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 
-public class CAbstractSuperSolution extends ComplexSolution {
+public abstract class CAbstractSuperSolution extends ComplexSolution {
 
 	public CAbstractSuperSolution(KappaSystem system) {
 		super(system);
@@ -23,10 +23,7 @@ public class CAbstractSuperSolution extends ComplexSolution {
 
 	}
 
-	public void applyRule(RuleApplicationPool pool) {
-		// TODO Auto-generated method stub
-
-	}
+	public abstract void applyRule(RuleApplicationPool pool);
 
 	public RuleApplicationPool prepareRuleApplicationPool(List<CInjection> injections) {
 		StraightStorage storage = new StraightStorage();

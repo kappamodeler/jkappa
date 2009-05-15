@@ -37,6 +37,12 @@ public class ElementRemover {
 		}
 	}
 	
+	/**
+	 * This method removes vertex, containing given element 
+	 * @param <E>
+	 * @param vertex
+	 * @return
+	 */
 	public <E extends WeightedItem> WeightedNode<E> removeElement(WeightedNode<E> vertex) {
 		if (vertex.isLeave()) {
 			Orientation whichChild = vertex.whichChild();
