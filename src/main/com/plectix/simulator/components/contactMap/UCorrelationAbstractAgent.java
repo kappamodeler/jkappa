@@ -199,11 +199,11 @@ class UCorrelationAbstractAgent {
 				continue;
 			if (lsFromSolution.getLinkSiteNameID() != siteNew.getNameId())
 				continue;
-			if (lsFromSolution.getInternalStateNameID() != CSite.NO_INDEX
-					&& siteNew.getInternalState().getNameId() != CSite.NO_INDEX
-					&& lsFromSolution.getInternalStateNameID() != siteNew
-							.getInternalState().getNameId())
-				continue;
+//			if (lsFromSolution.getInternalStateNameID() != CSite.NO_INDEX
+//					&& siteNew.getInternalState().getNameId() != CSite.NO_INDEX
+//					&& lsFromSolution.getInternalStateNameID() != siteNew
+//							.getInternalState().getNameId())
+//				continue;
 			CContactMapAbstractAgent agentToAdd = a.clone();
 			agentToAdd.getSite(siteFromSolution.getNameId()).getLinkState()
 					.setFreeLinkState();
@@ -225,8 +225,8 @@ class UCorrelationAbstractAgent {
 		lsNew.setAgentNameID(lsTo.getAgentNameID());
 		lsNew.setLinkSiteNameID(lsTo.getLinkSiteNameID());
 		lsNew.setStatusLink(CLinkStatus.BOUND);
-		if (lsTo.getInternalStateNameID() != CSite.NO_INDEX)
-			lsNew.setInternalStateNameID(lsTo.getInternalStateNameID());
+//		if (lsTo.getInternalStateNameID() != CSite.NO_INDEX)
+//			lsNew.setInternalStateNameID(lsTo.getInternalStateNameID());
 	}
 
 	private void doModify(CContactMapAbstractAgent newAgent,

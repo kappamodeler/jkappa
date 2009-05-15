@@ -14,7 +14,7 @@ public class CContactMapLinkState {
 	private CLinkStatus statusLink;
 	private int linkSiteNameID = CSite.NO_INDEX;
 	private int agentNameID = CSite.NO_INDEX;
-	private int internalStateNameID = CSite.NO_INDEX;
+//	private int internalStateNameID = CSite.NO_INDEX;
 
 	/**
 	 * Constructor of CContactMapLinkState.
@@ -24,8 +24,8 @@ public class CContactMapLinkState {
 		if (linkState.getConnectedSite() != null) {
 			this.agentNameID = linkState.getConnectedSite().getAgentLink().getNameId();
 			this.linkSiteNameID = linkState.getConnectedSite().getNameId();
-			this.internalStateNameID = linkState.getConnectedSite().getInternalState()
-					.getNameId();
+//			this.internalStateNameID = linkState.getConnectedSite().getInternalState()
+//					.getNameId();
 		}
 		this.statusLinkRank = linkState.getStatusLinkRank();
 		this.statusLink = linkState.getStatusLink();
@@ -39,7 +39,7 @@ public class CContactMapLinkState {
 		if (linkState.getLinkSiteNameID() != -1) {
 			this.agentNameID = linkState.getAgentNameID();
 			this.linkSiteNameID = linkState.getLinkSiteNameID();
-			this.internalStateNameID = linkState.getInternalStateNameID();
+//			this.internalStateNameID = linkState.getInternalStateNameID();
 		}
 		this.statusLink = linkState.getStatusLink();
 		this.statusLinkRank = linkState.getStatusLinkRank();
@@ -116,21 +116,21 @@ public class CContactMapLinkState {
 		return agentNameID;
 	}
 
-	/**
-	 * This method returns id of internal state link site
-	 * @return id of internal state link site
-	 */
-	public int getInternalStateNameID() {
-		return internalStateNameID;
-	}
-
-	/**
-	 * This method sets id of internal state link site
-	 * @param id given id
-	 */
-	public void setInternalStateNameID(int id) {
-		this.internalStateNameID = id;
-	}
+//	/**
+//	 * This method returns id of internal state link site
+//	 * @return id of internal state link site
+//	 */
+//	public int getInternalStateNameID() {
+//		return internalStateNameID;
+//	}
+//
+//	/**
+//	 * This method sets id of internal state link site
+//	 * @param id given id
+//	 */
+//	public void setInternalStateNameID(int id) {
+//		this.internalStateNameID = id;
+//	}
 
 	/**
 	 * This method sets this link free
@@ -140,7 +140,7 @@ public class CContactMapLinkState {
 		statusLinkRank = CLinkRank.FREE;
 		linkSiteNameID = CSite.NO_INDEX;
 		agentNameID = CSite.NO_INDEX;
-		internalStateNameID = CSite.NO_INDEX;
+//		internalStateNameID = CSite.NO_INDEX;
 	}
 
 	/**
@@ -180,12 +180,12 @@ public class CContactMapLinkState {
 		if (this.linkSiteNameID != linkState.getLinkSiteNameID())
 			return false;
 
-		if (internalStateNameID == CSite.NO_INDEX
-				|| linkState.getInternalStateNameID() == CSite.NO_INDEX)
-			return true;
-
-		if (this.internalStateNameID != linkState.getInternalStateNameID())
-			return false;
+//		if (internalStateNameID == CSite.NO_INDEX
+//				|| linkState.getInternalStateNameID() == CSite.NO_INDEX)
+//			return true;
+//
+//		if (this.internalStateNameID != linkState.getInternalStateNameID())
+//			return false;
 
 		return true;
 	}

@@ -172,10 +172,10 @@ public class CContactMapAbstractSite{
 			sb.append(" link site = "
 					+ ThreadLocalData.getNameDictionary().getName(
 							linkState.getLinkSiteNameID()));
-			if (linkState.getInternalStateNameID() != -1)
-				sb.append(" link istate = "
-						+ ThreadLocalData.getNameDictionary().getName(
-								linkState.getInternalStateNameID()));
+//			if (linkState.getInternalStateNameID() != -1)
+//				sb.append(" link istate = "
+//						+ ThreadLocalData.getNameDictionary().getName(
+//								linkState.getInternalStateNameID()));
 		}
 		return sb.toString();
 	}
