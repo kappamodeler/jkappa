@@ -36,7 +36,7 @@ public class AbstractAgent implements Comparable<AbstractAgent> {
 	
 	
 	//TODO remove this code and implement AbstractSite 
-	private class ComparableSite implements Comparable<ComparableSite>{
+	private static class ComparableSite implements Comparable<ComparableSite>{
 		private final AbstractSite mySite;
 		
 		public ComparableSite(AbstractSite site) {
