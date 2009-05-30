@@ -15,9 +15,9 @@ import com.plectix.simulator.probability.skiplist.SkipListSelector;
 
 public class TestSkipList {
 
-	int numberOfWeightedItems = 1000; 
+	int numberOfWeightedItems = 100; 
 	int numberOfUpdates = 100; 
-	int numberOfSelection = 100000000;
+	int numberOfSelection = 10000000;
 	
 	List<WeightedItemWithId> weightedItemList = new ArrayList<WeightedItemWithId>(); 
 	List<Integer> counts = new ArrayList<Integer>();
@@ -31,12 +31,9 @@ public class TestSkipList {
 			weightedItemList.add(new WeightedItemWithId(i, numberOfWeightedItems, WeightFunction.LINEAR)); 
 			counts.add(0); 
 			}
-		for (int i= 0; i< numberOfUpdates; i++) { 
-			Collections.shuffle(weightedItemList); 
-			weightedItemSelector.updatedItems(weightedItemList); 
-			}			
+		shuffleAndUpdate();		
 	}
-	
+	/*
 	public TestSkipList(){
 		IRandom irandom = new CRandomJava(null, null);
 		weightedItemSelector= new SkipListSelector<WeightedItemWithId>(irandom);
@@ -49,35 +46,97 @@ public class TestSkipList {
 			weightedItemSelector.updatedItems(weightedItemList); 
 			}
 		
-	}
+	}*/
+	
 	@Test
 	public void testRandom(){
+		processSelection();			
+		if (!equiprobability()) 
+			fail("Bad Randomize or very small operation factors!");
+	}
+	
+	
+	@Test
+	public void testRemoveRecalculationAndRandom() {
+		
+		assignOtherWeight();
+		removeSomeItems(5);
+		resetCounts();
+		
+		shuffleAndUpdate();
+
+		processSelection();
+	
+		if (!equiprobability()) 
+			fail("Bad Recalculation");
+	
+	}
+
+	private void removeSomeItems(int k){
+		for(int i = 0; i<numberOfWeightedItems; i++){
+			WeightedItemWithId item = weightedItemList.get(i);
+			if (item.getId()%k ==0){
+				item.remove();
+			}
+		}
+	}
+	
+	private void resetCounts(){
+		for(int i = 0; i<numberOfWeightedItems;i++){
+			counts.set(i, 0);
+		}
+	}
+	
+	private void assignOtherWeight(){
+		for (int i= 0; i< numberOfWeightedItems; i++) { 
+			WeightedItemWithId item = weightedItemList.get(i); 
+			if (item.getId() % 5 == 0)		
+				item.setWeightFunction(WeightFunction.LOGARITHM); 
+
+			if (item.getId() % 7 == 1)		
+				item.setWeightFunction(WeightFunction.PARABOLA); 		
+		}	
+	}
+	
+	private void shuffleAndUpdate(){
+		for (int i= 0; i< numberOfUpdates; i++) { 
+			Collections.shuffle(weightedItemList); 
+			weightedItemSelector.updatedItems(weightedItemList); 
+		} 
+		
+	}
+	
+	private void processSelection(){
 		for (int i= 0; i< numberOfSelection; i++) { 
 			WeightedItemWithId item = weightedItemSelector.select(); 
 			counts.set(item.getId(), counts.get(item.getId())+1); 
 			}
-		double min = (double)counts.get(0)/weightedItemList.get(0).getWeight();
-		double max = (double)counts.get(0)/weightedItemList.get(0).getWeight();
+	}
+	
+	private boolean equiprobability(){
+		double min = -1;
+		double max = -1;
 		for(int i = 0;i<numberOfWeightedItems;i++){
-			if ((double)counts.get(i)/weightedItemList.get(i).getWeight() >max){
-				max = counts.get(i);
+			if (weightedItemList.get(i).getWeight()!=0){
+				if ((double)counts.get(i)/weightedItemList.get(i).getWeight() > max|| max==-1){
+					max = counts.get(i);
+				}
+				else{
+					if ((double)counts.get(i)/weightedItemList.get(i).getWeight()<min|| min==-1) 
+						min = counts.get(i);
+				}
 			}
-			else{
-				if ((double)counts.get(i)/weightedItemList.get(i).getWeight()<min) 
-					min = counts.get(i);
-			}
-			
 		}
+		if (max==-1||min==-1) 
+			fail("List is empty!");
 		
-		if ((double)(max-min)/numberOfSelection >0.01) fail("Bad Randomize!");
+		return confidenceTest(max-min);	
+	}
+	//In testing equiprobability should use confidence interval?
+	private boolean confidenceTest(double p){
+		return Math.abs(p/numberOfSelection) <0.01;		
 	}
 	
-	
-	@Test
-	public void testSkipListSelector() {
-		fail("Not yet implemented");
-	}
-
 	@Test
 	public void testSelect() {
 		fail("Not yet implemented");
