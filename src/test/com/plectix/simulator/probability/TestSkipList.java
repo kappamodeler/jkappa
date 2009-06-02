@@ -17,7 +17,7 @@ public class TestSkipList {
 
 	int numberOfWeightedItems = 100; 
 	int numberOfUpdates = 100; 
-	int numberOfSelection = 10000000;
+	int numberOfSelection = 1000000;
 	
 	List<WeightedItemWithId> weightedItemList = new ArrayList<WeightedItemWithId>(); 
 	List<Integer> counts = new ArrayList<Integer>();
@@ -33,20 +33,6 @@ public class TestSkipList {
 			}
 		shuffleAndUpdate();		
 	}
-	/*
-	public TestSkipList(){
-		IRandom irandom = new CRandomJava(null, null);
-		weightedItemSelector= new SkipListSelector<WeightedItemWithId>(irandom);
-		for (int i= 0; i< numberOfWeightedItems; i++) { 
-			weightedItemList.add(new WeightedItemWithId(i, numberOfWeightedItems, WeightFunction.LINEAR)); 
-			counts.add(0); 
-			}
-		for (int i= 0; i< numberOfUpdates; i++) { 
-			Collections.shuffle(weightedItemList); 
-			weightedItemSelector.updatedItems(weightedItemList); 
-			}
-		
-	}*/
 	
 	@Test
 	public void testRandom(){
@@ -116,14 +102,16 @@ public class TestSkipList {
 	private boolean equiprobability(){
 		double min = -1;
 		double max = -1;
+		int j;
 		for(int i = 0;i<numberOfWeightedItems;i++){
+			j = weightedItemList.get(i).getId();
 			if (weightedItemList.get(i).getWeight()!=0){
-				if ((double)counts.get(i)/weightedItemList.get(i).getWeight() > max|| max==-1){
-					max = counts.get(i);
+				if ((double)counts.get(j)/weightedItemList.get(i).getWeight() > max|| max==-1){
+					max = counts.get(j)/weightedItemList.get(i).getWeight();
 				}
 				else{
-					if ((double)counts.get(i)/weightedItemList.get(i).getWeight()<min|| min==-1) 
-						min = counts.get(i);
+					if ((double)counts.get(j)/weightedItemList.get(i).getWeight()<min|| min==-1) 
+						min = counts.get(j)/weightedItemList.get(i).getWeight();
 				}
 			}
 		}
@@ -134,27 +122,26 @@ public class TestSkipList {
 	}
 	//In testing equiprobability should use confidence interval?
 	private boolean confidenceTest(double p){
-		return Math.abs(p/numberOfSelection) <0.01;		
+		return Math.abs(p) <0.01*(double)numberOfSelection/numberOfWeightedItems;		
 	}
 	
-	@Test
-	public void testSelect() {
-		fail("Not yet implemented");
-	}
 
 	@Test
-	public void testUpdatedItems() {
-		fail("Not yet implemented");
+	public void testSelectorCompare() throws Exception{
+		TestSelectorCompare testSelector= new TestSelectorCompare();
+		IRandom irandom = new CRandomJava(null, null);
+		weightedItemSelector= new SkipListSelector<WeightedItemWithId>(irandom);
+	
+		testSelector.setUp(weightedItemSelector, 100, 100, 100000, WeightFunction.LINEAR);
+		if (!testSelector.testRandom()){
+			fail("Bad Randomize or very small operation factors!");
+		}	
+		
+		if(!testSelector.testRemoveRecalculationAndRandom()){
+			fail("Bad Recalculation");		
+		}
 	}
-
-	@Test
-	public void testLevelsToString() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testWeightsToString() {
-		fail("Not yet implemented");
-	}
+	
+	
 
 }
