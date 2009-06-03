@@ -48,6 +48,15 @@ public class TestSelectorCompare {
 	}
 	
 	
+	public boolean testRemoveAssigneSineAndRandom(){
+		assignSineAndParabolaWeight();
+		removeSomeItems(3);
+		resetCounts();		
+		shuffleAndUpdate();
+		processSelection();
+		return equiprobability();
+		
+	}
 	
 	public boolean testRemoveRecalculationAndRandom() {
 		
@@ -63,7 +72,7 @@ public class TestSelectorCompare {
 	private void removeSomeItems(int k){
 		for(int i = 0; i<numberOfWeightedItems; i++){
 			WeightedItemWithId item = weightedItemList.get(i);
-			if (item.getId()%k ==0){
+			if (item.getId()%k !=0){
 				item.remove();
 			}
 		}
@@ -74,6 +83,18 @@ public class TestSelectorCompare {
 			counts.set(i, 0);
 		}
 	}
+	
+	private void assignSineAndParabolaWeight(){
+		for (int i= 0; i< numberOfWeightedItems; i++) { 
+			WeightedItemWithId item = weightedItemList.get(i); 
+			if (item.getId() % 2 == 0)		
+				item.setWeightFunction(WeightFunction.SINE); 
+
+			if (item.getId() % 7 == 1)		
+				item.setWeightFunction(WeightFunction.PARABOLA); 		
+		}	
+	}
+	
 	
 	private void assignOtherWeight(){
 		for (int i= 0; i< numberOfWeightedItems; i++) { 
@@ -111,8 +132,11 @@ public class TestSelectorCompare {
 		for(int i = 0;i<numberOfWeightedItems;i++){
 			j = weightedItemList.get(i).getId();
 			if (weightedItemList.get(i).getWeight()!=0){		
-				if(!confidenceTest(counts.get(j), weightedItemList.get(i).getWeight()/sumOfWeights)){
-					errors++;	
+				if(!confidenceTest(counts.get(j), weightedItemList.get(i).getWeight()/sumOfWeights)){	
+					errors++;
+					if(errors==1){ 
+						System.out.println("outliers");
+					}
 					System.out.println(counts.get(j));
 					System.out.println(weightedItemList.get(i).getWeight()/sumOfWeights);
 				}	

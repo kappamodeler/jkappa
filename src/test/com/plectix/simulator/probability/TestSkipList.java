@@ -138,7 +138,11 @@ public class TestSkipList {
 		}	
 		
 		if(!testSelector.testRemoveRecalculationAndRandom()){
-			fail("Bad Recalculation");		
+			fail("Bad Recalculation and Random after remove and set logariphm ");		
+		}
+
+		if(!testSelector.testRemoveAssigneSineAndRandom()){
+			fail("Bad Recalculation and Random after remove and set Sine and Parabola ");		
 		}
 	}
 	
