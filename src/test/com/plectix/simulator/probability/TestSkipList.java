@@ -16,7 +16,7 @@ import com.plectix.simulator.probability.skiplist.SkipListSelector;
 public class TestSkipList {
 
 	int numberOfWeightedItems = 100; 
-	int numberOfUpdates = 100; 
+	int numberOfUpdates = 1000; 
 	int numberOfSelection = 1000000;
 	
 	List<WeightedItemWithId> weightedItemList = new ArrayList<WeightedItemWithId>(); 
