@@ -135,10 +135,10 @@ public class TestSelectorCompare {
 				if(!confidenceTest(counts.get(j), weightedItemList.get(i).getWeight()/sumOfWeights)){	
 					errors++;
 					if(errors==1){ 
-						System.out.println("outliers");
+						//System.out.println("outliers");
 					}
-					System.out.println(counts.get(j));
-					System.out.println(weightedItemList.get(i).getWeight()/sumOfWeights);
+					//System.out.println(counts.get(j));
+					//System.out.println(weightedItemList.get(i).getWeight()/sumOfWeights);
 				}	
 			}
 			else{
