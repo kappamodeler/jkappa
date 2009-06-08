@@ -19,6 +19,11 @@ public class TestSkipList {
 	int numberOfUpdates = 1000; 
 	int numberOfSelection = 1000000;
 	
+	private static final double deviationGraph = 0.01;
+	private static final int frequencyRemoved1 = 5;
+	private static final int frequencyRemoved2 = 3;
+	
+	
 	List<WeightedItemWithId> weightedItemList = new ArrayList<WeightedItemWithId>(); 
 	List<Integer> counts = new ArrayList<Integer>();
 	SkipListSelector<WeightedItemWithId> weightedItemSelector;
@@ -41,12 +46,11 @@ public class TestSkipList {
 			fail("Bad Randomize or very small operation factors!");
 	}
 	
-	
 	@Test
 	public void testRemoveRecalculationAndRandom() {
 		
 		assignOtherWeight();
-		removeSomeItems(5);
+		removeSomeItems(frequencyRemoved1);
 		resetCounts();
 		
 		shuffleAndUpdate();
@@ -118,11 +122,12 @@ public class TestSkipList {
 		if (max==-1||min==-1) 
 			fail("List is empty!");
 		
-		return confidenceTest(max-min);	
+		return testDeviationGraph(max-min);	
 	}
-	//In testing equiprobability should use confidence interval?
-	private boolean confidenceTest(double p){
-		return Math.abs(p) <0.01*(double)numberOfSelection/numberOfWeightedItems;		
+	
+	//test deviation between graphs 1)expected and 2)empirical distribution
+	private boolean testDeviationGraph(double p){
+		return Math.abs(p) <deviationGraph*(double)numberOfSelection/numberOfWeightedItems;		
 	}
 	
 
@@ -132,16 +137,16 @@ public class TestSkipList {
 		IRandom irandom = new CRandomJava(null, null);
 		weightedItemSelector= new SkipListSelector<WeightedItemWithId>(irandom);
 	
-		testSelector.setUp(weightedItemSelector, 100, 100, 100000, WeightFunction.LINEAR);
+		testSelector.setUp(weightedItemSelector, numberOfWeightedItems, numberOfUpdates, numberOfSelection, WeightFunction.LINEAR);
 		if (!testSelector.testRandom()){
 			fail("Bad Randomize or very small operation factors!");
 		}	
 		
-		if(!testSelector.testRemoveRecalculationAndRandom()){
+		if(!testSelector.testRemoveRecalculationAndRandom(frequencyRemoved1)){
 			fail("Bad Recalculation and Random after remove and set logariphm ");		
 		}
 
-		if(!testSelector.testRemoveAssigneSineAndRandom()){
+		if(!testSelector.testRemoveAssigneSineAndRandom(frequencyRemoved2)){
 			fail("Bad Recalculation and Random after remove and set Sine and Parabola ");		
 		}
 	}

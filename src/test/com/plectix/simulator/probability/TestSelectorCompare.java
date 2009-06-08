@@ -17,6 +17,7 @@ public class TestSelectorCompare {
 	int numberOfWeightedItems; 
 	int numberOfUpdates; 
 	int numberOfSelection;
+	private static final double confidenceBound = 0.06;
 	
 	List<WeightedItemWithId> weightedItemList; 
 	List<Integer> counts;
@@ -48,9 +49,9 @@ public class TestSelectorCompare {
 	}
 	
 	
-	public boolean testRemoveAssigneSineAndRandom(){
+	public boolean testRemoveAssigneSineAndRandom(int frequencyRemoved){
 		assignSineAndParabolaWeight();
-		removeSomeItems(3);
+		removeSomeItems(frequencyRemoved);
 		resetCounts();		
 		shuffleAndUpdate();
 		processSelection();
@@ -58,10 +59,10 @@ public class TestSelectorCompare {
 		
 	}
 	
-	public boolean testRemoveRecalculationAndRandom() {
+	public boolean testRemoveRecalculationAndRandom(int frequencyRemoved) {
 		
 		assignOtherWeight();
-		removeSomeItems(5);
+		removeSomeItems(frequencyRemoved);
 		resetCounts();		
 		shuffleAndUpdate();
 		processSelection();
@@ -134,9 +135,9 @@ public class TestSelectorCompare {
 			if (weightedItemList.get(i).getWeight()!=0){		
 				if(!confidenceTest(counts.get(j), weightedItemList.get(i).getWeight()/sumOfWeights)){	
 					errors++;
-					if(errors==1){ 
+					//if(errors==1){ 
 						//System.out.println("outliers");
-					}
+					//}
 					//System.out.println(counts.get(j));
 					//System.out.println(weightedItemList.get(i).getWeight()/sumOfWeights);
 				}	
@@ -147,7 +148,7 @@ public class TestSelectorCompare {
 				
 		}
 			
-		return errors<0.06*numberOfWeightedItems;	
+		return errors<confidenceBound*numberOfWeightedItems;	
 	}
 	//1.92 - from tables for 95% confidence interval
 	private boolean confidenceTest(int numberOfEvents, double expectedProbability){

@@ -2,7 +2,6 @@ package com.plectix.simulator.probability;
 
 public class WeightedItemWithId implements WeightedItem{
 	private int id = 0; 
-	private int count = 0; 
 	private int numberOfItems = -1; 
 	private double weight = 0.0; 
 
@@ -29,14 +28,6 @@ public class WeightedItemWithId implements WeightedItem{
 	this.weight = 0.0; 
 	} 
 
-	public final void resetCount() { 
-	this.count = 0; 
-	} 
-
-	public final void incrementCount() { 
-	this.count++; 
-	} 
-
 	@Override 
 	public double getWeight() { 
 	return weight; 
@@ -46,7 +37,4 @@ public class WeightedItemWithId implements WeightedItem{
 	return id; 
 	} 
 
-	public final int getCount() { 
-	return count; 
-	}
 }
