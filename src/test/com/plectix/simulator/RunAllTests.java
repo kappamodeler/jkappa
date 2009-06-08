@@ -10,6 +10,7 @@ import com.plectix.simulator.stories.*;
 import com.plectix.simulator.updates.*;
 import com.plectix.simulator.parser.newtests.*;
 import com.plectix.simulator.perturbations.*;
+import com.plectix.simulator.probability.*;
 
 @RunWith(value=Suite.class)
 @SuiteClasses(value = {
@@ -20,8 +21,10 @@ import com.plectix.simulator.perturbations.*;
 		RunTestStories.class,
 		RunParserTests.class,
 //		TestAction.class
-		RunActionTest.class
-		//TestJavaXMLCompare.class,
+		RunActionTest.class,
+		//TestJavaXMLCompare.class,	
+		TestWeightedItemSelector.class
+	
 	})
 public class RunAllTests {
 
