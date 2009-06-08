@@ -13,7 +13,7 @@ import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.probability.WeightedItemWithId.WeightFunction;
 import com.plectix.simulator.probability.skiplist.SkipListSelector;
 
-public class TestSkipList {
+public class TestWeightedItemSelector {
 
 	int numberOfWeightedItems = 100; 
 	int numberOfUpdates = 1000; 
