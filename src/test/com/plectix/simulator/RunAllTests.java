@@ -21,9 +21,9 @@ import com.plectix.simulator.probability.*;
 		RunTestStories.class,
 		RunParserTests.class,
 //		TestAction.class
-		RunActionTest.class,
+		RunActionTest.class
 		//TestJavaXMLCompare.class,	
-		TestWeightedItemSelector.class
+		
 	
 	})
 public class RunAllTests {
