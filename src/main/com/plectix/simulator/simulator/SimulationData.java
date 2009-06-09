@@ -279,7 +279,7 @@ public class SimulationData {
 				println();
 				return true;
 			}
-		} else if (count <= simulationArguments.getEvent()) {
+		} else if (count < simulationArguments.getEvent()) {
 			if (count >= nextStep) {
 				outputBar();
 				nextStep += step;

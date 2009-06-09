@@ -85,6 +85,17 @@ public class Initializator {
 		return commandLine.getSimulationArguments();
 	}
 	
+	public static SimulationArguments prepareEventNumberArguments(String filePath, Integer eventNumber) throws ParseException{
+		String[] args = new String[4];
+		args[0] = "--sim";
+		args[1] = filePath;
+		args[2] = "--event";
+		args[3] = eventNumber.toString();
+		SimulatorCommandLine commandLine = null;
+		commandLine = new SimulatorCommandLine(args);
+		return commandLine.getSimulationArguments();
+	}
+	
 	public static SimulationArguments prepareSimulationArguments(String[] args) throws ParseException {
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
