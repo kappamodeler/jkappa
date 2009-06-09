@@ -12,7 +12,7 @@ public class TestSelectorCompare {
 	int numberOfWeightedItems; 
 	int numberOfUpdates; 
 	int numberOfSelection;
-	private static final double confidenceBound = 0.06;
+	private static final double CONFIDENCE_BOUND = 0.06;
 	
 	List<WeightedItemWithId> weightedItemList; 
 	WeightedItemSelector<WeightedItemWithId> weightedItemSelector;
@@ -138,7 +138,7 @@ public class TestSelectorCompare {
 				
 		}
 			
-		return errors<confidenceBound*numberOfWeightedItems;	
+		return errors<CONFIDENCE_BOUND*numberOfWeightedItems;	
 	}
 	//1.92 - from tables for 95% confidence interval
 	private boolean confidenceTest(int numberOfEvents, double expectedProbability){
