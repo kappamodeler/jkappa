@@ -19,22 +19,22 @@ public class TestWeightedItemSelector {
 	int numberOfUpdates = 1000; 
 	int numberOfSelection = 1000000;
 	
-	private static final double deviationGraph = 0.01;
-	private static final int frequencyRemoved1 = 5;
-	private static final int frequencyRemoved2 = 3;
-	
+	private static final double DEVIATION_GRAPH = 0.01;
+	private static final int FREQUENCY_REMOVED1 = 5;
+	private static final int FREQUENCY_REMOVED2 = 3;
+	private static final int DEFAULT_SEED = 4;
 	
 	List<WeightedItemWithId> weightedItemList = new ArrayList<WeightedItemWithId>(); 
-	List<Integer> counts = new ArrayList<Integer>();
+	//List<Integer> counts = new ArrayList<Integer>();
 	SkipListSelector<WeightedItemWithId> weightedItemSelector;
 	
 	@Before
 	public void setUp() throws Exception {
 		IRandom irandom = new CRandomJava(null, null);
+		irandom.setSeed(DEFAULT_SEED);
 		weightedItemSelector= new SkipListSelector<WeightedItemWithId>(irandom);
 		for (int i= 0; i< numberOfWeightedItems; i++) { 
 			weightedItemList.add(new WeightedItemWithId(i, numberOfWeightedItems, WeightFunction.LINEAR)); 
-			counts.add(0); 
 			}
 		shuffleAndUpdate();		
 	}
@@ -50,7 +50,7 @@ public class TestWeightedItemSelector {
 	public void testRemoveRecalculationAndRandom() {
 		
 		assignOtherWeight();
-		removeSomeItems(frequencyRemoved1);
+		removeSomeItems(FREQUENCY_REMOVED1);
 		resetCounts();
 		
 		shuffleAndUpdate();
@@ -73,7 +73,7 @@ public class TestWeightedItemSelector {
 	
 	private void resetCounts(){
 		for(int i = 0; i<numberOfWeightedItems;i++){
-			counts.set(i, 0);
+			weightedItemList.get(i).resetCount();
 		}
 	}
 	
@@ -90,7 +90,7 @@ public class TestWeightedItemSelector {
 	
 	private void shuffleAndUpdate(){
 		for (int i= 0; i< numberOfUpdates; i++) { 
-			Collections.shuffle(weightedItemList); 
+			//Collections.shuffle(weightedItemList); 
 			weightedItemSelector.updatedItems(weightedItemList); 
 		} 
 		
@@ -99,23 +99,21 @@ public class TestWeightedItemSelector {
 	private void processSelection(){
 		for (int i= 0; i< numberOfSelection; i++) { 
 			WeightedItemWithId item = weightedItemSelector.select(); 
-			counts.set(item.getId(), counts.get(item.getId())+1); 
+			item.incrementCount();
 			}
 	}
 	
 	private boolean equiprobability(){
 		double min = -1;
 		double max = -1;
-		int j;
 		for(int i = 0;i<numberOfWeightedItems;i++){
-			j = weightedItemList.get(i).getId();
 			if (weightedItemList.get(i).getWeight()!=0){
-				if ((double)counts.get(j)/weightedItemList.get(i).getWeight() > max|| max==-1){
-					max = counts.get(j)/weightedItemList.get(i).getWeight();
+				if ((double)weightedItemList.get(i).getCount()/weightedItemList.get(i).getWeight() > max|| max==-1){
+					max = weightedItemList.get(i).getCount()/weightedItemList.get(i).getWeight();
 				}
 				else{
-					if ((double)counts.get(j)/weightedItemList.get(i).getWeight()<min|| min==-1) 
-						min = counts.get(j)/weightedItemList.get(i).getWeight();
+					if ((double)weightedItemList.get(i).getCount()/weightedItemList.get(i).getWeight()<min|| min==-1) 
+						min = weightedItemList.get(i).getCount()/weightedItemList.get(i).getWeight();
 				}
 			}
 		}
@@ -127,7 +125,7 @@ public class TestWeightedItemSelector {
 	
 	//test deviation between graphs 1)expected and 2)empirical distribution
 	private boolean testDeviationGraph(double p){
-		return Math.abs(p) <deviationGraph*(double)numberOfSelection/numberOfWeightedItems;		
+		return Math.abs(p) <DEVIATION_GRAPH*(double)numberOfSelection/numberOfWeightedItems;		
 	}
 	
 
@@ -135,18 +133,19 @@ public class TestWeightedItemSelector {
 	public void testSelectorCompare() throws Exception{
 		TestSelectorCompare testSelector= new TestSelectorCompare();
 		IRandom irandom = new CRandomJava(null, null);
+		irandom.setSeed(DEFAULT_SEED);
 		weightedItemSelector= new SkipListSelector<WeightedItemWithId>(irandom);
-	
+		
 		testSelector.setUp(weightedItemSelector, numberOfWeightedItems, numberOfUpdates, numberOfSelection, WeightFunction.LINEAR);
 		if (!testSelector.testRandom()){
 			fail("Bad Randomize or very small operation factors!");
 		}	
 		
-		if(!testSelector.testRemoveRecalculationAndRandom(frequencyRemoved1)){
+		if(!testSelector.testRemoveRecalculationAndRandom(FREQUENCY_REMOVED1)){
 			fail("Bad Recalculation and Random after remove and set logariphm ");		
 		}
 
-		if(!testSelector.testRemoveAssigneSineAndRandom(frequencyRemoved2)){
+		if(!testSelector.testRemoveAssigneSineAndRandom(FREQUENCY_REMOVED2)){
 			fail("Bad Recalculation and Random after remove and set Sine and Parabola ");		
 		}
 	}

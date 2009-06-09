@@ -20,7 +20,6 @@ public class TestSelectorCompare {
 	private static final double confidenceBound = 0.06;
 	
 	List<WeightedItemWithId> weightedItemList; 
-	List<Integer> counts;
 	WeightedItemSelector<WeightedItemWithId> weightedItemSelector;
 
 	
@@ -28,16 +27,13 @@ public class TestSelectorCompare {
 			int testedNumberOfWeightedItems, int testedNumberOfUpdates,
 			int testedNumberOfSelection, WeightFunction typeOfWeight) throws Exception {
 		
-		weightedItemList = new ArrayList<WeightedItemWithId>();
-		counts = new ArrayList<Integer>();
-		
+		weightedItemList = new ArrayList<WeightedItemWithId>();		
 		weightedItemSelector = testedSelector;
 		numberOfWeightedItems = testedNumberOfWeightedItems;
 		numberOfUpdates = testedNumberOfUpdates;
 		numberOfSelection = testedNumberOfSelection;
 		for (int i= 0; i< numberOfWeightedItems; i++) { 
 			weightedItemList.add(new WeightedItemWithId(i, numberOfWeightedItems, typeOfWeight)); 
-			counts.add(0); 
 			}
 		shuffleAndUpdate();		
 	}
@@ -81,7 +77,7 @@ public class TestSelectorCompare {
 	
 	private void resetCounts(){
 		for(int i = 0; i<numberOfWeightedItems;i++){
-			counts.set(i, 0);
+			weightedItemList.get(i).resetCount();
 		}
 	}
 	
@@ -110,7 +106,7 @@ public class TestSelectorCompare {
 	
 	private void shuffleAndUpdate(){
 		for (int i= 0; i< numberOfUpdates; i++) { 
-			Collections.shuffle(weightedItemList); 
+			//Collections.shuffle(weightedItemList); 
 			weightedItemSelector.updatedItems(weightedItemList); 
 		} 
 		
@@ -119,31 +115,30 @@ public class TestSelectorCompare {
 	private void processSelection(){
 		for (int i= 0; i< numberOfSelection; i++) { 
 			WeightedItemWithId item = weightedItemSelector.select(); 
-			counts.set(item.getId(), counts.get(item.getId())+1); 
+			item.incrementCount();
 			}
 	}
 	
 	private boolean equiprobability(){
 	    int errors = 0; 
-	    int j;
 	    double sumOfWeights=0;
 	    for(int i = 0;i<numberOfWeightedItems;i++){
 	    	sumOfWeights+=weightedItemList.get(i).getWeight();
 	    }
 		for(int i = 0;i<numberOfWeightedItems;i++){
-			j = weightedItemList.get(i).getId();
+			
 			if (weightedItemList.get(i).getWeight()!=0){		
-				if(!confidenceTest(counts.get(j), weightedItemList.get(i).getWeight()/sumOfWeights)){	
+				if(!confidenceTest(weightedItemList.get(i).getCount(), weightedItemList.get(i).getWeight()/sumOfWeights)){	
 					errors++;
 					//if(errors==1){ 
-						//System.out.println("outliers");
+					//	System.out.println("outliers");
 					//}
-					//System.out.println(counts.get(j));
+					//System.out.println(weightedItemList.get(i).getCount());
 					//System.out.println(weightedItemList.get(i).getWeight()/sumOfWeights);
 				}	
 			}
 			else{
-				if (counts.get(j)>0) fail("Item with 0 weight was selected!!!!!");		
+				if (weightedItemList.get(i).getCount()>0) fail("Item with 0 weight was selected!!!!!");		
 			}
 				
 		}
