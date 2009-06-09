@@ -3,14 +3,9 @@ package com.plectix.simulator.probability;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.junit.Test;
-
-import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.probability.WeightedItemWithId.WeightFunction;
-import com.plectix.simulator.probability.skiplist.SkipListSelector;
 
 
 public class TestSelectorCompare {
