@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.cli.ParseException;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.Initializator;
+import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
@@ -23,7 +25,7 @@ public class TestEvents {
 	private static String prefixFileName = "";
 
 	private Simulator mySimulator;
-	private Integer [] eventsNumbers = {0, 1, 10, 100, 500, 1000, 10000};
+	private Integer [] eventsNumbers = {0, 1, 10, 100, 500, 1000, 1001, 1002};
 
 	
 	@Parameters
@@ -42,21 +44,20 @@ public class TestEvents {
 	
 	public TestEvents(String filename) {
 		prefixFileName  = filename;
-//		SimulationMain.initializeLogging();
 	}
 
 	@Test
 	public void test() {
 		for (int i = 0; i < eventsNumbers.length; i++) {
 			setup(eventsNumbers[i]);
-//			System.out.println(mySimulator.getSimulationData().getSimulationArguments().getEvent());
+			assertTrue(eventsNumbers[i] == mySimulator.getSimulationData().getSimulationArguments().getEvent());
 		}
 	}
 	
 	public void setup(Integer eventNumber) {
 		init(testDirectory + prefixFileName, eventNumber);
 		try {
-			mySimulator.run(0);
+			mySimulator.run(new SimulatorInputData(mySimulator.getSimulationData().getSimulationArguments()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			junit.framework.Assert.fail(e.getMessage());
