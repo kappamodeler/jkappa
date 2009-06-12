@@ -73,7 +73,7 @@ public class CNetworkNotation implements INetworkNotation {
 	@Override
 	public String toString() {
 		String st = "ruleName="
-				+ simulator.getSimulationData().getKappaSystem().getRulesByID(
+				+ simulator.getSimulationData().getKappaSystem().getRuleByID(
 						ruleID).getName() + " ";
 		st += "usedAgentsFromRules=" + usedAgentsFromRules.keySet().toString()
 				+ " ";
@@ -108,7 +108,7 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public void fillAddedAgentsID(SimulationData data) {
-		CRule rule = data.getKappaSystem().getRulesByID(ruleID);
+		CRule rule = data.getKappaSystem().getRuleByID(ruleID);
 		this.addedAgentsID = rule.getAgentsAddedID();
 	}
 
@@ -329,7 +329,7 @@ public class CNetworkNotation implements INetworkNotation {
 	}
 
 	public final CRule getRule() {
-		return simulator.getSimulationData().getKappaSystem().getRulesByID(
+		return simulator.getSimulationData().getKappaSystem().getRuleByID(
 				ruleID);
 	}
 

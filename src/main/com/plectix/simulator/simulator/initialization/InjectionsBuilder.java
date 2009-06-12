@@ -14,17 +14,14 @@ import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.KappaSystem;
 
 public class InjectionsBuilder {
-	private final KappaSystem myKappaSystem;
+	private final KappaSystem kappaSystem;
+	
 	public InjectionsBuilder(KappaSystem system) {
-		myKappaSystem = system;
+		kappaSystem = system;
 	}
 	
-	public ISolution getSolution() {
-		return myKappaSystem.getSolution();
-	}
-
-	private void walkInjectingComponents(InjectionSettingStrategy strategy, CAgent solutionAgent) {
-		for (CRule rule : myKappaSystem.getRules()) {
+	private final void walkInjectingComponents(InjectionSettingStrategy strategy, CAgent solutionAgent) {
+		for (CRule rule : kappaSystem.getRules()) {
 			for (IConnectedComponent cc : rule.getLeftHandSide()) {
 				if (cc != null) {
 					strategy.process(cc, solutionAgent);
@@ -32,8 +29,7 @@ public class InjectionsBuilder {
 			}
 		}
 
-		for (IObservablesConnectedComponent oCC : myKappaSystem.getObservables()
-				.getConnectedComponentList()) {
+		for (IObservablesConnectedComponent oCC : kappaSystem.getObservables().getConnectedComponentList()) {
 			if (oCC != null) {
 				if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
 					strategy.process(oCC, solutionAgent);
@@ -42,7 +38,7 @@ public class InjectionsBuilder {
 		}
 	}
 	
-	public void build() {
+	public final void build() {
 		InjectionSettingStrategy strategy = new StraightInjectionSettingStrategy();
 		for (CAgent agent : getSolution().getStraightStorage().getAgents()) {
 			this.walkInjectingComponents(strategy, agent);
@@ -55,17 +51,21 @@ public class InjectionsBuilder {
 		}
 	}
 	
-	public void build(SuperSubstance substance) {
+	public final void build(SuperSubstance substance) {
 		InjectionSettingStrategy strategy = new SuperInjectionSettingStrategy(substance);
 		for (CAgent agent : substance.getComponent().getAgents()) {
 			walkInjectingComponents(strategy, agent);
 		}
 	}
 	
-	public void build(Collection<CAgent> agents) {
+	public final void build(Collection<CAgent> agents) {
 		InjectionSettingStrategy strategy = new StraightInjectionSettingStrategy();
 		for (CAgent agent : agents) {
 			walkInjectingComponents(strategy, agent);
 		}
+	}
+
+	public final ISolution getSolution() {
+		return kappaSystem.getSolution();
 	}
 }

@@ -8,15 +8,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CObservables;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.contactMap.CContactMap;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.stories.CStories;
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 import com.plectix.simulator.util.PlxTimer;
@@ -27,21 +30,20 @@ public class KappaSystem {
 	private CStories stories = null;
 	private List<CPerturbation> perturbations = null;
 	private CObservables observables = new CObservables();
-	private ISolution solution;// = new CSolution(); // soup of initial
-	// components
+	private ISolution solution;// = new CSolution(); // soup of initial components
 	private CContactMap contactMap = new CContactMap();
 
-	private final IdGenerator myAgentsIdGenerator = new IdGenerator();
-	private final IdGenerator myRuleIdGenerator = new IdGenerator();
+	private final IdGenerator agentsIdGenerator = new IdGenerator();
+	private final IdGenerator ruleIdGenerator = new IdGenerator();
 
-	private final SimulationData mySimulationData;
+	private final SimulationData simulationData;
 
 	public KappaSystem(SimulationData data) {
-		mySimulationData = data;
+		simulationData = data;
 	}
 
 	public final void initialize(InfoType outputType) {
-		SimulationArguments args = mySimulationData.getSimulationArguments();
+		SimulationArguments args = simulationData.getSimulationArguments();
 		if (args.getSerializationMode() == SimulationArguments.SerializationMode.READ) {
 			ObjectInputStream ois;
 			try {
@@ -51,7 +53,7 @@ public class KappaSystem {
 				rules = (List<CRule>) ois.readObject();
 				observables = (CObservables) ois.readObject();
 				perturbations = (List<CPerturbation>) ois.readObject();
-				mySimulationData.setSnapshotTimes((List<Double>) ois
+				simulationData.setSnapshotTimes((List<Double>) ois
 						.readObject());
 				args.setEvent((long) ois.readLong());
 				args.setTimeLength((double) ois.readDouble());
@@ -72,7 +74,7 @@ public class KappaSystem {
 				oos.writeObject(rules);
 				oos.writeObject(observables);
 				oos.writeObject(perturbations);
-				oos.writeObject(mySimulationData.getSnapshotTimes());
+				oos.writeObject(simulationData.getSnapshotTimes());
 				oos.writeLong(args.getEvent());
 				oos.writeDouble(args.getTimeLength());
 				oos.flush();
@@ -97,7 +99,7 @@ public class KappaSystem {
 
 		if (args.isActivationMap()) {
 			PlxTimer timer = new PlxTimer();
-			mySimulationData.addInfo(outputType, InfoType.INFO,
+			simulationData.addInfo(outputType, InfoType.INFO,
 					"--Abstracting activation map...");
 
 			timer.startTimer();
@@ -105,14 +107,14 @@ public class KappaSystem {
 				rule.updateActivatedRulesList(rules);
 				rule.initializeActivatedObservablesList(observables);
 			}
-			mySimulationData.stopTimer(outputType, timer, "--Abstraction:");
-			mySimulationData.addInfo(outputType, InfoType.INFO,
+			simulationData.stopTimer(outputType, timer, "--Abstraction:");
+			simulationData.addInfo(outputType, InfoType.INFO,
 					"--Activation map computed");
 		}
 
 		if (args.isInhibitionMap()) {
 			PlxTimer timer = new PlxTimer();
-			mySimulationData.addInfo(outputType, InfoType.INFO,
+			simulationData.addInfo(outputType, InfoType.INFO,
 					"--Abstracting inhibition map...");
 
 			timer.startTimer();
@@ -120,8 +122,8 @@ public class KappaSystem {
 				rule.updateInhibitedRulesList(rules);
 				rule.initializeInhibitedObservablesList(observables);
 			}
-			mySimulationData.stopTimer(outputType, timer, "--Abstraction:");
-			mySimulationData.addInfo(outputType, InfoType.INFO,
+			simulationData.stopTimer(outputType, timer, "--Abstraction:");
+			simulationData.addInfo(outputType, InfoType.INFO,
 					"--Inhibition map computed");
 		}
 
@@ -147,7 +149,7 @@ public class KappaSystem {
 
 	public final void doPositiveUpdate(CRule rule,
 			List<CInjection> currentInjectionsList) {
-		if (mySimulationData.getSimulationArguments().isActivationMap()) {
+		if (simulationData.getSimulationArguments().isActivationMap()) {
 			SimulationUtils.positiveUpdate(rule.getActivatedRules(), rule
 					.getActivatedObservable(), rule);
 		} else {
@@ -241,10 +243,13 @@ public class KappaSystem {
 		return Collections.unmodifiableList(rules);
 	}
 
-	public final CRule getRulesByID(int ruleID) {
-		for (CRule rule : rules)
-			if (rule.getRuleID() == ruleID)
+	public final CRule getRuleByID(int ruleID) {
+		// TODO: We are scanning a list linearly, can't we use a HashMap here? 
+		for (CRule rule : rules) {
+			if (rule.getRuleID() == ruleID) {
 				return rule;
+			}
+		}
 		return null;
 	}
 
@@ -260,16 +265,16 @@ public class KappaSystem {
 		return stories;
 	}
 
-	public CContactMap getContactMap() {
+	public final CContactMap getContactMap() {
 		return contactMap;
 	}
 
 	public final long generateNextRuleId() {
-		return myRuleIdGenerator.generateNext();
+		return ruleIdGenerator.generateNext();
 	}
 
 	public final long generateNextAgentId() {
-		return myAgentsIdGenerator.generateNext();
+		return agentsIdGenerator.generateNext();
 	}
 
 	public final List<CPerturbation> getPerturbations() {
@@ -323,8 +328,8 @@ public class KappaSystem {
 	}
 
 	public void resetIdGenerators() {
-		myAgentsIdGenerator.reset();
-		myRuleIdGenerator.reset();
+		agentsIdGenerator.reset();
+		ruleIdGenerator.reset();
 	}
 
 	public void clearRules() {
