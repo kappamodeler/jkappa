@@ -2,6 +2,7 @@ package com.plectix.simulator.simulator;
 
 import java.text.DecimalFormat;
 
+import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.util.NameDictionary;
 import com.plectix.simulator.util.PlxLogger;
 
@@ -15,7 +16,13 @@ import com.plectix.simulator.util.PlxLogger;
 public class ThreadLocalData {
 	
 	private static ThreadLocal<PlxLogger> plxLogger = null;
-
+	private static ThreadLocal<IRandom> random = new ThreadLocal<IRandom> () {
+		@Override 
+		protected IRandom initialValue() {
+			return new CRandomJava(SimulationArguments.DEFAULT_SEED);
+		}
+	};
+	
 	private static final ThreadLocal<NameDictionary> nameDictionary = new ThreadLocal<NameDictionary> () {
 		@Override 
 		protected NameDictionary initialValue() {
@@ -71,5 +78,9 @@ public class ThreadLocalData {
 			return new PlxLogger(clazz);
 		} 
 		return plxLogger.get();
+	}
+
+	public static IRandom getRandom() {
+		return random.get();
 	}
 }

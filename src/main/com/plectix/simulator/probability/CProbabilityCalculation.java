@@ -3,34 +3,32 @@ package com.plectix.simulator.probability;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-
-import com.plectix.simulator.interfaces.IRandom;
-
-import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.injections.*;
+import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.simulator.*;
 import com.plectix.simulator.util.Info.InfoType;
 
 public final class CProbabilityCalculation {
-	private final List<CRule> rules;
+	private List<CRule> rules;
 	private final double[] rulesProbability;
 	private final IRandom random;
 	private double commonActivity;
 
-	public CProbabilityCalculation(InfoType outputType,SimulationData simulationData) {
+	public CProbabilityCalculation(InfoType outputType, SimulationData simulationData) {
 		this.rules = simulationData.getKappaSystem().getRules();
 		rulesProbability = new double[rules.size()];
 
-		String randomizerPatch = simulationData.getSimulationArguments().getRandomizer();
-		if(!simulationData.getSimulationArguments().isShortConsoleOutput())
+		if(!simulationData.getSimulationArguments().isShortConsoleOutput()) {
 			outputType = InfoType.OUTPUT;
+		}
 		
-		if (randomizerPatch == null)
-			random = new CRandomJava(outputType,simulationData);
-		else
-			random = new CRandomOCaml(randomizerPatch, simulationData.getSimulationArguments().getSeed());
-
+		int seed = simulationData.getSimulationArguments().getSeed();
+		random = ThreadLocalData.getRandom();
+		random.setSeed(seed);
+		simulationData.addInfo(outputType, InfoType.INFO,
+				"--Seeding random number generator with given seed "
+						+ Integer.valueOf(seed).toString());
 	}
 
 	private final void calculateRulesActivity() {
@@ -101,4 +99,12 @@ public final class CProbabilityCalculation {
 		return -1. / commonActivity * java.lang.Math.log(randomValue);
 	}
 
+	/**
+	 * This method is used on each iteration of Simulator.runStories() 
+	 * in order to get the latest information on simulation data
+	 * @param data
+	 */
+	public final void refreshSimulationInfo(SimulationData data) {
+		rules = data.getKappaSystem().getRules();
+	}
 }

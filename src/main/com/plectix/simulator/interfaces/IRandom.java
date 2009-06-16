@@ -39,5 +39,4 @@ public interface IRandom {
      * @param   seed   the initial seed.
      */
 	public void setSeed(long seed);
-
 }

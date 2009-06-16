@@ -364,6 +364,7 @@ public class Simulator implements SimulatorInterface {
 		synchronized (statusLock) {
 			currentIterationNumber = 0;
 		}
+		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.NOT_OUTPUT,simulationData);
 		
 		while (currentIterationNumber < simulationData.getSimulationArguments().getIterations()) {
 			PlxTimer timer=null;
@@ -373,10 +374,11 @@ public class Simulator implements SimulatorInterface {
 				timer.startTimer();
 			}
 			
+			ruleProbabilityCalculation.refreshSimulationInfo(simulationData);
+			
 			boolean isEndRules = false;
 			long clash = 0;
 			long max_clash = 0;
-			CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.NOT_OUTPUT,simulationData);
 		    
 		    while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
 					&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {
