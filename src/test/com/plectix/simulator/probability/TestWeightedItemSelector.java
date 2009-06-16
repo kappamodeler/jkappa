@@ -11,6 +11,7 @@ import org.junit.Test;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.probability.WeightedItemWithId.WeightFunction;
 import com.plectix.simulator.probability.skiplist.SkipListSelector;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class TestWeightedItemSelector {
 
@@ -29,7 +30,7 @@ public class TestWeightedItemSelector {
 	
 	@Before
 	public void setUp() throws Exception {
-		IRandom irandom = new CRandomJava(null, null);
+		IRandom irandom = ThreadLocalData.getRandom();
 		irandom.setSeed(DEFAULT_SEED);
 		weightedItemSelector= new SkipListSelector<WeightedItemWithId>(irandom);
 		for (int i= 0; i< numberOfWeightedItems; i++) { 
@@ -131,7 +132,7 @@ public class TestWeightedItemSelector {
 	@Test
 	public void testSelectorCompare() throws Exception{
 		TestSelectorCompare testSelector= new TestSelectorCompare();
-		IRandom irandom = new CRandomJava(null, null);
+		IRandom irandom = ThreadLocalData.getRandom();
 		irandom.setSeed(DEFAULT_SEED);
 		weightedItemSelector= new SkipListSelector<WeightedItemWithId>(irandom);
 		
