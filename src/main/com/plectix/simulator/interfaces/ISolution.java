@@ -81,4 +81,7 @@ public interface ISolution {
 
 	public void addInitialConnectedComponents(long quant,
 			List<CAgent> agents);
+
+	public void addInjectionToPool(
+			RuleApplicationPool prepareRuleApplicationPool, CInjection injection);
 }

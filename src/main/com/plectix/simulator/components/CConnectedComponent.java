@@ -1,24 +1,16 @@
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.components.injections.CInjectionStorage;
-import com.plectix.simulator.components.injections.CLiftElement;
+import com.plectix.simulator.components.injections.*;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
-import com.plectix.simulator.interfaces.IRandom;
+import com.plectix.simulator.probability.*;
+import com.plectix.simulator.probability.skiplist.*;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 import com.plectix.simulator.components.CSite;
 
@@ -47,14 +39,15 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	private CRule rule;
 	private SuperSubstance mySubstance = null;
 	// for the better searching
-	private CInjectionStorage myInjections = new CInjectionStorage();
+	private WeightedItemSelector<CInjection> myInjections 
+				= new SkipListSelector<CInjection>(ThreadLocalData.getRandom());
 
 	/**
 	 * private empty connected component constructor
 	 */
 	private CConnectedComponent() {
 		agentList.add(new CAgent());
-		myInjections.addInjection(CInjection.EMPTY_INJECTION, 0);
+		myInjections.updatedItem(CInjection.EMPTY_INJECTION);
 		agentFromSolutionForRHS = new ArrayList<CAgent>();
 	}
 
@@ -113,7 +106,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @param id id of injection
 	 */
 	private final void addInjection(CInjection inj) {
-		myInjections.addInjection(inj);
+		myInjections.updatedItem(inj);
 	}
 
 	/**
@@ -121,9 +114,14 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @param injection injection to remove
 	 */
 	public final void removeInjection(CInjection injection) {
-		myInjections.removeInjection(injection);
+		injection.eliminate();
+		myInjections.updatedItem(injection);
 	}
 
+	public long getInjectionsWeight() {
+		return (long)(myInjections.getTotalWeight());
+	}
+	
 	/**
 	 * This method initializes "spanning tree map" structure, which is used for comparing two components
 	 * and so on
@@ -373,15 +371,11 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @return list of injections from this connected component
 	 */
 	public final Collection<CInjection> getInjectionsList() {
-		return myInjections.getList();
+		return myInjections.asCollection();
 	}
 
-	public int getCommonPower() {
-		return myInjections.getCommonPower();
-	}
-	
 	public void simplifyInjection(CInjection inj) {
-		myInjections.simplifyInjection(inj);
+		myInjections.updatedItem(inj);
 	}
 	
 	/**
@@ -389,8 +383,8 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @param random random number generator
 	 * @return random injection from current connected component
 	 */
-	public final CInjection getRandomInjection(IRandom random) {
-		return myInjections.getRandomInjection(random);
+	public final CInjection getRandomInjection() {
+		return myInjections.select();
 	}
 
 	/**
@@ -399,7 +393,8 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @return first injection from list of injections
 	 */
 	public final CInjection getFirstInjection() {
-		return myInjections.getInjection(0);
+		// TODO check if we really need it
+		return myInjections.select();
 	}
 
 	/**

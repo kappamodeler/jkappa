@@ -45,7 +45,7 @@ public class TestPositiveUpdate extends TestUpdate {
 			for (CInjection injection : cc.getInjectionsList()) {
 				if (injection.isSuper()) {
 					solutionLinkingForCurrentObs += injection.getAgentLinkList().size() 
-							* injection.getPower();
+							* injection.getWeight();
 				} else {
 					solutionLinkingForCurrentObs += injection.getAgentLinkList().size();
 				}
@@ -68,7 +68,7 @@ public class TestPositiveUpdate extends TestUpdate {
 			if (!lhsIsEmpty(leftHand)) {
 				myFailer.assertEquals("LHS injections",
 						myLHSInjectionsQuantity.get(myTestFileName), 
-						cc.getCommonPower());
+						(int)cc.getInjectionsWeight());
 			} else {
 				myFailer.assertTrue("LHS injections", (componentInjections
 						.size() == 1)

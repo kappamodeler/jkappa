@@ -1,6 +1,6 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.injections.CInjection;
@@ -27,14 +27,18 @@ public abstract class CAbstractSuperSolution extends ComplexSolution {
 
 	public RuleApplicationPool prepareRuleApplicationPool(List<CInjection> injections) {
 		StraightStorage storage = new StraightStorage();
-		for (CInjection injection : injections) {
-			if (injection.isSuper()) {
-				storage.addConnectedComponent(getSuperStorage().extractComponent(injection));
-			} else {
-				storage.addConnectedComponent(getStraightStorage().extractComponent(injection));
-			}
-		}
 		StandardRuleApplicationPool pool = new StandardRuleApplicationPool(storage);
 		return pool;
+	}
+	
+	public void addInjectionToPool(RuleApplicationPool pool, CInjection injection) {
+		StraightStorage storage = pool.getStorage();
+		if (injection.isSuper()) {
+			storage.addConnectedComponent(getSuperStorage().extractComponent(injection));
+		} else {
+			for (CAgent agent : injection.getImage()) {
+				storage.addAgent(agent);
+			}
+		}
 	}
 }

@@ -51,7 +51,7 @@ public class TestInjectionsQuantity extends TestInjections  {
 			myFailer.fail("There's no component with name " + ccName);
 		}
 		Collection<CInjection> injectionsList = myCurrentCC.getInjectionsList();
-		long quant = myCurrentCC.getCommonPower();
+		double quant = myCurrentCC.getInjectionsWeight();
 //		for (CInjection injection : myCurrentCC.getInjectionsList()) {
 //			if (injection.isSuper()) {
 //				quant += injection.getSuperSubstance().getQuantity();
@@ -61,7 +61,7 @@ public class TestInjectionsQuantity extends TestInjections  {
 //		}
 			
 		if (injectionsList != null) {
-			myFailer.assertEquals("failed on " + ccName, (long)expectedQuantity, quant);
+			myFailer.assertEquals("failed on " + ccName, (long)expectedQuantity, (long)quant);
 		} else {
 			myFailer.assertEquals("failed on " + ccName, expectedQuantity, 0);
 		}

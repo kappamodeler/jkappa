@@ -50,4 +50,9 @@ import com.plectix.simulator.simulator.SimulationUtils;
 			}
 		}
 	}
+	
+	public void addInjectionToPool(
+			RuleApplicationPool prepareRuleApplicationPool, CInjection injection) {
+		// it should be empty
+	}
 }

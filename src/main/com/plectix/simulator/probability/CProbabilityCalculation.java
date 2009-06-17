@@ -1,7 +1,6 @@
 package com.plectix.simulator.probability;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.*;
@@ -14,9 +13,11 @@ public final class CProbabilityCalculation {
 	private final double[] rulesProbability;
 	private final IRandom random;
 	private double commonActivity;
+	private SimulationData simulationData;
 
 	public CProbabilityCalculation(InfoType outputType, SimulationData simulationData) {
 		this.rules = simulationData.getKappaSystem().getRules();
+		this.simulationData = simulationData;
 		rulesProbability = new double[rules.size()];
 
 		if(!simulationData.getSimulationArguments().isShortConsoleOutput()) {
@@ -47,12 +48,24 @@ public final class CProbabilityCalculation {
 	public final List<CInjection> getSomeInjectionList(CRule rule) {
 		List<CInjection> list = new ArrayList<CInjection>();
 		for (IConnectedComponent cc : rule.getLeftHandSide()) {
-			CInjection inj = cc.getRandomInjection(random);
+			CInjection inj = cc.getRandomInjection();
 			list.add(inj);
 		}
 		return list;
 	}
 
+	// TODO move it out of here
+	public final List<CInjection> chooseInjectionsForRuleApplication(CRule rule) {
+		List<CInjection> list = new ArrayList<CInjection>();
+		rule.preparePool(simulationData);
+		for (IConnectedComponent cc : rule.getLeftHandSide()) {
+			CInjection inj = cc.getRandomInjection();
+			list.add(inj);
+			simulationData.getKappaSystem().getSolution().addInjectionToPool(rule.getPool(), inj);
+		}
+		return list;
+	}
+	
 	private final void recalculateCommonActivity() {
 		commonActivity = 0.;
 		for (CRule rule : rules) {

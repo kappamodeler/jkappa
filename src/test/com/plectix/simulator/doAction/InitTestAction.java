@@ -112,8 +112,7 @@ public class InitTestAction extends DirectoryTestsRunner{
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug("Rule: " + myActiveRule.getName());
 
-		List<CInjection> injectionsList = ruleProbabilityCalculation
-				.getSomeInjectionList(myActiveRule);
+		List<CInjection> injectionsList = ruleProbabilityCalculation.chooseInjectionsForRuleApplication(myActiveRule);
 
 		currentTime += ruleProbabilityCalculation.getTimeValue();
 

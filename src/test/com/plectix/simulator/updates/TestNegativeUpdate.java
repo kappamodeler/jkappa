@@ -46,7 +46,7 @@ public class TestNegativeUpdate extends TestUpdate {
 
 				myFailer.assertEquals("LHS injections",
 						myLHSInjectionsQuantity.get(myTestFileName), 
-						cc.getCommonPower());
+						(int)cc.getInjectionsWeight());
 				for (CInjection injection : getCurrentInjectionsList()) {
 
 					assertFalse(cc.getInjectionsList().contains(injection));
@@ -69,7 +69,7 @@ public class TestNegativeUpdate extends TestUpdate {
 		for (IObservablesConnectedComponent cc : getInitializator()
 				.getObservables()) {
 			myFailer.assertEquals("Observables injections",
-					myObsInjectionsQuantity.get(myTestFileName), cc.getCommonPower());
+					myObsInjectionsQuantity.get(myTestFileName), (int)cc.getInjectionsWeight());
 		}
 	}
 

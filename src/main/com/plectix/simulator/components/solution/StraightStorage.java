@@ -75,6 +75,9 @@ public class StraightStorage implements IStorage {
 
 	//	--------------------------------------------------------------------
 	
+	/**
+	 * This feature used in operation modes 2-3
+	 */
 	public IConnectedComponent extractComponent(CInjection inj) {
 		if (inj.isEmpty()) {
 			return null;
@@ -82,13 +85,13 @@ public class StraightStorage implements IStorage {
 		SuperSubstance image = inj.getSuperSubstance();
 		if (image == null) {
 			IConnectedComponent component = SolutionUtils.getConnectedComponent(inj.getImageAgent());
-			for (CAgent agent : component.getAgents()) {
-				this.removeAgent(agent);
-			}
+//			IConnectedComponent component = image.getComponent();
+//			for (CAgent agent : component.getAgents()) {
+//				this.removeAgent(agent);
+//			}
 			return component;
-		} else {
-			return null;
 		}
+		return null;
 	}
 	
 	public void applyRule(RuleApplicationPool pool) {

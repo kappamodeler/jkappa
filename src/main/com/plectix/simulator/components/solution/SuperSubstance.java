@@ -75,4 +75,8 @@ public class SuperSubstance {
 	public long getQuantity() {
 		return myQuantity;
 	}
+	
+	public String getHash() {
+		return myHash;
+	}
 }

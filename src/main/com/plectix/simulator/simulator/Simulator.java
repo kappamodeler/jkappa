@@ -258,7 +258,8 @@ public class Simulator implements SimulatorInterface {
 				LOGGER.debug("Rule: " + rule.getName());
 			}
 	
-			List<CInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
+			List<CInjection> injectionsList = 
+				ruleProbabilityCalculation.chooseInjectionsForRuleApplication(rule);
 			if (!rule.isInfiniteRated()) {
 				synchronized (statusLock) {
 					currentTime += ruleProbabilityCalculation.getTimeValue();
@@ -399,8 +400,8 @@ public class Simulator implements SimulatorInterface {
 					break;
 				}
 
-				List<CInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
-				
+//				List<CInjection> injectionsList = ruleProbabilityCalculation.getSomeInjectionList(rule);
+				List<CInjection> injectionsList = ruleProbabilityCalculation.chooseInjectionsForRuleApplication(rule);
 				if (!rule.isInfiniteRated()) {
 					synchronized (statusLock) {
 						currentTime += ruleProbabilityCalculation.getTimeValue();

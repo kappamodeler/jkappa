@@ -9,13 +9,14 @@ import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.probability.WeightedItem;
 
 /**
  * Class implements Injection.
  * @author avokhmin
  */
 @SuppressWarnings("serial")
-public class CInjection implements Serializable {
+public class CInjection implements Serializable, WeightedItem {
 
 	public static final CInjection EMPTY_INJECTION = new CInjection();
 
@@ -23,6 +24,7 @@ public class CInjection implements Serializable {
 	private List<CSite> sitesList = new ArrayList<CSite>();
 	private List<CSite> changedSites;
 	private int myId = 0;
+	// from
 	private CConnectedComponent connectedComponent;
 	private SuperSubstance myImageComponent = null;
 	private long myPower = 1;
@@ -128,6 +130,16 @@ public class CInjection implements Serializable {
 		return null;
 	}
 
+	public Set<CAgent> getImage() {
+		Set<CAgent> image = new HashSet<CAgent>();
+		if (agentLinkList != null) {
+			for (CAgentLink agentL : agentLinkList) {
+				image.add(agentL.getAgentTo());
+			}
+		}
+		return image;
+	}
+	
 	public boolean compareInjectedLists(List<CInjection> list) {
 		int counter = 0;
 		for (CInjection injection : list) {
@@ -148,7 +160,7 @@ public class CInjection implements Serializable {
 		return false;
 	}
 	
-	public long getPower() {
+	public double getWeight() {
 		return myPower;
 	}
 	
@@ -158,9 +170,13 @@ public class CInjection implements Serializable {
 
 	public void setSimple() {
 		if (isSuper()) {
-			connectedComponent.simplifyInjection(this);
 			myPower = 1;
 			myImageComponent = null;
+			connectedComponent.simplifyInjection(this);
 		}
+	}
+
+	public void eliminate() {
+		myPower = 0;
 	}
 }

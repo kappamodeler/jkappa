@@ -32,7 +32,7 @@ public class SolutionUtils {
 				agentList.put(agentLink.getId(), agentLink);
 			}
 		}
-
+		
 		for (CAgent agentFromList : agentAddList)
 			agentList = getAdjacentAgents(agentFromList, agentList);
 

@@ -57,6 +57,7 @@ public class SuperStorage implements IStorage {
 		return list;
 	}
 
+	// TODO add a chance that we can take the same component twice!
 	public IConnectedComponent extractComponent(CInjection inj) {
 		SuperSubstance image = inj.getSuperSubstance();
 		if (image != null && !image.isEmpty()) {

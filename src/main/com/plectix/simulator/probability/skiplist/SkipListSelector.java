@@ -1,6 +1,7 @@
 package com.plectix.simulator.probability.skiplist;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,33 +47,29 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 
 	public final void updatedItems(Collection<E> changedWeightedItemList) {
 		for (E weightedItem : changedWeightedItemList) {
-			final SkipListItem<E> skipListItem = weightedItemToSkipListItemMap.get(weightedItem);
-			if (skipListItem == null) {
-				if (weightedItem.getWeight() > 0.0) {
-					// this item is new, we need to add
-					weightedItemToSkipListItemMap.put(weightedItem, addWeightedItem(weightedItem));
-				}
-			} else {
-				// this item is old... what is the new weight?
-				final double newWeight = weightedItem.getWeight();
-				if (newWeight <= 0.0) {
-					deleteItem(skipListItem);
-					// let's clean this item to make sure that we'll have NullPointerException if there are any bugs
-					skipListItem.clear();
-					weightedItemToSkipListItemMap.remove(weightedItem);
-				} else {
-					updateWeight(skipListItem, newWeight);
-				}
-			}
+			updatedItem(weightedItem);
 		}
 	}
 
-	private final int getRandomLevel() {
-		int ret = 0;
-		while (random.getDouble() < P && ret <= currentLevel) {
-			ret++;
+	public final void updatedItem(E weightedItem) {
+		final SkipListItem<E> skipListItem = weightedItemToSkipListItemMap.get(weightedItem);
+		if (skipListItem == null) {
+			if (weightedItem.getWeight() > 0.0) {
+				// this item is new, we need to add
+				weightedItemToSkipListItemMap.put(weightedItem, addWeightedItem(weightedItem));
+			}
+		} else {
+			// this item is old... what is the new weight?
+			final double newWeight = weightedItem.getWeight();
+			if (newWeight <= 0.0) {
+				deleteItem(skipListItem);
+				// let's clean this item to make sure that we'll have NullPointerException if there are any bugs
+				skipListItem.clear();
+				weightedItemToSkipListItemMap.remove(weightedItem);
+			} else {
+				updateWeight(skipListItem, newWeight);
+			}
 		}
-		return ret;
 	}
 	
 	private final SkipListItem<E> addWeightedItem(E weightedItem) {
@@ -110,6 +107,14 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 		return newItem;
 	}
 	
+	public double getTotalWeight() {
+		return totalWeight;
+	}
+	
+	public Collection<E> asCollection() {
+		return Collections.unmodifiableCollection(weightedItemToSkipListItemMap.keySet());
+	}
+	
 	private final void deleteItem(SkipListItem<E> skipListItem) {
 		final double weightDiff = -skipListItem.getSum(0);
 		totalWeight += weightDiff;
@@ -140,7 +145,15 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 
 		adjustWeightsForward(skipListItem, weightDiff, lastUpdatedLevel);
 	}
-
+	
+	private final int getRandomLevel() {
+		int ret = 0;
+		while (random.getDouble() < P && ret <= currentLevel) {
+			ret++;
+		}
+		return ret;
+	}
+	
 	private final void updateWeight(SkipListItem<E> skipListItem, double newWeight) {
 		final double weightDiff = newWeight - skipListItem.getSum(0);
 		if (weightDiff == 0.0) {

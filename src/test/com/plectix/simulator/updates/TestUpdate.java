@@ -96,8 +96,9 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug("Rule: " + myActiveRule.getName());
 
-		myCurrentInjectionsList = ruleProbabilityCalculation
-				.getSomeInjectionList(myActiveRule);
+//		myCurrentInjectionsList = ruleProbabilityCalculation
+//				.getSomeInjectionList(myActiveRule);
+		myCurrentInjectionsList = ruleProbabilityCalculation.chooseInjectionsForRuleApplication(myActiveRule);
 		currentTime += ruleProbabilityCalculation.getTimeValue();
 
 		if (!isClash(myCurrentInjectionsList)) {

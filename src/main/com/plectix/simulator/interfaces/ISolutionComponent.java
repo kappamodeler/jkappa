@@ -41,7 +41,7 @@ public interface ISolutionComponent {
 
 	public void initSpanningTreeMap();
 
-	public CInjection getRandomInjection(IRandom random);
+	public CInjection getRandomInjection();
 
 	public void clearAgentsFromSolutionForRHS();
 

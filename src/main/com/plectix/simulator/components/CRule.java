@@ -72,6 +72,8 @@ public class CRule implements Serializable {
 	private List<ChangedSite> fixedSites;
 	private double activity = 0.;
 	private double rate;
+	
+	private RuleApplicationPool pool;
 
 	/**
 	 * The only CRule constructor.
@@ -264,13 +266,12 @@ public class CRule implements Serializable {
 	protected final void apply(List<CInjection> injectionList,
 			INetworkNotation netNotation, SimulationData simulationData,
 			boolean isLast) {
-
 		agentAddList = new HashMap<CAgent, CAgent>();
 		sitesConnectedWithDeleted = new ArrayList<CSite>();
 		sitesConnectedWithBroken = new ArrayList<CSite>();
 		this.injList = injectionList;
 		ISolution solution = simulationData.getKappaSystem().getSolution(); 
-		RuleApplicationPool pool = solution.prepareRuleApplicationPool(injectionList);
+//		RuleApplicationPool pool = solution.prepareRuleApplicationPool(injectionList);
 		
 		if (rightHandside != null) {
 			for (IConnectedComponent cc : rightHandside) {
@@ -294,6 +295,14 @@ public class CRule implements Serializable {
 		}
 	}
 
+	public final RuleApplicationPool getPool() {
+		return pool;
+	}
+	
+	public final void preparePool(SimulationData simulationData) {
+		ISolution solution = simulationData.getKappaSystem().getSolution();
+		pool = solution.prepareRuleApplicationPool(null);
+	}
 	/**
 	 * This method applies the last rule for stories
 	 * @param injectionsList list of injections, which point to substances this rule will be applied to
@@ -963,7 +972,7 @@ public class CRule implements Serializable {
 	public final void calcultateActivity() {
 		activity = 1.;
 		for (IConnectedComponent cc : this.leftHandside) {
-			activity *= cc.getCommonPower();
+			activity *= cc.getInjectionsWeight();
 		}
 		// activity *= constraintData.getActivity();
 		activity *= rate;
@@ -1024,12 +1033,17 @@ public class CRule implements Serializable {
 	 * @return <tt>true</tt> if injections are in clash, otherwise <tt>false</tt>
 	 */
 	public final boolean isClash(List<CInjection> injections) {
-		if (injections.size() == 2) {
-			for (CSite siteCC1 : injections.get(0).getSiteList())
-				for (CSite siteCC2 : injections.get(1).getSiteList())
-					if (siteCC1.getAgentLink().getId() == siteCC2
-							.getAgentLink().getId())
-						return true;
+		Stack<CInjection> injectionStack = new Stack<CInjection>();
+		injectionStack.addAll(injections);
+		while (!injectionStack.isEmpty()) {
+			CInjection inj1 = injectionStack.pop();
+			for (CInjection inj2 : injectionStack) {
+				for (CSite siteCC1 : inj1.getSiteList())
+					for (CSite siteCC2 : inj2.getSiteList())
+						if (siteCC1.getAgentLink().getId() == siteCC2
+								.getAgentLink().getId())
+							return true;
+			}
 		}
 		return false;
 	}

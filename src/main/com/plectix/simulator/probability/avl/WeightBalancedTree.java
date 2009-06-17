@@ -5,7 +5,7 @@ import java.util.Collection;
 import com.plectix.simulator.probability.*;
 import com.plectix.simulator.probability.avl.processors.*;
 
-public class WeightBalancedTree<E extends WeightedItem> implements WeightedItemSelector<E> {
+public class WeightBalancedTree<E extends WeightedItem> {
 	private WeightedNode<E> myRoot = null;
 	
 	public void add(E element) {

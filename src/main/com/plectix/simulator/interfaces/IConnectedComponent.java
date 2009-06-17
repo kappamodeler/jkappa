@@ -26,11 +26,15 @@ public interface IConnectedComponent extends ISolutionComponent {
 	 */
 	public boolean isEmpty();
 
-	public int getCommonPower();
-
 	public void burnInjections();
 
 	public String getHash();
 
 	public void deleteAllInjections();
+
+	/**
+	 * 
+	 * @return the sum weight of injections from this connected component   
+	 */
+	public long getInjectionsWeight();
 }
