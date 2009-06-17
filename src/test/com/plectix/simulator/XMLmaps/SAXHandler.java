@@ -117,13 +117,13 @@ public class SAXHandler extends DefaultHandler {
 						.getValue("FromSite"), attributes.getValue("ToAgent"),
 						attributes.getValue("ToSite")));
 			}
-			if (isBondTag) {
-				isRuleTag = "Rule".equals(qName);
-				if (isRuleTag) {
-					bonds.get(bonds.size() - 1).addRuleId(
-							Integer.parseInt(attributes.getValue("Id")));
-				}
-			}
+//			if (isBondTag) {
+//				isRuleTag = "Rule".equals(qName);
+//				if (isRuleTag) {
+//					bonds.get(bonds.size() - 1).addRuleId(
+//							Integer.parseInt(attributes.getValue("Id")));
+//				}
+//			}
 		}
 	}
 

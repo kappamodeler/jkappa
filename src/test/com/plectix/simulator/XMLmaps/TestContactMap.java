@@ -24,7 +24,9 @@ import org.xml.sax.SAXException;
 public class TestContactMap{
 	
 	private static final String separator = File.separator;
-	private static final String prefixSourse= "test.data" + separator + "contact_map" + separator + "rules" + separator;
+	private static final String prefixSourseRules= "test.data" + separator + "contact_map" + separator + "rules" + separator;
+	private static final String prefixSourseModel= "test.data" + separator + "contact_map" + separator + "model" + separator;
+	private static final String prefixSourseAgents= "test.data" + separator + "contact_map" + separator + "agents" + separator;
 	private static final String prefixResult= "test.data" + separator + "contact_map" + separator + "results" + separator;
 	
 	private static int length = 20;
@@ -43,7 +45,7 @@ public class TestContactMap{
 	@Parameters
      public static Collection<Object[]> configs() {  
          String str = new String();  
-         Object[][] object = new Object[length][1];
+         Object[][] object = new Object[length+1][2];
          for (Integer i = 1; i <= length ; i++) {
  			if(i<10) str = "0" + "0" + i;
  			else
@@ -51,12 +53,18 @@ public class TestContactMap{
 	 			else 
 	 				str = i.toString();
  			object[i-1][0] = str;
+ 			object[i-1][1] = prefixSourseRules;//str; 			
          }
+         
+         object[length][0] = "001";
+         object[length][1] = prefixSourseModel;         
+         
          return Arrays.asList(object);
     }
 
-	public TestContactMap(String count){
-		InitTestContactMap.init(prefixSourse, prefixResult,  count);
+	public TestContactMap(String count, String patch){
+		InitTestContactMap.init(patch, prefixResult,  count);
+//		InitTestContactMap.init(prefixSourseRules, prefixResult,  count);
 	}
 
 	@Before
@@ -93,12 +101,14 @@ public class TestContactMap{
 	
 	@Test
 	public void testAgentsContactMap(){
-		if (agentsSimplex.size()!=agentsJava.size()){
-			fail("wrong size of agents list");
-			
-		}
-		for (Agent agent : agentsSimplex) {
-			if(!contains(agent, agentsJava))
+//		if (agentsSimplex.size()agentsJava.size()){
+//			fail("wrong size of agents list");
+//			
+//		}
+//		for (Agent agent : agentsSimplex) {
+//			if(!contains(agent, agentsJava))
+		for (Agent agent : agentsJava) {
+			if(!contains(agent, agentsSimplex))
 				fail("there is no agent " + agent.getName() + " in Java");
 		}
 	}

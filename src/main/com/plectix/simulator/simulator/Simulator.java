@@ -129,7 +129,7 @@ public class Simulator implements SimulatorInterface {
 		timeStepCounter++;
 	}
 
-	private final Source addCompleteSource() throws TransformerException, ParserConfigurationException {
+	public final Source addCompleteSource() throws TransformerException, ParserConfigurationException {
 		Source source = simulationData.createDOMModel();
 		simulatorResultsData.addResultSource(source);
 		return source;
