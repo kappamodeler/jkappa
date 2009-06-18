@@ -1,15 +1,8 @@
 package com.plectix.simulator.components.stories;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.*;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
@@ -38,7 +31,7 @@ public class CNetworkNotation implements INetworkNotation {
 	private Simulator simulator;
 	private Map<Long, AgentSites> changesOfAllUsedSites;
 	private Map<Long, AgentSitesFromRules> usedAgentsFromRules;
-	private List<Long> addedAgentsID;
+	private Set<Long> addedAgentsID;
 	private List<String> agentsNotation;
 	private List<Map<Long, List<Integer>>> introCCMap;
 
@@ -46,7 +39,7 @@ public class CNetworkNotation implements INetworkNotation {
 		return simulator;
 	}
 
-	public List<Long> getAddedAgentsID() {
+	public Set<Long> getAddedAgentsID() {
 		return addedAgentsID;
 	}
 
@@ -209,7 +202,6 @@ public class CNetworkNotation implements INetworkNotation {
 
 	private final void createAgentsNotation(List<CInjection> injectionsList,
 			SimulationData data, CRule rule) {
-//		ISolution solution = data.getKappaSystem().getSolution();
 		for (CInjection inj : injectionsList) {
 			if (inj != CInjection.EMPTY_INJECTION) {
 				IConnectedComponent cc = SolutionUtils.getConnectedComponent(inj
@@ -222,15 +214,12 @@ public class CNetworkNotation implements INetworkNotation {
 
 	public final void checkLinkForNetworkNotation(StateType index, CSite site) {
 		if (site.getLinkState().getConnectedSite() == null)
-			this
-					.addToAgents(site, new CStoriesSiteStates(index, -1, -1),
-							index);
+			this.addToAgents(site, new CStoriesSiteStates(index, -1, -1), index);
 		else
-			this
-					.addToAgents(site, new CStoriesSiteStates(index,
-							((CAgent) site.getLinkState().getConnectedSite()
-									.getAgentLink()).getHash(), ((CSite) site
-									.getLinkState().getConnectedSite()).getNameId()),
+			this.addToAgents(site, 
+					new CStoriesSiteStates(index,
+							((CAgent) site.getLinkState().getConnectedSite().getAgentLink()).getHash(), 
+							((CSite) site.getLinkState().getConnectedSite()).getNameId()),
 							index);
 	}
 

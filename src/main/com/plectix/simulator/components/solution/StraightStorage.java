@@ -7,7 +7,7 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 
 public class StraightStorage implements IStorage {
-	private final HashMap<Long, CAgent> agentMap = new HashMap<Long, CAgent>();;
+	private final Map<Long, CAgent> agentMap = new HashMap<Long, CAgent>();;
 	
 	// we instantiate this type through UniversalSolution only
 	StraightStorage() {
@@ -42,14 +42,6 @@ public class StraightStorage implements IStorage {
 		}
 		agentMap.remove(agent.getHash());
 	}
-	
-//	public final void removeConnectedComponent(IConnectedComponent component) {
-//		if (component == null)
-//			return;
-//		for (CAgent agent : component.getAgents()) {
-//			this.removeAgent(agent);
-//		}
-//	}
 
 	//-----------------GETTERS----------------------------------
 	
@@ -103,13 +95,4 @@ public class StraightStorage implements IStorage {
 	public final void clear() {
 		agentMap.clear();
 	}
-	
-//	public String toString() {
-//		TreeMap<String, Long> map = new TreeMap<String, Long>();
-//		StringBuffer sb = new StringBuffer();
-//		for (IConnectedComponent component : split()) {
-//			sb.append("%init " + 1 + " * " + component + "\n");
-//		}
-//		return sb.toString();
-//	}
 }

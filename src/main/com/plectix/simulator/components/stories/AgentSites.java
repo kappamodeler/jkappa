@@ -7,14 +7,11 @@ import com.plectix.simulator.interfaces.IStates;
 import com.plectix.simulator.interfaces.IStoriesSiteStates;
 
 public final class AgentSites{
-	private Map<Integer, IStoriesSiteStates> sites;
+	private Map<Integer, IStoriesSiteStates> sites = new HashMap<Integer, IStoriesSiteStates>();;
 
+	//! this isn't so good
 	public Map<Integer, IStoriesSiteStates> getSites() {
 		return sites;
-	}
-
-	public AgentSites() {
-		sites = new HashMap<Integer, IStoriesSiteStates>();
 	}
 
 	public final void addToSites(int idSite, IStoriesSiteStates siteStates,
@@ -26,8 +23,7 @@ public final class AgentSites{
 			ss.addInformation(index, siteStates);
 	}
 	
-	public final void changeLinkAgents(Long agentIDToDelete,
-			Long agentID){
+	public final void changeLinkAgents(long agentIDToDelete, long agentID){
 		for (IStoriesSiteStates checkSS : sites.values()) {
             if (checkSS.getAfterState().getIdLinkAgent() == agentIDToDelete)
             	checkSS.getAfterState().setIdLinkAgent(agentID);

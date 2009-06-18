@@ -91,7 +91,6 @@ public class SuperStorage implements IStorage {
 	}
 
 	public Collection<SuperSubstance> getComponents() {
-//		return Collections.unmodifiableList(myComponents);
 		return Collections.unmodifiableCollection(myStorage.values());
 	}
 }

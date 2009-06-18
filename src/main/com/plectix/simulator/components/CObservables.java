@@ -314,18 +314,18 @@ public class CObservables implements Serializable {
 	}
 	
 	public final List<IObservablesComponent> getComponentListForXMLOutput() {
-		if (componentListForXMLOutput != null)
-			return componentListForXMLOutput;
-		List<Integer> map = new ArrayList<Integer>();
-		List<IObservablesComponent> list = new ArrayList<IObservablesComponent>();
-		for (IObservablesComponent cc : componentList) {
-			if (!map.contains(cc.getId())) {
-				map.add(cc.getId());
-				list.add(cc);
+		if (componentListForXMLOutput == null) {
+			List<Integer> map = new ArrayList<Integer>();
+			List<IObservablesComponent> list = new ArrayList<IObservablesComponent>();
+			for (IObservablesComponent cc : componentList) {
+				if (!map.contains(cc.getId())) {
+					map.add(cc.getId());
+					list.add(cc);
+				}
 			}
+			componentListForXMLOutput = list;
 		}
-		componentListForXMLOutput = list;
-		return list;
+		return componentListForXMLOutput;
 	}
 
 	public final List<IObservablesConnectedComponent> getConnectedComponentList() {

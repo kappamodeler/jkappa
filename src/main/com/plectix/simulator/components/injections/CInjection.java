@@ -21,7 +21,7 @@ public class CInjection implements Serializable, WeightedItem {
 	public static final CInjection EMPTY_INJECTION = new CInjection();
 
 	private List<CAgentLink> agentLinkList;
-	private List<CSite> sitesList = new ArrayList<CSite>();
+	private List<CSite> sites = new LinkedList<CSite>();
 	private List<CSite> changedSites;
 	private int myId = 0;
 	// from
@@ -35,13 +35,13 @@ public class CInjection implements Serializable, WeightedItem {
 	public CInjection(CConnectedComponent connectedComponent,
 			List<CSite> sitesList, List<CAgentLink> agentLinkList) {
 		this.connectedComponent = connectedComponent;
-		this.sitesList = sitesList;
+		this.sites = sitesList;
 		this.agentLinkList = agentLinkList;
 		this.changedSites = new ArrayList<CSite>();
 	}
 
 	public final void removeSiteFromSitesList(CSite site) {
-		sitesList.remove(site);
+		sites.remove(site);
 	}
 
 	/**
@@ -100,8 +100,8 @@ public class CInjection implements Serializable, WeightedItem {
 		return Collections.unmodifiableList(agentLinkList);
 	}
 
-	public final List<CSite> getSiteList() {
-		return Collections.unmodifiableList(sitesList);
+	public final Collection<CSite> getSiteList() {
+		return Collections.unmodifiableList(sites);
 	}
 
 	public final IConnectedComponent getConnectedComponent() {
@@ -143,9 +143,9 @@ public class CInjection implements Serializable, WeightedItem {
 	public boolean compareInjectedLists(List<CInjection> list) {
 		int counter = 0;
 		for (CInjection injection : list) {
-			if (injection.getSiteList().size() == sitesList.size()) {
+			if (injection.getSiteList().size() == sites.size()) {
 				for (CSite site : injection.getSiteList()) {
-					if (sitesList.contains(site))
+					if (sites.contains(site))
 						counter++;
 					else {
 						counter = 0;

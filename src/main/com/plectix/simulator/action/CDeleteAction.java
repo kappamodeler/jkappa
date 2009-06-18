@@ -86,7 +86,7 @@ public class CDeleteAction extends CAction {
 				lift.getInjection().getConnectedComponent().removeInjection(
 						lift.getInjection());
 			}
-			site.clearLiftList();
+			site.clearLifts();
 			injection.removeSiteFromSitesList(site);
 		}
 		// injection.getConnectedComponent().getInjectionsList()

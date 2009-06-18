@@ -3,14 +3,12 @@
  */
 package com.plectix.simulator.components.stories;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 
 final class AgentSitesFromRules {
-	private HashMap<Integer, SitesFromRules> sites;
+	private Map<Integer, SitesFromRules> sites;
 	private int agentNameID;
 
 	public int getAgentNameID() {
@@ -33,11 +31,11 @@ final class AgentSitesFromRules {
 		return aSFR;
 	}
 	
-	public HashMap<Integer, SitesFromRules> getSites() {
+	public Map<Integer, SitesFromRules> getSites() {
 		return sites;
 	}
 	
-	public void setSites(HashMap<Integer, SitesFromRules> sites) {
+	public void setSites(Map<Integer, SitesFromRules> sites) {
 		this.sites = sites;
 	}
 

@@ -1,13 +1,8 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
-import com.plectix.simulator.interfaces.ISolutionComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 
 /*package*/ abstract class ComplexSolution extends SolutionAdapter {

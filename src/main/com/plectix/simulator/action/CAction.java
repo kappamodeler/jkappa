@@ -96,7 +96,7 @@ public abstract class CAction implements Serializable {
 	 * This method analyses current action and creates new actions, if possible. 
 	 * @return collection of new actions
 	 */
-	public final List<CAction> createAtomicActions() {
+	public final Collection<CAction> createAtomicActions() {
 		// TODO it is very strange place. is there any case, where
 		// fromAgent.getSites() == null ???
 		if (fromAgent.getSites() == null) {
@@ -104,7 +104,7 @@ public abstract class CAction implements Serializable {
 			return null;
 		}
 
-		List<CAction> list = new ArrayList<CAction>();
+		Set<CAction> list = new HashSet<CAction>();
 
 		for (CSite fromSite : fromAgent.getSites()) {
 			CSite toSite = toAgent.getSiteById(fromSite.getNameId());
@@ -163,7 +163,7 @@ public abstract class CAction implements Serializable {
 				//myRule.addChangedSite(toSite);
 				myRule.addInhibitedChangedSite(fromSite, false, true);
 		}
-		return Collections.unmodifiableList(list);
+		return Collections.unmodifiableSet(list);
 	}
 
 //=======================GETTERS AND SETTERS========================

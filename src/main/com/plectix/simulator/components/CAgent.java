@@ -27,7 +27,7 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 
 	// TODO: is this field static or not???
 	private final CSite myDefaultSite = new CSite(CSite.NO_INDEX, this);
-	private TreeMap<Integer, CSite> siteMap = new TreeMap<Integer, CSite>();
+	private Map<Integer, CSite> siteMap = new TreeMap<Integer, CSite>();
 
 	/**
 	 * Constructor of Agent.

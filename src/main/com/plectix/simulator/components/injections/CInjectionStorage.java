@@ -6,7 +6,6 @@ import com.plectix.simulator.interfaces.IRandom;
 
 public class CInjectionStorage {
 	private final Map<Integer, CInjection> injections = new HashMap<Integer, CInjection>();
-//	private final CInjectionsRandomizer injectionsRandomizer = new CInjectionsRandomizer();
 	private int maxId = -1;
 	
 	/**
@@ -19,7 +18,6 @@ public class CInjectionStorage {
 			maxId = Math.max(maxId, id);
 			inj.setId(id);
 			injections.put(id, inj);
-//			injectionsRandomizer.addInjection(inj);
 		}
 	}
 	
@@ -28,7 +26,6 @@ public class CInjectionStorage {
 			maxId++;
 			inj.setId(maxId);
 			injections.put(maxId, inj);
-//			injectionsRandomizer.addInjection(inj);
 		}
 	}
 
@@ -48,7 +45,6 @@ public class CInjectionStorage {
 				return;
 			}
 			CInjection inj = injections.remove(maxId);
-//			injectionsRandomizer.removeInjection(inj);
 			if (id != maxId) {
 				addInjection(inj, id);
 			}
@@ -65,17 +61,11 @@ public class CInjectionStorage {
 	}
 	
 	public CInjection getRandomInjection(IRandom random) {
-//		int randomId = injectionsRandomizer.getRandomInjection(random);
 		int randomId = random.getInteger(injections.size());
 		return injections.get(randomId);
 	}
 	
 	public int getCommonPower() {
-//		return injectionsRandomizer.getCommonPower();
 		return injections.size();
-	}
-	
-	public void simplifyInjection(CInjection inj) {
-//		injectionsRandomizer.simplifyInjection(inj);
 	}
 }

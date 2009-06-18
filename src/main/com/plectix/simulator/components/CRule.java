@@ -234,15 +234,15 @@ public class CRule implements Serializable {
 	 * This method returns IDs of all agents, which was added by the latest application of this rule 
 	 * @return list of IDs of all agents, which was added by the latest application of this rule
 	 */
-	public List<Long> getAgentsAddedID() {
+	public Set<Long> getAgentsAddedID() {
 		if (agentAddList.size() == 0)
 			return null;
-		List<Long> list = new ArrayList<Long>();
+		Set<Long> set = new HashSet<Long>();
 		        
 		for (CAgent agent : agentAddList.values()) {
-			list.add(agent.getId());
+			set.add(agent.getId());
 		}
-		return list;
+		return set;
 	}
 
 	/**
@@ -773,8 +773,8 @@ public class CRule implements Serializable {
 	 * @param observables all observable components in current simulation
 	 */
 	public final void initializeActivatedObservablesList(CObservables observables) {
-		activatedObservable = new ArrayList<IObservablesConnectedComponent>();
-		activatedObservableForXMLOutput = new ArrayList<IObservablesConnectedComponent>();
+		activatedObservable = new LinkedList<IObservablesConnectedComponent>();
+		activatedObservableForXMLOutput = new LinkedList<IObservablesConnectedComponent>();
 		for (IObservablesConnectedComponent obsCC : observables
 				.getConnectedComponentList()) {
 			if (obsCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX

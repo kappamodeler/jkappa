@@ -258,9 +258,9 @@ public class SimulationUtils {
 				for (CSite site : injection.getChangedSites()) {
 					site.getAgentLink().getDefaultSite()
 							.clearIncomingInjections(injection);
-					site.getAgentLink().getDefaultSite().clearLiftList();
+					site.getAgentLink().getDefaultSite().clearLifts();
 					site.clearIncomingInjections(injection);
-					site.clearLiftList();
+					site.clearLifts();
 				}
 				if (injection.getChangedSites().size() != 0) {
 					for (CSite site : injection.getSiteList()) {
@@ -282,9 +282,9 @@ public class SimulationUtils {
 				for (CSite site : injection.getChangedSites()) {
 					site.getAgentLink().getDefaultSite()
 							.clearIncomingInjections(injection);
-					site.getAgentLink().getDefaultSite().clearLiftList();
+					site.getAgentLink().getDefaultSite().clearLifts();
 					site.clearIncomingInjections(injection);
-					site.clearLiftList();
+					site.clearLifts();
 				}
 				if (injection.getChangedSites().size() != 0) {
 					for (CSite site : injection.getSiteList()) {
@@ -314,7 +314,7 @@ public class SimulationUtils {
 						lift.getConnectedComponent().removeInjection(
 								lift.getInjection());
 					}
-					checkedAgent.getDefaultSite().clearLiftList();
+					checkedAgent.getDefaultSite().clearLifts();
 					for (CLiftElement lift : checkedSite.getLift()) {
 
 						for (CSite site : lift.getInjection().getSiteList()) {
@@ -326,7 +326,7 @@ public class SimulationUtils {
 						lift.getConnectedComponent().removeInjection(
 								lift.getInjection());
 					}
-					checkedSite.clearLiftList();
+					checkedSite.clearLifts();
 				}
 			}
 		}

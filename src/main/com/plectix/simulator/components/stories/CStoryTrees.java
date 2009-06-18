@@ -26,7 +26,10 @@ public final class CStoryTrees {
 	private TreeMap<Integer, List<Integer>> traceIDToTraceID;
 	private TreeMap<Integer, List<Integer>> traceIDToTraceIDWeak;
 	private List<CNetworkNotation> networkNotationsList;
-
+	private List<CStoryIntro> storyIntros;
+	private List<Integer> listToDelete;
+	private Map<Integer, Integer> traceIDToIndex;
+	
 	public int getMainTraceID() {
 		return mainTraceID;
 	}
@@ -87,8 +90,6 @@ public final class CStoryTrees {
 //		this.testSet = new HashSet<Integer>();
 //		this.key = 0;
 	}
-
-	private Map<Integer, Integer> traceIDToIndex;
 
 	private List<CNetworkNotation> updateMainList(
 			List<CNetworkNotation> commonList) {
@@ -236,8 +237,6 @@ public final class CStoryTrees {
 			}
 		}
 	}
-
-	private List<Integer> listToDelete;
 
 	private void createListToDelete(
 			List<CNetworkNotation> commonList,
@@ -634,8 +633,7 @@ public final class CStoryTrees {
 				changesOfAllUsedSites.put(agentID, aSCh);
 				changesOfAllUsedSites.remove(agentIDToDelete);
 
-				List<Map<Long, List<Integer>>> introMapList = nn
-						.getIntroCCMap();
+				List<Map<Long, List<Integer>>> introMapList = nn.getIntroCCMap();
 				for (Map<Long, List<Integer>> introMap : introMapList) {
 					List<Integer> introSitesList = introMap
 							.get(agentIDToDelete);
@@ -1033,16 +1031,13 @@ public final class CStoryTrees {
 
 	private boolean isOcamlStyleObsName;
 
-	private void fillAllAddedAgentIDs(List<Long> list,
-			List<CNetworkNotation> nnList) {
-		for (CNetworkNotation nn : nnList) {
-			List<Long> addedAgents = nn.getAddedAgentsID();
-			if (addedAgents != null)
-				list.addAll(addedAgents);
-		}
-	}
-
-	List<CStoryIntro> storyIntros;
+//	private void fillAllAddedAgentIDs(Set<Long> setOfAddedAgentIDs, List<CNetworkNotation> nnList) {
+//		for (CNetworkNotation nn : nnList) {
+//			Set<Long> addedAgents = nn.getAddedAgentsID();
+//			if (addedAgents != null)
+//				setOfAddedAgentIDs.addAll(addedAgents);
+//		}
+//	}
 
 	private boolean isEqualLists(List<Integer> addedSites,
 			List<Integer> introSites) {
@@ -1102,9 +1097,15 @@ public final class CStoryTrees {
 
 		storyIntros = new ArrayList<CStoryIntro>();
 
-		List<Long> addedAgents = new ArrayList<Long>();
-		fillAllAddedAgentIDs(addedAgents, networkNotationsList);
+		Set<Long> addedAgents = new HashSet<Long>();
+//		fillAllAddedAgentIDs(addedAgents, networkNotationsList);
 
+		for (CNetworkNotation nn : networkNotationsList) {
+			Set<Long> agents = nn.getAddedAgentsID();
+			if (agents != null)
+				addedAgents.addAll(agents);
+		}
+		
 		Map<Long, List<Integer>> addedAgentsMap = new HashMap<Long, List<Integer>>();
 		Map<Long, CStoryIntro> addedIntros = new HashMap<Long, CStoryIntro>();
 

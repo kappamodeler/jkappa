@@ -1,10 +1,7 @@
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -30,7 +27,7 @@ public final class CSite implements Serializable {
 	private CAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;
 
-	private List<CLiftElement> liftList = new ArrayList<CLiftElement>();
+	private Set<CLiftElement> liftElements = new HashSet<CLiftElement>();
 
 	/**
 	 * Constructor by id
@@ -58,8 +55,8 @@ public final class CSite implements Serializable {
 	 * This method sets list of lift elements for this site
 	 * @param lift new value
 	 */
-	public final void setLift(List<CLiftElement> lift) {
-		this.liftList = lift;
+	public final void setLift(Set<CLiftElement> lift) {
+		this.liftElements = lift;
 	}
 
 	/**
@@ -67,15 +64,15 @@ public final class CSite implements Serializable {
 	 * @param liftElement lift element to add
 	 */
 	public final void addToLift(CLiftElement liftElement) {
-		this.liftList.add(liftElement);
+		this.liftElements.add(liftElement);
 	}
 
 	/**
 	 * This method returns list of lift elements of this site
 	 * @return list of lift elements of this site
 	 */
-	public final List<CLiftElement> getLift() {
-		return Collections.unmodifiableList(liftList);
+	public final Set<CLiftElement> getLift() {
+		return Collections.unmodifiableSet(liftElements);
 	}
 
 	/**
@@ -85,7 +82,7 @@ public final class CSite implements Serializable {
 	 */
 	public final List<CInjection> getInjectionFromLift(IConnectedComponent inCC) {
 		List<CInjection> list = new ArrayList<CInjection>();
-		for (CLiftElement liftElement : this.liftList)
+		for (CLiftElement liftElement : this.liftElements)
 			if (liftElement.getConnectedComponent() == inCC)
 				list.add(liftElement.getInjection());
 		return Collections.unmodifiableList(list);
@@ -240,8 +237,8 @@ public final class CSite implements Serializable {
 	/**
 	 * This method clears list of lift elements
 	 */
-	public final void clearLiftList() {
-		this.liftList.clear();
+	public final void clearLifts() {
+		this.liftElements.clear();
 	}
 
 	/**
@@ -249,7 +246,7 @@ public final class CSite implements Serializable {
 	 * @param inInjection excepted injection
 	 */
 	public final void clearIncomingInjections(CInjection inInjection) {
-		for (CLiftElement liftElement : this.liftList) {
+		for (CLiftElement liftElement : this.liftElements) {
 			CInjection injection = liftElement.getInjection();
 			if (injection != inInjection) {
 				for (CSite site : injection.getSiteList()) {
@@ -267,9 +264,9 @@ public final class CSite implements Serializable {
 	 * @param injection injection to remove
 	 */
 	public final void removeInjectionFromLift(CInjection injection) {
-		for (CLiftElement liftElement : this.liftList) {
+		for (CLiftElement liftElement : this.liftElements) {
 			if (injection == liftElement.getInjection()) {
-				this.liftList.remove(liftElement);
+				this.liftElements.remove(liftElement);
 				return;
 			}
 		}

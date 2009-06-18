@@ -3,12 +3,8 @@ package com.plectix.simulator.components.solution;
 import java.util.*;
 
 import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
-import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
+import com.plectix.simulator.simulator.*;
 
 /*package*/ class CSecondSolution extends CAbstractSuperSolution {
 	private final SuperStorage mySuperStorage;
