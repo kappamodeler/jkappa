@@ -10,6 +10,8 @@ import javax.xml.transform.TransformerException;
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.perturbations.CPerturbation;
+import com.plectix.simulator.components.perturbations.CPerturbationType;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.controller.SimulatorInputData;
@@ -248,10 +250,33 @@ public class Simulator implements SimulatorInterface {
 			CRule rule = ruleProbabilityCalculation.getRandomRule();
 	
 			if (rule == null) {
-				isEndRules = true;
-				simulationData.setTimeLength(currentTime);
-				simulationData.println("#");
-				break;
+				List<CPerturbation> perturbations = simulationData
+						.getKappaSystem().getPerturbations();
+				double tmpTime = simulationData.getSimulationArguments()
+						.getTimeLength();
+				CPerturbation tmpPerturbation = null;
+				for (CPerturbation perturbation : perturbations) {
+					if (perturbation.getType() == CPerturbationType.TIME
+							&& perturbation.getTimeCondition() > currentTime
+							&& perturbation.getTimeCondition() < tmpTime) {
+						tmpTime = perturbation.getTimeCondition();
+						tmpPerturbation = perturbation;
+					}
+				}
+				// TODO is it right way: to add timeSampleMin to currentTime for
+				// applying the perturbation?
+				if (tmpPerturbation != null){
+					currentTime = tmpPerturbation.getTimeCondition()
+							+ simulationData.getKappaSystem().getObservables()
+									.getTimeSampleMin();
+					simulationData.getKappaSystem().checkPerturbation(currentTime);
+					rule = ruleProbabilityCalculation.getRandomRule();
+				} else {
+					isEndRules = true;
+					simulationData.setTimeLength(currentTime);
+					simulationData.println("#");
+					break;
+				}
 			}
 			
 			if (LOGGER.isDebugEnabled()) {
@@ -260,11 +285,11 @@ public class Simulator implements SimulatorInterface {
 	
 			List<CInjection> injectionsList = 
 				ruleProbabilityCalculation.chooseInjectionsForRuleApplication(rule);
-			if (!rule.isInfiniteRated()) {
-				synchronized (statusLock) {
-					currentTime += ruleProbabilityCalculation.getTimeValue();
-				}
-			}
+//			if (!rule.isInfiniteRated()) {
+//				synchronized (statusLock) {
+//					currentTime += ruleProbabilityCalculation.getTimeValue();
+//				}
+//			}
 	
 			if (!rule.isClash(injectionsList)) {
 				// negative update
@@ -296,6 +321,12 @@ public class Simulator implements SimulatorInterface {
 				max_clash++;
 			}
 	
+			if (!rule.isInfiniteRated()) {
+				synchronized (statusLock) {
+					currentTime += ruleProbabilityCalculation.getTimeValue();
+				}
+			}
+			
 			if (CSiteration) {
 				addIteration(iteration_num);
 			}

@@ -1,0 +1,11 @@
+'AB' A() -> B() @ 1
+'BA' B() -> A() @ 0
+
+%init: 10 * A()
+
+%obs: B()
+%obs: A()
+
+%mod: $T>100.0 do 'BA':=1 
+%mod: $T>101.0 do 'AB':=0
+%mod: $T>198.0 do 'AB':=1 

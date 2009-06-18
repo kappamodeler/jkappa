@@ -56,6 +56,38 @@ public class Initializator {
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
+	public static SimulationArguments prepareDefaultSimArguments(String filePath) throws ParseException{
+		String[] args = new String[2];
+		args[0] = "--sim";
+		args[1] = filePath;
+		SimulatorCommandLine commandLine = null;
+		commandLine = new SimulatorCommandLine(args);
+		return commandLine.getSimulationArguments();
+	}
+	
+	public static SimulationArguments prepareInitTimeArguments(String filePath, Double initTime) throws ParseException{
+		String[] args = null;
+		if (initTime.equals(-1.0)){
+			args = new String[4];
+			args[0] = "--sim";
+			args[1] = filePath;
+			args[2] = "--time";
+			args[3] = Double.toString(50.0);
+		}
+		else {
+			args = new String[6];
+			args[0] = "--sim";
+			args[1] = filePath;
+			args[2] = "--time";
+			args[3] = Double.toString(initTime + 100.0);
+			args[4] = "--init";
+			args[5] = initTime.toString();
+		}
+		SimulatorCommandLine commandLine = null;
+		commandLine = new SimulatorCommandLine(args);
+		return commandLine.getSimulationArguments();
+	}
+	
 	
 	public static SimulationArguments prepareStorifyArguments(String filePath) throws ParseException{
 		String[] args = new String[7];
@@ -91,6 +123,17 @@ public class Initializator {
 		args[1] = filePath;
 		args[2] = "--event";
 		args[3] = eventNumber.toString();
+		SimulatorCommandLine commandLine = null;
+		commandLine = new SimulatorCommandLine(args);
+		return commandLine.getSimulationArguments();
+	}
+	
+	public static SimulationArguments prepareTimeArguments(String filePath, Integer time) throws ParseException{
+		String[] args = new String[4];
+		args[0] = "--sim";
+		args[1] = filePath;
+		args[2] = "--time";
+		args[3] = time.toString();
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();

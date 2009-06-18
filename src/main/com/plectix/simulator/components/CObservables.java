@@ -33,6 +33,7 @@ public class CObservables implements Serializable {
 	private boolean changeLastTime = false;
 	private boolean changeTimeNext = false;
 	private List<IObservablesComponent> componentListForXMLOutput = null;
+	private boolean flag = false;
 
 	/**
 	 * This method initializes CObservables within external parameters 
@@ -57,9 +58,8 @@ public class CObservables implements Serializable {
 				fullTime = fullTime - timeNext;
 			} else
 				timeNext = timeSampleMin;
-
 			this.initializeMinSampleTime(fullTime, points);
-			timeNext += timeSampleMin;
+//			timeNext += timeSampleMin;
 		} else {
 			this.initializeMinSampleTime(events, points);
 			if (initialTime <= 0.0)
@@ -136,6 +136,13 @@ public class CObservables implements Serializable {
 		}
 
 		if (isCalculateNow(time, count, isTime)) {
+			if (flag){
+				countTimeList.add(initialTime);
+				calculateAll(false);
+				lastTime = initialTime;
+				changeLastTime = false;
+				flag = false;
+			}
 			// if (time >= timeNext) {
 			timeNext += timeSampleMin;
 			if (!changeLastTime) {
@@ -164,8 +171,9 @@ public class CObservables implements Serializable {
 			if (initialTime > 0)
 				if ((!changeTimeNext) && (initialTime < time)) {
 					changeTimeNext = true;
+					flag = true;
 					updateLastValueAll(time);
-				}
+				} 
 			if (time >= timeNext)
 				return true;
 		} else {
