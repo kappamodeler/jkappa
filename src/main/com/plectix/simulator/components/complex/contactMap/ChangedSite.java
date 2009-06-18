@@ -1,4 +1,4 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.contactMap;
 import java.io.Serializable;
 
 import com.plectix.simulator.components.CSite;

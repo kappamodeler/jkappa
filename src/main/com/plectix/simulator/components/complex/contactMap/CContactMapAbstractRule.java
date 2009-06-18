@@ -1,10 +1,12 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.contactMap;
 
 import java.util.*;
 
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
@@ -17,8 +19,8 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 class CContactMapAbstractRule{
 
 	private CContactMapAbstractSolution solution;
-	private List<CContactMapAbstractAgent> lhsAgents;
-	private List<CContactMapAbstractAgent> rhsAgents;
+	private List<CAbstractAgent> lhsAgents;
+	private List<CAbstractAgent> rhsAgents;
 	private CContactMapAbstractAction abstractAction;
 	private CRule rule;
 	private int[] lastMaxIndex;
@@ -69,18 +71,18 @@ class CContactMapAbstractRule{
 	 * @param listIn given connected components
 	 * @return list of abstract agent
 	 */
-	private List<CContactMapAbstractAgent> initListAgents(
+	private List<CAbstractAgent> initListAgents(
 			List<IConnectedComponent> listIn) {
-		List<CContactMapAbstractAgent> listOut = new ArrayList<CContactMapAbstractAgent>();
-		Map<Integer, CContactMapAbstractAgent> map = new HashMap<Integer, CContactMapAbstractAgent>();
+		List<CAbstractAgent> listOut = new ArrayList<CAbstractAgent>();
+		Map<Integer, CAbstractAgent> map = new HashMap<Integer, CAbstractAgent>();
 		if (listIn == null)
 			return listOut;
 		for (IConnectedComponent c : listIn)
 			for (CAgent a : c.getAgents()) {
-				CContactMapAbstractAgent newAgent = new CContactMapAbstractAgent(
+				CAbstractAgent newAgent = new CAbstractAgent(
 						a);
 				for (CSite s : a.getSites()) {
-					CContactMapAbstractSite newSite = new CContactMapAbstractSite(
+					CAbstractSite newSite = new CAbstractSite(
 							s, newAgent);
 					newAgent.addSite(newSite);
 				}
@@ -100,8 +102,8 @@ class CContactMapAbstractRule{
 	 * This method returns agents, necessary for "focus rule".
 	 * @return necessary agents.
 	 */
-	public List<CContactMapAbstractAgent> getFocusedAgents() {
-		List<CContactMapAbstractAgent> listOut = new ArrayList<CContactMapAbstractAgent>();
+	public List<CAbstractAgent> getFocusedAgents() {
+		List<CAbstractAgent> listOut = new ArrayList<CAbstractAgent>();
 		listOut.addAll(getAddAgents(lhsAgents));
 		listOut.addAll(getAddAgents(rhsAgents));
 		return listOut;
@@ -113,12 +115,12 @@ class CContactMapAbstractRule{
 	 * @param listIn given list for finds.
 	 * @return necessary agents.
 	 */
-	private List<CContactMapAbstractAgent> getAddAgents(
-			List<CContactMapAbstractAgent> listIn) {
-		List<CContactMapAbstractAgent> listOut = new ArrayList<CContactMapAbstractAgent>();
+	private List<CAbstractAgent> getAddAgents(
+			List<CAbstractAgent> listIn) {
+		List<CAbstractAgent> listOut = new ArrayList<CAbstractAgent>();
 		if (listIn.isEmpty() || listIn.get(0).getNameId() == CSite.NO_INDEX)
 			return listOut;
-		for (CContactMapAbstractAgent a : listIn)
+		for (CAbstractAgent a : listIn)
 			if (a.isAdd())
 				listOut.add(a);
 		return listOut;
@@ -128,7 +130,7 @@ class CContactMapAbstractRule{
 	 * This method returns agents from left handSide current rule.
 	 * @return agents from left handSide current rule.
 	 */
-	public List<CContactMapAbstractAgent> getLhsAgents() {
+	public List<CAbstractAgent> getLhsAgents() {
 		return lhsAgents;
 	}
 
@@ -136,7 +138,7 @@ class CContactMapAbstractRule{
 	 * This method returns agents from right handSide current rule.
 	 * @return agents from right handSide current rule.
 	 */
-	public List<CContactMapAbstractAgent> getRhsAgents() {
+	public List<CAbstractAgent> getRhsAgents() {
 		return rhsAgents;
 	}
 
@@ -144,8 +146,8 @@ class CContactMapAbstractRule{
 	 * This method apply current rule by exhaustive search possible injections and returns new data.
 	 * @return new data.
 	 */
-	public List<CContactMapAbstractAgent> getNewData() {
-		List<CContactMapAbstractAgent> newData = new ArrayList<CContactMapAbstractAgent>();
+	public List<CAbstractAgent> getNewData() {
+		List<CAbstractAgent> newData = new ArrayList<CAbstractAgent>();
 		int[] indexList = new int[lhsAgents.size()];
 		List<String> addListString = new ArrayList<String>();
 		if (lhsAgents.size() == 0) {
@@ -155,7 +157,7 @@ class CContactMapAbstractRule{
 			return newData;
 		}
 
-		List<List<CContactMapAbstractAgent>> agentsLists = initAgentsListsFromSolution();
+		List<List<CAbstractAgent>> agentsLists = initAgentsListsFromSolution();
 		if (agentsLists == null)
 			return null;
 		agentsLists = clearAgentsLists(agentsLists);
@@ -184,8 +186,8 @@ class CContactMapAbstractRule{
 	 * @return injection for apply rule.
 	 */
 	private List<UCorrelationAbstractAgent> createInjectionList(
-			int[] indexList, List<List<CContactMapAbstractAgent>> agentsLists) {
-		List<CContactMapAbstractAgent> listAgents = new ArrayList<CContactMapAbstractAgent>();
+			int[] indexList, List<List<CAbstractAgent>> agentsLists) {
+		List<CAbstractAgent> listAgents = new ArrayList<CAbstractAgent>();
 		int index = 0;
 		for (int i : indexList)
 			listAgents.add(agentsLists.get(index++).get(i));
@@ -199,14 +201,14 @@ class CContactMapAbstractRule{
 	 * @param agentsLists given lists of agents.
 	 * @return lists of agents for creates injections.
 	 */
-	private List<List<CContactMapAbstractAgent>> clearAgentsLists(
-			List<List<CContactMapAbstractAgent>> agentsLists) {
+	private List<List<CAbstractAgent>> clearAgentsLists(
+			List<List<CAbstractAgent>> agentsLists) {
 		int i = 0;
-		List<List<CContactMapAbstractAgent>> listOut = new ArrayList<List<CContactMapAbstractAgent>>();
-		for (List<CContactMapAbstractAgent> list : agentsLists) {
-			List<CContactMapAbstractAgent> addList = new ArrayList<CContactMapAbstractAgent>();
-			CContactMapAbstractAgent agent = lhsAgents.get(i);
-			for (CContactMapAbstractAgent a : list) {
+		List<List<CAbstractAgent>> listOut = new ArrayList<List<CAbstractAgent>>();
+		for (List<CAbstractAgent> list : agentsLists) {
+			List<CAbstractAgent> addList = new ArrayList<CAbstractAgent>();
+			CAbstractAgent agent = lhsAgents.get(i);
+			for (CAbstractAgent a : list) {
 				if (agent.isFit(a))
 					addList.add(a);
 			}
@@ -220,11 +222,11 @@ class CContactMapAbstractRule{
 	 * This method returns all agents from solution for further clears.
 	 * @return agents from solution for further clears.
 	 */
-	private List<List<CContactMapAbstractAgent>> initAgentsListsFromSolution() {
-		List<List<CContactMapAbstractAgent>> agentsLists = new ArrayList<List<CContactMapAbstractAgent>>();
-		for (CContactMapAbstractAgent a : lhsAgents) {
+	private List<List<CAbstractAgent>> initAgentsListsFromSolution() {
+		List<List<CAbstractAgent>> agentsLists = new ArrayList<List<CAbstractAgent>>();
+		for (CAbstractAgent a : lhsAgents) {
 			Integer keyAgent = a.getNameId();
-			List<CContactMapAbstractAgent> list = solution
+			List<CAbstractAgent> list = solution
 					.getListOfAgentsByNameID(keyAgent);
 			if (list == null || list.isEmpty())
 				return null;
@@ -253,10 +255,10 @@ class CContactMapAbstractRule{
 	 * @param agentsLists given lists of agents
 	 * @return array of max value
 	 */
-	private int[] getMaxIndex(List<List<CContactMapAbstractAgent>> agentsLists) {
+	private int[] getMaxIndex(List<List<CAbstractAgent>> agentsLists) {
 		int[] mas = new int[agentsLists.size()];
 		int index = 0;
-		for (List<CContactMapAbstractAgent> l : agentsLists)
+		for (List<CAbstractAgent> l : agentsLists)
 			mas[index++] = l.size() - 1;
 		return mas;
 	}

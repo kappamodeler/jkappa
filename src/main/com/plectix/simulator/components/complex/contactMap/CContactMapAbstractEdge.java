@@ -1,19 +1,22 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.contactMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
+import com.plectix.simulator.components.complex.abstracting.CAbstractLinkState;
+
 public class CContactMapAbstractEdge {
-	private CContactMapAbstractSite vertexFrom;
+	private CAbstractSite vertexFrom;
 	private int vertexToSiteNameID;
 	private int vertexToAgentNameID;
 	private List<Integer> rules;
 
-	public CContactMapAbstractSite getVertexFrom() {
+	public CAbstractSite getVertexFrom() {
 		return vertexFrom;
 	}
 
-	public void setVertexFrom(CContactMapAbstractSite vertexFrom) {
+	public void setVertexFrom(CAbstractSite vertexFrom) {
 		this.vertexFrom = vertexFrom;
 	}
 
@@ -29,9 +32,9 @@ public class CContactMapAbstractEdge {
 		return rules;
 	}
 
-	public CContactMapAbstractEdge(CContactMapAbstractSite vertexFrom) {
+	public CContactMapAbstractEdge(CAbstractSite vertexFrom) {
 		this.vertexFrom = vertexFrom;
-		CContactMapLinkState ls = vertexFrom.getLinkState();
+		CAbstractLinkState ls = vertexFrom.getLinkState();
 		this.vertexToAgentNameID = ls.getAgentNameID();
 		this.vertexToSiteNameID = ls.getLinkSiteNameID();
 		rules = new ArrayList<Integer>();

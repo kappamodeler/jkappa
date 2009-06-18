@@ -1,4 +1,4 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.abstracting;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,12 +13,14 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
  * This class implements abstract agent.<br>
+ * SubView presented in the some form<br>
+ * AbstractAgent include part or all information of real Agent<br>
  * Uses for construct Contact map.
  * @author avokhmin
  *
  */
-public class CContactMapAbstractAgent{
-	private Map<Integer, CContactMapAbstractSite> sitesMap;
+public class CAbstractAgent{
+	private Map<Integer, CAbstractSite> sitesMap;
 	private int nameID = -1;
 	private boolean add = false;
 
@@ -55,7 +57,7 @@ public class CContactMapAbstractAgent{
 	 * This method returns map of sites.
 	 * @return map of sites.
 	 */
-	public final Map<Integer, CContactMapAbstractSite> getSitesMap() {
+	public final Map<Integer, CAbstractSite> getSitesMap() {
 		return this.sitesMap;
 	}
 
@@ -64,9 +66,9 @@ public class CContactMapAbstractAgent{
 	 * Sets <b>nameID</b> only. No fills sites map.
 	 * @param agent given agent
 	 */
-	public CContactMapAbstractAgent(CAgent agent) {
+	public CAbstractAgent(CAgent agent) {
 		this.nameID = agent.getNameId();
-		this.sitesMap = new HashMap<Integer, CContactMapAbstractSite>();
+		this.sitesMap = new HashMap<Integer, CAbstractSite>();
 	}
 
 	/**
@@ -74,12 +76,12 @@ public class CContactMapAbstractAgent{
 	 * Sets <b>nameID</b>, fills sites map.
 	 * @param agentLink given agent
 	 */
-	public CContactMapAbstractAgent(CContactMapAbstractAgent agentLink) {
+	public CAbstractAgent(CAbstractAgent agentLink) {
 		this.nameID = agentLink.getNameId();
-		this.sitesMap = new HashMap<Integer, CContactMapAbstractSite>();
+		this.sitesMap = new HashMap<Integer, CAbstractSite>();
 
-		for (Map.Entry<Integer, CContactMapAbstractSite> entry : agentLink.getSitesMap().entrySet()) {
-			CContactMapAbstractSite newSite = entry.getValue().clone();
+		for (Map.Entry<Integer, CAbstractSite> entry : agentLink.getSitesMap().entrySet()) {
+			CAbstractSite newSite = entry.getValue().clone();
 			newSite.setAgentLink(this);
 			sitesMap.put(entry.getKey(), newSite);
 		}
@@ -90,7 +92,7 @@ public class CContactMapAbstractAgent{
 	 * @param nameID given id
 	 * @return site from sites map.
 	 */
-	public final CContactMapAbstractSite getSite(int nameID) {
+	public final CAbstractSite getSite(int nameID) {
 		return this.sitesMap.get(nameID);
 	}
 
@@ -98,7 +100,7 @@ public class CContactMapAbstractAgent{
 	 * This method adds given site to sites map.
 	 * @param newSite given site
 	 */
-	public final void addSite(CContactMapAbstractSite newSite) {
+	public final void addSite(CAbstractSite newSite) {
 		this.sitesMap.put(newSite.getNameId(), newSite);
 	}
 
@@ -109,20 +111,20 @@ public class CContactMapAbstractAgent{
 	 * @param agentNameIdToAgent map of full state of agent
 	 */
 	public final void addSites(CAgent agent,
-			Map<Integer, CContactMapAbstractAgent> agentNameIdToAgent) {
+			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
 
-		CContactMapAbstractAgent abstractModelAgent = agentNameIdToAgent
+		CAbstractAgent abstractModelAgent = agentNameIdToAgent
 				.get(agent.getNameId());
 
 		for (CSite site : agent.getSites()) {
 			Integer key = site.getNameId();
-			CContactMapAbstractSite abstractSite = new CContactMapAbstractSite(
+			CAbstractSite abstractSite = new CAbstractSite(
 					site, this);
 			sitesMap.put(key, abstractSite);
 		}
 
-		for (Map.Entry<Integer, CContactMapAbstractSite> entry : abstractModelAgent.getSitesMap().entrySet()) {
-			CContactMapAbstractSite abstractSite = this.sitesMap.get(entry.getKey());
+		for (Map.Entry<Integer, CAbstractSite> entry : abstractModelAgent.getSitesMap().entrySet()) {
+			CAbstractSite abstractSite = this.sitesMap.get(entry.getKey());
 			if (abstractSite == null) {
 				this.sitesMap.put(entry.getKey(), entry.getValue());
 			}
@@ -133,9 +135,9 @@ public class CContactMapAbstractAgent{
 	 * This method adds given site to sites map, if there hasn't it.
 	 * @param siteToAdd given site
 	 */
-	public final void addModelSite(CContactMapAbstractSite siteToAdd) {
+	public final void addModelSite(CAbstractSite siteToAdd) {
 		int nameID = siteToAdd.getNameId();
-		CContactMapAbstractSite site = this.sitesMap.get(nameID);
+		CAbstractSite site = this.sitesMap.get(nameID);
 		if (site == null) {
 			this.sitesMap.put(nameID, siteToAdd);
 		}
@@ -148,8 +150,8 @@ public class CContactMapAbstractAgent{
 	 * @return <tt>true</tt> if current agent include in given list of agents, otherwise <tt>false</tt>
 	 */
 	public final boolean includedInCollectionByName(
-			Collection<CContactMapAbstractAgent> collection) {
-		for (CContactMapAbstractAgent agent : collection) {
+			Collection<CAbstractAgent> collection) {
+		for (CAbstractAgent agent : collection) {
 			if (this.getNameId() == agent.getNameId()) {
 				return true;
 			}
@@ -162,7 +164,7 @@ public class CContactMapAbstractAgent{
 	 * @param agent given agent
 	 * @return <tt>true</tt> if given agent equals to current agent, otherwise <tt>false</tt>
 	 */
-	public final boolean equalz(CContactMapAbstractAgent agent) {
+	public final boolean equalz(CAbstractAgent agent) {
 		if (this == agent) {
 			return true;
 		}
@@ -189,10 +191,10 @@ public class CContactMapAbstractAgent{
 	 * @return <tt>true</tt> if sites maps are equals, otherwise <tt>false</tt>
 	 */
 	private boolean isEqualSitesMaps(
-			Map<Integer, CContactMapAbstractSite> sitesMap1,
-			Map<Integer, CContactMapAbstractSite> sitesMap2) {
+			Map<Integer, CAbstractSite> sitesMap1,
+			Map<Integer, CAbstractSite> sitesMap2) {
 
-		for (Map.Entry<Integer, CContactMapAbstractSite> entry : sitesMap1.entrySet()) {
+		for (Map.Entry<Integer, CAbstractSite> entry : sitesMap1.entrySet()) {
 			if (!entry.getValue().equalz(sitesMap2.get(entry.getKey())))
 				return false;
 		}
@@ -205,12 +207,12 @@ public class CContactMapAbstractAgent{
 	 * @param agentIn given agent for checks
 	 * @return <tt>true</tt> if given agent fit to current agent, otherwise <tt>false</tt>
 	 */
-	public final boolean isFit(CContactMapAbstractAgent agentIn) {
+	public final boolean isFit(CAbstractAgent agentIn) {
 		if (this.nameID != agentIn.getNameId())
 			return false;
 
-		for (CContactMapAbstractSite site : sitesMap.values()) {
-			CContactMapAbstractSite siteIn = agentIn.getSite(site.getNameId());
+		for (CAbstractSite site : sitesMap.values()) {
+			CAbstractSite siteIn = agentIn.getSite(site.getNameId());
 			if (siteIn == null)
 				return false;
 			if (!site.isFit(siteIn))
@@ -244,10 +246,10 @@ public class CContactMapAbstractAgent{
 	 * @param listIn list of agents for clone
 	 * @return list of agents
 	 */
-	public static List<CContactMapAbstractAgent> cloneAll(
-			List<CContactMapAbstractAgent> listIn) {
-		List<CContactMapAbstractAgent> listOut = new ArrayList<CContactMapAbstractAgent>();
-		for (CContactMapAbstractAgent a : listIn)
+	public static List<CAbstractAgent> cloneAll(
+			List<CAbstractAgent> listIn) {
+		List<CAbstractAgent> listOut = new ArrayList<CAbstractAgent>();
+		for (CAbstractAgent a : listIn)
 			listOut.add(a.clone());
 		return listOut;
 	}
@@ -255,19 +257,19 @@ public class CContactMapAbstractAgent{
 	/**
 	 * This method clones current agent
 	 */
-	public CContactMapAbstractAgent clone() {
-		return new CContactMapAbstractAgent(this);
+	public CAbstractAgent clone() {
+		return new CAbstractAgent(this);
 	}
 
 	/**
 	 * This method checks include current agent in given collections.
 	 * @param collection given collection for checks
-	 * @see #equalz(CContactMapAbstractAgent)
+	 * @see #equalz(CAbstractAgent)
 	 * @return <tt>true</tt> if current agent include in given collection, otherwise <tt>false</tt>
 	 */
 	public final boolean includedInCollection(
-			Collection<CContactMapAbstractAgent> collection) {
-		for (CContactMapAbstractAgent agent : collection) {
+			Collection<CAbstractAgent> collection) {
+		for (CAbstractAgent agent : collection) {
 			if (this.equalz(agent)) {
 				return true;
 			}

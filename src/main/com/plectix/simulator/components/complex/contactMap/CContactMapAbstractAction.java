@@ -1,4 +1,4 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.contactMap;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 
 /**
  * This class creates abstract atomic actions and apply theirs.
@@ -14,7 +16,7 @@ import com.plectix.simulator.components.CSite;
  */
 class CContactMapAbstractAction {
 	private CContactMapAbstractRule rule;
-	private List<CContactMapAbstractAgent> agentsToAdd;
+	private List<CAbstractAgent> agentsToAdd;
 	private List<UCorrelationAbstractAgent> correlationAgents;
 
 	// NONE(-1),
@@ -30,7 +32,7 @@ class CContactMapAbstractAction {
 	 */
 	public CContactMapAbstractAction(CContactMapAbstractRule rule) {
 		this.rule = rule;
-		this.agentsToAdd = new ArrayList<CContactMapAbstractAgent>();
+		this.agentsToAdd = new ArrayList<CAbstractAgent>();
 		correlationAgents = new ArrayList<UCorrelationAbstractAgent>();
 
 		initAtomicActions();
@@ -40,8 +42,8 @@ class CContactMapAbstractAction {
 	 * This method initializes abstract atomic actions.
 	 */
 	private void initAtomicActions() {
-		List<CContactMapAbstractAgent> lhs = rule.getLhsAgents();
-		List<CContactMapAbstractAgent> rhs = rule.getRhsAgents();
+		List<CAbstractAgent> lhs = rule.getLhsAgents();
+		List<CAbstractAgent> rhs = rule.getRhsAgents();
 
 		if (lhs.get(0).getNameId() == CSite.NO_INDEX) {
 			addAgentsToAdd(rhs);
@@ -49,7 +51,7 @@ class CContactMapAbstractAction {
 		}
 
 		if (rhs.isEmpty()) {
-			for (CContactMapAbstractAgent a : lhs) {
+			for (CAbstractAgent a : lhs) {
 				addAgentToDelete(a);
 			}
 			return;
@@ -57,12 +59,12 @@ class CContactMapAbstractAction {
 
 		int i = 0;
 //		boolean[] checking = new boolean[lhs.size()];
-		for (CContactMapAbstractAgent lhsAgent : lhs) {
+		for (CAbstractAgent lhsAgent : lhs) {
 			if (i >= rhs.size()) {
 				addAgentToDelete(lhsAgent);
 				continue;
 			}
-			CContactMapAbstractAgent rhsAgent = rhs.get(i++);
+			CAbstractAgent rhsAgent = rhs.get(i++);
 			if (isFit(lhsAgent, rhsAgent)) {
 				UCorrelationAbstractAgent ua = new UCorrelationAbstractAgent(
 						this, lhsAgent, rhsAgent);
@@ -74,7 +76,7 @@ class CContactMapAbstractAction {
 			}
 		}
 		for (int j = i; j < rhs.size(); j++) {
-			CContactMapAbstractAgent rhsAgent = rhs.get(j);
+			CAbstractAgent rhsAgent = rhs.get(j);
 			addAgentToAdd(rhsAgent);
 		}
 
@@ -86,16 +88,16 @@ class CContactMapAbstractAction {
 	 * @param a2 given agent
 	 * @return <tt>true</tt> if given agents are similar, otherwise <tt>false</tt>
 	 */
-	private boolean isFit(CContactMapAbstractAgent a1,
-			CContactMapAbstractAgent a2) {
+	private boolean isFit(CAbstractAgent a1,
+			CAbstractAgent a2) {
 		if (a1.getNameId() != a2.getNameId())
 			return false;
 		if (a1.getSitesMap().size() != a2.getSitesMap().size())
 			return false;
 		
-		for (Map.Entry<Integer, CContactMapAbstractSite> entry : a1.getSitesMap().entrySet()) {
-			CContactMapAbstractSite s1 = entry.getValue();
-			CContactMapAbstractSite s2 = a2.getSitesMap().get(entry.getKey());
+		for (Map.Entry<Integer, CAbstractSite> entry : a1.getSitesMap().entrySet()) {
+			CAbstractSite s1 = entry.getValue();
+			CAbstractSite s2 = a2.getSitesMap().get(entry.getKey());
 			if ((s2 == null) || (s1.getNameId() != s2.getNameId()))
 				return false;
 		}
@@ -106,7 +108,7 @@ class CContactMapAbstractAction {
 	 * Util method. Uses only in {@link #initAtomicActions()}. Creates "DELETE" action.
 	 * @param agentIn given agent
 	 */
-	private void addAgentToDelete(CContactMapAbstractAgent agentIn) {
+	private void addAgentToDelete(CAbstractAgent agentIn) {
 		UCorrelationAbstractAgent ua = new UCorrelationAbstractAgent(this,
 				agentIn, null);
 		// ua.setType(CActionType.DELETE);
@@ -120,8 +122,8 @@ class CContactMapAbstractAction {
 	 * Util method. Uses only in {@link #initAtomicActions()}. Creates "ADD" action.
 	 * @param listIn given list of agents
 	 */
-	private void addAgentsToAdd(List<CContactMapAbstractAgent> listIn) {
-		for (CContactMapAbstractAgent a : listIn)
+	private void addAgentsToAdd(List<CAbstractAgent> listIn) {
+		for (CAbstractAgent a : listIn)
 			addAgentToAdd(a);
 	}
 
@@ -129,7 +131,7 @@ class CContactMapAbstractAction {
 	 * Util method. Uses only in {@link #initAtomicActions()}. Creates "ADD" action.
 	 * @param agentIn given agent
 	 */
-	private void addAgentToAdd(CContactMapAbstractAgent agentIn) {
+	private void addAgentToAdd(CAbstractAgent agentIn) {
 		agentsToAdd.add(agentIn.clone());
 		agentIn.shouldAdd();
 	}
@@ -141,17 +143,17 @@ class CContactMapAbstractAction {
 	 * @param addListString list of keys for checks
 	 * @return new data for solution
 	 */
-	public List<CContactMapAbstractAgent> apply(
+	public List<CAbstractAgent> apply(
 			List<UCorrelationAbstractAgent> injList,
 			CContactMapAbstractSolution solution, List<String> addListString) {
 		// TODO apply
-		List<CContactMapAbstractAgent> listOut = new ArrayList<CContactMapAbstractAgent>();
-		addToList(CContactMapAbstractAgent.cloneAll(agentsToAdd), listOut,
+		List<CAbstractAgent> listOut = new ArrayList<CAbstractAgent>();
+		addToList(CAbstractAgent.cloneAll(agentsToAdd), listOut,
 				solution, addListString);
 		int i = 0;
 		for (UCorrelationAbstractAgent corLHSandRHS : correlationAgents) {
 			UCorrelationAbstractAgent corLHSandSolution = injList.get(i);
-			CContactMapAbstractAgent newAgent = corLHSandSolution.getToAgent()
+			CAbstractAgent newAgent = corLHSandSolution.getToAgent()
 					.clone();
 
 			// listOut.addAll(corLHSandRHS.modifySiteFromSolution(newAgent,
@@ -173,10 +175,10 @@ class CContactMapAbstractAction {
 	 * @param solution given solution
 	 * @param addListString given list of keys for checks
 	 */
-	private void addToList(List<CContactMapAbstractAgent> listIn,
-			List<CContactMapAbstractAgent> listTo,
+	private void addToList(List<CAbstractAgent> listIn,
+			List<CAbstractAgent> listTo,
 			CContactMapAbstractSolution solution, List<String> addListString) {
-		for (CContactMapAbstractAgent a : listIn) {
+		for (CAbstractAgent a : listIn) {
 			String key = a.getKey();
 			if (!solution.getAgentsMap().containsKey(key)
 					&& !addListString.contains(key)) {

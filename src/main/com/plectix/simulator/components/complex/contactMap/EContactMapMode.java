@@ -1,4 +1,4 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.contactMap;
 
 /**
  * This class implements mode of create contact map.<br>

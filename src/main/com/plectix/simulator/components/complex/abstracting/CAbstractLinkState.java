@@ -1,4 +1,4 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.abstracting;
 
 import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CLink;
@@ -9,7 +9,7 @@ import com.plectix.simulator.components.CSite;
  * @author avokhmin
  *
  */
-public class CContactMapLinkState {
+public class CAbstractLinkState {
 	private CLinkRank statusLinkRank;
 	private CLinkStatus statusLink;
 	private int linkSiteNameID = CSite.NO_INDEX;
@@ -20,7 +20,7 @@ public class CContactMapLinkState {
 	 * Constructor of CContactMapLinkState.
 	 * @param linkState given link state for abstraction
 	 */
-	public CContactMapLinkState(CLink linkState) {
+	public CAbstractLinkState(CLink linkState) {
 		if (linkState.getConnectedSite() != null) {
 			this.agentNameID = linkState.getConnectedSite().getAgentLink().getNameId();
 			this.linkSiteNameID = linkState.getConnectedSite().getNameId();
@@ -35,7 +35,7 @@ public class CContactMapLinkState {
 	 * Constructor of CContactMapLinkState
 	 * @param linkState given link state
 	 */
-	public CContactMapLinkState(CContactMapLinkState linkState) {
+	public CAbstractLinkState(CAbstractLinkState linkState) {
 		if (linkState.getLinkSiteNameID() != -1) {
 			this.agentNameID = linkState.getAgentNameID();
 			this.linkSiteNameID = linkState.getLinkSiteNameID();
@@ -146,7 +146,7 @@ public class CContactMapLinkState {
 	/**
 	 * Constructor of CContactMapLinkState
 	 */
-	public CContactMapLinkState() {
+	public CAbstractLinkState() {
 		setFreeLinkState();
 	}
 
@@ -162,7 +162,7 @@ public class CContactMapLinkState {
 	 * @param linkState given state for checks
 	 * @return <tt>true</tt> if current state equals to given state, otherwise <tt>false</tt>
 	 */
-	public boolean equalz(CContactMapLinkState linkState) {
+	public boolean equalz(CAbstractLinkState linkState) {
 		if (this == linkState) {
 			return true;
 		}
@@ -198,7 +198,7 @@ public class CContactMapLinkState {
 	 * @return <tt>true</tt> if this link's status-rank is "smaller" then status rank of the other link 
 	 */
 	public final boolean compareLinkStates(
-			CContactMapLinkState solutionLinkState) {
+			CAbstractLinkState solutionLinkState) {
 		if (this.isLeftBranchStatus()
 				&& solutionLinkState.isRightBranchStatus())
 			return false;

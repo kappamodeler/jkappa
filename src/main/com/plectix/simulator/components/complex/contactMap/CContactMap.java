@@ -1,10 +1,11 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.contactMap;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.simulator.SimulationData;
 
 /**
@@ -18,7 +19,7 @@ public class CContactMap {
 	private CContactMapAbstractSolution abstractSolution;
 	private CRule focusRule;
 	private List<CContactMapAbstractRule> abstractRules;
-	private List<CContactMapAbstractAgent> agentsFromFocusedRule;
+	private List<CAbstractAgent> agentsFromFocusedRule;
 
 	/**
 	 * This method sets mode of create contact map.
@@ -58,7 +59,7 @@ public class CContactMap {
 	 * Default constructor of contact map. 
 	 */
 	public CContactMap() {
-		agentsFromFocusedRule = new ArrayList<CContactMapAbstractAgent>();
+		agentsFromFocusedRule = new ArrayList<CAbstractAgent>();
 	}
 
 	/**
@@ -73,7 +74,7 @@ public class CContactMap {
 			while (!isEnd) {
 				isEnd = true;
 				for (CContactMapAbstractRule rule : abstractRules) {
-					List<CContactMapAbstractAgent> newData = rule.getNewData();
+					List<CAbstractAgent> newData = rule.getNewData();
 					if (abstractSolution.addNewData(newData, rule)) {
 						isEnd = false;
 						// clear();
@@ -129,7 +130,7 @@ public class CContactMap {
 //				addAgentList.add(abstractSolution.getAgentNameIdToAgent().get(
 //						key));
 //			}
-			List<CContactMapAbstractAgent> addAgentList = new ArrayList<CContactMapAbstractAgent>();
+			List<CAbstractAgent> addAgentList = new ArrayList<CAbstractAgent>();
 			addAgentList.addAll(abstractSolution.getAgentNameIdToAgent().values());
 
 			List<Integer> agentNameIdList = new ArrayList<Integer>();
@@ -167,11 +168,11 @@ public class CContactMap {
 	 * @param addAgentList given agents
 	 */
 	private void constructAbstractCard(List<CRule> rules,
-			List<CContactMapAbstractAgent> addAgentList) {
+			List<CAbstractAgent> addAgentList) {
 		for (CRule rule : rules) {
-			List<CContactMapAbstractAgent> agentsFromRule = new ArrayList<CContactMapAbstractAgent>();
+			List<CAbstractAgent> agentsFromRule = new ArrayList<CAbstractAgent>();
 			fillAgentsFromRule(rule, agentsFromRule);
-			for (CContactMapAbstractAgent agent : addAgentList)
+			for (CAbstractAgent agent : addAgentList)
 				if (agent.includedInCollectionByName(agentsFromRule)) {
 					abstractSolution.addAgentToAgentsMap(agent);
 					abstractSolution.addAgentsBoundedWithFocusedAgent(agent,
@@ -187,10 +188,10 @@ public class CContactMap {
 	 * @param agentsList given agents
 	 */
 	private void fillFocusAgentsFromRule(CRule rule,
-			List<CContactMapAbstractAgent> agentsList) {
+			List<CAbstractAgent> agentsList) {
 		CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(rule);
 		abstractRule.initAbstractRule();
-		List<CContactMapAbstractAgent> list = abstractRule.getFocusedAgents();
+		List<CAbstractAgent> list = abstractRule.getFocusedAgents();
 		addAgentsToListFromRule(list, agentsList);
 //		return abstractRule;
 	}
@@ -201,9 +202,9 @@ public class CContactMap {
 	 * @param agentsList given agents
 	 */
 	private void fillAgentsFromRule(CRule rule,
-			List<CContactMapAbstractAgent> agentsList) {
+			List<CAbstractAgent> agentsList) {
 		CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(rule);
-		List<CContactMapAbstractAgent> agents = new ArrayList<CContactMapAbstractAgent>();
+		List<CAbstractAgent> agents = new ArrayList<CAbstractAgent>();
 		if (rule.getLeftHandSide().get(0).isEmpty()) {
 			agents = abstractRule.getLhsAgents();
 			addAgentsToListFromRule(agents, agentsList);
@@ -217,9 +218,9 @@ public class CContactMap {
 	 * @param agents given agents for checks
 	 * @param agentsForAdding given agents for adds
 	 */
-	private void addAgentsToListFromRule(List<CContactMapAbstractAgent> agents,
-			List<CContactMapAbstractAgent> agentsForAdding) {
-		for (CContactMapAbstractAgent agent : agents) {
+	private void addAgentsToListFromRule(List<CAbstractAgent> agents,
+			List<CAbstractAgent> agentsForAdding) {
+		for (CAbstractAgent agent : agents) {
 			if (!agent.includedInCollection(agentsForAdding)) {
 				agentsForAdding.add(agent);
 			}

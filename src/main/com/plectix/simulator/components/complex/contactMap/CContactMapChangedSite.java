@@ -1,14 +1,15 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.contactMap;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 
 public class CContactMapChangedSite {
 	// TODO need to be implement one interface with ChangedSite
-	private CContactMapAbstractSite site;
-	public CContactMapAbstractSite getSite() {
+	private CAbstractSite site;
+	public CAbstractSite getSite() {
 		return site;
 	}
 
@@ -24,7 +25,7 @@ public class CContactMapChangedSite {
 		return internalState;
 	}
 
-	public final void setLinkState(CContactMapAbstractSite site) {
+	public final void setLinkState(CAbstractSite site) {
 		if(this.linkState==true)
 			return;
 		if (site.getLinkState().getLinkSiteNameID() != CSite.NO_INDEX)
@@ -33,7 +34,7 @@ public class CContactMapChangedSite {
 			this.linkState = false;
 	}
 
-	public final void setInternalState(CContactMapAbstractSite site) {
+	public final void setInternalState(CAbstractSite site) {
 		if(this.internalState==true)
 			return;
 		if (site.getInternalState().getNameId() != CSite.NO_INDEX)
@@ -47,7 +48,7 @@ public class CContactMapChangedSite {
 		return usedRuleIDs;
 	}
 
-	public CContactMapChangedSite(CContactMapAbstractSite site) {
+	public CContactMapChangedSite(CAbstractSite site) {
 		this.site = site;
 		setInternalState(site);
 		setLinkState(site);

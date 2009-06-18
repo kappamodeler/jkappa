@@ -43,10 +43,10 @@ import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.SnapshotElement;
-import com.plectix.simulator.components.contactMap.CContactMapAbstractEdge;
-import com.plectix.simulator.components.contactMap.CContactMapAbstractSite;
-import com.plectix.simulator.components.contactMap.CContactMapChangedSite;
-import com.plectix.simulator.components.contactMap.EContactMapMode;
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
+import com.plectix.simulator.components.complex.contactMap.CContactMapAbstractEdge;
+import com.plectix.simulator.components.complex.contactMap.CContactMapChangedSite;
+import com.plectix.simulator.components.complex.contactMap.EContactMapMode;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.solution.SolutionLines;
 import com.plectix.simulator.components.stories.CStoryIntro;
@@ -871,7 +871,7 @@ public class SimulationData {
 						Element bond = doc.createElement("Bond");
 						int vertexToSiteNameID = edge.getVertexToSiteNameID();
 						int vertexToAgentNameID = edge.getVertexToAgentNameID();
-						CContactMapAbstractSite vertexFrom = edge
+						CAbstractSite vertexFrom = edge
 								.getVertexFrom();
 						BoundContactMap b = new BoundContactMap(vertexFrom.getAgentLink().getNameId(),ThreadLocalData
 								.getNameDictionary().getId(vertexFrom.getName()),vertexToAgentNameID,vertexToSiteNameID);

@@ -1,6 +1,7 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.contactMap;
 
 import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 
 /**
  * Util class. Used for save information about type of modification.
@@ -8,7 +9,7 @@ import com.plectix.simulator.action.CActionType;
  *
  */
 class CContactMapAtomicAction {
-	private CContactMapAbstractSite site;
+	private CAbstractSite site;
 	private CActionType type;
 
 	/**
@@ -17,7 +18,7 @@ class CContactMapAtomicAction {
 	 * @param site given site
 	 */
 	public CContactMapAtomicAction(CActionType type,
-			CContactMapAbstractSite site) {
+			CAbstractSite site) {
 		this.type = type;
 		this.site = site;
 	}
@@ -26,7 +27,7 @@ class CContactMapAtomicAction {
 	 * This method returns site
 	 * @return site
 	 */
-	public CContactMapAbstractSite getSite() {
+	public CAbstractSite getSite() {
 		return site;
 	}
 

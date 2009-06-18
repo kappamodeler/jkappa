@@ -1,4 +1,4 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.abstracting;
 
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
@@ -9,50 +9,50 @@ import com.plectix.simulator.simulator.ThreadLocalData;
  * @author avokhmin
  *
  */
-public class CContactMapAbstractSite{
+public class CAbstractSite{
 	private final int nameId;
-	private CContactMapLinkState linkState;
+	private CAbstractLinkState linkState;
 	private CInternalState internalState = CInternalState.EMPTY_STATE;
-	private CContactMapAbstractAgent linkAgent = null;
+	private CAbstractAgent linkAgent = null;
 
 	/**
 	 * Constructor of CContactMapAbstractSite
 	 * @param site given site for abstraction
 	 * @param agent "parent" agent
 	 */
-	public CContactMapAbstractSite(CSite site, CContactMapAbstractAgent agent) {
+	public CAbstractSite(CSite site, CAbstractAgent agent) {
 		this.nameId = site.getNameId();
 		this.linkAgent = agent;
 		if (site.getInternalState() != CInternalState.EMPTY_STATE)
 			this.internalState = new CInternalState(site.getInternalState()
 					.getNameId());
-		this.linkState = new CContactMapLinkState(site.getLinkState());
+		this.linkState = new CAbstractLinkState(site.getLinkState());
 	}
 
 	/**
 	 * Constructor of CContactMapAbstractSite
 	 * @param site given site for abstraction
 	 */
-	public CContactMapAbstractSite(CSite site) {
+	public CAbstractSite(CSite site) {
 		this.nameId = site.getNameId();
-		this.linkState = new CContactMapLinkState();
+		this.linkState = new CAbstractLinkState();
 	}
 
 	/**
 	 * Constructor of CContactMapAbstractSite
 	 * @param site given abstract site
 	 */
-	private CContactMapAbstractSite(CContactMapAbstractSite site) {
+	private CAbstractSite(CAbstractSite site) {
 		this.nameId = site.getNameId();
 		this.linkAgent = site.getAgentLink();
 		if (site.getInternalState() != CInternalState.EMPTY_STATE)
 			this.internalState = new CInternalState(site.getInternalState()
 					.getNameId());
-		this.linkState = new CContactMapLinkState(site.getLinkState());
+		this.linkState = new CAbstractLinkState(site.getLinkState());
 	}
 
-	public CContactMapAbstractSite clone() {
-		CContactMapAbstractSite siteOut = new CContactMapAbstractSite(this);
+	public CAbstractSite clone() {
+		CAbstractSite siteOut = new CAbstractSite(this);
 		return siteOut;
 	}
 
@@ -68,7 +68,7 @@ public class CContactMapAbstractSite{
 	 * Returns link state of this site.
 	 * @return link state of this site.
 	 */
-	public CContactMapLinkState getLinkState() {
+	public CAbstractLinkState getLinkState() {
 		return linkState;
 	}
 
@@ -95,7 +95,7 @@ public class CContactMapAbstractSite{
 	 * This method returns agent, which is parent for this site
 	 * @return agent, which is parent for this site 
 	 */
-	public final CContactMapAbstractAgent getAgentLink() {
+	public final CAbstractAgent getAgentLink() {
 		return linkAgent;
 	}
 
@@ -103,7 +103,7 @@ public class CContactMapAbstractSite{
 	 * This method sets link to the "parent" agent. 
 	 * @param linkAgent "parent" agent
 	 */
-	public final void setAgentLink(CContactMapAbstractAgent linkAgent) {
+	public final void setAgentLink(CAbstractAgent linkAgent) {
 		this.linkAgent = linkAgent;
 	}
 
@@ -114,7 +114,7 @@ public class CContactMapAbstractSite{
 	 * @return <tt>true</tt>, if current site equals 
 	 * to given site (by nameId, internal and link state), otherwise <tt>false</tt>.
 	 */
-	public final boolean equalz(CContactMapAbstractSite site) {
+	public final boolean equalz(CAbstractSite site) {
 		if (this == site) {
 			return true;
 		}
@@ -140,7 +140,7 @@ public class CContactMapAbstractSite{
 	 * @param site given site
 	 * @return <tt>true</tt> if <b>nameId</b> current site equals <b>nameId</b> given site, otherwise <tt>false</tt>.
 	 */
-	public final boolean equalByName(CContactMapAbstractSite site) {
+	public final boolean equalByName(CAbstractSite site) {
 		if (this == site) {
 			return true;
 		}
@@ -185,7 +185,7 @@ public class CContactMapAbstractSite{
 	 * @param s given site
 	 * @return <tt>true</tt> if current site does fit to given site, otherwise <tt>false</tt>.
 	 */
-	public boolean isFit(CContactMapAbstractSite s) {
+	public boolean isFit(CAbstractSite s) {
 		if (nameId == CSite.NO_INDEX)
 			return true;
 		if (!internalState.compareInternalStates(s.getInternalState()))

@@ -1,45 +1,48 @@
-package com.plectix.simulator.components.contactMap;
+package com.plectix.simulator.components.complex.contactMap;
 
 import java.util.*;
 
 import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
+import com.plectix.simulator.components.complex.abstracting.CAbstractLinkState;
 
 class UCorrelationAbstractAgent {
-	private CContactMapAbstractAgent fromAgent;
-	private CContactMapAbstractAgent toAgent;
+	private CAbstractAgent fromAgent;
+	private CAbstractAgent toAgent;
 	private List<CContactMapAtomicAction> atomicActionList;
 
 	public UCorrelationAbstractAgent(CContactMapAbstractAction action,
-			CContactMapAbstractAgent fromAgent,
-			CContactMapAbstractAgent toAgent) {
+			CAbstractAgent fromAgent,
+			CAbstractAgent toAgent) {
 		this.fromAgent = fromAgent;
 		this.toAgent = toAgent;
 	}
 
-	public CContactMapAbstractAgent getFromAgent() {
+	public CAbstractAgent getFromAgent() {
 		return fromAgent;
 	}
 
-	public void setFromAgent(CContactMapAbstractAgent fromAgent) {
+	public void setFromAgent(CAbstractAgent fromAgent) {
 		this.fromAgent = fromAgent;
 	}
 
-	public CContactMapAbstractAgent getToAgent() {
+	public CAbstractAgent getToAgent() {
 		return toAgent;
 	}
 
-	public void setToAgent(CContactMapAbstractAgent toAgent) {
+	public void setToAgent(CAbstractAgent toAgent) {
 		this.toAgent = toAgent;
 	}
 
 	public static List<UCorrelationAbstractAgent> createCorrelationSites(
 			CContactMapAbstractAction action,
-			List<CContactMapAbstractAgent> fromAgent,
-			List<CContactMapAbstractAgent> toAgent) {
+			List<CAbstractAgent> fromAgent,
+			List<CAbstractAgent> toAgent) {
 		List<UCorrelationAbstractAgent> list = new ArrayList<UCorrelationAbstractAgent>();
 		int i = 0;
-		for (CContactMapAbstractAgent a : fromAgent) {
+		for (CAbstractAgent a : fromAgent) {
 			list.add(new UCorrelationAbstractAgent(action, a, toAgent.get(i++)));
 		}
 		return list;
@@ -53,9 +56,9 @@ class UCorrelationAbstractAgent {
 					CActionType.DELETE, null));
 			return;
 		}
-		for (Map.Entry<Integer, CContactMapAbstractSite> entry : fromAgent.getSitesMap().entrySet()) {
-			CContactMapAbstractSite siteFrom = entry.getValue();
-			CContactMapAbstractSite siteTo = toAgent.getSitesMap().get(entry.getKey());
+		for (Map.Entry<Integer, CAbstractSite> entry : fromAgent.getSitesMap().entrySet()) {
+			CAbstractSite siteFrom = entry.getValue();
+			CAbstractSite siteTo = toAgent.getSitesMap().get(entry.getKey());
 
 			if (siteFrom.getInternalState().getNameId() != siteTo
 					.getInternalState().getNameId()) {
@@ -65,8 +68,8 @@ class UCorrelationAbstractAgent {
 						CActionType.MODIFY, siteFrom));
 			}
 
-			CContactMapLinkState lsFrom = siteFrom.getLinkState();
-			CContactMapLinkState lsTo = siteTo.getLinkState();
+			CAbstractLinkState lsFrom = siteFrom.getLinkState();
+			CAbstractLinkState lsTo = siteTo.getLinkState();
 
 			if (lsFrom.getAgentNameID() != lsTo.getAgentNameID()
 					|| (lsFrom.getLinkSiteNameID() != lsTo.getLinkSiteNameID())) {
@@ -98,10 +101,10 @@ class UCorrelationAbstractAgent {
 		}
 	}
 
-	private void findBreakBound(CContactMapAbstractSite siteFrom,
-			CContactMapAbstractSite siteTo) {
-		CContactMapLinkState lsFrom = siteFrom.getLinkState();
-		CContactMapLinkState lsTo = siteTo.getLinkState();
+	private void findBreakBound(CAbstractSite siteFrom,
+			CAbstractSite siteTo) {
+		CAbstractLinkState lsFrom = siteFrom.getLinkState();
+		CAbstractLinkState lsTo = siteTo.getLinkState();
 
 		if (lsFrom.getAgentNameID() != CSite.NO_INDEX
 				&& lsTo.getAgentNameID() == CSite.NO_INDEX) {
@@ -128,10 +131,10 @@ class UCorrelationAbstractAgent {
 				siteFrom));
 	}
 
-	public List<CContactMapAbstractAgent> modifySiteFromSolution(
-			CContactMapAbstractAgent newAgent,
+	public List<CAbstractAgent> modifySiteFromSolution(
+			CAbstractAgent newAgent,
 			CContactMapAbstractSolution solution){
-		List<CContactMapAbstractAgent> listOut = new ArrayList<CContactMapAbstractAgent>();
+		List<CAbstractAgent> listOut = new ArrayList<CAbstractAgent>();
 		for (CContactMapAtomicAction t : atomicActionList) {
 			switch (t.getType()) {
 			case BREAK:
@@ -153,17 +156,17 @@ class UCorrelationAbstractAgent {
 		return listOut;
 	}
 
-	private List<CContactMapAbstractAgent> doBreak(
-			CContactMapAbstractAgent newAgent,
+	private List<CAbstractAgent> doBreak(
+			CAbstractAgent newAgent,
 			CContactMapAbstractSolution solution, CContactMapAtomicAction type){
-		List<CContactMapAbstractAgent> listOut = new ArrayList<CContactMapAbstractAgent>();
+		List<CAbstractAgent> listOut = new ArrayList<CAbstractAgent>();
 		// TODO BRK
 		Integer key = type.getSite().getNameId();
 //		CContactMapAbstractSiteIContactMapAbstractSite siteTo = toAgent.getSitesMap().get(key);
-		CContactMapAbstractSite siteNew = newAgent.getSitesMap().get(key);
+		CAbstractSite siteNew = newAgent.getSitesMap().get(key);
 
 		// CContactMapLinkState lsTo = siteTo.getLinkState();
-		CContactMapLinkState lsNew = siteNew.getLinkState();
+		CAbstractLinkState lsNew = siteNew.getLinkState();
 
 		if (type.getSite().getLinkState().getStatusLinkRank() == CLinkRank.BOUND_OR_FREE
 				|| type.getSite().getLinkState().getStatusLinkRank() == CLinkRank.SEMI_LINK)
@@ -179,20 +182,20 @@ class UCorrelationAbstractAgent {
 		return listOut;
 	}
 
-	private List<CContactMapAbstractAgent> breakAllAgentsWithSite(
-			CContactMapAbstractAgent agentNew, CContactMapAbstractSite siteNew,
+	private List<CAbstractAgent> breakAllAgentsWithSite(
+			CAbstractAgent agentNew, CAbstractSite siteNew,
 			CContactMapAbstractSolution solution){
-		List<CContactMapAbstractAgent> listOut = new ArrayList<CContactMapAbstractAgent>();
-		List<CContactMapAbstractAgent> agentsList = solution
+		List<CAbstractAgent> listOut = new ArrayList<CAbstractAgent>();
+		List<CAbstractAgent> agentsList = solution
 				.getAgentNameIdToAgentsList().get(
 						siteNew.getLinkState().getAgentNameID());
 		if (agentsList == null)
 			return listOut;
-		for (CContactMapAbstractAgent a : agentsList) {
+		for (CAbstractAgent a : agentsList) {
 			int linkSiteNameID = siteNew.getLinkState().getLinkSiteNameID();
-			CContactMapAbstractSite siteFromSolution = a.getSite(linkSiteNameID);
+			CAbstractSite siteFromSolution = a.getSite(linkSiteNameID);
 			
-			CContactMapLinkState lsFromSolution = siteFromSolution
+			CAbstractLinkState lsFromSolution = siteFromSolution
 					.getLinkState();
 
 			if (lsFromSolution.getAgentNameID() != agentNew.getNameId())
@@ -204,7 +207,7 @@ class UCorrelationAbstractAgent {
 //					&& lsFromSolution.getInternalStateNameID() != siteNew
 //							.getInternalState().getNameId())
 //				continue;
-			CContactMapAbstractAgent agentToAdd = a.clone();
+			CAbstractAgent agentToAdd = a.clone();
 			agentToAdd.getSite(siteFromSolution.getNameId()).getLinkState()
 					.setFreeLinkState();
 			listOut.add(agentToAdd);
@@ -213,14 +216,14 @@ class UCorrelationAbstractAgent {
 		return listOut;
 	}
 
-	private void doBound(CContactMapAbstractAgent newAgent,
+	private void doBound(CAbstractAgent newAgent,
 			CContactMapAtomicAction type) {
 		Integer key = type.getSite().getNameId();
-		CContactMapAbstractSite siteTo = toAgent.getSitesMap().get(key);
-		CContactMapAbstractSite siteNew = newAgent.getSitesMap().get(key);
+		CAbstractSite siteTo = toAgent.getSitesMap().get(key);
+		CAbstractSite siteNew = newAgent.getSitesMap().get(key);
 
-		CContactMapLinkState lsTo = siteTo.getLinkState();
-		CContactMapLinkState lsNew = siteNew.getLinkState();
+		CAbstractLinkState lsTo = siteTo.getLinkState();
+		CAbstractLinkState lsNew = siteNew.getLinkState();
 
 		lsNew.setAgentNameID(lsTo.getAgentNameID());
 		lsNew.setLinkSiteNameID(lsTo.getLinkSiteNameID());
@@ -229,7 +232,7 @@ class UCorrelationAbstractAgent {
 //			lsNew.setInternalStateNameID(lsTo.getInternalStateNameID());
 	}
 
-	private void doModify(CContactMapAbstractAgent newAgent,
+	private void doModify(CAbstractAgent newAgent,
 			CContactMapAtomicAction type) {
 		Integer key = type.getSite().getNameId();
 		CInternalState stateTo = toAgent.getSitesMap().get(key)
@@ -241,13 +244,13 @@ class UCorrelationAbstractAgent {
 		stateNew.setNameId(stateTo.getNameId());
 	}
 
-	private List<CContactMapAbstractAgent> doDelete(
-			CContactMapAbstractAgent newAgent,
+	private List<CAbstractAgent> doDelete(
+			CAbstractAgent newAgent,
 			CContactMapAbstractSolution solution){
 		// TODO DELL
 
-		List<CContactMapAbstractAgent> listOut = new ArrayList<CContactMapAbstractAgent>();
-		for (CContactMapAbstractSite siteNew : newAgent.getSitesMap().values()) {
+		List<CAbstractAgent> listOut = new ArrayList<CAbstractAgent>();
+		for (CAbstractSite siteNew : newAgent.getSitesMap().values()) {
 			if (siteNew.getLinkState().getAgentNameID() == CSite.NO_INDEX)
 				continue;
 			listOut.addAll(breakAllAgentsWithSite(newAgent, siteNew, solution));
