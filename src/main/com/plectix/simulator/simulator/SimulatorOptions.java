@@ -34,7 +34,7 @@ public enum SimulatorOptions {
 	RESCALE("rescale", true, "Rescaling factor (eg. '10.0' or '0.10')"),
 	POINTS("points", true, "Number of data points per plots"),
 	MAX_CLASHES("max_clashes", true,
-			"Max number of consequtive clashes before aborting (default 100, 0=infinite)"),
+			"Max number of consequtive clashes before aborting (default 10000, 0=infinite)"),
 	GENERATE_MAP("generate_map", true,
 			"Name of the kappa file for which the influence map should be computed"),
 	CONTACT_MAP("contact_map", true, "Name of the kappa file to build contact map"),

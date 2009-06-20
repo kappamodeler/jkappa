@@ -16,7 +16,7 @@ public class SimulationArguments {
 	public static final int NUMBER_OF_MILLISECONDS_IN_DAY = 24 * NUMBER_OF_MILLISECONDS_IN_HOUR;
 	
 	public static final int DEFAULT_SEED = -1;
-	public static final long DEFAULT_MAX_CLASHES = 100;
+	public static final long DEFAULT_MAX_CLASHES = 10000;
 	public static final int DEFAULT_NUMBER_OF_POINTS = 1000;
 	/** Maximum simulation time is 100 days */
 	public static final long DEFAULT_WALL_CLOCK_TIME_LIMIT = 100L* NUMBER_OF_MILLISECONDS_IN_DAY;
