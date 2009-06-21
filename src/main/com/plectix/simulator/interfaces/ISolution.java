@@ -65,9 +65,9 @@ public interface ISolution {
 
 	public KappaSystem getKappaSystem();
 	
-	public RuleApplicationPool prepareRuleApplicationPool(List<CInjection> injections);
+	public RuleApplicationPool prepareRuleApplicationPool();
 
-	public void applyRule(RuleApplicationPool pool);
+	public void applyChanges(RuleApplicationPool pool);
 
 	/**
 	 * This method clones given connected component.

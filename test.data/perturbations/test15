@@ -7,4 +7,4 @@
 %obs: 'a' a()
 %obs: 'agent' w()
 
-%mod: ['a'] > 1 * ['agent'] do 'rule' := 4 * 'another rule 1' + 5 * 'another rule 2'
+%mod: ['a'] > 0 do 'rule' := 4 * 'another rule 1' + 5 * 'another rule 2'

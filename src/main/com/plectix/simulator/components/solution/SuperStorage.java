@@ -3,26 +3,37 @@ package com.plectix.simulator.components.solution;
 import java.util.*;
 
 import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 
 public class SuperStorage implements IStorage {
-	private Map<String, SuperSubstance> myStorage = new TreeMap<String, SuperSubstance>();
+	private Map<String, SuperSubstance> myStorage = new HashMap<String, SuperSubstance>();
 	private final ISolution mySolution;
 
 	SuperStorage(ISolution solution) {
 		mySolution = solution;
 	}
 
-	public void tryAdd(SuperSubstance substanceToAdd) {
-		String hash = ConnectedComponentToSmilesString.getInstance()
-			.toUniqueString(substanceToAdd.getComponent());
-		if (myStorage.get(hash) == null) {
+	public boolean tryAdd(SuperSubstance substanceToAdd) {
+		String hash = substanceToAdd.getComponent().getHash();
+		if (!myStorage.containsKey(hash)) {
 			myStorage.put(hash, substanceToAdd);
+			return true;
 		}
+		return false;
+	}
+	
+	public boolean tryIncrement(IConnectedComponent component) {
+		String hash = component.getHash();
+		SuperSubstance previousEntry = myStorage.get(hash);
+		if (previousEntry != null) {
+			previousEntry.add();
+			component.deleteIncomingInjections();
+			return true;
+		}
+		return false;
 	}
 	
 	public void addOrEvenIncrement(SuperSubstance substanceToAdd) {
@@ -35,16 +46,6 @@ public class SuperStorage implements IStorage {
 		}
 	}
 	
-	public void addConnectedComponent(IConnectedComponent component) {
-		tryAdd(new SuperSubstance(component));
-	}
-
-//	public void removeConnectedComponent(IConnectedComponent component) {
-//		String hash = ConnectedComponentToSmilesString.getInstance().toUniqueString(component);
-//		SuperSubstance substance = myStorage.remove(hash);
-//		substance.extract();
-//	}
-
 	public void clear() {
 		myStorage.clear();
 	}
@@ -52,7 +53,9 @@ public class SuperStorage implements IStorage {
 	public List<IConnectedComponent> split() {
 		List<IConnectedComponent> list = new ArrayList<IConnectedComponent>();
 		for (SuperSubstance substance : myStorage.values()) {
-			list.add(substance.getComponent());
+			for (int i = 0; i < substance.getQuantity(); i++) {
+				list.add(substance.getComponent());
+			}
 		}
 		return list;
 	}
@@ -62,7 +65,7 @@ public class SuperStorage implements IStorage {
 		SuperSubstance image = inj.getSuperSubstance();
 		if (image != null && !image.isEmpty()) {
 			IConnectedComponent component = this.extract(image);
-			component.burnInjections();
+			component.burnIncomingInjections();
 			if (image.isEmpty()) {
 				image.getComponent().deleteAllInjections();
 			}

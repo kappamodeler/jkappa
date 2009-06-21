@@ -170,13 +170,16 @@ public class CInjection implements Serializable, WeightedItem {
 
 	public void setSimple() {
 		if (isSuper()) {
-			myPower = 1;
-			myImageComponent = null;
+//			myImageComponent = null;
 			connectedComponent.simplifyInjection(this);
 		}
 	}
 
 	public void eliminate() {
 		myPower = 0;
+	}
+
+	public void setPower(int i) {
+		myPower = i;
 	}
 }

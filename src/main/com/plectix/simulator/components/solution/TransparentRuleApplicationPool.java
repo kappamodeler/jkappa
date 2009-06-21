@@ -20,4 +20,9 @@ import com.plectix.simulator.components.CAgent;
 	public void addAgent(CAgent agent) {
 		myStorage.addAgent(agent);
 	}
+	
+	@Override
+	public void clear() {
+		
+	}
 }

@@ -7,7 +7,7 @@ import com.plectix.simulator.interfaces.*;
 
 public interface IStorage {
 
-	public void addConnectedComponent(IConnectedComponent component);
+//	public void addConnectedComponent(IConnectedComponent component);
 	
 //	public void removeConnectedComponent(IConnectedComponent component);
 	

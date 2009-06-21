@@ -32,7 +32,6 @@ public class KappaModelCreator {
 			model.setSolution(solution);
 		}
 
-		// System.out.println(myAgentFactory.getCurrentId());
 		Collection<AbstractRule> rules = (new RulesParagraphReader(model,
 				myArguments, myAgentFactory)).readComponent(file.getRules());
 		model.setRules(rules);

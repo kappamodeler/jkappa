@@ -7,7 +7,7 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 
 public class StraightStorage implements IStorage {
-	private final Map<Long, CAgent> agentMap = new HashMap<Long, CAgent>();;
+	private final Set<CAgent> agentMap = new HashSet<CAgent>();;
 	
 	// we instantiate this type through UniversalSolution only
 	StraightStorage() {
@@ -18,10 +18,7 @@ public class StraightStorage implements IStorage {
 	// FOR APPLICATION POOL USAGE ONLY!
 	protected final void addAgent(CAgent agent) {
 		if (agent != null) {
-			long key = agent.getHash();
-			if (agent != agentMap.get(key)) {
-				agentMap.put(key, agent);
-			}
+			agentMap.add(agent);
 		}
 	}
 	
@@ -40,19 +37,19 @@ public class StraightStorage implements IStorage {
 		if (agent == null) {
 			return;
 		}
-		agentMap.remove(agent.getHash());
+		agentMap.remove(agent);
 	}
 
 	//-----------------GETTERS----------------------------------
 	
 	public final Collection<CAgent> getAgents() {
-		return Collections.unmodifiableCollection(agentMap.values());
+		return Collections.unmodifiableCollection(agentMap);
 	}
 
 	public final List<IConnectedComponent> split() {
 		BitSet bitset = new BitSet(1024);
 		List<IConnectedComponent> ccList = new ArrayList<IConnectedComponent>();
-		for (CAgent agent : agentMap.values()) {
+		for (CAgent agent : agentMap) {
 			int index = (int) agent.getId();
 			if (!bitset.get(index)) {
 				IConnectedComponent cc = SolutionUtils.getConnectedComponent(agent);

@@ -1,11 +1,8 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationUtils;
@@ -20,18 +17,8 @@ public class CThirdSolution extends CAbstractSuperSolution {
 		myStraightStorage = getStraightStorage();
 	}
 
-	private boolean tryAddToSuperStorage(IConnectedComponent component) {
-		for (SuperSubstance ss : mySuperStorage.getComponents()) {
-			if (ss.matches(component)) {
-				ss.add();
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	public void addConnectedComponent(IConnectedComponent component) {
-		if (!tryAddToSuperStorage(component)) { 
+	private void addConnectedComponent(IConnectedComponent component) {
+		if (!mySuperStorage.tryIncrement(component)) { 
 			myStraightStorage.addConnectedComponent(component);
 		}
 	}
@@ -42,7 +29,7 @@ public class CThirdSolution extends CAbstractSuperSolution {
 		}
 	}
 
-	public void applyRule(RuleApplicationPool pool) {
+	public void applyChanges(RuleApplicationPool pool) {
 		// TODO Auto-generated method stub
 		Collection<CAgent> agents = pool.getStorage().getAgents();
 		if (!agents.isEmpty()) {

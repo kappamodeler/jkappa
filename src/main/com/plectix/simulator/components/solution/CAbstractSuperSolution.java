@@ -4,20 +4,18 @@ import java.util.*;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.simulator.*;
 
 public abstract class CAbstractSuperSolution extends ComplexSolution {
-
 	public CAbstractSuperSolution(KappaSystem system) {
 		super(system);
 	}
 
-	public abstract void applyRule(RuleApplicationPool pool);
+	public abstract void applyChanges(RuleApplicationPool pool);
 
-	public RuleApplicationPool prepareRuleApplicationPool(List<CInjection> injections) {
-		StraightStorage storage = new StraightStorage();
-		StandardRuleApplicationPool pool = new StandardRuleApplicationPool(storage);
-		return pool;
+	public RuleApplicationPool prepareRuleApplicationPool() {
+		return new StandardRuleApplicationPool(new StraightStorage());
 	}
 	
 	public void addInjectionToPool(RuleApplicationPool pool, CInjection injection) {
@@ -25,8 +23,16 @@ public abstract class CAbstractSuperSolution extends ComplexSolution {
 		if (injection.isSuper()) {
 			storage.addConnectedComponent(getSuperStorage().extractComponent(injection));
 		} else {
-			for (CAgent agent : injection.getImage()) {
-				storage.addAgent(agent);
+			List<IConnectedComponent> list = SimulationUtils.buildConnectedComponents(injection.getImage());
+			if (list != null) {
+				for (IConnectedComponent component : list) {
+					if (injection.getImageAgent() != null) {
+						for (CAgent agent : component.getAgents()) {
+							storage.addAgent(agent);
+							getStraightStorage().removeAgent(agent);
+						}	
+					}
+				}
 			}
 		}
 	}

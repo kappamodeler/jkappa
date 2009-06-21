@@ -288,7 +288,8 @@ public class CRule implements Serializable {
 			}
 		}
 
-		solution.applyRule(pool);
+		solution.applyChanges(pool);
+		pool.clear();
 		
 		if (netNotation != null) {
 			addFixedSitesToNetworkNotation(netNotation);
@@ -301,7 +302,7 @@ public class CRule implements Serializable {
 	
 	public final void preparePool(SimulationData simulationData) {
 		ISolution solution = simulationData.getKappaSystem().getSolution();
-		pool = solution.prepareRuleApplicationPool(null);
+		pool = solution.prepareRuleApplicationPool();
 	}
 	/**
 	 * This method applies the last rule for stories
@@ -974,7 +975,6 @@ public class CRule implements Serializable {
 		for (IConnectedComponent cc : this.leftHandside) {
 			activity *= cc.getInjectionsWeight();
 		}
-		// activity *= constraintData.getActivity();
 		activity *= rate;
 		activity /= automorphismNumber;
 	}

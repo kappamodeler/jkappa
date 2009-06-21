@@ -3,12 +3,10 @@ package com.plectix.simulator.components.solution;
 import java.io.Serializable;
 import java.util.*;
 
-import com.plectix.simulator.action.*;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.simulator.SimulationUtils;
 
 @SuppressWarnings("serial")
 /*package*/ final class CSolution extends ComplexSolution implements Serializable {
@@ -32,12 +30,11 @@ import com.plectix.simulator.simulator.SimulationUtils;
 
 	//----------------RULE APPLICATION---------------------------
 	
-	public RuleApplicationPool prepareRuleApplicationPool(
-			List<CInjection> injections) {
+	public RuleApplicationPool prepareRuleApplicationPool() {
 		return new TransparentRuleApplicationPool(myStraightStorage);
 	}
 
-	public void applyRule(RuleApplicationPool pool) {
+	public void applyChanges(RuleApplicationPool pool) {
 	}
 
 	public void addInitialConnectedComponents(long quant, List<CAgent> components) {

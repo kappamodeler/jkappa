@@ -26,7 +26,7 @@ public interface IConnectedComponent extends ISolutionComponent {
 	 */
 	public boolean isEmpty();
 
-	public void burnInjections();
+	public void burnIncomingInjections();
 
 	public String getHash();
 
@@ -37,4 +37,6 @@ public interface IConnectedComponent extends ISolutionComponent {
 	 * @return the sum weight of injections from this connected component   
 	 */
 	public long getInjectionsWeight();
+
+	public void deleteIncomingInjections();
 }

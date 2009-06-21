@@ -375,6 +375,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	}
 
 	public void simplifyInjection(CInjection inj) {
+		inj.setPower(1);
 		myInjections.updatedItem(inj);
 	}
 	
@@ -409,7 +410,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	}
 
 	
-	public void burnInjections() {
+	public void burnIncomingInjections() {
 		for (CAgent agent : agentList) {
 			for (CSite site : agent.getSites()) {
 				for (CLiftElement lift : site.getLift()) {
@@ -419,6 +420,22 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 			// default-site case
 			for (CLiftElement lift : agent.getDefaultSite().getLift()) {
 				lift.getInjection().setSimple();
+			}
+		}
+	}
+	
+	public void deleteIncomingInjections() {
+		for (CAgent agent : agentList) {
+			for (CSite site : agent.getSites()) {
+				for (CLiftElement lift : site.getLift()) {
+					CInjection inj = lift.getInjection();
+					inj.getConnectedComponent().removeInjection(inj);
+				}
+			}
+			// default-site case
+			for (CLiftElement lift : agent.getDefaultSite().getLift()) {
+				CInjection inj = lift.getInjection();
+				inj.getConnectedComponent().removeInjection(inj);
 			}
 		}
 	}

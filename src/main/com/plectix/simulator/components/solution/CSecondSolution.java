@@ -20,7 +20,7 @@ import com.plectix.simulator.simulator.*;
 		myStraightStorage.addConnectedComponent(component);
 	}
 
-	public void applyRule(RuleApplicationPool pool) {
+	public void applyChanges(RuleApplicationPool pool) {
 		// we can skip checking that getStorage() returns temporary storage
 		Collection<CAgent> agents = pool.getStorage().getAgents();
 		for (CAgent agent : agents) {

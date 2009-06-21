@@ -8,4 +8,8 @@ public abstract class RuleApplicationPool {
 	public abstract void removeAgent(CAgent agent);
 	
 	public abstract StraightStorage getStorage();
+
+	public void clear() {
+		getStorage().clear();
+	}
 }
