@@ -30,8 +30,6 @@ public interface IConnectedComponent extends ISolutionComponent {
 
 	public String getHash();
 
-	public void deleteAllInjections();
-
 	/**
 	 * 
 	 * @return the sum weight of injections from this connected component   

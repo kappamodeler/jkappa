@@ -15,15 +15,6 @@ public class SuperStorage implements IStorage {
 	SuperStorage(ISolution solution) {
 		mySolution = solution;
 	}
-
-	public boolean tryAdd(SuperSubstance substanceToAdd) {
-		String hash = substanceToAdd.getComponent().getHash();
-		if (!myStorage.containsKey(hash)) {
-			myStorage.put(hash, substanceToAdd);
-			return true;
-		}
-		return false;
-	}
 	
 	public boolean tryIncrement(IConnectedComponent component) {
 		String hash = component.getHash();
@@ -66,9 +57,9 @@ public class SuperStorage implements IStorage {
 		if (image != null && !image.isEmpty()) {
 			IConnectedComponent component = this.extract(image);
 			component.burnIncomingInjections();
-			if (image.isEmpty()) {
-				image.getComponent().deleteAllInjections();
-			}
+//			if (image.isEmpty()) {
+//				image.getComponent().deleteAllInjections();
+//			}
 			return component;
 		} else {
 			return null;
@@ -82,6 +73,7 @@ public class SuperStorage implements IStorage {
 			setInjectionsForTheRestOfSubstance(image);
 			return component;
 		} else {
+			// not reachable
 			return null;
 		}
 	}

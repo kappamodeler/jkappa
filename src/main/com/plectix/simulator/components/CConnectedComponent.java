@@ -370,6 +370,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * This method returns all injections from current connected components.
 	 * @return list of injections from this connected component
 	 */
+	// TODO get rid of
 	public final Collection<CInjection> getInjectionsList() {
 		return myInjections.asCollection();
 	}
@@ -439,24 +440,14 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 			}
 		}
 	}
-	
-	public void deleteAllInjections() {
-		for (CAgent agent : agentList) {
-			for (CSite site : agent.getSites()) {
-				for (CLiftElement lift : site.getLift()) {
-					this.removeInjection(lift.getInjection());
-				}
-			}
-			// default-site case
-			for (CLiftElement lift : agent.getDefaultSite().getLift()) {
-				this.removeInjection(lift.getInjection());
-			}
-		}
-	}
 	// -----------------------hash, toString, equals-----------------------------
 
 
 	public String getHash() {
 		return ConnectedComponentToSmilesString.getInstance().toUniqueString(this);
+	}
+	
+	public String toString() {
+		return getHash(); 
 	}
 }

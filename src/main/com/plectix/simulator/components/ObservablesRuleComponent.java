@@ -46,7 +46,7 @@ public final class ObservablesRuleComponent implements IObservablesRuleComponent
 		double count = rule.getRate();
 
 		for (IConnectedComponent cc : rule.getLeftHandSide())
-			count *= cc.getInjectionsList().size();
+			count *= cc.getInjectionsWeight();
 		return count;
 	}
 

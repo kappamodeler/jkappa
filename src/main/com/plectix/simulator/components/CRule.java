@@ -270,7 +270,6 @@ public class CRule implements Serializable {
 		sitesConnectedWithBroken = new ArrayList<CSite>();
 		this.injList = injectionList;
 		ISolution solution = simulationData.getKappaSystem().getSolution(); 
-//		RuleApplicationPool pool = solution.prepareRuleApplicationPool(injectionList);
 		
 		if (rightHandside != null) {
 			for (IConnectedComponent cc : rightHandside) {
@@ -286,10 +285,9 @@ public class CRule implements Serializable {
 						.getLeftCComponent())), netNotation, simulationData);
 			}
 		}
-
+		
 		solution.applyChanges(pool);
 		pool.clear();
-		
 		if (netNotation != null) {
 			addFixedSitesToNetworkNotation(netNotation);
 		}
@@ -951,11 +949,9 @@ public class CRule implements Serializable {
 	 */
 	public final boolean canBeApplied() {
 		int injCounter = 0;
-		List<CInjection> injList = new ArrayList<CInjection>();
 		for (IConnectedComponent cc : this.getLeftHandSide()) {
-			if (!cc.isEmpty() && cc.getInjectionsList().size() != 0) {
+			if (!cc.isEmpty() && cc.getInjectionsWeight() != 0) {
 				injCounter++;
-				injList.add(cc.getInjectionsList().iterator().next());
 			} else if (cc.isEmpty()) {
 				injCounter++;
 			}
@@ -1054,8 +1050,8 @@ public class CRule implements Serializable {
 	 */
 	public final boolean isClashForInfiniteRule() {
 		if (this.leftHandside.size() == 2) {
-			if (this.leftHandside.get(0).getInjectionsList().size() == 1
-					&& this.leftHandside.get(1).getInjectionsList().size() == 1) {
+			if (this.leftHandside.get(0).getInjectionsWeight() == 1
+					&& this.leftHandside.get(1).getInjectionsWeight() == 1) {
 				List<CInjection> injList = new ArrayList<CInjection>();
 				injList.add(this.leftHandside.get(0).getFirstInjection());
 				injList.add(this.leftHandside.get(1).getFirstInjection());

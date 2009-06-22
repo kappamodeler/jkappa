@@ -101,7 +101,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		myCurrentInjectionsList = ruleProbabilityCalculation.chooseInjectionsForRuleApplication(myActiveRule);
 		currentTime += ruleProbabilityCalculation.getTimeValue();
 
-		if (!isClash(myCurrentInjectionsList)) {
+		if (myCurrentInjectionsList != null) {
 			// negative update
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("negative update");

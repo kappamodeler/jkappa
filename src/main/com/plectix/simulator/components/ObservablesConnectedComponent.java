@@ -34,9 +34,9 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 	private final String line;
 	private final int nameID;
 	private final List<Integer> automorphicObservables;
-	private final List<Integer> countList = new ArrayList<Integer>();
+	private final List<Long> countList = new ArrayList<Long>();
 	private final boolean unique;
-	private int lastInjectionsQuantity = -1;
+	private long lastInjectionsQuantity = -1;
 	
 	/**
 	 * Constructor. Creates ObservablesConnectedComponent from the list of connected agents.<br>
@@ -83,12 +83,12 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 	}
 
 	public final void updateLastValue() {
-		lastInjectionsQuantity = getInjectionsList().size();
+		lastInjectionsQuantity = getInjectionsWeight();
 	}
 
 	public final void calculate(boolean replaceLast) {
 		if (replaceLast)
-			countList.set(countList.size() - 1, getInjectionsList().size());
+			countList.set(countList.size() - 1, getInjectionsWeight());
 		else
 			countList.add(lastInjectionsQuantity);
 	}
@@ -99,12 +99,12 @@ public final class ObservablesConnectedComponent extends CConnectedComponent
 
 	public final double getCurrentState(CObservables obs) {
 		if (this.isUnique())
-			return getInjectionsList().size();
+			return getInjectionsWeight();
 		long value = 1;
 		for (IObservablesConnectedComponent cc : obs
 				.getConnectedComponentList())
 			if (cc.getId() == this.getId())
-				value *= cc.getInjectionsList().size();
+				value *= cc.getInjectionsWeight();
 		return value;
 	}
 

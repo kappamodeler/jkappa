@@ -18,6 +18,7 @@ import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.controller.SimulatorStatusInterface;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.util.MemoryUtil;
 import com.plectix.simulator.util.PlxLogger;
@@ -291,7 +292,7 @@ public class Simulator implements SimulatorInterface {
 //				}
 //			}
 	
-			if (!rule.isClash(injectionsList)) {
+			if (injectionsList != null) {
 				// negative update
 				max_clash = 0;
 				if (LOGGER.isDebugEnabled())

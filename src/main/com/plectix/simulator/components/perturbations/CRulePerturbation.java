@@ -70,7 +70,7 @@ public final class CRulePerturbation extends CRule {
 			if (count <= 1)
 				downRule();
 		} else {
-			if (getLeftHandSide().get(0).getInjectionsList().size() == 1)
+			if (getLeftHandSide().get(0).getInjectionsWeight() == 1)
 				downRule();
 		}
 	}

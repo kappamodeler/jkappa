@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.*;
+import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.*;
 import com.plectix.simulator.util.Info.InfoType;
@@ -63,7 +64,11 @@ public final class CProbabilityCalculation {
 			list.add(inj);
 			simulationData.getKappaSystem().getSolution().addInjectionToPool(rule.getPool(), inj);
 		}
-		return list;
+		if (!rule.isClash(list)) {
+			return list;
+		} else {
+			return null;
+		}
 	}
 	
 	private final void recalculateCommonActivity() {
