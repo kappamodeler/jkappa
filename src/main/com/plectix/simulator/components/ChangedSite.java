@@ -1,7 +1,6 @@
-package com.plectix.simulator.components.complex.contactMap;
+package com.plectix.simulator.components;
 import java.io.Serializable;
 
-import com.plectix.simulator.components.CSite;
 
 @SuppressWarnings("serial")
 public class ChangedSite implements Serializable{

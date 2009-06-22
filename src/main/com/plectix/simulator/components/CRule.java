@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.plectix.simulator.action.*;
-import com.plectix.simulator.components.complex.contactMap.ChangedSite;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
