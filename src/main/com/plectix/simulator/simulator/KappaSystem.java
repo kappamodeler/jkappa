@@ -6,16 +6,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.complex.contactMap.CContactMap;
-import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
-import com.plectix.simulator.components.complex.subviews.mock.CMockSubViews;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.stories.CStories;
@@ -23,12 +19,15 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.util.IdGenerator;
+import com.plectix.simulator.probability.WeightedItemSelector;
+import com.plectix.simulator.probability.skiplist.SkipListSelector;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class KappaSystem {
-	private List<CRule> rules = null;
+	private WeightedItemSelector<CRule> rules = new SkipListSelector<CRule>(ThreadLocalData.getRandom());
+	private List<CRule> orderedRulesList = new ArrayList<CRule>();
 	private CStories stories = null;
 	private List<CPerturbation> perturbations = null;
 	private CObservables observables = new CObservables();
@@ -52,7 +51,8 @@ public class KappaSystem {
 				ois = new ObjectInputStream(new FileInputStream(args
 						.getSerializationFileName()));
 				solution = (ISolution) ois.readObject();
-				rules = (List<CRule>) ois.readObject();
+				rules = (WeightedItemSelector<CRule>) ois.readObject();
+				orderedRulesList = (List<CRule>) ois.readObject();
 				observables = (CObservables) ois.readObject();
 				perturbations = (List<CPerturbation>) ois.readObject();
 				simulationData.setSnapshotTimes((List<Double>) ois
@@ -74,6 +74,7 @@ public class KappaSystem {
 						new FileOutputStream(args.getSerializationFileName()));
 				oos.writeObject(solution);
 				oos.writeObject(rules);
+				oos.writeObject(orderedRulesList);
 				oos.writeObject(observables);
 				oos.writeObject(perturbations);
 				oos.writeObject(simulationData.getSnapshotTimes());
@@ -217,6 +218,12 @@ public class KappaSystem {
 
 	// ------------------MISC--------------------------------
 
+	public void setRules(List<CRule> rules2) {
+		// TODO Auto-generated method stub
+		orderedRulesList = rules2;
+		rules.updatedItems(rules2);
+	}
+	
 	public final void checkPerturbation(double currentTime) {
 		if (perturbations.size() != 0) {
 			for (CPerturbation pb : perturbations) {
@@ -244,12 +251,17 @@ public class KappaSystem {
 	// ----------------------GETTERS-------------------------------
 
 	public final List<CRule> getRules() {
-		return Collections.unmodifiableList(rules);
+//		if (rules != null) {
+//			return rules.asSet();
+//		} else { 
+//			return null;
+//		}
+		return Collections.unmodifiableList(orderedRulesList);
 	}
 
 	public final CRule getRuleByID(int ruleID) {
-		// TODO: We are scanning a list linearly, can't we use a HashMap here? 
-		for (CRule rule : rules) {
+		// TODO: We are scanning a list linearly, can't we use a HashMap here?
+		for (CRule rule : orderedRulesList) {
 			if (rule.getRuleID() == ruleID) {
 				return rule;
 			}
@@ -257,6 +269,10 @@ public class KappaSystem {
 		return null;
 	}
 
+//	public final CRule getRuleByNumber(int i) {
+//		return orderedRulesList.get(i);
+//	}
+	
 	public final ISolution getSolution() {
 		return solution;
 	}
@@ -287,12 +303,9 @@ public class KappaSystem {
 
 	// ----------------------SETTERS / ADDERS-------------------------------
 
-	public final void setRules(List<CRule> rules) {
-		this.rules = rules;
-	}
-
 	public final void addRule(CRule rule) {
-		rules.add(rule);
+		orderedRulesList.add(rule);
+		rules.updatedItem(rule);
 	}
 
 	public void setSolution(ISolution solution) {
@@ -310,7 +323,7 @@ public class KappaSystem {
 	public final void addStories(String name) {
 		byte index = 0;
 		List<Integer> ruleIDs = new ArrayList<Integer>();
-		for (CRule rule : rules) {
+		for (CRule rule : orderedRulesList) {
 			if ((rule.getName() != null)
 					&& (rule.getName().startsWith(name) && ((name.length() == rule
 							.getName().length()) || ((rule.getName()
@@ -337,10 +350,78 @@ public class KappaSystem {
 	}
 
 	public void clearRules() {
-		rules.clear();
+		rules = new SkipListSelector<CRule>(ThreadLocalData.getRandom());
+		orderedRulesList.clear();
 	}
 
 	public void clearPerturbations() {
 		perturbations.clear();
 	}
+	
+	//--------------------METHODS FROM PROBABILITY CALCULATION--------------------
+	
+	public final CRule getRandomRule() {
+		Set<CRule> updatedElements = new HashSet<CRule>();
+		for (CRule rule : orderedRulesList) {
+			double oldActivity = rule.getActivity();
+			rule.calculateActivity();
+			if (rule.getActivity() != oldActivity) {
+				updatedElements.add(rule);
+			}
+		}
+		rules.updatedItems(updatedElements);
+		return rules.select();
+	}
+	
+	public final double getTimeValue() {
+		double randomValue = 0;
+
+		while (randomValue == 0.0)
+			randomValue = ThreadLocalData.getRandom().getDouble();
+
+		return -1. / rules.getTotalWeight() * java.lang.Math.log(randomValue);
+	}
+	
+//	private final void calculation() {
+//		calculateRulesActivity();
+//		recalculateCommonActivity();
+//		calculateProbability();
+//	}
+
+//	private final int getRandomIndex() {
+//
+//		for (int i = 0; i < rulesProbability.length; i++) {
+//			if (rules.get(i).isInfiniteRated() && (rules.get(i).getActivity()>0.0) 
+//					&& (!(rules.get(i).isClashForInfiniteRule())))
+//				return i;
+//		}
+//
+//		for (int i = 0; i < rulesProbability.length; i++) {
+//			if (randomValue < rulesProbability[i])
+//				return i;
+//		}
+//		return -1;
+//	}
+//	
+//	private final void recalculateCommonActivity() {
+//		commonActivity = 0.;
+//		for (CRule rule : rules) {
+//			commonActivity += rule.getActivity();
+//		}
+//	}
+	
+//	private final void calculateRulesActivity() {
+//		for (CRule rule : rules)
+//			rule.calcultateActivity();
+//	}
+//
+//	private final void calculateProbability() {
+//		rulesProbability[0] = rules.get(0).getActivity() / commonActivity;
+//		for (int i = 1; i < rulesProbability.length; i++) {
+//			rulesProbability[i] = rulesProbability[i - 1]
+//					+ rules.get(i).getActivity() / commonActivity;
+//		}
+//	}
+
+	
 }

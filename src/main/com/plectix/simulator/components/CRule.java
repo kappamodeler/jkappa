@@ -9,6 +9,7 @@ import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.probability.WeightedItem;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.PlxLogger;
@@ -39,7 +40,7 @@ import com.plectix.simulator.util.PlxLogger;
  * @see CConnectedComponent
  * @author evlasov
  */
-public class CRule implements Serializable {
+public class CRule implements Serializable, WeightedItem {
 	private static final long serialVersionUID = 6045806917402381525L;
 	
 	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(CRule.class);
@@ -965,7 +966,7 @@ public class CRule implements Serializable {
 	/**
 	 * This method calculates activity of this rule according to it's current parameters
 	 */
-	public final void calcultateActivity() {
+	public final void calculateActivity() {
 		activity = 1.;
 		for (IConnectedComponent cc : this.leftHandside) {
 			activity *= cc.getInjectionsWeight();
@@ -1221,5 +1222,10 @@ public class CRule implements Serializable {
 		String st = "ruleName=" + this.ruleName + " ";
 
 		return st;
+	}
+
+	@Override
+	public double getWeight() {
+		return activity;
 	}
 }

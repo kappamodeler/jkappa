@@ -952,18 +952,19 @@ public class SimulationData {
 			 * add activation map
 			 * */
 
-			for (int i = myKappaSystem.getRules().size() - 1; i >= 0; i--)
-				printMap(doc, TYPE_POSITIVE_MAP, influenceMap, myKappaSystem
-						.getRules().get(i), myKappaSystem.getRules().get(i)
-						.getActivatedRuleForXMLOutput(), myKappaSystem
-						.getRules().get(i).getActivatedObservableForXMLOutput());
+			for (int i = myKappaSystem.getRules().size() - 1; i >= 0; i--) {
+				CRule rule = myKappaSystem.getRuleByID(i);
+				printMap(doc, TYPE_POSITIVE_MAP, influenceMap, rule, 
+						rule.getActivatedRuleForXMLOutput(), 
+						rule.getActivatedObservableForXMLOutput());
+			}
 			if (simulationArguments.isInhibitionMap()) {
-				for (int i = myKappaSystem.getRules().size() - 1; i >= 0; i--)
-					printMap(doc, TYPE_NEGATIVE_MAP, influenceMap,
-							myKappaSystem.getRules().get(i), myKappaSystem
-									.getRules().get(i).getInhibitedRule(),
-							myKappaSystem.getRules().get(i)
-									.getInhibitedObservable());
+				for (int i = myKappaSystem.getRules().size() - 1; i >= 0; i--) {
+					CRule rule = myKappaSystem.getRuleByID(i);
+					printMap(doc, TYPE_NEGATIVE_MAP, influenceMap, rule, 
+							rule.getInhibitedRule(),
+							rule.getInhibitedObservable());
+				}
 			}
 			simplxSession.appendChild(influenceMap);
 			stopTimer(InfoType.OUTPUT, timer,
@@ -975,8 +976,8 @@ public class SimulationData {
 					.getTrees()) {
 				for (CStoryTrees st : stList) {
 					Element story = doc.createElement("Story");
-					story.setAttribute("Observable", myKappaSystem.getRules()
-							.get(st.getRuleID()).getName());
+					story.setAttribute("Observable", 
+							myKappaSystem.getRuleByID(st.getRuleID()).getName());
 					double percentage = ((double) st.getIsomorphicCount())
 							/ (double) simulationArguments.getIterations();
 					story.setAttribute("Percentage", Double
@@ -1314,19 +1315,18 @@ public class SimulationData {
 			int rulesAndObsNumber, Document doc) {
 		for (int i = myKappaSystem.getRules().size() - 1; i >= 0; i--) {
 			Element node = null;
+			CRule rule = myKappaSystem.getRuleByID(i);
 			if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 				node = doc.createElement("Rule");
-				node.setAttribute("Id", Integer.toString(myKappaSystem
-						.getRules().get(i).getRuleID() + 1));
+				node.setAttribute("Id", Integer.toString(rule.getRuleID() + 1));
 			} else {
 				node = doc.createElement("Node");
 				node.setAttribute("Type", "RULE");
-				node.setAttribute("Text", myKappaSystem.getRules().get(i)
-						.getName());
+				node.setAttribute("Text", rule.getName());
 				node.setAttribute("Id", Integer.toString(rulesAndObsNumber--));
 			}
-			node.setAttribute("Data", getData(myKappaSystem.getRules().get(i), isOcamlStyleObsName()));
-			node.setAttribute("Name", myKappaSystem.getRules().get(i).getName());
+			node.setAttribute("Data", getData(rule, isOcamlStyleObsName()));
+			node.setAttribute("Name", rule.getName());
 			influenceMap.appendChild(node);
 		}
 	}

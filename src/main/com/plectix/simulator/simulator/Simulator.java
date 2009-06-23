@@ -248,7 +248,7 @@ public class Simulator implements SimulatorInterface {
 			}
 			
 			simulationData.getKappaSystem().checkPerturbation(currentTime);
-			CRule rule = ruleProbabilityCalculation.getRandomRule();
+			CRule rule = simulationData.getKappaSystem().getRandomRule();
 	
 			if (rule == null) {
 				List<CPerturbation> perturbations = simulationData
@@ -271,7 +271,7 @@ public class Simulator implements SimulatorInterface {
 							+ simulationData.getKappaSystem().getObservables()
 									.getTimeSampleMin();
 					simulationData.getKappaSystem().checkPerturbation(currentTime);
-					rule = ruleProbabilityCalculation.getRandomRule();
+					rule = simulationData.getKappaSystem().getRandomRule();
 				} else {
 					isEndRules = true;
 					simulationData.setTimeLength(currentTime);
@@ -324,7 +324,7 @@ public class Simulator implements SimulatorInterface {
 	
 			if (!rule.isInfiniteRated()) {
 				synchronized (statusLock) {
-					currentTime += ruleProbabilityCalculation.getTimeValue();
+					currentTime += simulationData.getKappaSystem().getTimeValue();
 				}
 			}
 			
@@ -407,7 +407,7 @@ public class Simulator implements SimulatorInterface {
 				timer.startTimer();
 			}
 			
-			ruleProbabilityCalculation.refreshSimulationInfo(simulationData);
+//			ruleProbabilityCalculation.refreshSimulationInfo(simulationData);
 			
 			boolean isEndRules = false;
 			long clash = 0;
@@ -424,7 +424,7 @@ public class Simulator implements SimulatorInterface {
 				}
 				
 				simulationData.getKappaSystem().checkPerturbation(currentTime);
-				CRule rule = ruleProbabilityCalculation.getRandomRule();
+				CRule rule = simulationData.getKappaSystem().getRandomRule();
 
 				if (rule == null) {
 					simulationData.setTimeLength(currentTime);
@@ -436,7 +436,7 @@ public class Simulator implements SimulatorInterface {
 				List<CInjection> injectionsList = ruleProbabilityCalculation.chooseInjectionsForRuleApplication(rule);
 				if (!rule.isInfiniteRated()) {
 					synchronized (statusLock) {
-						currentTime += ruleProbabilityCalculation.getTimeValue();
+						currentTime += simulationData.getKappaSystem().getTimeValue();
 					}
 				}
 				if (!rule.isClash(injectionsList)) {

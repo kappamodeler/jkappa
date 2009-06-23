@@ -2,6 +2,7 @@ package com.plectix.simulator.stories;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;

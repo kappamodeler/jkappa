@@ -372,7 +372,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 */
 	// TODO get rid of
 	public final Collection<CInjection> getInjectionsList() {
-		return myInjections.asCollection();
+		return myInjections.asSet();
 	}
 
 	public void simplifyInjection(CInjection inj) {

@@ -102,7 +102,7 @@ public class InitTestAction extends DirectoryTestsRunner{
 	protected List<CInjection> run() {
 		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(
 				InfoType.OUTPUT,mySimulator.getSimulationData());
-		myActiveRule = ruleProbabilityCalculation.getRandomRule();
+		myActiveRule = mySimulator.getSimulationData().getKappaSystem().getRandomRule();
 
 		if (myActiveRule == null) {
 			mySimulator.getSimulationData().setTimeLength(currentTime);
@@ -114,7 +114,7 @@ public class InitTestAction extends DirectoryTestsRunner{
 
 		List<CInjection> injectionsList = ruleProbabilityCalculation.chooseInjectionsForRuleApplication(myActiveRule);
 
-		currentTime += ruleProbabilityCalculation.getTimeValue();
+		currentTime += mySimulator.getSimulationData().getKappaSystem().getTimeValue();
 
 //		apply(injectionsList);
 		return injectionsList;

@@ -30,7 +30,7 @@ public interface WeightedItemSelector<E extends WeightedItem> {
 	 * 
 	 * @return collection with all items
 	 */
-	public abstract Collection<E> asCollection();
+	public abstract Set<E> asSet();
 
 	/**
 	 * Check for changes in item

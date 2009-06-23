@@ -2,7 +2,9 @@ package com.plectix.simulator.updates;
 
 import static org.junit.Assert.fail;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.junit.Before;
@@ -62,7 +64,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		return myActiveRule;
 	}
 
-	public List<CRule> getRules() {
+	public Collection<CRule> getRules() {
 		return mySimulator.getSimulationData().getKappaSystem().getRules();
 	}
 
@@ -86,7 +88,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 
 		mySimulator.getSimulationData().getKappaSystem().getObservables().calculateObs(currentTime,
 				1, mySimulator.getSimulationData().getSimulationArguments().isTime());
-		myActiveRule = ruleProbabilityCalculation.getRandomRule();
+		myActiveRule = mySimulator.getSimulationData().getKappaSystem().getRandomRule();
 
 		if (myActiveRule == null) {
 			mySimulator.getSimulationData().setTimeLength(currentTime);
@@ -99,7 +101,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 //		myCurrentInjectionsList = ruleProbabilityCalculation
 //				.getSomeInjectionList(myActiveRule);
 		myCurrentInjectionsList = ruleProbabilityCalculation.chooseInjectionsForRuleApplication(myActiveRule);
-		currentTime += ruleProbabilityCalculation.getTimeValue();
+		currentTime += mySimulator.getSimulationData().getKappaSystem().getTimeValue();
 
 		if (myCurrentInjectionsList != null) {
 			// negative update

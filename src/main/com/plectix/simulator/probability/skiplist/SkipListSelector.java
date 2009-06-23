@@ -1,9 +1,6 @@
 package com.plectix.simulator.probability.skiplist;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.probability.WeightedItem;
@@ -111,8 +108,8 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 		return totalWeight;
 	}
 	
-	public Collection<E> asCollection() {
-		return Collections.unmodifiableCollection(weightedItemToSkipListItemMap.keySet());
+	public Set<E> asSet() {
+		return Collections.unmodifiableSet(weightedItemToSkipListItemMap.keySet());
 	}
 	
 	private final void deleteItem(SkipListItem<E> skipListItem) {
