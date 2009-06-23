@@ -18,4 +18,6 @@ public interface IAllSubViewsOfAllAgents {
 	
 	public List<CSubViews> getAllSubViewsByType(String type);
 	
+	public CSubViews getSubViewForRule(String typeOfAgent, CRule rule);
+	
 }
