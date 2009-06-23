@@ -2,6 +2,7 @@ package com.plectix.simulator.components.complex.subviews;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.ISolution;

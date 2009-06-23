@@ -1,4 +1,4 @@
-package com.plectix.simulator.components.complex.subviews;
+package com.plectix.simulator.components.complex.subviews.storage;
 
 import java.util.List;
 

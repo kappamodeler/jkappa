@@ -16,12 +16,18 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 
 public class SubViewsRule {
 	private List<AbstractAction> actions;
+	private int ruleId;
 
 	public SubViewsRule(CRule rule) {
 		actions = new LinkedList<AbstractAction>();
+		this.ruleId = rule.getRuleID();
 		List<CAbstractAgent> left = initListAgents(rule.getLeftHandSide());
 		List<CAbstractAgent> right = initListAgents(rule.getRightHandSide());
 		initAtomicActions(left, right);
+	}
+	
+	public int getRuleId(){
+		return ruleId;
 	}
 
 	/**
