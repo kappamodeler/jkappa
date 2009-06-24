@@ -276,6 +276,21 @@ public class SimulationUtils {
 		}
 	}
 	
+	public final static void doNegativeUpdate(CInjection injection) {
+		if (injection != CInjection.EMPTY_INJECTION) {
+		for (CSite site : injection.getChangedSites()) {
+			site.getAgentLink().getDefaultSite().clearIncomingInjections(injection);
+			site.getAgentLink().getDefaultSite().clearLifts();
+			site.clearIncomingInjections(injection);
+			site.clearLifts();
+		}
+		for (CSite site : injection.getSiteList()) {
+			site.removeInjectionFromLift(injection);
+		}
+		injection.getConnectedComponent().removeInjection(injection);
+		}
+	}
+	
 	public final static void doNegativeUpdateForContactMap(List<CInjection> injectionsList, CRule rule) {
 		for (CInjection injection : injectionsList) {
 			if (injection != CInjection.EMPTY_INJECTION) {
@@ -288,8 +303,7 @@ public class SimulationUtils {
 				}
 				if (injection.getChangedSites().size() != 0) {
 					for (CSite site : injection.getSiteList()) {
-						if (!injection
-								.checkSiteExistanceAmongChangedSites(site)) {
+						if (!injection.checkSiteExistanceAmongChangedSites(site)) {
 							site.removeInjectionFromLift(injection);
 						}
 					}

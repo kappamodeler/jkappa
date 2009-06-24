@@ -22,6 +22,8 @@ public class SuperStorage implements IStorage {
 		if (previousEntry != null) {
 			previousEntry.add();
 			component.deleteIncomingInjections();
+			previousEntry.getComponent().deleteIncomingInjections();
+			setInjectionsForSuperSubstance(previousEntry);
 			return true;
 		}
 		return false;
@@ -57,9 +59,6 @@ public class SuperStorage implements IStorage {
 		if (image != null && !image.isEmpty()) {
 			IConnectedComponent component = this.extract(image);
 			component.burnIncomingInjections();
-//			if (image.isEmpty()) {
-//				image.getComponent().deleteAllInjections();
-//			}
 			return component;
 		} else {
 			return null;
@@ -70,7 +69,10 @@ public class SuperStorage implements IStorage {
 		if (!image.isEmpty()) {
 			IConnectedComponent component = image.extract();
 			image.setComponent(mySolution.cloneConnectedComponent(component));
-			setInjectionsForTheRestOfSubstance(image);
+			// we don't want to choose an injection built to empty SS
+			if (!image.isEmpty()) {
+				setInjectionsForSuperSubstance(image);
+			}
 			return component;
 		} else {
 			// not reachable
@@ -78,7 +80,7 @@ public class SuperStorage implements IStorage {
 		}
 	}
 
-	private void setInjectionsForTheRestOfSubstance(SuperSubstance substance) {
+	private void setInjectionsForSuperSubstance(SuperSubstance substance) {
 		(new InjectionsBuilder(mySolution.getKappaSystem())).build(substance);
 	}
 	

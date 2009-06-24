@@ -64,16 +64,13 @@ public class TestPositiveUpdate extends TestUpdate {
 	public void testLHS() {
 		List<IConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
 		for (IConnectedComponent cc : leftHand) {
-			Collection<CInjection> componentInjections = cc.getInjectionsList();
 			if (!lhsIsEmpty(leftHand)) {
 				myFailer.assertEquals("LHS injections",
 						myLHSInjectionsQuantity.get(myTestFileName), 
 						(int)cc.getInjectionsWeight());
 			} else {
-				myFailer.assertTrue("LHS injections", (componentInjections
-						.size() == 1)
-						&& (componentInjections
-								.contains(CInjection.EMPTY_INJECTION)));
+				myFailer.assertTrue("LHS injections", (cc.getInjectionsWeight() == 1)
+						&& (cc.getInjectionsList().contains(CInjection.EMPTY_INJECTION)));
 			}
 		}
 	}

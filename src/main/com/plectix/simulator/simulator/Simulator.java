@@ -249,7 +249,6 @@ public class Simulator implements SimulatorInterface {
 			
 			simulationData.getKappaSystem().checkPerturbation(currentTime);
 			CRule rule = simulationData.getKappaSystem().getRandomRule();
-	
 			if (rule == null) {
 				List<CPerturbation> perturbations = simulationData
 						.getKappaSystem().getPerturbations();
@@ -312,6 +311,8 @@ public class Simulator implements SimulatorInterface {
 	
 				simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
 	
+				simulationData.getKappaSystem().getSolution().applyChanges(rule.getPool());
+				
 				simulationData.getKappaSystem().getObservables().calculateObs(currentTime, currentEventNumber, simulationData.getSimulationArguments().isTime());
 			} else {
 				simulationData.addInfo(InfoType.NOT_OUTPUT,InfoType.INTERNAL, "Application of rule exp is clashing");

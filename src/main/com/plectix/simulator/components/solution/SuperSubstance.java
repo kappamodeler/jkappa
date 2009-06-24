@@ -40,10 +40,6 @@ public class SuperSubstance {
 			return null;
 		}
 		myQuantity--;
-		// we don't want to choose an injection built to empty SS
-		if (myQuantity == 0) {
-			myComponent.deleteIncomingInjections();
-		}
 		return myComponent;
 	}
 	

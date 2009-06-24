@@ -10,6 +10,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.probability.*;
 import com.plectix.simulator.probability.skiplist.*;
+import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
 import com.plectix.simulator.components.CSite;
@@ -181,8 +182,9 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 			for (CAgent agent : cc.getAgentFromSolutionForRHS()) {
 				CInjection inj = this.createInjection(agent);
 				if (inj != null) {
-					if (!agent.hasSimilarInjection(inj))
+					if (!agent.hasSimilarInjection(inj)) {
 						setInjection(inj);
+					}
 				}
 			}
 		}
@@ -427,19 +429,33 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	
 	public void deleteIncomingInjections() {
 		for (CAgent agent : agentList) {
+//			for (CSite site : agent.getSites()) {
+//				for (CLiftElement lift : site.getLift()) {
+//					CInjection inj = lift.getInjection();
+//					inj.getConnectedComponent().removeInjection(inj);
+//				}
+//			}
+//			// default-site case
+//			for (CLiftElement lift : agent.getDefaultSite().getLift()) {
+//				CInjection inj = lift.getInjection();
+//				inj.getConnectedComponent().removeInjection(inj);
+//			}
+			List<CInjection> injList = new ArrayList<CInjection>();
 			for (CSite site : agent.getSites()) {
 				for (CLiftElement lift : site.getLift()) {
-					CInjection inj = lift.getInjection();
-					inj.getConnectedComponent().removeInjection(inj);
+					injList.add(lift.getInjection());
 				}
 			}
 			// default-site case
 			for (CLiftElement lift : agent.getDefaultSite().getLift()) {
-				CInjection inj = lift.getInjection();
-				inj.getConnectedComponent().removeInjection(inj);
+				injList.add(lift.getInjection());
+			}
+			for (CInjection injection : injList) {
+				SimulationUtils.doNegativeUpdate(injection);
 			}
 		}
 	}
+	
 	// -----------------------hash, toString, equals-----------------------------
 
 

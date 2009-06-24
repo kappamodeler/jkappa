@@ -34,11 +34,22 @@ public class CThirdSolution extends CAbstractSuperSolution {
 		// TODO Auto-generated method stub
 		Collection<CAgent> agents = pool.getStorage().getAgents();
 		if (!agents.isEmpty()) {
-			Collection<IConnectedComponent> components = SimulationUtils.buildConnectedComponents(agents);
-			for (IConnectedComponent cc : components) {
+			Set<CAgent> connectedComponents = new HashSet<CAgent>();
+			List<IConnectedComponent> list = new ArrayList<IConnectedComponent>();
+			connectedComponents.addAll(agents);
+			for (CAgent agent : agents) {
+				IConnectedComponent component = SolutionUtils.getConnectedComponent(agent);
+				list.add(component);
+				for (CAgent agentFromComponent : component.getAgents()) {
+					connectedComponents.remove(agentFromComponent);
+				}
+			}
+			for (IConnectedComponent cc : list) {
 				this.addConnectedComponent(cc);
 			}
 		}
+		
+		pool.clear();
 	}
 	
 	@Override

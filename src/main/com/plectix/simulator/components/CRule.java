@@ -287,8 +287,6 @@ public class CRule implements Serializable, WeightedItem {
 			}
 		}
 		
-		solution.applyChanges(pool);
-		pool.clear();
 		if (netNotation != null) {
 			addFixedSitesToNetworkNotation(netNotation);
 		}

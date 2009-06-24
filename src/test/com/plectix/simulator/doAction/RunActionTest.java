@@ -17,6 +17,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 
 
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.util.CComponentComparator;
 import com.plectix.simulator.util.Converter;
 
@@ -57,7 +58,10 @@ public class RunActionTest extends InitTestAction {
 //		compareWithSolution(lhs, firstsolution, "init");
 
 		apply(injectionsList);
-		activeRule = getActiveRule();
+		SimulationUtils.doNegativeUpdate(injectionsList);
+		simulationData.getKappaSystem().doPositiveUpdate(activeRule, injectionsList);
+		simulationData.getKappaSystem().getSolution().applyChanges(activeRule.getPool());
+		
 		List<IConnectedComponent> rhs = activeRule.getRightHandSide();
 		simulationData = getSimulationData();
 		

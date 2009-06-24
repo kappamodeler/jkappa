@@ -52,11 +52,9 @@ public class InjectionsBuilder {
 	}
 	
 	public final void build(SuperSubstance substance) {
-		if (substance.getQuantity() != 0) {
-			InjectionSettingStrategy strategy = new SuperInjectionSettingStrategy(substance);
-			for (CAgent agent : substance.getComponent().getAgents()) {
-				walkInjectingComponents(strategy, agent);
-			}
+		InjectionSettingStrategy strategy = new SuperInjectionSettingStrategy(substance);
+		for (CAgent agent : substance.getComponent().getAgents()) {
+			walkInjectingComponents(strategy, agent);
 		}
 	}
 	
