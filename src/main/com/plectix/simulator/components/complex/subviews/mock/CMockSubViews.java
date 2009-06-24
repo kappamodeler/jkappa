@@ -13,10 +13,10 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
-import com.plectix.simulator.components.complex.subviews.CSubViews;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
 import com.plectix.simulator.components.complex.subviews.base.AbstractClassSubViewBuilder;
 import com.plectix.simulator.components.complex.subviews.base.SubViewsRule;
+import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -270,17 +270,17 @@ public class CMockSubViews extends AbstractClassSubViewBuilder implements IAllSu
 		return listAgents;
 	}
 
-	public List<CSubViews> getAllSubViewsByType(String type) {
+	public List<ISubViews> getAllSubViewsByType(String type) {
 		return subViewsMap.get(Integer.valueOf(ThreadLocalData
 				.getNameDictionary().getId(type)));
 	}
 
-	public List<CSubViews> getAllSubViewsByTypeId(int type) {
+	public List<ISubViews> getAllSubViewsByTypeId(int type) {
 		return subViewsMap.get(Integer.valueOf(type));
 	}
 
 	@Override
-	public CSubViews getSubViewForRule(String typeOfAgent, CRule rule) {
+	public ISubViews getSubViewForRule(String typeOfAgent, CRule rule) {
 		// TODO Auto-generated method stub
 		return null;
 	}

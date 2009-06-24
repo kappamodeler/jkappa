@@ -5,15 +5,18 @@ import java.util.List;
 
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
+import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 
 public class AbstractAction {
 	private CAbstractAgent leftHandSideAgent;
 	private CAbstractAgent rightHandSideAgent;
 	private List<CAbstractSite> testedSites;
 	private List<CAbstractSite> modificatedSites;
+	private List<ISubViews> subViewsList;
 	
 	
 	public AbstractAction(CAbstractAgent leftHandSideAgent, CAbstractAgent rightAbstractAgent) {
+		subViewsList = new LinkedList<ISubViews>();
 		this.leftHandSideAgent = leftHandSideAgent;
 		this.rightHandSideAgent = rightAbstractAgent;
 		init();
@@ -40,6 +43,14 @@ public class AbstractAction {
 			}
 			testedSites.add(leftSite);
 		}
+	}
+	
+	public void addSubViews(ISubViews subViews){
+		subViewsList.add(subViews);
+	}
+	
+	public List<ISubViews> getSubViews(){
+		return subViewsList;
 	}
 
 	public List<CAbstractSite> getTestedSites() {

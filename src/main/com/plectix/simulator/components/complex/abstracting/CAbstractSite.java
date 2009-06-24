@@ -196,4 +196,21 @@ public class CAbstractSite{
 		return true;
 	}
 
+	public void addStates(CSite site) {
+		if(site == null)
+			return;
+		if (site.getInternalState() != CInternalState.EMPTY_STATE)
+			this.internalState = new CInternalState(site.getInternalState()
+					.getNameId());
+		this.linkState = new CAbstractLinkState(site.getLinkState());
+	}
+	public void addStates(CAbstractSite site) {
+		if(site == null)
+			return;
+		if (site.getInternalState() != CInternalState.EMPTY_STATE)
+			this.internalState = new CInternalState(site.getInternalState()
+					.getNameId());
+		this.linkState = new CAbstractLinkState(site.getLinkState());
+	}
+
 }

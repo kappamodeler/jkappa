@@ -10,14 +10,14 @@ import java.util.Set;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.subviews.CSubViewClass;
-import com.plectix.simulator.components.complex.subviews.CSubViews;
-import com.plectix.simulator.components.complex.subviews.storage.CSubViewsStorageLinkedList;
+import com.plectix.simulator.components.complex.subviews.storage.CSubViewsLinkedlist;
+import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 
 public abstract class AbstractClassSubViewBuilder {
-	protected Map<Integer, List<CSubViews>> subViewsMap;
+	protected Map<Integer, List<ISubViews>> subViewsMap;
 
 	public AbstractClassSubViewBuilder() {
-		this.subViewsMap = new HashMap<Integer, List<CSubViews>>();
+		this.subViewsMap = new HashMap<Integer, List<ISubViews>>();
 	}
 
 	protected void constructClassesSubViews(List<SubViewsRule> abstractRules,
@@ -28,7 +28,7 @@ public abstract class AbstractClassSubViewBuilder {
 				.entrySet()) {
 			Integer agentType = entery.getKey();
 			CAbstractAgent agent = entery.getValue();
-			List<CSubViews> subViewsList = new LinkedList<CSubViews>();
+			List<ISubViews> subViewsList = new LinkedList<ISubViews>();
 			subViewsMap.put(agentType, subViewsList);
 			Set<CSubViewClass> setClasses = new HashSet<CSubViewClass>();
 			agentTypeToClass.put(agentType, setClasses);
@@ -90,8 +90,7 @@ public abstract class AbstractClassSubViewBuilder {
 			Integer key = entrySets.getKey();
 			Set<CSubViewClass> sets = entrySets.getValue();
 			for (CSubViewClass subViewClass : sets) {
-				CSubViews subViews = new CSubViews(subViewClass,
-						new CSubViewsStorageLinkedList());
+				ISubViews subViews = new CSubViewsLinkedlist(subViewClass);
 				subViewsMap.get(key).add(subViews);
 			}
 		}

@@ -12,6 +12,8 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
+import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
+import com.plectix.simulator.components.complex.subviews.storage.SubViewsExeption;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
 public class SubViewsRule {
@@ -25,9 +27,38 @@ public class SubViewsRule {
 		List<CAbstractAgent> right = initListAgents(rule.getRightHandSide());
 		initAtomicActions(left, right);
 	}
-	
-	public int getRuleId(){
-		return ruleId;
+
+	public void initActionsToSubViews(Map<Integer, List<ISubViews>> subViewsMap) {
+		for (AbstractAction action : actions) {
+			if (action.getRightHandSideAgent() == null)
+				continue; // TODO Delete action!!!!!
+			CAbstractAgent agent = action.getLeftHandSideAgent();
+			if (agent == null)
+				agent = action.getRightHandSideAgent();
+			List<ISubViews> subViewsList = subViewsMap.get(agent.getNameId());
+			for (ISubViews subViews : subViewsList) {
+				if (subViews.isAgentFit(agent))
+					action.addSubViews(subViews);
+			}
+		}
+	}
+
+	public boolean apply(Map<Integer, CAbstractAgent> agentNameIdToAgent,
+			Map<Integer, List<ISubViews>> subViewsMap) throws SubViewsExeption {
+		boolean isEnd = true;
+		for (AbstractAction action : actions) {
+			for (ISubViews subViews : action.getSubViews())
+				if (subViews.test(action))
+					isEnd = false;
+		}
+		if(isEnd)
+			return false;
+		boolean isAdd = false;
+		for (AbstractAction action : actions)
+			for (ISubViews subViews : action.getSubViews())
+				if (subViews.burnRule(action))
+					isAdd = true;
+		return isAdd;
 	}
 
 	/**
@@ -166,4 +197,7 @@ public class SubViewsRule {
 		return actions;
 	}
 
+	public int getRuleId() {
+		return ruleId;
+	}
 }

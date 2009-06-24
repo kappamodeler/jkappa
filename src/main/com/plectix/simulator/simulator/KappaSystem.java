@@ -12,6 +12,7 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.complex.contactMap.CContactMap;
+import com.plectix.simulator.components.complex.subviews.CMainSubViews;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
 import com.plectix.simulator.components.complex.subviews.mock.CMockSubViews;
 import com.plectix.simulator.components.injections.CInjection;
@@ -144,7 +145,7 @@ public class KappaSystem {
 			contactMap.initAbstractSolution();
 			contactMap.constructAbstractRules(rules);
 			contactMap.constructAbstractContactMap();
-//			IAllSubViewsOfAllAgents subViews = new CMockSubViews();
+//			IAllSubViewsOfAllAgents subViews = new CMainSubViews();
 //			subViews.build(solution, rules);
 
 			// contactMap.constructReachableRules(rules);
