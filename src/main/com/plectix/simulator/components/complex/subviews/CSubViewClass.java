@@ -4,9 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.graphs.Vertex;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
-public class CSubViewClass {
+public class CSubViewClass extends Vertex{
 	private int agentTypeId;
 	private Set<Integer> sitesId;
 	private Set<Integer> rulesId;
