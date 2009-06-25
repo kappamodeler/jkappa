@@ -21,23 +21,8 @@ public class SolutionBuilder {
 		mySubstanceBuilder = new SubstanceBuilder(myKappaSystem);
 	}
 	
-	public ISolution build(AbstractSolution arg) {
-		ISolution solution;
-		switch(myArguments.getOperationMode()) {
-		case SECOND: {
-			solution = (new SolutionFactory()).produce(OperationMode.SECOND, myKappaSystem);
-			break;
-		}
-		case THIRD: {
-			solution = (new SolutionFactory()).produce(OperationMode.THIRD, myKappaSystem);
-			break;
-		}
-		default:{
-			solution = (new SolutionFactory()).produce(OperationMode.FIRST, myKappaSystem);
-			break;
-		}
-		}
-
+	public final ISolution build(AbstractSolution arg) {
+		ISolution solution = (new SolutionFactory()).produce(myArguments.getOperationMode(), myKappaSystem);
 		
 		for (SolutionLineData lineData : arg.getAgents()) {
 			List<CAgent> list = mySubstanceBuilder.buildAgents(lineData.getAgents());

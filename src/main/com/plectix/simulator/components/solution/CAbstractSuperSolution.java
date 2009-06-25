@@ -1,5 +1,7 @@
 package com.plectix.simulator.components.solution;
 
+import java.util.List;
+
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -28,6 +30,12 @@ public abstract class CAbstractSuperSolution extends ComplexSolution {
 					getStraightStorage().removeAgent(agent);
 				}	
 			}
+		}
+	}
+	
+	public final void addInitialConnectedComponents(long quant, List<CAgent> agents) {
+		for (IConnectedComponent component : SimulationUtils.buildConnectedComponents(agents)) {
+			getSuperStorage().addOrEvenIncrement(quant, component);	
 		}
 	}
 }

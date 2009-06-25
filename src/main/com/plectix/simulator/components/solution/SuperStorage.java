@@ -29,14 +29,19 @@ public class SuperStorage implements IStorage {
 		return false;
 	}
 	
-	public void addOrEvenIncrement(SuperSubstance substanceToAdd) {
-		String hash = substanceToAdd.getComponent().getHash();
+	public void addOrEvenIncrement(long quant, IConnectedComponent component) {
+		String hash = component.getHash();
+		SuperSubstance substanceToAdd = new SuperSubstance(quant, component);
 		SuperSubstance previousEntry = myStorage.get(hash);
 		if (previousEntry == null) {
 			myStorage.put(hash, substanceToAdd);
 		} else {
 			previousEntry.add(substanceToAdd.getQuantity());
 		}
+	}
+	
+	public void addNewSuperSubstance(IConnectedComponent component) {
+		myStorage.put(component.getHash(), new SuperSubstance(1, component));
 	}
 	
 	public void clear() {

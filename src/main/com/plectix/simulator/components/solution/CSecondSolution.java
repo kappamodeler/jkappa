@@ -1,8 +1,5 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.*;
-
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.*;
@@ -21,16 +18,10 @@ import com.plectix.simulator.simulator.*;
 		myStraightStorage.addConnectedComponent(component);
 	}
 
-	public void addInitialConnectedComponents(long quant, List<CAgent> agentsList) {
-		for (IConnectedComponent component : SimulationUtils.buildConnectedComponents(agentsList)) {
-			mySuperStorage.addOrEvenIncrement(new SuperSubstance(quant, component));	
-		}	
-	}
-	
 	@Override
 	public void addInjectionToPool(RuleApplicationPool pool, CInjection injection) {
 		if (injection.isSuper()) {
-			myStraightStorage.addConnectedComponent(getSuperStorage().extractComponent(injection));
+			myStraightStorage.addConnectedComponent(mySuperStorage.extractComponent(injection));
 		}
 	}
 	

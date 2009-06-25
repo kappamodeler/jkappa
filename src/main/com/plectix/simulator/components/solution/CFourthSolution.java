@@ -7,23 +7,20 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 
-public class CThirdSolution extends CAbstractSuperSolution {
+public class CFourthSolution extends CAbstractSuperSolution {
 	private final SuperStorage mySuperStorage;
-	private final StraightStorage myStraightStorage;
 	
-	public CThirdSolution(KappaSystem system) {
+	public CFourthSolution(KappaSystem system) {
 		super(system);
 		mySuperStorage = getSuperStorage();
-		myStraightStorage = getStraightStorage();
 	}
 
 	private final void addConnectedComponent(IConnectedComponent component) {
 		if (!mySuperStorage.tryIncrement(component)) { 
-			myStraightStorage.addConnectedComponent(component);
+			mySuperStorage.addNewSuperSubstance(component);
 		}
 	}
 
-	@Override
 	public final void applyChanges(RuleApplicationPool pool) {
 		// TODO Auto-generated method stub
 		Collection<CAgent> agents = pool.getStorage().getAgents();
@@ -61,8 +58,6 @@ public class CThirdSolution extends CAbstractSuperSolution {
 				IConnectedComponent component = SolutionUtils.getConnectedComponent(injection.getImageAgent());
 				for (CAgent agent : component.getAgents()) {
 					storage.addAgent(agent);
-					// if 'agent' is from straight storage, then it should be removed from there
-					myStraightStorage.removeAgent(agent);
 				}	
 			}
 		}
