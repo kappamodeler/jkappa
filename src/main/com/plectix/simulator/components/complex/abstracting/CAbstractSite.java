@@ -6,10 +6,11 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
  * This method implements abstract site.
+ * 
  * @author avokhmin
- *
+ * 
  */
-public class CAbstractSite{
+public class CAbstractSite {
 	private final int nameId;
 	private CAbstractLinkState linkState;
 	private CInternalState internalState = CInternalState.EMPTY_STATE;
@@ -17,8 +18,11 @@ public class CAbstractSite{
 
 	/**
 	 * Constructor of CContactMapAbstractSite
-	 * @param site given site for abstraction
-	 * @param agent "parent" agent
+	 * 
+	 * @param site
+	 *            given site for abstraction
+	 * @param agent
+	 *            "parent" agent
 	 */
 	public CAbstractSite(CSite site, CAbstractAgent agent) {
 		this.nameId = site.getNameId();
@@ -31,7 +35,9 @@ public class CAbstractSite{
 
 	/**
 	 * Constructor of CContactMapAbstractSite
-	 * @param site given site for abstraction
+	 * 
+	 * @param site
+	 *            given site for abstraction
 	 */
 	public CAbstractSite(CSite site) {
 		this.nameId = site.getNameId();
@@ -40,7 +46,9 @@ public class CAbstractSite{
 
 	/**
 	 * Constructor of CContactMapAbstractSite
-	 * @param site given abstract site
+	 * 
+	 * @param site
+	 *            given abstract site
 	 */
 	private CAbstractSite(CAbstractSite site) {
 		this.nameId = site.getNameId();
@@ -58,6 +66,7 @@ public class CAbstractSite{
 
 	/**
 	 * This method returns internal state for current site.
+	 * 
 	 * @return internal state for current site.
 	 */
 	public CInternalState getInternalState() {
@@ -66,6 +75,7 @@ public class CAbstractSite{
 
 	/**
 	 * Returns link state of this site.
+	 * 
 	 * @return link state of this site.
 	 */
 	public CAbstractLinkState getLinkState() {
@@ -74,6 +84,7 @@ public class CAbstractSite{
 
 	/**
 	 * This method returns name of this site
+	 * 
 	 * @see com.plectix.simulator.util.NameDictionary NameDictionary
 	 * @return name of this agent
 	 */
@@ -85,6 +96,7 @@ public class CAbstractSite{
 
 	/**
 	 * This method returns name-id of this site
+	 * 
 	 * @return name-id of this site
 	 */
 	public int getNameId() {
@@ -93,26 +105,31 @@ public class CAbstractSite{
 
 	/**
 	 * This method returns agent, which is parent for this site
-	 * @return agent, which is parent for this site 
+	 * 
+	 * @return agent, which is parent for this site
 	 */
 	public final CAbstractAgent getAgentLink() {
 		return linkAgent;
 	}
 
 	/**
-	 * This method sets link to the "parent" agent. 
-	 * @param linkAgent "parent" agent
+	 * This method sets link to the "parent" agent.
+	 * 
+	 * @param linkAgent
+	 *            "parent" agent
 	 */
 	public final void setAgentLink(CAbstractAgent linkAgent) {
 		this.linkAgent = linkAgent;
 	}
 
 	/**
-	 * This method returns <tt>true</tt>, if current site equals 
-	 * to given site (by nameId, internal and link state), otherwise <tt>false</tt>.
-	 * @param site given site
-	 * @return <tt>true</tt>, if current site equals 
-	 * to given site (by nameId, internal and link state), otherwise <tt>false</tt>.
+	 * This method returns <tt>true</tt>, if current site equals to given site
+	 * (by nameId, internal and link state), otherwise <tt>false</tt>.
+	 * 
+	 * @param site
+	 *            given site
+	 * @return <tt>true</tt>, if current site equals to given site (by nameId,
+	 *         internal and link state), otherwise <tt>false</tt>.
 	 */
 	public final boolean equalz(CAbstractSite site) {
 		if (this == site) {
@@ -136,9 +153,13 @@ public class CAbstractSite{
 	}
 
 	/**
-	 * This method returns <tt>true</tt> if <b>nameId</b> current site equals <b>nameId</b> given site, otherwise <tt>false</tt>.
-	 * @param site given site
-	 * @return <tt>true</tt> if <b>nameId</b> current site equals <b>nameId</b> given site, otherwise <tt>false</tt>.
+	 * This method returns <tt>true</tt> if <b>nameId</b> current site equals
+	 * <b>nameId</b> given site, otherwise <tt>false</tt>.
+	 * 
+	 * @param site
+	 *            given site
+	 * @return <tt>true</tt> if <b>nameId</b> current site equals <b>nameId</b>
+	 *         given site, otherwise <tt>false</tt>.
 	 */
 	public final boolean equalByName(CAbstractSite site) {
 		if (this == site) {
@@ -172,18 +193,22 @@ public class CAbstractSite{
 			sb.append(" link site = "
 					+ ThreadLocalData.getNameDictionary().getName(
 							linkState.getLinkSiteNameID()));
-//			if (linkState.getInternalStateNameID() != -1)
-//				sb.append(" link istate = "
-//						+ ThreadLocalData.getNameDictionary().getName(
-//								linkState.getInternalStateNameID()));
+			// if (linkState.getInternalStateNameID() != -1)
+			// sb.append(" link istate = "
+			// + ThreadLocalData.getNameDictionary().getName(
+			// linkState.getInternalStateNameID()));
 		}
 		return sb.toString();
 	}
 
 	/**
-	 * This method returns <tt>true</tt> if current site does fit to given site, otherwise <tt>false</tt>.
-	 * @param s given site
-	 * @return <tt>true</tt> if current site does fit to given site, otherwise <tt>false</tt>.
+	 * This method returns <tt>true</tt> if current site does fit to given site,
+	 * otherwise <tt>false</tt>.
+	 * 
+	 * @param s
+	 *            given site
+	 * @return <tt>true</tt> if current site does fit to given site, otherwise
+	 *         <tt>false</tt>.
 	 */
 	public boolean isFit(CAbstractSite s) {
 		if (nameId == CSite.NO_INDEX)
@@ -197,20 +222,22 @@ public class CAbstractSite{
 	}
 
 	public void addStates(CSite site) {
-		if(site == null)
+		if (site == null)
 			return;
 		if (site.getInternalState() != CInternalState.EMPTY_STATE)
 			this.internalState = new CInternalState(site.getInternalState()
 					.getNameId());
 		this.linkState = new CAbstractLinkState(site.getLinkState());
 	}
+
 	public void addStates(CAbstractSite site) {
-		if(site == null)
+		if (site == null)
 			return;
 		if (site.getInternalState() != CInternalState.EMPTY_STATE)
 			this.internalState = new CInternalState(site.getInternalState()
 					.getNameId());
-		this.linkState = new CAbstractLinkState(site.getLinkState());
+		if (site.getLinkState().getAgentNameID() != CSite.NO_INDEX)
+			this.linkState = new CAbstractLinkState(site.getLinkState());
 	}
 
 }

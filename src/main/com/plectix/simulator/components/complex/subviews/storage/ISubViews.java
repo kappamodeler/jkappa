@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.subviews.base.AbstractAction;
 
 public interface ISubViews {
@@ -42,12 +43,21 @@ public interface ISubViews {
 	 * 
 	 * @param oldViews
 	 * @param newViews
+	 * @throws SubViewsExeption 
 	 */
-	public boolean burnRule(CAbstractAgent oldViews, CAbstractAgent newViews);
+	public boolean burnRule(CAbstractAgent oldViews, CAbstractAgent newViews) throws SubViewsExeption;
 
 	public void fillingInitialState(
 			Map<Integer, CAbstractAgent> agentNameIdToAgent,
 			Collection<CAgent> agents);
 
 	public boolean isAgentFit(CAbstractAgent agent);
+	
+	/**
+	 * This method needs for take into consideration "side effect" 
+	 * @param deletedLinks
+	 * @param b 
+	 * @return
+	 */
+	public boolean burnBreakAllNeedLinkState(AbstractAction action);
 }

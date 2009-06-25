@@ -18,6 +18,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 
 public class SubViewsRule {
 	private List<AbstractAction> actions;
+	private List<CAbstractSite> sitesShouldBeBreak;
 	private int ruleId;
 
 	public SubViewsRule(CRule rule) {
@@ -51,13 +52,17 @@ public class SubViewsRule {
 				if (subViews.test(action))
 					isEnd = false;
 		}
-		if(isEnd)
+		if (isEnd)
 			return false;
 		boolean isAdd = false;
-		for (AbstractAction action : actions)
-			for (ISubViews subViews : action.getSubViews())
+		for (AbstractAction action : actions) {
+			for (ISubViews subViews : action.getSubViews()) {
 				if (subViews.burnRule(action))
 					isAdd = true;
+				if (subViews.burnBreakAllNeedLinkState(action))
+					isAdd = true;
+			}
+		}
 		return isAdd;
 	}
 
@@ -199,5 +204,9 @@ public class SubViewsRule {
 
 	public int getRuleId() {
 		return ruleId;
+	}
+
+	public List<CAbstractSite> getBreakingSites() {
+		return sitesShouldBeBreak;
 	}
 }

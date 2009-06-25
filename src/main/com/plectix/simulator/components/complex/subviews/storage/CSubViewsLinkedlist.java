@@ -45,29 +45,43 @@ public class CSubViewsLinkedlist implements ISubViews {
 	}
 
 	public boolean burnRule(AbstractAction action) throws SubViewsExeption {
+		return burnRule(action.getLeftHandSideAgent(), action.getRightHandSideAgent());
+//		CAbstractAgent agent = action.getLeftHandSideAgent();
+//		if (agent == null) {
+//			agent = action.getRightHandSideAgent().clone();
+//			return addAbstractAgent(agent);
+//		}
+//		if (action.getRightHandSideAgent() == null) {
+//			// TODO DELETE Action!!!
+//		}
+//		boolean isAdd = false;
+//		List<CAbstractAgent> agentsList = getAllSubViews(agent);
+//		for (CAbstractAgent agentFromStorage : agentsList) {
+//			CAbstractAgent newAgent = agentFromStorage.clone();
+//			newAgent.addAllStates(action.getRightHandSideAgent());
+//			if (addAbstractAgent(newAgent))
+//				isAdd = true;
+//		}
+//		return isAdd;
+	}
 
-		CAbstractAgent agent = action.getLeftHandSideAgent();
-		if (agent == null) {
-			agent = action.getRightHandSideAgent().clone();
-			return addAbstractAgent(agent);
-		}
-		if (action.getRightHandSideAgent() == null) {
+	public boolean burnRule(CAbstractAgent oldViews, CAbstractAgent newViews)
+			throws SubViewsExeption {
+		if (oldViews == null)
+			return addAbstractAgent(newViews);
+
+		if (newViews == null) {
 			// TODO DELETE Action!!!
 		}
 		boolean isAdd = false;
-		List<CAbstractAgent> agentsList = getAllSubViews(agent);
+		List<CAbstractAgent> agentsList = getAllSubViews(oldViews);
 		for (CAbstractAgent agentFromStorage : agentsList) {
 			CAbstractAgent newAgent = agentFromStorage.clone();
-			newAgent.addAllStates(action.getRightHandSideAgent());
+			newAgent.addAllStates(newViews);
 			if (addAbstractAgent(newAgent))
 				isAdd = true;
 		}
 		return isAdd;
-	}
-
-	public boolean burnRule(CAbstractAgent oldViews, CAbstractAgent newViews) {
-
-		return false;
 	}
 
 	public boolean test(AbstractAction action) throws SubViewsExeption {
@@ -87,8 +101,9 @@ public class CSubViewsLinkedlist implements ISubViews {
 		for (CAbstractAgent aAgent : storage) {
 			boolean isHave = true;
 			for (CAbstractSite site : testView.getSitesMap().values()) {
-				int siteId = site.getNameId();
-				if (!aAgent.getSite(siteId).isFit(site)) {
+//				int siteId = site.getNameId();
+				// if (!aAgent.getSite(siteId).isFit(site)) {
+				if (!site.isFit(aAgent.getSite(site.getNameId()))) {
 					isHave = false;
 					break;
 				}
@@ -106,7 +121,8 @@ public class CSubViewsLinkedlist implements ISubViews {
 		for (CAbstractAgent aAgent : storage) {
 			boolean isHave = true;
 			for (CAbstractSite site : view.getSitesMap().values()) {
-				if (!aAgent.getSite(site.getNameId()).isFit(site)) {
+				// if (!aAgent.getSite(site.getNameId()).isFit(site)) {
+				if (!site.isFit(aAgent.getSite(site.getNameId()))) {
 					isHave = false;
 					break;
 				}
@@ -163,5 +179,13 @@ public class CSubViewsLinkedlist implements ISubViews {
 
 	public String toString() {
 		return subViewClass.toString();
+	}
+
+	public boolean burnBreakAllNeedLinkState(AbstractAction action) {
+		// TODO Auto-generated method stub
+		List<CAbstractSite> breakingSites = action.getBreakingSites();
+		
+		
+		return false;
 	}
 }
