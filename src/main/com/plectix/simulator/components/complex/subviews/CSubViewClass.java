@@ -1,5 +1,6 @@
 package com.plectix.simulator.components.complex.subviews;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,31 +10,30 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class CSubViewClass extends Vertex{
 	private int agentTypeId;
-	private Set<Integer> sitesId;
-	private Set<Integer> rulesId;
+	private ArrayList<Integer> sitesId;
+	private ArrayList<Integer> rulesId;
 
-	public CSubViewClass(int agentTypeId, int siteId) {
+	public CSubViewClass(int agentTypeId) {
 		this.agentTypeId = agentTypeId;
-		sitesId = new HashSet<Integer>();
-		rulesId = new HashSet<Integer>();
-		sitesId.add(Integer.valueOf(siteId));
+		sitesId = new ArrayList<Integer>();
+		rulesId = new ArrayList<Integer>();
 	}
 
 	public int getAgentTypeId() {
 		return agentTypeId;
 	}
 
-	public Set<Integer> getSitesId() {
+	public ArrayList<Integer> getSitesId() {
 		return sitesId;
 	}
 	
-	public Set<Integer> getRulesId(){
+	public ArrayList<Integer> getRulesId(){
 		return rulesId;
 	}
 	
 	
-	public void addSite(int site){
-		sitesId.add(site);
+	public void addSite(int siteId){
+		sitesId.add(siteId);
 	}
 	
 	public boolean equals(Object obj) {
@@ -79,5 +79,10 @@ public class CSubViewClass extends Vertex{
 	public void addRulesId(CSubViewClass removedClass) {
 		for (Integer ruleId : removedClass.getRulesId())
 			this.addRuleId(ruleId);
+	}
+
+	public void addRuleId(ArrayList<Integer> rulesId2) {
+		rulesId.addAll(rulesId2);
+		
 	}
 }

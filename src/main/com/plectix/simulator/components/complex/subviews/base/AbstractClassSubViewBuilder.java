@@ -1,5 +1,6 @@
 package com.plectix.simulator.components.complex.subviews.base;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.subviews.CSubViewClass;
 import com.plectix.simulator.components.complex.subviews.storage.CSubViewsLinkedlist;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
+import com.plectix.simulator.graphs.Edge;
 import com.plectix.simulator.graphs.Graph;
 import com.plectix.simulator.graphs.Vertex;
 
@@ -25,84 +27,141 @@ public abstract class AbstractClassSubViewBuilder {
 	protected void constructClassesSubViews(List<SubViewsRule> abstractRules,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
 
-
-		Map<Integer,Graph> graphsByAgent = new HashMap<Integer, Graph>();
-		Map<Integer,Map<CAbstractSite,Vertex>> agentVertexBySite = new HashMap<Integer, Map<CAbstractSite,Vertex>>();
+		// CSubViewClass = Vertex
+		Map<Integer, Graph> graphsByAgent = new HashMap<Integer, Graph>();
+		Map<Integer, Map<CAbstractSite, CSubViewClass>> agentVertexBySite = new HashMap<Integer, Map<CAbstractSite, CSubViewClass>>();
 		Map<Integer, Set<CSubViewClass>> agentTypeToClass = new HashMap<Integer, Set<CSubViewClass>>();
-		for (Map.Entry<Integer, CAbstractAgent> entery : agentNameIdToAgent.entrySet()){
+		// create graph for each agent
+		for (Map.Entry<Integer, CAbstractAgent> entery : agentNameIdToAgent
+				.entrySet()) {
 			Integer agentType = entery.getKey();
 			CAbstractAgent agent = entery.getValue();
 			Graph graphForAgent = new Graph();
-			Map<CAbstractSite,Vertex> vertexBySite = new HashMap<CAbstractSite, Vertex>();
-			
-			for(CAbstractSite site : agent.getSitesMap().values()){
-				
+			Map<CAbstractSite, CSubViewClass> vertexBySite = new HashMap<CAbstractSite, CSubViewClass>();
+
+			for (CAbstractSite site : agent.getSitesMap().values()) {
+				CSubViewClass primitiveView = new CSubViewClass(agentType);
+				primitiveView.addSite(site.getNameId());
+				graphForAgent.addVertex(primitiveView);
+				vertexBySite.put(site, primitiveView);
 			}
-			
-			
-			
+			graphsByAgent.put(agentType, graphForAgent);
+			agentVertexBySite.put(agentType, vertexBySite);
 		}
 
+		// draw edges in graphs
+		for (SubViewsRule aRule : abstractRules) {
+			List<AbstractAction> actions = aRule.getActions();
+			for (AbstractAction action : actions) {
+				List<CAbstractSite> modificatedSites = action
+						.getModificatedSites();
+				List<CAbstractSite> testedSites = action.getTestedSites();
+				if (modificatedSites == null)
+					continue;
+				int agentType = action.getLeftHandSideAgent().getNameId();
+				if (modificatedSites.isEmpty())
+					continue;
+				for (CAbstractSite modSite : modificatedSites) {
+					for (CAbstractSite testedSite : testedSites) {
+						graphsByAgent.get(agentType).addEdge(
+								new Edge(agentVertexBySite.get(agentType).get(
+										modSite), agentVertexBySite.get(
+										agentType).get(testedSite)));
+					}
+					for (CAbstractSite mod2Site : modificatedSites) {
+						if (modSite == mod2Site)
+							continue;
+						graphsByAgent.get(agentType).addEdge(
+								new Edge(agentVertexBySite.get(agentType).get(
+										modSite), agentVertexBySite.get(
+										agentType).get(mod2Site)));
+
+					}
+					agentVertexBySite.get(agentType).get(modSite).addRuleId(
+							aRule.getRuleId());
+				}
+			}
+		}
+		
+		//extract classesSubView and write correspondence action-subview
+		for (Integer agentType : agentNameIdToAgent.keySet()) {
+			ArrayList<CSubViewClass> subViewsOfAgent = new ArrayList<CSubViewClass>();
+			//is getAll... doing once?
+			for(ArrayList<Vertex> subClass : graphsByAgent
+					.get(agentType).getAllWeakClosureComponent()){
+				CSubViewClass classSubView = new CSubViewClass(agentType);
+				
+				for(Vertex v : subClass){
+					classSubView.addSite(((CSubViewClass)v).getSitesId().get(0));
+					classSubView.addRuleId(((CSubViewClass)v).getRulesId());
+				}
+				subViewsOfAgent.add(classSubView);
+			}
+
+		}
+		
+	
 		
 		
 		
-		
-//		Map<Integer, Set<CSubViewClass>> agentTypeToClass = new HashMap<Integer, Set<CSubViewClass>>();
-//		for (Map.Entry<Integer, CAbstractAgent> entery : agentNameIdToAgent
-//				.entrySet()) {
-//			Integer agentType = entery.getKey();
-//			CAbstractAgent agent = entery.getValue();
-//			List<ISubViews> subViewsList = new LinkedList<ISubViews>();
-//			subViewsMap.put(agentType, subViewsList);
-//			Set<CSubViewClass> setClasses = new HashSet<CSubViewClass>();
-//			agentTypeToClass.put(agentType, setClasses);
-//			for (CAbstractSite site : agent.getSitesMap().values()) {
-//				setClasses.add(new CSubViewClass(agent.getNameId(), site
-//						.getNameId()));
-//			}
-//		}
-//
-//		for (SubViewsRule aRule : abstractRules) {
-//			List<AbstractAction> actions = aRule.getActions();
-//			for (AbstractAction action : actions) {
-//				List<CAbstractSite> modificatedSites = action
-//						.getModificatedSites();
-//				List<CAbstractSite> testedSites = action.getTestedSites();
-//
-//				if (modificatedSites == null)
-//					continue;
-//				int agentType = action.getLeftHandSideAgent().getNameId();
-//				if (modificatedSites.isEmpty())
-//					continue;
-//				Set<CSubViewClass> setClasses = agentTypeToClass.get(agentType);
-//				CAbstractSite headSite = modificatedSites.get(0);
-//				CSubViewClass headClass = getFirstClass(setClasses, headSite
-//						.getNameId());
-//				headClass.addRuleId(aRule.getRuleId());
-//				for (CAbstractSite modSite : modificatedSites) {
-//					for (CAbstractSite testSite : testedSites) {
-//						headClass = getFirstClass(setClasses, headSite
-//								.getNameId());
-//						addSiteToClass(agentTypeToClass, testSite, headClass);
-//					}
-//					if (modSite == headSite)
-//						continue;
-//
-//					int removedSiteId = modSite.getNameId();
-//					CSubViewClass removedClass = getSecondClass(setClasses,
-//							removedSiteId);
-//					boolean first = true;
-//					while (first
-//							|| getNeedClasses(setClasses, removedSiteId).size() != 1) {
-//						mergerSubViewsClasses(agentTypeToClass, removedClass,
-//								headClass);
-//						removedClass = getSecondClass(setClasses, removedSiteId);
-//						first = false;
-//					}
-//				}
-//
-//			}
-//		}
+
+		// Map<Integer, Set<CSubViewClass>> agentTypeToClass = new
+		// HashMap<Integer, Set<CSubViewClass>>();
+		// for (Map.Entry<Integer, CAbstractAgent> entery : agentNameIdToAgent
+		// .entrySet()) {
+		// Integer agentType = entery.getKey();
+		// CAbstractAgent agent = entery.getValue();
+		// List<ISubViews> subViewsList = new LinkedList<ISubViews>();
+		// subViewsMap.put(agentType, subViewsList);
+		// Set<CSubViewClass> setClasses = new HashSet<CSubViewClass>();
+		// agentTypeToClass.put(agentType, setClasses);
+		// for (CAbstractSite site : agent.getSitesMap().values()) {
+		// setClasses.add(new CSubViewClass(agent.getNameId(), site
+		// .getNameId()));
+		// }
+		// }
+		//
+		// for (SubViewsRule aRule : abstractRules) {
+		// List<AbstractAction> actions = aRule.getActions();
+		// for (AbstractAction action : actions) {
+		// List<CAbstractSite> modificatedSites = action
+		// .getModificatedSites();
+		// List<CAbstractSite> testedSites = action.getTestedSites();
+		//
+		// if (modificatedSites == null)
+		// continue;
+		// int agentType = action.getLeftHandSideAgent().getNameId();
+		// if (modificatedSites.isEmpty())
+		// continue;
+		// Set<CSubViewClass> setClasses = agentTypeToClass.get(agentType);
+		// CAbstractSite headSite = modificatedSites.get(0);
+		// CSubViewClass headClass = getFirstClass(setClasses, headSite
+		// .getNameId());
+		// headClass.addRuleId(aRule.getRuleId());
+		// for (CAbstractSite modSite : modificatedSites) {
+		// for (CAbstractSite testSite : testedSites) {
+		// headClass = getFirstClass(setClasses, headSite
+		// .getNameId());
+		// addSiteToClass(agentTypeToClass, testSite, headClass);
+		// }
+		// if (modSite == headSite)
+		// continue;
+		//
+		// int removedSiteId = modSite.getNameId();
+		// CSubViewClass removedClass = getSecondClass(setClasses,
+		// removedSiteId);
+		// boolean first = true;
+		// while (first
+		// || getNeedClasses(setClasses, removedSiteId).size() != 1) {
+		// mergerSubViewsClasses(agentTypeToClass, removedClass,
+		// headClass);
+		// removedClass = getSecondClass(setClasses, removedSiteId);
+		// first = false;
+		// }
+		// }
+		//
+		// }
+		// }
 		fillingSubViewsMap(agentTypeToClass);
 		System.out.println();
 	}
