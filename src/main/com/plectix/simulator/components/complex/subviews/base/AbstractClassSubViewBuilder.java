@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
@@ -27,10 +28,9 @@ public abstract class AbstractClassSubViewBuilder {
 	protected void constructClassesSubViews(List<SubViewsRule> abstractRules,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
 
-		// CSubViewClass = Vertex
+		// CSubViewClass with one site = Vertex
 		Map<Integer, Graph> graphsByAgent = new HashMap<Integer, Graph>();
 		Map<Integer, Map<CAbstractSite, CSubViewClass>> agentVertexBySite = new HashMap<Integer, Map<CAbstractSite, CSubViewClass>>();
-		Map<Integer, Set<CSubViewClass>> agentTypeToClass = new HashMap<Integer, Set<CSubViewClass>>();
 		// create graph for each agent
 		for (Map.Entry<Integer, CAbstractAgent> entery : agentNameIdToAgent
 				.entrySet()) {
@@ -82,28 +82,26 @@ public abstract class AbstractClassSubViewBuilder {
 				}
 			}
 		}
-		
-		//extract classesSubView and write correspondence action-subview
+		Map<Integer, ArrayList<CSubViewClass>> agentTypeToClass = new HashMap<Integer, ArrayList<CSubViewClass>>();
+
+		// extract classesSubView and write correspondence subview- rule
 		for (Integer agentType : agentNameIdToAgent.keySet()) {
 			ArrayList<CSubViewClass> subViewsOfAgent = new ArrayList<CSubViewClass>();
-			//is getAll... doing once?
-			for(ArrayList<Vertex> subClass : graphsByAgent
-					.get(agentType).getAllWeakClosureComponent()){
+			// is getAll... doing once?
+			for (ArrayList<Vertex> subClass : graphsByAgent.get(agentType)
+					.getAllWeakClosureComponent()) {
 				CSubViewClass classSubView = new CSubViewClass(agentType);
-				
-				for(Vertex v : subClass){
-					classSubView.addSite(((CSubViewClass)v).getSitesId().get(0));
-					classSubView.addRuleId(((CSubViewClass)v).getRulesId());
+
+				for (Vertex v : subClass) {
+					classSubView.addSite(((CSubViewClass) v).getSitesId()
+							.get(0));
+					classSubView.addRulesId(((CSubViewClass) v).getRulesId());
 				}
 				subViewsOfAgent.add(classSubView);
 			}
+			agentTypeToClass.put(agentType, subViewsOfAgent);
 
 		}
-		
-	
-		
-		
-		
 
 		// Map<Integer, Set<CSubViewClass>> agentTypeToClass = new
 		// HashMap<Integer, Set<CSubViewClass>>();
@@ -166,17 +164,20 @@ public abstract class AbstractClassSubViewBuilder {
 		System.out.println();
 	}
 
+	// now filling by CSubViewsLinkedlist
 	private void fillingSubViewsMap(
-			Map<Integer, Set<CSubViewClass>> agentTypeToClass) {
-		for (Map.Entry<Integer, Set<CSubViewClass>> entrySets : agentTypeToClass
+			Map<Integer, ArrayList<CSubViewClass>> agentTypeToClass) {
+		for (Entry<Integer, ArrayList<CSubViewClass>> entrySets : agentTypeToClass
 				.entrySet()) {
 			Integer key = entrySets.getKey();
-			Set<CSubViewClass> sets = entrySets.getValue();
+			ArrayList<CSubViewClass> sets = entrySets.getValue();
 			for (CSubViewClass subViewClass : sets) {
+				//build map action- subview too
 				ISubViews subViews = new CSubViewsLinkedlist(subViewClass);
 				subViewsMap.get(key).add(subViews);
 			}
 		}
+
 	}
 
 	private static CSubViewClass getFirstClass(Set<CSubViewClass> setClasses,
