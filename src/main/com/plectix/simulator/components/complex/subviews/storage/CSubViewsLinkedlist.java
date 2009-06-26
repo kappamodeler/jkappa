@@ -18,6 +18,7 @@ public class CSubViewsLinkedlist implements ISubViews {
 	public CSubViewsLinkedlist(CSubViewClass subViewClass) {
 		this.subViewClass = subViewClass;
 		this.storage = new LinkedList<CAbstractAgent>();
+		
 	}
 
 	public void fillingInitialState(
