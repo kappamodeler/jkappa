@@ -2,6 +2,7 @@ package com.plectix.simulator.components.complex.subviews;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 
 import com.plectix.simulator.components.CRule;
@@ -11,12 +12,12 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 public class CSubViewClass extends Vertex{
 	private int agentTypeId;
 	private ArrayList<Integer> sitesId;
-	private ArrayList<Integer> rulesId;
+	private LinkedList<Integer> rulesId;
 
 	public CSubViewClass(int agentTypeId) {
 		this.agentTypeId = agentTypeId;
 		sitesId = new ArrayList<Integer>();
-		rulesId = new ArrayList<Integer>();
+		rulesId = new LinkedList<Integer>();
 	}
 
 	public int getAgentTypeId() {
@@ -27,7 +28,7 @@ public class CSubViewClass extends Vertex{
 		return sitesId;
 	}
 	
-	public ArrayList<Integer> getRulesId(){
+	public LinkedList<Integer> getRulesId(){
 		return rulesId;
 	}
 	
@@ -81,7 +82,7 @@ public class CSubViewClass extends Vertex{
 			this.addRuleId(ruleId);
 	}
 
-	public void addRuleId(ArrayList<Integer> rulesId2) {
+	public void addRulesId(LinkedList<Integer> rulesId2) {
 		rulesId.addAll(rulesId2);
 		
 	}
