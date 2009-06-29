@@ -48,6 +48,8 @@ public abstract class AbstractClassSubViewBuilder {
 			}
 			graphsByAgent.put(agentType, graphForAgent);
 			agentVertexBySite.put(agentType, vertexBySite);
+			List<ISubViews> subViewsList = new LinkedList<ISubViews>();
+			subViewsMap.put(agentType, subViewsList);
 		}
 
 		// draw edges in graphs
@@ -66,8 +68,8 @@ public abstract class AbstractClassSubViewBuilder {
 					for (CAbstractSite testedSite : testedSites) {
 						graphsByAgent.get(agentType).addEdge(
 								new Edge(agentVertexBySite.get(agentType).get(
-										modSite), agentVertexBySite.get(
-										agentType).get(testedSite)));
+										modSite.getNameId()), agentVertexBySite.get(
+										agentType).get(testedSite.getNameId())));
 					}
 					for (CAbstractSite mod2Site : modificatedSites) {
 						if (modSite == mod2Site)
