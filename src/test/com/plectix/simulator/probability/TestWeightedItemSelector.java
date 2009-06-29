@@ -129,6 +129,7 @@ public class TestWeightedItemSelector {
 	}
 	
 
+	//we can delete this class and leave only this method
 	@Test
 	public void testSelectorCompare() throws Exception{
 		TestSelectorCompare testSelector= new TestSelectorCompare();
