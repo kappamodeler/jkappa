@@ -1,6 +1,8 @@
 package com.plectix.simulator.components.complex.abstracting;
 
 import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CLinkRank;
+import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
@@ -32,7 +34,7 @@ public class CAbstractSite {
 					.getNameId());
 		this.linkState = new CAbstractLinkState(site.getLinkState());
 	}
-	
+
 	public CAbstractSite(CAbstractAgent agent, int nameId) {
 		this.nameId = nameId;
 		this.linkAgent = agent;
@@ -242,7 +244,8 @@ public class CAbstractSite {
 		if (site.getInternalState() != CInternalState.EMPTY_STATE)
 			this.internalState = new CInternalState(site.getInternalState()
 					.getNameId());
-		if (site.getLinkState().getAgentNameID() != CSite.NO_INDEX)
+		if (site.getLinkState().getStatusLinkRank() != CLinkRank.SEMI_LINK
+				|| site.getLinkState().getStatusLinkRank() != CLinkRank.BOUND_OR_FREE)
 			this.linkState = new CAbstractLinkState(site.getLinkState());
 	}
 

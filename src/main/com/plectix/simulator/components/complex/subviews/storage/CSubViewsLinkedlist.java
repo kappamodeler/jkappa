@@ -93,6 +93,8 @@ public class CSubViewsLinkedlist implements ISubViews {
 			break;
 		}
 		case TEST_AND_MODIFICATION: {
+			if(sideEffectId == null)
+				return;
 			for (CAbstractAgent agent : agentsList)
 				for (Integer siteId : sideEffectId) {
 					CAbstractSite site = agent.getSite(siteId);
@@ -265,6 +267,8 @@ public class CSubViewsLinkedlist implements ISubViews {
 	public boolean burnBreakAllNeedLinkState(AbstractAction action) {
 		List<CAbstractSite> breakingSites = action.getSitesSideEffect();
 		List<CAbstractAgent> addlist = new LinkedList<CAbstractAgent>();
+		if(breakingSites == null)
+			return false;
 		for (CAbstractSite site : breakingSites) {
 			if (site.getAgentLink().getNameId() != subViewClass
 					.getAgentTypeId())
