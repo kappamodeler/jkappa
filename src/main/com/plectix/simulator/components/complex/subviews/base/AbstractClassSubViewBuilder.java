@@ -30,20 +30,21 @@ public abstract class AbstractClassSubViewBuilder {
 
 		// CSubViewClass with one site = Vertex
 		Map<Integer, Graph> graphsByAgent = new HashMap<Integer, Graph>();
-		Map<Integer, Map<CAbstractSite, CSubViewClass>> agentVertexBySite = new HashMap<Integer, Map<CAbstractSite, CSubViewClass>>();
+		Map<Integer, Map<Integer, CSubViewClass>> agentVertexBySite = new HashMap<Integer, Map<Integer, CSubViewClass>>();
 		// create graph for each agent
 		for (Map.Entry<Integer, CAbstractAgent> entery : agentNameIdToAgent
 				.entrySet()) {
 			Integer agentType = entery.getKey();
 			CAbstractAgent agent = entery.getValue();
 			Graph graphForAgent = new Graph();
-			Map<CAbstractSite, CSubViewClass> vertexBySite = new HashMap<CAbstractSite, CSubViewClass>();
+			//int = site.id
+			Map<Integer, CSubViewClass> vertexBySite = new HashMap<Integer, CSubViewClass>();
 
 			for (CAbstractSite site : agent.getSitesMap().values()) {
 				CSubViewClass primitiveView = new CSubViewClass(agentType);
 				primitiveView.addSite(site.getNameId());
 				graphForAgent.addVertex(primitiveView);
-				vertexBySite.put(site, primitiveView);
+				vertexBySite.put(site.getNameId(), primitiveView);
 			}
 			graphsByAgent.put(agentType, graphForAgent);
 			agentVertexBySite.put(agentType, vertexBySite);
@@ -73,11 +74,11 @@ public abstract class AbstractClassSubViewBuilder {
 							continue;
 						graphsByAgent.get(agentType).addEdge(
 								new Edge(agentVertexBySite.get(agentType).get(
-										modSite), agentVertexBySite.get(
-										agentType).get(mod2Site)));
+										modSite.getNameId()), agentVertexBySite.get(
+										agentType).get(mod2Site.getNameId())));
 
 					}
-					agentVertexBySite.get(agentType).get(modSite).addRuleId(
+					agentVertexBySite.get(agentType).get(modSite.getNameId()).addRuleId(
 							aRule.getRuleId());
 				}
 			}
