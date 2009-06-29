@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
-import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
+import com.plectix.simulator.components.complex.subviews.CSubViewClass;
 import com.plectix.simulator.components.complex.subviews.base.AbstractAction;
 
 public interface ISubViews {
@@ -60,4 +60,6 @@ public interface ISubViews {
 	 * @return
 	 */
 	public boolean burnBreakAllNeedLinkState(AbstractAction action);
+	
+	public CSubViewClass getSubViewClass();
 }

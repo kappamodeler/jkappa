@@ -30,37 +30,33 @@ public class SubViewsRule {
 	}
 
 	public void initActionsToSubViews(Map<Integer, List<ISubViews>> subViewsMap) {
-		for (AbstractAction action : actions) {
-			if (action.getRightHandSideAgent() == null)
-				continue; // TODO Delete action!!!!!
-			CAbstractAgent agent = action.getLeftHandSideAgent();
-			if (agent == null)
-				agent = action.getRightHandSideAgent();
-			List<ISubViews> subViewsList = subViewsMap.get(agent.getNameId());
-			for (ISubViews subViews : subViewsList) {
-				if (subViews.isAgentFit(agent))
-					action.addSubViews(subViews);
-			}
-		}
+		for (AbstractAction action : actions)
+			action.initSubViews(subViewsMap);
 	}
 
 	public boolean apply(Map<Integer, CAbstractAgent> agentNameIdToAgent,
 			Map<Integer, List<ISubViews>> subViewsMap) throws SubViewsExeption {
-		boolean isEnd = true;
 		for (AbstractAction action : actions) {
+			boolean isEnd = true;
 			for (ISubViews subViews : action.getSubViews())
-				if (subViews.test(action))
+				if (subViews.test(action)) {
 					isEnd = false;
+				} else if (action.getActionType() == EAbstractActionType.TEST_ONLY)
+					return false;
+			if (isEnd)
+				return false;
 		}
-		if (isEnd)
-			return false;
 		boolean isAdd = false;
 		for (AbstractAction action : actions) {
-			for (ISubViews subViews : action.getSubViews()) {
-				if (subViews.burnRule(action))
-					isAdd = true;
-				if (subViews.burnBreakAllNeedLinkState(action))
-					isAdd = true;
+			if (action.getActionType() != EAbstractActionType.TEST_ONLY) {
+				for (ISubViews subViews : action.getSubViews()) {
+					if (subViews.burnRule(action))
+						isAdd = true;
+				}
+				for (List<ISubViews> subViewsList : subViewsMap.values())
+					for (ISubViews subViews : subViewsList)
+						if (subViews.burnBreakAllNeedLinkState(action))
+							isAdd = true;
 			}
 		}
 		return isAdd;

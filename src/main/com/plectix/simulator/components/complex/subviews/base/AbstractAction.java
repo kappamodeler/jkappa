@@ -2,6 +2,7 @@ package com.plectix.simulator.components.complex.subviews.base;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
@@ -16,8 +17,9 @@ public class AbstractAction {
 	private List<CAbstractSite> testedSites;
 	private List<CAbstractSite> modificatedSites;
 	private List<ISubViews> subViewsList;
-	private List<CAbstractSite> sitesShouldBeBreak;
-	private boolean isDeleted = false;
+	private List<CAbstractSite> sitesSideEffect;
+	private List<Integer> sideEffect;
+	private EAbstractActionType actionType;
 
 	public AbstractAction(CAbstractAgent leftHandSideAgent,
 			CAbstractAgent rightAbstractAgent) {
@@ -29,14 +31,16 @@ public class AbstractAction {
 
 	private void init() {
 		if (leftHandSideAgent == null) {
+			actionType = EAbstractActionType.ADD;
 			return;
 		}
-		if(rightHandSideAgent == null){
-			isDeleted = true;
+		if (rightHandSideAgent == null) {
+			actionType = EAbstractActionType.DELETE;
 			return;
 		}
 		testedSites = new LinkedList<CAbstractSite>();
 		modificatedSites = new LinkedList<CAbstractSite>();
+		actionType = EAbstractActionType.TEST_ONLY;
 
 		for (CAbstractSite leftSite : leftHandSideAgent.getSitesMap().values()) {
 			CAbstractSite rightSite = rightHandSideAgent.getSite(leftSite
@@ -46,11 +50,13 @@ public class AbstractAction {
 			if (!leftSite.getInternalState().equalz(
 					rightSite.getInternalState())) {
 				modificatedSites.add(leftSite);
+				actionType = EAbstractActionType.TEST_AND_MODIFICATION;
 				continue;
 			}
 
 			if (!leftSite.getLinkState().equalz(rightSite.getLinkState())) {
 				modificatedSites.add(leftSite);
+				actionType = EAbstractActionType.TEST_AND_MODIFICATION;
 				continue;
 			}
 			testedSites.add(leftSite);
@@ -64,11 +70,25 @@ public class AbstractAction {
 		if (leftLinkState.equalz(rightLinkState))
 			return;
 		if (leftLinkState.getStatusLink() != CLinkStatus.FREE
-				&& leftLinkState.getLinkSiteNameID() == CSite.NO_INDEX){
-			if(sitesShouldBeBreak == null)
-				sitesShouldBeBreak = new LinkedList<CAbstractSite>();
-			sitesShouldBeBreak.add(leftSite);
+				&& leftLinkState.getLinkSiteNameID() == CSite.NO_INDEX) {
+			if (sideEffect == null)
+				sideEffect = new LinkedList<Integer>();
+			sideEffect.add(leftSite.getNameId());
+			// if (sitesShouldBeBreak == null)
+			// sitesShouldBeBreak = new LinkedList<CAbstractSite>();
+			// sitesShouldBeBreak.add(leftSite);
 		}
+	}
+
+	public void clearSitesSideEffect() {
+		if (sitesSideEffect != null)
+			sitesSideEffect.clear();
+	}
+
+	public void addSiteSideEffect(CAbstractSite breakingSite) {
+		if (sitesSideEffect == null)
+			sitesSideEffect = new LinkedList<CAbstractSite>();
+		sitesSideEffect.add(breakingSite);
 	}
 
 	public void addSubViews(ISubViews subViews) {
@@ -94,13 +114,42 @@ public class AbstractAction {
 	public CAbstractAgent getRightHandSideAgent() {
 		return rightHandSideAgent;
 	}
-	
-	public List<CAbstractSite> getBreakingSites(){
-		return sitesShouldBeBreak;
+
+	public List<CAbstractSite> getSitesSideEffect() {
+		return sitesSideEffect;
 	}
 
-	public boolean isDeleted(){
-		return isDeleted;
+	public EAbstractActionType getActionType() {
+		return actionType;
 	}
-	
+
+	public List<Integer> getSideEffect() {
+		return sideEffect;
+	}
+
+	public void initSubViews(Map<Integer, List<ISubViews>> subViewsMap) {
+		CAbstractAgent agent = leftHandSideAgent;
+		if (leftHandSideAgent == null)
+			agent = rightHandSideAgent;
+		List<ISubViews> subViewsList = subViewsMap.get(agent.getNameId());
+		for (ISubViews subViews : subViewsList) {
+			if (actionType != EAbstractActionType.TEST_ONLY) {
+				if (subViews.isAgentFit(agent))
+					addSubViews(subViews);
+			} else {
+				if (agent.getSitesMap().isEmpty())
+					addSubViews(subViews);
+				else {
+					for (CAbstractSite site : agent.getSitesMap().values()) {
+						if (subViews.getSubViewClass().isHaveSite(
+								site.getNameId())) {
+							addSubViews(subViews);
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+
 }

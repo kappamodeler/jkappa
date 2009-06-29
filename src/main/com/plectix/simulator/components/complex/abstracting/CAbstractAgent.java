@@ -72,6 +72,11 @@ public class CAbstractAgent {
 		this.nameID = agent.getNameId();
 		this.sitesMap = new HashMap<Integer, CAbstractSite>();
 	}
+	
+	public CAbstractAgent(int nameId){
+		this.nameID = nameId;
+		sitesMap = new HashMap<Integer, CAbstractSite>();
+	}
 
 	/**
 	 * Constructor of CContactMapAbstractAgent.<br>

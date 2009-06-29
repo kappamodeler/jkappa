@@ -32,6 +32,12 @@ public class CAbstractSite {
 					.getNameId());
 		this.linkState = new CAbstractLinkState(site.getLinkState());
 	}
+	
+	public CAbstractSite(CAbstractAgent agent, int nameId) {
+		this.nameId = nameId;
+		this.linkAgent = agent;
+		this.linkState = new CAbstractLinkState();
+	}
 
 	/**
 	 * Constructor of CContactMapAbstractSite

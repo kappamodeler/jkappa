@@ -1,15 +1,20 @@
 package com.plectix.simulator.components.complex.subviews.storage;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CLinkStatus;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
+import com.plectix.simulator.components.complex.abstracting.CAbstractLinkState;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.subviews.CSubViewClass;
 import com.plectix.simulator.components.complex.subviews.base.AbstractAction;
+import com.plectix.simulator.components.complex.subviews.base.EAbstractActionType;
 
 public class CSubViewsLinkedlist implements ISubViews {
 	private CSubViewClass subViewClass;
@@ -18,7 +23,7 @@ public class CSubViewsLinkedlist implements ISubViews {
 	public CSubViewsLinkedlist(CSubViewClass subViewClass) {
 		this.subViewClass = subViewClass;
 		this.storage = new LinkedList<CAbstractAgent>();
-		
+
 	}
 
 	public void fillingInitialState(
@@ -46,36 +51,25 @@ public class CSubViewsLinkedlist implements ISubViews {
 	}
 
 	public boolean burnRule(AbstractAction action) throws SubViewsExeption {
-		return burnRule(action.getLeftHandSideAgent(), action.getRightHandSideAgent());
-//		CAbstractAgent agent = action.getLeftHandSideAgent();
-//		if (agent == null) {
-//			agent = action.getRightHandSideAgent().clone();
-//			return addAbstractAgent(agent);
-//		}
-//		if (action.getRightHandSideAgent() == null) {
-//			// TODO DELETE Action!!!
-//		}
-//		boolean isAdd = false;
-//		List<CAbstractAgent> agentsList = getAllSubViews(agent);
-//		for (CAbstractAgent agentFromStorage : agentsList) {
-//			CAbstractAgent newAgent = agentFromStorage.clone();
-//			newAgent.addAllStates(action.getRightHandSideAgent());
-//			if (addAbstractAgent(newAgent))
-//				isAdd = true;
-//		}
-//		return isAdd;
-	}
+		CAbstractAgent oldViews = action.getLeftHandSideAgent();
+		CAbstractAgent newViews = action.getRightHandSideAgent();
 
-	public boolean burnRule(CAbstractAgent oldViews, CAbstractAgent newViews)
-			throws SubViewsExeption {
-		if (oldViews == null)
-			return addAbstractAgent(newViews);
+		// if (oldViews == null)
+		// return addAbstractAgent(newViews);
 
-		if (newViews == null) {
-			// TODO DELETE Action!!!
-		}
-		boolean isAdd = false;
 		List<CAbstractAgent> agentsList = getAllSubViews(oldViews);
+		initBreakingSites(action, agentsList);
+		switch (action.getActionType()) {
+		case ADD:
+			return addAbstractAgent(newViews);
+		case TEST_ONLY:
+			return false;
+		case DELETE:
+			return false;
+		}
+
+		
+		boolean isAdd = false;
 		for (CAbstractAgent agentFromStorage : agentsList) {
 			CAbstractAgent newAgent = agentFromStorage.clone();
 			newAgent.addAllStates(newViews);
@@ -83,6 +77,88 @@ public class CSubViewsLinkedlist implements ISubViews {
 				isAdd = true;
 		}
 		return isAdd;
+
+	}
+
+	private void initBreakingSites(AbstractAction action,
+			List<CAbstractAgent> agentsList) {
+		action.clearSitesSideEffect();
+		List<Integer> sideEffectId = action.getSideEffect();
+		Map<Integer, CAbstractAgent> sideEfectMap = new HashMap<Integer, CAbstractAgent>();
+		switch (action.getActionType()) {
+		case DELETE: {
+			for (CAbstractAgent agent : agentsList)
+				for (CAbstractSite site : agent.getSitesMap().values())
+					initSideEffectSite(site, agent, sideEfectMap, action);
+			break;
+		}
+		case TEST_AND_MODIFICATION: {
+			for (CAbstractAgent agent : agentsList)
+				for (Integer siteId : sideEffectId) {
+					CAbstractSite site = agent.getSite(siteId);
+					initSideEffectSite(site, agent, sideEfectMap, action);
+				}
+			break;
+		}
+		}
+	}
+
+	private void initSideEffectSite(CAbstractSite site, CAbstractAgent agent,
+			Map<Integer, CAbstractAgent> sideEfectMap, AbstractAction action) {
+		CAbstractLinkState linkState = site.getLinkState();
+		if (linkState.getAgentNameID() != CSite.NO_INDEX) {
+			int newAgentNameId = linkState.getAgentNameID();
+			int newSiteNameId = linkState.getLinkSiteNameID();
+			int hashValue = generateHash(newAgentNameId, newSiteNameId, agent
+					.getNameId(), site.getNameId());
+			if (sideEfectMap.get(hashValue) == null) {
+				CAbstractAgent newAgent = createSideEffectAgent(newAgentNameId,
+						newSiteNameId, agent.getNameId(), site.getNameId());
+				sideEfectMap.put(hashValue, newAgent);
+				action.addSiteSideEffect(newAgent.getSite(newSiteNameId));
+			}
+		}
+	}
+
+	private static CAbstractAgent createSideEffectAgent(int agentNameId,
+			int siteNameId, int linkAgentNameId, int linkSiteNameId) {
+		CAbstractAgent newAgent = new CAbstractAgent(agentNameId);
+		CAbstractSite newSite = new CAbstractSite(newAgent, siteNameId);
+		newSite.getLinkState().setAgentNameID(linkAgentNameId);
+		newSite.getLinkState().setLinkSiteNameID(linkSiteNameId);
+		newSite.getLinkState().setStatusLink(CLinkStatus.BOUND);
+		newAgent.addSite(newSite);
+		return newAgent;
+	}
+
+	private static int generateHash(int agentNameId, int siteNameId,
+			int linkAgentNameId, int linkSiteNameId) {
+		int hashValue = 11;
+		hashValue = 31 * hashValue + agentNameId;
+		hashValue = 31 * hashValue + siteNameId;
+		hashValue = 31 * hashValue + linkAgentNameId;
+		hashValue = 31 * hashValue + linkSiteNameId;
+		return hashValue;
+	}
+
+	public boolean burnRule(CAbstractAgent oldViews, CAbstractAgent newViews)
+			throws SubViewsExeption {
+		// if (oldViews == null)
+		// return addAbstractAgent(newViews);
+		//
+		// if (newViews == null) {
+		// // TODO DELETE Action!!!
+		// }
+		// boolean isAdd = false;
+		// List<CAbstractAgent> agentsList = getAllSubViews(oldViews);
+		// for (CAbstractAgent agentFromStorage : agentsList) {
+		// CAbstractAgent newAgent = agentFromStorage.clone();
+		// newAgent.addAllStates(newViews);
+		// if (addAbstractAgent(newAgent))
+		// isAdd = true;
+		// }
+		// return isAdd;
+		return false;
 	}
 
 	public boolean test(AbstractAction action) throws SubViewsExeption {
@@ -95,16 +171,20 @@ public class CSubViewsLinkedlist implements ISubViews {
 	public boolean test(CAbstractAgent testView) throws SubViewsExeption {
 		if (testView.getNameId() != subViewClass.getAgentTypeId())
 			throw new SubViewsExeption(subViewClass, testView);
+		boolean isHave = false;
 		for (CAbstractSite site : testView.getSitesMap().values())
-			if (!subViewClass.isHaveSite(site.getNameId()))
-				throw new SubViewsExeption(subViewClass, testView);
+			if (subViewClass.isHaveSite(site.getNameId()))
+				isHave = true;
+		if (!isHave)
+			throw new SubViewsExeption(subViewClass, testView);
 
 		for (CAbstractAgent aAgent : storage) {
-			boolean isHave = true;
+			isHave = true;
 			for (CAbstractSite site : testView.getSitesMap().values()) {
-//				int siteId = site.getNameId();
+				int siteId = site.getNameId();
 				// if (!aAgent.getSite(siteId).isFit(site)) {
-				if (!site.isFit(aAgent.getSite(site.getNameId()))) {
+				if ((subViewClass.isHaveSite(siteId))
+					&& (!site.isFit(aAgent.getSite(siteId)))) {
 					isHave = false;
 					break;
 				}
@@ -183,10 +263,37 @@ public class CSubViewsLinkedlist implements ISubViews {
 	}
 
 	public boolean burnBreakAllNeedLinkState(AbstractAction action) {
-		// TODO Auto-generated method stub
-		List<CAbstractSite> breakingSites = action.getBreakingSites();
-		
-		
-		return false;
+		List<CAbstractSite> breakingSites = action.getSitesSideEffect();
+		List<CAbstractAgent> addlist = new LinkedList<CAbstractAgent>();
+		for (CAbstractSite site : breakingSites) {
+			if (site.getAgentLink().getNameId() != subViewClass
+					.getAgentTypeId())
+				continue;
+			for (CAbstractAgent agentFromStorage : storage) {
+				CAbstractSite siteFromStorage = agentFromStorage.getSite(site
+						.getNameId());
+				if (site.equalz(siteFromStorage)) {
+					CAbstractAgent newAgent = new CAbstractAgent(
+							agentFromStorage);
+					newAgent.getSite(site.getNameId()).getLinkState()
+							.setFreeLinkState();
+					addlist.add(newAgent);
+				}
+			}
+		}
+		boolean isAdd = false;
+		for (CAbstractAgent agent : addlist)
+			try {
+				if (addAbstractAgent(agent))
+					isAdd = true;
+			} catch (SubViewsExeption e) {
+				// e.printStackTrace();
+			}
+
+		return isAdd;
+	}
+
+	public CSubViewClass getSubViewClass() {
+		return subViewClass;
 	}
 }
