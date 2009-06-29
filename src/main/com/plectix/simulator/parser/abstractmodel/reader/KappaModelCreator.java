@@ -13,13 +13,16 @@ import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 public class KappaModelCreator {
 
 	private final SimulationArguments myArguments;
-	private AgentFactory myAgentFactory = new AgentFactory();
+	private AgentFactory myAgentFactory = new AgentFactory(false);
+	private AgentFactory mySolutionAgentFactory = myAgentFactory;
 
 	public KappaModelCreator(SimulationArguments arguments) {
 		myArguments = arguments;
+		if (!myArguments.incompletesAllowed()) {
+			mySolutionAgentFactory = new AgentFactory(true);
+		}
 	}
 
-	// TODO stateg?
 	public KappaModel createModel(KappaFile file) throws SimulationDataFormatException {
 		KappaModel model = new KappaModel();
 
@@ -27,7 +30,7 @@ public class KappaModelCreator {
 
 		if (myArguments.getSimulationType() != SimulationType.GENERATE_MAP) {
 			AbstractSolution solution = (new SolutionParagraphReader(model,
-					myArguments, myAgentFactory)).readComponent(file
+					myArguments, mySolutionAgentFactory)).readComponent(file
 					.getSolution());
 			model.setSolution(solution);
 		}

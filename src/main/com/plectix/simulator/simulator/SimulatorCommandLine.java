@@ -197,6 +197,10 @@ public class SimulatorCommandLine {
 			simulationArguments.setMonitorPeakMemory(getLongValue(SimulatorOptions.MONITOR_PEAK_MEMORY));
 		}
 
+		if (hasOption(SimulatorOptions.ALLOW_INCOMPLETES)) {
+			simulationArguments.allowIncompletes();
+		}
+		
 		if (hasOption(SimulatorOptions.CLOCK_PRECISION)) {
 			simulationArguments.setClockPrecision(getIntValue(SimulatorOptions.CLOCK_PRECISION));
 		}

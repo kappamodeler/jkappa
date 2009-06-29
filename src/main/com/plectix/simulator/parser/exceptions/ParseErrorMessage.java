@@ -32,6 +32,7 @@ public enum ParseErrorMessage {
 	BAD_LINEAR_EXPRESSION("Bad linear expression format, use (a_1*'rule_1' + ... + a_n*'rule_n' + K) for "
 			+ "rate modification or (a_1*['specie_1'] + ... + a_n*['specie_n'] + K) for species condition"),
 	SENSE_OF_INEQUALITY_EXPECTED("> or < expected"),
+	INCOMPLETES_DISABLED("Incomplete substances are disabled!"),
 	
 	;
 	

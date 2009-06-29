@@ -279,7 +279,6 @@ public class CMockSubViews extends AbstractClassSubViewBuilder implements IAllSu
 		return subViewsMap.get(Integer.valueOf(type));
 	}
 
-	@Override
 	public ISubViews getSubViewForRule(String typeOfAgent, CRule rule) {
 		// TODO Auto-generated method stub
 		return null;

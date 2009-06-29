@@ -21,7 +21,7 @@ public class ExceptionsTest {
 	private static final String mySourceFilePath = prefix + "ExceptionsTestFile";
 	private static final String myExceptionsDataFilePath = prefix + "ExceptionsTestData";
 	private final KappaModel myModel = new KappaModel();
-	private final AgentFactory myAgentFactory = new AgentFactory();
+	private final AgentFactory myAgentFactory = new AgentFactory(false);
 	private final Map<Integer, String> myExceptionsData = new HashMap<Integer, String>();
 	
 	private enum ReaderUsageModifier {

@@ -10,6 +10,7 @@ import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.AbstractSite;
 import com.plectix.simulator.parser.exceptions.DocumentFormatException;
+import com.plectix.simulator.parser.exceptions.IncompletesDisabledException;
 import com.plectix.simulator.parser.exceptions.ParseErrorException;
 import com.plectix.simulator.parser.exceptions.ParseErrorMessage;
 import com.plectix.simulator.simulator.ThreadLocalData;
@@ -23,12 +24,14 @@ public class AgentFactory {
 	private static final String PATTERN_STATE = "^[0-9[a-zA-Z]]+";
 
 	private final static String SYMBOL_CONNECTED_TRUE_VALUE = "_";
+	private final boolean disableIncompletes;
 	
-	public AgentFactory() {
+	public AgentFactory(boolean disableIncompletes) {
+		this.disableIncompletes = disableIncompletes;
 	}
 	
 	public final List<AbstractAgent> parseAgent(String line)
-			throws ParseErrorException, DocumentFormatException {
+			throws ParseErrorException, DocumentFormatException, IncompletesDisabledException {
 		line = line.replaceAll("[ 	]", "");
 		// if (!testLine(line))
 		// throw new ParseErrorException();
@@ -74,7 +77,7 @@ public class AgentFactory {
 	}
 
 	private final AbstractSite parseSome(String line, Map<Integer, AbstractSite> map)
-			throws ParseErrorException {
+			throws ParseErrorException, IncompletesDisabledException {
 		String state = null;
 		String connect = null;
 		DataString dt = null;
@@ -110,18 +113,24 @@ public class AgentFactory {
 
 		if (connect != null)
 			if (connect.length() == 0) {
+				if (disableIncompletes) {
+					throw new IncompletesDisabledException(ParseErrorMessage.INCOMPLETES_DISABLED, line);
+				}
 				csite.getLinkState().setStatusLink(CLinkStatus.WILDCARD);
 			} else if (connect.equals(SYMBOL_CONNECTED_TRUE_VALUE)) {
+				if (disableIncompletes) {
+					throw new IncompletesDisabledException(ParseErrorMessage.INCOMPLETES_DISABLED, line);
+				}
 				csite.getLinkState().setStatusLink(CLinkStatus.BOUND);
 			} else {
 				try {
 					int index = Integer.valueOf(connect);
-					AbstractSite CSite = map.get(index);
-					if (CSite != null) {
-						CSite.getLinkState().setSite(csite);
-						csite.getLinkState().setSite(CSite);
+					AbstractSite abstractSite = map.get(index);
+					if (abstractSite != null) {
+						abstractSite.getLinkState().setSite(csite);
+						csite.getLinkState().setSite(abstractSite);
 
-						CSite.setLinkIndex(index);
+						abstractSite.setLinkIndex(index);
 						csite.setLinkIndex(index);
 						map.remove(index);
 					} else {

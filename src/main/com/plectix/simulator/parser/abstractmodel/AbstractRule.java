@@ -11,16 +11,19 @@ public class AbstractRule implements IAbstractComponent {
 	private final double myRate;
 	private final int myId;
 	private final boolean myIsStorify;
+	// -1 is default value
+	private final double binaryRate;
 	
 	public AbstractRule(List<AbstractAgent> left,
 			List<AbstractAgent> right, String name,
-			double ruleRate, int ruleID, boolean isStorify) {
+			double ruleRate, double binaryRate, int ruleID, boolean isStorify) {
 		myRate = ruleRate;
 		myLHS = left;
 		
 		myRHS = right;
 		myName = name;
 		myId = ruleID;
+		this.binaryRate = binaryRate;
 		myIsStorify = isStorify;
 	}
 	
@@ -45,6 +48,10 @@ public class AbstractRule implements IAbstractComponent {
 		return myId;
 	}
 
+	public double getBinaryRate() {
+		return binaryRate;
+	}
+	
 	public boolean isStorify() {
 		return myIsStorify;
 	}

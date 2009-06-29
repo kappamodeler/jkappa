@@ -49,10 +49,12 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 						rulesStr.length()).trim();
 
 			}
+			double binaryRate = -1;
 			int index = rulesStr.lastIndexOf("@");
 			if (index != -1) {
 				try {
 					String activStr = rulesStr.substring(index + 1).trim();
+					binaryRate = extractBinaryRate(activStr);
 					String inf = new String(new Double(Double.POSITIVE_INFINITY)
 							.toString());
 					activStr = activStr.replaceAll("\\$INF", inf);
@@ -125,11 +127,11 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 				switch (index) {
 				case CC_LHS: {
 					left = parseAgent(lhs.trim());
-					rules.add(new AbstractRule(left, right, name, activity, ruleID, isStorify));
+					rules.add(new AbstractRule(left, right, name, activity, binaryRate, ruleID, isStorify));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 						 rules.add(new AbstractRule(right,
-						 parseAgent(lhs.trim()), nameOp, activity2, ruleID,
+						 parseAgent(lhs.trim()), nameOp, activity2, binaryRate, ruleID,
 						 isStorify));
 					}
 					break;
@@ -137,11 +139,11 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 				case CC_RHS: {
 					right = parseAgent(rhs.trim());
 					rules.add(new AbstractRule(left, right, name,
-							 activity, ruleID, isStorify));
+							 activity, binaryRate, ruleID, isStorify));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 						rules.add(new AbstractRule(parseAgent(rhs.trim()), 
-								left, name, activity2, ruleID, isStorify));
+								left, name, activity2, binaryRate, ruleID, isStorify));
 					}
 					break;
 				}
@@ -149,11 +151,12 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 					left = parseAgent(lhs.trim());
 					right = parseAgent(rhs.trim());
 					rules.add(new AbstractRule(left, right, name,
-							 activity, ruleID, isStorify));
+							 activity, binaryRate, ruleID, isStorify));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 						rules.add(new AbstractRule(parseAgent(rhs.trim()), 
-								parseAgent(lhs.trim()), nameOp, activity2, ruleID, isStorify));
+								parseAgent(lhs.trim()), nameOp, activity2, binaryRate, 
+								ruleID, isStorify));
 					}
 					break;
 				}
@@ -166,5 +169,26 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 
 		}
 		return rules;
+	}
+
+	/**
+	 * this method modifies it's parameter by replacing binary rate part if there's one!
+	 * @param activStr
+	 * @return binary rate as double
+	 */
+	private double extractBinaryRate(String activStr) {
+		int indexOpen = activStr.lastIndexOf("(");
+		if (indexOpen != -1) {
+			activStr = activStr.substring(indexOpen);
+			int indexClose = activStr.indexOf(")");
+			activStr = activStr.substring(0, indexClose - 1).trim();
+			try {
+				return Double.parseDouble(activStr);
+			} catch(NumberFormatException e) {
+				return -1;
+			}
+		} else {
+			return -1;
+		}
 	}
 }

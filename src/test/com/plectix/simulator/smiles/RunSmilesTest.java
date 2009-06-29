@@ -25,6 +25,7 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.AbstractSite;
 import com.plectix.simulator.parser.exceptions.DocumentFormatException;
+import com.plectix.simulator.parser.exceptions.IncompletesDisabledException;
 import com.plectix.simulator.parser.exceptions.ParseErrorException;
 import com.plectix.simulator.parser.util.AgentFactory;
 
@@ -69,7 +70,7 @@ public class RunSmilesTest {
 	public void test() {
 		String line = "";
 		int lineCounter = 0;
-		AgentFactory af = new AgentFactory();
+		AgentFactory af = new AgentFactory(false);
 		CConnectedComponent cc;
 		StringBuffer fails;
 		SmilesTest smilestest;
@@ -98,7 +99,6 @@ public class RunSmilesTest {
 		} catch (DocumentFormatException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	// / SubstanceBuilder

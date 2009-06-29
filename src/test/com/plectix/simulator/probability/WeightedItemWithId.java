@@ -38,7 +38,6 @@ public class WeightedItemWithId implements WeightedItem{
 		this.count++; 
 	} 
 
-	@Override 
 	public double getWeight() { 
 		return weight; 
 	} 

@@ -93,6 +93,7 @@ public class SimulationArguments {
 	private StorifyMode storifyMode = StorifyMode.NONE;
 	private SerializationMode serializationMode = SerializationMode.NONE;
 	private OperationMode operationMode = OperationMode.FIRST;
+	private boolean allowIncompletes = false;;
 	
 	public SimulationArguments() {
 		super();
@@ -784,5 +785,13 @@ public class SimulationArguments {
 
 	public OperationMode getOperationMode() {
 		return operationMode;
+	}
+
+	public final void allowIncompletes() {
+		this.allowIncompletes  = true;
+	}
+	
+	public final boolean incompletesAllowed() {
+		return this.allowIncompletes;
 	}
 }

@@ -5,9 +5,7 @@ import java.util.List;
 import com.plectix.simulator.parser.KappaFileParagraph;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.exceptions.DocumentFormatException;
-import com.plectix.simulator.parser.exceptions.ParseErrorException;
-import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
+import com.plectix.simulator.parser.exceptions.*;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 
@@ -22,7 +20,13 @@ public abstract class KappaParagraphReader<E> {
 		myAgentFactory = factory;
 	}
 	
-	protected final List<AbstractAgent> parseAgent(String line) throws ParseErrorException, DocumentFormatException {
+	protected final List<AbstractAgent> parseAgent(String line) 
+			throws ParseErrorException, DocumentFormatException, IncompletesDisabledException {
+		return myAgentFactory.parseAgent(line);
+	}
+	
+	protected final List<AbstractAgent> parseSolutionAgent(String line) 
+			throws ParseErrorException, DocumentFormatException, IncompletesDisabledException {
 		return myAgentFactory.parseAgent(line);
 	}
 	

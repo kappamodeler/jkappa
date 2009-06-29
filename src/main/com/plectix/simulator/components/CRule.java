@@ -75,6 +75,9 @@ public class CRule implements Serializable, WeightedItem {
 	
 	private RuleApplicationPool pool;
 
+	private double binaryRate = -1;
+	private final boolean isBinary;
+
 	/**
 	 * The only CRule constructor.
 	 * 
@@ -125,6 +128,12 @@ public class CRule implements Serializable, WeightedItem {
 				}
 			}
 		}
+
+		isBinary = (leftHandside.size() == 2) 
+				&& (leftHandside.get(0).getAgents().size() == 1)
+				&& (leftHandside.get(1).getAgents().size() == 1)
+				&& (actionList.size() == 1)
+				&& (CActionType.getById(actionList.get(0).getTypeId()) == CActionType.BOUND);
 	}
 	
 	/**
@@ -1222,8 +1231,15 @@ public class CRule implements Serializable, WeightedItem {
 		return st;
 	}
 
-	@Override
 	public double getWeight() {
 		return activity;
+	}
+
+	public void setBinaryRate(double binaryRate) {
+		this.binaryRate  = binaryRate;
+	}
+	
+	public boolean isBinary() {
+		return this.isBinary;
 	}
 }
