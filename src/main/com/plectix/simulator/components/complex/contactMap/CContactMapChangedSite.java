@@ -62,5 +62,11 @@ public class CContactMapChangedSite {
 				usedRuleIDs.add(value);
 		}
 	}
+	
+	public void addRules(int ruleId) {
+		if (!usedRuleIDs.contains(ruleId))
+				usedRuleIDs.add(ruleId);
+		
+	}
 
 }
