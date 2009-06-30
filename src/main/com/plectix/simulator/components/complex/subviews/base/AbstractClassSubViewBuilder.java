@@ -89,6 +89,15 @@ public abstract class AbstractClassSubViewBuilder {
 
 		// extract classesSubView and write correspondence subview- rule
 		for (Integer agentType : agentNameIdToAgent.keySet()) {
+			if (agentNameIdToAgent.get(agentType).getSitesMap().isEmpty()){
+				ArrayList<CSubViewClass> subViewsOfAgent = new ArrayList<CSubViewClass>();
+				CSubViewClass classSubView = new CSubViewClass(agentType);
+				subViewsOfAgent.add(classSubView);
+				
+				agentTypeToClass.put(agentType, subViewsOfAgent);
+				continue;
+					
+			}
 			ArrayList<CSubViewClass> subViewsOfAgent = new ArrayList<CSubViewClass>();
 			// is getAll... doing once?
 			for (ArrayList<Vertex> subClass : graphsByAgent.get(agentType)
@@ -103,6 +112,7 @@ public abstract class AbstractClassSubViewBuilder {
 				subViewsOfAgent.add(classSubView);
 			}
 			agentTypeToClass.put(agentType, subViewsOfAgent);
+			
 
 		}
 
