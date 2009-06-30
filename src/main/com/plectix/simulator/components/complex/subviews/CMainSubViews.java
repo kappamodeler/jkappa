@@ -66,13 +66,12 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	}
 
 	public List<ISubViews> getAllSubViewsByTypeId(int type) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return subViewsMap.get(type);
 	}
 
 	public Iterator<Integer> getAllTypesIdOfAgents() {
-		// TODO Auto-generated method stub
-		return null;
+		 return agentNameIdToAgent.keySet().iterator();
 	}
 
 	public List<String> getAllTypesOfAgents() {
