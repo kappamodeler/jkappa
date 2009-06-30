@@ -65,8 +65,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		return null;
 	}
 
-	public List<ISubViews> getAllSubViewsByTypeId(int type) {
-		
+	public List<ISubViews> getAllSubViewsByTypeId(int type) {		
 		return subViewsMap.get(type);
 	}
 
