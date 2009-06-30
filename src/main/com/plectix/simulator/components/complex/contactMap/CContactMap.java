@@ -103,20 +103,19 @@ public class CContactMap {
 			while(iterator.hasNext()){
 				List<ISubViews> listOfSubViews = subViews.getAllSubViewsByTypeId(iterator.next());
 				abstractSolution.addData(listOfSubViews);
-				
 			}
 			
-			boolean isEnd = false;
-			while (!isEnd) {
-				isEnd = true;
-				for (CContactMapAbstractRule rule : abstractRules) {
-					List<CAbstractAgent> newData = rule.getNewData();
-					if (abstractSolution.addNewData(newData, rule)) {
-						isEnd = false;
-						// clear();
-					}
-				}
-			}
+//			boolean isEnd = false;
+//			while (!isEnd) {
+//				isEnd = true;
+//				for (CContactMapAbstractRule rule : abstractRules) {
+//					List<CAbstractAgent> newData = rule.getNewData();
+//					if (abstractSolution.addNewData(newData, rule)) {
+//						isEnd = false;
+//						// clear();
+//					}
+//				}
+//			}
 			break;
 
 		case AGENT_OR_RULE:

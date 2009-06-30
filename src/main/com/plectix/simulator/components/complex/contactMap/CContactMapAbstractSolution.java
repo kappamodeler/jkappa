@@ -309,7 +309,8 @@ public class CContactMapAbstractSolution {
 
 	public void addData(List<ISubViews> listOfSubViews) {
 		for (ISubViews views : listOfSubViews) {
-			List<CAbstractAgent> list = views.getAllSubViews(null);
+//			List<CAbstractAgent> list = views.getAllSubViews(null);
+			List<CAbstractAgent> list = views.getAllSubViews();
 			List<Integer> listOfRules = views.getSubViewClass().getRulesId();
 			for (CAbstractAgent a : list) {
 				if (addAgentToAgentsMap(a)) {

@@ -221,6 +221,10 @@ public class CSubViewsLinkedlist implements ISubViews {
 		}
 		return false;
 	}
+	
+	public List<CAbstractAgent> getAllSubViews(){
+		return storage;
+	}
 
 	public List<CAbstractAgent> getAllSubViews(CAbstractAgent view) {
 		List<CAbstractAgent> outList = new LinkedList<CAbstractAgent>();
@@ -305,7 +309,8 @@ public class CSubViewsLinkedlist implements ISubViews {
 			for (CAbstractAgent agentFromStorage : storage) {
 				CAbstractSite siteFromStorage = agentFromStorage.getSite(site
 						.getNameId());
-				if (site.equalz(siteFromStorage)) {
+//				if (site.equalz(siteFromStorage)) {
+				if (siteFromStorage!=null && site.isFit(siteFromStorage)) {
 					CAbstractAgent newAgent = new CAbstractAgent(
 							agentFromStorage);
 					newAgent.getSite(site.getNameId()).getLinkState()

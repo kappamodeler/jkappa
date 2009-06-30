@@ -26,6 +26,8 @@ public interface ISubViews {
 	 *         If view = null (no property) then return all SubViews
 	 */
 	public List<CAbstractAgent> getAllSubViews(CAbstractAgent view);
+	
+	public List<CAbstractAgent> getAllSubViews();
 
 	/**
 	 * @param agent
