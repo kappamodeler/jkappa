@@ -55,6 +55,12 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 				try {
 					String activStr = rulesStr.substring(index + 1).trim();
 					binaryRate = extractBinaryRate(activStr);
+					int bracketIndex = activStr.indexOf("(");
+					if (bracketIndex != -1) {
+						activStr = activStr.substring(0, activStr.indexOf("(")).trim();
+					}
+//					System.out.println(activStr);
+//					System.out.println(binaryRate);
 					String inf = new String(new Double(Double.POSITIVE_INFINITY)
 							.toString());
 					activStr = activStr.replaceAll("\\$INF", inf);
@@ -67,6 +73,8 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 					}
 				} catch (Exception e) {
 					String details = rulesStr.substring(index).trim();
+					e.printStackTrace();
+					System.exit(0);
 					throw new ParseErrorException(ruleLine,
 							ParseErrorMessage.UNEXPECTED_RULE_RATE, details);
 				}
@@ -179,9 +187,9 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 	private double extractBinaryRate(String activStr) {
 		int indexOpen = activStr.lastIndexOf("(");
 		if (indexOpen != -1) {
-			activStr = activStr.substring(indexOpen);
+			activStr = activStr.substring(indexOpen + 1);
 			int indexClose = activStr.indexOf(")");
-			activStr = activStr.substring(0, indexClose - 1).trim();
+			activStr = activStr.substring(0, indexClose).trim();
 			try {
 				return Double.parseDouble(activStr);
 			} catch(NumberFormatException e) {

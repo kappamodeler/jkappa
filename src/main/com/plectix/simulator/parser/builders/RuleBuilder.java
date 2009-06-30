@@ -37,7 +37,7 @@ public class RuleBuilder {
 		List<CAgent> lhsAgents = mySubstanceBuilder.buildAgents(lhs);
 		List<CAgent> rhsAgents = mySubstanceBuilder.buildAgents(rhs);
 		CRule newRule = SimulationUtils.buildRule(lhsAgents, rhsAgents, name, rate, id, isStorify);
-		newRule.setBinaryRate(rule.getBinaryRate());
+		newRule.setAdditionalRate(rule.getBinaryRate());
 		myKappaSystem.generateNextRuleId();
 		return newRule;
 	}

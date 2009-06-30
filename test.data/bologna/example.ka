@@ -1,0 +1,11 @@
+'rule_one' A(x, u), B(y) -> A(x!1, u), B(y!1) @ 50.0 (0.00001)
+'rule_two' A(x!0, u, k!1), B(y!0, l!1) -> @ 10.0
+
+%init: 100 * A(x, u)
+%init: 100 * B(y)
+%init: 200 * (A(x, u, k!1), B(y, l!1))
+
+%obs: 'A simple' A(x)
+%obs: 'B simple' B(y)
+%obs: 'AB simple' (A(x, u, k!1), B(y, l!1))
+%obs: 'AB after rule' (A(x!0, u, k!1), B(y!0, l!1))

@@ -107,7 +107,7 @@ public abstract class CAction implements Serializable {
 		Set<CAction> list = new HashSet<CAction>();
 
 		for (CSite fromSite : fromAgent.getSites()) {
-			CSite toSite = toAgent.getSiteById(fromSite.getNameId());
+			CSite toSite = toAgent.getSiteByNameId(fromSite.getNameId());
 			if (fromSite.getInternalState().getNameId() != toSite
 					.getInternalState().getNameId()) {
 				list.add(new CModifyAction(myRule, fromSite, toSite,

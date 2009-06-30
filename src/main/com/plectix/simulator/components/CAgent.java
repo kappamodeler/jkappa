@@ -99,10 +99,10 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 	public final CAgent findLinkAgent(CAgent agent, List<CSite> siteCollection) {
 		if (agent == null || siteCollection.size() == 0)
 			return null;
-		CAgent imageAgent = (CAgent) this.getSiteById(siteCollection.get(0).getNameId())
+		CAgent imageAgent = (CAgent) this.getSiteByNameId(siteCollection.get(0).getNameId())
 				.getLinkState().getConnectedSite().getAgentLink();
 		for (CSite siteF : siteCollection) {
-			CAgent agent2 = (CAgent) this.getSiteById(siteF.getNameId())
+			CAgent agent2 = (CAgent) this.getSiteByNameId(siteF.getNameId())
 					.getLinkState().getConnectedSite().getAgentLink();
 			if (imageAgent != agent2)
 				return null;
@@ -217,7 +217,7 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 	 * @param siteNameId site id to search
 	 * @return site, that has similar id as given, or null, if there's no such
 	 */
-	public final CSite getSiteById(int siteNameId) {
+	public final CSite getSiteByNameId(int siteNameId) {
 		return siteMap.get(siteNameId);
 	}
 

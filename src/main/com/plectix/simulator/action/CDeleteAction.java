@@ -104,7 +104,7 @@ public class CDeleteAction extends CAction {
 
 			if (existInRule) {
 				agentMode = NetworkNotationMode.TEST_OR_MODIFY;
-				CSite siteFromRule = myFromAgent.getSiteById(site.getNameId());
+				CSite siteFromRule = myFromAgent.getSiteByNameId(site.getNameId());
 
 				if (siteFromRule != null)
 					linkStateMode = NetworkNotationMode.TEST_OR_MODIFY;

@@ -236,7 +236,36 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		}
 		return false;
 	}
+	
+	/**
+	 * This method searches for an agent in this connected component which could be 
+	 * an image of hypothetical injection from fixed agent.
+	 * Used in Bologna method only. 
+	 */
+	public final CAgent findSimilarAgent(CAgent agent) {
+		for (CAgent ccAgent : agentList) {
+			if (SimulationUtils.justCompareAgents(ccAgent, agent)) {
+				return ccAgent;
+			}
+		}
+		return null;
+	}
 
+	/**
+	 * This method searches incoming injection, which has fixed agent in image.
+	 * Used in Bologna method only
+	 * @param agent agent to be found in injection's image
+	 * @return injection
+	 */
+	public final CInjection findInjection(CAgent agent) {
+		for (CInjection injection : myInjections.asSet()) {
+			if (injection.getImage().contains(agent)) {
+				return injection;
+			}
+		}
+		return null;
+	}
+	
 	public final boolean isAutomorphicTo(CAgent agent) {
 		if (spanningTreeMap == null)
 			return false;
@@ -279,7 +308,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 			return false;
 
 		for (CSite cc1Site : agentOne.getSites()) {
-			CSite cc2Site = agentTwo.getSiteById(cc1Site.getNameId());
+			CSite cc2Site = agentTwo.getSiteByNameId(cc1Site.getNameId());
 			if (cc2Site == null)
 				return false;
 			if (!cc1Site.expandedEqualz(cc2Site, true))
@@ -298,7 +327,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		if (currentAgent == null || solutionAgent == null)
 			return false;
 		for (CSite site : currentAgent.getSites()) {
-			CSite solutionSite = solutionAgent.getSiteById(site.getNameId());
+			CSite solutionSite = solutionAgent.getSiteByNameId(site.getNameId());
 			if (solutionSite == null)
 				return false;
 			if (!site.expandedEqualz(solutionSite, false))

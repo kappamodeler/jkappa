@@ -2,6 +2,7 @@ package com.plectix.simulator.simulator;
 
 import java.util.*;
 
+import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CRule;
@@ -400,4 +401,16 @@ public class SimulationUtils {
 		}
 	}
 
+	public final static boolean justCompareAgents(CAgent currentAgent, CAgent solutionAgent) {
+		if (currentAgent == null || solutionAgent == null)
+			return false;
+		for (CSite site : currentAgent.getSites()) {
+			CSite solutionSite = solutionAgent.getSiteByNameId(site.getNameId());
+			if (solutionSite == null)
+				return false;
+			if (!site.expandedEqualz(solutionSite, false))
+				return false;
+		}
+		return true;
+	}
 }

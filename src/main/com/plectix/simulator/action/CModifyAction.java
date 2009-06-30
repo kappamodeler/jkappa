@@ -58,7 +58,7 @@ public class CModifyAction extends CAction {
 		CAgent agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 
 		// /////////////////////////////////////////////
-		CSite injectedSite = agentFromInSolution.getSiteById(mySiteTo
+		CSite injectedSite = agentFromInSolution.getSiteByNameId(mySiteTo
 				.getNameId());
 		addToNetworkNotation(StateType.BEFORE,
 				netNotation, injectedSite);

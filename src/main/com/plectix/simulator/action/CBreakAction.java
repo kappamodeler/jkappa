@@ -63,7 +63,7 @@ public class CBreakAction extends CAction {
 		int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getAgentLink());
 		agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 
-		CSite injectedSite = agentFromInSolution.getSiteById(mySiteFrom.getNameId());
+		CSite injectedSite = agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId());
 
 		addToNetworkNotation(StateType.BEFORE, netNotation,
 				injectedSite);
@@ -88,9 +88,9 @@ public class CBreakAction extends CAction {
 
 		}
 
-		agentFromInSolution.getSiteById(mySiteFrom.getNameId()).getLinkState()
+		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).getLinkState()
 				.connectSite(null);
-		agentFromInSolution.getSiteById(mySiteFrom.getNameId()).getLinkState()
+		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).getLinkState()
 				.setStatusLink(CLinkStatus.FREE);
 		// /////////////////////////////////////////////
 
@@ -106,7 +106,7 @@ public class CBreakAction extends CAction {
 			addRuleSitesToNetworkNotation(false, netNotation, linkSite);
 		}
 		// /////////////////////////////////////////////
-		agentFromInSolution.getSiteById(mySiteFrom.getNameId()).
+		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).
 			setLinkIndex(-1);
 	}
 

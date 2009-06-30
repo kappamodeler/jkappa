@@ -317,7 +317,7 @@ public class CAbstractAgent {
 
 	public void addAllStates(CAgent agent) {
 		for (CAbstractSite aSite : this.getSitesMap().values())
-			aSite.addStates(agent.getSiteById(aSite.getNameId()));
+			aSite.addStates(agent.getSiteByNameId(aSite.getNameId()));
 	}
 
 	public void addAllStates(CAbstractAgent agent) {

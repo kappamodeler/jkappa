@@ -1,5 +1,7 @@
 package com.plectix.simulator.interfaces;
 
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.SuperSubstance;
 /**
  * Interface of Connected Component.
@@ -37,4 +39,8 @@ public interface IConnectedComponent extends ISolutionComponent {
 	public long getInjectionsWeight();
 
 	public void deleteIncomingInjections();
+
+	public CAgent findSimilarAgent(CAgent rulesSecondAgent);
+
+	public CInjection findInjection(CAgent agentInFirstComponentToSwap);
 }

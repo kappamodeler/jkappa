@@ -9,6 +9,7 @@ import javax.xml.transform.TransformerException;
 
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.RuleApplicator;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.perturbations.CPerturbationType;
@@ -64,6 +65,8 @@ public class Simulator implements SimulatorInterface {
 	
 	/** Object to lock when we are reading variables to compute the current status */
 	private Object statusLock = new Object();
+	
+	private final RuleApplicator ruleApplicator = new RuleApplicator(simulationData);
 	
 	public Simulator() {
 		super();
@@ -300,20 +303,22 @@ public class Simulator implements SimulatorInterface {
 				synchronized (statusLock) {
 					currentEventNumber++;
 				}
-				rule.applyRule(injectionsList, simulationData);
+
+				if (ruleApplicator.applyRule(rule, injectionsList, simulationData)) {
 	
-				SimulationUtils.doNegativeUpdate(injectionsList);
+					SimulationUtils.doNegativeUpdate(injectionsList);
 				
-				// positive update
-				if (LOGGER.isDebugEnabled()) {
-					LOGGER.debug("positive update");
+					// positive update
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("positive update");
+					}
+	
+					simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
+	
+					simulationData.getKappaSystem().getSolution().applyChanges(rule.getPool());
+				
+					simulationData.getKappaSystem().getObservables().calculateObs(currentTime, currentEventNumber, simulationData.getSimulationArguments().isTime());
 				}
-	
-				simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
-	
-				simulationData.getKappaSystem().getSolution().applyChanges(rule.getPool());
-				
-				simulationData.getKappaSystem().getObservables().calculateObs(currentTime, currentEventNumber, simulationData.getSimulationArguments().isTime());
 			} else {
 				simulationData.addInfo(InfoType.NOT_OUTPUT,InfoType.INTERNAL, "Application of rule exp is clashing");
 				if (LOGGER.isDebugEnabled()) {

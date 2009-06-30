@@ -2,16 +2,59 @@ package com.plectix.simulator.components.bologna;
 
 import java.util.*;
 
+import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.solution.SolutionUtils;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 
+/**
+ * This class describes only those reaction, which we should mention 
+ * when talking about Bologna method
+ * @author evlasov
+ *
+ */
 public class Reaction {
-	private CInjection firstInjection;
-	private CInjection secondInjection;
+	private final CInjection firstInjection;
+	private final CInjection secondInjection;
+	private final IConnectedComponent firstComponent;
+	private final IConnectedComponent secondComponent;
 	private List<CInjection> list;
+	private final ReactionClass type;
+	private final CRule rule;
+	private final CAgent agentInFirstComponentToSwap;
+	private final CAgent agentInSecondComponentToSwap;
 	
-	public Reaction(CInjection firstInjection, CInjection secondInjection) {
+	/**
+	 * Constructor.
+	 * @param rule
+	 * @param firstInjection
+	 * @param secondInjection
+	 */
+	public Reaction(CRule rule, CInjection firstInjection, CInjection secondInjection) {
+		this.rule = rule;
 		this.firstInjection = firstInjection;
 		this.secondInjection = secondInjection;
+		this.firstComponent = SolutionUtils.getConnectedComponent(firstInjection.getImageAgent());
+		this.secondComponent = SolutionUtils.getConnectedComponent(secondInjection.getImageAgent());
+		CAgent rulesFirstAgent = rule.getLeftHandSide().get(0).getAgents().get(0);
+		CAgent rulesSecondAgent = rule.getLeftHandSide().get(1).getAgents().get(0);
+		
+		this.agentInFirstComponentToSwap = firstComponent.findSimilarAgent(rulesSecondAgent);
+		this.agentInSecondComponentToSwap = secondComponent.findSimilarAgent(rulesFirstAgent);
+		
+		if (firstComponent.getAgents().contains(secondInjection.getImageAgent())) {
+			type = ReactionClass.UNARY;
+		} else if (agentInFirstComponentToSwap != null) {
+			if (agentInSecondComponentToSwap != null) {
+				type = ReactionClass.BINARY_TWICE_POLYMERIZING;
+			} else {
+				type = ReactionClass.BINARY_POLYMERIZING;
+			}
+		} else if (agentInSecondComponentToSwap != null) {
+			type = ReactionClass.BINARY_POLYMERIZING;
+		} else {
+			type = ReactionClass.BINARY;
+		}
 	}
 	
 	public List<CInjection> getInjectionsList() {
@@ -22,4 +65,52 @@ public class Reaction {
 		}
 		return list;
 	}
+	
+	public final ReactionClass getType() {
+		return type;
+	}
+	
+	/**
+	 * @return <tt>true</tt> if and only if this reaction is polymerizing (see documentation)
+	 */
+	public boolean isPolymerizing() {
+		return type == ReactionClass.BINARY_POLYMERIZING 
+				|| type == ReactionClass.BINARY_TWICE_POLYMERIZING;
+	}
+	
+	/**
+	 * @return <tt>true</tt> if and only if this reaction is unary (see documentation)
+	 */
+	public boolean isUnary() {
+		return type == ReactionClass.UNARY;
+	}
+	
+	/**
+	 * @return <tt>true</tt> if and only if this reaction is simple binary (see documentation)
+	 */
+	public boolean isSimpleBinary() {
+		return type == ReactionClass.BINARY;
+	}
+	
+	/**
+	 * @return rule, which belongs to this reaction
+	 */
+	public CRule getRule() {
+		return this.rule;
+	}
+	
+	public List<Reaction> getSwappedReactions() {
+		List<Reaction> list = new ArrayList<Reaction>();
+		if (agentInSecondComponentToSwap != null) {
+			list.add(new Reaction(rule, firstInjection, 
+						rule.getLeftHandSide().get(0).findInjection(agentInSecondComponentToSwap)));
+		}
+		if (agentInFirstComponentToSwap != null) {
+			list.add(new Reaction(rule, 
+					rule.getLeftHandSide().get(1).findInjection(agentInFirstComponentToSwap),
+					secondInjection));
+		}
+		return list;
+	}
 }
+

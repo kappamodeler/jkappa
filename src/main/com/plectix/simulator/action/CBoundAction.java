@@ -78,7 +78,7 @@ public class CBoundAction extends CAction {
 			agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 
 			// /////////////////////////////////////////////
-			CSite injectedSite = agentFromInSolution.getSiteById(mySiteFrom
+			CSite injectedSite = agentFromInSolution.getSiteByNameId(mySiteFrom
 					.getNameId());
 			injection.addToChangedSites(injectedSite);
 
@@ -98,18 +98,18 @@ public class CBoundAction extends CAction {
 			agentToInSolution = inj.getAgentFromImageById(agentIdInCC);
 		}
 
-		agentFromInSolution.getSiteById(mySiteFrom.getNameId()).getLinkState()
-				.connectSite(agentToInSolution.getSiteById(mySiteTo.getNameId()));
+		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).getLinkState()
+				.connectSite(agentToInSolution.getSiteByNameId(mySiteTo.getNameId()));
 
-		agentToInSolution.getSiteById(mySiteTo.getNameId()).getLinkState()
-		.connectSite(agentFromInSolution.getSiteById(mySiteFrom.getNameId()));
+		agentToInSolution.getSiteByNameId(mySiteTo.getNameId()).getLinkState()
+		.connectSite(agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()));
 
 		addToNetworkNotation(StateType.AFTER, netNotation,
-				agentFromInSolution.getSiteById(mySiteFrom.getNameId()));
+				agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()));
 
-		agentFromInSolution.getSiteById(mySiteFrom.getNameId()).setLinkIndex(
+		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).setLinkIndex(
 				mySiteFrom.getLinkIndex());
-		agentToInSolution.getSiteById(mySiteTo.getNameId()).setLinkIndex(
+		agentToInSolution.getSiteByNameId(mySiteTo.getNameId()).setLinkIndex(
 				mySiteTo.getLinkIndex());
 
 	}

@@ -78,7 +78,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 			for (CSite siteNew : newAgentsList.get(i).getSites()) {
 				CLink lsNew = siteNew.getLinkState();
 				CLink lsOld = agentList.get(i)
-						.getSiteById(siteNew.getNameId()).getLinkState();
+						.getSiteByNameId(siteNew.getNameId()).getLinkState();
 				lsNew.setStatusLink(lsOld.getStatusLink());
 				if (lsOld.getConnectedSite() != null) {
 					CSite siteOldLink = (CSite) lsOld.getConnectedSite();
@@ -88,7 +88,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 							break;
 					}
 					int index = j;
-					lsNew.connectSite(newAgentsList.get(index).getSiteById(
+					lsNew.connectSite(newAgentsList.get(index).getSiteByNameId(
 							siteOldLink.getNameId()));
 				}
 			}

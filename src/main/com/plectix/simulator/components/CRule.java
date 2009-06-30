@@ -75,7 +75,10 @@ public class CRule implements Serializable, WeightedItem {
 	
 	private RuleApplicationPool pool;
 
-	private double binaryRate = -1;
+	/** 
+	 * This one is and additional rate, that we should consider when applying a binary rule
+	 */
+	private double additionalRate = -1;
 	private final boolean isBinary;
 
 	/**
@@ -132,10 +135,26 @@ public class CRule implements Serializable, WeightedItem {
 		isBinary = (leftHandside.size() == 2) 
 				&& (leftHandside.get(0).getAgents().size() == 1)
 				&& (leftHandside.get(1).getAgents().size() == 1)
-				&& (actionList.size() == 1)
-				&& (CActionType.getById(actionList.get(0).getTypeId()) == CActionType.BOUND);
+				&& onlyOneBoundAction();
 	}
 	
+	private boolean onlyOneBoundAction() {
+		int counter = 0;
+		for (CAction action : actionList) {
+			if (CActionType.getById(action.getTypeId()) == CActionType.NONE) {
+				continue;
+			}
+			if (CActionType.getById(action.getTypeId()) == CActionType.BOUND) {
+				counter++;
+			} else {
+				return false;
+			}
+			if (counter > 2) {
+				return false;
+			}
+		}
+		return true;
+	}
 	/**
 	 * This method links every connected component in given list with this rule 
 	 * @param cList give list of connected component
@@ -381,7 +400,7 @@ public class CRule implements Serializable, WeightedItem {
 			if (siteFromRule.getNameId() == CSite.NO_INDEX)
 				site = agentToInSolution.getDefaultSite();
 			else
-				site = agentToInSolution.getSiteById(siteFromRule.getNameId());
+				site = agentToInSolution.getSiteByNameId(siteFromRule.getNameId());
 			// add fixed agents
 			netNotation.addFixedSitesFromRules(site, NetworkNotationMode.TEST,
 					fs.isInternalState(), fs.isLinkState());
@@ -449,7 +468,7 @@ public class CRule implements Serializable, WeightedItem {
 	 */
 	private final void fillFixedSites(CAgent lhsAgent, CAgent rhsAgent) {
 		for (CSite lhsSite : lhsAgent.getSites()) {
-			CSite rhsSite = rhsAgent.getSiteById(lhsSite.getNameId());
+			CSite rhsSite = rhsAgent.getSiteByNameId(lhsSite.getNameId());
 			ChangedSite fixedSite = new ChangedSite(lhsSite);
 			if (lhsSite.getInternalState().equals(rhsSite.getInternalState())
 					&& lhsSite.getInternalState().getNameId() != CSite.NO_INDEX) {
@@ -1225,21 +1244,31 @@ public class CRule implements Serializable, WeightedItem {
 		return Collections.unmodifiableList(actionList);
 	}
 
-	public String toString() {
-		String st = "ruleName=" + this.ruleName + " ";
-
-		return st;
-	}
-
 	public double getWeight() {
 		return activity;
 	}
 
-	public void setBinaryRate(double binaryRate) {
-		this.binaryRate  = binaryRate;
+	public void setAdditionalRate(double binaryRate) {
+		System.out.println(binaryRate);
+		this.additionalRate = binaryRate;
 	}
 	
-	public boolean isBinary() {
-		return this.isBinary;
+	public double getAdditionalRate() {
+		return this.additionalRate;
+	}
+	
+	/**
+	 * This method tells us when we should perform Bologna method on application of this rule
+	 * @return <tt>true</tt> if and only if this rule is binary
+	 * and we should consider it's additional rate when applying
+	 */
+	public boolean isUnusualBinary() {
+		return this.isBinary && additionalRate != rate;
+	}
+	
+	public String toString() {
+		String st = "ruleName=" + this.ruleName + " ";
+
+		return st;
 	}
 }
