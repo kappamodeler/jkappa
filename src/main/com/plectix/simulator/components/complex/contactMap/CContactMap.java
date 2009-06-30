@@ -6,6 +6,8 @@ import java.util.List;
 
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
+import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
+import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.simulator.SimulationData;
 
 /**
@@ -91,6 +93,45 @@ public class CContactMap {
 
 	}
 
+	
+	public void constructAbstractContactMapFromSubViews(IAllSubViewsOfAllAgents subViews) {
+		// TODO
+		switch (mode) {
+		case MODEL:
+			
+			Iterator<Integer> iterator = subViews.getAllTypesIdOfAgents();
+			while(iterator.hasNext()){
+				List<ISubViews> listOfSubViews = subViews.getAllSubViewsByTypeId(iterator.next());
+				abstractSolution.addData(listOfSubViews);
+				
+			}
+			
+			boolean isEnd = false;
+			while (!isEnd) {
+				isEnd = true;
+				for (CContactMapAbstractRule rule : abstractRules) {
+					List<CAbstractAgent> newData = rule.getNewData();
+					if (abstractSolution.addNewData(newData, rule)) {
+						isEnd = false;
+						// clear();
+					}
+				}
+			}
+			break;
+
+		case AGENT_OR_RULE:
+			// TODO add edges to contact map for agents from
+			// agentNameIdToAgentsList which are not in focus;
+			break;
+		}
+
+	}
+	
+	
+	
+	
+	
+	
 	/**
 	 * This method initializes abstract solution.
 	 */
