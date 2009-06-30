@@ -245,7 +245,7 @@ public class CAbstractSite {
 			this.internalState = new CInternalState(site.getInternalState()
 					.getNameId());
 		if (site.getLinkState().getStatusLinkRank() != CLinkRank.SEMI_LINK
-				|| site.getLinkState().getStatusLinkRank() != CLinkRank.BOUND_OR_FREE)
+				&& site.getLinkState().getStatusLinkRank() != CLinkRank.BOUND_OR_FREE)
 			this.linkState = new CAbstractLinkState(site.getLinkState());
 	}
 

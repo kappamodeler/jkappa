@@ -39,16 +39,23 @@ public class SubViewsRule {
 		for (AbstractAction action : actions) {
 			boolean isEnd = true;
 			for (ISubViews subViews : action.getSubViews())
-				if (subViews.test(action)) {
-					isEnd = false;
-				} else if (action.getActionType() == EAbstractActionType.TEST_ONLY)
-					return false;
+				try {
+					if (subViews.test(action)) {
+						isEnd = false;
+					} else if (action.getActionType() == EAbstractActionType.TEST_ONLY
+							|| action.getActionType() == EAbstractActionType.DELETE)
+						return false;
+				} catch (SubViewsExeption e) {
+					if (action.getActionType() != EAbstractActionType.DELETE)
+						e.printStackTrace();
+				}
 			if (isEnd)
 				return false;
 		}
 		boolean isAdd = false;
 		for (AbstractAction action : actions) {
 			if (action.getActionType() != EAbstractActionType.TEST_ONLY) {
+				action.clearSitesSideEffect();
 				for (ISubViews subViews : action.getSubViews()) {
 					if (subViews.burnRule(action))
 						isAdd = true;

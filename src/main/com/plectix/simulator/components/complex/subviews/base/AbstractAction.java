@@ -34,11 +34,12 @@ public class AbstractAction {
 			actionType = EAbstractActionType.ADD;
 			return;
 		}
+		testedSites = new LinkedList<CAbstractSite>();
 		if (rightHandSideAgent == null) {
 			actionType = EAbstractActionType.DELETE;
+			testedSites.addAll(leftHandSideAgent.getSitesMap().values());
 			return;
 		}
-		testedSites = new LinkedList<CAbstractSite>();
 		modificatedSites = new LinkedList<CAbstractSite>();
 		actionType = EAbstractActionType.TEST_ONLY;
 
@@ -133,11 +134,13 @@ public class AbstractAction {
 			agent = rightHandSideAgent;
 		List<ISubViews> subViewsList = subViewsMap.get(agent.getNameId());
 		for (ISubViews subViews : subViewsList) {
-			if (actionType != EAbstractActionType.TEST_ONLY) {
+			if (actionType != EAbstractActionType.TEST_ONLY
+					&& actionType != EAbstractActionType.DELETE) {
 				if (subViews.isAgentFit(agent))
 					addSubViews(subViews);
 			} else {
-				if (agent.getSitesMap().isEmpty())
+				if (agent.getSitesMap().isEmpty()
+						|| actionType == EAbstractActionType.DELETE)
 					addSubViews(subViews);
 				else {
 					for (CAbstractSite site : agent.getSitesMap().values()) {

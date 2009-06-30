@@ -38,8 +38,13 @@ public class CSubViewsLinkedlist implements ISubViews {
 				needAgent.getSitesMap().remove(siteId);
 		}
 		// storage.add(needAgent);
-		storage.addAll(convertAgentsToAbstract(getNeedAgentsBySolution(agents),
-				needAgent));
+		for (CAbstractAgent agent : convertAgentsToAbstract(
+				getNeedAgentsBySolution(agents), needAgent))
+			try {
+				addAbstractAgent(agent);
+			} catch (SubViewsExeption e) {
+				e.printStackTrace();
+			}
 	}
 
 	public boolean addAbstractAgent(CAbstractAgent agent)
@@ -57,18 +62,21 @@ public class CSubViewsLinkedlist implements ISubViews {
 		// if (oldViews == null)
 		// return addAbstractAgent(newViews);
 
-		List<CAbstractAgent> agentsList = getAllSubViews(oldViews);
+		List<CAbstractAgent> agentsList;
+		if (testDeleteAction(action))
+			agentsList = storage;
+		else
+			agentsList = getAllSubViews(oldViews);
 		initBreakingSites(action, agentsList);
 		switch (action.getActionType()) {
 		case ADD:
-			return addAbstractAgent(newViews);
+			return addAbstractAgent(newViews.clone());
 		case TEST_ONLY:
 			return false;
 		case DELETE:
 			return false;
 		}
 
-		
 		boolean isAdd = false;
 		for (CAbstractAgent agentFromStorage : agentsList) {
 			CAbstractAgent newAgent = agentFromStorage.clone();
@@ -80,9 +88,20 @@ public class CSubViewsLinkedlist implements ISubViews {
 
 	}
 
+	private boolean testDeleteAction(AbstractAction action) {
+		if (action.getActionType() != EAbstractActionType.DELETE)
+			return false;
+		boolean isNotHave = true;
+		for (CAbstractSite site : action.getLeftHandSideAgent().getSitesMap()
+				.values())
+			if (subViewClass.isHaveSite(site.getNameId()))
+				return false;
+
+		return isNotHave;
+	}
+
 	private void initBreakingSites(AbstractAction action,
 			List<CAbstractAgent> agentsList) {
-		action.clearSitesSideEffect();
 		List<Integer> sideEffectId = action.getSideEffect();
 		Map<Integer, CAbstractAgent> sideEfectMap = new HashMap<Integer, CAbstractAgent>();
 		switch (action.getActionType()) {
@@ -93,7 +112,7 @@ public class CSubViewsLinkedlist implements ISubViews {
 			break;
 		}
 		case TEST_AND_MODIFICATION: {
-			if(sideEffectId == null)
+			if (sideEffectId == null)
 				return;
 			for (CAbstractAgent agent : agentsList)
 				for (Integer siteId : sideEffectId) {
@@ -174,6 +193,12 @@ public class CSubViewsLinkedlist implements ISubViews {
 		if (testView.getNameId() != subViewClass.getAgentTypeId())
 			throw new SubViewsExeption(subViewClass, testView);
 		boolean isHave = false;
+		if (testView.getSitesMap().isEmpty())
+			if (!storage.isEmpty()) {
+				return true;
+			} else
+				return false;
+
 		for (CAbstractSite site : testView.getSitesMap().values())
 			if (subViewClass.isHaveSite(site.getNameId()))
 				isHave = true;
@@ -186,7 +211,7 @@ public class CSubViewsLinkedlist implements ISubViews {
 				int siteId = site.getNameId();
 				// if (!aAgent.getSite(siteId).isFit(site)) {
 				if ((subViewClass.isHaveSite(siteId))
-					&& (!site.isFit(aAgent.getSite(siteId)))) {
+						&& (!site.isFit(aAgent.getSite(siteId)))) {
 					isHave = false;
 					break;
 				}
@@ -201,12 +226,16 @@ public class CSubViewsLinkedlist implements ISubViews {
 		List<CAbstractAgent> outList = new LinkedList<CAbstractAgent>();
 		if (view == null || view.getNameId() != subViewClass.getAgentTypeId())
 			return outList;
+		if (view.getSitesMap().isEmpty())
+			return storage;
 		for (CAbstractAgent aAgent : storage) {
-			boolean isHave = true;
+			boolean isHave = false;
 			for (CAbstractSite site : view.getSitesMap().values()) {
 				// if (!aAgent.getSite(site.getNameId()).isFit(site)) {
-				if (!site.isFit(aAgent.getSite(site.getNameId()))) {
-					isHave = false;
+				int siteId = site.getNameId();
+				if (subViewClass.isHaveSite(siteId)
+						&& site.isFit(aAgent.getSite(siteId))) {
+					isHave = true;
 					break;
 				}
 			}
@@ -267,7 +296,7 @@ public class CSubViewsLinkedlist implements ISubViews {
 	public boolean burnBreakAllNeedLinkState(AbstractAction action) {
 		List<CAbstractSite> breakingSites = action.getSitesSideEffect();
 		List<CAbstractAgent> addlist = new LinkedList<CAbstractAgent>();
-		if(breakingSites == null)
+		if (breakingSites == null)
 			return false;
 		for (CAbstractSite site : breakingSites) {
 			if (site.getAgentLink().getNameId() != subViewClass
