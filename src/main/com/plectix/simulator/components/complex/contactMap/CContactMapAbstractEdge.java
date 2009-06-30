@@ -73,4 +73,9 @@ public class CContactMapAbstractEdge {
 				rules.add(value);
 		}
 	}
+	
+	public void addRules(int ruleId){
+		rules.add(ruleId);
+		
+	}
 }
