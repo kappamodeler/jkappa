@@ -304,16 +304,17 @@ public class Simulator implements SimulatorInterface {
 					currentEventNumber++;
 				}
 
-				if (ruleApplicator.applyRule(rule, injectionsList, simulationData)) {
+				List<CInjection> newInjections = ruleApplicator.applyRule(rule, injectionsList, simulationData);
+				if (newInjections != null) {
 	
-					SimulationUtils.doNegativeUpdate(injectionsList);
+					SimulationUtils.doNegativeUpdate(newInjections);
 				
 					// positive update
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("positive update");
 					}
 	
-					simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
+					simulationData.getKappaSystem().doPositiveUpdate(rule, newInjections);
 	
 					simulationData.getKappaSystem().getSolution().applyChanges(rule.getPool());
 				

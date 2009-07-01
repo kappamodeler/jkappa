@@ -1263,7 +1263,7 @@ public class CRule implements Serializable, WeightedItem {
 	 * and we should consider it's additional rate when applying
 	 */
 	public boolean isUnusualBinary() {
-		return this.isBinary && additionalRate != rate;
+		return this.isBinary && additionalRate != -1;
 	}
 	
 	public String toString() {

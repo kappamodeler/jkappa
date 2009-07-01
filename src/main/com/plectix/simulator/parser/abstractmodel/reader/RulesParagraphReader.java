@@ -50,26 +50,47 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 
 			}
 			double binaryRate = -1;
+			double binaryRateOpposite = -1;
 			int index = rulesStr.lastIndexOf("@");
 			if (index != -1) {
 				try {
 					String activStr = rulesStr.substring(index + 1).trim();
-					binaryRate = extractBinaryRate(activStr);
-					int bracketIndex = activStr.indexOf("(");
-					if (bracketIndex != -1) {
-						activStr = activStr.substring(0, activStr.indexOf("(")).trim();
-					}
-//					System.out.println(activStr);
-//					System.out.println(binaryRate);
 					String inf = new String(new Double(Double.POSITIVE_INFINITY)
 							.toString());
 					activStr = activStr.replaceAll("\\$INF", inf);
 					if (activStr.indexOf(",") != -1) {
-						activity = Double.valueOf(activStr.substring(0,
-								activStr.indexOf(",")));
-						activity2 = Double.valueOf(activStr.substring(activStr.indexOf(",") + 1));
+						String[] activities = activStr.split(",");
+						
+						// reading first part
+						int bracketIndex = activities[0].indexOf("(");
+						if (bracketIndex != -1) {
+							activity = readRateInBrackets(activities[0]);
+							activStr = activStr.substring(0, activities[0].indexOf("(")).trim();
+							binaryRate = Double.valueOf(activStr);
+						} else {
+							activity = Double.valueOf(activities[0]);
+						}
+						
+						bracketIndex = activities[1].indexOf("(");
+						if (bracketIndex != -1) {
+							activity = readRateInBrackets(activities[1]);
+							activStr = activStr.substring(0, activities[1].indexOf("(")).trim();
+							binaryRateOpposite = Double.valueOf(activStr);
+						} else {
+							activity = Double.valueOf(activities[1]);
+						}
+						
+//						activity = Double.valueOf(activities[0]);
+//						activity2 = Double.valueOf(activStr.substring(activStr.indexOf(",") + 1));
 					} else {
-						activity = Double.valueOf(activStr);
+						int bracketIndex = activStr.indexOf("(");
+						if (bracketIndex != -1) {
+							activity = readRateInBrackets(activStr);
+							activStr = activStr.substring(0, activStr.indexOf("(")).trim();
+							binaryRate = Double.valueOf(activStr);
+						} else {
+							activity = Double.valueOf(activStr);
+						}
 					}
 				} catch (Exception e) {
 					String details = rulesStr.substring(index).trim();
@@ -138,8 +159,8 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 					rules.add(new AbstractRule(left, right, name, activity, binaryRate, ruleID, isStorify));
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
-						 rules.add(new AbstractRule(right,
-						 parseAgent(lhs.trim()), nameOp, activity2, binaryRate, ruleID,
+						 rules.add(new AbstractRule(right, parseAgent(lhs.trim()), 
+								 nameOp, activity2, binaryRateOpposite, ruleID,
 						 isStorify));
 					}
 					break;
@@ -151,7 +172,7 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 						rules.add(new AbstractRule(parseAgent(rhs.trim()), 
-								left, name, activity2, binaryRate, ruleID, isStorify));
+								left, name, activity2, binaryRateOpposite, ruleID, isStorify));
 					}
 					break;
 				}
@@ -163,7 +184,7 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 					if (typeRule == RULE_TWO_WAY) {
 						ruleID++;
 						rules.add(new AbstractRule(parseAgent(rhs.trim()), 
-								parseAgent(lhs.trim()), nameOp, activity2, binaryRate, 
+								parseAgent(lhs.trim()), nameOp, activity2, binaryRateOpposite, 
 								ruleID, isStorify));
 					}
 					break;
@@ -184,7 +205,7 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 	 * @param activStr
 	 * @return binary rate as double
 	 */
-	private double extractBinaryRate(String activStr) {
+	private double readRateInBrackets(String activStr) {
 		int indexOpen = activStr.lastIndexOf("(");
 		if (indexOpen != -1) {
 			activStr = activStr.substring(indexOpen + 1);

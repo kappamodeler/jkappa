@@ -2,8 +2,12 @@ package com.plectix.simulator.components.bologna;
 
 import java.util.*;
 
+import com.plectix.simulator.action.CAction;
+import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.action.CBoundAction;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.injections.CLiftElement;
 import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
@@ -101,16 +105,43 @@ public class Reaction {
 	
 	public List<Reaction> getSwappedReactions() {
 		List<Reaction> list = new ArrayList<Reaction>();
-		if (agentInSecondComponentToSwap != null) {
-			list.add(new Reaction(rule, firstInjection, 
-						rule.getLeftHandSide().get(0).findInjection(agentInSecondComponentToSwap)));
-		}
 		if (agentInFirstComponentToSwap != null) {
-			list.add(new Reaction(rule, 
-					rule.getLeftHandSide().get(1).findInjection(agentInFirstComponentToSwap),
-					secondInjection));
+			for (CSite site : agentInFirstComponentToSwap.getSites()) { 
+				for (CLiftElement liftE : site.getLift()) {
+				// we can compare these for being ==
+//					System.out.println("-------------------------------------");
+//					System.out.println(liftE.getInjection().getConnectedComponent());
+//					System.out.println(rule.getLeftHandSide().get(1));
+					if (liftE.getInjection().getConnectedComponent() 
+							== rule.getLeftHandSide().get(1)) {
+						list.add(new Reaction(rule, 
+								firstInjection, 
+								liftE.getInjection()));
+					}
+				}
+			}
+//			list.add(new Reaction(rule, 
+//					firstInjection, 
+//					rule.getLeftHandSide().get(1).findInjection(agentInFirstComponentToSwap)));
+		}
+		if (agentInSecondComponentToSwap != null) {
+			for (CSite site : agentInSecondComponentToSwap.getSites()) { 
+				for (CLiftElement liftE : site.getLift()) {
+				// we can compare these for being ==
+					if (liftE.getInjection().getConnectedComponent() 
+							== rule.getLeftHandSide().get(0)) {
+						list.add(new Reaction(rule, 
+								liftE.getInjection(),
+								secondInjection));
+					}
+				}
+			}
+//			list.add(new Reaction(rule, 
+//					rule.getLeftHandSide().get(0).findInjection(agentInSecondComponentToSwap),
+//					secondInjection));
 		}
 		return list;
 	}
 }
+
 

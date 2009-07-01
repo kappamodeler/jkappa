@@ -259,7 +259,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 */
 	public final CInjection findInjection(CAgent agent) {
 		for (CInjection injection : myInjections.asSet()) {
-			if (injection.getImage().contains(agent)) {
+			if (injection.getImageAgent() == agent) {
 				return injection;
 			}
 		}

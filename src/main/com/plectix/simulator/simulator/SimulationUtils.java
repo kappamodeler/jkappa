@@ -401,7 +401,14 @@ public class SimulationUtils {
 		}
 	}
 
-	public final static boolean justCompareAgents(CAgent currentAgent, CAgent solutionAgent) {
+	/**
+	 * current
+	 * @param currentAgent
+	 * @param solutionAgent
+	 * @return
+	 */
+	// currentAgent is the biggest one. solutionAgent should be contained in it.
+	public final static boolean justCompareAgents(CAgent solutionAgent, CAgent currentAgent) {
 		if (currentAgent == null || solutionAgent == null)
 			return false;
 		for (CSite site : currentAgent.getSites()) {
