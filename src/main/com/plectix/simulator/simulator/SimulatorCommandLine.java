@@ -287,6 +287,10 @@ public class SimulatorCommandLine {
 			
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.GENERATE_MAP);
 		}
+		
+		if (hasOption(SimulatorOptions.COMPUTE_SUB_VIEWS)) {
+			simulationArguments.setSubViews(true);
+		}
 	
 		if (hasOption(SimulatorOptions.CONTACT_MAP)) {
 			if (!option) {

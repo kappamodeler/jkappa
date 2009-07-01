@@ -70,6 +70,7 @@ public class SimulationArguments {
 	private String randomizer = null;
 	private boolean activationMap = true;
 	private boolean inhibitionMap = false;
+	private boolean subViews = false;
 	private boolean compile = false;
 	private boolean debugInit = false;
 	private boolean genereteMap = false;
@@ -793,5 +794,13 @@ public class SimulationArguments {
 	
 	public final boolean incompletesAllowed() {
 		return this.allowIncompletes;
+	}
+	
+	public final boolean isSubViews(){
+		return subViews;
+	}
+	
+	public final void setSubViews(boolean b){
+		subViews = b;
 	}
 }

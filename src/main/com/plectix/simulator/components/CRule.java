@@ -1249,7 +1249,7 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	public void setAdditionalRate(double binaryRate) {
-		System.out.println(binaryRate);
+//		System.out.println(binaryRate);
 		this.additionalRate = binaryRate;
 	}
 	

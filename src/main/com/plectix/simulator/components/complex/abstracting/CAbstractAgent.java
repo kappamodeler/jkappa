@@ -3,6 +3,8 @@ package com.plectix.simulator.components.complex.abstracting;
 import java.util.*;
 
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CLinkRank;
+import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
@@ -323,6 +325,30 @@ public class CAbstractAgent {
 	public void addAllStates(CAbstractAgent agent) {
 		for (CAbstractSite aSite : this.getSitesMap().values())
 			aSite.addStates(agent.getSite(aSite.getNameId()));
+	}
+	
+	public String toStringForXML(){
+		StringBuffer sb = new StringBuffer(getName() + "(");
+		boolean first = true;
+		for (CAbstractSite site : sitesMap.values()) {
+			if (!first) {
+				sb.append(",");
+			} else {
+				first = false;
+			}
+			sb.append(site.getName());
+			if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
+				sb.append("~" + site.getInternalState().getName());
+			}
+			CAbstractLinkState linkState = site.getLinkState();
+			if(linkState.getAgentNameID() != CSite.NO_INDEX){
+				sb.append(ThreadLocalData.getNameDictionary().getName(linkState.getAgentNameID()));
+				sb.append(".");
+				sb.append(ThreadLocalData.getNameDictionary().getName(linkState.getLinkSiteNameID()));
+			}
+		}
+		sb.append(")");
+		return sb.toString();
 	}
 
 }

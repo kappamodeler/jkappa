@@ -20,6 +20,10 @@ import com.plectix.simulator.components.complex.subviews.storage.SubViewsExeptio
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.simulator.ThreadLocalData;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		IAllSubViewsOfAllAgents {
@@ -48,16 +52,16 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	}
 
 	private void initBoundRulesAndSubViews() {
-		for(SubViewsRule rule : abstractRules)
+		for (SubViewsRule rule : abstractRules)
 			rule.initActionsToSubViews(subViewsMap);
 	}
 
 	private void fillingClasses(Collection<CAgent> agents) {
-		for(List<ISubViews> subViewsList : subViewsMap.values()){
-			for(ISubViews subViews : subViewsList)
-				subViews.fillingInitialState(agentNameIdToAgent,agents);
+		for (List<ISubViews> subViewsList : subViewsMap.values()) {
+			for (ISubViews subViews : subViewsList)
+				subViews.fillingInitialState(agentNameIdToAgent, agents);
 		}
-		
+
 	}
 
 	public List<ISubViews> getAllSubViewsByType(String type) {
@@ -65,12 +69,12 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		return null;
 	}
 
-	public List<ISubViews> getAllSubViewsByTypeId(int type) {		
+	public List<ISubViews> getAllSubViewsByTypeId(int type) {
 		return subViewsMap.get(type);
 	}
 
 	public Iterator<Integer> getAllTypesIdOfAgents() {
-		 return agentNameIdToAgent.keySet().iterator();
+		return agentNameIdToAgent.keySet().iterator();
 	}
 
 	public List<String> getAllTypesOfAgents() {
@@ -165,7 +169,8 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	/**
 	 * This method creates abstract contact map (need uses with create contact
 	 * map by <code>MODEL</code>).
-	 * @throws SubViewsExeption 
+	 * 
+	 * @throws SubViewsExeption
 	 */
 	private void constructAbstractContactMap() throws SubViewsExeption {
 		boolean isEnd = false;
@@ -178,4 +183,36 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		}
 	}
 
+	public Element createXML(Document doc) {
+		Element reachables = doc.createElement("Reachables");
+		reachables.setAttribute("Name", "Subviews");
+		for (Integer agentId : agentNameIdToAgent.keySet()) {
+			for (ISubViews subViews : subViewsMap.get(agentId)) {
+				Element set = doc.createElement("Set");
+				String agentName = ThreadLocalData.getNameDictionary().getName(
+						agentId);
+				set.setAttribute("Agent", agentName);
+				Element tag = doc.createElement("Tag");
+				String data = "Agent: " + agentName + " ; Sites: ";
+				String sites = new String();
+				for (Integer siteId : subViews.getSubViewClass().getSitesId()) {
+					if (!sites.isEmpty())
+						sites = ",";
+					sites += ThreadLocalData.getNameDictionary()
+							.getName(siteId);
+				}
+				data += sites + " ";
+				tag.setAttribute("Data", data);
+				set.appendChild(tag);
+
+				for (CAbstractAgent agent : subViews.getAllSubViews()) {
+					Element entry = doc.createElement("Entry");
+					entry.setAttribute("Data", agent.toStringForXML());
+					set.appendChild(entry);
+				}
+				reachables.appendChild(set);
+			}
+		}
+		return reachables;
+	}
 }

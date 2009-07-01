@@ -827,6 +827,10 @@ public class SimulationData {
 		doc.appendChild(simplxSession);
 
 		timer.startTimer();
+		
+		if(simulationArguments.isSubViews()){
+			simplxSession.appendChild(myKappaSystem.getSubViews().createXML(doc));
+		}
 
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 			Element contactMapElement = doc.createElement("ContactMap");

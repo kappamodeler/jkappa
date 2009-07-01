@@ -35,6 +35,7 @@ public class KappaSystem {
 	private CObservables observables = new CObservables();
 	private ISolution solution;// = new CSolution(); // soup of initial components
 	private CContactMap contactMap = new CContactMap();
+	private IAllSubViewsOfAllAgents subViews;
 
 	private final IdGenerator agentsIdGenerator = new IdGenerator();
 	private final IdGenerator ruleIdGenerator = new IdGenerator();
@@ -132,23 +133,26 @@ public class KappaSystem {
 					"--Inhibition map computed");
 		}
 
-		//!!!!!!!!INJECTIONS!!!!!!!!!
+		// !!!!!!!!INJECTIONS!!!!!!!!!
 		if (args.isSolutionRead()) {
 			(new InjectionsBuilder(this)).build();
 		}
-		
-		//!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
+		// !!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-//			contactMap.initAbstractSolution();
-//			contactMap.constructAbstractRules(rules);
-//			contactMap.constructAbstractContactMap();
-			IAllSubViewsOfAllAgents subViews = new CMainSubViews();
+		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP
+				|| args.isSubViews()) {
+
+			// contactMap.initAbstractSolution();
+			// contactMap.constructAbstractRules(rules);
+			// contactMap.constructAbstractContactMap();
+			subViews = new CMainSubViews();
 			subViews.build(solution, rules);
-			contactMap.initAbstractSolution();
-			contactMap.constructAbstractRules(rules);
-			contactMap.constructAbstractContactMapFromSubViews(subViews);
+			if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
+				contactMap.initAbstractSolution();
+				contactMap.constructAbstractRules(rules);
+				contactMap.constructAbstractContactMapFromSubViews(subViews);
+			}
 			// contactMap.constructReachableRules(rules);
 			// contactMap.constructContactMap();
 		}
@@ -227,7 +231,7 @@ public class KappaSystem {
 		orderedRulesList = rules2;
 		rules.updatedItems(rules2);
 	}
-	
+
 	public final void checkPerturbation(double currentTime) {
 		if (perturbations.size() != 0) {
 			for (CPerturbation pb : perturbations) {
@@ -255,11 +259,11 @@ public class KappaSystem {
 	// ----------------------GETTERS-------------------------------
 
 	public final List<CRule> getRules() {
-//		if (rules != null) {
-//			return rules.asSet();
-//		} else { 
-//			return null;
-//		}
+		// if (rules != null) {
+		// return rules.asSet();
+		// } else {
+		// return null;
+		// }
 		return Collections.unmodifiableList(orderedRulesList);
 	}
 
@@ -273,10 +277,10 @@ public class KappaSystem {
 		return null;
 	}
 
-//	public final CRule getRuleByNumber(int i) {
-//		return orderedRulesList.get(i);
-//	}
-	
+	// public final CRule getRuleByNumber(int i) {
+	// return orderedRulesList.get(i);
+	// }
+
 	public final ISolution getSolution() {
 		return solution;
 	}
@@ -291,6 +295,10 @@ public class KappaSystem {
 
 	public final CContactMap getContactMap() {
 		return contactMap;
+	}
+
+	public final IAllSubViewsOfAllAgents getSubViews() {
+		return subViews;
 	}
 
 	public final long generateNextRuleId() {
@@ -361,9 +369,10 @@ public class KappaSystem {
 	public void clearPerturbations() {
 		perturbations.clear();
 	}
-	
-	//--------------------METHODS FROM PROBABILITY CALCULATION--------------------
-	
+
+	// --------------------METHODS FROM PROBABILITY
+	// CALCULATION--------------------
+
 	public final CRule getRandomRule() {
 		Set<CRule> updatedElements = new HashSet<CRule>();
 		for (CRule rule : orderedRulesList) {
@@ -376,7 +385,7 @@ public class KappaSystem {
 		rules.updatedItems(updatedElements);
 		return rules.select();
 	}
-	
+
 	public final double getTimeValue() {
 		double randomValue = 0;
 
@@ -385,47 +394,46 @@ public class KappaSystem {
 
 		return -1. / rules.getTotalWeight() * java.lang.Math.log(randomValue);
 	}
-	
-//	private final void calculation() {
-//		calculateRulesActivity();
-//		recalculateCommonActivity();
-//		calculateProbability();
-//	}
 
-//	private final int getRandomIndex() {
-//
-//		for (int i = 0; i < rulesProbability.length; i++) {
-//			if (rules.get(i).isInfiniteRated() && (rules.get(i).getActivity()>0.0) 
-//					&& (!(rules.get(i).isClashForInfiniteRule())))
-//				return i;
-//		}
-//
-//		for (int i = 0; i < rulesProbability.length; i++) {
-//			if (randomValue < rulesProbability[i])
-//				return i;
-//		}
-//		return -1;
-//	}
-//	
-//	private final void recalculateCommonActivity() {
-//		commonActivity = 0.;
-//		for (CRule rule : rules) {
-//			commonActivity += rule.getActivity();
-//		}
-//	}
-	
-//	private final void calculateRulesActivity() {
-//		for (CRule rule : rules)
-//			rule.calcultateActivity();
-//	}
-//
-//	private final void calculateProbability() {
-//		rulesProbability[0] = rules.get(0).getActivity() / commonActivity;
-//		for (int i = 1; i < rulesProbability.length; i++) {
-//			rulesProbability[i] = rulesProbability[i - 1]
-//					+ rules.get(i).getActivity() / commonActivity;
-//		}
-//	}
+	// private final void calculation() {
+	// calculateRulesActivity();
+	// recalculateCommonActivity();
+	// calculateProbability();
+	// }
 
-	
+	// private final int getRandomIndex() {
+	//
+	// for (int i = 0; i < rulesProbability.length; i++) {
+	// if (rules.get(i).isInfiniteRated() && (rules.get(i).getActivity()>0.0)
+	// && (!(rules.get(i).isClashForInfiniteRule())))
+	// return i;
+	// }
+	//
+	// for (int i = 0; i < rulesProbability.length; i++) {
+	// if (randomValue < rulesProbability[i])
+	// return i;
+	// }
+	// return -1;
+	// }
+	//	
+	// private final void recalculateCommonActivity() {
+	// commonActivity = 0.;
+	// for (CRule rule : rules) {
+	// commonActivity += rule.getActivity();
+	// }
+	// }
+
+	// private final void calculateRulesActivity() {
+	// for (CRule rule : rules)
+	// rule.calcultateActivity();
+	// }
+	//
+	// private final void calculateProbability() {
+	// rulesProbability[0] = rules.get(0).getActivity() / commonActivity;
+	// for (int i = 1; i < rulesProbability.length; i++) {
+	// rulesProbability[i] = rulesProbability[i - 1]
+	// + rules.get(i).getActivity() / commonActivity;
+	// }
+	// }
+
 }

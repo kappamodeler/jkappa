@@ -127,6 +127,7 @@ public enum SimulatorOptions {
 	SHORT_CONSOLE_OUTPUT("short_console_output", false, "Short console output"),
 	OPERATION_MODE("operation_mode", true, "sets current operation mode"),
 	MONITOR_PEAK_MEMORY("monitor_peak_memory", true, "turns on monitoring of peak memory usage at give periods in milliseconds"),
+	COMPUTE_SUB_VIEWS("compute_sub_views", false, "Compute sub views."),
 	ALLOW_INCOMPLETES("allow_incompletes", false, "Allows incomplete substances in solution");
 	;
 

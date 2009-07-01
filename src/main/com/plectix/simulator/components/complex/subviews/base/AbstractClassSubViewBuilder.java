@@ -174,7 +174,6 @@ public abstract class AbstractClassSubViewBuilder {
 		// }
 		// }
 		fillingSubViewsMap(agentTypeToClass);
-		System.out.println();
 	}
 
 	// now filling by CSubViewsLinkedlist
