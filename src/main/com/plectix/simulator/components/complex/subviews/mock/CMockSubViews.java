@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
@@ -280,6 +283,11 @@ public class CMockSubViews extends AbstractClassSubViewBuilder implements IAllSu
 	}
 
 	public ISubViews getSubViewForRule(String typeOfAgent, CRule rule) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Element createXML(Document doc) {
 		// TODO Auto-generated method stub
 		return null;
 	}
