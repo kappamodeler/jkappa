@@ -88,7 +88,9 @@ public class MemoryUtil {
 			peakMemoryTimer.scheduleAtFixedRate(new TimerTask() {
 				@Override
 				public void run() {
-					peakMemoryUsage.update();
+					if (peakMemoryUsage != null) {
+						peakMemoryUsage.update();
+					}
 				} 
 			}, 0, period);
 		}
