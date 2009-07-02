@@ -196,7 +196,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 				String data = "Agent: " + agentName + " ; Sites: ";
 				String sites = new String();
 				for (Integer siteId : subViews.getSubViewClass().getSitesId()) {
-					if (!sites.isEmpty())
+					if (sites.length() != 0)
 						sites = ",";
 					sites += ThreadLocalData.getNameDictionary()
 							.getName(siteId);
