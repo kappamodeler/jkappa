@@ -20,6 +20,7 @@ public class AbstractAction {
 	private List<CAbstractSite> sitesSideEffect;
 	private List<Integer> sideEffect;
 	private EAbstractActionType actionType;
+	private boolean canApply = false;
 
 	public AbstractAction(CAbstractAgent leftHandSideAgent,
 			CAbstractAgent rightAbstractAgent) {
@@ -126,6 +127,14 @@ public class AbstractAction {
 
 	public List<Integer> getSideEffect() {
 		return sideEffect;
+	}
+	
+	public boolean canApply(){
+		return canApply;
+	}
+	
+	public void setApply(boolean b){
+		canApply = b;
 	}
 
 	public void initSubViews(Map<Integer, List<ISubViews>> subViewsMap) {

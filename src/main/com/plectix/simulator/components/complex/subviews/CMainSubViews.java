@@ -3,6 +3,7 @@ package com.plectix.simulator.components.complex.subviews;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		IAllSubViewsOfAllAgents {
 	private Map<Integer, CAbstractAgent> agentNameIdToAgent;
 	private List<SubViewsRule> abstractRules;
+	private HashSet<Integer> deadRules;
 
 	public CMainSubViews() {
 		super();
@@ -215,8 +217,19 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		}
 		return reachables;
 	}
-	
-	public Map<Integer, CAbstractAgent> getFullMapOfAgents(){
+
+	public Map<Integer, CAbstractAgent> getFullMapOfAgents() {
 		return agentNameIdToAgent;
+	}
+
+	public void initDeadRules() {
+		deadRules = new HashSet<Integer>();
+		for (SubViewsRule rule : abstractRules)
+			if (rule.isApply())
+				deadRules.add(rule.getRuleId());
+	}
+
+	public HashSet<Integer> getDeadRules() {
+		return deadRules;
 	}
 }

@@ -20,6 +20,7 @@ public class SubViewsRule {
 	private List<AbstractAction> actions;
 	private List<CAbstractSite> sitesShouldBeBreak;
 	private int ruleId;
+	private boolean isApply = false;
 
 	public SubViewsRule(CRule rule) {
 		actions = new LinkedList<AbstractAction>();
@@ -36,22 +37,29 @@ public class SubViewsRule {
 
 	public boolean apply(Map<Integer, CAbstractAgent> agentNameIdToAgent,
 			Map<Integer, List<ISubViews>> subViewsMap) throws SubViewsExeption {
-		for (AbstractAction action : actions) {
-			boolean isEnd = true;
-			for (ISubViews subViews : action.getSubViews())
-				try {
-					if (subViews.test(action)) {
-						isEnd = false;
-					} else if (action.getActionType() == EAbstractActionType.TEST_ONLY
-							|| action.getActionType() == EAbstractActionType.DELETE)
-						return false;
-				} catch (SubViewsExeption e) {
-					if (action.getActionType() != EAbstractActionType.DELETE)
-						e.printStackTrace();
-				}
-			if (isEnd)
-				return false;
+
+		if (!isApply) {
+			for (AbstractAction action : actions) {
+				boolean isEnd = true;
+				if (action.canApply())
+					continue;
+				for (ISubViews subViews : action.getSubViews())
+					try {
+						if (subViews.test(action)) {
+							isEnd = false;
+						} else if (action.getActionType() == EAbstractActionType.TEST_ONLY
+								|| action.getActionType() == EAbstractActionType.DELETE)
+							return false;
+					} catch (SubViewsExeption e) {
+						if (action.getActionType() != EAbstractActionType.DELETE)
+							e.printStackTrace();
+					}
+				if (isEnd)
+					return false;
+				action.setApply(true);
+			}
 		}
+
 		boolean isAdd = false;
 		for (AbstractAction action : actions) {
 			if (action.getActionType() != EAbstractActionType.TEST_ONLY) {
@@ -66,6 +74,8 @@ public class SubViewsRule {
 							isAdd = true;
 			}
 		}
+		if (isAdd)
+			isApply = true;
 		return isAdd;
 	}
 
@@ -211,5 +221,9 @@ public class SubViewsRule {
 
 	public List<CAbstractSite> getBreakingSites() {
 		return sitesShouldBeBreak;
+	}
+
+	public boolean isApply() {
+		return isApply;
 	}
 }
