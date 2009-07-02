@@ -215,4 +215,8 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		}
 		return reachables;
 	}
+	
+	public Map<Integer, CAbstractAgent> getFullMapOfAgents(){
+		return agentNameIdToAgent;
+	}
 }

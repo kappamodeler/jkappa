@@ -2,11 +2,13 @@ package com.plectix.simulator.components.complex.subviews;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.interfaces.ISolution;
 
@@ -25,4 +27,6 @@ public interface IAllSubViewsOfAllAgents {
 	public ISubViews getSubViewForRule(String typeOfAgent, CRule rule);
 	
 	public Element createXML(Document doc);
+	
+	public Map<Integer, CAbstractAgent> getFullMapOfAgents();
 }
