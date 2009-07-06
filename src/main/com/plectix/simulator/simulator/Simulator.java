@@ -13,8 +13,10 @@ import com.plectix.simulator.components.RuleApplicator;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.perturbations.CPerturbationType;
+import com.plectix.simulator.components.solution.OperationMode;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStories;
+import com.plectix.simulator.components.stories.newVersion.CEvent;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
@@ -307,14 +309,18 @@ public class Simulator implements SimulatorInterface {
 				List<CInjection> newInjections = ruleApplicator.applyRule(rule, injectionsList, simulationData);
 				if (newInjections != null) {
 	
-					SimulationUtils.doNegativeUpdate(newInjections);
+					// on the 4th mode we should set only super injections, so we do it manually 
+					// directly after the rule application
+					if (simulationData.getSimulationArguments().getOperationMode() != OperationMode.FOURTH) {
+						SimulationUtils.doNegativeUpdate(newInjections);
 				
-					// positive update
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("positive update");
-					}
+						// positive update
+						if (LOGGER.isDebugEnabled()) {
+							LOGGER.debug("positive update");
+						}
 	
-					simulationData.getKappaSystem().doPositiveUpdate(rule, newInjections);
+						simulationData.getKappaSystem().doPositiveUpdate(rule, newInjections);
+					}
 	
 					simulationData.getKappaSystem().getSolution().applyChanges(rule.getPool());
 				
@@ -448,12 +454,13 @@ public class Simulator implements SimulatorInterface {
 				}
 				if (!rule.isClash(injectionsList)) {
 					// TODO: Make sure that CNetworkNotation works with long event number, not integer
-					CNetworkNotation netNotation = new CNetworkNotation(this, (int)currentEventNumber, rule, injectionsList, simulationData);
+					CNetworkNotation netNotation = null;// = new CNetworkNotation(this, (int)currentEventNumber, rule, injectionsList, simulationData);
+					CEvent eventContainer = new CEvent(currentEventNumber,rule.getRuleID());
 					max_clash = 0;
 					if (stories.checkRule(rule.getRuleID(), currentIterationNumber)) {
-						rule.applyLastRuleForStories(injectionsList,netNotation);
-						rule.applyRuleForStories(injectionsList, netNotation, simulationData, true);
-						stories.addToNetworkNotationStoryStorifyRule(currentIterationNumber, netNotation, currentTime);
+//						rule.applyLastRuleForStories(injectionsList,netNotation,eventContainer);
+						rule.applyRuleForStories(injectionsList, netNotation,eventContainer, simulationData, true);
+						stories.addToNetworkNotationStoryStorifyRule(currentIterationNumber, netNotation,eventContainer, currentTime);
 						synchronized (statusLock) {
 							currentEventNumber++;
 						}
@@ -462,10 +469,10 @@ public class Simulator implements SimulatorInterface {
 						break;
 					}
 					
-					rule.applyRuleForStories(injectionsList, netNotation, simulationData, false);
-					netNotation.fillAddedAgentsID(simulationData);
+					rule.applyRuleForStories(injectionsList, netNotation,eventContainer, simulationData, false);
+//					netNotation.fillAddedAgentsID(simulationData);
 					if (!rule.isRHSEqualsLHS()) {
-						stories.addToNetworkNotationStory(currentIterationNumber, netNotation);
+						stories.addToNetworkNotationStory(currentIterationNumber, netNotation,eventContainer);
 					}
 					synchronized (statusLock) {
 						currentEventNumber++;

@@ -1,7 +1,5 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.*;
-
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -17,35 +15,13 @@ public class CThirdSolution extends CAbstractSuperSolution {
 		myStraightStorage = getStraightStorage();
 	}
 
-	private final void addConnectedComponent(IConnectedComponent component) {
+	@Override
+	protected final void addConnectedComponent(IConnectedComponent component) {
 		if (!mySuperStorage.tryIncrement(component)) { 
 			myStraightStorage.addConnectedComponent(component);
 		}
 	}
 
-	@Override
-	public final void applyChanges(RuleApplicationPool pool) {
-		// TODO Auto-generated method stub
-		Collection<CAgent> agents = pool.getStorage().getAgents();
-		if (!agents.isEmpty()) {
-			Set<CAgent> connectedComponents = new HashSet<CAgent>();
-			List<IConnectedComponent> list = new ArrayList<IConnectedComponent>();
-			connectedComponents.addAll(agents);
-			for (CAgent agent : agents) {
-				IConnectedComponent component = SolutionUtils.getConnectedComponent(agent);
-				list.add(component);
-				for (CAgent agentFromComponent : component.getAgents()) {
-					connectedComponents.remove(agentFromComponent);
-				}
-			}
-			for (IConnectedComponent cc : list) {
-				this.addConnectedComponent(cc);
-			}
-		}
-		
-		pool.clear();
-	}
-	
 	@Override
 	public final RuleApplicationPool prepareRuleApplicationPool() {
 		return new StandardRuleApplicationPool(new StraightStorage());

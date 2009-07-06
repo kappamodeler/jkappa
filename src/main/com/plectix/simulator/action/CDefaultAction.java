@@ -1,10 +1,15 @@
 package com.plectix.simulator.action;
 
+import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.newVersion.CEvent;
+import com.plectix.simulator.components.stories.newVersion.ECheck;
+import com.plectix.simulator.components.stories.newVersion.EKeyOfState;
+import com.plectix.simulator.components.stories.newVersion.WireHashKey;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
@@ -39,14 +44,47 @@ public class CDefaultAction extends CAction {
 		myToAgent = toAgent;
 		setType(CActionType.NONE);
 	}
-	
-	public final void doAction(RuleApplicationPool pool, CInjection injection, 
-			INetworkNotation netNotation, SimulationData simulationData) {
+
+	public final void doAction(RuleApplicationPool pool, CInjection injection,
+			INetworkNotation netNotation, CEvent eventContainer,
+			SimulationData simulationData) {
 		int agentIdInCC = getAgentIdInCCBySideId(myToAgent);
-		CAgent agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
+		CAgent agentFromInSolution = injection
+				.getAgentFromImageById(agentIdInCC);
 		getRightCComponent().addAgentFromSolutionForRHS(agentFromInSolution);
+		addToEventContainer(eventContainer, agentFromInSolution,ECheck.TEST);
 	}
-	
+
+//	private void addToEventContainer(CEventContainer eventContainer,
+//			CAgent agentFromInSolution) {
+//		if (eventContainer == null)
+//			return;
+//		// AGENT
+//		eventContainer.addEvent(new WireHashKey(agentFromInSolution.getId(),
+//				EKeyOfState.AGENT), null, ECheck.TEST, CEventContainer.BEFORE_STATE);
+//		for (CSite s : getAgentFrom().getSites()) {
+//			CSite site = agentFromInSolution.getSiteById(s.getNameId());
+//			CLinkRank linkRank = s.getLinkState().getStatusLinkRank();
+//			if (linkRank != CLinkRank.BOUND_OR_FREE) {
+//				// FREE/BOUND
+//				eventContainer.addEvent(new WireHashKey(agentFromInSolution
+//						.getId(), site.getNameId(), EKeyOfState.BOUND_FREE),
+//						site, ECheck.TEST, CEventContainer.BEFORE_STATE);
+//
+//				if (linkRank != CLinkRank.SEMI_LINK) {
+//					eventContainer.addEvent(
+//							new WireHashKey(agentFromInSolution.getId(), site
+//									.getNameId(), EKeyOfState.LINK_STATE),
+//							site, ECheck.TEST, CEventContainer.BEFORE_STATE);
+//				}
+//			}
+//
+//			eventContainer.addEvent(new WireHashKey(agentFromInSolution.getId(),
+//					site.getNameId(), EKeyOfState.INTERNAL_STATE), site,
+//					ECheck.TEST, CEventContainer.BEFORE_STATE);
+//		}
+//	}
+
 	protected final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
@@ -57,7 +95,7 @@ public class CDefaultAction extends CAction {
 					internalStateMode, linkStateMode);
 		}
 	}
-	
+
 	protected final void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, CSite site) {
 	}

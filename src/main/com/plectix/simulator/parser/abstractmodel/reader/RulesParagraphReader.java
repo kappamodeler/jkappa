@@ -73,11 +73,11 @@ public class RulesParagraphReader extends KappaParagraphReader<Collection<Abstra
 						
 						bracketIndex = activities[1].indexOf("(");
 						if (bracketIndex != -1) {
-							activity = readRateInBrackets(activities[1]);
+							activity2 = readRateInBrackets(activities[1]);
 							activStr = activStr.substring(0, activities[1].indexOf("(")).trim();
 							binaryRateOpposite = Double.valueOf(activStr);
 						} else {
-							activity = Double.valueOf(activities[1]);
+							activity2 = Double.valueOf(activities[1]);
 						}
 						
 //						activity = Double.valueOf(activities[0]);

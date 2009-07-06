@@ -116,7 +116,6 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 */
 	public final void removeInjection(CInjection injection) {
 		injection.eliminate();
-		myInjections.updatedItem(injection);
 	}
 
 	public long getInjectionsWeight() {
@@ -150,7 +149,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @param injection injection to be set
 	 */
 	public final void setInjection(CInjection injection) {
-		addInjection(injection);
+		this.addInjection(injection);
 		for (CSite changedSite : injectedSites) {
 			changedSite.addToLift(new CLiftElement(this, injection));
 		}
@@ -406,8 +405,8 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return myInjections.asSet();
 	}
 
-	public void simplifyInjection(CInjection inj) {
-		inj.setPower(1);
+	public void updateInjection(CInjection inj, long newPower) {
+		inj.setPower(newPower);
 		myInjections.updatedItem(inj);
 	}
 	
@@ -441,35 +440,9 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		return temp;
 	}
 
-	
-	public void burnIncomingInjections() {
+	private Set<CInjection> getIncomingInjectionsSet() {
+		Set<CInjection> injList = new HashSet<CInjection>();
 		for (CAgent agent : agentList) {
-			for (CSite site : agent.getSites()) {
-				for (CLiftElement lift : site.getLift()) {
-					lift.getInjection().setSimple();
-				}
-			}
-			// default-site case
-			for (CLiftElement lift : agent.getDefaultSite().getLift()) {
-				lift.getInjection().setSimple();
-			}
-		}
-	}
-	
-	public void deleteIncomingInjections() {
-		for (CAgent agent : agentList) {
-//			for (CSite site : agent.getSites()) {
-//				for (CLiftElement lift : site.getLift()) {
-//					CInjection inj = lift.getInjection();
-//					inj.getConnectedComponent().removeInjection(inj);
-//				}
-//			}
-//			// default-site case
-//			for (CLiftElement lift : agent.getDefaultSite().getLift()) {
-//				CInjection inj = lift.getInjection();
-//				inj.getConnectedComponent().removeInjection(inj);
-//			}
-			List<CInjection> injList = new ArrayList<CInjection>();
 			for (CSite site : agent.getSites()) {
 				for (CLiftElement lift : site.getLift()) {
 					injList.add(lift.getInjection());
@@ -479,12 +452,42 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 			for (CLiftElement lift : agent.getDefaultSite().getLift()) {
 				injList.add(lift.getInjection());
 			}
-			for (CInjection injection : injList) {
-				SimulationUtils.doNegativeUpdate(injection);
-			}
+		}
+		return injList;
+	}
+	
+	//TODO get these 4 methods shorter!!!!!	
+	public void burnIncomingInjections() {
+		for (CInjection inj : getIncomingInjectionsSet()) {
+			inj.setSimple();
 		}
 	}
 	
+	public void incrementIncomingInjections() {
+		for (CInjection inj : getIncomingInjectionsSet()) {
+			inj.incPower();
+		}
+	}
+	
+	public void deleteIncomingInjections() {
+		for (CInjection inj : getIncomingInjectionsSet()) {
+			SimulationUtils.doNegativeUpdate(inj);
+		}		
+	}
+	
+//	public void reassignIncomingInjections(SuperSubstance ss) {
+//		for (CAgent agent : agentList) {
+//			for (CSite site : agent.getSites()) {
+//				for (CLiftElement lift : site.getLift()) {
+//					lift.getInjection().setSuperSubstance(ss);
+//				}
+//			}
+//			// default-site case
+//			for (CLiftElement lift : agent.getDefaultSite().getLift()) {
+//				lift.getInjection().setSuperSubstance(ss);
+//			}
+//		}
+//	}
 	// -----------------------hash, toString, equals-----------------------------
 
 

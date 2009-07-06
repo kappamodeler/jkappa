@@ -13,6 +13,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.solution.OperationMode;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
 
@@ -58,8 +59,10 @@ public class RunActionTest extends InitTestAction {
 //		compareWithSolution(lhs, firstsolution, "init");
 
 		apply(injectionsList);
-		SimulationUtils.doNegativeUpdate(injectionsList);
-		simulationData.getKappaSystem().doPositiveUpdate(activeRule, injectionsList);
+		if (simulationData.getSimulationArguments().getOperationMode() != OperationMode.FOURTH) {
+			SimulationUtils.doNegativeUpdate(injectionsList);
+			simulationData.getKappaSystem().doPositiveUpdate(activeRule, injectionsList);
+		}
 		simulationData.getKappaSystem().getSolution().applyChanges(activeRule.getPool());
 		
 		List<IConnectedComponent> rhs = activeRule.getRightHandSide();

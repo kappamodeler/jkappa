@@ -1,6 +1,6 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.injections.CInjection;
@@ -11,8 +11,6 @@ public abstract class CAbstractSuperSolution extends ComplexSolution {
 	public CAbstractSuperSolution(KappaSystem system) {
 		super(system);
 	}
-
-	public abstract void applyChanges(RuleApplicationPool pool);
 
 	public RuleApplicationPool prepareRuleApplicationPool() {
 		return new StandardRuleApplicationPool(new StraightStorage());
@@ -31,6 +29,30 @@ public abstract class CAbstractSuperSolution extends ComplexSolution {
 				}	
 			}
 		}
+	}
+	
+	protected abstract void addConnectedComponent(IConnectedComponent component);
+	
+	public void applyChanges(RuleApplicationPool pool) {
+		Collection<CAgent> agents = pool.getStorage().getAgents();
+		List<CAgent> agentsCopy = new ArrayList<CAgent>();
+		agentsCopy.addAll(agents);
+		if (!agents.isEmpty()) {
+			List<IConnectedComponent> list = new ArrayList<IConnectedComponent>();
+			while (!agentsCopy.isEmpty()) {
+				CAgent agent = agentsCopy.get(0);
+				IConnectedComponent component = SolutionUtils.getConnectedComponent(agent);
+				list.add(component);
+				for (CAgent agentFromComponent : component.getAgents()) {
+					agentsCopy.remove(agentFromComponent);
+				}
+			}
+			for (IConnectedComponent cc : list) {
+				this.addConnectedComponent(cc);
+			}
+		}
+		
+		pool.clear();
 	}
 	
 	public final void addInitialConnectedComponents(long quant, List<CAgent> agents) {

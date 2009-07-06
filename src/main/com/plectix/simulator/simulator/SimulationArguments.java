@@ -93,7 +93,7 @@ public class SimulationArguments {
 	private SimulationType simulationType = SimulationType.NONE;
 	private StorifyMode storifyMode = StorifyMode.NONE;
 	private SerializationMode serializationMode = SerializationMode.NONE;
-	private OperationMode operationMode = OperationMode.FIRST;
+	private OperationMode operationMode = OperationMode.DEFAULT;
 	private boolean allowIncompletes = false;;
 	
 	public SimulationArguments() {

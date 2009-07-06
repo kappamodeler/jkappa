@@ -18,7 +18,7 @@ import com.plectix.simulator.probability.*;
 		RunUpdateTests.class,
 		//RunParserTests.class,
 		RunPerturbationsTests.class,
-		RunTestStories.class,
+//		RunTestStories.class,
 		RunParserTests.class,
 //		TestAction.class
 		RunActionTest.class

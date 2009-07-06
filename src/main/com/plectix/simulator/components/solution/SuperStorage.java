@@ -22,8 +22,9 @@ public class SuperStorage implements IStorage {
 		if (previousEntry != null) {
 			previousEntry.add();
 			component.deleteIncomingInjections();
-			previousEntry.getComponent().deleteIncomingInjections();
-			setInjectionsForSuperSubstance(previousEntry);
+//			previousEntry.getComponent().deleteIncomingInjections();
+			previousEntry.getComponent().incrementIncomingInjections();
+//			setInjectionsForSuperSubstance(previousEntry);
 			return true;
 		}
 		return false;
@@ -41,7 +42,11 @@ public class SuperStorage implements IStorage {
 	}
 	
 	public void addNewSuperSubstance(IConnectedComponent component) {
-		myStorage.put(component.getHash(), new SuperSubstance(1, component));
+		SuperSubstance s = new SuperSubstance(1, component);
+		myStorage.put(component.getHash(), s);
+//		component.reassignIncomingInjections(s);
+		component.deleteIncomingInjections();
+		setInjectionsForSuperSubstance(s);
 	}
 	
 	public void clear() {
@@ -77,6 +82,10 @@ public class SuperStorage implements IStorage {
 			// we don't want to choose an injection built to empty SS
 			if (!image.isEmpty()) {
 				setInjectionsForSuperSubstance(image);
+			} else {
+				// TODO do we really want to remove this component from collection?
+				myStorage.remove(component.getHash());
+				image.getComponent().deleteIncomingInjections();
 			}
 			return component;
 		} else {

@@ -25,7 +25,7 @@ public class CInjection implements Serializable, WeightedItem {
 	private List<CSite> changedSites;
 	private int myId = 0;
 	// from
-	private CConnectedComponent connectedComponent;
+	private IConnectedComponent connectedComponent;
 	private SuperSubstance myImageComponent = null;
 	private long myPower = 1;
 	
@@ -171,15 +171,19 @@ public class CInjection implements Serializable, WeightedItem {
 	public void setSimple() {
 		if (isSuper()) {
 			myImageComponent = null;
-			connectedComponent.simplifyInjection(this);
+			connectedComponent.updateInjection(this, 1);
 		}
 	}
 
 	public void eliminate() {
-		myPower = 0;
+		connectedComponent.updateInjection(this, 0);
 	}
 
-	public void setPower(int i) {
+	public void incPower() {
+		connectedComponent.updateInjection(this, myPower + 1);
+	}
+	
+	public void setPower(long i) {
 		myPower = i;
 	}
 }

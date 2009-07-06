@@ -81,9 +81,9 @@ import com.plectix.simulator.simulator.KappaSystem;
 						.getSiteByNameId(siteNew.getNameId()).getLinkState();
 				lsNew.setStatusLink(lsOld.getStatusLink());
 				if (lsOld.getConnectedSite() != null) {
-					CSite siteOldLink = (CSite) lsOld.getConnectedSite();
+					CSite siteOldLink = lsOld.getConnectedSite();
 					int j = 0;
-					for (j = 0; j < agentList.size(); j++) {
+					for (; j < agentList.size(); j++) {
 						if (agentList.get(j) == siteOldLink.getAgentLink())
 							break;
 					}

@@ -8,6 +8,7 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.newVersion.CEvent;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.probability.WeightedItem;
 import com.plectix.simulator.simulator.SimulationData;
@@ -233,9 +234,9 @@ public class CRule implements Serializable, WeightedItem {
 	 * otherwise false 
 	 */
 	public void applyRuleForStories(List<CInjection> injectionList,
-			INetworkNotation netNotation, SimulationData simulationData,
+			INetworkNotation netNotation, CEvent eventContainer, SimulationData simulationData,
 			boolean isLast) {
-		apply(injectionList, netNotation, simulationData, isLast);
+		apply(injectionList, netNotation,eventContainer, simulationData, isLast);
 	}
 
 	/**
@@ -244,7 +245,7 @@ public class CRule implements Serializable, WeightedItem {
 	 * @param simulationData simulation data
 	 */
 	public void applyRule(List<CInjection> injectionList, SimulationData simulationData) {
-		apply(injectionList, null, simulationData, false);
+		apply(injectionList, null,null, simulationData, false);
 	}
 
 	/**
@@ -292,7 +293,7 @@ public class CRule implements Serializable, WeightedItem {
 	 * otherwise false 
 	 */
 	protected final void apply(List<CInjection> injectionList,
-			INetworkNotation netNotation, SimulationData simulationData,
+			INetworkNotation netNotation, CEvent eventContainer, SimulationData simulationData,
 			boolean isLast) {
 		agentAddList = new HashMap<CAgent, CAgent>();
 		sitesConnectedWithDeleted = new ArrayList<CSite>();
@@ -308,10 +309,10 @@ public class CRule implements Serializable, WeightedItem {
 
 		for (CAction action : actionList) {
 			if (action.getLeftCComponent() == null) {
-				action.doAction(pool, null, netNotation, simulationData);
+				action.doAction(pool, null, netNotation,eventContainer, simulationData);
 			} else {
 				action.doAction(pool, injectionList.get(leftHandside.indexOf(action
-						.getLeftCComponent())), netNotation, simulationData);
+						.getLeftCComponent())), netNotation,eventContainer, simulationData);
 			}
 		}
 		
@@ -334,7 +335,7 @@ public class CRule implements Serializable, WeightedItem {
 	 * @param netNotation INetworkNotation object which keep information about rule application
 	 */
 	public final void applyLastRuleForStories(List<CInjection> injectionsList,
-			INetworkNotation netNotation) {
+			INetworkNotation netNotation, CEvent eventContainer) {
 		for (CInjection inj : injectionsList) {
 			for (CSite site : inj.getSiteList()) {
 				netNotation.checkLinkForNetworkNotationDel(StateType.BEFORE,

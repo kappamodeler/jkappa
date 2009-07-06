@@ -1,14 +1,10 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.KappaSystem;
 
 public class SuperSubstance {
 	private long myQuantity = 0;
@@ -78,5 +74,9 @@ public class SuperSubstance {
 	
 	public String getHash() {
 		return myHash;
+	}
+	
+	public String toString() {
+		return "ss:" + myComponent + " * " + myQuantity;
 	}
 }

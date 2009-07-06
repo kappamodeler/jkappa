@@ -38,9 +38,19 @@ public interface IConnectedComponent extends ISolutionComponent {
 	 */
 	public long getInjectionsWeight();
 
-	public void deleteIncomingInjections();
-
 	public CAgent findSimilarAgent(CAgent rulesSecondAgent);
 
 	public CInjection findInjection(CAgent agentInFirstComponentToSwap);
+
+	public void deleteIncomingInjections();
+	
+	public void incrementIncomingInjections();
+
+	public void updateInjection(CInjection injection, long i);
+
+//	/**
+//	 * This method says to all incoming injections that they are super now. 
+//	 * @param s
+//	 */
+//	public void reassignIncomingInjections(SuperSubstance s);
 }

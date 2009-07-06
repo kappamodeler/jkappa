@@ -5,6 +5,10 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.newVersion.CEvent;
+import com.plectix.simulator.components.stories.newVersion.ECheck;
+import com.plectix.simulator.components.stories.newVersion.EKeyOfState;
+import com.plectix.simulator.components.stories.newVersion.WireHashKey;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
@@ -61,9 +65,10 @@ public class CBoundAction extends CAction {
 		setType(CActionType.BOUND);
 	}
 
-	public final void doAction(RuleApplicationPool pool, CInjection injection, 
-			INetworkNotation netNotation, SimulationData simulationData) {
-		//	TODO remove copypaste
+	public final void doAction(RuleApplicationPool pool, CInjection injection,
+			INetworkNotation netNotation, CEvent eventContainer,
+			SimulationData simulationData) {
+		// TODO remove copypaste
 		/**
 		 * Done.
 		 */
@@ -103,14 +108,52 @@ public class CBoundAction extends CAction {
 
 		agentToInSolution.getSiteByNameId(mySiteTo.getNameId()).getLinkState()
 		.connectSite(agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()));
+		//======================================================================
 
 		addToNetworkNotation(StateType.AFTER, netNotation,
 				agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()));
+		addToEventContainer(eventContainer, agentFromInSolution
+				.getSiteByNameId(mySiteFrom.getNameId()));
+		addToEventContainer(eventContainer, agentToInSolution
+				.getSiteByNameId(mySiteTo.getNameId()));
+		//======================================================================
 
 		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).setLinkIndex(
 				mySiteFrom.getLinkIndex());
 		agentToInSolution.getSiteByNameId(mySiteTo.getNameId()).setLinkIndex(
 				mySiteTo.getLinkIndex());
+
+	}
+
+	private static void addToEventContainer(CEvent eventContainer,
+			CSite site) {
+		if (eventContainer == null)
+			return;
+		eventContainer.addEvent(new WireHashKey(site.getAgentLink().getId(), site
+				.getNameId(), EKeyOfState.LINK_STATE), site,
+				ECheck.MODIFICATION, CEvent.AFTER_STATE);
+
+		// UHashKey key = new
+		// UHashKey(site.getAgentLink().getId(),site.getNameId
+		// (),EKeyOfState.LINK_STATE);
+		// AEvent<CStateOfLink> event = (AEvent<CStateOfLink>)
+		// eventContainer.getEvent(key);
+		// CSite connectedSite = site.getLinkState().getConnectedSite();
+		// event.getState().setAfterState(new
+		// CStateOfLink(connectedSite.getAgentLink
+		// ().getId(),connectedSite.getNameId()));
+		// event.correctingType(ECheck.MODIFICATION);
+
+		eventContainer.addEvent(new WireHashKey(site.getAgentLink().getId(), site
+				.getNameId(), EKeyOfState.BOUND_FREE), site,
+				ECheck.MODIFICATION, CEvent.AFTER_STATE);
+
+		// key = new UHashKey(site.getAgentLink().getId(), site.getNameId(),
+		// EKeyOfState.BOUND_FREE);
+		// AEvent<Boolean> event2 = (AEvent<Boolean>) eventContainer
+		// .getEvent(key);
+		// event2.getState().setAfterState(false);
+		// event2.correctingType(ECheck.MODIFICATION);
 
 	}
 

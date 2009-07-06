@@ -1,5 +1,7 @@
 package com.plectix.simulator.action;
 
+import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
@@ -8,6 +10,13 @@ import com.plectix.simulator.components.injections.CLiftElement;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.newVersion.AState;
+import com.plectix.simulator.components.stories.newVersion.AtomicEvent;
+import com.plectix.simulator.components.stories.newVersion.CEvent;
+import com.plectix.simulator.components.stories.newVersion.CStateOfLink;
+import com.plectix.simulator.components.stories.newVersion.ECheck;
+import com.plectix.simulator.components.stories.newVersion.EKeyOfState;
+import com.plectix.simulator.components.stories.newVersion.WireHashKey;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
@@ -44,12 +53,15 @@ public class CDeleteAction extends CAction {
 		setType(CActionType.DELETE);
 	}
 
-	public final void doAction(RuleApplicationPool pool, CInjection injection, 
-			INetworkNotation netNotation, SimulationData simulationData) {
+	public final void doAction(RuleApplicationPool pool, CInjection injection,
+			INetworkNotation netNotation, CEvent eventContainer,
+			SimulationData simulationData) {
 		/**
 		 * Done.
 		 */
 		CAgent agent = injection.getAgentFromImageById(myFromAgent.getIdInConnectedComponent());
+		addToEventContainer(eventContainer, agent, ECheck.TEST_AND_MODIFICATION);
+		addToEventContainerNotFixedSites(eventContainer, agent);
 		for (CSite site : agent.getSites()) {
 			removeSiteToConnectedWithDeleted(site);
 			CSite solutionSite = (CSite) site.getLinkState().getConnectedSite();
@@ -58,6 +70,8 @@ public class CDeleteAction extends CAction {
 				addToNetworkNotation(StateType.BEFORE,
 						netNotation, solutionSite);
 
+				addToEventContainerConnectedSites(eventContainer, solutionSite,
+						CEvent.BEFORE_STATE);
 				addSiteToConnectedWithDeleted(solutionSite);
 				solutionSite.getLinkState().connectSite(null);
 				solutionSite.getLinkState().setStatusLink(
@@ -66,6 +80,9 @@ public class CDeleteAction extends CAction {
 				addToNetworkNotation(StateType.AFTER,
 						netNotation, solutionSite);
 				addRuleSitesToNetworkNotation(false, netNotation, solutionSite);
+
+				addToEventContainerConnectedSites(eventContainer, solutionSite,
+						CEvent.AFTER_STATE);
 				// solutionSite.removeInjectionsFromCCToSite(injection);
 			}
 		}
@@ -95,6 +112,119 @@ public class CDeleteAction extends CAction {
 		pool.removeAgent(agent);
 	}
 
+	private void addToEventContainerConnectedSites(
+			CEvent eventContainer, CSite siteFromSolution,
+			boolean isBefore) {
+		if (eventContainer == null)
+			return;
+		long agentId = siteFromSolution.getAgentLink().getId();
+		int siteId = siteFromSolution.getNameId();
+
+		eventContainer.addEvent(new WireHashKey(agentId, EKeyOfState.AGENT),
+				null, ECheck.MODIFICATION, isBefore);
+
+		eventContainer.addEvent(new WireHashKey(agentId, siteId,
+				EKeyOfState.BOUND_FREE), siteFromSolution, ECheck.MODIFICATION,
+				isBefore);
+		eventContainer.addEvent(new WireHashKey(agentId, siteId,
+				EKeyOfState.LINK_STATE), siteFromSolution, ECheck.MODIFICATION,
+				isBefore);
+
+	}
+
+	private void addToEventContainerNotFixedSites(
+			CEvent eventContainer, CAgent agentFromInSolution) {
+		if (eventContainer == null)
+			return;
+		long agentId = agentFromInSolution.getId();
+		// eventContainer.addEvent(new UHashKey(agentId,EKeyOfState.AGENT),
+		// null, ECheck.MODIFICATION, )
+		for (CSite siteFromSolution : agentFromInSolution.getSites()) {
+			int siteId = siteFromSolution.getNameId();
+//			if (myFromAgent.getSiteById(siteId) != null) {
+//				if (myFromAgent.getSiteById(siteId).getInternalState()
+//						.getNameId() == CInternalState.EMPTY_STATE.getNameId())
+//					eventContainer.addEvent(new WireHashKey(agentId, siteId,
+//							EKeyOfState.INTERNAL_STATE), siteFromSolution,
+//							ECheck.MODIFICATION, CEventContainer.BEFORE_STATE);
+//
+//				continue;
+//			}
+			eventContainer.addEvent(new WireHashKey(agentId, siteId,
+					EKeyOfState.BOUND_FREE), siteFromSolution,
+					ECheck.MODIFICATION, CEvent.BEFORE_STATE);
+			eventContainer.addEvent(new WireHashKey(agentId, siteId,
+					EKeyOfState.LINK_STATE), siteFromSolution,
+					ECheck.MODIFICATION, CEvent.BEFORE_STATE);
+			eventContainer.addEvent(new WireHashKey(agentId, siteId,
+					EKeyOfState.INTERNAL_STATE), siteFromSolution,
+					ECheck.MODIFICATION, CEvent.BEFORE_STATE);
+		}
+
+		// if (eventContainer != null) {
+		// // AGENT
+		// AEvent<Boolean> event = (AEvent<Boolean>) eventContainer
+		// .getEvent(new UHashKey(agentFromInSolution.getId(),
+		// EKeyOfState.AGENT));
+		// event.correctingType(ECheck.MODIFICATION);
+		// for (CSite s : agentFromInSolution.getSites()) {
+		// if(getAgentFrom().getSiteById(s.getNameId()) != null)
+		// continue;
+		// CSite site =s; //agentFromInSolution.getSiteById(s.getNameId());
+		// CLinkRank linkRank = s.getLinkState().getStatusLinkRank();
+		// if (linkRank != CLinkRank.BOUND_OR_FREE) {
+		// // FREE/BOUND
+		// AEvent<Boolean> event2 = new AEvent<Boolean>(
+		// eventContainer, ECheck.MODIFICATION);
+		// AState<Boolean> state2 = new AState<Boolean>();
+		// state2.setBeforeState(linkRank.equals(CLinkRank.FREE));
+		// event2.setState(state2);
+		// eventContainer.addEvent(
+		// new UHashKey(agentFromInSolution.getId(), site
+		// .getNameId(), EKeyOfState.BOUND_FREE),
+		// event2);
+		//
+		// if (linkRank != CLinkRank.SEMI_LINK) {
+		// AEvent<CStateOfLink> event3 = new AEvent<CStateOfLink>(
+		// eventContainer, ECheck.MODIFICATION);
+		// AState<CStateOfLink> state3 = new AState<CStateOfLink>();
+		// if (linkRank == CLinkRank.FREE)
+		// state3.setBeforeState(new CStateOfLink(
+		// CStateOfLink.FREE, CStateOfLink.FREE));
+		// else
+		// state3.setBeforeState(new CStateOfLink(site
+		// .getLinkState().getConnectedSite()
+		// .getAgentLink().getId(), site
+		// .getLinkState().getConnectedSite()
+		// .getNameId()));
+		// event3.setState(state3);
+		// eventContainer.addEvent(new UHashKey(
+		// agentFromInSolution.getId(), site.getNameId(),
+		// EKeyOfState.LINK_STATE), event3);
+		// }
+		// }
+		//
+		// eventContainer.addEvent(new UHashKey(agentFromInSolution
+		// .getId(), site.getNameId(),
+		// EKeyOfState.INTERNAL_STATE), agentFromInSolution, s,
+		// ECheck.MODIFICATION, true);
+		// // if (s.getInternalState().getNameId() !=
+		// // CInternalState.EMPTY_STATE
+		// // .getNameId()) {
+		// // AEvent<Integer> event2 = new AEvent<Integer>(
+		// // eventContainer, ECheck.MODIFICATION);
+		// // AState<Integer> state2 = new AState<Integer>();
+		// // state2.setBeforeState(s.getInternalState().getNameId());
+		// // event2.setState(state2);
+		// // eventContainer.addEvent(new UHashKey(agentFromInSolution
+		// // .getId(), site.getNameId(),
+		// // EKeyOfState.INTERNAL_STATE), event2);
+		// // }
+		//
+		// }
+		// }
+	}
+
 	protected final void addRuleSitesToNetworkNotation(boolean existInRule,
 			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {
@@ -118,12 +248,12 @@ public class CDeleteAction extends CAction {
 					internalStateMode = NetworkNotationMode.MODIFY;
 			} else
 				linkStateMode = NetworkNotationMode.MODIFY;
-			
+
 			netNotation.addToAgentsFromRules(site, agentMode,
 					internalStateMode, linkStateMode);
 		}
 	}
-	
+
 	protected final void addToNetworkNotation(StateType index,
 			INetworkNotation netNotation, CSite site) {
 		if (netNotation != null) {

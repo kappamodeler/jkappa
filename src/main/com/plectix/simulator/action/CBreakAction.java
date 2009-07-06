@@ -6,6 +6,10 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.newVersion.CEvent;
+import com.plectix.simulator.components.stories.newVersion.ECheck;
+import com.plectix.simulator.components.stories.newVersion.EKeyOfState;
+import com.plectix.simulator.components.stories.newVersion.WireHashKey;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
@@ -57,8 +61,9 @@ public class CBreakAction extends CAction {
 		setType(CActionType.BREAK);
 	}
 
-	public final void doAction(RuleApplicationPool pool, CInjection injection, 
-			INetworkNotation netNotation, SimulationData simulationData) {
+	public final void doAction(RuleApplicationPool pool, CInjection injection,
+			INetworkNotation netNotation, CEvent eventContainer,
+			SimulationData simulationData) {
 		CAgent agentFromInSolution;
 		int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getAgentLink());
 		agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
@@ -105,9 +110,38 @@ public class CBreakAction extends CAction {
 			addSiteToConnectedWithBroken(linkSite);
 			addRuleSitesToNetworkNotation(false, netNotation, linkSite);
 		}
+		addToEventContainer(eventContainer, linkSite);
 		// /////////////////////////////////////////////
 		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).
 			setLinkIndex(-1);
+	}
+
+	private static void addToEventContainer(CEvent eventContainer,
+			CSite site) {
+		if (eventContainer == null)
+			return;
+		eventContainer.addEvent(new WireHashKey(site.getAgentLink().getId(), site
+				.getNameId(), EKeyOfState.LINK_STATE), site,
+				ECheck.MODIFICATION, CEvent.AFTER_STATE);
+		// UHashKey key = new
+		// UHashKey(site.getAgentLink().getId(),site.getNameId
+		// (),EKeyOfState.LINK_STATE);
+		// AEvent<CStateOfLink> event = (AEvent<CStateOfLink>)
+		// eventContainer.getEvent(key);
+		// event.getState().setAfterState(new
+		// CStateOfLink(CStateOfLink.FREE,CStateOfLink.FREE));
+		// event.correctingType(ECheck.MODIFICATION);
+
+		eventContainer.addEvent(new WireHashKey(site.getAgentLink().getId(), site
+				.getNameId(), EKeyOfState.BOUND_FREE), site,
+				ECheck.MODIFICATION, CEvent.AFTER_STATE);
+		// key = new UHashKey(site.getAgentLink().getId(), site.getNameId(),
+		// EKeyOfState.BOUND_FREE);
+		// AEvent<Boolean> event2 = (AEvent<Boolean>)
+		// eventContainer.getEvent(key);
+		// event2.getState().setAfterState(true);
+		// event2.correctingType(ECheck.MODIFICATION);
+
 	}
 
 	/**

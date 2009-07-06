@@ -7,6 +7,10 @@ import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.newVersion.CEvent;
+import com.plectix.simulator.components.stories.newVersion.ECheck;
+import com.plectix.simulator.components.stories.newVersion.EKeyOfState;
+import com.plectix.simulator.components.stories.newVersion.WireHashKey;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
 
@@ -53,8 +57,9 @@ public abstract class CAction implements Serializable {
 	 * @param netNotation network notation ("null" if it not "STORY" simulation mode).
 	 * @param simulationData simulation data
 	 */
-	public abstract void doAction(RuleApplicationPool pool, CInjection injection, 
-			INetworkNotation netNotation,  SimulationData simulationData);
+	public abstract void doAction(RuleApplicationPool pool,
+			CInjection injection, INetworkNotation netNotation,
+			CEvent eventContainer, SimulationData simulationData);
 
 	/**
 	 * Util method. Adds information about given site to given network notation
@@ -71,8 +76,8 @@ public abstract class CAction implements Serializable {
 	 * @param netNotation given network notation
 	 * @param site given site
 	 */
-	protected abstract void addRuleSitesToNetworkNotation(boolean siteExistsInRule,
-			INetworkNotation netNotation, CSite site);
+	protected abstract void addRuleSitesToNetworkNotation(
+			boolean siteExistsInRule, INetworkNotation netNotation, CSite site);
 
 	/**
 	 * This method returns takes agent from left handside of the rule by it's image - agent from right
@@ -92,8 +97,42 @@ public abstract class CAction implements Serializable {
 		return -1;
 	}
 
+	protected void addToEventContainer(CEvent eventContainer,
+			CAgent agentFromInSolution, ECheck type) {
+		if (eventContainer == null)
+			return;
+		// AGENT
+		eventContainer.addEvent(new WireHashKey(agentFromInSolution.getId(),
+				EKeyOfState.AGENT), null, type, CEvent.BEFORE_STATE);
+		for (CSite s : getAgentFrom().getSites()) {
+			CSite site = agentFromInSolution.getSiteByNameId(s.getNameId());
+			CLinkRank linkRank = s.getLinkState().getStatusLinkRank();
+			if (linkRank != CLinkRank.BOUND_OR_FREE) {
+				// FREE/BOUND
+				eventContainer.addEvent(new WireHashKey(agentFromInSolution
+						.getId(), site.getNameId(), EKeyOfState.BOUND_FREE),
+						site, type, CEvent.BEFORE_STATE);
+
+				if (linkRank != CLinkRank.SEMI_LINK) {
+					eventContainer.addEvent(
+							new WireHashKey(agentFromInSolution.getId(), site
+									.getNameId(), EKeyOfState.LINK_STATE),
+							site, type, CEvent.BEFORE_STATE);
+				}
+			}
+
+			if (s.getInternalState().getNameId() != CInternalState.EMPTY_STATE
+					.getNameId())
+				eventContainer.addEvent(
+						new WireHashKey(agentFromInSolution.getId(), site
+								.getNameId(), EKeyOfState.INTERNAL_STATE),
+						site, type, CEvent.BEFORE_STATE);
+		}
+	}
+
 	/**
-	 * This method analyses current action and creates new actions, if possible. 
+	 * This method analyses current action and creates new actions, if possible.
+	 * 
 	 * @return collection of new actions
 	 */
 	public final Collection<CAction> createAtomicActions() {
@@ -112,9 +151,9 @@ public abstract class CAction implements Serializable {
 					.getInternalState().getNameId()) {
 				list.add(new CModifyAction(myRule, fromSite, toSite,
 						leftConnectedComponent, rightConnectedComponent));
-				//if (!isChangedSiteContains(toSite))
-					//myRule.addChangedSite(toSite);
-					myRule.addInhibitedChangedSite(fromSite,true, false);
+				// if (!isChangedSiteContains(toSite))
+				// myRule.addChangedSite(toSite);
+				myRule.addInhibitedChangedSite(fromSite, true, false);
 			}
 
 			// if ((fromSite.getLinkState().getSite() == null)
@@ -130,8 +169,8 @@ public abstract class CAction implements Serializable {
 					&& (toSite.getLinkState().getStatusLink() == CLinkStatus.FREE)) {
 				list.add(new CBreakAction(myRule, fromSite, toSite,
 						leftConnectedComponent, rightConnectedComponent));
-				//	myRule.addChangedSite(toSite);
-					myRule.addInhibitedChangedSite(fromSite, false, true);
+				// myRule.addChangedSite(toSite);
+				myRule.addInhibitedChangedSite(fromSite, false, true);
 				continue;
 			}
 
@@ -142,8 +181,8 @@ public abstract class CAction implements Serializable {
 				list.add(new CBoundAction(myRule, toSite, toSite.getLinkState()
 						.getConnectedSite(), leftConnectedComponent,
 						rightConnectedComponent));
-				//	myRule.addChangedSite(toSite);
-					myRule.addInhibitedChangedSite(fromSite, false, true);
+				// myRule.addChangedSite(toSite);
+				myRule.addInhibitedChangedSite(fromSite, false, true);
 				continue;
 			}
 
@@ -160,8 +199,8 @@ public abstract class CAction implements Serializable {
 			list.add(new CBoundAction(myRule, toSite, (CSite) toSite
 					.getLinkState().getConnectedSite(), leftConnectedComponent,
 					rightConnectedComponent));
-				//myRule.addChangedSite(toSite);
-				myRule.addInhibitedChangedSite(fromSite, false, true);
+			// myRule.addChangedSite(toSite);
+			myRule.addInhibitedChangedSite(fromSite, false, true);
 		}
 		return Collections.unmodifiableSet(list);
 	}
@@ -225,7 +264,7 @@ public abstract class CAction implements Serializable {
 	public final CAgent getAgentTo() {
 		return toAgent;
 	}
-	
+
 	/**
 	 * This method returns connected component from right handSide rule,
 	 * which this action should be applied to (may be "null").
@@ -241,5 +280,5 @@ public abstract class CAction implements Serializable {
 	public final IConnectedComponent getLeftCComponent() {
 		return leftConnectedComponent;
 	}
-	
+
 }
