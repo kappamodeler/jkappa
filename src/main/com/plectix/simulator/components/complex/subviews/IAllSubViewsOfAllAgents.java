@@ -9,6 +9,7 @@ import org.w3c.dom.Element;
 
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
+import com.plectix.simulator.components.complex.subviews.base.SubViewsRule;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.interfaces.ISolution;
 
@@ -29,4 +30,8 @@ public interface IAllSubViewsOfAllAgents {
 	public Element createXML(Document doc);
 	
 	public Map<Integer, CAbstractAgent> getFullMapOfAgents();
+	
+	public Map<Integer, CAbstractAgent> getAgentNameIdToAgent();
+	
+	public List<SubViewsRule> getRules();
 }

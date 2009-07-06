@@ -8,6 +8,9 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.TreeMap;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
@@ -78,6 +81,10 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	public Iterator<Integer> getAllTypesIdOfAgents() {
 		return agentNameIdToAgent.keySet().iterator();
 	}
+	
+	public Map<Integer, CAbstractAgent> getAgentNameIdToAgent(){
+		return agentNameIdToAgent;
+	}
 
 	public List<String> getAllTypesOfAgents() {
 		// TODO Auto-generated method stub
@@ -89,7 +96,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		return null;
 	}
 
-	//==========================================================================
+	// ==========================================================================
 	// =====================
 
 	private static Collection<CAgent> prepareSolutionAgents(ISolution solution) {
@@ -174,14 +181,46 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	 * 
 	 * @throws SubViewsExeption
 	 */
+	// private void constructAbstractContactMap() throws SubViewsExeption {
+	// boolean isEnd = false;
+	// while (!isEnd) {
+	// isEnd = true;
+	// for (SubViewsRule rule : abstractRules) {
+	// if (rule.apply(agentNameIdToAgent, subViewsMap)!=null)
+	// isEnd = false;
+	// }
+	// }
+	// }
 	private void constructAbstractContactMap() throws SubViewsExeption {
-		boolean isEnd = false;
-		while (!isEnd) {
-			isEnd = true;
-			for (SubViewsRule rule : abstractRules) {
-				if (rule.apply(agentNameIdToAgent, subViewsMap))
-					isEnd = false;
-			}
+		//RuleId
+		Queue<Integer> activeRule = new PriorityQueue<Integer>();
+		//RuleId -> isIncluded
+		Map<Integer, Boolean> includedInQueue = new HashMap<Integer, Boolean>();
+		//ruleId -> number in array
+		Map<Integer, Integer> filter = new HashMap<Integer, Integer>();
+
+		for (int i = 0; i < abstractRules.size(); i++) {
+			SubViewsRule rule = abstractRules.get(i);
+			activeRule.add(rule.getRuleId());
+			includedInQueue.put(rule.getRuleId(), true);
+			filter.put(rule.getRuleId(), i);
+		}
+
+		while (!activeRule.isEmpty()) {
+			
+			Integer ruleId = activeRule.poll();
+			includedInQueue.put(ruleId, false);
+			SubViewsRule rule = abstractRules
+					.get(filter.get(ruleId));
+			HashSet<Integer> activatedRule = rule.apply(agentNameIdToAgent,
+					subViewsMap);
+			if (activatedRule != null)
+				for (int j : activatedRule) {
+					if (includedInQueue.get(j))
+						continue;
+					includedInQueue.put(j, true);
+					activeRule.add(j);
+				}
 		}
 	}
 
@@ -231,5 +270,9 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 
 	public HashSet<Integer> getDeadRules() {
 		return deadRules;
+	}
+	
+	public List<SubViewsRule> getRules(){
+		return abstractRules;
 	}
 }

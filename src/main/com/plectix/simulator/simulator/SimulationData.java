@@ -82,7 +82,7 @@ public class SimulationData {
 	private final static String TYPE_POSITIVE_MAP = "POSITIVE";
 
 	private static final double DEFAULT_NUMBER_OF_POINTS = 1000;
-	
+
 	private static final int NUMBER_OF_SIGNIFICANT_DIGITS = 6;
 
 	private List<Double> timeStamps = null;
@@ -167,7 +167,8 @@ public class SimulationData {
 		return simulationArguments.isOcamlStyleObservableNames();
 	}
 
-	public final void setSimulationArguments(InfoType outputType, SimulationArguments arguments) {
+	public final void setSimulationArguments(InfoType outputType,
+			SimulationArguments arguments) {
 		this.simulationArguments = arguments;
 
 		if (simulationArguments.isNoDumpStdoutStderr()) {
@@ -199,10 +200,13 @@ public class SimulationData {
 		if (simulationArguments.getCommandLineString() != null) {
 			println("Java " + simulationArguments.getCommandLineString());
 		}
-		
+
 		if (simulationArguments.getMonitorPeakMemory() > 0) {
-			println("Turning memory monitoring on using a period of " + simulationArguments.getMonitorPeakMemory() + " milliseconds");
-			MemoryUtil.monitorPeakMemoryUsage(simulationArguments.getMonitorPeakMemory());
+			println("Turning memory monitoring on using a period of "
+					+ simulationArguments.getMonitorPeakMemory()
+					+ " milliseconds");
+			MemoryUtil.monitorPeakMemoryUsage(simulationArguments
+					.getMonitorPeakMemory());
 		}
 
 		addInfo(outputType, InfoType.INFO, "-Initialization...");
@@ -261,12 +265,13 @@ public class SimulationData {
 		}
 	}
 
-	public final boolean isEndSimulation(double currentTime, long count) {  
-		if (System.currentTimeMillis() - clockStamp > simulationArguments.getWallClockTimeLimit()) {
+	public final boolean isEndSimulation(double currentTime, long count) {
+		if (System.currentTimeMillis() - clockStamp > simulationArguments
+				.getWallClockTimeLimit()) {
 			println("Simulation is interrupted because the wall clock time has expired");
 			return true;
 		}
-		
+
 		if (simulationArguments.isTime()) {
 			if (currentTime <= simulationArguments.getTimeLength()) {
 				if (currentTime >= nextStep) {
@@ -458,12 +463,14 @@ public class SimulationData {
 				.createModel(kappaFile);
 		List<CRule> ruleList = (new RuleBuilder(new KappaSystem(this)))
 				.build(new RulesParagraphReader(model, simulationArguments,
-						new AgentFactory(false)).readComponent(kappaFile.getRules()));
+						new AgentFactory(false)).readComponent(kappaFile
+						.getRules()));
 
 		myKappaSystem.getContactMap().setSimulationData(this);
 		if (ruleList != null && !ruleList.isEmpty()) {
 			myKappaSystem.getContactMap().setFocusRule(ruleList.get(0));
-			myKappaSystem.getContactMap().setMode(EContactMapMode.AGENT_OR_RULE);
+			myKappaSystem.getContactMap()
+					.setMode(EContactMapMode.AGENT_OR_RULE);
 		}
 	}
 
@@ -551,8 +558,9 @@ public class SimulationData {
 				case BREAK: {
 					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
 							.getConnectedSite());
-					if (action.getSiteFrom().getAgentLink().getIdInRuleHandside() < siteTo
-							.getAgentLink().getIdInRuleHandside()) {
+					if (action.getSiteFrom().getAgentLink()
+							.getIdInRuleHandside() < siteTo.getAgentLink()
+							.getIdInRuleHandside()) {
 						// BRK (#0,a) (#1,x)
 						print("BRK (#");
 						print(""
@@ -574,7 +582,8 @@ public class SimulationData {
 				case DELETE: {
 					// DEL #0
 					print("DEL #");
-					println("" + (action.getAgentFrom().getIdInRuleHandside() - 1));
+					println(""
+							+ (action.getAgentFrom().getIdInRuleHandside() - 1));
 					break;
 				}
 				case ADD: {
@@ -600,8 +609,9 @@ public class SimulationData {
 					// BND (#1,x) (#0,a)
 					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
 							.getConnectedSite());
-					if (action.getSiteFrom().getAgentLink().getIdInRuleHandside() > siteTo
-							.getAgentLink().getIdInRuleHandside()) {
+					if (action.getSiteFrom().getAgentLink()
+							.getIdInRuleHandside() > siteTo.getAgentLink()
+							.getIdInRuleHandside()) {
 						print("BND (#");
 						print(""
 								+ (action.getSiteFrom().getAgentLink()
@@ -642,7 +652,7 @@ public class SimulationData {
 					isOcamlStyleObsName()));
 			sb.append("->");
 			sb.append(SimulationUtils.printPartRule(rule.getRightHandSide(),
-							isOcamlStyleObsName()));
+					isOcamlStyleObsName()));
 			StringBuffer ch = new StringBuffer();
 			for (int j = 0; j < sb.length(); j++)
 				ch.append("-");
@@ -672,7 +682,7 @@ public class SimulationData {
 	private final String perturbationToString(CPerturbation perturbation) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("-");
-		String greater = (perturbation.getGreater()) ? "> ": "< ";
+		String greater = (perturbation.getGreater()) ? "> " : "< ";
 		switch (perturbation.getType()) {
 		case TIME: {
 			sb.append("Whenever current time ");
@@ -686,8 +696,9 @@ public class SimulationData {
 					perturbation.getObsNameID()).getName());
 			sb.append("] ");
 			sb.append(greater);
-			sb.append(SimulationUtils.perturbationParametersToString(perturbation
-					.getLHSParametersList()));
+			sb.append(SimulationUtils
+					.perturbationParametersToString(perturbation
+							.getLHSParametersList()));
 			break;
 		}
 		}
@@ -740,16 +751,16 @@ public class SimulationData {
 						sb.append(timeStamps.get(timeStepCounter));
 						sb.append(" ");
 						sb.append(runningMetrics.get(observable_num).get(
-										timeStepCounter).getMin());
+								timeStepCounter).getMin());
 						sb.append(" ");
 						sb.append(runningMetrics.get(observable_num).get(
-										timeStepCounter).getMax());
+								timeStepCounter).getMax());
 						sb.append(" ");
 						sb.append(runningMetrics.get(observable_num).get(
-										timeStepCounter).getMean());
+								timeStepCounter).getMean());
 						sb.append(" ");
 						sb.append(runningMetrics.get(observable_num).get(
-										timeStepCounter).getStd());
+								timeStepCounter).getStd());
 
 						writer.write(sb.toString());
 						writer.newLine();
@@ -827,9 +838,10 @@ public class SimulationData {
 		doc.appendChild(simplxSession);
 
 		timer.startTimer();
-		
-		if(simulationArguments.isSubViews()){
-			simplxSession.appendChild(myKappaSystem.getSubViews().createXML(doc));
+
+		if (simulationArguments.isSubViews()) {
+			simplxSession.appendChild(myKappaSystem.getSubViews()
+					.createXML(doc));
 		}
 
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
@@ -845,15 +857,17 @@ public class SimulationData {
 					.getEdgesInContactMap();
 			List<Integer> agentIDWasRead = new ArrayList<Integer>();
 
-			for (Map.Entry<Integer, Map<Integer, CContactMapChangedSite>> entry : 
-				agentsInContactMap.entrySet()) {
-				
+			for (Map.Entry<Integer, Map<Integer, CContactMapChangedSite>> entry : agentsInContactMap
+					.entrySet()) {
+
 				Element agent = doc.createElement("Agent");
 				agentIDWasRead.add(entry.getKey());
-				Map<Integer, CContactMapChangedSite> sitesMap = entry.getValue();
-				Iterator<Map.Entry<Integer, CContactMapChangedSite>> siteIterator = 
-					sitesMap.entrySet().iterator();
-				Map.Entry<Integer, CContactMapChangedSite> siteEntry = siteIterator.next();
+				Map<Integer, CContactMapChangedSite> sitesMap = entry
+						.getValue();
+				Iterator<Map.Entry<Integer, CContactMapChangedSite>> siteIterator = sitesMap
+						.entrySet().iterator();
+				Map.Entry<Integer, CContactMapChangedSite> siteEntry = siteIterator
+						.next();
 				CContactMapChangedSite chSite = siteEntry.getValue();
 				agent.setAttribute("Name", chSite.getSite().getAgentLink()
 						.getName());
@@ -867,43 +881,48 @@ public class SimulationData {
 			}
 
 			List<BoundContactMap> boundList = new ArrayList<BoundContactMap>();
-			for (Map<Integer, List<CContactMapAbstractEdge>> edgesMap : bondsInContactMap.values()) {
-				
-				for (List<CContactMapAbstractEdge> edgesList : edgesMap.values()) {
-					
+			for (Map<Integer, List<CContactMapAbstractEdge>> edgesMap : bondsInContactMap
+					.values()) {
+
+				for (List<CContactMapAbstractEdge> edgesList : edgesMap
+						.values()) {
+
 					for (CContactMapAbstractEdge edge : edgesList) {
 						Element bond = doc.createElement("Bond");
 						int vertexToSiteNameID = edge.getVertexToSiteNameID();
 						int vertexToAgentNameID = edge.getVertexToAgentNameID();
-						CAbstractSite vertexFrom = edge
-								.getVertexFrom();
-						BoundContactMap b = new BoundContactMap(vertexFrom.getAgentLink().getNameId(),ThreadLocalData
-								.getNameDictionary().getId(vertexFrom.getName()),vertexToAgentNameID,vertexToSiteNameID);
-						if(!b.includedInCollection(boundList))//(!boundList.contains(b))
+						CAbstractSite vertexFrom = edge.getVertexFrom();
+						BoundContactMap b = new BoundContactMap(vertexFrom
+								.getAgentLink().getNameId(), ThreadLocalData
+								.getNameDictionary()
+								.getId(vertexFrom.getName()),
+								vertexToAgentNameID, vertexToSiteNameID);
+						if (!b.includedInCollection(boundList))// (!boundList.
+							// contains(b))
 							boundList.add(b);
 						else
 							continue;
-					//	if (!agentIDWasRead.contains(vertexToAgentNameID)) {
-							bond.setAttribute("FromAgent", vertexFrom
-									.getAgentLink().getName());
-							bond.setAttribute("FromSite", vertexFrom.getName());
-							bond.setAttribute("ToAgent", ThreadLocalData
-									.getNameDictionary().getName(
-											vertexToAgentNameID));
-							bond.setAttribute("ToSite", ThreadLocalData
-									.getNameDictionary().getName(
-											vertexToSiteNameID));
+						// if (!agentIDWasRead.contains(vertexToAgentNameID)) {
+						bond.setAttribute("FromAgent", vertexFrom
+								.getAgentLink().getName());
+						bond.setAttribute("FromSite", vertexFrom.getName());
+						bond.setAttribute("ToAgent", ThreadLocalData
+								.getNameDictionary().getName(
+										vertexToAgentNameID));
+						bond.setAttribute("ToSite", ThreadLocalData
+								.getNameDictionary()
+								.getName(vertexToSiteNameID));
 
-							if (edge.getRules().size() != 0) {
-								for (int ruleID : edge.getRules()) {
-									Element rule = doc.createElement("Rule");
-									rule.setAttribute("Id", Integer
-											.toString(ruleID));
-									bond.appendChild(rule);
-								}
+						if (edge.getRules().size() != 0) {
+							for (int ruleID : edge.getRules()) {
+								Element rule = doc.createElement("Rule");
+								rule.setAttribute("Id", Integer
+										.toString(ruleID));
+								bond.appendChild(rule);
 							}
-							contactMapElement.appendChild(bond);
-					//	}
+						}
+						contactMapElement.appendChild(bond);
+						// }
 					}
 				}
 			}
@@ -958,16 +977,15 @@ public class SimulationData {
 
 			for (int i = myKappaSystem.getRules().size() - 1; i >= 0; i--) {
 				CRule rule = myKappaSystem.getRuleByID(i);
-				printMap(doc, TYPE_POSITIVE_MAP, influenceMap, rule, 
-						rule.getActivatedRuleForXMLOutput(), 
-						rule.getActivatedObservableForXMLOutput());
+				printMap(doc, TYPE_POSITIVE_MAP, influenceMap, rule, rule
+						.getActivatedRuleForXMLOutput(), rule
+						.getActivatedObservableForXMLOutput());
 			}
 			if (simulationArguments.isInhibitionMap()) {
 				for (int i = myKappaSystem.getRules().size() - 1; i >= 0; i--) {
 					CRule rule = myKappaSystem.getRuleByID(i);
-					printMap(doc, TYPE_NEGATIVE_MAP, influenceMap, rule, 
-							rule.getInhibitedRule(),
-							rule.getInhibitedObservable());
+					printMap(doc, TYPE_NEGATIVE_MAP, influenceMap, rule, rule
+							.getInhibitedRule(), rule.getInhibitedObservable());
 				}
 			}
 			simplxSession.appendChild(influenceMap);
@@ -980,8 +998,8 @@ public class SimulationData {
 					.getTrees()) {
 				for (CStoryTrees st : stList) {
 					Element story = doc.createElement("Story");
-					story.setAttribute("Observable", 
-							myKappaSystem.getRuleByID(st.getRuleID()).getName());
+					story.setAttribute("Observable", myKappaSystem.getRuleByID(
+							st.getRuleID()).getName());
 					double percentage = ((double) st.getIsomorphicCount())
 							/ (double) simulationArguments.getIterations();
 					story.setAttribute("Percentage", Double
@@ -1023,13 +1041,23 @@ public class SimulationData {
 			Element simulation = doc.createElement("Simulation");
 			simulation.setAttribute("TotalEvents", Long
 					.toString(simulationArguments.getEvent()));
-			simulation.setAttribute("TotalTime", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(simulationArguments.getTimeLength(), NUMBER_OF_SIGNIFICANT_DIGITS));
-			simulation.setAttribute("InitTime", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(simulationArguments.getInitialTime(), NUMBER_OF_SIGNIFICANT_DIGITS));
+			simulation.setAttribute("TotalTime", DecimalFormatter
+					.toStringWithSetNumberOfSignificantDigits(
+							simulationArguments.getTimeLength(),
+							NUMBER_OF_SIGNIFICANT_DIGITS));
+			simulation.setAttribute("InitTime", DecimalFormatter
+					.toStringWithSetNumberOfSignificantDigits(
+							simulationArguments.getInitialTime(),
+							NUMBER_OF_SIGNIFICANT_DIGITS));
 
-			simulation.setAttribute("TimeSample", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(myKappaSystem.getObservables().getTimeSampleMin(), NUMBER_OF_SIGNIFICANT_DIGITS));
+			simulation.setAttribute("TimeSample", DecimalFormatter
+					.toStringWithSetNumberOfSignificantDigits(myKappaSystem
+							.getObservables().getTimeSampleMin(),
+							NUMBER_OF_SIGNIFICANT_DIGITS));
 			simplxSession.appendChild(simulation);
 
-			List<IObservablesComponent> list = myKappaSystem.getObservables().getComponentListForXMLOutput();
+			List<IObservablesComponent> list = myKappaSystem.getObservables()
+					.getComponentListForXMLOutput();
 			for (int i = list.size() - 1; i >= 0; i--) {
 				Element node = createElement(list.get(i), doc);
 				simulation.appendChild(node);
@@ -1045,7 +1073,8 @@ public class SimulationData {
 
 			csv.appendChild(cdata);
 			simulation.appendChild(csv);
-			stopTimer(InfoType.OUTPUT, timer, "-Building xml tree for data points:");
+			stopTimer(InfoType.OUTPUT, timer,
+					"-Building xml tree for data points:");
 		}
 
 		appendInfo(simplxSession, doc);
@@ -1056,18 +1085,24 @@ public class SimulationData {
 
 	private final void addSiteToContactMapAgent(CContactMapChangedSite site,
 			Element agent, Document doc) {
+		boolean isDefaultSite = site.getSite().getNameId() == CSite.NO_INDEX;
 		Element siteNode = doc.createElement("Site");
 		for (Integer ruleID : site.getUsedRuleIDs()) {
 			Element siteRule = doc.createElement("Rule");
 			siteRule.setAttribute("Id", Integer.toString(ruleID));
-			siteNode.appendChild(siteRule);
+			if (isDefaultSite)
+				agent.appendChild(siteRule);
+			else
+				siteNode.appendChild(siteRule);
 		}
-		siteNode.setAttribute("Name", site.getSite().getName());
-		siteNode.setAttribute("CanChangeState", Boolean.toString(site
-				.isInternalState()));
-		siteNode.setAttribute("CanBeBound", Boolean
-				.toString(site.isLinkState()));
-		agent.appendChild(siteNode);
+		if (!isDefaultSite) {
+			siteNode.setAttribute("Name", site.getSite().getName());
+			siteNode.setAttribute("CanChangeState", Boolean.toString(site
+					.isInternalState()));
+			siteNode.setAttribute("CanBeBound", Boolean.toString(site
+					.isLinkState()));
+			agent.appendChild(siteNode);
+		}
 	}
 
 	private final void appendInfo(Element simplxSession, Document doc) {
@@ -1140,8 +1175,9 @@ public class SimulationData {
 			counter++;
 		}
 		int traceIDSize = storyTree.getTraceIDToLevel().size() + counter - 1;
-		
-		for (Map.Entry<Integer, List<Integer>> entry : storyTree.getLevelToTraceID().entrySet()) {
+
+		for (Map.Entry<Integer, List<Integer>> entry : storyTree
+				.getLevelToTraceID().entrySet()) {
 			int level = entry.getKey();
 			List<Integer> list = entry.getValue();
 			List<CStoryType> listST = allLevels.get(level);
@@ -1185,12 +1221,12 @@ public class SimulationData {
 		TreeMap<Integer, List<Integer>> traceIDToTraceIDsWeak = storyTree
 				.getTraceIDToTraceIDWeak();
 
-//		List<CStoryType> currentStTypeList = new ArrayList<CStoryType>();
-		
+		// List<CStoryType> currentStTypeList = new ArrayList<CStoryType>();
+
 		List<CStoryType> intros = new ArrayList<CStoryType>();
 		for (List<CStoryType> currentStTypeList : allLevels.values()) {
-//			int curKey = entry.getKey();
-//			currentStTypeList = allLevels.get(curKey);
+			// int curKey = entry.getKey();
+			// currentStTypeList = allLevels.get(curKey);
 			fillNodesLevelStoryTrees(currentStTypeList, nodes, doc, intros);
 
 			for (CStoryType stT : currentStTypeList) {
@@ -1273,9 +1309,13 @@ public class SimulationData {
 		}
 	}
 
-	private final void appendData(CObservables obs, List<IObservablesComponent> list, CDATASection cdata, int index) {
+	private final void appendData(CObservables obs,
+			List<IObservablesComponent> list, CDATASection cdata, int index) {
 		String enter = "\n";
-		cdata.appendData(DecimalFormatter.toStringWithSetNumberOfSignificantDigits(myKappaSystem.getObservables().getCountTimeList().get(index), NUMBER_OF_SIGNIFICANT_DIGITS));
+		cdata.appendData(DecimalFormatter
+				.toStringWithSetNumberOfSignificantDigits(myKappaSystem
+						.getObservables().getCountTimeList().get(index),
+						NUMBER_OF_SIGNIFICANT_DIGITS));
 		for (int j = list.size() - 1; j >= 0; j--) {
 			cdata.appendData(",");
 			IObservablesComponent oCC = list.get(j);
@@ -1284,13 +1324,15 @@ public class SimulationData {
 		cdata.appendData(enter);
 	}
 
-	private final String getItem(CObservables obs, int index, IObservablesComponent oCC) {
+	private final String getItem(CObservables obs, int index,
+			IObservablesComponent oCC) {
 		if (oCC.isUnique()) {
 			return oCC.getStringItem(index, obs);
 		}
-		
+
 		long value = 1;
-		for (IObservablesConnectedComponent cc : obs.getConnectedComponentList()) {
+		for (IObservablesConnectedComponent cc : obs
+				.getConnectedComponentList()) {
 			if (cc.getId() == oCC.getId()) {
 				value *= cc.getItem(index, obs);
 			}
@@ -1300,21 +1342,25 @@ public class SimulationData {
 	}
 
 	/**
-	 * This method creates string representation of given rule, which using in XML output
+	 * This method creates string representation of given rule, which using in
+	 * XML output
 	 * 
-	 * @param rule 
-	 * @param isOcamlStyleObsName <tt>true</tt> if option <code>--ocaml-style-obs-name</code> is enabled,
-	 * otherwise <tt>false</tt>
-	 * @return string representation of given rule 
+	 * @param rule
+	 * @param isOcamlStyleObsName
+	 *            <tt>true</tt> if option <code>--ocaml-style-obs-name</code> is
+	 *            enabled, otherwise <tt>false</tt>
+	 * @return string representation of given rule
 	 */
 	public static final String getData(CRule rule, boolean isOcamlStyleObsName) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(SimulationUtils.printPartRule(rule.getLeftHandSide(), isOcamlStyleObsName));
+		sb.append(SimulationUtils.printPartRule(rule.getLeftHandSide(),
+				isOcamlStyleObsName));
 		sb.append("->");
-		sb.append(SimulationUtils.printPartRule(rule.getRightHandSide(), isOcamlStyleObsName));
+		sb.append(SimulationUtils.printPartRule(rule.getRightHandSide(),
+				isOcamlStyleObsName));
 		return sb.toString();
 	}
-	
+
 	private final void addRulesToXML(Element influenceMap,
 			int rulesAndObsNumber, Document doc) {
 		for (int i = myKappaSystem.getRules().size() - 1; i >= 0; i--) {

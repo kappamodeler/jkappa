@@ -3,6 +3,7 @@ package com.plectix.simulator.components.complex.subviews.base;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,8 @@ public class SubViewsRule {
 			action.initSubViews(subViewsMap);
 	}
 
-	public boolean apply(Map<Integer, CAbstractAgent> agentNameIdToAgent,
+	public HashSet<Integer> apply(
+			Map<Integer, CAbstractAgent> agentNameIdToAgent,
 			Map<Integer, List<ISubViews>> subViewsMap) throws SubViewsExeption {
 
 		if (!isApply) {
@@ -49,35 +51,85 @@ public class SubViewsRule {
 							isEnd = false;
 						} else if (action.getActionType() == EAbstractActionType.TEST_ONLY
 								|| action.getActionType() == EAbstractActionType.DELETE)
-							return false;
+							return null;
 					} catch (SubViewsExeption e) {
 						if (action.getActionType() != EAbstractActionType.DELETE)
 							e.printStackTrace();
 					}
 				if (isEnd)
-					return false;
+					return null;
 				action.setApply(true);
 			}
 		}
 
-		boolean isAdd = false;
+		HashSet<Integer> activatedRules = new HashSet<Integer>();
 		for (AbstractAction action : actions) {
 			if (action.getActionType() != EAbstractActionType.TEST_ONLY) {
 				action.clearSitesSideEffect();
 				for (ISubViews subViews : action.getSubViews()) {
 					if (subViews.burnRule(action))
-						isAdd = true;
+						activatedRules.addAll(subViews.getSubViewClass()
+								.getRulesId());
 				}
 				for (List<ISubViews> subViewsList : subViewsMap.values())
 					for (ISubViews subViews : subViewsList)
 						if (subViews.burnBreakAllNeedLinkState(action))
-							isAdd = true;
+							activatedRules.addAll(subViews.getSubViewClass()
+									.getRulesId());
 			}
 		}
-		if (isAdd)
+		if (!activatedRules.isEmpty()) {
 			isApply = true;
-		return isAdd;
+			return activatedRules;
+		} else {
+			return null;
+
+		}
 	}
+
+	// public boolean apply(Map<Integer, CAbstractAgent> agentNameIdToAgent,
+	// Map<Integer, List<ISubViews>> subViewsMap) throws SubViewsExeption {
+	//
+	// if (!isApply) {
+	// for (AbstractAction action : actions) {
+	// boolean isEnd = true;
+	// if (action.canApply())
+	// continue;
+	// for (ISubViews subViews : action.getSubViews())
+	// try {
+	// if (subViews.test(action)) {
+	// isEnd = false;
+	// } else if (action.getActionType() == EAbstractActionType.TEST_ONLY
+	// || action.getActionType() == EAbstractActionType.DELETE)
+	// return false;
+	// } catch (SubViewsExeption e) {
+	// if (action.getActionType() != EAbstractActionType.DELETE)
+	// e.printStackTrace();
+	// }
+	// if (isEnd)
+	// return false;
+	// action.setApply(true);
+	// }
+	// }
+	//
+	// boolean isAdd = false;
+	// for (AbstractAction action : actions) {
+	// if (action.getActionType() != EAbstractActionType.TEST_ONLY) {
+	// action.clearSitesSideEffect();
+	// for (ISubViews subViews : action.getSubViews()) {
+	// if (subViews.burnRule(action))
+	// isAdd = true;
+	// }
+	// for (List<ISubViews> subViewsList : subViewsMap.values())
+	// for (ISubViews subViews : subViewsList)
+	// if (subViews.burnBreakAllNeedLinkState(action))
+	// isAdd = true;
+	// }
+	// }
+	// if (isAdd)
+	// isApply = true;
+	// return isAdd;
+	// }
 
 	/**
 	 * Util method. Uses for sort and creates list of abstract agent by given
@@ -225,5 +277,13 @@ public class SubViewsRule {
 
 	public boolean isApply() {
 		return isApply;
+	}
+
+	public List<AbstractAction> getLHSActions() {
+		List<AbstractAction> outList = new LinkedList<AbstractAction>();
+		for (AbstractAction action : actions)
+			if (action.getActionType() != EAbstractActionType.ADD)
+				outList.add(action);
+		return outList;
 	}
 }

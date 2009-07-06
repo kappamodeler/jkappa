@@ -18,15 +18,25 @@ import com.plectix.simulator.simulator.ThreadLocalData;
  * 
  */
 public class CAbstractAgent {
+	private final CAbstractSite myDefaultSite = new CAbstractSite(this,CSite.NO_INDEX);
+	
 	private Map<Integer, CAbstractSite> sitesMap;
 	private int nameID = -1;
 	private boolean add = false;
 
-	@Override
 	public String toString() {
 		String st = getName();
 		return st;
 	}
+	
+	/**
+	 * This method returns default site from current agent
+	 * @return default site from current agent
+	 */
+	public CAbstractSite getDefaultSite() {
+		return myDefaultSite;
+	}
+	
 
 	/**
 	 * Uses for correct adds agent to "focus rule"

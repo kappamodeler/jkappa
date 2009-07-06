@@ -12,6 +12,7 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.complex.contactMap.CContactMap;
+import com.plectix.simulator.components.complex.influenceMap.CInfluenceMapMain;
 import com.plectix.simulator.components.complex.subviews.CMainSubViews;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
 import com.plectix.simulator.components.injections.CInjection;
@@ -36,6 +37,7 @@ public class KappaSystem {
 	private ISolution solution;// = new CSolution(); // soup of initial components
 	private CContactMap contactMap = new CContactMap();
 	private IAllSubViewsOfAllAgents subViews;
+	private CInfluenceMapMain influenceMap;
 
 	private final IdGenerator agentsIdGenerator = new IdGenerator();
 	private final IdGenerator ruleIdGenerator = new IdGenerator();
@@ -152,6 +154,9 @@ public class KappaSystem {
 				contactMap.initAbstractSolution();
 				contactMap.constructAbstractRules(rules);
 				contactMap.constructAbstractContactMapFromSubViews(subViews);
+
+//				influenceMap = new CInfluenceMapMain();
+//				influenceMap.initInfluenceMap(subViews.getRules(), contactMap, subViews.getAgentNameIdToAgent());
 			}
 			// contactMap.constructReachableRules(rules);
 			// contactMap.constructContactMap();

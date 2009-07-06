@@ -144,7 +144,7 @@ public class AbstractAction {
 		List<ISubViews> subViewsList = subViewsMap.get(agent.getNameId());
 		for (ISubViews subViews : subViewsList) {
 			if (actionType != EAbstractActionType.TEST_ONLY
-					&& actionType != EAbstractActionType.DELETE) {
+					&& actionType != EAbstractActionType.DELETE && actionType != EAbstractActionType.ADD) {
 				if (subViews.isAgentFit(agent))
 					addSubViews(subViews);
 			} else {

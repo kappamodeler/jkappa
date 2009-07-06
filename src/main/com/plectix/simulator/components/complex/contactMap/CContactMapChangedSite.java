@@ -8,7 +8,7 @@ import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 
 public class CContactMapChangedSite {
 	// TODO need to be implement one interface with ChangedSite
-	private CAbstractSite site;
+	private CAbstractSite site = null;
 	public CAbstractSite getSite() {
 		return site;
 	}
@@ -52,6 +52,13 @@ public class CContactMapChangedSite {
 		this.site = site;
 		setInternalState(site);
 		setLinkState(site);
+		usedRuleIDs = new ArrayList<Integer>();
+	}
+	
+	public CContactMapChangedSite() {
+//		this.site = site;
+//		setInternalState(site);
+//		setLinkState(site);
 		usedRuleIDs = new ArrayList<Integer>();
 	}
 

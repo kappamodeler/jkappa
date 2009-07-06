@@ -3,6 +3,7 @@ package com.plectix.simulator.components.complex.contactMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -138,6 +139,17 @@ public class CContactMapAbstractSolution {
 					changedSite.setLinkState(site);
 				}
 			}
+			changedSite.addRules(rule);
+		}
+
+		if (agent.getSitesMap().isEmpty()){
+			CContactMapChangedSite changedSite = null;
+			if (sitesMap == null) {
+				sitesMap = new HashMap<Integer, CContactMapChangedSite>();
+				changedSite = new CContactMapChangedSite(agent.getDefaultSite());
+				sitesMap.put(-1, changedSite);
+				this.agentsInContactMap.put(agentKey, sitesMap);
+			} else changedSite = sitesMap.get(-1);
 			changedSite.addRules(rule);
 		}
 	}
@@ -309,9 +321,9 @@ public class CContactMapAbstractSolution {
 
 	public void addData(List<ISubViews> listOfSubViews) {
 		for (ISubViews views : listOfSubViews) {
-//			List<CAbstractAgent> list = views.getAllSubViews(null);
+			// List<CAbstractAgent> list = views.getAllSubViews(null);
 			List<CAbstractAgent> list = views.getAllSubViews();
-			List<Integer> listOfRules = views.getSubViewClass().getRulesId();
+			HashSet<Integer> listOfRules = views.getSubViewClass().getRulesId();
 			for (CAbstractAgent a : list) {
 				if (addAgentToAgentsMap(a)) {
 					for (int ruleId : listOfRules) {

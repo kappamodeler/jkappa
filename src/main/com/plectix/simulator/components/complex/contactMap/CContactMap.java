@@ -2,10 +2,15 @@ package com.plectix.simulator.components.complex.contactMap;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.simulator.SimulationData;
@@ -98,24 +103,24 @@ public class CContactMap {
 		// TODO
 		switch (mode) {
 		case MODEL:
-			
+
 			Iterator<Integer> iterator = subViews.getAllTypesIdOfAgents();
 			while(iterator.hasNext()){
 				List<ISubViews> listOfSubViews = subViews.getAllSubViewsByTypeId(iterator.next());
 				abstractSolution.addData(listOfSubViews);
 			}
-			
-//			boolean isEnd = false;
-//			while (!isEnd) {
-//				isEnd = true;
-//				for (CContactMapAbstractRule rule : abstractRules) {
-//					List<CAbstractAgent> newData = rule.getNewData();
-//					if (abstractSolution.addNewData(newData, rule)) {
-//						isEnd = false;
-//						// clear();
-//					}
-//				}
-//			}
+
+			// boolean isEnd = false;
+			// while (!isEnd) {
+			// isEnd = true;
+			// for (CContactMapAbstractRule rule : abstractRules) {
+			// List<CAbstractAgent> newData = rule.getNewData();
+			// if (abstractSolution.addNewData(newData, rule)) {
+			// isEnd = false;
+			// // clear();
+			// }
+			// }
+			// }
 			break;
 
 		case AGENT_OR_RULE:
@@ -125,12 +130,7 @@ public class CContactMap {
 		}
 
 	}
-	
-	
-	
-	
-	
-	
+
 	/**
 	 * This method initializes abstract solution.
 	 */
@@ -162,14 +162,14 @@ public class CContactMap {
 					(CRule) this.focusRule, this.agentsFromFocusedRule);
 			constructAbstractCard(rules, agentsFromFocusedRule);
 
-//			TODO wait and remove!
-//			Iterator<Integer> iterator = abstractSolution
-//					.getAgentNameIdToAgent().keySet().iterator();
-//			while (iterator.hasNext()) {
-//				Integer key = iterator.next();
-//				addAgentList.add(abstractSolution.getAgentNameIdToAgent().get(
-//						key));
-//			}
+			// TODO wait and remove!
+			// Iterator<Integer> iterator = abstractSolution
+			// .getAgentNameIdToAgent().keySet().iterator();
+			// while (iterator.hasNext()) {
+			// Integer key = iterator.next();
+			// addAgentList.add(abstractSolution.getAgentNameIdToAgent().get(
+			// key));
+			// }
 			List<CAbstractAgent> addAgentList = new ArrayList<CAbstractAgent>();
 			addAgentList.addAll(abstractSolution.getAgentNameIdToAgent().values());
 
@@ -194,7 +194,7 @@ public class CContactMap {
 			if (!agentNameIdList.contains(key))
 				namesOfAgentsToDelete.add(key);
 		}
-		
+
 		for (Integer i : namesOfAgentsToDelete) {
 			abstractSolution.getAgentNameIdToAgentsList().remove(i);
 			abstractSolution.getEdgesInContactMap().remove(i);
@@ -233,7 +233,7 @@ public class CContactMap {
 		abstractRule.initAbstractRule();
 		List<CAbstractAgent> list = abstractRule.getFocusedAgents();
 		addAgentsToListFromRule(list, agentsList);
-//		return abstractRule;
+		// return abstractRule;
 	}
 
 	/**
@@ -266,4 +266,30 @@ public class CContactMap {
 			}
 		}
 	}
+
+	public List<CAbstractAgent> getSideEffect(CAbstractSite mainSite) {
+		// TODO
+		List<CAbstractAgent> outList = new LinkedList<CAbstractAgent>();
+		int mainAgentId = mainSite.getAgentLink().getNameId();
+		int mainSiteId = mainSite.getNameId();
+		Map<Integer, Map<Integer, List<CContactMapAbstractEdge>>> mapAll = abstractSolution
+				.getEdgesInContactMap();
+		for (CContactMapAbstractEdge edge : mapAll.get(mainAgentId).get(
+				mainSiteId)) {
+			/**
+			 * mainAgent(mainSite!linkSite.linkAgent)
+			 */
+			int linkSiteId = edge.getVertexToSiteNameID();
+			int linkAgentId = edge.getVertexToAgentNameID();
+			CAbstractAgent linkAgent = new CAbstractAgent(linkAgentId);
+			CAbstractSite linkSite = new CAbstractSite(linkAgent,linkSiteId);
+			linkAgent.addSite(linkSite);
+			linkSite.getLinkState().setAgentNameID(mainAgentId);
+			linkSite.getLinkState().setLinkSiteNameID(mainSiteId);
+			linkSite.getLinkState().setStatusLink(CLinkStatus.BOUND);
+			outList.add(linkAgent);
+		}
+		return outList;
+	}
+
 }

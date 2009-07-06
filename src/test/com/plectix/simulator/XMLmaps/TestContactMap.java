@@ -29,7 +29,8 @@ public class TestContactMap{
 	private static final String prefixSourseAgents= "test.data" + separator + "contact_map" + separator + "agents" + separator;
 	private static final String prefixResult= "test.data" + separator + "contact_map" + separator + "results" + separator;
 	
-	private static int length = 20;
+	private static int length = 19;
+	private static int lengthModel = 3;
 	
 	private SAXParserFactory parserFactory;
 	private SAXParser parserxml;
@@ -45,7 +46,7 @@ public class TestContactMap{
 	@Parameters
      public static Collection<Object[]> configs() {  
          String str = new String();  
-         Object[][] object = new Object[length+1][2];
+         Object[][] object = new Object[length+lengthModel][2];
          for (Integer i = 1; i <= length ; i++) {
  			if(i<10) str = "0" + "0" + i;
  			else
@@ -56,8 +57,18 @@ public class TestContactMap{
  			object[i-1][1] = prefixSourseRules;//str; 			
          }
          
-         object[length][0] = "001";
-         object[length][1] = prefixSourseModel;         
+         for (Integer i = 1; i <= lengthModel ; i++) {
+  			if(i<10) str = "0" + "0" + i;
+  			else
+  				if (i<100) str = "0" + i;
+ 	 			else 
+ 	 				str = i.toString();
+  			object[length+i-1][0] = str;
+  			object[length+i-1][1] = prefixSourseModel;         
+          }
+         
+//         object[length][0] = "001";
+//         object[length][1] = prefixSourseModel;         
          
          return Arrays.asList(object);
     }
@@ -101,14 +112,14 @@ public class TestContactMap{
 	
 	@Test
 	public void testAgentsContactMap(){
-//		if (agentsSimplex.size()agentsJava.size()){
+//		if (agentsSimplex.size() != agentsJava.size()){
 //			fail("wrong size of agents list");
-//			
 //		}
-//		for (Agent agent : agentsSimplex) {
-//			if(!contains(agent, agentsJava))
-		for (Agent agent : agentsJava) {
-			if(!contains(agent, agentsSimplex))
+		
+//		for (Agent agent : agentsJava) {
+//			if(!contains(agent, agentsSimplex))
+		for (Agent agent : agentsSimplex) {
+			if(!contains(agent, agentsJava))
 				fail("there is no agent " + agent.getName() + " in Java");
 		}
 	}
