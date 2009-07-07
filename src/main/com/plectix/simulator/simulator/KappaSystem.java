@@ -140,7 +140,7 @@ public class KappaSystem {
 			(new InjectionsBuilder(this)).build();
 		}
 
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!
+		solution.getSuperStorage().setAgentsLimit(args.getAgentsLimit());
 
 		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP
 				|| args.isSubViews()) {

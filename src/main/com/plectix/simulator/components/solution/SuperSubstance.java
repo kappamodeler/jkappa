@@ -41,7 +41,7 @@ public class SuperSubstance {
 	
 	public void setComponent(IConnectedComponent component) {
 		myComponent = component;
-		refreshHash();
+//		refreshHash();
 	}
 	
 	public List<CAgent> getAgents() {
@@ -58,10 +58,6 @@ public class SuperSubstance {
 	
 	public void add(long quant) {
 		myQuantity += quant;
-	}
-	
-	public boolean matches(IConnectedComponent component) {
-		return component.getHash().equals(myHash);
 	}
 	
 	public IConnectedComponent getComponent() {

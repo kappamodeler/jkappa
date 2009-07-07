@@ -10,13 +10,13 @@ import com.plectix.simulator.components.injections.CLiftElement;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
-import com.plectix.simulator.components.stories.newVersion.AState;
-import com.plectix.simulator.components.stories.newVersion.AtomicEvent;
-import com.plectix.simulator.components.stories.newVersion.CEvent;
-import com.plectix.simulator.components.stories.newVersion.CStateOfLink;
-import com.plectix.simulator.components.stories.newVersion.ECheck;
-import com.plectix.simulator.components.stories.newVersion.EKeyOfState;
-import com.plectix.simulator.components.stories.newVersion.WireHashKey;
+import com.plectix.simulator.components.stories.storage.AState;
+import com.plectix.simulator.components.stories.storage.AtomicEvent;
+import com.plectix.simulator.components.stories.storage.CEvent;
+import com.plectix.simulator.components.stories.storage.CStateOfLink;
+import com.plectix.simulator.components.stories.storage.ECheck;
+import com.plectix.simulator.components.stories.storage.ETypeOfWire;
+import com.plectix.simulator.components.stories.storage.WireHashKey;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
@@ -120,14 +120,14 @@ public class CDeleteAction extends CAction {
 		long agentId = siteFromSolution.getAgentLink().getId();
 		int siteId = siteFromSolution.getNameId();
 
-		eventContainer.addEvent(new WireHashKey(agentId, EKeyOfState.AGENT),
+		eventContainer.addEvent(new WireHashKey(agentId, ETypeOfWire.AGENT),
 				null, ECheck.MODIFICATION, isBefore);
 
 		eventContainer.addEvent(new WireHashKey(agentId, siteId,
-				EKeyOfState.BOUND_FREE), siteFromSolution, ECheck.MODIFICATION,
+				ETypeOfWire.BOUND_FREE), siteFromSolution, ECheck.MODIFICATION,
 				isBefore);
 		eventContainer.addEvent(new WireHashKey(agentId, siteId,
-				EKeyOfState.LINK_STATE), siteFromSolution, ECheck.MODIFICATION,
+				ETypeOfWire.LINK_STATE), siteFromSolution, ECheck.MODIFICATION,
 				isBefore);
 
 	}
@@ -151,13 +151,13 @@ public class CDeleteAction extends CAction {
 //				continue;
 //			}
 			eventContainer.addEvent(new WireHashKey(agentId, siteId,
-					EKeyOfState.BOUND_FREE), siteFromSolution,
+					ETypeOfWire.BOUND_FREE), siteFromSolution,
 					ECheck.MODIFICATION, CEvent.BEFORE_STATE);
 			eventContainer.addEvent(new WireHashKey(agentId, siteId,
-					EKeyOfState.LINK_STATE), siteFromSolution,
+					ETypeOfWire.LINK_STATE), siteFromSolution,
 					ECheck.MODIFICATION, CEvent.BEFORE_STATE);
 			eventContainer.addEvent(new WireHashKey(agentId, siteId,
-					EKeyOfState.INTERNAL_STATE), siteFromSolution,
+					ETypeOfWire.INTERNAL_STATE), siteFromSolution,
 					ECheck.MODIFICATION, CEvent.BEFORE_STATE);
 		}
 

@@ -242,6 +242,10 @@ public class SimulatorCommandLine {
 			simulationArguments.setTimeLength(getDoubleValue(SimulatorOptions.TIME));
 			simulationArguments.setTime(true);
 		} 
+
+		if (hasOption(SimulatorOptions.AGENTS_LIMIT)) {
+			simulationArguments.setAgentsLimit(getIntValue(SimulatorOptions.AGENTS_LIMIT));
+		}
 		
 		boolean option = false;
 		String fileName = null;

@@ -128,7 +128,8 @@ public enum SimulatorOptions {
 	OPERATION_MODE("operation_mode", true, "sets current operation mode"),
 	MONITOR_PEAK_MEMORY("monitor_peak_memory", true, "turns on monitoring of peak memory usage at give periods in milliseconds"),
 	COMPUTE_SUB_VIEWS("compute_sub_views", false, "Compute sub views."),
-	ALLOW_INCOMPLETES("allow_incompletes", false, "Allows incomplete substances in solution");
+	ALLOW_INCOMPLETES("allow_incompletes", false, "Allows incomplete substances in solution"),
+	AGENTS_LIMIT("agents_limit", true, "Limits the number of agents which can form super substance in operation modes 2-4"),
 	;
 
 	private String shortName = null;

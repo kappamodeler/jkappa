@@ -48,9 +48,5 @@ public interface IConnectedComponent extends ISolutionComponent {
 
 	public void updateInjection(CInjection injection, long i);
 
-//	/**
-//	 * This method says to all incoming injections that they are super now. 
-//	 * @param s
-//	 */
-//	public void reassignIncomingInjections(SuperSubstance s);
+	public int getAgentsQuantity();
 }

@@ -8,7 +8,7 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
-import com.plectix.simulator.components.stories.newVersion.CEvent;
+import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.probability.WeightedItem;
 import com.plectix.simulator.simulator.SimulationData;
@@ -16,36 +16,37 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.PlxLogger;
 
 /**
- * This class is an implementation of 'rule' entity. 
+ * This class is an implementation of 'rule' entity.
  * 
- * <br><br>
+ * <br>
+ * <br>
  * Rule has two handsides with list of connected components each, name and rate.
  * 
  * <br>
- * In general we have kappa file line like
- * <br><br>
- * <code>'ruleName' leftHandSide -> rightHandSide @ ruleRate</code>,
- * where 
+ * In general we have kappa file line like <br>
  * <br>
- * <li><code>ruleName</code> - name of this rule</li>
- * <li><code>leftHandside</code> - list of substances (maybe empty)</li>
- * <li><code>rightHandside</code> - list of substances (maybe empty), which will replace leftHandside 
- * after applying this rule</li> 
- * <li><code>ruleRate</code> - rate of this rule, i.e. number, which affects on rule 
- * application frequency in a whole process </li>
- * <br><br>
- * For example, we have kappa file line such as : <code>'name' A(x) -> B(), C() @ 0.0</code>
+ * <code>'ruleName' leftHandSide -> rightHandSide @ ruleRate</code>, where <br>
+ * <li><code>ruleName</code> - name of this rule</li> <li>
+ * <code>leftHandside</code> - list of substances (maybe empty)</li> <li>
+ * <code>rightHandside</code> - list of substances (maybe empty), which will
+ * replace leftHandside after applying this rule</li> <li><code>ruleRate</code>
+ * - rate of this rule, i.e. number, which affects on rule application frequency
+ * in a whole process</li> <br>
  * <br>
- * This one means rule, which transform agent A with site x to agents B and C. Notice that this 
- * rule will never be applied, because it has zero <code>ruleRate</code>
+ * For example, we have kappa file line such as : <code>'name' A(x) -> B(), C() @ 0.0</code> <br>
+ * This one means rule, which transform agent A with site x to agents B and C.
+ * Notice that this rule will never be applied, because it has zero
+ * <code>ruleRate</code>
+ * 
  * @see CConnectedComponent
  * @author evlasov
  */
 public class CRule implements Serializable, WeightedItem {
 	private static final long serialVersionUID = 6045806917402381525L;
-	
-	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(CRule.class);
-	
+
+	private static final PlxLogger LOGGER = ThreadLocalData
+			.getLogger(CRule.class);
+
 	private final List<IConnectedComponent> leftHandside;
 	private final List<IConnectedComponent> rightHandside;
 	private final String ruleName;
@@ -73,11 +74,12 @@ public class CRule implements Serializable, WeightedItem {
 	private List<ChangedSite> fixedSites;
 	private double activity = 0.;
 	private double rate;
-	
+
 	private RuleApplicationPool pool;
 
-	/** 
-	 * This one is and additional rate, that we should consider when applying a binary rule
+	/**
+	 * This one is and additional rate, that we should consider when applying a
+	 * binary rule
 	 */
 	private double additionalRate = -1;
 	private final boolean isBinary;
@@ -85,16 +87,23 @@ public class CRule implements Serializable, WeightedItem {
 	/**
 	 * The only CRule constructor.
 	 * 
-	 * @param leftHandsideComponents left handside of the rule, list of connected components
-	 * @param rightHandsideComponents right handside of the rule, list of connected components
-	 * @param ruleName name of the rule 
-	 * @param ruleRate rate of the rule
-	 * @param ruleID unique rule identificator
-	 * @param isStorify <tt>true</tt> if simulator run in storify mode, <tt>false</tt> otherwise
+	 * @param leftHandsideComponents
+	 *            left handside of the rule, list of connected components
+	 * @param rightHandsideComponents
+	 *            right handside of the rule, list of connected components
+	 * @param ruleName
+	 *            name of the rule
+	 * @param ruleRate
+	 *            rate of the rule
+	 * @param ruleID
+	 *            unique rule identificator
+	 * @param isStorify
+	 *            <tt>true</tt> if simulator run in storify mode, <tt>false</tt>
+	 *            otherwise
 	 */
-	public CRule(List<IConnectedComponent> leftHandsideComponents, 
-			List<IConnectedComponent> rightHandsideComponents, 
-			String ruleName, double ruleRate, int ruleID, boolean isStorify) {
+	public CRule(List<IConnectedComponent> leftHandsideComponents,
+			List<IConnectedComponent> rightHandsideComponents, String ruleName,
+			double ruleRate, int ruleID, boolean isStorify) {
 		if (leftHandsideComponents == null) {
 			leftHandside = new ArrayList<IConnectedComponent>();
 			leftHandside.add(CConnectedComponent.EMPTY);
@@ -109,7 +118,7 @@ public class CRule implements Serializable, WeightedItem {
 		for (IConnectedComponent cc : this.leftHandside) {
 			cc.initSpanningTreeMap();
 		}
-//		if (ruleRate == Double.MAX_VALUE) {
+		// if (ruleRate == Double.MAX_VALUE) {
 		if (ruleRate == Double.POSITIVE_INFINITY) {
 			this.infiniteRate = true;
 			this.rate = 1;
@@ -133,12 +142,12 @@ public class CRule implements Serializable, WeightedItem {
 			}
 		}
 
-		isBinary = (leftHandside.size() == 2) 
+		isBinary = (leftHandside.size() == 2)
 				&& (leftHandside.get(0).getAgents().size() == 1)
 				&& (leftHandside.get(1).getAgents().size() == 1)
 				&& onlyOneBoundAction();
 	}
-	
+
 	private boolean onlyOneBoundAction() {
 		int counter = 0;
 		for (CAction action : actionList) {
@@ -156,9 +165,12 @@ public class CRule implements Serializable, WeightedItem {
 		}
 		return true;
 	}
+
 	/**
-	 * This method links every connected component in given list with this rule 
-	 * @param cList give list of connected component
+	 * This method links every connected component in given list with this rule
+	 * 
+	 * @param cList
+	 *            give list of connected component
 	 */
 	private final void setConnectedComponentLinkRule(
 			List<IConnectedComponent> cList) {
@@ -167,10 +179,11 @@ public class CRule implements Serializable, WeightedItem {
 		for (IConnectedComponent cc : cList)
 			cc.setRule(this);
 	}
-	
+
 	/**
 	 * 
-	 * @return <tt>true</tt> if left handside of this rule contains no substances, otherwise <tt>false</tt>
+	 * @return <tt>true</tt> if left handside of this rule contains no
+	 *         substances, otherwise <tt>false</tt>
 	 */
 	public final boolean leftHandSideIsEmpty() {
 		return leftHandside.contains(CConnectedComponent.EMPTY);
@@ -178,7 +191,8 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * 
-	 * @return <tt>true</tt> if right handside of this rule contains no substances, otherwise <tt>false</tt>
+	 * @return <tt>true</tt> if right handside of this rule contains no
+	 *         substances, otherwise <tt>false</tt>
 	 */
 	public final boolean rightHandSideIsEmpty() {
 		return rightHandside == null;
@@ -186,7 +200,8 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * 
-	 * @return list of rules which couldn't be applied after application of this rule
+	 * @return list of rules which couldn't be applied after application of this
+	 *         rule
 	 */
 	public List<CRule> getInhibitedRule() {
 		return inhibitedRule;
@@ -194,16 +209,17 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * 
-	 * @return list of observables which quantity reduces after application of this rule
+	 * @return list of observables which quantity reduces after application of
+	 *         this rule
 	 */
 	public List<IObservablesConnectedComponent> getInhibitedObservable() {
 		return inhibitedObservable;
 	}
-	
+
 	/**
 	 * 
-	 * @return <tt>true</tt> if left handside of this rule contains the same substances as right handside,
-	 * otherwise <tt>false</tt>
+	 * @return <tt>true</tt> if left handside of this rule contains the same
+	 *         substances as right handside, otherwise <tt>false</tt>
 	 */
 	public boolean isRHSEqualsLHS() {
 		return rHSEqualsLHS;
@@ -211,7 +227,9 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * Indicates if rate of this rule is infinite
-	 * @return <tt>true</tt> if rate of this rule is infinite, otherwise <tt>false</tt>
+	 * 
+	 * @return <tt>true</tt> if rate of this rule is infinite, otherwise
+	 *         <tt>false</tt>
 	 */
 	public final boolean isInfiniteRated() {
 		return infiniteRate;
@@ -219,6 +237,7 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * Sets rate of this rule to infinity
+	 * 
 	 * @param infinityRate
 	 */
 	public final void setInfinityRate(boolean infinityRate) {
@@ -227,47 +246,67 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * This method is used by simulator in "storify" mode to apply current rule
-	 * @param injectionList list of injections, which point to substances this rule will be applied to
-	 * @param netNotation INetworkNotation object which keep information about rule application
-	 * @param simulationData simulation data
-	 * @param isLast is <tt>true</tt> if and only if this application is the latest in current simulation,
-	 * otherwise false 
+	 * 
+	 * @param injectionList
+	 *            list of injections, which point to substances this rule will
+	 *            be applied to
+	 * @param netNotation
+	 *            INetworkNotation object which keep information about rule
+	 *            application
+	 * @param simulationData
+	 *            simulation data
+	 * @param isLast
+	 *            is <tt>true</tt> if and only if this application is the latest
+	 *            in current simulation, otherwise false
 	 */
 	public void applyRuleForStories(List<CInjection> injectionList,
-			INetworkNotation netNotation, CEvent eventContainer, SimulationData simulationData,
-			boolean isLast) {
-		apply(injectionList, netNotation,eventContainer, simulationData, isLast);
+			INetworkNotation netNotation, CEvent eventContainer,
+			SimulationData simulationData, boolean isLast) {
+		apply(injectionList, netNotation, eventContainer, simulationData,
+				isLast);
 	}
 
 	/**
-	 * This method is used by simulator in "simulation" mode to apply current rule
-	 * @param injectionList list of injections, which point to substances this rule will be applied to
-	 * @param simulationData simulation data
+	 * This method is used by simulator in "simulation" mode to apply current
+	 * rule
+	 * 
+	 * @param injectionList
+	 *            list of injections, which point to substances this rule will
+	 *            be applied to
+	 * @param simulationData
+	 *            simulation data
 	 */
-	public void applyRule(List<CInjection> injectionList, SimulationData simulationData) {
-		apply(injectionList, null,null, simulationData, false);
+	public void applyRule(List<CInjection> injectionList,
+			SimulationData simulationData) {
+		apply(injectionList, null, null, simulationData, false);
 	}
 
 	/**
-	 * This method searches agent in solution, which was added with the latest 
-	 * application of this rule 
-	 * @param rhsAgent agent from the right handside of the rule, which was "parent"
-	 * of the unknown agent
-	 * @return agent in solution, which was added with the latest application of this rule
+	 * This method searches agent in solution, which was added with the latest
+	 * application of this rule
+	 * 
+	 * @param rhsAgent
+	 *            agent from the right handside of the rule, which was "parent"
+	 *            of the unknown agent
+	 * @return agent in solution, which was added with the latest application of
+	 *         this rule
 	 */
 	public final CAgent getAgentAdd(CAgent rhsAgent) {
 		return agentAddList.get(rhsAgent);
 	}
 
 	/**
-	 * This method returns IDs of all agents, which was added by the latest application of this rule 
-	 * @return list of IDs of all agents, which was added by the latest application of this rule
+	 * This method returns IDs of all agents, which was added by the latest
+	 * application of this rule
+	 * 
+	 * @return list of IDs of all agents, which was added by the latest
+	 *         application of this rule
 	 */
 	public Set<Long> getAgentsAddedID() {
 		if (agentAddList.size() == 0)
 			return null;
 		Set<Long> set = new HashSet<Long>();
-		        
+
 		for (CAgent agent : agentAddList.values()) {
 			set.add(agent.getId());
 		}
@@ -275,10 +314,14 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method puts agent in solution, which was added with the latest 
-	 * application of this rule, with it's "parent" - agent from the right handside of the rule
-	 * @param rhsAgent agent from the right handside of the rule
-	 * @param agentFromSolution agent from solution
+	 * This method puts agent in solution, which was added with the latest
+	 * application of this rule, with it's "parent" - agent from the right
+	 * handside of the rule
+	 * 
+	 * @param rhsAgent
+	 *            agent from the right handside of the rule
+	 * @param agentFromSolution
+	 *            agent from solution
 	 */
 	public final void putAgentAdd(CAgent rhsAgent, CAgent agentFromSolution) {
 		agentAddList.put(rhsAgent, agentFromSolution);
@@ -286,21 +329,28 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * The main method for the rule application
-	 * @param injectionList list of injections, which point to substances this rule will be applied to
-	 * @param netNotation INetworkNotation object which keep information about rule application
-	 * @param simulationData simulation data
-	 * @param isLast is <tt>true</tt> if and only if this application is the latest in current simulation,
-	 * otherwise false 
+	 * 
+	 * @param injectionList
+	 *            list of injections, which point to substances this rule will
+	 *            be applied to
+	 * @param netNotation
+	 *            INetworkNotation object which keep information about rule
+	 *            application
+	 * @param simulationData
+	 *            simulation data
+	 * @param isLast
+	 *            is <tt>true</tt> if and only if this application is the latest
+	 *            in current simulation, otherwise false
 	 */
 	protected final void apply(List<CInjection> injectionList,
-			INetworkNotation netNotation, CEvent eventContainer, SimulationData simulationData,
-			boolean isLast) {
+			INetworkNotation netNotation, CEvent eventContainer,
+			SimulationData simulationData, boolean isLast) {
 		agentAddList = new HashMap<CAgent, CAgent>();
 		sitesConnectedWithDeleted = new ArrayList<CSite>();
 		sitesConnectedWithBroken = new ArrayList<CSite>();
 		this.injList = injectionList;
-		ISolution solution = simulationData.getKappaSystem().getSolution(); 
-		
+		ISolution solution = simulationData.getKappaSystem().getSolution();
+
 		if (rightHandside != null) {
 			for (IConnectedComponent cc : rightHandside) {
 				cc.clearAgentsFromSolutionForRHS();
@@ -309,13 +359,15 @@ public class CRule implements Serializable, WeightedItem {
 
 		for (CAction action : actionList) {
 			if (action.getLeftCComponent() == null) {
-				action.doAction(pool, null, netNotation,eventContainer, simulationData);
+				action.doAction(pool, null, netNotation, eventContainer,
+						simulationData);
 			} else {
-				action.doAction(pool, injectionList.get(leftHandside.indexOf(action
-						.getLeftCComponent())), netNotation,eventContainer, simulationData);
+				action.doAction(pool, injectionList.get(leftHandside
+						.indexOf(action.getLeftCComponent())), netNotation,
+						eventContainer, simulationData);
 			}
 		}
-		
+
 		if (netNotation != null) {
 			addFixedSitesToNetworkNotation(netNotation);
 		}
@@ -324,15 +376,21 @@ public class CRule implements Serializable, WeightedItem {
 	public final RuleApplicationPool getPool() {
 		return pool;
 	}
-	
+
 	public final void preparePool(SimulationData simulationData) {
 		ISolution solution = simulationData.getKappaSystem().getSolution();
 		pool = solution.prepareRuleApplicationPool();
 	}
+
 	/**
 	 * This method applies the last rule for stories
-	 * @param injectionsList list of injections, which point to substances this rule will be applied to
-	 * @param netNotation INetworkNotation object which keep information about rule application
+	 * 
+	 * @param injectionsList
+	 *            list of injections, which point to substances this rule will
+	 *            be applied to
+	 * @param netNotation
+	 *            INetworkNotation object which keep information about rule
+	 *            application
 	 */
 	public final void applyLastRuleForStories(List<CInjection> injectionsList,
 			INetworkNotation netNotation, CEvent eventContainer) {
@@ -344,11 +402,15 @@ public class CRule implements Serializable, WeightedItem {
 		}
 
 	}
-	
+
 	/**
-	 * This method adds information about changed site in solution to the given network notation
-	 * @param netNotation network notation
-	 * @param site site from solution
+	 * This method adds information about changed site in solution to the given
+	 * network notation
+	 * 
+	 * @param netNotation
+	 *            network notation
+	 * @param site
+	 *            site from solution
 	 */
 	private final void addNewSiteToNetworkNotation(
 			INetworkNotation netNotation, CSite site) {
@@ -363,15 +425,19 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method adds information about what happened with agents (or it's sites if being exact) 
-	 * in solution, that was injected by "fixed" agents in rule, to the given network notation.
+	 * This method adds information about what happened with agents (or it's
+	 * sites if being exact) in solution, that was injected by "fixed" agents in
+	 * rule, to the given network notation.
 	 * 
-	 * Fixed site means that we have two agents in different handsides of the rule, which are
-	 * placed on the same positions and has similar names and sites.   
+	 * Fixed site means that we have two agents in different handsides of the
+	 * rule, which are placed on the same positions and has similar names and
+	 * sites.
 	 * 
-	 * @param netNotation network notation
+	 * @param netNotation
+	 *            network notation
 	 */
-	private final void addFixedSitesToNetworkNotation(INetworkNotation netNotation) {
+	private final void addFixedSitesToNetworkNotation(
+			INetworkNotation netNotation) {
 		for (CSite siteInSolution : this.sitesConnectedWithBroken) {
 			addNewSiteToNetworkNotation(netNotation, siteInSolution);
 			if (!netNotation.changedSitesContains(siteInSolution)) {
@@ -395,13 +461,14 @@ public class CRule implements Serializable, WeightedItem {
 		for (ChangedSite fs : fixedSites) {
 			CSite siteFromRule = (CSite) fs.getSite();
 			CInjection inj = getInjectionBySiteToFromLHS(siteFromRule);
-			CAgent agentToInSolution = inj.getAgentFromImageById(
-					siteFromRule.getAgentLink().getIdInConnectedComponent());
+			CAgent agentToInSolution = inj.getAgentFromImageById(siteFromRule
+					.getAgentLink().getIdInConnectedComponent());
 			CSite site;
 			if (siteFromRule.getNameId() == CSite.NO_INDEX)
 				site = agentToInSolution.getDefaultSite();
 			else
-				site = agentToInSolution.getSiteByNameId(siteFromRule.getNameId());
+				site = agentToInSolution.getSiteByNameId(siteFromRule
+						.getNameId());
 			// add fixed agents
 			netNotation.addFixedSitesFromRules(site, NetworkNotationMode.TEST,
 					fs.isInternalState(), fs.isLinkState());
@@ -413,8 +480,8 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method sets idInRuleSide parameters to the agents from the rule's right handside
-	 * and needed for initialization
+	 * This method sets idInRuleSide parameters to the agents from the rule's
+	 * right handside and needed for initialization
 	 */
 	private final void markRHSAgents() {
 		List<CAgent> rhsAgents = new ArrayList<CAgent>();
@@ -444,8 +511,9 @@ public class CRule implements Serializable, WeightedItem {
 
 		int index = 0;
 		for (CAgent lhsAgent : lhsAgents) {
-			if ((index < rhsAgents.size()) && !(rhsAgents.get(index).equalz(lhsAgent) 
-					&& rhsAgents.get(index).siteMapsAreEqual(lhsAgent))) {
+			if ((index < rhsAgents.size())
+					&& !(rhsAgents.get(index).equalz(lhsAgent) && rhsAgents
+							.get(index).siteMapsAreEqual(lhsAgent))) {
 				break;
 			}
 			// filling of fixed agents
@@ -463,9 +531,13 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method searches for the similar sites of two agents. We use it on initialization 
-	 * @param lhsAgent agent from left handside
-	 * @param rhsAgent agent from right handside
+	 * This method searches for the similar sites of two agents. We use it on
+	 * initialization
+	 * 
+	 * @param lhsAgent
+	 *            agent from left handside
+	 * @param rhsAgent
+	 *            agent from right handside
 	 */
 	private final void fillFixedSites(CAgent lhsAgent, CAgent rhsAgent) {
 		for (CSite lhsSite : lhsAgent.getSites()) {
@@ -483,9 +555,10 @@ public class CRule implements Serializable, WeightedItem {
 					&& rhsSite.getLinkState().getConnectedSite() != null) {
 				if (lhsSite.getLinkState().getConnectedSite().equalz(
 						rhsSite.getLinkState().getConnectedSite())
-						&& lhsSite.getLinkState().getConnectedSite().getAgentLink()
-								.getIdInRuleHandside() == rhsSite.getLinkState()
-								.getConnectedSite().getAgentLink().getIdInRuleHandside())
+						&& lhsSite.getLinkState().getConnectedSite()
+								.getAgentLink().getIdInRuleHandside() == rhsSite
+								.getLinkState().getConnectedSite()
+								.getAgentLink().getIdInRuleHandside())
 					fixedSite.setLinkState(true);
 			}
 			if (fixedSite.isLinkState() || fixedSite.isInternalState())
@@ -500,7 +573,9 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * This method sorts agents by id in rule's handside
-	 * @param list list of agents to be sorted
+	 * 
+	 * @param list
+	 *            list of agents to be sorted
 	 */
 	private final void sortAgentsByIdInRuleHandside(List<CAgent> list) {
 		CAgent left;
@@ -535,11 +610,14 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method returns agents that are included both in right handside 
-	 * of the current rule and in another rules
-	 * @param agentsFromAnotherRules list of agents from another rules
-	 * @return <tt>true</tt> if there's agents that are included both in right handside 
-	 * of the current rule and in another rules, otherwise <tt>false</tt>
+	 * This method returns agents that are included both in right handside of
+	 * the current rule and in another rules
+	 * 
+	 * @param agentsFromAnotherRules
+	 *            list of agents from another rules
+	 * @return <tt>true</tt> if there's agents that are included both in right
+	 *         handside of the current rule and in another rules, otherwise
+	 *         <tt>false</tt>
 	 */
 	private boolean hasAgentIntersection(List<CAgent> agentsFromAnotherRules) {
 		if (rightHandside != null)
@@ -551,10 +629,13 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method founds if there's agent from the given list which is activates by this rule
-	 * @param agentsFromAnotherRules list of agents
-	 * @return <tt>true</tt> if there's agent from the given list which is activates by this rule,
-	 * otherwise <tt>false</tt>
+	 * This method founds if there's agent from the given list which is
+	 * activates by this rule
+	 * 
+	 * @param agentsFromAnotherRules
+	 *            list of agents
+	 * @return <tt>true</tt> if there's agent from the given list which is
+	 *         activates by this rule, otherwise <tt>false</tt>
 	 */
 	private final boolean isActivated(List<CAgent> agentsFromAnotherRules) {
 		if (this.rightHandside == null)
@@ -587,8 +668,7 @@ public class CRule implements Serializable, WeightedItem {
 			for (CSite site : agent.getSites()) {
 				for (CSite changedSite : changedActivatedSites) {
 					if (changedSite.equalz(site)) {
-						CLink currentLinkState = changedSite
-								.getLinkState();
+						CLink currentLinkState = changedSite.getLinkState();
 						CLink linkState = site.getLinkState();
 
 						if (currentLinkState.hasFreeStatus()
@@ -617,8 +697,8 @@ public class CRule implements Serializable, WeightedItem {
 						if (currentLinkState.getStatusLinkRank() == linkState
 								.getStatusLinkRank()
 								&& currentLinkState.getStatusLinkRank() == CLinkRank.BOUND)
-							if (!(currentLinkState.getConnectedSite().equalz(linkState
-									.getConnectedSite())))
+							if (!(currentLinkState.getConnectedSite()
+									.equalz(linkState.getConnectedSite())))
 								return false;
 					}
 				}
@@ -628,10 +708,13 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method founds if there's agent from the given list which is inhibited by this rule
-	 * @param agentsFromAnotherRules list of agents
-	 * @return <tt>true</tt> if there's agent from the given list which is inhibited by this rule,
-	 * otherwise <tt>false</tt>
+	 * This method founds if there's agent from the given list which is
+	 * inhibited by this rule
+	 * 
+	 * @param agentsFromAnotherRules
+	 *            list of agents
+	 * @return <tt>true</tt> if there's agent from the given list which is
+	 *         inhibited by this rule, otherwise <tt>false</tt>
 	 */
 	private final boolean isInhibited(List<CAgent> agentsFromAnotherRules) {
 		for (CAgent agent : agentsFromAnotherRules) {
@@ -713,31 +796,36 @@ public class CRule implements Serializable, WeightedItem {
 			return true;
 		if (currentLinkState.getStatusLinkRank() == CLinkRank.BOUND
 				&& linkState.getStatusLinkRank() == CLinkRank.BOUND)
-			if (currentLinkState.getConnectedSite().equalz(linkState.getConnectedSite()))
+			if (currentLinkState.getConnectedSite().equalz(
+					linkState.getConnectedSite()))
 				// if (currentLinkState.getSite().equals(linkState.getSite()))
 				return true;
 		return false;
 	}
 
 	/**
-	 * Util method 
+	 * Util method
 	 */
 	private final boolean checkRulesNullAgents(CAgent agent) {
 		if (this.rightHandside != null) {
 			for (IConnectedComponent cc : this.getRightHandSide())
 				for (CAgent agentFromRule : cc.getAgents())
 					if (agent.equalz(agentFromRule))
-						if (agentFromRule.getSites().isEmpty() || agent.getSites().isEmpty())
+						if (agentFromRule.getSites().isEmpty()
+								|| agent.getSites().isEmpty())
 							return true;
 		}
 		return false;
 	}
 
-	//----------------------FILL OF ACTIVATED AND INHIBITED COMPONENTS--------------------- 
+	// ----------------------FILL OF ACTIVATED AND INHIBITED
+	// COMPONENTS---------------------
 	/**
-	 * This method updates list of rules (using rules from another, given list) 
+	 * This method updates list of rules (using rules from another, given list)
 	 * which are activated by this one.
-	 * @param rules given list of rules  
+	 * 
+	 * @param rules
+	 *            given list of rules
 	 */
 	public final void updateActivatedRulesList(List<CRule> rules) {
 		activatedRules = new ArrayList<CRule>();
@@ -755,9 +843,11 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method updates list of rules (using rules from another, given list) 
+	 * This method updates list of rules (using rules from another, given list)
 	 * which are inhibited by this one.
-	 * @param rules given list of rules  
+	 * 
+	 * @param rules
+	 *            given list of rules
 	 */
 	public final void updateInhibitedRulesList(List<CRule> rules) {
 		inhibitedRule = new ArrayList<CRule>();
@@ -771,11 +861,13 @@ public class CRule implements Serializable, WeightedItem {
 				}
 		}
 	}
-	
+
 	/**
-	 * This methods checks if given list of connected components is included in left handside
-	 * of this rule
-	 * @param listCC given list of connected components
+	 * This methods checks if given list of connected components is included in
+	 * left handside of this rule
+	 * 
+	 * @param listCC
+	 *            given list of connected components
 	 * @return <tt>true</tt> if listCC is included in left handside of this rule
 	 */
 	private boolean checkEmbedding(List<IConnectedComponent> listCC) {
@@ -795,10 +887,14 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This methods check out observable components which are activated by this rule
-	 * @param observables all observable components in current simulation
+	 * This methods check out observable components which are activated by this
+	 * rule
+	 * 
+	 * @param observables
+	 *            all observable components in current simulation
 	 */
-	public final void initializeActivatedObservablesList(CObservables observables) {
+	public final void initializeActivatedObservablesList(
+			CObservables observables) {
 		activatedObservable = new LinkedList<IObservablesConnectedComponent>();
 		activatedObservableForXMLOutput = new LinkedList<IObservablesConnectedComponent>();
 		for (IObservablesConnectedComponent obsCC : observables
@@ -815,10 +911,14 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This methods check out observable components which are inhibited by this rule
-	 * @param observables all observable components in current simulation
+	 * This methods check out observable components which are inhibited by this
+	 * rule
+	 * 
+	 * @param observables
+	 *            all observable components in current simulation
 	 */
-	public final void initializeInhibitedObservablesList(CObservables observables) {
+	public final void initializeInhibitedObservablesList(
+			CObservables observables) {
 		inhibitedObservable = new ArrayList<IObservablesConnectedComponent>();
 		for (IObservablesConnectedComponent obsCC : observables
 				.getConnectedComponentList()) {
@@ -831,6 +931,7 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * Util method using when creating actions list
+	 * 
 	 * @param fromSite
 	 * @param internalState
 	 * @param linkState
@@ -848,18 +949,22 @@ public class CRule implements Serializable, WeightedItem {
 		changedInhibitedSites.add(new ChangedSite(fromSite, internalState,
 				linkState));
 	}
-	//---------------------XML OUTPUT INFORMATION---------------------------------------
-	
+
+	// ---------------------XML OUTPUT
+	// INFORMATION---------------------------------------
+
 	/**
 	 * This method returns list of activated rules to be printed to XML
+	 * 
 	 * @return list of activated rules, that are to be printed to XML
 	 */
 	public List<CRule> getActivatedRuleForXMLOutput() {
 		return activatedRuleForXMLOutput;
 	}
-	
+
 	/**
 	 * This method returns list of activated observables to be printed to XML
+	 * 
 	 * @return list of activated observables, that are to be printed to XML
 	 */
 	public List<IObservablesConnectedComponent> getActivatedObservableForXMLOutput() {
@@ -886,7 +991,8 @@ public class CRule implements Serializable, WeightedItem {
 				for (CAgent lAgent : ccL.getAgents()) {
 					actionList.add(new CDeleteAction(this, lAgent, ccL));
 					for (CSite site : lAgent.getSites()) {
-						changedInhibitedSites.add(new ChangedSite(site, true, true));
+						changedInhibitedSites.add(new ChangedSite(site, true,
+								true));
 					}
 				}
 			return;
@@ -896,12 +1002,13 @@ public class CRule implements Serializable, WeightedItem {
 		if (!this.leftHandSideIsEmpty()) {
 			for (IConnectedComponent cc : leftHandside) {
 				lhsAgentsQuantity += cc.getAgents().size();
-			}	
+			}
 		}
-		
+
 		for (IConnectedComponent ccR : rightHandside) {
 			for (CAgent rAgent : ccR.getAgents()) {
-				if ((lhsAgentsQuantity == 0) || (rAgent.getIdInRuleHandside() > lhsAgentsQuantity)) {
+				if ((lhsAgentsQuantity == 0)
+						|| (rAgent.getIdInRuleHandside() > lhsAgentsQuantity)) {
 					actionList.add(new CAddAction(this, rAgent, ccR));
 					// fillChangedSites(rAgent);
 				}
@@ -918,14 +1025,18 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * This method adds all actions among to a given agent
-	 * @param lAgent given agent
-	 * @param ccL connected component which contains lAgent
+	 * 
+	 * @param lAgent
+	 *            given agent
+	 * @param ccL
+	 *            connected component which contains lAgent
 	 */
 	private final void isAgentFromLHSHasFoundInRHS(CAgent lAgent,
 			IConnectedComponent ccL) {
 		for (IConnectedComponent ccR : rightHandside) {
 			for (CAgent rAgent : ccR.getAgents()) {
-				if (lAgent.getIdInRuleHandside() == rAgent.getIdInRuleHandside()) {
+				if (lAgent.getIdInRuleHandside() == rAgent
+						.getIdInRuleHandside()) {
 					CAction newAction = new CDefaultAction(this, lAgent,
 							rAgent, ccL, ccR);
 					actionList.add(newAction);
@@ -939,7 +1050,9 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * This methods extracts all agents from a given connected components
-	 * @param ccList list of connected components
+	 * 
+	 * @param ccList
+	 *            list of connected components
 	 * @return list of agents, included in ccList
 	 */
 	public final List<CAgent> getAgentsFromConnectedComponent(
@@ -947,7 +1060,7 @@ public class CRule implements Serializable, WeightedItem {
 		List<CAgent> agentList = new ArrayList<CAgent>();
 		if (ccList.get(0).getAgents().get(0).getIdInRuleHandside() == CAgent.UNMARKED)
 			return agentList;
-		for (IConnectedComponent cc : ccList){
+		for (IConnectedComponent cc : ccList) {
 			for (CAgent agent : cc.getAgents())
 				agentList.add(agent);
 		}
@@ -970,10 +1083,11 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method checks if every connected component in left handside of this rule has
-	 * injection to solution
-	 * @return <tt>true</tt> if every connected component in left handside of this rule has
-	 * injection to solution, otherwise <tt>false</tt> 
+	 * This method checks if every connected component in left handside of this
+	 * rule has injection to solution
+	 * 
+	 * @return <tt>true</tt> if every connected component in left handside of
+	 *         this rule has injection to solution, otherwise <tt>false</tt>
 	 */
 	public final boolean canBeApplied() {
 		int injCounter = 0;
@@ -991,7 +1105,8 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method calculates activity of this rule according to it's current parameters
+	 * This method calculates activity of this rule according to it's current
+	 * parameters
 	 */
 	public final void calculateActivity() {
 		activity = 1.;
@@ -1004,6 +1119,7 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * This method returns the name of this rule
+	 * 
 	 * @return the name of this rule
 	 */
 	public final String getName() {
@@ -1012,6 +1128,7 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * This method returns activity of this rule
+	 * 
 	 * @return activity of this rule
 	 */
 	public final double getActivity() {
@@ -1020,14 +1137,18 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * This method sets activity of this rule to a given value
-	 * @param activity new value
+	 * 
+	 * @param activity
+	 *            new value
 	 */
 	public final void setActivity(Double activity) {
 		this.activity = activity;
 	}
 
 	/**
-	 * This method returns list of components from the left handside of this rule  
+	 * This method returns list of components from the left handside of this
+	 * rule
+	 * 
 	 * @return list of components from the left handside of this rule
 	 */
 	public final List<IConnectedComponent> getLeftHandSide() {
@@ -1039,7 +1160,9 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method returns list of components from the right handside of this rule  
+	 * This method returns list of components from the right handside of this
+	 * rule
+	 * 
 	 * @return list of components from the right handside of this rule
 	 */
 	public final List<IConnectedComponent> getRightHandSide() {
@@ -1052,8 +1175,11 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * This method indicates if 2 injections are in clash
-	 * @param injections list of injections with power = 2
-	 * @return <tt>true</tt> if injections are in clash, otherwise <tt>false</tt>
+	 * 
+	 * @param injections
+	 *            list of injections with power = 2
+	 * @return <tt>true</tt> if injections are in clash, otherwise
+	 *         <tt>false</tt>
 	 */
 	public final boolean isClash(List<CInjection> injections) {
 		Stack<CInjection> injectionStack = new Stack<CInjection>();
@@ -1072,9 +1198,11 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method indicates if injections from left handside are in clash in case this rule
-	 * has infinite rate
-	 * @return <tt>true</tt> if injections are in clash, otherwise <tt>false</tt>
+	 * This method indicates if injections from left handside are in clash in
+	 * case this rule has infinite rate
+	 * 
+	 * @return <tt>true</tt> if injections are in clash, otherwise
+	 *         <tt>false</tt>
 	 */
 	public final boolean isClashForInfiniteRule() {
 		if (this.leftHandside.size() == 2) {
@@ -1090,11 +1218,14 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method returns injection from the injection-list from the latest application of this rule,
-	 * which points to connected component, including siteTo
-	 * @param siteTo given site
-	 * @return injection from the injection-list from the latest application of this rule,
-	 * which points to connected component, including siteTo
+	 * This method returns injection from the injection-list from the latest
+	 * application of this rule, which points to connected component, including
+	 * siteTo
+	 * 
+	 * @param siteTo
+	 *            given site
+	 * @return injection from the injection-list from the latest application of
+	 *         this rule, which points to connected component, including siteTo
 	 */
 	public final CInjection getInjectionBySiteToFromLHS(CSite siteTo) {
 		int sideId = siteTo.getAgentLink().getIdInRuleHandside();
@@ -1114,7 +1245,9 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * This method adds given site util list.
-	 * @param site given site
+	 * 
+	 * @param site
+	 *            given site
 	 */
 	public final void addSiteConnectedWithBroken(CSite site) {
 		sitesConnectedWithBroken.add(site);
@@ -1142,8 +1275,11 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * We use this method to compare rules
-	 * @param obj another rule
-	 * @return <tt>true</tt> if rules have similar id's, otherwise <tt>false</tt>
+	 * 
+	 * @param obj
+	 *            another rule
+	 * @return <tt>true</tt> if rules have similar id's, otherwise
+	 *         <tt>false</tt>
 	 */
 	public final boolean equalz(CRule obj) {
 		if (this == obj) {
@@ -1164,10 +1300,13 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * This method indicates whether this rule included in given collection of rules 
-	 * @param collection collection of rules
-	 * @return <tt>true</tt> if this rule included in given collection of rules, 
-	 * otherwise <tt>false</tt>
+	 * This method indicates whether this rule included in given collection of
+	 * rules
+	 * 
+	 * @param collection
+	 *            collection of rules
+	 * @return <tt>true</tt> if this rule included in given collection of rules,
+	 *         otherwise <tt>false</tt>
 	 */
 	public final boolean includedInCollection(Collection<CRule> collection) {
 		for (CRule rule : collection) {
@@ -1178,13 +1317,12 @@ public class CRule implements Serializable, WeightedItem {
 		return false;
 	}
 
-	
-	
+	// ------------------------GETTERS AND
+	// SETTERS------------------------------------
 
-	//------------------------GETTERS AND SETTERS------------------------------------
-	
 	/**
 	 * Returns id number of current rule
+	 * 
 	 * @return rule id
 	 */
 	public final int getRuleID() {
@@ -1192,8 +1330,10 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * Sets id of current rule to a given value 
-	 * @param id new value of rule id
+	 * Sets id of current rule to a given value
+	 * 
+	 * @param id
+	 *            new value of rule id
 	 */
 	public final void setRuleID(int id) {
 		this.ruleID = id;
@@ -1201,6 +1341,7 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * Returns current rule rate
+	 * 
 	 * @return rule rate
 	 */
 	public final double getRate() {
@@ -1209,7 +1350,9 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * Sets current rule rate to a given value
-	 * @param ruleRate new value of rule rate
+	 * 
+	 * @param ruleRate
+	 *            new value of rule rate
 	 */
 	public final void setRuleRate(double ruleRate) {
 		if (ruleRate >= 0) {
@@ -1222,15 +1365,17 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	/**
-	 * Returns list of observable components which activate by this rule 
+	 * Returns list of observable components which activate by this rule
+	 * 
 	 * @return list of observable components which activate by this rule
 	 */
 	public final List<IObservablesConnectedComponent> getActivatedObservable() {
 		return Collections.unmodifiableList(activatedObservable);
 	}
-	
+
 	/**
-	 * Returns list of rules which activate by this rule 
+	 * Returns list of rules which activate by this rule
+	 * 
 	 * @return list of rules which activate by this rule
 	 */
 	public final List<CRule> getActivatedRules() {
@@ -1239,6 +1384,7 @@ public class CRule implements Serializable, WeightedItem {
 
 	/**
 	 * Returns list of actions, which this rule performs
+	 * 
 	 * @return list of actions, which this rule performs
 	 */
 	public final List<CAction> getActionList() {
@@ -1250,23 +1396,25 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	public void setAdditionalRate(double binaryRate) {
-//		System.out.println(binaryRate);
+		// System.out.println(binaryRate);
 		this.additionalRate = binaryRate;
 	}
-	
+
 	public double getAdditionalRate() {
 		return this.additionalRate;
 	}
-	
+
 	/**
-	 * This method tells us when we should perform Bologna method on application of this rule
-	 * @return <tt>true</tt> if and only if this rule is binary
-	 * and we should consider it's additional rate when applying
+	 * This method tells us when we should perform Bologna method on application
+	 * of this rule
+	 * 
+	 * @return <tt>true</tt> if and only if this rule is binary and we should
+	 *         consider it's additional rate when applying
 	 */
 	public boolean isUnusualBinary() {
 		return this.isBinary && additionalRate != -1;
 	}
-	
+
 	public String toString() {
 		String st = "ruleName=" + this.ruleName + " ";
 

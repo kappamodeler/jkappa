@@ -19,6 +19,10 @@ public final class SolutionFactory {
 			// TODO
 			return new CFourthSolution(system);
 		}
+		case FIFTH: {
+			// TODO
+			return new CFifthSolution(system);
+		}
 		default : {
 			// TODO
 			return new CSolution(system);

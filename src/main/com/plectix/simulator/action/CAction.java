@@ -7,10 +7,10 @@ import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
-import com.plectix.simulator.components.stories.newVersion.CEvent;
-import com.plectix.simulator.components.stories.newVersion.ECheck;
-import com.plectix.simulator.components.stories.newVersion.EKeyOfState;
-import com.plectix.simulator.components.stories.newVersion.WireHashKey;
+import com.plectix.simulator.components.stories.storage.CEvent;
+import com.plectix.simulator.components.stories.storage.ECheck;
+import com.plectix.simulator.components.stories.storage.ETypeOfWire;
+import com.plectix.simulator.components.stories.storage.WireHashKey;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
 
@@ -103,20 +103,20 @@ public abstract class CAction implements Serializable {
 			return;
 		// AGENT
 		eventContainer.addEvent(new WireHashKey(agentFromInSolution.getId(),
-				EKeyOfState.AGENT), null, type, CEvent.BEFORE_STATE);
+				ETypeOfWire.AGENT), null, type, CEvent.BEFORE_STATE);
 		for (CSite s : getAgentFrom().getSites()) {
 			CSite site = agentFromInSolution.getSiteByNameId(s.getNameId());
 			CLinkRank linkRank = s.getLinkState().getStatusLinkRank();
 			if (linkRank != CLinkRank.BOUND_OR_FREE) {
 				// FREE/BOUND
 				eventContainer.addEvent(new WireHashKey(agentFromInSolution
-						.getId(), site.getNameId(), EKeyOfState.BOUND_FREE),
+						.getId(), site.getNameId(), ETypeOfWire.BOUND_FREE),
 						site, type, CEvent.BEFORE_STATE);
 
 				if (linkRank != CLinkRank.SEMI_LINK) {
 					eventContainer.addEvent(
 							new WireHashKey(agentFromInSolution.getId(), site
-									.getNameId(), EKeyOfState.LINK_STATE),
+									.getNameId(), ETypeOfWire.LINK_STATE),
 							site, type, CEvent.BEFORE_STATE);
 				}
 			}
@@ -125,7 +125,7 @@ public abstract class CAction implements Serializable {
 					.getNameId())
 				eventContainer.addEvent(
 						new WireHashKey(agentFromInSolution.getId(), site
-								.getNameId(), EKeyOfState.INTERNAL_STATE),
+								.getNameId(), ETypeOfWire.INTERNAL_STATE),
 						site, type, CEvent.BEFORE_STATE);
 		}
 	}

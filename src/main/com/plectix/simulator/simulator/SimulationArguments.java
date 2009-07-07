@@ -94,7 +94,8 @@ public class SimulationArguments {
 	private StorifyMode storifyMode = StorifyMode.NONE;
 	private SerializationMode serializationMode = SerializationMode.NONE;
 	private OperationMode operationMode = OperationMode.DEFAULT;
-	private boolean allowIncompletes = false;;
+	private boolean allowIncompletes = false;
+	private int agentsLimit = 100;
 	
 	public SimulationArguments() {
 		super();
@@ -802,5 +803,13 @@ public class SimulationArguments {
 	
 	public final void setSubViews(boolean b){
 		subViews = b;
+	}
+
+	public void setAgentsLimit(int limit) {
+		agentsLimit = limit;
+	}
+	
+	public int getAgentsLimit() {
+		return agentsLimit;
 	}
 }

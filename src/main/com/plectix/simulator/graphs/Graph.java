@@ -12,13 +12,13 @@ public class Graph {
 	private ArrayList<Vertex> vertices = null;
 	public int numberOfVertices;
 
-	public Graph(){
+	public Graph() {
 		edges = new LinkedList<Edge>();
 		vertices = new ArrayList<Vertex>();
 		numberOfVertices = 0;
-		
+
 	}
-	
+
 	public void setEdges(LinkedList<Edge> edges) {
 		this.edges = edges;
 	}
@@ -190,8 +190,8 @@ public class Graph {
 				ArrayList<Vertex> newSet = new ArrayList<Vertex>();
 				vertices.get(i).setTag(true);
 				newSet.add(vertices.get(i));
-				for(Edge e : vertices.get(i).edges){
-					if(e.getSource() == vertices.get(i)){
+				for (Edge e : vertices.get(i).edges) {
+					if (e.getSource() == vertices.get(i)) {
 						newSet.add(e.getTarget());
 						e.getTarget().setTag(true);
 					}
@@ -205,8 +205,8 @@ public class Graph {
 	}
 
 	private void sortVerticesByOutDegree() {
-		
-		for(int i = 0;i<numberOfVertices;i++){
+
+		for (int i = 0; i < numberOfVertices; i++) {
 			outDegree(vertices.get(i));
 		}
 		// may be optimize
@@ -223,15 +223,14 @@ public class Graph {
 		}
 
 	}
-	//change neighbors
-	private void outDegree(Vertex v){
-		for(Edge e : v.edges){
-			if (e.getTarget()==v)
+
+	// change neighbors
+	private void outDegree(Vertex v) {
+		for (Edge e : v.edges) {
+			if (e.getTarget() == v)
 				v.neighbors.remove(e.getSource());
 		}
-		
-	
-		
+
 	}
 
 	private void clearTags() {
@@ -248,7 +247,6 @@ public class Graph {
 	 */
 	public void closeGraph() {
 
-
 		Set<Vertex> newEdgeTargets = new HashSet<Vertex>();
 
 		// At every iteration of the outer loop, we add a path of length 1
@@ -260,7 +258,7 @@ public class Graph {
 		boolean done = false;
 		for (int i = 0; !done && (i < bound); ++i) {
 			done = true;
-			for (Vertex v1 :  vertices) {
+			for (Vertex v1 : vertices) {
 				newEdgeTargets.clear();
 
 				for (Edge v1OutEdge : v1.edges) {
@@ -303,7 +301,7 @@ public class Graph {
 	private Edge getEdge(Vertex v1, Vertex v2) {
 
 		for (Edge edge : v1.edges) {
-			if (edge.getTarget() == v2 || edge.getSource() == v2)
+			if (edge.getTarget() == v2)
 				return edge;
 		}
 		return null;
@@ -335,12 +333,15 @@ public class Graph {
 		return result;
 	}
 
-	public void addEdge(Edge e){
-		edges.add(e);
-		e.getSource().edges.add(e);
-		e.getSource().neighbors.add(e.getTarget());
-		e.getTarget().edges.add(e);
-		e.getTarget().neighbors.add(e.getSource());
+	public void addEdge(Edge e) {
+		if (getEdge(e.getSource(), e.getTarget()) == null) {
+
+			edges.add(e);
+			e.getSource().edges.add(e);
+			e.getSource().neighbors.add(e.getTarget());
+			e.getTarget().edges.add(e);
+			e.getTarget().neighbors.add(e.getSource());
+		}
 	}
-	
+
 }

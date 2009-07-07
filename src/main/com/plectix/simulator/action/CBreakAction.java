@@ -6,10 +6,10 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
-import com.plectix.simulator.components.stories.newVersion.CEvent;
-import com.plectix.simulator.components.stories.newVersion.ECheck;
-import com.plectix.simulator.components.stories.newVersion.EKeyOfState;
-import com.plectix.simulator.components.stories.newVersion.WireHashKey;
+import com.plectix.simulator.components.stories.storage.CEvent;
+import com.plectix.simulator.components.stories.storage.ECheck;
+import com.plectix.simulator.components.stories.storage.ETypeOfWire;
+import com.plectix.simulator.components.stories.storage.WireHashKey;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
@@ -121,7 +121,7 @@ public class CBreakAction extends CAction {
 		if (eventContainer == null)
 			return;
 		eventContainer.addEvent(new WireHashKey(site.getAgentLink().getId(), site
-				.getNameId(), EKeyOfState.LINK_STATE), site,
+				.getNameId(), ETypeOfWire.LINK_STATE), site,
 				ECheck.MODIFICATION, CEvent.AFTER_STATE);
 		// UHashKey key = new
 		// UHashKey(site.getAgentLink().getId(),site.getNameId
@@ -133,7 +133,7 @@ public class CBreakAction extends CAction {
 		// event.correctingType(ECheck.MODIFICATION);
 
 		eventContainer.addEvent(new WireHashKey(site.getAgentLink().getId(), site
-				.getNameId(), EKeyOfState.BOUND_FREE), site,
+				.getNameId(), ETypeOfWire.BOUND_FREE), site,
 				ECheck.MODIFICATION, CEvent.AFTER_STATE);
 		// key = new UHashKey(site.getAgentLink().getId(), site.getNameId(),
 		// EKeyOfState.BOUND_FREE);

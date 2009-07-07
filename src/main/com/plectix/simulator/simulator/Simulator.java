@@ -16,7 +16,7 @@ import com.plectix.simulator.components.perturbations.CPerturbationType;
 import com.plectix.simulator.components.solution.OperationMode;
 import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStories;
-import com.plectix.simulator.components.stories.newVersion.CEvent;
+import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
@@ -452,7 +452,7 @@ public class Simulator implements SimulatorInterface {
 						currentTime += simulationData.getKappaSystem().getTimeValue();
 					}
 				}
-				if (!rule.isClash(injectionsList)) {
+				if (injectionsList!=null) {
 					// TODO: Make sure that CNetworkNotation works with long event number, not integer
 					CNetworkNotation netNotation = null;// = new CNetworkNotation(this, (int)currentEventNumber, rule, injectionsList, simulationData);
 					CEvent eventContainer = new CEvent(currentEventNumber,rule.getRuleID());

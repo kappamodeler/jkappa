@@ -44,7 +44,7 @@ public class Initializator {
 		args[5] = "--seed";
 		args[6] = "10";
 		args[7] = "--operation-mode";
-		args[8] = "1";
+		args[8] = "DEFAULT";
 		return args;
 	}
 	

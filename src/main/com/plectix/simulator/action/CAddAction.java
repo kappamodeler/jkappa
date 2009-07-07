@@ -6,10 +6,10 @@ import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.CStoriesSiteStates;
 import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
 import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
-import com.plectix.simulator.components.stories.newVersion.CEvent;
-import com.plectix.simulator.components.stories.newVersion.ECheck;
-import com.plectix.simulator.components.stories.newVersion.EKeyOfState;
-import com.plectix.simulator.components.stories.newVersion.WireHashKey;
+import com.plectix.simulator.components.stories.storage.CEvent;
+import com.plectix.simulator.components.stories.storage.ECheck;
+import com.plectix.simulator.components.stories.storage.ETypeOfWire;
+import com.plectix.simulator.components.stories.storage.WireHashKey;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
 
@@ -56,7 +56,7 @@ public class CAddAction extends CAction {
 
 		if (eventContainer != null) {
 			eventContainer.addEvent(new WireHashKey(agent.getId(),
-					EKeyOfState.AGENT), null, ECheck.MODIFICATION, CEvent.AFTER_STATE);
+					ETypeOfWire.AGENT), null, ECheck.MODIFICATION, CEvent.AFTER_STATE);
 			// UHashKey key = new UHashKey(agent.getId(), EKeyOfState.AGENT);
 			// AEvent<Boolean> event = new AEvent<Boolean>(eventContainer,
 			// ECheck.MODIFICATION);
@@ -97,7 +97,7 @@ public class CAddAction extends CAction {
 		long agentId = site.getAgentLink().getId();
 		int siteId = site.getNameId();
 		eventContainer.addEvent(new WireHashKey(agentId, siteId,
-				EKeyOfState.BOUND_FREE), site, ECheck.MODIFICATION,
+				ETypeOfWire.BOUND_FREE), site, ECheck.MODIFICATION,
 				CEvent.AFTER_STATE);
 		// UHashKey key = new UHashKey(agentId, siteId, EKeyOfState.BOUND_FREE);
 		// AEvent<Boolean> event = new AEvent<Boolean>(eventContainer,
@@ -108,7 +108,7 @@ public class CAddAction extends CAction {
 		// eventContainer.addEvent(key, event);
 
 		eventContainer.addEvent(new WireHashKey(agentId, siteId,
-				EKeyOfState.INTERNAL_STATE), site, ECheck.MODIFICATION,
+				ETypeOfWire.INTERNAL_STATE), site, ECheck.MODIFICATION,
 				CEvent.AFTER_STATE);
 		// if(site.getInternalState().getNameId() !=
 		// CInternalState.EMPTY_STATE.getNameId()){
@@ -122,7 +122,7 @@ public class CAddAction extends CAction {
 		// }
 
 		eventContainer.addEvent(new WireHashKey(agentId, siteId,
-				EKeyOfState.LINK_STATE), site, ECheck.MODIFICATION,
+				ETypeOfWire.LINK_STATE), site, ECheck.MODIFICATION,
 				CEvent.AFTER_STATE);
 		// key = new UHashKey(agentId, siteId, EKeyOfState.LINK_STATE);
 		// AEvent<CStateOfLink> event3 = new

@@ -11,23 +11,30 @@ import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 public class SuperStorage implements IStorage {
 	private Map<String, SuperSubstance> myStorage = new HashMap<String, SuperSubstance>();
 	private final ISolution mySolution;
-
+	private int agentsLimit = Integer.MAX_VALUE;
+	// this one keeps max component's length
+	private int maxComponentLength = 0;
+	
 	SuperStorage(ISolution solution) {
 		mySolution = solution;
 	}
 	
 	public boolean tryIncrement(IConnectedComponent component) {
-		String hash = component.getHash();
-		SuperSubstance previousEntry = myStorage.get(hash);
-		if (previousEntry != null) {
-			previousEntry.add();
-			component.deleteIncomingInjections();
-//			previousEntry.getComponent().deleteIncomingInjections();
-			previousEntry.getComponent().incrementIncomingInjections();
-//			setInjectionsForSuperSubstance(previousEntry);
-			return true;
+		if (component.getAgentsQuantity() <= maxComponentLength) {
+			String hash = component.getHash();
+			SuperSubstance previousEntry = myStorage.get(hash);
+			if (previousEntry != null) {
+				previousEntry.add();
+				component.deleteIncomingInjections();
+				previousEntry.getComponent().incrementIncomingInjections();
+				return true;
+			}
 		}
 		return false;
+	}
+	
+	private void refreshMaxLength(IConnectedComponent component) {
+		maxComponentLength = Math.max(maxComponentLength, component.getAgentsQuantity());
 	}
 	
 	public void addOrEvenIncrement(long quant, IConnectedComponent component) {
@@ -36,6 +43,7 @@ public class SuperStorage implements IStorage {
 		SuperSubstance previousEntry = myStorage.get(hash);
 		if (previousEntry == null) {
 			myStorage.put(hash, substanceToAdd);
+			refreshMaxLength(component);
 		} else {
 			previousEntry.add(substanceToAdd.getQuantity());
 		}
@@ -43,8 +51,8 @@ public class SuperStorage implements IStorage {
 	
 	public void addNewSuperSubstance(IConnectedComponent component) {
 		SuperSubstance s = new SuperSubstance(1, component);
+		refreshMaxLength(component);
 		myStorage.put(component.getHash(), s);
-//		component.reassignIncomingInjections(s);
 		component.deleteIncomingInjections();
 		setInjectionsForSuperSubstance(s);
 	}
@@ -84,7 +92,7 @@ public class SuperStorage implements IStorage {
 				setInjectionsForSuperSubstance(image);
 			} else {
 				// TODO do we really want to remove this component from collection?
-				myStorage.remove(component.getHash());
+				myStorage.remove(image.getHash());
 				image.getComponent().deleteIncomingInjections();
 			}
 			return component;
@@ -103,5 +111,13 @@ public class SuperStorage implements IStorage {
 
 	public Collection<SuperSubstance> getComponents() {
 		return Collections.unmodifiableCollection(myStorage.values());
+	}
+	
+	public final int getAgentsLimit() {
+		return agentsLimit;
+	}
+	
+	public final void setAgentsLimit(int limit) {
+		agentsLimit = limit;
 	}
 }

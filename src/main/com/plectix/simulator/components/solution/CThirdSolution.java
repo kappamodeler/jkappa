@@ -16,7 +16,7 @@ public class CThirdSolution extends CAbstractSuperSolution {
 	}
 
 	@Override
-	protected final void addConnectedComponent(IConnectedComponent component) {
+	protected void addConnectedComponent(IConnectedComponent component) {
 		if (!mySuperStorage.tryIncrement(component)) { 
 			myStraightStorage.addConnectedComponent(component);
 		}

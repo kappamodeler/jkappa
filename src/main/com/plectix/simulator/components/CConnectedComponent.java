@@ -475,19 +475,6 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 		}		
 	}
 	
-//	public void reassignIncomingInjections(SuperSubstance ss) {
-//		for (CAgent agent : agentList) {
-//			for (CSite site : agent.getSites()) {
-//				for (CLiftElement lift : site.getLift()) {
-//					lift.getInjection().setSuperSubstance(ss);
-//				}
-//			}
-//			// default-site case
-//			for (CLiftElement lift : agent.getDefaultSite().getLift()) {
-//				lift.getInjection().setSuperSubstance(ss);
-//			}
-//		}
-//	}
 	// -----------------------hash, toString, equals-----------------------------
 
 
@@ -497,5 +484,12 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	
 	public String toString() {
 		return getHash(); 
+	}
+
+	/**
+	 * We use this method to check if this component is too long for being SuperSubstance
+	 */
+	public int getAgentsQuantity() { 
+		return agentList.size();
 	}
 }

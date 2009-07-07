@@ -2,8 +2,8 @@ package com.plectix.simulator.components.stories;
 
 import java.util.*;
 
-import com.plectix.simulator.components.stories.newVersion.CEvent;
-import com.plectix.simulator.components.stories.newVersion.CWiresStorage;
+import com.plectix.simulator.components.stories.storage.CEvent;
+import com.plectix.simulator.components.stories.storage.CWiresStorage;
 import com.plectix.simulator.simulator.SimulationData;
 
 public final class CStories {

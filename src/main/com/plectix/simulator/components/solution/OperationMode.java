@@ -4,7 +4,9 @@ public enum OperationMode {
 	FIRST("1"),
 	SECOND("2"),
 	THIRD("3"),
-	FOURTH("4"), DEFAULT("DEFAULT");
+	FOURTH("4"),
+	FIFTH("5"),
+	DEFAULT("DEFAULT");
 	
 	private final String string;
 	
@@ -18,6 +20,6 @@ public enum OperationMode {
 				return mode;
 			}
 		}
-		return FIRST;
+		return DEFAULT;
 	}
 }
