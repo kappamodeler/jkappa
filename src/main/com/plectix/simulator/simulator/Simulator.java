@@ -325,6 +325,10 @@ public class Simulator implements SimulatorInterface {
 					simulationData.getKappaSystem().getSolution().applyChanges(rule.getPool());
 				
 					simulationData.getKappaSystem().getObservables().calculateObs(currentTime, currentEventNumber, simulationData.getSimulationArguments().isTime());
+				} else {
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("Rule rejected");
+					}
 				}
 			} else {
 				simulationData.addInfo(InfoType.NOT_OUTPUT,InfoType.INTERNAL, "Application of rule exp is clashing");

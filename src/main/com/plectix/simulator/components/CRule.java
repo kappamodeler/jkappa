@@ -349,7 +349,6 @@ public class CRule implements Serializable, WeightedItem {
 		sitesConnectedWithDeleted = new ArrayList<CSite>();
 		sitesConnectedWithBroken = new ArrayList<CSite>();
 		this.injList = injectionList;
-		ISolution solution = simulationData.getKappaSystem().getSolution();
 
 		if (rightHandside != null) {
 			for (IConnectedComponent cc : rightHandside) {
@@ -1113,7 +1112,21 @@ public class CRule implements Serializable, WeightedItem {
 		for (IConnectedComponent cc : this.leftHandside) {
 			activity *= cc.getInjectionsWeight();
 		}
-		activity *= rate;
+		if (!this.isUnusualBinary()) {
+			activity *= rate;
+		} else {
+			double k1 = rate;
+			// additional rate
+			double k2 = additionalRate;
+			
+			long commonInjectionsWeight = 0;
+			for (IConnectedComponent cc : this.leftHandside) {
+				commonInjectionsWeight += cc.getInjectionsWeight();
+			}
+			double temp = k1 / commonInjectionsWeight;
+			double k2prime = Math.max(temp, k2);
+			activity *= k2prime;
+		}
 		activity /= automorphismNumber;
 	}
 

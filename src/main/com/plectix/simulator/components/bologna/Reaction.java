@@ -2,9 +2,6 @@ package com.plectix.simulator.components.bologna;
 
 import java.util.*;
 
-import com.plectix.simulator.action.CAction;
-import com.plectix.simulator.action.CActionType;
-import com.plectix.simulator.action.CBoundAction;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.injections.CLiftElement;
@@ -12,7 +9,7 @@ import com.plectix.simulator.components.solution.SolutionUtils;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
 /**
- * This class describes only those reaction, which we should mention 
+ * This class describes only those reactions, which we should mention 
  * when talking about Bologna method
  * @author evlasov
  *
@@ -43,8 +40,10 @@ public class Reaction {
 		CAgent rulesFirstAgent = rule.getLeftHandSide().get(0).getAgents().get(0);
 		CAgent rulesSecondAgent = rule.getLeftHandSide().get(1).getAgents().get(0);
 		
-		this.agentInFirstComponentToSwap = firstComponent.findSimilarAgent(rulesSecondAgent);
-		this.agentInSecondComponentToSwap = secondComponent.findSimilarAgent(rulesFirstAgent);
+		this.agentInFirstComponentToSwap = 
+				firstComponent.findSimilarAgent(rulesSecondAgent, firstInjection.getImageAgent());
+		this.agentInSecondComponentToSwap = 
+				secondComponent.findSimilarAgent(rulesFirstAgent, secondInjection.getImageAgent());
 		
 		if (firstComponent.getAgents().contains(secondInjection.getImageAgent())) {
 			type = ReactionClass.UNARY;
@@ -109,36 +108,26 @@ public class Reaction {
 			for (CSite site : agentInFirstComponentToSwap.getSites()) { 
 				for (CLiftElement liftE : site.getLift()) {
 				// we can compare these for being ==
-//					System.out.println("-------------------------------------");
-//					System.out.println(liftE.getInjection().getConnectedComponent());
-//					System.out.println(rule.getLeftHandSide().get(1));
 					if (liftE.getInjection().getConnectedComponent() 
-							== rule.getLeftHandSide().get(1)) {
-						list.add(new Reaction(rule, 
-								firstInjection, 
+								== rule.getLeftHandSide().get(1)) {
+						list.add(new Reaction(rule, firstInjection, 
 								liftE.getInjection()));
 					}
 				}
 			}
-//			list.add(new Reaction(rule, 
-//					firstInjection, 
-//					rule.getLeftHandSide().get(1).findInjection(agentInFirstComponentToSwap)));
 		}
 		if (agentInSecondComponentToSwap != null) {
 			for (CSite site : agentInSecondComponentToSwap.getSites()) { 
 				for (CLiftElement liftE : site.getLift()) {
 				// we can compare these for being ==
 					if (liftE.getInjection().getConnectedComponent() 
-							== rule.getLeftHandSide().get(0)) {
+								== rule.getLeftHandSide().get(0)) {
 						list.add(new Reaction(rule, 
 								liftE.getInjection(),
 								secondInjection));
 					}
 				}
 			}
-//			list.add(new Reaction(rule, 
-//					rule.getLeftHandSide().get(0).findInjection(agentInSecondComponentToSwap),
-//					secondInjection));
 		}
 		return list;
 	}

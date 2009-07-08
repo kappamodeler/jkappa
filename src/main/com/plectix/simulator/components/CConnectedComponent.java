@@ -240,10 +240,11 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * This method searches for an agent in this connected component which could be 
 	 * an image of hypothetical injection from fixed agent.
 	 * Used in Bologna method only. 
+	 * @param exception is an agent that we don't want to choose
 	 */
-	public final CAgent findSimilarAgent(CAgent agent) {
+	public final CAgent findSimilarAgent(CAgent agent, CAgent exception) {
 		for (CAgent ccAgent : agentList) {
-			if (SimulationUtils.justCompareAgents(ccAgent, agent)) {
+			if (SimulationUtils.justCompareAgents(ccAgent, agent) && ccAgent != exception) {
 				return ccAgent;
 			}
 		}

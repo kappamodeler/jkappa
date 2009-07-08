@@ -38,7 +38,7 @@ public interface IConnectedComponent extends ISolutionComponent {
 	 */
 	public long getInjectionsWeight();
 
-	public CAgent findSimilarAgent(CAgent rulesSecondAgent);
+	public CAgent findSimilarAgent(CAgent rulesSecondAgent, CAgent exception);
 
 	public CInjection findInjection(CAgent agentInFirstComponentToSwap);
 
