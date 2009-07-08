@@ -13,6 +13,7 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
+import com.plectix.simulator.components.complex.subviews.WrapperTwoSet;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.components.complex.subviews.storage.SubViewsExeption;
 import com.plectix.simulator.interfaces.IConnectedComponent;
@@ -36,7 +37,7 @@ public class SubViewsRule {
 			action.initSubViews(subViewsMap);
 	}
 
-	public HashSet<Integer> apply(
+	public WrapperTwoSet apply(
 			Map<Integer, CAbstractAgent> agentNameIdToAgent,
 			Map<Integer, List<ISubViews>> subViewsMap) throws SubViewsExeption {
 
@@ -62,19 +63,19 @@ public class SubViewsRule {
 			}
 		}
 
-		HashSet<Integer> activatedRules = new HashSet<Integer>();
+		WrapperTwoSet activatedRules = new WrapperTwoSet();
 		for (AbstractAction action : actions) {
 			if (action.getActionType() != EAbstractActionType.TEST_ONLY) {
 				action.clearSitesSideEffect();
 				for (ISubViews subViews : action.getSubViews()) {
 					if (subViews.burnRule(action))
-						activatedRules.addAll(subViews.getSubViewClass()
+						activatedRules.getFirst().addAll(subViews.getSubViewClass()
 								.getRulesId());
 				}
 				for (List<ISubViews> subViewsList : subViewsMap.values())
 					for (ISubViews subViews : subViewsList)
 						if (subViews.burnBreakAllNeedLinkState(action))
-							activatedRules.addAll(subViews.getSubViewClass()
+							activatedRules.getSecond().addAll(subViews.getSubViewClass()
 									.getRulesId());
 			}
 		}

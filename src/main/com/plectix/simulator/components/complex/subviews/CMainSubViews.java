@@ -17,6 +17,7 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
+import com.plectix.simulator.components.complex.influenceMap.CInfluenceMapMain;
 import com.plectix.simulator.components.complex.subviews.base.AbstractClassSubViewBuilder;
 import com.plectix.simulator.components.complex.subviews.base.SubViewsRule;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
@@ -47,10 +48,14 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		fillAgentMap(agents);
 		constructAbstractRules(rules);
 		constructClasses(abstractRules, agentNameIdToAgent);
+//		WeakInfluence wI = new WeakInfluence();
+		CInfluenceMapMain wI = new CInfluenceMapMain();
+		wI.initInfluenceMap(abstractRules,null, agentNameIdToAgent);
+
 		fillingClasses(agents);
 		initBoundRulesAndSubViews();
 		try {
-			constructAbstractContactMap();
+			constructAbstractContactMap(wI);
 		} catch (SubViewsExeption e) {
 			e.printStackTrace();
 		}
@@ -191,9 +196,9 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	// }
 	// }
 	// }
-	private void constructAbstractContactMap() throws SubViewsExeption {
+	private void constructAbstractContactMap(CInfluenceMapMain wInfluence) throws SubViewsExeption {
 		//RuleId
-		Queue<Integer> activeRule = new PriorityQueue<Integer>();
+		Queue<Integer> activeRule = new LinkedList<Integer>();
 		//RuleId -> isIncluded
 		Map<Integer, Boolean> includedInQueue = new HashMap<Integer, Boolean>();
 		//ruleId -> number in array
@@ -206,16 +211,23 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 			filter.put(rule.getRuleId(), i);
 		}
 
+		Integer ruleId;
+		SubViewsRule rule;
+		WrapperTwoSet activatedRule;
+		HashSet<Integer> intersection = new HashSet<Integer>();
+		//int ij=0;
 		while (!activeRule.isEmpty()) {
-			
-			Integer ruleId = activeRule.poll();
+			ruleId = activeRule.poll();
 			includedInQueue.put(ruleId, false);
-			SubViewsRule rule = abstractRules
+			rule = abstractRules
 					.get(filter.get(ruleId));
-			HashSet<Integer> activatedRule = rule.apply(agentNameIdToAgent,
+			activatedRule = rule.apply(agentNameIdToAgent,
 					subViewsMap);
-			if (activatedRule != null)
-				for (int j : activatedRule) {
+	
+			intersection = intersect(activatedRule, 
+					wInfluence.getActivationByRule(ruleId));
+			if (intersection != null)
+				for (int j : intersection) {
 					if (includedInQueue.get(j))
 						continue;
 					includedInQueue.put(j, true);
@@ -223,6 +235,22 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 				}
 		}
 	}
+	
+	private HashSet<Integer> intersect(WrapperTwoSet activatedRule,
+			List<Integer> activationByRule) {
+		if(activatedRule==null||activationByRule==null){
+			return null;
+		}
+		HashSet<Integer> answer = activatedRule.getSecond();
+		for (Integer i : activatedRule.getFirst()) {
+			if (activationByRule.contains(i)) {
+				answer.add(i);
+			}
+		}
+
+		return answer;
+	}
+
 
 	public Element createXML(Document doc) {
 		Element reachables = doc.createElement("Reachables");

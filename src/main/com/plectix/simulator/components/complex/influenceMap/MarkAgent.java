@@ -1,51 +1,37 @@
 package com.plectix.simulator.components.complex.influenceMap;
 
-import com.plectix.simulator.action.CActionType;
-import com.plectix.simulator.components.CSite;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
-import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 
 class MarkAgent {
-	private CAbstractAgent agent;
-	private int siteId = CSite.NO_INDEX;
-	private CActionType type = CActionType.NONE;
+	private int agentNameId;
+	private Map<Integer,List<MarkSite>> sitesMap;
 
-	public MarkAgent(CAbstractAgent agent, CAbstractSite site, CActionType type) {
-		this.type = type;
+	public MarkAgent(CAbstractAgent agent) {
 		CAbstractAgent agentNew = new CAbstractAgent(agent.getNameId());
-		this.agent = agentNew;
-		if (site != null) {
-			CAbstractSite siteNew = site.clone();
-			siteNew.setAgentLink(agentNew);
-			agentNew.addSite(siteNew);
-			siteId = siteNew.getNameId();
+		agentNameId = agentNew.getNameId();
+		sitesMap = new HashMap<Integer, List<MarkSite>>();
+	}
+
+	public int getAgentNameId() {
+		return agentNameId;
+	}
+	
+	public void addMarkSite(MarkSite mSite){
+		List<MarkSite> mSites = sitesMap.get(mSite.getSite().getNameId());
+		if(mSites == null){
+			mSites = new LinkedList<MarkSite>();
+			sitesMap.put(mSite.getSite().getNameId(), mSites);
 		}
-	}
-
-	public MarkAgent(CAbstractAgent agent, CActionType type) {
-		this.type = type;
-		CAbstractAgent agentNew = new CAbstractAgent(agent.getNameId());
-		this.agent = agentNew;
-	}
-
-	public CActionType getType() {
-		return type;
-	}
-
-	public void setType(CActionType type) {
-		this.type = type;
-	}
-
-	public CAbstractAgent getAgent() {
-		return agent;
+		mSites.add(mSite);
 	}
 	
-	public int getSiteId(){
-		return siteId;
-	}
-	
-	public CAbstractSite getSite(){
-		return agent.getSite(siteId);
+	public List<MarkSite> getMarkSites(int key){
+		return sitesMap.get(key);
 	}
 	
 }
