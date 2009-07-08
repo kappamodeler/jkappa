@@ -2,6 +2,19 @@ package com.plectix.simulator.util;
 
 public class PrimeNumbers {
 
+	public static final int getPrime(int index) {
+		if (index < FIRST_8242.length) {
+			return FIRST_8242[index];
+		} else {
+			index -= FIRST_8242.length;
+			if (index < PrimeNumbers2.NEXT_1758.length) {
+				return PrimeNumbers2.NEXT_1758[index];
+			} else {
+				throw new RuntimeException("We don't have such a large prime number!");
+			}
+		}
+	}
+	
 	// We can only compile 8242 integers, more exceeds 65536 bytes limit!
 	public static final int[] FIRST_8242 = {
 		2,3,5,7,11,13,17,19,23,29,
