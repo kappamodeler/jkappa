@@ -247,6 +247,15 @@ public class SimulatorCommandLine {
 			simulationArguments.setAgentsLimit(getIntValue(SimulatorOptions.AGENTS_LIMIT));
 		}
 		
+		if (hasOption(SimulatorOptions.LIVE_DATA_INTERVAL)) {
+			simulationArguments.setLiveDataInterval(getLongValue(SimulatorOptions.LIVE_DATA_INTERVAL));
+		}
+		
+		if (hasOption(SimulatorOptions.LIVE_DATA_POINTS)) {
+			simulationArguments.setLiveDataPoints(getIntValue(SimulatorOptions.LIVE_DATA_POINTS));
+		}
+		
+		
 		boolean option = false;
 		String fileName = null;
 		

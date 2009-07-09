@@ -21,8 +21,9 @@ import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.controller.SimulatorStatusInterface;
-import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.probability.CProbabilityCalculation;
+import com.plectix.simulator.streaming.LiveData;
+import com.plectix.simulator.streaming.LiveDataStreamer;
 import com.plectix.simulator.util.MemoryUtil;
 import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.PlxTimer;
@@ -64,6 +65,8 @@ public class Simulator implements SimulatorInterface {
 	private SimulatorStatus simulatorStatus = new SimulatorStatus();
 
 	private SimulatorResultsData simulatorResultsData = new SimulatorResultsData();
+	
+	private LiveDataStreamer liveDataStreamer = new LiveDataStreamer();
 	
 	/** Object to lock when we are reading variables to compute the current status */
 	private Object statusLock = new Object();
@@ -108,6 +111,17 @@ public class Simulator implements SimulatorInterface {
 		}
 
 		return simulatorStatus;
+	}
+	
+
+	/**
+	 * Returns the live data
+	 * 
+	 * @param liveData
+	 * @return
+	 */
+	public final LiveData getLiveData(LiveData liveData) {
+		return liveDataStreamer.getLiveData(liveData);
 	}
 	
 	private final void addIteration(int iteration_num) {
@@ -236,6 +250,7 @@ public class Simulator implements SimulatorInterface {
 		long clash = 0;
 		long max_clash = 0;
 		boolean isEndRules = false;
+		liveDataStreamer.reset(simulationData.getSimulationArguments().getLiveDataInterval(), simulationData.getSimulationArguments().getLiveDataPoints(), simulationData.getKappaSystem().getObservables());
 		simulatorStatus.setStatusMessage(STATUS_RUNNING);
 		
 		while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
@@ -343,6 +358,7 @@ public class Simulator implements SimulatorInterface {
 				synchronized (statusLock) {
 					currentTime += simulationData.getKappaSystem().getTimeValue();
 				}
+				liveDataStreamer.addNewDataPoint(currentEventNumber, currentTime, simulationData.getKappaSystem().getObservables());
 			}
 			
 			if (CSiteration) {

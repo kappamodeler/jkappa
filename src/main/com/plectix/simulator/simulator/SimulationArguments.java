@@ -24,6 +24,8 @@ public class SimulationArguments {
 	public static final int DEFAULT_CLOCK_PRECISION = 60;
 	public static final String DEFAULT_XML_SESSION_NAME = "simplx.xml";
 	public static final String DEFAULT_SERIALIZATION_FILE_NAME = "~tmp.sd";
+	public static final int DEFAULT_AGENTS_LIMIT = 100;
+	public static final int DEFAULT_LIVE_DATA_POINTS = 500;
 
 	public enum SimulationType { 
 		NONE,
@@ -95,7 +97,9 @@ public class SimulationArguments {
 	private SerializationMode serializationMode = SerializationMode.NONE;
 	private OperationMode operationMode = OperationMode.DEFAULT;
 	private boolean allowIncompletes = false;
-	private int agentsLimit = 100;
+	private int agentsLimit = DEFAULT_AGENTS_LIMIT;
+	private long liveDataInterval = -1;
+	private int liveDataPoints = DEFAULT_LIVE_DATA_POINTS;
 	
 	public SimulationArguments() {
 		super();
@@ -805,11 +809,34 @@ public class SimulationArguments {
 		subViews = b;
 	}
 
-	public void setAgentsLimit(int limit) {
+	public final void setAgentsLimit(int limit) {
 		agentsLimit = limit;
 	}
 	
-	public int getAgentsLimit() {
+	public final int getAgentsLimit() {
 		return agentsLimit;
+	}
+
+	public final long getLiveDataInterval() {
+		return liveDataInterval;
+	}
+
+	public final void setLiveDataInterval(long liveDataInterval) {
+		this.liveDataInterval = liveDataInterval;
+	}
+
+	public final int getLiveDataPoints() {
+		return liveDataPoints;
+	}
+
+	/**
+	 * Registers the approximate number of data points to report live.
+	 * The default value is {@value #DEFAULT_LIVE_DATA_POINTS}. 
+	 * 
+	 * @param liveDataPoints
+	 * @see #DEFAULT_LIVE_DATA_POINTS
+	 */
+	public final void setLiveDataPoints(int liveDataPoints) {
+		this.liveDataPoints = liveDataPoints;
 	}
 }
