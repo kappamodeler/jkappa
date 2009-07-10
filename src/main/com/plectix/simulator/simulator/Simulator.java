@@ -323,17 +323,16 @@ public class Simulator implements SimulatorInterface {
 
 				List<CInjection> newInjections = ruleApplicator.applyRule(rule, injectionsList, simulationData);
 				if (newInjections != null) {
-	
+					SimulationUtils.doNegativeUpdate(newInjections);
+				
+					// positive update
+					if (LOGGER.isDebugEnabled()) {
+						LOGGER.debug("positive update");
+					}
+					
 					// on the 4th mode we should set only super injections, so we do it manually 
 					// directly after the rule application
 					if (simulationData.getSimulationArguments().getOperationMode() != OperationMode.FOURTH) {
-						SimulationUtils.doNegativeUpdate(newInjections);
-				
-						// positive update
-						if (LOGGER.isDebugEnabled()) {
-							LOGGER.debug("positive update");
-						}
-	
 						simulationData.getKappaSystem().doPositiveUpdate(rule, newInjections);
 					}
 	

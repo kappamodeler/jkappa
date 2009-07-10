@@ -25,6 +25,7 @@ public class SuperStorage implements IStorage {
 			SuperSubstance previousEntry = myStorage.get(hash);
 			if (previousEntry != null) {
 				previousEntry.add();
+				// there could be some injections here even after the negative update!
 				component.deleteIncomingInjections();
 				previousEntry.getComponent().incrementIncomingInjections();
 				return true;
@@ -52,7 +53,7 @@ public class SuperStorage implements IStorage {
 	public void addNewSuperSubstance(IConnectedComponent component) {
 		SuperSubstance s = new SuperSubstance(1, component);
 		refreshMaxLength(component);
-		myStorage.put(component.getHash(), s);
+		myStorage.put(s.getHash(), s);
 		component.deleteIncomingInjections();
 		setInjectionsForSuperSubstance(s);
 	}
