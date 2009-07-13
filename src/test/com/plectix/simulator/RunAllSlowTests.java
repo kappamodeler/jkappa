@@ -9,7 +9,7 @@ import com.plectix.simulator.smiles.RunSmilesTest;
 
 @RunWith(value=Suite.class)
 @SuiteClasses(value = {
-		RunSmilesTest.class,
+		RunSmilesTest.class
 //		TestContactMap.class
 	})
 public class RunAllSlowTests {
