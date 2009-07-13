@@ -4,16 +4,13 @@ import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
-import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
-import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.enums.EActionOfAEvent;
+import com.plectix.simulator.components.stories.enums.ETypeOfWire;
 import com.plectix.simulator.components.stories.storage.CEvent;
-import com.plectix.simulator.components.stories.storage.ECheck;
-import com.plectix.simulator.components.stories.storage.ETypeOfWire;
 import com.plectix.simulator.components.stories.storage.WireHashKey;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
-import com.plectix.simulator.interfaces.INetworkNotation;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
 
@@ -62,7 +59,7 @@ public class CBreakAction extends CAction {
 	}
 
 	public final void doAction(RuleApplicationPool pool, CInjection injection,
-			INetworkNotation netNotation, CEvent eventContainer,
+			CEvent eventContainer,
 			SimulationData simulationData) {
 		CAgent agentFromInSolution;
 		int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getAgentLink());
@@ -70,14 +67,16 @@ public class CBreakAction extends CAction {
 
 		CSite injectedSite = agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId());
 
-		addToNetworkNotation(StateType.BEFORE, netNotation,
-				injectedSite);
-		addRuleSitesToNetworkNotation(true, netNotation, injectedSite);
+//		addToNetworkNotation(StateType.BEFORE, netNotation,
+//				injectedSite);
+//		addRuleSitesToNetworkNotation(true, netNotation, injectedSite);
 
 		CSite linkSite = (CSite) injectedSite.getLinkState().getConnectedSite();
+		addToEventContainer(eventContainer, linkSite,CEvent.BEFORE_STATE);
+		addToEventContainer(eventContainer, injectedSite,CEvent.BEFORE_STATE);
 		if ((mySiteFrom.getLinkState().getConnectedSite() == null) && (linkSite != null)) {
-			addToNetworkNotation(StateType.BEFORE, netNotation,
-					linkSite);
+//			addToNetworkNotation(StateType.BEFORE, netNotation,
+//					linkSite);
 
 			linkSite.getLinkState().connectSite(null);
 			linkSite.getLinkState().setStatusLink(CLinkStatus.FREE);
@@ -88,41 +87,40 @@ public class CBreakAction extends CAction {
 			injection.addToChangedSites(linkSite);
 			getRightCComponent().addAgentFromSolutionForRHS(linkSite
 					.getAgentLink());
-			addToNetworkNotation(StateType.AFTER, netNotation,
-					linkSite);
+//			addToNetworkNotation(StateType.AFTER, netNotation,
+//					linkSite);
 
 		}
 
-		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).getLinkState()
-				.connectSite(null);
-		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).getLinkState()
-				.setStatusLink(CLinkStatus.FREE);
+		injectedSite.getLinkState().connectSite(null);
+		injectedSite.getLinkState().setStatusLink(CLinkStatus.FREE);
 		// /////////////////////////////////////////////
 
 		injection.addToChangedSites(injectedSite);
 
-		addToNetworkNotation(StateType.AFTER, netNotation,
-				injectedSite);
+//		addToNetworkNotation(StateType.AFTER, netNotation,
+//				injectedSite);
 		/**
 		 * Break a bond for this rules: A(x!_)->A(x)
 		 */
 		if (mySiteFrom.getLinkState().getConnectedSite() == null && linkSite != null) {
 			addSiteToConnectedWithBroken(linkSite);
-			addRuleSitesToNetworkNotation(false, netNotation, linkSite);
+//			addRuleSitesToNetworkNotation(false, netNotation, linkSite);
 		}
-		addToEventContainer(eventContainer, linkSite);
+		addToEventContainer(eventContainer, linkSite,CEvent.AFTER_STATE);
+		addToEventContainer(eventContainer, injectedSite,CEvent.AFTER_STATE);
 		// /////////////////////////////////////////////
 		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).
 			setLinkIndex(-1);
 	}
 
 	private static void addToEventContainer(CEvent eventContainer,
-			CSite site) {
-		if (eventContainer == null)
+			CSite site, boolean state) {
+		if (eventContainer == null || site == null)
 			return;
-		eventContainer.addEvent(new WireHashKey(site.getAgentLink().getId(), site
+		eventContainer.addAtomicEvent(new WireHashKey(site.getAgentLink().getId(), site
 				.getNameId(), ETypeOfWire.LINK_STATE), site,
-				ECheck.MODIFICATION, CEvent.AFTER_STATE);
+				EActionOfAEvent.MODIFICATION, state);
 		// UHashKey key = new
 		// UHashKey(site.getAgentLink().getId(),site.getNameId
 		// (),EKeyOfState.LINK_STATE);
@@ -132,9 +130,9 @@ public class CBreakAction extends CAction {
 		// CStateOfLink(CStateOfLink.FREE,CStateOfLink.FREE));
 		// event.correctingType(ECheck.MODIFICATION);
 
-		eventContainer.addEvent(new WireHashKey(site.getAgentLink().getId(), site
+		eventContainer.addAtomicEvent(new WireHashKey(site.getAgentLink().getId(), site
 				.getNameId(), ETypeOfWire.BOUND_FREE), site,
-				ECheck.MODIFICATION, CEvent.AFTER_STATE);
+				EActionOfAEvent.MODIFICATION, state);
 		// key = new UHashKey(site.getAgentLink().getId(), site.getNameId(),
 		// EKeyOfState.BOUND_FREE);
 		// AEvent<Boolean> event2 = (AEvent<Boolean>)
@@ -157,29 +155,4 @@ public class CBreakAction extends CAction {
 		myRule.addSiteConnectedWithBroken(checkedSite);
 	}
 
-	protected final void addRuleSitesToNetworkNotation(boolean existInRule,
-			INetworkNotation netNotation, CSite site) {
-		if (netNotation != null) {
-			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
-			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
-			NetworkNotationMode internalStateMode = NetworkNotationMode.NONE;
-
-			if (existInRule) {
-				agentMode = NetworkNotationMode.TEST;
-				linkStateMode = NetworkNotationMode.TEST_OR_MODIFY;
-			} else {
-				linkStateMode = NetworkNotationMode.MODIFY;
-			}
-			netNotation.addToAgentsFromRules(site, agentMode,
-					internalStateMode, linkStateMode);
-		}
-	}
-
-	protected final void addToNetworkNotation(StateType index,
-			INetworkNotation netNotation, CSite site) {
-		if (netNotation != null) {
-			netNotation.checkLinkForNetworkNotation(index, site);
-			netNotation.checkLinkToUsedSites(index, site);
-		}
-	}
 }

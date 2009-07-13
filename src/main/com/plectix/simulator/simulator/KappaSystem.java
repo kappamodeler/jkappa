@@ -12,7 +12,8 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.complex.contactMap.CContactMap;
-import com.plectix.simulator.components.complex.influenceMap.CInfluenceMapMain;
+import com.plectix.simulator.components.complex.influenceMap.AInfluenceMap;
+import com.plectix.simulator.components.complex.influenceMap.withFuture.CInfluenceMapWithFuture;
 import com.plectix.simulator.components.complex.subviews.CMainSubViews;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
 import com.plectix.simulator.components.injections.CInjection;
@@ -37,7 +38,7 @@ public class KappaSystem {
 	private ISolution solution;// = new CSolution(); // soup of initial components
 	private CContactMap contactMap = new CContactMap();
 	private IAllSubViewsOfAllAgents subViews;
-	private CInfluenceMapMain influenceMap;
+	private AInfluenceMap influenceMap;
 
 	private final IdGenerator agentsIdGenerator = new IdGenerator();
 	private final IdGenerator ruleIdGenerator = new IdGenerator();
@@ -105,35 +106,35 @@ public class KappaSystem {
 
 		observables.checkAutomorphisms();
 
-		if (args.isActivationMap()) {
-			PlxTimer timer = new PlxTimer();
-			simulationData.addInfo(outputType, InfoType.INFO,
-					"--Abstracting activation map...");
-
-			timer.startTimer();
-			for (CRule rule : rules) {
-				rule.updateActivatedRulesList(rules);
-				rule.initializeActivatedObservablesList(observables);
-			}
-			simulationData.stopTimer(outputType, timer, "--Abstraction:");
-			simulationData.addInfo(outputType, InfoType.INFO,
-					"--Activation map computed");
-		}
-
-		if (args.isInhibitionMap()) {
-			PlxTimer timer = new PlxTimer();
-			simulationData.addInfo(outputType, InfoType.INFO,
-					"--Abstracting inhibition map...");
-
-			timer.startTimer();
-			for (CRule rule : rules) {
-				rule.updateInhibitedRulesList(rules);
-				rule.initializeInhibitedObservablesList(observables);
-			}
-			simulationData.stopTimer(outputType, timer, "--Abstraction:");
-			simulationData.addInfo(outputType, InfoType.INFO,
-					"--Inhibition map computed");
-		}
+//		if (args.isActivationMap()) {
+//			PlxTimer timer = new PlxTimer();
+//			simulationData.addInfo(outputType, InfoType.INFO,
+//					"--Abstracting activation map...");
+//
+//			timer.startTimer();
+//			for (CRule rule : rules) {
+//				rule.updateActivatedRulesList(rules);
+//				rule.initializeActivatedObservablesList(observables);
+//			}
+//			simulationData.stopTimer(outputType, timer, "--Abstraction:");
+//			simulationData.addInfo(outputType, InfoType.INFO,
+//					"--Activation map computed");
+//		}
+//
+//		if (args.isInhibitionMap()) {
+//			PlxTimer timer = new PlxTimer();
+//			simulationData.addInfo(outputType, InfoType.INFO,
+//					"--Abstracting inhibition map...");
+//
+//			timer.startTimer();
+//			for (CRule rule : rules) {
+//				rule.updateInhibitedRulesList(rules);
+//				rule.initializeInhibitedObservablesList(observables);
+//			}
+//			simulationData.stopTimer(outputType, timer, "--Abstraction:");
+//			simulationData.addInfo(outputType, InfoType.INFO,
+//					"--Inhibition map computed");
+//		}
 
 		// !!!!!!!!INJECTIONS!!!!!!!!!
 		if (args.isSolutionRead()) {
@@ -143,20 +144,29 @@ public class KappaSystem {
 		solution.getSuperStorage().setAgentsLimit(args.getAgentsLimit());
 
 		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP
-				|| args.isSubViews()) {
-
+				|| args.isSubViews() || args.isDeadRules() || args.isActivationMap() || args.isInhibitionMap()) {
 			// contactMap.initAbstractSolution();
 			// contactMap.constructAbstractRules(rules);
 			// contactMap.constructAbstractContactMap();
 			subViews = new CMainSubViews();
 			subViews.build(solution, rules);
+			if(args.isDeadRules())
+				subViews.initDeadRules();
 			if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-				contactMap.initAbstractSolution();
-				contactMap.constructAbstractRules(rules);
-				contactMap.constructAbstractContactMapFromSubViews(subViews);
-
-//				influenceMap = new CInfluenceMapMain();
-//				influenceMap.initInfluenceMap(subViews.getRules(), contactMap, subViews.getAgentNameIdToAgent());
+				contactMap.fillingContactMap(rules,subViews,simulationData);
+			}
+			
+			if(args.isActivationMap() || args.isInhibitionMap()){
+				PlxTimer timer = new PlxTimer();
+				simulationData.addInfo(outputType, InfoType.INFO,
+						"--Abstracting influence map...");
+				influenceMap = new CInfluenceMapWithFuture();
+				contactMap.fillingContactMap(rules,subViews,simulationData);
+				influenceMap.initInfluenceMap(subViews.getRules(), contactMap, subViews.getAgentNameIdToAgent());
+				influenceMap.fillingActivatedInhibitedRules(rules,this, observables);
+				simulationData.stopTimer(outputType, timer, "--Abstraction:");
+				simulationData.addInfo(outputType, InfoType.INFO,
+						"--influence map computed");
 			}
 			// contactMap.constructReachableRules(rules);
 			// contactMap.constructContactMap();
@@ -398,6 +408,10 @@ public class KappaSystem {
 			randomValue = ThreadLocalData.getRandom().getDouble();
 
 		return -1. / rules.getTotalWeight() * java.lang.Math.log(randomValue);
+	}
+	
+	public AInfluenceMap getInfluenceMap(){
+		return influenceMap;
 	}
 
 	// private final void calculation() {

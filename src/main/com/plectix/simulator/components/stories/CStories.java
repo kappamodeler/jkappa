@@ -2,8 +2,10 @@ package com.plectix.simulator.components.stories;
 
 import java.util.*;
 
+import com.plectix.simulator.components.stories.storage.AbstractStorage;
 import com.plectix.simulator.components.stories.storage.CEvent;
-import com.plectix.simulator.components.stories.storage.CWiresStorage;
+import com.plectix.simulator.components.stories.storage.IWireStorage;
+import com.plectix.simulator.components.stories.storage.StoryStorageException;
 import com.plectix.simulator.simulator.SimulationData;
 
 public final class CStories {
@@ -11,9 +13,7 @@ public final class CStories {
 	private int iterations = 10;
 
 	private final List<Integer> aplliedRulesIds;
-	private final List<NetworkNotationForCurrentStory> networkNotationForCurrentStory;
-	private final HashMap<Integer,CWiresStorage> eventsMapForCurrentStory;
-	private final HashMap<Integer, List<CStoryTrees>> trees;
+	private final Map<Integer,IWireStorage> eventsMapForCurrentStory;
 
 	private SimulationData simulationData;
 
@@ -21,13 +21,9 @@ public final class CStories {
 		this.simulationData = simData;
 		this.iterations = simData.getSimulationArguments().getIterations();
 		this.aplliedRulesIds = new ArrayList<Integer>();
-		this.trees = new HashMap<Integer, List<CStoryTrees>>();
-		this.networkNotationForCurrentStory = new ArrayList<NetworkNotationForCurrentStory>();
-		this.eventsMapForCurrentStory = new HashMap<Integer, CWiresStorage>();
+		this.eventsMapForCurrentStory = new HashMap<Integer, IWireStorage>();
 		for (int i = 0; i < iterations; i++) {
-			this.networkNotationForCurrentStory
-					.add(new NetworkNotationForCurrentStory());
-			this.eventsMapForCurrentStory.put(new Integer(i),new CWiresStorage(simulationData
+			this.eventsMapForCurrentStory.put(new Integer(i),new AbstractStorage(simulationData
 					.getSimulationArguments().getStorifyMode()));
 		}
 	}
@@ -38,18 +34,19 @@ public final class CStories {
 		return aplliedRulesIds.get(index);
 	}
 
-	public final Collection<List<CStoryTrees>> getTrees() {
-		return Collections.unmodifiableCollection(trees.values());
-	}
+//	public final Collection<List<CStoryTrees>> getTrees() {
+//		return Collections.unmodifiableCollection(trees.values());
+//	}
 
-	public final void handling(int index) {
-//		if (networkNotationForCurrentStory.get(index).isEndOfStory()){
-		if (eventsMapForCurrentStory.get(index).isEndOfStory()){
-//			networkNotationForCurrentStory.get(index).handling();
+	/**
+	 * param index ; root of cleaning
+	 */
+	public final void cleaningStory(int index) throws StoryStorageException{
+		if (eventsMapForCurrentStory.get(index).isImportantStory()){
 			eventsMapForCurrentStory.get(index).handling();
 		}
 		else{
-//			networkNotationForCurrentStory.get(index).clearList();
+			//delete this story
 			eventsMapForCurrentStory.get(index).clearList();
 		}
 	}
@@ -60,29 +57,21 @@ public final class CStories {
 		}
 	}
 
-	public final void addToNetworkNotationStory(int index,
-			CNetworkNotation networkNotation, CEvent eventContainer) {
-//		NetworkNotationForCurrentStory.addToNetworkNotationList(
-//				networkNotation, this.networkNotationForCurrentStory.get(index)
-//						.getNetworkNotationList());
-		eventsMapForCurrentStory.get(Integer.valueOf(index)).addEventContainer(eventContainer);
+	public final void addEventToStory(int index,
+			CEvent eventContainer) throws StoryStorageException {
+		eventsMapForCurrentStory.get(Integer.valueOf(index)).addEventContainer(eventContainer,false);
 	}
 
-	public final void addToNetworkNotationStoryStorifyRule(int index,
-			CNetworkNotation networkNotation, CEvent eventContainer,
-			double currentTime) {
-//		this.networkNotationForCurrentStory.get(index)
-//				.addToNetworkNotationListStorifyRule(networkNotation);
-//		this.networkNotationForCurrentStory.get(index).setAverageTime(
-//				currentTime);
+	public final void addLastEventToStoryStorifyRule(int index,
+			CEvent eventContainer,
+			double currentTime) throws StoryStorageException  {
 		this.eventsMapForCurrentStory.get(Integer.valueOf(index))
 				.addLastEventContainer(eventContainer, currentTime);
 	}
 
 	public final boolean checkRule(int ruleToBeChecked, int index) {
 		if (aplliedRulesIds.contains(ruleToBeChecked)) {
-//			networkNotationForCurrentStory.get(index).setEndOfStory();
-//			eventsMapForCurrentStory.get(Integer.valueOf(index)).setEndOfStory();
+			eventsMapForCurrentStory.get(Integer.valueOf(index)).setEndOfStory();
 			return true;
 		} else {
 			return false;
@@ -125,4 +114,11 @@ public final class CStories {
 //
 //		}
 	}
+	
+	public Map<Integer, IWireStorage> getEventsMapForCurrentStory() {
+		// TODO Auto-generated method stub
+		return eventsMapForCurrentStory;
+	}
+	
+	
 }

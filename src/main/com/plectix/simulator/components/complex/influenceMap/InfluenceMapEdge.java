@@ -1,6 +1,6 @@
 package com.plectix.simulator.components.complex.influenceMap;
 
-class InfluenceMapEdge {
+public class InfluenceMapEdge {
 	private final int fromRule;
 	private final int toRule;
 

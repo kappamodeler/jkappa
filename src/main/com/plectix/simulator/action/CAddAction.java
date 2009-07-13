@@ -3,12 +3,9 @@ package com.plectix.simulator.action;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
-import com.plectix.simulator.components.stories.CStoriesSiteStates;
-import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
-import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.enums.EActionOfAEvent;
+import com.plectix.simulator.components.stories.enums.ETypeOfWire;
 import com.plectix.simulator.components.stories.storage.CEvent;
-import com.plectix.simulator.components.stories.storage.ECheck;
-import com.plectix.simulator.components.stories.storage.ETypeOfWire;
 import com.plectix.simulator.components.stories.storage.WireHashKey;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
@@ -46,7 +43,7 @@ public class CAddAction extends CAction {
 	}
 
 	public void doAction(RuleApplicationPool pool, CInjection injection,
-			INetworkNotation netNotation, CEvent eventContainer,
+			CEvent eventContainer,
 			SimulationData simulationData) {
 		/**
 		 * Done.
@@ -55,8 +52,8 @@ public class CAddAction extends CAction {
 				.getKappaSystem().generateNextAgentId());
 
 		if (eventContainer != null) {
-			eventContainer.addEvent(new WireHashKey(agent.getId(),
-					ETypeOfWire.AGENT), null, ECheck.MODIFICATION, CEvent.AFTER_STATE);
+			eventContainer.addAtomicEvent(new WireHashKey(agent.getId(),
+					ETypeOfWire.AGENT), null, EActionOfAEvent.MODIFICATION, CEvent.AFTER_STATE);
 			// UHashKey key = new UHashKey(agent.getId(), EKeyOfState.AGENT);
 			// AEvent<Boolean> event = new AEvent<Boolean>(eventContainer,
 			// ECheck.MODIFICATION);
@@ -70,16 +67,16 @@ public class CAddAction extends CAction {
 			siteAdd.setInternalState(new CInternalState(site.getInternalState()
 					.getNameId()));
 			agent.addSite(siteAdd);
-			addToNetworkNotation(StateType.AFTER, netNotation,
-					siteAdd);
-			addRuleSitesToNetworkNotation(false, netNotation, siteAdd);
+//			addToNetworkNotation(StateType.AFTER, netNotation,
+//					siteAdd);
+//			addRuleSitesToNetworkNotation(false, netNotation, siteAdd);
 			addSiteToEventContainer(eventContainer, siteAdd);
 		}
 		if (myToAgent.getSites().size() == 0) {
-			addToNetworkNotation(StateType.AFTER, netNotation,
-					agent.getDefaultSite());
-			addRuleSitesToNetworkNotation(false, netNotation, agent
-					.getDefaultSite());
+//			addToNetworkNotation(StateType.AFTER, netNotation,
+//					agent.getDefaultSite());
+//			addRuleSitesToNetworkNotation(false, netNotation, agent
+//					.getDefaultSite());
 		}
 
 		getRightCComponent().addAgentFromSolutionForRHS(agent);
@@ -96,8 +93,8 @@ public class CAddAction extends CAction {
 
 		long agentId = site.getAgentLink().getId();
 		int siteId = site.getNameId();
-		eventContainer.addEvent(new WireHashKey(agentId, siteId,
-				ETypeOfWire.BOUND_FREE), site, ECheck.MODIFICATION,
+		eventContainer.addAtomicEvent(new WireHashKey(agentId, siteId,
+				ETypeOfWire.BOUND_FREE), site, EActionOfAEvent.MODIFICATION,
 				CEvent.AFTER_STATE);
 		// UHashKey key = new UHashKey(agentId, siteId, EKeyOfState.BOUND_FREE);
 		// AEvent<Boolean> event = new AEvent<Boolean>(eventContainer,
@@ -107,8 +104,8 @@ public class CAddAction extends CAction {
 		// event.setState(state);
 		// eventContainer.addEvent(key, event);
 
-		eventContainer.addEvent(new WireHashKey(agentId, siteId,
-				ETypeOfWire.INTERNAL_STATE), site, ECheck.MODIFICATION,
+		eventContainer.addAtomicEvent(new WireHashKey(agentId, siteId,
+				ETypeOfWire.INTERNAL_STATE), site, EActionOfAEvent.MODIFICATION,
 				CEvent.AFTER_STATE);
 		// if(site.getInternalState().getNameId() !=
 		// CInternalState.EMPTY_STATE.getNameId()){
@@ -121,8 +118,8 @@ public class CAddAction extends CAction {
 		// eventContainer.addEvent(key, event2);
 		// }
 
-		eventContainer.addEvent(new WireHashKey(agentId, siteId,
-				ETypeOfWire.LINK_STATE), site, ECheck.MODIFICATION,
+		eventContainer.addAtomicEvent(new WireHashKey(agentId, siteId,
+				ETypeOfWire.LINK_STATE), site, EActionOfAEvent.MODIFICATION,
 				CEvent.AFTER_STATE);
 		// key = new UHashKey(agentId, siteId, EKeyOfState.LINK_STATE);
 		// AEvent<CStateOfLink> event3 = new
@@ -134,34 +131,6 @@ public class CAddAction extends CAction {
 		// event3.setState(state3);
 		// eventContainer.addEvent(key, event3);
 
-	}
-
-	protected final void addRuleSitesToNetworkNotation(boolean existInRule,
-			INetworkNotation netNotation, CSite site) {
-		if (netNotation != null) {
-			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
-			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
-			NetworkNotationMode internalStateMode = NetworkNotationMode.NONE;
-
-			agentMode = NetworkNotationMode.TEST_OR_MODIFY;
-			if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
-				internalStateMode = NetworkNotationMode.TEST_OR_MODIFY;
-			}
-			if (site.getLinkState().getStatusLinkRank() != CLinkRank.SEMI_LINK) {
-				linkStateMode = NetworkNotationMode.TEST_OR_MODIFY;
-			}
-
-			netNotation.addToAgentsFromRules(site, agentMode,
-					internalStateMode, linkStateMode);
-		}
-	}
-
-	protected final void addToNetworkNotation(StateType index,
-			INetworkNotation netNotation, CSite site) {
-		if (netNotation != null) {
-			netNotation.addToAgents(site, new CStoriesSiteStates(index, site
-					.getInternalState().getNameId()), index);
-		}
 	}
 
 	/**

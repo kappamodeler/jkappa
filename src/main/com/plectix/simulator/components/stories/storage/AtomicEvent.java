@@ -1,11 +1,13 @@
 package com.plectix.simulator.components.stories.storage;
 
+import com.plectix.simulator.components.stories.enums.EActionOfAEvent;
+
 public class AtomicEvent<E> {
-	private ECheck type;
+	private EActionOfAEvent type;
 	private final CEvent container;
 	private AState<E> state;
 
-	public AtomicEvent(CEvent container, ECheck type) {
+	public AtomicEvent(CEvent container, EActionOfAEvent type) {
 		this.container = container;
 		state = new AState<E>();
 		this.type = type;
@@ -19,11 +21,11 @@ public class AtomicEvent<E> {
 		return state;
 	}
 
-	public void setType(ECheck type) {
+	public void setType(EActionOfAEvent type) {
 		this.type = type;
 	}
 
-	public ECheck getType() {
+	public EActionOfAEvent getType() {
 		return type;
 	}
 
@@ -31,14 +33,19 @@ public class AtomicEvent<E> {
 		return container;
 	}
 
-	public boolean isCausing() {
-		return false;
+	public void correctingType(EActionOfAEvent modification) {
+		if (type == EActionOfAEvent.TEST_AND_MODIFICATION)
+			return;
+		if (type == EActionOfAEvent.TEST && modification == EActionOfAEvent.MODIFICATION)
+			type = EActionOfAEvent.TEST_AND_MODIFICATION;
 	}
 
-	public void correctingType(ECheck modification) {
-		if (type == ECheck.TEST_AND_MODIFICATION)
-			return;
-		if (type == ECheck.TEST && modification == ECheck.MODIFICATION)
-			type = ECheck.TEST_AND_MODIFICATION;
+	public AtomicEvent<?> cloneWithBefore(CEvent container) {
+		AtomicEvent<E> outAEvent = new AtomicEvent<E>(container,EActionOfAEvent.MODIFICATION);
+		AState<E> outState = new AState<E>();
+		outAEvent.setState(outState);
+		outState.setAfterState(state.getBeforeState());
+		outState.setBeforeState(null);
+		return outAEvent;
 	}
 }

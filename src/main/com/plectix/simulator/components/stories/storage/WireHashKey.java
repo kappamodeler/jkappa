@@ -1,27 +1,42 @@
 package com.plectix.simulator.components.stories.storage;
 
+import java.util.HashMap;
+
+import com.plectix.simulator.components.solution.IStorage;
+import com.plectix.simulator.components.stories.enums.ETypeOfWire;
+
 public class WireHashKey {
 	private final long agentId;
-	//=0 if test existence
-	private final int siteId;
-	private final ETypeOfWire keyOfState;
-	//number of modify event on this wire
-	private int numberOfEventOnWire;
 
+	// = 0 if the type of wire == agent
+	private final int siteId;
+
+	// AGENT(1),
+	// INTERNAL_STATE(2),
+	// LINK_STATE(3),
+	// BOUND_FREE(4);
+	private final ETypeOfWire typeOfWire;
+
+	
+	// number of unresolved modify events on this wire
+	// may be need tested events
+	//private int numberOfUnresolvedEventOnWire;
+	
 	public WireHashKey(long agentId, int siteId, ETypeOfWire state) {
 		this.agentId = agentId;
 		this.siteId = siteId;
-		this.keyOfState = state;
+		this.typeOfWire = state;
 	}
 
+	// for agent_test_existence wires
 	public WireHashKey(long agentId, ETypeOfWire state) {
 		this.agentId = agentId;
 		this.siteId = 0;
-		this.keyOfState = state;
+		this.typeOfWire = state;
 	}
 
-	public ETypeOfWire getKeyOfState() {
-		return keyOfState;
+	public ETypeOfWire getTypeOfWire() {
+		return typeOfWire;
 	}
 
 	@Override
@@ -31,17 +46,17 @@ public class WireHashKey {
 
 		WireHashKey in = (WireHashKey) obj;
 		if (this.agentId == in.agentId && this.siteId == in.siteId
-				&& this.keyOfState == in.keyOfState)
+				&& this.typeOfWire == in.typeOfWire)
 			return true;
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = 17;
+		int result = 101;
 		result = getResult(result, (int) (agentId ^ (agentId >>> 32)));
 		result = getResult(result, siteId);
-		result = getResult(result, keyOfState.getId());
+		result = getResult(result, typeOfWire.getId());
 		return result;
 	}
 
@@ -52,34 +67,22 @@ public class WireHashKey {
 	@Override
 	public String toString() {
 		String str;
-		if (keyOfState == ETypeOfWire.AGENT)
-			str = "agentId= " + agentId + " type= " + keyOfState.toString();
+		if (typeOfWire == ETypeOfWire.AGENT)
+			str = "agentId= " + agentId + " type= " + typeOfWire.toString();
 		else
 			str = "agentId=" + agentId + " siteId=" + siteId + " type="
-					+ keyOfState.toString();
+					+ typeOfWire.toString();
 
 		return str;
 	}
 
-	public void setNumberOfEventOnWire(int numberOfEventOnWire) {
-		this.numberOfEventOnWire = numberOfEventOnWire;
-	}
-
-	public int getNumberOfUnresolvedEventOnWire() {
-		return numberOfEventOnWire;
-	}
-
-	public void incNumberOfUnresolvedEvent(boolean up) {
-		if (up){
-			numberOfEventOnWire++;
-		}else{
-			numberOfEventOnWire--;
-		}
-		
-	}
-	
-	public Integer getSiteId(){
+	public Integer getSiteId() {
 		return siteId;
 	}
+	
+	public Long getAgentId() {
+		return agentId;
+	}
 
+	
 }

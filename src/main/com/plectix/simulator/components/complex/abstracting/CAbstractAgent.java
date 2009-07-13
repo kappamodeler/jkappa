@@ -84,8 +84,8 @@ public class CAbstractAgent {
 		this.nameID = agent.getNameId();
 		this.sitesMap = new HashMap<Integer, CAbstractSite>();
 	}
-	
-	public CAbstractAgent(int nameId){
+
+	public CAbstractAgent(int nameId) {
 		this.nameID = nameId;
 		sitesMap = new HashMap<Integer, CAbstractSite>();
 	}
@@ -94,14 +94,14 @@ public class CAbstractAgent {
 	 * Constructor of CContactMapAbstractAgent.<br>
 	 * Sets <b>nameID</b>, fills sites map.
 	 * 
-	 * @param agentLink
+	 * @param agent
 	 *            given agent
 	 */
-	public CAbstractAgent(CAbstractAgent agentLink) {
-		this.nameID = agentLink.getNameId();
+	public CAbstractAgent(CAbstractAgent agent) {
+		this.nameID = agent.getNameId();
 		this.sitesMap = new HashMap<Integer, CAbstractSite>();
 
-		for (Map.Entry<Integer, CAbstractSite> entry : agentLink.getSitesMap()
+		for (Map.Entry<Integer, CAbstractSite> entry : agent.getSitesMap()
 				.entrySet()) {
 			CAbstractSite newSite = entry.getValue().clone();
 			newSite.setAgentLink(this);
@@ -336,8 +336,8 @@ public class CAbstractAgent {
 		for (CAbstractSite aSite : this.getSitesMap().values())
 			aSite.addStates(agent.getSite(aSite.getNameId()));
 	}
-	
-	public String toStringForXML(){
+
+	public String toStringForXML() {
 		StringBuffer sb = new StringBuffer(getName() + "(");
 		boolean first = true;
 		for (CAbstractSite site : sitesMap.values()) {
@@ -351,14 +351,39 @@ public class CAbstractAgent {
 				sb.append("~" + site.getInternalState().getName());
 			}
 			CAbstractLinkState linkState = site.getLinkState();
-			if(linkState.getAgentNameID() != CSite.NO_INDEX){
-				sb.append(ThreadLocalData.getNameDictionary().getName(linkState.getAgentNameID()));
+			if (linkState.getAgentNameID() != CSite.NO_INDEX) {
+				sb.append(ThreadLocalData.getNameDictionary().getName(
+						linkState.getAgentNameID()));
 				sb.append(".");
-				sb.append(ThreadLocalData.getNameDictionary().getName(linkState.getLinkSiteNameID()));
+				sb.append(ThreadLocalData.getNameDictionary().getName(
+						linkState.getLinkSiteNameID()));
 			}
 		}
 		sb.append(")");
 		return sb.toString();
+	}
+
+	public CAbstractAgent plus(CAbstractAgent view) {
+		CAbstractAgent sum = new CAbstractAgent(nameID);
+
+		sum.sitesMap = new HashMap<Integer, CAbstractSite>();
+
+		for (Map.Entry<Integer, CAbstractSite> entry : view.getSitesMap()
+				.entrySet()) {
+			CAbstractSite newSite = entry.getValue().clone();
+			sum.sitesMap.put(entry.getKey(), newSite);
+		}
+
+		for (Map.Entry<Integer, CAbstractSite> entry : this.getSitesMap()
+				.entrySet()) {
+			if (sum.sitesMap.get(entry.getKey()) == null) {
+				CAbstractSite newSite = entry.getValue().clone();
+				sum.sitesMap.put(entry.getKey(), newSite);
+			}
+		}
+
+		return sum;
+
 	}
 
 }

@@ -6,10 +6,9 @@ import java.util.*;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
-import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
+import com.plectix.simulator.components.stories.enums.EActionOfAEvent;
+import com.plectix.simulator.components.stories.enums.ETypeOfWire;
 import com.plectix.simulator.components.stories.storage.CEvent;
-import com.plectix.simulator.components.stories.storage.ECheck;
-import com.plectix.simulator.components.stories.storage.ETypeOfWire;
 import com.plectix.simulator.components.stories.storage.WireHashKey;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
@@ -58,26 +57,8 @@ public abstract class CAction implements Serializable {
 	 * @param simulationData simulation data
 	 */
 	public abstract void doAction(RuleApplicationPool pool,
-			CInjection injection, INetworkNotation netNotation,
+			CInjection injection, 
 			CEvent eventContainer, SimulationData simulationData);
-
-	/**
-	 * Util method. Adds information about given site to given network notation
-	 * @param index information type
-	 * @param netNotation network notation
-	 * @param site given site
-	 */
-	protected abstract void addToNetworkNotation(StateType index,
-			INetworkNotation netNotation, CSite site);
-
-	/**
-	 * Util method. Initializes unconfigured state.
-	 * @param siteExistsInRule key, <tt>true</tt> if given site exists in rule, otherwise <tt>false</tt>
-	 * @param netNotation given network notation
-	 * @param site given site
-	 */
-	protected abstract void addRuleSitesToNetworkNotation(
-			boolean siteExistsInRule, INetworkNotation netNotation, CSite site);
 
 	/**
 	 * This method returns takes agent from left handside of the rule by it's image - agent from right
@@ -98,23 +79,23 @@ public abstract class CAction implements Serializable {
 	}
 
 	protected void addToEventContainer(CEvent eventContainer,
-			CAgent agentFromInSolution, ECheck type) {
+			CAgent agentFromInSolution, EActionOfAEvent type) {
 		if (eventContainer == null)
 			return;
 		// AGENT
-		eventContainer.addEvent(new WireHashKey(agentFromInSolution.getId(),
+		eventContainer.addAtomicEvent(new WireHashKey(agentFromInSolution.getId(),
 				ETypeOfWire.AGENT), null, type, CEvent.BEFORE_STATE);
 		for (CSite s : getAgentFrom().getSites()) {
 			CSite site = agentFromInSolution.getSiteByNameId(s.getNameId());
 			CLinkRank linkRank = s.getLinkState().getStatusLinkRank();
 			if (linkRank != CLinkRank.BOUND_OR_FREE) {
 				// FREE/BOUND
-				eventContainer.addEvent(new WireHashKey(agentFromInSolution
+				eventContainer.addAtomicEvent(new WireHashKey(agentFromInSolution
 						.getId(), site.getNameId(), ETypeOfWire.BOUND_FREE),
 						site, type, CEvent.BEFORE_STATE);
 
-				if (linkRank != CLinkRank.SEMI_LINK) {
-					eventContainer.addEvent(
+				if (linkRank != CLinkRank.SEMI_LINK){// && linkRank != CLinkRank.FREE) {
+					eventContainer.addAtomicEvent(
 							new WireHashKey(agentFromInSolution.getId(), site
 									.getNameId(), ETypeOfWire.LINK_STATE),
 							site, type, CEvent.BEFORE_STATE);
@@ -123,7 +104,7 @@ public abstract class CAction implements Serializable {
 
 			if (s.getInternalState().getNameId() != CInternalState.EMPTY_STATE
 					.getNameId())
-				eventContainer.addEvent(
+				eventContainer.addAtomicEvent(
 						new WireHashKey(agentFromInSolution.getId(), site
 								.getNameId(), ETypeOfWire.INTERNAL_STATE),
 						site, type, CEvent.BEFORE_STATE);

@@ -1,48 +1,60 @@
 package com.plectix.simulator.components.stories.compressions;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Stack;
-import java.util.TreeMap;
-import java.util.Map.Entry;
 
-import com.plectix.simulator.components.stories.storage.CEvent;
-import com.plectix.simulator.components.stories.storage.ETypeOfWire;
-import com.plectix.simulator.components.stories.storage.IAtomicEventIterator;
+import com.plectix.simulator.components.stories.enums.EActionOfAEvent;
+import com.plectix.simulator.components.stories.enums.EMarkOfEvent;
+import com.plectix.simulator.components.stories.enums.EState;
+import com.plectix.simulator.components.stories.enums.ETypeOfWire;
+import com.plectix.simulator.components.stories.storage.AtomicEvent;
+import com.plectix.simulator.components.stories.storage.CStateOfLink;
 import com.plectix.simulator.components.stories.storage.ICEvent;
 import com.plectix.simulator.components.stories.storage.IEventIterator;
 import com.plectix.simulator.components.stories.storage.IWireStorage;
+import com.plectix.simulator.components.stories.storage.StoryStorageException;
 import com.plectix.simulator.components.stories.storage.WireHashKey;
-import com.plectix.simulator.components.stories.storage.EMarkOfEvent;
 
 public class WeakCompression 
 {
 	private IWireStorage storage;
+	private ICEvent boundaryEvent = null;
+	private boolean upperBound = true;
 	
 	public WeakCompression (IWireStorage storage) 
 	{
 		this.storage = storage;
 	}
 	
-	public void process () 
+	public void setBoundaryEvent (ICEvent event, boolean upperBound)
+	{
+		this.boundaryEvent = event;
+		this.upperBound = upperBound;
+	}
+	
+	public boolean process () throws StoryStorageException 
 	{		
-		Stack<Object[]> searchStack = new Stack<Object[]>();
-		CEvent observableEvent = storage.observableEvent();
-		Long observableEventId = storage.observableEventId();
+		Stack<ICEvent> searchStack = new Stack<ICEvent>();
+		ICEvent initialEvent = storage.initialEvent();
+		ICEvent observableEvent = storage.observableEvent();
+		boolean compressed = false;
 
 		storage.markAllUnresolved();
 		
-		storage.markEvent(observableEvent, EMarkOfEvent.KEPT);
-		searchStack.add(new Object[] {observableEventId, observableEvent});
+		// Add initial event to stack
+		//initialEvent.setMark(EMarkOfEvent.KEPT);
+		searchStack.add(initialEvent);
+		
+		// Add observable event to stack
+		observableEvent.setMark(EMarkOfEvent.KEPT,storage);
+
+		searchStack.add(observableEvent);
 		
 		while (!searchStack.empty())
 		{
-			CEvent top = (CEvent)searchStack.peek()[1];
+			ICEvent top = searchStack.peek();
 			
-			Object[] nextEvent = selectEventToBranch(top);
+			ICEvent nextEvent = selectEventToBranch(top);
 			
 			if (nextEvent == null)
 			{
@@ -50,150 +62,60 @@ public class WeakCompression
 				continue;
 			}
 			
-			CEvent nextEventEntity = (CEvent)nextEvent[1];
+			nextEvent.setMark(EMarkOfEvent.DELETED, storage);
 			
-			storage.markEvent(nextEventEntity, EMarkOfEvent.DELETED);
-			
-			//if (!propagate((Long)nextEvent[0], nextEventEntity))
-			//{
-				storage.markEvent(nextEventEntity, EMarkOfEvent.KEPT);
+			if (!propagate(nextEvent))
+			{
+				nextEvent.setMark(EMarkOfEvent.KEPT, storage);
 				searchStack.push(nextEvent);
-			//}
+			} else if (!compressed)
+				compressed = true;
 		}
+		
+		return compressed;
 	}
 
-	private Object[] selectEventToBranch (CEvent keptEvent)
+	private ICEvent selectEventToBranch (ICEvent keptEvent) throws StoryStorageException
 	{
-		IAtomicEventIterator iterator = storage.wireEventIterator(keptEvent);
+		WireHashKey selectedWire = keptEvent.getWireWithMinimumUresolvedEvent(storage);
 		
-		WireHashKey selectedWire = null;
-		int minUnresolvedCount; 
-		
-		if (iterator.hasNext())
-		{
-			selectedWire = iterator.next();
-			minUnresolvedCount = storage.getUnresolvedCount(selectedWire);
+		if (selectedWire == null)
+			return null;
 
-			while (iterator.hasNext())
-			{
-				WireHashKey wire = iterator.next();
-				int unresolvedCount = storage.getUnresolvedCount(wire);
+		IEventIterator eventIterator = storage.eventIterator(selectedWire, true);
 				
-				if (unresolvedCount > 0)
-				{
-					if (unresolvedCount < minUnresolvedCount || minUnresolvedCount == 0)
-					{
-						minUnresolvedCount = unresolvedCount;
-						selectedWire = wire;
-					}
-				}
-			}
-			
-			if (minUnresolvedCount > 0)
-			{
-				IEventIterator eventIterator = storage.eventIterator(selectedWire, true);
+		while (eventIterator.hasNext())
+		{
+			eventIterator.next();
 				
-				while (eventIterator.hasNext())
-				{
-					Long eventId = eventIterator.next();
+			ICEvent nextEvent = eventIterator.value(); 
 					
-					CEvent nextEvent = eventIterator.value(); 
-					
-					if (nextEvent.getMark() == EMarkOfEvent.UNRESOLVED)
-						return new Object[] {eventId, nextEvent}; 
-				}
-			}
-		}
-		return null;
-	}
-	
-	private class StackEntry
-	{
-		private int    wireIdx;
-		//private Iterator<Integer> internalStateIterator = null;
-		
-		public StackEntry (IWireStorage storage, long eventId, ICEvent event, int wireIdx)
-		{
-			this.wireIdx = wireIdx;
-			//this.eventIterator = storage.eventIterator(event.getWireKey(wireIdx), eventId, false); 
+			if (nextEvent.getMark() == EMarkOfEvent.UNRESOLVED)
+				return nextEvent; 
 		}
 		
-		public int getWireIdx ()
-		{
-			return wireIdx;
-		}
-		
-		public boolean hasNextState ()
-		{
-			// TODO: states enumeration
-			return false; 
-		}
-	}
-	
-	private class QueueEntry
-	{
-		private long eventId;
-		private ICEvent event;
-		private int queueSize; 
-		private int stackSize; 
-		
-		public int currentWireIdx = 0;
-		
-		public QueueEntry (long eventId, ICEvent event, int queueSize, int stackSize)
-		{
-			this.eventId = eventId;
-			this.event = event;
-			this.queueSize = queueSize;
-			this.stackSize = stackSize;
-		}
-		
-		public ICEvent getEvent ()
-		{
-			return event;
-		}
-
-		public int getWireCount ()
-		{
-			return event.getAtomicEventCount();
-		}
-
-		public long getEventId ()
-		{
-			return eventId;
-		}
-		
-		public ETypeOfWire getWireType ()
-		{
-			return event.getWireKey(currentWireIdx).getKeyOfState();
-		}
-		
-		public int getQueueSize ()
-		{
-			return queueSize;
-		}
-
-		public int getStackSize ()
-		{
-			return stackSize;
-		}
+		throw new StoryStorageException("selectEventToBranch(): no UNRESOLVED event");
 	}
 	
 	private ArrayList<QueueEntry> uninvestigatedQueue = new ArrayList<QueueEntry>();
 	private Stack<StackEntry> wireStack = new Stack<StackEntry>();
+	private ArrayList<ICEvent> candidatesToDelete = new ArrayList<ICEvent>();
 	
 	int currentNodeIdx;
 	QueueEntry currentNode = null;
 	StackEntry topEntry = null;
 	
-	private boolean propagate (Long eventId, ICEvent event)
+	private boolean propagate (ICEvent event) throws StoryStorageException
 	{
 		uninvestigatedQueue.clear();
 		wireStack.clear();
 		
-		uninvestigatedQueue.add(new QueueEntry(eventId, event, 0, 0));
-		wireStack.push(new StackEntry(storage, eventId, event, 0));
+		uninvestigatedQueue.add(new QueueEntry(event, 0, 0, 0));
 		
 		currentNodeIdx = 0;
+		currentNode = uninvestigatedQueue.get(currentNodeIdx);
+		
+		pushEntry();
 		
 		while (currentNodeIdx != uninvestigatedQueue.size())
 		{
@@ -208,49 +130,51 @@ public class WeakCompression
 			
 			topEntry = wireStack.peek();
 			
-			// Push wire from event to stack
+			// Push next wire from event to stack
 			if (currentNode.currentWireIdx != topEntry.getWireIdx())
 			{
-				wireStack.push(new StackEntry(storage, currentNode.getEventId(), currentNode.getEvent(), currentNode.currentWireIdx));
+				pushEntry();
 				continue;
 			}
 			
-			ETypeOfWire wireType = currentNode.getWireType();
-			boolean has_next_state = false;
-			
-			if (wireType == ETypeOfWire.BOUND_FREE || wireType == ETypeOfWire.INTERNAL_STATE)
-				has_next_state = topEntry.hasNextState();
-			
-			// Find block of events on current wire to delete
-			if (has_next_state && addDeletedEvents())
+			// Add new events to queue
+			if (topEntry.hasNextState())
 			{
-				currentNode.currentWireIdx++;
+				// Find block of events on current wire to delete
+				if (addDeletedEvents())
+					currentNode.currentWireIdx++;
+				
+				// Go to next wire state
 				continue;
 			}
+			
 			
 			// Restore stack and queue
-			if (!has_next_state)
+			// Backtrack to previous wire
+			if (currentNode.currentWireIdx > 0)
 			{
-				// Backtrack to previous wire
-				if (currentNode.currentWireIdx > 0)
-				{
-					currentNode.currentWireIdx--;
-					wireStack.pop();
-					continue;
-				}
+				currentNode.currentWireIdx--;
+				decreaseStack(wireStack.size() - 1);
+
+				QueueEntry last = uninvestigatedQueue.get(uninvestigatedQueue.size() - 1);
+				int previousPos = last.getQueuePosIdx();
 				
-				// Backtrack to source wire
-				while (uninvestigatedQueue.size() != currentNode.getQueueSize())
-					uninvestigatedQueue.remove(uninvestigatedQueue.size() - 1);
-				while (wireStack.size() != currentNode.getStackSize())
-					wireStack.pop();
-				
-				if (uninvestigatedQueue.size() > 0)
-				{
-					currentNodeIdx = uninvestigatedQueue.size() - 1;
-					uninvestigatedQueue.get(currentNodeIdx).currentWireIdx = wireStack.peek().getWireIdx();
-				}
+				// If queue has events added from previous wire
+				if (previousPos == currentNodeIdx && 
+					uninvestigatedQueue.get(previousPos).getStackSize() == wireStack.size())
+					decreaseQueue(last.getQueueSize());
+
+				continue;
 			}
+				
+			// Backtrack to source event and wire
+			decreaseQueue(currentNode.getQueueSize());
+			decreaseStack(currentNode.getStackSize());
+				
+			currentNodeIdx = currentNode.getQueuePosIdx();
+			
+			if (uninvestigatedQueue.size() > 0)
+				uninvestigatedQueue.get(currentNodeIdx).currentWireIdx = wireStack.peek().getWireIdx();
 		}
 		
 		if (currentNodeIdx > 0)
@@ -258,25 +182,282 @@ public class WeakCompression
 		return false;
 	}
 	
-	private boolean addDeletedEvents ()
+	private void pushEntry () throws StoryStorageException
 	{
-		int srcQueueSize = uninvestigatedQueue.size();
+		ICEvent event = currentNode.getEvent();
+		
+		if (event.getAtomicEventCount() == 0)
+			throw new StoryStorageException("pushEntry(): event has no non-BOUND/FREE atomic events");
+			
+		if (currentNode.getWireType() == ETypeOfWire.BOUND_FREE)
+			throw new StoryStorageException("pushEntry(): unexpected BOUND/FREE wire");
+		
+		wireStack.push(new StackEntry(storage, event, currentNode.currentWireIdx));
+	}
+	
+	private void decreaseQueue (int size) throws StoryStorageException
+	{
+		while (uninvestigatedQueue.size() != size)
+		{
+			QueueEntry last = uninvestigatedQueue.get(uninvestigatedQueue.size() - 1);
+			last.getEvent().setMark(EMarkOfEvent.UNRESOLVED, storage);
+			uninvestigatedQueue.remove(uninvestigatedQueue.size() - 1);
+		}
+	}
+	
+	private void decreaseStack (int size)
+	{
+		while (wireStack.size() != size)
+			wireStack.pop();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean walkOnInternalStateWire (Integer state, boolean upwards) throws StoryStorageException
+	{
+		ICEvent event = currentNode.getEvent();
+		WireHashKey wireKey = event.getWireKey(topEntry.getWireIdx());
+
+		IEventIterator eventIterator = storage.eventIterator(wireKey, event.getStepId(), upwards);
+
+		while (eventIterator.hasNext())
+		{
+			eventIterator.next();
+
+			ICEvent curEvent = eventIterator.value();
+
+			// DELETED
+			if (curEvent.getMark() == EMarkOfEvent.DELETED)
+				continue;
+
+			AtomicEvent<Integer> atomicEvent = (AtomicEvent<Integer>) curEvent.getAtomicEvent(wireKey);
+
+			// KEPT and UNRESOLVED
+			switch (atomicEvent.getType())
+			{
+			case TEST:
+				if (state != atomicEvent.getState().getBeforeState())
+				{
+					if (!deleteEvent(curEvent))
+						return false;
+					continue;
+				}
+				return true;
+			case TEST_AND_MODIFICATION:
+				if (upwards)
+				{
+					if (state != atomicEvent.getState().getAfterState())
+					{
+						if (!deleteEvent(curEvent))
+							return false;
+						continue;
+					}
+				} else if (state != atomicEvent.getState().getBeforeState())
+				{
+					if (!deleteEvent(curEvent))
+						return false;
+					continue;
+				}
+				return true;
+			case MODIFICATION:
+				if (upwards && state != atomicEvent.getState().getAfterState())
+				{
+					if (!deleteEvent(curEvent))
+						return false;
+					continue;
+				}
+				return true;
+			}
+		}
+		return true;
+	}
+		
+	@SuppressWarnings("unchecked")
+	public boolean walkOnAgentWire () throws StoryStorageException
+	{
+		ICEvent event = currentNode.getEvent();
+		WireHashKey wireKey = event.getWireKey(topEntry.getWireIdx());
+		AtomicEvent<EState> atomicEvent = (AtomicEvent<EState>) event.getAtomicEvent(topEntry.getWireIdx());
+
+		if (atomicEvent.getType() == EActionOfAEvent.TEST)
+			return true;
+
+		boolean upwards = false;
+		EState state = null;
+
+		if (atomicEvent.getState().getBeforeState() == null)
+		{
+			state = atomicEvent.getState().getAfterState();
+		} else if (atomicEvent.getState().getAfterState() == null)
+		{
+			upwards = true;
+			state = atomicEvent.getState().getBeforeState();
+		} else
+			throw new StoryStorageException("walkOnAgentWire(): wire doesn't have null state before/after modification");
+
+		IEventIterator eventIterator = storage.eventIterator(wireKey, event.getStepId(), upwards);
+
+		while (eventIterator.hasNext())
+		{
+			eventIterator.next();
+
+			ICEvent curEvent = eventIterator.value();
+
+			// DELETED
+			if (curEvent.getMark() == EMarkOfEvent.DELETED)
+				continue;
+
+			AtomicEvent<EState> curAtomicEvent = (AtomicEvent<EState>) curEvent.getAtomicEvent(wireKey);
+
+			// KEPT and UNRESOLVED
+			switch (curAtomicEvent.getType())
+			{
+			case TEST:
+				if (!deleteEvent(curEvent))
+					return false;
+				continue;
+			case TEST_AND_MODIFICATION:
+			case MODIFICATION:
+				if (!deleteEvent(curEvent))
+					return false;
+				
+				if (upwards)
+				{
+					if (state != curAtomicEvent.getState().getAfterState() || curAtomicEvent.getState().getBeforeState() != null)
+						throw new StoryStorageException("walkOnAgentWire(): inconsistent storage");
+					return true;
+				}
+
+				if ((curAtomicEvent.getType() == EActionOfAEvent.TEST_AND_MODIFICATION &&
+						state != curAtomicEvent.getState().getBeforeState()) ||
+						curAtomicEvent.getState().getAfterState() != null)
+					throw new StoryStorageException("walkOnAgentWire(): inconsistent storage");
+
+				return true;
+			}
+		}
+		return true;
+	}
+	
+	final static CStateOfLink freeLinkState = new CStateOfLink(CStateOfLink.FREE, CStateOfLink.FREE);
+	
+	@SuppressWarnings("unchecked")
+	public boolean walkOnLinkStateWire () throws StoryStorageException
+	{
+		ICEvent event = currentNode.getEvent();
+		AtomicEvent<CStateOfLink> atomicEvent = (AtomicEvent<CStateOfLink>) event.getAtomicEvent(topEntry.getWireIdx());
+
+		if (atomicEvent.getType() == EActionOfAEvent.TEST)
+			return true;
+
+		boolean bothDirections = false;
+		boolean upwards = false;
+
+		if (atomicEvent.getState().getBeforeState() == null || freeLinkState.equals(atomicEvent.getState().getBeforeState()))
+		{
+			upwards = false;
+		} else if (freeLinkState.equals(atomicEvent.getState().getAfterState()))
+		{
+			upwards = true;
+		} else if (atomicEvent.getState().getAfterState() == null)
+		{
+			throw new StoryStorageException("walkOnLinkStateWire(): inconsistent storage");
+		} else
+			bothDirections = true;
+		
+		// TODO: more advanced deletion of events needed 
+		if (bothDirections)
+			return walkOnLinkStateSingleDirection(false) && walkOnLinkStateSingleDirection(true);
+		
+		return walkOnLinkStateSingleDirection(upwards);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private boolean walkOnLinkStateSingleDirection (boolean upwards) throws StoryStorageException
+	{
+		ICEvent event = currentNode.getEvent();
+		WireHashKey wireKey = event.getWireKey(topEntry.getWireIdx());
+		
+		IEventIterator eventIterator = storage.eventIterator(wireKey, event.getStepId(), upwards);
+
+		while (eventIterator.hasNext())
+		{
+			eventIterator.next();
+
+			ICEvent curEvent = eventIterator.value();
+
+			// DELETED
+			if (curEvent.getMark() == EMarkOfEvent.DELETED)
+				continue;
+
+			AtomicEvent<CStateOfLink> curAtomicEvent = (AtomicEvent<CStateOfLink>) curEvent.getAtomicEvent(wireKey);
+
+			// KEPT and UNRESOLVED
+			if (!deleteEvent(curEvent))
+				return false;
+			if (curAtomicEvent.getType() == EActionOfAEvent.TEST)
+				continue;
+
+			if (upwards)
+			{
+				if (curAtomicEvent.getState().getBeforeState() == null || 
+						freeLinkState.equals(curAtomicEvent.getState().getBeforeState()))
+					return true;
+				continue;
+			}
+			
+			if (curAtomicEvent.getState().getAfterState() == null)
+				throw new StoryStorageException("walkOnLinkStateSingleDirection(): inconsistent storage");
+
+			if (freeLinkState.equals(curAtomicEvent.getState().getAfterState()))
+				return true;
+		}
+		
+		return true;
+	}
+	
+	private boolean deleteEvent (ICEvent curEvent) throws StoryStorageException
+	{
+		if (curEvent.getMark() == EMarkOfEvent.KEPT)
+			return false;
+
+		candidatesToDelete.add(curEvent);
+		return true;
+	}
+
+	private boolean addDeletedEvents () throws StoryStorageException
+	{
+		candidatesToDelete.clear();
 		
 		switch (currentNode.getWireType())
 		{
-		case BOUND_FREE:
-			return true;
 		case INTERNAL_STATE:
-			return true;
+			Integer currentInternalState = topEntry.nextState();
+			
+			if (!walkOnInternalStateWire(currentInternalState, false) || 
+				!walkOnInternalStateWire(currentInternalState, true))
+				return false;
+			break;
 		case LINK_STATE:
-			return true;
+			topEntry.selectNonIterable();
+			if (!walkOnLinkStateWire())
+				return false;
+			break;
 		case AGENT:
-			return true;
+			topEntry.selectNonIterable();
+			if (!walkOnAgentWire())
+				return false;
+			break;
 		}
 
-		while (uninvestigatedQueue.size() != srcQueueSize)
-			uninvestigatedQueue.remove(uninvestigatedQueue.size() - 1);
+		int srcQueueSize = uninvestigatedQueue.size();
 		
-		return false;	
+		for (ICEvent e: candidatesToDelete)
+		{
+			e.setMark(EMarkOfEvent.DELETED, storage);
+			uninvestigatedQueue.add(new QueueEntry(e, srcQueueSize, wireStack.size(), currentNodeIdx));
+		}
+		
+		return true;	
 	}
+
 }

@@ -334,4 +334,25 @@ public class CSubViewsLinkedlist implements ISubViews {
 	public CSubViewClass getSubViewClass() {
 		return subViewClass;
 	}
+
+	@Override
+	public List<CAbstractAgent> getAllSubViewsCoherent(CAbstractAgent view) {
+		List<CAbstractAgent> outList = new LinkedList<CAbstractAgent>();
+		if (view == null||view.getSitesMap().isEmpty())
+			return storage;
+		
+		for (CAbstractAgent aAgent : storage) {
+			boolean isHave = true;
+			for (CAbstractSite site : view.getSitesMap().values()) {
+				int siteId = site.getNameId();
+				if (subViewClass.isHaveSite(siteId)
+						&& !site.isFit(aAgent.getSite(siteId))) {
+					isHave = false;
+				}
+			}
+			if (isHave)
+				outList.add(aAgent.plus(view));
+		}
+		return outList;
+	}
 }

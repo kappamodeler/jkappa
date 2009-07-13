@@ -222,15 +222,15 @@ public class SimulatorCommandLine {
 		}
 
 		if (hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)) {
-			simulationArguments.setStorifyMode(SimulationArguments.StorifyMode.NONE);
+			simulationArguments.setStorifyMode(SimulationArguments.StoryCompressionMode.NONE);
 		}
 
 		if (hasOption(SimulatorOptions.COMPRESS_STORIES)) {
-			simulationArguments.setStorifyMode(SimulationArguments.StorifyMode.WEAK);
+			simulationArguments.setStorifyMode(SimulationArguments.StoryCompressionMode.WEAK);
 		}
 
 		if (hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
-			simulationArguments.setStorifyMode(SimulationArguments.StorifyMode.STRONG);
+			simulationArguments.setStorifyMode(SimulationArguments.StoryCompressionMode.STRONG);
 		}
 
 		if (hasOption(SimulatorOptions.EVENT)) {
@@ -246,15 +246,6 @@ public class SimulatorCommandLine {
 		if (hasOption(SimulatorOptions.AGENTS_LIMIT)) {
 			simulationArguments.setAgentsLimit(getIntValue(SimulatorOptions.AGENTS_LIMIT));
 		}
-		
-		if (hasOption(SimulatorOptions.LIVE_DATA_INTERVAL)) {
-			simulationArguments.setLiveDataInterval(getLongValue(SimulatorOptions.LIVE_DATA_INTERVAL));
-		}
-		
-		if (hasOption(SimulatorOptions.LIVE_DATA_POINTS)) {
-			simulationArguments.setLiveDataPoints(getIntValue(SimulatorOptions.LIVE_DATA_POINTS));
-		}
-		
 		
 		boolean option = false;
 		String fileName = null;
@@ -305,6 +296,10 @@ public class SimulatorCommandLine {
 			simulationArguments.setSubViews(true);
 		}
 	
+		if (hasOption(SimulatorOptions.COMPUTE_DEAD_RILES)) {
+			simulationArguments.setDeadRules(true);
+		}
+
 		if (hasOption(SimulatorOptions.CONTACT_MAP)) {
 			if (!option) {
 				option = true;

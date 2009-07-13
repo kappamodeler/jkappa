@@ -30,11 +30,11 @@ public class Initializator {
 		boolean rescale = (myRescale != null);
 		String[] args;
 		if (!rescale) {
-			args = new String[9];
+			args = new String[10];
 		} else {
-			args = new String[11];
-			args[9] = "-rescale";
-			args[10] = "" + myRescale;
+			args = new String[12];
+			args[10] = "-rescale";
+			args[11] = "" + myRescale;
 		}
 		args[0] = "--debug";
 		args[1] = "--sim";
@@ -45,6 +45,7 @@ public class Initializator {
 		args[6] = "10";
 		args[7] = "--operation-mode";
 		args[8] = "DEFAULT";
+		args[9] = "--no-maps";
 		return args;
 	}
 	
@@ -89,29 +90,43 @@ public class Initializator {
 	}
 	
 	
-	public static SimulationArguments prepareStorifyArguments(String filePath) throws ParseException{
-		String[] args = new String[7];
+	public static SimulationArguments prepareStorifyArguments(String filePath, boolean isWeak) throws ParseException{
+		String[] args;
+		args = new String[9];
+		if (isWeak){
+			args[8] = "--compress-stories";
+		}else{
+			args[8] = "--no_compress_stories";
+		}
 		args[0] = "--storify";
 		args[1] = filePath;
 		args[2] = "--event";
 		args[3] = "1000";
-		args[4] = "--no_compress_stories";
-		args[5] = "--iteration";
-		args[6] = "10";
+		args[4] = "--iteration";
+		args[5] = "10";
+		args[6] = "--seed";
+		args[7] = "20";
+		
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
 	
-	public static SimulationArguments prepareStorifyArgumentsSlow(String filePath) throws ParseException{
-		String[] args = new String[7];
+	public static SimulationArguments prepareStorifyArgumentsSlow(String filePath, boolean isWeak) throws ParseException{
+		String[] args = new String[8];
+		if (isWeak){
+			args[8] = "--compress-stories";
+		}else{
+			args[8] = "--no_compress_stories";
+		}
 		args[0] = "--storify";
 		args[1] = filePath;
 		args[2] = "--event";
 		args[3] = "1000";
-		args[4] = "--no_compress_stories";
-		args[5] = "--iteration";
-		args[6] = "100";
+		args[4] = "--iteration";
+		args[5] = "100";
+		args[6] = "--seed";
+		args[7] = "20";
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();

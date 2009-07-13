@@ -7,8 +7,6 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
-import com.plectix.simulator.interfaces.INetworkNotation;
-
 import com.plectix.simulator.simulator.SimulationData;
 
 /**
@@ -50,16 +48,16 @@ public final class CRulePerturbation extends CRule {
 
 	@Override
 	public final void applyRuleForStories(List<CInjection> injectionList,
-			INetworkNotation netNotation, CEvent eventContainer, SimulationData simulationData, boolean isLast) {
+			CEvent eventContainer, SimulationData simulationData, boolean isLast) {
 		check();
-		apply(injectionList, netNotation,eventContainer, simulationData, false);
+		apply(injectionList, eventContainer, simulationData, false);
 		count--;
 	}
 
 	@Override
 	public final void applyRule(List<CInjection> injectionList, SimulationData simulationData) {
 		check();
-		apply(injectionList, null,null, simulationData, false);
+		apply(injectionList, null, simulationData, false);
 		count--;
 	}
 

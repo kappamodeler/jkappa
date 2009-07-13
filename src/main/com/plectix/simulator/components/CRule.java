@@ -6,8 +6,6 @@ import java.util.*;
 import com.plectix.simulator.action.*;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
-import com.plectix.simulator.components.stories.CNetworkNotation.NetworkNotationMode;
-import com.plectix.simulator.components.stories.CStoriesSiteStates.StateType;
 import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.probability.WeightedItem;
@@ -57,13 +55,13 @@ public class CRule implements Serializable, WeightedItem {
 
 	private int automorphismNumber = 1;
 	private boolean infiniteRate = false;
-	private List<CRule> activatedRules;
+	private List<CRule> activatedRules = new LinkedList<CRule>();
 	private List<CRule> activatedRuleForXMLOutput;
-	private List<CRule> inhibitedRule;
+	private List<CRule> inhibitedRule = new LinkedList<CRule>();
 
-	private List<IObservablesConnectedComponent> activatedObservable;
+	private List<IObservablesConnectedComponent> activatedObservable = new LinkedList<IObservablesConnectedComponent>();
 	private List<IObservablesConnectedComponent> activatedObservableForXMLOutput;
-	private List<IObservablesConnectedComponent> inhibitedObservable;
+	private List<IObservablesConnectedComponent> inhibitedObservable = new LinkedList<IObservablesConnectedComponent>();
 
 	private int ruleID;
 	private List<CAction> actionList;
@@ -260,9 +258,9 @@ public class CRule implements Serializable, WeightedItem {
 	 *            in current simulation, otherwise false
 	 */
 	public void applyRuleForStories(List<CInjection> injectionList,
-			INetworkNotation netNotation, CEvent eventContainer,
+			CEvent eventContainer,
 			SimulationData simulationData, boolean isLast) {
-		apply(injectionList, netNotation, eventContainer, simulationData,
+		apply(injectionList, eventContainer, simulationData,
 				isLast);
 	}
 
@@ -278,7 +276,7 @@ public class CRule implements Serializable, WeightedItem {
 	 */
 	public void applyRule(List<CInjection> injectionList,
 			SimulationData simulationData) {
-		apply(injectionList, null, null, simulationData, false);
+		apply(injectionList, null, simulationData, false);
 	}
 
 	/**
@@ -343,7 +341,7 @@ public class CRule implements Serializable, WeightedItem {
 	 *            in current simulation, otherwise false
 	 */
 	protected final void apply(List<CInjection> injectionList,
-			INetworkNotation netNotation, CEvent eventContainer,
+			CEvent eventContainer,
 			SimulationData simulationData, boolean isLast) {
 		agentAddList = new HashMap<CAgent, CAgent>();
 		sitesConnectedWithDeleted = new ArrayList<CSite>();
@@ -358,18 +356,15 @@ public class CRule implements Serializable, WeightedItem {
 
 		for (CAction action : actionList) {
 			if (action.getLeftCComponent() == null) {
-				action.doAction(pool, null, netNotation, eventContainer,
+				action.doAction(pool, null,eventContainer,
 						simulationData);
 			} else {
 				action.doAction(pool, injectionList.get(leftHandside
-						.indexOf(action.getLeftCComponent())), netNotation,
+						.indexOf(action.getLeftCComponent())), 
 						eventContainer, simulationData);
 			}
 		}
 
-		if (netNotation != null) {
-			addFixedSitesToNetworkNotation(netNotation);
-		}
 	}
 
 	public final RuleApplicationPool getPool() {
@@ -379,103 +374,6 @@ public class CRule implements Serializable, WeightedItem {
 	public final void preparePool(SimulationData simulationData) {
 		ISolution solution = simulationData.getKappaSystem().getSolution();
 		pool = solution.prepareRuleApplicationPool();
-	}
-
-	/**
-	 * This method applies the last rule for stories
-	 * 
-	 * @param injectionsList
-	 *            list of injections, which point to substances this rule will
-	 *            be applied to
-	 * @param netNotation
-	 *            INetworkNotation object which keep information about rule
-	 *            application
-	 */
-	public final void applyLastRuleForStories(List<CInjection> injectionsList,
-			INetworkNotation netNotation, CEvent eventContainer) {
-		for (CInjection inj : injectionsList) {
-			for (CSite site : inj.getSiteList()) {
-				netNotation.checkLinkForNetworkNotationDel(StateType.BEFORE,
-						site);
-			}
-		}
-
-	}
-
-	/**
-	 * This method adds information about changed site in solution to the given
-	 * network notation
-	 * 
-	 * @param netNotation
-	 *            network notation
-	 * @param site
-	 *            site from solution
-	 */
-	private final void addNewSiteToNetworkNotation(
-			INetworkNotation netNotation, CSite site) {
-		if (netNotation != null) {
-			NetworkNotationMode agentMode = NetworkNotationMode.NONE;
-			NetworkNotationMode linkStateMode = NetworkNotationMode.NONE;
-			NetworkNotationMode internalStateMode = NetworkNotationMode.NONE;
-			linkStateMode = NetworkNotationMode.MODIFY;
-			netNotation.addToAgentsFromRules(site, agentMode,
-					internalStateMode, linkStateMode);
-		}
-	}
-
-	/**
-	 * This method adds information about what happened with agents (or it's
-	 * sites if being exact) in solution, that was injected by "fixed" agents in
-	 * rule, to the given network notation.
-	 * 
-	 * Fixed site means that we have two agents in different handsides of the
-	 * rule, which are placed on the same positions and has similar names and
-	 * sites.
-	 * 
-	 * @param netNotation
-	 *            network notation
-	 */
-	private final void addFixedSitesToNetworkNotation(
-			INetworkNotation netNotation) {
-		for (CSite siteInSolution : this.sitesConnectedWithBroken) {
-			addNewSiteToNetworkNotation(netNotation, siteInSolution);
-			if (!netNotation.changedSitesContains(siteInSolution)) {
-				netNotation.checkLinkToUsedSites(StateType.BEFORE,
-						siteInSolution);
-				netNotation.checkLinkToUsedSites(StateType.AFTER,
-						siteInSolution);
-			}
-		}
-
-		for (CSite siteInSolution : this.sitesConnectedWithDeleted) {
-			addNewSiteToNetworkNotation(netNotation, siteInSolution);
-			if (!netNotation.changedSitesContains(siteInSolution)) {
-				netNotation.checkLinkToUsedSites(StateType.BEFORE,
-						siteInSolution);
-				netNotation.checkLinkToUsedSites(StateType.AFTER,
-						siteInSolution);
-			}
-		}
-
-		for (ChangedSite fs : fixedSites) {
-			CSite siteFromRule = (CSite) fs.getSite();
-			CInjection inj = getInjectionBySiteToFromLHS(siteFromRule);
-			CAgent agentToInSolution = inj.getAgentFromImageById(siteFromRule
-					.getAgentLink().getIdInConnectedComponent());
-			CSite site;
-			if (siteFromRule.getNameId() == CSite.NO_INDEX)
-				site = agentToInSolution.getDefaultSite();
-			else
-				site = agentToInSolution.getSiteByNameId(siteFromRule
-						.getNameId());
-			// add fixed agents
-			netNotation.addFixedSitesFromRules(site, NetworkNotationMode.TEST,
-					fs.isInternalState(), fs.isLinkState());
-			if (!netNotation.changedSitesContains(site)) {
-				netNotation.checkLinkToUsedSites(StateType.BEFORE, site);
-				netNotation.checkLinkToUsedSites(StateType.AFTER, site);
-			}
-		}
 	}
 
 	/**
@@ -1394,7 +1292,22 @@ public class CRule implements Serializable, WeightedItem {
 	public final List<CRule> getActivatedRules() {
 		return Collections.unmodifiableList(activatedRules);
 	}
-
+	
+	public final void addActivatedRule(CRule rule){
+		activatedRules.add(rule);
+	}
+	
+	public final void addinhibitedRule(CRule rule){
+		inhibitedRule.add(rule);
+	}
+	
+	public final void addActivatedObs(IObservablesConnectedComponent obs){
+		activatedObservable.add(obs);
+	}
+	public final void addinhibitedObs(IObservablesConnectedComponent obs){
+		inhibitedObservable.add(obs);
+	}
+	
 	/**
 	 * Returns list of actions, which this rule performs
 	 * 

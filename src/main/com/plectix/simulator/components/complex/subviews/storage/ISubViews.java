@@ -22,12 +22,14 @@ public interface ISubViews {
 	/**
 	 * @param view
 	 *            view with some information
-	 * @return SubViews which coherent with agent.<br>
-	 *         If view = null (no property) then return all SubViews
+	 * @return SubViews which coherent with agent at least one site .<br>
+	 *         If view = null (no property) then return null. Use getAllSubViews();
 	 */
 	public List<CAbstractAgent> getAllSubViews(CAbstractAgent view);
 	
 	public List<CAbstractAgent> getAllSubViews();
+	
+	public List<CAbstractAgent> getAllSubViewsCoherent(CAbstractAgent view);
 
 	/**
 	 * @param agent

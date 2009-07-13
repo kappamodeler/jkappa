@@ -103,7 +103,7 @@ public final class AgentInvariant {
 		
 		productOfNeighborPrimes = 1;
 		for (AgentInvariant agentInvariant : neighborAgentList) {
-			productOfNeighborPrimes *= PrimeNumbers.getPrime(agentInvariant.getRankNew() + agentInvariant.getNeighborRank(this) - 1);
+			productOfNeighborPrimes *= PrimeNumbers.FIRST_8242[agentInvariant.getRankNew() + agentInvariant.getNeighborRank(this) - 1];
 		}
 	}
 

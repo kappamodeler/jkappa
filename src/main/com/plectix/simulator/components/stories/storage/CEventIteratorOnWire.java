@@ -1,8 +1,5 @@
 package com.plectix.simulator.components.stories.storage;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.TreeMap;
 
 public class CEventIteratorOnWire implements IEventIterator {
@@ -10,42 +7,53 @@ public class CEventIteratorOnWire implements IEventIterator {
 	private WireHashKey parentWire;
 	private TreeMap<Long, AtomicEvent<?>> wire;
 	private Long currentKey;
-	private boolean narrowDown;
+	private boolean timeReverse;
+	private boolean isFirst;
 
-	
-	public CEventIteratorOnWire(TreeMap<Long, AtomicEvent<?>> map,WireHashKey wkey, Long first,
-			boolean reverse){
+	public CEventIteratorOnWire(TreeMap<Long, AtomicEvent<?>> map,
+			WireHashKey wkey, Long first, boolean reverse)
+			throws StoryStorageException {
 		wire = map;
 		currentKey = first;
-		narrowDown = reverse;		
+		if (wire.get(first) == null) {
+			throw new StoryStorageException("CEventIteratorOnWire hasn't this event", first);
+		}
+		timeReverse = reverse;
+		isFirst = true;
 	}
-	@Override
+
 	public CEvent value() {
 		return wire.get(currentKey).getContainer();
 	}
 
-	@Override
+	// some doubt about lowerkey
 	public boolean hasNext() {
-		if (narrowDown){
-			return(wire.lowerKey(currentKey)!=null);
+		if(isFirst){
+			return true;
 		}
-		else{
-			return(wire.higherKey(currentKey)!=null);
+		if (timeReverse) {
+			return (wire.lowerKey(currentKey) != null);
+		} else {
+			return (wire.higherKey(currentKey) != null);
 		}
 	}
 
-	@Override
 	public Long next() {
-		if (narrowDown){
-			return wire.lowerKey(currentKey);
+		if(isFirst){
+			isFirst = false;
+			return currentKey;
 		}
-		else{
-			return wire.higherKey(currentKey);
+		if (timeReverse) {
+			currentKey = wire.lowerKey(currentKey);
+			return currentKey;
+		} else {
+			currentKey = wire.higherKey(currentKey);
+			return currentKey;
 		}
 	}
 
 	/**
-	 * not implemented
+	 * not implemented. Ask Nikita why.
 	 */
 	@Override
 	public void remove() {

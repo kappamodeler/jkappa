@@ -31,7 +31,10 @@ public interface IAllSubViewsOfAllAgents {
 	
 	public Map<Integer, CAbstractAgent> getFullMapOfAgents();
 	
-	public Map<Integer, CAbstractAgent> getAgentNameIdToAgent();
-	
+	public void initDeadRules();
+
 	public List<SubViewsRule> getRules();
+
+	public Map<Integer, CAbstractAgent> getAgentNameIdToAgent();
+
 }

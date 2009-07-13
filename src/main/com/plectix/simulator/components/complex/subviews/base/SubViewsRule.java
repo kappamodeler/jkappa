@@ -64,6 +64,7 @@ public class SubViewsRule {
 		}
 
 		WrapperTwoSet activatedRules = new WrapperTwoSet();
+		isApply = true;
 		for (AbstractAction action : actions) {
 			if (action.getActionType() != EAbstractActionType.TEST_ONLY) {
 				action.clearSitesSideEffect();
@@ -80,7 +81,7 @@ public class SubViewsRule {
 			}
 		}
 		if (!activatedRules.isEmpty()) {
-			isApply = true;
+//			isApply = true;
 			return activatedRules;
 		} else {
 			return null;

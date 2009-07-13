@@ -8,16 +8,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.TreeMap;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
-import com.plectix.simulator.components.complex.influenceMap.CInfluenceMapMain;
+import com.plectix.simulator.components.complex.influenceMap.AInfluenceMap;
+import com.plectix.simulator.components.complex.influenceMap.withoutFuture.CInfluenceMapWithoutFuture;
 import com.plectix.simulator.components.complex.subviews.base.AbstractClassSubViewBuilder;
 import com.plectix.simulator.components.complex.subviews.base.SubViewsRule;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
@@ -49,7 +48,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		constructAbstractRules(rules);
 		constructClasses(abstractRules, agentNameIdToAgent);
 //		WeakInfluence wI = new WeakInfluence();
-		CInfluenceMapMain wI = new CInfluenceMapMain();
+		AInfluenceMap wI = new CInfluenceMapWithoutFuture();
 		wI.initInfluenceMap(abstractRules,null, agentNameIdToAgent);
 
 		fillingClasses(agents);
@@ -196,7 +195,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	// }
 	// }
 	// }
-	private void constructAbstractContactMap(CInfluenceMapMain wInfluence) throws SubViewsExeption {
+	private void constructAbstractContactMap(AInfluenceMap wInfluence) throws SubViewsExeption {
 		//RuleId
 		Queue<Integer> activeRule = new LinkedList<Integer>();
 		//RuleId -> isIncluded
@@ -217,6 +216,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		HashSet<Integer> intersection = new HashSet<Integer>();
 		//int ij=0;
 		while (!activeRule.isEmpty()) {
+			//System.out.println(ij++);
 			ruleId = activeRule.poll();
 			includedInQueue.put(ruleId, false);
 			rule = abstractRules
@@ -292,7 +292,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	public void initDeadRules() {
 		deadRules = new HashSet<Integer>();
 		for (SubViewsRule rule : abstractRules)
-			if (rule.isApply())
+			if (!rule.isApply())
 				deadRules.add(rule.getRuleId());
 	}
 

@@ -43,12 +43,14 @@ public class InitTestAction extends DirectoryTestsRunner{
 		String arg2 = new String("--sim");
 		String arg3 = new String(filePath);
 		String arg4 = new String("--no_save_all");
+		String arg5 = new String("--no-maps");
 
-		String[] args = new String[4];
+		String[] args = new String[5];
 		args[0] = arg1;
 		args[1] = arg2;
 		args[2] = arg3;
 		args[3] = arg4;
+		args[4] = arg5;
 		return args;
 	}
 

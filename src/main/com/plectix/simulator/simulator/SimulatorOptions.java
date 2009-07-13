@@ -128,10 +128,9 @@ public enum SimulatorOptions {
 	OPERATION_MODE("operation_mode", true, "sets current operation mode"),
 	MONITOR_PEAK_MEMORY("monitor_peak_memory", true, "turns on monitoring of peak memory usage at give periods in milliseconds"),
 	COMPUTE_SUB_VIEWS("compute_sub_views", false, "Compute sub views."),
+	COMPUTE_DEAD_RILES("compute_dead_rules", false, "Compute dead rules."),
 	ALLOW_INCOMPLETES("allow_incompletes", false, "Allows incomplete substances in solution"),
 	AGENTS_LIMIT("agents_limit", true, "Limits the number of agents which can form super substance in operation modes 2-4"),
-	LIVE_DATA_INTERVAL("live_data_interval", true, "Time interval to update live data in seconds (default: -1)"),
-	LIVE_DATA_POINTS("live_data_points", true, "Approximate number of data points to report live (default: 500)"),
 	;
 
 	private String shortName = null;

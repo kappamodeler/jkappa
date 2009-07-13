@@ -9,12 +9,26 @@ import com.plectix.simulator.simulator.xml.RelationModifier;
 
 public class CStoryType {
 
+	private int traceID;
+	private int id;
+	private int depth;
+	private StoryOutputType type;
+	private String text;
+	private String data;
+
+	public CStoryType(StoryOutputType type, int traceID, int id, String text,
+			String data, int depth) {
+		this.traceID = traceID;
+		this.id = id;
+		this.type = type;
+		this.text = text;
+		this.data = data;
+		this.depth = depth;
+	}
+
 	public enum StoryOutputType {
 		INTRO, RULE, OBS;
 	}
-
-	private StoryOutputType type;
-	private String text;
 
 	public String getText() {
 		return text;
@@ -23,8 +37,6 @@ public class CStoryType {
 	public String getData() {
 		return data;
 	}
-
-	private String data;
 
 	public StoryOutputType getType() {
 		return type;
@@ -38,20 +50,6 @@ public class CStoryType {
 		return id;
 	}
 
-	private int traceID;
-	private int id;
-	private int depth;
-
-	public CStoryType(StoryOutputType type, int traceID, int id, String text,
-			String data, int depth) {
-		this.traceID = traceID;
-		this.id = id;
-		this.type = type;
-		this.text = text;
-		this.data = data;
-		this.depth = depth;
-	}
-
 	public void fillNode(Element node, EntityModifier strType) {
 		node.setAttribute("Id", Integer.toString(id));
 		node.setAttribute("Type", strType.getString());
@@ -60,7 +58,8 @@ public class CStoryType {
 		node.setAttribute("Depth", Integer.toString(depth));
 	}
 
-	public void fillConnection(Element node, int toNode, RelationModifier modifier) {
+	public void fillConnection(Element node, int toNode,
+			RelationModifier modifier) {
 		node.setAttribute("Relation", modifier.getString());
 		node.setAttribute("FromNode", Integer.toString(this.id));
 		node.setAttribute("ToNode", Integer.toString(toNode));

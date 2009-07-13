@@ -24,8 +24,6 @@ public class SimulationArguments {
 	public static final int DEFAULT_CLOCK_PRECISION = 60;
 	public static final String DEFAULT_XML_SESSION_NAME = "simplx.xml";
 	public static final String DEFAULT_SERIALIZATION_FILE_NAME = "~tmp.sd";
-	public static final int DEFAULT_AGENTS_LIMIT = 100;
-	public static final int DEFAULT_LIVE_DATA_POINTS = 500;
 
 	public enum SimulationType { 
 		NONE,
@@ -37,7 +35,7 @@ public class SimulationArguments {
 		CONTACT_MAP
 	}
 
-	public enum StorifyMode {
+	public enum StoryCompressionMode {
 		/** Sets the mode for stories to No Compression */
 		NONE,
 		/** Sets the mode for stories to Weak Compression */
@@ -73,6 +71,7 @@ public class SimulationArguments {
 	private boolean activationMap = true;
 	private boolean inhibitionMap = false;
 	private boolean subViews = false;
+	private boolean deadRules = false;
 	private boolean compile = false;
 	private boolean debugInit = false;
 	private boolean genereteMap = false;
@@ -93,13 +92,11 @@ public class SimulationArguments {
 	private String focusFilename = null;
 	private String commandLineString = null;
 	private SimulationType simulationType = SimulationType.NONE;
-	private StorifyMode storifyMode = StorifyMode.NONE;
+	private StoryCompressionMode storifyMode = StoryCompressionMode.NONE;
 	private SerializationMode serializationMode = SerializationMode.NONE;
 	private OperationMode operationMode = OperationMode.DEFAULT;
 	private boolean allowIncompletes = false;
-	private int agentsLimit = DEFAULT_AGENTS_LIMIT;
-	private long liveDataInterval = -1;
-	private int liveDataPoints = DEFAULT_LIVE_DATA_POINTS;
+	private int agentsLimit = 100;
 	
 	public SimulationArguments() {
 		super();
@@ -726,7 +723,7 @@ public class SimulationArguments {
 		this.serializationMode = serializationMode;
 	}
 
-	public final StorifyMode getStorifyMode() {
+	public final StoryCompressionMode getStorifyMode() {
 		return storifyMode;
 	}
 	
@@ -734,9 +731,9 @@ public class SimulationArguments {
 	 * Sets the stories mode.
 	 *  
 	 * @param storifyMode
-	 * @see StorifyMode
+	 * @see StoryCompressionMode
 	 */
-	public final void setStorifyMode(StorifyMode storifyMode) {
+	public final void setStorifyMode(StoryCompressionMode storifyMode) {
 		this.storifyMode = storifyMode;
 	}
 	
@@ -809,34 +806,19 @@ public class SimulationArguments {
 		subViews = b;
 	}
 
-	public final void setAgentsLimit(int limit) {
+	public void setAgentsLimit(int limit) {
 		agentsLimit = limit;
 	}
 	
-	public final int getAgentsLimit() {
+	public int getAgentsLimit() {
 		return agentsLimit;
 	}
 
-	public final long getLiveDataInterval() {
-		return liveDataInterval;
+	public void setDeadRules(boolean b) {
+		deadRules = b;
 	}
 
-	public final void setLiveDataInterval(long liveDataInterval) {
-		this.liveDataInterval = liveDataInterval;
-	}
-
-	public final int getLiveDataPoints() {
-		return liveDataPoints;
-	}
-
-	/**
-	 * Registers the approximate number of data points to report live.
-	 * The default value is {@value #DEFAULT_LIVE_DATA_POINTS}. 
-	 * 
-	 * @param liveDataPoints
-	 * @see #DEFAULT_LIVE_DATA_POINTS
-	 */
-	public final void setLiveDataPoints(int liveDataPoints) {
-		this.liveDataPoints = liveDataPoints;
+	public boolean isDeadRules(){
+		return deadRules;
 	}
 }

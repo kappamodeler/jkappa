@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.plectix.simulator.XMLmaps.TestContactMap;
 import com.plectix.simulator.doAction.*;
 import com.plectix.simulator.injections.*;
 import com.plectix.simulator.stories.*;
@@ -21,9 +22,9 @@ import com.plectix.simulator.probability.*;
 //		RunTestStories.class,
 		RunParserTests.class,
 //		TestAction.class
-		RunActionTest.class
+		RunActionTest.class,
 		//TestJavaXMLCompare.class,	
-		
+		TestContactMap.class
 	
 	})
 public class RunAllTests {

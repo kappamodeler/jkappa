@@ -14,7 +14,6 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.components.perturbations.CPerturbationType;
 import com.plectix.simulator.components.solution.OperationMode;
-import com.plectix.simulator.components.stories.CNetworkNotation;
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.controller.SimulatorInputData;
@@ -22,8 +21,6 @@ import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.probability.CProbabilityCalculation;
-import com.plectix.simulator.streaming.LiveData;
-import com.plectix.simulator.streaming.LiveDataStreamer;
 import com.plectix.simulator.util.MemoryUtil;
 import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.PlxTimer;
@@ -65,8 +62,6 @@ public class Simulator implements SimulatorInterface {
 	private SimulatorStatus simulatorStatus = new SimulatorStatus();
 
 	private SimulatorResultsData simulatorResultsData = new SimulatorResultsData();
-	
-	private LiveDataStreamer liveDataStreamer = new LiveDataStreamer();
 	
 	/** Object to lock when we are reading variables to compute the current status */
 	private Object statusLock = new Object();
@@ -111,17 +106,6 @@ public class Simulator implements SimulatorInterface {
 		}
 
 		return simulatorStatus;
-	}
-	
-
-	/**
-	 * Returns the live data
-	 * 
-	 * @param liveData
-	 * @return
-	 */
-	public final LiveData getLiveData(LiveData liveData) {
-		return liveDataStreamer.getLiveData(liveData);
 	}
 	
 	private final void addIteration(int iteration_num) {
@@ -250,7 +234,6 @@ public class Simulator implements SimulatorInterface {
 		long clash = 0;
 		long max_clash = 0;
 		boolean isEndRules = false;
-		liveDataStreamer.reset(simulationData.getSimulationArguments().getLiveDataInterval(), simulationData.getSimulationArguments().getLiveDataPoints(), simulationData.getKappaSystem().getObservables());
 		simulatorStatus.setStatusMessage(STATUS_RUNNING);
 		
 		while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
@@ -323,17 +306,18 @@ public class Simulator implements SimulatorInterface {
 
 				List<CInjection> newInjections = ruleApplicator.applyRule(rule, injectionsList, simulationData);
 				if (newInjections != null) {
+	
 					SimulationUtils.doNegativeUpdate(newInjections);
 				
 					// positive update
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("positive update");
 					}
-					
+	
 					// on the 4th mode we should set only super injections, so we do it manually 
 					// directly after the rule application
 					if (simulationData.getSimulationArguments().getOperationMode() != OperationMode.FOURTH) {
-						simulationData.getKappaSystem().doPositiveUpdate(rule, newInjections);
+					simulationData.getKappaSystem().doPositiveUpdate(rule, newInjections);
 					}
 	
 					simulationData.getKappaSystem().getSolution().applyChanges(rule.getPool());
@@ -357,7 +341,6 @@ public class Simulator implements SimulatorInterface {
 				synchronized (statusLock) {
 					currentTime += simulationData.getKappaSystem().getTimeValue();
 				}
-				liveDataStreamer.addNewDataPoint(currentEventNumber, currentTime, simulationData.getKappaSystem().getObservables());
 			}
 			
 			if (CSiteration) {
@@ -473,13 +456,12 @@ public class Simulator implements SimulatorInterface {
 				}
 				if (injectionsList!=null) {
 					// TODO: Make sure that CNetworkNotation works with long event number, not integer
-					CNetworkNotation netNotation = null;// = new CNetworkNotation(this, (int)currentEventNumber, rule, injectionsList, simulationData);
 					CEvent eventContainer = new CEvent(currentEventNumber,rule.getRuleID());
 					max_clash = 0;
+					//what is this??
 					if (stories.checkRule(rule.getRuleID(), currentIterationNumber)) {
-//						rule.applyLastRuleForStories(injectionsList,netNotation,eventContainer);
-						rule.applyRuleForStories(injectionsList, netNotation,eventContainer, simulationData, true);
-						stories.addToNetworkNotationStoryStorifyRule(currentIterationNumber, netNotation,eventContainer, currentTime);
+						rule.applyRuleForStories(injectionsList, eventContainer, simulationData, true);
+						stories.addLastEventToStoryStorifyRule(currentIterationNumber, eventContainer, currentTime);
 						synchronized (statusLock) {
 							currentEventNumber++;
 						}
@@ -488,10 +470,10 @@ public class Simulator implements SimulatorInterface {
 						break;
 					}
 					
-					rule.applyRuleForStories(injectionsList, netNotation,eventContainer, simulationData, false);
+					rule.applyRuleForStories(injectionsList, eventContainer, simulationData, false);
 //					netNotation.fillAddedAgentsID(simulationData);
 					if (!rule.isRHSEqualsLHS()) {
-						stories.addToNetworkNotationStory(currentIterationNumber, netNotation,eventContainer);
+						stories.addEventToStory(currentIterationNumber, eventContainer);
 					}
 					synchronized (statusLock) {
 						currentEventNumber++;
@@ -510,8 +492,8 @@ public class Simulator implements SimulatorInterface {
 			synchronized (statusLock) {
 				currentEventNumber = 0;
 			}
-			stories.handling(currentIterationNumber);
 			
+			stories.cleaningStory(currentIterationNumber);
 			if(!simulationData.getSimulationArguments().isShortConsoleOutput()) {
 				endOfSimulation(InfoType.OUTPUT,isEndRules, timer);
 			}
