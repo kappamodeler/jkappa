@@ -1,21 +1,18 @@
 package com.plectix.simulator.stories.correctness;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import org.apache.commons.logging.impl.AvalonLogger;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
-
-import static org.junit.Assert.*;
 
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.components.stories.enums.EActionOfAEvent;
@@ -26,9 +23,9 @@ import com.plectix.simulator.components.stories.storage.AState;
 import com.plectix.simulator.components.stories.storage.AtomicEvent;
 import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.components.stories.storage.CStateOfLink;
+import com.plectix.simulator.components.stories.storage.IEventIterator;
 import com.plectix.simulator.components.stories.storage.IWireStorage;
 import com.plectix.simulator.components.stories.storage.StoryStorageException;
-import com.plectix.simulator.components.stories.storage.IEventIterator;
 import com.plectix.simulator.components.stories.storage.WireHashKey;
 import com.plectix.simulator.stories.InitStoriesTests;
 
