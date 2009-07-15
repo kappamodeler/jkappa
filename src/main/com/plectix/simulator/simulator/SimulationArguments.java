@@ -18,6 +18,8 @@ public class SimulationArguments {
 	public static final int DEFAULT_SEED = -1;
 	public static final long DEFAULT_MAX_CLASHES = 10000;
 	public static final int DEFAULT_NUMBER_OF_POINTS = 1000;
+	public static final int DEFAULT_AGENTS_LIMIT = 100;
+	
 	/** Maximum simulation time is 100 days */
 	public static final long DEFAULT_WALL_CLOCK_TIME_LIMIT = 100L* NUMBER_OF_MILLISECONDS_IN_DAY;
 	public static final long DEFAULT_MONITOR_PEAK_MEMORY = -1;
@@ -96,7 +98,7 @@ public class SimulationArguments {
 	private SerializationMode serializationMode = SerializationMode.NONE;
 	private OperationMode operationMode = OperationMode.DEFAULT;
 	private boolean allowIncompletes = false;
-	private int agentsLimit = 100;
+	private int agentsLimit = DEFAULT_AGENTS_LIMIT;
 	
 	public SimulationArguments() {
 		super();
