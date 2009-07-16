@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans default-init-method="initialize">
+
+    <!-- aliases --> 
+   	<!-- -->
+    <alias name="panelMainPanel"        alias="mainPanel"/>
+
+    <!-- other classes --> 
+	<bean id="uiProperties" class="com.plectix.simulator.gui.lib.UIProperties"/>
+
+    <!-- GUI classes --> 
+	<bean id="mainWindow" class="com.plectix.simulator.gui.lib.MainWindow" autowire="byName"/>
+	<bean id="controlPanel"  class="com.plectix.simulator.gui.panel.ControlPanel" autowire="byName">
+       <property name="simulationSettingsList">
+       <list>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="Example.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "50"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="KPT_study.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="MekScaf.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "0.02"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="SIA_2007_03_23-egfr.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "15"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="SIA_2007_03_23-global.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "20"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="Seda_111008_Insulin_Present.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "15"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="TyThomson-ReceptorAndGProtein.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "200"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="abc2.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "0.05"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="abc2.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "25.0"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="add_linked_species.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "0.01"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="brightberl.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "1000"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="calcium2.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "0.5"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="contextual_rules-add_rem.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="debugging-bug_update.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="debugging-compression.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "100"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="debugging-inf.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="debugging-justin-9-07-2008.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "500"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="debugging-link.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "50"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="debugging-polymere.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "50"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="debugging-semi-link-bug.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "25"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="debugging-walter-fev08.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "25"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="debugging-weird.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="degradation-deg-bnd.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="degradation-deg-free.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "40"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="easy-egfr.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "0.02"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="egfr.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="erasure.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10.0"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="eric.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "0.002"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="exponentielle.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10.0"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="fgf2-fgf.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "15"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="half_binding.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "0.05"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="half_binding.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10.0"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="invexp.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "5"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="large_systems-sysepi.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "1000"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="non_atomic.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "20.0"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="osc.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "250"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="repressilator.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10000.0"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="scalability-bench-mapk1.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "0.5"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="sfb.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "100"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="side_effect.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "10.0"/> </bean>
+            <bean class="com.plectix.simulator.gui.panel.SimulationSettings"> <constructor-arg value="will.ka"/> <constructor-arg value= "time"/> <constructor-arg value= "1000.0"/> </bean>
+       </list>
+       </property>
+	</bean>
+	<bean id="graphPanel"  class="com.plectix.simulator.gui.panel.GraphPanel" autowire="byName"/>
+
+    <!-- mainPanel options: -->
+	<bean id="panelMainPanel"  class="com.plectix.simulator.gui.panel.MainPanel" autowire="byName"/>
+	<bean id="libMainPanel"  class="com.plectix.simulator.gui.lib.MainPanel" autowire="byName"/>
+    <bean id="splitPanel"  class="com.plectix.simulator.gui.lib.SplitPanel" autowire="byName"/>
+
+    <bean id="awtExceptionHandler" class="com.plectix.simulator.gui.lib.AWTExceptionHandler"/>
+	<bean id="promptDialogs" class="com.plectix.simulator.gui.lib.PromptDialogs">
+	     <property name="frame" ref="mainWindow"/>
+	</bean>
+</beans>

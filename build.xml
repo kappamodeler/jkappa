@@ -23,6 +23,11 @@
         <include name="commons-logging/commons-logging-1.1.1.jar"/>
         <include name="log4j/log4j-1.2.15.jar"/>
         <include name="commons-cli/commons-cli-1.1.jar"/>
+        <include name="jfreechart/jcommon-1.0.16.jar"/>
+        <include name="jfreechart/jfreechart-1.0.13.jar"/>
+        <include name="spring/spring-beans-2.0.2.jar"/>
+        <include name="spring/spring-context-2.0.2.jar"/>
+        <include name="spring/spring-core-2.0.2.jar"/>
 	</fileset>
 
 	<fileset id="test.jars" dir="${lib.dir}">
@@ -30,6 +35,11 @@
         <include name="xstream/xpp3_min-1.1.4c.jar"/>
 		<include name="log4j/log4j-1.2.15.jar"/>
 		<include name="commons-cli/commons-cli-1.1.jar"/>
+        <include name="jfreechart/jcommon-1.0.16.jar"/>
+        <include name="jfreechart/jfreechart-1.0.13.jar"/>
+        <include name="spring/spring-beans-2.0.2.jar"/>
+        <include name="spring/spring-context-2.0.2.jar"/>
+        <include name="spring/spring-core-2.0.2.jar"/>
 		<include name="junit/junit.jar"/>
    	</fileset>
 
@@ -248,6 +258,16 @@
 	       	<formatter type="plain"/>
 			<test name="com.plectix.simulator.RunAllTests"/>
 		</junit>
-		<echo message="Tests complete - check log for errors"/>
+		<echo message="Tests are complete - check log for errors"/>
+	</target>
+
+	<target name="slowTests" description="Run Slow JUnit tests" depends="build-tests">
+		<echo>Running Slow JUnit Tests</echo>
+		<junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="no">
+			<classpath refid="test.classpath" />
+	       	<formatter type="plain"/>
+			<test name="com.plectix.simulator.RunAllSlowTests"/>
+		</junit>
+		<echo message="Slow Tests are complete - check log for errors"/>
 	</target>
 </project>

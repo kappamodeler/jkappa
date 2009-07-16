@@ -26,6 +26,17 @@ public class SimulatorCommandLine {
 		this.simulationArguments = createSimulationArguments();
 	}
 
+	public SimulatorCommandLine(String commandLineString) throws ParseException {
+		// let's get the original command line before we change it below:
+		this.commandLineString = commandLineString;
+		// let's replace all '-' by '_' 
+		String[] args = SimulationUtils.changeArguments(commandLineString.split(" "));
+		// let's parse the command line
+		this.commandLine = (new PosixParser()).parse(SimulatorOptions.COMMAND_LINE_OPTIONS, args);
+		// let's create simulation arguments:
+		this.simulationArguments = createSimulationArguments();
+	}
+
 	public final SimulationArguments getSimulationArguments() {
 		return simulationArguments;
 	}

@@ -1,8 +1,11 @@
 package com.plectix.simulator.simulator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-import com.plectix.simulator.components.CAgentLink;
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CRule;
@@ -10,9 +13,7 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.injections.CLiftElement;
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
 
