@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
 
 import org.apache.log4j.Logger;
 import org.jfree.chart.JFreeChart;
@@ -13,7 +15,6 @@ import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CombinedDomainXYPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.FixedMillisecond;
 import org.jfree.data.time.TimeSeries;
@@ -30,6 +31,8 @@ import com.plectix.simulator.gui.lib.GridBagPanel;
  */
 public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 	private static final long serialVersionUID = 1L;
+	
+	private static final double MEGA = 1024.0 * 1024.0;
 
 	private static final Logger LOGGER = Logger.getLogger(GraphPanel.class);
 
@@ -44,7 +47,9 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 	private org.jfree.chart.ChartPanel jfreeChartPanel = null;
 	private ChartZoomInfo chartZoomInfo = new ChartZoomInfo();
 	
-	private TimeSeries memoryUsageTimeSeries = null;
+	private TimeSeries memoryUsageTimeSeriesHeap = null;
+	private TimeSeries memoryUsageTimeSeriesNonHeap = null;
+	private TimeSeries memoryUsageTimeSeriesTotal = null;
 	
 	public GraphPanel() {
 		super();
@@ -64,17 +69,24 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 		add(jfreeChartPanel, gc.fillBoth());
 	}
 
-	public final void addMemoryUsageData(final long currentTimeMillis, final long memoryUsage) {
+	public final void addMemoryUsageData() {
+		final MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
+		final long currentHeap = mbean.getHeapMemoryUsage().getUsed();
+		final long currentNonHeap = mbean.getNonHeapMemoryUsage().getUsed();
+		final long currentTimeMillis = System.currentTimeMillis();
+		
 		// LOGGER.info(currentTimeMillis + ": " + (memoryUsage/1024.0/1024.0));
-		memoryUsageTimeSeries.add(new FixedMillisecond(currentTimeMillis), memoryUsage/1024.0/1024.0);	
+		memoryUsageTimeSeriesHeap.add(new FixedMillisecond(currentTimeMillis), currentHeap/MEGA);	
+		memoryUsageTimeSeriesNonHeap.add(new FixedMillisecond(currentTimeMillis), currentNonHeap/MEGA);	
+		memoryUsageTimeSeriesTotal.add(new FixedMillisecond(currentTimeMillis), (currentHeap + currentNonHeap)/MEGA);	
+		
 		updateChart();
 	}
 
 	public final void resetCharts() {
-		memoryUsageTimeSeries = new TimeSeries("Total Memory Usage (MB)");
-		memoryUsageTimeSeries.setDescription("Total Memory Usage (MB)");
-		memoryUsageTimeSeries.setDomainDescription("Domain");
-		memoryUsageTimeSeries.setRangeDescription("Range");
+		memoryUsageTimeSeriesHeap = new TimeSeries("Heap Memory Usage (MB)");
+		memoryUsageTimeSeriesNonHeap = new TimeSeries("Non-Heap Memory Usage (MB)");
+		memoryUsageTimeSeriesTotal = new TimeSeries("Total Memory Usage (MB)");
 	}
 	
 	/**
@@ -117,13 +129,21 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 		plot.setDomainAxis(xAxis);
 		plot.setRangeAxis(yAxis);
 		
-		XYItemRenderer renderer = new ItemRenderer(); // XYLineAndShapeRenderer(true, false);
-
+		/*
+		XYItemRenderer renderer = new ItemRenderer(); 
 		renderer.setSeriesPaint(0, ColorMap.getColor(0));
+		renderer.setSeriesPaint(1, ColorMap.getColor(1));
+		renderer.setSeriesPaint(2, ColorMap.getColor(2));
 //		renderer.setSeriesStroke(0, new BasicStroke(5));
+		*/
 		
-		plot.setDataset(0, new TimeSeriesCollection(memoryUsageTimeSeries));
-		plot.setRenderer(0, renderer);
+		plot.setDataset(0, new TimeSeriesCollection(memoryUsageTimeSeriesHeap));
+		plot.setDataset(1, new TimeSeriesCollection(memoryUsageTimeSeriesNonHeap));
+		plot.setDataset(2, new TimeSeriesCollection(memoryUsageTimeSeriesTotal));
+		
+		plot.setRenderer(0, new ItemRenderer(ColorMap.getColor(0)));  // XYLineAndShapeRenderer(true, false);
+		plot.setRenderer(1, new ItemRenderer(ColorMap.getColor(1)));
+		plot.setRenderer(2, new ItemRenderer(ColorMap.getColor(2)));
 	
 		return plot;
 	}
@@ -136,11 +156,10 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 	private static final class ItemRenderer extends XYLineAndShapeRenderer {
 		private static final long serialVersionUID = 1L;
 		
-		public ItemRenderer() {
+		public ItemRenderer(final Color color) {
 			super(true, true);
 
 			Shape shape = RECTANGLE;
-			Color color = Color.BLUE;
 			
 			setBaseShape(shape);
 			setBaseShape(shape);

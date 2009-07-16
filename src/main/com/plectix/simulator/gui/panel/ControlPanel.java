@@ -207,12 +207,9 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 				progressBar.setValue(0);
 			}
 		}
-		final MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
-		final long currentHeap = mbean.getHeapMemoryUsage().getUsed();
-		final long currentNonHeap = mbean.getNonHeapMemoryUsage().getUsed();
 		
 		if (graphPanel != null) {
-			graphPanel.addMemoryUsageData(System.currentTimeMillis(), currentHeap + currentNonHeap);
+			graphPanel.addMemoryUsageData();
 		}
 		
 		// get data and plot
