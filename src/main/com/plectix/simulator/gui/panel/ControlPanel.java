@@ -162,6 +162,7 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 			LOGGER.info("Command line options:" + commandLineOptions);
 			try {
 				LOGGER.info("Calling Simulator");
+				Runtime.getRuntime().gc();
 				SimulatorCommandLine commandLine = new SimulatorCommandLine(commandLineOptions);
 				simulationJobID = simulationService.submit(new SimulatorInputData(commandLine.getSimulationArguments(), DEFAULT_OUTPUT_STREAM), null);
 				setComponentsEnabled(true);
@@ -184,6 +185,7 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 		if (simulationJobID >= 0) {
 			simulationService.cancel(simulationJobID, true, true);						
 			setComponentsEnabled(false);
+			Runtime.getRuntime().gc();
 		}
 		simulationJobID = -1;
 		LOGGER.info("Done with Simulator.");
