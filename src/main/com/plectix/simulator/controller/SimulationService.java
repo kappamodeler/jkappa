@@ -7,6 +7,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import com.plectix.simulator.streaming.LiveData;
+
 /**
  * This class runs jobs in a thread pool. The thread pool is created only once, when any one
  * of the constructors are called and then its size can not be changed again. The default
@@ -132,6 +134,22 @@ public class SimulationService {
 		}
 		
 		return futureTask.getSimulator().getStatus();
+	}
+
+	/**
+	 * Returns the streaming live data for <code>jobID</code> or
+	 * <code>null</code> if the job doesn't exist.
+	 * 
+	 * @param jobID
+	 * @return the current status
+	 */
+	public LiveData getSimulatorLiveData(long jobID, LiveData liveData) {
+		SimulatorFutureTask futureTask = callablesMap.get(jobID);
+		if (futureTask == null) {
+			return null;
+		}
+		
+		return futureTask.getSimulator().getLiveData(liveData);
 	}
 	
 	/**

@@ -5,8 +5,11 @@ import java.awt.Dimension;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.event.KeyEvent;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+
+import javax.swing.JTabbedPane;
 
 import org.apache.log4j.Logger;
 import org.jfree.chart.JFreeChart;
@@ -22,6 +25,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 
 import com.plectix.simulator.gui.lib.ColorMap;
 import com.plectix.simulator.gui.lib.GridBagPanel;
+import com.plectix.simulator.streaming.LiveData;
 
 /**
  * <p>TODO document GraphPanel
@@ -43,8 +47,10 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 	private static final Shape UP_TRIANGLE = new Polygon(new int[]{-5, 0, 5}, new int[]{12, 0, 12}, 3);
 	@SuppressWarnings("unused")
 	private static final Shape DOWN_TRIANGLE = new Polygon(new int[]{-5, 0, 5}, new int[]{-12, 0, -12}, 3);
+
+	private org.jfree.chart.ChartPanel observablesChartPanel = null;
+	private org.jfree.chart.ChartPanel memoryChartPanel = null;
 	
-	private org.jfree.chart.ChartPanel jfreeChartPanel = null;
 	private ChartZoomInfo chartZoomInfo = new ChartZoomInfo();
 	
 	private TimeSeries memoryUsageTimeSeriesHeap = null;
@@ -57,19 +63,42 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 
 	public void initialize() {
 		GridBagConstraintsEx gc = createNewConstraints().insets(5, 5, 5, 5);
+
+		// Chart Panels
+		observablesChartPanel = createNewChartPanel();
+		memoryChartPanel = createNewChartPanel();
+
+		JTabbedPane tabbedPane = new JTabbedPane();
 		
-		// Chart Panel
-		jfreeChartPanel = new org.jfree.chart.ChartPanel(null, false);
-		jfreeChartPanel.setMinimumSize(new Dimension(800, 600));
-		jfreeChartPanel.setPreferredSize(new Dimension(800, 600));
-		jfreeChartPanel.setMaximumDrawWidth(2000);
-		jfreeChartPanel.setMaximumDrawHeight(1500);
-		jfreeChartPanel.setMinimumDrawWidth(400);
-		jfreeChartPanel.setMinimumDrawHeight(300);
-		add(jfreeChartPanel, gc.fillBoth());
+		tabbedPane.addTab("Observables", observablesChartPanel);
+		tabbedPane.setMnemonicAt(0, KeyEvent.VK_1);
+
+		tabbedPane.addTab("Memory", memoryChartPanel);
+		tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+		
+		tabbedPane.setSelectedIndex(1);
+		
+		add(tabbedPane, gc.fillBoth());
 	}
 
-	public final void addMemoryUsageData() {
+	private final org.jfree.chart.ChartPanel createNewChartPanel() {
+		org.jfree.chart.ChartPanel chartPanel = new org.jfree.chart.ChartPanel(null, false);
+		chartPanel.setMinimumSize(new Dimension(800, 600));
+		chartPanel.setPreferredSize(new Dimension(800, 600));
+		chartPanel.setMaximumDrawWidth(2000);
+		chartPanel.setMaximumDrawHeight(1500);
+		chartPanel.setMinimumDrawWidth(400);
+		chartPanel.setMinimumDrawHeight(300);
+		return chartPanel;
+	}
+
+	public void updateLiveDataChart(LiveData liveData) {
+		// TODO update XY Series for observablesChartPanel
+		// Then call updateLiveDataChartPanel()
+		
+	}
+	
+	public final void updateMemoryUsageChart() {
 		final MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
 		final long currentHeap = mbean.getHeapMemoryUsage().getUsed();
 		final long currentNonHeap = mbean.getNonHeapMemoryUsage().getUsed();
@@ -80,7 +109,7 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 		memoryUsageTimeSeriesNonHeap.add(new FixedMillisecond(currentTimeMillis), currentNonHeap/MEGA);	
 		memoryUsageTimeSeriesTotal.add(new FixedMillisecond(currentTimeMillis), (currentHeap + currentNonHeap)/MEGA);	
 		
-		updateChart();
+		updateMemoryChartPanel();
 	}
 
 	public final void resetCharts() {
@@ -92,7 +121,7 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 	/**
 	 * 
 	 */
-	private void updateChart() {		
+	private void updateMemoryChartPanel() {		
 		// Create X axis:
 		DateAxis xAxis = new DateAxis();
 		xAxis.setLowerMargin(0.0);
@@ -109,10 +138,10 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
         
         // Create Chart:
         if (seriesExists) {
-        	jfreeChartPanel.setChart(new JFreeChart(null, JFreeChart.DEFAULT_TITLE_FONT, combinedPlot, SHOW_LEGEND));
-        	jfreeChartPanel.getChart().setBackgroundPaint(new Color(0, 0, 0, 0));
+        	memoryChartPanel.setChart(new JFreeChart(null, JFreeChart.DEFAULT_TITLE_FONT, combinedPlot, SHOW_LEGEND));
+        	memoryChartPanel.getChart().setBackgroundPaint(new Color(0, 0, 0, 0));
         } else {
-            jfreeChartPanel.setChart(null);
+            memoryChartPanel.setChart(null);
         }
 	}
 	
@@ -167,5 +196,6 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 			setBasePaint(color);
 		}
 	}
+
 
 }

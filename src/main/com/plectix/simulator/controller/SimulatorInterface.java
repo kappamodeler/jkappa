@@ -1,5 +1,7 @@
 package com.plectix.simulator.controller;
 
+import com.plectix.simulator.streaming.LiveData;
+
 public interface SimulatorInterface {
 	
     /**
@@ -22,10 +24,25 @@ public interface SimulatorInterface {
     public SimulatorStatusInterface getStatus();
     
     /**
+     * Returns the streaming live data
+     * 
+     * @param liveData
+     * @return the live data
+     */
+    public LiveData getLiveData(LiveData liveData);
+    
+    /**
      * Returns the results data of the simulation.
      * 
      * @return the output of the simulation
      */
     public SimulatorResultsData getSimulatorResultsData();
+
+    /**
+     * Call-back function used when an Exception is thrown from the simulation thread
+     * 
+     * @param e the Exception thrown
+     */
+	public void cleanUpAfterException(Exception e);
 
 }

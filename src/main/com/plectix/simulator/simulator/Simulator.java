@@ -37,12 +37,17 @@ public class Simulator implements SimulatorInterface {
 	private static final String INTRO_MESSAGE = "JSIM: Build on " + BuildConstants.BUILD_DATE 
 											  + " from SVN Revision " + BuildConstants.BUILD_SVN_REVISION
 											  + ", JRE: " + System.getProperty("java.vendor") + " " + System.getProperty("java.version");
+
+	private static final String STATUS_INITIALIZING = "Initializing";
 	
 	private static final String STATUS_RUNNING = "Running";
 	
 	private static final String STATUS_WRAPPING = "Wrapping the simulation results";
 	
 	private static final String STATUS_IDLE = "Idle";
+	
+	private static final String STATUS_EXCEPTION = "Exception thrown: ";
+	
 	
 	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(Simulator.class);
 
@@ -123,6 +128,12 @@ public class Simulator implements SimulatorInterface {
 		return liveDataStreamer.getLiveData(liveData);
 	}
 	
+	@Override
+	public final void cleanUpAfterException(Exception exception) {
+		simulatorStatus.setStatusMessage(STATUS_EXCEPTION + exception.getClass().getName());
+		simulatorStatus.setProgress(1.0);
+	}
+
 	private final void addIteration(int iteration_num) {
 		// TODO: This method should be rewritten!!!
 		List<List<RunningMetric>> runningMetrics = simulationData.getRunningMetrics();
@@ -187,6 +198,7 @@ public class Simulator implements SimulatorInterface {
 	public final void run(SimulatorInputData simulatorInputData) throws Exception {
 		// add info about JSIM:
 		simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO, INTRO_MESSAGE);
+		simulatorStatus.setStatusMessage(STATUS_INITIALIZING);
 	
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();

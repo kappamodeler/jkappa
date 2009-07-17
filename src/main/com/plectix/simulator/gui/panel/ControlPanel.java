@@ -4,10 +4,10 @@ import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintStream;
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -24,7 +24,9 @@ import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.gui.lib.GridBagPanel;
 import com.plectix.simulator.gui.lib.UIProperties;
 import com.plectix.simulator.simulator.DefaultSimulatorFactory;
+import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
+import com.plectix.simulator.streaming.LiveData;
 
 /**
  * <p>TODO document ControlPanel
@@ -58,7 +60,14 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 	
 	private List<ControlPanelListener> listeners = new ArrayList<ControlPanelListener>();
 
+	private Timer timer = null;
+	
 	private SimulationService simulationService = null;
+
+	// TODO: Add a slider bar to set the live data interval:
+	private long liveDataInterval = 1000;
+
+	private int liveDataPoints = SimulationArguments.DEFAULT_LIVE_DATA_POINTS;
 	
 	public ControlPanel() {
 		super();
@@ -155,7 +164,10 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 	}
 	
 	private final void startSimulation() {
-		String commandLineOptions = commandLineOptionsTextField.getText();
+		String commandLineOptions = commandLineOptionsTextField.getText() 
+									+ " --live-data-interval " + liveDataInterval 
+									+ " --live-data-points " + liveDataPoints;
+		
 		if (commandLineOptions == null || commandLineOptions.length() == 0) {
 			LOGGER.warn("commandLineOptions is null!!!");
 		} else {
@@ -169,7 +181,16 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 				
 				progressBar.setIndeterminate(true);				
 				graphPanel.resetCharts();
-				new SimulatorStatusChecker(this, simulationService, simulationJobID, period);
+
+				timer = new Timer();
+				timer.scheduleAtFixedRate(new TimerTask() {
+					@Override
+					public void run() {
+						checkStatus();
+					}
+
+				}, 0, period);
+				
 			} catch (ParseException parseException) {
 				if (simulationJobID >= 0) {
 					simulationService.cancel(simulationJobID, true, true);
@@ -198,24 +219,45 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 		commandLineOptionsTextField.setEnabled(!simulationRunning);
 		progressBar.setEnabled(simulationRunning);
 	}
-	
-	public final void updateStatus(SimulatorStatusInterface simulatorStatus) {
-		final int progress = (int) (100.0 * simulatorStatus.getProgress());
-		if (progress != 0) {
+
+	private void checkStatus() {
+		SimulatorStatusInterface simulatorStatus = simulationService.getSimulatorStatus(simulationJobID);
+		LiveData liveData = simulationService.getSimulatorLiveData(simulationJobID, new LiveData());
+		
+		// LOGGER.info("Simulator Status: " + simulatorStatus.getStatusMessage());
+		
+		if (simulatorStatus == null) {
+			timer.cancel();
+			timer.purge();
+
 			progressBar.setIndeterminate(false);
-			progressBar.setValue(progress);
-			if (progress == 100) {
-				stopSimulation();
-				progressBar.setValue(0);
+			progressBar.setValue(0);
+		} else {
+			if (simulatorStatus.getProgress() == 1.0) {
+				timer.cancel();
+				timer.purge();
+			}
+			// System.err.println("Progress: " + simulatorStatus.getProgress() + " " + simulatorStatus.getStatusMessage());
+			
+			final int progress = (int) (100.0 * simulatorStatus.getProgress());
+			if (progress != 0) {
+				progressBar.setIndeterminate(false);
+				progressBar.setValue(progress);
+				if (progress == 100) {
+					stopSimulation();
+					progressBar.setValue(0);
+				}
+			}
+			
+			if (graphPanel != null) {
+				graphPanel.updateMemoryUsageChart();
 			}
 		}
 		
-		if (graphPanel != null) {
-			graphPanel.addMemoryUsageData();
+		if (liveData != null) {
+			graphPanel.updateLiveDataChart(liveData);
 		}
-		
-		// get data and plot
-	}
+	} 
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
