@@ -1,0 +1,7 @@
+'C base deamination' DNA(Base~C,status~ok) -> DNA(Base~U,status~dom) @ 1.2
+'mC base deamination' DNA(Base~mC,status~ok) -> DNA(Base~T,status~dom) @ 1.2
+'Chromatin compaction' MECP2(GmC!1),DNA(Base~mC,chr~opened!1) -> MECP2(GmC!1),DNA(Base~mC,chr~closed!1) @ 1.2
+
+
+%init: 400 * (DNA(Base~mC,rd,chr~closed!1,init~mC,status~ok),MECP2(GmC!1))
+%init: 20000 * (DNA(Base~C,rd,chr~opened,init~C,status~ok))

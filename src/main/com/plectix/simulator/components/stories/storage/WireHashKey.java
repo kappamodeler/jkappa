@@ -1,6 +1,6 @@
 package com.plectix.simulator.components.stories.storage;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.plectix.simulator.components.solution.IStorage;
 import com.plectix.simulator.components.stories.enums.ETypeOfWire;
@@ -82,6 +82,13 @@ public class WireHashKey {
 	
 	public Long getAgentId() {
 		return agentId;
+	}
+
+	public Integer getSmallHash() {
+		int result = 101;
+		result = getResult(result, siteId);
+		result = getResult(result, typeOfWire.getId());
+		return result;
 	}
 
 	

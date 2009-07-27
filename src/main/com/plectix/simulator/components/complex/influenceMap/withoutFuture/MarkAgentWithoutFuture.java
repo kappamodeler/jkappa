@@ -1,6 +1,6 @@
 package com.plectix.simulator.components.complex.influenceMap.withoutFuture;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ class MarkAgentWithoutFuture {
 	public MarkAgentWithoutFuture(CAbstractAgent agent) {
 		CAbstractAgent agentNew = new CAbstractAgent(agent.getNameId());
 		agentNameId = agentNew.getNameId();
-		sitesMap = new HashMap<Integer, List<MarkSiteWithoutFuture>>();
+		sitesMap = new LinkedHashMap<Integer, List<MarkSiteWithoutFuture>>();
 	}
 
 	public int getAgentNameId() {

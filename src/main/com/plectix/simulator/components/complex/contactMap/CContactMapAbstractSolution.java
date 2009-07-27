@@ -2,8 +2,8 @@ package com.plectix.simulator.components.complex.contactMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -37,11 +37,11 @@ public class CContactMapAbstractSolution {
 	}
 
 	public CContactMapAbstractSolution(SimulationData simulationData) {
-		this.agentNameIdToAgent = new HashMap<Integer, CAbstractAgent>();
-		this.agentNameIdToAgentsList = new HashMap<Integer, List<CAbstractAgent>>();
-		this.agentsMap = new HashMap<String, CAbstractAgent>();
-		this.edgesInContactMap = new HashMap<Integer, Map<Integer, List<CContactMapAbstractEdge>>>();
-		this.agentsInContactMap = new HashMap<Integer, Map<Integer, CContactMapChangedSite>>();
+		this.agentNameIdToAgent = new LinkedHashMap<Integer, CAbstractAgent>();
+		this.agentNameIdToAgentsList = new LinkedHashMap<Integer, List<CAbstractAgent>>();
+		this.agentsMap = new LinkedHashMap<String, CAbstractAgent>();
+		this.edgesInContactMap = new LinkedHashMap<Integer, Map<Integer, List<CContactMapAbstractEdge>>>();
+		this.agentsInContactMap = new LinkedHashMap<Integer, Map<Integer, CContactMapChangedSite>>();
 		this.simulationData = simulationData;
 		Collection<CAgent> agents = prepareSolutionAgents();
 		fillModelMapOfAgents(agents);
@@ -90,7 +90,7 @@ public class CContactMapAbstractSolution {
 			int siteKey = site.getNameId();
 			if (siteToNameID != CSite.NO_INDEX) {
 				if (edgesMap == null) {
-					edgesMap = new HashMap<Integer, List<CContactMapAbstractEdge>>();
+					edgesMap = new LinkedHashMap<Integer, List<CContactMapAbstractEdge>>();
 					List<CContactMapAbstractEdge> edgeList = new ArrayList<CContactMapAbstractEdge>();
 					CContactMapAbstractEdge edge = new CContactMapAbstractEdge(
 							site);
@@ -125,7 +125,7 @@ public class CContactMapAbstractSolution {
 			}
 			CContactMapChangedSite changedSite;
 			if (sitesMap == null) {
-				sitesMap = new HashMap<Integer, CContactMapChangedSite>();
+				sitesMap = new LinkedHashMap<Integer, CContactMapChangedSite>();
 				changedSite = new CContactMapChangedSite(site);
 				sitesMap.put(siteKey, changedSite);
 				this.agentsInContactMap.put(agentKey, sitesMap);
@@ -145,7 +145,7 @@ public class CContactMapAbstractSolution {
 		if (agent.getSitesMap().isEmpty()){
 			CContactMapChangedSite changedSite = null;
 			if (sitesMap == null) {
-				sitesMap = new HashMap<Integer, CContactMapChangedSite>();
+				sitesMap = new LinkedHashMap<Integer, CContactMapChangedSite>();
 				changedSite = new CContactMapChangedSite(agent.getDefaultSite());
 				sitesMap.put(-1, changedSite);
 				this.agentsInContactMap.put(agentKey, sitesMap);
@@ -167,7 +167,7 @@ public class CContactMapAbstractSolution {
 			int siteKey = site.getNameId();
 			if (siteToNameID != CSite.NO_INDEX) {
 				if (edgesMap == null) {
-					edgesMap = new HashMap<Integer, List<CContactMapAbstractEdge>>();
+					edgesMap = new LinkedHashMap<Integer, List<CContactMapAbstractEdge>>();
 					List<CContactMapAbstractEdge> edgeList = new ArrayList<CContactMapAbstractEdge>();
 					CContactMapAbstractEdge edge = new CContactMapAbstractEdge(
 							site);
@@ -202,7 +202,7 @@ public class CContactMapAbstractSolution {
 			}
 			CContactMapChangedSite changedSite;
 			if (sitesMap == null) {
-				sitesMap = new HashMap<Integer, CContactMapChangedSite>();
+				sitesMap = new LinkedHashMap<Integer, CContactMapChangedSite>();
 				changedSite = new CContactMapChangedSite(site);
 				sitesMap.put(siteKey, changedSite);
 				this.agentsInContactMap.put(agentKey, sitesMap);
@@ -323,7 +323,7 @@ public class CContactMapAbstractSolution {
 		for (ISubViews views : listOfSubViews) {
 			// List<CAbstractAgent> list = views.getAllSubViews(null);
 			List<CAbstractAgent> list = views.getAllSubViews();
-			HashSet<Integer> listOfRules = views.getSubViewClass().getRulesId();
+			LinkedHashSet<Integer> listOfRules = views.getSubViewClass().getRulesId();
 			for (CAbstractAgent a : list) {
 				if (addAgentToAgentsMap(a)) {
 					for (int ruleId : listOfRules) {

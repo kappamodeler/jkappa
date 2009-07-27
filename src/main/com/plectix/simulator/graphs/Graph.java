@@ -1,7 +1,7 @@
 package com.plectix.simulator.graphs;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -41,137 +41,107 @@ public class Graph {
 	 * 
 	 * @return
 	 */
-	public List<Edge> getAllEdgesInCycles() {
+	public List<Edge> getAllEdgesInDirectedCycles() {
 		clearTags();
 		LinkedList<Edge> list = new LinkedList<Edge>();
 
 		Stack<Vertex> stack = new Stack<Vertex>();
 		vertices.get(0).parent = null;
 		vertices.get(0).setTag(true);
+		vertices.get(0).mark2 = true;
 		stack.push(vertices.get(0));
 
-		boolean breaked = false;
-		while (!stack.empty()) {
-			breaked = false;
-			Vertex temp = stack.pop();
-			for (Edge e : temp.edges) {
-				if (breaked)
-					continue;
-				if (e.getTarget() == temp) {
-					if (e.getSource() == temp.parent) {
-						continue;
-					} else {
-						e.setTarget(e.getSource());
-						e.setSource(temp);
-					}
-				}
-				if (e.getTarget().isTag()) {
-					list.addAll(extractCycle(e.getTarget(), temp));
-					breaked = true;
-					continue;
-				} else {
-					e.getTarget().setTag(true);
-					stack.push(e.getTarget());
+		int temp = 0;
+
+		while (temp != -1) {
+			if (!stack.empty()) {
+				doStep(stack, list);
+			} else {
+				temp = needExploreMore();
+				if (temp != -1) {
+					Vertex v = vertices.get(temp);
+					stack.push(v);
+					v.setTag(true);
+					v.mark2 = true;
 				}
 			}
 		}
-		return null;
+		return list;
 	}
 
-	private LinkedList<Edge> extractCycle(Vertex v, Vertex secondParent) {
-		LinkedList<Vertex> list1 = new LinkedList<Vertex>();
-		LinkedList<Vertex> list2 = new LinkedList<Vertex>();
-		LinkedList<Edge> answer = new LinkedList<Edge>();
-		list1.add(v);
-		list1.add(secondParent);
-		list2.add(v.parent);
-		Vertex runner = secondParent;
-		while (runner.parent != null) {
-			runner = runner.parent;
-			list1.add(runner);
+	/**
+	 * we move the path. isTag = true when path include this vertex doesn't use
+	 * neighbor
+	 * 
+	 * @param stack
+	 * @param list
+	 */
+	private void doStep(Stack<Vertex> stack, LinkedList<Edge> list) {
+		Vertex from = stack.peek();
+		Vertex to = from.next();
+		if (to == from) {
+			addEdgeToAnswer(list, from, to);
+			return;
 		}
-		runner = v.parent;
-		while (runner.parent != null) {
-			runner = runner.parent;
-			list2.add(runner);
-		}
-		int size1 = list1.size() - 1;
-		int size2 = list2.size() - 1;
-
-		while (list1.get(size1) == list2.get(size2)) {
-			list1.remove(size1);
-			size1--;
-			list2.remove(size2);
-			size2--;
-		}
-
-		// megre and glue these vertices to one
-		Vertex merged = list1.get(size1).parent;
-		Edge e = getEdge(v, secondParent);
-		answer.add(e);
-		v.edges.remove(e);
-		v.neighbors.remove(secondParent);
-		secondParent.edges.remove(e);
-		secondParent.neighbors.remove(v);
-		Vertex vertexTwo = new Vertex();
-		for (Vertex vertex : list1) {
-			vertexTwo = vertex.parent;
-			addEdgeToAnswer(answer, vertex, vertexTwo);
+		if (to != null) {
+			if (!to.isTag()) {
+				to.parent = from;
+				to.mark2 = true;
+				to.setTag(true);
+				stack.push(to);
+			} else {
+				extractCycle(from, to, list, stack);
+			}
+		} else {
+			stack.pop().setTag(false);
 		}
 
-		for (Vertex vertex : list2) {
-			vertexTwo = vertex.parent;
-			addEdgeToAnswer(answer, vertex, vertexTwo);
-		}
-		// redirect edges
-		for (Vertex vertex : list1) {
-			mergeVertices(merged, vertex);
-		}
+	}
 
-		for (Vertex vertex : list2) {
-			mergeVertices(merged, vertex);
-		}
-
-		boolean needCompress = true;
-
-		while (needCompress) {
-			needCompress = false;
-			for (int i = 0; i < merged.neighbors.size(); i++) {
-				if (merged.neighbors.lastIndexOf(merged.neighbors.get(i)) != i) {
-					vertexTwo = merged.neighbors.get(i);
-					while (getEdge(merged, vertexTwo) != null) {
-						addEdgeToAnswer(answer, merged, vertexTwo);
-					}
-					mergeVertices(merged, vertexTwo);
-					needCompress = true;
-				}
+	private int needExploreMore() {
+		for (int i = 0; i < numberOfVertices; i++) {
+			if (!vertices.get(i).mark2) {
+				return i;
 			}
 		}
-
-		return answer;
+		return -1;
 	}
 
-	private void addEdgeToAnswer(LinkedList<Edge> answer, Vertex vertex,
-			Vertex vertexTwo) {
-		Edge e;
-		e = getEdge(vertex, vertexTwo);
+	// redraw all egdes from vertices of cycle form one Big vertex
+	private void extractCycle(Vertex from, Vertex to, LinkedList<Edge> list,
+			Stack<Vertex> stack) {
+		addEdgeToAnswer(list, from, to);
+		while (from != to) {
+			addEdgeToAnswer(list, from.parent, from);
+			mergeVertices(to, from);
+			from = from.parent;
+			stack.pop();
+		}
+
+	}
+
+	private void addEdgeToAnswer(LinkedList<Edge> answer, Vertex from, Vertex to) {
+		Edge e = getEdge(from, to);
 		answer.add(e);
-		vertex.edges.remove(e);
-		vertex.neighbors.remove(vertexTwo);
-		vertexTwo.edges.remove(e);
-		vertexTwo.neighbors.remove(vertex);
+		from.edges.remove(e);
+		to.edges.remove(e);
+		to.explored=0;
+		from.explored = 0;
+		edges.remove(e);
 	}
 
 	private void mergeVertices(Vertex merged, Vertex vertex) {
 		for (Edge eTemp : vertex.edges) {
-			eTemp.setSource(merged);
-			merged.edges.add(eTemp);
-			merged.neighbors.add(eTemp.getTarget());
-			eTemp.getTarget().neighbors.remove(vertex);
-			eTemp.getTarget().neighbors.add(merged);
+			if (eTemp.getTarget() == vertex) {
+				eTemp.setTarget(merged);
+				merged.edges.add(eTemp);
+			}
+			if (eTemp.getSource() == vertex) {
+				eTemp.setSource(merged);
+				merged.edges.add(eTemp);
+			}
 		}
 		vertex.edges.clear();
-		vertex.neighbors.clear();
 	}
 
 	public ArrayList<ArrayList<Vertex>> getAllWeakClosureComponent() {
@@ -247,7 +217,7 @@ public class Graph {
 	 */
 	public void closeGraph() {
 
-		Set<Vertex> newEdgeTargets = new HashSet<Vertex>();
+		Set<Vertex> newEdgeTargets = new LinkedHashSet<Vertex>();
 
 		// At every iteration of the outer loop, we add a path of length 1
 		// between nodes that originally had a path of length 2. In the worst

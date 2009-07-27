@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -59,7 +59,7 @@ public class PolyhedraCreator {
 
 	private static void createPolydedron(String[] vertices, String[] edgeMap, int numberOfAgentNames) {
 		
-		Map<String, PolyhedraAgent> agentMap = new HashMap<String, PolyhedraAgent>(vertices.length);
+		Map<String, PolyhedraAgent> agentMap = new LinkedHashMap<String, PolyhedraAgent>(vertices.length);
 		for (int i= 0 ; i < vertices.length; i++) {
 			agentMap.put(vertices[i], new PolyhedraAgent(AGENT_NAMES[i%numberOfAgentNames]));
 		}

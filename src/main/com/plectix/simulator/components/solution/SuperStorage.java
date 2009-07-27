@@ -9,7 +9,7 @@ import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 
 public class SuperStorage implements IStorage {
-	private Map<String, SuperSubstance> myStorage = new HashMap<String, SuperSubstance>();
+	private Map<String, SuperSubstance> myStorage = new LinkedHashMap<String, SuperSubstance>();
 	private final ISolution mySolution;
 	private int agentsLimit = Integer.MAX_VALUE;
 	// this one keeps max component's length

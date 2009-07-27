@@ -7,6 +7,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import org.junit.*;
 
+import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
@@ -88,8 +89,8 @@ public class TestPositiveUpdate extends TestUpdate {
 	@Override
 	public void init() {
 		myObsInjectionsQuantity = (new QuantityDataParser(myPrefixFileName
-				+ "ObsInjectionsData")).parse();
+				+ "ObsInjectionsData" + RunAllTests.FILENAME_EXTENSION)).parse();
 		myLHSInjectionsQuantity = (new QuantityDataParser(myPrefixFileName
-				+ "LHSInjectionsData")).parse();
+				+ "LHSInjectionsData" + RunAllTests.FILENAME_EXTENSION)).parse();
 	}
 }

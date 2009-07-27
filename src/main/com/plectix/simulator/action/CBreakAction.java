@@ -13,6 +13,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
  * Class implements "BREAK" action type.
@@ -118,6 +119,8 @@ public class CBreakAction extends CAction {
 			CSite site, boolean state) {
 		if (eventContainer == null || site == null)
 			return;
+
+		ThreadLocalData.getTypeById().setTypeOfAgent(site.getAgentLink().getId(), site.getAgentLink().getNameId());
 		eventContainer.addAtomicEvent(new WireHashKey(site.getAgentLink().getId(), site
 				.getNameId(), ETypeOfWire.LINK_STATE), site,
 				EActionOfAEvent.MODIFICATION, state);
@@ -129,6 +132,7 @@ public class CBreakAction extends CAction {
 		// event.getState().setAfterState(new
 		// CStateOfLink(CStateOfLink.FREE,CStateOfLink.FREE));
 		// event.correctingType(ECheck.MODIFICATION);
+
 
 		eventContainer.addAtomicEvent(new WireHashKey(site.getAgentLink().getId(), site
 				.getNameId(), ETypeOfWire.BOUND_FREE), site,

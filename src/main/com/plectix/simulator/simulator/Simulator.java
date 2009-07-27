@@ -3,10 +3,6 @@ package com.plectix.simulator.simulator;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
-
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.RuleApplicator;
@@ -21,6 +17,7 @@ import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.probability.CProbabilityCalculation;
+import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.streaming.LiveData;
 import com.plectix.simulator.streaming.LiveDataStreamer;
 import com.plectix.simulator.util.MemoryUtil;
@@ -161,11 +158,11 @@ public class Simulator implements SimulatorInterface {
 		timeStepCounter++;
 	}
 
-	public final Source addCompleteSource() throws TransformerException, ParserConfigurationException {
-		Source source = simulationData.createDOMModel();
-		simulatorResultsData.addResultSource(source);
-		return source;
-	}
+//	public final Source addCompleteSource() throws TransformerException, ParserConfigurationException {
+//		Source source = simulationData.createDOMModel();
+//		simulatorResultsData.addResultSource(source);
+//		return source;
+//	}
 	
 	private final void endOfMerge(PlxTimer timer){
 		simulationData.stopTimer(InfoType.OUTPUT,timer, "-Merge stories:");
@@ -217,7 +214,9 @@ public class Simulator implements SimulatorInterface {
 		}
 		
 		if (!simulationData.getSimulationArguments().isDebugInit()) {
-			if (simulationData.getSimulationArguments().isGenereteMap() || simulationData.getSimulationArguments().isContactMap() ) {
+			if (simulationData.getSimulationArguments().isGenereteMap() || 
+					simulationData.getSimulationArguments().getSimulationType() == SimulationType.CONTACT_MAP){
+					//simulationData.getSimulationArguments().isContactMap() ) {
 				// nothing to do in this case... outputData is called below...
 			} else if (simulationData.getSimulationArguments().isNumberOfRuns()) {
 				// this mode needs to be re-implemented
@@ -239,8 +238,8 @@ public class Simulator implements SimulatorInterface {
 		}
 		
 		// Output XML data:
-		Source source = addCompleteSource();
-		simulationData.outputData(source, currentEventNumber);
+//		Source source = addCompleteSource();
+		simulationData.outputData(currentEventNumber);
 		
 		simulatorStatus.setStatusMessage(STATUS_IDLE);
 		
@@ -456,6 +455,7 @@ public class Simulator implements SimulatorInterface {
 			boolean isEndRules = false;
 			long clash = 0;
 			long max_clash = 0;
+			ThreadLocalData.getTypeById().setIteration(currentIterationNumber);
 		    
 		    while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
 					&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {

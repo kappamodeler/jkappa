@@ -1,0 +1,41 @@
+# Rules:
+#######
+# Chapter 'New Chapter 1'
+'G protein activation' G_alpha(nuc~GDP) -> G_alpha(nuc~GTP) @ 0
+'G protein activation Ref1' G_alpha(nuc~GDP,receptor!2),Receptor(g_protein!2,ligand!1),Ligand(receptor!1) -> G_alpha(nuc~GTP,receptor!2),Receptor(g_protein!2,ligand!1),Ligand(receptor!1) @ 1.0
+'G protein activation Ref2' G_alpha(nuc~GDP,receptor) -> G_alpha(nuc~GTP,receptor) @ 1.0e-3
+'G protein activation Ref3' Receptor(ligand,g_protein!1),G_alpha(nuc~GDP,receptor!1) -> Receptor(ligand,g_protein!1),G_alpha(nuc~GTP,receptor!1) @ 1.0e-3
+'G protein deactivation' G_alpha(nuc~GTP) -> G_alpha(nuc~GDP) @ 1.0e-3
+'G protein deactivation Ref1' G_alpha(nuc~GTP,rgs!1),RGS(g_protein!1) -> G_alpha(nuc~GDP,rgs!1),RGS(g_protein!1) @ 0.1
+'G protein deactivation Ref2' G_alpha(nuc~GTP,rgs) -> G_alpha(nuc~GDP,rgs) @ 1.0e-3
+'G protein dissociation' G_alpha(beta_gamma!1),G_beta_gamma(alpha!1) -> G_alpha(beta_gamma),G_beta_gamma(alpha) @ 0.0
+'G protein dissociation Ref1' G_beta_gamma(alpha!1),G_alpha(beta_gamma!1,nuc~GDP) -> G_beta_gamma(alpha),G_alpha(beta_gamma,nuc~GDP) @ 1.0e-3
+'G protein dissociation Ref2' G_beta_gamma(alpha!1),G_alpha(beta_gamma!1,nuc~GTP) -> G_beta_gamma(alpha),G_alpha(beta_gamma,nuc~GTP) @ 1.0
+'G protein self-association' G_alpha(beta_gamma),G_beta_gamma(alpha) -> G_alpha(beta_gamma!1),G_beta_gamma(alpha!1) @ 1.0e-4
+'Ligand-binding' Ligand(receptor),Receptor(ligand) <-> Ligand(receptor!1),Receptor(ligand!1) @ 1.0e-4,0.1
+'RGS-G protein interaction' RGS(g_protein),G_alpha(rgs) <-> RGS(g_protein!1),G_alpha(rgs!1) @ 1.0e-4,0.1
+'Receptor-G protein association' Receptor(g_protein),G_alpha(receptor) <-> Receptor(g_protein!1),G_alpha(receptor!1) @ 1.0e-4,0.1
+
+
+# Initial Conditions:
+%init: 5000 * (Ligand(receptor))
+%init: 2000 * (G_beta_gamma(alpha))
+%init: 2000 * (G_alpha(rgs,receptor,nuc~GDP,beta_gamma))
+%init: 2000 * (Receptor(ligand,g_protein))
+%init: 2000 * (RGS(g_protein))
+
+# Simulation:
+%obs: G_beta_gamma(alpha)
+%obs: 'R.L' Receptor(ligand!1),Ligand(receptor!1)
+%obs: 'G_GDP_free' G_alpha(nuc~GDP,beta_gamma)
+%obs: 'RGS.G' RGS(g_protein!1),G_alpha(rgs!1)
+%obs: 'R.G' G_alpha(receptor!1),Receptor(g_protein!1)
+%obs: G_alpha(nuc~GTP)
+%obs: 'G_protein_GDP' G_alpha(beta_gamma!1,nuc~GDP),G_beta_gamma(alpha!1)
+%obs: 'G_protein_GTP' G_alpha(beta_gamma!1,nuc~GTP),G_beta_gamma(alpha!1)
+
+# Perturbation:
+
+# Stories:
+%story: 'G protein dissociation Ref1'
+

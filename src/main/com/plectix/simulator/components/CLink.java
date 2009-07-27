@@ -16,7 +16,7 @@ import java.io.Serializable;
  */
 @SuppressWarnings("serial")
 public final class CLink implements Serializable {
-	private CLinkStatus statusLink;
+	private CLinkStatus statusLink;	
 	private CSite linkSite = null;
 	
 	private int linkStateID = NULL_INDEX;
@@ -52,6 +52,18 @@ public final class CLink implements Serializable {
 		linkSite = null;
 		linkStateID = NULL_INDEX;
 	}
+	
+	public final void setWildLinkState(){
+		statusLink = CLinkStatus.WILDCARD;
+		linkSite = null;
+		linkStateID = NULL_INDEX;
+	}
+	
+	public void setSemiLink() {
+		statusLink = CLinkStatus.BOUND;
+		linkSite = null;
+		linkStateID = NULL_INDEX;
+	}	
 	
 	/**
 	 * This method returns <tt>true</tt> if status of this link is "free"

@@ -1,12 +1,15 @@
 package com.plectix.simulator.XMLmaps;
 
+import java.io.IOException;
+
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
-
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
-
+import com.plectix.simulator.RunAllTests;
+import com.plectix.simulator.components.stories.storage.StoryStorageException;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
@@ -15,7 +18,7 @@ import com.plectix.simulator.util.Info.InfoType;
 import com.plectix.simulator.util.MemoryUtil.PeakMemoryUsage;
 
 public class InitTestContactMap {
-//	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
+	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 	private static final String testModel = "model";
 	
 	private static Simulator mySimulator;
@@ -29,7 +32,7 @@ public class InitTestContactMap {
 		
 		args[0] = "--short-console-output";
 		args[1] = "--contact-map";
-		args[2] = directory + "~kappa" + count + ".tmp";
+		args[2] = directory + "~kappa" + count + RunAllTests.FILENAME_EXTENSION;//".tmp";
 		args[3] = "--no-dump-iteration-number";
 		args[4] = "--no-dump-rule-iteration";
 		args[5] = "--no-build-influence-map";
@@ -37,7 +40,7 @@ public class InitTestContactMap {
 		args[7] = "--no-compute-qualitative-compression";
 		args[8] = "--no-enumerate-complexes";
 		args[9] = "--focus-on";
-		args[10] = directory + "~focus" + count + ".tmp";
+		args[10] = directory + "~focus" + count + RunAllTests.FILENAME_EXTENSION;//".tmp";
 		return args;
 	}
 	
@@ -47,7 +50,7 @@ public class InitTestContactMap {
 		
 		args[0] = "--short-console-output";
 		args[1] = "--contact-map";
-		args[2] = directory + "~kappa" + count + ".tmp";
+		args[2] = directory + "~kappa" + count + RunAllTests.FILENAME_EXTENSION;//".tmp";
 		args[3] = "--no-dump-iteration-number";
 		args[4] = "--no-dump-rule-iteration";
 		args[5] = "--no-build-influence-map";
@@ -60,7 +63,7 @@ public class InitTestContactMap {
 	}
 
 	public static void init(String dir, String dirResult, String count) {
-//		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
+		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		mySimulator = new Simulator();
 		directory = dir;
 		sessionPath = dirResult;
@@ -84,7 +87,8 @@ public class InitTestContactMap {
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine.getSimulationArguments());
 		simulationData.readSimulatonFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
-		simulationData.getSimulationArguments().setXmlSessionName(sessionPath  + "~session" + mycount + ".tmp");
+		//simulationData.getSimulationArguments().setXmlSessionName(sessionPath  + "~session" + mycount + ".tmp");
+		simulationData.getSimulationArguments().setXmlSessionName(getSessionPath());
 		try {
 			mySimulator.run(0);
 		} catch (Exception e) {
@@ -101,11 +105,20 @@ public class InitTestContactMap {
 		// Output XML data:
 		Source source;
 		try {
-			source = mySimulator.addCompleteSource();
-			simulationData.outputData(source, 0);
+//			source = mySimulator.addCompleteSource();
+			simulationData.outputData(0);
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (XMLStreamException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (StoryStorageException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -117,7 +130,7 @@ public class InitTestContactMap {
 	}
 	
 	public static String getComparePath(){
-		return directory + "~session" + mycount + ".tmp";
+		return directory + "~session" + mycount + RunAllTests.FILENAME_EXTENSION;//".tmp";
 	}
 
 }

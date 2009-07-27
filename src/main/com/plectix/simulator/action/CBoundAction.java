@@ -1,17 +1,20 @@
 package com.plectix.simulator.action;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.enums.EActionOfAEvent;
 import com.plectix.simulator.components.stories.enums.ETypeOfWire;
 import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.components.stories.storage.WireHashKey;
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
-import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
  * Class implements "BOUND" action type.
@@ -104,6 +107,8 @@ public class CBoundAction extends CAction {
 //		addToEventContainer(eventContainer, agentToInSolution
 //				.getSiteByNameId(mySiteTo.getNameId()),CEvent.BEFORE_STATE);
 
+		ThreadLocalData.getTypeById().setTypeOfAgent(agentFromInSolution.getId(), agentFromInSolution.getNameId());
+		ThreadLocalData.getTypeById().setTypeOfAgent(agentToInSolution.getId(), agentToInSolution.getNameId());
 		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).getLinkState()
 				.connectSite(agentToInSolution.getSiteByNameId(mySiteTo.getNameId()));
 
@@ -130,6 +135,8 @@ public class CBoundAction extends CAction {
 			CSite site, boolean state) {
 		if (eventContainer == null)
 			return;
+		
+		ThreadLocalData.getTypeById().setTypeOfAgent(site.getAgentLink().getId(), site.getAgentLink().getNameId());
 		eventContainer.addAtomicEvent(new WireHashKey(site.getAgentLink().getId(), site
 				.getNameId(), ETypeOfWire.LINK_STATE), site,
 				EActionOfAEvent.MODIFICATION, state);
@@ -156,5 +163,41 @@ public class CBoundAction extends CAction {
 		// event2.getState().setAfterState(false);
 		// event2.correctingType(ECheck.MODIFICATION);
 
+	}
+		public Set<CSite> getBoundingSites() {
+		Set<CSite> set = new LinkedHashSet<CSite>();
+		CSite imageTo = null;
+		CSite imageFrom = null;
+		Set<CAgent> lhsAgents = new LinkedHashSet<CAgent>();
+		for (IConnectedComponent cc : myRule.getLeftHandSide()) {
+			lhsAgents.addAll(cc.getAgents());
+		}
+		if (!lhsAgents.isEmpty()) {
+			for (CAgent agentL : lhsAgents) {
+				int id = agentL.getIdInRuleHandside();
+
+				CAgent tryThis = this.getSiteFrom().getAgentLink();
+				if (id == tryThis.getIdInRuleHandside()) {
+					imageFrom = agentL.getSiteByNameId(this.getSiteFrom().getNameId());
+					set.add(imageFrom);
+				}
+				
+				tryThis = this.getSiteTo().getAgentLink();
+				if (id == tryThis.getIdInRuleHandside()) {
+					imageTo = agentL.getSiteByNameId(this.getSiteTo().getNameId());
+					set.add(imageTo);
+				}
+			}
+		}
+		// first we should always add siteFrom info
+		if (imageFrom == null) {
+			set.add(this.getSiteFrom());
+		}
+		// and only then - siteTo info
+		if (imageTo == null) {
+			set.add(this.getSiteTo());
+		}
+		// There's always should be 2 elements
+		return set;
 	}
 }

@@ -17,7 +17,7 @@ public class RuleCCDataParser extends Parser<Map<String, RuleStructure>> {
 	
 	@Override
 	protected Map<String, RuleStructure> unsafeParse() {
-		Map<String, RuleStructure> map = new HashMap<String, RuleStructure>();
+		Map<String, RuleStructure> map = new LinkedHashMap<String, RuleStructure>();
 
 		String line = myReader.getStringFromFile();
 		String currentTest = "";

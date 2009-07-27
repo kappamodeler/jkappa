@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.util.NameDictionary;
 import com.plectix.simulator.util.PlxLogger;
+import com.plectix.simulator.util.TypeById;
 
 /**
  * This class hold data local to each <code>Thread</code> (i.e. Simulation). 
@@ -30,6 +31,14 @@ public class ThreadLocalData {
 		}
 	};
 
+	private static final ThreadLocal<TypeById> typeById = new ThreadLocal<TypeById>(){
+		@Override 
+		protected TypeById initialValue() {
+			return new TypeById();
+		}
+		
+	};
+	
 	private static final ThreadLocal<DecimalFormat[]> decimalFormatters = new ThreadLocal<DecimalFormat[]>() {
 		@Override 
 		protected DecimalFormat[] initialValue() {
@@ -54,6 +63,11 @@ public class ThreadLocalData {
 		return nameDictionary.get();
     }
 
+    public static final TypeById getTypeById(){
+    	return typeById.get();
+    }
+    
+    
     public static final DecimalFormat getDecimalFormat(int i) {
     	DecimalFormat[] decimalFormats = decimalFormatters.get();
     	if (i < 0) {

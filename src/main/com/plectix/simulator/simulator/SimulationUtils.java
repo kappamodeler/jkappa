@@ -3,6 +3,7 @@ package com.plectix.simulator.simulator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
@@ -420,5 +421,39 @@ public class SimulationUtils {
 				return false;
 		}
 		return true;
+	}
+	
+	public static List<IConnectedComponent> splitAndCopy(KappaSystem ks, Collection<CAgent> agents) {
+		List<IConnectedComponent> set = new LinkedList<IConnectedComponent>();
+		Collection<IConnectedComponent> split = split(agents);
+		if (split == null) {
+			set.add(new CConnectedComponent());
+			return set;
+		}
+		for (IConnectedComponent cc : split) {
+			set.add(ks.getSolution().cloneConnectedComponent(cc));
+		}
+		if (set.isEmpty()) {
+			return null;
+		}
+		return set;
+	}
+	
+//	public static Collection<IConnectedComponent> split(Collection<CAgent> agents) {
+//		Collection<IConnectedComponent> set = new LinkedHashSet<IConnectedComponent>();
+//		List<CAgent> copiedAgents = new ArrayList<CAgent>(agents);
+//		for (CAgent agent : agents) {
+//			IConnectedComponent cc = SolutionUtils.getConnectedComponent(agent);
+//			set.add(cc);
+//			copiedAgents.removeAll(cc.getAgents());
+//			if (copiedAgents.isEmpty()) {
+//				break;
+//			}
+//		}
+//		return set;
+//	}
+	
+	public static Collection<IConnectedComponent> split(Collection<CAgent> agents){
+		return SimulationUtils.buildConnectedComponents(agents);
 	}
 }

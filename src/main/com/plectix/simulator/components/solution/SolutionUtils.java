@@ -8,12 +8,12 @@ import com.plectix.simulator.interfaces.*;
 public class SolutionUtils {
 	public static final IConnectedComponent getConnectedComponent(CAgent agent) {
 		if (agent != null) {
-			Map<Long, CAgent> adjacentAgents = new HashMap<Long, CAgent>();
+			Map<Long, CAgent> adjacentAgents = new LinkedHashMap<Long, CAgent>();
 			adjacentAgents.put(agent.getId(), agent);
 			adjacentAgents = getAdjacentAgents(agent, adjacentAgents);
 			int index = 0;
 			for (CAgent agentIn : adjacentAgents.values()) {
-				agentIn.setIdInRuleSide(index);
+//				agentIn.setIdInRuleSide(index);
 				agentIn.setIdInConnectedComponent(index++);
 			}
 
@@ -25,7 +25,7 @@ public class SolutionUtils {
 
 	private static final Map<Long, CAgent> getAdjacentAgents(CAgent agent, Map<Long, CAgent> agentList2) {
 		Map<Long, CAgent> allAgents = agentList2;
-		Set<CAgent> agentAddList = new HashSet<CAgent>();
+		Set<CAgent> agentAddList = new LinkedHashSet<CAgent>();
 
 		for (CSite site : agent.getSites()) {
 			CSite siteLink = site.getLinkState().getConnectedSite();

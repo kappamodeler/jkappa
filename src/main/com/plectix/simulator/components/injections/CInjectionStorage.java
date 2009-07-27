@@ -5,7 +5,7 @@ import java.util.*;
 import com.plectix.simulator.interfaces.IRandom;
 
 public class CInjectionStorage {
-	private final Map<Integer, CInjection> injections = new HashMap<Integer, CInjection>();
+	private final Map<Integer, CInjection> injections = new LinkedHashMap<Integer, CInjection>();
 	private int maxId = -1;
 	
 	/**

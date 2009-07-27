@@ -18,6 +18,7 @@ public class SimulationArguments {
 	public static final int DEFAULT_SEED = -1;
 	public static final long DEFAULT_MAX_CLASHES = 10000;
 	public static final int DEFAULT_NUMBER_OF_POINTS = 1000;
+	
 	/** Maximum simulation time is 100 days */
 	public static final long DEFAULT_WALL_CLOCK_TIME_LIMIT = 100L* NUMBER_OF_MILLISECONDS_IN_DAY;
 	public static final long DEFAULT_MONITOR_PEAK_MEMORY = -1;
@@ -78,6 +79,7 @@ public class SimulationArguments {
 	private boolean debugInit = false;
 	private boolean genereteMap = false;
 	private boolean contactMap = false;
+	private boolean localViews = false;
 	private boolean numberOfRuns = false;
 	private boolean storify = false;
 	private boolean forwardOnly = false;
@@ -101,6 +103,10 @@ public class SimulationArguments {
 	private int agentsLimit = DEFAULT_AGENTS_LIMIT;
 	private long liveDataInterval = -1;
 	private int liveDataPoints = DEFAULT_LIVE_DATA_POINTS;
+	private boolean enumerationOfSpecies;
+	private boolean quantitativeCompression = false;
+	private boolean qualitativeCompression = false;
+
 	
 	public SimulationArguments() {
 		super();
@@ -783,7 +789,7 @@ public class SimulationArguments {
 	}
 
 	public boolean isSolutionRead() {
-		return simulationType != SimulationType.GENERATE_MAP;
+		return true;//return simulationType != SimulationType.GENERATE_MAP;
 	}
 
 	public void setOperationMode(String value) {
@@ -825,6 +831,24 @@ public class SimulationArguments {
 	public boolean isDeadRules(){
 		return deadRules;
 	}
+	
+	public void setLocalViews(Boolean b){
+		if(b)
+			this.subViews = true;
+		this.localViews = b;
+	}
+	
+	public boolean isLocalViews(){
+		return localViews;
+	}
+
+	public void setEnumerationOfSpecies(boolean b) {
+		this.enumerationOfSpecies = b;
+	}
+	
+	public boolean isEnumerationOfSpecies(){
+		return enumerationOfSpecies;
+	}
 
 	public final long getLiveDataInterval() {
 		return liveDataInterval;
@@ -849,5 +873,20 @@ public class SimulationArguments {
 		this.liveDataPoints = liveDataPoints;
 	}
 
+	public void setQuantitativeCompression(boolean b) {
+		this.quantitativeCompression = b;
+	}
+	
+	public boolean isQuantitativeCompression(){
+		return quantitativeCompression;
+	}
+
+	public void setQualitativeCompression(boolean b) {
+		this.qualitativeCompression = b;
+	}
+	
+	public boolean isQualitativeCompression(){
+		return qualitativeCompression;
+	}
 
 }

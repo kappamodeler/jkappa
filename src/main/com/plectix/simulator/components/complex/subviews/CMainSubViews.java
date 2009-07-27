@@ -2,13 +2,16 @@ package com.plectix.simulator.components.complex.subviews;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
@@ -33,11 +36,11 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		IAllSubViewsOfAllAgents {
 	private Map<Integer, CAbstractAgent> agentNameIdToAgent;
 	private List<SubViewsRule> abstractRules;
-	private HashSet<Integer> deadRules;
+	private LinkedHashSet<Integer> deadRules;
 
 	public CMainSubViews() {
 		super();
-		agentNameIdToAgent = new HashMap<Integer, CAbstractAgent>();
+		agentNameIdToAgent = new LinkedHashMap<Integer, CAbstractAgent>();
 		abstractRules = new LinkedList<SubViewsRule>();
 	}
 
@@ -47,13 +50,17 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		fillAgentMap(agents);
 		constructAbstractRules(rules);
 		constructClasses(abstractRules, agentNameIdToAgent);
-//		WeakInfluence wI = new WeakInfluence();
+
 		AInfluenceMap wI = new CInfluenceMapWithoutFuture();
-		wI.initInfluenceMap(abstractRules,null, agentNameIdToAgent);
+		// AInfluenceMap wI = new CInfluenceMapWithFuture();
+		wI.initInfluenceMap(abstractRules, null, null, agentNameIdToAgent);
 
 		fillingClasses(agents);
 		initBoundRulesAndSubViews();
 		try {
+			// we use this original heuristic TODO
+			constructAbstractContactMap(wI);
+			constructAbstractContactMap(wI);
 			constructAbstractContactMap(wI);
 		} catch (SubViewsExeption e) {
 			e.printStackTrace();
@@ -85,8 +92,8 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	public Iterator<Integer> getAllTypesIdOfAgents() {
 		return agentNameIdToAgent.keySet().iterator();
 	}
-	
-	public Map<Integer, CAbstractAgent> getAgentNameIdToAgent(){
+
+	public Map<Integer, CAbstractAgent> getAgentNameIdToAgent() {
 		return agentNameIdToAgent;
 	}
 
@@ -195,14 +202,16 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	// }
 	// }
 	// }
-	private void constructAbstractContactMap(AInfluenceMap wInfluence) throws SubViewsExeption {
-		//RuleId
+	private void constructAbstractContactMap(AInfluenceMap wInfluence)
+			throws SubViewsExeption {
+		// RuleId
 		Queue<Integer> activeRule = new LinkedList<Integer>();
-		//RuleId -> isIncluded
-		Map<Integer, Boolean> includedInQueue = new HashMap<Integer, Boolean>();
-		//ruleId -> number in array
-		Map<Integer, Integer> filter = new HashMap<Integer, Integer>();
+		// RuleId -> isIncluded
+		Map<Integer, Boolean> includedInQueue = new LinkedHashMap<Integer, Boolean>();
+		// ruleId -> number in array
+		Map<Integer, Integer> filter = new LinkedHashMap<Integer, Integer>();
 
+		int ij = 0;
 		for (int i = 0; i < abstractRules.size(); i++) {
 			SubViewsRule rule = abstractRules.get(i);
 			activeRule.add(rule.getRuleId());
@@ -213,19 +222,17 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		Integer ruleId;
 		SubViewsRule rule;
 		WrapperTwoSet activatedRule;
-		HashSet<Integer> intersection = new HashSet<Integer>();
-		//int ij=0;
+		LinkedHashSet<Integer> intersection = new LinkedHashSet<Integer>();
+		// int ij=0;
 		while (!activeRule.isEmpty()) {
-			//System.out.println(ij++);
+			// System.out.println(ij++);
 			ruleId = activeRule.poll();
 			includedInQueue.put(ruleId, false);
-			rule = abstractRules
-					.get(filter.get(ruleId));
-			activatedRule = rule.apply(agentNameIdToAgent,
-					subViewsMap);
-	
-			intersection = intersect(activatedRule, 
-					wInfluence.getActivationByRule(ruleId));
+			rule = abstractRules.get(filter.get(ruleId));
+			activatedRule = rule.apply(agentNameIdToAgent, subViewsMap);
+
+			intersection = intersect(activatedRule, wInfluence
+					.getActivationByRule(ruleId));
 			if (intersection != null)
 				for (int j : intersection) {
 					if (includedInQueue.get(j))
@@ -235,13 +242,13 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 				}
 		}
 	}
-	
-	private HashSet<Integer> intersect(WrapperTwoSet activatedRule,
+
+	private LinkedHashSet<Integer> intersect(WrapperTwoSet activatedRule,
 			List<Integer> activationByRule) {
-		if(activatedRule==null||activationByRule==null){
+		if (activatedRule == null || activationByRule == null) {
 			return null;
 		}
-		HashSet<Integer> answer = activatedRule.getSecond();
+		LinkedHashSet<Integer> answer = activatedRule.getSecond();
 		for (Integer i : activatedRule.getFirst()) {
 			if (activationByRule.contains(i)) {
 				answer.add(i);
@@ -250,7 +257,6 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 
 		return answer;
 	}
-
 
 	public Element createXML(Document doc) {
 		Element reachables = doc.createElement("Reachables");
@@ -263,10 +269,10 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 				set.setAttribute("Agent", agentName);
 				Element tag = doc.createElement("Tag");
 				String data = "Agent: " + agentName + " ; Sites: ";
-				String sites = new String();
+				String sites = new String("");
 				for (Integer siteId : subViews.getSubViewClass().getSitesId()) {
 					if (sites.length() != 0)
-						sites = ",";
+						sites += ",";
 					sites += ThreadLocalData.getNameDictionary()
 							.getName(siteId);
 				}
@@ -290,17 +296,70 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	}
 
 	public void initDeadRules() {
-		deadRules = new HashSet<Integer>();
+		deadRules = new LinkedHashSet<Integer>();
 		for (SubViewsRule rule : abstractRules)
 			if (!rule.isApply())
 				deadRules.add(rule.getRuleId());
 	}
 
-	public HashSet<Integer> getDeadRules() {
+	public LinkedHashSet<Integer> getDeadRules() {
 		return deadRules;
 	}
-	
-	public List<SubViewsRule> getRules(){
+
+	public List<SubViewsRule> getRules() {
 		return abstractRules;
+	}
+
+	@Override
+	public void createXML(XMLStreamWriter writer) throws XMLStreamException {
+		// TODO Auto-generated method stub
+		writer.writeStartElement("Reachables");
+		writer.writeAttribute("Name", "Subviews");
+		for (Integer agentId : agentNameIdToAgent.keySet()) {
+			if(agentId == -1)
+				continue;
+			for (ISubViews subViews : subViewsMap.get(agentId)) {
+				// Element set = doc.createElement("Set");
+				writer.writeStartElement("Set");
+				String agentName = ThreadLocalData.getNameDictionary().getName(
+						agentId);
+				writer.writeAttribute("Agent", agentName);
+				// Element tag = doc.createElement("Tag");
+				writer.writeStartElement("Tag");
+				String data = "Agent: " + agentName + " ; Sites: ";
+				String sites = new String("");
+				for (Integer siteId : subViews.getSubViewClass().getSitesId()) {
+					if (sites.length() != 0)
+						sites += ",";
+					sites += ThreadLocalData.getNameDictionary()
+							.getName(siteId);
+				}
+				data += sites + " ";
+				writer.writeAttribute("Data", data);
+				// set.appendChild(tag);
+				writer.writeEndElement();
+
+				for (CAbstractAgent agent : subViews.getAllSubViews()) {
+					writer.writeStartElement("Entry");
+					writer.writeAttribute("Data", agent.toStringForXML());
+					writer.writeEndElement();
+				}
+				writer.writeEndElement();
+			}
+		}
+		writer.writeEndElement();
+	}
+
+	public List<CAbstractAgent> getAllCorehentViews(CAbstractAgent agent) {
+
+		//TODO may be optimise for nontesting actions
+		List<CAbstractAgent> answer = new LinkedList<CAbstractAgent>();
+
+		for (ISubViews subviews : getAllSubViewsByTypeId(agent.getNameId())) {
+				answer.addAll(subviews.getAllSubViews(agent));
+		}
+
+		return answer;
+
 	}
 }

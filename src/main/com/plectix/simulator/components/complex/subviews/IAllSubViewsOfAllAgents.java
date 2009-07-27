@@ -4,6 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -36,5 +39,9 @@ public interface IAllSubViewsOfAllAgents {
 	public List<SubViewsRule> getRules();
 
 	public Map<Integer, CAbstractAgent> getAgentNameIdToAgent();
+
+	public void createXML(XMLStreamWriter writer)throws XMLStreamException;
+	
+	public List<CAbstractAgent> getAllCorehentViews(CAbstractAgent agent);
 
 }

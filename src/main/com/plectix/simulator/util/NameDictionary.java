@@ -1,13 +1,13 @@
 package com.plectix.simulator.util;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public final class NameDictionary {
 	private final List<String> idToNamesList = new ArrayList<String>();
-	private final Map<String, Integer> namesToIdMap = new HashMap<String, Integer>();
+	private final Map<String, Integer> namesToIdMap = new LinkedHashMap<String, Integer>();
 	
 	public final int addName(String name) {
 		Integer id = namesToIdMap.get(name);

@@ -41,16 +41,26 @@ public class Bond {
 		return ToSite;
 	}
 
-	public boolean equals(Bond c) {
-		if (((c.FromAgent.equals(this.FromAgent))
-				&& (c.FromSite.equals(this.FromSite))
-				&& (c.ToAgent.equals(this.ToAgent))
-				&& (c.ToSite.equals(this.ToSite)))
-			||((c.FromAgent.equals(this.ToAgent))
-						&& (c.FromSite.equals(this.ToSite))
-						&& (c.ToAgent.equals(this.FromAgent))
-						&& (c.ToSite.equals(this.FromSite))))
+	public boolean equals(Object aBond) {
+		
+		if(this == aBond) return true;
+		
+		if(aBond == null) return false;
+		
+		if(getClass() != aBond.getClass()) return false;
+		
+		Bond bond = (Bond) aBond;
+
+		if (((bond.FromAgent.equals(this.FromAgent))
+				&& (bond.FromSite.equals(this.FromSite))
+				&& (bond.ToAgent.equals(this.ToAgent))
+				&& (bond.ToSite.equals(this.ToSite)))
+			||((bond.FromAgent.equals(this.ToAgent))
+						&& (bond.FromSite.equals(this.ToSite))
+						&& (bond.ToAgent.equals(this.FromAgent))
+						&& (bond.ToSite.equals(this.FromSite))))
 			return true;
+		
 		return false;
 	}
 }

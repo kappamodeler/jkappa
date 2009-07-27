@@ -40,6 +40,16 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 	}
 	
 	/**
+	 * This constructor is easier to use
+	 * @param name
+	 * @param agentID
+	 */
+	public CAgent(String name, long agentID) {
+		id = agentID;
+		this.nameId = ThreadLocalData.getNameDictionary().getId(name);
+	}
+	
+	/**
 	 * Empty Agent constructor
 	 */
 	public CAgent() {
@@ -169,8 +179,8 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 			return false;
 		}
 		
-		Set<CSite> listThis = new HashSet<CSite>();
-		Set<CSite> listThat = new HashSet<CSite>();
+		Set<CSite> listThis = new LinkedHashSet<CSite>();
+		Set<CSite> listThat = new LinkedHashSet<CSite>();
 		
 		listThis.addAll(siteMap.values());
 		listThat.addAll(agent.getSites());
@@ -236,6 +246,9 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 	 * @return name of this agent
 	 */
 	public final String getName() {
+		if (nameId == -1) {
+			return "EMPTY";
+		}
 		return ThreadLocalData.getNameDictionary().getName(nameId);
 	}
 
@@ -296,7 +309,10 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 			if (site.getLinkState().getStatusLinkRank() == CLinkRank.SEMI_LINK) {
 				sb.append("!_");
 			} else if (site.getLinkIndex() != -1) {
-				sb.append("!" + site.getLinkIndex());
+//				sb.append("!" + site.getLinkIndex());
+				sb.append("!");
+				sb.append(site.getLinkState().getConnectedSite().getName());
+				sb.append(site.getLinkIndex());
 			} else if (site.getLinkState().getStatusLink() == CLinkStatus.WILDCARD) {
 				sb.append("?");
 			}
@@ -305,7 +321,35 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 		return sb.toString();
 	}
 
+	public String skeletonString() {
+		StringBuffer sb = new StringBuffer(getName() + "(");
+		boolean first = true;
+		for (CSite site : siteMap.values()) {
+			if (!first) {
+				sb.append(", ");
+			} else {
+				first = false;
+			}
+			sb.append(site.getName());
+			if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
+				sb.append("~" + site.getInternalState().getName());
+			}
+		}
+		sb.append(")");
+		return sb.toString();
+	}
+	
 	public int compareTo(CAgent o) {
 		return idInRuleSide - o.getIdInRuleHandside();
+	}
+
+	public void setId(int newId) {
+		id = newId;
+		
+	}
+
+	public void removeSite(int nameId2) {
+		siteMap.remove(nameId2);
+		
 	}
 }

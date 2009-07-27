@@ -30,11 +30,11 @@ public class Initializator {
 		boolean rescale = (myRescale != null);
 		String[] args;
 		if (!rescale) {
-			args = new String[10];
+			args = new String[9];
 		} else {
-			args = new String[12];
-			args[10] = "-rescale";
-			args[11] = "" + myRescale;
+			args = new String[11];
+			args[9] = "-rescale";
+			args[10] = "" + myRescale;
 		}
 		args[0] = "--debug";
 		args[1] = "--sim";
@@ -44,8 +44,7 @@ public class Initializator {
 		args[5] = "--seed";
 		args[6] = "10";
 		args[7] = "--operation-mode";
-		args[8] = "DEFAULT";
-		args[9] = "--no-maps";
+		args[8] = "1";
 		return args;
 	}
 	
@@ -90,43 +89,32 @@ public class Initializator {
 	}
 	
 	
-	public static SimulationArguments prepareStorifyArguments(String filePath, boolean isWeak) throws ParseException{
-		String[] args;
-		args = new String[9];
-		if (isWeak){
+	public static SimulationArguments prepareStorifyArguments(String filePath, boolean isSlow, boolean isWeak, boolean isStrong) throws ParseException{
+		String[] args = new String[10];
+		if (isStrong){
 			args[8] = "--compress-stories";
+			args[9] = "--use-strong-compression";
+		}else if (isWeak){
+			args[8] = "--compress-stories";
+			args[9] = "--no-use-strong-compression";
 		}else{
-			args[8] = "--no_compress_stories";
+			args[8] = "--no-compress-stories";
+			args[9] = "--no-use-strong-compression";
+			
 		}
 		args[0] = "--storify";
 		args[1] = filePath;
 		args[2] = "--event";
 		args[3] = "1000";
 		args[4] = "--iteration";
-		args[5] = "10";
+		if (isSlow){
+			args[5] = "100";
+		}else {
+			args[5] = "10";
+		}
 		args[6] = "--seed";
-		args[7] = "20";
+		args[7] = "13";
 		
-		SimulatorCommandLine commandLine = null;
-		commandLine = new SimulatorCommandLine(args);
-		return commandLine.getSimulationArguments();
-	}
-	
-	public static SimulationArguments prepareStorifyArgumentsSlow(String filePath, boolean isWeak) throws ParseException{
-		String[] args = new String[8];
-		if (isWeak){
-			args[8] = "--compress-stories";
-		}else{
-			args[8] = "--no_compress_stories";
-		}
-		args[0] = "--storify";
-		args[1] = filePath;
-		args[2] = "--event";
-		args[3] = "1000";
-		args[4] = "--iteration";
-		args[5] = "100";
-		args[6] = "--seed";
-		args[7] = "20";
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();

@@ -6,6 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
@@ -14,6 +20,9 @@ import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.util.BoundContactMap;
+import com.plectix.simulator.util.Info;
 
 /**
  * Class implements contact map.
@@ -302,6 +311,10 @@ public class CContactMap {
 		int mainSiteId = mainSite.getNameId();
 		Map<Integer, Map<Integer, List<CContactMapAbstractEdge>>> mapAll = abstractSolution
 				.getEdgesInContactMap();
+		if(!mapAll.containsKey(mainAgentId))
+			return outList;
+		if(!mapAll.get(mainAgentId).containsKey(mainSiteId))
+			return outList;
 		for (CContactMapAbstractEdge edge : mapAll.get(mainAgentId).get(
 				mainSiteId)) {
 			/**
@@ -321,7 +334,7 @@ public class CContactMap {
 	}
 
 	public void fillingContactMap(List<CRule> rules,
-			IAllSubViewsOfAllAgents subViews,SimulationData simulationData) {
+			IAllSubViewsOfAllAgents subViews, SimulationData simulationData) {
 		if (!isInit) {
 			setSimulationData(simulationData);
 			initAbstractSolution();
@@ -331,4 +344,124 @@ public class CContactMap {
 		isInit = true;
 	}
 
+	public void createXML(XMLStreamWriter writer) throws XMLStreamException {
+
+		// Element contactMapElement = doc.createElement("ContactMap");
+		writer.writeStartElement("ContactMap");
+		writer.writeAttribute("Name", "High resolution");
+
+		Map<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap = getAbstractSolution()
+				.getAgentsInContactMap();
+		Map<Integer, Map<Integer, List<CContactMapAbstractEdge>>> bondsInContactMap = getAbstractSolution()
+				.getEdgesInContactMap();
+		List<Integer> agentIDWasRead = new ArrayList<Integer>();
+
+		for (Map.Entry<Integer, Map<Integer, CContactMapChangedSite>> entry : agentsInContactMap
+				.entrySet()) {
+
+			// Element agent = doc.createElement("Agent");
+			writer.writeStartElement("Agent");
+			agentIDWasRead.add(entry.getKey());
+			Map<Integer, CContactMapChangedSite> sitesMap = entry.getValue();
+			Iterator<Map.Entry<Integer, CContactMapChangedSite>> siteIterator = sitesMap
+					.entrySet().iterator();
+			Map.Entry<Integer, CContactMapChangedSite> siteEntry = siteIterator
+					.next();
+			CContactMapChangedSite chSite = siteEntry.getValue();
+			writer.writeAttribute("Name", chSite.getSite().getAgentLink()
+					.getName());
+
+			// TODO
+			addSiteToContactMapAgent(chSite, writer);
+
+			while (siteIterator.hasNext()) {
+				siteEntry = siteIterator.next();
+				addSiteToContactMapAgent(siteEntry.getValue(), writer);
+			}
+			// contactMapElement.appendChild(agent);
+			writer.writeEndElement();
+		}
+
+		List<BoundContactMap> boundList = new ArrayList<BoundContactMap>();
+		for (Map<Integer, List<CContactMapAbstractEdge>> edgesMap : bondsInContactMap
+				.values()) {
+
+			for (List<CContactMapAbstractEdge> edgesList : edgesMap.values()) {
+
+				for (CContactMapAbstractEdge edge : edgesList) {
+					// Element bond = doc.createElement("Bond");
+					int vertexToSiteNameID = edge.getVertexToSiteNameID();
+					int vertexToAgentNameID = edge.getVertexToAgentNameID();
+					CAbstractSite vertexFrom = edge.getVertexFrom();
+					BoundContactMap b = new BoundContactMap(vertexFrom
+							.getAgentLink().getNameId(), ThreadLocalData
+							.getNameDictionary().getId(vertexFrom.getName()),
+							vertexToAgentNameID, vertexToSiteNameID);
+					if (!b.includedInCollection(boundList))// (!boundList.contains(b))
+						boundList.add(b);
+					else
+						continue;
+					// if (!agentIDWasRead.contains(vertexToAgentNameID)) {
+					writer.writeStartElement("Bond");
+					writer.writeAttribute("FromAgent", vertexFrom
+							.getAgentLink().getName());
+					writer.writeAttribute("FromSite", vertexFrom.getName());
+					writer.writeAttribute("ToAgent", ThreadLocalData
+							.getNameDictionary().getName(vertexToAgentNameID));
+					writer.writeAttribute("ToSite", ThreadLocalData
+							.getNameDictionary().getName(vertexToSiteNameID));
+
+					if (edge.getRules().size() != 0) {
+						for (int ruleID : edge.getRules()) {
+							// Element rule = doc.createElement("Rule");
+							writer.writeStartElement("Rule");
+							writer.writeAttribute("Id", Integer
+									.toString(ruleID));
+							// bond.appendChild(rule);
+							writer.writeEndElement();
+						}
+					}
+					// contactMapElement.appendChild(bond);
+					writer.writeEndElement();
+					// }
+				}
+			}
+		}
+		// simplxSession.appendChild(contactMapElement);
+		writer.writeEndElement();
+	}
+
+	private void addSiteToContactMapAgent(CContactMapChangedSite site,
+			XMLStreamWriter writer) throws XMLStreamException {
+		boolean isDefaultSite = site.getSite().getNameId() == CSite.NO_INDEX;
+		if (isDefaultSite) {
+			for (Integer ruleID : site.getUsedRuleIDs()) {
+				if (isDefaultSite) {
+					writer.writeStartElement("Rule");
+					writer.writeAttribute("Id", Integer.toString(ruleID));
+					writer.writeEndElement();
+				}
+			}
+		} else {
+			writer.writeStartElement("Site");
+			writer.writeAttribute("Name", site.getSite().getName());
+			writer.writeAttribute("CanChangeState", Boolean.toString(site
+					.isInternalState()));
+			writer.writeAttribute("CanBeBound", Boolean.toString(site
+					.isLinkState()));
+
+			for (Integer ruleID : site.getUsedRuleIDs()) {
+				if (isDefaultSite) {
+					writer.writeStartElement("Rule");
+					writer.writeAttribute("Id", Integer.toString(ruleID));
+					writer.writeEndElement();
+				}
+			}
+			writer.writeEndElement();
+		}
+	}
+	
+	public boolean isInit(){
+		return isInit;
+	}
 }

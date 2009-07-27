@@ -1,0 +1,12 @@
+# Rules:
+#######
+'Ras_Raf' Ras(S1S2~gtp),Raf(x~u) -> Ras(S1S2~gtp!1),Raf(x~u!1) @ 1.0
+'Raf' Ras(S1S2~gtp!1),Raf(x~u!1) -> Ras(S1S2~gtp!1),Raf(x~p!1) @ 1.0
+'Ras_Raf_op' Ras(S1S2~gtp!1),Raf(x!1) -> Ras(S1S2~gtp),Raf(x) @ 1.0
+'PP2A1_Raf' PP2A1(s),Raf(x~p) -> PP2A1(s!1),Raf(x~p!1) @ 1.0
+'Raf_op' PP2A1(s!1),Raf(x~p!1) -> PP2A1(s!1),Raf(x~u!1) @ 1.0
+
+# Initial Conditions:
+%init: 300 * (Ras(S1S2~gtp))
+%init: 1000 * (Raf(x~u))
+%init: 200 * (PP2A1(s))

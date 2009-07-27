@@ -1,0 +1,4 @@
+'Rule1' R(l,r),E(r) <-> R(l!1,r),E(r!1) @ 1.0,1.0
+
+# Initial Conditions:
+%init: 2 * (R(l,r,Y48~u,Y68~u),E(r))

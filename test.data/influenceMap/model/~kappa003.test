@@ -1,0 +1,53 @@
+######     egfr-faeder.ka
+#rules
+R(l,r) , E(r) <->R(l!1,r) , E(r!1)
+#R(l!1,r) , E(r!1) -> R(l,r) , E(r)
+E(r!1) , E(r!2) , R(l!1,r) , R(l!2,r) ->E(r!1) , E(r!2) ,  R(l!1,r!3) , R(l!2,r!3)
+E(r!1) , E(r!2) , R(l!1,r!3) , R(l!2,r!3) -> E(r!1) , E(r!2) , R(l!1,r) , R(l!2,r)
+E(r!1) , E(r!2) , R(l!1,r!3,Y68~u) , R(l!2,r!3) -> E(r!1) , E(r!2) , R(l!1,r!3,Y68~p) , R(l!2,r!3)
+R(Y68~p) -> R(Y68~u)
+E(r!1) , E(r!2) , R(l!1,r!3,Y48~u) , R(l!2,r!3) -> E(r!1) , E(r!2) , R(l!1,r!3,Y48~p) , R(l!2,r!3)
+R(Y48~p) -> R(Y48~u)
+R(r!_,Y48~p!1) , Sh(pi!1,Y7~u) -> R(r!_,Y48~p!1), Sh(pi!1,Y7~p)
+Sh(pi!_,Y7~p) -> Sh(pi!_,Y7~u)
+Sh(pi,Y7~p) -> Sh(pi,Y7~u)
+R(Y68~p) , G(a,b) -> R(Y68~p!1) , G(a!1,b)
+R(Y68~p!1) , G (a!1,b) -> R(Y68~p) , G(a,b)
+R(Y68~p) , G(a,b!_) -> R(Y68~p!1) , G(a!1,b!_)
+R(Y68~p!1) , G(a!1,b!_) -> R(Y68~p) , G(a,b!_)
+R(Y68~p!1) , G(a!1,b) , So(d) -> R(Y68~p!1) , G(a!1,b!2) , So(d!2)
+R(Y68~p!1) , G(a!1,b!2) , So(d!2) -> R(Y68~p!1) , G(a!1,b) , So(d) 
+G(a,b) , So(d) -> G(a,b!1) , So(d!1)
+G(a,b!1) , So(d!1) -> G(a,b) , So(d)
+'es' Sh(pi,Y7~p!2) , G(a!2,b) , So(d) -> Sh(pi,Y7~p!2) , G(a!2,b!1) , So(d!1)
+Sh(pi,Y7~p!2) , G(a!2,b!1) , So(d!1) -> Sh(pi,Y7~p!2) , G(a!2,b) , So(d)
+Sh(pi!_,Y7~p!2) , G(a!2,b) , So(d) -> Sh(pi!_,Y7~p!2) , G(a!2,b!3) , So(d!3)
+Sh(pi!_,Y7~p!2) , G(a!2,b!3) , So(d!3) -> Sh(pi!_,Y7~p!2) , G(a!2,b) , So(d)
+R(Y48~p) , Sh(pi,Y7~u) -> R(Y48~p!1) , Sh(pi!1,Y7~u)
+R(Y48~p!1) , Sh(pi!1,Y7~u) -> R(Y48~p) , Sh(pi,Y7~u)
+R(Y48~p) , Sh(pi,Y7~p) -> R(Y48~p!1) , Sh(pi!1,Y7~p)
+R(Y48~p!1) , Sh(pi!1,Y7~p) -> R(Y48~p) , Sh(pi,Y7~p)
+R(Y48~p) , Sh(pi,Y7~p!1) , G(a!1,b) -> R(Y48~p!2) , Sh(pi!2,Y7~p!1) , G(a!1,b)
+R(Y48~p!2) , Sh(pi!2,Y7~p!1) , G(a!1,b) -> R(Y48~p) , Sh(pi,Y7~p!1) , G(a!1,b)
+R(Y48~p) , Sh(pi,Y7~p!1) , G(a!1,b!3) , So(d!3) -> R(Y48~p!2) , Sh(pi!2,Y7~p!1) , G(a!1,b!3) , So(d!3)
+R(Y48~p!2) , Sh(pi!2,Y7~p!1) , G(a!1,b!3) , So(d!3) -> R(Y48~p) , Sh(pi,Y7~p!1) , G(a!1,b!3) , So(d!3)
+R(Y48~p!1) , Sh(pi!1,Y7~p) , G(a,b) -> R(Y48~p!1) , Sh(pi!1,Y7~p!2) , G(a!2,b)
+R(Y48~p!1) , Sh(pi!1,Y7~p!2) , G(a!2,b) -> R(Y48~p!1) , Sh(pi!1,Y7~p) , G(a,b)
+Sh(pi,Y7~p) , G(a,b) -> Sh(pi,Y7~p!1) , G(a!1,b)
+Sh(pi,Y7~p!1) , G(a!1,b) -> Sh(pi,Y7~p) , G(a,b)
+Sh(pi,Y7~p) , G(a,b!_) -> Sh(pi,Y7~p!1) , G(a!1,b!_)
+Sh(pi,Y7~p!1) , G(a!1,b!_) -> Sh(pi,Y7~p) , G(a,b!_)
+R(Y48~p!1) , Sh(pi!1,Y7~p) , G(a,b!3) , So(d!3) -> R(Y48~p!1) , Sh(pi!1,Y7~p!2) , G(a!2,b!3) , So(d!3)
+R(Y48~p!1) , Sh(pi!1,Y7~p!2) , G(a!2,b!3) , So(d!3) -> R(Y48~p!1) , Sh(pi!1,Y7~p) , G(a,b!3) , So(d!3)
+R(r!_,l) -> R(r,l)
+Sh(Y7~u!_) -> Sh(Y7~t)
+
+
+#Initial solution
+%init: 2*(R(l,r,Y48~u,Y68~u),E(r),R(l,r,Y48~u,Y68~u),E(r),G(a,b),So(d),G(a,b),Sh(pi,Y7~u))
+
+#Observation
+#%obs: So(d!2),G(b!2,a!1),Sh(Y7~p!1,pi!0),R(Y48~p!0)
+#%obs: So(d!2),G(b!2,a!1),R(Y68~p!1)
+
+%story:'es'

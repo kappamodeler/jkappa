@@ -25,11 +25,19 @@ public class Connection {
 	}
 	
 	
-	public boolean equals(Connection c){
+	public boolean equals(Object aConnection){
 		
-		if ((c.FromNode.equals(this.FromNode))&&
-				(c.ToNode.equals(this.ToNode))&&
-				(c.Relation.equals(this.Relation)))
+		if(this == aConnection) return true;
+		
+		if(aConnection == null) return false;
+		
+		if(getClass() != aConnection.getClass()) return false;
+		
+		Connection connection = (Connection) aConnection;
+		
+		if ((connection.FromNode.equals(this.FromNode))&&
+				(connection.ToNode.equals(this.ToNode))&&
+				(connection.Relation.equals(this.Relation)))
 			return true;
 		return false;
 	}

@@ -20,20 +20,17 @@ class StackEntry
 	/**
 	 * Frozen state for internal state wire
 	 */
-	private Integer frozenState = null;
+	private Object frozenState = null;
 	/**
 	 * Iterator for all possible internal states 
 	 */
-	private Iterator<Integer> stateIterator = null;
+	private Iterator<?> stateIterator = null;
 	
 	boolean hasNextState = true;
 	
-	public StackEntry (IWireStorage storage, ICEvent event, int wireIdx) throws StoryStorageException
+	public StackEntry (int wireIdx) throws StoryStorageException
 	{
 		this.wireIdx = wireIdx;
-		
-		// Check if it is frozen
-		initEntry(storage, event);
 	}
 	
 	public int getWireIdx ()
@@ -48,12 +45,7 @@ class StackEntry
 		return hasNextState;
 	}
 	
-	public void selectNonIterable ()
-	{
-		hasNextState = false;
-	}
-	
-	public Integer nextState ()
+	public Object nextState ()
 	{
 		if (frozenState != null)
 		{
@@ -64,19 +56,45 @@ class StackEntry
 		return stateIterator.next();
 	}
 	
-	private void initEntry (IWireStorage storage, ICEvent event) throws StoryStorageException
+	/**
+	 * Check if it is frozen
+	 * @param weak
+	 * @throws StoryStorageException
+	 */
+	public void checkFrozenState (WeakCompression weak) throws StoryStorageException
 	{
+		IWireStorage storage = weak.getStorage();
+		ICEvent event = weak.getEvent();
 		ETypeOfWire type = event.getAtomicEventType(wireIdx);
 		
-		if (type != ETypeOfWire.INTERNAL_STATE)
+		if (type == ETypeOfWire.AGENT || weak.isLastEvent())
+		{
+			frozenState = "doesn't matter";
 			return;
+		}
 		
-		detectFrozenState(storage, event.getStepId(), event.getWireKey(wireIdx), false);
+		if (event.getStepId() != WeakCompression.ghostEventId)
+		{ // TODO: frozen state for ghost event
+			detectFrozenState(storage, event.getStepId(), event.getWireKey(wireIdx), false);
+			if (frozenState == null)
+				detectFrozenState(storage, event.getStepId(), event.getWireKey(wireIdx), true);
+		}
+		
 		if (frozenState == null)
-			detectFrozenState(storage, event.getStepId(), event.getWireKey(wireIdx), true);
-		
-		if (frozenState == null && type == ETypeOfWire.INTERNAL_STATE)
-			this.stateIterator = storage.wireInternalStateIterator(event.getWireKey(wireIdx));
+		{
+			switch (type)
+			{
+			case INTERNAL_STATE:
+				this.stateIterator = storage.wireInternalStateIterator(event.getWireKey(wireIdx));
+				break;
+			case BOUND_FREE:
+				this.stateIterator = new BoundSateIterator();
+				break;
+			case LINK_STATE:
+				this.stateIterator = new LinkStateIterator(weak);
+				break;
+			}
+		}
 	}
 	
 	private void detectFrozenState (IWireStorage storage, long eventId, WireHashKey wireKey, boolean upwards) throws StoryStorageException
@@ -93,28 +111,28 @@ class StackEntry
 			if (curMark == EMarkOfEvent.DELETED)
 				continue;
 			
-			if (curMark == EMarkOfEvent.KEPT)
+			if (curMark != EMarkOfEvent.KEPT)
+				return;
+			
+			AtomicEvent<?> atomicEvent = curEvent.getAtomicEvent(wireKey);
+
+			switch (WeakCompression.getRealType(atomicEvent))
 			{
-				AtomicEvent<?> atomicEvent = curEvent.getAtomicEvent(wireKey);
-				
-				switch (atomicEvent.getType())
-				{
-				case TEST:
-					frozenState = (Integer) atomicEvent.getState().getBeforeState();
-					break;
-				case TEST_AND_MODIFICATION:
-					if (upwards)
-						frozenState = (Integer) atomicEvent.getState().getAfterState();
-					else
-						frozenState = (Integer) atomicEvent.getState().getBeforeState();
-					break;
-				case MODIFICATION:
-					if (upwards)
-						frozenState = (Integer) atomicEvent.getState().getAfterState();
-				}
+			case TEST:
+				frozenState = atomicEvent.getState().getBeforeState();
+				break;
+			case TEST_AND_MODIFICATION:
+				if (upwards)
+					frozenState = atomicEvent.getState().getAfterState();
+				else
+					frozenState = atomicEvent.getState().getBeforeState();
+				break;
+			case MODIFICATION:
+				if (upwards)
+					frozenState = atomicEvent.getState().getAfterState();
 			}
 			
-			break;
+			return;
 		}
 	}
 }

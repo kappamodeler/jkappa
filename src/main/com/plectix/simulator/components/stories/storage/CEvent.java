@@ -1,7 +1,7 @@
 package com.plectix.simulator.components.stories.storage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,29 +16,34 @@ import com.plectix.simulator.components.CSite;
 public class CEvent implements ICEvent {
 	public final static boolean BEFORE_STATE = true;
 	public final static boolean AFTER_STATE = false;
-
+	
 	private EMarkOfEvent mark = null;
 
-	//filter with non bound/free wires
-	private ArrayList<WireHashKey> filter;
-	
-	//map with all wires which touched by this event
-	private HashMap<WireHashKey, AtomicEvent<?>> eventsMap;
+	// filter with non bound/free wires
+	private ArrayList<WireHashKey> filter = new ArrayList<WireHashKey>();
+
+	// map with all wires which touched by this event
+	private LinkedHashMap<WireHashKey, AtomicEvent<?>> eventsMap = new LinkedHashMap<WireHashKey, AtomicEvent<?>>();
 
 	private final long stepId;
-	
-	//event symbolize applying this rule  
+
+	// event symbolize applying this rule
 	private final int ruleId;
 
 	public CEvent(long stepId, int ruleId) {
 		this.ruleId = ruleId;
 		this.stepId = stepId;
-		eventsMap = new HashMap<WireHashKey, AtomicEvent<?>>();
-		filter = new ArrayList<WireHashKey>();
 	}
-	
+
+	public CEvent(long stepId, int ruleId, EMarkOfEvent initialMark) {
+		this.ruleId = ruleId;
+		this.stepId = stepId;
+		this.mark = initialMark;
+	}
+
 	public String toString() {
-		return new String("mark: " + mark + " stepId: " + stepId + " ruleId: " + ruleId);
+		return new String("mark: " + mark + " stepId: " + stepId + " ruleId: "
+				+ ruleId);
 	}
 
 	public void addAtomicEvent(WireHashKey key, CSite site,
@@ -65,7 +70,7 @@ public class CEvent implements ICEvent {
 		AtomicEvent<CStateOfLink> event = (AtomicEvent<CStateOfLink>) eventsMap
 				.get(key);
 		if (event == null) {
-			filter.add(key);
+			addToFilter(key);
 			event = new AtomicEvent<CStateOfLink>(this, type);
 			eventsMap.put(key, event);
 		} else
@@ -96,7 +101,7 @@ public class CEvent implements ICEvent {
 
 		AtomicEvent<Integer> event = (AtomicEvent<Integer>) eventsMap.get(key);
 		if (event == null) {
-			filter.add(key);
+			addToFilter(key);
 			event = new AtomicEvent<Integer>(this, type);
 			eventsMap.put(key, event);
 		} else
@@ -114,7 +119,7 @@ public class CEvent implements ICEvent {
 			EActionOfAEvent type, boolean isBefore) {
 		AtomicEvent<EState> event = (AtomicEvent<EState>) eventsMap.get(key);
 		if (event == null) {
-			//filter.add(key);
+			addToFilter(key);
 			event = new AtomicEvent<EState>(this, type);
 			eventsMap.put(key, event);
 		} else
@@ -137,7 +142,7 @@ public class CEvent implements ICEvent {
 			boolean isBefore) {
 		AtomicEvent<EState> event = (AtomicEvent<EState>) eventsMap.get(key);
 		if (event == null) {
-			filter.add(key);
+			addToFilter(key);
 			event = new AtomicEvent<EState>(this, type);
 			eventsMap.put(key, event);
 		} else
@@ -145,8 +150,8 @@ public class CEvent implements ICEvent {
 
 		if (isBefore)
 			event.getState().setBeforeState(EState.CHECK_AGENT);
-		else{
-			if(event.getType() != EActionOfAEvent.TEST_AND_MODIFICATION)
+		else {
+			if (event.getType() != EActionOfAEvent.TEST_AND_MODIFICATION)
 				event.getState().setAfterState(EState.CHECK_AGENT);
 		}
 
@@ -160,41 +165,19 @@ public class CEvent implements ICEvent {
 		return ruleId;
 	}
 
-	public HashMap<WireHashKey, AtomicEvent<?>> getAtomicEvents() {
+	public LinkedHashMap<WireHashKey, AtomicEvent<?>> getAtomicEvents() {
 		return eventsMap;
 	}
 
-	@SuppressWarnings("unchecked")
-	public void clearsLinkStates() {
-		List<WireHashKey> listForDel = null;
-		for (Map.Entry entry : eventsMap.entrySet()) {
-			WireHashKey key = (WireHashKey) entry.getKey();
-			if (key.getTypeOfWire() != ETypeOfWire.LINK_STATE)
-				continue;
-			AtomicEvent<CStateOfLink> event = (AtomicEvent<CStateOfLink>) entry
-					.getValue();
-			if (event.getType() != EActionOfAEvent.TEST)
-				continue;
-			if (event.getState().getBeforeState().isFree()) {
-				if (listForDel == null)
-					listForDel = new ArrayList<WireHashKey>();
-				listForDel.add(key);
-			}
 
-		}
-
-		if (listForDel != null)
-			for (WireHashKey key : listForDel)
-				eventsMap.remove(key);
-	}
-
-	public void setMark(EMarkOfEvent newMark,IWireStorage storage) throws StoryStorageException {
+	public void setMark(EMarkOfEvent newMark, IWireStorage storage)
+			throws StoryStorageException {
 		if (newMark == mark)
 			throw new StoryStorageException("same mark");
-		
-		//there is newMark != unresolved
+
+		// there is newMark != unresolved
 		if (mark == EMarkOfEvent.UNRESOLVED) {
-			shiftNumberOfUnresolvedEventsOnWires(false,storage);
+			shiftNumberOfUnresolvedEventsOnWires(false, storage);
 		} else {
 			if (newMark == EMarkOfEvent.UNRESOLVED) {
 				shiftNumberOfUnresolvedEventsOnWires(true, storage);
@@ -203,15 +186,15 @@ public class CEvent implements ICEvent {
 		mark = newMark;
 	}
 
-	private void shiftNumberOfUnresolvedEventsOnWires(boolean up, IWireStorage storage) throws StoryStorageException {
+	private void shiftNumberOfUnresolvedEventsOnWires(boolean up,
+			IWireStorage storage) throws StoryStorageException {
 		for (WireHashKey w : eventsMap.keySet()) {
 			if (eventsMap.get(w).getType() != EActionOfAEvent.TEST) {
-				upNumberOfUnresolvedModifyEvent(w,up, storage);
+				upNumberOfUnresolvedModifyEvent(w, up, storage);
 			}
 		}
 	}
 
-	
 	public EMarkOfEvent getMark() {
 		return mark;
 	}
@@ -225,8 +208,10 @@ public class CEvent implements ICEvent {
 	}
 
 	public int getAtomicEventCount() throws StoryStorageException {
-		if (filter.size()==0){
-			throw new StoryStorageException("atomic event(non bound/free) in event = 0");
+		// TODO: refactor
+		filter.clear();
+		for(WireHashKey wk : eventsMap.keySet()){
+			addToFilter(wk);
 		}
 		return filter.size();
 	}
@@ -237,27 +222,33 @@ public class CEvent implements ICEvent {
 		if (wk == null)
 			throw new StoryStorageException("get atomic event type", index);
 
-		//TODO comment after good testing
-		if(eventsMap.get(wk).getType()==EActionOfAEvent.TEST_AND_MODIFICATION&&
-				eventsMap.get(wk).getState().getAfterState()==eventsMap.get(wk).getState().getBeforeState()){
-			throw new StoryStorageException("states after and before equals on testAndModify event");
-		}
-		if(eventsMap.get(wk).getType()==EActionOfAEvent.TEST&&
-				(eventsMap.get(wk).getState().getAfterState()!=null||
-						eventsMap.get(wk).getState().getBeforeState()==null))
-			throw new StoryStorageException("states after!=null or before=null on test event");
-			
-		if(eventsMap.get(wk).getType()==EActionOfAEvent.MODIFICATION&&
-				(eventsMap.get(wk).getState().getBeforeState()!=null||
-						eventsMap.get(wk).getState().getAfterState()==null))
-			throw new StoryStorageException("states after=null or before!=null on onlyModify event");
+		// TODO comment after good testing
+		// if (eventsMap.get(wk).getType() ==
+		// EActionOfAEvent.TEST_AND_MODIFICATION
+		// && eventsMap.get(wk).getState().getAfterState() == eventsMap
+		// .get(wk).getState().getBeforeState()) {
+		// throw new StoryStorageException(
+		// "states after and before equals on testAndModify event");
+		// }
+		// if (eventsMap.get(wk).getType() == EActionOfAEvent.TEST
+		// && (eventsMap.get(wk).getState().getAfterState() != null || eventsMap
+		// .get(wk).getState().getBeforeState() == null))
+		// throw new StoryStorageException(
+		// "states after!=null or before=null on test event");
+		//
+		// if (eventsMap.get(wk).getType() == EActionOfAEvent.MODIFICATION
+		// && (eventsMap.get(wk).getState().getBeforeState() != null ||
+		// eventsMap
+		// .get(wk).getState().getAfterState() == null))
+		// throw new StoryStorageException(
+		// "states after=null or before!=null on onlyModify event  "
+		// + this.stepId);
 
-		
 		return wk.getTypeOfWire();
 	}
 
 	public WireHashKey getWireKey(int index) throws StoryStorageException {
-		if(filter.isEmpty())
+		if (filter.isEmpty())
 			throw new StoryStorageException("filter in CEvent is empty");
 		WireHashKey wk = filter.get(index);
 		if (wk == null)
@@ -272,9 +263,14 @@ public class CEvent implements ICEvent {
 		for (int i = 0; i < filter.size(); i++) {
 			list.add(eventsMap.get(filter.get(i)));
 		}
-		return new CIteratorAEventWithinEvent(list);
+		return new CIteratorAEventWithinEvent(eventsMap);
 	}
 
+	public boolean containsWire (WireHashKey wireKey)
+	{
+		return eventsMap.containsKey(wireKey);
+	}
+	
 	public AtomicEvent<?> getAtomicEvent(WireHashKey wireKey)
 			throws StoryStorageException {
 		AtomicEvent<?> event = eventsMap.get(wireKey);
@@ -285,73 +281,193 @@ public class CEvent implements ICEvent {
 		return event;
 	}
 
+	public void removeWire (WireHashKey wKey)
+	{
+		eventsMap.remove(wKey);
+		filter.remove(wKey);
+	}
+	
 	/**
-	 * return null if all wire in this event doesn't contain unresolved modify event
+	 * return null if all wire in this event doesn't contain unresolved modify
+	 * event
+	 * 
+	 * @throws StoryStorageException
 	 * 
 	 */
-	public WireHashKey getWireWithMinimumUresolvedEvent(IWireStorage storage) {
+	public WireHashKey getWireWithMinimumUresolvedEvent(IWireStorage storage)
+			throws StoryStorageException {
+//		if (filter.isEmpty()) {
+//			throw new StoryStorageException("filter is empty"
+//					+ this.getStepId());
+//		}
 		WireHashKey wKey = filter.get(0);
 		int n = filter.size();
-		int m = getNumberOfUnresolvedModifyEventOnWire(wKey,storage);
+		int m = getNumberOfUnresolvedModifyEventOnWire(wKey, storage);
 		int temp;
-		for(int i=1;i<n;i++){
-			temp = getNumberOfUnresolvedModifyEventOnWire(filter.get(i),storage);
-			if ((temp!=0 && temp < m)||(m==0 && temp>0)){
+		for (int i = 1; i < n; i++) {
+			temp = getNumberOfUnresolvedModifyEventOnWire(filter.get(i),
+					storage);
+			if ((temp != 0 && temp < m) || (m == 0 && temp > 0)) {
 				wKey = filter.get(i);
-				m=temp;
+				m = temp;
 			}
 		}
-		
-		if (m>0){
+
+		if (m > 0) {
 			return wKey;
-		}else{
+		} else {
 			return null;
 		}
 	}
 
-	public void setMarkUnresolved(IWireStorage storage) throws StoryStorageException {
+	public void setMarkUnresolved(IWireStorage storage)
+			throws StoryStorageException {
 		mark = EMarkOfEvent.UNRESOLVED;
 		shiftNumberOfUnresolvedEventsOnWires(true, storage);
 	}
-		
-	public void addToFilter(WireHashKey key){
-		filter.add(key);
+
+	public void addToFilter(WireHashKey key) {
+		if (key.getTypeOfWire() == ETypeOfWire.AGENT)
+			filter.add(0, key);
+		else
+			filter.add(key);
 	}
 
-
-	public void setNumberOfModifyEventOnWire(WireHashKey wKey, int numberOfUnresolvedEventOnWireN, IWireStorage storage) {
-		storage.putUnresolvedModifyEvent(wKey, Integer.valueOf(numberOfUnresolvedEventOnWireN));
+	public void setNumberOfModifyEventOnWire(WireHashKey wKey,
+			int numberOfUnresolvedEventOnWireN, IWireStorage storage) {
+		storage.putUnresolvedModifyEvent(wKey, Integer
+				.valueOf(numberOfUnresolvedEventOnWireN));
 	}
 
-	public int getNumberOfUnresolvedModifyEventOnWire(WireHashKey wKey,IWireStorage storage) {
+	public int getNumberOfUnresolvedModifyEventOnWire(WireHashKey wKey,
+			IWireStorage storage) throws StoryStorageException {
 		return storage.getUnresolvedModifyCount(wKey);
 	}
 
-	public void upNumberOfUnresolvedModifyEvent(WireHashKey wKey,boolean up, IWireStorage storage) throws StoryStorageException {
-//		if(storage.getUnresolved(this)){
-//			throw new StoryStorageException("number unresolved in wire");
-//			System.out.println();
-//		}
+	public void upNumberOfUnresolvedModifyEvent(WireHashKey wKey, boolean up,
+			IWireStorage storage) throws StoryStorageException {
+		// if(storage.getUnresolved(this)){
+		// throw new StoryStorageException("number unresolved in wire");
+		// System.out.println();
+		// }
 		int x = storage.getUnresolvedModifyCount(wKey);
-		
+
 		if (up) {
 			x++;
 		} else {
 			x--;
 		}
-		if(x<0)
-			throw new StoryStorageException("negative number of unresolved events on wire");
-		
+		if (x < 0)
+			throw new StoryStorageException(
+					"negative number of unresolved events on wire");
+
 		storage.putUnresolvedModifyEvent(wKey, Integer.valueOf(x));
 
 	}
 
 	public void onlySetMark(EMarkOfEvent newMark) {
 		mark = newMark;
+
+	}
+
+	// rebuild event and numberOfUnresolvedevents on wires
+	public List<PointRound> exchangeWires(Map<WireHashKey, WireHashKey> map, IWireStorage storage) throws StoryStorageException {
+
+		List<PointRound> list = new LinkedList<PointRound>();
+
+		for (WireHashKey wk : map.keySet()) {
+			WireHashKey wkTwo = map.get(wk);
+			
+			AtomicEvent<?> ae1 = eventsMap.remove(wk);
+			AtomicEvent<?> ae2 = eventsMap.remove(wkTwo);
+			
+			if (ae1 == null && ae2 == null) {
+				continue;
+			}
+			if (ae1 == null) {
+				eventsMap.put(wk, ae2);
+
+			} else {
+				if (ae2 == null) {
+					eventsMap.put(wkTwo, ae1);
+
+				}
+				else{
+					eventsMap.put(wkTwo, ae1);
+					eventsMap.put(wk, ae2);
+				}
+			}
+
+			PointRound pr = new PointRound();
+			pr.number = stepId;
+			pr.wk1 = wk;
+			pr.wk2 = wkTwo;
+			list.add(pr);
+
+			int dif = 0;
+			if(mark==EMarkOfEvent.UNRESOLVED){
+				if (eventsMap.get(wk)!=null&&eventsMap.get(wk).getType()!=EActionOfAEvent.TEST){
+					dif++;
+				}
+				if (eventsMap.get(wkTwo)!=null&&eventsMap.get(wkTwo).getType()!=EActionOfAEvent.TEST){
+					dif--;
+				}
+				if(dif>0){
+					upNumberOfUnresolvedModifyEvent(wk, true,storage);
+					upNumberOfUnresolvedModifyEvent(wkTwo, false,storage);
+				}
+
+				if(dif<0){
+					upNumberOfUnresolvedModifyEvent(wk, false,storage);
+					upNumberOfUnresolvedModifyEvent(wkTwo, true,storage);
+				}
 		
+			}			
+		}
+		filter.clear();
+		for(WireHashKey wk : eventsMap.keySet()){
+			addToFilter(wk);
+		}
+		return list;
+
+	}
+	
+	private void updateCounts(boolean b, boolean c, WireHashKey wk1,
+			WireHashKey wk2, IWireStorage storage) throws StoryStorageException {
 		
+		if(mark!=EMarkOfEvent.UNRESOLVED){
+			return;
+		}
+		if(b&&!c){
+			if(eventsMap.get(wk1).getType()!=EActionOfAEvent.TEST){
+				upNumberOfUnresolvedModifyEvent(wk1, true,storage);
+				upNumberOfUnresolvedModifyEvent(wk2, false, storage);
+				
+			}
+			
+		}
+		if(!b&&c){
+			if(eventsMap.get(wk2).getType()!=EActionOfAEvent.TEST){
+				upNumberOfUnresolvedModifyEvent(wk2, true, storage);
+				upNumberOfUnresolvedModifyEvent(wk1, false, storage);		
+			}
+
+			
+			
+		}
+		if(!b&&!c){
+			if(eventsMap.get(wk2).getType()!=EActionOfAEvent.TEST){
+				upNumberOfUnresolvedModifyEvent(wk2, true, storage);
+				upNumberOfUnresolvedModifyEvent(wk1, false, storage);		
+			}
+			if(eventsMap.get(wk1).getType()!=EActionOfAEvent.TEST){
+				upNumberOfUnresolvedModifyEvent(wk1, true,storage);
+				upNumberOfUnresolvedModifyEvent(wk2, false, storage);
+				
+			}		
+		}
+			
 	}
 
 	
-
 }

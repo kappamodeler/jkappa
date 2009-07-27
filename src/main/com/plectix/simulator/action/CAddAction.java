@@ -9,6 +9,7 @@ import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.components.stories.storage.WireHashKey;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
  * Class implements "ADD" action type.
@@ -51,6 +52,7 @@ public class CAddAction extends CAction {
 		CAgent agent = new CAgent(myToAgent.getNameId(), simulationData
 				.getKappaSystem().generateNextAgentId());
 
+		ThreadLocalData.getTypeById().setTypeOfAgent(agent.getId(), agent.getNameId());
 		if (eventContainer != null) {
 			eventContainer.addAtomicEvent(new WireHashKey(agent.getId(),
 					ETypeOfWire.AGENT), null, EActionOfAEvent.MODIFICATION, CEvent.AFTER_STATE);
@@ -93,6 +95,8 @@ public class CAddAction extends CAction {
 
 		long agentId = site.getAgentLink().getId();
 		int siteId = site.getNameId();
+		ThreadLocalData.getTypeById().setTypeOfAgent(site.getAgentLink().getId(), site.getAgentLink().getNameId());
+
 		eventContainer.addAtomicEvent(new WireHashKey(agentId, siteId,
 				ETypeOfWire.BOUND_FREE), site, EActionOfAEvent.MODIFICATION,
 				CEvent.AFTER_STATE);

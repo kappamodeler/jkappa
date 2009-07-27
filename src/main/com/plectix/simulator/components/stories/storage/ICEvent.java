@@ -20,6 +20,13 @@ public interface ICEvent
 	
 
 	/**
+	 * Check if event contains atomic event on a wire
+	 * @param wireKey
+	 * @return
+	 */
+	boolean containsWire (WireHashKey wireKey);
+	
+	/**
 	 * Get atomic event by wire key
 	 * @param wireKey
 	 * @return
@@ -34,6 +41,8 @@ public interface ICEvent
 	 * @throws StoryStorageException 
 	 */
 	int getAtomicEventCount () throws StoryStorageException;
+	
+	// TODO: Agent wires first
 	
 	/**
 	 * Get wire key from list with search order 
@@ -79,7 +88,10 @@ public interface ICEvent
 	/**
 	 * 
 	 * @return wire with non-zero unresolved Event or null
+	 * @throws StoryStorageException 
 	 */
-	WireHashKey getWireWithMinimumUresolvedEvent(IWireStorage storage);
+	WireHashKey getWireWithMinimumUresolvedEvent(IWireStorage storage) throws StoryStorageException;
+
+	int getRuleId();
 
 }

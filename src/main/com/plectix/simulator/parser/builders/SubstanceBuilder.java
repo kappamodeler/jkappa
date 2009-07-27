@@ -41,7 +41,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 			result.add(newAgent);
 		}
 
-		Map<Integer, CSite> map = new HashMap<Integer, CSite>();
+		Map<Integer, CSite> map = new LinkedHashMap<Integer, CSite>();
 		for (CAgent agent : result) {
 			for (CSite site : agent.getSites()) {
 				int index = site.getLinkIndex();

@@ -4,6 +4,5 @@ import java.util.Iterator;
 
 public interface IAtomicEventIterator extends Iterator<WireHashKey>
 {
-	AtomicEvent<?> value();
 }
 

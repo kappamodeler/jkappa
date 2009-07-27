@@ -142,6 +142,21 @@ public class CAbstractLinkState {
 		agentNameID = CSite.NO_INDEX;
 //		internalStateNameID = CSite.NO_INDEX;
 	}
+	
+	public final void setWildLinkState(){
+		statusLink = CLinkStatus.WILDCARD;
+		statusLinkRank = CLinkRank.BOUND_OR_FREE;
+		linkSiteNameID = CSite.NO_INDEX;
+		agentNameID = CSite.NO_INDEX;
+	}
+	
+	public void setSemiLink() {
+		statusLink = CLinkStatus.BOUND;
+		statusLinkRank = CLinkRank.SEMI_LINK;
+		linkSiteNameID = CSite.NO_INDEX;
+		agentNameID = CSite.NO_INDEX;
+		
+	}	
 
 	/**
 	 * Constructor of CContactMapLinkState
@@ -229,5 +244,7 @@ public class CAbstractLinkState {
 	private final boolean isRightBranchStatus() {
 		return (statusLink == CLinkStatus.BOUND) ? true : false;
 	}
+
+
 
 }

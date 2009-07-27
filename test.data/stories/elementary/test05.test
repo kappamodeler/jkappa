@@ -1,0 +1,5 @@
+'1' c(x~u), d(x) -> c(x~p!1),d(x!1) @ 1.0
+
+%init: 1 * (c(x~u))
+%init: 1 * (d(x))
+%story: '1'

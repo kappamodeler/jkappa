@@ -2,7 +2,7 @@ package com.plectix.simulator.stories;
 
 import static org.junit.Assert.fail;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -10,7 +10,7 @@ import java.util.TreeMap;
 public class TestTree {
 
 	private TreeMap<Integer,List<Integer>> trace; 
-	private HashMap<Integer, Byte> color;
+	private LinkedHashMap<Integer, Byte> color;
 	
 	private Byte white = 0x00;
 	private Byte grey = 0x01;
@@ -19,7 +19,7 @@ public class TestTree {
 	
 	TestTree(TreeMap<Integer,List<Integer>> traceIdToTraceId){
 		trace = traceIdToTraceId;
-		color = new HashMap<Integer, Byte>();
+		color = new LinkedHashMap<Integer, Byte>();
 	}
 	
 

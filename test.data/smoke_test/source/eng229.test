@@ -1,0 +1,52 @@
+#######prologue##################
+
+'Ca_CaM' Ca(loc~cp,l),CaM(ca) <-> Ca(loc~cp,l!1),CaM(ca!1)
+Glu(g),AMPA(g) <-> Glu(g!1),AMPA(g!1)
+Glu(g),NMDA(g) <-> Glu(g!1),NMDA(g!1)
+AMPA(g!_),NMDA(g!_,ch~mg) -> AMPA(g!_),NMDA(g!_,ch~u)
+NMDA(g!_,ch~u),VGCC(ch~i) -> NMDA(g!_,ch~u),VGCC(ch~a)
+VGCC(ch~a) -> VGCC(ch~i)
+NMDA(ch~u) -> NMDA(ch~mg)
+VGCC(ch~a),Ca(loc~ec,l) -> VGCC(ch~a),Ca(loc~cp,l)
+Ca(loc~cp,l) -> Ca(loc~sr,l)
+
+
+
+#####adenylate cyclase pathway###############
+
+'AC activation'  CaM(ca!_),AC(cat~i) -> CaM(ca!_),AC(cat~a)
+'cAMP synthesis' AC(cat~a)-> AC(cat~a),cAMP(x~u) @ 1000.0
+'PKA activation' cAMP(x),PKA(y,loc~cp) <-> cAMP(x!1),PKA(y!1,loc~cp)
+
+PKA(y!_,loc~cp) -> PKA(y!_,loc~N) 
+
+'CREB_PKA_phos' PKA(loc~N),CREB(s133~u) -> PKA(loc~N),CREB(s133~p)
+
+
+
+######CaMK pathway############################
+'CaMKK_act' CaM(ca!_),CaMKK(cat~i) -> CaM(ca!_),CaMKK(cat~a)
+
+'CaMKIV_act'  CaMKK(cat~a),CamKIV(cat~i) -> CaMKK(cat~a),CamKIV(cat~a)
+
+'CaMKII_act'  CaMKK(cat~a),CamKII(cat~i) -> CaMKK(cat~a),CamKII(cat~a)
+
+CamKIV(cat~a,loc~cp) -> CamKIV(cat~a,loc~N)
+
+CamKII(cat~a,loc~cp) -> CamKII(cat~a,loc~N)
+
+'CREB_CamKIV_phos' CamKIV(cat~a,loc~N), CREB(s133~u) -> CamKIV(cat~a,loc~N), CREB(s133~p) 
+'CREB_CamKII_phos' CamKII(cat~a,loc~N), CREB(s142~u) -> CamKII(cat~a,loc~N), CREB(s142~p) 
+
+%init: 500 * Glu(g) 
+%init: 250 * (NMDA(g,ch~mg),AMPA(g),VGCC(ch~i),Ca(loc~ec,l),CaM(ca),AC(cat~i),PKA(y,loc~cp),CREB(s133~u,s142~u)) 
+%init: 250 * (CamKIV(cat~i,loc~cp),CamKII(cat~i,loc~cp),CaMKK(cat~i))
+
+%obs: 'CREB133' CREB(s133~p,s142~u)
+%obs: 'CREB142' CREB(s142~p,s133~u)
+%obs: 'CREB-P' CREB(s142~p,s133~p)
+
+%story: 'CREB_PKA_phos'
+%story: 'CREB_CamKIV_phos'
+%story: 'CREB_CamKII_phos'
+

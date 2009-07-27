@@ -333,8 +333,8 @@ public class CObservables implements Serializable {
 	}
 
 	public final List<IObservablesConnectedComponent> getConnectedComponentListForXMLOutput() {
-		List<Integer> map = new ArrayList<Integer>();
-		List<IObservablesConnectedComponent> list = new ArrayList<IObservablesConnectedComponent>();
+		Set<Integer> map = new LinkedHashSet<Integer>();
+		List<IObservablesConnectedComponent> list = new LinkedList<IObservablesConnectedComponent>();
 		for (IObservablesConnectedComponent cc : connectedComponentList) {
 			if (!map.contains(cc.getId())) {
 				map.add(cc.getId());

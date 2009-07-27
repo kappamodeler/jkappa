@@ -1,12 +1,12 @@
 package com.plectix.simulator.components.complex.influenceMap;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
@@ -26,13 +26,17 @@ public abstract class AInfluenceMap {
 	protected Map<Integer, List<InfluenceMapEdge>> inhibitionMap;
 	protected Map<Integer, List<InfluenceMapEdge>> inhibitionMapObs;
 
+	protected Map<Integer, List<SubViewsRule>> obsRules;
+
 	public AInfluenceMap() {
-		activationMap = new HashMap<Integer, List<InfluenceMapEdge>>();
-		inhibitionMap = new HashMap<Integer, List<InfluenceMapEdge>>();
+		activationMap = new LinkedHashMap<Integer, List<InfluenceMapEdge>>();
+		inhibitionMap = new LinkedHashMap<Integer, List<InfluenceMapEdge>>();
+		activationMapObs = new LinkedHashMap<Integer, List<InfluenceMapEdge>>();
+		inhibitionMapObs = new LinkedHashMap<Integer, List<InfluenceMapEdge>>();
 	}
 
 	public abstract void initInfluenceMap(List<SubViewsRule> rules,
-			CContactMap contactMap,
+			CObservables observables, CContactMap contactMap,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent);
 
 	public List<Integer> getActivationByRule(Integer ruleId) {
@@ -47,11 +51,11 @@ public abstract class AInfluenceMap {
 		return answer;
 	}
 
-	public Element createXML(Document doc, int rules,
+	public void createXML(XMLStreamWriter writer, int rules,
 			List<IObservablesConnectedComponent> obsCCList,
 			boolean isInhibitionMap, KappaSystem myKappaSystem,
-			boolean isOcamlStyleObsName) {
-		Element influenceMapXML = doc.createElement("InfluenceMap");
+			boolean isOcamlStyleObsName) throws XMLStreamException {
+		writer.writeStartElement("InfluenceMap");
 
 		int rulesAndObsNumber = obsCCList.size() + rules;
 		/**
@@ -59,26 +63,26 @@ public abstract class AInfluenceMap {
 		 * */
 		for (int i = obsCCList.size() - 1; i >= 0; i--) {
 			IObservablesConnectedComponent obsCC = obsCCList.get(i);
-			Element node = doc.createElement("Node");
-			node.setAttribute("Id", Integer.toString(rulesAndObsNumber--));
-			node.setAttribute("Type", "OBSERVABLE");
+			writer.writeStartElement("Node");
+			writer.writeAttribute("Id", Integer.toString(rulesAndObsNumber--));
+			writer.writeAttribute("Type", "OBSERVABLE");
 
 			String obsName = obsCC.getName();
 
 			if (obsName == null)
 				obsName = obsCC.getLine();
 
-			node.setAttribute("Text", '[' + obsName + ']');
-			node.setAttribute("Data", obsCC.getLine());
-			node.setAttribute("Name", '[' + obsName + ']');
-			influenceMapXML.appendChild(node);
+			writer.writeAttribute("Text", '[' + obsName + ']');
+			writer.writeAttribute("Data", obsCC.getLine());
+			writer.writeAttribute("Name", '[' + obsName + ']');
+			writer.writeEndElement();
 		}
 
 		/**
 		 * add rules
 		 * */
-		addRulesToXML(influenceMapXML, rulesAndObsNumber, doc, rules,
-				isOcamlStyleObsName, myKappaSystem);
+		addRulesToXML(rulesAndObsNumber, writer, rules, isOcamlStyleObsName,
+				myKappaSystem);
 
 		/**
 		 * add activation map
@@ -86,72 +90,70 @@ public abstract class AInfluenceMap {
 
 		for (int i = rules - 1; i >= 0; i--) {
 			CRule rule = myKappaSystem.getRuleByID(i);
-			// printMap(doc, TYPE_POSITIVE_MAP, influenceMapXML, rule,
-			// rule.getActivatedRuleForXMLOutput(),
-			printMap(doc, TYPE_POSITIVE_MAP, influenceMapXML, rule,
-					activationMap.get(Integer.valueOf(i)), rule
-							.getActivatedObservableForXMLOutput(), rules);
+			printMap(writer, TYPE_POSITIVE_MAP, rule, activationMap.get(Integer
+					.valueOf(i)), activationMapObs.get(Integer.valueOf(i)),
+					rules);
 		}
 		if (isInhibitionMap) {
 			for (int i = rules - 1; i >= 0; i--) {
 				CRule rule = myKappaSystem.getRuleByID(i);
-				// printMap(doc, TYPE_NEGATIVE_MAP, influenceMapXML, rule,
-				// rule.getInhibitedRule(),
-				printMap(doc, TYPE_NEGATIVE_MAP, influenceMapXML, rule,
-						inhibitionMap.get(Integer.valueOf(i)), rule
-								.getInhibitedObservable(), rules);
+				printMap(writer, TYPE_NEGATIVE_MAP, rule, inhibitionMap
+						.get(Integer.valueOf(i)), inhibitionMapObs.get(Integer
+						.valueOf(i)), rules);
 			}
 		}
-
-		return influenceMapXML;
+		writer.writeEndElement();
 	}
 
-	private final void printMap(Document doc, String mapType,
-			Element influenceMap, CRule rule,
-			List<InfluenceMapEdge> rulesToPrint,
-			List<IObservablesConnectedComponent> obsToPrint, int allRules) {
+	private final void printMap(XMLStreamWriter writer, String mapType,
+			CRule rule, List<InfluenceMapEdge> rulesToPrint,
+			List<InfluenceMapEdge> obsToPrint, int allRules)
+			throws XMLStreamException {
 		int rulesNumber = allRules + 1;
-		// for (int j = obsToPrint.size() - 1; j >= 0; j--) {
-		// Element node = doc.createElement("Connection");
-		// node.setAttribute("FromNode", Integer
-		// .toString(rule.getRuleID() + 1));
-		// node.setAttribute("ToNode", Integer.toString(obsToPrint.get(j)
-		// .getId()
-		// + rulesNumber));
-		// node.setAttribute("Relation", mapType);
-		// influenceMap.appendChild(node);
-		// }
-
-		// for (int j = rulesToPrint.size() - 1; j >= 0; j--) {
-		if (rulesToPrint == null)
-			return;
-		for (int j = rulesToPrint.size() - 1; j >= 0; j--) {
-			Element node = doc.createElement("Connection");
-			node.setAttribute("FromNode", Integer
+		if (obsToPrint != null)
+		for (int j = obsToPrint.size() - 1; j >= 0; j--) {
+			writer.writeStartElement("Connection");
+			writer.writeAttribute("FromNode", Integer
 					.toString(rule.getRuleID() + 1));
-			node.setAttribute("ToNode", Integer.toString(rulesToPrint.get(j)
-					.getToRule() + 1));
-			// .getRuleID() + 1));
-			node.setAttribute("Relation", mapType);
-			influenceMap.appendChild(node);
+			writer.writeAttribute("ToNode", Integer.toString(obsToPrint.get(j).getToRule() + rulesNumber));
+			writer.writeAttribute("Relation", mapType);
+			writer.writeEndElement();
 		}
-
+		
+		if (rulesToPrint != null)
+		for (int j = rulesToPrint.size() - 1; j >= 0; j--) {
+			writer.writeStartElement("Connection");
+			writer.writeAttribute("FromNode", Integer
+					.toString(rule.getRuleID() + 1));
+			writer.writeAttribute("ToNode", Integer.toString(rulesToPrint
+					.get(j).getToRule() + 1));
+			// .getRuleID() + 1));
+			writer.writeAttribute("Relation", mapType);
+			writer.writeEndElement();
+		}
 	}
 
-	private final void addRulesToXML(Element influenceMap,
-			int rulesAndObsNumber, Document doc, int rules,
-			boolean isOcamlStyleObsName, KappaSystem myKappaSystem) {
+	private static final void addRulesToXML(int rulesAndObsNumber,
+			XMLStreamWriter writer, int rules, boolean isOcamlStyleObsName,
+			KappaSystem myKappaSystem) throws XMLStreamException {
 		for (int i = rules - 1; i >= 0; i--) {
-			Element node = null;
 			CRule rule = myKappaSystem.getRuleByID(i);
-			node = doc.createElement("Node");
-			node.setAttribute("Type", "RULE");
-			node.setAttribute("Text", rule.getName());
-			node.setAttribute("Id", Integer.toString(rulesAndObsNumber--));
-			node.setAttribute("Data", SimulationData.getData(rule,
+			writer.writeStartElement("Node");
+			writer.writeAttribute("Type", "RULE");
+			if (rule.getName() != null) {
+				writer.writeAttribute("Text", rule.getName());
+				writer.writeAttribute("Name", rule.getName());
+			} else {
+				Integer ruleId = rule.getRuleID() + 1;
+				writer.writeAttribute("Text", "%Auto_" + ruleId);
+				writer.writeAttribute("Name", "%Auto_" + ruleId);
+//				writer.writeAttribute("Text", SimulationData.getData(rule,
+//						isOcamlStyleObsName));
+			}
+			writer.writeAttribute("Id", Integer.toString(rulesAndObsNumber--));
+			writer.writeAttribute("Data", SimulationData.getData(rule,
 					isOcamlStyleObsName));
-			node.setAttribute("Name", rule.getName());
-			influenceMap.appendChild(node);
+			writer.writeEndElement();
 		}
 	}
 
@@ -164,10 +166,19 @@ public abstract class AInfluenceMap {
 					CRule ruleAdd = kappaSystem.getRuleByID(edge.getToRule());
 					rule.addActivatedRule(ruleAdd);
 				}
-			for(IObservablesConnectedComponent obs : observables.getConnectedComponentList()){
-				rule.addinhibitedObs(obs);
-				rule.addActivatedObs(obs);
-			}
+			if (activationMapObs.containsKey(rule.getRuleID()))
+				for (InfluenceMapEdge edge : activationMapObs.get(rule
+						.getRuleID())) {
+					for (SubViewsRule obsRule : obsRules.get(edge.getToRule()))
+						rule.addActivatedObs(obsRule.getObsConnectedComponent());
+				}
+			if (inhibitionMapObs.containsKey(rule.getRuleID()))
+				for (InfluenceMapEdge edge : inhibitionMapObs.get(rule
+						.getRuleID())) {
+					for (SubViewsRule obsRule : obsRules.get(edge.getToRule()))
+						rule.addinhibitedObs(obsRule.getObsConnectedComponent());
+				}
+			
 			if (inhibitionMap.containsKey(rule.getRuleID()))
 				for (InfluenceMapEdge edge : inhibitionMap
 						.get(rule.getRuleID())) {

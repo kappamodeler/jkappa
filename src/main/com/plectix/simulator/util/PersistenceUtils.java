@@ -25,7 +25,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -292,7 +292,7 @@ public class PersistenceUtils {
 	 *             fails if a field name is repeated in a class's hierarchy.
 	 */
 	public static Map<String, Object> getNonTransientFields(Object o) {
-		Map<String, Object> ret = new HashMap<String, Object>();
+		Map<String, Object> ret = new LinkedHashMap<String, Object>();
 		// copied from DMComposite r6104
 		Class c = o.getClass();
 		// ERROR must call c.setAccessible true if we have a private inner class

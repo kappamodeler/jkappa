@@ -59,10 +59,18 @@ public enum SimulatorOptions {
 	PROFILE("profile", false, "Produces profile"),
 	KEY("key", true, "Name of the file containing the key for the crypted version"),
 	NO_INHIBITION_MAP("no_inhibition_map", false, "Don't construct inhibition map"),
+	INHIBITION_MAP("inhibition_map", false, "Construct inhibition map"),
+
+	/**=====================================================================**/
+	/*							STORIES										**/
+	/**=====================================================================**/
 	COMPRESS_STORIES("compress_stories", false, "Weak compression of stories"),
-	DONT_COMPRESS_STORIES("no_compress_stories", false, "Do not compress stories"),
+	DONT_COMPRESS_STORIES("no_compress_stories", false, "Do not compress stories. 'No compression'"),
 	USE_STRONG_COMPRESSION("use_strong_compression", false,
 			"Use strong compression to classify stories"),
+	DONT_USE_STRONG_COMPRESSION("no_use_strong_compression", false,
+			"Don't use strong compression to classify stories"),
+			
 	MERGE_MAPS("merge_maps", false, "Also constructs inhibition maps"),
 	WARNINGS("W", false, "Output all warnings on standard error channel"),
 	ITERATION("iteration", true, "Number of stories to be searched for (with --storify option only)"),
@@ -86,8 +94,6 @@ public enum SimulatorOptions {
 	QA("QA", false, "Turns QA mode on (slower, but performs more sanity checks"),
 	SNAPHOT_TMP("snapshot_tmp_file", true, 
 			"Sets the name of temp snapshot files (default snapshots.tmp)"),
-	DONT_USE_STRONG_COMPRESSION("no_use_strong_compression", false,
-			"Don't use strong compression to classify stories"),
 	LOG_COMPRESSION("log_compression", true, "Displays the before/after "
 			+ "compression status in the html desktop"),
 	BACKTRACK_LIMIT("backtrack_limit", true, "Limits the exploration when scanning for stories"),
@@ -113,9 +119,16 @@ public enum SimulatorOptions {
 	EVENT_SAMPLE("event_sample", true, "Sets sample size in events (default: 100)"),
 	NO_DUMP_ITERATION_NUMBER("no_dump_iteration_number", false, "No dump iteration number"),
 	NO_DUMP_RULE_ITERATION("no_dump_rule_iteration", false, "No dump rule iteration"),
+	
 	NO_COMPUTE_QUANTITATIVE_COMPRESSION("no_compute_quantitative_compression", false, "No compute quantitative compression"),
+	OUTPUT_QUANTITATIVE_COMPRESSION("output_quantitative_compression", true, "Output compute quantitative compression"),
+
 	NO_COMPUTE_QUALITATIVE_COMPRESSION("no_compute_qualitative_compression", false, "No compute qualitative compression"),
+	OUTPUT_QUALITATIVE_COMPRESSION("output_qualitative_compression", true, "Output compute qualitative compression"),
+	
 	NO_ENUMERATE_COMPLEXES("no_enumerate_complexes", false, "No enumerate complexes"),
+	ENUMERATE_COMPLEXES("enumerate_complexes", false, "Enumerate complexes"),
+	
 	RESET_ALL("reset_all", false, "Reset all"),
 	FOCUS_ON("focus_on", true, "(default: disabled) Focus contact maps around the given rules"),
 	DO_LOW_RES_CONTACT_MAP("do_low_res_contact_map", false, "(default: enabled)construct the low resolution contact map"),
@@ -130,6 +143,11 @@ public enum SimulatorOptions {
 	COMPUTE_SUB_VIEWS("compute_sub_views", false, "Compute sub views."),
 	COMPUTE_DEAD_RILES("compute_dead_rules", false, "Compute dead rules."),
 	ALLOW_INCOMPLETES("allow_incompletes", false, "Allows incomplete substances in solution"),
+	NO_DO_COMPUTE_DAG_REFINEMENT_RELATION("no_do_compute_dag_refinement_relation", false, "No compute the DAG for the refinement relation"),
+
+	NO_COMPUTE_LOCAL_VIEWS("no_compute_local_views", false, "No compute reachability analysis"),
+	COMPUTE_LOCAL_VIEWS("compute_local_views", false, "Compute reachability analysis"),
+
 	AGENTS_LIMIT("agents_limit", true, "Limits the number of agents which can form super substance in operation modes 2-4"),
 	LIVE_DATA_INTERVAL("live_data_interval", true, "Time interval to update live data in seconds (default: -1)"),
 	LIVE_DATA_POINTS("live_data_points", true, "Approximate number of data points to report live (default: 500)"),

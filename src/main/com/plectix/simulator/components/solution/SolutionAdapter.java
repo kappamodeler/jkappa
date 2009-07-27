@@ -63,6 +63,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 		List<CAgent> newAgentsList = new ArrayList<CAgent>();
 		for (CAgent agent : agentList) {
 			CAgent newAgent = new CAgent(agent.getNameId(), mySystem.generateNextAgentId());
+			newAgent.setIdInRuleSide(agent.getIdInRuleHandside());
 			for (CSite site : agent.getSites()) {
 				CSite newSite = new CSite(site.getNameId(), newAgent);
 				newSite.setLinkIndex(site.getLinkIndex());

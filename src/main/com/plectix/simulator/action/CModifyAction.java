@@ -12,6 +12,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
  * Class implements "MODIFY" action type.
@@ -79,6 +80,8 @@ public class CModifyAction extends CAction {
 			CSite site, boolean state) {
 		if (eventContainer == null)
 			return;
+		ThreadLocalData.getTypeById().setTypeOfAgent(site.getAgentLink().getId(), site.getAgentLink().getNameId());
+
 		eventContainer.addAtomicEvent(new WireHashKey(site.getAgentLink().getId(), site
 				.getNameId(), ETypeOfWire.INTERNAL_STATE), site,
 				EActionOfAEvent.MODIFICATION, state);

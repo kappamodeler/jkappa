@@ -1,13 +1,16 @@
 package com.plectix.simulator.components.complex.subviews.base;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
@@ -22,15 +25,15 @@ public abstract class AbstractClassSubViewBuilder {
 	protected Map<Integer, List<ISubViews>> subViewsMap;
 
 	public AbstractClassSubViewBuilder() {
-		this.subViewsMap = new HashMap<Integer, List<ISubViews>>();
+		this.subViewsMap = new LinkedHashMap<Integer, List<ISubViews>>();
 	}
 
 	protected void constructClassesSubViews(List<SubViewsRule> abstractRules,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
 
 		// CSubViewClass with one site = Vertex
-		Map<Integer, Graph> graphsByAgent = new HashMap<Integer, Graph>();
-		Map<Integer, Map<Integer, CSubViewClass>> agentVertexBySite = new HashMap<Integer, Map<Integer, CSubViewClass>>();
+		Map<Integer, Graph> graphsByAgent = new LinkedHashMap<Integer, Graph>();
+		Map<Integer, Map<Integer, CSubViewClass>> agentVertexBySite = new LinkedHashMap<Integer, Map<Integer, CSubViewClass>>();
 		// create graph for each agent
 		for (Map.Entry<Integer, CAbstractAgent> entery : agentNameIdToAgent
 				.entrySet()) {
@@ -38,7 +41,7 @@ public abstract class AbstractClassSubViewBuilder {
 			CAbstractAgent agent = entery.getValue();
 			Graph graphForAgent = new Graph();
 			// int = site.id
-			Map<Integer, CSubViewClass> vertexBySite = new HashMap<Integer, CSubViewClass>();
+			Map<Integer, CSubViewClass> vertexBySite = new LinkedHashMap<Integer, CSubViewClass>();
 
 			for (CAbstractSite site : agent.getSitesMap().values()) {
 				CSubViewClass primitiveView = new CSubViewClass(agentType);
@@ -87,7 +90,7 @@ public abstract class AbstractClassSubViewBuilder {
 				}
 			}
 		}
-		Map<Integer, ArrayList<CSubViewClass>> agentTypeToClass = new HashMap<Integer, ArrayList<CSubViewClass>>();
+		Map<Integer, ArrayList<CSubViewClass>> agentTypeToClass = new LinkedHashMap<Integer, ArrayList<CSubViewClass>>();
 
 		// extract classesSubView and write correspondence subview- rule
 		for (Integer agentType : agentNameIdToAgent.keySet()) {
@@ -118,14 +121,14 @@ public abstract class AbstractClassSubViewBuilder {
 		}
 
 		// Map<Integer, Set<CSubViewClass>> agentTypeToClass = new
-		// HashMap<Integer, Set<CSubViewClass>>();
+		// LinkedHashMap<Integer, Set<CSubViewClass>>();
 		// for (Map.Entry<Integer, CAbstractAgent> entery : agentNameIdToAgent
 		// .entrySet()) {
 		// Integer agentType = entery.getKey();
 		// CAbstractAgent agent = entery.getValue();
 		// List<ISubViews> subViewsList = new LinkedList<ISubViews>();
 		// subViewsMap.put(agentType, subViewsList);
-		// Set<CSubViewClass> setClasses = new HashSet<CSubViewClass>();
+		// Set<CSubViewClass> setClasses = new LinkedHashSet<CSubViewClass>();
 		// agentTypeToClass.put(agentType, setClasses);
 		// for (CAbstractSite site : agent.getSitesMap().values()) {
 		// setClasses.add(new CSubViewClass(agent.getNameId(), site
@@ -252,6 +255,9 @@ public abstract class AbstractClassSubViewBuilder {
 				}
 		} else
 			agentTypeToClass.get(agentId).add(fillingClass);
+	}
+
+	public void createXML(XMLStreamWriter writer) throws XMLStreamException {
 	}
 
 }

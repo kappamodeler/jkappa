@@ -28,7 +28,8 @@ public class SolutionBuilder {
 			List<CAgent> list = mySubstanceBuilder.buildAgents(lineData.getAgents());
 			long quant = lineData.getCount();
 			
-			if (myArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
+			if (myArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP 
+					|| myArguments.getSimulationType() == SimulationArguments.SimulationType.GENERATE_MAP) {
 				//myKappaSystem.getContactMap().addAgentFromSolution(list);
 				myKappaSystem.getContactMap().setSimulationData(myData);
 				solution.addInitialConnectedComponents(1, list);

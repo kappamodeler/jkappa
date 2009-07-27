@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
@@ -43,15 +44,15 @@ public class RunSmilesTest {
 	@Parameters
 	public static Collection<Object[]> data() {
 		String[] files = new String[] { 
-				"twoagents", 
-				"ring", 
-				"tworings",
-				"polymer", 
-				"branchstructure", 
-				"cubane", 
-				"polyhedron",
-				"fullerene", 
-				"fusedrings" };
+				"twoagents" + RunAllTests.FILENAME_EXTENSION, 
+				"ring" + RunAllTests.FILENAME_EXTENSION, 
+				"tworings" + RunAllTests.FILENAME_EXTENSION,
+				"polymer" + RunAllTests.FILENAME_EXTENSION, 
+				"branchstructure" + RunAllTests.FILENAME_EXTENSION, 
+				"cubane" + RunAllTests.FILENAME_EXTENSION, 
+				"polyhedron" + RunAllTests.FILENAME_EXTENSION,
+				"fullerene" + RunAllTests.FILENAME_EXTENSION, 
+				"fusedrings" + RunAllTests.FILENAME_EXTENSION};
 		Collection<Object[]> data = new ArrayList<Object[]>();
 		for (String string : files) {
 			Object[] obj = new Object[1];
@@ -114,7 +115,7 @@ public class RunSmilesTest {
 			result.add(newAgent);
 		}
 
-		Map<Integer, CSite> map = new HashMap<Integer, CSite>();
+		Map<Integer, CSite> map = new LinkedHashMap<Integer, CSite>();
 		for (CAgent agent : result) {
 			for (CSite site : agent.getSites()) {
 				int index = site.getLinkIndex();

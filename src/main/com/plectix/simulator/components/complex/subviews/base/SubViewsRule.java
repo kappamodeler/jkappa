@@ -2,8 +2,7 @@ package com.plectix.simulator.components.complex.subviews.base;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -17,18 +16,32 @@ import com.plectix.simulator.components.complex.subviews.WrapperTwoSet;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.components.complex.subviews.storage.SubViewsExeption;
 import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 
 public class SubViewsRule {
 	private List<AbstractAction> actions;
 	private List<CAbstractSite> sitesShouldBeBreak;
 	private int ruleId;
 	private boolean isApply = false;
+	private IObservablesConnectedComponent obsCC;
 
 	public SubViewsRule(CRule rule) {
 		actions = new LinkedList<AbstractAction>();
 		this.ruleId = rule.getRuleID();
 		List<CAbstractAgent> left = initListAgents(rule.getLeftHandSide());
 		List<CAbstractAgent> right = initListAgents(rule.getRightHandSide());
+		initAtomicActions(left, right);
+	}
+	
+	
+	public SubViewsRule(IObservablesConnectedComponent cc){
+		actions = new LinkedList<AbstractAction>();
+		obsCC = cc;
+		this.ruleId = cc.getId();
+		List<IConnectedComponent> leftList = new LinkedList<IConnectedComponent>();
+		leftList.add(cc);
+		List<CAbstractAgent> left = initListAgents(leftList);
+		List<CAbstractAgent> right = initListAgents(null);
 		initAtomicActions(left, right);
 	}
 
@@ -81,7 +94,6 @@ public class SubViewsRule {
 			}
 		}
 		if (!activatedRules.isEmpty()) {
-//			isApply = true;
 			return activatedRules;
 		} else {
 			return null;
@@ -143,7 +155,7 @@ public class SubViewsRule {
 	 */
 	private List<CAbstractAgent> initListAgents(List<IConnectedComponent> listIn) {
 		List<CAbstractAgent> listOut = new LinkedList<CAbstractAgent>();
-		Map<Integer, CAbstractAgent> map = new HashMap<Integer, CAbstractAgent>();
+		Map<Integer, CAbstractAgent> map = new LinkedHashMap<Integer, CAbstractAgent>();
 		if (listIn == null)
 			return listOut;
 		for (IConnectedComponent c : listIn)
@@ -279,6 +291,10 @@ public class SubViewsRule {
 
 	public boolean isApply() {
 		return isApply;
+	}
+	
+	public IObservablesConnectedComponent getObsConnectedComponent(){
+		return obsCC;
 	}
 
 	public List<AbstractAction> getLHSActions() {

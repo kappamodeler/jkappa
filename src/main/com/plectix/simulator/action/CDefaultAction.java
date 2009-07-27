@@ -12,6 +12,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
  * Class implements "NONE" action type.
@@ -47,6 +48,9 @@ public class CDefaultAction extends CAction {
 		int agentIdInCC = getAgentIdInCCBySideId(myToAgent);
 		CAgent agentFromInSolution = injection
 				.getAgentFromImageById(agentIdInCC);
+		
+
+		ThreadLocalData.getTypeById().setTypeOfAgent(agentFromInSolution.getId(), agentFromInSolution.getNameId());
 		getRightCComponent().addAgentFromSolutionForRHS(agentFromInSolution);
 		addToEventContainer(eventContainer, agentFromInSolution,EActionOfAEvent.TEST);
 	}

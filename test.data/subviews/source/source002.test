@@ -1,0 +1,29 @@
+#CLASS
+EGF 1
+EGFR 3
+ERK 1
+Grb2 3
+HER2 3
+M2KP 1
+MEK 1
+MKP 1
+Raf 1
+Ras 1
+RasGAP 1
+Shc 1
+SoS 1
+
+#SUBVIEW
+EGF 4
+EGFR 90
+ERK 72
+Grb2 9
+HER2 30
+M2KP 3
+MEK 108
+MKP 3
+Raf 6
+Ras 8
+RasGAP 8
+Shc 15
+SoS 16

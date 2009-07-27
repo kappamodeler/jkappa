@@ -1,0 +1,12 @@
+'ab' a(x), b(x) -> a(x!1), b(x!1)
+'ac' a(y), c(x) -> a(x!1), c(x!1)
+'bd' b(y), d(y) -> b(y!1), d(y!1)
+ 
+'dbac' a(x!1,y!2), b(x!1, y!3), c(x!2), d(y!3) -> a(x!1,y!2), b(x!1, y!3), c(x!2, y!4), d(x!4,y!3)
+
+%init: 20*(a(x,y), b(x,y), c(x,y), d(x,y))
+
+%obs: a(x,y)
+%obs: b(x,y)
+
+%story: 'dbac'

@@ -25,7 +25,7 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 	private final SkipListItem<E> head = new SkipListItem<E>();
 	private final SkipListItem<E> tail = new SkipListItem<E>();
 
-	private final Map<E, SkipListItem<E>> weightedItemToSkipListItemMap = new HashMap<E, SkipListItem<E>>();
+	private final Map<E, SkipListItem<E>> weightedItemToSkipListItemMap = new LinkedHashMap<E, SkipListItem<E>>();
 	
 	private IRandom random = null;
 	

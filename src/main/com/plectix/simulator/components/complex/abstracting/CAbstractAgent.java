@@ -82,12 +82,12 @@ public class CAbstractAgent {
 	 */
 	public CAbstractAgent(CAgent agent) {
 		this.nameID = agent.getNameId();
-		this.sitesMap = new HashMap<Integer, CAbstractSite>();
+		this.sitesMap = new LinkedHashMap<Integer, CAbstractSite>();
 	}
 
 	public CAbstractAgent(int nameId) {
 		this.nameID = nameId;
-		sitesMap = new HashMap<Integer, CAbstractSite>();
+		sitesMap = new LinkedHashMap<Integer, CAbstractSite>();
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class CAbstractAgent {
 	 */
 	public CAbstractAgent(CAbstractAgent agent) {
 		this.nameID = agent.getNameId();
-		this.sitesMap = new HashMap<Integer, CAbstractSite>();
+		this.sitesMap = new LinkedHashMap<Integer, CAbstractSite>();
 
 		for (Map.Entry<Integer, CAbstractSite> entry : agent.getSitesMap()
 				.entrySet()) {
@@ -352,6 +352,7 @@ public class CAbstractAgent {
 			}
 			CAbstractLinkState linkState = site.getLinkState();
 			if (linkState.getAgentNameID() != CSite.NO_INDEX) {
+				sb.append("!");
 				sb.append(ThreadLocalData.getNameDictionary().getName(
 						linkState.getAgentNameID()));
 				sb.append(".");
@@ -366,7 +367,7 @@ public class CAbstractAgent {
 	public CAbstractAgent plus(CAbstractAgent view) {
 		CAbstractAgent sum = new CAbstractAgent(nameID);
 
-		sum.sitesMap = new HashMap<Integer, CAbstractSite>();
+		sum.sitesMap = new LinkedHashMap<Integer, CAbstractSite>();
 
 		for (Map.Entry<Integer, CAbstractSite> entry : view.getSitesMap()
 				.entrySet()) {

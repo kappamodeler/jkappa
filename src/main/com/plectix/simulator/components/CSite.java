@@ -27,7 +27,7 @@ public final class CSite implements Serializable {
 	private CAgent linkAgent = null;
 	private int linkIndex = NO_INDEX;
 
-	private Set<CLiftElement> liftElements = new HashSet<CLiftElement>();
+	private Set<CLiftElement> liftElements = new LinkedHashSet<CLiftElement>();
 
 	/**
 	 * Constructor by id
@@ -38,6 +38,14 @@ public final class CSite implements Serializable {
 		linkState = new CLink(CLinkStatus.FREE);
 	}
 
+	/**
+	 * This constructor is easier to use!
+	 * @param name
+	 */
+	public CSite(String name) {
+		this.nameId = ThreadLocalData.getNameDictionary().getId(name);
+		linkState = new CLink(CLinkStatus.FREE);
+	}
 	//------------------------GETTERS AND SETTERS------------------------------
 	
 	/**
@@ -231,6 +239,9 @@ public final class CSite implements Serializable {
 	 * @return name of this site
 	 */
 	public final String getName() {
+		if (nameId == -1) {
+			return "EMPTY";
+		}
 		return ThreadLocalData.getNameDictionary().getName(nameId);
 	}
 
@@ -274,5 +285,9 @@ public final class CSite implements Serializable {
 
 	public String toString() {
 		return linkAgent.getName() + "(" + getName() + ")";
+	}
+	
+	public void truncInternalState(){
+		internalState.setNameId(NO_INDEX);
 	}
 }

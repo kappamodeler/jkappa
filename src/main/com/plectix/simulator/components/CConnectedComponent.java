@@ -42,11 +42,13 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	// for the better searching
 	private WeightedItemSelector<CInjection> myInjections 
 				= new SkipListSelector<CInjection>(ThreadLocalData.getRandom());
+	private final boolean isEmpty;
 
 	/**
 	 * private empty connected component constructor
 	 */
-	private CConnectedComponent() {
+	public CConnectedComponent() {
+		isEmpty = true;
 		agentList.add(new CAgent());
 		myInjections.updatedItem(CInjection.EMPTY_INJECTION);
 		agentFromSolutionForRHS = new ArrayList<CAgent>();
@@ -59,10 +61,11 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	public CConnectedComponent(Collection<CAgent> connectedAgents) {
 		agentList.addAll(connectedAgents);
 		agentFromSolutionForRHS = new ArrayList<CAgent>();
+		isEmpty = false;
 	}
 
 	public boolean isEmpty() {
-		return this == EMPTY;
+		return isEmpty;
 	}
 	
 	public void setSuperSubstance(SuperSubstance substance) {
@@ -128,7 +131,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 */
 	public final void initSpanningTreeMap() {
 		CSpanningTree spTree;
-		spanningTreeMap = new HashMap<Integer, List<CSpanningTree>>();
+		spanningTreeMap = new LinkedHashMap<Integer, List<CSpanningTree>>();
 		if (agentList.isEmpty())
 			return;
 
@@ -442,7 +445,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	}
 
 	private Set<CInjection> getIncomingInjectionsSet() {
-		Set<CInjection> injList = new HashSet<CInjection>();
+		Set<CInjection> injList = new LinkedHashSet<CInjection>();
 		for (CAgent agent : agentList) {
 			for (CSite site : agent.getSites()) {
 				for (CLiftElement lift : site.getLift()) {
@@ -484,6 +487,9 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	}
 	
 	public String toString() {
+		if (this.isEmpty()) {
+			return "EMPTY";
+		}
 		return getHash(); 
 	}
 

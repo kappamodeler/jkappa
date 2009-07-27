@@ -1,0 +1,4 @@
+'1' A(x~p,y~u,z~u!1),B(z~p!1,x~p) -> A(x~u,y~u,z~u!1),B(z~p!1,x~p)
+
+%init: 1 * (A(x~p,y~u,z~u!1),B(z~p!1,x~p))
+%init: 1 * (A(x~p,y~p,z~u!1),B(z~p!1,x~u))

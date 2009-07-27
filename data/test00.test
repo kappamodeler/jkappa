@@ -1,0 +1,16 @@
+'bound' a(x), b(x) -> a(x!1), b(x!1)
+'grow' a(x!_,y) -> a(x!_, y!1), a(x!1)
+'add' a(x!_,y), a(x) -> a(x!_, y!1), a(x!1)
+'lock' a(x!_,y), b(x!_, y) -> a(x!_,y!1),b(x!_,y!1)
+'break' a(y!1), b(y!1) -> a(y), b(y)
+
+'goal' b(x!1,y!5), a(x!1,y!2), a(x!2,y!3), a(x!3,y!4), a(x!4,y!5)  -> b(x!1,y!5), a(x!1,y!2), a(x!2,y!3), a(x!3,y!4), a(x!4,y!5) 
+
+
+%init: 30*a(x,y),5*b(x,y)
+#%init: 5*b(x,y)
+
+%obs: a(x!_)
+%obs: b(y!_)
+
+%story: 'goal'

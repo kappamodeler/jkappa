@@ -1,0 +1,17 @@
+
+# Rules:
+#######
+
+'1' a(x)->b(x)
+'2' b(x)->c(x)
+'3' c(x)->d(x)
+
+# Initial conditions:
+%init: 1 * (a(x))
+
+# Simulation:
+%obs: a(x)
+%obs: b(x)
+%obs: c(x)
+
+%story: '3'

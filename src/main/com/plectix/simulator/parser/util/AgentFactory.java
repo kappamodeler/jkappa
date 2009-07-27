@@ -1,6 +1,6 @@
 package com.plectix.simulator.parser.util;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class AgentFactory {
 		// throw new ParseErrorException();
 
 		StringTokenizer st = new StringTokenizer(line, "),");
-		Map<Integer, AbstractSite> map = new HashMap<Integer, AbstractSite>();
+		Map<Integer, AbstractSite> map = new LinkedHashMap<Integer, AbstractSite>();
 		StringTokenizer agent;
 		String ccomp;
 		String site;

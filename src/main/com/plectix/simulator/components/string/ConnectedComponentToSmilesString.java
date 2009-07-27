@@ -3,7 +3,7 @@ package com.plectix.simulator.components.string;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -374,7 +374,7 @@ public class ConnectedComponentToSmilesString implements ConnectedComponentToStr
 	}
 	
 	private static final void computeNeighbors(final List<AgentInvariant> agentInvariantList) {
-		Map<CAgent, AgentInvariant> agentToAgentInvariantMap = new HashMap<CAgent, AgentInvariant>(agentInvariantList.size());
+		Map<CAgent, AgentInvariant> agentToAgentInvariantMap = new LinkedHashMap<CAgent, AgentInvariant>(agentInvariantList.size());
 		for (AgentInvariant agentInvariant : agentInvariantList) {
 			agentToAgentInvariantMap.put(agentInvariant.getAgent(), agentInvariant);
 		}

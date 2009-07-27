@@ -48,4 +48,23 @@ public class AtomicEvent<E> {
 		outState.setBeforeState(null);
 		return outAEvent;
 	}
+	
+	public AtomicEvent<?> clone(){
+		AtomicEvent<E> outAEvent = new AtomicEvent<E>(container,type);
+		AState<E> outState = new AState<E>();
+		outAEvent.setState(outState);
+		outState.setAfterState(state.getAfterState());
+		outState.setBeforeState(state.getBeforeState());
+		return outAEvent;
+
+	}
+	@Override
+	public String toString(){
+		String answer = "";
+		answer +="container = " +container.getStepId();
+		answer +=" type =" + type;
+		answer += " state =  "+ state.toString();
+			
+		return answer;
+	}
 }

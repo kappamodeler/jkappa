@@ -14,6 +14,7 @@ import com.plectix.simulator.Initializator;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.stories.CStories;
 
+import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
@@ -30,6 +31,8 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	private boolean isSlow;
 	private boolean isWeak;
 
+	private boolean isStrong;
+
 	@Override
 	public String getPrefixFileName() {
 		return testDirectory;
@@ -40,11 +43,12 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 		return getAllTestFileNames(getDirectory());
 	}
 
-	public InitStoriesTests(String path, String fileName, boolean isSlow, boolean isWeak) {
+	public InitStoriesTests(String path, String fileName, boolean isSlow, boolean isWeak, boolean isStrong) {
 		testDirectory = path;
 		FileName = fileName;
 		this.isSlow = isSlow;
 		this.isWeak = isWeak;
+		this.isStrong = isStrong;
 	}
 
 	@Before
@@ -66,11 +70,10 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 
 		SimulationArguments args = null;
 		try {
-			if (!isSlow)
-				args = Initializator.prepareStorifyArguments(filePath, isWeak);
-			else 
-				args = Initializator.prepareStorifyArgumentsSlow(filePath, isWeak);
-				
+			//seed=2: 13
+			//seed=9: 13
+			//seed=13: 11(storage)
+			args = Initializator.prepareStorifyArguments(filePath, isSlow, isWeak, isStrong);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);
@@ -89,12 +92,14 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 		return mySimulator.getSimulationData().getKappaSystem().getStories();
 	}
 
-//	public CStoryTrees getStoryTrees() {
-//		return storyTrees;
-//	}
-
 	public List<CRule> getRules() {
 		return mySimulator.getSimulationData().getKappaSystem().getRules();
 	}
+	
+	public KappaSystem getKappaSystem() {
+		return mySimulator.getSimulationData().getKappaSystem();
+	}
+	
+	
 
 }

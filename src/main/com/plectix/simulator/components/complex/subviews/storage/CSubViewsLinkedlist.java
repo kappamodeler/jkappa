@@ -1,7 +1,7 @@
 package com.plectix.simulator.components.complex.subviews.storage;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +49,9 @@ public class CSubViewsLinkedlist implements ISubViews {
 
 	public boolean addAbstractAgent(CAbstractAgent agent)
 			throws SubViewsExeption {
+		if(agent.getSitesMap().size()< subViewClass.getSitesId().size())
+			throw new SubViewsExeption(subViewClass, agent);
+
 		if (test(agent))
 			return false;
 		storage.add(agent);
@@ -103,7 +106,7 @@ public class CSubViewsLinkedlist implements ISubViews {
 	private void initBreakingSites(AbstractAction action,
 			List<CAbstractAgent> agentsList) {
 		List<Integer> sideEffectId = action.getSideEffect();
-		Map<Integer, CAbstractAgent> sideEfectMap = new HashMap<Integer, CAbstractAgent>();
+		Map<Integer, CAbstractAgent> sideEfectMap = new LinkedHashMap<Integer, CAbstractAgent>();
 		switch (action.getActionType()) {
 		case DELETE: {
 			for (CAbstractAgent agent : agentsList)
@@ -237,10 +240,13 @@ public class CSubViewsLinkedlist implements ISubViews {
 			for (CAbstractSite site : view.getSitesMap().values()) {
 				// if (!aAgent.getSite(site.getNameId()).isFit(site)) {
 				int siteId = site.getNameId();
-				if (subViewClass.isHaveSite(siteId)
-						&& site.isFit(aAgent.getSite(siteId))) {
-					isHave = true;
-					break;
+				if (subViewClass.isHaveSite(siteId)){
+						if(site.isFit(aAgent.getSite(siteId)))
+							isHave = true;
+						else{
+							isHave = false;
+							break;
+						}
 				}
 			}
 			if (isHave)
@@ -335,7 +341,6 @@ public class CSubViewsLinkedlist implements ISubViews {
 		return subViewClass;
 	}
 
-	@Override
 	public List<CAbstractAgent> getAllSubViewsCoherent(CAbstractAgent view) {
 		List<CAbstractAgent> outList = new LinkedList<CAbstractAgent>();
 		if (view == null||view.getSitesMap().isEmpty())

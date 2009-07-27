@@ -8,12 +8,20 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.*;
 
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.contactMap.CContactMap;
+import com.plectix.simulator.components.complex.detectionOfCycles.Detector;
+import com.plectix.simulator.components.complex.enumerationOfSpecies.GeneratorSpecies;
+import com.plectix.simulator.components.complex.enumerationOfSpecies.Species;
 import com.plectix.simulator.components.complex.influenceMap.AInfluenceMap;
 import com.plectix.simulator.components.complex.influenceMap.withFuture.CInfluenceMapWithFuture;
+import com.plectix.simulator.components.complex.localviews.CLocalViewsMain;
 import com.plectix.simulator.components.complex.subviews.CMainSubViews;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
 import com.plectix.simulator.components.injections.CInjection;
@@ -25,6 +33,10 @@ import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.probability.WeightedItemSelector;
 import com.plectix.simulator.probability.skiplist.SkipListSelector;
+import com.plectix.simulator.rulecompression.CompressionResults;
+import com.plectix.simulator.rulecompression.RuleCompressionType;
+import com.plectix.simulator.rulecompression.RuleCompressor;
+import com.plectix.simulator.rulecompression.writer.RuleCompressionXMLWriter;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.Info.InfoType;
@@ -39,6 +51,9 @@ public class KappaSystem {
 	private CContactMap contactMap = new CContactMap();
 	private IAllSubViewsOfAllAgents subViews;
 	private AInfluenceMap influenceMap;
+	private CLocalViewsMain localViews;
+	private GeneratorSpecies enumerationOfSpecies;
+	private RuleCompressionXMLWriter ruleCompressionWriter; 
 
 	private final IdGenerator agentsIdGenerator = new IdGenerator();
 	private final IdGenerator ruleIdGenerator = new IdGenerator();
@@ -99,52 +114,20 @@ public class KappaSystem {
 				.getEvent(), args.getPoints(), args.isTime());
 		List<CRule> rules = getRules();
 
-		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-			// contactMap.addCreatedAgentsToSolution(this.solution, rules);
-			// contactMap.setSolution(this.solution);
-		}
-
 		observables.checkAutomorphisms();
-
-//		if (args.isActivationMap()) {
-//			PlxTimer timer = new PlxTimer();
-//			simulationData.addInfo(outputType, InfoType.INFO,
-//					"--Abstracting activation map...");
-//
-//			timer.startTimer();
-//			for (CRule rule : rules) {
-//				rule.updateActivatedRulesList(rules);
-//				rule.initializeActivatedObservablesList(observables);
-//			}
-//			simulationData.stopTimer(outputType, timer, "--Abstraction:");
-//			simulationData.addInfo(outputType, InfoType.INFO,
-//					"--Activation map computed");
-//		}
-//
-//		if (args.isInhibitionMap()) {
-//			PlxTimer timer = new PlxTimer();
-//			simulationData.addInfo(outputType, InfoType.INFO,
-//					"--Abstracting inhibition map...");
-//
-//			timer.startTimer();
-//			for (CRule rule : rules) {
-//				rule.updateInhibitedRulesList(rules);
-//				rule.initializeInhibitedObservablesList(observables);
-//			}
-//			simulationData.stopTimer(outputType, timer, "--Abstraction:");
-//			simulationData.addInfo(outputType, InfoType.INFO,
-//					"--Inhibition map computed");
-//		}
 
 		// !!!!!!!!INJECTIONS!!!!!!!!!
 		if (args.isSolutionRead()) {
 			(new InjectionsBuilder(this)).build();
 		}
 
-		solution.getSuperStorage().setAgentsLimit(args.getAgentsLimit());
+		if (solution.getSuperStorage() != null) {
+			solution.getSuperStorage().setAgentsLimit(args.getAgentsLimit());
+		}
 
 		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP
-				|| args.isSubViews() || args.isDeadRules() || args.isActivationMap() || args.isInhibitionMap()) {
+				|| args.isSubViews() || args.isDeadRules() || args.isActivationMap() 
+				|| args.isInhibitionMap()) {
 			// contactMap.initAbstractSolution();
 			// contactMap.constructAbstractRules(rules);
 			// contactMap.constructAbstractContactMap();
@@ -161,18 +144,49 @@ public class KappaSystem {
 				simulationData.addInfo(outputType, InfoType.INFO,
 						"--Abstracting influence map...");
 				influenceMap = new CInfluenceMapWithFuture();
-				contactMap.fillingContactMap(rules,subViews,simulationData);
-				influenceMap.initInfluenceMap(subViews.getRules(), contactMap, subViews.getAgentNameIdToAgent());
+				if(!contactMap.isInit())
+					contactMap.fillingContactMap(rules,subViews,simulationData);
+				influenceMap.initInfluenceMap(subViews.getRules(),observables, contactMap, subViews.getAgentNameIdToAgent());
 				influenceMap.fillingActivatedInhibitedRules(rules,this, observables);
 				simulationData.stopTimer(outputType, timer, "--Abstraction:");
 				simulationData.addInfo(outputType, InfoType.INFO,
 						"--influence map computed");
 			}
-			// contactMap.constructReachableRules(rules);
-			// contactMap.constructContactMap();
+			
+			if(args.isLocalViews() || args.isEnumerationOfSpecies()){
+				localViews = new CLocalViewsMain(subViews);
+				localViews.buildLocalViews();
+				if(args.isEnumerationOfSpecies()){
+					enumerationOfSpecies = new GeneratorSpecies(localViews.getLocalViews());
+					List<CAbstractAgent> list = new LinkedList<CAbstractAgent>();
+					list.addAll(contactMap.getAbstractSolution().getAgentNameIdToAgent().values());
+					Detector detector = new Detector(subViews,list);
+					if(detector.extractCycles().isEmpty())
+						enumerationOfSpecies.enumerate();
+					else
+						enumerationOfSpecies.setUnbounded();
+				}
+			}
+		}
+		
+		if (args.isQualitativeCompression()){
+			compressRules(RuleCompressionType.QUALITATIVE, rules);
+		}
+		
+		if (args.isQuantitativeCompression()){
+			compressRules(RuleCompressionType.QUANTITATIVE, rules);
 		}
 	}
 
+	private void compressRules(RuleCompressionType type, Collection<CRule> rules) {
+		RuleCompressor compressor = new RuleCompressor(type, this);
+		CompressionResults results = compressor.compress(rules);
+		System.out.println(results);
+		CMainSubViews qualitativeSubViews = new CMainSubViews();
+		qualitativeSubViews.build(solution, new ArrayList<CRule>(results.getCompressedRules()));
+		qualitativeSubViews.initDeadRules();
+		ruleCompressionWriter = new RuleCompressionXMLWriter(this, results, qualitativeSubViews);
+	}
 	// ---------------------POSITIVE UPDATE-----------------------------
 
 	public final void doPositiveUpdate(CRule rule,
@@ -283,7 +297,7 @@ public class KappaSystem {
 	}
 
 	public final CRule getRuleByID(int ruleID) {
-		// TODO: We are scanning a list linearly, can't we use a HashMap here?
+		// TODO: We are scanning a list linearly, can't we use a LinkedHashMap here?
 		for (CRule rule : orderedRulesList) {
 			if (rule.getRuleID() == ruleID) {
 				return rule;
@@ -389,15 +403,13 @@ public class KappaSystem {
 	// CALCULATION--------------------
 
 	public final CRule getRandomRule() {
-		Set<CRule> updatedElements = new HashSet<CRule>();
 		for (CRule rule : orderedRulesList) {
 			double oldActivity = rule.getActivity();
 			rule.calculateActivity();
 			if (rule.getActivity() != oldActivity) {
-				updatedElements.add(rule);
+				rules.updatedItem(rule);
 			}
 		}
-		rules.updatedItems(updatedElements);
 		return rules.select();
 	}
 
@@ -413,46 +425,16 @@ public class KappaSystem {
 	public AInfluenceMap getInfluenceMap(){
 		return influenceMap;
 	}
+	
+	public CLocalViewsMain getLocalViews(){
+		return localViews;
+	}
 
-	// private final void calculation() {
-	// calculateRulesActivity();
-	// recalculateCommonActivity();
-	// calculateProbability();
-	// }
+	public GeneratorSpecies getEnumerationOfSpecies() {
+		return enumerationOfSpecies;
+	}
 
-	// private final int getRandomIndex() {
-	//
-	// for (int i = 0; i < rulesProbability.length; i++) {
-	// if (rules.get(i).isInfiniteRated() && (rules.get(i).getActivity()>0.0)
-	// && (!(rules.get(i).isClashForInfiniteRule())))
-	// return i;
-	// }
-	//
-	// for (int i = 0; i < rulesProbability.length; i++) {
-	// if (randomValue < rulesProbability[i])
-	// return i;
-	// }
-	// return -1;
-	// }
-	//	
-	// private final void recalculateCommonActivity() {
-	// commonActivity = 0.;
-	// for (CRule rule : rules) {
-	// commonActivity += rule.getActivity();
-	// }
-	// }
-
-	// private final void calculateRulesActivity() {
-	// for (CRule rule : rules)
-	// rule.calcultateActivity();
-	// }
-	//
-	// private final void calculateProbability() {
-	// rulesProbability[0] = rules.get(0).getActivity() / commonActivity;
-	// for (int i = 1; i < rulesProbability.length; i++) {
-	// rulesProbability[i] = rulesProbability[i - 1]
-	// + rules.get(i).getActivity() / commonActivity;
-	// }
-	// }
-
+	public RuleCompressionXMLWriter getRuleCompressionBuilder(){
+		return ruleCompressionWriter;
+	}
 }

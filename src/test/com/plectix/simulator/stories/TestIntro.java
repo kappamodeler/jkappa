@@ -23,8 +23,8 @@
 //	}
 //
 //	private final void buildIntroMap(CStoryTrees storyTree) {
-//		HashMap<Integer, List<CStoryType>> allLevels = new HashMap<Integer, List<CStoryType>>();
-//		HashMap<Integer, List<CStoryType>> traceIdToStoryTypeIntro = new HashMap<Integer, List<CStoryType>>();
+//		LinkedHashMap<Integer, List<CStoryType>> allLevels = new LinkedHashMap<Integer, List<CStoryType>>();
+//		LinkedHashMap<Integer, List<CStoryType>> traceIdToStoryTypeIntro = new LinkedHashMap<Integer, List<CStoryType>>();
 //
 //		int counter = 0;
 //		int depth = storyTree.getLevelToTraceID().size();
@@ -60,7 +60,7 @@
 //		checkLeaves(traceIdToStoryTypeIntro);
 //	}
 //
-//	private void checkLeaves(HashMap<Integer, List<CStoryType>> introMap) {
+//	private void checkLeaves(LinkedHashMap<Integer, List<CStoryType>> introMap) {
 //		for (Map.Entry<Integer, List<Integer>> entry : trace.entrySet()) {
 //			if (entry.getValue().isEmpty()) {
 //				if (!introMap.keySet().contains(entry.getKey()))
@@ -70,7 +70,7 @@
 //
 //	}
 //
-//	private void checkIntroId(HashMap<Integer, List<CStoryType>> introMap) {
+//	private void checkIntroId(LinkedHashMap<Integer, List<CStoryType>> introMap) {
 //		List<Integer> introList = new ArrayList<Integer>();
 //		for (List<CStoryType> introValue : introMap.values()) {
 //			for (CStoryType intro : introValue) {

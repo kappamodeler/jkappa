@@ -1,0 +1,7 @@
+'r0' A(rd),B(rd)->A(rd!1),B(rd!1)
+'r1' B(rd!_) -> B(rd)
+'r2' C(x),A(x,rd) -> C(x!1),A(x!1,rd) 
+
+%init: 1 * A(x,rd)
+%init: 1 * B(rd)
+%init: 1 * C(x)

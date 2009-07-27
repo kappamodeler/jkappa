@@ -4,14 +4,13 @@ import java.util.TreeMap;
 
 public class CEventIteratorOnWire implements IEventIterator {
 
-	private WireHashKey parentWire;
 	private TreeMap<Long, AtomicEvent<?>> wire;
 	private Long currentKey;
 	private boolean timeReverse;
 	private boolean isFirst;
 
 	public CEventIteratorOnWire(TreeMap<Long, AtomicEvent<?>> map,
-			WireHashKey wkey, Long first, boolean reverse)
+			 Long first, boolean reverse)
 			throws StoryStorageException {
 		wire = map;
 		currentKey = first;
@@ -26,7 +25,6 @@ public class CEventIteratorOnWire implements IEventIterator {
 		return wire.get(currentKey).getContainer();
 	}
 
-	// some doubt about lowerkey
 	public boolean hasNext() {
 		if(isFirst){
 			return true;

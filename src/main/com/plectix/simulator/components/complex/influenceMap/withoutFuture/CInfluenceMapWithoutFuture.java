@@ -1,13 +1,14 @@
 package com.plectix.simulator.components.complex.influenceMap.withoutFuture;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 
 import com.plectix.simulator.components.CLinkRank;
+import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractLinkState;
@@ -24,12 +25,12 @@ public class CInfluenceMapWithoutFuture extends AInfluenceMap{
 		super();
 	}
 
-	public void initInfluenceMap(List<SubViewsRule> rules,
+	public void initInfluenceMap(List<SubViewsRule> rules, CObservables observables,
 			CContactMap contactMap,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
 		for (SubViewsRule rule : rules) {
-			Map<Integer, MarkAgentWithoutFuture> activatedAgents = new HashMap<Integer, MarkAgentWithoutFuture>();
-			Map<Integer, MarkAgentWithoutFuture> inhibitedAgents = new HashMap<Integer, MarkAgentWithoutFuture>();
+			Map<Integer, MarkAgentWithoutFuture> activatedAgents = new LinkedHashMap<Integer, MarkAgentWithoutFuture>();
+			Map<Integer, MarkAgentWithoutFuture> inhibitedAgents = new LinkedHashMap<Integer, MarkAgentWithoutFuture>();
 			fillingActivatedAndInhibitedSites(activatedAgents, inhibitedAgents,
 					contactMap, rule, agentNameIdToAgent);
 			for (SubViewsRule ruleCheck : rules) {
@@ -59,7 +60,7 @@ public class CInfluenceMapWithoutFuture extends AInfluenceMap{
 			case DELETE: {
 				CAbstractAgent agent = action.getLeftHandSideAgent();
 				MarkAgentWithoutFuture aAgent = getMarkAgent(inhibitedAgents, agent);
-				HashSet<Integer> sideEffect = new HashSet<Integer>();
+				LinkedHashSet<Integer> sideEffect = new LinkedHashSet<Integer>();
 				for (CAbstractSite siteLHS : agent.getSitesMap().values()) {
 					if (!isLinkStateHasSideEffect(siteLHS))
 						aAgent.addMarkSite(new MarkSiteWithoutFuture(siteLHS, EAction.ALL));
@@ -79,7 +80,7 @@ public class CInfluenceMapWithoutFuture extends AInfluenceMap{
 			}
 			case TEST_AND_MODIFICATION: {
 				CAbstractAgent agent = action.getLeftHandSideAgent();
-				HashSet<Integer> sideEffect = new HashSet<Integer>();
+				LinkedHashSet<Integer> sideEffect = new LinkedHashSet<Integer>();
 				for (CAbstractSite siteLHS : agent.getSitesMap().values()) {
 					CAbstractSite siteRHS = action.getRightHandSideAgent()
 							.getSite(siteLHS.getNameId());
@@ -149,7 +150,7 @@ public class CInfluenceMapWithoutFuture extends AInfluenceMap{
 	}
 
 	private void findSideEffect(CAbstractAgent agent,
-			HashSet<Integer> sideEffect, CContactMap contactMap,
+			LinkedHashSet<Integer> sideEffect, CContactMap contactMap,
 			Map<Integer, MarkAgentWithoutFuture> activatedAgents,
 			Map<Integer, MarkAgentWithoutFuture> inhibitedAgents,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent) {

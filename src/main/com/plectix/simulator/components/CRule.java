@@ -303,7 +303,7 @@ public class CRule implements Serializable, WeightedItem {
 	public Set<Long> getAgentsAddedID() {
 		if (agentAddList.size() == 0)
 			return null;
-		Set<Long> set = new HashSet<Long>();
+		Set<Long> set = new LinkedHashSet<Long>();
 
 		for (CAgent agent : agentAddList.values()) {
 			set.add(agent.getId());
@@ -343,7 +343,7 @@ public class CRule implements Serializable, WeightedItem {
 	protected final void apply(List<CInjection> injectionList,
 			CEvent eventContainer,
 			SimulationData simulationData, boolean isLast) {
-		agentAddList = new HashMap<CAgent, CAgent>();
+		agentAddList = new LinkedHashMap<CAgent, CAgent>();
 		sitesConnectedWithDeleted = new ArrayList<CSite>();
 		sitesConnectedWithBroken = new ArrayList<CSite>();
 		this.injList = injectionList;
@@ -1342,8 +1342,9 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	public String toString() {
-		String st = "ruleName=" + this.ruleName + " ";
-
-		return st;
+		StringBuffer st = new StringBuffer(leftHandside.toString());
+		st.append("->");
+		st.append(rightHandside);
+		return st.toString();
 	}
 }

@@ -20,7 +20,7 @@ public class RunInjectionsTests extends TestRunner {
 	private static final String separator = File.separator;
 	@BeforeClass
 	public static void setup() {
-		String fullTestFilePath = "test.data" + separator +"TheGreatTestFile";
+		String fullTestFilePath = "test.data" + separator +"TheGreatTestFile" + RunAllTests.FILENAME_EXTENSION;
 		getInitializator().init(fullTestFilePath);
 	}
 }

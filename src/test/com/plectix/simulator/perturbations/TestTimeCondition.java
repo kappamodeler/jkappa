@@ -6,6 +6,7 @@ import java.util.*;
 import org.junit.*;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.components.CRule;
 
 import com.plectix.simulator.util.Failer;
@@ -22,7 +23,7 @@ public class TestTimeCondition extends TestPerturbation {
 	
 	@BeforeClass
 	public static void initialize() {
-		myExpectedData = (new QuantityDataParser(myPrefixFileName + "RateData")).parse();
+		myExpectedData = (new QuantityDataParser(myPrefixFileName + "RateData" + RunAllTests.FILENAME_EXTENSION)).parse();
 	}
 	
 	public TestTimeCondition(String fileName) {

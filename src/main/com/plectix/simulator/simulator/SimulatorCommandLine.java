@@ -145,12 +145,19 @@ public class SimulatorCommandLine {
 		
 		if (hasOption(SimulatorOptions.MERGE_MAPS)) {
 			simulationArguments.setInhibitionMap(true);
+			simulationArguments.setActivationMap(true);
 		}
 		
 		if (hasOption(SimulatorOptions.NO_INHIBITION_MAP)
 				|| (hasOption(SimulatorOptions.NO_MAPS))
 				|| (hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
 			simulationArguments.setInhibitionMap(false);
+		}
+		
+		if (hasOption(SimulatorOptions.INHIBITION_MAP)
+				&& !(hasOption(SimulatorOptions.NO_MAPS))
+				&& !(hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+			simulationArguments.setInhibitionMap(true);
 		}
 
 		if (hasOption(SimulatorOptions.COMPILE)) {
@@ -159,10 +166,6 @@ public class SimulatorCommandLine {
 
 		if (hasOption(SimulatorOptions.DEBUG_INIT)) {
 			simulationArguments.setDebugInit(true);
-		}
-
-		if (hasOption(SimulatorOptions.GENERATE_MAP)) {
-			simulationArguments.setGenereteMap(true);
 		}
 
 		if (hasOption(SimulatorOptions.CONTACT_MAP)) {
@@ -232,16 +235,20 @@ public class SimulatorCommandLine {
 			simulationArguments.setSerializationFileName(getValue(SimulatorOptions.SAVE_ALL)) ;
 		}
 
-		if (hasOption(SimulatorOptions.DONT_COMPRESS_STORIES)) {
+		/**=====================================================================**/
+		/*							STORIES										**/
+		/**=====================================================================**/
+
+		if(hasOption(SimulatorOptions.DONT_COMPRESS_STORIES) && hasOption(SimulatorOptions.DONT_USE_STRONG_COMPRESSION)){
 			simulationArguments.setStorifyMode(SimulationArguments.StoryCompressionMode.NONE);
 		}
 
-		if (hasOption(SimulatorOptions.COMPRESS_STORIES)) {
-			simulationArguments.setStorifyMode(SimulationArguments.StoryCompressionMode.WEAK);
+		if (hasOption(SimulatorOptions.USE_STRONG_COMPRESSION) || hasOption(SimulatorOptions.COMPRESS_STORIES)) {
+			simulationArguments.setStorifyMode(SimulationArguments.StoryCompressionMode.STRONG);
 		}
 
-		if (hasOption(SimulatorOptions.USE_STRONG_COMPRESSION)) {
-			simulationArguments.setStorifyMode(SimulationArguments.StoryCompressionMode.STRONG);
+		if(hasOption(SimulatorOptions.COMPRESS_STORIES) && hasOption(SimulatorOptions.DONT_USE_STRONG_COMPRESSION)){
+			simulationArguments.setStorifyMode(SimulationArguments.StoryCompressionMode.WEAK);
 		}
 
 		if (hasOption(SimulatorOptions.EVENT)) {
@@ -308,7 +315,7 @@ public class SimulatorCommandLine {
 			} else {
 				option = false;
 			}
-			
+			simulationArguments.setGenereteMap(true);
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.GENERATE_MAP);
 		}
 		
@@ -330,7 +337,32 @@ public class SimulatorCommandLine {
 			
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.CONTACT_MAP);
 		}
-	
+		
+		
+		if (hasOption(SimulatorOptions.COMPUTE_LOCAL_VIEWS)) {
+			simulationArguments.setLocalViews(true);
+		}
+
+		if (hasOption(SimulatorOptions.NO_COMPUTE_LOCAL_VIEWS)) {
+			simulationArguments.setLocalViews(false);
+		}
+		
+		if (hasOption(SimulatorOptions.ENUMERATE_COMPLEXES)) {
+			simulationArguments.setEnumerationOfSpecies(true);
+		}
+
+		if(hasOption(SimulatorOptions.OUTPUT_QUANTITATIVE_COMPRESSION)){
+			simulationArguments.setQuantitativeCompression(true);
+		}
+
+		if(hasOption(SimulatorOptions.OUTPUT_QUALITATIVE_COMPRESSION)){
+			simulationArguments.setQualitativeCompression(true);
+		}
+
+		if (hasOption(SimulatorOptions.NO_ENUMERATE_COMPLEXES)) {
+			simulationArguments.setEnumerationOfSpecies(false);
+		}
+
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.NONE) {
 			if (!simulationArguments.isHelp() && !simulationArguments.isVersion()) {
 				// HelpFormatter formatter = new HelpFormatter();

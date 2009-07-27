@@ -28,17 +28,17 @@ public class Node {
 	}
 	
 	Node(String dataStr, String id, String name, String text, String type){
-		this.data = new Data(dataStr);
+		this.data = new Data(dataStr.replaceAll("=>", "->"));
 		this.id = id;
 		this.name = new Data(name);
-		this.text = new Data(text);
+		this.text = new Data(text.replaceAll("=>", "->"));
 		this.type = type;
 		
 	}
 
 	Boolean equals(Node node){
-		if ((node.data.equals(this.data))&&
-			(node.id.equals(this.id))&&
+//		if ((node.data.equals(this.data))&&
+		if(	(node.id.equals(this.id))&&
 			(node.name.equals(this.name))&&
 			(node.text.equals(this.text))&&
 			(node.type.equals(this.type)))

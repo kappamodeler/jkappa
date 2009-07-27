@@ -1,0 +1,83 @@
+# Rules:
+#######   large_systems-sysepi.ka
+# Chapter 'Deamination'
+'C base deamination' DNA(Base~C,status~ok) -> DNA(Base~U,status~dom) @ 1.2
+'mC base deamination' DNA(Base~mC,status~ok) -> DNA(Base~T,status~dom) @ 1.2
+
+#######
+# Chapter 'Chromatin control'
+'Chromatin compaction' MECP2(GmC!1),DNA(Base~mC,chr~opened!1) -> MECP2(GmC!1),DNA(Base~mC,chr~closed!1) @ 1.2
+'Chromatin opening' DNA(chr~closed!1),CBP(chr!1) -> DNA(chr~opened),CBP(chr) @ 1.2
+'DNA.chr--GmC.MECP2' MECP2(GmC),DNA(Base~mC,chr~opened) -> MECP2(GmC!1),DNA(Base~mC,chr~opened!1) @ 1.0
+'DNA(T:G)+MECP2' MECP2(GmC!1),DNA(Base~T,chr!1) -> MECP2(GmC),DNA(Base~T,chr) @ 1.5
+'DNA.chr--chr.CBP' DNA(chr~closed),CBP(chr) -> DNA(chr~closed!1),CBP(chr!1) @ 0.0
+'DNA.chr--chr.CBP Ref1' DNA(chr~closed),CBP(chr,tdg) -> DNA(chr~closed!1),CBP(chr!1,tdg) @ 1.0
+'DNA.chr--chr.CBP Ref2' DNA(chr~closed),CBP(chr,tdg!1),TDG(rd!1,N140,dnmt3a) -> DNA(chr~closed!1),CBP(chr!1,tdg!2),TDG(rd!2,N140,dnmt3a) @ 1.0
+'DNA.chr--chr.CBP Ref3' CBP(chr,tdg!1),DNA(chr~closed),TDG(rd!1,N140,dnmt3a!2),Dnmt3a(dna,tdg!2) -> CBP(chr!1,tdg!2),DNA(chr~closed!1),TDG(rd!2,N140,dnmt3a!3),Dnmt3a(dna,tdg!3) @ 1.0
+'DNA.chr+chr.CBP' DNA(chr!1),CBP(chr!1) -> DNA(chr),CBP(chr) @ 1.3
+
+#######
+# Chapter 'DNA repair'
+'DNA.bas-N140.TDG' DNA(Base,status~dom,chr~opened),TDG(N140) -> DNA(Base!1,status~dom,chr~opened),TDG(N140!1) @ 0.0
+'DNA.bas-N140.TDG Ref1' DNA(Base,chr~opened,status~dom,rd),TDG(N140,rd,dnmt3a,lig) -> DNA(Base!1,chr~opened,status~dom,rd),TDG(N140!1,rd,dnmt3a,lig) @ 1.0
+'DNA.bas-N140.TDG Ref2' DNA(Base,status~dom,chr~opened),TDG(N140,rd!1,dnmt3a,lig),CBP(tdg!1,chr) -> DNA(Base!1,status~dom,chr~opened),TDG(N140!1,rd!2,dnmt3a,lig),CBP(tdg!2,chr) @ 1.0
+'DNA.bas-N140.TDG Ref3' DNA(status~dom,chr~opened,Base~T,rd!1),TDG(N140,rd!1,dnmt3a,lig) -> DNA(status~dom,chr~opened,Base~T!1,rd!2),TDG(N140!1,rd!2,dnmt3a,lig) @ 1.3
+'DNA.bas-N140.TDG Ref4' DNA(Base,chr~opened,status~dom,rd),TDG(dnmt3a!1,rd,N140,lig),Dnmt3a(tdg!1,dna) -> DNA(Base!2,chr~opened,status~dom,rd),TDG(dnmt3a!1,rd,N140!2,lig),Dnmt3a(tdg!1,dna) @ 1.0
+'DNA.bas-N140.TDG Ref5' DNA(Base,status~dom,chr~opened),CBP(tdg!1,chr),TDG(N140,rd!1,dnmt3a!2,lig),Dnmt3a(dna,tdg!2) -> DNA(Base!2,status~dom,chr~opened),CBP(tdg!1,chr),TDG(N140!2,rd!1,dnmt3a!3,lig),Dnmt3a(dna,tdg!3) @ 1.0
+'DNA.bas-N140.TDG Ref6' DNA(status~dom,chr~opened,Base~T,rd!1),TDG(N140,rd!1,dnmt3a!2,lig),Dnmt3a(tdg!2,dna) -> DNA(status~dom,chr~opened,Base~T!1,rd!2),TDG(N140!1,rd!2,dnmt3a!3,lig),Dnmt3a(tdg!3,dna) @ 1.3
+'DNA.bas-N140.TDG Ref7' DNA(Base,chr~opened,status~dom,rd),TDG(N140,rd,dnmt3a,lig!1),APE1_PolB(tdg!1,CAT) -> DNA(Base!2,chr~opened,status~dom,rd),TDG(N140!2,rd,dnmt3a,lig!1),APE1_PolB(tdg!1,CAT) @ 1.0
+'DNA.bas-N140.TDG Ref8' DNA(Base,status~dom,chr~opened),CBP(tdg!1,chr),TDG(N140,rd!1,dnmt3a,lig!2),APE1_PolB(tdg!2,CAT) -> DNA(Base!2,status~dom,chr~opened),CBP(tdg!1,chr),TDG(N140!2,rd!1,dnmt3a,lig!3),APE1_PolB(tdg!3,CAT) @ 1.0
+'DNA.bas-N140.TDG Ref9' DNA(status~dom,chr~opened,Base~T,rd!1),TDG(rd!1,lig!2,dnmt3a,N140),APE1_PolB(tdg!2,CAT) -> DNA(status~dom,chr~opened,Base~T!2,rd!1),TDG(rd!1,lig!3,dnmt3a,N140!2),APE1_PolB(tdg!3,CAT) @ 1.0
+'DNA.bas-N140.TDG Ref10' DNA(Base,chr~opened,status~dom,rd),Dnmt3a(tdg!1,dna),TDG(dnmt3a!1,N140,rd,lig!2),APE1_PolB(tdg!2,CAT) -> DNA(Base!2,chr~opened,status~dom,rd),Dnmt3a(tdg!1,dna),TDG(dnmt3a!1,N140!2,rd,lig!3),APE1_PolB(tdg!3,CAT) @ 1.0
+'DNA.bas-N140.TDG Ref11' DNA(Base,status~dom,chr~opened),CBP(tdg!1,chr),Dnmt3a(dna,tdg!2),TDG(N140,rd!1,dnmt3a!2,lig!3),APE1_PolB(tdg!3,CAT) -> DNA(Base!4,status~dom,chr~opened),CBP(tdg!1,chr),Dnmt3a(dna,tdg!2),TDG(N140!4,rd!1,dnmt3a!2,lig!3),APE1_PolB(tdg!3,CAT) @ 1.0
+'DNA.bas-N140.TDG Ref12' DNA(status~dom,chr~opened,Base~T,rd!1),Dnmt3a(tdg!2,dna),TDG(rd!1,lig!3,dnmt3a!2,N140),APE1_PolB(tdg!3,CAT) -> DNA(status~dom,chr~opened,Base~T!3,rd!1),Dnmt3a(tdg!2,dna),TDG(rd!1,lig!4,dnmt3a!2,N140!3),APE1_PolB(tdg!4,CAT) @ 1.0
+'DNA.basN140.TDG' DNA(Base!1),TDG(N140!1) -> DNA(Base),TDG(N140) @ 1.5
+
+
+'DNA.rd+rd.TDG' DNA(rd!1),TDG(rd!1,nc~act,N140) -> DNA(rd),TDG(rd,nc~act,N140) @ 0.0
+'DNA.rd+rd.TDG Ref2' DNA(rd!1,Base!2),TDG(rd!1,N140!2,nc~act) -> DNA(rd,Base!1),TDG(rd,N140!1,nc~act) @ 1.5
+'DNA.rd+rd.TDG Ref3' DNA(rd!1),TDG(rd!1,nc~act,N140) -> DNA(rd),TDG(rd,nc~act,N140) @ 1.0
+'Dnmt3a+TDG' Dnmt3a(tdg!2),TDG(dnmt3a!2) -> Dnmt3a(tdg),TDG(dnmt3a) @ 0.0
+'Dnmt3a+TDG Ref1' Dnmt3a(tdg!2),TDG(dnmt3a!2,rd) -> Dnmt3a(tdg),TDG(dnmt3a,rd) @ 1.0
+'Dnmt3a+TDG Ref2' Dnmt3a(tdg!2),TDG(dnmt3a!2,rd!_) -> Dnmt3a(tdg),TDG(dnmt3a,rd!_) @ 1.3
+'Dnmt3a--TDG' Dnmt3a(tdg,dna),TDG(dnmt3a) -> Dnmt3a(tdg!2,dna),TDG(dnmt3a!2) @ 1.0
+'TDG.lig--tdg.APE1' TDG(lig),APE1_PolB(tdg) -> TDG(lig!1),APE1_PolB(tdg!1) @ 0.0
+'TDG.lig--tdg.APE1 Ref1' TDG(lig),APE1_PolB(tdg,CAT) -> TDG(lig!1),APE1_PolB(tdg!1,CAT) @ 1.0
+'TDG.lig--tdg.APE1 Ref2' TDG(lig,rd,N140),APE1_PolB(tdg,CAT!1),DNA(Base!1,rd) -> TDG(lig!1,rd,N140),APE1_PolB(tdg!1,CAT!2),DNA(Base!2,rd) @ 1.0
+'TDG.lig--tdg.APE1 Ref3' DNA(Base!1,rd!2),TDG(rd!2,lig,N140),APE1_PolB(CAT!1,tdg) -> DNA(Base!1,rd!2),TDG(rd!2,lig!3,N140),APE1_PolB(CAT!1,tdg!3) @ 1.5
+'TDG.lig+tdg.APE1' TDG(lig!1),APE1_PolB(tdg!1) -> TDG(lig),APE1_PolB(tdg) @ 1.3
+'Repair T' DNA(status~dom,Base~T!1,rd!2),TDG(lig,rd!2,N140!1) -> DNA(status~hole,Base~x,rd!1),TDG(lig,rd!1,N140) @ 1.5
+'Repair T with swap' DNA(Base~T!1,status~dom,rd!2),TDG(N140!1,lig!3,rd!2),APE1_PolB(tdg!3,CAT) -> DNA(Base~x!3,status~hole,rd!2),TDG(N140,lig!1,rd!2),APE1_PolB(tdg!1,CAT!3) @ 1.4
+'Repair U' DNA(Base~U!1,status~dom),TDG(N140!1,lig) -> DNA(Base~x,status~hole),TDG(N140,lig) @ 1.5
+'Repair U with swap' DNA(Base~U!1,status~dom),TDG(N140!1,lig!2),APE1_PolB(tdg!2,CAT) -> DNA(Base~x!2,status~hole),TDG(N140,lig!1),APE1_PolB(tdg!1,CAT!2) @ 1.4
+
+'Repair x' APE1_PolB(CAT!1),DNA(status~hole,Base~x!1) -> APE1_PolB(CAT),DNA(status~ok,Base~C) @ 1.3
+
+'DNA(C:G)+dna.Dnmt3a Ref2' Dnmt3a(dna!2,tdg),DNA(Base~C!2) -> Dnmt3a(dna,tdg),DNA(Base~C) @ 1.0 
+'C base remethylation' Dnmt3a(dna!3),DNA(Base~C!3) -> Dnmt3a(dna),DNA(Base~mC) @ 1.3
+
+#######
+# Chapter 'CBP-TDG'
+
+'CBP+TDGu' CBP(tdg!1),TDG(rd~u!1) -> CBP(tdg),TDG(rd~u) @ 1.3
+'CBP+TDGac' CBP(tdg!1),TDG(rd~Ac!1) -> CBP(tdg),TDG(rd~Ac) @ 1.0
+
+'TDG dacetylation' TDG(rd~Ac) -> TDG(rd~u) @ 0.1
+
+
+# 'Lost information' DNA(Base~C,init~mC,rd) -> DNA(Base~C,init~mC,rd) @ 1 # Inactive rule
+# 'Observe over repair' DNA(init~C,Base~mC?) -> DNA(init~C,Base~mC?) @ 1.0 # Inactive rule
+
+
+
+# Initial Conditions:
+%init: 100 * (CBP(tdg,chr))
+%init: 50 * (Dnmt3a(tdg,dna))
+%init: 50 * (TDG(dnmt3a,N140,nc~act,lig,rd~u))
+%init: 400 * (DNA(Base~mC,rd,chr~closed!1,init~mC,status~ok),MECP2(GmC!1))
+%init: 20000 * (DNA(Base~C,rd,chr~opened,init~C,status~ok))
+%init: 50 * (APE1_PolB(tdg,CAT))
+%init: 50 * (MECP2(GmC))
+
+
+

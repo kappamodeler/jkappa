@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.junit.*;
 
+import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
@@ -12,13 +13,13 @@ import com.plectix.simulator.util.*;
 
 public class TestInjectionsCorrection extends TestInjections {
 	private static final String separator = File.separator;
-	private static Map<String, SortedSet<Long>> myCompareData = new HashMap<String, SortedSet<Long>>();
+	private static Map<String, SortedSet<Long>> myCompareData = new LinkedHashMap<String, SortedSet<Long>>();
 	private Failer myFailer = new Failer();
 	private boolean antiFlag = false;
 
 	public TestInjectionsCorrection() {
 		myCompareData = (new CorrectionsDataParser(
-				"test.data" + separator +"InjectionsCorrectionData")).parse();
+				"test.data" + separator +"InjectionsCorrectionData" + RunAllTests.FILENAME_EXTENSION)).parse();
 	}
 
 	@Test

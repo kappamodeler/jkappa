@@ -12,6 +12,7 @@ import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.components.stories.storage.WireHashKey;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
  * This class implements "atomic action".
@@ -83,6 +84,7 @@ public abstract class CAction implements Serializable {
 		if (eventContainer == null)
 			return;
 		// AGENT
+		ThreadLocalData.getTypeById().setTypeOfAgent(agentFromInSolution.getId(), agentFromInSolution.getNameId());
 		eventContainer.addAtomicEvent(new WireHashKey(agentFromInSolution.getId(),
 				ETypeOfWire.AGENT), null, type, CEvent.BEFORE_STATE);
 		for (CSite s : getAgentFrom().getSites()) {
@@ -124,7 +126,7 @@ public abstract class CAction implements Serializable {
 			return null;
 		}
 
-		Set<CAction> list = new HashSet<CAction>();
+		Set<CAction> list = new LinkedHashSet<CAction>();
 
 		for (CSite fromSite : fromAgent.getSites()) {
 			CSite toSite = toAgent.getSiteByNameId(fromSite.getNameId());

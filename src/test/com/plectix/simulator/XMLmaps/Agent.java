@@ -22,12 +22,22 @@ public class Agent {
 		agentRules = new ArrayList<Integer>();
 	}
 
-	Boolean equals(Agent agent){
+	public boolean equals(Object aAgent){
+		
+		if(this == aAgent) return true;
+		
+		if(aAgent == null) return false;
+		
+		if(getClass() != aAgent.getClass()) return false;
+		
+		Agent agent = (Agent) aAgent;
+		
 		if ((agent.name.equals(this.name))&&
 				(agent.sites.equals(this.sites))
 //				&&(isEqual(agent.agentRules, this.agentRules))
 				)
 			return true;
+		
 		return false;
 	}
 	

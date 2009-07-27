@@ -6,12 +6,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,9 @@ import java.util.TreeMap;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -52,6 +56,7 @@ import com.plectix.simulator.components.solution.SolutionLines;
 import com.plectix.simulator.components.stories.CStoryIntro;
 import com.plectix.simulator.components.stories.CStoryType;
 import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
+import com.plectix.simulator.components.stories.storage.StoryStorageException;
 
 import com.plectix.simulator.interfaces.IObservablesComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
@@ -81,7 +86,7 @@ public class SimulationData {
 	private final static String TYPE_POSITIVE_MAP = "POSITIVE";
 
 	private static final double DEFAULT_NUMBER_OF_POINTS = 1000;
-	
+
 	private static final int NUMBER_OF_SIGNIFICANT_DIGITS = 6;
 
 	private List<Double> timeStamps = null;
@@ -166,7 +171,8 @@ public class SimulationData {
 		return simulationArguments.isOcamlStyleObservableNames();
 	}
 
-	public final void setSimulationArguments(InfoType outputType, SimulationArguments arguments) {
+	public final void setSimulationArguments(InfoType outputType,
+			SimulationArguments arguments) {
 		this.simulationArguments = arguments;
 
 		if (simulationArguments.isNoDumpStdoutStderr()) {
@@ -198,10 +204,13 @@ public class SimulationData {
 		if (simulationArguments.getCommandLineString() != null) {
 			println("Java " + simulationArguments.getCommandLineString());
 		}
-		
+
 		if (simulationArguments.getMonitorPeakMemory() > 0) {
-			println("Turning memory monitoring on using a period of " + simulationArguments.getMonitorPeakMemory() + " milliseconds");
-			MemoryUtil.monitorPeakMemoryUsage(simulationArguments.getMonitorPeakMemory());
+			println("Turning memory monitoring on using a period of "
+					+ simulationArguments.getMonitorPeakMemory()
+					+ " milliseconds");
+			MemoryUtil.monitorPeakMemoryUsage(simulationArguments
+					.getMonitorPeakMemory());
 		}
 
 		addInfo(outputType, InfoType.INFO, "-Initialization...");
@@ -260,12 +269,13 @@ public class SimulationData {
 		}
 	}
 
-	public final boolean isEndSimulation(double currentTime, long count) {  
-		if (System.currentTimeMillis() - clockStamp > simulationArguments.getWallClockTimeLimit()) {
+	public final boolean isEndSimulation(double currentTime, long count) {
+		if (System.currentTimeMillis() - clockStamp > simulationArguments
+				.getWallClockTimeLimit()) {
 			println("Simulation is interrupted because the wall clock time has expired");
 			return true;
 		}
-		
+
 		if (simulationArguments.isTime()) {
 			if (currentTime <= simulationArguments.getTimeLength()) {
 				if (currentTime >= nextStep) {
@@ -386,7 +396,7 @@ public class SimulationData {
 	}
 
 	private final void fillRuleListStoryConnections(CStoryType toStoryType,
-			HashMap<Integer, CStoryType> traceIdToStoryTypeRule,
+			LinkedHashMap<Integer, CStoryType> traceIdToStoryTypeRule,
 			List<Integer> rIDs, List<Element> connections, Document doc,
 			RelationModifier modifier) {
 		if (rIDs.size() != 0) {
@@ -457,16 +467,18 @@ public class SimulationData {
 				.createModel(kappaFile);
 		List<CRule> ruleList = (new RuleBuilder(new KappaSystem(this)))
 				.build(new RulesParagraphReader(model, simulationArguments,
-						new AgentFactory(false)).readComponent(kappaFile.getRules()));
+						new AgentFactory(false)).readComponent(kappaFile
+						.getRules()));
 
 		myKappaSystem.getContactMap().setSimulationData(this);
 		if (ruleList != null && !ruleList.isEmpty()) {
 			myKappaSystem.getContactMap().setFocusRule(ruleList.get(0));
-			myKappaSystem.getContactMap().setMode(EContactMapMode.AGENT_OR_RULE);
+			myKappaSystem.getContactMap()
+					.setMode(EContactMapMode.AGENT_OR_RULE);
 		}
 	}
 
-	//**************************************************************************
+	// **************************************************************************
 	//
 	// INFO OUTPUT
 	// 
@@ -491,7 +503,7 @@ public class SimulationData {
 		infoList.add(info);
 	}
 
-	//**************************************************************************
+	// **************************************************************************
 	//
 	// CONSOLE OUTPUT
 	// 
@@ -550,8 +562,9 @@ public class SimulationData {
 				case BREAK: {
 					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
 							.getConnectedSite());
-					if (action.getSiteFrom().getAgentLink().getIdInRuleHandside() < siteTo
-							.getAgentLink().getIdInRuleHandside()) {
+					if (action.getSiteFrom().getAgentLink()
+							.getIdInRuleHandside() < siteTo.getAgentLink()
+							.getIdInRuleHandside()) {
 						// BRK (#0,a) (#1,x)
 						print("BRK (#");
 						print(""
@@ -573,7 +586,8 @@ public class SimulationData {
 				case DELETE: {
 					// DEL #0
 					print("DEL #");
-					println("" + (action.getAgentFrom().getIdInRuleHandside() - 1));
+					println(""
+							+ (action.getAgentFrom().getIdInRuleHandside() - 1));
 					break;
 				}
 				case ADD: {
@@ -599,8 +613,9 @@ public class SimulationData {
 					// BND (#1,x) (#0,a)
 					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
 							.getConnectedSite());
-					if (action.getSiteFrom().getAgentLink().getIdInRuleHandside() > siteTo
-							.getAgentLink().getIdInRuleHandside()) {
+					if (action.getSiteFrom().getAgentLink()
+							.getIdInRuleHandside() > siteTo.getAgentLink()
+							.getIdInRuleHandside()) {
 						print("BND (#");
 						print(""
 								+ (action.getSiteFrom().getAgentLink()
@@ -641,7 +656,7 @@ public class SimulationData {
 					isOcamlStyleObsName()));
 			sb.append("->");
 			sb.append(SimulationUtils.printPartRule(rule.getRightHandSide(),
-							isOcamlStyleObsName()));
+					isOcamlStyleObsName()));
 			StringBuffer ch = new StringBuffer();
 			for (int j = 0; j < sb.length(); j++)
 				ch.append("-");
@@ -671,7 +686,7 @@ public class SimulationData {
 	private final String perturbationToString(CPerturbation perturbation) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("-");
-		String greater = (perturbation.getGreater()) ? "> ": "< ";
+		String greater = (perturbation.getGreater()) ? "> " : "< ";
 		switch (perturbation.getType()) {
 		case TIME: {
 			sb.append("Whenever current time ");
@@ -685,8 +700,9 @@ public class SimulationData {
 					perturbation.getObsNameID()).getName());
 			sb.append("] ");
 			sb.append(greater);
-			sb.append(SimulationUtils.perturbationParametersToString(perturbation
-					.getLHSParametersList()));
+			sb.append(SimulationUtils
+					.perturbationParametersToString(perturbation
+							.getLHSParametersList()));
 			break;
 		}
 		}
@@ -739,16 +755,16 @@ public class SimulationData {
 						sb.append(timeStamps.get(timeStepCounter));
 						sb.append(" ");
 						sb.append(runningMetrics.get(observable_num).get(
-										timeStepCounter).getMin());
+								timeStepCounter).getMin());
 						sb.append(" ");
 						sb.append(runningMetrics.get(observable_num).get(
-										timeStepCounter).getMax());
+								timeStepCounter).getMax());
 						sb.append(" ");
 						sb.append(runningMetrics.get(observable_num).get(
-										timeStepCounter).getMean());
+								timeStepCounter).getMean());
 						sb.append(" ");
 						sb.append(runningMetrics.get(observable_num).get(
-										timeStepCounter).getStd());
+								timeStepCounter).getStd());
 
 						writer.write(sb.toString());
 						writer.newLine();
@@ -767,7 +783,6 @@ public class SimulationData {
 				+ " sec. CPU");
 	}
 
-	//**************************************************************************
 	// 
 	// XML OUTPUT
 	// 
@@ -782,180 +797,103 @@ public class SimulationData {
 		}
 	}
 
-	public final DOMSource createDOMModel()
-			throws ParserConfigurationException, TransformerException {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.newDocument();
+	public final void createXMLOutput(Writer outstream)
+			throws ParserConfigurationException, TransformerException,
+			XMLStreamException, StoryStorageException {
 		PlxTimer timer = new PlxTimer();
-		Element simplxSession = null;
+		XMLOutputFactory output = XMLOutputFactory.newInstance();
+		XMLStreamWriter writer = output.createXMLStreamWriter(outstream);
+
+		writer.writeStartDocument("utf-8", "1.0");
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-			simplxSession = doc.createElement("ComplxSession");
-			simplxSession.setAttribute("xsi:schemaLocation",
-					"http://synthesisstudios.com ComplxSession.xsd");
+			writer.writeStartElement("ComplxSession");
+			// simplxSession.setAttribute("xsi:schemaLocation",
+			// "http://synthesisstudios.com ComplxSession.xsd");
 
-			// "unexpected element (uri:"", local:"ComplxSession
-			// "). Expected elements are <{http://plectix.synthesisstudios.com/schemas/kappasession}ComplxSession>,<{http://plectix.synthesisstudios.com/schemas/kappasession}KappaResults>,<{http://plectix.synthesisstudios.com/schemas/kappasession}SimplxSession>"
-			Element element = doc.createElement("Refinement");
-			element.setAttribute("Name", "DAG");
-			simplxSession.appendChild(element);
-			element = doc.createElement("Refinement");
-			element.setAttribute("Name", "Maximal");
-			simplxSession.appendChild(element);
-
-			Element ruleSet = doc.createElement("RuleSet");
-			ruleSet.setAttribute("Name", "Original");
-			addRulesToXML(ruleSet, myKappaSystem.getRules().size(), doc);
-			simplxSession.appendChild(ruleSet);
+			/*
+			 * simplxSession.setAttribute("xsi:schemaLocation","http://synthesisstudios.com ComplxSession.xsd"
+			 * );
+			 * 
+			 * // "unexpected element (uri:"", local:"ComplxSession //
+			 * "). Expected elements are <{http://plectix.synthesisstudios.com/schemas/kappasession}ComplxSession>,<{http://plectix.synthesisstudios.com/schemas/kappasession}KappaResults>,<{http://plectix.synthesisstudios.com/schemas/kappasession}SimplxSession>"
+			 * Element element = doc.createElement("Refinement");
+			 * element.setAttribute("Name", "DAG");
+			 * simplxSession.appendChild(element); element =
+			 * doc.createElement("Refinement");
+			 * element.setAttribute("Name","Maximal");
+			 * simplxSession.appendChild(element);
+			 * 
+			 * Element ruleSet = doc.createElement("RuleSet");
+			 * ruleSet.setAttribute("Name", "Original"); addRulesToXML(ruleSet,
+			 * myKappaSystem.getRules().size(), doc);
+			 * simplxSession.appendChild(ruleSet);
+			 */
 		} else {
-			simplxSession = doc.createElement("SimplxSession");
-			simplxSession.setAttribute("xsi:schemaLocation",
-					"http://plectix.synthesisstudios.com SimplxSession.xsd");
+			writer.writeStartElement("SimplxSession");
+			writer.writeAttribute("xsi:schemaLocation", "http://plectix.synthesisstudios.com SimplxSession.xsd");
+			/*
+			 * simplxSession.setAttribute("xsi:schemaLocation",
+			 * "http://plectix.synthesisstudios.com SimplxSession.xsd");
+			 */
 		}
-		simplxSession.setAttribute("xmlns:xsi",
-				"http://www.w3.org/2001/XMLSchema-instance");
-		simplxSession.setAttribute("xmlns",
-				"http://plectix.synthesisstudios.com/schemas/kappasession");
-		simplxSession.setAttribute("CommandLine", simulationArguments
-				.getCommandLineString());
-		simplxSession.setAttribute("InputFile", simulationArguments
-				.getInputFilename());
+		writer.setDefaultNamespace("http://plectix.synthesisstudios.com/schemas/kappasession");
+		writer.writeDefaultNamespace("http://plectix.synthesisstudios.com/schemas/kappasession");
+		writer.writeNamespace("xsi","http://www.w3.org/2001/XMLSchema-instance");
+
+		writer.writeAttribute("CommandLine", simulationArguments.getCommandLineString());
+
+		writer.writeAttribute("InputFile", simulationArguments.getInputFilename());
 		Date d = new Date();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		simplxSession.setAttribute("TimeStamp", df.format(d));
-		doc.appendChild(simplxSession);
+		writer.writeAttribute("TimeStamp", df.format(d));
 
 		timer.startTimer();
+
+		// TODO check it
+		if (simulationArguments.isSubViews()) {
+			myKappaSystem.getSubViews().createXML(writer);
+		}
 		
-		if(simulationArguments.isSubViews()){
-			simplxSession.appendChild(myKappaSystem.getSubViews().createXML(doc));
+		if(simulationArguments.isEnumerationOfSpecies()){
+			myKappaSystem.getEnumerationOfSpecies().writeToXML(writer);
 		}
 
+		if(simulationArguments.isLocalViews()){
+			myKappaSystem.getLocalViews().writeToXML(writer);
+		}
+		
+		if (simulationArguments.isQualitativeCompression() || simulationArguments.isQuantitativeCompression()){
+			myKappaSystem.getRuleCompressionBuilder().writeToXML(writer, isOcamlStyleObsName());
+		}
+
+		// TODO check it
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-			Element contactMapElement = doc.createElement("ContactMap");
-			contactMapElement.setAttribute("Name",
-					"Low remyKappaSystem.getSolution()");
-
-			Map<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap = myKappaSystem
-					.getContactMap().getAbstractSolution()
-					.getAgentsInContactMap();
-			Map<Integer, Map<Integer, List<CContactMapAbstractEdge>>> bondsInContactMap = myKappaSystem
-					.getContactMap().getAbstractSolution()
-					.getEdgesInContactMap();
-			List<Integer> agentIDWasRead = new ArrayList<Integer>();
-
-			for (Map.Entry<Integer, Map<Integer, CContactMapChangedSite>> entry : 
-				agentsInContactMap.entrySet()) {
-				
-				Element agent = doc.createElement("Agent");
-				agentIDWasRead.add(entry.getKey());
-				Map<Integer, CContactMapChangedSite> sitesMap = entry.getValue();
-				Iterator<Map.Entry<Integer, CContactMapChangedSite>> siteIterator = 
-					sitesMap.entrySet().iterator();
-				Map.Entry<Integer, CContactMapChangedSite> siteEntry = siteIterator.next();
-				CContactMapChangedSite chSite = siteEntry.getValue();
-				agent.setAttribute("Name", chSite.getSite().getAgentLink()
-						.getName());
-				addSiteToContactMapAgent(chSite, agent, doc);
-
-				while (siteIterator.hasNext()) {
-					siteEntry = siteIterator.next();
-					addSiteToContactMapAgent(siteEntry.getValue(), agent, doc);
-				}
-				contactMapElement.appendChild(agent);
-			}
-
-			List<BoundContactMap> boundList = new ArrayList<BoundContactMap>();
-			for (Map<Integer, List<CContactMapAbstractEdge>> edgesMap : bondsInContactMap.values()) {
-				
-				for (List<CContactMapAbstractEdge> edgesList : edgesMap.values()) {
-					
-					for (CContactMapAbstractEdge edge : edgesList) {
-						Element bond = doc.createElement("Bond");
-						int vertexToSiteNameID = edge.getVertexToSiteNameID();
-						int vertexToAgentNameID = edge.getVertexToAgentNameID();
-						CAbstractSite vertexFrom = edge
-								.getVertexFrom();
-						BoundContactMap b = new BoundContactMap(vertexFrom.getAgentLink().getNameId(),ThreadLocalData
-								.getNameDictionary().getId(vertexFrom.getName()),vertexToAgentNameID,vertexToSiteNameID);
-						if(!b.includedInCollection(boundList))//(!boundList.contains(b))
-							boundList.add(b);
-						else
-							continue;
-					//	if (!agentIDWasRead.contains(vertexToAgentNameID)) {
-							bond.setAttribute("FromAgent", vertexFrom
-									.getAgentLink().getName());
-							bond.setAttribute("FromSite", vertexFrom.getName());
-							bond.setAttribute("ToAgent", ThreadLocalData
-									.getNameDictionary().getName(
-											vertexToAgentNameID));
-							bond.setAttribute("ToSite", ThreadLocalData
-									.getNameDictionary().getName(
-											vertexToSiteNameID));
-
-							if (edge.getRules().size() != 0) {
-								for (int ruleID : edge.getRules()) {
-									Element rule = doc.createElement("Rule");
-									rule.setAttribute("Id", Integer
-											.toString(ruleID));
-									bond.appendChild(rule);
-								}
-							}
-							contactMapElement.appendChild(bond);
-					//	}
-					}
-				}
-			}
-			simplxSession.appendChild(contactMapElement);
+			myKappaSystem.getContactMap().createXML(writer);
 		}
 
 		if (simulationArguments.isActivationMap()) {
-			Element influenceMap = myKappaSystem.getInfluenceMap().createXML(doc, myKappaSystem.getRules().size(), myKappaSystem
-					.getObservables().getConnectedComponentListForXMLOutput(), simulationArguments.isInhibitionMap(), 
-					myKappaSystem, simulationArguments.isOcamlStyleObservableNames());
-			simplxSession.appendChild(influenceMap);
+			myKappaSystem.getInfluenceMap().createXML(
+					writer,
+					myKappaSystem.getRules().size(),
+					myKappaSystem.getObservables()
+							.getConnectedComponentListForXMLOutput(),
+					simulationArguments.isInhibitionMap(), myKappaSystem,
+					simulationArguments.isOcamlStyleObservableNames());
 			stopTimer(InfoType.OUTPUT, timer,
 					"-Building xml tree for influence map:");
 		}
 
-//		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY) {
-//			for (List<CStoryTrees> stList : myKappaSystem.getStories()
-//					.getTrees()) {
-//				for (CStoryTrees st : stList) {
-//					Element story = doc.createElement("Story");
-//					story.setAttribute("Observable", 
-//							myKappaSystem.getRuleByID(st.getRuleID()).getName());
-//					double percentage = ((double) st.getIsomorphicCount())
-//							/ (double) simulationArguments.getIterations();
-//					story.setAttribute("Percentage", Double
-//							.toString(percentage * 100));
-//					story.setAttribute("Average", Double.toString(st
-//							.getAverageTime()
-//							/ st.getIsomorphicCount()));
-//					addConnection(story, st, doc, st.getRuleID());
-//					simplxSession.appendChild(story);
-//				}
-//			}
-//
-//		}
+		// //TODO STORIES!!!!!!!!!!!
+		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY) {
+			
+			myKappaSystem.getStories().createXML(writer, myKappaSystem, simulationArguments.getIterations());
+		
+
+		}
 
 		if (snapshots != null) {
 			timer.startTimer();
-			for (CSnapshot snapshot : snapshots) {
-				Element snapshotElement = doc.createElement("FinalState");
-				snapshotElement.setAttribute("Time", String.valueOf(snapshot
-						.getSnapshotTime()));
-				List<SnapshotElement> snapshotElementList = snapshot
-						.getSnapshotElements();
-				for (SnapshotElement se : snapshotElementList) {
-					Element species = doc.createElement("Species");
-					species.setAttribute("Kappa", se.getComponentsName());
-					species.setAttribute("Number", String
-							.valueOf(se.getCount()));
-					snapshotElement.appendChild(species);
-				}
-				simplxSession.appendChild(snapshotElement);
-			}
+			writeSnapshotsToXML(writer);
 			stopTimer(InfoType.OUTPUT, timer,
 					"-Building xml tree for snapshots:");
 		}
@@ -963,257 +901,139 @@ public class SimulationData {
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.SIM) {
 			int obsCountTimeListSize = myKappaSystem.getObservables()
 					.getCountTimeList().size();
-			Element simulation = doc.createElement("Simulation");
-			simulation.setAttribute("TotalEvents", Long
+			writer.writeStartElement("Simulation");
+			writer.writeAttribute("TotalEvents", Long
 					.toString(simulationArguments.getEvent()));
-			simulation.setAttribute("TotalTime", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(simulationArguments.getTimeLength(), NUMBER_OF_SIGNIFICANT_DIGITS));
-			simulation.setAttribute("InitTime", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(simulationArguments.getInitialTime(), NUMBER_OF_SIGNIFICANT_DIGITS));
+			writer.writeAttribute("TotalTime", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(simulationArguments.getTimeLength(),
+							NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
+			writer.writeAttribute("InitTime", DecimalFormatter
+					.toStringWithSetNumberOfSignificantDigits(
+							simulationArguments.getInitialTime(),
+							NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
 
-			simulation.setAttribute("TimeSample", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(myKappaSystem.getObservables().getTimeSampleMin(), NUMBER_OF_SIGNIFICANT_DIGITS));
-			simplxSession.appendChild(simulation);
+			writer.writeAttribute("TimeSample", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(myKappaSystem
+							.getObservables().getTimeSampleMin(),
+							NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
 
-			List<IObservablesComponent> list = myKappaSystem.getObservables().getComponentListForXMLOutput();
+			
+			List<IObservablesComponent> list = myKappaSystem.getObservables()
+					.getComponentListForXMLOutput();
 			for (int i = list.size() - 1; i >= 0; i--) {
-				Element node = createElement(list.get(i), doc);
-				simulation.appendChild(node);
+				createElement(list.get(i), writer);
 			}
 
+			// CData right
 			timer.startTimer();
-			Element csv = doc.createElement("CSV");
-			CDATASection cdata = doc.createCDATASection("\n");
-
+			writer.writeStartElement("CSV");
+			StringBuffer cdata = new StringBuffer();
 			for (int i = 0; i < obsCountTimeListSize; i++) {
-				appendData(myKappaSystem.getObservables(), list, cdata, i);
+				cdata
+						.append(appendData(myKappaSystem.getObservables(),
+								list, i));
 			}
-
-			csv.appendChild(cdata);
-			simulation.appendChild(csv);
-			stopTimer(InfoType.OUTPUT, timer, "-Building xml tree for data points:");
+			writer.writeCData(cdata.toString());
+			writer.writeEndElement();
+			writer.writeEndElement();
+			stopTimer(InfoType.OUTPUT, timer,
+					"-Building xml tree for data points:");
 		}
 
-		appendInfo(simplxSession, doc);
+		appendInfo(writer);
 
-		DOMSource domSource = new DOMSource(doc);
-		return domSource;
+		writer.writeEndElement();
+		writer.writeEndDocument();
+		writer.flush();
+		writer.close();
+
 	}
 
-	private final void addSiteToContactMapAgent(CContactMapChangedSite site,
-			Element agent, Document doc) {
-		boolean isDefaultSite = site.getSite().getNameId() == CSite.NO_INDEX;
-		Element siteNode = doc.createElement("Site");
-		for (Integer ruleID : site.getUsedRuleIDs()) {
-			Element siteRule = doc.createElement("Rule");
-			siteRule.setAttribute("Id", Integer.toString(ruleID));
-			if (isDefaultSite)
-				agent.appendChild(siteRule);
-			else
-			siteNode.appendChild(siteRule);
+	private void writeSnapshotsToXML(XMLStreamWriter writer)
+			throws XMLStreamException {
+		for (CSnapshot snapshot : snapshots) {
+			writer.writeStartElement("FinalState");
+			writer.writeAttribute("Time", String.valueOf(snapshot
+					.getSnapshotTime()));
+			List<SnapshotElement> snapshotElementList = snapshot
+					.getSnapshotElements();
+			for (SnapshotElement se : snapshotElementList) {
+				writer.writeStartElement("Species");
+				writer.writeAttribute("Kappa", se.getComponentsName());
+				writer.writeAttribute("Number", String.valueOf(se
+						.getCount()));
+				writer.writeEndElement();
+			}
+			writer.writeEndElement();
 		}
-		if (!isDefaultSite) {
-		siteNode.setAttribute("Name", site.getSite().getName());
-		siteNode.setAttribute("CanChangeState", Boolean.toString(site
-				.isInternalState()));
-			siteNode.setAttribute("CanBeBound", Boolean.toString(site
-					.isLinkState()));
-		agent.appendChild(siteNode);
-	}
 	}
 
-	private final void appendInfo(Element simplxSession, Document doc) {
-		Element log = doc.createElement("Log");
-
+	private final void appendInfo(XMLStreamWriter writer)
+			throws XMLStreamException {
+		writer.writeStartElement("Log");
 		for (Info info : infoList) {
-			Element node = doc.createElement("Entry");
-			node.setAttribute("Position", info.getPosition());
-			node.setAttribute("Count", info.getCount());
-			node.setAttribute("Message", info.getMessageWithTime());
-			node.setAttribute("Type", info.getType().toString());
-			log.appendChild(node);
+			writer.writeStartElement("Entry");
+			writer.writeAttribute("Position", info.getPosition());
+			writer.writeAttribute("Count", info.getCount());
+			writer.writeAttribute("Message", info.getMessageWithTime());
+			writer.writeAttribute("Type", info.getType().toString());
+			writer.writeEndElement();
 		}
-
-		simplxSession.appendChild(log);
+		writer.writeEndElement();
 	}
 
-	private final Element createElement(IObservablesComponent obs, Document doc) {
-		Element node = doc.createElement("Plot");
+	private final void createElement(IObservablesComponent obs,
+			XMLStreamWriter writer) throws XMLStreamException {
+		writer.writeStartElement("Plot");
 		String obsName = obs.getName();
 		if (obsName == null)
 			obsName = obs.getLine();
 
 		if (obs instanceof IObservablesConnectedComponent) {
-			node.setAttribute("Type", "OBSERVABLE");
-			node.setAttribute("Text", '[' + obsName + ']');
+			writer.writeAttribute("Type", "OBSERVABLE");
+			writer.writeAttribute("Text", '[' + obsName + ']');
 		} else {
-			node.setAttribute("Type", "RULE");
-			node.setAttribute("Text", obsName);
+			writer.writeAttribute("Type", "RULE");
+			writer.writeAttribute("Text", obsName);
 		}
-		return node;
+		writer.writeEndElement();
 	}
 
-//	private final void addConnection(Element story, CStoryTrees storyTree,
-//			Document doc, int item) {
-//
-//		HashMap<Integer, List<CStoryType>> allLevels = new HashMap<Integer, List<CStoryType>>();
-//
-//		HashMap<Integer, List<CStoryType>> traceIdToStoryTypeIntro = new HashMap<Integer, List<CStoryType>>();
-//		HashMap<Integer, CStoryType> traceIdToStoryTypeRule = new HashMap<Integer, CStoryType>();
-//
-//		int counter = 0;
-//
-//		int depth = storyTree.getLevelToTraceID().size();
-//
-//		List<CStoryIntro> storyIntroList = storyTree.getStoryIntros();
-//		for (CStoryIntro stIntro : storyIntroList) {
-//			for (Integer traceID : stIntro.getTraceIDs()) {
-//
-//				List<CStoryType> introList = traceIdToStoryTypeIntro
-//						.get(traceID);
-//
-//				if (introList == null) {
-//					introList = new ArrayList<CStoryType>();
-//					traceIdToStoryTypeIntro.put(traceID, introList);
-//				}
-//				int level = storyTree.getTraceIDToLevel().get(traceID);
-//				CStoryType stT = new CStoryType(StoryOutputType.INTRO, traceID,
-//						counter, "intro:" + stIntro.getNotation(), "", depth
-//								- level - 1);
-//				introList.add(stT);
-//
-//				List<CStoryType> listST = allLevels.get(level);
-//				if (listST == null) {
-//					listST = new ArrayList<CStoryType>();
-//					allLevels.put(level, listST);
-//				}
-//				listST.add(stT);
-//			}
-//			counter++;
-//		}
-//		int traceIDSize = storyTree.getTraceIDToLevel().size() + counter - 1;
-//		
-//		for (Map.Entry<Integer, List<Integer>> entry : storyTree.getLevelToTraceID().entrySet()) {
-//			int level = entry.getKey();
-//			List<Integer> list = entry.getValue();
-//			List<CStoryType> listST = allLevels.get(level);
-//			StoryOutputType type;
-//			if (level == 0)
-//				type = StoryOutputType.OBS;
-//			else
-//				type = StoryOutputType.RULE;
-//
-//			if (listST == null) {
-//				listST = new ArrayList<CStoryType>();
-//				allLevels.put(level, listST);
-//			}
-//			for (Integer traceID : list) {
-//				CStoryType storyType;
-//				if (simulationArguments.getStorifyMode() == SimulationArguments.StorifyMode.NONE)
-//					storyType = new CStoryType(type, traceID,
-//							counter + traceID, storyTree.getTraceIDToText()
-//									.get(traceID), storyTree.getTraceIDToData()
-//									.get(traceID), depth - level);
-//				else
-//					storyType = new CStoryType(type, traceID, traceIDSize--,
-//							storyTree.getTraceIDToText().get(traceID),
-//							storyTree.getTraceIDToData().get(traceID), depth
-//									- level);
-//				listST.add(storyType);
-//
-//				CStoryType rule = traceIdToStoryTypeRule.get(traceID);
-//
-//				if (rule == null) {
-//					rule = storyType;
-//					traceIdToStoryTypeRule.put(traceID, rule);
-//				}
-//			}
-//		}
-//
-//		List<Element> nodes = new ArrayList<Element>();
-//		List<Element> connections = new ArrayList<Element>();
-//		TreeMap<Integer, List<Integer>> traceIDToTraceIDs = storyTree
-//				.getTraceIDToTraceID();
-//		TreeMap<Integer, List<Integer>> traceIDToTraceIDsWeak = storyTree
-//				.getTraceIDToTraceIDWeak();
-//
-////		List<CStoryType> currentStTypeList = new ArrayList<CStoryType>();
-//		
-//		List<CStoryType> intros = new ArrayList<CStoryType>();
-//		for (List<CStoryType> currentStTypeList : allLevels.values()) {
-////			int curKey = entry.getKey();
-////			currentStTypeList = allLevels.get(curKey);
-//			fillNodesLevelStoryTrees(currentStTypeList, nodes, doc, intros);
-//
-//			for (CStoryType stT : currentStTypeList) {
-//				if (stT.getType() != StoryOutputType.INTRO) {
-//					List<CStoryType> introList = traceIdToStoryTypeIntro
-//							.get(stT.getTraceID());
-//					fillIntroListStoryConnections(stT, introList, connections,
-//							doc);
-//					int trID = stT.getTraceID();
-//					List<Integer> rIDs = traceIDToTraceIDs.get(trID);
-//					fillRuleListStoryConnections(stT, traceIdToStoryTypeRule,
-//							rIDs, connections, doc, RelationModifier.STRONG);
-//					rIDs = traceIDToTraceIDsWeak.get(trID);
-//					if (rIDs != null)
-//						fillRuleListStoryConnections(stT,
-//								traceIdToStoryTypeRule, rIDs, connections, doc,
-//								RelationModifier.WEAK);
-//				}
-//			}
-//		}
-//
-//		for (Element el : nodes)
-//			story.appendChild(el);
-//		for (Element el : connections)
-//			story.appendChild(el);
-//	}
 
-	private final void writeToXML(Source source, PlxTimer timerOutput)
-			throws ParserConfigurationException, TransformerException {
-		TransformerFactory trFactory = TransformerFactory.newInstance();
-		Transformer transformer = trFactory.newTransformer();
+
+	public final void outputData(long count)
+			throws ParserConfigurationException, TransformerException,
+			XMLStreamException, IOException, StoryStorageException {
+		PlxTimer timerOutput = new PlxTimer();
+		timerOutput.startTimer();
+		createXMLOutput(new BufferedWriter(new FileWriter(getXmlSessionPath())));
 		stopTimer(InfoType.OUTPUT, timerOutput,
 				"-Results outputted in xml session:");
-		StreamResult streamesult = new StreamResult(getXmlSessionPath());
-		Properties pr = new Properties();
-		pr.setProperty(OutputKeys.METHOD, "html");
-		transformer.setOutputProperties(pr);
-		transformer.transform(source, streamesult);
+
 	}
 
-	public final void outputData(Source source, long count) {
-		try {
-			PlxTimer timerOutput = new PlxTimer();
-			timerOutput.startTimer();
-			writeToXML(source, timerOutput);
-		} catch (ParserConfigurationException e) {
-			if (printStream != null) {
-				e.printStackTrace(printStream);
-			}
-		} catch (TransformerException e) {
-			if (printStream != null) {
-				e.printStackTrace(printStream);
-			}
-		}
-	}
-
-	private final void appendData(CObservables obs, List<IObservablesComponent> list, CDATASection cdata, int index) {
-		String enter = "\n";
-		cdata.appendData(DecimalFormatter.toStringWithSetNumberOfSignificantDigits(myKappaSystem.getObservables().getCountTimeList().get(index), NUMBER_OF_SIGNIFICANT_DIGITS));
+	private final StringBuffer appendData(CObservables obs,
+			List<IObservablesComponent> list, int index) {
+		StringBuffer cdata = new StringBuffer();
+		cdata.append(DecimalFormatter.toStringWithSetNumberOfSignificantDigits(
+				myKappaSystem.getObservables().getCountTimeList().get(index),
+				NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
 		for (int j = list.size() - 1; j >= 0; j--) {
-			cdata.appendData(",");
+			cdata.append(",");
 			IObservablesComponent oCC = list.get(j);
-			cdata.appendData(getItem(obs, index, oCC));
+			cdata.append(getItem(obs, index, oCC));
 		}
-		cdata.appendData(enter);
+		cdata.append("\n");
+		return cdata;
 	}
 
-	private final String getItem(CObservables obs, int index, IObservablesComponent oCC) {
+	private final String getItem(CObservables obs, int index,
+			IObservablesComponent oCC) {
 		if (oCC.isUnique()) {
 			return oCC.getStringItem(index, obs);
 		}
-		
+
 		long value = 1;
-		for (IObservablesConnectedComponent cc : obs.getConnectedComponentList()) {
+		for (IObservablesConnectedComponent cc : obs
+				.getConnectedComponentList()) {
 			if (cc.getId() == oCC.getId()) {
 				value *= cc.getItem(index, obs);
 			}
@@ -1223,42 +1043,26 @@ public class SimulationData {
 	}
 
 	/**
-	 * This method creates string representation of given rule, which using in XML output
+	 * This method creates string representation of given rule, which using in
+	 * XML output
 	 * 
-	 * @param rule 
-	 * @param isOcamlStyleObsName <tt>true</tt> if option <code>--ocaml-style-obs-name</code> is enabled,
-	 * otherwise <tt>false</tt>
-	 * @return string representation of given rule 
+	 * @param rule
+	 * @param isOcamlStyleObsName
+	 *            <tt>true</tt> if option <code>--ocaml-style-obs-name</code> is
+	 *            enabled, otherwise <tt>false</tt>
+	 * @return string representation of given rule
 	 */
 	public static final String getData(CRule rule, boolean isOcamlStyleObsName) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(SimulationUtils.printPartRule(rule.getLeftHandSide(), isOcamlStyleObsName));
+		sb.append(SimulationUtils.printPartRule(rule.getLeftHandSide(),
+				isOcamlStyleObsName));
 		sb.append("->");
-		sb.append(SimulationUtils.printPartRule(rule.getRightHandSide(), isOcamlStyleObsName));
+		sb.append(SimulationUtils.printPartRule(rule.getRightHandSide(),
+				isOcamlStyleObsName));
 		return sb.toString();
 	}
-	
-	private final void addRulesToXML(Element influenceMap,
-			int rulesAndObsNumber, Document doc) {
-		for (int i = myKappaSystem.getRules().size() - 1; i >= 0; i--) {
-			Element node = null;
-			CRule rule = myKappaSystem.getRuleByID(i);
-			if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-				node = doc.createElement("Rule");
-				node.setAttribute("Id", Integer.toString(rule.getRuleID() + 1));
-			} else {
-				node = doc.createElement("Node");
-				node.setAttribute("Type", "RULE");
-				node.setAttribute("Text", rule.getName());
-				node.setAttribute("Id", Integer.toString(rulesAndObsNumber--));
-			}
-			node.setAttribute("Data", getData(rule, isOcamlStyleObsName()));
-			node.setAttribute("Name", rule.getName());
-			influenceMap.appendChild(node);
-		}
-	}
 
-	//**************************************************************************
+	// **************************************************************************
 	//
 	// GETTERS AND SETTERS
 	// 

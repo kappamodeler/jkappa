@@ -131,7 +131,7 @@ public class CInjection implements Serializable, WeightedItem {
 	}
 
 	public Set<CAgent> getImage() {
-		Set<CAgent> image = new HashSet<CAgent>();
+		Set<CAgent> image = new LinkedHashSet<CAgent>();
 		if (agentLinkList != null) {
 			for (CAgentLink agentL : agentLinkList) {
 				image.add(agentL.getAgentTo());

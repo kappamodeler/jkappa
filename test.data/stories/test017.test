@@ -1,0 +1,50 @@
+'Add EGF{104435}'  -> EGF(receptor) @ 0.0
+'EGFR@Y1092_p{94511}' EGFR(dimer!_,Y1092~u) -> EGFR(dimer!_,Y1092~p) @ 0.1
+'EGFR@Y1092_u{94512}' EGFR(Y1092~p) -> EGFR(Y1092~u) @ 0.01
+'ERK@Y_p{94590}' MEK(dock!1,S1~p,S2~p), ERK(dock!1,Y~u) -> MEK(dock,S1~u,S2~u), ERK(dock,Y~p) @ 1.0
+'EGFR@Y1016_u{94510}' EGFR(Y1016~p) -> EGFR(Y1016~u) @ 0.01
+'Shc@Y_p{94556}' EGFR(dimer!_,Y1172!1), Shc(PTB!1,Y317~u) -> EGFR(dimer!_,Y1172!1), Shc(PTB!1,Y317~p) @ 0.1
+'EGFR@Y1016_p{94509}' EGFR(dimer!_,Y1016~u) -> EGFR(dimer!_,Y1016~p) @ 0.1
+'EGFR dimerizes (no ligand){94515}' EGFR(dimer), EGFR(dimer) <-> EGFR(dimer!1), EGFR(dimer!1) @ 4.15134695790681e-06,0.1
+'SoS binds Grb2{94566}' Grb2(SH3), SoS(grb2) <-> Grb2(SH3!1), SoS(grb2!1) @ 0.000415134695790681,0.1
+'Ras dissociates from RasGAP{94575}' Ras(nuc!1), RasGAP(GAP!1) -> Ras(nuc), RasGAP(GAP) @ 0.1
+'EGF binds EGFR{94507}' EGF(receptor), EGFR(ligand,dimer) <-> EGF(receptor!1), EGFR(ligand!1,dimer) @ 0.00124540408737204,0.0038
+'Raf1@S_p{94678}' Ras(nuc~GTP!1), Raf1(ras!1,S~u) -> Ras(nuc~GTP!1), Raf1(ras!1,S~p) @ 1.0
+'Raf1@S_u{94680}' Raf1(ras,S~p,mek) -> Raf1(ras,S~u,mek) @ 0.1
+'Ras@nuc_GDP{94573}' Ras(nuc~GTP!1), RasGAP(GAP!1) -> Ras(nuc~GDP!1), RasGAP(GAP!1) @ 10.0
+'Raf1 binds MEK{94580}' Raf1(mek,S~p), MEK(dock) <-> Raf1(mek!1,S~p), MEK(dock!1) @ 0.00415134695790681,0.1
+'MEK@S1_p{94582}' Raf1(mek!1,S~p), MEK(dock!1,S1~u) -> Raf1(mek,S~p), MEK(dock,S1~p) @ 1.0
+'EGFR@Y1172_u {94563}' EGFR(Y1172~p) -> EGFR(Y1172~u) @ 0.01
+'MEK@S1_u{94585}' MEK(dock,S1~p) -> MEK(dock,S1~u) @ 0.01
+'Grb2 binds Shc{94564}' Grb2(SH2), Shc(Y317~p) <-> Grb2(SH2!1), Shc(Y317~p!1) @ 0.000415134695790681,0.1
+'Ras binds RasGAP{94574}' Ras(nuc~GTP), RasGAP(SH2!_,GAP) -> Ras(nuc~GTP!1), RasGAP(SH2!_,GAP!1) @ 0.000415134695790681
+'MEK binds ERK{94587}' MEK(dock,S1~p,S2~p), ERK(dock) <-> MEK(dock!1,S1~p,S2~p), ERK(dock!1) @ 0.00415134695790681,0.1
+'MEK@S2_p{94583}' Raf1(mek!1,S~p), MEK(dock!1,S2~u) -> Raf1(mek,S~p), MEK(dock,S2~p) @ 1.0
+'Shc binds EGFR{94554}' EGFR(Y1172~p), Shc(PTB) <-> EGFR(Y1172~p!1), Shc(PTB!1) @ 0.000415134695790681,0.1
+'Ras@nuc_GTP{94571}' Ras(nuc~GDP!1), SoS(GEF!1) -> Ras(nuc~GTP!1), SoS(GEF!1) @ 1.0
+'Ras binds Raf1{94578}' Ras(nuc~GTP), Raf1(ras) <-> Ras(nuc~GTP!1), Raf1(ras!1) @ 0.000415134695790681,0.1
+'SoS binds Ras (short arm){96258}' SoS(GEF,grb2!1), Ras(nuc~GDP), Grb2(SH2!2,SH3!1), EGFR(Y1092!2) -> SoS(GEF!1,grb2!2), Ras(nuc~GDP!1), Grb2(SH2!3,SH3!2), EGFR(Y1092!3) @ 0.00415134695790681
+'RasGAP binds EGFR{94558}' EGFR(Y1016~p), RasGAP(SH2) <-> EGFR(Y1016~p!1), RasGAP(SH2!1) @ 0.000415134695790681,0.1
+'Grb2 binds EGFR{94560}' EGFR(Y1092~p), Grb2(SH2) <-> EGFR(Y1092~p!1), Grb2(SH2!1) @ 0.000415134695790681,0.1
+'SoS dissociates from Ras{94569}' SoS(GEF!1), Ras(nuc!1) -> SoS(GEF), Ras(nuc) @ 0.1
+'EGFR@Y1172_p{94562}' EGFR(dimer!_,Y1172~u) -> EGFR(dimer!_,Y1172~p) @ 0.1
+'SoS binds Ras (long arm){94567}' SoS(GEF,grb2!1), Ras(nuc~GDP), Grb2(SH2!2,SH3!1), Shc(PTB!_,Y317!2) -> SoS(GEF!1,grb2!2), Ras(nuc~GDP!1), Grb2(SH2!3,SH3!2), Shc(PTB!_,Y317!3) @ 0.00415134695790681
+'ERK@Y_u{94591}' ERK(dock,Y~p) -> ERK(dock,Y~u) @ 0.01
+'MEK@S2_u{94584}' MEK(dock,S2~p) -> MEK(dock,S2~u) @ 0.01
+'Ras@nuc_GTP intrinsic{94570}' Ras(nuc~GDP) -> Ras(nuc~GTP) @ 0.0001
+'Ras@nuc_GDP intrinsic{94572}' Ras(nuc~GTP) -> Ras(nuc~GDP) @ 0.1
+'EGFR dimerizes{94508}' EGFR(ligand!_,dimer), EGFR(ligand!_,dimer) <-> EGFR(ligand!_,dimer!1), EGFR(ligand!_,dimer!1) @ 0.00415134695790681,0.1
+'Shc@Y_u{94557}' Shc(Y317~p) -> Shc(Y317~u) @ 0.01
+'ERK@T_u{94589}' ERK(dock,T~p) -> ERK(dock,T~u) @ 0.01
+'ERK@T_p{94588}' MEK(dock!1,S1~p,S2~p), ERK(dock!1,T~u) -> MEK(dock,S1~u,S2~u), ERK(dock,T~p) @ 1.0
+%init: 150 * (Raf1(ras,mek,S~u))
+%init: 200 * (EGFR(ligand,dimer,Y1016~u,Y1092~u,Y1172~u))
+%init: 150 * (Shc(PTB,Y317~u))
+%init: 150 * (RasGAP(SH2,GAP))
+%init: 150 * (ERK(dock,T~u,Y~u))
+%init: 150 * (SoS(GEF,grb2))
+%init: 150 * (Grb2(SH2,SH3))
+%init: 150 * (Ras(nuc~GDP))
+%init: 150 * (MEK(dock,S1~u,S2~u))
+%init: 0 * (EGF(receptor))
+%story: 'ERK@T_p{94588}'

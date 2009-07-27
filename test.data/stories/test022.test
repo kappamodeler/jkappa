@@ -1,0 +1,14 @@
+'1' A(x~u,y~u) ->A(x~u,y~p) @ 10.0
+'2' A(x~u,y~p) -> A(x~u,y~soz) @ 10000.0
+'3' A(x) -> A(x!1),B(x!1)
+'4' A(x!1,y~p),B(x!1)->
+'5' A(x~u,y~u) ->A(x~p,y~u) @ 10.0
+'6' A(x~p,y~u) ->A(x~p,y~z) @ 10.0
+'7' A(x~p,y~z) ->A(x~p,y~r) @ 10.0
+'8' A(x~p,y~r) ->A(x~p,y~rt) @ 10.0
+'9' A(x~p,y~rt)-> A(x~p,y~p) @ 10.0
+ 
+ 
+%init : 100*(A(x~u,y~u))
+ 
+%story : '4'

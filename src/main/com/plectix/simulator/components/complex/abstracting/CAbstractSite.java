@@ -249,4 +249,9 @@ public class CAbstractSite {
 			this.linkState = new CAbstractLinkState(site.getLinkState());
 	}
 
+	
+	public void setLinkState(CAbstractLinkState newState){
+		this.linkState = newState;
+		
+	}
 }

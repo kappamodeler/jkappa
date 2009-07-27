@@ -1,0 +1,52 @@
+# Rules:
+#######
+# Chapter 'Chapter 1'
+'Ras_Raf' Ras(S1S2~gtp),Raf(x~u) -> Ras(S1S2~gtp!1),Raf(x~u!1) @ 1.0
+'Raf' Ras(S1S2~gtp!1),Raf(x~u!1) -> Ras(S1S2~gtp!1),Raf(x~p!1) @ 1.0
+'Ras_Raf_op' Ras(S1S2~gtp!1),Raf(x!1) -> Ras(S1S2~gtp),Raf(x) @ 1.0
+'PP2A1_Raf' PP2A1(s),Raf(x~p) -> PP2A1(s!1),Raf(x~p!1) @ 1.0
+'Raf_op' PP2A1(s!1),Raf(x~p!1) -> PP2A1(s!1),Raf(x~u!1) @ 1.0
+'PP2A1_Raf_op' PP2A1(s!1),Raf(x!1) -> PP2A1(s),Raf(x) @ 1.0
+# 'Raf_MEK@222' Raf(x~p),MEK(S222~u) -> Raf(x~p!1),MEK(S222~u!1) @ 1.0 # Inactive rule
+'eg2' Raf(x~p),MEK(s) -> Raf(x~p!1),MEK(s!1) @ 1.0
+# 'MEK@222' Raf(x~p!1),MEK(S222~u!1) -> Raf(x~p!1),MEK(S222~p!1) @ 1.0 # Inactive rule
+# 'Raf_MEK@222_op' Raf(x~p!1),MEK(S222!1) -> Raf(x~p),MEK(S222) @ 1.0 # Inactive rule
+# 'Raf_MEK@218' Raf(x~p),MEK(S218~u) -> Raf(x~p!1),MEK(S218~u!1) @ 1.0 # Inactive rule
+# 'MEK@218' Raf(x~p!1),MEK(S218~u!1) -> Raf(x~p!1),MEK(S218~p!1) @ 1.0 # Inactive rule
+# 'eg1' Raf(x~p!1),MEK(s!1) -> Raf(x~p),MEK(s) @ 1.0 # Inactive rule
+# 'Raf_MEK@218_op' Raf(x~p!1),MEK(S218!1) -> Raf(x~p),MEK(S218) @ 1.0 # Inactive rule
+'PP2A2_MEK@222' PP2A2(s),MEK(S222~p) -> PP2A2(s!1),MEK(S222~p!1) @ 1.0
+'MEK@222_op' PP2A2(s!1),MEK(S222~p!1) -> PP2A2(s!1),MEK(S222~u!1) @ 1.0
+'PP2A2_MEK@222_op' PP2A2(s!1),MEK(S222!1) -> PP2A2(s),MEK(S222) @ 1.0
+'PP2A2_MEK@218' PP2A2(s),MEK(S218~p) -> PP2A2(s!1),MEK(S218~p!1) @ 1.0
+'MEK@222_op' PP2A2(s!1),MEK(S218~p!1) -> PP2A2(s!1),MEK(S218~u!1) @ 1.0
+'PP2A2_MEK@218_op' PP2A2(s!1),MEK(S218!1) -> PP2A2(s),MEK(S218) @ 1.0
+'MEK_ERK@185' MEK(s,S218~p,S222~p),ERK(T185~u) -> MEK(s!1,S218~p,S222~p),ERK(T185~u!1) @ 1.0
+'ERK@185' MEK(s!1,S218~p,S222~p),ERK(T185~u!1) -> MEK(s!1,S218~p,S222~p),ERK(T185~p!1) @ 1.0
+'MEK_ERK@185_op' MEK(s!1,S218~p,S222~p),ERK(T185!1) -> MEK(s,S218~p,S222~p),ERK(T185) @ 1.0
+'MEK_ERK@187' MEK(s,S218~p,S222~p),ERK(Y187~u) -> MEK(s!1,S218~p,S222~p),ERK(Y187~u!1) @ 1.0
+'ERK@187' MEK(s!1,S218~p,S222~p),ERK(Y187~u!1) -> MEK(s!1,S218~p,S222~p),ERK(Y187~p!1) @ 1.0
+'MEK_ERK@187_op' MEK(s!1,S218~p,S222~p),ERK(Y187!1) -> MEK(s,S218~p,S222~p),ERK(Y187) @ 1.0
+'MKP3_ERK@185' MKP3(s),ERK(T185~p) -> MKP3(s!1),ERK(T185~p!1) @ 1.0
+'ERK@185_op' MKP3(s!1),ERK(T185~p!1) -> MKP3(s!1),ERK(T185~u!1) @ 1.0
+'MKP3_ERK@185_op' MKP3(s!1),ERK(T185!1) -> MKP3(s),ERK(T185) @ 1.0
+'MKP3_ERK@187' MKP3(s),ERK(Y187~p) -> MKP3(s!1),ERK(Y187~p!1) @ 1.0
+'ERK@187_op' MKP3(s!1),ERK(Y187~p!1) -> MKP3(s!1),ERK(Y187~u!1) @ 1.0
+'MKP3_ERK@187_op' MKP3(s!1),ERK(Y187!1) -> MKP3(s),ERK(Y187) @ 1.0
+'DeadRules' A(x)->B(x)
+
+# Initial Conditions:
+%init: 300 * (Ras(S1S2~gtp))
+%init: 1000 * (Raf(x~u))
+%init: 200 * (PP2A1(s))
+%init: 200 * (PP2A2(s))
+%init: 1000 * (MEK(s,S222~p,S218~p))
+%init: 1000 * (ERK(s,T185~u,Y187~u))
+%init: 200 * (MKP3(s))
+
+# Simulation:
+%obs: Raf(x~p?)
+%obs: ERK(T185~p?,Y187~p?)
+%obs: MEK(S218~p?,S222~p?)
+
+%story: 'MKP3_ERK@187_op'

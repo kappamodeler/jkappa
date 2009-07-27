@@ -19,8 +19,16 @@ public class CStateOfLink {
 		this.agentId = agentId;
 	}
 
+	public long getAgentId() {
+		return agentId;
+	}
+
 	public void setSiteId(int siteId) {
 		this.siteId = siteId;
+	}
+
+	public int getSiteId() {
+		return siteId;
 	}
 
 	public boolean isFree() {
@@ -39,6 +47,18 @@ public class CStateOfLink {
 		return false;
 	}
 
+	
+	@Override
+	public int hashCode() {
+		int result = 101;
+		result = getResult(result, (int) (agentId ^ (agentId >>> 32)));
+		result = getResult(result, siteId);
+		return result;
+	}
+
+	private static int getResult(int result, int c) {
+		return 37 * result + c;
+	}
 	@Override
 	public String toString() {
 		String str;

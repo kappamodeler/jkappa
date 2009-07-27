@@ -8,6 +8,7 @@ import org.apache.commons.cli.ParseException;
 import org.junit.*;
 
 import com.plectix.simulator.Initializator;
+import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.TestRunner;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
@@ -28,8 +29,8 @@ public class TestParser extends TestRunner {
 	private static final String sourceDir = myTestFileNamePrefix + "source" + separator;
 	private static final String compareDir = myTestFileNamePrefix + "compare" + separator;
 
-	private final String fileWithPerturbations = "perturbations.ka";
-	private final String fileWithStories = "stories.ka";
+	private final String fileWithPerturbations = "perturbations" + RunAllTests.FILENAME_EXTENSION;
+	private final String fileWithStories = "stories" + RunAllTests.FILENAME_EXTENSION;
 
 	private boolean isStorify;
 
@@ -105,12 +106,13 @@ public class TestParser extends TestRunner {
 		test(fileName);
 	}
 
-	@Test
-	public void testPerturbations() {
-		String fileName = fileWithPerturbations;
-		test(fileName);
-
-	}
+	// TODO: THINKING...
+//	@Test
+//	public void testPerturbations() {
+//		String fileName = fileWithPerturbations;
+//		test(fileName);
+//
+//	}
 
 	@Test
 	public void testStory() {

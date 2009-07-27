@@ -74,7 +74,7 @@ class CContactMapAbstractRule{
 	private List<CAbstractAgent> initListAgents(
 			List<IConnectedComponent> listIn) {
 		List<CAbstractAgent> listOut = new ArrayList<CAbstractAgent>();
-		Map<Integer, CAbstractAgent> map = new HashMap<Integer, CAbstractAgent>();
+		Map<Integer, CAbstractAgent> map = new LinkedHashMap<Integer, CAbstractAgent>();
 		if (listIn == null)
 			return listOut;
 		for (IConnectedComponent c : listIn)

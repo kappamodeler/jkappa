@@ -1,6 +1,6 @@
 package com.plectix.simulator.parser;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
@@ -52,7 +52,7 @@ public class SubstanceConstructor {
 	
 	public IConnectedComponent createCC(List<CAgent> list) {
 		IConnectedComponent cc = new CConnectedComponent(list);
-		HashMap<Integer, CSite> map = new HashMap<Integer, CSite>();
+		LinkedHashMap<Integer, CSite> map = new LinkedHashMap<Integer, CSite>();
 		for (CAgent agent : cc.getAgents()) {
 			for (CSite site : agent.getSites()) {
 				int linkIndex = site.getLinkIndex();

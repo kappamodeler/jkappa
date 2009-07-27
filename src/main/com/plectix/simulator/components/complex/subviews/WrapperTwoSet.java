@@ -1,29 +1,29 @@
 package com.plectix.simulator.components.complex.subviews;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 public class WrapperTwoSet {
 	
-	private HashSet<Integer> first;
-	private HashSet<Integer> second;
+	private LinkedHashSet<Integer> first;
+	private LinkedHashSet<Integer> second;
 	
 	public WrapperTwoSet(){
-		first = new HashSet<Integer>();
-		second = new HashSet<Integer>();
+		first = new LinkedHashSet<Integer>();
+		second = new LinkedHashSet<Integer>();
 	}
-	public void setFirst(HashSet<Integer> first) {
+	public void setFirst(LinkedHashSet<Integer> first) {
 		this.first = first;
 	}
-	public HashSet<Integer> getFirst() {
+	public LinkedHashSet<Integer> getFirst() {
 		return first;
 	}
-	public void setSecond(HashSet<Integer> second) {
+	public void setSecond(LinkedHashSet<Integer> second) {
 		this.second = second;
 	}
-	public HashSet<Integer> getSecond() {
+	public LinkedHashSet<Integer> getSecond() {
 		return second;
 	}
-	public HashSet<Integer> toOneSet() {
+	public LinkedHashSet<Integer> toOneSet() {
 		// TODO Auto-generated method stub
 		return null;
 	}

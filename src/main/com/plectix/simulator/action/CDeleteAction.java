@@ -16,6 +16,7 @@ import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
  * Class implements "DELETE" action type.
@@ -54,6 +55,8 @@ public class CDeleteAction extends CAction {
 		 * Done.
 		 */
 		CAgent agent = injection.getAgentFromImageById(myFromAgent.getIdInConnectedComponent());
+		ThreadLocalData.getTypeById().setTypeOfAgent(agent.getId(), agent.getNameId());
+		
 		addToEventContainer(eventContainer, agent, EActionOfAEvent.TEST_AND_MODIFICATION);
 		addToEventContainerNotFixedSites(eventContainer, agent);
 		for (CSite site : agent.getSites()) {
@@ -116,7 +119,8 @@ public class CDeleteAction extends CAction {
 
 //		eventContainer.addAtomicEvent(new WireHashKey(agentId, ETypeOfWire.AGENT),
 //				null, EActionOfAEvent.MODIFICATION, isBefore);
-
+		ThreadLocalData.getTypeById().setTypeOfAgent(siteFromSolution.getAgentLink().getId(), siteFromSolution.getAgentLink().getNameId());
+		
 		eventContainer.addAtomicEvent(new WireHashKey(agentId, siteId,
 				ETypeOfWire.BOUND_FREE), siteFromSolution, EActionOfAEvent.MODIFICATION,
 				isBefore);
@@ -131,6 +135,8 @@ public class CDeleteAction extends CAction {
 		if (eventContainer == null)
 			return;
 		long agentId = agentFromInSolution.getId();
+		ThreadLocalData.getTypeById().setTypeOfAgent(agentFromInSolution.getId(), agentFromInSolution.getNameId());
+
 		// eventContainer.addEvent(new UHashKey(agentId,EKeyOfState.AGENT),
 		// null, ECheck.MODIFICATION, )
 		for (CSite siteFromSolution : agentFromInSolution.getSites()) {

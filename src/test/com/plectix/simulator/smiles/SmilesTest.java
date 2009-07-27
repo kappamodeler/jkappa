@@ -2,7 +2,7 @@ package com.plectix.simulator.smiles;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -88,7 +88,7 @@ public class SmilesTest {
 	
 	private String testLinkIndexes() {
 		StringBuffer fails = new StringBuffer();
-		HashMap<Integer, Integer> links = new HashMap<Integer, Integer>();
+		LinkedHashMap<Integer, Integer> links = new LinkedHashMap<Integer, Integer>();
 		Random rnd = new Random();
 		int r;
 		for (CAgent agent : ccomponent.getAgents()) {

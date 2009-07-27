@@ -9,6 +9,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.*;
 import org.junit.runner.RunWith;
 
+import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.*;
 import com.plectix.simulator.util.*;
@@ -28,7 +29,7 @@ public class TestInjectionsQuantity extends TestInjections  {
 	@Parameters
 	public static Collection<Object[]> regExValues() {
 		myDataMap = (new QuantityDataParser(
-			"test.data" + separator + "InjectionsQuantityData")).parse();
+			"test.data" + separator + "InjectionsQuantityData" + RunAllTests.FILENAME_EXTENSION)).parse();
 		LinkedList<Object[]> parameters = new LinkedList<Object[]>();
 		int i = 0;
 		for (String name : myDataMap.keySet()) {

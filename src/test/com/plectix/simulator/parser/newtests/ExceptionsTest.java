@@ -7,6 +7,7 @@ import org.apache.commons.cli.ParseException;
 import org.junit.*;
 
 import com.plectix.simulator.Initializator;
+import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.parser.*;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.abstractmodel.reader.*;
@@ -18,11 +19,11 @@ import com.plectix.simulator.util.MessageConstructor;
 public class ExceptionsTest {
 	private static final String separator = File.separator;
 	private static final String prefix = "test.data" + separator + "new_parser" + separator;
-	private static final String mySourceFilePath = prefix + "ExceptionsTestFile";
-	private static final String myExceptionsDataFilePath = prefix + "ExceptionsTestData";
+	private static final String mySourceFilePath = prefix + "ExceptionsTestFile" + RunAllTests.FILENAME_EXTENSION;
+	private static final String myExceptionsDataFilePath = prefix + "ExceptionsTestData" + RunAllTests.FILENAME_EXTENSION;
 	private final KappaModel myModel = new KappaModel();
 	private final AgentFactory myAgentFactory = new AgentFactory(false);
-	private final Map<Integer, String> myExceptionsData = new HashMap<Integer, String>();
+	private final Map<Integer, String> myExceptionsData = new LinkedHashMap<Integer, String>();
 	
 	private enum ReaderUsageModifier {
 		RULES("#RULES"),

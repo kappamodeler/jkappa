@@ -1,13 +1,15 @@
 package com.plectix.simulator.components.complex.influenceMap.withFuture;
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.components.CLinkRank;
+import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractLinkState;
@@ -17,39 +19,61 @@ import com.plectix.simulator.components.complex.influenceMap.AInfluenceMap;
 import com.plectix.simulator.components.complex.influenceMap.InfluenceMapEdge;
 import com.plectix.simulator.components.complex.subviews.base.AbstractAction;
 import com.plectix.simulator.components.complex.subviews.base.SubViewsRule;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 
-public class CInfluenceMapWithFuture extends AInfluenceMap{
-	private enum ETypeMap {
-		ACTIVATION_MAP, INHIBITION_MAP
-	}
+public class CInfluenceMapWithFuture extends AInfluenceMap {
 
 	public CInfluenceMapWithFuture() {
 		super();
 	}
 
 	public void initInfluenceMap(List<SubViewsRule> rules,
-			CContactMap contactMap,
+			CObservables observables, CContactMap contactMap,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
+		initObsRules(observables);
+
 		for (SubViewsRule rule : rules) {
 			List<MarkAgentWithFuture> activatedSites = new LinkedList<MarkAgentWithFuture>();
 			List<MarkAgentWithFuture> inhibitedSites = new LinkedList<MarkAgentWithFuture>();
 			fillingActivatedAndInhibitedSites(activatedSites, inhibitedSites,
 					contactMap, rule, agentNameIdToAgent);
+			int ruleId = rule.getRuleId();
 			for (SubViewsRule ruleCheck : rules) {
-				int ruleId = rule.getRuleId();
 				int ruleCheckId = ruleCheck.getRuleId();
 				fillingMap(activationMap, activatedSites, ruleId, ruleCheckId,
-						ruleCheck, ETypeMap.ACTIVATION_MAP);
+						ruleCheck.getLHSActions());
 				fillingMap(inhibitionMap, inhibitedSites, ruleId, ruleCheckId,
-						ruleCheck, ETypeMap.INHIBITION_MAP);
+						ruleCheck.getLHSActions());
 			}
+
+			for (List<SubViewsRule> rulesCheck : obsRules.values())
+				for (SubViewsRule ruleCheck : rulesCheck) {
+					fillingMap(activationMapObs, activatedSites, ruleId,
+							ruleCheck.getRuleId(), ruleCheck.getLHSActions());
+					fillingMap(inhibitionMapObs, inhibitedSites, ruleId,
+							ruleCheck.getRuleId(), ruleCheck.getLHSActions());
+				}
+		}
+	}
+
+	private void initObsRules(CObservables observables) {
+		obsRules = new HashMap<Integer, List<SubViewsRule>>();
+		for (IObservablesConnectedComponent cc : observables
+				.getConnectedComponentList()) {
+			SubViewsRule rule = new SubViewsRule(cc);
+			List<SubViewsRule> list = obsRules.get(rule.getRuleId());
+			if(list == null){
+				list = new LinkedList<SubViewsRule>();
+				obsRules.put(rule.getRuleId(), list);
+			}
+			list.add(rule);
 		}
 	}
 
 	private void fillingActivatedAndInhibitedSites(
-			List<MarkAgentWithFuture> activatedSites, List<MarkAgentWithFuture> inhibitedSites,
-			CContactMap contactMap, SubViewsRule rule,
-			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
+			List<MarkAgentWithFuture> activatedSites,
+			List<MarkAgentWithFuture> inhibitedSites, CContactMap contactMap,
+			SubViewsRule rule, Map<Integer, CAbstractAgent> agentNameIdToAgent) {
 		for (AbstractAction action : rule.getActions()) {
 			switch (action.getActionType()) {
 			case ADD: {
@@ -71,11 +95,11 @@ public class CInfluenceMapWithFuture extends AInfluenceMap{
 							CActionType.DELETE));
 					break;
 				}
-				HashSet<Integer> sideEffect = new HashSet<Integer>();
+				LinkedHashSet<Integer> sideEffect = new LinkedHashSet<Integer>();
 				for (CAbstractSite siteLHS : agent.getSitesMap().values()) {
 					if (!isLinkStateHasSideEffect(siteLHS)) {
-						inhibitedSites.add(new MarkAgentWithFuture(agent, siteLHS,
-								CActionType.DELETE));
+						inhibitedSites.add(new MarkAgentWithFuture(agent,
+								siteLHS, CActionType.DELETE));
 					} else
 						sideEffect.add(siteLHS.getNameId());
 				}
@@ -84,13 +108,14 @@ public class CInfluenceMapWithFuture extends AInfluenceMap{
 					if (!agent.getSitesMap().containsKey(clearSite.getNameId()))
 						sideEffect.add(clearSite.getNameId());
 
-				findSideEffect(agent, sideEffect, contactMap, activatedSites,
-						inhibitedSites, agentNameIdToAgent);
+				if (contactMap != null)
+					findSideEffect(agent, sideEffect, contactMap,
+							activatedSites, inhibitedSites, agentNameIdToAgent);
 				break;
 			}
 			case TEST_AND_MODIFICATION: {
 				CAbstractAgent agent = action.getLeftHandSideAgent();
-				HashSet<Integer> sideEffect = new HashSet<Integer>();
+				LinkedHashSet<Integer> sideEffect = new LinkedHashSet<Integer>();
 				for (CAbstractSite siteLHS : agent.getSitesMap().values()) {
 					CAbstractSite siteRHS = action.getRightHandSideAgent()
 							.getSite(siteLHS.getNameId());
@@ -98,27 +123,28 @@ public class CInfluenceMapWithFuture extends AInfluenceMap{
 							siteRHS.getInternalState())) {
 						CAbstractSite modSite = siteLHS.clone();
 						modSite.getLinkState().setFreeLinkState();
-						inhibitedSites.add(new MarkAgentWithFuture(agent, modSite,
-								CActionType.MODIFY));
+						inhibitedSites.add(new MarkAgentWithFuture(agent,
+								modSite, CActionType.MODIFY));
 						modSite = siteRHS.clone();
 						modSite.getLinkState().setFreeLinkState();
-						activatedSites.add(new MarkAgentWithFuture(agent, modSite,
-								CActionType.MODIFY));
+						activatedSites.add(new MarkAgentWithFuture(agent,
+								modSite, CActionType.MODIFY));
 					}
 					CAbstractLinkState linkStateLHS = siteLHS.getLinkState();
 					CAbstractLinkState linkStateRHS = siteRHS.getLinkState();
 					if (!linkStateLHS.equalz(linkStateRHS)) {
-						if (!isLinkStateHasSideEffect(siteLHS)) {
-							activatedSites.add(new MarkAgentWithFuture(agent, siteRHS,
-									CActionType.BOUND));
-							inhibitedSites.add(new MarkAgentWithFuture(agent, siteLHS,
-									CActionType.BOUND));
-						} else
+						if (isLinkStateHasSideEffect(siteLHS)) {
 							sideEffect.add(siteLHS.getNameId());
+						}
+						activatedSites.add(new MarkAgentWithFuture(agent,
+								siteRHS, CActionType.BOUND));
+						inhibitedSites.add(new MarkAgentWithFuture(agent,
+								siteLHS, CActionType.BOUND));
 					}
 				}
-				findSideEffect(agent, sideEffect, contactMap, activatedSites,
-						inhibitedSites, agentNameIdToAgent);
+				if (contactMap != null)
+					findSideEffect(agent, sideEffect, contactMap,
+							activatedSites, inhibitedSites, agentNameIdToAgent);
 				break;
 			}
 			}
@@ -126,8 +152,9 @@ public class CInfluenceMapWithFuture extends AInfluenceMap{
 	}
 
 	private void findSideEffect(CAbstractAgent agent,
-			HashSet<Integer> sideEffect, CContactMap contactMap,
-			List<MarkAgentWithFuture> activatedSites, List<MarkAgentWithFuture> inhibitedSites,
+			LinkedHashSet<Integer> sideEffect, CContactMap contactMap,
+			List<MarkAgentWithFuture> activatedSites,
+			List<MarkAgentWithFuture> inhibitedSites,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
 		CAbstractAgent clearAgent = agentNameIdToAgent.get(agent.getNameId());
 		for (Integer sideEffectSiteId : sideEffect) {
@@ -139,15 +166,16 @@ public class CInfluenceMapWithFuture extends AInfluenceMap{
 				CAbstractAgent actAgent = new CAbstractAgent(sideEffectAgent);
 				for (CAbstractSite actSite : actAgent.getSitesMap().values())
 					actSite.getLinkState().setFreeLinkState();
-				activatedSites.add(new MarkAgentWithFuture(actAgent, CActionType.BREAK));
+				activatedSites.add(new MarkAgentWithFuture(actAgent,
+						CActionType.BREAK));
 			}
 		}
 	}
 
 	private void fillingMap(Map<Integer, List<InfluenceMapEdge>> map,
 			List<MarkAgentWithFuture> sites, int ruleId, int ruleCheckId,
-			SubViewsRule ruleCheck, ETypeMap typeMap) {
-		if (isIntersection(sites, ruleCheck, typeMap)) {
+			List<AbstractAction> actions) {
+		if (isIntersection(sites, actions)) {
 			List<InfluenceMapEdge> list = map.get(ruleId);
 			if (list == null) {
 				list = new LinkedList<InfluenceMapEdge>();
@@ -158,14 +186,16 @@ public class CInfluenceMapWithFuture extends AInfluenceMap{
 	}
 
 	private boolean isIntersection(List<MarkAgentWithFuture> agents,
-			SubViewsRule ruleCheck, ETypeMap typeMap) {
-		for (AbstractAction action : ruleCheck.getLHSActions())
+			List<AbstractAction> actions) {
+		for (AbstractAction action : actions)
 			for (MarkAgentWithFuture mAgent : agents) {
 				if (mAgent.getAgent().getNameId() != action
 						.getLeftHandSideAgent().getNameId())
 					continue;
 				CAbstractSite mSite = mAgent.getSite();
 				if (mSite == null)
+					return true;
+				if(action.getLeftHandSideAgent().getSitesMap().isEmpty())
 					return true;
 				CAbstractSite aSite = action.getLeftHandSideAgent().getSite(
 						mSite.getNameId());

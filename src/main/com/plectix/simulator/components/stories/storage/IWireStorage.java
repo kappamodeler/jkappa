@@ -1,8 +1,12 @@
 package com.plectix.simulator.components.stories.storage;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+
+import com.plectix.simulator.components.stories.compressions.CompressionPassport;
 
 public interface IWireStorage
 {
@@ -10,13 +14,13 @@ public interface IWireStorage
 	 * @return Initial event 
 	 * @throws StoryStorageException 
 	 */
-	ICEvent initialEvent () throws StoryStorageException;
+	CEvent initialEvent () throws StoryStorageException;
 	
 	/**
 	 * @return Observable event 
 	 * @throws StoryStorageException 
 	 */
-	ICEvent observableEvent () throws StoryStorageException;
+	CEvent observableEvent () throws StoryStorageException;
 	
 	/**
 	 * Mark all events UNRESOLVED and calculate count of UNRESOLVED for each wire
@@ -24,6 +28,13 @@ public interface IWireStorage
 	 */
 	void markAllUnresolved () throws StoryStorageException;
 	
+	
+	/**
+	 * Mark all UNRESOLVED events as DELETED
+	 * @throws StoryStorageException
+	 */
+	boolean markAllUnresolvedAsDeleted() throws StoryStorageException;
+
 	/**
 	 * Event getter
 	 * @param wkey
@@ -40,14 +51,6 @@ public interface IWireStorage
 	 */
 	AtomicEvent<?> getAtomicEvent (WireHashKey wkey, Long event);
 	
-	/**
-	 * Event iterator
-	 * @param reverse : true - goUpwards from bottom, against the current of real time
-	 * @return
-	 * @throws StoryStorageException 
-	 */
-	IEventIterator eventIterator (boolean reverse) throws StoryStorageException;
-
 	/**
 	 * Event iterator within wire
 	 * @param wkey
@@ -71,8 +74,9 @@ public interface IWireStorage
 	 * Get count of UNRESOLVED modify event within wire
 	 * @param wkey
 	 * @return
+	 * @throws StoryStorageException 
 	 */
-	int getUnresolvedModifyCount (WireHashKey wkey);
+	int getUnresolvedModifyCount (WireHashKey wkey) throws StoryStorageException;
 
 	/**
 	 * Put count of UNRESOLVED modify event within wire
@@ -89,39 +93,25 @@ public interface IWireStorage
 	 * @throws StoryStorageException 
 	 */
 	Iterator<Integer> wireInternalStateIterator (WireHashKey wkey) throws StoryStorageException;
-	
+		
 	/**
-	 * Get iterator for all agent types
+	 * @param wkey
 	 * @return
+	 * @throws StoryStorageException
 	 */
-	Iterator<Integer> agentTypeIterator ();
-	
-	/**
-	 * Get iterator for all agents with given type
-	 * @param typeId
-	 * @return
-	 */
-	Iterator<Long> agentIterator (int typeId);
-	
-	/**
-	 * Make storage with swapped agents 
-	 * @param agents1 Agent IDs to swap
-	 * @param agents2 Agent IDs to swap with
-	 * @param firstEventId Event ID to start swapping from
-	 * @param swapTop If true then swap higher atomic events
-	 * @return new storage
-	 */
-	IWireStorage swapAgents(Long[] agents1, Long[] agents2, Long firstEventId, boolean swapTop);
-	
+	Iterator<CStateOfLink> wireLinkStateIterator(WireHashKey wkey) throws StoryStorageException;
 
-	
-	
-	
-	
-	
-	
-	
-	
+	/**
+	 * Create interface class for strong compression 
+	 * @return
+	 */
+	CompressionPassport extractPassport();
+	/**
+	 * remove wire if it doesn't contain atomic events. Return true - removing is successful
+	 * @param arrayList
+	 * @return
+	 */
+	boolean removeWire(ArrayList<WireHashKey> arrayList);
 	
 	//internal procedures
 	//////////////////////////////////////////////////////////////////////////
@@ -139,10 +129,23 @@ public interface IWireStorage
 	
 	public Map<WireHashKey, TreeMap<Long, AtomicEvent<?>>> getStorageWires();
 
-	public Map<CEvent, Map<WireHashKey, AtomicEvent<?>>> getWiresByEvent();
+	//public Map<CEvent, Map<WireHashKey, AtomicEvent<?>>> getWiresByEvent();
+	
+	public Set<CEvent> getEvents();
 
 	void clearList();
 
+
+	void replaceWireToWire(Map<WireHashKey, WireHashKey> map,
+			Long firstEventId, boolean swapTop,
+			TreeMap<Long, AtomicEvent<?>> allEventsByNumber) throws StoryStorageException;
+
+
+	double getAverageTime();
+
+	void markAllNull() throws StoryStorageException;
+	
+	int getIteration();
 
 
 }
