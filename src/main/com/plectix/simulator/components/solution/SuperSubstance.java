@@ -1,10 +1,10 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.*;
+import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 
 public class SuperSubstance {
 	private long myQuantity = 0;

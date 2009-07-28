@@ -180,23 +180,18 @@
 //
 package com.plectix.simulator.harness.contactMap;
 
-import static org.junit.Assert.*;
-
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-
-
 
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.complex.contactMap.CContactMap;

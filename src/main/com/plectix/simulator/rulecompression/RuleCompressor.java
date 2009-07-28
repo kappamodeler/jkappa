@@ -1,17 +1,25 @@
 package com.plectix.simulator.rulecompression;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.complex.localviews.CLocalViewsMain;
 import com.plectix.simulator.components.complex.subviews.CMainSubViews;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
 import com.plectix.simulator.parser.KappaSystemParser;
 import com.plectix.simulator.rulecompression.util.ExpChoiceTree;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.simulator.SimulationData;
 
 public class RuleCompressor {
 	private final KappaSystem ks;

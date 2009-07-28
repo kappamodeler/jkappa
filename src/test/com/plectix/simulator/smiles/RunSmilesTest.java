@@ -26,7 +26,6 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.AbstractSite;
 import com.plectix.simulator.parser.exceptions.DocumentFormatException;
-import com.plectix.simulator.parser.exceptions.IncompletesDisabledException;
 import com.plectix.simulator.parser.exceptions.ParseErrorException;
 import com.plectix.simulator.parser.util.AgentFactory;
 

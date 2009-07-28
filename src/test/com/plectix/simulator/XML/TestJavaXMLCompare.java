@@ -1,6 +1,6 @@
 package com.plectix.simulator.XML;
 
-import org.junit.*;
+import org.junit.Test;
 
 import com.plectix.simulator.util.FileDirComparator;
 

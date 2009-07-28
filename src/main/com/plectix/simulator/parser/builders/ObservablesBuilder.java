@@ -5,10 +5,13 @@ import java.util.List;
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.parser.abstractmodel.observables.*;
-import com.plectix.simulator.parser.util.IdGenerator;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.parser.abstractmodel.observables.AbstractObservables;
+import com.plectix.simulator.parser.abstractmodel.observables.ObservableComponentLineData;
+import com.plectix.simulator.parser.abstractmodel.observables.ObservableRuleLineData;
+import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.SimulationUtils;
 
 public class ObservablesBuilder {
 	private CObservables myExistingObservables;

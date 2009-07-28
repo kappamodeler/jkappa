@@ -2,13 +2,11 @@ package com.plectix.simulator.parser.newtests;
 
 import java.util.List;
 
-import com.plectix.simulator.components.perturbations.CPerturbation;
-import com.plectix.simulator.components.perturbations.CPerturbationType;
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.perturbations.CPerturbation;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IPerturbationExpression;
-
-import com.plectix.simulator.components.CSite;
 
 public class PerturbationReader {
 

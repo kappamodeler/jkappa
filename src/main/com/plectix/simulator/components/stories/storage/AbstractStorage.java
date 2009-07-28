@@ -1,9 +1,9 @@
 package com.plectix.simulator.components.stories.storage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +17,6 @@ import com.plectix.simulator.components.stories.enums.EState;
 import com.plectix.simulator.components.stories.enums.ETypeOfWire;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationArguments.StoryCompressionMode;
-import com.plectix.simulator.stories.StoryCorrectness;
 
 public class AbstractStorage implements IWireStorage {
 

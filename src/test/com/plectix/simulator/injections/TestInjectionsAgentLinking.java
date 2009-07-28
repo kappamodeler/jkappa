@@ -1,18 +1,21 @@
 package com.plectix.simulator.injections;
 
-import java.util.*;
+import static org.junit.Assert.assertEquals;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
-
 import org.junit.runner.RunWith;
-import org.junit.runners.*;
+import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 
 @RunWith(value = Parameterized.class)
 public class TestInjectionsAgentLinking extends TestInjections {

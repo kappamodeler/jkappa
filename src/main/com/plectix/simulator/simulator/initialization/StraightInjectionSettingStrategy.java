@@ -2,7 +2,7 @@ package com.plectix.simulator.simulator.initialization;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 
 public class StraightInjectionSettingStrategy implements InjectionSettingStrategy {
 

@@ -1,10 +1,14 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 

@@ -1,11 +1,14 @@
 package com.plectix.simulator.probability;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.components.injections.*;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IRandom;
+import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.Info.InfoType;
 
 public final class CProbabilityCalculation {

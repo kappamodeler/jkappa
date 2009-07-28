@@ -1,14 +1,14 @@
 package com.plectix.simulator.injections;
 
 
-import java.util.*;
+import java.util.Collection;
 
-import org.junit.*;
+import org.junit.Test;
 
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.injections.CLiftElement;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.MessageConstructor;
 

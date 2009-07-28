@@ -1,11 +1,14 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.simulator.SimulationUtils;
 
 public abstract class CAbstractSuperSolution extends ComplexSolution {
 	public CAbstractSuperSolution(KappaSystem system) {

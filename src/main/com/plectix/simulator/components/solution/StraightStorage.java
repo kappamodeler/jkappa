@@ -1,10 +1,16 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 
 public class StraightStorage implements IStorage {
 	private final Set<CAgent> agentMap = new LinkedHashSet<CAgent>();;

@@ -7,16 +7,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
-import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractLinkState;
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.components.solution.SuperSubstance;
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.SimulationData;
 

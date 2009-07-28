@@ -1,12 +1,16 @@
 package com.plectix.simulator.parser.builders;
 
-import java.util.*;
+import java.util.List;
 
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.components.solution.*;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.parser.abstractmodel.*;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.solution.SolutionFactory;
+import com.plectix.simulator.components.solution.SolutionLines;
+import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
+import com.plectix.simulator.parser.abstractmodel.SolutionLineData;
+import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.simulator.SimulationArguments;
+import com.plectix.simulator.simulator.SimulationData;
 
 public class SolutionBuilder {
 	private final KappaSystem myKappaSystem;

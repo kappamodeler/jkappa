@@ -3,8 +3,8 @@ package com.plectix.simulator.stories;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.LinkedHashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -21,7 +21,6 @@ import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.components.stories.storage.CStateOfLink;
 import com.plectix.simulator.components.stories.storage.IEventIterator;
 import com.plectix.simulator.components.stories.storage.IWireStorage;
-import com.plectix.simulator.components.stories.storage.StoragePassport;
 import com.plectix.simulator.components.stories.storage.StoryStorageException;
 import com.plectix.simulator.components.stories.storage.WireHashKey;
 

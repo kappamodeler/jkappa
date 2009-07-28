@@ -1,11 +1,14 @@
 package com.plectix.simulator.rulecompression;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.plectix.simulator.action.*;
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.components.solution.*;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.action.CAction;
+import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.solution.SolutionUtils;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 
 /*package*/ class RuleAnalyzer {
 	private final CRule rule;

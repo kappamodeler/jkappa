@@ -1,17 +1,22 @@
 package com.plectix.simulator.parser;
 
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import org.junit.*;
-import org.junit.runner.*;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.*;
+import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.DirectoryTestsRunner;
-import com.plectix.simulator.util.*;
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.util.CollectionsComparator;
+import com.plectix.simulator.util.Converter;
+import com.plectix.simulator.util.Failer;
 
 @RunWith(Parameterized.class)
 public class TestParseAgents extends DirectoryTestsRunner {

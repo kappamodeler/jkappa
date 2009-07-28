@@ -1,6 +1,5 @@
 package com.plectix.simulator.parser;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.plectix.simulator.simulator.Simulator;

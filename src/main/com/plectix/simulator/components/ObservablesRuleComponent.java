@@ -1,9 +1,11 @@
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesRuleComponent;
 
 /**
  * This class implements rule observable. This one is the object which affected by fixed rule,

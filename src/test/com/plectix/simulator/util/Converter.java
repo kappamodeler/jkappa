@@ -1,8 +1,15 @@
 package com.plectix.simulator.util;
 
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CLinkRank;
+import com.plectix.simulator.components.CLinkStatus;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 
 public class Converter {
 	public static String toString(CSite site) {

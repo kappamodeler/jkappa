@@ -1,10 +1,18 @@
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.simulator.SimulationArguments;
+import com.plectix.simulator.simulator.SimulationUtils;
 
 /**
  * This class describes observables storage.

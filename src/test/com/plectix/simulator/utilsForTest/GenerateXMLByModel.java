@@ -10,13 +10,11 @@ import javax.xml.transform.TransformerException;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
-import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.components.stories.storage.StoryStorageException;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
-import com.plectix.simulator.subViews.InitData;
 import com.plectix.simulator.util.Info.InfoType;
 
 public abstract class GenerateXMLByModel {

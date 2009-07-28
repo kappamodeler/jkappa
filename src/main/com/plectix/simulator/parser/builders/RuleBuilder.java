@@ -1,13 +1,15 @@
 package com.plectix.simulator.parser.builders;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.parser.abstractmodel.*;
-import com.plectix.simulator.parser.util.IdGenerator;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
+import com.plectix.simulator.parser.abstractmodel.AbstractRule;
+import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.simulator.SimulationUtils;
 
 public class RuleBuilder {
 	private final SubstanceBuilder mySubstanceBuilder;

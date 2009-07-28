@@ -1,15 +1,13 @@
 package com.plectix.simulator.util;
 
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 
 public class CComponentComparator {
 	

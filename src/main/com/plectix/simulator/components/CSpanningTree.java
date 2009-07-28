@@ -4,9 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CSite;
-
 /**
  * It's specific class, used for unifying connected components.
  * @author avokhmin

@@ -3,8 +3,8 @@ package com.plectix.simulator.components.complex.contactMap;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractLinkState;
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 
 public class CContactMapAbstractEdge {
 	private CAbstractSite vertexFrom;

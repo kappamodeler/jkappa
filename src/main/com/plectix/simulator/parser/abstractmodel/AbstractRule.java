@@ -1,6 +1,7 @@
 package com.plectix.simulator.parser.abstractmodel;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 import com.plectix.simulator.parser.util.StringUtil;
 

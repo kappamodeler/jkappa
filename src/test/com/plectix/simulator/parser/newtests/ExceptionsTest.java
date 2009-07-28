@@ -1,17 +1,25 @@
 package com.plectix.simulator.parser.newtests;
 
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.apache.commons.cli.ParseException;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.RunAllTests;
-import com.plectix.simulator.parser.*;
+import com.plectix.simulator.parser.KappaFileLine;
+import com.plectix.simulator.parser.KappaFileParagraph;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.abstractmodel.reader.*;
-import com.plectix.simulator.parser.exceptions.*;
+import com.plectix.simulator.parser.abstractmodel.reader.KappaParagraphReader;
+import com.plectix.simulator.parser.abstractmodel.reader.RulesParagraphReader;
+import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.MessageConstructor;

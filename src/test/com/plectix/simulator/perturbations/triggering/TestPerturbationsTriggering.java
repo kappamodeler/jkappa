@@ -1,15 +1,15 @@
 package com.plectix.simulator.perturbations.triggering;
 
-import org.junit.runner.RunWith;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.cli.ParseException;
-
-import static org.junit.Assert.*;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 

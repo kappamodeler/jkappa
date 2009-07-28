@@ -2,33 +2,23 @@ package com.plectix.simulator.XMLmaps;
 
 import static org.junit.Assert.fail;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.cli.ParseException;
-import org.apache.log4j.PropertyConfigurator;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Suite;
 import org.junit.runners.Parameterized.Parameters;
-import org.junit.runners.Suite.SuiteClasses;
-
-import org.junit.*;
 import org.xml.sax.SAXException;
-
-import com.plectix.simulator.Initializator;
-import com.plectix.simulator.SimulationMain;
-
-import com.plectix.simulator.simulator.SimulationArguments;
-import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulationUtils;
-import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.simulator.SimulatorCommandLine;
-import com.plectix.simulator.util.Info.InfoType;
 
 
 @RunWith(value = Parameterized.class)

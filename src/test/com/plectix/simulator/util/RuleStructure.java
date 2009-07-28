@@ -1,6 +1,6 @@
 package com.plectix.simulator.util;
 
-import java.util.*;
+import java.util.List;
 
 public class RuleStructure {
 	private List<String> myLHS;

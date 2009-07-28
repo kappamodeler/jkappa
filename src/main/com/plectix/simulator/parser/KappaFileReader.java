@@ -1,6 +1,7 @@
 package com.plectix.simulator.parser;
 
-import java.io.*;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import com.plectix.simulator.parser.exceptions.DocumentFormatException;
 import com.plectix.simulator.parser.exceptions.ParseErrorException;

@@ -1,15 +1,11 @@
 package com.plectix.simulator.rulecompression;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
-
-import javax.swing.text.AbstractDocument.LeafElement;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
@@ -22,11 +18,8 @@ import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractLinkState;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.localviews.CLocalViewsMain;
-import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
 import com.plectix.simulator.components.complex.subviews.base.AbstractAction;
-import com.plectix.simulator.components.complex.subviews.base.SubViewsRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.parser.abstractmodel.AbstractLinkState;
 
 
 /*

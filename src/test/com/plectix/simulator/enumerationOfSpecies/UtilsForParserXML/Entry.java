@@ -1,15 +1,11 @@
 package com.plectix.simulator.enumerationOfSpecies.UtilsForParserXML;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.naming.spi.DirStateFactory.Result;
 
 
 public class Entry {

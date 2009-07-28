@@ -1,13 +1,28 @@
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
-import com.plectix.simulator.action.*;
+import com.plectix.simulator.action.CAction;
+import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.action.CAddAction;
+import com.plectix.simulator.action.CDefaultAction;
+import com.plectix.simulator.action.CDeleteAction;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.storage.CEvent;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.probability.WeightedItem;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.ThreadLocalData;

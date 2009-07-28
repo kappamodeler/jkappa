@@ -14,7 +14,6 @@ import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.util.Converter;
 import com.plectix.simulator.util.Failer;

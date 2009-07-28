@@ -1,7 +1,7 @@
 package com.plectix.simulator.stories.weakCompression;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Collection;

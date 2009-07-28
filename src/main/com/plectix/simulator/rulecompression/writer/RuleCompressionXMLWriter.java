@@ -1,6 +1,12 @@
 package com.plectix.simulator.rulecompression.writer;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -8,7 +14,8 @@ import javax.xml.stream.XMLStreamWriter;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.complex.subviews.CMainSubViews;
 import com.plectix.simulator.rulecompression.CompressionResults;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.simulator.SimulationData;
 
 public class RuleCompressionXMLWriter {
 	private final Map<Integer, CRule> initialRulesMap = new LinkedHashMap<Integer, CRule>();

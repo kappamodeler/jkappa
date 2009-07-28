@@ -3,7 +3,6 @@ package com.plectix.simulator.localViews;
 import static org.junit.Assert.fail;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,11 +20,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.SAXException;
 
-import com.plectix.simulator.localViews.InitData;
-import com.plectix.simulator.localViews.InitTestLocalViewsCompareXML;
 import com.plectix.simulator.subViews.UtilsForParserXML.Entry;
 import com.plectix.simulator.subViews.UtilsForParserXML.Set;
-import com.plectix.simulator.subViews.UtilsForParserXML.Tag;
 
 @RunWith(value = Parameterized.class)
 public class TestLocalViewsCompareXML {

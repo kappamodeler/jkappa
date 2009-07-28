@@ -1,10 +1,12 @@
 package com.plectix.simulator.components.complex.abstracting;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CLinkRank;
-import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 

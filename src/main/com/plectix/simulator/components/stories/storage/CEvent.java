@@ -6,12 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.stories.enums.EActionOfAEvent;
 import com.plectix.simulator.components.stories.enums.EMarkOfEvent;
 import com.plectix.simulator.components.stories.enums.EState;
 import com.plectix.simulator.components.stories.enums.ETypeOfWire;
-import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CSite;
 
 public class CEvent implements ICEvent {
 	public final static boolean BEFORE_STATE = true;

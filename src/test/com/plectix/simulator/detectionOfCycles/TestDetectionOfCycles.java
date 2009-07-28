@@ -4,24 +4,21 @@ import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.contactMap.CContactMap;
 import com.plectix.simulator.components.complex.detectionOfCycles.Detector;
-import com.plectix.simulator.components.complex.enumerationOfSpecies.GeneratorSpecies;
-import com.plectix.simulator.components.complex.localviews.CLocalViewsMain;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
 import com.plectix.simulator.utilsForTest.FileWrapper;
-import com.plectix.simulator.utilsForTest.ReadAndParserFile;
 
 
 

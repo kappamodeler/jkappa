@@ -1,8 +1,5 @@
 package com.plectix.simulator.components.stories.storage;
 
-import java.util.LinkedHashMap;
-
-import com.plectix.simulator.components.solution.IStorage;
 import com.plectix.simulator.components.stories.enums.ETypeOfWire;
 
 public class WireHashKey {

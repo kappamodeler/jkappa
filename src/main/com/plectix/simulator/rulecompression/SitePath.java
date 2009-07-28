@@ -1,6 +1,8 @@
 package com.plectix.simulator.rulecompression;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CSite;

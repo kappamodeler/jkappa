@@ -1,6 +1,6 @@
 package com.plectix.simulator.parser.builders;
 
-import java.util.*;
+import java.util.List;
 
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;

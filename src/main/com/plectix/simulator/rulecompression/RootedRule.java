@@ -1,11 +1,20 @@
 package com.plectix.simulator.rulecompression;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
-import com.plectix.simulator.action.*;
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.rulecompression.util.ExpChoiceTree;
+import com.plectix.simulator.action.CAction;
+import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.action.CBoundAction;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 
 /*package*/ class RootedRule {

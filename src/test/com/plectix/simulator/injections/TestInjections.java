@@ -1,7 +1,9 @@
 
 package com.plectix.simulator.injections;
 
-import com.plectix.simulator.*;
+import com.plectix.simulator.Initializator;
+import com.plectix.simulator.Test;
+import com.plectix.simulator.TestRunner;
 
 public abstract class TestInjections implements Test {
 	public static Initializator getInitializator() {

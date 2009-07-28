@@ -1,8 +1,8 @@
 package com.plectix.simulator.components.stories.storage.graphs;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;

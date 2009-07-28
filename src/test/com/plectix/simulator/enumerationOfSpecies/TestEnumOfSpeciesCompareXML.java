@@ -2,7 +2,6 @@ package com.plectix.simulator.enumerationOfSpecies;
 
 import static org.junit.Assert.fail;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
 
 import org.junit.Assert;
 import org.junit.Before;

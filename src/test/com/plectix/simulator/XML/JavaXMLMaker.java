@@ -6,14 +6,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import org.apache.log4j.Logger;
-
-import com.plectix.simulator.Initializator;
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.controller.SimulationService;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.DefaultSimulatorFactory;
-import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 
 public final class JavaXMLMaker {

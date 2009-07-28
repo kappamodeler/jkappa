@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 
 /**
  * This class implements observable connected component. In fact, this is connected component

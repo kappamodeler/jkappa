@@ -1,20 +1,29 @@
 package com.plectix.simulator.parser.builders;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.perturbations.CPerturbation;
-import com.plectix.simulator.components.perturbations.CPerturbationType;
 import com.plectix.simulator.components.perturbations.CRulePerturbation;
 import com.plectix.simulator.components.perturbations.RateExpression;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesComponent;
+import com.plectix.simulator.interfaces.IPerturbationExpression;
 import com.plectix.simulator.parser.abstractmodel.AbstractPerturbation;
-import com.plectix.simulator.parser.abstractmodel.perturbations.*;
-import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.*;
-import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.*;
-import com.plectix.simulator.parser.exceptions.*;
-import com.plectix.simulator.parser.util.IdGenerator;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpressionMonome;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.AbstractSpeciesCondition;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.AbstractTimeCondition;
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractOnceModification;
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractRateModification;
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.ModificationType;
+import com.plectix.simulator.parser.exceptions.DocumentFormatException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.simulator.SimulationArguments;
+import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.SimulationUtils;
 
 public class PerturbationsBuilder {
 	private final SubstanceBuilder mySubstanceBuilder;

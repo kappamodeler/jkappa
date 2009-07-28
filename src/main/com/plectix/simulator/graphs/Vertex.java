@@ -1,7 +1,6 @@
 package com.plectix.simulator.graphs;
 
 import java.util.LinkedList;
-import java.util.List;
 
 public class Vertex {
 	protected LinkedList<Edge> edges = null;

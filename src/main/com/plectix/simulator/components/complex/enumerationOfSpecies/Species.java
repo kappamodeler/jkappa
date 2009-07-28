@@ -1,13 +1,9 @@
 package com.plectix.simulator.components.complex.enumerationOfSpecies;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
@@ -17,10 +13,6 @@ import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
-import com.plectix.simulator.components.solution.StraightStorage;
-import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class Species {
 

@@ -1,8 +1,12 @@
 package com.plectix.simulator.rulecompression;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationUtils;

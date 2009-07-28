@@ -1,7 +1,6 @@
 package com.plectix.simulator.components.complex.subviews;
 
 import java.util.LinkedHashSet;
-import java.util.LinkedList;
 
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.graphs.Vertex;

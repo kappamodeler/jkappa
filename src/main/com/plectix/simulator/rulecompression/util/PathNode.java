@@ -1,8 +1,10 @@
 package com.plectix.simulator.rulecompression.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.rulecompression.SitePath;
 
 /*package*/ class PathNode {

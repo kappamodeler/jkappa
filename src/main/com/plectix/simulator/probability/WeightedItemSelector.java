@@ -1,6 +1,7 @@
 package com.plectix.simulator.probability;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * Interface to select a {@link WeightedItem} from a {@link Collection}

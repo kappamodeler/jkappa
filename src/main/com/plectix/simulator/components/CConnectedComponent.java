@@ -1,19 +1,24 @@
 package com.plectix.simulator.components;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.plectix.simulator.components.injections.*;
+import com.plectix.simulator.components.injections.CInjection;
+import com.plectix.simulator.components.injections.CLiftElement;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
-import com.plectix.simulator.probability.*;
-import com.plectix.simulator.probability.skiplist.*;
+import com.plectix.simulator.probability.WeightedItemSelector;
+import com.plectix.simulator.probability.skiplist.SkipListSelector;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.ThreadLocalData;
-
-import com.plectix.simulator.components.CSite;
 
 /**
  * This class implements "connected component" entity.<br><br>

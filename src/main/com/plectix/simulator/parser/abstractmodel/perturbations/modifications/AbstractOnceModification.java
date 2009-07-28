@@ -1,6 +1,6 @@
 package com.plectix.simulator.parser.abstractmodel.perturbations.modifications;
 
-import java.util.*;
+import java.util.List;
 
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.util.StringUtil;

@@ -3,18 +3,13 @@ package com.plectix.simulator.doAction;
 import java.util.List;
 
 import org.apache.commons.cli.ParseException;
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.After;
 import org.junit.Before;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-
-
 import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;

@@ -1,6 +1,6 @@
 package com.plectix.simulator.util;
 
-import java.util.*;
+import java.util.Collection;
 
 public class Failer {
 	private String myCurrentTestFileName;

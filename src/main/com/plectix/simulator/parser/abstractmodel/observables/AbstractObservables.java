@@ -1,6 +1,7 @@
 package com.plectix.simulator.parser.abstractmodel.observables;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.IAbstractComponent;

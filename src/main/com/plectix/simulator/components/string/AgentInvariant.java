@@ -9,8 +9,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.util.PrimeNumbers;
 

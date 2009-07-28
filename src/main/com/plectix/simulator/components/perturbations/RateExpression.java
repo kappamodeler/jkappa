@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IPerturbationExpression;
 
 /**
  * This class implements rate parameters for right handSide in "perturbation expression".

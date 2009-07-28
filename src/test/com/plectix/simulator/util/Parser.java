@@ -1,6 +1,6 @@
 package com.plectix.simulator.util;
 
-import java.io.*;
+import java.io.FileNotFoundException;
 
 /*package*/ abstract class Parser<E> {
 	private EasyFileReader myReader;

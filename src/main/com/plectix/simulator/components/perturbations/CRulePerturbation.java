@@ -6,7 +6,6 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
 import com.plectix.simulator.simulator.SimulationData;
 
 /**

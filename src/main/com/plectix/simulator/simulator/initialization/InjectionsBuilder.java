@@ -2,14 +2,12 @@ package com.plectix.simulator.simulator.initialization;
 
 import java.util.Collection;
 
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.ObservablesConnectedComponent;
 import com.plectix.simulator.components.solution.SuperSubstance;
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.KappaSystem;
 

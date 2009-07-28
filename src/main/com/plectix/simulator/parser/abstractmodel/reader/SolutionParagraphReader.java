@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
-import com.plectix.simulator.parser.abstractmodel.*;
+import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
+import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
+import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.exceptions.BadOptionException;
 import com.plectix.simulator.parser.exceptions.ParseErrorException;
 import com.plectix.simulator.parser.exceptions.ParseErrorMessage;

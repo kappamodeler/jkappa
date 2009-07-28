@@ -6,12 +6,10 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Map;
 
 import com.plectix.simulator.components.stories.CStories;
 import com.plectix.simulator.components.stories.storage.IWireStorage;
 import com.plectix.simulator.components.stories.storage.StoryStorageException;
-import com.plectix.simulator.subViews.UtilsForParserXML.Entry;
 
 
 public class MergeStoriesGraphs {

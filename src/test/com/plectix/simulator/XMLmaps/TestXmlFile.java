@@ -1,20 +1,14 @@
 package com.plectix.simulator.XMLmaps;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-//import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-//import javax.xml.validation.SchemaFactory;
-//import javax.xml.validation.Schema;
 
 import org.junit.Test;
 import org.xml.sax.SAXException;

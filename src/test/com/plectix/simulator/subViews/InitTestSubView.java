@@ -1,16 +1,9 @@
 package com.plectix.simulator.subViews;
 
-import java.util.List;
-
+import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
-import org.apache.commons.cli.ParseException;
-
-import com.plectix.simulator.RunAllTests;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.complex.subviews.CMainSubViews;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
-import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;

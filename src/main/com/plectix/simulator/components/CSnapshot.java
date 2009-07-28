@@ -1,6 +1,8 @@
 package com.plectix.simulator.components;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.SimulationData;

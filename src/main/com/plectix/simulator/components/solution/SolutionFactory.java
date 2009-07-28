@@ -1,6 +1,6 @@
 package com.plectix.simulator.components.solution;
 
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.KappaSystem;
 
 public final class SolutionFactory {

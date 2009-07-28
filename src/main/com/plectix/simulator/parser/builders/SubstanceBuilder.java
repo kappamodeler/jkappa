@@ -1,15 +1,15 @@
 package com.plectix.simulator.parser.builders;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.AbstractSite;
-import com.plectix.simulator.parser.util.IdGenerator;
 import com.plectix.simulator.simulator.KappaSystem;
 
 /*package*/ class SubstanceBuilder {

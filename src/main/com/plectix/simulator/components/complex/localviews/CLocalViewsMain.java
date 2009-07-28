@@ -1,7 +1,6 @@
 package com.plectix.simulator.components.complex.localviews;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;

@@ -1,12 +1,17 @@
 package com.plectix.simulator.components.complex.contactMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.plectix.simulator.action.CActionType;
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CLinkRank;
+import com.plectix.simulator.components.CLinkStatus;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
-import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractLinkState;
+import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 
 class UCorrelationAbstractAgent {
 	private CAbstractAgent fromAgent;

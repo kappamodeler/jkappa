@@ -1,8 +1,8 @@
 package com.plectix.simulator.components;
 
-import java.util.*;
+import java.util.List;
 
-import com.plectix.simulator.components.bologna.*;
+import com.plectix.simulator.components.bologna.Reaction;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.simulator.SimulationData;

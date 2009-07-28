@@ -6,10 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.*;
-
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CObservables;
@@ -18,7 +19,6 @@ import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.contactMap.CContactMap;
 import com.plectix.simulator.components.complex.detectionOfCycles.Detector;
 import com.plectix.simulator.components.complex.enumerationOfSpecies.GeneratorSpecies;
-import com.plectix.simulator.components.complex.enumerationOfSpecies.Species;
 import com.plectix.simulator.components.complex.influenceMap.AInfluenceMap;
 import com.plectix.simulator.components.complex.influenceMap.withFuture.CInfluenceMapWithFuture;
 import com.plectix.simulator.components.complex.localviews.CLocalViewsMain;

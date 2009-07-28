@@ -1,7 +1,6 @@
 package com.plectix.simulator.XMLmaps;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
@@ -10,6 +9,7 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
+
 import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.components.stories.storage.StoryStorageException;
 import com.plectix.simulator.simulator.SimulationData;

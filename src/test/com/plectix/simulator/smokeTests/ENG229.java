@@ -7,7 +7,6 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.cli.ParseException;

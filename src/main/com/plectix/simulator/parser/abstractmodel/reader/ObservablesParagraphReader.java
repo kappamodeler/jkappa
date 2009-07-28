@@ -2,7 +2,7 @@ package com.plectix.simulator.parser.abstractmodel.reader;
 
 import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
-import com.plectix.simulator.parser.abstractmodel.*;
+import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.abstractmodel.observables.AbstractObservables;
 import com.plectix.simulator.parser.exceptions.DocumentFormatException;
 import com.plectix.simulator.parser.exceptions.ParseErrorException;

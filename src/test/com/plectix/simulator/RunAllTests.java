@@ -6,17 +6,17 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.plectix.simulator.XMLmaps.TestContactMap;
 import com.plectix.simulator.XMLmaps.TestInfluenceMap;
-import com.plectix.simulator.smokeTests.SmokeTestMain;
-import com.plectix.simulator.subViews.TestSubViews;
-import com.plectix.simulator.doAction.*;
+import com.plectix.simulator.doAction.RunActionTest;
 import com.plectix.simulator.enumerationOfSpecies.TestEnumOfSpecies;
 import com.plectix.simulator.enumerationOfSpecies.TestEnumOfSpeciesCompareXML;
-import com.plectix.simulator.injections.*;
+import com.plectix.simulator.injections.RunInjectionsTests;
 import com.plectix.simulator.localViews.TestLocalViews;
 import com.plectix.simulator.localViews.TestLocalViewsCompareXML;
-import com.plectix.simulator.updates.*;
-import com.plectix.simulator.parser.newtests.*;
-import com.plectix.simulator.perturbations.*;
+import com.plectix.simulator.parser.newtests.RunParserTests;
+import com.plectix.simulator.perturbations.RunPerturbationsTests;
+import com.plectix.simulator.smokeTests.SmokeTestMain;
+import com.plectix.simulator.subViews.TestSubViews;
+import com.plectix.simulator.updates.RunUpdateTests;
 
 @RunWith(value=Suite.class)
 @SuiteClasses(value = {

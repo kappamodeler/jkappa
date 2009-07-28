@@ -2,7 +2,6 @@ package com.plectix.simulator.components.complex.abstracting;
 
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkRank;
-import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.ThreadLocalData;
 

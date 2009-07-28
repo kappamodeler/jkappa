@@ -1,9 +1,14 @@
 package com.plectix.simulator.rulecompression;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
-import com.plectix.simulator.action.*;
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.action.CAction;
+import com.plectix.simulator.action.CActionType;
+import com.plectix.simulator.action.CBoundAction;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.rulecompression.util.PathFinder;
 import com.plectix.simulator.simulator.ThreadLocalData;
 

@@ -1,13 +1,16 @@
 package com.plectix.simulator.components.complex.contactMap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
-
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
 /**

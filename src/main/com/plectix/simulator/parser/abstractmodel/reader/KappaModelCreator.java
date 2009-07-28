@@ -1,9 +1,14 @@
 package com.plectix.simulator.parser.abstractmodel.reader;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 import com.plectix.simulator.parser.KappaFile;
-import com.plectix.simulator.parser.abstractmodel.*;
+import com.plectix.simulator.parser.abstractmodel.AbstractPerturbation;
+import com.plectix.simulator.parser.abstractmodel.AbstractRule;
+import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
+import com.plectix.simulator.parser.abstractmodel.AbstractStories;
+import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.abstractmodel.observables.AbstractObservables;
 import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
 import com.plectix.simulator.parser.util.AgentFactory;

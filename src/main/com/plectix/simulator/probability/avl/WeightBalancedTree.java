@@ -2,8 +2,11 @@ package com.plectix.simulator.probability.avl;
 
 import java.util.Collection;
 
-import com.plectix.simulator.probability.*;
-import com.plectix.simulator.probability.avl.processors.*;
+import com.plectix.simulator.probability.WeightedItem;
+import com.plectix.simulator.probability.avl.processors.BalanceRecoveryUnit;
+import com.plectix.simulator.probability.avl.processors.ElementAdder;
+import com.plectix.simulator.probability.avl.processors.ElementFinder;
+import com.plectix.simulator.probability.avl.processors.ElementRemover;
 
 public class WeightBalancedTree<E extends WeightedItem> {
 	private WeightedNode<E> myRoot = null;

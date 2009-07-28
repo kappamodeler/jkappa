@@ -2,17 +2,22 @@ package com.plectix.simulator.injections;
 
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
 
-import org.junit.*;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.*;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.util.*;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.util.Failer;
+import com.plectix.simulator.util.QuantityDataParser;
 
 @RunWith(Parameterized.class)
 public class TestInjectionsQuantity extends TestInjections  {

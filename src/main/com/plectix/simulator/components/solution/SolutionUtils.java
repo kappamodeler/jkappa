@@ -1,9 +1,14 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
-import com.plectix.simulator.components.*;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 
 public class SolutionUtils {
 	public static final IConnectedComponent getConnectedComponent(CAgent agent) {

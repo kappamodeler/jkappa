@@ -1,14 +1,15 @@
 package com.plectix.simulator.perturbations;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
 
-import org.junit.*;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.components.CRule;
-
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.QuantityDataParser;
 

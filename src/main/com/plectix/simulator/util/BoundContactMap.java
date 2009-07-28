@@ -1,6 +1,5 @@
 package com.plectix.simulator.util;
 
-import java.util.Collection;
 import java.util.List;
 
 public class BoundContactMap {

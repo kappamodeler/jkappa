@@ -1,5 +1,6 @@
 package com.plectix.simulator.XML;
-import java.io.*;
+import java.io.File;
+import java.io.PrintWriter;
 
 public class SimplxBatFileCreator {
 	private static final double[] myTime = new double[] { 0.01, 1000, 

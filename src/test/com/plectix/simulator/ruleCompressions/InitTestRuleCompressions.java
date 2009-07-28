@@ -6,8 +6,6 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.complex.localviews.CLocalViewsMain;
-import com.plectix.simulator.components.complex.subviews.CMainSubViews;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;

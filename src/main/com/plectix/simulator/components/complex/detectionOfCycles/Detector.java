@@ -1,15 +1,13 @@
 package com.plectix.simulator.components.complex.detectionOfCycles;
 
-import java.util.LinkedHashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
 import com.plectix.simulator.components.CLinkRank;
-import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
-import com.plectix.simulator.components.complex.abstracting.CAbstractLinkState;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.graphs.Edge;

@@ -1,6 +1,8 @@
 package com.plectix.simulator.parser.abstractmodel;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.plectix.simulator.components.solution.SolutionLines;
 

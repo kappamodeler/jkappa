@@ -5,7 +5,10 @@ import java.util.List;
 import com.plectix.simulator.parser.KappaFileParagraph;
 import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.exceptions.*;
+import com.plectix.simulator.parser.exceptions.DocumentFormatException;
+import com.plectix.simulator.parser.exceptions.IncompletesDisabledException;
+import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 

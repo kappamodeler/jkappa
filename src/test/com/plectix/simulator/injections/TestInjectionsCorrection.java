@@ -1,15 +1,21 @@
 package com.plectix.simulator.injections;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import org.junit.*;
+import org.junit.Test;
 
 import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.util.*;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.util.CorrectionsDataParser;
+import com.plectix.simulator.util.Failer;
+import com.plectix.simulator.util.MessageConstructor;
 
 public class TestInjectionsCorrection extends TestInjections {
 	private static final String separator = File.separator;

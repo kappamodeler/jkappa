@@ -1,19 +1,22 @@
 package com.plectix.simulator.updates;
 
-import java.io.File;
-import java.util.*;
+import static org.junit.Assert.assertFalse;
 
+import java.io.File;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
-import org.junit.*;
-
-import static org.junit.Assert.*;
-
 import com.plectix.simulator.RunAllTests;
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.*;
-import com.plectix.simulator.util.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.util.Failer;
+import com.plectix.simulator.util.QuantityDataParser;
 
 public class TestNegativeUpdate extends TestUpdate {
 

@@ -1,6 +1,9 @@
 package com.plectix.simulator.rulecompression.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ExpChoiceTree<E> {
 	private final E value;

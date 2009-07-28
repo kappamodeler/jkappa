@@ -9,9 +9,6 @@ import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.CSite;
@@ -22,7 +19,6 @@ import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.BoundContactMap;
-import com.plectix.simulator.util.Info;
 
 /**
  * Class implements contact map.

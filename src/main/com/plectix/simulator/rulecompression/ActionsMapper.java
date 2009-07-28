@@ -1,6 +1,8 @@
 package com.plectix.simulator.rulecompression;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import com.plectix.simulator.action.CActionType;
 import com.plectix.simulator.components.CAgent;

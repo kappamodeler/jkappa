@@ -1,5 +1,6 @@
 package com.plectix.simulator.action;
 
+import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CInternalState;
 import com.plectix.simulator.components.CLinkStatus;
 import com.plectix.simulator.components.CRule;
@@ -12,9 +13,7 @@ import com.plectix.simulator.components.stories.enums.ETypeOfWire;
 import com.plectix.simulator.components.stories.storage.CEvent;
 import com.plectix.simulator.components.stories.storage.StoryStorageException;
 import com.plectix.simulator.components.stories.storage.WireHashKey;
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.ThreadLocalData;
 

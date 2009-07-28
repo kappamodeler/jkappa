@@ -5,7 +5,10 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 import org.apache.commons.cli.ParseException;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.RunAllTests;
@@ -16,7 +19,7 @@ import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
 import com.plectix.simulator.parser.exceptions.DocumentFormatException;
 import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.FileComparator;
 

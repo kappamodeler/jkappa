@@ -4,21 +4,16 @@ import static org.junit.Assert.fail;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.junit.Before;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CRule;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
-
-import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.Simulator;

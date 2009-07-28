@@ -2,7 +2,7 @@ package com.plectix.simulator.components.solution;
 
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.simulator.KappaSystem;
 
 /*package*/ class CSecondSolution extends CAbstractSuperSolution {
 	private final SuperStorage mySuperStorage;

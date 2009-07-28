@@ -1,7 +1,6 @@
 package com.plectix.simulator.controller;
 
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.cli.ParseException;
 

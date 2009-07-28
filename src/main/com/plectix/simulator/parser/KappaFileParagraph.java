@@ -1,6 +1,8 @@
 package com.plectix.simulator.parser;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class KappaFileParagraph {
 	private Collection<KappaFileLine> myParagraph = new ArrayList<KappaFileLine>();

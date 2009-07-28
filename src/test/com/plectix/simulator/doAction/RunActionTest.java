@@ -15,8 +15,6 @@ import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.OperationMode;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-
-
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.util.CComponentComparator;

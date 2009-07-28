@@ -2,9 +2,9 @@ package com.plectix.simulator.parser;
 
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
-import com.plectix.simulator.parser.builders.*;
-import com.plectix.simulator.parser.exceptions.*;
-import com.plectix.simulator.simulator.*;
+import com.plectix.simulator.parser.builders.KappaSystemBuilder;
+import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class KappaSystemParser {

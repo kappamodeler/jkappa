@@ -1,14 +1,20 @@
 package com.plectix.simulator.components.injections;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CAgentLink;
 import com.plectix.simulator.components.CConnectedComponent;
 import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.solution.SuperSubstance;
-import com.plectix.simulator.interfaces.*;
+import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.probability.WeightedItem;
 
 /**

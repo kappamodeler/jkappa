@@ -14,8 +14,6 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.components.complex.enumerationOfSpecies.GeneratorSpecies;
 import com.plectix.simulator.components.complex.localviews.CLocalViewsMain;
-import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
-import com.plectix.simulator.utilsForTest.FileWrapper;
 	
 
 

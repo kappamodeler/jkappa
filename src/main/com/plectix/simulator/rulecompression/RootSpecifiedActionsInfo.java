@@ -1,6 +1,7 @@
 package com.plectix.simulator.rulecompression;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * This is the set of actions, having the same agent as root

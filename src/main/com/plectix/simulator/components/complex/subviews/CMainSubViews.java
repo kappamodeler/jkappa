@@ -2,9 +2,9 @@ package com.plectix.simulator.components.complex.subviews;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +12,9 @@ import java.util.Queue;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
@@ -28,9 +31,6 @@ import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.simulator.ThreadLocalData;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		IAllSubViewsOfAllAgents {

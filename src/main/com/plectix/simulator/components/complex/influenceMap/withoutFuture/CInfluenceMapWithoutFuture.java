@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-
 import com.plectix.simulator.components.CLinkRank;
 import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CSite;

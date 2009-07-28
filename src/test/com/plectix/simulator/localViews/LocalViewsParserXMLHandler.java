@@ -8,7 +8,6 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import com.plectix.simulator.subViews.UtilsForParserXML.Entry;
 import com.plectix.simulator.subViews.UtilsForParserXML.Set;
-import com.plectix.simulator.subViews.UtilsForParserXML.Tag;
 
 public class LocalViewsParserXMLHandler extends DefaultHandler {
 	

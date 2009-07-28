@@ -1,7 +1,8 @@
 package com.plectix.simulator.util;
 
-import java.io.*;
-import com.plectix.simulator.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class FileDirComparator {
 	private final String myFirstDir;

@@ -1,8 +1,15 @@
 package com.plectix.simulator.rulecompression;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import com.plectix.simulator.components.*;
+import com.plectix.simulator.components.CAgent;
+import com.plectix.simulator.components.CInternalState;
+import com.plectix.simulator.components.CLinkStatus;
+import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.simulator.KappaSystem;
 
 /*package*/ class CommonPartFinder {
