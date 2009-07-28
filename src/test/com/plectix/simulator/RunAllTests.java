@@ -41,9 +41,7 @@ import com.plectix.simulator.updates.RunUpdateTests;
 		TestEnumOfSpeciesCompareXML.class,
 		
 		TestLocalViews.class,
-		TestLocalViewsCompareXML.class,
-		
-		
+		TestLocalViewsCompareXML.class
 		
 	})
 public class RunAllTests {
