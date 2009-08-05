@@ -1,0 +1,9 @@
+'ab comp' a(x),b(x) <-> a(x!1),b(x!1)
+'c phos' b(x),c(x~u) -> b(x),c(x~p)
+'a deg ANY' a() -> 
+
+
+%init: 500 * (a(x),b(x),c(x~u))
+%obs: c(x~p)
+%obs: a()
+%obs: b(x!_)

@@ -1,0 +1,25 @@
+#rules
+aa() -> a(x) 
+'ab_comp' a(x),b(x) <-> a(x!1),b(x!1) @ 1.0,50.0
+'cy_phos' a(x),c(x~p,y~u) -> a(x),c(x~p,y~p) 
+a(x!1),b(x!1),c(x~u) -> a(x!1),b(x!1),c(x~p) 
+
+#############DECLARATIONS#################
+%init: 1000 * (aa(),b(x),c(x~u,y~u))
+%obs: c(y~p)
+%obs: 'cy_phos' 
+%story: 'cy_phos' 
+%obs:   'ab' a(x!1),b(x!1) 
+%obs:   'a'  a(x) no
+%obs:   'b'  b(x) no
+
+#%obs: 'cy_phos'  
+
+##############EXPERIMENTS#################
+
+#%mod: $T > 0.5 do 'a_b':= 0.0
+
+#%mod: ['ab'] > ['b']/3 do 'ab_comp' := 'ab_comp' / 10
+
+
+

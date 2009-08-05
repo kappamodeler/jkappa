@@ -3,7 +3,6 @@ package com.plectix.simulator.components.injections;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,6 +15,7 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.probability.WeightedItem;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
  * Class implements Injection.
@@ -23,8 +23,6 @@ import com.plectix.simulator.probability.WeightedItem;
  */
 @SuppressWarnings("serial")
 public class CInjection implements Serializable, WeightedItem {
-
-	public static final CInjection EMPTY_INJECTION = new CInjection();
 
 	private List<CAgentLink> agentLinkList;
 	private List<CSite> sites = new LinkedList<CSite>();
@@ -35,7 +33,7 @@ public class CInjection implements Serializable, WeightedItem {
 	private SuperSubstance myImageComponent = null;
 	private long myPower = 1;
 	
-	private CInjection() {
+	public CInjection() {
 	}
 
 	public CInjection(CConnectedComponent connectedComponent,
@@ -99,15 +97,15 @@ public class CInjection implements Serializable, WeightedItem {
 	}
 	
 	public final List<CSite> getChangedSites() {
-		return Collections.unmodifiableList(changedSites);
+		return changedSites;
 	}
 
 	public final List<CAgentLink> getAgentLinkList() {
-		return Collections.unmodifiableList(agentLinkList);
+		return agentLinkList;
 	}
 
 	public final Collection<CSite> getSiteList() {
-		return Collections.unmodifiableList(sites);
+		return sites;
 	}
 
 	public final IConnectedComponent getConnectedComponent() {
@@ -124,7 +122,7 @@ public class CInjection implements Serializable, WeightedItem {
 	}
 	
 	public boolean isEmpty() {
-		return this == CInjection.EMPTY_INJECTION;
+		return this == ThreadLocalData.getEmptyInjection();
 	}
 	
 	public CAgent getImageAgent() {

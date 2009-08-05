@@ -12,7 +12,7 @@ import com.plectix.simulator.components.CObservables;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.contactMap.CContactMap;
-import com.plectix.simulator.components.complex.subviews.base.SubViewsRule;
+import com.plectix.simulator.components.complex.subviews.base.AbstractionRule;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
@@ -26,7 +26,7 @@ public abstract class AInfluenceMap {
 	protected Map<Integer, List<InfluenceMapEdge>> inhibitionMap;
 	protected Map<Integer, List<InfluenceMapEdge>> inhibitionMapObs;
 
-	protected Map<Integer, List<SubViewsRule>> obsRules;
+	protected Map<Integer, List<AbstractionRule>> obsRules;
 
 	public AInfluenceMap() {
 		activationMap = new LinkedHashMap<Integer, List<InfluenceMapEdge>>();
@@ -35,7 +35,7 @@ public abstract class AInfluenceMap {
 		inhibitionMapObs = new LinkedHashMap<Integer, List<InfluenceMapEdge>>();
 	}
 
-	public abstract void initInfluenceMap(List<SubViewsRule> rules,
+	public abstract void initInfluenceMap(List<AbstractionRule> rules,
 			CObservables observables, CContactMap contactMap,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent);
 
@@ -169,13 +169,13 @@ public abstract class AInfluenceMap {
 			if (activationMapObs.containsKey(rule.getRuleID()))
 				for (InfluenceMapEdge edge : activationMapObs.get(rule
 						.getRuleID())) {
-					for (SubViewsRule obsRule : obsRules.get(edge.getToRule()))
+					for (AbstractionRule obsRule : obsRules.get(edge.getToRule()))
 						rule.addActivatedObs(obsRule.getObsConnectedComponent());
 				}
 			if (inhibitionMapObs.containsKey(rule.getRuleID()))
 				for (InfluenceMapEdge edge : inhibitionMapObs.get(rule
 						.getRuleID())) {
-					for (SubViewsRule obsRule : obsRules.get(edge.getToRule()))
+					for (AbstractionRule obsRule : obsRules.get(edge.getToRule()))
 						rule.addinhibitedObs(obsRule.getObsConnectedComponent());
 				}
 			

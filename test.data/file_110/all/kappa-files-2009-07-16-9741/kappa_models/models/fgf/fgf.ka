@@ -1,0 +1,38 @@
+FGF(r) , FGFR(l) <-> FGF(r!1) , FGFR(l!1) 
+FGF(r!1) , FGFR(l!1,Y653~u) -> FGF(r!1) , FGFR(l!1,Y653~p) 
+FGF(r!1) , FGFR(l!1,Y654~u) -> FGF(r!1) , FGFR(l!1,Y654~p) 
+FGFR(Y653~p,Y654~p,Y766~u) -> FGFR(Y653~p,Y654~p,Y766~p)
+PLC(d), FGFR(Y766~p) -> PLC(d!1) , FGFR(Y766~p!1)
+'deg_plc_fgfr' PLC(d!1) , FGFR(Y766~p!1) ->  PLC(d)
+FGFR(f) , FRS2(r) -> FGFR(f!1) , FRS2(r!1)
+FGFR(Y653~p,Y654~p,f!1) , FRS2(r!1,Y196~u) -> FGFR(Y653~p,Y654~p,f!1) , FRS2(r!1,Y196~p)
+FGFR(Y653~p,Y654~p,f!1) , FRS2(r!1,Y306~u) -> FGFR(Y653~p,Y654~p,f!1) , FRS2(r!1,Y306~p)
+FGFR(Y653~p,Y654~p,f!1) , FRS2(r!1,Y471~u) -> FGFR(Y653~p,Y654~p,f!1) , FRS2(r!1,Y471~p)
+Shp2(d) , FRS2(Y471~p) -> Shp2(d!1) , FRS2(Y471~p!1)
+Src(d) , FRS2(Y196~p) -> Src(d!1) , FRS2(Y196~p!1)
+Grb2(a) , FRS2(Y306~p) -> Grb2(a!1) , FRS2(Y306~p!1)
+Shp2(d!1) , FRS2(Y471!1,Y196~p) -> Shp2(d!1) , FRS2(Y471!1,Y196~u)
+Shp2(d!1) , FRS2(Y471!1,Y306~p) -> Shp2(d!1) , FRS2(Y471!1,Y306~u)
+Shp2(d!1) , FRS2(Y471~p!1) -> Shp2(d!1) , FRS2(Y471~u!1)
+'deg_src_frs2' Src(d!1) , FRS2(Y196~p!1) -> Src(d) 
+Spry(d) , Src(e) -> Spry(d!1) , Src(e!1)
+Spry(d!1,Y55~u) , Src(e!1) -> Spry(d!1,Y55~p) , Src(e!1)
+Spry(Y55~p) , CBL(d) -> Spry(Y55~p!1) , CBL(d!1)
+Spry(Y55~p,g) , Grb2(a) -> Spry(Y55~p,g!1) , Grb2(a!1)
+CBL(d!0),Spry(Y55~p!0,d!1),Src(e!1,d!2),FRS2(Y196!2,ubi~u)->CBL(d!0),Spry(Y55~p!0,d!1),Src(e!1,d!2),FRS2(Y196!2,ubi~p)
+'deg_frs2' FRS2(ubi~p) -> 
+Shp2(d!0),FRS2(Y471!0,Y196!1),Src(d!1,e!2),Spry(d!2,Y55~p) -> Shp2(d!0),FRS2(Y471!0,Y196!1),Src(d!1,e!2),Spry(d!2,Y55~u)
+Grb2(b) , Sos(d) -> Grb2(b!1) , Sos(d!1)
+
+%init: 10 * (FGF(r),FGFR(l,f,Y653~u,Y654~u,Y766~u),PLC(d~u),FRS2(r,Y196~u,Y306~u,Y471~u,ubi~u),Shp2(d~u),Src(d~u,e~u),\
+	      Spry(d~u,Y55~u,g~u),Grb2(a~u,b~u),Sos(d~u),CBL(d~u))
+
+%obs: Sos(d!0),Grb2(b!0,a!1),FRS2(Y306!1,r!2),FGFR(f!2)
+%obs: Sos(d!0),Grb2(b!0,a!1),Spry(g!1,d!2),Src(e!2,d!3),FRS2(Y196!3,r!4),FGFR(f!4)
+%obs: FRS2()
+%obs: FRS2(ubi~p)
+%obs: 'deg_frs2'
+
+%story: 'deg_plc_fgfr'
+#-------------- 
+

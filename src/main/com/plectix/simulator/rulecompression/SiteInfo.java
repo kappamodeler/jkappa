@@ -13,7 +13,7 @@ import com.plectix.simulator.components.CSite;
 	
 	public SiteInfo(CSite site) {
 		this.siteName = site.getName();
-		this.agentName = site.getAgentLink().getName();
+		this.agentName = site.getParentAgent().getName();
 	}
 	
 	public String getSiteName() {

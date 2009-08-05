@@ -1,0 +1,12 @@
+'kill b' a(x!1),b(x!1) -> a(x!1),c(x!1,y!2),d(y!2)
+a(x),b(x) -> a(x!1),b(x!1)
+b(x!_,y),e(x) -> b(x!_,y!1),e(x!1) @ $INF
+e(x!_,y~u) -> e(x!_,y~p) @ $INF
+'obs' e(x,y~p) -> e(x,y~p)
+
+%init: 5000*(a(x),b(x,y),e(x,y~u))
+%obs: a(x!1),c(x!1,y!2),d(y!2)
+%obs:a(x!1),b(x!1,y!2),e(x!2)
+%obs:'obs'
+%story: 'obs'
+ 

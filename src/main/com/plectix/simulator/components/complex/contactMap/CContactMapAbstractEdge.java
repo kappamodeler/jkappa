@@ -66,13 +66,6 @@ public class CContactMapAbstractEdge {
 	}
 	
 	
-	public void addRules(CContactMapAbstractRule rule) {
-		if (rule != null) {
-			int value = rule.getRule().getRuleID();
-			if (!rules.contains(value))
-				rules.add(value);
-		}
-	}
 	
 	public void addRules(int ruleId){
 		rules.add(ruleId);

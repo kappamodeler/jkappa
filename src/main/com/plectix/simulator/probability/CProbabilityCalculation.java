@@ -6,14 +6,11 @@ import java.util.List;
 import com.plectix.simulator.components.CRule;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.Info.InfoType;
 
 public final class CProbabilityCalculation {
-	private final IRandom random;
-	private double commonActivity;
 	private SimulationData simulationData;
 
 	public CProbabilityCalculation(InfoType outputType, SimulationData simulationData) {
@@ -24,8 +21,6 @@ public final class CProbabilityCalculation {
 		}
 		
 		int seed = simulationData.getSimulationArguments().getSeed();
-		random = ThreadLocalData.getRandom();
-		random.setSeed(seed);
 		simulationData.addInfo(outputType, InfoType.INFO,
 				"--Seeding random number generator with given seed "
 						+ Integer.valueOf(seed).toString());

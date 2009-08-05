@@ -71,8 +71,8 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		if (injections.size() == 2) {
 			for (CSite siteCC1 : injections.get(0).getSiteList())
 				for (CSite siteCC2 : injections.get(1).getSiteList())
-					if (siteCC1.getAgentLink().getId() == siteCC2
-							.getAgentLink().getId())
+					if (siteCC1.getParentAgent().getId() == siteCC2
+							.getParentAgent().getId())
 						return true;
 		}
 		return false;
@@ -117,6 +117,6 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	}
 
 	public static boolean lhsIsEmpty(List<IConnectedComponent> lh) {
-		return (lh.size() == 1) && (lh.contains(CConnectedComponent.EMPTY));
+		return (lh.size() == 1) && (lh.contains(ThreadLocalData.getEmptyConnectedComponent()));
 	}
 }

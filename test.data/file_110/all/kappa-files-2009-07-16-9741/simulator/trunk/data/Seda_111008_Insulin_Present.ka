@@ -1,0 +1,40 @@
+# Rules:
+#######
+# Chapter 'New Chapter 1'
+'IR...Insulin@alpha1_1' Insulin(ir!1),IR(alpha1!1,loc~out,alpha2,NPXY~u,irs1) -> Insulin(ir),IR(alpha1,loc~out,alpha2,NPXY~u,irs1) @ .20
+'IR...Insulin@alpha1_2' Insulin(ir!1),IR(alpha1!1,loc~out,alpha2,NPXY~p,irs1) -> Insulin(ir),IR(alpha1,loc~out,alpha2,NPXY~u,irs1) @ .20
+'IR...Insulin@alpha2_1' Insulin(ir!1),IR(alpha1,loc~out,alpha2!1,NPXY~u,irs1) -> Insulin(ir),IR(alpha1,loc~out,alpha2,NPXY~u,irs1) @ .20
+'IR...Insulin@alpha2_2' Insulin(ir!1),IR(alpha1,loc~out,alpha2!1,NPXY~p,irs1) -> Insulin(ir),IR(alpha1,loc~out,alpha2,NPXY~u,irs1) @ .20
+'IR@NPXY_p1' Insulin(ir!1),IR(NPXY~u,alpha1!1,loc~out,alpha2,irs1) -> Insulin(ir!1),IR(NPXY~p,alpha1!1,loc~out,alpha2,irs1) @ 2500
+'IR@NPXY_p2' Insulin(ir!1),IR(NPXY~u,alpha1,loc~out,alpha2!1,irs1) -> Insulin(ir!1),IR(NPXY~p,alpha1,loc~out,alpha2!1,irs1) @ 2500
+'IR@NPXY_u, twice' IR(NPXY~p,loc~in,alpha1!1,alpha2!2),Insulin(ir!1),Insulin(ir!2) -> IR(NPXY~u,loc~in,alpha1,alpha2),Insulin(ir),Insulin(ir) @ .461
+'IR@NPXY_u1' IR(NPXY~p,loc~in,alpha1!1,alpha2),Insulin(ir!1) -> IR(NPXY~u,loc~in,alpha1,alpha2),Insulin(ir) @ .461
+'IR@NPXY_u2' IR(NPXY~p,loc~in,alpha1,alpha2!1),Insulin(ir!1) -> IR(NPXY~u,loc~in,alpha1,alpha2),Insulin(ir) @ .461
+'IR@loc_out, free' IR(alpha1,alpha2,NPXY~u,loc~in,irs1) <-> IR(alpha1,alpha2,NPXY~u,loc~out,irs1) @ .003,.00033
+'Insulin...IR_twice1' Insulin(ir!1),Insulin(ir!2),IR(alpha2!1,alpha1!2,loc~out,NPXY~p) -> Insulin(ir),Insulin(ir!2),IR(alpha2,alpha1!2,loc~out,NPXY~p) @ 20
+'Insulin...IR_twice2' Insulin(ir!1),Insulin(ir!2),IR(alpha2!1,alpha1!2,loc~out,NPXY~p) -> Insulin(ir!1),Insulin(ir),IR(alpha2!1,alpha1,loc~out,NPXY~p) @ 20
+'Insulin.IR@alpha1' Insulin(ir),IR(alpha1,alpha2,NPXY~u,loc~out,irs1) -> Insulin(ir!1),IR(alpha1!1,alpha2,NPXY~u,loc~out,irs1) @ .000024
+'Insulin.IR@alpha2' Insulin(ir),IR(alpha1,alpha2,NPXY~u,loc~out,irs1) -> Insulin(ir!1),IR(alpha1,alpha2!1,NPXY~u,loc~out,irs1) @ .000024
+'Insulin.IR_twice1' Insulin(ir),Insulin(ir!1),IR(alpha2,alpha1!1,loc~out,NPXY~p) -> Insulin(ir!1),Insulin(ir!2),IR(alpha2!1,alpha1!2,loc~out,NPXY~p) @ .000024
+'Insulin.IR_twice2' Insulin(ir!1),Insulin(ir),IR(alpha2!1,alpha1,loc~out,NPXY~p) -> Insulin(ir!1),Insulin(ir!2),IR(alpha2!1,alpha1!2,loc~out,NPXY~p) @ .000024
+'IR@loc_in, bound' IR(NPXY~p,loc~out,irs1) <-> IR(NPXY~p,loc~in,irs1) @ .0021,.00021
+# 'IRS1@ir_p' IRS1(ir,Y~u),IR(NPXY~p,loc~out,irs1) -> IRS1(ir,Y~p),IR(NPXY~p,loc~out,irs1) @ 1.855 # Inactive rule
+# 'IR.IRS1' IR(NPXY~p,loc~out,irs1),IRS1(ir) <-> IR(NPXY~p,loc~out,irs1!1),IRS1(ir!1) @ 4.16,1.0 # Inactive rule
+# 'IRS1@ir_u1' IR(NPXY~p,loc~out,irs1),IRS1(ir,Y~p) -> IR(NPXY~p,loc~out,irs1),IRS1(ir,Y~u) @ .622 # Inactive rule
+# 'IRS1@ir_u2' IRS1(ir,Y~p),IR(NPXY~u,loc~out,irs1,alpha1,alpha2) -> IRS1(ir,Y~u),IR(NPXY~u,loc~out,irs1,alpha1,alpha2) @ .622 # Inactive rule
+
+
+# Initial Conditions:
+%init: 100000 * (Insulin(ir))
+%init: 90 * (IR(alpha1,alpha2,loc~out,irs1,NPXY~u))
+%init: 10 * (IR(alpha1,alpha2,loc~in,irs1,NPXY~u))
+
+# Simulation:
+%obs: 'x2' IR(alpha1,alpha2,loc~out,irs1,NPXY~u)
+# %obs: 'x4' IR(alpha1!2,alpha2!1,loc~out,irs1,NPXY~p),Insulin(ir!1),Insulin(ir!2)
+# %obs: 'x5_a' IR(alpha1!1,alpha2,loc~out,irs1,NPXY~p),Insulin(ir!1)
+# %obs: 'x5_b' IR(alpha1,alpha2!1,loc~out,irs1,NPXY~p),Insulin(ir!1)
+%obs: 'x4+x5' IR(loc~out,irs1,NPXY~p)
+
+# Stories:
+

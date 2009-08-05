@@ -1,0 +1,16 @@
+'A degradation' A(y) ->  @ 5
+'A protection'  A(y),C(x) <-> A(y!1),C(x!1)
+
+'AB complexation' A(x),B(x) <-> A(x!1),B(x!1)
+
+%init: 1000 * (A(x,y),B(x),C(x))
+
+%story: 'AB complexation'
+
+%obs: 'AB' A(x!_)
+%obs: 'A degradation'
+
+#%obs: 'protected A' A(y!_)
+
+%mod: $T>10.0 do 'A protection':=0
+

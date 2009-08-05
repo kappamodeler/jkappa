@@ -16,7 +16,7 @@ class MarkAgentWithFuture {
 		this.agent = agentNew;
 		if (site != null) {
 			CAbstractSite siteNew = site.clone();
-			siteNew.setAgentLink(agentNew);
+			siteNew.setParentAgent(agentNew);
 			agentNew.addSite(siteNew);
 			siteId = siteNew.getNameId();
 		}

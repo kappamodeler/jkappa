@@ -212,7 +212,7 @@ public class QualitativeCompressor {
 			CSite connectedSite = site.getLinkState().getConnectedSite();
 			if (connectedSite != null) {
 				if (decreaseLinkSite(site)) {
-					stack.add(connectedSite.getAgentLink());
+					stack.add(connectedSite.getParentAgent());
 					removed = true;
 				}
 			}
@@ -224,7 +224,7 @@ public class QualitativeCompressor {
 
 	private boolean decreaseLinkSite(CSite site) {
 		CSite connectedSite = site.getLinkState().getConnectedSite();
-		CAgent agent = connectedSite.getAgentLink();
+		CAgent agent = connectedSite.getParentAgent();
 		CAbstractAgent aAgent = clone(agent);
 		int size = localviews.getCountOfCoherentAgent(aAgent);
 
@@ -239,7 +239,7 @@ public class QualitativeCompressor {
 				linkState.setSemiLink();
 			}
 
-			Integer removedId = site.getAgentLink().getIdInRuleHandside();
+			Integer removedId = site.getParentAgent().getIdInRuleHandside();
 			mapBefore.remove(removedId);
 			mapAfter.remove(removedId);
 			removedList.add(removedId);
@@ -254,10 +254,6 @@ public class QualitativeCompressor {
 			return null;
 		}
 		CAbstractAgent newAgent = new CAbstractAgent(agent);
-		for (CSite s : agent.getSites()) {
-			CAbstractSite newSite = new CAbstractSite(s, newAgent);
-			newAgent.addSite(newSite);
-		}
 		return newAgent;
 	}
 
@@ -306,14 +302,14 @@ public class QualitativeCompressor {
 		CAbstractLinkState oldLinkState = new CAbstractLinkState(aAgent
 				.getSite(site.getNameId()).getLinkState());
 
-		CAgent dualAgent = mapAfter.get(site.getAgentLink()
+		CAgent dualAgent = mapAfter.get(site.getParentAgent()
 				.getIdInRuleHandside());
 		if (oldLinkState.getStatusLink() == CLinkStatus.FREE) {
 			aAgent.getSite(site.getNameId()).getLinkState().setWildLinkState();
 			if (sizeOfProper == localviews.getCountOfCoherentAgent(aAgent)) {
 				site.getLinkState().setWildLinkState();
 				if (tested && site.getInternalState().getNameId() == -1) {
-					site.getAgentLink().removeSite(site.getNameId());
+					site.getParentAgent().removeSite(site.getNameId());
 					if (dualAgent != null) {
 						dualAgent.removeSite(site.getNameId());
 					}
@@ -328,7 +324,7 @@ public class QualitativeCompressor {
 			} else {
 				if (tested && site.getInternalState().getNameId() == -1) {
 					// site.getAgentLink().getSites().remove(site);
-					site.getAgentLink().removeSite(site.getNameId());
+					site.getParentAgent().removeSite(site.getNameId());
 					dualAgent.removeSite(site.getNameId());
 					return true;
 				}
@@ -381,7 +377,7 @@ public class QualitativeCompressor {
 					CSite siteOldLink = lsOld.getConnectedSite();
 					int j = 0;
 					for (; j < instance.size(); j++) {
-						if (instance.get(j) == siteOldLink.getAgentLink())
+						if (instance.get(j) == siteOldLink.getParentAgent())
 							break;
 					}
 					int index = j;

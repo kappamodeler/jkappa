@@ -1,0 +1,22 @@
+%obs:'KKKst' KKK(x~p)
+%obs:'KKPP' KK(x~pp)
+%obs:'KPP' K(x~pp)
+
+E1(),KKK(x~u) -> E1(),KKK(x~p) 
+E2(),KKK(x~p) -> E2(),KKK(x~u) 
+
+KKK(x~p),KK(x~u) -> KKK(x~p),KK(x~p)
+KKK(x~p),KK(x~p) -> KKK(x~p),KK(x~pp)
+
+KKPase(),KK(x~p) -> KKPase(),KK(x~u) 
+KKPase(),KK(x~pp)-> KKPase(),KK(x~p)
+
+KK(x~pp),K(x~u) -> KK(x~pp),K(x~p)
+KK(x~pp),K(x~p) -> KK(x~pp),K(x~pp)
+
+KPase(),K(x~p) -> KPase(),K(x~u)
+KPase(),K(x~pp) -> KPase(),K(x~p)
+
+%init: 5 * (E1(),E2(),KKPase(),KPase()) + 500 * KKK(x~u) + 500 * KK(x~u) + 500 * K(x~u)
+
+

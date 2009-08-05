@@ -1,0 +1,9 @@
+A(l) -> A(l!1),B(r!1)
+A(x~u,l!_) -> A(x~p,l!_)
+B() -> 
+A(l) -> A(l!1),C(r!1,x~u)
+C(r!_,x~u) -> C(r,x~p)
+
+
+%init: A(x~u,l),B(r),C(r,x~u)
+

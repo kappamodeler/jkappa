@@ -1,0 +1,11 @@
+Glu(g),AMPA(g) <-> Glu(g!1),AMPA(g!1)
+Glu(g),NMDA(g) <-> Glu(g!1),NMDA(g!1)
+
+AMPA(g!_),NMDA(g!_,ch~mg) -> AMPA(g!_),NMDA(g!_,ch~u)
+'open_VGCC' NMDA(g!_,ch~u),VGCC(ch~i) -> NMDA(g!_,ch~u),VGCC(ch~a)
+VGCC(ch~a) -> VGCC(ch~i)
+NMDA(ch~u) -> NMDA(ch~mg)
+
+%init: Glu(g),Glu(g),NMDA(g,ch~mg),AMPA(g), VGCC(ch~i)
+%obs: VGCC(ch~a)
+%story: 'open_VGCC'

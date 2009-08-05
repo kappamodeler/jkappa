@@ -24,7 +24,7 @@ import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.influenceMap.AInfluenceMap;
 import com.plectix.simulator.components.complex.influenceMap.withoutFuture.CInfluenceMapWithoutFuture;
 import com.plectix.simulator.components.complex.subviews.base.AbstractClassSubViewBuilder;
-import com.plectix.simulator.components.complex.subviews.base.SubViewsRule;
+import com.plectix.simulator.components.complex.subviews.base.AbstractionRule;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.components.complex.subviews.storage.SubViewsExeption;
 import com.plectix.simulator.components.solution.SuperSubstance;
@@ -35,13 +35,13 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		IAllSubViewsOfAllAgents {
 	private Map<Integer, CAbstractAgent> agentNameIdToAgent;
-	private List<SubViewsRule> abstractRules;
+	private List<AbstractionRule> abstractRules;
 	private LinkedHashSet<Integer> deadRules;
 
 	public CMainSubViews() {
 		super();
 		agentNameIdToAgent = new LinkedHashMap<Integer, CAbstractAgent>();
-		abstractRules = new LinkedList<SubViewsRule>();
+		abstractRules = new LinkedList<AbstractionRule>();
 	}
 
 	public void build(ISolution solution, List<CRule> rules) {
@@ -68,7 +68,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	}
 
 	private void initBoundRulesAndSubViews() {
-		for (SubViewsRule rule : abstractRules)
+		for (AbstractionRule rule : abstractRules)
 			rule.initActionsToSubViews(subViewsMap);
 	}
 
@@ -80,10 +80,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 
 	}
 
-	public List<ISubViews> getAllSubViewsByType(String type) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	public List<ISubViews> getAllSubViewsByTypeId(int type) {
 		return subViewsMap.get(type);
@@ -97,15 +94,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		return agentNameIdToAgent;
 	}
 
-	public List<String> getAllTypesOfAgents() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	public ISubViews getSubViewForRule(String typeOfAgent, CRule rule) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	// ==========================================================================
 	// =====================
@@ -142,13 +131,13 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		for (CAgent a : listIn) {
 			CAbstractAgent modelAgent = agentNameIdToAgent.get(a.getNameId());
 			if (modelAgent == null) {
-				modelAgent = new CAbstractAgent(a);
+				modelAgent = new CAbstractAgent(a.getNameId());
 				agentNameIdToAgent.put(a.getNameId(), modelAgent);
 			}
 
 			for (CSite s : a.getSites()) {
 				CAbstractSite as = new CAbstractSite(s);
-				as.setAgentLink(modelAgent);
+				as.setParentAgent(modelAgent);
 				modelAgent.addModelSite(as);
 			}
 		}
@@ -157,9 +146,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	private void fillAgentMap(Collection<CAgent> agents) {
 
 		for (CAgent agent : agents) {
-			CAbstractAgent abstractAgent = new CAbstractAgent(agent);
-			abstractAgent.addSites(agent, this.agentNameIdToAgent);
-			// addAgentToAgentsMap(abstractAgent);
+			CAbstractAgent abstractAgent = new CAbstractAgent(agent,this.agentNameIdToAgent.get(agent.getNameId()));
 		}
 	}
 
@@ -172,36 +159,20 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 	 */
 	private void constructAbstractRules(List<CRule> rules) {
 		for (CRule rule : rules) {
-			SubViewsRule abstractRule = new SubViewsRule(rule);
+			AbstractionRule abstractRule = new AbstractionRule(rule);
 			abstractRules.add(abstractRule);
 		}
 	}
 
-	private void constructClasses(List<SubViewsRule> abstractRules,
+	private void constructClasses(List<AbstractionRule> abstractRules,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
-		List<SubViewsRule> list = new LinkedList<SubViewsRule>();
-		for (SubViewsRule mr : abstractRules)
+		List<AbstractionRule> list = new LinkedList<AbstractionRule>();
+		for (AbstractionRule mr : abstractRules)
 			list.add(mr);
 		constructClassesSubViews(list, agentNameIdToAgent);
 
 	}
 
-	/**
-	 * This method creates abstract contact map (need uses with create contact
-	 * map by <code>MODEL</code>).
-	 * 
-	 * @throws SubViewsExeption
-	 */
-	// private void constructAbstractContactMap() throws SubViewsExeption {
-	// boolean isEnd = false;
-	// while (!isEnd) {
-	// isEnd = true;
-	// for (SubViewsRule rule : abstractRules) {
-	// if (rule.apply(agentNameIdToAgent, subViewsMap)!=null)
-	// isEnd = false;
-	// }
-	// }
-	// }
 	private void constructAbstractContactMap(AInfluenceMap wInfluence)
 			throws SubViewsExeption {
 		// RuleId
@@ -211,16 +182,15 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		// ruleId -> number in array
 		Map<Integer, Integer> filter = new LinkedHashMap<Integer, Integer>();
 
-		int ij = 0;
 		for (int i = 0; i < abstractRules.size(); i++) {
-			SubViewsRule rule = abstractRules.get(i);
+			AbstractionRule rule = abstractRules.get(i);
 			activeRule.add(rule.getRuleId());
 			includedInQueue.put(rule.getRuleId(), true);
 			filter.put(rule.getRuleId(), i);
 		}
 
 		Integer ruleId;
-		SubViewsRule rule;
+		AbstractionRule rule;
 		WrapperTwoSet activatedRule;
 		LinkedHashSet<Integer> intersection = new LinkedHashSet<Integer>();
 		// int ij=0;
@@ -297,7 +267,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 
 	public void initDeadRules() {
 		deadRules = new LinkedHashSet<Integer>();
-		for (SubViewsRule rule : abstractRules)
+		for (AbstractionRule rule : abstractRules)
 			if (!rule.isApply())
 				deadRules.add(rule.getRuleId());
 	}
@@ -306,7 +276,7 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		return deadRules;
 	}
 
-	public List<SubViewsRule> getRules() {
+	public List<AbstractionRule> getRules() {
 		return abstractRules;
 	}
 
@@ -350,16 +320,4 @@ public class CMainSubViews extends AbstractClassSubViewBuilder implements
 		writer.writeEndElement();
 	}
 
-	public List<CAbstractAgent> getAllCorehentViews(CAbstractAgent agent) {
-
-		//TODO may be optimise for nontesting actions
-		List<CAbstractAgent> answer = new LinkedList<CAbstractAgent>();
-
-		for (ISubViews subviews : getAllSubViewsByTypeId(agent.getNameId())) {
-				answer.addAll(subviews.getAllSubViews(agent));
-		}
-
-		return answer;
-
-	}
 }

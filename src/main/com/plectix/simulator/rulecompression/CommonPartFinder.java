@@ -52,7 +52,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 			CAgent agent = agents.get(pathHead.toString());
 			outcomingSite = infoIterator.next();
 			if (agent == null) {
-				agent = new CAgent(outcomingSite.getAgentLink().getName(), ks.generateNextAgentId());
+				agent = new CAgent(outcomingSite.getParentAgent().getName(), ks.generateNextAgentId());
 				agents.put(pathHead.toString(), agent);
 			}
 			
@@ -113,7 +113,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 	}
 	
 	private CSite getSiteClone(CSite arg) {
-		CSite inSite = new CSite(arg.getName());
+		CSite inSite = new CSite(arg.getNameId());
 		inSite.setInternalState(new CInternalState(arg.getInternalState().getNameId()));
 		return inSite;
 	}

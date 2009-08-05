@@ -5,11 +5,11 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 
-public class CThirdSolution extends CAbstractSuperSolution {
+/*package*/ class CThirdSolution extends CAbstractSuperSolution {
 	private final SuperStorage mySuperStorage;
 	private final StraightStorage myStraightStorage;
 	
-	public CThirdSolution(KappaSystem system) {
+	CThirdSolution(KappaSystem system) {
 		super(system);
 		mySuperStorage = getSuperStorage();
 		myStraightStorage = getStraightStorage();
@@ -24,7 +24,7 @@ public class CThirdSolution extends CAbstractSuperSolution {
 
 	@Override
 	public final RuleApplicationPool prepareRuleApplicationPool() {
-		return new StandardRuleApplicationPool(new StraightStorage());
+		return new StandardRuleApplicationPool();
 	}
 	
 	@Override

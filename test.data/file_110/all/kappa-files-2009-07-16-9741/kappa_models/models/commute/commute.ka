@@ -1,0 +1,8 @@
+E(r),R(l,r) <-> E(r!1),R(l!1,r)
+R(r),R(r) -> R(r!1),R(r!1)
+E(r!1),R(l!1,r!2),R(r!2,l!3),E(r!3) -> E(r!1),R(l!1,r),R(r,l!3),E(r!3)
+R(l,r!2),R(r!2,l!3),E(r!3) -> R(l,r),R(r,l!3),E(r!3)
+R(l,r!2),R(r!2,l) -> R(l,r),R(r,l)
+
+%init: E(r),R(r,l)
+

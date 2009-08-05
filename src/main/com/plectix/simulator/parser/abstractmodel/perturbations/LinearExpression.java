@@ -14,7 +14,7 @@ public class LinearExpression {
 	}
 	
 	public List<LinearExpressionMonome> getPolynome() {
-		return Collections.unmodifiableList(myRightHandSidePolynome);
+		return myRightHandSidePolynome;
 	}
 	
 	//--------------toString----------------

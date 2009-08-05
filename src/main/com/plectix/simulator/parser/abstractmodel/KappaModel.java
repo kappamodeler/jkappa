@@ -34,7 +34,7 @@ public class KappaModel {
 	}
 
 	public Collection<AbstractRule> getRules() {
-		return Collections.unmodifiableCollection(myRules);
+		return myRules;
 	}
 
 	public AbstractSolution getSolution() {

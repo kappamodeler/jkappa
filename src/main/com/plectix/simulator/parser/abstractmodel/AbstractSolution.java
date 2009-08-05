@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.plectix.simulator.components.solution.SolutionLines;
+import com.plectix.simulator.components.solution.SolutionLine;
 
 public class AbstractSolution implements IAbstractComponent {
 	//Long - counter, List - connectedcomponent
 	private List<SolutionLineData> myAgents = new LinkedList<SolutionLineData>();
-	private final List<SolutionLines> mySolutionLines = new ArrayList<SolutionLines>();
+	private final List<SolutionLine> mySolutionLines = new ArrayList<SolutionLine>();
 	
 	public final void addAgents(long quant, List<AbstractAgent> agents) {
 		if (agents == null || agents.isEmpty() || quant <= 0)
@@ -21,7 +21,7 @@ public class AbstractSolution implements IAbstractComponent {
 		return myAgents;
 	}
 
-	public List<SolutionLines> getSolutionLines() {
+	public List<SolutionLine> getSolutionLines() {
 		return mySolutionLines;
 	}
 	
@@ -30,13 +30,13 @@ public class AbstractSolution implements IAbstractComponent {
 		while (line.indexOf("(") == 0) {
 			line = line.substring(1, line.length() - 1);
 		}
-		for (SolutionLines sl : mySolutionLines) {
+		for (SolutionLine sl : mySolutionLines) {
 			if (sl.getLine().equals(line)) {
 				sl.setCount(sl.getCount() + count);
 				return;
 			}
 		}
-		mySolutionLines.add(new SolutionLines(line, count));
+		mySolutionLines.add(new SolutionLine(line, count));
 
 	}
 	

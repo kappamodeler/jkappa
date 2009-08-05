@@ -1,0 +1,13 @@
+a(x),b(x) <-> a(x!1),b(x!1) 
+'intro_a' -> a(x) @ 0.0 
+'deg_a' a(x?) -> @ 0.0 
+
+%obs: 'ab' a(x!1),b(x!1) 
+%obs: 'a' a(x?) 
+%obs: 'intro_a'
+%obs: 'deg_a'
+%init: 10*(a(x),b(x)) 
+
+%mod: $T>5 do 'intro_a':=100*['intro_a'] +15
+%mod: ['a'] < 100.0*['intro_a'] +20*['deg_a']+7  do 'intro_a':= 5*['intro_a'] +7*['deg_a']+20  
+%mod: ['a'] > 100.0*['ab']+15*['a']   do 'deg_a':= 1.0

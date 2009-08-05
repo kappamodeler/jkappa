@@ -1,0 +1,6 @@
+B(x~u) -> B(x~p) 
+B(x~p,y~u) -> B(x~p,y~p)
+B(x~p,z~u) -> B(x~p,z~p)
+
+%init: 100*B(x~u,y~u,z~u)
+

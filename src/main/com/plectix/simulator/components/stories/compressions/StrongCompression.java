@@ -46,14 +46,17 @@ class StrongCompression
 		{
 			improved = false;
 			
+			if (passport.eventCount() < 3)
+				return;
+			
 			IEventIterator eventIterator1 = passport.eventIterator(false);
 			IEventIterator eventIterator2 = passport.eventIterator(true);
 			
-			if (eventIterator1.hasNext())
-				eventIterator1.next();
+			//if (eventIterator1.hasNext())
+			//	eventIterator1.next();
 			
-			if (eventIterator2.hasNext())
-				eventIterator2.next();
+			//if (eventIterator2.hasNext())
+			//	eventIterator2.next();
 			
 			while (eventIterator1.hasNext() && eventIterator2.hasNext())
 			{

@@ -15,6 +15,7 @@ import com.plectix.simulator.localViews.TestLocalViewsCompareXML;
 import com.plectix.simulator.parser.newtests.RunParserTests;
 import com.plectix.simulator.perturbations.RunPerturbationsTests;
 import com.plectix.simulator.smokeTests.SmokeTestMain;
+import com.plectix.simulator.stories.weakCompression.RunTestWeakCompression;
 import com.plectix.simulator.subViews.TestSubViews;
 import com.plectix.simulator.updates.RunUpdateTests;
 
@@ -41,8 +42,11 @@ import com.plectix.simulator.updates.RunUpdateTests;
 		TestEnumOfSpeciesCompareXML.class,
 		
 		TestLocalViews.class,
-		TestLocalViewsCompareXML.class
+		TestLocalViewsCompareXML.class,
 		
+		
+		
+		RunTestWeakCompression.class
 	})
 public class RunAllTests {
 	public static final String FILENAME_EXTENSION = ".test";

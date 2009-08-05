@@ -12,6 +12,7 @@ import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.QuantityDataParser;
 
@@ -73,7 +74,7 @@ public class TestPositiveUpdate extends TestUpdate {
 						(int)cc.getInjectionsWeight());
 			} else {
 				myFailer.assertTrue("LHS injections", (cc.getInjectionsWeight() == 1)
-						&& (cc.getInjectionsList().contains(CInjection.EMPTY_INJECTION)));
+						&& (cc.getInjectionsList().contains(ThreadLocalData.getEmptyInjection())));
 			}
 		}
 	}

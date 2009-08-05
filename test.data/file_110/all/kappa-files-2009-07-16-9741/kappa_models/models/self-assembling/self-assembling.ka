@@ -1,0 +1,35 @@
+#'start_ac' a(y) , c(y) -> a(y!1) , c(y!1)
+#'start_ab' a(x) , b(x) -> a(x!1) , b(x!1) 
+
+
+'init' a(x~u!_,y~u!_,f~u) <-> a(x~0!_,y~0!_,f~1)
+'fc1_ab' a(x~0!1,f~1) , b(x~u!1,y~u) <-> a(x~1!1,f~1) , b(x~1!1,y~0)
+'fc1_ac' a(y~0!1,f~1) , c(y~u!1,x~u) <-> a(y~1!1,f~1) , c(y~1!1,x~0)
+
+###'lc2_bc' b(x~1!?,y~0) , c(y~1!?,x~0) <-> b(x~1!?,y!2~1) , c(y~1!?,x!2~1) 
+'lc2_bc' b(x~1?,y~0) , c(x~0) <-> b(x~1?,y~1!2) , c(x~1!2) 
+
+'resp_ca' c(y~1!0) , a(y~1!0,f~1) <-> c(y~2!0) , a(y~2!0,f~1)
+
+'resp_cb' c(x~1!0) , b(x~1?,y~1!0) <-> c(x~2!0) , b(x~1?,y~2!0)
+
+'resp_ba' b(x~1!0,y~2?) , a(x~1!0,f~1) <-> b(x~2!0,y~2?) , a(x~2!0,f~1)
+
+'ps' a(x~2?,y~2?,f~1) -> a(x~2?,y~2?,f~3)
+
+'pp_ab' a(x~2!0,f~3) , b(x~2!0,y~2?) -> a(x~3!0,f~3) , b(x~3!0,y~2?) 
+'pp_ac' a(y~2!0,f~3) , c(y~2!0) -> a(y~3!0,f~3) , c(y~3!0) 
+'pp_bc' b(x~3?,y~2!0) ,  c(x~2!0) -> b(x~3?,y~3!0) ,  c(x~3!0)
+
+'exit_a' a(x~3?,y~3?,f~3?) -> a(x~u?,y~u?,f~s?)
+'exit_b' b(x~3?,y~3?) -> b(x~u?,y~u?)
+'exit_c' c(x~3?,y~3?) -> c(x~u?,y~u?)
+
+
+%init: 2 * (a(x~u!1,y~u!2,f~u) , b(x~u!1,y~u) , c(x~u,y~u!2))
+
+%obs: a(x!1,y!2,f~s) , b(x!1,y!_) , c(y!2,x!_)  
+%obs: a(x!1,y!2,f~s) , b(x!1,y!3) , c(y!2,x!4) , a(x!5,y!6,f~s) , b(x!5,y!4) , c(y!6,x!3)
+%obs: 'lc2_bc_op'
+%obs: 'resp_cb'
+%story: 'exit_a'

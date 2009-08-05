@@ -29,7 +29,7 @@ public interface SimulatorInterface {
      * @param liveData
      * @return the live data
      */
-    public LiveData getLiveData(LiveData liveData);
+    public LiveData getLiveData();
     
     /**
      * Returns the results data of the simulation.

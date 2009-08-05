@@ -1,0 +1,12 @@
+# Rules:
+#######
+# Chapter 'New Chapter 1'
+'1E...Sp' A1(X~p,e!1),E(s!1) -> A1(X~p,e),E(s) @ 1.0
+'2E.S' E(s),S(e,X~u) -> E(s!1),S(e!1,X~u) @ 1.0,1.0
+'3E.S_op' E(s!1),S(e!1,X~u) -> E(s),S(e,X~u) @ 1.0,1.0
+'4ES->ESp' S(X~u,e!1),E(s!1) -> S(X~p,e!1),E(s!1) @ 1.0
+'5Sp_deg' S(X~p,e) -> @ 1.0
+
+
+# Initial Conditions:
+%init: 1 * (A1(e,X~p),E(s),S(e,X~u))

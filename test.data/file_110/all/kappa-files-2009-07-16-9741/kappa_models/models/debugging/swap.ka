@@ -1,0 +1,12 @@
+A(x),X(x,y~blue) -> A(x!1),X(x!1,y~blue)
+B(x),X(x,y~green) -> B(x!1),X(x!1,y~green)
+C(x),X(x,y~red) -> C(x!1),X(x!1,y~red)
+
+A(x!1),X(x!1),B(x!2),X(x!2) -> A(x!2),X(x!1),B(x!1),X(x!2)
+A(x!1),X(x!1),C(x!2),X(x!2) -> A(x!2),X(x!1),C(x!1),X(x!2)
+'Goal' A(x!1),X(x!1,y~green) -> A(x!1),X(x!1,y~green)
+
+
+%init: A(x),B(x),X(x,y~blue),X(x,y~green),X(x,y~red),C(x)
+%story: 'Goal'
+

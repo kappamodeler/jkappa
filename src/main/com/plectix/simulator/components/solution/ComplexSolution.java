@@ -1,30 +1,36 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 
+/**
+ * This is complex solution class, which means that species can be stored here in two ways:
+ * as components in SuperStorage and as agents in StraightStorage.
+ * <br>Notice that implementations can physically contain all the species in only one storage 
+ * (1 and 4 solution-types).
+ */
 /*package*/ abstract class ComplexSolution extends SolutionAdapter {
-	private final StraightStorage myStraightStorage;
-	private final SuperStorage mySuperStorage;
+	private final StraightStorage myStraightStorage = new StraightStorage();
+	private final SuperStorage mySuperStorage = new SuperStorage(this);
 	
-	public ComplexSolution(KappaSystem system) {
+	ComplexSolution(KappaSystem system) {
 		super(system);
-		myStraightStorage = new StraightStorage();
-		mySuperStorage = new SuperStorage(this);
 	}
 
-	public StraightStorage getStraightStorage() {
+	@Override
+	public final StraightStorage getStraightStorage() {
 		return myStraightStorage;
 	}
 	
-	public SuperStorage getSuperStorage() {
+	@Override
+	public final SuperStorage getSuperStorage() {
 		return mySuperStorage;
 	}
 	
-	public List<IConnectedComponent> split() {
+	@Override
+	public Collection<IConnectedComponent> split() {
 		List<IConnectedComponent> list = new ArrayList<IConnectedComponent>();
 		if (mySuperStorage != null) {
 			list.addAll(mySuperStorage.split());
@@ -35,7 +41,8 @@ import com.plectix.simulator.simulator.KappaSystem;
 		return list;
 	}
 	
-	public void clear() {
+	@Override
+	public final void clear() {
 		myStraightStorage.clear();
 		mySuperStorage.clear();
 	}

@@ -1,17 +1,9 @@
 package com.plectix.simulator.action;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CLinkRank;
-import com.plectix.simulator.components.CLinkStatus;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.*;
 import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.components.solution.RuleApplicationPool;
 import com.plectix.simulator.components.stories.enums.EActionOfAEvent;
@@ -24,7 +16,6 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 
 /**
  * This class implements "atomic action".
- * @author avokhmin
  * @see CActionType
  */
 @SuppressWarnings("serial")
@@ -39,7 +30,7 @@ public abstract class CAction implements Serializable {
 	private CSite siteFrom = null;
 
 	/**
-	 * Constructor. Creates atomic action, transforming choosen agent from left handside
+	 * Constructor. Creates atomic action, transforming chosen agent from left handside
 	 * to the other one from right handside of the fixed rule
 	 * 
 	 * @param rule fixed rule
@@ -87,7 +78,7 @@ public abstract class CAction implements Serializable {
 		return -1;
 	}
 
-	protected void addToEventContainer(CEvent eventContainer,
+	protected final void addToEventContainer(CEvent eventContainer,
 			CAgent agentFromInSolution, EActionOfAEvent type) {
 		if (eventContainer == null)
 			return;
@@ -127,13 +118,6 @@ public abstract class CAction implements Serializable {
 	 * @return collection of new actions
 	 */
 	public final Collection<CAction> createAtomicActions() {
-		// TODO it is very strange place. is there any case, where
-		// fromAgent.getSites() == null ???
-		if (fromAgent.getSites() == null) {
-			myType = CActionType.NONE;
-			return null;
-		}
-
 		Set<CAction> list = new LinkedHashSet<CAction>();
 
 		for (CSite fromSite : fromAgent.getSites()) {
@@ -142,20 +126,13 @@ public abstract class CAction implements Serializable {
 					.getInternalState().getNameId()) {
 				list.add(new CModifyAction(myRule, fromSite, toSite,
 						leftConnectedComponent, rightConnectedComponent));
-				// if (!isChangedSiteContains(toSite))
-				// myRule.addChangedSite(toSite);
 				myRule.addInhibitedChangedSite(fromSite, true, false);
 			}
 
-			// if ((fromSite.getLinkState().getSite() == null)
-			// && (toSite.getLinkState().getSite() == null))
-			// continue;
 			if ((fromSite.getLinkState().getStatusLink() == CLinkStatus.FREE)
 					&& (toSite.getLinkState().getStatusLink() == CLinkStatus.FREE))
 				continue;
 
-			// if ((fromSite.getLinkState().getSite() != null)
-			// && (toSite.getLinkState().getSite() == null)) {
 			if ((fromSite.getLinkState().getStatusLink() != CLinkStatus.FREE)
 					&& (toSite.getLinkState().getStatusLink() == CLinkStatus.FREE)) {
 				list.add(new CBreakAction(myRule, fromSite, toSite,
@@ -165,8 +142,6 @@ public abstract class CAction implements Serializable {
 				continue;
 			}
 
-			// if ((fromSite.getLinkState().getSite() == null)
-			// && (toSite.getLinkState().getSite() != null)) {
 			if ((fromSite.getLinkState().getStatusLink() == CLinkStatus.FREE)
 					&& (toSite.getLinkState().getStatusLink() == CLinkStatus.BOUND)) {
 				list.add(new CBoundAction(myRule, toSite, toSite.getLinkState()
@@ -177,23 +152,23 @@ public abstract class CAction implements Serializable {
 				continue;
 			}
 
-			CSite lConnectSite = (CSite) fromSite.getLinkState().getConnectedSite();
-			CSite rConnectSite = (CSite) toSite.getLinkState().getConnectedSite();
+			CSite lConnectSite = fromSite.getLinkState().getConnectedSite();
+			CSite rConnectSite = toSite.getLinkState().getConnectedSite();
 			if (lConnectSite == null || rConnectSite == null)
 				continue;
-			if ((lConnectSite.getAgentLink().getIdInRuleHandside() == rConnectSite
-					.getAgentLink().getIdInRuleHandside())
+			if ((lConnectSite.getParentAgent().getIdInRuleHandside() == rConnectSite
+					.getParentAgent().getIdInRuleHandside())
 					&& (lConnectSite.equalz(rConnectSite)))
 				continue;
 			list.add(new CBreakAction(myRule, fromSite, toSite,
 					leftConnectedComponent, rightConnectedComponent));
-			list.add(new CBoundAction(myRule, toSite, (CSite) toSite
+			list.add(new CBoundAction(myRule, toSite, toSite
 					.getLinkState().getConnectedSite(), leftConnectedComponent,
 					rightConnectedComponent));
 			// myRule.addChangedSite(toSite);
 			myRule.addInhibitedChangedSite(fromSite, false, true);
 		}
-		return Collections.unmodifiableSet(list);
+		return list;
 	}
 
 //=======================GETTERS AND SETTERS========================

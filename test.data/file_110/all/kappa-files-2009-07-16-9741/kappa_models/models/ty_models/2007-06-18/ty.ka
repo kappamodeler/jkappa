@@ -1,0 +1,513 @@
+%init: Cell() , Dig1(Ste12_site~u,MAPK_site~u,PO4_site~none) , Dig2(Ste12_site~u,MAPK_site~u,PO4_site~none) , Far1(MAPK_site~u,S87~none,T306~none) , Fus3(target_site~u,T180~none,Y182~none) , Gpa1(Ste2_site~u,Sst2_site~u,Ste4_site~u,nucleotide~GDP) , Kss1(target_site~u,T183~none,Y185~none) , Msg5(MAPK_site~u) , Pheromone(Ste2_site~u) , Ptp(MAPK_site~u) , Sst2(Ste2_site~u,MAPK_site~u,S539~none) , Ste11(Ste5_site~u,MAPK_site~u,S302_S306_T307~none,Feedback_PO4~none) , Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Ste2(Pheromone_site~u,Gpa1_site~u,Sst2_site~u,Yck_site~u,S338_S339~none) , Ste20(Ste4_site~u,Ste11_site~u) , Ste4(Gpa1_site~u,Ste5_site~u,Ste20_site~u) , Ste5(Ste5_site~u,Ste4_site~u,Ste11_site~u,Ste7_site~u,MAPK_site~u) , Ste50(Ste11_site~u) , Ste7(Ste5_site~u,MAPK_site~u,S359_T363~none) , Yck(Ste2_site~u)
+
+#Dig1/Dig2/Ste12_phosphorylation
+
+Dig1(MAPK_site~u,PO4_site~none) , Fus3(target_site~u,T180~PO4,Y182~none) <-> Dig1(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~PO4,Y182~none) 
+
+Dig1(MAPK_site~u,PO4_site~none) , Fus3(target_site~u,T180~none,Y182~PO4) <-> Dig1(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~none,Y182~PO4) 
+
+Dig1(MAPK_site~u,PO4_site~none) , Fus3(target_site~u,T180~PO4,Y182~PO4) <-> Dig1(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~PO4,Y182~PO4) 
+
+Dig1(MAPK_site~u,PO4_site~none) , Kss1(target_site~u,T183~PO4,Y185~none) <-> Dig1(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~PO4,Y185~none) 
+
+Dig1(MAPK_site~u,PO4_site~none) , Kss1(target_site~u,T183~none,Y185~PO4) <-> Dig1(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~none,Y185~PO4) 
+
+Dig1(MAPK_site~u,PO4_site~none) , Kss1(target_site~u,T183~PO4,Y185~PO4) <-> Dig1(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~PO4,Y185~PO4) 
+
+Dig1(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~PO4,Y182~none) -> Dig1(MAPK_site~u,PO4_site~PO4) , Fus3(target_site~u,T180~PO4,Y182~none)
+
+Dig1(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~none,Y182~PO4) -> Dig1(MAPK_site~u,PO4_site~PO4) , Fus3(target_site~u,T180~none,Y182~PO4) 
+
+Dig1(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~PO4,Y182~PO4) -> Dig1(MAPK_site~u,PO4_site~PO4) , Fus3(target_site~u,T180~PO4,Y182~PO4) 
+
+Dig1(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~PO4,Y185~none) -> Dig1(MAPK_site~u,PO4_site~PO4) , Kss1(target_site~u,T183~PO4,Y185~none) 
+
+Dig1(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~none,Y185~PO4) -> Dig1(MAPK_site~u,PO4_site~PO4) , Kss1(target_site~u,T183~none,Y185~PO4) 
+
+Dig1(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~PO4,Y185~PO4) -> Dig1(MAPK_site~u,PO4_site~PO4) , Kss1(target_site~u,T183~PO4,Y185~PO4) 
+
+Dig2(MAPK_site~u,PO4_site~none) , Fus3(target_site~u,T180~PO4,Y182~none) <-> Dig2(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~PO4,Y182~none) 	
+
+Dig2(MAPK_site~u,PO4_site~none) , Fus3(target_site~u,T180~none,Y182~PO4) <-> Dig2(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~none,Y182~PO4) 
+
+Dig2(MAPK_site~u,PO4_site~none) , Fus3(target_site~u,T180~PO4,Y182~PO4) <-> Dig2(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~PO4,Y182~PO4) 
+
+Dig2(MAPK_site~u,PO4_site~none) , Kss1(target_site~u,T183~PO4,Y185~none) <-> Dig2(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~PO4,Y185~none) 
+
+
+Dig2(MAPK_site~u,PO4_site~none) , Kss1(target_site~u,T183~none,Y185~PO4) <-> Dig2(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~none,Y185~PO4) 
+
+Dig2(MAPK_site~u,PO4_site~none) , Kss1(target_site~u,T183~PO4,Y185~PO4) <-> Dig2(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~PO4,Y185~PO4) 
+
+Dig2(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~PO4,Y182~none) -> Dig2(MAPK_site~u,PO4_site~PO4) , Fus3(target_site~u,T180~PO4,Y182~none) 
+
+Dig2(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~none,Y182~PO4) -> Dig2(MAPK_site~u,PO4_site~PO4) , Fus3(target_site~u,T180~none,Y182~PO4) 
+
+Dig2(MAPK_site~u!1,PO4_site~none) , Fus3(target_site~u!1,T180~PO4,Y182~PO4) -> Dig2(MAPK_site~u,PO4_site~PO4) , Fus3(target_site~u,T180~PO4,Y182~PO4) 
+
+Dig2(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~PO4,Y185~none) -> Dig2(MAPK_site~u,PO4_site~PO4) , Kss1(target_site~u,T183~PO4,Y185~none) 
+
+Dig2(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~none,Y185~PO4) -> Dig2(MAPK_site~u,PO4_site~PO4) , Kss1(target_site~u,T183~none,Y185~PO4)
+
+Dig2(MAPK_site~u!1,PO4_site~none) , Kss1(target_site~u!1,T183~PO4,Y185~PO4) -> Dig2(MAPK_site~u,PO4_site~PO4) , Kss1(target_site~u,T183~PO4,Y185~PO4)
+
+#Dig1/Dig2/Ste12/Tec1_interactions
+
+Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Dig1(Ste12_site~u,PO4_site~none) <-> Ste12(Dig1_site~u!1,Dig2_site~u,MAPK_site~u) , Dig1(Ste12_site~u!1,PO4_site~none) 
+
+Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Dig1(Ste12_site~u,PO4_site~PO4) <-> Ste12(Dig1_site~u!1,Dig2_site~u,MAPK_site~u) , Dig1(Ste12_site~u!1,PO4_site~PO4) 
+
+
+Ste12(Dig1_site~u,Dig2_site~u!_,MAPK_site~u) , Dig1(Ste12_site~u,PO4_site~none) <-> Ste12(Dig1_site~u!1,Dig2_site~u!_,MAPK_site~u) , Dig1(Ste12_site~u!1,PO4_site~none) 
+
+Ste12(Dig1_site~u,Dig2_site~u!_,MAPK_site~u) , Dig1(Ste12_site~u,PO4_site~PO4) <-> Ste12(Dig1_site~u!1,Dig2_site~u!_,MAPK_site~u) , Dig1(Ste12_site~u!1,PO4_site~PO4) 
+
+Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u!2) , Kss1(target_site~u!2) , Dig1(Ste12_site~u,PO4_site~none) <-> Ste12(Dig1_site~u!1,Dig2_site~u,MAPK_site~u!2) , Kss1(target_site~u!2) , Dig1(Ste12_site~u!1,PO4_site~none) 	
+
+Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u!2) , Kss1(target_site~u!2) , Dig1(Ste12_site~u,PO4_site~PO4) <-> Ste12(Dig1_site~u!1,Dig2_site~u,MAPK_site~u!2) , Kss1(target_site~u!2) , Dig1(Ste12_site~u!1,PO4_site~PO4) 
+
+Ste12(Dig1_site~u,Dig2_site~u!_,MAPK_site~u!2) , Kss1(target_site~u!2) , Dig1(Ste12_site~u,PO4_site~none) <-> Ste12(Dig1_site~u!1,Dig2_site~u!_,MAPK_site~u!2) , Kss1(target_site~u!2) , Dig1(Ste12_site~u!1,PO4_site~none) 
+
+Ste12(Dig1_site~u,Dig2_site~u!_,MAPK_site~u!2) , Kss1(target_site~u!2) , Dig1(Ste12_site~u,PO4_site~PO4) <-> Ste12(Dig1_site~u!1,Dig2_site~u!_,MAPK_site~u!2) , Kss1(target_site~u!2) , Dig1(Ste12_site~u!1,PO4_site~PO4) 
+
+Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u!2) , Fus3(target_site~u!2) , Dig1(Ste12_site~u,PO4_site~none) <-> Ste12(Dig1_site~u!1,Dig2_site~u,MAPK_site~u!2) , Fus3(target_site~u!2) , Dig1(Ste12_site~u!1,PO4_site~none) 
+
+Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u!2) , Fus3(target_site~u!2) , Dig1(Ste12_site~u,PO4_site~PO4) <-> Ste12(Dig1_site~u!1,Dig2_site~u,MAPK_site~u!2) , Fus3(target_site~u!2) , Dig1(Ste12_site~u!1,PO4_site~PO4) 
+
+Ste12(Dig1_site~u,Dig2_site~u!_,MAPK_site~u!2) , Fus3(target_site~u!2) , Dig1(Ste12_site~u,PO4_site~none) <-> Ste12(Dig1_site~u!1,Dig2_site~u!_,MAPK_site~u!2) , Fus3(target_site~u!2) , Dig1(Ste12_site~u!1,PO4_site~none) 
+
+Ste12(Dig1_site~u,Dig2_site~u!_,MAPK_site~u!2) , Fus3(target_site~u!2) , Dig1(Ste12_site~u,PO4_site~PO4) <-> Ste12(Dig1_site~u!1,Dig2_site~u!_,MAPK_site~u!2) , Fus3(target_site~u!2) , Dig1(Ste12_site~u!1,PO4_site~PO4) 
+
+Ste12(Dig1_site~u,Dig2_site~u) , Dig2(Ste12_site~u,PO4_site~none) <-> Ste12(Dig1_site~u,Dig2_site~u!1) , Dig2(Ste12_site~u!1,PO4_site~none) 
+
+Ste12(Dig1_site~u,Dig2_site~u) , Dig2(Ste12_site~u,PO4_site~PO4) <-> Ste12(Dig1_site~u,Dig2_site~u!1) , Dig2(Ste12_site~u!1,PO4_site~PO4) 
+
+Ste12(Dig1_site~u!_,Dig2_site~u) , Dig2(Ste12_site~u,PO4_site~none) <-> Ste12(Dig1_site~u!_,Dig2_site~u!1) , Dig2(Ste12_site~u!1,PO4_site~none) 
+
+Ste12(Dig1_site~u!_,Dig2_site~u) , Dig2(Ste12_site~u,PO4_site~PO4) <-> Ste12(Dig1_site~u!_,Dig2_site~u!1) , Dig2(Ste12_site~u!1,PO4_site~PO4) 
+
+Ste12(Dig1_site~u,MAPK_site~u) , Kss1(target_site~u,T183~none,Y185~none) <-> Ste12(Dig1_site~u,MAPK_site~u!1) , Kss1(target_site~u!1,T183~none,Y185~none) 
+
+Ste12(Dig1_site~u,MAPK_site~u) , Kss1(target_site~u,T183~PO4,Y185~none) <-> Ste12(Dig1_site~u,MAPK_site~u!1) , Kss1(target_site~u!1,T183~PO4,Y185~none) 
+
+Ste12(Dig1_site~u,MAPK_site~u) , Kss1(target_site~u,T183~none,Y185~PO4) <-> Ste12(Dig1_site~u,MAPK_site~u!1) , Kss1(target_site~u!1,T183~none,Y185~PO4) 	
+
+Ste12(Dig1_site~u,MAPK_site~u) , Kss1(target_site~u,T183~PO4,Y185~PO4) <-> Ste12(Dig1_site~u,MAPK_site~u!1) , Kss1(target_site~u!1,T183~PO4,Y185~PO4) 
+
+Ste12(Dig1_site~u!_,MAPK_site~u) , Kss1(target_site~u,T183~none,Y185~none) <-> Ste12(Dig1_site~u!_,MAPK_site~u!1) , Kss1(target_site~u!1,T183~none,Y185~none) 
+
+Ste12(Dig1_site~u!_,MAPK_site~u) , Kss1(target_site~u,T183~PO4,Y185~none) <-> Ste12(Dig1_site~u!_,MAPK_site~u!1) , Kss1(target_site~u!1,T183~PO4,Y185~none) 
+
+Ste12(Dig1_site~u!_,MAPK_site~u) , Kss1(target_site~u,T183~none,Y185~PO4) <-> Ste12(Dig1_site~u!_,MAPK_site~u!1) , Kss1(target_site~u!1,T183~none,Y185~PO4) 
+
+Ste12(Dig1_site~u!_,MAPK_site~u) , Kss1(target_site~u,T183~PO4,Y185~PO4) <-> Ste12(Dig1_site~u!_,MAPK_site~u!1) , Kss1(target_site~u!1,T183~PO4,Y185~PO4) 
+
+Ste12(Dig1_site~u,MAPK_site~u) , Fus3(target_site~u,T180~none,Y182~none) <-> Ste12(Dig1_site~u,MAPK_site~u!1) , Fus3(target_site~u!1,T180~none,Y182~none) 
+
+Ste12(Dig1_site~u,MAPK_site~u) , Fus3(target_site~u,T180~PO4,Y182~none) <-> Ste12(Dig1_site~u,MAPK_site~u!1) , Fus3(target_site~u!1,T180~PO4,Y182~none) 
+
+Ste12(Dig1_site~u,MAPK_site~u) , Fus3(target_site~u,T180~none,Y182~PO4) <-> Ste12(Dig1_site~u,MAPK_site~u!1) , Fus3(target_site~u!1,T180~none,Y182~PO4) 
+
+Ste12(Dig1_site~u,MAPK_site~u) , Fus3(target_site~u,T180~PO4,Y182~PO4) <-> Ste12(Dig1_site~u,MAPK_site~u!1) , Fus3(target_site~u!1,T180~PO4,Y182~PO4) 
+
+Ste12(Dig1_site~u!_,MAPK_site~u) , Fus3(target_site~u,T180~none,Y182~none) <-> Ste12(Dig1_site~u!_,MAPK_site~u!1) , Fus3(target_site~u!1,T180~none,Y182~none) 
+
+Ste12(Dig1_site~u!_,MAPK_site~u) , Fus3(target_site~u,T180~PO4,Y182~none) <-> Ste12(Dig1_site~u!_,MAPK_site~u!1) , Fus3(target_site~u!1,T180~PO4,Y182~none) 
+
+Ste12(Dig1_site~u!_,MAPK_site~u) , Fus3(target_site~u,T180~none,Y182~PO4) <-> Ste12(Dig1_site~u!_,MAPK_site~u!1) , Fus3(target_site~u!1,T180~none,Y182~PO4) 
+
+Ste12(Dig1_site~u!_,MAPK_site~u) , Fus3(target_site~u,T180~PO4,Y182~PO4) <-> Ste12(Dig1_site~u!_,MAPK_site~u!1) , Fus3(target_site~u!1,T180~PO4,Y182~PO4) 
+
+
+#Far1/MAPK_interactions
+
+Far1(MAPK_site~u,T306~none) , Fus3(target_site~u,T180~PO4,Y182~none) <-> Far1(MAPK_site~u!1,T306~none) , Fus3(target_site~u!1,T180~PO4,Y182~none) 
+
+Far1(MAPK_site~u,T306~none) , Fus3(target_site~u,T180~none,Y182~PO4) <-> Far1(MAPK_site~u!1,T306~none) , Fus3(target_site~u!1,T180~none,Y182~PO4) 
+
+Far1(MAPK_site~u,T306~none) , Fus3(target_site~u,T180~PO4,Y182~PO4) <-> Far1(MAPK_site~u!1,T306~none) , Fus3(target_site~u!1,T180~PO4,Y182~PO4) 
+Far1(MAPK_site~u!1,T306~none) , Fus3(target_site~u!1,T180~PO4,Y182~none) -> Far1(MAPK_site~u,T306~PO4) , Fus3(target_site~u,T180~PO4,Y182~none) 
+
+Far1(MAPK_site~u!1,T306~none) , Fus3(target_site~u!1,T180~none,Y182~PO4) -> Far1(MAPK_site~u,T306~PO4) , Fus3(target_site~u,T180~none,Y182~PO4) 
+
+Far1(MAPK_site~u!1,T306~none) , Fus3(target_site~u!1,T180~PO4,Y182~PO4) -> Far1(MAPK_site~u,T306~PO4) , Fus3(target_site~u,T180~PO4,Y182~PO4) 
+
+Far1(MAPK_site~u,T306~none) , Kss1(target_site~u,T183~PO4,Y185~none) <-> Far1(MAPK_site~u!1,T306~none) , Kss1(target_site~u!1,T183~PO4,Y185~none) 
+
+Far1(MAPK_site~u,T306~none) , Kss1(target_site~u,T183~none,Y185~PO4) <-> Far1(MAPK_site~u!1,T306~none) , Kss1(target_site~u!1,T183~none,Y185~PO4) 
+
+Far1(MAPK_site~u,T306~none) , Kss1(target_site~u,T183~PO4,Y185~PO4) <-> Far1(MAPK_site~u!1,T306~none) , Kss1(target_site~u!1,T183~PO4,Y185~PO4) 
+
+Far1(MAPK_site~u!1,T306~none) , Kss1(target_site~u!1,T183~PO4,Y185~none) -> Far1(MAPK_site~u,T306~PO4) , Kss1(target_site~u,T183~PO4,Y185~none) 
+
+Far1(MAPK_site~u!1,T306~none) , Kss1(target_site~u!1,T183~none,Y185~PO4) -> Far1(MAPK_site~u,T306~PO4) , Kss1(target_site~u,T183~none,Y185~PO4) 
+
+Far1(MAPK_site~u!1,T306~none) , Kss1(target_site~u!1,T183~PO4,Y185~PO4) -> Far1(MAPK_site~u,T306~PO4) , Kss1(target_site~u,T183~PO4,Y185~PO4) 
+
+
+#G_protein_nucleotide_hydrolysis/exchange
+
+Gpa1(Ste2_site~u,Ste4_site~u,nucleotide~GDP) -> Gpa1(Ste2_site~u,Ste4_site~u,nucleotide~GTP) 
+
+Ste2(Pheromone_site~u,Gpa1_site~u!2) , Gpa1(Ste2_site~u!2,Ste4_site~u,nucleotide~GDP) -> Ste2(Pheromone_site~u,Gpa1_site~u!2) , Gpa1(Ste2_site~u!2,Ste4_site~u,nucleotide~GTP) 
+
+Ste2(Pheromone_site~u!_,Gpa1_site~u!2) , Gpa1(Ste2_site~u!2,Ste4_site~u,nucleotide~GDP) -> Ste2(Pheromone_site~u!_,Gpa1_site~u!2) , Gpa1(Ste2_site~u!2,Ste4_site~u,nucleotide~GTP) 
+
+Gpa1(Ste2_site~u,Ste4_site~u!2,nucleotide~GDP) , Ste4(Gpa1_site~u!2) -> Gpa1(Ste2_site~u,Ste4_site~u!2,nucleotide~GTP) , Ste4(Gpa1_site~u!2) 
+Ste2(Pheromone_site~u,Gpa1_site~u!2) , Gpa1(Ste2_site~u!2,Ste4_site~u!_,nucleotide~GDP) -> Ste2(Pheromone_site~u,Gpa1_site~u!2) , Gpa1(Ste2_site~u!2,Ste4_site~u!_,nucleotide~GTP) 
+
+Ste2(Pheromone_site~u!_,Gpa1_site~u!2) , Gpa1(Ste2_site~u!2,Ste4_site~u!_,nucleotide~GDP) -> Ste2(Pheromone_site~u!_,Gpa1_site~u!2) , Gpa1(Ste2_site~u!2,Ste4_site~u!_,nucleotide~GTP) 
+Gpa1(Ste2_site~u,nucleotide~GTP) -> Gpa1(Ste2_site~u,nucleotide~GDP) 
+Ste2(Gpa1_site~u!2,Sst2_site~u) , Gpa1(Ste2_site~u!2,nucleotide~GTP) -> Ste2(Gpa1_site~u!2,Sst2_site~u) , Gpa1(Ste2_site~u!2,nucleotide~GDP) 
+Ste2(Gpa1_site~u!2,Sst2_site~u!_,) , Gpa1(Ste2_site~u!2,nucleotide~GTP) -> Ste2(Gpa1_site~u!2,Sst2_site~u!_,) , Gpa1(Ste2_site~u!2,nucleotide~GDP) 
+
+
+#Gpa1_synthesis/degradation
+
+Gpa1() , Cell() -> Cell() 
+
+Cell() -> Cell() , Gpa1(Ste2_site~u,Sst2_site~u,Ste4_site~u,nucleotide~GTP) 
+
+
+
+#MAPK_phosphorylation_cascade
+
+Ste20(Ste4_site~u!2) , Ste4(Ste5_site~u!3,Ste20_site~u!2) , Ste5(Ste4_site~u!3,Ste11_site~u!4) , Ste11(Ste5_site~u!4,S302_S306_T307~none) -> Ste20(Ste4_site~u!2) , Ste4(Ste5_site~u!3,Ste20_site~u!2) , Ste5(Ste4_site~u!3,Ste11_site~u!4) , Ste11(Ste5_site~u!4,S302_S306_T307~pS) 
+
+Ste20(Ste4_site~u!2) , Ste4(Ste5_site~u!3,Ste20_site~u!2) , Ste5(Ste4_site~u!3,Ste11_site~u!4) , Ste11(Ste5_site~u!4,S302_S306_T307~pS) -> Ste20(Ste4_site~u!2) , Ste4(Ste5_site~u!3,Ste20_site~u!2) , Ste5(Ste4_site~u!3,Ste11_site~u!4) , Ste11(Ste5_site~u!4,S302_S306_T307~pSpS) 	
+
+
+Ste20(Ste4_site~u!2) , Ste4(Ste5_site~u!3,Ste20_site~u!2) , Ste5(Ste4_site~u!3,Ste11_site~u!4) , Ste11(Ste5_site~u!4,S302_S306_T307~pSpS) -> Ste20(Ste4_site~u!2) , Ste4(Ste5_site~u!3,Ste20_site~u!2) , Ste5(Ste4_site~u!3,Ste11_site~u!4) , Ste11(Ste5_site~u!4,S302_S306_T307~pSpSpT) 
+
+Ste11(Ste5_site~u!2,S302_S306_T307~pS) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~none) -> Ste11(Ste5_site~u!2,S302_S306_T307~pS) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~pS) 
+
+	Ste11(Ste5_site~u!2,S302_S306_T307~pS) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~pS) -> Ste11(Ste5_site~u!2,S302_S306_T307~pS) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~pSpT) 
+
+	Ste11(Ste5_site~u!2,S302_S306_T307~pSpS) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~none) -> Ste11(Ste5_site~u!2,S302_S306_T307~pSpS) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~pS) 
+
+	Ste11(Ste5_site~u!2,S302_S306_T307~pSpS) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~pS) -> Ste11(Ste5_site~u!2,S302_S306_T307~pSpS) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~pSpT) 
+
+	Ste11(Ste5_site~u!2,S302_S306_T307~pSpSpT) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~none) -> Ste11(Ste5_site~u!2,S302_S306_T307~pSpSpT) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~pS) 
+
+	Ste11(Ste5_site~u!2,S302_S306_T307~pSpSpT) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~pS) -> Ste11(Ste5_site~u!2,S302_S306_T307~pSpSpT) , Ste5(Ste11_site~u!2,Ste5_site~u!3) , Ste5(Ste5_site~u!3,Ste7_site~u!4) , Ste7(Ste5_site~u!4,S359_T363~pSpT) 
+
+	Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~none,Y182~none) -> Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~none,Y182~PO4) 
+
+	Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~none,Y182~PO4) -> Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~PO4,Y182~PO4) 
+	Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~none,Y182~none) -> Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~PO4,Y182~none) 
+
+	Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~PO4,Y182~none) -> Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~PO4,Y182~PO4) 
+
+	Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~none,Y182~none) ->  Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~none,Y182~PO4) 
+
+	Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~none,Y182~PO4) -> Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~PO4,Y182~PO4) 
+
+	Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~none,Y182~none) -> Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~PO4,Y182~none) 
+
+	Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~PO4,Y182~none) -> Ste7(Ste5_site~u!2,MAPK_site~u,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Fus3(target_site~u!3,T180~PO4,Y182~PO4) 
+
+	Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~none,Y185~none) -> Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~none,Y185~PO4) 
+
+	Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~none,Y185~none) -> Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~none,Y185~PO4) 
+
+	Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~none,Y185~PO4) -> Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~PO4,Y185~PO4) 
+
+	Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~none,Y185~PO4) -> Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~PO4,Y185~PO4) 
+	Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~none,Y185~none) -> Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~PO4,Y185~none) 
+
+	Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~none,Y185~none) -> Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~PO4,Y185~none) 
+
+	Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~PO4,Y185~none) -> Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~PO4,Y185~PO4) 
+
+	Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~PO4,Y185~none) -> Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pS) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~PO4,Y185~PO4) 
+
+	Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pSpT) , Kss1(target_site~u!2,T183~none,Y185~none) -> Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pSpT) , Kss1(target_site~u!2,T183~none,Y185~PO4) 
+
+	Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~none,Y185~none) ->  Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~none,Y185~PO4) 
+
+	Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~none,Y185~PO4) -> Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~PO4,Y185~PO4) 
+
+	Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~none,Y185~PO4) -> Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~PO4,Y185~PO4) 
+
+	Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pSpT) , Kss1(target_site~u!2,T183~none,Y185~none) -> Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pSpT) , Kss1(target_site~u!2,T183~PO4,Y185~none) 
+
+	Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~none,Y185~none) ->  Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~PO4,Y185~none) 
+
+	Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~PO4,Y185~none) -> Ste7(MAPK_site~u!2,Ste5_site~u,S359_T363~pS) , Kss1(target_site~u!2,T183~PO4,Y185~PO4) 
+
+	Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~PO4,Y185~none) -> Ste7(MAPK_site~u,Ste5_site~u!2,S359_T363~pSpT) , Ste5(Ste7_site~u!2,MAPK_site~u!3) , Kss1(target_site~u!3,T183~PO4,Y185~PO4) 
+
+
+#MAPK/phosphatase_interactions
+
+	Ptp(MAPK_site~u) , Fus3(target_site~u,Y182~PO4) <-> Ptp(MAPK_site~u!1) , Fus3(target_site~u!1,Y182~PO4) 
+
+	Ptp(MAPK_site~u) , Kss1(target_site~u,Y185~PO4) <-> Ptp(MAPK_site~u!1) , Kss1(target_site~u!1,Y185~PO4) 
+
+	Ptp(MAPK_site~u!1) , Fus3(target_site~u!1,Y182~PO4) -> Ptp(MAPK_site~u) , Fus3(target_site~u,Y182~none) 
+
+	Ptp(MAPK_site~u!1) , Kss1(target_site~u!1,Y185~PO4) -> Ptp(MAPK_site~u) , Kss1(target_site~u,Y185~none) 
+
+	Msg5(MAPK_site~u) , Fus3(target_site~u,T180~PO4,Y182~none) <-> Msg5(MAPK_site~u!1) , Fus3(target_site~u!1,T180~PO4,Y182~none) 
+
+	Msg5(MAPK_site~u) , Fus3(target_site~u,T180~none,Y182~PO4) <-> Msg5(MAPK_site~u!1) , Fus3(target_site~u!1,T180~none,Y182~PO4) 
+	Msg5(MAPK_site~u) , Fus3(target_site~u,T180~PO4,Y182~PO4) <-> Msg5(MAPK_site~u!1) , Fus3(target_site~u!1,T180~PO4,Y182~PO4) 
+	Msg5(MAPK_site~u) , Kss1(target_site~u,T183~PO4,Y185~none) <-> Msg5(MAPK_site~u!1) , Kss1(target_site~u!1,T183~PO4,Y185~none) 
+
+	Msg5(MAPK_site~u) , Kss1(target_site~u,T183~none,Y185~PO4) <-> Msg5(MAPK_site~u!1) , Kss1(target_site~u!1,T183~none,Y185~PO4) 
+	Msg5(MAPK_site~u) , Kss1(target_site~u,T183~PO4,Y185~PO4) <-> Msg5(MAPK_site~u!1) , Kss1(target_site~u!1,T183~PO4,Y185~PO4) 
+
+	Msg5(MAPK_site~u!1) , Fus3(target_site~u!1,Y182~PO4) -> Msg5(MAPK_site~u) , Fus3(target_site~u,Y182~none) 
+
+	Msg5(MAPK_site~u!1) , Fus3(target_site~u!1,T180~PO4,Y182~none) -> Msg5(MAPK_site~u) , Fus3(target_site~u,T180~none,Y182~none) 
+
+	Msg5(MAPK_site~u!1) , Kss1(target_site~u!1,Y185~PO4) -> Msg5(MAPK_site~u) , Kss1(target_site~u,Y185~none) 
+
+	Msg5(MAPK_site~u!1) , Kss1(target_site~u!1,T183~PO4,Y185~none) -> Msg5(MAPK_site~u) , Kss1(target_site~u,T183~none,Y185~none) 
+
+
+#Non-specific_dephosphorylation
+
+	Dig1(PO4_site~PO4) -> Dig1(PO4_site~none) 
+
+	Dig2(PO4_site~PO4) -> Dig2(PO4_site~none) 
+
+	Far1(S87~PO4) -> Far1(S87~none) 
+
+	Far1(T306~PO4) -> Far1(T306~none) 
+
+	Fus3(T180~PO4) -> Fus3(T180~none) 
+
+	Fus3(Y182~PO4) -> Fus3(Y182~none) 
+
+	Kss1(T183~PO4) -> Kss1(T183~none) 	
+
+	Kss1(Y185~PO4) -> Kss1(Y185~none) 
+
+	Sst2(S539~PO4) -> Sst2(S539~none) 
+
+	Ste2(S338_S339~PO4) -> Ste2(S338_S339~none) 
+
+	Ste7(S359_T363~pSpT) -> Ste7(S359_T363~pS) 
+
+	Ste7(S359_T363~pS) -> Ste7(S359_T363~none) 
+
+	Ste11(S302_S306_T307~pSpSpT) -> Ste11(S302_S306_T307~pSpS) 
+
+	Ste11(S302_S306_T307~pSpS) -> Ste11(S302_S306_T307~pS) 
+
+	Ste11(S302_S306_T307~pS) -> Ste11(S302_S306_T307~none) 
+
+
+#Pheromone/Receptor/G_protein_interactions
+
+	Pheromone(Ste2_site~u) , Ste2(Pheromone_site~u) <-> Pheromone(Ste2_site~u!1) , Ste2(Pheromone_site~u!1) 
+
+	Ste2(Gpa1_site~u) , Gpa1(Ste2_site~u,Ste4_site~u) <-> Ste2(Gpa1_site~u!1) , Gpa1(Ste2_site~u!1,Ste4_site~u) 
+
+	Ste2(Gpa1_site~u) , Gpa1(Ste2_site~u,Ste4_site~u!_,) <-> Ste2(Gpa1_site~u!1) , Gpa1(Ste2_site~u!1,Ste4_site~u!_,) 
+
+	Gpa1(Ste2_site~u,Ste4_site~u,nucleotide~GDP) , Ste4(Gpa1_site~u,Ste5_site~u,Ste20_site~u) <-> Gpa1(Ste2_site~u,Ste4_site~u!1,nucleotide~GDP) , Ste4(Gpa1_site~u!1,Ste5_site~u,Ste20_site~u) 
+
+	Gpa1(Ste2_site~u,Ste4_site~u,nucleotide~GTP) , Ste4(Gpa1_site~u,Ste5_site~u,Ste20_site~u) <-> Gpa1(Ste2_site~u,Ste4_site~u!1,nucleotide~GTP) , Ste4(Gpa1_site~u!1,Ste5_site~u,Ste20_site~u) 
+
+	Gpa1(Ste2_site~u!_,Ste4_site~u,nucleotide~GDP) , Ste4(Gpa1_site~u,Ste5_site~u,Ste20_site~u) <-> Gpa1(Ste2_site~u!_,Ste4_site~u!1,nucleotide~GDP) , Ste4(Gpa1_site~u!1,Ste5_site~u,Ste20_site~u) 
+
+	Gpa1(Ste2_site~u!_,Ste4_site~u,nucleotide~GTP) , Ste4(Gpa1_site~u,Ste5_site~u,Ste20_site~u) <-> Gpa1(Ste2_site~u!_,Ste4_site~u!1,nucleotide~GTP) , Ste4(Gpa1_site~u!1,Ste5_site~u,Ste20_site~u) 
+
+#Protein_dilution/synthesis_due_to_cell_growth
+
+#{MatchOnce}* , Cell() -> Cell() kdilution	exclude_reactants(1,Cell())
+
+	Cell() -> Cell() , Pheromone(Ste2_site~u) 
+
+	Cell() -> Cell() , Dig1(Ste12_site~u,MAPK_site~u,PO4_site~none) 
+
+	Cell() -> Cell() , Dig2(Ste12_site~u,MAPK_site~u,PO4_site~none) 
+
+	Cell() -> Cell() , Far1(MAPK_site~u,S87~none,T306~none) 
+
+	Cell() -> Cell() , Fus3(target_site~u,T180~none,Y182~none) 
+
+	Cell() -> Cell() , Gpa1(Ste2_site~u,Sst2_site~u,Ste4_site~u,nucleotide~GDP) 
+
+	Cell() -> Cell() , Kss1(target_site~u,T183~none,Y185~none) 
+
+	Cell() -> Cell() , Msg5(MAPK_site~u) 
+
+	Cell() -> Cell() , Ptp(MAPK_site~u)
+
+	Cell() -> Cell() , Sst2(Ste2_site~u,MAPK_site~u,S539~none) 
+
+	Cell() -> Cell() , Ste2(Pheromone_site~u,Gpa1_site~u,Sst2_site~u,Yck_site~u,S338_S339~none) 		
+
+	Cell() -> Cell() , Ste4(Gpa1_site~u,Ste5_site~u,Ste20_site~u) 
+
+	Cell() -> Cell() , Ste5(Ste5_site~u,Ste4_site~u,Ste11_site~u,Ste7_site~u,MAPK_site~u) 
+
+	Cell() -> Cell() , Ste7(Ste5_site~u,MAPK_site~u,S359_T363~none) 
+
+	Cell() -> Cell() , Ste11(Ste5_site~u,MAPK_site~u,S302_S306_T307~none,Feedback_PO4~none) 
+
+	Cell() -> Cell() , Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) 
+
+	Cell() -> Cell() , Ste20(Ste4_site~u,Ste11_site~u) 
+
+	Cell() -> Cell() , Yck(Ste2_site~u) 
+
+
+#RGS%28Sst2%29/Galpha%28Gpa1%29/Receptor%28Ste2%29_interactions
+
+	Ste2(Sst2_site~u,Yck_site~u,S338_S339~none) , Sst2(Ste2_site~u,MAPK_site~u) <-> Ste2(Sst2_site~u!1,Yck_site~u,S338_S339~none) , Sst2(Ste2_site~u!1,MAPK_site~u) 
+
+#Sst2_synthesis/degradation
+
+	Fus3(target_site~u,T180~none,Y182~PO4) , Sst2(Ste2_site~u,MAPK_site~u,S539~none) <-> Fus3(target_site~u!1,T180~none,Y182~PO4) , Sst2(Ste2_site~u,MAPK_site~u!1,S539~none) 
+
+	Kss1(target_site~u,T183~none,Y185~PO4) , Sst2(Ste2_site~u,MAPK_site~u,S539~none) <-> Kss1(target_site~u!1,T183~none,Y185~PO4) , Sst2(Ste2_site~u,MAPK_site~u!1,S539~none) 
+
+	Fus3(target_site~u,T180~PO4,Y182~none) , Sst2(Ste2_site~u,MAPK_site~u,S539~none) <-> Fus3(target_site~u!1,T180~PO4,Y182~none) , Sst2(Ste2_site~u,MAPK_site~u!1,S539~none) 
+
+	Kss1(target_site~u,T183~PO4,Y185~none) , Sst2(Ste2_site~u,MAPK_site~u,S539~none) <-> Kss1(target_site~u!1,T183~PO4,Y185~none) , Sst2(Ste2_site~u,MAPK_site~u!1,S539~none) 
+
+	Fus3(target_site~u,T180~PO4,Y182~PO4) , Sst2(Ste2_site~u,MAPK_site~u,S539~none) <-> Fus3(target_site~u!1,T180~PO4,Y182~PO4) , Sst2(Ste2_site~u,MAPK_site~u!1,S539~none) 
+
+	Kss1(target_site~u,T183~PO4,Y185~PO4) , Sst2(Ste2_site~u,MAPK_site~u,S539~none) <-> Kss1(target_site~u!1,T183~PO4,Y185~PO4) , Sst2(Ste2_site~u,MAPK_site~u!1,S539~none) 
+	Fus3(target_site~u!1,T180~none,Y182~PO4) , Sst2(MAPK_site~u!1,S539~none) -> Fus3(target_site~u,T180~none,Y182~PO4) , Sst2(MAPK_site~u,S539~PO4) 
+
+	Kss1(target_site~u!1,T183~none,Y185~PO4) , Sst2(MAPK_site~u!1,S539~none) -> Kss1(target_site~u,T183~none,Y185~PO4) , Sst2(MAPK_site~u,S539~PO4) 
+
+	Fus3(target_site~u!1,T180~PO4,Y182~none) , Sst2(MAPK_site~u!1,S539~none) -> Fus3(target_site~u,T180~PO4,Y182~none) , Sst2(MAPK_site~u,S539~PO4) 
+
+	Kss1(target_site~u!1,T183~PO4,Y185~none) , Sst2(MAPK_site~u!1,S539~none) -> Kss1(target_site~u,T183~PO4,Y185~none) , Sst2(MAPK_site~u,S539~PO4) 
+
+	Fus3(target_site~u!1,T180~PO4,Y182~PO4) , Sst2(MAPK_site~u!1,S539~none) -> Fus3(target_site~u,T180~PO4,Y182~PO4) , Sst2(Ste2_site~u,MAPK_site~u,S539~PO4) 
+
+	Kss1(target_site~u!1,T183~PO4,Y185~PO4) , Sst2(MAPK_site~u!1,S539~none) -> Kss1(target_site~u,T183~PO4,Y185~PO4) , Sst2(Ste2_site~u,MAPK_site~u,S539~PO4) 
+
+	Sst2(S539~none) , Cell() -> Cell() 
+
+	Sst2(S539~PO4) , Cell() -> Cell() 
+
+	Cell() -> Cell() , Sst2(Ste2_site~u,MAPK_site~u,S539~none) 
+
+
+#Ste11_synthesis/degradation
+
+	Fus3(target_site~u,T180~none,Y182~PO4) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~none) <-> Fus3(target_site~u!1,T180~none,Y182~PO4) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) 
+
+	Kss1(target_site~u,T183~none,Y185~PO4) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~none) <-> Kss1(target_site~u!1,T183~none,Y185~PO4) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) 
+	Fus3(target_site~u,T180~PO4,Y182~none) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~none) <-> Fus3(target_site~u!1,T180~PO4,Y182~none) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) 
+
+	Kss1(target_site~u,T183~PO4,Y185~none) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~none) <-> Kss1(target_site~u!1,T183~PO4,Y185~none) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) 
+
+	Fus3(target_site~u,T180~PO4,Y182~PO4) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~none) <-> Fus3(target_site~u!1,T180~PO4,Y182~PO4) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) 		
+
+	Kss1(target_site~u,T183~PO4,Y185~PO4) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~none) <-> Kss1(target_site~u!1,T183~PO4,Y185~PO4) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) 
+
+	Fus3(target_site~u!1,T180~none,Y182~PO4) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) -> Fus3(target_site~u,T180~none,Y182~PO4) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~PO4) 
+
+	Kss1(target_site~u!1,T183~none,Y185~PO4) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) -> Kss1(target_site~u,T183~none,Y185~PO4) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~PO4) 
+
+	Fus3(target_site~u!1,T180~PO4,Y182~none) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) -> Fus3(target_site~u,T180~PO4,Y182~none) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~PO4) 
+
+	Kss1(target_site~u!1,T183~PO4,Y185~none) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) -> Kss1(target_site~u,T183~PO4,Y185~none) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~PO4) 
+
+	Fus3(target_site~u!1,T180~PO4,Y182~PO4) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) -> Fus3(target_site~u,T180~PO4,Y182~PO4) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~PO4) 
+
+	Kss1(target_site~u!1,T183~PO4,Y185~PO4) , Ste11(Ste5_site~u,MAPK_site~u!1,Feedback_PO4~none) -> Kss1(target_site~u,T183~PO4,Y185~PO4) , Ste11(Ste5_site~u,MAPK_site~u,Feedback_PO4~PO4) 
+
+	Ste11() , Cell() -> Cell() 
+
+	Ste11(Feedback_PO4~PO4) , Cell() -> Cell() 
+
+	Cell() -> Cell() , Ste11(Ste5_site~u,MAPK_site~u,S302_S306_T307~none,Feedback_PO4~none) 
+
+
+
+#Ste12_mediated_protein_synthesis
+
+	Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) -> Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Dig2(Ste12_site~u,MAPK_site~u,PO4_site~none) 
+	Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) -> Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Far1(MAPK_site~u,S87~none,T306~none) 
+
+	Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) -> Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Fus3(target_site~u,T180~none,Y182~none) 
+
+	Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) -> Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Gpa1(Ste2_site~u,Sst2_site~u,Ste4_site~u,nucleotide~GDP) 
+
+	Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) -> Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Msg5(MAPK_site~u) 
+
+	Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) -> Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Ptp(MAPK_site~u) 
+
+	Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) -> Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Sst2(Ste2_site~u,MAPK_site~u,S539~none) 
+
+	Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) -> Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Ste2(Pheromone_site~u,Gpa1_site~u,Sst2_site~u,Yck_site~u,S338_S339~none) 
+	Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) -> Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) , Ste12(Dig1_site~u,Dig2_site~u,MAPK_site~u) 
+
+
+#Ste2_synthesis/endocytosis/degradation
+
+	Cell() -> Cell() , Ste2(Pheromone_site~u,Gpa1_site~u,Sst2_site~u,Yck_site~u,S338_S339~none) 
+
+
+	Ste2(Sst2_site~u,Yck_site~u,S338_S339~none) , Yck(Ste2_site~u) <-> Ste2(Sst2_site~u,Yck_site~u!1,S338_S339~none) , Yck(Ste2_site~u!1) 
+
+	Ste2(Pheromone_site~u,Yck_site~u!2,S338_S339~none) , Yck(Ste2_site~u!2) -> Ste2(Pheromone_site~u,Yck_site~u,S338_S339~PO4) , Yck(Ste2_site~u) 
+
+	Ste2(Pheromone_site~u!_,Yck_site~u!2,S338_S339~none) , Yck(Ste2_site~u!2) -> Ste2(Pheromone_site~u!_,Yck_site~u,S338_S339~PO4) , Yck(Ste2_site~u) 	
+
+	Ste2(S338_S339~PO4) , Cell() -> Cell() 
+
+
+#Ste4:Ste18/Ste20_interaction
+
+	Ste4(Gpa1_site~u,Ste20_site~u) , Ste20(Ste4_site~u,Ste11_site~u) <-> Ste4(Gpa1_site~u,Ste20_site~u!1) , Ste20(Ste4_site~u!1,Ste11_site~u) 
+
+
+#Ste4:Ste18/Ste5_interactions_and_Ste5_dimerization/oligomerization
+
+	Ste5(Ste5_site~u,Ste4_site~u) , Ste5(Ste5_site~u,Ste4_site~u) <-> Ste5(Ste5_site~u!1,Ste4_site~u) , Ste5(Ste5_site~u!1,Ste4_site~u) 
+
+	Ste5(Ste5_site~u,Ste4_site~u!_,) , Ste5(Ste5_site~u,Ste4_site~u) <-> Ste5(Ste5_site~u!1,Ste4_site~u!_,) , Ste5(Ste5_site~u!1,Ste4_site~u) 
+
+
+	Ste5(Ste5_site~u,Ste4_site~u!_,) , Ste5(Ste5_site~u,Ste4_site~u!_,) <-> Ste5(Ste5_site~u!1,Ste4_site~u!_,) , Ste5(Ste5_site~u!1,Ste4_site~u!_,) 
+
+	Ste4(Gpa1_site~u,Ste5_site~u) , Ste5(Ste5_site~u,Ste4_site~u) <-> Ste4(Gpa1_site~u,Ste5_site~u!1) , Ste5(Ste5_site~u,Ste4_site~u!1) 
+
+
+	Ste4(Gpa1_site~u,Ste5_site~u) , Ste5(Ste5_site~u!2,Ste4_site~u) , Ste5(Ste5_site~u!2,Ste4_site~u) <-> Ste4(Gpa1_site~u,Ste5_site~u!1) , Ste5(Ste5_site~u!2,Ste4_site~u!1) , Ste5(Ste5_site~u!2,Ste4_site~u) 
+
+	Ste4(Gpa1_site~u,Ste5_site~u) , Ste5(Ste5_site~u!2,Ste4_site~u) , Ste5(Ste5_site~u!2,Ste4_site~u!_,) <-> Ste4(Gpa1_site~u,Ste5_site~u!1) , Ste5(Ste5_site~u!2,Ste4_site~u!1) , Ste5(Ste5_site~u!2,Ste4_site~u!_) 
+
+
+#Ste5/MAPK_cascade_interactions
+
+	Ste5(Ste11_site~u) , Ste11(Ste5_site~u,MAPK_site~u) <-> Ste5(Ste11_site~u!1) , Ste11(Ste5_site~u!1,MAPK_site~u) 
+
+	Ste5(Ste7_site~u) , Ste7(Ste5_site~u,MAPK_site~u) <-> Ste5(Ste7_site~u!1) , Ste7(Ste5_site~u!1,MAPK_site~u) 
+
+	Ste5(MAPK_site~u) , Fus3(target_site~u) <-> Ste5(MAPK_site~u!1) , Fus3(target_site~u!1) 
+
+	Ste5(MAPK_site~u) , Kss1(target_site~u) <-> Ste5(MAPK_site~u!1) , Kss1(target_site~u!1) 
+
+
+
+#Ste7_synthesis/degradation
+
+	Ste7() , Cell() -> Cell() 
+
+	Ste7(S359_T363~pSpT) , Cell() -> Cell() 
+
+	Cell() -> Cell() , Ste7(Ste5_site~u,MAPK_site~u,S359_T363~none) 
+
+
+
+#Ste7/MAPK_interactions
+
+Ste7(Ste5_site~u,MAPK_site~u) , Fus3(target_site~u) <-> Ste7(Ste5_site~u,MAPK_site~u!1) , Fus3(target_site~u!1) 
+
+Ste7(Ste5_site~u,MAPK_site~u) , Kss1(target_site~u) <-> Ste7(Ste5_site~u,MAPK_site~u!1) , Kss1(target_site~u!1) 
+
+
+
+%obs:Cell()

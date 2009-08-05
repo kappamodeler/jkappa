@@ -15,7 +15,7 @@ public class CAbstractSite {
 	private final int nameId;
 	private CAbstractLinkState linkState;
 	private CInternalState internalState = CInternalState.EMPTY_STATE;
-	private CAbstractAgent linkAgent = null;
+	private CAbstractAgent parentAgent = null;
 
 	/**
 	 * Constructor of CContactMapAbstractSite
@@ -27,7 +27,7 @@ public class CAbstractSite {
 	 */
 	public CAbstractSite(CSite site, CAbstractAgent agent) {
 		this.nameId = site.getNameId();
-		this.linkAgent = agent;
+		this.parentAgent = agent;
 		if (site.getInternalState() != CInternalState.EMPTY_STATE)
 			this.internalState = new CInternalState(site.getInternalState()
 					.getNameId());
@@ -36,7 +36,7 @@ public class CAbstractSite {
 
 	public CAbstractSite(CAbstractAgent agent, int nameId) {
 		this.nameId = nameId;
-		this.linkAgent = agent;
+		this.parentAgent = agent;
 		this.linkState = new CAbstractLinkState();
 	}
 
@@ -59,7 +59,7 @@ public class CAbstractSite {
 	 */
 	private CAbstractSite(CAbstractSite site) {
 		this.nameId = site.getNameId();
-		this.linkAgent = site.getAgentLink();
+		this.parentAgent = site.getAgentLink();
 		if (site.getInternalState() != CInternalState.EMPTY_STATE)
 			this.internalState = new CInternalState(site.getInternalState()
 					.getNameId());
@@ -116,17 +116,17 @@ public class CAbstractSite {
 	 * @return agent, which is parent for this site
 	 */
 	public final CAbstractAgent getAgentLink() {
-		return linkAgent;
+		return parentAgent;
 	}
 
 	/**
 	 * This method sets link to the "parent" agent.
 	 * 
-	 * @param linkAgent
+	 * @param parentAgent
 	 *            "parent" agent
 	 */
-	public final void setAgentLink(CAbstractAgent linkAgent) {
-		this.linkAgent = linkAgent;
+	public final void setParentAgent(CAbstractAgent parentAgent) {
+		this.parentAgent = parentAgent;
 	}
 
 	/**
@@ -186,7 +186,7 @@ public class CAbstractSite {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		sb.append("site = " + getName());
-		sb.append(" from agent = " + linkAgent.getName());
+		sb.append(" from agent = " + parentAgent.getName());
 		// TODO seems that we haven't got this case anytime
 		if (nameId == -1)
 			return sb.toString();

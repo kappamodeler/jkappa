@@ -2,6 +2,7 @@ package com.plectix.simulator.components.stories.compressions;
 
 import java.util.Iterator;
 
+import com.plectix.simulator.components.stories.enums.EActionOfAEvent;
 import com.plectix.simulator.components.stories.enums.EMarkOfEvent;
 import com.plectix.simulator.components.stories.enums.ETypeOfWire;
 import com.plectix.simulator.components.stories.storage.AtomicEvent;
@@ -67,7 +68,7 @@ class StackEntry
 		ICEvent event = weak.getEvent();
 		ETypeOfWire type = event.getAtomicEventType(wireIdx);
 		
-		if (type == ETypeOfWire.AGENT || weak.isLastEvent())
+		if (type == ETypeOfWire.AGENT || weak.isLastEvent() || event.getAtomicEvent(wireIdx).getType() == EActionOfAEvent.TEST)
 		{
 			frozenState = "doesn't matter";
 			return;

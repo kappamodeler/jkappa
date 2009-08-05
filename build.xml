@@ -68,7 +68,7 @@
 		<delete dir="${deploy.dir}"/>
 	</target>
  
-	<target name="build" depends="build-subprojects,filter-tpl,build-project"/>
+	<target name="build" depends="build-subprojects,set-svn-revision,build-project"/>
     
 	<target name="build-subprojects"/>
      
@@ -80,7 +80,7 @@
         </copy>
     </target>
 
-	<target name="build-project" depends="init" description="Building project">
+	<target name="build-project" depends="filter-tpl,init" description="Building project">
         <echo message="OS: ${os.name} "/>
         <echo message="Java: ${java.version} "/>
         <echo message="Ant Java: ${ant.java.version} "/>
@@ -107,6 +107,9 @@
 		<copy todir="${deploy-zip.dir}">
 			<fileset dir=".">				
 				<include name="config/log4j.properties"/>
+				<include name="config/applicationContext.xml"/>
+				<include name="config/ui.properties"/>
+				<include name="data/*.ka"/>
 				<include name="${dist.dir}/simulator.jar"/>
 				<exclude name="**/.svn"/>
 			</fileset>
@@ -117,6 +120,8 @@
 		
 		<copy todir="${deploy-zip.dir}" file="run/Simulator.bat"/>
 		<copy todir="${deploy-zip.dir}" file="run/Simulator.sh"/>
+		<copy todir="${deploy-zip.dir}" file="run/LiveDataGUI.bat"/>
+		<copy todir="${deploy-zip.dir}" file="run/LiveDataGUI.sh"/>
 		<replaceregexp>
 			<regexp pattern="\$\{export.classpath.unix}"/>
 			<substitution expression="${export.classpath.unix}"/>
@@ -202,7 +207,7 @@
 		<echo message="SVN Revision ${build.svn.revision}" />
     </target>
 
-    <target name="filter-tpl" depends="set-svn-revision">
+    <target name="filter-tpl">
         <echo message="Processing the templates. ${ant.build.javac.source}" />
 	    <tstamp>
 	          <format property="build.date" pattern="yyyy-MM-dd HH:mm:ss z" />
@@ -238,6 +243,7 @@
 		</javadoc>
 	</target>
 	
+
 	<!-- ################################### Test Targets ################################### -->
 	
 	<target name="build-tests" depends="init" description="Building tests">

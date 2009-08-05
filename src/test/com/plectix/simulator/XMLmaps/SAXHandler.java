@@ -82,8 +82,8 @@ public class SAXHandler extends DefaultHandler {
 		}
 
 		if (isContactMap) {
-			if(!"High resolution".equals(qName))
-				return;
+//			if("High resolution".equals(qName))
+//				return;
 			if ("Agent".equals(qName)) {
 				isAgentTag = true;
 				agents.add(new Agent(attributes.getValue("Name")));

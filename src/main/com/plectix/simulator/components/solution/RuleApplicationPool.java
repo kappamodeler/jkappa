@@ -2,14 +2,34 @@ package com.plectix.simulator.components.solution;
 
 import com.plectix.simulator.components.CAgent;
 
-public abstract class RuleApplicationPool {
-	public abstract void addAgent(CAgent agent);
+/**
+ * <p>This is application pool, temporary storage for the one rule application.
+ * When rule is ready to be applied with set of injections S, we retrieve all the substances
+ * which should react (i.e. where injections from S point to) from solution and place them here.</p>
+ * <p>Then we apply rule to the substances within this pool and finally someone calls solution's method
+ * ISolution.flushPoolContent(), which adds the result of the reaction 
+ * (which is temporary placed here, in pool) back to the solution.</p>
+ */
+public interface RuleApplicationPool {
+	/**
+	 * Adds agent to this pool
+	 * @param agent agent to be added
+	 */
+	public void addAgent(CAgent agent);
 
-	public abstract void removeAgent(CAgent agent);
+	/**
+	 * Removes agent from this pool
+	 * @param agent agent to be removed
+	 */
+	public void removeAgent(CAgent agent);
 	
-	public abstract StraightStorage getStorage();
+	/**
+	 * @return this pool's storage 
+	 */
+	public StraightStorage getStorage();
 
-	public void clear() {
-		getStorage().clear();
-	}
+	/**
+	 * Clears this pool's storage
+	 */
+	public void clear();
 }

@@ -1,0 +1,14 @@
+'KT@x' K(a),T(x) <-> K(a!1),T(x!1)
+'Tp@x' K(a!1),T(x~u!1) -> K(a!1),T(x~p!1)
+'KT@y' K(a),T(y) <-> K(a!1),T(y!1)
+'Tp@y' K(a!1),T(y~u!1) -> K(a!1),T(y~p!1)
+
+'PT@x' P(a),T(x) <-> P(a!1),T(x!1)
+'Tu@x' P(a!1),T(x~u!1) -> P(a!1),T(x~p!1)
+'PT@y' P(a),T(y) <-> P(a!1),T(y!1)
+'Tu@y' P(a!1),T(y~u!1) -> P(a!1),T(y~p!1)
+
+
+
+%obs: T(x~p?,y~p?)
+%init: 500 * (T(x~u,y~u),K(a),P(a))

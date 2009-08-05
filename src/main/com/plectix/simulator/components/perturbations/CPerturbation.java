@@ -31,7 +31,6 @@ public final class CPerturbation implements Serializable{
 	private double perturbationRate;
 	private double ruleRate;
 	private CRule rule;
-	private int perturbationID;
 	private boolean greater = true;
 	private boolean isDO = false;
 	private List<IPerturbationExpression> parametersRHS;
@@ -44,10 +43,9 @@ public final class CPerturbation implements Serializable{
 	 * @param rateParameters given rate expression
 	 * @see CPerturbationType
 	 */
-	public CPerturbation(int perturbationID, double time,
+	public CPerturbation(double time,
 			CRule rule,
 			List<IPerturbationExpression> rateParameters) {
-		this.perturbationID = perturbationID;
 		this.timeCondition = time;
 		this.type = CPerturbationType.TIME;
 		this.perturbationRate = -1;
@@ -64,9 +62,8 @@ public final class CPerturbation implements Serializable{
 	 * @param rule given specially rule
 	 * @see CPerturbationType
 	 */
-	public CPerturbation(int perturbationID, double time,
+	public CPerturbation(double time,
 			CRulePerturbation rule) {
-		this.perturbationID = perturbationID;
 		this.timeCondition = time;
 		this.type = CPerturbationType.ONCE;
 		this.rule = rule;
@@ -87,11 +84,10 @@ public final class CPerturbation implements Serializable{
 	 * @param rateParameters given list of rate parameters for right handSide.
 	 * @param observables observables storage. 
 	 */
-	public CPerturbation(int perturbationID, List<IObservablesComponent> obsComponents,
+	public CPerturbation(List<IObservablesComponent> obsComponents,
 			List<Double> parameters, int obsNameID,
 			CRule rule, boolean greater,
 			List<IPerturbationExpression> rateParameters, CObservables observables) {
-		this.perturbationID = perturbationID;
 		this.obsNameID = obsNameID;
 		CObservables obs = observables;
 		fillParameters(obsComponents, parameters, obs);
@@ -148,7 +144,7 @@ public final class CPerturbation implements Serializable{
 	 * @return perturbation expressions from right handSide
 	 */
 	public final List<IPerturbationExpression> getRHSParametersList() {
-		return Collections.unmodifiableList(parametersRHS);
+		return parametersRHS;
 	}
 
 	/**

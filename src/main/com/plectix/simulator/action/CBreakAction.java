@@ -58,97 +58,60 @@ public class CBreakAction extends CAction {
 		setType(CActionType.BREAK);
 	}
 
+	@Override
 	public final void doAction(RuleApplicationPool pool, CInjection injection,
 			CEvent eventContainer,
 			SimulationData simulationData) {
 		CAgent agentFromInSolution;
-		int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getAgentLink());
+		int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getParentAgent());
 		agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 
 		CSite injectedSite = agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId());
-
-//		addToNetworkNotation(StateType.BEFORE, netNotation,
-//				injectedSite);
-//		addRuleSitesToNetworkNotation(true, netNotation, injectedSite);
 
 		CSite linkSite = (CSite) injectedSite.getLinkState().getConnectedSite();
 		addToEventContainer(eventContainer, linkSite,CEvent.BEFORE_STATE);
 		addToEventContainer(eventContainer, injectedSite,CEvent.BEFORE_STATE);
 		if ((mySiteFrom.getLinkState().getConnectedSite() == null) && (linkSite != null)) {
-//			addToNetworkNotation(StateType.BEFORE, netNotation,
-//					linkSite);
-
 			linkSite.getLinkState().connectSite(null);
 			linkSite.getLinkState().setStatusLink(CLinkStatus.FREE);
 			if (mySiteTo != null) {
-//				linkSite.setLinkIndex(mySiteTo.getLinkIndex());
 				linkSite.setLinkIndex(-1);
 			}
 			injection.addToChangedSites(linkSite);
 			getRightCComponent().addAgentFromSolutionForRHS(linkSite
-					.getAgentLink());
-//			addToNetworkNotation(StateType.AFTER, netNotation,
-//					linkSite);
-
+					.getParentAgent());
 		}
 
 		injectedSite.getLinkState().connectSite(null);
 		injectedSite.getLinkState().setStatusLink(CLinkStatus.FREE);
-		// /////////////////////////////////////////////
-
 		injection.addToChangedSites(injectedSite);
 
-//		addToNetworkNotation(StateType.AFTER, netNotation,
-//				injectedSite);
-		/**
-		 * Break a bond for this rules: A(x!_)->A(x)
-		 */
+		// Break connection for rules such as A(x!_)->A(x)
 		if (mySiteFrom.getLinkState().getConnectedSite() == null && linkSite != null) {
 			addSiteToConnectedWithBroken(linkSite);
-//			addRuleSitesToNetworkNotation(false, netNotation, linkSite);
 		}
 		addToEventContainer(eventContainer, linkSite,CEvent.AFTER_STATE);
 		addToEventContainer(eventContainer, injectedSite,CEvent.AFTER_STATE);
-		// /////////////////////////////////////////////
+		///////////////////////////////////////////////
 		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).
 			setLinkIndex(-1);
 	}
 
-	private static void addToEventContainer(CEvent eventContainer,
+	private final void addToEventContainer(CEvent eventContainer,
 			CSite site, boolean state) {
 		if (eventContainer == null || site == null)
 			return;
 
-		ThreadLocalData.getTypeById().setTypeOfAgent(site.getAgentLink().getId(), site.getAgentLink().getNameId());
-		eventContainer.addAtomicEvent(new WireHashKey(site.getAgentLink().getId(), site
+		ThreadLocalData.getTypeById().setTypeOfAgent(site.getParentAgent().getId(), site.getParentAgent().getNameId());
+		eventContainer.addAtomicEvent(new WireHashKey(site.getParentAgent().getId(), site
 				.getNameId(), ETypeOfWire.LINK_STATE), site,
 				EActionOfAEvent.MODIFICATION, state);
-		// UHashKey key = new
-		// UHashKey(site.getAgentLink().getId(),site.getNameId
-		// (),EKeyOfState.LINK_STATE);
-		// AEvent<CStateOfLink> event = (AEvent<CStateOfLink>)
-		// eventContainer.getEvent(key);
-		// event.getState().setAfterState(new
-		// CStateOfLink(CStateOfLink.FREE,CStateOfLink.FREE));
-		// event.correctingType(ECheck.MODIFICATION);
 
-
-		eventContainer.addAtomicEvent(new WireHashKey(site.getAgentLink().getId(), site
+		eventContainer.addAtomicEvent(new WireHashKey(site.getParentAgent().getId(), site
 				.getNameId(), ETypeOfWire.BOUND_FREE), site,
 				EActionOfAEvent.MODIFICATION, state);
-		// key = new UHashKey(site.getAgentLink().getId(), site.getNameId(),
-		// EKeyOfState.BOUND_FREE);
-		// AEvent<Boolean> event2 = (AEvent<Boolean>)
-		// eventContainer.getEvent(key);
-		// event2.getState().setAfterState(true);
-		// event2.correctingType(ECheck.MODIFICATION);
-
 	}
 
-	/**
-	 * Util method. Uses for fill {@link CRule#addSiteConnectedWithBroken(CSite)}.
-	 * @param checkedSite given site.
-	 */
 	private final void addSiteToConnectedWithBroken(CSite checkedSite) {
 		for (CSite site : myRule.getSitesConnectedWithBroken()) {
 			if (site == checkedSite) {

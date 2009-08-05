@@ -143,13 +143,13 @@ public class SimulationService {
 	 * @param jobID
 	 * @return the current status
 	 */
-	public LiveData getSimulatorLiveData(long jobID, LiveData liveData) {
+	public LiveData getSimulatorLiveData(long jobID) {
 		SimulatorFutureTask futureTask = callablesMap.get(jobID);
 		if (futureTask == null) {
 			return null;
 		}
 		
-		return futureTask.getSimulator().getLiveData(liveData);
+		return futureTask.getSimulator().getLiveData();
 	}
 	
 	/**

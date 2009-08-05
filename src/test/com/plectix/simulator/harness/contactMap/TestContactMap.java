@@ -314,13 +314,7 @@ public class TestContactMap{
 					
 					memory.reset();
 					timer.reset();
-					contactMap.constructAbstractRules(InitTestContactMap.getRules());
-					printConsole(timer.getPrintToString("CContactMap.constructAbstractRules "));
-					printConsole(memory.getPrintToString("CContactMap.constructAbstractRules"));
-					
-					memory.reset();
-					timer.reset();
-					contactMap.constructAbstractContactMapFromSubViews(subViews);
+					contactMap.constructAbstractContactMapFromSubViews(subViews,InitTestContactMap.getRules());
 					printConsole(timer.getPrintToString("CContactMap.constructAbstractContactMapFromSubViews "));
 					printConsole(memory.getPrintToString("CContactMap.constructAbstractContactMapFromSubViews"));
 					

@@ -1,0 +1,174 @@
+# Rules:
+######
+# Chapter New Chapter 1
+' PI3KE545K.PIP@three' PI3KE545K(subs!1),PIP(three~u!1) -> PI3KE545K(subs!1),PIP(three~p!1) @ 1.0
+'4E-BP1...Raptor' 4E-BP1(tos!2),Raptor(s!2) -> 4E-BP1(tos),Raptor(s) @ 1.0
+'4E-BP1.Raptor' 4E-BP1(tos),Raptor(s) -> 4E-BP1(tos!2),Raptor(s!2) @ 1.0
+'4E-BP1@T37' 4E-BP1(tos!1,T37~u),mTOR(heat!2,l!3),Raptor(heat!2,s!1),mLST8(m!3) -> 4E-BP1(tos!1,T37~p),mTOR(heat!2,l!3),Raptor(heat!2,s!1),mLST8(m!3) @ 1.0
+'4E-BP1@T41' 4E-BP1(tos!1,T41~u),mTOR(heat!2,l!3),Raptor(heat!2,s!1),mLST8(m!3) -> 4E-BP1(tos!1,T41~p),mTOR(heat!2,l!3),Raptor(heat!2,s!1),mLST8(m!3) @ 1.0
+'AMPK...TSC2@S1270' AMPK(tsc!1,a),TSC2(S1270,a!1) -> AMPK(tsc,a),TSC2(S1270,a) @ 1.0
+'AMPK...TSC2@S1388' TSC2(a!1,S1388),AMPK(tsc!1,a) -> TSC2(a,S1388),AMPK(tsc,a) @ 1.0
+'Akt#S473' Akt(S473~p!1),PHLPP(PDZ!1) -> Akt(S473~u!1),PHLPP(PDZ!1) @ 1.0
+'Akt#T308' Akt(T308~p!1),PP2A(B55-a!1) -> Akt(T308~u!1),PP2A(B55-a!1) @ 1.0
+'Akt...FoxO1@T24' Akt(subs!1),FoxO1(T24!1) -> Akt(subs),FoxO1(T24) @ 1.0
+'Akt...FoxO3a@T32' Akt(subs!1),FoxO3a(T32!1) -> Akt(subs),FoxO3a(T32) @ 1.0
+'Akt...GSK3a' Akt(subs!1),GSK3a(a!1) -> Akt(subs),GSK3a(a) @ 1.0
+'Akt...GSK3b' Akt(subs!1),GSK3b(a!1) -> Akt(subs),GSK3b(a) @ 1.0
+'Akt...PHLPP' Akt(S473!1),PHLPP(PDZ!1) -> Akt(S473),PHLPP(PDZ) @ 1.0
+'Akt...PIP' Akt(PH!1),PIP(three~p!1) -> Akt(PH),PIP(three~p) @ 1.0
+'Akt...PP2A' Akt(T308!1),PP2A(B55-a!1) -> Akt(T308),PP2A(B55-a) @ 1.0
+'Akt...SIN1' Akt(sin!1),SIN1(akt!1) -> Akt(sin),SIN1(akt) @ 1.0
+'Akt...TSC2@S1086' Akt(subs!1),TSC2(S1086,a!1) -> Akt(subs),TSC2(S1086,a) @ 1.0
+'Akt...TSC2@S939' Akt(subs!1),TSC2(S939,a!1) -> Akt(subs),TSC2(S939,a) @ 1.0
+'Akt...TSC2@T1462' Akt(subs!1),TSC2(T1462,a!1) -> Akt(subs),TSC2(T1462,a) @ 1.0
+'Akt.FoxO1@T24' Akt(subs,S473~p,T308~p),FoxO1(T24~u) -> Akt(subs!1,S473~p,T308~p),FoxO1(T24~u!1) @ 1.0
+'Akt.FoxO3a@T32' Akt(subs,S473~p,T308~p),FoxO3a(T32~u) -> Akt(subs!1,S473~p,T308~p),FoxO3a(T32~u!1) @ 1.0
+'Akt.GSK3a' Akt(subs,T308~p),GSK3a(a) -> Akt(subs!1,T308~p),GSK3a(a!1) @ 1.0
+'Akt.GSK3b' Akt(subs,T308~p),GSK3b(a) -> Akt(subs!1,T308~p),GSK3b(a!1) @ 1.0
+'Akt.PHLPP' Akt(S473~p),PHLPP(PDZ) -> Akt(S473~p!1),PHLPP(PDZ!1) @ 1.0
+'Akt.PIP' Akt(PH),PIP(three~p) -> Akt(PH!1),PIP(three~p!1) @ 1.0
+'Akt.PP2A' Akt(T308~p),PP2A(B55-a) -> Akt(T308~p!1),PP2A(B55-a!1) @ 1.0
+
+'Akt.SIN1' Akt(sin),SIN1(akt) {$1<>$2} -> Akt(sin!1),SIN1(akt!1) @ 1.0
+
+'Akt.TSC2' Akt(subs,T308~p),TSC2(a) {$1<>$2} -> Akt(subs!1,T308~p),TSC2(a!1) @ 1.0
+
+'Akt.TSC2@S1086' Akt(subs!1,T308~p),TSC2(S1086~u,a!1) -> Akt(subs!1,T308~p),TSC2(S1086~p,a!1) @ 1.0
+'Akt.TSC2@S939' Akt(subs!1,T308~p),TSC2(S939~u,a!1)  -> Akt(subs!1,T308~p),TSC2(S939~p,a!1) @ 1.0
+'Akt.TSC2@T1462' Akt(T308~p,subs!1),TSC2(T1462~u,a!1)  -> Akt(T308~p,subs!1),TSC2(T1462~p,a!1) @ 1.0
+
+'Akt@S473' mTOR(sin!4,heat!1,l!6,fkb12!2),Rictor(sin!3,m2!2,m1!1),Akt(sin!5,S473~u),SIN1(m!4,ric!3,akt!5),mLST8(m!6) -> mTOR(sin!4,heat!1,l!6,fkb12!2),Rictor(sin!3,m2!2,m1!1),Akt(sin!5,S473~p),SIN1(m!4,ric!3,akt!5),mLST8(m!6) @ 1.0
+'Akt@T308' PDK1(akt!1,PH!3),PIP(three~p!2),Akt(T308~u!1,PH!2),PIP(three~p!3) -> PDK1(akt!1,PH!3),PIP(three~p!2),Akt(T308~p!1,PH!2),PIP(three~p!3) @ 1.0
+'Akt@T308 dummy' Akt(T308~u) -> Akt(T308~p) @ 1.0
+'FKB12...rapa' FKB12(a!1),rapamycin(a!1) -> FKB12(a),rapamycin(a) @ 1.0
+'FKB12.rapa' FKB12(a),rapamycin(a) -> FKB12(a!1),rapamycin(a!1) @ 1.0
+'FKB38...Rheb' FKB38(a!1),Rheb(fkb!1,g~gtp) -> FKB38(a),Rheb(fkb,g~gtp) @ 1.0
+'FKB38.Rheb' FKB38(a),Rheb(fkb,g~gtp) -> FKB38(a!1),Rheb(fkb!1,g~gtp) @ 1.0
+'FoxO1@T24' Akt(subs!1,T308~p,S473~p),FoxO1(T24~u!1) -> Akt(subs!1,T308~p,S473~p),FoxO1(T24~p!1) @ 1.0
+'FoxO3@T32' Akt(subs!1,T308~p,S473~p),FoxO3a(T32~u!1) -> Akt(subs!1,T308~p,S473~p),FoxO3a(T32~p!1) @ 1.0
+'GSK3a@S21' Akt(subs!1,T308~p),GSK3a(a!1,S21~u) -> Akt(subs!1,T308~p),GSK3a(a!1,S21~p) @ 1.0
+'GSK3b@S9' Akt(subs!1,T308~p),GSK3b(a!1,S9~u) -> Akt(subs!1,T308~p),GSK3b(a!1,S9~p) @ 1.0
+'IRS1...PI3KE545K' IRS1(pi3k!1),PI3KE545K(SH2!1) -> IRS1(pi3k),PI3KE545K(SH2) @ 1.0
+'IRS1...S6K1' S6K1(subs!1),IRS1(S302!1) -> S6K1(subs),IRS1(S302) @ 1.0
+'IRS1.PI3KE545K' IRS1(pi3k),PI3KE545K(SH2~u) -> IRS1(pi3k!1),PI3KE545K(SH2~u!1) @ 1.0
+'IRS1.S6K1' S6K1(subs),IRS1(S302~u) -> S6K1(subs!1),IRS1(S302~u!1) @ 1.0
+'IRS1@S302' S6K1(subs!1),IRS1(S302~u!1) -> S6K1(subs!1),IRS1(S302~p!1) @ 1.0
+'PDK1...Akt' PDK1(akt!1),Akt(T308!1) -> PDK1(akt),Akt(T308) @ 1.0
+'PDK1...PIP' PDK1(PH!1),PIP(three~p!1) -> PDK1(PH),PIP(three~p) @ 1.0
+'PDK1...S6K1' PDK1(s6k1!1),S6K1(T229!1) -> PDK1(s6k1),S6K1(T229) @ 1.0
+
+'PDK1.Akt' PDK1(PH!1,akt),PIP(three~p!1),Akt(PH!2,T308~u),PIP(three~p!2) {$1<>$3} -> PDK1(PH!2,akt!1),PIP(three~p!2),Akt(PH!3,T308~u!1),PIP(three~p!3) @ 1.0
+
+'PDK1.PIP' PDK1(PH),PIP(three~p) -> PDK1(PH!1),PIP(three~p!1) @ 1.0
+
+'PDK1.S6K1' PDK1(s6k1),S6K1(T389~p,T229~u) {$1<>$2} -> PDK1(s6k1!1),S6K1(T389~p,T229~u!1) @ 1.0
+
+'PI3KE545K...PIP' PI3KE545K(subs!1),PIP(three!1) -> PI3KE545K(subs),PIP(three) @ 1.0
+'PI3KE545K.PIP' PI3KE545K(subs),PIP(three~u) -> PI3KE545K(subs!1),PIP(three~u!1) @ 1.0
+'PI3KE545K@SH2' IRS1(pi3k!1),PI3KE545K(SH2~u!1) -> IRS1(pi3k!1),PI3KE545K(SH2~p!1) @ 1.0
+'PIP#three' PIP(three~p!1),PTEN(subs!1) -> PIP(three~u!1),PTEN(subs!1) @ 1.0
+'PTEN...PIP' PIP(three!1),PTEN(subs!1) -> PIP(three),PTEN(subs) @ 1.0
+'PTEN.PIP' PTEN(subs),PIP(three~p) -> PTEN(subs!1),PIP(three~p!1) @ 1.0
+'Rheb...FKB38' Rheb(fkb!1),FKB38(a!1) -> Rheb(fkb),FKB38(a) @ 1.0
+'Rheb...TSC2' Rheb(g!1),TSC2(gap!1) -> Rheb(g),TSC2(gap) @ 1.0
+'Rheb.FKB38' Rheb(fkb),FKB38(a) {$1<>$2} -> Rheb(fkb!1),FKB38(a!1) @ 1.0
+'Rheb.TSC2' Rheb(g~gtp),TSC2(gap) {$1<>$2} -> Rheb(g~gtp!1),TSC2(gap!1) @ 1.0
+'RhebGDP' Rheb(g~gtp!1),TSC2(gap!1) -> Rheb(g~gdp!1),TSC2(gap!1) @ 1.0
+'Rictor...SIN1' Rictor(sin!1),SIN1(ric!1) -> Rictor(sin),SIN1(ric) @ 1.0
+'Rictor.SIN1' Rictor(sin),SIN1(ric) -> Rictor(sin!4),SIN1(ric!4) @ 1.0
+'S6K1...Raptor' S6K1(tos!2),Raptor(s!2) -> S6K1(tos),Raptor(s) @ 1.0
+'S6K1...S6' S6K1(subs!1),S6(S235!1) -> S6K1(subs),S6(S235) @ 1.0
+
+'S6K1.Raptor' S6K1(tos),Raptor(s) {$1<>$2} -> S6K1(tos!2),Raptor(s!2) @ 1.0
+
+'S6K1.S6' S6K1(T389~p,subs),S6(S235~u) -> S6K1(T389~p,subs!1),S6(S235~u!1) @ 1.0
+'S6K1.S6@S235' S6K1(T389~p,subs!1),S6(S235~u!1) -> S6K1(T389~p,subs!1),S6(S235~p!1) @ 1.0
+'S6K1@T229' PDK1(s6k1!1),S6K1(T229~u!1) -> PDK1(s6k1!1),S6K1(T229~p!1) @ 1.0
+'S6K1@T389' S6K1(tos!1,T389~u),mTOR(heat!2,l!3,fkb38),Raptor(heat!2,s!1),mLST8(m!3) -> S6K1(tos!1,T389~p),mTOR(heat!2,l!3,fkb38),Raptor(heat!2,s!1),mLST8(m!3) @ 1.0
+'TSC2.AMPK@S1270' AMPK(a~p,tsc),TSC2(a,S1270~u) -> AMPK(a~p,tsc!1),TSC2(a!1,S1270~u) @ 1.0
+'TSC2.AMPK@S1388' AMPK(a~p,tsc),TSC2(a,S1388~u) -> AMPK(a~p,tsc!1),TSC2(a!1,S1388~u) @ 1.0
+'TSC2@S1086' Akt(T308~p,subs!1),TSC2(S1086~u,a!1) -> Akt(T308~p,subs!1),TSC2(S1086~p,a!1) @ 1.0
+'TSC2@S1270' AMPK(a~p,tsc!1),TSC2(a!1,S1270~u) -> AMPK(a~p,tsc!1),TSC2(a!1,S1270~p) @ 1.0
+'TSC2@S1388' AMPK(a~p,tsc!1),TSC2(a!1,S1388~u) -> AMPK(a~p,tsc!1),TSC2(a!1,S1388~p) @ 1.0
+'TSC2@S939' Akt(subs!1,T308~p),TSC2(S939~u,a!1) -> Akt(subs!1,T308~p),TSC2(S939~p,a!1) @ 1.0
+'TSC2@T1462' Akt(subs!1,T308~p),TSC2(T1462~u,a!1) -> Akt(subs!1,T308~p),TSC2(T1462~p,a!1) @ 1.0
+'mTOR...FKB12' FKB12(m!2),mTOR(fkb12!2) -> FKB12(m),mTOR(fkb12) @ 1.0
+'mTOR...FKB38' FKB38(a!1,m!2),Rheb(fkb!1,g~gtp),mTOR(fkb38!2) -> FKB38(a!1,m),Rheb(fkb!1,g~gtp),mTOR(fkb38) @ 1.0
+'mTOR...LST8' mTOR(l!1),mLST8(m!1) -> mTOR(l),mLST8(m) @ 1.0
+'mTOR...Raptor' mTOR(heat!1),Raptor(heat!1) -> mTOR(heat),Raptor(heat) @ 1.0
+# 'mTOR...Raptor Ref1' mTOR(heat!1,fkb12!2),Raptor(heat!1),FKB12(a!3,m!2),rapamycin(a!3) -> mTOR(heat,fkb12!1),Raptor(heat),FKB12(a!2,m!1),rapamycin(a!2) @ 2.0 # Inactive rule
+'mTOR...Rictor' mTOR(heat!1,fkb12!2),Rictor(m2!2,m1!1) -> mTOR(heat,fkb12),Rictor(m2,m1) @ 1.0
+# 'mTOR...Rictor Ref1' mTOR(heat!1,sin,fkb12!2),Rictor(m2!2,m1!1,sin!_) -> mTOR(heat,sin,fkb12),Rictor(m2,m1,sin!_) @ 2.0 # Inactive rule
+# 'mTOR...Rictor Ref2' mTOR(heat!1,sin!_,fkb12!2),Rictor(m2!2,sin,m1!1) -> mTOR(heat,sin!_,fkb12),Rictor(m2,sin,m1) @ 2.0 # Inactive rule
+# 'mTOR...Rictor Ref3' mTOR(heat!1,sin!3,fkb12!2),Rictor(m2!2,sin!4,m1!1),SIN1(ric!4),SIN1(m!3) -> mTOR(heat,sin!1,fkb12),Rictor(m2,sin!2,m1),SIN1(ric!2),SIN1(m!1) @ 2.0 # Inactive rule
+# 'mTOR...Rictor Ref4' mTOR(heat!1,sin,fkb12!2),Rictor(m2!2,m1!1,sin) -> mTOR(heat,sin,fkb12),Rictor(m2,m1,sin) @ 2.0 # Inactive rule
+'mTOR...SIN1' mTOR(sin!1),SIN1(m!1) -> mTOR(sin),SIN1(m) @ 1.0
+'mTOR.FKB12' FKB12(a!1,m),rapamycin(a!1),mTOR(fkb12) -> FKB12(a!1,m!2),rapamycin(a!1),mTOR(fkb12!2) @ 1.0
+'mTOR.FKB38' FKB38(m,a),mTOR(fkb38) {$1<>$2} -> FKB38(m!2,a),mTOR(fkb38!2) @ 1.0
+'mTOR.LST8' mTOR(l),mLST8(m) -> mTOR(l!1),mLST8(m!1) @ 1.0
+'mTOR.Raptor' mTOR(heat),Raptor(heat) {$1<>$2} -> mTOR(heat!1),Raptor(heat!1) @ 1.0
+
+'mTOR.Rictor' mTOR(sin!1,fkb12,heat),Rictor(sin!2,m2,m1),SIN1(ric!2,m!1) {$1<>$2} -> mTOR(sin!3,fkb12!2,heat!1),Rictor(sin!4,m2!2,m1!1),SIN1(ric!4,m!3) @ 1.0
+
+'mTOR.SIN1' mTOR(sin),SIN1(m) {$1<>$2} -> mTOR(sin!1),SIN1(m!1) @ 1.0
+
+#######
+# Chapter Cycles
+'Cycle I ref1' mTOR(fkb12,sin!1,heat),Rictor(sin!4,m2,m1),SIN1(ric!4,m!1) -> mTOR(fkb12!2,sin!1,heat!3),Rictor(sin!4,m2!2,m1!3),SIN1(ric!4,m!1) @ 1.e+3
+'Cycle I ref2' mTOR(fkb12!2,sin,heat!3),Rictor(sin!4,m2!2,m1!3),SIN1(ric!4,m) -> mTOR(fkb12!2,sin!1,heat!3),Rictor(sin!4,m2!2,m1!3),SIN1(ric!4,m!1) @ 1.e+3
+'Cycle I ref3' mTOR(fkb12!2,sin!1,heat!3),Rictor(sin,m2!2,m1!3),SIN1(ric,m!1) -> mTOR(fkb12!2,sin!1,heat!3),Rictor(sin!4,m2!2,m1!3),SIN1(ric!4,m!1) @ 1.e+3
+
+'Cycle II ref1' mTOR(heat!2,fkb38),FKB38(a!8,m),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308!5,subs!6),PDK1(akt!5,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat!2,s!3) -> mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308!5,subs!6),PDK1(akt!5,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat!2,s!3) @ 1.e+3
+'Cycle II ref2' mTOR(heat,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308!5,subs!6),PDK1(akt!5,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat,s!3) -> mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308!5,subs!6),PDK1(akt!5,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat!2,s!3) @ 1.e+3
+'Cycle II ref3' mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308!5,subs!6),PDK1(akt!5,s6k1!4),S6K1(tos,T229!4),Raptor(heat!2,s) -> mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308!5,subs!6),PDK1(akt!5,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat!2,s!3) @ 1.e+3
+'Cycle II ref4' mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308!5,subs!6),PDK1(akt!5,s6k1),S6K1(tos!3,T229),Raptor(heat!2,s!3) -> mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308!5,subs!6),PDK1(akt!5,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat!2,s!3) @ 1.e+3
+'Cycle II ref5' mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308,subs!6),PDK1(akt,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat!2,s!3) -> mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308!5,subs!6),PDK1(akt!5,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat!2,s!3) @ 1.e+3
+'Cycle II ref6' mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a,gap!7),Akt(T308!5,subs),PDK1(akt!5,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat!2,s!3) -> mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308!5,subs!6),PDK1(akt!5,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat!2,s!3) @ 1.e+3
+'Cycle II ref7' mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g,fkb!8),TSC2(a!6,gap),Akt(T308!5,subs!6),PDK1(akt!5,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat!2,s!3) -> mTOR(heat!2,fkb38!1),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(T308!5,subs!6),PDK1(akt!5,s6k1!4),S6K1(tos!3,T229!4),Raptor(heat!2,s!3) @ 1.e+3
+
+
+'Cycle III ref1' mTOR(fkb38,sin!3),FKB38(a!8,m),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(subs!6,sin!2),SIN1(akt!2,m!3) -> mTOR(fkb38!1,sin!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(subs!6,sin!2),SIN1(akt!2,m!3) @ 1.e+3
+'Cycle III ref2' mTOR(fkb38!1,sin),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(subs!6,sin!2),SIN1(akt!2,m) -> mTOR(fkb38!1,sin!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(subs!6,sin!2),SIN1(akt!2,m!3) @ 1.e+3
+'Cycle III ref3' mTOR(fkb38!1,sin!3),FKB38(a,m!1),Rheb(g!7,fkb),TSC2(a!6,gap!7),Akt(subs!6,sin!2),SIN1(akt!2,m!3) -> mTOR(fkb38!1,sin!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(subs!6,sin!2),SIN1(akt!2,m!3) @ 1.e+3
+'Cycle III ref4' mTOR(fkb38!1,sin!3),FKB38(a!8,m!1),Rheb(g,fkb!8),TSC2(a!6,gap),Akt(subs!6,sin!2),SIN1(akt!2,m!3) -> mTOR(fkb38!1,sin!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(subs!6,sin!2),SIN1(akt!2,m!3) @ 1.e+3
+'Cycle III ref5' mTOR(fkb38!1,sin!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a,gap!7),Akt(subs,sin!2),SIN1(akt!2,m!3) -> mTOR(fkb38!1,sin!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(subs!6,sin!2),SIN1(akt!2,m!3) @ 1.e+3
+'Cycle III ref6' mTOR(fkb38!1,sin!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(subs!6,sin),SIN1(akt,m!3) -> mTOR(fkb38!1,sin!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(subs!6,sin!2),SIN1(akt!2,m!3) @ 1.e+3
+
+
+'Cycle IV ref1' mTOR(fkb38!1,heat,fkb12),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(sin!2,subs!6),SIN1(akt!2,ric!5),Rictor(sin!5,m1,m2) -> mTOR(fkb38!1,heat!4,fkb12!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(sin!2,subs!6),SIN1(akt!2,ric!5),Rictor(sin!5,m1!4,m2!3) @ 1.e+3
+'Cycle IV ref2' mTOR(fkb38,heat!4,fkb12!3),FKB38(a!8,m),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(sin!2,subs!6),SIN1(akt!2,ric!5),Rictor(sin!5,m1!4,m2!3) -> mTOR(fkb38!1,heat!4,fkb12!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(sin!2,subs!6),SIN1(akt!2,ric!5),Rictor(sin!5,m1!4,m2!3) @ 1.e+3
+'Cycle IV ref3' mTOR(fkb38!1,heat!4,fkb12!3),FKB38(a,m!1),Rheb(g!7,fkb),TSC2(a!6,gap!7),Akt(sin!2,subs!6),SIN1(akt!2,ric!5),Rictor(sin!5,m1!4,m2!3) -> mTOR(fkb38!1,heat!4,fkb12!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(sin!2,subs!6),SIN1(akt!2,ric!5),Rictor(sin!5,m1!4,m2!3) @ 1.e+3
+'Cycle IV ref4' mTOR(fkb38!1,heat!4,fkb12!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(sin!2,subs!6),SIN1(akt!2,ric),Rictor(sin,m1!4,m2!3) -> mTOR(fkb38!1,heat!4,fkb12!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(sin!2,subs!6),SIN1(akt!2,ric!5),Rictor(sin!5,m1!4,m2!3) @ 1.e+3
+'Cycle IV ref5' mTOR(fkb38!1,heat!4,fkb12!3),FKB38(a!8,m!1),Rheb(g,fkb!8),TSC2(a!6,gap),Akt(sin!2,subs!6),SIN1(akt!2,ric!5),Rictor(sin!5,m1!4,m2!3) -> mTOR(fkb38!1,heat!4,fkb12!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(sin!2,subs!6),SIN1(akt!2,ric!5),Rictor(sin!5,m1!4,m2!3) @ 1.e+3
+'Cycle IV ref6' mTOR(fkb38!1,heat!4,fkb12!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a,gap!7),Akt(sin!2,subs),SIN1(akt!2,ric!5),Rictor(sin!5,m1!4,m2!3) -> mTOR(fkb38!1,heat!4,fkb12!3),FKB38(a!8,m!1),Rheb(g!7,fkb!8),TSC2(a!6,gap!7),Akt(sin!2,subs!6),SIN1(akt!2,ric!5),Rictor(sin!5,m1!4,m2!3) @ 1.e+3
+
+# Initial Conditions:
+%init: 100 * (PP2A(B55-a))
+%init: 100 * (SIN1(m,akt,ric))
+%init: 100 * (IRS1(S302~u,pi3k))
+%init: 100 * (GSK3a(a,S21~u))
+%init: 100 * (PHLPP(PDZ))
+%init: 100 * (FoxO3a(a,T32~u))
+%init: 100 * (Rictor(m2,sin,m1))
+%init: 100 * (Rheb(fkb,g~gtp))
+%init: 100 * (GSK3b(a,S9~u))
+%init: 100 * (4E-BP1(tos,T37~u,T41~u))
+%init: 100 * (FoxO1(a,T24~u))
+%init: 100 * (PI3KE545K(subs,SH2~u))
+%init: 100 * (rapamycin(a))
+%init: 100 * (Raptor(heat,s))
+%init: 100 * (S6(S235~u))
+%init: 100 * (FKB38(a,m))
+%init: 100 * (S6K1(tos,T229~u,T389~u,subs))
+%init: 100 * (PIP(three~u))
+%init: 100 * (AMPK(a~p,tsc))
+%init: 100 * (Akt(sin,subs,PH,S473~u,T308~u))
+%init: 100 * (TSC2(a,gap,T1462~u,S939~u,S1086~u,S1270~u,S1388~u))
+%init: 100 * (PTEN(subs))
+%init: 100 * (FKB12(a,m))
+%init: 100 * (PDK1(akt,s6k1,PH))
+%init: 100 * (mTOR(l,heat,sin,fkb38,fkb12))
+%init: 100 * (mLST8(m))
+
+# Simulation:
+# Stories:

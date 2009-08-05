@@ -82,7 +82,7 @@ public final class AgentInvariant {
 			if (site.getLinkState().getStatusLink() == CLinkStatus.BOUND) {
 				CSite connectedSite = site.getLinkState().getConnectedSite();
 				if (connectedSite != null) {
-					AgentInvariant neighbor = agentToAgentInvariantMap.get(connectedSite.getAgentLink()); 
+					AgentInvariant neighbor = agentToAgentInvariantMap.get(connectedSite.getParentAgent()); 
 					if (neighbor == null) {
 						throw new RuntimeException("Could not find neighbor Agent in map!");
 					}
@@ -241,7 +241,7 @@ public final class AgentInvariant {
 				if (connectedSite == null) {
 					return null;
 				}
-				if (connectedSite.getAgentLink() == neighborAgent.getAgent()) {
+				if (connectedSite.getParentAgent() == neighborAgent.getAgent()) {
 					return site;
 				}
 			}

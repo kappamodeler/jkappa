@@ -53,8 +53,6 @@ public enum CActionType {
 	ADD(2),
 	BOUND(3),
 	MODIFY(4);
-//	ABSTRACT_BREAK_OR_BOUND(5),
-//	ABSTRACT_BREAK_OR_BOUND_AND_MODIFY(6);
 	
 	private int myId = -100;
 

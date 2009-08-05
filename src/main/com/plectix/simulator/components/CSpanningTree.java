@@ -90,7 +90,7 @@ final class CSpanningTree implements Serializable {
 		for (CSite site : rootAgent.getSites()) {
 			CSite linkSite = (CSite) site.getLinkState().getConnectedSite();
 			if (linkSite != null) {
-				CAgent agent = linkSite.getAgentLink();
+				CAgent agent = linkSite.getParentAgent();
 				Integer vertexIndex = agent.getIdInConnectedComponent();
 				if (newVertex[vertexIndex]) {
 					vertexes[rootAgent.getIdInConnectedComponent()]

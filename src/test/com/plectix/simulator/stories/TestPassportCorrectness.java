@@ -247,8 +247,9 @@ public class TestPassportCorrectness extends InitStoriesTests {
 			throws StoryStorageException {
 		Compressor weak = new Compressor(passport.getStorage());
 		passport.getStorage().markAllNull();
-		passport.getStorage().initialEvent().onlySetMark(EMarkOfEvent.KEPT);
-
+		if (!passport.getStorage().initialEvent().getAtomicEvents().isEmpty()) {
+			passport.getStorage().initialEvent().onlySetMark(EMarkOfEvent.KEPT);
+		}
 		weak.execute(StoryCompressionMode.WEAK);
 
 		passport.getStorage().markAllUnresolvedAsDeleted();

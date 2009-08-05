@@ -13,9 +13,11 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
-import org.apache.commons.cli.ParseException;
 import org.apache.log4j.Logger;
 
 import com.plectix.simulator.controller.SimulationService;
@@ -39,12 +41,13 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 
 	private static final PrintStream DEFAULT_OUTPUT_STREAM = System.err;
 	
+	private static final int MINIMUM_LIVE_DATA_INTERVAL = 50;
+
+	private static final int MAXIMUM_LIVE_DATA_INTERVAL = 30050;
+	
 	private static final String SIMULATION_COMBOBOX_ACTION_COMMAND = "SIMULATION_COMBOBOX_ACTION_COMMAND"; 
 	
 	private static final String COMMAND_LINE_OPTIONS = "--operation-mode 1 --agents-limit 100 --xml-session-name Session.xml --seed 1";
-	
-	// TODO: Add a slider bar to set the period:
-	private long period = 200;
 	
 	private long simulationJobID = -1;
 	
@@ -64,8 +67,13 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 	
 	private SimulationService simulationService = null;
 
-	// TODO: Add a slider bar to set the live data interval:
-	private long liveDataInterval = 1000;
+	private JLabel graphUpdatePeriodLabel = null;
+	private JSlider graphUpdatePeriodSlider = null;
+	private int graphUpdatePeriod = 200;
+	
+	private JLabel liveDataIntervalLabel = null;
+	private JSlider liveDataIntervalSlider = null;
+	private int liveDataInterval = 200;
 
 	private int liveDataPoints = SimulationArguments.DEFAULT_LIVE_DATA_POINTS;
 	
@@ -116,7 +124,6 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 	
 	public boolean addListener(ControlPanelListener listener) {
 		// let's make sure that this listener is up-to-date:
-		// LOGGER.info("Bringing listener " + listener + " up-to-date, currentTerminal is: " + currentTerminal.getArea());
 		// listener.setCurrentTerminal(currentTerminal);
 		boolean ret = listeners.add(listener);
 		// notifyListeners(currentTerminal);
@@ -152,6 +159,42 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 		add(label, gc.col(0).incy().fillNone().anchorLeft());
 		add(commandLineOptionsTextField, gc.incx().span(4, 1).fillHorizontal());
 
+		label = new JLabel(UIProperties.getString("controlpanel.livedatainterval.label"));
+		add(label, gc.col(0).incy().span(1, 1).fillNone().anchorLeft());
+		liveDataIntervalLabel = new JLabel(liveDataInterval + " msecs");
+		add(liveDataIntervalLabel, gc.incx().anchorRight());
+		liveDataIntervalSlider = new JSlider(MINIMUM_LIVE_DATA_INTERVAL, MAXIMUM_LIVE_DATA_INTERVAL, liveDataInterval);
+		liveDataIntervalSlider.setExtent(MINIMUM_LIVE_DATA_INTERVAL);
+		liveDataIntervalSlider.setMinorTickSpacing(10*MINIMUM_LIVE_DATA_INTERVAL);
+		liveDataIntervalSlider.setMajorTickSpacing(100*MINIMUM_LIVE_DATA_INTERVAL);
+		// liveDataIntervalSlider.setSnapToTicks(true);
+		liveDataIntervalSlider.setPaintTicks(true);
+		liveDataIntervalSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				liveDataInterval = liveDataIntervalSlider.getValue();
+				liveDataIntervalLabel.setText(liveDataInterval + " msecs");
+			} } );
+		add(liveDataIntervalSlider, gc.incx().span(3, 1).fillHorizontal());
+
+		label = new JLabel(UIProperties.getString("controlpanel.graphupdateperiod.label"));
+		add(label, gc.col(0).incy().span(1, 1).fillNone().anchorLeft());
+		graphUpdatePeriodLabel = new JLabel(graphUpdatePeriod + " msecs");
+		add(graphUpdatePeriodLabel, gc.incx().anchorRight());
+		graphUpdatePeriodSlider = new JSlider(MINIMUM_LIVE_DATA_INTERVAL, MAXIMUM_LIVE_DATA_INTERVAL, graphUpdatePeriod);
+		graphUpdatePeriodSlider.setExtent(MINIMUM_LIVE_DATA_INTERVAL);
+		graphUpdatePeriodSlider.setMinorTickSpacing(10*MINIMUM_LIVE_DATA_INTERVAL);
+		graphUpdatePeriodSlider.setMajorTickSpacing(100*MINIMUM_LIVE_DATA_INTERVAL);
+		// graphUpdatePeriodSlider.setSnapToTicks(true);
+		graphUpdatePeriodSlider.setPaintTicks(true);
+		graphUpdatePeriodSlider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				graphUpdatePeriod = graphUpdatePeriodSlider.getValue();
+				graphUpdatePeriodLabel.setText(graphUpdatePeriod + " msecs");
+			} } );
+		add(graphUpdatePeriodSlider, gc.incx().span(3, 1).fillHorizontal());
+		
 		gc.col(0).incy().span(1, 1).insets(0, 5, 0, 0).fillHorizontal();
 		
 		// finally add a glue:
@@ -173,10 +216,11 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 		} else {
 			LOGGER.info("Command line options:" + commandLineOptions);
 			try {
+				SimulatorCommandLine commandLine = new SimulatorCommandLine(commandLineOptions);
+				graphPanel.clearConsole();
 				LOGGER.info("Calling Simulator");
 				Runtime.getRuntime().gc();
-				SimulatorCommandLine commandLine = new SimulatorCommandLine(commandLineOptions);
-				simulationJobID = simulationService.submit(new SimulatorInputData(commandLine.getSimulationArguments(), DEFAULT_OUTPUT_STREAM), null);
+				simulationJobID = simulationService.submit(new SimulatorInputData(commandLine.getSimulationArguments(), new ConsolePrintStream(graphPanel.getTextArea())), null);
 				setComponentsEnabled(true);
 				
 				progressBar.setIndeterminate(true);				
@@ -189,14 +233,14 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 						checkStatus();
 					}
 
-				}, 0, period);
+				}, 0, graphUpdatePeriod);
 				
-			} catch (ParseException parseException) {
+			} catch (Exception exception) {
 				if (simulationJobID >= 0) {
 					simulationService.cancel(simulationJobID, true, true);
 					simulationJobID = -1;
 				}
-				parseException.printStackTrace();
+				exception.printStackTrace();
 			}
 		}
 	}
@@ -217,12 +261,14 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 		stopButton.setEnabled(simulationRunning);
 		simulationComboBox.setEnabled(!simulationRunning);
 		commandLineOptionsTextField.setEnabled(!simulationRunning);
+		liveDataIntervalSlider.setEnabled(!simulationRunning);
+		graphUpdatePeriodSlider.setEnabled(!simulationRunning);
 		progressBar.setEnabled(simulationRunning);
 	}
 
 	private void checkStatus() {
 		SimulatorStatusInterface simulatorStatus = simulationService.getSimulatorStatus(simulationJobID);
-		LiveData liveData = simulationService.getSimulatorLiveData(simulationJobID, new LiveData());
+		LiveData liveData = simulationService.getSimulatorLiveData(simulationJobID);
 		
 		// LOGGER.info("Simulator Status: " + simulatorStatus.getStatusMessage());
 		

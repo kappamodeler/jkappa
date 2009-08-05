@@ -44,7 +44,7 @@ public class Simulator1 implements SimulatorInterface {
 	}
 
 	@Override
-	public final LiveData getLiveData(LiveData liveData) {
+	public final LiveData getLiveData() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -2,6 +2,8 @@ package com.plectix.simulator.simulator;
 
 import java.text.DecimalFormat;
 
+import com.plectix.simulator.components.CConnectedComponent;
+import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.util.NameDictionary;
 import com.plectix.simulator.util.PlxLogger;
@@ -21,6 +23,23 @@ public class ThreadLocalData {
 		@Override 
 		protected IRandom initialValue() {
 			return new CRandomJava(SimulationArguments.DEFAULT_SEED);
+		}
+	};
+
+	/**
+	 * "EMPTY" ConnectedComponent, contains no agents.
+	 */
+	private static ThreadLocal<CConnectedComponent> emptyConnectedComponent = new ThreadLocal<CConnectedComponent> () {
+		@Override 
+		protected CConnectedComponent initialValue() {
+			return new CConnectedComponent();
+		}
+	};
+
+	private static ThreadLocal<CInjection> emptyInjection = new ThreadLocal<CInjection> () {
+		@Override 
+		protected CInjection initialValue() {
+			return new CInjection();
 		}
 	};
 	
@@ -96,5 +115,13 @@ public class ThreadLocalData {
 
 	public static IRandom getRandom() {
 		return random.get();
+	}
+	
+	public static CConnectedComponent getEmptyConnectedComponent(){
+		return emptyConnectedComponent.get();
+	}
+
+	public static CInjection getEmptyInjection(){
+		return emptyInjection.get();
 	}
 }

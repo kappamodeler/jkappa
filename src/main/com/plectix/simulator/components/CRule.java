@@ -63,7 +63,6 @@ public class CRule implements Serializable, WeightedItem {
 	private final List<IConnectedComponent> leftHandside;
 	private final List<IConnectedComponent> rightHandside;
 	private final String ruleName;
-	private final boolean isStorify;
 	private List<CSite> sitesConnectedWithDeleted;
 	private List<CSite> sitesConnectedWithBroken;
 	private boolean rHSEqualsLHS;
@@ -71,11 +70,9 @@ public class CRule implements Serializable, WeightedItem {
 	private int automorphismNumber = 1;
 	private boolean infiniteRate = false;
 	private List<CRule> activatedRules = new LinkedList<CRule>();
-	private List<CRule> activatedRuleForXMLOutput;
 	private List<CRule> inhibitedRule = new LinkedList<CRule>();
 
 	private List<IObservablesConnectedComponent> activatedObservable = new LinkedList<IObservablesConnectedComponent>();
-	private List<IObservablesConnectedComponent> activatedObservableForXMLOutput;
 	private List<IObservablesConnectedComponent> inhibitedObservable = new LinkedList<IObservablesConnectedComponent>();
 
 	private int ruleID;
@@ -84,7 +81,6 @@ public class CRule implements Serializable, WeightedItem {
 	private List<CInjection> injList;
 	private List<CSite> changedActivatedSites;
 	private List<ChangedSite> changedInhibitedSites;
-	private List<ChangedSite> fixedSites;
 	private double activity = 0.;
 	private double rate;
 
@@ -119,19 +115,17 @@ public class CRule implements Serializable, WeightedItem {
 			double ruleRate, int ruleID, boolean isStorify) {
 		if (leftHandsideComponents == null) {
 			leftHandside = new ArrayList<IConnectedComponent>();
-			leftHandside.add(CConnectedComponent.EMPTY);
+			leftHandside.add(ThreadLocalData.getEmptyConnectedComponent());
 		} else {
 			this.leftHandside = leftHandsideComponents;
 		}
 		this.rightHandside = rightHandsideComponents;
-		this.isStorify = isStorify;
 		this.rate = ruleRate;
 		setConnectedComponentLinkRule(leftHandsideComponents);
 		setConnectedComponentLinkRule(rightHandsideComponents);
 		for (IConnectedComponent cc : this.leftHandside) {
 			cc.initSpanningTreeMap();
 		}
-		// if (ruleRate == Double.MAX_VALUE) {
 		if (ruleRate == Double.POSITIVE_INFINITY) {
 			this.infiniteRate = true;
 			this.rate = 1;
@@ -199,7 +193,7 @@ public class CRule implements Serializable, WeightedItem {
 	 *         substances, otherwise <tt>false</tt>
 	 */
 	public final boolean leftHandSideIsEmpty() {
-		return leftHandside.contains(CConnectedComponent.EMPTY);
+		return leftHandside.contains(ThreadLocalData.getEmptyConnectedComponent());
 	}
 
 	/**
@@ -211,23 +205,7 @@ public class CRule implements Serializable, WeightedItem {
 		return rightHandside == null;
 	}
 
-	/**
-	 * 
-	 * @return list of rules which couldn't be applied after application of this
-	 *         rule
-	 */
-	public List<CRule> getInhibitedRule() {
-		return inhibitedRule;
-	}
 
-	/**
-	 * 
-	 * @return list of observables which quantity reduces after application of
-	 *         this rule
-	 */
-	public List<IObservablesConnectedComponent> getInhibitedObservable() {
-		return inhibitedObservable;
-	}
 
 	/**
 	 * 
@@ -308,23 +286,6 @@ public class CRule implements Serializable, WeightedItem {
 		return agentAddList.get(rhsAgent);
 	}
 
-	/**
-	 * This method returns IDs of all agents, which was added by the latest
-	 * application of this rule
-	 * 
-	 * @return list of IDs of all agents, which was added by the latest
-	 *         application of this rule
-	 */
-	public Set<Long> getAgentsAddedID() {
-		if (agentAddList.size() == 0)
-			return null;
-		Set<Long> set = new LinkedHashSet<Long>();
-
-		for (CAgent agent : agentAddList.values()) {
-			set.add(agent.getId());
-		}
-		return set;
-	}
 
 	/**
 	 * This method puts agent in solution, which was added with the latest
@@ -398,7 +359,6 @@ public class CRule implements Serializable, WeightedItem {
 	private final void markRHSAgents() {
 		List<CAgent> rhsAgents = new ArrayList<CAgent>();
 		List<CAgent> lhsAgents = new ArrayList<CAgent>();
-		fixedSites = new ArrayList<ChangedSite>();
 
 		if (leftHandside.get(0).isEmpty()) {
 			int indexAgentRHS = 0;
@@ -429,8 +389,8 @@ public class CRule implements Serializable, WeightedItem {
 				break;
 			}
 			// filling of fixed agents
-			if (index < rhsAgents.size() && isStorify)
-				fillFixedSites(lhsAgent, rhsAgents.get(index));
+//			if (index < rhsAgents.size() && isStorify)
+//				fillFixedSites(lhsAgent, rhsAgents.get(index));
 			index++;
 		}
 
@@ -442,46 +402,6 @@ public class CRule implements Serializable, WeightedItem {
 		}
 	}
 
-	/**
-	 * This method searches for the similar sites of two agents. We use it on
-	 * initialization
-	 * 
-	 * @param lhsAgent
-	 *            agent from left handside
-	 * @param rhsAgent
-	 *            agent from right handside
-	 */
-	private final void fillFixedSites(CAgent lhsAgent, CAgent rhsAgent) {
-		for (CSite lhsSite : lhsAgent.getSites()) {
-			CSite rhsSite = rhsAgent.getSiteByNameId(lhsSite.getNameId());
-			ChangedSite fixedSite = new ChangedSite(lhsSite);
-			if (lhsSite.getInternalState().equals(rhsSite.getInternalState())
-					&& lhsSite.getInternalState().getNameId() != CSite.NO_INDEX) {
-				fixedSite.setInternalState(true);
-			}
-			if (lhsSite.getLinkState().getConnectedSite() == null
-					&& rhsSite.getLinkState().getConnectedSite() == null) {
-				fixedSite.setLinkState(true);
-			}
-			if (lhsSite.getLinkState().getConnectedSite() != null
-					&& rhsSite.getLinkState().getConnectedSite() != null) {
-				if (lhsSite.getLinkState().getConnectedSite().equalz(
-						rhsSite.getLinkState().getConnectedSite())
-						&& lhsSite.getLinkState().getConnectedSite()
-								.getAgentLink().getIdInRuleHandside() == rhsSite
-								.getLinkState().getConnectedSite()
-								.getAgentLink().getIdInRuleHandside())
-					fixedSite.setLinkState(true);
-			}
-			if (fixedSite.isLinkState() || fixedSite.isInternalState())
-				fixedSites.add(fixedSite);
-		}
-		if (lhsAgent.getSites().size() == 0 && rhsAgent.getSites().size() == 0) {
-			ChangedSite fixedSite = new ChangedSite(lhsAgent.getDefaultSite());
-			fixedSite.setLinkState(true);
-			fixedSites.add(fixedSite);
-		}
-	}
 
 	/**
 	 * This method sorts agents by id in rule's handside
@@ -521,325 +441,9 @@ public class CRule implements Serializable, WeightedItem {
 		}
 	}
 
-	/**
-	 * This method returns agents that are included both in right handside of
-	 * the current rule and in another rules
-	 * 
-	 * @param agentsFromAnotherRules
-	 *            list of agents from another rules
-	 * @return <tt>true</tt> if there's agents that are included both in right
-	 *         handside of the current rule and in another rules, otherwise
-	 *         <tt>false</tt>
-	 */
-	private boolean hasAgentIntersection(List<CAgent> agentsFromAnotherRules) {
-		if (rightHandside != null)
-			for (IConnectedComponent cc : rightHandside)
-				for (CAgent agentRight : cc.getAgents())
-					if (agentRight.includedInCollection(agentsFromAnotherRules))
-						return true;
-		return false;
-	}
 
-	/**
-	 * This method founds if there's agent from the given list which is
-	 * activates by this rule
-	 * 
-	 * @param agentsFromAnotherRules
-	 *            list of agents
-	 * @return <tt>true</tt> if there's agent from the given list which is
-	 *         activates by this rule, otherwise <tt>false</tt>
-	 */
-	private final boolean isActivated(List<CAgent> agentsFromAnotherRules) {
-		if (this.rightHandside == null)
-			return false;
-		int allIntersectsSites = 0;
-		if (!hasAgentIntersection(agentsFromAnotherRules))
-			return false;
 
-		for (CAgent agent : agentsFromAnotherRules) {
-			if (checkRulesNullAgents(agent))
-				return true;
 
-			for (CSite site : agent.getSites()) {
-				for (CSite changedSite : changedActivatedSites) {
-					if (changedSite.equalz(site)) {
-						allIntersectsSites++;
-						CInternalState currentInternalState = changedSite
-								.getInternalState();
-						CInternalState internalState = site.getInternalState();
-						if (!(currentInternalState.isRankRoot())
-								&& !(internalState.isRankRoot())) {
-							if (internalState.getNameId() != currentInternalState
-									.getNameId())
-								return false;
-						}
-					}
-				}
-			}
-
-			for (CSite site : agent.getSites()) {
-				for (CSite changedSite : changedActivatedSites) {
-					if (changedSite.equalz(site)) {
-						CLink currentLinkState = changedSite.getLinkState();
-						CLink linkState = site.getLinkState();
-
-						if (currentLinkState.hasFreeStatus()
-								&& linkState.hasFreeStatus())
-							continue;
-
-						if (linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
-							continue;
-
-						if (currentLinkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
-							continue;
-
-						if ((currentLinkState.getStatusLinkRank() == CLinkRank.SEMI_LINK || currentLinkState
-								.getStatusLinkRank() == CLinkRank.BOUND)
-								&& linkState.getStatusLinkRank() == CLinkRank.SEMI_LINK)
-							continue;
-
-						if (currentLinkState.hasFreeStatus()
-								&& (!(linkState.hasFreeStatus())))
-							return false;
-
-						if ((!(currentLinkState.hasFreeStatus()))
-								&& linkState.hasFreeStatus())
-							return false;
-
-						if (currentLinkState.getStatusLinkRank() == linkState
-								.getStatusLinkRank()
-								&& currentLinkState.getStatusLinkRank() == CLinkRank.BOUND)
-							if (!(currentLinkState.getConnectedSite()
-									.equalz(linkState.getConnectedSite())))
-								return false;
-					}
-				}
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * This method founds if there's agent from the given list which is
-	 * inhibited by this rule
-	 * 
-	 * @param agentsFromAnotherRules
-	 *            list of agents
-	 * @return <tt>true</tt> if there's agent from the given list which is
-	 *         inhibited by this rule, otherwise <tt>false</tt>
-	 */
-	private final boolean isInhibited(List<CAgent> agentsFromAnotherRules) {
-		for (CAgent agent : agentsFromAnotherRules) {
-			if (this.leftHandside != null && checkRulesNullAgents(agent))
-				return true;
-
-			if (!hasAgentIntersection(agentsFromAnotherRules))
-				return false;
-
-			for (CSite site : agent.getSites()) {
-				for (ChangedSite changedSite : changedInhibitedSites) {
-					if (changedSite.getSite().equalz(site)) {
-						// if (changedSite.getSite().equals(site)) {
-
-						CInternalState currentInternalState = changedSite
-								.getSite().getInternalState();
-						CInternalState internalState = site.getInternalState();
-
-						CLink currentLinkState = changedSite.getSite()
-								.getLinkState();
-						CLink linkState = site.getLinkState();
-
-						if (!changedSite.isInternalState()
-								&& changedSite.isLinkState()) {
-							if (!(currentInternalState.isRankRoot())
-									&& !(internalState.isRankRoot())) {
-								if (internalState.getNameId() == currentInternalState
-										.getNameId()) {
-									if (checkInhibitedLinkStates(
-											currentLinkState, linkState))
-										return true;
-								}
-							}
-
-							if (currentInternalState.isRankRoot()) {
-								if (checkInhibitedLinkStates(currentLinkState,
-										linkState))
-									return true;
-							}
-						}
-
-						if (changedSite.isInternalState()) {
-							if (!(currentInternalState.isRankRoot())
-									&& !(internalState.isRankRoot())) {
-								if (internalState.getNameId() == currentInternalState
-										.getNameId()) {
-									if (linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
-										return true;
-									if (checkInhibitedLinkStates(
-											currentLinkState, linkState))
-										return true;
-								}
-							} else {
-								if (currentLinkState.getStatusLinkRank() == CLinkRank.FREE
-										&& linkState.getStatusLinkRank() == CLinkRank.BOUND_OR_FREE)
-									return true;
-								if (checkInhibitedLinkStates(currentLinkState,
-										linkState))
-									return true;
-							}
-						}
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * This method helps to avoid code duplication
-	 */
-	private boolean checkInhibitedLinkStates(CLink currentLinkState,
-			CLink linkState) {
-		if (currentLinkState.getStatusLinkRank() == CLinkRank.FREE
-				&& linkState.getStatusLinkRank() == CLinkRank.FREE)
-			return true;
-		if (currentLinkState.getStatusLinkRank() == CLinkRank.BOUND
-				&& linkState.getStatusLinkRank() == CLinkRank.SEMI_LINK)
-			return true;
-		if (currentLinkState.getStatusLinkRank() == CLinkRank.BOUND
-				&& linkState.getStatusLinkRank() == CLinkRank.BOUND)
-			if (currentLinkState.getConnectedSite().equalz(
-					linkState.getConnectedSite()))
-				// if (currentLinkState.getSite().equals(linkState.getSite()))
-				return true;
-		return false;
-	}
-
-	/**
-	 * Util method
-	 */
-	private final boolean checkRulesNullAgents(CAgent agent) {
-		if (this.rightHandside != null) {
-			for (IConnectedComponent cc : this.getRightHandSide())
-				for (CAgent agentFromRule : cc.getAgents())
-					if (agent.equalz(agentFromRule))
-						if (agentFromRule.getSites().isEmpty()
-								|| agent.getSites().isEmpty())
-							return true;
-		}
-		return false;
-	}
-
-	// ----------------------FILL OF ACTIVATED AND INHIBITED
-	// COMPONENTS---------------------
-	/**
-	 * This method updates list of rules (using rules from another, given list)
-	 * which are activated by this one.
-	 * 
-	 * @param rules
-	 *            given list of rules
-	 */
-	public final void updateActivatedRulesList(List<CRule> rules) {
-		activatedRules = new ArrayList<CRule>();
-		activatedRuleForXMLOutput = new ArrayList<CRule>();
-		for (CRule rule : rules) {
-			for (IConnectedComponent cc : rule.getLeftHandSide()) {
-				if (isActivated(cc.getAgents())) {
-					activatedRules.add(rule);
-					if (!checkEmbedding(rule.getLeftHandSide()))
-						activatedRuleForXMLOutput.add(rule);
-					break;
-				}
-			}
-		}
-	}
-
-	/**
-	 * This method updates list of rules (using rules from another, given list)
-	 * which are inhibited by this one.
-	 * 
-	 * @param rules
-	 *            given list of rules
-	 */
-	public final void updateInhibitedRulesList(List<CRule> rules) {
-		inhibitedRule = new ArrayList<CRule>();
-		for (CRule rule : rules) {
-			if (this != rule)
-				for (IConnectedComponent cc : rule.getLeftHandSide()) {
-					if (isInhibited(cc.getAgents())) {
-						inhibitedRule.add(rule);
-						break;
-					}
-				}
-		}
-	}
-
-	/**
-	 * This methods checks if given list of connected components is included in
-	 * left handside of this rule
-	 * 
-	 * @param listCC
-	 *            given list of connected components
-	 * @return <tt>true</tt> if listCC is included in left handside of this rule
-	 */
-	private boolean checkEmbedding(List<IConnectedComponent> listCC) {
-		int counter = 0;
-		for (IConnectedComponent cc : listCC) {
-			for (IConnectedComponent checkCC : this.leftHandside) {
-				if (cc.unify(checkCC.getAgents().get(0))) {
-					counter++;
-					break;
-				}
-			}
-		}
-		if (counter == listCC.size())
-			return true;
-
-		return false;
-	}
-
-	/**
-	 * This methods check out observable components which are activated by this
-	 * rule
-	 * 
-	 * @param observables
-	 *            all observable components in current simulation
-	 */
-	public final void initializeActivatedObservablesList(
-			CObservables observables) {
-		activatedObservable = new LinkedList<IObservablesConnectedComponent>();
-		activatedObservableForXMLOutput = new LinkedList<IObservablesConnectedComponent>();
-		for (IObservablesConnectedComponent obsCC : observables
-				.getConnectedComponentList()) {
-			if (obsCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX
-					&& isActivated(obsCC.getAgents())) {
-				activatedObservable.add(obsCC);
-				List<IConnectedComponent> listCC = new ArrayList<IConnectedComponent>();
-				listCC.add(obsCC);
-				if (!checkEmbedding(listCC))
-					activatedObservableForXMLOutput.add(obsCC);
-			}
-		}
-	}
-
-	/**
-	 * This methods check out observable components which are inhibited by this
-	 * rule
-	 * 
-	 * @param observables
-	 *            all observable components in current simulation
-	 */
-	public final void initializeInhibitedObservablesList(
-			CObservables observables) {
-		inhibitedObservable = new ArrayList<IObservablesConnectedComponent>();
-		for (IObservablesConnectedComponent obsCC : observables
-				.getConnectedComponentList()) {
-			if (obsCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX
-					&& isInhibited(obsCC.getAgents())) {
-				inhibitedObservable.add(obsCC);
-			}
-		}
-	}
 
 	/**
 	 * Util method using when creating actions list
@@ -862,26 +466,6 @@ public class CRule implements Serializable, WeightedItem {
 				linkState));
 	}
 
-	// ---------------------XML OUTPUT
-	// INFORMATION---------------------------------------
-
-	/**
-	 * This method returns list of activated rules to be printed to XML
-	 * 
-	 * @return list of activated rules, that are to be printed to XML
-	 */
-	public List<CRule> getActivatedRuleForXMLOutput() {
-		return activatedRuleForXMLOutput;
-	}
-
-	/**
-	 * This method returns list of activated observables to be printed to XML
-	 * 
-	 * @return list of activated observables, that are to be printed to XML
-	 */
-	public List<IObservablesConnectedComponent> getActivatedObservableForXMLOutput() {
-		return activatedObservableForXMLOutput;
-	}
 
 	/**
 	 * This methods creates atomic-actions list for this rule
@@ -1081,7 +665,7 @@ public class CRule implements Serializable, WeightedItem {
 		if (leftHandside == null) {
 			return null;
 		} else {
-			return Collections.unmodifiableList(leftHandside);
+			return leftHandside;
 		}
 	}
 
@@ -1095,7 +679,7 @@ public class CRule implements Serializable, WeightedItem {
 		if (rightHandside == null) {
 			return null;
 		} else {
-			return Collections.unmodifiableList(rightHandside);
+			return rightHandside;
 		}
 	}
 
@@ -1115,8 +699,8 @@ public class CRule implements Serializable, WeightedItem {
 			for (CInjection inj2 : injectionStack) {
 				for (CSite siteCC1 : inj1.getSiteList())
 					for (CSite siteCC2 : inj2.getSiteList())
-						if (siteCC1.getAgentLink().getId() == siteCC2
-								.getAgentLink().getId())
+						if (siteCC1.getParentAgent().getId() == siteCC2
+								.getParentAgent().getId())
 							return true;
 			}
 		}
@@ -1154,7 +738,7 @@ public class CRule implements Serializable, WeightedItem {
 	 *         this rule, which points to connected component, including siteTo
 	 */
 	public final CInjection getInjectionBySiteToFromLHS(CSite siteTo) {
-		int sideId = siteTo.getAgentLink().getIdInRuleHandside();
+		int sideId = siteTo.getParentAgent().getIdInRuleHandside();
 		int i = 0;
 		for (IConnectedComponent cc : leftHandside) {
 			for (CAgent agent : cc.getAgents())
@@ -1166,7 +750,7 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	public final List<CSite> getSitesConnectedWithBroken() {
-		return Collections.unmodifiableList(sitesConnectedWithBroken);
+		return sitesConnectedWithBroken;
 	}
 
 	/**
@@ -1180,7 +764,7 @@ public class CRule implements Serializable, WeightedItem {
 	}
 
 	public final List<CSite> getSitesConnectedWithDeleted() {
-		return Collections.unmodifiableList(sitesConnectedWithDeleted);
+		return sitesConnectedWithDeleted;
 	}
 
 	public final void addSiteConnectedWithDeleted(CSite site) {
@@ -1296,7 +880,7 @@ public class CRule implements Serializable, WeightedItem {
 	 * @return list of observable components which activate by this rule
 	 */
 	public final List<IObservablesConnectedComponent> getActivatedObservable() {
-		return Collections.unmodifiableList(activatedObservable);
+		return activatedObservable;
 	}
 
 	/**
@@ -1305,7 +889,7 @@ public class CRule implements Serializable, WeightedItem {
 	 * @return list of rules which activate by this rule
 	 */
 	public final List<CRule> getActivatedRules() {
-		return Collections.unmodifiableList(activatedRules);
+		return activatedRules;
 	}
 	
 	public final void addActivatedRule(CRule rule){
@@ -1329,7 +913,7 @@ public class CRule implements Serializable, WeightedItem {
 	 * @return list of actions, which this rule performs
 	 */
 	public final List<CAction> getActionList() {
-		return Collections.unmodifiableList(actionList);
+		return actionList;
 	}
 
 	public double getWeight() {

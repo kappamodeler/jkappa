@@ -49,41 +49,33 @@ public class CModifyAction extends CAction {
 		setType(CActionType.MODIFY);
 	}
 
+	@Override
 	public final void doAction(RuleApplicationPool pool, CInjection injection,
 			CEvent eventContainer,
 			SimulationData simulationData) {
 		/**
 		 * Done.
 		 */
-		int agentIdInCC = getAgentIdInCCBySideId(mySiteTo.getAgentLink());
+		int agentIdInCC = getAgentIdInCCBySideId(mySiteTo.getParentAgent());
 		CAgent agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
-
-		// /////////////////////////////////////////////
 		CSite injectedSite = agentFromInSolution.getSiteByNameId(mySiteTo
 				.getNameId());
-//		addToNetworkNotation(StateType.BEFORE,
-//				netNotation, injectedSite);
-//		addRuleSitesToNetworkNotation(false, netNotation, injectedSite);
 
 		addSiteToEventContainer(eventContainer, injectedSite, CEvent.BEFORE_STATE);
 		injectedSite.getInternalState().setNameId(myInternalStateNameId);
 		injection.addToChangedSites(injectedSite);
 
-//		addToNetworkNotation(StateType.AFTER,
-//				netNotation, injectedSite);
 		addSiteToEventContainer(eventContainer, injectedSite, CEvent.AFTER_STATE);
-		// /////////////////////////////////////////////
 	}
 
-	private static void addSiteToEventContainer(CEvent eventContainer,
+	private final void addSiteToEventContainer(CEvent eventContainer,
 			CSite site, boolean state) {
 		if (eventContainer == null)
 			return;
-		ThreadLocalData.getTypeById().setTypeOfAgent(site.getAgentLink().getId(), site.getAgentLink().getNameId());
+		ThreadLocalData.getTypeById().setTypeOfAgent(site.getParentAgent().getId(), site.getParentAgent().getNameId());
 
-		eventContainer.addAtomicEvent(new WireHashKey(site.getAgentLink().getId(), site
+		eventContainer.addAtomicEvent(new WireHashKey(site.getParentAgent().getId(), site
 				.getNameId(), ETypeOfWire.INTERNAL_STATE), site,
 				EActionOfAEvent.MODIFICATION, state);
 	}
-
 }

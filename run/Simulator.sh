@@ -11,7 +11,7 @@ if [ x$JAVA != 'x' ] ; then
    else
        VERSION_MIN=`echo $VERSION | awk -F'.' '{print $2}'`
 
-       if [ x`expr $VERSION_MIN \< 5` == 'x1' ] ; then
+       if [ x`expr $VERSION_MIN \< 6` == 'x1' ] ; then
            JAVA=
        else
            # Installed version is fine:

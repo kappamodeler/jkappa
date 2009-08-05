@@ -82,13 +82,13 @@ public class CEvent implements ICEvent {
 				event.getState().setBeforeState(new CStateOfLink());
 			else
 				event.getState().setBeforeState(
-						new CStateOfLink(connectedSite.getAgentLink().getId(),
+						new CStateOfLink(connectedSite.getParentAgent().getId(),
 								connectedSite.getNameId()));
 		else if (site.getLinkState().getConnectedSite() == null)
 			event.getState().setAfterState(new CStateOfLink());
 		else
 			event.getState().setAfterState(
-					new CStateOfLink(connectedSite.getAgentLink().getId(),
+					new CStateOfLink(connectedSite.getParentAgent().getId(),
 							connectedSite.getNameId()));
 	}
 

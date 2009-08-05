@@ -1,0 +1,150 @@
+# large scale model
+
+# considers both MAPKKp and MAPKKpp as enzymes (i.e. inactive needs both depho'ed)
+# MAPKK phos'ed/dephos'ed sequentially and processively
+# ERK phos'ed/dephos'ed distributively; phos'ed concurrently, dephos'ed sequentially (Y then T)
+# Raf, MEK depho'ed by PP2A; ERK by MKP
+# active ERK phoses SoS, causing break-up of Grb2-SoS
+
+# background noise
+'ADPATP' A(s~pp), Pi() <-> A(s~ppp)
+
+# chapter -> ligand binding
+# mainly consider EGF and HRG for now
+'EGF_EGFR'     EGF(r), EGFR(L,CR) <-> EGF(r!1), EGFR(L!1,CR)
+#'TGFa_EGFR'    TGFa(r), EGFR(L,CR) <-> TGFa(r!1), EGFR(L!1,CR)
+#'amphiR_EGFR'  amphiR(r), EGFR(L,CR) <-> amphiR(r!1), EGFR(L!1,CR)
+#'betaC_EGFR'   betaC(r), EGFR(L,CR) <-> betaC(r!1), EGFR(L!1,CR)
+#'HB-EGF_EGFR'  HB-EGF(r), EGFR(L,CR) <-> HB-EGF(r!1), EGFR(L!1,CR)
+#'epiR_EGFR'    epiR(r), EGFR(L,CR) <-> epiR(r!1), EGFR(L!1,CR)
+'HRG_ErbB3'    HRG(r), ErbB3(L,CR) <-> HRG(r!1), ErbB3(L!1,CR)
+#'NRG2_ErbB3'   NRG2(r), ErbB3(L,CR) <-> NRG2(r!1), ErbB3(L!1,CR)
+#'HB-EGF_ErbB4' HB-EGF(r), ErbB4(L,CR) <-> HB-EGF(r!1), ErbB4(L!1,CR)
+#'betaC_ErbB4'  betaC(r), ErbB4(L,CR) <-> betaC(r!1), ErbB4(L!1,CR)
+#'epiR_ErbB4'   epiR(r), ErbB4(L,CR) <-> epiR(r!1), ErbB4(L!1,CR)
+'HRG_ErbB4'    HRG(r), ErbB4(L,CR) <-> HRG(r!1), ErbB4(L!1,CR)
+#'NRG2_ErbB4'   NRG2(r), ErbB4(L,CR) <-> NRG2(r!1), ErbB4(L!1,CR)
+#'NRG3_ErbB4'   NRG3(r), ErbB4(L,CR) <-> NRG3(r!1), ErbB4(L!1,CR)
+#'NRG4_ErbB4'   NRG4(r), ErbB4(L,CR) <-> NRG4(r!1), ErbB4(L!1,CR)
+
+# chapter -> ligand-receptor dimerization
+'EGFR_EGFR'   EGFR(L!_,CR), EGFR(L!_,CR) <-> EGFR(L!_,CR!1), EGFR(L!_,CR!1)
+'EGFR_ErbB2'  EGFR(L!_,CR), ErbB2(CR) <-> EGFR(L!_,CR!1), ErbB2(CR!1)
+'EGFR_ErbB4'   EGFR(L!_,CR), ErbB4(L!_,CR) <-> EGFR(L!_,CR!1), ErbB4(L!_,CR!1)
+
+'ErbB2_ErbB3' EGFR(L!_,CR), ErbB2(CR) <-> EGFR(L!_,CR!1), ErbB2(CR!1)
+'ErbB2_ErbB4' EGFR(L!_,CR), ErbB2(CR) <-> EGFR(L!_,CR!1), ErbB2(CR!1)
+
+# chapter -> active dimers
+'EGFR_ATP@992'     EGFR(CR!_,Y992~u), A(s~ppp) -> EGFR(CR!_,Y992~u!1), A(s~ppp!1)
+'992'              EGFR(CR!_,Y992~u!1), A(s~ppp!1) -> EGFR(CR!_,Y992~p!1), A(s~pp!1)
+'EGFR_ADP_op@992'  EGFR(CR!_,Y992~p!1), A(s~pp!1) -> EGFR(CR!_,Y992~p), A(s~pp)
+'EGFR_ATP@1068'    EGFR(CR!_,Y1068~u), A(s~ppp) -> EGFR(CR!_,Y1068~u!1), A(s~ppp!1)
+'1068'             EGFR(CR!_,Y1068~u!1), A(s~ppp!1) -> EGFR(CR!_,Y1068~p!1), A(s~pp!1)
+'EGFR_ADP_op@1068' EGFR(CR!_,Y1068~p!1), A(s~pp!1) -> EGFR(CR!_,Y1068~p), A(s~pp)
+'EGFR_ATP@1148'    EGFR(CR!_,Y1148~u), A(s~ppp) -> EGFR(CR!_,Y1148~u!1), A(s~ppp!1)
+'1148'             EGFR(CR!_,Y1148~u!1), A(s~ppp!1) -> EGFR(CR!_,Y1148~p!1), A(s~pp!1)
+'EGFR_ADP_op@1148' EGFR(CR!_,Y1148~p!1), A(s~pp!1) -> EGFR(CR!_,Y1148~p), A(s~pp)
+
+### add proper phosphatase rules ###
+'EGFR@992_op'  EGFR(Y992~p) -> EGFR(Y992~u)
+'EGFR@1068_op' EGFR(Y1068~p) -> EGFR(Y1068~u)
+'EGFR@1148_op' EGFR(Y1148~p) -> EGFR(Y1148~u)
+
+# chapter -> SoS and RasGAP recruitment
+'EGFR_RasGAP'  EGFR(Y992~p), RasGAP(SH2) <-> EGFR(Y992~p!1), RasGAP(SH2!1)
+# simple Grb2_SoS association rule, insensitive to SoS's phos state
+#'Grb2_SoS'     Grb2(SH3n), SoS(a) <-> Grb2(SH3n!1), SoS(a!1)
+'Grb2_SoS'     Grb2(SH3n), SoS(a,SS~u) -> Grb2(SH3n!1), SoS(a!1,SS~u)
+'Grb2_SoS_op'  Grb2(SH3n!1), SoS(a!1) -> Grb2(SH3n), SoS(a)
+'EGFR_Grb2'    EGFR(Y1068~p), Grb2(SH2) <-> EGFR(Y1068~p!1), Grb2(SH2!1)
+# simple Shc recruitment rule, insensitive to Shc's phos state
+#'EGFR_Shc'     EGFR(Y1148~p), Shc(PTB) <-> EGFR(Y1148~p!1), Shc(PTB!1)
+'EGFR_Shc'     EGFR(Y1148~p), Shc(PTB,Y318~u) -> EGFR(Y1148~p!1), Shc(PTB!1,Y318~u)
+'EGFR_Shc_op'  EGFR(Y1148~p!1), Shc(PTB!1) -> EGFR(Y1148~p), Shc(PTB)
+'Shc@318'      EGFR(Y1148~p!1), Shc(PTB!1,Y318~u) -> EGFR(Y1148~p!1), Shc(PTB!1,Y318~p)
+'Shc@318_op'   Shc(Y318~p) -> Shc(Y318~u)
+'Shc_Grb2'     Shc(Y318~p), Grb2(SH2) <-> Shc(Y318~p!1), Grb2(SH2!1)
+'SoS_op'       SoS(SS~p) -> SoS(SS~u)
+
+# chapter -> PI3K recruitment
+'Grb2_Gab1'     Grb2(SH3c), Gab1(PR) <-> Grb2(SH3c!1), Gab1(PR!1) 
+'Gab1@447'      EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y447~u) -> EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y447~p)
+'Gab1@472'      EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y472~u) -> EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y472~p)
+'Gab1@619'      EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y619~u) -> EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y619~p)
+# later on need to split fictitious agent PI3K into p85/p110 subunits
+# but, for now, consider it as one monolithic agent
+'Gab1_PI3K@447' Gab1(Y447~p), PI3K(SH2) <-> Gab1(Y447~p!1), PI3K(SH2!1)
+'Gab1_PI3K@472' Gab1(Y472~p), PI3K(SH2) <-> Gab1(Y472~p!1), PI3K(SH2!1)
+'Gab1_PI3K@619' Gab1(Y619~p), PI3K(SH2) <-> Gab1(Y619~p!1), PI3K(SH2!1)
+# PI3K can also be recruited to the membrane by active Ras...
+#'RasGTP_PI3K'
+
+# chapter -> active PI (i.e. PIP3)
+EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y447~p!3), PI3K(SH2!3,s), PI(three) ->  EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y447~p!3), PI3K(SH2!3,s!4), PI(three!4)
+EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y472~p!3), PI3K(SH2!3,s), PI(three) ->  EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y472~p!3), PI3K(SH2!3,s!4), PI(three!4)
+EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y619~p!3), PI3K(SH2!3,s), PI(three) ->  EGFR(Y1068~p!1), Grb2(SH2!1,SH3c!2), Gab1(PR!2,Y619~p!3), PI3K(SH2!3,s!4), PI(three!4)
+PI3K(s!1), PI(three~u!1) -> PI3K(s!1), PI(three~p!1)
+PI3K(s!1), PI(three!1) -> PI3K(s), PI(three)
+PTEN(s), PI(three) <-> PTEN(s!1), PI(three!1)
+PTEN(s!1), PI(three~p!1) -> PTEN(s!1), PI(three~u!1)
+
+# chapter -> active PDK and Akt
+'PIP3_PDK'   PI(three~p,four~p,five~p), PDK(PH) <-> PI(three~p!1,four~p,five~p), PDK(PH!1)
+'PDK@241'    PDK(PH!_,S241~u) -> PDK(PH!_,S241~p)
+'PIP3_Akt'   PI(three~p,four~p,five~p), Akt(PH) <-> PI(three~p!1,four~p,five~p), Akt(PH!1)
+'PDK_Akt'    PDK(PH!_,S241~p), Akt(PH!_,T308) -> PDK(PH!_,S241~p!1), Akt(PH!_,T308!1)
+'Akt@308'    PDK(PH!_,S241~p!1), Akt(PH!_,T308~u!1) -> PDK(PH!_,S241~p!1), Akt(PH!_,T308~p!1)
+'PDK_Akt_op' PDK(S241~p!1), Akt(T308!1) -> PDK(S241~p), Akt(T308)
+'Akt@473'    Akt(T308~p,S473~u) -> Akt(T308~p,S473~p)
+
+# chapter -> active Ras
+'long arm SoS_Ras'  EGFR(Y1148~p!1), Shc(PTB!1,Y318~p!2), Grb2(SH2!2,SH3!3), SoS(a!3,b), Ras(S1S2) -> EGFR(Y1148~p!1), Shc(PTB!1,Y318~p!2), Grb2(SH2!2,SH3!3), SoS(a!3,b!4), Ras(S1S2!4)
+'short arm SoS_Ras' EGFR(Y1068~p!1), Grb2(SH2!1,SH3!2), SoS(a!2,b), Ras(S1S2) ->  EGFR(Y1068~p!1), Grb2(SH2!1,SH3!2), SoS(a!2,b!3), Ras(S1S2!3)
+'GTP'               SoS(b!1), Ras(S1S2~gdp!1) -> SoS(b!1), Ras(S1S2~gtp!1)
+'SoS_Ras_op'        SoS(b!1), Ras(S1S2!1) -> SoS(b), Ras(S1S2)
+'EGFR_RasGAP_Ras'   EGFR(Y992~p!1), RasGAP(SH2!1,s), Ras(S1S2) -> EGFR(Y992~p!1), RasGAP(SH2!1,s!2), Ras(S1S2!2)
+'GDP'               RasGAP(s!1), Ras(S1S2~gtp!1) -> RasGAP(s!1), Ras(S1S2~gdp!1)
+'RasGAP_Ras_op'     RasGAP(s!1), Ras(S1S2!1) -> RasGAP(s), Ras(S1S2)
+
+# chapter 2a -> active Raf
+'Ras_Raf'  Ras(S1S2~gtp), Raf(x) <-> Ras(S1S2~gtp!1), Raf(x!1)
+'Raf'      Ras(S1S2~gtp!1), Raf(x~u!1) -> Ras(S1S2~gtp!1), Raf(x~p!1)
+#
+'PP2A_Raf' PP2A(s), Raf(x) <-> PP2A(s!1), Raf(x!1)
+'Raf_op'   PP2A(s!1), Raf(x~p!1) -> PP2A(s!1), Raf(x~u!1)
+
+# chapter 2b -> active MEK: processive, sequential binding (222 then 218)
+'Raf_MEK'  Raf(x~p), MEK(s) <-> Raf(x~p!1), MEK(s!1)
+'MEKp'     Raf(x~p!1), MEK(s!1,S222~u) -> Raf(x~p!1), MEK(s!1,S222~p)
+'MEKpp'    Raf(x~p!1), MEK(s!1,S222~p,S218~u) -> Raf(x~p!1), MEK(s!1,S222~p,S218~p)
+#
+'PP2A_MEK' PP2A(s), MEK(s) <-> PP2A(s!1), MEK(s!1)
+'MEKu'     PP2A(s!1), MEK(s!1,S218~p) -> PP2A(s!1), MEK(s!1,S218~u)
+'MEKuu'    PP2A(s!1), MEK(s!1,S222~p,S218~u) -> PP2A(s!1), MEK(s!1,S222~u,S218~u)
+
+# chapter 2c -> active ERK: nonprocessive, concurrent binding
+MEK(S222~p), ERK(T185) <-> MEK(S222~p!1), ERK(T185!1)
+MEK(S222~p!1), ERK(T185~u!1) -> MEK(S222~p!1), ERK(T185~p!1)
+MEK(S222~p), ERK(Y187) <-> MEK(S222~p!1), ERK(Y187!1)
+MEK(S222~p!1), ERK(Y187~u!1) -> MEK(S222~p!1), ERK(Y187~p!1)
+#
+MKP(s), ERK(T185) <-> MKP(s!1), ERK(T185!1)
+MKP(s!1), ERK(T185~p!1,Y187~u) -> MKP(s!1), ERK(T185~u!1,Y187~u)
+MKP(s), ERK(Y187) <-> MKP(s!1), ERK(Y187!1)
+MKP(s!1), ERK(Y187~p!1) -> MKP(s!1), ERK(Y187~u!1)
+
+# negative feedback
+SoS(SS), ERK(T185~p,Y187~p) <-> SoS(SS!1), ERK(T185~p,Y187~p!1)
+SoS(SS~u!1), ERK(T185~p,Y187~p!1) -> SoS(SS~p!1), ERK(T185~p,Y187~p!1)
+Grb2(SH3n!1), SoS(a!1,SS~p!2), ERK(T185~p,Y187~p!2) -> Grb2(SH3n), SoS(a,SS~p!2), ERK(T185~p,Y187~p!2)
+
+# initial solution
+%init: EGF(r) + 1*(EGFR(i~n,L,CR,Y992~u,Y1068~u,Y1148~u),SoS(a,b,SS~u),Grb2(SH2,SH3n,SH3c)) + 1*(Grb2(SH2,SH3n!1,SH3c),SoS(a!1,b,SS~u)) + 1*(RasGAP(SH2,s)) + 1*(Ras(S1S2~gdp)) + 1*(Raf(x~u)) + 1*(Shc(PTB,Y318~u)) + 1*(PP2A(s)) + 1*(MEK(s,S222~u,S218~u)) + 1*(ERK(T185~u,Y187~u)) + 1*(MKP(s)) + A(s~pp)
+
+#%obs: Ras(S1S2~gtp?)
+#%obs: Raf(x~p?)
+#%obs: MEK(S222~p?)
+#%obs: ERK(T185~p?,Y187~p?)
+
+# simplx --sim bf.ka --time 50 --no-rule-page --no-maps --rescale 10 --plot

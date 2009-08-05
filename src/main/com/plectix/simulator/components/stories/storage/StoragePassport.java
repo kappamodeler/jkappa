@@ -23,11 +23,6 @@ public class StoragePassport implements CompressionPassport {
 	private Map<Long, ArrayList<WireHashKey>> wiresByIdAgent;
 	private TreeMap<Long, AtomicEvent<?>> allEventsByNumber;
 	private LinkedHashMap<Long, Integer> typeById;
-	private TreeMap<Long, Integer> eventsDepths;
-	private TreeMap<Long, Long> nodeEventIdToNodeId;
-	private TreeMap<Long, LinkedHashSet<Long>> connections;
-	private TreeMap<Long, Long> introAgentIdtoNodeId;
-
 	private SwapRecord swap;
 
 	public StoragePassport(AbstractStorage abstractStorage) {
@@ -42,12 +37,11 @@ public class StoragePassport implements CompressionPassport {
 		prepareForStrong();
 
 	}
-	
-	public boolean isFirstEvent (long eventId)
-	{
-		return allEventsByNumber.firstKey().equals(eventId);
-	}
 
+	public int eventCount () {
+		return allEventsByNumber.size();
+	}
+	
 	public Iterator<Long> agentIterator(int typeId) {
 		return iDsByType.get(typeId).iterator();
 	}
@@ -82,7 +76,8 @@ public class StoragePassport implements CompressionPassport {
 			Integer type = new Integer(0);
 
 			id = wk.getAgentId();
-			type = ThreadLocalData.getTypeById().getType(storage.getIteration(),id);
+			type = ThreadLocalData.getTypeById().getType(
+					storage.getIteration(), id);
 
 			if (iDsByType.get(type) == null) {
 				iDsByType.put(type, new LinkedHashSet<Long>());
@@ -125,16 +120,16 @@ public class StoragePassport implements CompressionPassport {
 					storage.getStorageWires().get(wk).remove(event.getStepId());
 					mayBeEmptyAgents.add(wk.getAgentId());
 
-					}
 				}
-
 			}
+
+		}
 
 		for (Long i : deletedEvents) {
 			storage.getEvents().remove(allEventsByNumber.get(i).getContainer());
 			allEventsByNumber.remove(i);
 		}
-			
+
 		boolean tryRemove;
 		for (Long id : mayBeEmptyAgents) {
 			tryRemove = true;
@@ -147,16 +142,17 @@ public class StoragePassport implements CompressionPassport {
 				}
 			}
 
-
 			if (tryRemove) {
 				if (storage.removeWire(wiresByIdAgent.get(id))) {
 					wiresByIdAgent.remove(id);
 					Integer type = typeById.remove(id);
 					iDsByType.get(type).remove(id);
 				}
-				if(storage.initialEvent().getAtomicEvents().isEmpty()){
+				if (storage.initialEvent().getAtomicEvents().isEmpty()) {
 					storage.getEvents().remove(storage.initialEvent());
 					allEventsByNumber.remove(Long.valueOf(-1));
+					// storage.nullInitial();
+					storage.initialEvent().onlySetMark(null);
 				}
 			}
 
@@ -210,6 +206,7 @@ public class StoragePassport implements CompressionPassport {
 		return true;
 
 	}
+
 	private void doSwap(SwapRecord sw) throws StoryStorageException {
 		int size = sw.getAgents1().size();
 
@@ -222,9 +219,13 @@ public class StoragePassport implements CompressionPassport {
 						allEventsByNumber.higherKey(sw.getFirstEventId()))
 						.getContainer());
 			} else {
-				sw.setOtherSide(allEventsByNumber.get(
-						allEventsByNumber.lowerKey(sw.getFirstEventId()))
-						.getContainer());
+				if (allEventsByNumber.lowerKey(sw.getFirstEventId()) != null) {
+					sw.setOtherSide(allEventsByNumber.get(
+							allEventsByNumber.lowerKey(sw.getFirstEventId()))
+							.getContainer());
+				} else {
+					sw.setOtherSide(null);
+				}
 			}
 
 		}
@@ -233,40 +234,38 @@ public class StoragePassport implements CompressionPassport {
 			for (int i = 0; i < sw.getAgents1().size(); i++) {
 				Map<WireHashKey, WireHashKey> newmap = new LinkedHashMap<WireHashKey, WireHashKey>();
 
-				buildCorrespondence(newmap, wiresByIdAgent.get(sw.getAgents1().get(i)), 
-						wiresByIdAgent.get(sw.getAgents2().get(i)));
+				buildCorrespondence(newmap, wiresByIdAgent.get(sw.getAgents1()
+						.get(i)), wiresByIdAgent.get(sw.getAgents2().get(i)));
 
 				sw.mapWire.add(newmap);
 
 			}
 
 		}
-		
+
 		for (int i = 0; i < size; i++) {
 			storage.replaceWireToWire(sw.mapWire.get(i), sw.getFirstEventId(),
 					sw.isSwapTop(), allEventsByNumber);
-		
 
-	}
+		}
 	}
 
 	private void buildCorrespondence(Map<WireHashKey, WireHashKey> mapWire,
-			ArrayList<WireHashKey> arrayList1, ArrayList<WireHashKey> arrayList2) throws StoryStorageException {
-		
-		
+			ArrayList<WireHashKey> arrayList1, ArrayList<WireHashKey> arrayList2)
+			throws StoryStorageException {
+
 		ArrayList<Integer> hashs1 = new ArrayList<Integer>();
 		ArrayList<Integer> hashs2 = new ArrayList<Integer>();
-		int k =arrayList1.size();
-		for(int i =0;i<k;i++){
+		int k = arrayList1.size();
+		for (int i = 0; i < k; i++) {
 			hashs1.add(arrayList1.get(i).getSmallHash());
 		}
-		if(arrayList2.size()!=k){
+		if (arrayList2.size() != k) {
 			throw new StoryStorageException();
 		}
-		for(int i =0;i<k;i++){
+		for (int i = 0; i < k; i++) {
 			hashs2.add(arrayList2.get(i).getSmallHash());
 		}
-
 
 		for (int i = 0; i < k; i++) {
 			for (int j = 0; j < k; j++) {
@@ -277,19 +276,17 @@ public class StoragePassport implements CompressionPassport {
 		}
 
 	}
-	
-	
+
 	public TreeMap<Long, AtomicEvent<?>> getAllEventsByNumber() {
 		return allEventsByNumber;
 	}
-	
+
 	public Map<Long, ArrayList<WireHashKey>> getWiresByIdAgent() {
 		return wiresByIdAgent;
 	}
-	
-	public StoriesGraphs extractGraph(){
+
+	public StoriesGraphs extractGraph() {
 		return new StoriesGraphs(this);
 	}
-
 
 }

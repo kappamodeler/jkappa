@@ -1,0 +1,38 @@
+#!/usr/bin/perl
+use strict;
+use LWP;
+
+#print "This is libwww-perl-$LWP::VERSION\n";
+my $useragent= LWP::UserAgent->new;
+$useragent->timeout(3600);
+
+my $xml="<simplx_parameters>
+    <kappa_file><![CDATA[($ARGV[0])]]></kappa_file>
+    <run_type>simulate</run_type>
+    <mode>time</mode>
+    <end_time>5</end_time>
+    <initial_time>0</initial_time>
+    <data_points>10</data_points>
+    <seed>1</seed>
+</simplx_parameters>";
+print $xml;
+#getc;
+
+#my $url = "http://ec2-67-202-7-119.compute-1.amazonaws.com/engine/web_service";
+my $url = "http://localhost:3000/engine/web_service";
+
+#my $req=HTTP::Request->new(POST => $url);
+my $req=HTTP::Request->new(POST => $url);
+#my $req=HTTP::Request->new(POST => $url);
+$req->authorization_basic('clemens', 'cl3m3ns');
+$req->content_type('text/xml');
+$req->content($xml);
+
+my $res=$useragent->request($req);
+
+if ($res->is_success) {
+	print $res->content;
+} 
+else {
+	print $res->status_line . "\n";
+}

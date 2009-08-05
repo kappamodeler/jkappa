@@ -1,0 +1,16 @@
+#former rule:
+######### B(x~u) -> B(x~p) 
+#simplified  rule:
+'%Auto_1' B(x~u) -> B(x~p) #1
+#former rule:
+######### B(x~p,y~u) -> B(x~p,y~p)
+#simplified  rule:
+'%Auto_2' B(x~p,y~u) -> B(x~p,y~p) #2
+#former rule:
+######### B(x~p,z~u) -> B(x~p,z~p)
+#simplified  rule:
+'%Auto_3' B(x~p,z~u) -> B(x~p,z~p) #3
+
+%init: 100*B(x~u,y~u,z~u)
+
+

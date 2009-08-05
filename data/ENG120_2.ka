@@ -1,0 +1,82 @@
+# Rules:
+#######
+# Chapter 'New Chapter'
+'-E,+EGF' E() -> EGF(r~ext) @ 1.0
+'-EGF' EGF(r~int) -> @ 1.0
+'-EGFR' EGFR(L~int,CR) -> @ 1.0
+'EGF...EGFR' EGF(r!1),EGFR(L!1) -> EGF(r),EGFR(L) @ 1.0
+'EGF.EGFR' EGF(r~ext),EGFR(L~ext,CR) -> EGF(r~ext!1),EGFR(L~ext!1,CR) @ 1.0
+'EGF@r_int, EGFR@L_int' EGF(r~ext!1),EGFR(L~ext!1,CR) -> EGF(r~int!1),EGFR(L~int!1,CR) @ 1.0
+'EGF@r_int,EGFR@L_int, EGF@r_int,EGFR@L_int' EGF(r~ext!1),EGFR(L~ext!1,CR!2),EGF(r~ext!3),EGFR(L~ext!3,CR!2) -> EGF(r~int!1),EGFR(L~int!1,CR!2),EGF(r~int!3),EGFR(L~int!3,CR!2) @ 1.0
+'EGFR...EGFR' EGFR(CR!1),EGFR(CR!1) -> EGFR(CR),EGFR(CR) @ 1.0
+'EGFR...HER2' EGFR(CR!1),HER2(CR!1) -> EGFR(CR),HER2(CR) @ 1.0
+'EGFR.EGFR' EGFR(L~int!_,CR),EGFR(L~int!_,CR) -> EGFR(L~int!_,CR!1),EGFR(L~int!_,CR!1) @ 1.0
+'EGFR.EGFR@L_ext' EGFR(L~ext!1,CR),EGFR(L~ext!2,CR),EGF(r!1),EGF(r!2) -> EGFR(L~ext!2,CR!1),EGFR(L~ext!3,CR!1),EGF(r!2),EGF(r!3) @ 1.0
+'EGFR.Grb2, Grb2@SH2_p' EGFR(Y1092~p),Grb2(SH2~u) <-> EGFR(Y1092~p!1),Grb2(SH2~p!1) @ 1.0,1.0
+'EGFR.HER2' EGFR(L~ext!_,CR),HER2(CR) -> EGFR(L~ext!_,CR!1),HER2(CR!1) @ 1.0
+'EGFR.RasGAP' EGFR(Y1016~p),RasGAP(SH2~u) <-> EGFR(Y1016~p!1),RasGAP(SH2~rec!1) @ 1.0,1.0
+'EGFR.Shc' EGFR(Y1172~p),Shc(PTB~u) <-> EGFR(Y1172~p!1),Shc(PTB~rec!1) @ 1.0,1.0
+'EGFR@L_ext' EGFR(L~int,CR) -> EGFR(L~ext,CR) @ 1.0
+'EGFR@Y1016_p' EGFR(CR!_,Y1016~u) -> EGFR(CR!_,Y1016~p) @ 1.0
+'EGFR@Y1016_u' EGFR(Y1016~p) -> EGFR(Y1016~u) @ 1.0
+'EGFR@Y1092_p' EGFR(CR!_,Y1092~u) -> EGFR(CR!_,Y1092~p) @ 1.0
+'EGFR@Y1092_u' EGFR(Y1092~p) -> EGFR(Y1092~u) @ 1.0
+'EGFR@Y1172_p' EGFR(CR!_,Y1172~u) -> EGFR(CR!_,Y1172~p) @ 1.0
+'EGFR@Y1172_u' EGFR(Y1172~p) -> EGFR(Y1172~u) @ 1.0
+'ERK...MEK' MEK(s!1),ERK(Y!1) -> MEK(s),ERK(Y) @ 1.0
+'ERK...SoS' ERK(s!1),SoS(S!1) -> ERK(s),SoS(S) @ 1.0
+'ERK.MEK' MEK(s,S1~p?,S2~p?),ERK(Y~u) -> MEK(s!1,S1~p?,S2~p?),ERK(Y~u!1) @ 1.0
+'ERK.SoS' ERK(s,T~p?,Y~p?),SoS(S~u) -> ERK(s!1,T~p?,Y~p?),SoS(S~u!1) @ 1.0
+'ERK@T...MEK' MEK(s!1),ERK(T!1) -> MEK(s),ERK(T) @ 1.0
+'ERK@T.MEK' MEK(s,S1~p?,S2~p?),ERK(T~u) -> MEK(s!1,S1~p?,S2~p?),ERK(T~u!1) @ 1.0
+'ERK@T_p' MEK(s!1,S1~p?,S2~p?),ERK(T~u!1) -> MEK(s!1,S1~p?,S2~p?),ERK(T~p!1) @ 1.0
+'ERK@T_u' MKP(s!1),ERK(T~p!1) -> MKP(s!1),ERK(T~u!1) @ 1.0
+'ERK@Y_p' MEK(s!1,S1~p?,S2~p?),ERK(Y~u!1) -> MEK(s!1,S1~p?,S2~p?),ERK(Y~p!1) @ 1.0
+'ERK@Y_u' MKP(s!1),ERK(Y~p!1) -> MKP(s!1),ERK(Y~u!1) @ 1.0
+'Grb2...SoS' Grb2(SH3n!1),SoS(P!1) -> Grb2(SH3n),SoS(P) @ 1.0
+'Grb2.SoS' Grb2(SH3n),SoS(P,S~u) -> Grb2(SH3n!1),SoS(P!1,S~u) @ 1.0
+'HER2.Grb2' HER2(Y1139~p),Grb2(SH2~u) <-> HER2(Y1139~p!1),Grb2(SH2~rec!1) @ 1.0,1.0
+
+
+'Ras...Raf' Ras(s!1),Raf(RBD!1) -> Ras(s),Raf(RBD) @ 1.0
+'Ras.Raf' Ras(s~gtp),Raf(RBD,S~p) -> Ras(s~gtp!1),Raf(RBD!1,S~p) @ 1.0
+'Ras@s_gdp' Ras(s~gtp?) -> Ras(s~gdp?) @ 1.0
+'Ras@s_gdp.RasGAP' RasGAP(GAP!1),Ras(s~gtp!1) -> RasGAP(GAP!1),Ras(s~gdp!1) @ 1.0
+'Ras@s_gtp' SoS(GEF!1),Ras(s~gdp!1) -> SoS(GEF!1),Ras(s~gtp!1) @ 1.0
+'RasGAP...Ras' RasGAP(GAP!1),Ras(s!1) -> RasGAP(GAP),Ras(s) @ 1.0
+'RasGAP.Ras' RasGAP(SH2~rec!_,GAP),Ras(s~gtp) -> RasGAP(SH2~rec!_,GAP!1),Ras(s~gtp!1) @ 1.0
+'Shc.Grb2' Shc(Y~p),Grb2(SH2) <-> Shc(Y~p!1),Grb2(SH2!1) @ 1.0,1.0
+'Shc@Y_p' Shc(PTB~rec!_,Y~u) -> Shc(PTB~rec!_,Y~p) @ 1.0
+'Shc@Y_u' Shc(Y~p) -> Shc(Y~u) @ 1.0
+'SoS Long Arm' Shc(PTB~rec!_,Y!1),Grb2(SH2!1,SH3n!2),SoS(P!2,GEF),Ras(s~gdp) -> Shc(PTB~rec!_,Y!1),Grb2(SH2!1,SH3n!2),SoS(P!2,GEF!3),Ras(s~gdp!3) @ 1.0
+'SoS Short Arm' Grb2(SH2~rec!_,SH3n!1),SoS(P!1,GEF),Ras(s~gdp) -> Grb2(SH2~rec!_,SH3n!1),SoS(P!1,GEF!2),Ras(s~gdp!2) @ 1.0
+'SoS...Ras' SoS(GEF!1),Ras(s!1) -> SoS(GEF),Ras(s) @ 1.0
+'SoS@S_p' ERK(s!1,T~p?,Y~p?),SoS(S~u!1) -> ERK(s!1,T~p?,Y~p?),SoS(S~p!1) @ 1.0
+'SoS@S_u' SoS(S~p) -> SoS(S~u) @ 1.0
+
+
+# Initial Conditions:
+%init: 10 * (E())
+%init: 100 * (EGFR(L~ext,CR,Y1016~u,Y1092~u,Y1172~u))
+%init: 50 * (Grb2(SH2~u,SH3n,SH3c))
+%init: 50 * (SoS(P,GEF,S~u))
+%init: 50 * (Grb2(SH2~u,SH3n!1,SH3c),SoS(P!1,GEF,S~u))
+%init: 100 * (Shc(PTB~u,Y~u))
+%init: 200 * (RasGAP(SH2~u,GAP))
+%init: 100 * (Ras(s~gdp))
+%init: 100 * (Raf(RBD,S~p))
+%init: 200 * (MEK(s,S1~u,S2~u))
+%init: 40 * (M2KP(s))
+%init: 200 * (ERK(s,T~u,Y~u))
+%init: 80 * (MKP(s))
+%init: 1 * (HER2(CR,Y1139~u,Y1196~u,Y1221~u))
+
+# Simulation:
+# %obs: 'RasGTP' Ras(s~gtp?)
+%obs: Raf(S~u?)
+%obs: MEK(S1~p?,S2~p?)
+%obs: ERK(T~p?,Y~p?)
+%obs: SoS(S~p?)
+
+# Stories:
+%story: 'ERK...SoS'

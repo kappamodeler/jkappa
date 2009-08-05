@@ -16,7 +16,7 @@ import com.plectix.simulator.components.complex.contactMap.CContactMap;
 import com.plectix.simulator.components.complex.influenceMap.AInfluenceMap;
 import com.plectix.simulator.components.complex.influenceMap.InfluenceMapEdge;
 import com.plectix.simulator.components.complex.subviews.base.AbstractAction;
-import com.plectix.simulator.components.complex.subviews.base.SubViewsRule;
+import com.plectix.simulator.components.complex.subviews.base.AbstractionRule;
 
 public class CInfluenceMapWithoutFuture extends AInfluenceMap{
 	
@@ -24,15 +24,15 @@ public class CInfluenceMapWithoutFuture extends AInfluenceMap{
 		super();
 	}
 
-	public void initInfluenceMap(List<SubViewsRule> rules, CObservables observables,
+	public void initInfluenceMap(List<AbstractionRule> rules, CObservables observables,
 			CContactMap contactMap,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
-		for (SubViewsRule rule : rules) {
+		for (AbstractionRule rule : rules) {
 			Map<Integer, MarkAgentWithoutFuture> activatedAgents = new LinkedHashMap<Integer, MarkAgentWithoutFuture>();
 			Map<Integer, MarkAgentWithoutFuture> inhibitedAgents = new LinkedHashMap<Integer, MarkAgentWithoutFuture>();
 			fillingActivatedAndInhibitedSites(activatedAgents, inhibitedAgents,
 					contactMap, rule, agentNameIdToAgent);
-			for (SubViewsRule ruleCheck : rules) {
+			for (AbstractionRule ruleCheck : rules) {
 				int ruleId = rule.getRuleId();
 				int ruleCheckId = ruleCheck.getRuleId();
 				fillingMap(activationMap, activatedAgents, ruleId, ruleCheckId,
@@ -46,7 +46,7 @@ public class CInfluenceMapWithoutFuture extends AInfluenceMap{
 	private void fillingActivatedAndInhibitedSites(
 			Map<Integer, MarkAgentWithoutFuture> activatedAgents,
 			Map<Integer, MarkAgentWithoutFuture> inhibitedAgents, CContactMap contactMap,
-			SubViewsRule rule, Map<Integer, CAbstractAgent> agentNameIdToAgent) {
+			AbstractionRule rule, Map<Integer, CAbstractAgent> agentNameIdToAgent) {
 		for (AbstractAction action : rule.getActions()) {
 			switch (action.getActionType()) {
 			case ADD: {
@@ -177,7 +177,7 @@ public class CInfluenceMapWithoutFuture extends AInfluenceMap{
 
 	private void fillingMap(Map<Integer, List<InfluenceMapEdge>> map,
 			Map<Integer, MarkAgentWithoutFuture> agents, int ruleId, int ruleCheckId,
-			SubViewsRule ruleCheck) {
+			AbstractionRule ruleCheck) {
 		if (isIntersection(agents, ruleCheck)) {
 			List<InfluenceMapEdge> list = map.get(ruleId);
 			if (list == null) {
@@ -189,7 +189,7 @@ public class CInfluenceMapWithoutFuture extends AInfluenceMap{
 	}
 
 	private boolean isIntersection(Map<Integer, MarkAgentWithoutFuture> agents,
-			SubViewsRule ruleCheck) {
+			AbstractionRule ruleCheck) {
 		boolean isOneIntersection = false;
 		for (AbstractAction action : ruleCheck.getLHSActions()) {
 			CAbstractAgent checkAgent = action.getLeftHandSideAgent();

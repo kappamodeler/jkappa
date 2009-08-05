@@ -1,0 +1,35 @@
+'time' E(r?),R(l,r)->E(r!0),R(l!0,r)
+'time2' E(r!0),R(l!0,r),E(r!1),R(l!1,r)->E(r!0),E(r!1),R(l!0,r!2),R(l!1,r!2)
+'namenamename' E(r!0),E(r!1),R(l!0,r!2),R(l!1,r!2)->E(r!0),R(l!0,r),E(r!1),R(l!1,r)
+'space' E(r!0),E(r!0),R(l!1,r),R(l!1,r)->E(r!0),E(r!1),R(l!0,r!2),R(l!1,r!2)
+'tab' E(r!_),R(l,r)->E(r!0),R(l!0,r)
+'rule' E(r),R(l,r)->E(r!0),R(l,r!0)
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' E(r~u),R(r~p)->E(r!0),R(r!0)
+'TABline' E(x!0),R(x!0)->E(x~p),R(a,b,c,d,e,x)
+'q Ref1' L(p!0,q),R(a,b!0)->L(p!0,q!1),R(a!1,b!0)
+'q Ref1_op' L(p!0,q!1),R(a!1,b!0)->L(p!0,q),R(a,b!0)
+'q Ref2' L(l!0,q),R(a,b!0)->L(l!0,q!1),R(a!1,b!0)
+'q Ref2_op' L(l!0,q!1),R(a!1,b!0)->L(l!0,q),R(a,b!0)
+'MEK_Scaf#1' MEK(S1~u,S2,s),Scaf(m)->MEK(S1~u,S2,s!0),Scaf(m!0)
+'MEK_Scaf#2' MEK(S1,S2~u,s),Scaf(m)->MEK(S1,S2~u,s!0),Scaf(m!0)
+'ErbB1_ErbB4' ErbB1(C,CR,L~ext,N),ErbB4(C,CR,L~ext!_,N)->ErbB1(C,CR!0,L~ext,N),ErbB4(C,CR!0,L~ext!_,N)
+'ErbB1_ErbB4_op' ErbB1(C,CR!0,L~ext,N),ErbB4(C,CR!0,L~ext!_,N)->ErbB1(C,CR,L~ext,N),ErbB4(C,CR,L~ext!_,N)
+'MEK_ERK@185' ERK(T185~u),MEK(S218~p,S222~p,s)->ERK(T185~u!0),MEK(S218~p,S222~p,s!0)
+'MEK_ERK@185_op' ERK(T185~u!0),MEK(S218~p,S222~p,s!0)->ERK(T185~u),MEK(S218~p,S222~p,s)
+'ERK@185' ERK(T185~u!0),MEK(S218~p,S222~p,s!0)->ERK(T185~p!0),MEK(S218~p,S222~p,s!0)
+'MEK_ERK@187' ERK(Y187~u),MEK(S218~p,S222~p,s)->ERK(Y187~u!0),MEK(S218~p,S222~p,s!0)
+'MEK_ERK@187_op' ERK(Y187~u!0),MEK(S218~p,S222~p,s!0)->ERK(Y187~u),MEK(S218~p,S222~p,s)
+'ERK@187' ERK(Y187~u!0),MEK(S218~p,S222~p,s!0)->ERK(Y187~p!0),MEK(S218~p,S222~p,s!0)
+
+%init: 5000 * (E(r))
+%init: 1 * (ERK(Y187!0), MEK(S218~p, S222~p, s!0))
+%init: 5000 * (R(l, r))
+%init: 100 * (a(x))
+%init: 100 * (b(x))
+%init: 1000 * (d(x, y))
+
+%story: 'MEK_ERK@187_op'
+%story: 'TABline'
+%story: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+%story: 'time'
+%story: 'time2'

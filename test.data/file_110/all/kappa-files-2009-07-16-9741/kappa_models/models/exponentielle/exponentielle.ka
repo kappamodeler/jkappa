@@ -1,0 +1,5 @@
+'exp' a(x) -> a(x), a(x)
+
+%obs: a(x)
+#%obs: 'exp'
+%init: a(x)

@@ -1,0 +1,144 @@
+# kappa version of the EGF/HRG model (without cPP)
+# 05/4/07
+
+# background noise
+'ATP recycling' A(s~pp), Pi() -> A(s~ppp)
+
+# chapter -> ligand binding
+'EGF_ErbB1'    EGF(r~ext), ErbB1(L~ext,CR) <-> EGF(r~ext!1), ErbB1(L~ext!1,CR)
+'HRG_ErbB3'    HRG(r~ext), ErbB3(L~ext,CR) <-> HRG(r~ext!1), ErbB3(L~ext!1,CR)
+'HRG_ErbB4'    HRG(r~ext), ErbB4(L~ext,CR) <-> HRG(r~ext!1), ErbB4(L~ext!1,CR)
+
+# chapter -> ligand-receptor dimerization
+
+# primary
+'ErbB1_ErbB1' ErbB1(L~ext!_,CR,N,C), ErbB1(L~ext!_,CR,N,C) <-> ErbB1(L~ext!_,CR!1,N,C), ErbB1(L~ext!_,CR!1,N,C)
+'ErbB1_ErbB2' ErbB1(L~ext!_,CR,N,C), ErbB2(L~ext,CR,N,C) <-> ErbB1(L~ext!_,CR!1,N,C), ErbB2(L~ext,CR!1,N,C)
+'ErbB2_ErbB3' ErbB2(L~ext,CR,N,C), ErbB3(L~ext!_,CR,N,C) <-> ErbB2(L~ext,CR!1,N,C), ErbB3(L~ext!_,CR!1,N,C)
+'ErbB2_ErbB4' ErbB2(L~ext,CR,N,C), ErbB4(L~ext!_,CR,N,C) <-> ErbB2(L~ext,CR!1,N,C), ErbB4(L~ext!_,CR!1,N,C)
+
+# secondary: do we need both ligands at the same time? not according to will's current model...
+'ErbB1_ErbB3' ErbB1(L~ext,CR,N,C), ErbB3(L~ext!_,CR,N,C) <-> ErbB1(L~ext,CR!1,N,C), ErbB3(L~ext!_,CR!1,N,C)
+'ErbB1_ErbB4' ErbB1(L~ext,CR,N,C), ErbB4(L~ext!_,CR,N,C) <-> ErbB1(L~ext,CR!1,N,C), ErbB4(L~ext!_,CR!1,N,C)
+'ErbB1_ErbB3' ErbB1(L~ext!_,CR,N,C), ErbB3(L~ext,CR,N,C) <-> ErbB1(L~ext!_,CR!1,N,C), ErbB3(L~ext,CR!1,N,C)
+'ErbB1_ErbB4' ErbB1(L~ext!_,CR,N,C), ErbB4(L~ext,CR,N,C) <-> ErbB1(L~ext!_,CR!1,N,C), ErbB4(L~ext,CR!1,N,C)
+
+# bad news
+#'ErbB2_ErbB2' ErbB2(L~ext,CR,N,C), ErbB2(L~ext,CR,N,C) <-> ErbB2(L~ext,CR!1,N,C), ErbB2(L~ext,CR!1,N,C)
+# completely dead, but maybe a sink for excessive signal?
+#'ErbB3_ErbB3' ErbB3(L~ext,CR,N,C), ErbB3(L~ext!_,CR,N,C) <-> ErbB3(L~ext,CR!1,N,C), ErbB3(L~ext!_,CR!1,N,C)
+# unknown; not in Will's model
+#'ErbB3_ErbB4' ErbB3(L~ext,CR,N,C), ErbB3(L~ext!_,CR,N,C) <-> ErbB3(L~ext,CR!1,N,C), ErbB4(L~ext!_,CR!1,N,C)
+#'ErbB4_ErbB4' ErbB2(L~ext,CR,N,C), ErbB3(L~ext!_,CR,N,C) <-> ErbB4(L~ext,CR!1,N,C), ErbB4(L~ext!_,CR!1,N,C)
+
+# phase -> ATP snaffling
+'ErbB1_ATP'    ErbB1(N!_,bp), A(s~ppp) -> ErbB1(N!_,bp!1), A(s~ppp!1)
+'ErbB1_A_op'   ErbB1(bp!1), A(s!1) -> ErbB1(bp), A(s)
+'ErbB2_ATP'    ErbB2(N!_,bp), A(s~ppp) -> ErbB2(N!_,bp!1), A(s~ppp!1)
+'ErbB2_A_op'   ErbB2(bp!1), A(s!1) -> ErbB2(bp), A(s)
+'ErbB4_ATP'    ErbB4(N!_,bp), A(s~ppp) -> ErbB4(N!_,bp!1), A(s~ppp!1)
+'ErbB4_A_op'   ErbB4(bp!1), A(s!1) -> ErbB4(bp), A(s)
+
+# phase -> inhibitors could go here
+
+# phase -> cross-phosphorylation
+
+# activating B1
+'B1N_B1C'   ErbB1(CR!1,N,C), ErbB1(CR!1,N,C) <-> ErbB1(CR!1,N!2,C), ErbB1(CR!1,N,C!2)
+'B2N_B1C'   ErbB2(CR!1,N,C), ErbB1(CR!1,N,C) <-> ErbB2(CR!1,N!2,C), ErbB1(CR!1,N,C!2)
+'B4N_B1C'   ErbB4(CR!1,N,C), ErbB1(CR!1,N,C) <-> ErbB4(CR!1,N!2,C), ErbB1(CR!1,N,C!2)
+'B1@992#1'  ErbB1(N!1,bp!2), ErbB1(C!1,Y992~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB1(C!1,Y992~p), A(s~pp!2)
+'B1@1068#1' ErbB1(N!1,bp!2), ErbB1(C!1,Y1068~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB1(C!1,Y1068~p), A(s~pp!2)
+'B1@1148#1' ErbB1(N!1,bp!2), ErbB1(C!1,Y1148~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB1(C!1,Y1148~p), A(s~pp!2)
+'B1@992#2'  ErbB2(N!1,bp!2), ErbB1(C!1,Y992~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB1(C!1,Y992~p), A(s~pp!2)
+'B1@1068#2' ErbB2(N!1,bp!2), ErbB1(C!1,Y1068~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB1(C!1,Y1068~p), A(s~pp!2)
+'B1@1148#2' ErbB2(N!1,bp!2), ErbB1(C!1,Y1148~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB1(C!1,Y1148~p), A(s~pp!2)
+'B1@992#3'  ErbB4(N!1,bp!2), ErbB1(C!1,Y992~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB1(C!1,Y992~p), A(s~pp!2)
+'B1@1068#3' ErbB4(N!1,bp!2), ErbB1(C!1,Y1068~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB1(C!1,Y1068~p), A(s~pp!2)
+'B1@1148#3' ErbB4(N!1,bp!2), ErbB1(C!1,Y1148~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB1(C!1,Y1148~p), A(s~pp!2)
+
+# activating B2
+'B1N_B2C'   ErbB1(CR!1,N,C), ErbB2(CR!1,N,C) <-> ErbB1(CR!1,N!2,C), ErbB2(CR!1,N,C!2)
+#'B2N_B2C'   ErbB2(CR!1,N,C), ErbB2(CR!1,N,C) <-> ErbB2(CR!1,N!2,C), ErbB2(CR!1,N,C!2)
+'B4N_B2C'   ErbB4(CR!1,N,C), ErbB2(CR!1,N,C) <-> ErbB4(CR!1,N!2,C), ErbB2(CR!1,N,C!2)
+'B2@1139#1' ErbB1(N!1,bp!2), ErbB2(C!1,Y1139~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB2(C!1,Y1139~p), A(s~pp!2)
+'B2@1196#1' ErbB1(N!1,bp!2), ErbB2(C!1,Y1196~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB2(C!1,Y1196~p), A(s~pp!2)
+'B2@1221#1' ErbB1(N!1,bp!2), ErbB2(C!1,Y1221~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB2(C!1,Y1221~p), A(s~pp!2)
+#'B2@1139#2' ErbB2(N!1,bp!2), ErbB2(C!1,Y1139~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB2(C!1,Y1139~p), A(s~pp!2)
+#'B2@1196#2' ErbB2(N!1,bp!2), ErbB2(C!1,Y1196~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB2(C!1,Y1196~p), A(s~pp!2)
+#'B2@1221#2' ErbB2(N!1,bp!2), ErbB2(C!1,Y1221~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB2(C!1,Y1221~p), A(s~pp!2)
+'B2@1139#3' ErbB4(N!1,bp!2), ErbB2(C!1,Y1139~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB2(C!1,Y1139~p), A(s~pp!2)
+'B2@1196#3' ErbB4(N!1,bp!2), ErbB2(C!1,Y1196~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB2(C!1,Y1196~p), A(s~pp!2)
+'B2@1221#3' ErbB4(N!1,bp!2), ErbB2(C!1,Y1221~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB2(C!1,Y1221~p), A(s~pp!2)
+
+# activating B3
+'B1N_B3C' ErbB1(CR!1,N,C), ErbB3(CR!1,C,N) <-> ErbB1(CR!1,N!2,C), ErbB3(CR!1,N,C!2)
+'B2N_B3C' ErbB2(CR!1,N,C), ErbB3(CR!1,C,N) <-> ErbB2(CR!1,N!2,C), ErbB3(CR!1,N,C!2)
+#'B4N_B3C' ErbB4(CR!1,N,C), ErbB3(CR!1,C,N) <-> ErbB4(CR!1,N!2,C), ErbB3(CR!1,N,C!2)
+'B3@1035#1' ErbB1(N!1,bp!2), ErbB3(C!1,Y1035~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB3(C!1,Y1035~p), A(s~pp!2)
+'B3@1178#1' ErbB1(N!1,bp!2), ErbB3(C!1,Y1178~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB3(C!1,Y1178~p), A(s~pp!2)
+'B3@1203#1' ErbB1(N!1,bp!2), ErbB3(C!1,Y1203~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB3(C!1,Y1203~p), A(s~pp!2)
+'B3@1241#1' ErbB1(N!1,bp!2), ErbB3(C!1,Y1241~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB3(C!1,Y1241~p), A(s~pp!2)
+'B3@1257#1' ErbB1(N!1,bp!2), ErbB3(C!1,Y1257~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB3(C!1,Y1257~p), A(s~pp!2)
+'B3@1270#1' ErbB1(N!1,bp!2), ErbB3(C!1,Y1270~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB3(C!1,Y1270~p), A(s~pp!2)
+'B3@1309#1' ErbB1(N!1,bp!2), ErbB3(C!1,Y1309~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB3(C!1,Y1309~p), A(s~pp!2)
+'B3@1035#2' ErbB2(N!1,bp!2), ErbB3(C!1,Y1035~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB3(C!1,Y1035~p), A(s~pp!2)
+'B3@1178#2' ErbB2(N!1,bp!2), ErbB3(C!1,Y1178~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB3(C!1,Y1178~p), A(s~pp!2)
+'B3@1203#2' ErbB2(N!1,bp!2), ErbB3(C!1,Y1203~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB3(C!1,Y1203~p), A(s~pp!2)
+'B3@1241#2' ErbB2(N!1,bp!2), ErbB3(C!1,Y1241~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB3(C!1,Y1241~p), A(s~pp!2)
+'B3@1257#2' ErbB2(N!1,bp!2), ErbB3(C!1,Y1257~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB3(C!1,Y1257~p), A(s~pp!2)
+'B3@1270#2' ErbB2(N!1,bp!2), ErbB3(C!1,Y1270~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB3(C!1,Y1270~p), A(s~pp!2)
+'B3@1309#2' ErbB2(N!1,bp!2), ErbB3(C!1,Y1309~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB3(C!1,Y1309~p), A(s~pp!2)
+#'B3@1035#3' ErbB4(N!1,bp!2), ErbB3(C!1,Y1035~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB3(C!1,Y1035~p), A(s~pp!2)
+#'B3@1178#3' ErbB4(N!1,bp!2), ErbB3(C!1,Y1178~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB3(C!1,Y1178~p), A(s~pp!2)
+#'B3@1203#3' ErbB4(N!1,bp!2), ErbB3(C!1,Y1203~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB3(C!1,Y1203~p), A(s~pp!2)
+#'B3@1241#3' ErbB4(N!1,bp!2), ErbB3(C!1,Y1241~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB3(C!1,Y1241~p), A(s~pp!2)
+#'B3@1257#3' ErbB4(N!1,bp!2), ErbB3(C!1,Y1257~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB3(C!1,Y1257~p), A(s~pp!2)
+#'B3@1270#3' ErbB4(N!1,bp!2), ErbB3(C!1,Y1270~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB3(C!1,Y1270~p), A(s~pp!2)
+#'B3@1309#3' ErbB4(N!1,bp!2), ErbB3(C!1,Y1309~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB3(C!1,Y1309~p), A(s~pp!2)
+
+# activating B4
+'B1N_B4C' ErbB1(CR!1,N,C), ErbB4(CR!1,N,C) <-> ErbB1(CR!1,N!2,C), ErbB4(CR!1,N,C!2)
+'B2N_B4C' ErbB2(CR!1,N,C), ErbB4(CR!1,N,C) <-> ErbB2(CR!1,N!2,C), ErbB4(CR!1,N,C!2)
+#'B4N_B4C' ErbB4(CR!1,N,C), ErbB4(CR!1,N,C) <-> ErbB4(CR!1,N!2,C), ErbB4(CR!1,N,C!2)
+'B4@1056#1' ErbB1(N!1,bp!2), ErbB4(C!1,Y1056~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB4(C!1,Y1056~p), A(s~pp!2)
+'B4@1188#1' ErbB1(N!1,bp!2), ErbB4(C!1,Y1188~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB4(C!1,Y1188~p), A(s~pp!2)
+'B4@1242#1' ErbB1(N!1,bp!2), ErbB4(C!1,Y1242~u), A(s~ppp!2) -> ErbB1(N!1,bp!2), ErbB4(C!1,Y1242~p), A(s~pp!2)
+'B4@1056#2' ErbB2(N!1,bp!2), ErbB4(C!1,Y1056~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB4(C!1,Y1056~p), A(s~pp!2)
+'B4@1188#2' ErbB2(N!1,bp!2), ErbB4(C!1,Y1188~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB4(C!1,Y1188~p), A(s~pp!2)
+'B4@1242#2' ErbB2(N!1,bp!2), ErbB4(C!1,Y1242~u), A(s~ppp!2) -> ErbB2(N!1,bp!2), ErbB4(C!1,Y1242~p), A(s~pp!2)
+#'B4@1056#3' ErbB4(N!1,bp!2), ErbB4(C!1,Y1056~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB4(C!1,Y1056~p), A(s~pp!2)
+#'B4@1188#3' ErbB4(N!1,bp!2), ErbB4(C!1,Y1188~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB4(C!1,Y1188~p), A(s~pp!2)
+#'B4@1242#3' ErbB4(N!1,bp!2), ErbB4(C!1,Y1242~u), A(s~ppp!2) -> ErbB4(N!1,bp!2), ErbB4(C!1,Y1242~p), A(s~pp!2)
+
+# simplified dephos (commented to compact stories...)
+#ErbB1(Y992~p) -> ErbB1(Y992~u), Pi()
+#ErbB1(Y1068~p) -> ErbB1(Y1068~u), Pi()
+#ErbB1(Y1148~p) -> ErbB1(Y1148~u), Pi()
+#ErbB2(Y1139~p) -> ErbB2(Y1139~u), Pi()
+#ErbB2(Y1196~p) -> ErbB2(Y1196~u), Pi()
+#ErbB2(Y1221~p) -> ErbB2(Y1221~u), Pi()
+#ErbB3(Y1035~p) -> ErbB3(Y1035~u), Pi()
+#ErbB3(Y1178~p) -> ErbB3(Y1178~u), Pi()
+#ErbB3(Y1203~p) -> ErbB3(Y1203~u), Pi()
+#ErbB3(Y1241~p) -> ErbB3(Y1241~u), Pi()
+#ErbB3(Y1257~p) -> ErbB3(Y1257~u), Pi()
+#ErbB3(Y1270~p) -> ErbB3(Y1270~u), Pi()
+#ErbB3(Y1309~p) -> ErbB3(Y1309~u), Pi()
+#ErbB4(Y1056~p) -> ErbB4(Y1056~u), Pi()
+#ErbB4(Y1188~p) -> ErbB4(Y1188~u), Pi()
+#ErbB4(Y1242~p) -> ErbB4(Y1242~u), Pi()
+
+# fake story rule:
+'23' ErbB2(CR!1,Y1139~p,Y1196~p,Y1221~p), ErbB3(CR!1) ->
+
+# initial story solution
+%init: 1*(EGF(r))
+%init: 1*(HRG(r))
+%init: 1*(ErbB1(L~ext,CR,N,bp,C))
+%init: 1*(ErbB2(L~ext,CR,N,bp,C,Y1139~u,Y1196~u,Y1221~u))
+%init: 1*(ErbB3(L~ext,CR,N,bp,C))
+%init: 1*(A(s~ppp))
+%init: 2*(Pi())
+
+%story: '23'

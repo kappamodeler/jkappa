@@ -2,10 +2,12 @@ package com.plectix.simulator.components.complex.contactMap;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.CRule;
@@ -22,7 +24,7 @@ import com.plectix.simulator.simulator.SimulationData;
 public class CContactMapAbstractSolution {
 	private Map<Integer, CAbstractAgent> agentNameIdToAgent;
 	private Map<Integer, List<CAbstractAgent>> agentNameIdToAgentsList;
-	private Map<String, CAbstractAgent> agentsMap;
+	private Map<String, Boolean> agentsMap;
 	private Map<Integer, Map<Integer, List<CContactMapAbstractEdge>>> edgesInContactMap;
 	private Map<Integer, Map<Integer, CContactMapChangedSite>> agentsInContactMap;
 	private final SimulationData simulationData;
@@ -38,7 +40,7 @@ public class CContactMapAbstractSolution {
 	public CContactMapAbstractSolution(SimulationData simulationData) {
 		this.agentNameIdToAgent = new LinkedHashMap<Integer, CAbstractAgent>();
 		this.agentNameIdToAgentsList = new LinkedHashMap<Integer, List<CAbstractAgent>>();
-		this.agentsMap = new LinkedHashMap<String, CAbstractAgent>();
+		this.agentsMap = new LinkedHashMap<String, Boolean>();
 		this.edgesInContactMap = new LinkedHashMap<Integer, Map<Integer, List<CContactMapAbstractEdge>>>();
 		this.agentsInContactMap = new LinkedHashMap<Integer, Map<Integer, CContactMapChangedSite>>();
 		this.simulationData = simulationData;
@@ -71,12 +73,8 @@ public class CContactMapAbstractSolution {
 		return agentNameIdToAgentsList;
 	}
 
-	public Map<String, CAbstractAgent> getAgentsMap() {
-		return agentsMap;
-	}
 
-	private void addToEdgesAndAgentsMap(CContactMapAbstractRule rule,
-			CAbstractAgent agent) {
+	private void addToEdgesAndAgentsMap(CAbstractAgent agent) {
 		int agentKey = agent.getNameId();
 		Map<Integer, List<CContactMapAbstractEdge>> edgesMap = this.edgesInContactMap
 				.get(agentKey);
@@ -96,7 +94,6 @@ public class CContactMapAbstractSolution {
 					edgeList.add(edge);
 					edgesMap.put(siteKey, edgeList);
 					this.edgesInContactMap.put(agentKey, edgesMap);
-					edge.addRules(rule);
 				} else {
 					List<CContactMapAbstractEdge> edgeList = edgesMap
 							.get(siteKey);
@@ -110,14 +107,12 @@ public class CContactMapAbstractSolution {
 					boolean wasInList = false;
 					for (CContactMapAbstractEdge checkedEdge : edgeList) {
 						if (edge.equalz(checkedEdge)) {
-							checkedEdge.addRules(rule);
 							wasInList = true;
 							break;
 						}
 					}
 					if (!wasInList) {
 						edgeList.add(edge);
-						edge.addRules(rule);
 					}
 				}
 
@@ -138,7 +133,6 @@ public class CContactMapAbstractSolution {
 					changedSite.setLinkState(site);
 				}
 			}
-			changedSite.addRules(rule);
 		}
 
 		if (agent.getSitesMap().isEmpty()){
@@ -149,7 +143,6 @@ public class CContactMapAbstractSolution {
 				sitesMap.put(-1, changedSite);
 				this.agentsInContactMap.put(agentKey, sitesMap);
 			} else changedSite = sitesMap.get(-1);
-			changedSite.addRules(rule);
 		}
 	}
 
@@ -219,21 +212,6 @@ public class CContactMapAbstractSolution {
 		}
 	}
 
-	public boolean addNewData(List<CAbstractAgent> listIn,
-			CContactMapAbstractRule rule) {
-		if (listIn == null)
-			return false;
-
-		boolean isAdd = false;
-		for (CAbstractAgent a : listIn) {
-			if (addAgentToAgentsMap(a)) {
-				isAdd = true;
-				addToEdgesAndAgentsMap(rule, a);
-			}
-		}
-		// listIn.clear();
-		return isAdd;
-	}
 
 	private void fillModelMapOfAgents(Collection<CAgent> agents) {
 		fillModelMapByAgentList(agents);
@@ -251,13 +229,13 @@ public class CContactMapAbstractSolution {
 		for (CAgent a : listIn) {
 			CAbstractAgent modelAgent = agentNameIdToAgent.get(a.getNameId());
 			if (modelAgent == null) {
-				modelAgent = new CAbstractAgent(a);
+				modelAgent = new CAbstractAgent(a.getNameId());
 				agentNameIdToAgent.put(a.getNameId(), modelAgent);
 			}
 
 			for (CSite s : a.getSites()) {
 				CAbstractSite as = new CAbstractSite(s);
-				as.setAgentLink(modelAgent);
+				as.setParentAgent(modelAgent);
 				modelAgent.addModelSite(as);
 			}
 		}
@@ -266,16 +244,15 @@ public class CContactMapAbstractSolution {
 	private void fillAgentMap(Collection<CAgent> agents) {
 
 		for (CAgent agent : agents) {
-			CAbstractAgent abstractAgent = new CAbstractAgent(agent);
-			abstractAgent.addSites(agent, this.agentNameIdToAgent);
+			CAbstractAgent abstractAgent = new CAbstractAgent(agent,this.agentNameIdToAgent.get(agent.getNameId()));
 			addAgentToAgentsMap(abstractAgent);
 		}
 	}
 
 	public boolean addAgentToAgentsMap(CAbstractAgent abstractAgent) {
 		String key = abstractAgent.getKey();
-		CAbstractAgent ag = agentsMap.get(key);
-		if (ag == null) {
+		
+		if (agentsMap.get(key) == null) {
 			List<CAbstractAgent> agentsFromSolution = agentNameIdToAgentsList
 					.get(abstractAgent.getNameId());
 			if (agentsFromSolution == null) {
@@ -285,11 +262,11 @@ public class CContactMapAbstractSolution {
 			}
 
 			agentsFromSolution.add(abstractAgent);
-			agentsMap.put(key, abstractAgent);
+			agentsMap.put(key, true);
 		} else
 			return false;
 
-		addToEdgesAndAgentsMap(null, abstractAgent);
+		addToEdgesAndAgentsMap(abstractAgent);
 		return true;
 	}
 
@@ -302,25 +279,15 @@ public class CContactMapAbstractSolution {
 				CAbstractLinkState ls = siteFromRule.getLinkState();
 				if (ls.getAgentNameID() == agent.getNameId()
 						|| agentFromRule.getNameId() == agent.getNameId())
-					// if((agentNameIdList == null) ||
-					// (agentNameIdList.contains(agentFromRule.getNameId())))
 					addAgentToAgentsMap(agentFromRule);
 			}
 		}
 
 	}
 
-	public final List<CAbstractAgent> getListOfAgentsByNameID(int nameID) {
-		List<CAbstractAgent> listAgents = agentNameIdToAgentsList.get(Integer
-				.valueOf(nameID));
-		if (listAgents == null)
-			return null;
-		return listAgents;
-	}
 
 	public void addData(List<ISubViews> listOfSubViews) {
 		for (ISubViews views : listOfSubViews) {
-			// List<CAbstractAgent> list = views.getAllSubViews(null);
 			List<CAbstractAgent> list = views.getAllSubViews();
 			LinkedHashSet<Integer> listOfRules = views.getSubViewClass().getRulesId();
 			for (CAbstractAgent a : list) {

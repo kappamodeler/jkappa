@@ -2,17 +2,17 @@ package com.plectix.simulator.enumerationOfSpecies;
 
 import static org.junit.Assert.fail;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -114,46 +114,6 @@ public class TestEnumOfSpeciesCompareXML {
     @Test
 	public void testReachables(){
     	
-    	
-    	
-    	 List<Entry> listData = new ArrayList<Entry>();
-         
-    	 
-         listData.add(new Entry("11", "21", "31"));
-         listData.add(new Entry("12", "22", "32"));
-         listData.add(new Entry("13", "23", "33"));
-         listData.add(new Entry("14", "24", "34"));
-         
-
-//         for (Entry element : listData) {
-//       
-//        	 if(element.equals(new Entry("14", "24", "34"))) {
-//        		 listData.remove(element);
-//             }
-//        	 
-//         }
-         
-         int count = 0;
-         
-         System.out.println("1 = " + listData);
-        
-         Iterator<Entry> iter = listData.iterator();
-         
-         while (iter.hasNext()) {
-        	 
-        	 Entry type = (Entry) iter.next();
-             
-        	 if(type.equals(new Entry("14", "24", "34"))) {
-            	 iter.remove();
-            	 count++;
-            	 System.out.println("2 = " + listData);
-             }
-             
-         }
-     	
-         System.out.println("3 = " + count);
-
-         
     	Assert.assertEquals("[Error] Entres in XML (JAVA,SIMPLEX) ", reachablesJava.size(), reachablesSimplex.size());
 		
     	StringBuffer errors = new StringBuffer();
@@ -191,27 +151,28 @@ public class TestEnumOfSpeciesCompareXML {
     	
     }
     
-    //TODO: THINKING....
-//    @Test
-//	public void testEntry(){
-//    	Assert.assertEquals("[Error] Entres in XML (JAVA,SIMPLEX) ", entresJava.size(), entresSimplex.size());
-//		
-//    	StringBuffer errors = new StringBuffer();
-//    	
-//    	for (Entry entry : entresSimplex) {
-//			if(!contains(entry, entresJava))
-//				errors.append("[ERROR] No Entry '<Entry Type = \"" + entry.getType() 
-//												+ "\" Weight = \"" + entry.getWeight() 
-//												+ "\" Data = \"" + entry.getData() 
-//												+ "/>' ==>  in Java \n");
-//		}
-//		
-//    	if (errors.length() > 0) {
-//    		System.out.println(count);
-//			fail(errors.toString());
-//		}
-//	
-//    }
+    @Test
+	public void testEntry(){
+    	
+    	Assert.assertEquals("[Error] Entres in XML (JAVA,SIMPLEX) ", entresJava.size(), entresSimplex.size());
+		
+    	StringBuffer errors = new StringBuffer();
+    	
+    	for (Entry entry : entresSimplex) {
+			if(!contains(entry, entresJava))
+				errors.append("[ERROR] No Entry '<Entry Type = \"" + entry.getType() 
+												+ "\" Weight = \"" + entry.getWeight() 
+												+ "\" Data = \"" + entry.getData() 
+												+ "/>' ==>  in Java \n");
+//				errors.append(entry.getData() + "\n");
+		}
+		
+    	if (errors.length() > 0) {
+    		System.out.println("Count = " + count);
+			fail(errors.toString());
+		}
+	
+    }
 
 
 	private boolean contains(Reachables set, ArrayList<Reachables> list) {
@@ -236,18 +197,8 @@ public class TestEnumOfSpeciesCompareXML {
 	
 	private boolean contains(Entry entry, ArrayList<Entry> list) {
 
-		if (entry.getData().equals("EGFR(dimer!1,ligand,tail~p),EGFR(dimer!1,ligand,tail~u)")) {
-			boolean is = true;
-			is = is && is;
-			System.out.println(is);
-		}
-		
 		for (Entry entryList : list) {
 			if (entryList.equals(entry)){
-				System.out.println("1 = " + entry.getData());
-				System.out.println("2 = " + entryList.getData());
-				System.out.println("1 1 = " + entry.getDataList());
-				System.out.println("2 2= " + entryList.getDataList());
 				count++;
 				list.remove(entryList);
 				return true;

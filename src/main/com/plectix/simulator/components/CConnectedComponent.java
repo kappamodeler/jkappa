@@ -32,11 +32,6 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 public class CConnectedComponent implements IConnectedComponent, Serializable {
 	private static final long serialVersionUID = -2233812055480299501L;
 	
-	/**
-	 * "EMPTY" ConnectedComponent, contains no agents.
-	 */
-	public static CConnectedComponent EMPTY = new CConnectedComponent();
-
 	private final List<CAgent> agentList = new ArrayList<CAgent>();;
 	private Map<Integer, List<CSpanningTree>> spanningTreeMap;
 	private List<CAgent> agentFromSolutionForRHS;
@@ -46,7 +41,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	private SuperSubstance mySubstance = null;
 	// for the better searching
 	private WeightedItemSelector<CInjection> myInjections 
-				= new SkipListSelector<CInjection>(ThreadLocalData.getRandom());
+				= new SkipListSelector<CInjection>();
 	private final boolean isEmpty;
 
 	/**
@@ -55,7 +50,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	public CConnectedComponent() {
 		isEmpty = true;
 		agentList.add(new CAgent());
-		myInjections.updatedItem(CInjection.EMPTY_INJECTION);
+		myInjections.updatedItem(ThreadLocalData.getEmptyInjection());
 		agentFromSolutionForRHS = new ArrayList<CAgent>();
 	}
 
@@ -106,7 +101,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 */
 	//TODO move?
 	public final List<CAgent> getAgentFromSolutionForRHS() {
-		return Collections.unmodifiableList(agentFromSolutionForRHS);
+		return agentFromSolutionForRHS;
 	}
 
 	/**
@@ -202,7 +197,7 @@ public class CConnectedComponent implements IConnectedComponent, Serializable {
 	 * @return list of this component's agents
 	 */
 	public final List<CAgent> getAgents() {
-		return Collections.unmodifiableList(agentList);
+		return agentList;
 	}
 
 	public final boolean unify(CAgent agent) {

@@ -1,10 +1,10 @@
 package com.plectix.simulator.components.stories.storage.graphs;
 
 import java.util.AbstractList;
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import com.plectix.simulator.components.stories.CStories;
@@ -16,6 +16,7 @@ public class MergeStoriesGraphs {
 
 	private CStories stories;
 	private AbstractList<UniqueGraph> listUniqueGraph = new LinkedList<UniqueGraph>();
+	private int counter = 0;
 	
 	public MergeStoriesGraphs(CStories _stories) {
 		stories = _stories;
@@ -23,6 +24,12 @@ public class MergeStoriesGraphs {
 	
 	public void merge() throws StoryStorageException {
 
+		
+		for (IWireStorage story : getEventsMapForCurrentStory().values()) {
+			if(story.isImportantStory()) {
+				counter++;
+			}
+		}
 		for (IWireStorage story : getEventsMapForCurrentStory().values()) {
 			if(story.isImportantStory()) {
 				
@@ -74,12 +81,12 @@ public class MergeStoriesGraphs {
 	}
 
 	private void addNewGraph(StoriesGraphs graph) {
-		listUniqueGraph.add(new UniqueGraph(graph, getEventsMapForCurrentStory().size(), graph.getPassport().getStorage().getAverageTime()));
+		listUniqueGraph.add(new UniqueGraph(graph, counter, graph.getPassport().getStorage().getAverageTime()));
 	}
 
 	private boolean equalGraph(StoriesGraphs graphs1, StoriesGraphs graphs2) {
-		TreeMap<Long,LinkedHashSet<Long>> connection1 = graphs1.getConnections();
-		TreeMap<Long,LinkedHashSet<Long>> connection2 = graphs2.getConnections();
+		TreeMap<Long,Set<Long>> connection1 = graphs1.getConnections2().getAdjacentEdges();
+		TreeMap<Long,Set<Long>> connection2 = graphs2.getConnections2().getAdjacentEdges();
 		
 		
 		TreeMap<Integer, LinkedHashSet<Integer>> tree1;
@@ -106,32 +113,25 @@ public class MergeStoriesGraphs {
 	}
 
 	private TreeMap<Integer, LinkedHashSet<Integer>> buildRuleGraph(StoriesGraphs graph,
-			TreeMap<Long, LinkedHashSet<Long>> connection) {
+			TreeMap<Long,Set<Long>> connection) {
 		TreeMap<Integer, LinkedHashSet<Integer>> ruleGraph = new TreeMap<Integer, LinkedHashSet<Integer>>();
 		LinkedHashSet<Integer> set;
-		int introSize = graph.getIntroCCIdtoData().size();
 		for(Long key: connection.keySet()){
 			Long event = graph.getEventIdByNodeId(key);
 			int rule = graph.getEventByStepId(event).getRuleId();
 			set = new LinkedHashSet<Integer>();
 			for (Long nodeId : connection.get(key)) {
-				if (nodeId > introSize){
+				if (!graph.getIntroCCIdtoData().containsKey(nodeId)){
 					Long eventId = graph.getEventIdByNodeId(nodeId);
 					int ruleId = graph.getEventByStepId(eventId).getRuleId();
 					set.add(ruleId);
 				}
+				
 			}
 			ruleGraph.put(rule, set);
 		}
 		return ruleGraph;
 	}
 
-	public Long[] getLinkedHashSetFromConnectionsToLong(StoriesGraphs graph) {
-		Collection<LinkedHashSet<Long>> qw = graph.getConnections().values();
-		return qw.toArray(new Long [graph.getConnections().values().size()]);
-	}
-
-	
-	
 	
 }

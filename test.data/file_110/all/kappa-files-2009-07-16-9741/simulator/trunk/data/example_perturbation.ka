@@ -1,0 +1,11 @@
+a(x),b(x) <-> a(x!1),b(x!1) 
+'intro_a' -> a(x) @ 0.0 
+'deg_a' a(x?) -> @ 0.0 
+
+%obs: 'ab' a(x!1),b(x!1) 
+%obs: 'a' a(x?) 
+%init: 10*(a(x),b(x)) 
+
+%mod: $T>5 do 'intro_a':=100 
+%mod: ['a'] > 100.0 do 'intro_a':= 0.0 
+#%mod: ['a'] > 100.0 do 'deg_a':= 1.0

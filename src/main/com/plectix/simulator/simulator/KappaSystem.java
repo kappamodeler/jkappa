@@ -42,7 +42,7 @@ import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class KappaSystem {
-	private WeightedItemSelector<CRule> rules = new SkipListSelector<CRule>(ThreadLocalData.getRandom());
+	private WeightedItemSelector<CRule> rules = new SkipListSelector<CRule>();
 	private List<CRule> orderedRulesList = new ArrayList<CRule>();
 	private CStories stories = null;
 	private List<CPerturbation> perturbations = null;
@@ -78,7 +78,7 @@ public class KappaSystem {
 				perturbations = (List<CPerturbation>) ois.readObject();
 				simulationData.setSnapshotTimes((List<Double>) ois
 						.readObject());
-				args.setEvent((long) ois.readLong());
+				args.setMaxNumberOfEvents((long) ois.readLong());
 				args.setTimeLength((double) ois.readDouble());
 				ois.close();
 			} catch (FileNotFoundException e) {
@@ -99,7 +99,7 @@ public class KappaSystem {
 				oos.writeObject(observables);
 				oos.writeObject(perturbations);
 				oos.writeObject(simulationData.getSnapshotTimes());
-				oos.writeLong(args.getEvent());
+				oos.writeLong(args.getMaxNumberOfEvents());
 				oos.writeDouble(args.getTimeLength());
 				oos.flush();
 				oos.close();
@@ -111,7 +111,7 @@ public class KappaSystem {
 		}
 
 		observables.init(args.getTimeLength(), args.getInitialTime(), args
-				.getEvent(), args.getPoints(), args.isTime());
+				.getMaxNumberOfEvents(), args.getPoints(), args.isTime());
 		List<CRule> rules = getRules();
 
 		observables.checkAutomorphisms();
@@ -181,11 +181,10 @@ public class KappaSystem {
 	private void compressRules(RuleCompressionType type, Collection<CRule> rules) {
 		RuleCompressor compressor = new RuleCompressor(type, this);
 		CompressionResults results = compressor.compress(rules);
-		System.out.println(results);
-		CMainSubViews qualitativeSubViews = new CMainSubViews();
-		qualitativeSubViews.build(solution, new ArrayList<CRule>(results.getCompressedRules()));
-		qualitativeSubViews.initDeadRules();
-		ruleCompressionWriter = new RuleCompressionXMLWriter(this, results, qualitativeSubViews);
+		CMainSubViews newSubViews = new CMainSubViews();
+		newSubViews.build(solution, new ArrayList<CRule>(results.getCompressedRules()));
+		newSubViews.initDeadRules();
+		ruleCompressionWriter = new RuleCompressionXMLWriter(this, results, newSubViews);
 	}
 	// ---------------------POSITIVE UPDATE-----------------------------
 
@@ -204,14 +203,6 @@ public class KappaSystem {
 		doPositiveUpdateForDeletedAgents(freeAgents);
 	}
 
-	public final void doPositiveUpdateForContactMap(CRule rule,
-			List<CInjection> currentInjectionsList, List<CRule> invokedRules) {
-		SimulationUtils.positiveUpdateForContactMap(getRules(), rule,
-				invokedRules);
-		List<CAgent> freeAgents = SimulationUtils
-				.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
-		doPositiveUpdateForDeletedAgentsForContactMap(freeAgents, invokedRules);
-	}
 
 	private final void doPositiveUpdateForDeletedAgents(List<CAgent> agentsList) {
 		for (CAgent agent : agentsList) {
@@ -235,28 +226,10 @@ public class KappaSystem {
 		}
 	}
 
-	private final void doPositiveUpdateForDeletedAgentsForContactMap(
-			List<CAgent> agentsList, List<CRule> rules) {
-		for (CAgent agent : agentsList) {
-			for (CRule rule : getRules()) {
-				for (IConnectedComponent cc : rule.getLeftHandSide()) {
-					CInjection inj = cc.createInjection(agent);
-					if (inj != null) {
-						if (!agent.hasSimilarInjection(inj))
-							cc.setInjection(inj);
-					}
-				}
-				if (rule.canBeApplied() && !rule.includedInCollection(rules)) {
-					rules.add(rule);
-				}
-			}
-		}
-	}
 
 	// ------------------MISC--------------------------------
 
 	public void setRules(List<CRule> rules2) {
-		// TODO Auto-generated method stub
 		orderedRulesList = rules2;
 		rules.updatedItems(rules2);
 	}
@@ -288,12 +261,7 @@ public class KappaSystem {
 	// ----------------------GETTERS-------------------------------
 
 	public final List<CRule> getRules() {
-		// if (rules != null) {
-		// return rules.asSet();
-		// } else {
-		// return null;
-		// }
-		return Collections.unmodifiableList(orderedRulesList);
+		return orderedRulesList;
 	}
 
 	public final CRule getRuleByID(int ruleID) {
@@ -306,9 +274,6 @@ public class KappaSystem {
 		return null;
 	}
 
-	// public final CRule getRuleByNumber(int i) {
-	// return orderedRulesList.get(i);
-	// }
 
 	public final ISolution getSolution() {
 		return solution;
@@ -339,7 +304,7 @@ public class KappaSystem {
 	}
 
 	public final List<CPerturbation> getPerturbations() {
-		return Collections.unmodifiableList(perturbations);
+		return perturbations;
 	}
 
 	// ----------------------SETTERS / ADDERS-------------------------------
@@ -391,7 +356,7 @@ public class KappaSystem {
 	}
 
 	public void clearRules() {
-		rules = new SkipListSelector<CRule>(ThreadLocalData.getRandom());
+		rules = new SkipListSelector<CRule>();
 		orderedRulesList.clear();
 	}
 
@@ -403,13 +368,21 @@ public class KappaSystem {
 	// CALCULATION--------------------
 
 	public final CRule getRandomRule() {
+		List<CRule> infinitRules = new ArrayList<CRule>();
 		for (CRule rule : orderedRulesList) {
 			double oldActivity = rule.getActivity();
 			rule.calculateActivity();
+			if(rule.isInfiniteRated() && rule.getActivity() > 0){
+				infinitRules.add(rule);
+				rule.setActivity(0.);
+			}
+				
 			if (rule.getActivity() != oldActivity) {
 				rules.updatedItem(rule);
 			}
 		}
+		if(!infinitRules.isEmpty())
+			return infinitRules.get(ThreadLocalData.getRandom().getInteger(infinitRules.size()));
 		return rules.select();
 	}
 

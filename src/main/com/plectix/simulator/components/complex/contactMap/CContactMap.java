@@ -2,9 +2,12 @@ package com.plectix.simulator.components.complex.contactMap;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
@@ -15,6 +18,7 @@ import com.plectix.simulator.components.CSite;
 import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
 import com.plectix.simulator.components.complex.abstracting.CAbstractSite;
 import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
+import com.plectix.simulator.components.complex.subviews.base.AbstractionRule;
 import com.plectix.simulator.components.complex.subviews.storage.ISubViews;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.ThreadLocalData;
@@ -31,7 +35,6 @@ public class CContactMap {
 	private SimulationData simulationData;
 	private CContactMapAbstractSolution abstractSolution;
 	private CRule focusRule;
-	private List<CContactMapAbstractRule> abstractRules;
 	private List<CAbstractAgent> agentsFromFocusedRule;
 	private boolean isInit = false;
 
@@ -76,45 +79,8 @@ public class CContactMap {
 		this.focusRule = focusRule;
 	}
 
-	/**
-	 * Default constructor of contact map.
-	 */
-	public CContactMap() {
-		agentsFromFocusedRule = new ArrayList<CAbstractAgent>();
-	}
-
-	/**
-	 * This method creates abstract contact map (need uses with create contact
-	 * map by <code>MODEL</code>).
-	 */
-	public void constructAbstractContactMap() {
-		// TODO
-		switch (mode) {
-		case MODEL:
-			boolean isEnd = false;
-			while (!isEnd) {
-				isEnd = true;
-				for (CContactMapAbstractRule rule : abstractRules) {
-					List<CAbstractAgent> newData = rule.getNewData();
-					if (abstractSolution.addNewData(newData, rule)) {
-						isEnd = false;
-						// clear();
-					}
-				}
-			}
-			break;
-
-		case AGENT_OR_RULE:
-			// TODO add edges to contact map for agents from
-			// agentNameIdToAgentsList which are not in focus;
-			break;
-		}
-
-	}
-
 	public void constructAbstractContactMapFromSubViews(
-			IAllSubViewsOfAllAgents subViews) {
-		// TODO
+			IAllSubViewsOfAllAgents subViews, List<CRule> rules) {
 		switch (mode) {
 		case MODEL:
 
@@ -125,68 +91,36 @@ public class CContactMap {
 				abstractSolution.addData(listOfSubViews);
 			}
 
-			// boolean isEnd = false;
-			// while (!isEnd) {
-			// isEnd = true;
-			// for (CContactMapAbstractRule rule : abstractRules) {
-			// List<CAbstractAgent> newData = rule.getNewData();
-			// if (abstractSolution.addNewData(newData, rule)) {
-			// isEnd = false;
-			// // clear();
-			// }
-			// }
-			// }
 			break;
 
 		case AGENT_OR_RULE:
-			// TODO add edges to contact map for agents from
-			// agentNameIdToAgentsList which are not in focus;
-			break;
-		}
-
-	}
-
-	/**
-	 * This method initializes abstract solution.
-	 */
-	public final void initAbstractSolution() {
-		this.abstractSolution = new CContactMapAbstractSolution(simulationData);
-	}
-
-	/**
-	 * This method initializes abstract rules.<br>
-	 * For <code>AGENT_OR_RULE</code> mode, creates abstract contact map.
-	 * 
-	 * @param rules
-	 *            given rules
-	 */
-	public void constructAbstractRules(List<CRule> rules) {
-		switch (mode) {
-		case MODEL:
-			List<CContactMapAbstractRule> listAbstractRules = new ArrayList<CContactMapAbstractRule>();
-			for (CRule rule : rules) {
-				CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(
-						abstractSolution, rule);
-				abstractRule.initAbstractRule();
-				listAbstractRules.add(abstractRule);
-			}
-			this.abstractRules = listAbstractRules;
-			break;
-
-		case AGENT_OR_RULE:
-			// CContactMapAbstractRule abstractRule = fillFocusAgentsFromRule(
-			fillFocusAgentsFromRule((CRule) this.focusRule,
-					this.agentsFromFocusedRule);
+			AbstractionRule abstractRule = new AbstractionRule(
+					focusRule);
+			//abstractRule.initAbstractRule();
+			agentsFromFocusedRule = abstractRule.getFocusedAgents();
 			constructAbstractCard(rules, agentsFromFocusedRule);
 
-			// TODO wait and remove!
-			// Iterator<Integer> iterator = abstractSolution
-			// .getAgentNameIdToAgent().keySet().iterator();
-			// while (iterator.hasNext()) {
-			// Integer key = iterator.next();
-			// addAgentList.add(abstractSolution.getAgentNameIdToAgent().get(
-			// key));
-			// }
+//			Map<Integer, Boolean> used = new LinkedHashMap<Integer, Boolean>();
+//			Set<Integer> types = new LinkedHashSet<Integer>();
+//			for (CAbstractAgent agent : agentsFromFocusedRule) {
+//				int type = agent.getNameId();
+//				if (used.get(type) == null) {
+//					used.put(type, true);
+//					List<ISubViews> listOfSubViews = subViews
+//							.getAllSubViewsByTypeId(type);
+//					types.addAll(abstractSolution.addBoundedData(listOfSubViews));
+//				}
+//			}
+//			
+//			for(int i : types){
+//				if (used.get(i) == null) {
+//					used.put(i, true);
+//					List<ISubViews> listOfSubViews = subViews
+//							.getAllSubViewsByTypeId(i);
+//					abstractSolution.addData(listOfSubViews);
+//				}			
+//			}
+
 			List<CAbstractAgent> addAgentList = new ArrayList<CAbstractAgent>();
 			addAgentList.addAll(abstractSolution.getAgentNameIdToAgent()
 					.values());
@@ -200,6 +134,14 @@ public class CContactMap {
 			clearCard(agentNameIdList);
 			break;
 		}
+
+	}
+
+	/**
+	 * This method initializes abstract solution.
+	 */
+	public final void initAbstractSolution() {
+		this.abstractSolution = new CContactMapAbstractSolution(simulationData);
 	}
 
 	/**
@@ -212,14 +154,15 @@ public class CContactMap {
 
 		for (Integer key : abstractSolution.getAgentNameIdToAgentsList()
 				.keySet()) {
-			if (!agentNameIdList.contains(key))
+			if (!agentNameIdList.contains(key)) {
 				namesOfAgentsToDelete.add(key);
+			}
 		}
 
 		for (Integer i : namesOfAgentsToDelete) {
-			abstractSolution.getAgentNameIdToAgentsList().remove(i);
 			abstractSolution.getEdgesInContactMap().remove(i);
 			abstractSolution.getAgentsInContactMap().remove(i);
+			abstractSolution.getAgentNameIdToAgentsList().remove(i);
 		}
 	}
 
@@ -242,26 +185,9 @@ public class CContactMap {
 					abstractSolution.addAgentToAgentsMap(agent);
 					abstractSolution.addAgentsBoundedWithFocusedAgent(agent,
 							agentsFromRule);
-					// break;
 				}
 		}
-	}
 
-	/**
-	 * Util method. Fills given agents to given "focus rule"
-	 * 
-	 * @param rule
-	 *            given rule
-	 * @param agentsList
-	 *            given agents
-	 */
-	private void fillFocusAgentsFromRule(CRule rule,
-			List<CAbstractAgent> agentsList) {
-		CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(rule);
-		abstractRule.initAbstractRule();
-		List<CAbstractAgent> list = abstractRule.getFocusedAgents();
-		addAgentsToListFromRule(list, agentsList);
-		// return abstractRule;
 	}
 
 	/**
@@ -273,29 +199,19 @@ public class CContactMap {
 	 *            given agents
 	 */
 	private void fillAgentsFromRule(CRule rule, List<CAbstractAgent> agentsList) {
-		CContactMapAbstractRule abstractRule = new CContactMapAbstractRule(rule);
-		List<CAbstractAgent> agents = new ArrayList<CAbstractAgent>();
-		if (rule.getLeftHandSide().get(0).isEmpty()) {
-			agents = abstractRule.getLhsAgents();
-			addAgentsToListFromRule(agents, agentsList);
-		}
-		agents = abstractRule.getRhsAgents();
-		addAgentsToListFromRule(agents, agentsList);
-	}
+		AbstractionRule abstractRule = new AbstractionRule(rule);
+		// TODO hren
+		if (!rule.getLeftHandSide().get(0).isEmpty()) {
+			for (CAbstractAgent agent : abstractRule.getLhsAgents()) {
+				if (!agent.includedInCollection(agentsList)) {
+					agentsList.add(agent);
+				}
+			}
 
-	/**
-	 * Util method. Find sets difference and add to <b>agentsForAdding</b>
-	 * 
-	 * @param agents
-	 *            given agents for checks
-	 * @param agentsForAdding
-	 *            given agents for adds
-	 */
-	private void addAgentsToListFromRule(List<CAbstractAgent> agents,
-			List<CAbstractAgent> agentsForAdding) {
-		for (CAbstractAgent agent : agents) {
-			if (!agent.includedInCollection(agentsForAdding)) {
-				agentsForAdding.add(agent);
+		}
+		for (CAbstractAgent agent : abstractRule.getRhsAgents()) {
+			if (!agent.includedInCollection(agentsList)) {
+				agentsList.add(agent);
 			}
 		}
 	}
@@ -307,9 +223,9 @@ public class CContactMap {
 		int mainSiteId = mainSite.getNameId();
 		Map<Integer, Map<Integer, List<CContactMapAbstractEdge>>> mapAll = abstractSolution
 				.getEdgesInContactMap();
-		if(!mapAll.containsKey(mainAgentId))
+		if (!mapAll.containsKey(mainAgentId))
 			return outList;
-		if(!mapAll.get(mainAgentId).containsKey(mainSiteId))
+		if (!mapAll.get(mainAgentId).containsKey(mainSiteId))
 			return outList;
 		for (CContactMapAbstractEdge edge : mapAll.get(mainAgentId).get(
 				mainSiteId)) {
@@ -334,8 +250,7 @@ public class CContactMap {
 		if (!isInit) {
 			setSimulationData(simulationData);
 			initAbstractSolution();
-			constructAbstractRules(rules);
-			constructAbstractContactMapFromSubViews(subViews);
+			constructAbstractContactMapFromSubViews(subViews, rules);
 		}
 		isInit = true;
 	}
@@ -385,7 +300,6 @@ public class CContactMap {
 			for (List<CContactMapAbstractEdge> edgesList : edgesMap.values()) {
 
 				for (CContactMapAbstractEdge edge : edgesList) {
-					// Element bond = doc.createElement("Bond");
 					int vertexToSiteNameID = edge.getVertexToSiteNameID();
 					int vertexToAgentNameID = edge.getVertexToAgentNameID();
 					CAbstractSite vertexFrom = edge.getVertexFrom();
@@ -397,7 +311,6 @@ public class CContactMap {
 						boundList.add(b);
 					else
 						continue;
-					// if (!agentIDWasRead.contains(vertexToAgentNameID)) {
 					writer.writeStartElement("Bond");
 					writer.writeAttribute("FromAgent", vertexFrom
 							.getAgentLink().getName());
@@ -409,21 +322,17 @@ public class CContactMap {
 
 					if (edge.getRules().size() != 0) {
 						for (int ruleID : edge.getRules()) {
-							// Element rule = doc.createElement("Rule");
 							writer.writeStartElement("Rule");
 							writer.writeAttribute("Id", Integer
 									.toString(ruleID));
-							// bond.appendChild(rule);
 							writer.writeEndElement();
 						}
 					}
-					// contactMapElement.appendChild(bond);
 					writer.writeEndElement();
 					// }
 				}
 			}
 		}
-		// simplxSession.appendChild(contactMapElement);
 		writer.writeEndElement();
 	}
 
@@ -456,8 +365,8 @@ public class CContactMap {
 			writer.writeEndElement();
 		}
 	}
-	
-	public boolean isInit(){
+
+	public boolean isInit() {
 		return isInit;
 	}
 }

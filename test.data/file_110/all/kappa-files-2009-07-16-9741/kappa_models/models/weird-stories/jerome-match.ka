@@ -1,0 +1,25 @@
+# Rules:
+#######
+# Chapter 'Take your racket'
+'wrong hand' Jerome(lefthand,righthand),Racket(handler) <-> Jerome(lefthand!1,righthand),Racket(handler!1) @ 200,50
+'Good hand' Jerome(lefthand,righthand),Racket(handler) <-> Jerome(lefthand,righthand!1),Racket(handler!1) @ 50,50
+
+#######
+# Chapter 'Play'
+'Match won' Jerome(righthand!1),Racket(handler!1),Match(Status~Notfinished) -> Jerome(righthand!1),Racket(handler!1),Match(Status~Won) @ 20
+'Match lost.' Jerome(lefthand!1,righthand),Racket(handler!1),Match(Status~Notfinished) -> Jerome(lefthand,righthand),Racket(handler),Match(Status~Lost) @ 40
+
+
+# Initial Conditions:
+%init: 1 * (Jerome(lefthand,righthand))
+%init: 1000 * (Match(Status~Notfinished))
+%init: 2 * (Racket(handler))
+
+# Observations:
+%obs: Match(Status~Lost)
+%obs: Match(Status~Won)
+
+# Stories:
+%story: 'Match won'
+%story: 'Match lost.'
+

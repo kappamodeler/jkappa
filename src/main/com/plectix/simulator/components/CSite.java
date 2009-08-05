@@ -25,8 +25,7 @@ public final class CSite implements Serializable {
 	private final int nameId;
 	private final CLink linkState;
 	private CInternalState internalState = CInternalState.EMPTY_STATE;
-//	private boolean changed;
-	private CAgent linkAgent = null;
+	private CAgent parentAgent = null;
 	private int linkIndex = NO_INDEX;
 
 	private Set<CLiftElement> liftElements = new LinkedHashSet<CLiftElement>();
@@ -40,14 +39,6 @@ public final class CSite implements Serializable {
 		linkState = new CLink(CLinkStatus.FREE);
 	}
 
-	/**
-	 * This constructor is easier to use!
-	 * @param name
-	 */
-	public CSite(String name) {
-		this.nameId = ThreadLocalData.getNameDictionary().getId(name);
-		linkState = new CLink(CLinkStatus.FREE);
-	}
 	//------------------------GETTERS AND SETTERS------------------------------
 	
 	/**
@@ -58,7 +49,7 @@ public final class CSite implements Serializable {
 	public CSite(int id, CAgent agent) {
 		this.nameId = id;
 		linkState = new CLink(CLinkStatus.FREE);
-		linkAgent = agent;
+		parentAgent = agent;
 	}
 
 	/**
@@ -82,7 +73,7 @@ public final class CSite implements Serializable {
 	 * @return list of lift elements of this site
 	 */
 	public final Set<CLiftElement> getLift() {
-		return Collections.unmodifiableSet(liftElements);
+		return liftElements;
 	}
 
 	/**
@@ -95,7 +86,7 @@ public final class CSite implements Serializable {
 		for (CLiftElement liftElement : this.liftElements)
 			if (liftElement.getConnectedComponent() == inCC)
 				list.add(liftElement.getInjection());
-		return Collections.unmodifiableList(list);
+		return list;
 	}
 
 	/**
@@ -110,18 +101,18 @@ public final class CSite implements Serializable {
 	 * This method sets link to the "parent" agent. 
 	 * @param agent "parent" agent
 	 */
-	public final void setAgentLink(CAgent agent) {
+	public final void setParentAgent(CAgent agent) {
 		if (agent == null)
 			return;
-		this.linkAgent = agent;
+		this.parentAgent = agent;
 	}
 
 	/**
 	 * This method returns agent, which is parent for this site
 	 * @return agent, which is parent for this site 
 	 */
-	public final CAgent getAgentLink() {
-		return linkAgent;
+	public final CAgent getParentAgent() {
+		return parentAgent;
 	}
 
 	/**
@@ -161,10 +152,10 @@ public final class CSite implements Serializable {
 			return false;
 		}
 
-		if (linkAgent == null) {
-			return site.getAgentLink() == null;
+		if (parentAgent == null) {
+			return site.getParentAgent() == null;
 		} else {
-			return linkAgent.equalz(site.getAgentLink());
+			return parentAgent.equalz(site.getParentAgent());
 		}
 	}
 
@@ -286,10 +277,7 @@ public final class CSite implements Serializable {
 	}
 
 	public String toString() {
-		return linkAgent.getName() + "(" + getName() + ")";
+		return parentAgent.getName() + "(" + getName() + ")";
 	}
 	
-	public void truncInternalState(){
-		internalState.setNameId(NO_INDEX);
-	}
 }

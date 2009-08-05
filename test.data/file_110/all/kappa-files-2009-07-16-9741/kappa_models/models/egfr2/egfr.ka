@@ -1,0 +1,39 @@
+#rules
+R(l,r),E(r) <-> R(l!1,r),E(r!1)  
+
+R(l!_,r),R(l!_,r) -> R(l!_,r!1),R(l!_,r!1)
+R(r!1),R(r!1) -> R(r),R(r) 
+
+'Grb_Shc' Sh(Y7~p),G(a) <-> Sh(Y7~p!1),G(a!1)
+'Grb_R' R(Y68~p),G(a) <-> R(Y68~p!1),G(a!1)
+So(d),G(b) <-> So(d!1),G(b!1)
+'Shc_R' R(Y48~p),Sh(pi) <-> R(Y48~p!1),Sh(pi!1) 
+
+
+
+#mods
+R(r!_,Y68~u) -> R(r!_,Y68~p)
+
+'Y68_dephos' R(Y68~p) -> R(Y68~u)
+
+#'Y68_dephos' R(Y68!?~p) -> R(Y68!?~u)
+
+R(r!_,Y48~u) -> R(r!_,Y48~p)
+
+#'Y48_dephos' R(Y48!?~p) -> R(Y48!?~u)
+'Y48_dephos' R(Y48~p) -> R(Y48~u)
+
+R(r!_,Y48~p!1),Sh(pi!1,Y7~u) -> R(r!_,Y48~p!1), Sh(pi!1,Y7~p) 
+
+Sh(Y7~p) -> Sh(Y7~u)
+
+#Initial solution
+%init: 1000 * (R(l,r,Y48~u,Y68~u),E(r),G(a,b),So(d),Sh(pi,Y7~u)) 
+
+#Observation
+%obs: 'R_Grb2_Sos' R(l!_,Y68~p!3),G(b!2,a!3),So(d!2)
+%obs: 'R_Shc_Grb2_Sos' R(l!_,Y48~p!2),Sh(pi!2,Y7~p!3),G(a!3,b!4),So(d!4)
+#%obs: R(Y68!3),G(a!3) 
+#%obs: R(Y48!2),Sh(pi!2) 
+#%obs: 'Grb_R'
+%story: 'Grb_Shc'

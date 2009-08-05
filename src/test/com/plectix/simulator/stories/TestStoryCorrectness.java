@@ -28,7 +28,7 @@ public class TestStoryCorrectness extends InitStoriesTests {
 	public TestStoryCorrectness(String fileName) {
 
 		//3 boolean variables: isSlow, isWeak, isStrong 
-		super(path, fileName, false, true, true);
+		super(path, fileName, false, true, false);
 
 		this.fileName = fileName;
 	}

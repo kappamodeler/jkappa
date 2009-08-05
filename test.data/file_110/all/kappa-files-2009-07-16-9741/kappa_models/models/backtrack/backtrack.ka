@@ -1,0 +1,13 @@
+R(a~0) -> R(a~1)
+R(a~1) -> R(a~2)
+R(a~2) -> R(a~0)
+R(a~2,b~u) -> R(a~2,b~p)
+R(a~1,b~p,c~u) -> R(a~1,b~p,c~p)
+R(a~0,b~p) -> R(a~0,b~u)
+R(a~0,c~p) -> R(a~0,c~u)
+'goal' R(a,b~u,c~p) -> R(a,b~u,c~p)
+
+%init:R(a~0,b~u,c~u)
+%story: 'goal'
+
+

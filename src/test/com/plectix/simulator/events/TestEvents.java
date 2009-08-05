@@ -51,7 +51,7 @@ public class TestEvents {
 	public void test() {
 		for (int i = 0; i < eventsNumbers.length; i++) {
 			setup(eventsNumbers[i]);
-			assertTrue(eventsNumbers[i] == mySimulator.getSimulationData().getSimulationArguments().getEvent());
+			assertTrue(eventsNumbers[i] == mySimulator.getSimulationData().getSimulationArguments().getMaxNumberOfEvents());
 			
 		}
 	}

@@ -1,0 +1,57 @@
+#'1' A(x~p,y~p,z~p)->A(x~p,y~q,z~p)
+#'2' B(x~p,y~p,z~p)->B(x~p,y~q,z~q)
+#'3' C(x,y), C(x,y) ->C(x!1,y!2), C(x!1,y!2)
+
+#'4_1' D(x~p,y)->D(x~u,y)
+#'4_2' D(z~p,y)->D(z~u,y)
+#'4_4' D(x~p,r)->D(x~u,r)
+#'4_3' D(y~p,x,z)->D(y~u,x,z)
+
+#'5' E(x~p,y!1),F(x!1,y~u)->E(x~p,y!1),F(x!1,y~p)
+
+#'6' G(x!_)->G(x)
+
+#'7' A(x~p!1),B(x!1)-> A(x~p),B(x)
+
+#'8' A(x!_)->
+
+#'9' A(x~p!_)->A(x~u!_)
+#'10' ->A(x~p)
+#'11' A(x~p,y),B(x)->A(x~p!1,y),B(x!1)
+
+#'EGFR.Shc' EGFR(Y1172~p),Shc(PTB~u) <-> EGFR(Y1172~p!1),Shc(PTB~rec!1) @ 1.0,1.0
+
+#'13' A()->B(x~p)
+#B(x~p)->B(x~u)
+
+#'14' A(x~p,z)->A(x~u,z)
+#A(y),B(x)->A(y!1),B(x!1)
+
+'15' A(x~p)->
+B(x~p)->B(x~u)
+
+#%init: 1*(A(x~p,y~p,z~p))
+#%init: 1*(B(x~p,y~p,z~p))
+#%init: 1*(C(x,y))
+
+#%init: 1*(D(x~p,y~p,z~p,r))
+#%init: 1*(E(x~p,y!1),F(x!1,y~u))
+
+#%init: 1*(G(x!1),H(x!1))
+
+#%init: 1*(A(x~p!1),B(x!1))
+
+#%init: 1*(A(x!1,y),B(x!1))
+#%init: 1*(A(x!1,y),C(x!1))
+
+#%init: 1*(A(x~p!1),B(x!1))
+
+#%init: 1*(A(x~p,y),B(x))
+
+#%init: 1*(EGFR(Y1172~p),Shc(PTB~u))
+
+#%init: 1*(A())
+
+#%init: 1*(A(x~p,y,z),B(x))
+
+%init: 1*(A(x~p,y!1),B(x~p!1))

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import com.plectix.simulator.components.stories.compressions.CompressionPassport;
 import com.plectix.simulator.components.stories.compressions.Compressor;
@@ -516,12 +517,12 @@ public class AbstractStorage implements IWireStorage {
 		}
 		if (temp > 0) {
 			initialEvent.setMark(EMarkOfEvent.KEPT, this);
+			events.add(initialEvent);
 		} else {
 			// TODO remove initialEvent from storage
 			// initialEvent.setMark(null, this);
 		}
 
-		events.add(initialEvent);
 	}
 
 	private void concordWires() {
@@ -703,5 +704,67 @@ public class AbstractStorage implements IWireStorage {
 	public int getIteration(){
 		return iteration;
 	}
+
+	@Override
+	public void correctLinkStates(CStateOfLink old1, WireHashKey wk1,
+			CStateOfLink new1, WireHashKey wk2, CStateOfLink old2,
+			WireHashKey wk3, CStateOfLink new2, WireHashKey wk4, Long first,
+			boolean top) {
+		
+		if(top){
+			reLinkTop(wk1, new1, first);
+			reLinkTop(wk2, old1, first);
+			reLinkTop(wk3, new2, first);
+			reLinkTop(wk4, old2, first);			
+		}
+		else{
+			reLinkBottom(wk1, new1, first);
+			reLinkBottom(wk2, old1, first);
+			reLinkBottom(wk3, new2, first);
+			reLinkBottom(wk4, old2, first);
+			
+			
+		}
+		
+		
+	}
+
+	private void reLinkTop(WireHashKey wk1, CStateOfLink new1, long first) {
+		boolean done = false;
+		TreeMap<Long,AtomicEvent<?>> wire = storageWires.get(wk1);
+		while(!done){
+			Entry<Long, AtomicEvent<?>> lowerEntry = wire.lowerEntry(first);
+			AtomicEvent<?> ae = lowerEntry.getValue();
+			first = lowerEntry.getKey();
+			if(ae.getType()==EActionOfAEvent.TEST){
+				((CStateOfLink)ae.getState().getBeforeState()).setAgentId(new1.getAgentId());
+			}
+			if(ae.getType() ==EActionOfAEvent.TEST_AND_MODIFICATION||ae.getType()==EActionOfAEvent.MODIFICATION){
+				((CStateOfLink)ae.getState().getAfterState()).setAgentId(new1.getAgentId());
+				done = true;
+			}
+
+			
+		}
+	}
+
+	private void reLinkBottom(WireHashKey wk1, CStateOfLink new1, long first) {
+		boolean done = false;
+		TreeMap<Long,AtomicEvent<?>> wire = storageWires.get(wk1);
+		while(!done){
+			Entry<Long, AtomicEvent<?>> ceilingEntry = wire.ceilingEntry(first);
+			AtomicEvent<?> ae = ceilingEntry.getValue();
+			first = ceilingEntry.getKey();
+			if(ae.getType()==EActionOfAEvent.TEST){
+				((CStateOfLink)ae.getState().getBeforeState()).setAgentId(new1.getAgentId());
+			}
+			if(ae.getType() ==EActionOfAEvent.TEST_AND_MODIFICATION||ae.getType()==EActionOfAEvent.MODIFICATION){
+				((CStateOfLink)ae.getState().getAfterState()).setAgentId(new1.getAgentId());
+				done = true;
+			}		
+		}
+	}
+
+
 
 }

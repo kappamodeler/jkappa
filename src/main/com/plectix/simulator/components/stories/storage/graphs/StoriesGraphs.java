@@ -1,5 +1,6 @@
 package com.plectix.simulator.components.stories.storage.graphs;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -21,12 +22,16 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 
 public class StoriesGraphs {
 
-	private TreeMap<Long, Integer> nodeDepths;
 	private TreeMap<Long, Integer> depths;
 	private TreeMap<Long, Long> nodeEventIdToNodeId;
-	private TreeMap<Long, LinkedHashSet<Long>> connections;
 	private TreeMap<Long, Long> introAgentIdtoCCId;
 	private TreeMap<Long, String> introCCIdtoData;
+
+	private Connections connections;
+
+	public Connections getConnections2() {
+		return connections;
+	}
 
 	private TreeMap<Long, Long> nodeIdToEventId;
 
@@ -34,132 +39,80 @@ public class StoriesGraphs {
 
 	public StoriesGraphs(CompressionPassport passport) {
 		this.passport = passport;
-		this.nodeDepths = new TreeMap<Long, Integer>();
+		this.depths = new TreeMap<Long, Integer>();
 		this.nodeEventIdToNodeId = new TreeMap<Long, Long>();
-		this.connections = new TreeMap<Long, LinkedHashSet<Long>>();
 		this.introAgentIdtoCCId = new TreeMap<Long, Long>();
 		this.introCCIdtoData = new TreeMap<Long, String>();
 		this.nodeIdToEventId = new TreeMap<Long, Long>();
+		this.connections = new Connections();
 	}
 
 	public Integer getEventDepth(long eventId) throws StoryStorageException {
-		if (nodeDepths.isEmpty()) {
+		if (depths.isEmpty()) {
 			nodeEventIdToNodeId = new TreeMap<Long, Long>();
 		}
-		return nodeDepths.get(nodeEventIdToNodeId.get(eventId));
+		return depths.get(nodeEventIdToNodeId.get(eventId));
 	}
 
 	public Integer getIntroDepth(long introId) throws StoryStorageException {
-		if (nodeDepths.isEmpty()) {
+		if (depths.isEmpty()) {
 			nodeEventIdToNodeId = new TreeMap<Long, Long>();
 		}
-		if (!nodeDepths.containsKey(introId)) {
+		if (!depths.containsKey(introId)) {
 			return -1;
 		}
-		return nodeDepths.get(introId);
+		return depths.get(introId);
 	}
 
 	public void buildGraph() throws StoryStorageException {
-		fillNodeIdMap(fillIntroIdMap(getEventByStepId(-1)));
-		Integer depth = 0;
-		
-		
-		for (IEventIterator iterator = passport.eventIterator(true); iterator
-				.hasNext();) {
-			long eventId = (long) iterator.next();
-			if (nodeDepths.isEmpty()) {
-				nodeDepths.put(nodeEventIdToNodeId.get(eventId), depth++);
-			} else {
-				if (eventId != -1) {
-					for (Iterator<WireHashKey> wireIt = getEventByStepId(
-							eventId).wireEventIterator(); wireIt.hasNext();) {
-						WireHashKey wKey = (WireHashKey) wireIt.next();
-						TreeMap<Long, AtomicEvent<?>> wire = passport
-								.getStorage().getStorageWires().get(wKey);
-						if (depth < getNearbyDepth(wire, eventId))
-							depth = getNearbyDepth(wire, eventId);
-					}
-					nodeDepths.put(nodeEventIdToNodeId.get(eventId), depth);
-				} else {
-					Integer introDepth = 0;
-					Long tmpCCId = null;
-					for (Iterator<WireHashKey> wireIt = getEventByStepId(
-							eventId).wireEventIterator(); wireIt.hasNext();) {
-						WireHashKey wKey = (WireHashKey) wireIt.next();
-						tmpCCId = introAgentIdtoCCId.get(wKey.getAgentId());
-						if (!nodeDepths.containsKey(tmpCCId)) {
-							for (Iterator<WireHashKey> wireByCC = getEventByStepId(
-									eventId).wireEventIterator(); wireByCC
-									.hasNext();) {
-								WireHashKey w = (WireHashKey) wireByCC.next();
-
-								TreeMap<Long, AtomicEvent<?>> wire = passport
-										.getStorage().getStorageWires().get(w);
-								if (introAgentIdtoCCId.get(w.getAgentId()) == tmpCCId) {
-									if (introDepth < getNearbyDepth(wire,
-											eventId)) {
-										introDepth = getNearbyDepth(wire,
-												eventId);
-									}
-								}
-							}
-							nodeDepths.put(tmpCCId, introDepth);
-						}
-					}
-				}
-			}
-			if (eventId != -1) {
-				fillConnections(getEventByStepId(eventId));
-			}
-		}
+		ICEvent intro = getEventByStepId(-1);
+		fillNodeIdMap(fillIntroIdMap(intro));
+		fillConnections();
 		fillDepths();
-		inverseDepths();
-		filterNodes();
+		//filterNodes();
 	}
 
 	private void fillDepths() {
-		depths = new TreeMap<Long, Integer>();
-
-		Long tmpNode = connections.lastKey();
+		
+		TreeMap<Long, Set<Long>> myconnections = connections.getAdjacentEdges();
+		Long tmpNode = myconnections.lastKey();
 		depths.put(tmpNode, 0);
-		do{
-			for (Long leaf : connections.get(tmpNode)) {
-				if (depths.containsKey(leaf)){
-					if (depths.get(leaf)< depths.get(tmpNode) + 1){
+		do {
+			for (Long leaf : myconnections.get(tmpNode)) {
+				if (depths.containsKey(leaf)) {
+					if (depths.get(leaf) < depths.get(tmpNode) + 1) {
 						depths.put(leaf, depths.get(tmpNode) + 1);
 					}
 				} else {
 					depths.put(leaf, depths.get(tmpNode) + 1);
 				}
 			}
-			tmpNode = connections.lowerKey(tmpNode);
-		} while(tmpNode != null);
+			tmpNode = myconnections.lowerKey(tmpNode);
+		} while (tmpNode != null);
 		
-		
-		nodeDepths = depths;
-		
+		inverseDepths();
 	}
 
 	private void filterNodes() {
 		TreeMap<Long, Long> newMap = new TreeMap<Long, Long>();
-		for (Iterator iterator = nodeIdToEventId.keySet().iterator(); iterator
+		for (Iterator<Long> iterator = nodeIdToEventId.keySet().iterator(); iterator
 				.hasNext();) {
 			Long node = (Long) iterator.next();
 			if (findNodeInConnection(node))
 				newMap.put(node, nodeIdToEventId.get(node));
-
 		}
 		nodeIdToEventId = newMap;
 	}
 
 	private boolean findNodeInConnection(Long node) {
-		for (Entry<Long, LinkedHashSet<Long>> entry : connections.entrySet()) {
+		for (Entry<Long, Set<Long>> entry : connections.getAdjacentEdges().entrySet()) {
 			if (entry.getKey().equals(node))
-				if (entry.getValue().size() == 1 && entry.getValue().contains(node))
+				if (entry.getValue().size() == 1
+						&& entry.getValue().contains(node))
 					return false;
 				else
 					return true;
-			
+
 			for (Long n : entry.getValue()) {
 				if (n.equals(node))
 					return true;
@@ -169,14 +122,13 @@ public class StoriesGraphs {
 	}
 
 	private void inverseDepths() {
-
 		TreeMap<Long, Integer> inverseDepths = new TreeMap<Long, Integer>();
-		int graphDepth = nodeDepths.size() - 1;
-		for (Long key : nodeDepths.keySet()) {
-			inverseDepths.put(key, graphDepth - nodeDepths.get(key));
+		int graphDepth = depths.size() - 1;
+		for (Long key : depths.keySet()) {
+			inverseDepths.put(key, graphDepth - depths.get(key));
 		}
-		nodeDepths = null;
-		nodeDepths = inverseDepths;
+		depths = null;
+		depths = inverseDepths;
 	}
 
 	private Long fillIntroIdMap(ICEvent introEvent)
@@ -198,8 +150,6 @@ public class StoriesGraphs {
 					CStateOfLink link = (CStateOfLink) introEvent
 							.getAtomicEvent(wKey).getState().getAfterState();
 					if (link != null) {
-						// if (link.getAgentId() != -1 && link.getSiteId() !=
-						// -1){
 						if (!agentsMap.containsKey(wKey.getAgentId())) {
 							agentsMap.put(wKey.getAgentId(),
 									new LinkedHashSet<BoundedCouple>());
@@ -208,14 +158,43 @@ public class StoriesGraphs {
 								new BoundedCouple(wKey.getAgentId(), wKey
 										.getSiteId(), link.getAgentId(), link
 										.getSiteId()));
-						// }
 					}
 				}
+
 			}
+			
+			
+			fillInternalStates(introEvent, agentsMap);
 			counter = fillCCDataMap(agentsMap);
 			return counter;
 		}
 		return Long.valueOf(0);
+	}
+
+	private void fillInternalStates(ICEvent introEvent,
+			TreeMap<Long, LinkedHashSet<BoundedCouple>> agentsMap)
+			throws StoryStorageException {
+		for (Iterator<WireHashKey> wireIt = introEvent.wireEventIterator(); wireIt
+				.hasNext();) {
+			WireHashKey wKey = (WireHashKey) wireIt.next();
+			
+			if (wKey.getTypeOfWire().equals(ETypeOfWire.INTERNAL_STATE)) {
+				Integer internal = (Integer)introEvent
+				.getAtomicEvent(wKey).getState().getAfterState();
+				
+				if (internal != null) {
+					for (BoundedCouple couple : agentsMap.get(wKey.getAgentId())) {
+						if (couple.getAgent1().equals(wKey.getAgentId()) && couple.getSite1().equals(wKey.getSiteId())){
+							couple.setInternalState1(internal);
+						}
+						if (couple.getAgent2()!=null)
+							if (couple.getAgent2().equals(wKey.getAgentId()) && couple.getSite2().equals(wKey.getSiteId())){
+								couple.setInternalState2(internal);
+							}
+					}
+				}
+			}
+		}
 	}
 
 	private Long fillCCDataMap(
@@ -239,13 +218,7 @@ public class StoriesGraphs {
 					if (couple.getAgent2() != null) {
 						introAgentIdtoCCId.put(couple.getAgent2(), counter);
 						nodeIdToEventId.put(counter, counter);
-					} else {
-						// Integer type = ThreadLocalData.getTypeById().getType(
-						// passport.getStorage().getIteration(),
-						// couple.getAgent1());
-						// introCCIdtoData.put(counter, ThreadLocalData
-						// .getNameDictionary().getName(type));
-					}
+					} 
 				}
 				counter++;
 
@@ -262,50 +235,61 @@ public class StoriesGraphs {
 		return counter;
 	}
 
+	
 	private String getText(Set<BoundedCouple> set) {
-
+		
 		StringBuffer text = new StringBuffer();
-		Map<Long, Map<Integer, Integer>> agentWithSites = new LinkedHashMap<Long, Map<Integer, Integer>>();
-
+		Map<Long, Set<Site>> agentWithSites = new LinkedHashMap<Long, Set<Site>>();
+		
 		int counter = 0;
+		
 		for (BoundedCouple boundedCouple : set) {
+			
 			if (boundedCouple.getAgent2() != null) {
-
 				boundedCouple.setLink(counter++);
+				
 				if (agentWithSites.containsKey(boundedCouple.getAgent1())) {
-					agentWithSites.get(boundedCouple.getAgent1()).put(
-							boundedCouple.getSite1(), boundedCouple.getLink());
+					
+					agentWithSites.get(boundedCouple.getAgent1()).add(
+							new Site(boundedCouple.getSite1(), boundedCouple.getLink(), boundedCouple.getInternalState1()));
+					
 				} else {
 					agentWithSites.put(boundedCouple.getAgent1(),
-							new LinkedHashMap<Integer, Integer>());
-					agentWithSites.get(boundedCouple.getAgent1()).put(
-							boundedCouple.getSite1(), boundedCouple.getLink());
+							new LinkedHashSet<Site>());
+					agentWithSites.get(boundedCouple.getAgent1()).add(
+							new Site(boundedCouple.getSite1(), boundedCouple.getLink(), boundedCouple.getInternalState1()));
+					
+					
 				}
-
+				
 				if (agentWithSites.containsKey(boundedCouple.getAgent2())) {
-					agentWithSites.get(boundedCouple.getAgent2()).put(
-							boundedCouple.getSite2(), boundedCouple.getLink());
+					agentWithSites.get(boundedCouple.getAgent2()).add(
+							new Site(boundedCouple.getSite2(), boundedCouple.getLink(), boundedCouple.getInternalState2()));
+					
 				} else {
 					agentWithSites.put(boundedCouple.getAgent2(),
-							new LinkedHashMap<Integer, Integer>());
-					agentWithSites.get(boundedCouple.getAgent2()).put(
-							boundedCouple.getSite2(), boundedCouple.getLink());
+							new LinkedHashSet<Site>());
+					agentWithSites.get(boundedCouple.getAgent2()).add(
+							new Site(boundedCouple.getSite2(), boundedCouple.getLink(), boundedCouple.getInternalState2()));
+					
 				}
+				
 			} else {
-				if (!agentWithSites.containsKey(boundedCouple.getAgent1()))
+				if (!agentWithSites.containsKey(boundedCouple.getAgent1())){
 					agentWithSites.put(boundedCouple.getAgent1(),
-							new LinkedHashMap<Integer, Integer>());
-				agentWithSites.get(boundedCouple.getAgent1()).put(
-						boundedCouple.getSite1(), null);
+							new LinkedHashSet<Site>());
+				}
+				agentWithSites.get(boundedCouple.getAgent1()).add(
+						new Site(boundedCouple.getSite1(), boundedCouple.getInternalState1()));
 			}
 		}
-
+		
 		boolean agentFirst = true;
-
+		
 		for (Long agentId : agentWithSites.keySet()) {
 			if (agentId == null)
 				continue;
-
+			
 			if (agentFirst) {
 				agentFirst = false;
 			} else {
@@ -316,25 +300,21 @@ public class StoriesGraphs {
 			text.append("" + ThreadLocalData.getNameDictionary().getName(type)
 					+ "(");
 			boolean siteFirst = true;
-			if (agentWithSites.get(agentId) != null) {
-				for (Entry<Integer, Integer> siteId : agentWithSites.get(
-						agentId).entrySet()) {
+			
+			if (agentWithSites.get(agentId) != null) { //is it neccessary???
+				
+				for (Site site : agentWithSites.get(agentId)) {
 					if (siteFirst) {
 						siteFirst = false;
 					} else {
 						text.append(", ");
 					}
-					text.append(ThreadLocalData.getNameDictionary().getName(
-							siteId.getKey()));
-
-					if (siteId.getValue() != null)
-						text.append("!" + siteId.getValue());
+					text.append(site.toString());
 				}
 			}
 			text.append(")");
-
 		}
-
+		
 		return text.toString();
 	}
 
@@ -380,72 +360,74 @@ public class StoriesGraphs {
 
 	}
 
-	private void fillConnections(ICEvent event) {
-		LinkedHashSet<Long> connectionSet = new LinkedHashSet<Long>();
-		Long upperNodeId;
-		Map<Long, Integer> agentsMap = new LinkedHashMap<Long, Integer>();
-		int ccCounter = 0;
-		Long tmpAgent;
+	private void fillConnections() throws StoryStorageException {
 
-		for (Iterator<WireHashKey> wireIt = event.wireEventIterator(); wireIt
+		for (IEventIterator iterator = passport.eventIterator(false); iterator
 				.hasNext();) {
-			WireHashKey wKey = (WireHashKey) wireIt.next();
-			TreeMap<Long, AtomicEvent<?>> wire = passport.getStorage()
-					.getStorageWires().get(wKey);
-			tmpAgent = wKey.getAgentId();
-			agentsMap.put(wKey.getAgentId(), ccCounter);
-			for (Iterator<WireHashKey> iter = event.wireEventIterator(); iter
-					.hasNext();) {
-				WireHashKey w = (WireHashKey) iter.next();
-				if (w.getAgentId() != tmpAgent)
-					continue;
-				
-				
+			long eventId = (long) iterator.next();
+			if (eventId != -1) {
+				fillConnections2(getEventByStepId(eventId));
 			}
+		}
+	}
 
+	private void fillConnections2(ICEvent event) {
+		Long upperNode;
+		// Set<Long> connectionSet = new LinkedHashSet<Long>();
+		TreeMap<Long,Long> map = new TreeMap<Long, Long>();
+		for (Iterator<WireHashKey> iterator = event.wireEventIterator(); iterator
+				.hasNext();) {
+			WireHashKey wkey = (WireHashKey) iterator.next();
+			TreeMap<Long, AtomicEvent<?>> wire = passport.getStorage()
+					.getStorageWires().get(wkey);
 			if (!wire.get(event.getStepId()).getType().equals(
 					EActionOfAEvent.MODIFICATION)) {
 
-				upperNodeId = getUpperNode(wire, wKey, event.getStepId());
-				if (upperNodeId != null)
-					connectionSet.add(upperNodeId);
+				upperNode = getUpperNode(wire, wkey, event.getStepId());
+
+				if (upperNode != null) {
+					map.put(upperNode, upperNode);
+				}
 			}
-			ccCounter++;
+		}
+		if (!map.isEmpty()){
+			upperNode = map.lastKey();
+			
+			do{
+				connections.addConnection(nodeEventIdToNodeId
+						.get(event.getStepId()), upperNode);
+				upperNode = map.lowerKey(upperNode);
+			} while(upperNode!=null);
 		}
 
-		connections.put(nodeEventIdToNodeId.get(event.getStepId()),
-				connectionSet);
 	}
+
 	private Long getUpperNode(TreeMap<Long, AtomicEvent<?>> wire,
 			WireHashKey key, long eventId) {
-		long tmp = eventId;
+		Long tmp = eventId;
 		tmp = wire.lowerKey(tmp);
 
-//		while (wire.lowerEntry(tmp) != null
-//				&& wire.get(tmp).getType().equals(EActionOfAEvent.TEST) )
-//				 {
-//			tmp = wire.lowerKey(tmp);
-//		}
-
-		if (wire.get(tmp) != null) {
-			if (wire.get(tmp).getType().equals(EActionOfAEvent.TEST))
-				return null;
-			if (tmp != -1)
-				return nodeEventIdToNodeId.get(tmp);
-			else
-				return introAgentIdtoCCId.get(key.getAgentId());
+		if(tmp!=null){
+			while (wire.lowerEntry(tmp) != null
+					&& wire.get(tmp).getType().equals(EActionOfAEvent.TEST)) {
+				tmp = wire.lowerKey(tmp);
+			}
+			// }
+			if (wire.get(tmp) != null) {
+				// if (wire.get(tmp).getType().equals(EActionOfAEvent.TEST))
+				// return null;
+				if (tmp != -1)
+					return nodeEventIdToNodeId.get(tmp);
+				else
+					return introAgentIdtoCCId.get(key.getAgentId());
+			}
 		}
 		return null;
 	}
-	private int getNearbyDepth(TreeMap<Long, AtomicEvent<?>> wire, long stepId) {
-
-		if (wire.higherKey(stepId) != null)
-			return nodeDepths.get(nodeEventIdToNodeId.get(wire.higherKey(stepId))) + 1;
-		else
-			return 0;
-	}
 
 	public ICEvent getEventByStepId(long stepId) {
+		if (!passport.getAllEventsByNumber().containsKey(stepId))
+			return null;
 		return passport.getAllEventsByNumber().get(stepId).getContainer();
 	}
 
@@ -457,10 +439,6 @@ public class StoriesGraphs {
 
 	public TreeMap<Long, String> getIntroCCIdtoData() {
 		return introCCIdtoData;
-	}
-
-	public TreeMap<Long, LinkedHashSet<Long>> getConnections() {
-		return connections;
 	}
 
 	public CompressionPassport getPassport() {

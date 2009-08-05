@@ -1,0 +1,13 @@
+#rules
+R(l,r) , E(r) <-> R(l!1,r) , E(r!1)
+#R(l!1,r) , E(r!1) -> R(l,r) , E(r)
+E(r!1) , E(r!2) , R(l!1,r) , R(l!2,r) -> E(r!1) , E(r!2) ,  R(l!1,r!3) , R(l!2,r!3)
+E(r!1) , E(r!2) , R(l!1,r!3) , R(l!2,r!3) -> E(r!1) , E(r!2) , R(l!1,r) , R(l!2,r)
+
+#Initial solution
+%init: 2*(R(l,r),E(r))
+
+#Observation
+%obs: So(d!2),G(b!2,a!1),Sh(Y7~p!1,pi!0),R(Y48~p!0)
+%obs: So(d!2),G(b!2,a!1),R(Y68~p!1)
+

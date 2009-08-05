@@ -1,0 +1,17 @@
+
+'AB' A(b),B(a) <-> A(b!1),B(a!1) @ 1.0E-2(1.0E3) , 1.0 [NO_POLY]
+
+'CB' C(b),B(c) <-> C(b!1),B(c!1) @ 1.E-2(1.0E3) , 1.0 [NO_POLY]
+
+'AC' A(c),C(a) <-> A(c!1),C(a!1) @ 1.E-2(1.0E3) , 1.0 [NO_POLY]
+
+A(c),I(c) <-> A(c!1),I(c!1) @ 1.e-2,1.0 
+
+%obs: A(b!1,c!2),B(a!1,c!3),C(a!2,b!3)
+%obs: A(b!_,c)
+%obs: A(b,c)
+
+%init: 1000 * A(b,c),B(a,c),C(a,b),I(c)
+%init: 1000 * I(c)
+
+

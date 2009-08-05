@@ -1,0 +1,11 @@
+
+'AtoB' A(x~0,y~0,z~0,d~u) ->  A(x~0,y~0,z~0,d~p)
+
+'x'  C(x!0), A(x~1!0) -> C(x!0), A(x~0!0)
+'y'  C(x!0), A(x!0,y~1) -> C(x!0), A(x!0,y~0)
+'z'  C(x!0), A(x!0,z~1) -> C(x!0), A(x!0,z~0)
+
+'CA' C(x), A(x) <-> C(x!0), A(x!0)
+
+%init: A(x~1,y~1,z~1,d~u), C(x)
+%story: 'AtoB'

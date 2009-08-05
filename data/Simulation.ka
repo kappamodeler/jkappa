@@ -1,0 +1,289 @@
+# Rules:
+#######
+# Chapter 'Receptors'
+'001-EGFR.EGF' EGFR(ligand),EGF(hi) -> EGFR(ligand!1),EGF(hi!1) @ 0.0
+'001-EGFR.EGF Ref1' EGFR(ligand),EGF(hi) -> EGFR(ligand!1),EGF(hi!1) @ 9.88e-4
+'001-EGFR.EGF Ref2' EGFR(ligand,dimer!1),EGF(hi),HER3(dimer!1) -> EGFR(ligand!1,dimer!2),EGF(hi!1),HER3(dimer!2) @ 4.94e-4
+'002-EGFR...EGF' EGFR(ligand!1),EGF(hi!1) -> EGFR(ligand),EGF(hi) @ 0.0
+'002-EGFR...EGF Ref1' EGF(hi!1),EGFR(ligand!1,dimer) -> EGF(hi),EGFR(ligand,dimer) @ 4.0e-3
+'002-EGFR...EGF Ref2' EGFR(ligand!1,dimer!2),HER3(dimer!2),EGF(hi!1) -> EGFR(ligand,dimer!1),HER3(dimer!1),EGF(hi) @ 4.0e-3
+'002-EGFR...EGF Ref3' EGF(hi!1),EGFR(dimer!2),EGFR(ligand!1,dimer!2) -> EGF(hi),EGFR(dimer!1),EGFR(ligand,dimer!1) @ 4.0e-3
+'002-EGFR...EGF Ref4' EGF(hi!1),HER2(dimer!2),EGFR(ligand!1,dimer!2) -> EGF(hi),HER2(dimer!1),EGFR(ligand,dimer!1) @ 4.0e-3
+'002-EGFR...EGF Ref5' NRG(hi!2),EGF(hi!1),EGFR(ligand!1,dimer!3),HER3(ligand!2,dimer!3) -> NRG(hi!1),EGF(hi),EGFR(ligand,dimer!2),HER3(ligand!1,dimer!2) @ 6.0e-3
+'003-HER3.NRG' HER3(ligand),NRG(hi) -> HER3(ligand!1),NRG(hi!1) @ 0.0
+'003-HER3.NRG Ref1' HER3(ligand),NRG(hi) -> HER3(ligand!1),NRG(hi!1) @ 9.88e-4
+'004-HER3...NRG' NRG(hi!1),HER3(ligand!1) -> NRG(hi),HER3(ligand) @ 0.0
+'004-HER3...NRG Ref1' NRG(hi!1),HER3(ligand!1,dimer) -> NRG(hi),HER3(ligand,dimer) @ 4.0e-3
+'004-HER3...NRG Ref2' HER3(ligand!1,dimer!2),NRG(hi!1),HER2(dimer!2) -> HER3(ligand,dimer!1),NRG(hi),HER2(dimer!1) @ 4.0e-4
+'004-HER3...NRG Ref3' HER3(ligand!1,dimer!2),NRG(hi!1),EGFR(dimer!2) -> HER3(ligand,dimer!1),NRG(hi),EGFR(dimer!1) @ 4.0e-3
+'004-HER3...NRG Ref4' NRG(hi!1),HER3(dimer!2),HER3(ligand!1,dimer!2) -> NRG(hi),HER3(dimer!1),HER3(ligand,dimer!1) @ 4.0e-3
+'004-HER3...NRG Ref5' HER3(ligand!2,dimer!3),HER3(ligand!1,dimer!3),NRG(hi!1),NRG(hi!2) -> HER3(ligand!2,dimer!1),HER3(ligand,dimer!1),NRG(hi),NRG(hi!2) @ 1.6e-2
+'005-EGFR.EGFR' EGFR(dimer),EGFR(dimer) -> EGFR(dimer!1),EGFR(dimer!1) @ 4.15e-6
+'006-HER2.HER2' HER2(dimer),HER2(dimer) -> HER2(dimer!1),HER2(dimer!1) @ 4.15e-6
+'007-HER3.HER3' HER3(dimer),HER3(dimer) -> HER3(dimer!1),HER3(dimer!1) @ 4.15e-6
+'008-EGFR.HER2' HER2(dimer),EGFR(dimer) -> HER2(dimer!1),EGFR(dimer!1) @ 4.15e-6
+'009-EGFR.HER3' EGFR(dimer),HER3(dimer) -> EGFR(dimer!1),HER3(dimer!1) @ 4.15e-6
+'010-HER2.HER3' HER3(dimer),HER2(dimer) -> HER3(dimer!1),HER2(dimer!1) @ 4.15e-6
+'011-EGFR...EGFR' EGFR(dimer!1),EGFR(dimer!1) -> EGFR(dimer),EGFR(dimer) @ 0.0
+'011-EGFR...EGFR Ref1' EGF(hi!2),EGFR(ligand!3,dimer!1,tail~p?),EGFR(ligand!2,dimer!1,tail~p?),EGF(hi!3) -> EGF(hi!1),EGFR(ligand!2,dimer,tail~p?),EGFR(ligand!1,dimer,tail~p?),EGF(hi!2) @ 1.0e-2
+'011-EGFR...EGFR Ref2' EGF(hi!2),EGF(hi!3),EGFR(ligand!2,dimer!1,tail~p?),EGFR(ligand!3,dimer!1,tail~u?) -> EGF(hi!2),EGF(hi!1),EGFR(ligand!2,dimer,tail~p?),EGFR(ligand!1,dimer,tail~u?) @ 2.0e-2
+'011-EGFR...EGFR Ref3' EGFR(ligand!3,dimer!1,tail~u?),EGF(hi!3),EGFR(ligand!2,dimer!1,tail~u?),EGF(hi!2) -> EGFR(ligand!1,dimer,tail~u?),EGF(hi!1),EGFR(ligand!2,dimer,tail~u?),EGF(hi!2) @ 4.0e-2
+'011-EGFR...EGFR Ref4' EGFR(ligand!2,dimer!1,tail~p?),EGF(hi!2),EGFR(dimer!1,ligand,tail~p?) -> EGFR(ligand!1,dimer,tail~p?),EGF(hi!1),EGFR(dimer,ligand,tail~p?) @ 5.0e-2
+'011-EGFR...EGFR Ref5' EGFR(ligand!1,dimer!2,tail~p?),EGF(hi!1),EGFR(dimer!2,ligand,tail~u?) -> EGFR(ligand!1,dimer,tail~p?),EGF(hi!1),EGFR(dimer,ligand,tail~u?) @ 10.0e-2
+'011-EGFR...EGFR Ref6' EGFR(dimer!2,ligand,tail~u?),EGFR(ligand!1,dimer!2,tail~u?),EGF(hi!1) -> EGFR(dimer,ligand,tail~u?),EGFR(ligand!1,dimer,tail~u?),EGF(hi!1) @ 20.0e-2
+'011-EGFR...EGFR Ref7' EGFR(dimer!1,ligand,tail~p?),EGFR(dimer!1,ligand,tail~p?) -> EGFR(dimer,ligand,tail~p?),EGFR(dimer,ligand,tail~p?) @ 25.0e-2
+'011-EGFR...EGFR Ref8' EGFR(dimer!1,ligand,tail~p?),EGFR(dimer!1,ligand,tail~u?) -> EGFR(dimer,ligand,tail~p?),EGFR(dimer,ligand,tail~u?) @ 50.0e-2
+'011-EGFR...EGFR Ref9' EGFR(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand,tail~u?) -> EGFR(dimer,ligand,tail~u?),EGFR(dimer,ligand,tail~u?) @ 100.0e-2
+'011-EGFR...EGFR Ref10' EGFR(dimer!1,ligand,tail~p?),EGFR(dimer!1,ligand!_,tail~u?) -> EGFR(dimer,ligand,tail~p?),EGFR(dimer,ligand!_,tail~u?) @ 1.0e-1
+'012-HER2...HER2' HER2(dimer!1),HER2(dimer!1) -> HER2(dimer),HER2(dimer) @ 0.0
+'012-HER2...HER2 Ref1' HER2(ligand,dimer!1,tail~p?),HER2(dimer!1,ligand,tail~p?) -> HER2(ligand,dimer,tail~p?),HER2(dimer,ligand,tail~p?) @ 2.5e-1
+'012-HER2...HER2 Ref2' HER2(dimer!1,ligand,tail~p?),HER2(dimer!1,ligand,tail~u?) -> HER2(dimer,ligand,tail~p?),HER2(dimer,ligand,tail~u?) @ 5.0e-1
+'012-HER2...HER2 Ref3' HER2(dimer!1,ligand,tail~u?),HER2(dimer!1,ligand,tail~u?) -> HER2(dimer,ligand,tail~u?),HER2(dimer,ligand,tail~u?) @ 10.0e-1
+'013-EGFR...HER2' HER2(dimer!1),EGFR(dimer!1) -> HER2(dimer),EGFR(dimer) @ 0.0
+'013-EGFR...HER2 Ref1' EGFR(ligand!2,dimer!1,tail~p?),HER2(dimer!1,ligand,tail~p?),EGF(hi!2) -> EGFR(ligand!1,dimer,tail~p?),HER2(dimer,ligand,tail~p?),EGF(hi!1) @ 2.0e-2
+'013-EGFR...HER2 Ref2' EGFR(dimer!1,ligand!2,tail~p?),HER2(dimer!1,ligand,tail~u?),EGF(hi!2) -> EGFR(dimer,ligand!1,tail~p?),HER2(dimer,ligand,tail~u?),EGF(hi!1) @ 4.0e-2
+'013-EGFR...HER2 Ref3' EGF(hi!2),EGFR(dimer!1,ligand!2,tail~u?),HER2(dimer!1,ligand,tail~p?) -> EGF(hi!1),EGFR(dimer,ligand!1,tail~u?),HER2(dimer,ligand,tail~p?) @ 4.0e-2
+'013-EGFR...HER2 Ref4' EGFR(dimer!1,ligand!2,tail~u?),HER2(dimer!1,ligand,tail~u?),EGF(hi!2) -> EGFR(dimer,ligand!1,tail~u?),HER2(dimer,ligand,tail~u?),EGF(hi!1) @ 8.0e-2
+'013-EGFR...HER2 Ref5' EGFR(dimer!1,ligand,tail~p?),HER2(dimer!1,ligand,tail~p?) -> EGFR(dimer,ligand,tail~p?),HER2(dimer,ligand,tail~p?) @ 10.0e-2
+'013-EGFR...HER2 Ref6' HER2(dimer!1,ligand,tail~p?),EGFR(dimer!1,ligand,tail~u?) -> HER2(dimer,ligand,tail~p?),EGFR(dimer,ligand,tail~u?) @ 20.0e-2
+'013-EGFR...HER2 Ref7' HER2(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand,tail~p?) -> HER2(dimer,ligand,tail~u?),EGFR(dimer,ligand,tail~p?) @ 20.0e-2
+'013-EGFR...HER2 Ref8' HER2(ligand,dimer!1,tail~u?),EGFR(dimer!1,ligand,tail~u?) -> HER2(ligand,dimer,tail~u?),EGFR(dimer,ligand,tail~u?) @ 40.0e-2
+'014-HER3...HER3' HER3(dimer!1),HER3(dimer!1) -> HER3(dimer),HER3(dimer) @ 0.0
+'014-HER3...HER3 Ref1' NRG(hi!2),HER3(dimer!1,ligand!3,tail~p?),NRG(hi!3),HER3(ligand!2,dimer!1,tail~p?) -> NRG(hi!1),HER3(dimer,ligand!2,tail~p?),NRG(hi!2),HER3(ligand!1,dimer,tail~p?) @ 1.0e-2
+'014-HER3...HER3 Ref2' HER3(dimer!1,ligand!3,tail~p?),NRG(hi!2),NRG(hi!3),HER3(ligand!2,dimer!1,tail~u?) -> HER3(dimer,ligand!2,tail~p?),NRG(hi!1),NRG(hi!2),HER3(ligand!1,dimer,tail~u?) @ 2.0e-2
+'014-HER3...HER3 Ref3' NRG(hi!3),HER3(dimer!1,ligand!3,tail~u?),NRG(hi!2),HER3(ligand!2,dimer!1,tail~u?) -> NRG(hi!1),HER3(dimer,ligand!1,tail~u?),NRG(hi!2),HER3(ligand!2,dimer,tail~u?) @ 4.0e-2
+'014-HER3...HER3 Ref4' HER3(ligand,dimer!1,tail~p?),HER3(dimer!1,ligand!3,tail~p?),NRG(hi!3) -> HER3(ligand,dimer,tail~p?),HER3(dimer,ligand!2,tail~p?),NRG(hi!2) @ 5.0e-2
+'014-HER3...HER3 Ref5' HER3(dimer!1,ligand!3,tail~p?),NRG(hi!3),HER3(ligand,dimer!1,tail~u?) -> HER3(dimer,ligand!1,tail~p?),NRG(hi!1),HER3(ligand,dimer,tail~u?) @ 10.0e-2
+'014-HER3...HER3 Ref6' HER3(dimer!1,ligand!3,tail~u?),HER3(ligand,dimer!1,tail~p?),NRG(hi!3) -> HER3(dimer,ligand!1,tail~u?),HER3(ligand,dimer,tail~p?),NRG(hi!1) @ 10.0e-2
+'014-HER3...HER3 Ref7' NRG(hi!3),HER3(dimer!1,ligand,tail~u?),HER3(dimer!1,ligand!3,tail~u?) -> NRG(hi!1),HER3(dimer,ligand,tail~u?),HER3(dimer,ligand!1,tail~u?) @ 20.0e-2
+'014-HER3...HER3 Ref8' HER3(dimer!1,ligand,tail~p?),HER3(ligand,dimer!1,tail~p?) -> HER3(dimer,ligand,tail~p?),HER3(ligand,dimer,tail~p?) @ 25.0e-2
+'014-HER3...HER3 Ref9' HER3(dimer!1,ligand,tail~p?),HER3(ligand,dimer!1,tail~u?) -> HER3(dimer,ligand,tail~p?),HER3(ligand,dimer,tail~u?) @ 50.0e-2
+'014-HER3...HER3 Ref10' HER3(dimer!1,ligand,tail~u?),HER3(ligand,dimer!1,tail~u?) -> HER3(dimer,ligand,tail~u?),HER3(ligand,dimer,tail~u?) @ 100.0e-2
+'015-HER3...HER2' HER3(dimer!1),HER2(dimer!1) -> HER3(dimer),HER2(dimer) @ 0.0
+'015-HER3...HER2 Ref1' HER3(ligand!2,dimer!1,tail~p?),HER2(ligand,dimer!1,tail~p?),NRG(hi!2) -> HER3(ligand!1,dimer,tail~p?),HER2(ligand,dimer,tail~p?),NRG(hi!1) @ 2.0e-2
+'015-HER3...HER2 Ref2' HER2(ligand,dimer!1,tail~u?),NRG(hi!2),HER3(ligand!2,dimer!1,tail~p?) -> HER2(ligand,dimer,tail~u?),NRG(hi!1),HER3(ligand!1,dimer,tail~p?) @ 4.0e-2
+'015-HER3...HER2 Ref3' HER3(ligand!2,dimer!1,tail~u?),NRG(hi!2),HER2(ligand,dimer!1,tail~p?) -> HER3(ligand!1,dimer,tail~u?),NRG(hi!1),HER2(ligand,dimer,tail~p?) @ 4.0e-2
+'015-HER3...HER2 Ref4' HER3(ligand!2,dimer!1,tail~u?),NRG(hi!2),HER2(ligand,dimer!1,tail~u?) -> HER3(ligand!1,dimer,tail~u?),NRG(hi!1),HER2(ligand,dimer,tail~u?) @ 8.0e-2
+'015-HER3...HER2 Ref5' HER2(ligand,dimer!1,tail~p?),HER3(ligand,dimer!1,tail~p?) -> HER2(ligand,dimer,tail~p?),HER3(ligand,dimer,tail~p?) @ 10.0e-2
+'015-HER3...HER2 Ref6' HER2(ligand,dimer!1,tail~p?),HER3(dimer!1,ligand,tail~u?) -> HER2(ligand,dimer,tail~p?),HER3(dimer,ligand,tail~u?) @ 20.0e-2
+'015-HER3...HER2 Ref7' HER2(ligand,dimer!1,tail~u?),HER3(dimer!1,ligand,tail~p?) -> HER2(ligand,dimer,tail~u?),HER3(dimer,ligand,tail~p?) @ 20.0e-2
+'015-HER3...HER2 Ref8' HER3(dimer!1,ligand,tail~u?),HER2(ligand,dimer!1,tail~u?) -> HER3(dimer,ligand,tail~u?),HER2(ligand,dimer,tail~u?) @ 40.0e-2
+'016-EGFR...HER3' HER3(dimer!1),EGFR(dimer!1) -> HER3(dimer),EGFR(dimer) @ 0.0
+'016-EGFR...HER3 Ref1' EGFR(ligand!2,dimer!1,tail~p?),EGF(hi!2),HER3(dimer!1,ligand!3,tail~p?),NRG(hi!3) -> EGFR(ligand!1,dimer,tail~p?),EGF(hi!1),HER3(dimer,ligand!2,tail~p?),NRG(hi!2) @ 1.0e-2
+'016-EGFR...HER3 Ref2' HER3(dimer!1,ligand!3,tail~p?),EGF(hi!2),EGFR(ligand!2,dimer!1,tail~u?),NRG(hi!3) -> HER3(dimer,ligand!2,tail~p?),EGF(hi!1),EGFR(ligand!1,dimer,tail~u?),NRG(hi!2) @ 2.0e-2
+'016-EGFR...HER3 Ref3' EGF(hi!2),EGFR(ligand!2,dimer!1,tail~p?),NRG(hi!3),HER3(dimer!1,ligand!3,tail~u?) -> EGF(hi!1),EGFR(ligand!1,dimer,tail~p?),NRG(hi!2),HER3(dimer,ligand!2,tail~u?) @ 2.0e-2
+'016-EGFR...HER3 Ref4' HER3(dimer!1,ligand!3,tail~u?),EGF(hi!2),NRG(hi!3),EGFR(ligand!2,dimer!1,tail~u?) -> HER3(dimer,ligand!2,tail~u?),EGF(hi!1),NRG(hi!2),EGFR(ligand!1,dimer,tail~u?) @ 4.0e-2
+'016-EGFR...HER3 Ref5' HER3(dimer!1,ligand!3,tail~p?),EGFR(ligand,dimer!1,tail~p?),NRG(hi!3) -> HER3(dimer,ligand!1,tail~p?),EGFR(ligand,dimer,tail~p?),NRG(hi!1) @ 5.0e-2
+'016-EGFR...HER3 Ref6' NRG(hi!3),EGFR(ligand,dimer!1,tail~u?),HER3(dimer!1,ligand!3,tail~p?) -> NRG(hi!1),EGFR(ligand,dimer,tail~u?),HER3(dimer,ligand!1,tail~p?) @ 10.0e-2
+'016-EGFR...HER3 Ref7' HER3(dimer!1,ligand!3,tail~u?),NRG(hi!3),EGFR(ligand,dimer!1,tail~p?) -> HER3(dimer,ligand!1,tail~u?),NRG(hi!1),EGFR(ligand,dimer,tail~p?) @ 10.0e-2
+'016-EGFR...HER3 Ref8' EGFR(ligand,dimer!1,tail~u?),HER3(dimer!1,ligand!3,tail~u?),NRG(hi!3) -> EGFR(ligand,dimer,tail~u?),HER3(dimer,ligand!1,tail~u?),NRG(hi!1) @ 20.0e-2
+'016-EGFR...HER3 Ref9' HER3(dimer!1,ligand,tail~p?),EGF(hi!2),EGFR(ligand!2,dimer!1,tail~p?) -> HER3(dimer,ligand,tail~p?),EGF(hi!1),EGFR(ligand!1,dimer,tail~p?) @ 5.0e-2
+'016-EGFR...HER3 Ref10' EGF(hi!2),EGFR(ligand!2,dimer!1,tail~u?),HER3(dimer!1,ligand,tail~p?) -> EGF(hi!1),EGFR(ligand!1,dimer,tail~u?),HER3(dimer,ligand,tail~p?) @ 10.0e-2
+'016-EGFR...HER3 Ref11' HER3(dimer!1,ligand,tail~u?),EGFR(ligand!2,dimer!1,tail~p?),EGF(hi!2) -> HER3(dimer,ligand,tail~u?),EGFR(ligand!1,dimer,tail~p?),EGF(hi!1) @ 10.0e-2
+'016-EGFR...HER3 Ref12' HER3(dimer!1,ligand,tail~u?),EGFR(ligand!2,dimer!1,tail~u?),EGF(hi!2) -> HER3(dimer,ligand,tail~u?),EGFR(ligand!1,dimer,tail~u?),EGF(hi!1) @ 20.0e-2
+'016-EGFR...HER3 Ref13' EGFR(ligand,dimer!1,tail~p?),HER3(dimer!1,ligand,tail~p?) -> EGFR(ligand,dimer,tail~p?),HER3(dimer,ligand,tail~p?) @ 25.0e-2
+'016-EGFR...HER3 Ref14' HER3(dimer!1,ligand,tail~p?),EGFR(ligand,dimer!1,tail~u?) -> HER3(dimer,ligand,tail~p?),EGFR(ligand,dimer,tail~u?) @ 50.0e-2
+'016-EGFR...HER3 Ref15' HER3(dimer!1,ligand,tail~u?),EGFR(ligand,dimer!1,tail~p?) -> HER3(dimer,ligand,tail~u?),EGFR(ligand,dimer,tail~p?) @ 50.0e-2
+'016-EGFR...HER3 Ref16' HER3(dimer!1,ligand,tail~u?),EGFR(ligand,dimer!1,tail~u?) -> HER3(dimer,ligand,tail~u?),EGFR(ligand,dimer,tail~u?) @ 100.0e-2
+'017-EGFR@tail_p' EGFR(dimer,ligand,tail~u?) -> EGFR(dimer,ligand,tail~p?) @ 1.0e-3
+'017-EGFR@tail_p Ref1' EGFR(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand,tail~u?) -> EGFR(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand,tail~p?) @ 1.0e-2
+'017-EGFR@tail_p Ref2' EGFR(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand!2,tail~u?),EGF(hi!2) -> EGFR(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand!2,tail~p?),EGF(hi!2) @ 2.0e-2
+'017-EGFR@tail_p Ref3' EGFR(dimer!1,ligand!2,tail~u?),EGFR(ligand!3,dimer!1,tail~u?),EGF(hi!2),EGF(hi!3) -> EGFR(dimer!2,ligand!1,tail~p?),EGFR(ligand!3,dimer!2,tail~u?),EGF(hi!1),EGF(hi!3) @ 4.0e-2
+'017-EGFR@tail_p Ref4' EGFR(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand,tail~p?) -> EGFR(dimer!1,ligand,tail~p?),EGFR(dimer!1,ligand,tail~p?) @ 3.0e-2
+'017-EGFR@tail_p Ref5' EGFR(dimer!1,ligand!2,tail~u?),EGFR(dimer!1,ligand,tail~p?),EGF(hi!2) -> EGFR(dimer!1,ligand!2,tail~p?),EGFR(dimer!1,ligand,tail~p?),EGF(hi!2) @ 6.0e-2
+'017-EGFR@tail_p Ref6' EGFR(dimer!1,ligand!3,tail~p?),EGFR(dimer!1,ligand!2,tail~u?),EGF(hi!2),EGF(hi!3) -> EGFR(dimer!1,ligand!3,tail~p?),EGFR(dimer!1,ligand!2,tail~p?),EGF(hi!2),EGF(hi!3) @ 12.0e-2
+'017-EGFR@tail_p Ref7' EGFR(ligand!1,dimer,tail~u?),EGF(hi!1) -> EGFR(ligand!1,dimer,tail~p?),EGF(hi!1) @ 2.0e-3
+'017-EGFR@tail_p Ref8' EGFR(ligand,dimer!1,tail~u?),HER2(dimer!1,ligand,tail~u?) -> EGFR(ligand,dimer!1,tail~p?),HER2(dimer!1,ligand,tail~u?) @ 16.0e-3
+'017-EGFR@tail_p Ref9' EGFR(ligand!2,dimer!1,tail~u?),HER2(dimer!1,ligand,tail~u?),EGF(hi!2) -> EGFR(ligand!2,dimer!1,tail~p?),HER2(dimer!1,ligand,tail~u?),EGF(hi!2) @ 32.0e-3
+'017-EGFR@tail_p Ref10' EGFR(ligand,dimer!1,tail~u?),HER2(dimer!1,ligand,tail~p?) -> EGFR(ligand,dimer!1,tail~p?),HER2(dimer!1,ligand,tail~p?) @ 48.0e-3
+'017-EGFR@tail_p Ref11' HER2(dimer!1,ligand,tail~p?),EGFR(ligand!2,dimer!1,tail~u?),EGF(hi!2) -> HER2(dimer!1,ligand,tail~p?),EGFR(ligand!2,dimer!1,tail~p?),EGF(hi!2) @ 96.0e-3
+'017-EGFR@tail_p Ref12' EGFR(ligand,dimer!1,tail~u?),HER3(dimer!1,ligand,tail~u?) -> EGFR(ligand,dimer!1,tail~p?),HER3(dimer!1,ligand,tail~u?) @ 8.0e-3
+'017-EGFR@tail_p Ref13' EGFR(ligand,dimer!1,tail~u?),HER3(dimer!1,ligand,tail~p?) -> EGFR(ligand,dimer!1,tail~p?),HER3(dimer!1,ligand,tail~p?) @ 24.0e-3
+'017-EGFR@tail_p Ref14' EGFR(ligand,dimer!1,tail~u?),HER3(dimer!1,ligand!2,tail~u?),NRG(hi!2) -> EGFR(ligand,dimer!1,tail~p?),HER3(dimer!1,ligand!2,tail~u?),NRG(hi!2) @ 16.0e-3
+'017-EGFR@tail_p Ref15' EGFR(ligand,dimer!1,tail~u?),NRG(hi!2),HER3(dimer!1,ligand!2,tail~p?) -> EGFR(ligand,dimer!1,tail~p?),NRG(hi!2),HER3(dimer!1,ligand!2,tail~p?) @ 48.0e-3
+'017-EGFR@tail_p Ref16' HER3(dimer!1,ligand,tail~u?),EGFR(ligand!2,dimer!1,tail~u?),EGF(hi!2) -> HER3(dimer!2,ligand,tail~u?),EGFR(ligand!1,dimer!2,tail~p?),EGF(hi!1) @ 16.0e-3
+'017-EGFR@tail_p Ref17' HER3(ligand,dimer!1,tail~p?),EGFR(dimer!1,ligand!2,tail~u?),EGF(hi!2) -> HER3(ligand,dimer!1,tail~p?),EGFR(dimer!1,ligand!2,tail~p?),EGF(hi!2) @ 48.0e-3
+'018-HER2@tail_p' HER2(dimer,ligand,tail~u?) -> HER2(dimer,ligand,tail~p?) @ 2.0e-4
+'018-HER2@tail_p Ref1' HER2(dimer!1,ligand,tail~u?),HER2(dimer!1,ligand,tail~u?) -> HER2(dimer!1,ligand,tail~p?),HER2(dimer!1,ligand,tail~u?) @ 8.0e-3
+'018-HER2@tail_p Ref2' HER2(dimer!1,ligand,tail~u?),HER2(dimer!1,ligand,tail~p?) -> HER2(dimer!1,ligand,tail~p?),HER2(dimer!1,ligand,tail~p?) @ 24.0e-3
+'018-HER2@tail_p Ref3' HER2(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand,tail~u?) -> HER2(dimer!1,ligand,tail~p?),EGFR(dimer!1,ligand,tail~u?) @ 8.0e-3
+'018-HER2@tail_p Ref4' EGFR(dimer!1,ligand!2,tail~u?),HER2(dimer!1,ligand,tail~u?),EGF(hi!2) -> EGFR(dimer!2,ligand!1,tail~u?),HER2(dimer!2,ligand,tail~p?),EGF(hi!1) @ 16.0e-3
+'018-HER2@tail_p Ref5' HER2(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand,tail~p?) -> HER2(dimer!1,ligand,tail~p?),EGFR(dimer!1,ligand,tail~p?) @ 24.0e-3
+'018-HER2@tail_p Ref6' EGFR(dimer!1,ligand!2,tail~p?),HER2(dimer!1,ligand,tail~u?),EGF(hi!2) -> EGFR(dimer!1,ligand!2,tail~p?),HER2(dimer!1,ligand,tail~p?),EGF(hi!2) @ 48.0e-3
+'018-HER2@tail_p Ref7' HER2(dimer!1,ligand,tail~u?),HER3(dimer!1,ligand,tail~u?) -> HER2(dimer!1,ligand,tail~p?),HER3(dimer!1,ligand,tail~u?) @ 8.0e-3
+'018-HER2@tail_p Ref8' HER2(dimer!1,ligand,tail~u?),HER3(dimer!1,ligand!2,tail~u?),NRG(hi!2) -> HER2(dimer!2,ligand,tail~p?),HER3(dimer!2,ligand!1,tail~u?),NRG(hi!1) @ 16.0e-3
+'018-HER2@tail_p Ref9' HER3(dimer!1,ligand,tail~p?),HER2(dimer!1,ligand,tail~u?) -> HER3(dimer!1,ligand,tail~p?),HER2(dimer!1,ligand,tail~p?) @ 24.0e-3
+'018-HER2@tail_p Ref10' HER3(dimer!1,ligand!2,tail~p?),HER2(dimer!1,ligand,tail~u?),NRG(hi!2) -> HER3(dimer!2,ligand!1,tail~p?),HER2(dimer!2,ligand,tail~p?),NRG(hi!1) @ 48.0e-3
+'018-HER3@tail_p' HER3(ligand,dimer,tail~u?) -> HER3(ligand,dimer,tail~p?) @ 0.0
+'018-HER3@tail_p Ref1' EGFR(dimer!1,ligand,tail~u?),HER3(dimer!1,ligand,tail~u?) -> EGFR(dimer!1,ligand,tail~u?),HER3(dimer!1,ligand,tail~p?) @ 8.0e-3
+'018-HER3@tail_p Ref2' EGFR(dimer!1,ligand,tail~u?),HER3(dimer!1,ligand!2,tail~u?),NRG(hi!2) -> EGFR(dimer!1,ligand,tail~u?),HER3(dimer!1,ligand!2,tail~p?),NRG(hi!2) @ 16.0e-3
+'018-HER3@tail_p Ref3' EGFR(ligand!3,dimer!1,tail~u?),EGF(hi!3),HER3(dimer!1,ligand!2,tail~u?),NRG(hi!2) -> EGFR(ligand!3,dimer!2,tail~u?),EGF(hi!3),HER3(dimer!2,ligand!1,tail~p?),NRG(hi!1) @ 32.0e-3
+'018-HER3@tail_p Ref4' EGFR(dimer!1,ligand,tail~p?),HER3(dimer!1,ligand,tail~u?) -> EGFR(dimer!1,ligand,tail~p?),HER3(dimer!1,ligand,tail~p?) @ 24.0e-3
+'018-HER3@tail_p Ref5' EGFR(dimer!1,ligand,tail~p?),HER3(dimer!1,ligand!2,tail~u?),NRG(hi!2) -> EGFR(dimer!1,ligand,tail~p?),HER3(dimer!1,ligand!2,tail~p?),NRG(hi!2) @ 48.0e-3
+'018-HER3@tail_p Ref6' EGFR(dimer!1,ligand!3,tail~p?),EGF(hi!3),HER3(dimer!1,ligand!2,tail~u?),NRG(hi!2) -> EGFR(dimer!1,ligand!3,tail~p?),EGF(hi!3),HER3(dimer!1,ligand!2,tail~p?),NRG(hi!2) @ 96.0e-3
+'018-HER3@tail_p Ref7' HER2(dimer!1,ligand,tail~u?),HER3(ligand,dimer!1,tail~u?) -> HER2(dimer!1,ligand,tail~u?),HER3(ligand,dimer!1,tail~p?) @ 16.0e-3
+'018-HER3@tail_p Ref8' HER2(dimer!1,ligand,tail~u?),HER3(ligand!2,dimer!1,tail~u?),NRG(hi!2) -> HER2(dimer!1,ligand,tail~u?),HER3(ligand!2,dimer!1,tail~p?),NRG(hi!2) @ 32.0e-3
+'018-HER3@tail_p Ref9' HER2(dimer!1,ligand,tail~p?),HER3(ligand,dimer!1,tail~u?) -> HER2(dimer!1,ligand,tail~p?),HER3(ligand,dimer!1,tail~p?) @ 48.0e-3
+'018-HER3@tail_p Ref10' HER2(dimer!1,ligand,tail~p?),HER3(ligand!2,dimer!1,tail~u?),NRG(hi!2) -> HER2(dimer!1,ligand,tail~p?),HER3(ligand!2,dimer!1,tail~p?),NRG(hi!2) @ 96.0e-3
+'019-EGFR@tail_u' EGFR(dimer,ligand,tail~p?) -> EGFR(dimer,ligand,tail~u?) @ 200.0e-3
+'019-EGFR@tail_u Ref1' EGFR(dimer,ligand!1,tail~p?),EGF(hi!1) -> EGFR(dimer,ligand!1,tail~u?),EGF(hi!1) @ 50.0e-3
+'019-EGFR@tail_u Ref2' EGFR(ligand!1,dimer!3,tail~p?),EGFR(dimer!3,ligand!2,tail~p?),EGF(hi!1),EGF(hi!2) -> EGFR(ligand!1,dimer!3,tail~u?),EGFR(dimer!3,ligand!2,tail~p?),EGF(hi!1),EGF(hi!2) @ 5.0e-3
+'019-EGFR@tail_u Ref3' EGFR(ligand!1,dimer!3,tail~p?),EGF(hi!1),EGF(hi!2),EGFR(dimer!3,ligand!2,tail~u?) -> EGFR(ligand!1,dimer!3,tail~u?),EGF(hi!1),EGF(hi!2),EGFR(dimer!3,ligand!2,tail~u?) @ 10.0e-3
+'019-EGFR@tail_u Ref4' EGFR(dimer!3,ligand,tail~p?),EGFR(ligand!1,dimer!3,tail~p?),EGF(hi!1) -> EGFR(dimer!2,ligand,tail~p?),EGFR(ligand!1,dimer!2,tail~u?),EGF(hi!1) @ 20.0e-3
+'019-EGFR@tail_u Ref5' EGFR(dimer!1,tail~p?,ligand),EGFR(ligand!2,dimer!1,tail~p?),EGF(hi!2) -> EGFR(dimer!1,tail~u?,ligand),EGFR(ligand!2,dimer!1,tail~p?),EGF(hi!2) @ 20.0e-3
+'019-EGFR@tail_u Ref6' EGFR(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand!2,tail~p?),EGF(hi!2) -> EGFR(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand!2,tail~u?),EGF(hi!2) @ 40.0e-3
+'019-EGFR@tail_u Ref7' EGFR(dimer!1,ligand,tail~p?),EGF(hi!2),EGFR(dimer!1,ligand!2,tail~u?) -> EGFR(dimer!2,ligand,tail~u?),EGF(hi!1),EGFR(dimer!2,ligand!1,tail~u?) @ 40.0e-3
+'019-EGFR@tail_u Ref8' EGFR(ligand,dimer!1,tail~p?),EGFR(dimer!1,ligand,tail~p?) -> EGFR(ligand,dimer!1,tail~u?),EGFR(dimer!1,ligand,tail~p?) @ 80.0e-3
+'019-EGFR@tail_u Ref9' EGFR(dimer!1,ligand,tail~p?),EGFR(dimer!1,ligand,tail~u?) -> EGFR(dimer!1,ligand,tail~u?),EGFR(dimer!1,ligand,tail~u?) @ 160.0e-3
+'019-EGFR@tail_u Ref10' EGFR(ligand!2,dimer!1,tail~p?),HER2(dimer!1,ligand,tail~p?),EGF(hi!2) -> EGFR(ligand!2,dimer!1,tail~u?),HER2(dimer!1,ligand,tail~p?),EGF(hi!2) @ 5.0e-3
+'019-EGFR@tail_u Ref11' EGFR(ligand!2,dimer!1,tail~p?),EGF(hi!2),HER2(dimer!1,ligand,tail~u?) -> EGFR(ligand!1,dimer!2,tail~u?),EGF(hi!1),HER2(dimer!2,ligand,tail~u?) @ 10.0e-3
+'019-EGFR@tail_u Ref12' EGFR(dimer!1,tail~p?,ligand),HER2(dimer!1,ligand,tail~p?) -> EGFR(dimer!1,tail~u?,ligand),HER2(dimer!1,ligand,tail~p?) @ 20.0e-3
+'019-EGFR@tail_u Ref13' HER2(dimer!1,ligand,tail~u?),EGFR(dimer!1,tail~p?,ligand) -> HER2(dimer!1,ligand,tail~u?),EGFR(dimer!1,tail~u?,ligand) @ 40.0e-3
+'019-EGFR@tail_u Ref14' HER3(ligand!3,dimer!1,tail~p?),EGFR(ligand!2,dimer!1,tail~p?),EGF(hi!2),NRG(hi!3) -> HER3(ligand!3,dimer!1,tail~p?),EGFR(ligand!2,dimer!1,tail~u?),EGF(hi!2),NRG(hi!3) @ 5.0e-3
+'019-EGFR@tail_u Ref15' NRG(hi!3),EGFR(ligand!2,dimer!1,tail~p?),HER3(ligand!3,dimer!1,tail~u?),EGF(hi!2) -> NRG(hi!3),EGFR(ligand!2,dimer!1,tail~u?),HER3(ligand!3,dimer!1,tail~u?),EGF(hi!2) @ 10.0e-3
+'019-EGFR@tail_u Ref16' HER3(ligand,dimer!1,tail~p?),EGF(hi!2),EGFR(ligand!2,dimer!1,tail~p?) -> HER3(ligand,dimer!1,tail~p?),EGF(hi!2),EGFR(ligand!2,dimer!1,tail~u?) @ 20.0e-3
+'019-EGFR@tail_u Ref17' EGF(hi!2),EGFR(ligand!2,dimer!1,tail~p?),HER3(ligand,dimer!1,tail~u?) -> EGF(hi!1),EGFR(ligand!1,dimer!2,tail~u?),HER3(ligand,dimer!2,tail~u?) @ 40.0e-3
+'019-EGFR@tail_u Ref18' HER3(ligand!3,dimer!1,tail~p?),EGFR(dimer!1,ligand,tail~p?),NRG(hi!3) -> HER3(ligand!2,dimer!1,tail~p?),EGFR(dimer!1,ligand,tail~u?),NRG(hi!2) @ 20.0e-3
+'019-EGFR@tail_u Ref19' HER3(ligand,dimer!1,tail~u?),EGFR(ligand!2,dimer!1,tail~p?),EGF(hi!2) -> HER3(ligand,dimer!2,tail~u?),EGFR(ligand!1,dimer!2,tail~u?),EGF(hi!1) @ 40.0e-3
+'019-EGFR@tail_u Ref20' HER3(ligand,dimer!1,tail~p?),EGFR(ligand,dimer!1,tail~p?) -> HER3(ligand,dimer!1,tail~p?),EGFR(ligand,dimer!1,tail~u?) @ 80.0e-3
+'019-EGFR@tail_u Ref21' EGFR(ligand,dimer!1,tail~p?),HER3(ligand,dimer!1,tail~u?) -> EGFR(ligand,dimer!1,tail~u?),HER3(ligand,dimer!1,tail~u?) @ 160.0e-3
+'020-HER2@tail_u' HER2(ligand,dimer,tail~p?) -> HER2(ligand,dimer,tail~u?) @ 5.0e-2
+'020-HER2@tail_u Ref1' HER2(ligand,dimer!1,tail~p?),EGFR(dimer!1,ligand!2,tail~p?),EGF(hi!2) -> HER2(ligand,dimer!1,tail~u?),EGFR(dimer!1,ligand!2,tail~p?),EGF(hi!2) @ 5.0e-3
+'020-HER2@tail_u Ref2' EGFR(dimer!1,ligand!2,tail~u?),EGF(hi!2),HER2(ligand,dimer!1,tail~p?) -> EGFR(dimer!2,ligand!1,tail~u?),EGF(hi!1),HER2(ligand,dimer!2,tail~u?) @ 10.0e-3
+'020-HER2@tail_u Ref3' HER2(ligand,dimer!1,tail~p?),EGFR(ligand,dimer!1,tail~p?) -> HER2(ligand,dimer!1,tail~u?),EGFR(ligand,dimer!1,tail~p?) @ 40.0e-3
+'020-HER2@tail_u Ref4' EGFR(ligand,dimer!1,tail~u?),HER2(ligand,dimer!1,tail~p?) -> EGFR(ligand,dimer!1,tail~u?),HER2(ligand,dimer!1,tail~u?) @ 80.0e-3
+'020-HER2@tail_u Ref5' HER2(ligand,dimer!1,tail~p?),HER2(dimer!1,ligand,tail~p?) -> HER2(ligand,dimer!1,tail~u?),HER2(dimer!1,ligand,tail~p?) @ 5.0e-3
+'020-HER2@tail_u Ref6' HER2(ligand,dimer!1,tail~u?),HER2(ligand,dimer!1,tail~p?) -> HER2(ligand,dimer!1,tail~u?),HER2(ligand,dimer!1,tail~u?) @ 10.0e-3
+'020-HER2@tail_u Ref7' HER2(ligand,dimer!1,tail~p?),NRG(hi!2),HER3(dimer!1,ligand!2,tail~p?) -> HER2(ligand,dimer!2,tail~u?),NRG(hi!1),HER3(dimer!2,ligand!1,tail~p?) @ 5.0e-3
+'020-HER2@tail_u Ref8' HER2(ligand,dimer!1,tail~p?),HER3(dimer!1,ligand!2,tail~u?),NRG(hi!2) -> HER2(ligand,dimer!1,tail~u?),HER3(dimer!1,ligand!2,tail~u?),NRG(hi!2) @ 10.0e-3
+'020-HER2@tail_u Ref9' HER2(ligand,dimer!1,tail~p?),HER3(dimer!1,ligand,tail~p?) -> HER2(ligand,dimer!1,tail~u?),HER3(dimer!1,ligand,tail~p?) @ 20.0e-3
+'020-HER2@tail_u Ref10' HER2(ligand,dimer!1,tail~p?),HER3(dimer!1,ligand,tail~u?) -> HER2(ligand,dimer!1,tail~u?),HER3(dimer!1,ligand,tail~u?) @ 40.0e-3
+'021-HER3@tail_u' HER3(dimer,ligand,tail~p?) -> HER3(dimer,ligand,tail~u?) @ 200.0e-3
+'021-HER3@tail_u Ref1' HER3(dimer,ligand!1,tail~p?),NRG(hi!1) -> HER3(dimer,ligand!1,tail~u?),NRG(hi!1) @ 50.0e-3
+'021-HER3@tail_u Ref2' HER3(ligand!1,dimer!3,tail~p?),HER3(dimer!3,ligand!2,tail~p?),NRG(hi!1),NRG(hi!2) -> HER3(ligand!1,dimer!3,tail~u?),HER3(dimer!3,ligand!2,tail~p?),NRG(hi!1),NRG(hi!2) @ 5.0e-3
+'021-HER3@tail_u Ref3' HER3(ligand!1,dimer!3,tail~p?),HER3(dimer!3,ligand!2,tail~u?),NRG(hi!1),NRG(hi!2) -> HER3(ligand!1,dimer!3,tail~u?),HER3(dimer!3,ligand!2,tail~u?),NRG(hi!1),NRG(hi!2) @ 10.0e-3
+'021-HER3@tail_u Ref4' HER3(ligand!1,dimer!3,tail~p?),HER3(dimer!3,ligand,tail~p?),NRG(hi!1) -> HER3(ligand!1,dimer!2,tail~u?),HER3(dimer!2,ligand,tail~p?),NRG(hi!1) @ 20.0e-3
+'021-HER3@tail_u Ref5' HER3(dimer!1,ligand,tail~p?),HER3(ligand!2,dimer!1,tail~p?),NRG(hi!2) -> HER3(dimer!1,ligand,tail~u?),HER3(ligand!2,dimer!1,tail~p?),NRG(hi!2) @ 20.0e-3
+'021-HER3@tail_u Ref6' HER3(dimer!1,ligand!2,tail~p?),NRG(hi!2),HER3(dimer!1,ligand,tail~u?) -> HER3(dimer!1,ligand!2,tail~u?),NRG(hi!2),HER3(dimer!1,ligand,tail~u?) @ 40.0e-3
+'021-HER3@tail_u Ref7' HER3(dimer!1,ligand,tail~p?),HER3(dimer!1,ligand!2,tail~u?),NRG(hi!2) -> HER3(dimer!2,ligand,tail~u?),HER3(dimer!2,ligand!1,tail~u?),NRG(hi!1) @ 40.0e-3
+'021-HER3@tail_u Ref8' HER3(ligand,dimer!1,tail~p?),HER3(dimer!1,ligand,tail~p?) -> HER3(ligand,dimer!1,tail~u?),HER3(dimer!1,ligand,tail~p?) @ 80.0e-3
+'021-HER3@tail_u Ref9' HER3(ligand,dimer!1,tail~p?),HER3(dimer!1,ligand,tail~u?) -> HER3(ligand,dimer!1,tail~u?),HER3(dimer!1,ligand,tail~u?) @ 160.0e-3
+'021-HER3@tail_u Ref10' HER2(dimer!1,ligand,tail~p?),HER3(ligand!2,dimer!1,tail~p?),NRG(hi!2) -> HER2(dimer!1,ligand,tail~p?),HER3(ligand!2,dimer!1,tail~u?),NRG(hi!2) @ 5.0e-3
+'021-HER3@tail_u Ref11' HER2(dimer!1,ligand,tail~u?),HER3(ligand!2,dimer!1,tail~p?),NRG(hi!2) -> HER2(dimer!2,ligand,tail~u?),HER3(ligand!1,dimer!2,tail~u?),NRG(hi!1) @ 10.0e-3
+'021-HER3@tail_u Ref12' HER2(dimer!1,ligand,tail~p?),HER3(dimer!1,ligand,tail~p?) -> HER2(dimer!1,ligand,tail~p?),HER3(dimer!1,ligand,tail~u?) @ 20.0e-3
+'021-HER3@tail_u Ref13' HER2(dimer!1,ligand,tail~u?),HER3(dimer!1,ligand,tail~p?) -> HER2(dimer!1,ligand,tail~u?),HER3(dimer!1,ligand,tail~u?) @ 40.0e-3
+'021-HER3@tail_u Ref14' HER3(ligand!2,dimer!1,tail~p?),NRG(hi!2),EGF(hi!3),EGFR(ligand!3,dimer!1,tail~p?) -> HER3(ligand!2,dimer!1,tail~u?),NRG(hi!2),EGF(hi!3),EGFR(ligand!3,dimer!1,tail~p?) @ 5.0e-3
+'021-HER3@tail_u Ref15' HER3(ligand!2,dimer!1,tail~p?),NRG(hi!2),EGF(hi!3),EGFR(ligand!3,dimer!1,tail~u?) -> HER3(ligand!2,dimer!1,tail~u?),NRG(hi!2),EGF(hi!3),EGFR(ligand!3,dimer!1,tail~u?) @ 10.0e-3
+'021-HER3@tail_u Ref16' HER3(ligand!2,dimer!1,tail~p?),NRG(hi!2),EGFR(ligand,dimer!1,tail~p?) -> HER3(ligand!2,dimer!1,tail~u?),NRG(hi!2),EGFR(ligand,dimer!1,tail~p?) @ 20.0e-3
+'021-HER3@tail_u Ref17' HER3(ligand!2,dimer!1,tail~p?),NRG(hi!2),EGFR(ligand,dimer!1,tail~u?) -> HER3(ligand!1,dimer!2,tail~u?),NRG(hi!1),EGFR(ligand,dimer!2,tail~u?) @ 40.0e-3
+'021-HER3@tail_u Ref18' HER3(ligand,dimer!1,tail~p?),EGFR(ligand!3,dimer!1,tail~p?),EGF(hi!3) -> HER3(ligand,dimer!1,tail~u?),EGFR(ligand!2,dimer!1,tail~p?),EGF(hi!2) @ 20.0e-3
+'021-HER3@tail_u Ref19' HER3(ligand!2,dimer!1,tail~p?),NRG(hi!2),EGFR(ligand,dimer!1,tail~u?) -> HER3(ligand!1,dimer!2,tail~u?),NRG(hi!1),EGFR(ligand,dimer!2,tail~u?) @ 40.0e-3
+'021-HER3@tail_u Ref20' HER3(ligand,dimer!1,tail~p?),EGFR(ligand,dimer!1,tail~p?) -> HER3(ligand,dimer!1,tail~u?),EGFR(ligand,dimer!1,tail~p?) @ 80.0e-3
+'021-HER3@tail_u Ref21' HER3(ligand,dimer!1,tail~p?),EGFR(ligand,dimer!1,tail~u?) -> HER3(ligand,dimer!1,tail~u?),EGFR(ligand,dimer!1,tail~u?) @ 160.0e-3
+
+#######
+# Chapter 'RasGAP' -- Inactive chapter
+# 'Ras@tail_gdp.RasGAP' Ras(tail~gtp!1),RasGAP(GAP!1) -> Ras(tail~gdp!1),RasGAP(GAP!1) @ 1.0 # Inactive rule
+# 'RasGAP...Ras' Ras(tail!1),RasGAP(GAP!1) -> Ras(tail),RasGAP(GAP) @ 1.0 # Inactive rule
+# 'RasGAP.Ras' Ras(tail~gtp),RasGAP(GAP) -> Ras(tail~gtp!1),RasGAP(GAP!1) @ 1.0 # Inactive rule
+
+#######
+# Chapter 'Et al.' -- Inactive chapter
+# '519-ERK1@T183_u' ERK1(tail~p!1),MKP(s!1) -> ERK1(tail~u!1),MKP(s!1) @ 5.0e-4
+# '524-ERK1@Y185.MKP' ERK1(tail~p),MKP(s) -> ERK1(tail~p!1),MKP(s!1) @ 1.0e-5
+# '527-ERK1.MEK1' MEK1(erk1,tail~p),ERK1(C) -> MEK1(erk1!1,tail~p),ERK1(C!1) @ 3.0e-3
+# '528-ERK1...MKP' ERK1(tail!1),MKP(s!1) -> ERK1(tail),MKP(s) @ 1.0e-2
+# '529-ERK1...MEK1' ERK1(C!1),MEK1(erk1!1) -> ERK1(C),MEK1(erk1) @ 1.0
+# '532-ERK1@Y185_p' ERK1(C!_,tail~u) -> ERK1(C!_,tail~p) @ 1.0e-1
+# 'SoS...ERK1' ERK1(tail!1),SoS(erk1!1) -> ERK1(tail),SoS(erk1) @ 1.0e-3
+# 'SoS@x_p' ERK1(tail~p!1),SoS(erk1!1,grb2!_,x~u) -> ERK1(tail~p!1),SoS(erk1!1,grb2!_,x~p) @ 1.0e-3
+# 'SoS@x_u' SoS(x~p) -> SoS(x~u) @ 1.0e-3
+# 'SoS.ERK1' ERK1(tail~p),SoS(grb2!_,erk1) -> ERK1(tail~p!1),SoS(grb2!_,erk1!1) @ 1.0e-5
+# '530-EGFR.Shc' EGFR(tail~p),Shc(PTB) -> EGFR(tail~p!1),Shc(PTB!1) @ 1.0e-7
+# '531-EGFR...Shc' EGFR(tail!1),Shc(PTB!1) -> EGFR(tail),Shc(PTB) @ 1.0
+# '503-Shc@Y_px2' Shc(PTB,tail~u),EGFR(tail~p) -> Shc(PTB!1,tail~p),EGFR(tail~p!1) @ 1.0e-4
+# '502-Shc@Y_u' Shc(tail~p?) -> Shc(tail~u?) @ 1.0
+# '503-Shc@Y_p' HER2(tail~p),Shc(PTB,tail~u) -> HER2(tail~p!1),Shc(PTB!1,tail~p) @ 1.0e-4
+# '518-HER2.Shc' HER2(tail~p),Shc(PTB) -> HER2(tail~p!1),Shc(PTB!1) @ 1.0e-7
+# '520-HER2...Shc' Shc(PTB!1),HER2(tail!1) -> Shc(PTB),HER2(tail) @ 1.0
+# '431-EGFR...Grb2' Grb2(SH2!1),EGFR(tail!1) -> Grb2(SH2),EGFR(tail) @ 1.0e-1
+# '432-EGFR.Grb2' EGFR(tail~p),Grb2(SH2) -> EGFR(tail~p!1),Grb2(SH2!1) @ 1.0e-6
+# '420-Grb2...HER3' Grb2(SH2!1),HER3(tail!1) -> Grb2(SH2),HER3(tail) @ 1.0e-1
+# '421-Grb2...HER2' Grb2(SH2!1),HER2(tail!1) -> Grb2(SH2),HER2(tail) @ 1.0e-1
+# '416-HER3.Grb2' Grb2(SH2),HER3(tail~p) -> Grb2(SH2!1),HER3(tail~p!1) @ 1.0e-6
+# '417-HER2.Grb2' Grb2(SH2),HER2(tail~p) -> Grb2(SH2!1),HER2(tail~p!1) @ 1.0e-6
+# 'Shc...Grb2' Shc(tail!1),Grb2(SH2!1) -> Shc(tail),Grb2(SH2) @ 1.0e-1
+# '505-Shc.Grb2' Shc(tail~p),Grb2(SH2) -> Shc(tail~p!1),Grb2(SH2!1) @ 1.0e-6
+# '500-SoS.Ras' Grb2(SH3c!1),Ras(sos),SoS(grb2!1,ras) -> Grb2(SH3c!1),Ras(sos!2),SoS(grb2!1,ras!2) @ 1.0e-5
+# '507-Ras@S_gtp' Grb2(SH3c!1),SoS(grb2!1,ras!2),Ras(sos!2,tail~gdp) -> Grb2(SH3c!1),SoS(grb2!1,ras!2),Ras(sos!2,tail~gtp) @ 1.0e-3
+# '521-Grb2.SoS' SoS(grb2),Grb2(SH2!_,SH3c) -> SoS(grb2!1),Grb2(SH2!_,SH3c!1) @ 1.0e-5
+# '522-Grb2...SoS' Grb2(SH3c!1),SoS(grb2!1) -> Grb2(SH3c),SoS(grb2) @ 1.0
+# '501-SoS...Ras' SoS(ras!2),Ras(sos!2) -> SoS(ras),Ras(sos) @ 1.0
+# 'Ras@tail_gdp' Ras(tail~gtp) -> Ras(tail~gdp) @ 1.0e-4
+# '511-Raf1@S_p' Raf1(RBD,tail~u) -> Raf1(RBD,tail~p) @ 5.0e-3
+# '508-Ras.Raf1' Ras(tail~gtp),Raf1(RBD,tail~p) -> Ras(tail~gtp!1),Raf1(RBD!1,tail~p) @ 1.0e-5
+# '510-Raf1@S_u' Raf1(RBD!_,tail~p) -> Raf1(RBD!_,tail~u) @ 1.0e-2
+# '509-Ras...Raf1' Raf1(RBD!1),Ras(tail!1) -> Raf1(RBD),Ras(tail) @ 1.0
+# '516-MEK1@S2_p' Raf1(tail!1),MEK1(tail~u!1) -> Raf1(tail!1),MEK1(tail~p!1) @ 1.0e-2
+# 'M2KP...MEK1' M2KP(px!1),MEK1(tail!1) -> M2KP(px),MEK1(tail) @ 1.0e-2
+# '514-Raf1...MEK1@S2' MEK1(tail!1),Raf1(tail!1) -> MEK1(tail),Raf1(tail) @ 1.0
+# '513-Raf1.MEK1' MEK1(tail~u),Raf1(RBD,tail~u) -> MEK1(tail~u!1),Raf1(RBD,tail~u!1) @ 1.0e-6
+# 'M2KP.MEK1' MEK1(tail~p),M2KP(px) -> MEK1(tail~p!1),M2KP(px!1) @ 1.0e-2
+# 'MEK1@tail_u' M2KP(px!1),MEK1(tail~p!1) -> M2KP(px!1),MEK1(tail~u!1) @ 1.0e-3
+
+#######
+# Chapter 'Akt' -- Inactive chapter
+# 'PI3K@tail_u' PI3K(tail~p) -> PI3K(tail~u) @ 5.0e-2
+# '410-PI3K@tail_p' PI3K(tail~u,SH2!_) -> PI3K(tail~p,SH2!_) @ 1.0e-1
+# '424-Gab1.PI3K' PI3K(SH2),Gab1(Y327~p,Y627~p,PI3K) -> PI3K(SH2!1),Gab1(Y327~p,Y627~p,PI3K!1) @ 5.0e-5
+# '428-Gab1...PI3K' PI3K(SH2!1),Gab1(PI3K!1) -> PI3K(SH2),Gab1(PI3K) @ 10
+# '403-PTEN.PIP' PTEN(subs),PIP(three~p) -> PTEN(subs!1),PIP(three~p!1) @ 1.0
+# '404-PTEN...PIP' PTEN(subs!1),PIP(three!1) -> PTEN(subs),PIP(three) @ 1.0
+# '405-PIP@three_u' PTEN(subs!1),PIP(three~p!1) -> PTEN(subs!1),PIP(three~u!1) @ 1.0
+# '406-PIP@three_p' PI3K(subs!1,tail~p),PIP(three~u!1) -> PI3K(subs!1,tail~p),PIP(three~p!1) @ 1.0e-2
+# '407-PIP.PDK1' PIP(three~p),PDK1(PH) -> PIP(three~p!1),PDK1(PH!1) @ 1.0e-1
+# '408-PIP.AKT' PIP(three~p),AKT(PH) -> PIP(three~p!1),AKT(PH!1) @ 10
+# '409-PIP...PDK1' PIP(three!1),PDK1(PH!1) -> PIP(three),PDK1(PH) @ 1.0e-2
+# '411-PIP...AKT' AKT(PH!1),PIP(three!1) -> AKT(PH),PIP(three) @ 1.0
+# '412-PI3K.PIP' PI3K(subs,tail~p),PIP(three~u) -> PI3K(subs!1,tail~p),PIP(three~u!1) @ 1.0e-3
+# '413-PI3K...PIP' PIP(three!1),PI3K(subs!1) -> PIP(three),PI3K(subs) @ 1.0e-2
+# '414-PDK1.AKT' AKT(T308~u,pdk1,PH!_),PDK1(PH!1,akt),PIP(three~p!1) -> AKT(T308~u,pdk1!2,PH!_),PDK1(PH!1,akt!2),PIP(three~p!1) @ 1.0
+# '434-AKT@tail_p' AKT(T308~u,pdk1!2,PH!_),PIP(three~p!1),PDK1(PH!1,akt!2) -> AKT(T308~p,pdk1,PH!_),PIP(three~p!1),PDK1(PH!1,akt) @ 10
+# '433-AKT@tail_u' AKT(T308~p!1),PP2A(px!1) -> AKT(T308~u!1),PP2A(px!1) @ 1.0e-1
+# '435-AKT.PP2A' AKT(T308~p),PP2A(px) -> AKT(T308~p!1),PP2A(px!1) @ 1.0
+# '436-AKT...PP2A' PP2A(px!1),AKT(T308!1) -> PP2A(px),AKT(T308) @ 1.0
+# '426-Gab1.EGFR' Gab1(MBD,MR),EGFR(tail~p) -> Gab1(MBD!1,MR),EGFR(tail~p!1) @ 1.0e-4
+# '422-Gab1@Y627_p' Grb2(SH3c!2,SH2!_),Gab1(MR!2,Y627~u) -> Grb2(SH3c,SH2!_),Gab1(MR,Y627~p) @ 1.0
+# '430-Gab1...EGFR' Gab1(MBD!1),EGFR(tail!1) -> Gab1(MBD),EGFR(tail) @ 1.0e-3
+# '425-Gab1.Grb2' Gab1(MR,MBD!_),Grb2(SH3c) -> Gab1(MR!1,MBD!_),Grb2(SH3c!1) @ 1.0e-4
+# '422-Gab1@Y327_p' Grb2(SH3c!2,SH2!_),Gab1(MR!2,Y327~u) -> Grb2(SH3c,SH2!_),Gab1(MR,Y327~p) @ 1.0
+# 'Gab1@Y327_u' Gab1(Y327~p) -> Gab1(Y327~u) @ 2.5e-3
+# 'Gab1@Y627_u' Gab1(Y627~p) -> Gab1(Y627~u) @ 5.0e-2
+
+
+# Initial Conditions:
+%init: 20000 * (HER2(dimer,tail~u,ligand))
+%init: 200000 * (HER3(ligand,dimer,tail~u))
+%init: 200000 * (EGFR(ligand,dimer,tail~u))
+%init: 150000 * (ERK1(C,tail~u),Grb2(SH3c,SH2),MEK1(erk1,tail~u),MKP(s),Raf1(RBD,tail~p),Ras(sos,tail~gdp),Shc(PTB,tail~u),SoS(grb2,ras,x~u,erk1),M2KP(px))
+%init: 50000000 * (EGF(hi))
+%init: 50000000 * (NRG(hi))
+%init: 150000 * (AKT(PH,T308~u,pdk1),Gab1(MR,MBD,Y627~u,Y327~u,PI3K),PI3K(subs,tail~u,SH2),PP2A(px))
+%init: 100000 * (PTEN(subs))
+%init: 250000 * (PIP(three~u),PDK1(PH,akt))
+
+# Simulation:
+%obs: PIP(three~p?)
+%obs: PI3K(tail~p?)
+%obs: AKT(T308~p?)
+%obs: PDK1(PH!_)
+%obs: PDK1(PH!1),PIP(three~p!1)
+%obs: EGFR(tail~p?)
+%obs: Gab1(Y327~p?,Y627~p?)
+%obs: AKT(PH!1),PIP(three~u!1)
+%obs: ERK1(tail~p?)
+%obs: MEK1(tail~p)
+%obs: Raf1(tail~u?)
+
+# Stories:
+# %story: '532-ERK1@Y185_p'

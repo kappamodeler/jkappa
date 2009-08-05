@@ -38,6 +38,7 @@ public class CDefaultAction extends CAction {
 		setType(CActionType.NONE);
 	}
 
+	@Override
 	public final void doAction(RuleApplicationPool pool, CInjection injection,
 			CEvent eventContainer,
 			SimulationData simulationData) {
@@ -50,34 +51,4 @@ public class CDefaultAction extends CAction {
 		getRightCComponent().addAgentFromSolutionForRHS(agentFromInSolution);
 		addToEventContainer(eventContainer, agentFromInSolution,EActionOfAEvent.TEST);
 	}
-
-//	private void addToEventContainer(CEventContainer eventContainer,
-//			CAgent agentFromInSolution) {
-//		if (eventContainer == null)
-//			return;
-//		// AGENT
-//		eventContainer.addEvent(new WireHashKey(agentFromInSolution.getId(),
-//				EKeyOfState.AGENT), null, ECheck.TEST, CEventContainer.BEFORE_STATE);
-//		for (CSite s : getAgentFrom().getSites()) {
-//			CSite site = agentFromInSolution.getSiteById(s.getNameId());
-//			CLinkRank linkRank = s.getLinkState().getStatusLinkRank();
-//			if (linkRank != CLinkRank.BOUND_OR_FREE) {
-//				// FREE/BOUND
-//				eventContainer.addEvent(new WireHashKey(agentFromInSolution
-//						.getId(), site.getNameId(), EKeyOfState.BOUND_FREE),
-//						site, ECheck.TEST, CEventContainer.BEFORE_STATE);
-//
-//				if (linkRank != CLinkRank.SEMI_LINK) {
-//					eventContainer.addEvent(
-//							new WireHashKey(agentFromInSolution.getId(), site
-//									.getNameId(), EKeyOfState.LINK_STATE),
-//							site, ECheck.TEST, CEventContainer.BEFORE_STATE);
-//				}
-//			}
-//
-//			eventContainer.addEvent(new WireHashKey(agentFromInSolution.getId(),
-//					site.getNameId(), EKeyOfState.INTERNAL_STATE), site,
-//					ECheck.TEST, CEventContainer.BEFORE_STATE);
-//		}
-//	}
 }

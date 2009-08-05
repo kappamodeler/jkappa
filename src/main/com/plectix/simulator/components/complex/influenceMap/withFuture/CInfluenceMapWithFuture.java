@@ -17,7 +17,7 @@ import com.plectix.simulator.components.complex.contactMap.CContactMap;
 import com.plectix.simulator.components.complex.influenceMap.AInfluenceMap;
 import com.plectix.simulator.components.complex.influenceMap.InfluenceMapEdge;
 import com.plectix.simulator.components.complex.subviews.base.AbstractAction;
-import com.plectix.simulator.components.complex.subviews.base.SubViewsRule;
+import com.plectix.simulator.components.complex.subviews.base.AbstractionRule;
 import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
 
 public class CInfluenceMapWithFuture extends AInfluenceMap {
@@ -26,18 +26,18 @@ public class CInfluenceMapWithFuture extends AInfluenceMap {
 		super();
 	}
 
-	public void initInfluenceMap(List<SubViewsRule> rules,
+	public void initInfluenceMap(List<AbstractionRule> rules,
 			CObservables observables, CContactMap contactMap,
 			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
 		initObsRules(observables);
 
-		for (SubViewsRule rule : rules) {
+		for (AbstractionRule rule : rules) {
 			List<MarkAgentWithFuture> activatedSites = new LinkedList<MarkAgentWithFuture>();
 			List<MarkAgentWithFuture> inhibitedSites = new LinkedList<MarkAgentWithFuture>();
 			fillingActivatedAndInhibitedSites(activatedSites, inhibitedSites,
 					contactMap, rule, agentNameIdToAgent);
 			int ruleId = rule.getRuleId();
-			for (SubViewsRule ruleCheck : rules) {
+			for (AbstractionRule ruleCheck : rules) {
 				int ruleCheckId = ruleCheck.getRuleId();
 				fillingMap(activationMap, activatedSites, ruleId, ruleCheckId,
 						ruleCheck.getLHSActions());
@@ -45,8 +45,8 @@ public class CInfluenceMapWithFuture extends AInfluenceMap {
 						ruleCheck.getLHSActions());
 			}
 
-			for (List<SubViewsRule> rulesCheck : obsRules.values())
-				for (SubViewsRule ruleCheck : rulesCheck) {
+			for (List<AbstractionRule> rulesCheck : obsRules.values())
+				for (AbstractionRule ruleCheck : rulesCheck) {
 					fillingMap(activationMapObs, activatedSites, ruleId,
 							ruleCheck.getRuleId(), ruleCheck.getLHSActions());
 					fillingMap(inhibitionMapObs, inhibitedSites, ruleId,
@@ -56,13 +56,13 @@ public class CInfluenceMapWithFuture extends AInfluenceMap {
 	}
 
 	private void initObsRules(CObservables observables) {
-		obsRules = new HashMap<Integer, List<SubViewsRule>>();
+		obsRules = new HashMap<Integer, List<AbstractionRule>>();
 		for (IObservablesConnectedComponent cc : observables
 				.getConnectedComponentList()) {
-			SubViewsRule rule = new SubViewsRule(cc);
-			List<SubViewsRule> list = obsRules.get(rule.getRuleId());
+			AbstractionRule rule = new AbstractionRule(cc);
+			List<AbstractionRule> list = obsRules.get(rule.getRuleId());
 			if(list == null){
-				list = new LinkedList<SubViewsRule>();
+				list = new LinkedList<AbstractionRule>();
 				obsRules.put(rule.getRuleId(), list);
 			}
 			list.add(rule);
@@ -72,7 +72,7 @@ public class CInfluenceMapWithFuture extends AInfluenceMap {
 	private void fillingActivatedAndInhibitedSites(
 			List<MarkAgentWithFuture> activatedSites,
 			List<MarkAgentWithFuture> inhibitedSites, CContactMap contactMap,
-			SubViewsRule rule, Map<Integer, CAbstractAgent> agentNameIdToAgent) {
+			AbstractionRule rule, Map<Integer, CAbstractAgent> agentNameIdToAgent) {
 		for (AbstractAction action : rule.getActions()) {
 			switch (action.getActionType()) {
 			case ADD: {

@@ -55,20 +55,7 @@ public class CContactMapChangedSite {
 		usedRuleIDs = new ArrayList<Integer>();
 	}
 	
-	public CContactMapChangedSite() {
-//		this.site = site;
-//		setInternalState(site);
-//		setLinkState(site);
-		usedRuleIDs = new ArrayList<Integer>();
-	}
 
-	public void addRules(CContactMapAbstractRule rule) {
-		if (rule != null) {
-			int value = rule.getRule().getRuleID();
-			if (!usedRuleIDs.contains(value))
-				usedRuleIDs.add(value);
-		}
-	}
 	
 	public void addRules(int ruleId) {
 		if (!usedRuleIDs.contains(ruleId))

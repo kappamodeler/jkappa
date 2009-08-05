@@ -1,0 +1,13 @@
+# scaffolding recruitment of Raf and MEK
+
+'Raf_Scaf' Raf(RBD,S~u), Scaf(r) -> Raf(RBD,S~u!1), Scaf(r!1)
+'MEK_Scaf#1' MEK(s,S1~u,S2), Scaf(m) -> MEK(s!1,S1~u,S2), Scaf(m!1)
+'MEK_Scaf#2' MEK(s,S1,S2~u), Scaf(m) -> MEK(s!1,S1,S2~u), Scaf(m!1)
+
+'Raf_Scaf_op' Raf(S!1), Scaf(r!1) -> Raf(S), Scaf(r)
+'MEK_Scaf_op' MEK(s!1), Scaf(m!1) -> MEK(s), Scaf(m)
+
+# scaffolding PTMs of MEK
+
+'MEK@S1' Scaf(r!_,m!1), MEK(s!1,S1~u) -> Scaf(r!_,m!1), MEK(s!1,S1~p)
+'MEK@S2' Scaf(r!_,m!1), MEK(s!1,S2~u) -> Scaf(r!_,m!1), MEK(s!1,S2~p)

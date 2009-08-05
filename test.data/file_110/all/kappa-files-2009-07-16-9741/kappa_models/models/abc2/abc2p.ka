@@ -1,0 +1,18 @@
+#######
+# Chapter 'Main'
+'A degradation' A(y) -> 
+'AB complexation' A(x),B(x) <-> A(x!1),B(x!1)
+'AC complexation' A(y),C(x) <-> A(y!1),C(x!1)
+'A deactivation' A(x~p?) -> A(x~u?)
+
+#######
+# Chapter 'Observation'
+'A activation' A(x~u!1),B(x!1) -> A(x~p!1),B(x!1)
+
+
+%init: 1000 * (A(x~u,y),B(x),C(x))
+%obs: A(x~p)
+%story: 'A activation'
+
+%mod: $T>2.5 do 'AC complexation':=0.0
+

@@ -41,46 +41,23 @@ public class Compressor {
 		WeakCompression weak = new WeakCompression(storage);
 		
 		try {
-			/*
-			IEventIterator it = storage.extractPassport().eventIterator(false);
-
-			int n = 0;
-			
-			while (it.hasNext())
-			{
-				it.next();
-				//System.out.println(it.value().getStepId() + "\t" + it.value().getRuleId() + "\t*" + it.value().getMark().toString() + "*");
-				n++;
-			}
-			System.out.println("\n>>> " + n);
-			*/
+			//System.out.println("\n>>> " + storage.extractPassport().getAllEventsByNumber().size());
 			
 			weak.process();
 			
-			storage.extractPassport().removeEventWithMarkDelete();
-			
 			/*
-			
 			it = storage.extractPassport().eventIterator(false);
 
-			n = 0;
-			
-			while (it.hasNext())
-			{
-				it.next();
-				//System.out.println(it.value().getStepId() + "\t" + it.value().getRuleId() + "\t*" + it.value().getMark().toString() + "*");
-				n++;
-			}
-			System.out.println(">>> " + n);
-			
-			IEventIterator it = storage.extractPassport().eventIterator(false);
-			
 			while (it.hasNext())
 			{
 				it.next();
 				System.out.println(it.value().getStepId() + "\t" + it.value().getRuleId() + "\t*" + it.value().getMark().toString() + "*");
+				//for (WireHashKey wk: it.value().getAtomicEvents().keySet())
+				//	System.out.println("\t" + wk.toString());
 			}
 			*/
+			
+			//System.out.println("\n>>> " + storage.extractPassport().getAllEventsByNumber().size());
 		} catch (StoryStorageException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -93,53 +70,17 @@ public class Compressor {
 		
 		try {
 			/*
-			WeakCompression weak = new WeakCompression(storage);
-			
-			IEventIterator it = storage.extractPassport().eventIterator(false);
+			System.out.println("\n>>> " + storage.extractPassport().getAllEventsByNumber().size());
 
-			int n = 0;
-			
-			while (it.hasNext())
-			{
-				it.next();
-				//System.out.println(it.value().getStepId() + "\t" + it.value().getRuleId() + "\t*" + it.value().getMark().toString() + "*");
-				n++;
-			}
-			System.out.println("\n>>> " + n);
-			
+			WeakCompression weak = new WeakCompression(storage);
 			weak.process();
 			
-			storage.extractPassport().removeEventWithMarkDelete();
-			
-			it = storage.extractPassport().eventIterator(false);
-
-			n = 0;
-			
-			while (it.hasNext())
-			{
-				it.next();
-				//System.out.println(it.value().getStepId() + "\t" + it.value().getRuleId() + "\t*" + it.value().getMark().toString() + "*");
-				n++;
-			}
-			System.out.println(">>> " + n);
+			System.out.println("\n>>> " + storage.extractPassport().getAllEventsByNumber().size());
 			*/
 			
 			strong.process();
-			storage.extractPassport().removeEventWithMarkDelete();
 
-			/*
-			it = storage.extractPassport().eventIterator(false);
-
-			n = 0;
-			
-			while (it.hasNext())
-			{
-				it.next();
-				//System.out.println(it.value().getStepId() + "\t" + it.value().getRuleId() + "\t*" + it.value().getMark().toString() + "*");
-				n++;
-			}
-			System.out.println(">>> " + n);
-			*/
+			//System.out.println("\n>>> " + storage.extractPassport().getAllEventsByNumber().size());
 		} catch (StoryStorageException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

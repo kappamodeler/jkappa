@@ -61,13 +61,13 @@ public class RunActionTest extends InitTestAction {
 			SimulationUtils.doNegativeUpdate(injectionsList);
 			simulationData.getKappaSystem().doPositiveUpdate(activeRule, injectionsList);
 		}
-		simulationData.getKappaSystem().getSolution().applyChanges(activeRule.getPool());
+		simulationData.getKappaSystem().getSolution().flushPoolContent(activeRule.getPool());
 		
 		List<IConnectedComponent> rhs = activeRule.getRightHandSide();
 		simulationData = getSimulationData();
 		
 		
-		List<IConnectedComponent> solution = simulationData.getKappaSystem()
+		Collection<IConnectedComponent> solution = simulationData.getKappaSystem()
 				.getSolution().split();
 
 		if (rhs == null) {
@@ -86,7 +86,7 @@ public class RunActionTest extends InitTestAction {
 	}
 
 	private void compareWithSolution(List<IConnectedComponent> listCC,
-			List<IConnectedComponent> solutionCC, String ruleName) {
+			Collection<IConnectedComponent> solutionCC, String ruleName) {
 		IConnectedComponent foundCC;
 		if (listCC != null) {
 			for (IConnectedComponent cc : listCC) {

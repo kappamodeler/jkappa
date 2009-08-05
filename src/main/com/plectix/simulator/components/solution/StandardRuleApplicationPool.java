@@ -2,23 +2,36 @@ package com.plectix.simulator.components.solution;
 
 import com.plectix.simulator.components.CAgent;
 
-public class StandardRuleApplicationPool extends RuleApplicationPool {
+/**
+ * This one is the standard rule application pool which is the honest one.
+ * It means that it really contains a little StraightStorage object, which
+ * really keeps substances.
+ */
+/*package*/ final class StandardRuleApplicationPool implements RuleApplicationPool {
 	// We think that this collection is not so big
 	private final StraightStorage myTempStorage;
 	
-	public StandardRuleApplicationPool(StraightStorage storage) {
-		myTempStorage = storage;
+	StandardRuleApplicationPool() {
+		myTempStorage = new StraightStorage();
 	}
 
-	public void addAgent(CAgent agent) {
+	@Override
+	public final void addAgent(CAgent agent) {
 		myTempStorage.addAgent(agent);
 	}
 
-	public void removeAgent(CAgent agent) {
+	@Override
+	public final void removeAgent(CAgent agent) {
 		myTempStorage.removeAgent(agent);
 	}
 
-	public StraightStorage getStorage() {
+	@Override
+	public final StraightStorage getStorage() {
 		return myTempStorage;
+	}
+
+	@Override
+	public final void clear() {
+		myTempStorage.clear();
 	}
 }

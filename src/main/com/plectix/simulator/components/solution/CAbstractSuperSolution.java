@@ -1,42 +1,29 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationUtils;
 
-public abstract class CAbstractSuperSolution extends ComplexSolution {
-	public CAbstractSuperSolution(KappaSystem system) {
+/**
+ * This class describes solutions, which perform any changes to SuperStorage during
+ * the simulation process. Notice that CSecondSolution is not that type, because 
+ * we just fill SuperStorage in the beginning and that's all!
+ */
+/*package*/ abstract class CAbstractSuperSolution extends ComplexSolution {
+	CAbstractSuperSolution(KappaSystem system) {
 		super(system);
 	}
 
-	public RuleApplicationPool prepareRuleApplicationPool() {
-		return new StandardRuleApplicationPool(new StraightStorage());
-	}
-	
-	public void addInjectionToPool(RuleApplicationPool pool, CInjection injection) {
-		StraightStorage storage = pool.getStorage();
-		if (injection.isSuper()) {
-			storage.addConnectedComponent(getSuperStorage().extractComponent(injection));
-		} else {
-			if (injection.getImageAgent() != null) {
-				IConnectedComponent component = SolutionUtils.getConnectedComponent(injection.getImageAgent());
-				for (CAgent agent : component.getAgents()) {
-					storage.addAgent(agent);
-					getStraightStorage().removeAgent(agent);
-				}	
-			}
-		}
-	}
-	
+	/**
+	 * We use this method in order to add connected component to the solution
+	 * @param component component to be added
+	 */
 	protected abstract void addConnectedComponent(IConnectedComponent component);
 	
-	public void applyChanges(RuleApplicationPool pool) {
+	public final void flushPoolContent(RuleApplicationPool pool) {
 		Collection<CAgent> agents = pool.getStorage().getAgents();
 		List<CAgent> agentsCopy = new ArrayList<CAgent>();
 		agentsCopy.addAll(agents);

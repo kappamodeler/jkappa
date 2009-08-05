@@ -4,19 +4,16 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 
 /**
- * This type of solution is very similar to the third one.
- * Distinctive feature of the 5th solution, that it adds component 
+ * This type of solution is very similar to the third one, so we just extend CThirdSolution.
+ * Distinctive feature of the 5th solution is adding component 
  * to SuperStorage if and only if this component isn't too long.
- * 
- * Critical length of the component in SuperSolution defined in SimulatorOptions.
- * @author evlasov
- *
+ * <br> Critical length of the component in SuperSolution defined in SimulatorOptions.
  */
-public class CFifthSolution extends CThirdSolution {
+/*package*/ final class CFifthSolution extends CThirdSolution {
 	private final SuperStorage mySuperStorage;
 	private final StraightStorage myStraightStorage;
 	
-	public CFifthSolution(KappaSystem system) {
+	CFifthSolution(KappaSystem system) {
 		super(system);
 		mySuperStorage = getSuperStorage();
 		myStraightStorage = getStraightStorage();
@@ -25,9 +22,7 @@ public class CFifthSolution extends CThirdSolution {
 	@Override
 	protected final void addConnectedComponent(IConnectedComponent component) {
 		if (component.getAgentsQuantity() <= mySuperStorage.getAgentsLimit()) {
-			if (!mySuperStorage.tryIncrement(component)) { 
-				mySuperStorage.addNewSuperSubstance(component);
-			}
+			mySuperStorage.addConnectedComponent(component);
 		} else {
 			myStraightStorage.addConnectedComponent(component);
 		}

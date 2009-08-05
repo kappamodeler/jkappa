@@ -9,6 +9,7 @@ import java.util.Set;
 import com.plectix.simulator.interfaces.IRandom;
 import com.plectix.simulator.probability.WeightedItem;
 import com.plectix.simulator.probability.WeightedItemSelector;
+import com.plectix.simulator.simulator.ThreadLocalData;
 
 
 /**
@@ -31,11 +32,8 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 
 	private final Map<E, SkipListItem<E>> weightedItemToSkipListItemMap = new LinkedHashMap<E, SkipListItem<E>>();
 	
-	private IRandom random = null;
-	
-	public SkipListSelector(IRandom random) {
+	public SkipListSelector() {
 		super();
-		this.random = random;
 	}
 
 	public final E select() {
@@ -43,7 +41,7 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 			return null;
 		}
 		
-		return search(head, currentLevel, totalWeight * random.getDouble()).getWeightedItem();
+		return search(head, currentLevel, totalWeight * ThreadLocalData.getRandom().getDouble()).getWeightedItem();
 	}
 
 	public final void updatedItems(Collection<E> changedWeightedItemList) {
@@ -149,7 +147,7 @@ public class SkipListSelector<E extends WeightedItem> implements WeightedItemSel
 	
 	private final int getRandomLevel() {
 		int ret = 0;
-		while (random.getDouble() < P && ret <= currentLevel) {
+		while (ThreadLocalData.getRandom().getDouble() < P && ret <= currentLevel) {
 			ret++;
 		}
 		return ret;

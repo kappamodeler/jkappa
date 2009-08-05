@@ -88,12 +88,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 <Rule Id="47" Name="b. Ste5...Ste5 Ref3" Data="Ste5(ste4!1,ste5!0),Ste5(ste4!2,ste5!0),Ste4(ste5!1),Ste4(ste5!2)->Ste5(ste4!0,ste5),Ste5(ste4!1,ste5),Ste4(ste5!0),Ste4(ste5!1)" ForwardRate="0.0005" />
 </RuleSet>
 <ContactMap Name="Low resolution">
-<Agent Name="Ste5">
-<Site Name="ste4" CanChangeState="false" CanBeBound="true">
-</Site>
-<Site Name="ste5" CanChangeState="false" CanBeBound="true">
-</Site>
-</Agent>
 <Agent Name="Ste4">
 <Site Name="gpa1" CanChangeState="false" CanBeBound="true">
 </Site>
@@ -126,13 +120,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 </Site>
 <Site Name="mapk" CanChangeState="false" CanBeBound="true">
 </Site>
-<Site Name="ste2" CanChangeState="false" CanBeBound="true">
-</Site>
-</Agent>
-<Agent Name="Pheromone">
-<Rule Id="1"/>
-<Rule Id="2"/>
-<Rule Id="24"/>
 <Site Name="ste2" CanChangeState="false" CanBeBound="true">
 </Site>
 </Agent>
@@ -160,10 +147,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 <Rule Id="4"/>
 <Rule Id="5"/>
 <Rule Id="6"/>
-</Bond><Bond FromAgent="Ste2" FromSite="pheromone" ToAgent="Pheromone" ToSite="ste2">
-<Rule Id="1"/>
-<Rule Id="2"/>
-<Rule Id="24"/>
 </Bond><Bond FromAgent="Ste2" FromSite="sst2" ToAgent="Sst2" ToSite="ste2">
 <Rule Id="17"/>
 <Rule Id="18"/>
@@ -177,105 +160,6 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
 </Bond><Bond FromAgent="Ste4" FromSite="ste20" ToAgent="Ste20" ToSite="ste4">
 <Rule Id="31"/>
 <Rule Id="32"/>
-</Bond><Bond FromAgent="Ste5" FromSite="ste4" ToAgent="Ste4" ToSite="ste5">
-<Rule Id="33"/>
-<Rule Id="34"/>
-<Rule Id="35"/>
-<Rule Id="36"/>
-<Rule Id="37"/>
-<Rule Id="38"/>
-<Rule Id="39"/>
-</Bond><Bond FromAgent="Ste5" FromSite="ste5" ToAgent="Ste5" ToSite="ste5">
-<Rule Id="40"/>
-<Rule Id="41"/>
-<Rule Id="42"/>
-<Rule Id="43"/>
-<Rule Id="44"/>
-<Rule Id="45"/>
-<Rule Id="46"/>
-<Rule Id="47"/>
-</Bond></ContactMap>
-<ContactMap Name="High resolution">
-<Agent Name="Ste5">
-<Site Name="ste4" CanChangeState="false" CanBeBound="true">
-</Site>
-<Site Name="ste5" CanChangeState="false" CanBeBound="true">
-</Site>
-</Agent>
-<Agent Name="Ste4">
-<Site Name="gpa1" CanChangeState="false" CanBeBound="true">
-</Site>
-<Site Name="ste20" CanChangeState="false" CanBeBound="true">
-</Site>
-<Site Name="ste5" CanChangeState="false" CanBeBound="true">
-</Site>
-</Agent>
-<Agent Name="Ste20">
-<Site Name="ste4" CanChangeState="false" CanBeBound="true">
-</Site>
-</Agent>
-<Agent Name="Ste2">
-<Rule Id="23"/>
-<Rule Id="25"/>
-<Site Name="gpa1" CanChangeState="false" CanBeBound="true">
-</Site>
-<Site Name="pheromone" CanChangeState="false" CanBeBound="true">
-</Site>
-<Site Name="sst2" CanChangeState="false" CanBeBound="true">
-</Site>
-</Agent>
-<Agent Name="Sst2">
-<Rule Id="28"/>
-<Rule Id="29"/>
-<Rule Id="30"/>
-<Site Name="S539" CanChangeState="true" CanBeBound="true">
-<Rule Id="30"/>
-</Site>
-<Site Name="mapk" CanChangeState="false" CanBeBound="true">
-</Site>
-<Site Name="ste2" CanChangeState="false" CanBeBound="true">
-</Site>
-</Agent>
-<Agent Name="Pheromone">
-<Site Name="ste2" CanChangeState="false" CanBeBound="true">
-</Site>
-</Agent>
-<Agent Name="Gpa1">
-<Rule Id="26"/>
-<Rule Id="27"/>
-<Site Name="nuc" CanChangeState="true" CanBeBound="true">
-<Rule Id="13"/>
-<Rule Id="14"/>
-<Rule Id="15"/>
-<Rule Id="19"/>
-<Rule Id="20"/>
-<Rule Id="21"/>
-<Rule Id="22"/>
-<Rule Id="27"/>
-</Site>
-<Site Name="ste2" CanChangeState="false" CanBeBound="true">
-</Site>
-<Site Name="ste4" CanChangeState="false" CanBeBound="true">
-</Site>
-</Agent>
-<Bond FromAgent="Ste20" FromSite="ste4" ToAgent="Ste4" ToSite="ste20">
-<Rule Id="31"/>
-<Rule Id="32"/>
-</Bond><Bond FromAgent="Sst2" FromSite="ste2" ToAgent="Ste2" ToSite="sst2">
-<Rule Id="17"/>
-<Rule Id="18"/>
-</Bond><Bond FromAgent="Gpa1" FromSite="ste4" ToAgent="Ste4" ToSite="gpa1">
-<Rule Id="7"/>
-<Rule Id="8"/>
-<Rule Id="9"/>
-<Rule Id="10"/>
-<Rule Id="11"/>
-<Rule Id="12"/>
-</Bond><Bond FromAgent="Gpa1" FromSite="ste2" ToAgent="Ste2" ToSite="gpa1">
-<Rule Id="3"/>
-<Rule Id="4"/>
-<Rule Id="5"/>
-<Rule Id="6"/>
 </Bond></ContactMap>
 <Refinement Name="DAG"><Association FromRule="45" ToRule="44"/>
 <Association FromRule="46" ToRule="44"/>

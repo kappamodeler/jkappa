@@ -32,7 +32,7 @@ import com.plectix.simulator.interfaces.IConnectedComponent;
 					if (type == CActionType.DELETE) {
 						modifiedAgent = action.getAgentFrom();
 					} else {
-						modifiedAgent = action.getSiteFrom().getAgentLink();
+						modifiedAgent = action.getSiteFrom().getParentAgent();
 					}
 					modifiedAgents.add(modifiedAgent);
 					untouchedComponentsAgents.removeAll(SolutionUtils

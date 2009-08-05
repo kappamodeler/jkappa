@@ -26,6 +26,8 @@ class WeakCompression {
 
 	// For strong compression
 	public final static long ghostEventId = -100;
+	private int maxQueueSize;
+	private boolean maxQueueSizeReached;
 	private Long upperGhostId = null;
 	private Long lowerGhostId = null;
 
@@ -47,41 +49,65 @@ class WeakCompression {
 		ICEvent initialEvent = storage.initialEvent();
 		ICEvent observableEvent = storage.observableEvent();
 		boolean compressed = false;
+		
+		if (storage.extractPassport().eventCount() < 256)
+			maxQueueSize = 256;
+		else
+			maxQueueSize = 16;
+		
+		do {
+			maxQueueSize *= 2;
+			maxQueueSizeReached = false;
 
-		storage.markAllNull();
-		storage.markAllUnresolved();
+			storage.markAllNull();
+			storage.markAllUnresolved();
+			
+			searchStack.clear();
 
-		// Add initial event to stack
-		if (initialEvent.getMark() != null)
-			searchStack.add(initialEvent);
+			// Add initial event to stack
+			if (initialEvent.getMark() != null)
+				searchStack.add(initialEvent);
 
-		// Add observable event to stack
-		observableEvent.setMark(EMarkOfEvent.KEPT, storage);
-		searchStack.add(observableEvent);
+			// Add observable event to stack
+			observableEvent.setMark(EMarkOfEvent.KEPT, storage);
+			searchStack.add(observableEvent);
 
-		if (ghostEvent != null && !propagate(ghostEvent))
-			return false;
-
-		while (!searchStack.empty()) {
-			ICEvent top = searchStack.peek();
-
-			ICEvent nextEvent = selectEventToBranch(top);
-
-			if (nextEvent == null) {
-				searchStack.pop();
-				continue;
+			if (ghostEvent != null) {
+				if (!propagate(ghostEvent))
+				{
+					if (maxQueueSizeReached)
+						continue;
+					return false;
+				}
+				ghostEvent = null;
+				if (uninvestigatedQueue.size() > 1)
+					compressed = true;
 			}
 
-			nextEvent.setMark(EMarkOfEvent.DELETED, storage);
+			while (!searchStack.empty()) {
+				ICEvent top = searchStack.peek();
 
-			if (!propagate(nextEvent)) {
-				nextEvent.setMark(EMarkOfEvent.KEPT, storage);
-				searchStack.push(nextEvent);
-			} else if (!compressed)
+				ICEvent nextEvent = selectEventToBranch(top);
+
+				if (nextEvent == null) {
+					searchStack.pop();
+					continue;
+				}
+
+				nextEvent.setMark(EMarkOfEvent.DELETED, storage);
+
+				if (!propagate(nextEvent)) {
+					nextEvent.setMark(EMarkOfEvent.KEPT, storage);
+					searchStack.push(nextEvent);
+				} else if (!compressed)
+					compressed = true;
+			}
+
+			if (storage.markAllUnresolvedAsDeleted() && !compressed)
 				compressed = true;
-		}
-
-		compressed = compressed || storage.markAllUnresolvedAsDeleted();
+			
+			storage.extractPassport().removeEventWithMarkDelete();
+		} while (maxQueueSize < storage.extractPassport().eventCount()); 
 
 		return compressed;
 	}
@@ -246,6 +272,11 @@ class WeakCompression {
 			// Shift to next event in queue
 			if (currentNode.currentWireIdx == currentNode.getWireCount()) {
 				currentNodeIdx++;
+				
+				// currentWireIdx may be not zero if we backtracked
+				if (currentNodeIdx < uninvestigatedQueue.size())
+					uninvestigatedQueue.get(currentNodeIdx).currentWireIdx = 0;
+				
 				continue;
 			}
 
@@ -368,7 +399,7 @@ class WeakCompression {
 		ICEvent event = currentNode.getEvent();
 		WireHashKey wireKey = event.getWireKey(topEntry.getWireIdx());
 		boolean upwards = (tillValue == null);
-
+		
 		Long firstId = getFirstEventId(upwards);
 
 		if (firstId == null)
@@ -435,9 +466,6 @@ class WeakCompression {
 		ICEvent event = currentNode.getEvent();
 		AtomicEvent<EState> atomicEvent = (AtomicEvent<EState>) event
 				.getAtomicEvent(topEntry.getWireIdx());
-
-		if (atomicEvent.getType() == EActionOfAEvent.TEST)
-			return true;
 
 		boolean upwards = false;
 
@@ -555,7 +583,8 @@ class WeakCompression {
 	private boolean addDeletedEvents() throws StoryStorageException {
 		candidatesToDelete.clear();
 
-		if (isLastEvent()) {
+		if (currentNode.getEvent().getAtomicEvent(topEntry.getWireIdx()).getType() == EActionOfAEvent.TEST
+				|| isLastEvent()) {
 			topEntry.nextState();
 			return true;
 		}
@@ -591,6 +620,12 @@ class WeakCompression {
 
 		int srcQueueSize = uninvestigatedQueue.size();
 
+		if (candidatesToDelete.size() + uninvestigatedQueue.size() > maxQueueSize)
+		{
+			maxQueueSizeReached = true;
+			return false;
+		}
+		
 		for (ICEvent e : candidatesToDelete) {
 			e.setMark(EMarkOfEvent.DELETED, storage);
 			uninvestigatedQueue.add(new QueueEntry(e, srcQueueSize, wireStack

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.solution.SolutionFactory;
-import com.plectix.simulator.components.solution.SolutionLines;
+import com.plectix.simulator.components.solution.SolutionLine;
 import com.plectix.simulator.interfaces.ISolution;
 import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
 import com.plectix.simulator.parser.abstractmodel.SolutionLineData;
@@ -41,7 +41,7 @@ public class SolutionBuilder {
 				solution.addInitialConnectedComponents(quant, list);
 			}
 			if (myArguments.getSimulationType() == SimulationArguments.SimulationType.COMPILE) {
-				for (SolutionLines line : arg.getSolutionLines()) {
+				for (SolutionLine line : arg.getSolutionLines()) {
 					solution.checkSolutionLinesAndAdd(line.getLine(), line.getCount());
 				}
 			}

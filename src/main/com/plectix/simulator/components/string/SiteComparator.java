@@ -94,7 +94,7 @@ public final class SiteComparator implements Comparator<CSite> {
 				}
 				
 				// so let's compare the name of the Agents they are bound to:
-				return linkSite1.getAgentLink().getName().compareTo(linkSite2.getAgentLink().getName());
+				return linkSite1.getParentAgent().getName().compareTo(linkSite2.getParentAgent().getName());
 			}
 		}
 			
@@ -144,7 +144,7 @@ public final class SiteComparator implements Comparator<CSite> {
 			} else {
 				return result + "BOUND-" + connectedSite.getName() 
 	    		+ "-" + connectedSite.getInternalState().getName()
-	    		+ "-" + connectedSite.getAgentLink().getName();
+	    		+ "-" + connectedSite.getParentAgent().getName();
 			}
 		} else if (statusLink == CLinkStatus.WILDCARD) {
 			return result + "WILD";

@@ -134,7 +134,7 @@ public class SimulatorCommandLine {
 		}
 
 		if (hasOption(SimulatorOptions.RANDOMIZER_JAVA)) {
-			simulationArguments.setRandomizer(getValue(SimulatorOptions.RANDOMIZER_JAVA));
+			//simulationArguments.setRandomizer(getValue(SimulatorOptions.RANDOMIZER_JAVA));
 		}
 
 		if (hasOption(SimulatorOptions.NO_ACTIVATION_MAP)
@@ -211,8 +211,8 @@ public class SimulatorCommandLine {
 			simulationArguments.setMonitorPeakMemory(getLongValue(SimulatorOptions.MONITOR_PEAK_MEMORY));
 		}
 
-		if (hasOption(SimulatorOptions.ALLOW_INCOMPLETES)) {
-			simulationArguments.allowIncompletes();
+		if (hasOption(SimulatorOptions.REJECT_INCOMPLETES)) {
+			simulationArguments.rejectIncompletes();
 		}
 		
 		if (hasOption(SimulatorOptions.CLOCK_PRECISION)) {
@@ -252,7 +252,7 @@ public class SimulatorCommandLine {
 		}
 
 		if (hasOption(SimulatorOptions.EVENT)) {
-			simulationArguments.setEvent(getLongValue(SimulatorOptions.EVENT));
+			simulationArguments.setMaxNumberOfEvents(getLongValue(SimulatorOptions.EVENT));
 			simulationArguments.setTime(false);
 		}
 		
@@ -266,7 +266,7 @@ public class SimulatorCommandLine {
 		}
 		
 		if (hasOption(SimulatorOptions.LIVE_DATA_INTERVAL)) {
-			simulationArguments.setLiveDataInterval(getLongValue(SimulatorOptions.LIVE_DATA_INTERVAL));
+			simulationArguments.setLiveDataInterval(getIntValue(SimulatorOptions.LIVE_DATA_INTERVAL));
 		}
 		
 		if (hasOption(SimulatorOptions.LIVE_DATA_POINTS)) {

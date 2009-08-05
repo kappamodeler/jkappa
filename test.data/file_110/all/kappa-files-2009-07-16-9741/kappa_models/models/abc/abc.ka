@@ -1,0 +1,15 @@
+#rules
+
+'AB' a(x),b(x) <-> a(x!1),b(x!1) 
+'C@s2' a(x),c(x~p,y~u) -> a(x),c(y~p,x~p) 
+'C@s1' a(x!1),b(x!1),c(x~u) -> a(x!1),b(x!1),c(x~p) 
+
+%init: 1 * (a(x),b(x),c(x~u,y~u))
+
+%obs: 'C**' c(y~p) 
+%obs: 'AB' a(x!_)
+
+%story: 'C@s2'
+
+
+

@@ -85,8 +85,8 @@ public class SimulationUtils {
 					if (site.getLinkState().getStatusLinkRank() == CLinkRank.SEMI_LINK) {
 						siteStr = siteStr + "!_";
 						// line = line + "!_";
-					} else if (site.getAgentLink().getIdInRuleHandside() < ((CSite) site
-							.getLinkState().getConnectedSite()).getAgentLink()
+					} else if (site.getParentAgent().getIdInRuleHandside() < ((CSite) site
+							.getLinkState().getConnectedSite()).getParentAgent()
 							.getIdInRuleHandside()) {
 						site.getLinkState().getConnectedSite().getLinkState()
 								.setLinkStateID(index[0]);
@@ -257,11 +257,11 @@ public class SimulationUtils {
 
 	public final static void doNegativeUpdate(List<CInjection> injectionsList) {
 		for (CInjection injection : injectionsList) {
-			if (injection != CInjection.EMPTY_INJECTION) {
+			if (injection != ThreadLocalData.getEmptyInjection()) {
 				for (CSite site : injection.getChangedSites()) {
-					site.getAgentLink().getDefaultSite()
+					site.getParentAgent().getDefaultSite()
 							.clearIncomingInjections(injection);
-					site.getAgentLink().getDefaultSite().clearLifts();
+					site.getParentAgent().getDefaultSite().clearLifts();
 					site.clearIncomingInjections(injection);
 					site.clearLifts();
 				}
@@ -280,10 +280,10 @@ public class SimulationUtils {
 	}
 	
 	public final static void doNegativeUpdate(CInjection injection) {
-		if (injection != CInjection.EMPTY_INJECTION) {
+		if (injection != ThreadLocalData.getEmptyInjection()) {
 		for (CSite site : injection.getChangedSites()) {
-			site.getAgentLink().getDefaultSite().clearIncomingInjections(injection);
-			site.getAgentLink().getDefaultSite().clearLifts();
+			site.getParentAgent().getDefaultSite().clearIncomingInjections(injection);
+			site.getParentAgent().getDefaultSite().clearLifts();
 			site.clearIncomingInjections(injection);
 			site.clearLifts();
 		}
@@ -296,11 +296,11 @@ public class SimulationUtils {
 	
 	public final static void doNegativeUpdateForContactMap(List<CInjection> injectionsList, CRule rule) {
 		for (CInjection injection : injectionsList) {
-			if (injection != CInjection.EMPTY_INJECTION) {
+			if (injection != ThreadLocalData.getEmptyInjection()) {
 				for (CSite site : injection.getChangedSites()) {
-					site.getAgentLink().getDefaultSite()
+					site.getParentAgent().getDefaultSite()
 							.clearIncomingInjections(injection);
-					site.getAgentLink().getDefaultSite().clearLifts();
+					site.getParentAgent().getDefaultSite().clearLifts();
 					site.clearIncomingInjections(injection);
 					site.clearLifts();
 				}
@@ -324,7 +324,7 @@ public class SimulationUtils {
 			for (CSite checkedSite : rule.getSitesConnectedWithDeleted()) {
 				if (!injection.checkSiteExistanceAmongChangedSites(checkedSite)) {
 
-					CAgent checkedAgent = checkedSite.getAgentLink();
+					CAgent checkedAgent = checkedSite.getParentAgent();
 					addToAgentList(freeAgents, checkedAgent);
 					for (CLiftElement lift : checkedAgent.getDefaultSite()
 							.getLift()) {
@@ -348,7 +348,7 @@ public class SimulationUtils {
 			}
 		}
 		for (CSite checkedSite : rule.getSitesConnectedWithBroken()) {
-			CAgent checkedAgent = checkedSite.getAgentLink();
+			CAgent checkedAgent = checkedSite.getParentAgent();
 			addToAgentList(freeAgents, checkedAgent);
 		}
 		return freeAgents;

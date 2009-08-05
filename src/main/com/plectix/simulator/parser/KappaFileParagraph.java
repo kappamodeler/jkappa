@@ -20,6 +20,6 @@ public class KappaFileParagraph {
 	}
 	
 	public Collection<KappaFileLine> getLines() { 
-		return Collections.unmodifiableCollection(myParagraph);
+		return myParagraph;
 	}
 }

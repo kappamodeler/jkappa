@@ -1,0 +1,29 @@
+B(a),A(b) <-> B(a!1),A(b!1) [NO_OVERLAP]
+C(a),A(c) <-> C(a!1),A(c!1) [NO_OVERLAP]
+D(a),A(d) <-> D(a!1),A(d!1) [NO_OVERLAP]
+E(a),A(e) <-> E(a!1),A(e!1) [NO_OVERLAP]
+A(b),B(a) <-> A(b!1),B(a!1) [NO_OVERLAP]
+C(b),B(c) <-> C(b!1),B(c!1) [NO_OVERLAP]
+D(b),B(d) <-> D(b!1),B(d!1) [NO_OVERLAP]
+E(b),B(e) <-> E(b!1),B(e!1) [NO_OVERLAP]
+A(c),C(a) <-> A(c!1),C(a!1) [NO_OVERLAP]
+B(c),C(b) <-> B(c!1),C(b!1) [NO_OVERLAP]
+D(c),C(d) <-> D(c!1),C(d!1) [NO_OVERLAP]
+E(c),C(e) <-> E(c!1),C(e!1) [NO_OVERLAP]
+A(d),D(a) <-> A(d!1),D(a!1) [NO_OVERLAP]
+B(d),D(b) <-> B(d!1),D(b!1) [NO_OVERLAP]
+C(d),D(c) <-> C(d!1),D(c!1) [NO_OVERLAP]
+E(d),D(e) <-> E(d!1),D(e!1) [NO_OVERLAP]
+A(e),E(a) <-> A(e!1),E(a!1) [NO_OVERLAP]
+B(e),E(b) <-> B(e!1),E(b!1) [NO_OVERLAP]
+C(e),E(c) <-> C(e!1),E(c!1) [NO_OVERLAP]
+D(e),E(d) <-> D(e!1),E(d!1) [NO_OVERLAP]
+
+%init: 100*E(a,b,c,d)
+%init: 100*A(b,c,d,e)
+%init: 100*B(a,c,d,e) 
+%init: 100*C(a,b,d,e)
+%init: 100*D(a,b,c,e) 
+
+
+

@@ -37,7 +37,7 @@ import com.plectix.simulator.components.CSnapshot;
 import com.plectix.simulator.components.SnapshotElement;
 import com.plectix.simulator.components.complex.contactMap.EContactMapMode;
 import com.plectix.simulator.components.perturbations.CPerturbation;
-import com.plectix.simulator.components.solution.SolutionLines;
+import com.plectix.simulator.components.solution.SolutionLine;
 import com.plectix.simulator.components.stories.CStoryType;
 import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
 import com.plectix.simulator.components.stories.storage.StoryStorageException;
@@ -62,8 +62,6 @@ import com.plectix.simulator.util.Info.InfoType;
 
 public class SimulationData {
 
-	private final static String TYPE_NEGATIVE_MAP = "NEGATIVE";
-	private final static String TYPE_POSITIVE_MAP = "POSITIVE";
 
 	private static final double DEFAULT_NUMBER_OF_POINTS = 1000;
 
@@ -89,7 +87,6 @@ public class SimulationData {
 	private double stepStories;
 	private double nextStepStories;
 
-	// private int agentIdGenerator = 0;
 
 	private boolean argumentsSet = false;
 	private SimulationArguments simulationArguments = new SimulationArguments();
@@ -105,9 +102,6 @@ public class SimulationData {
 		return myKappaSystem;
 	}
 
-	// public void setKappaSystem(KappaSystem system) {
-	// myKappaSystem = system;
-	// }
 
 	public KappaModel getInitialModel() {
 		return myInitialModel;
@@ -154,7 +148,8 @@ public class SimulationData {
 	public final void setSimulationArguments(InfoType outputType,
 			SimulationArguments arguments) {
 		this.simulationArguments = arguments;
-
+		this.simulationArguments.updateRandom();
+		
 		if (simulationArguments.isNoDumpStdoutStderr()) {
 			printStream = null;
 		}
@@ -200,7 +195,7 @@ public class SimulationData {
 		if (simulationArguments.isTime()) {
 			setTimeLength(simulationArguments.getTimeLength());
 		} else {
-			setEvent(simulationArguments.getEvent());
+			setEvent(simulationArguments.getMaxNumberOfEvents());
 			println("*Warning* No time limit.");
 		}
 
@@ -268,7 +263,7 @@ public class SimulationData {
 				println();
 				return true;
 			}
-		} else if (count < simulationArguments.getEvent()) {
+		} else if (count < simulationArguments.getMaxNumberOfEvents()) {
 			if (count >= nextStep) {
 				outputBar();
 				nextStep += step;
@@ -313,7 +308,7 @@ public class SimulationData {
 		checkAndInitStoriesBar();
 		step = event * 1.0 / simulationArguments.getClockPrecision();
 		nextStep = step;
-		simulationArguments.setEvent(event);
+		simulationArguments.setMaxNumberOfEvents(event);
 	}
 
 	public final void setTimeLength(double timeLength) {
@@ -324,74 +319,17 @@ public class SimulationData {
 		simulationArguments.setTime(true);
 	}
 
-	public final void initIterations(List<Double> timeStamps,
-			List<List<RunningMetric>> runningMetrics) {
-		this.timeStamps = timeStamps;
-		this.runningMetrics = runningMetrics;
+	public final void initIterations() {
+		this.timeStamps =  new ArrayList<Double>();
+		this.runningMetrics = new ArrayList<List<RunningMetric>>();
 		int observable_num = myKappaSystem.getObservables()
-				.getComponentListForXMLOutput().size();
-		// int observable_num =
-		// myKappaSystem.getObservables().getComponentList().size();
+				.getUniqueComponentList().size();
 		for (int i = 0; i < observable_num; i++) {
 			runningMetrics.add(new ArrayList<RunningMetric>());
 		}
 
 	}
 
-	private final void fillNodesLevelStoryTrees(
-			List<CStoryType> currentStTypeList, List<Element> nodes,
-			Document doc, List<CStoryType> intros) {
-		Element node;
-		for (CStoryType stT : currentStTypeList) {
-			if (stT.getType() == StoryOutputType.OBS) {
-				node = doc.createElement("Node");
-				stT.fillNode(node, EntityModifier.OBS);
-				nodes.add(node);
-			} else if (stT.getType() == StoryOutputType.RULE) {
-				node = doc.createElement("Node");
-				stT.fillNode(node, EntityModifier.RULE);
-				nodes.add(node);
-			} else {
-				if (!stT.includedInCollection(intros)) {
-					node = doc.createElement("Node");
-					stT.fillNode(node, EntityModifier.INTRO);
-					nodes.add(node);
-					intros.add(stT);
-				}
-			}
-		}
-	}
-
-	private final void fillIntroListStoryConnections(CStoryType toStoryType,
-			List<CStoryType> introList, List<Element> connections, Document doc) {
-		if (introList != null) {
-			Element node;
-			for (CStoryType stT : introList) {
-				node = doc.createElement("Connection");
-				stT.fillConnection(node, toStoryType.getId(),
-						RelationModifier.STRONG);
-				connections.add(node);
-			}
-		}
-	}
-
-	private final void fillRuleListStoryConnections(CStoryType toStoryType,
-			LinkedHashMap<Integer, CStoryType> traceIdToStoryTypeRule,
-			List<Integer> rIDs, List<Element> connections, Document doc,
-			RelationModifier modifier) {
-		if (rIDs.size() != 0) {
-			Element node;
-			for (int rID : rIDs) {
-				CStoryType st = traceIdToStoryTypeRule.get(rID);
-				node = doc.createElement("Connection");
-				if (st == null) {
-					println();
-				}
-				st.fillConnection(node, toStoryType.getId(), modifier);
-				connections.add(node);
-			}
-		}
-	}
 
 	public final void stopTimer(InfoType outputType, PlxTimer timer,
 			String message) {
@@ -522,7 +460,7 @@ public class SimulationData {
 
 	private final void outputSolution() {
 		println("INITIAL SOLUTION:");
-		for (SolutionLines sl : (myKappaSystem.getSolution())
+		for (SolutionLine sl : (myKappaSystem.getSolution())
 				.getSolutionLines()) {
 			print("-");
 			print("" + sl.getCount());
@@ -542,20 +480,20 @@ public class SimulationData {
 				case BREAK: {
 					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
 							.getConnectedSite());
-					if (action.getSiteFrom().getAgentLink()
-							.getIdInRuleHandside() < siteTo.getAgentLink()
+					if (action.getSiteFrom().getParentAgent()
+							.getIdInRuleHandside() < siteTo.getParentAgent()
 							.getIdInRuleHandside()) {
 						// BRK (#0,a) (#1,x)
 						print("BRK (#");
 						print(""
-								+ (action.getSiteFrom().getAgentLink()
+								+ (action.getSiteFrom().getParentAgent()
 										.getIdInRuleHandside() - 1));
 						print(",");
 						print(action.getSiteFrom().getName());
 						print(") ");
 						print("(#");
 						print(""
-								+ (siteTo.getAgentLink().getIdInRuleHandside() - 1));
+								+ (siteTo.getParentAgent().getIdInRuleHandside() - 1));
 						print(",");
 						print(siteTo.getName());
 						print(") ");
@@ -593,19 +531,19 @@ public class SimulationData {
 					// BND (#1,x) (#0,a)
 					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
 							.getConnectedSite());
-					if (action.getSiteFrom().getAgentLink()
-							.getIdInRuleHandside() > siteTo.getAgentLink()
+					if (action.getSiteFrom().getParentAgent()
+							.getIdInRuleHandside() > siteTo.getParentAgent()
 							.getIdInRuleHandside()) {
 						print("BND (#");
 						print(""
-								+ (action.getSiteFrom().getAgentLink()
+								+ (action.getSiteFrom().getParentAgent()
 										.getIdInRuleHandside() - 1));
 						print(",");
 						print(action.getSiteFrom().getName());
 						print(") ");
 						print("(#");
 						print(""
-								+ (action.getSiteTo().getAgentLink()
+								+ (action.getSiteTo().getParentAgent()
 										.getIdInRuleHandside() - 1));
 						print(",");
 						print(siteTo.getName());
@@ -618,7 +556,7 @@ public class SimulationData {
 					// MOD (#1,x) with p
 					print("MOD (#");
 					print(""
-							+ (action.getSiteFrom().getAgentLink()
+							+ (action.getSiteFrom().getParentAgent()
 									.getIdInRuleHandside() - 1));
 					print(",");
 					print(action.getSiteFrom().getName());
@@ -708,7 +646,7 @@ public class SimulationData {
 		timer.startTimer();
 
 		int number_of_observables = myKappaSystem.getObservables()
-				.getComponentListForXMLOutput().size();
+				.getUniqueComponentList().size();
 		try {
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 				int oCamlObservableNo = number_of_observables - observable_num
@@ -883,7 +821,7 @@ public class SimulationData {
 					.getCountTimeList().size();
 			writer.writeStartElement("Simulation");
 			writer.writeAttribute("TotalEvents", Long
-					.toString(simulationArguments.getEvent()));
+					.toString(simulationArguments.getMaxNumberOfEvents()));
 			writer.writeAttribute("TotalTime", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(simulationArguments.getTimeLength(),
 							NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
 			writer.writeAttribute("InitTime", DecimalFormatter
@@ -897,7 +835,7 @@ public class SimulationData {
 
 			
 			List<IObservablesComponent> list = myKappaSystem.getObservables()
-					.getComponentListForXMLOutput();
+					.getUniqueComponentList();
 			for (int i = list.size() - 1; i >= 0; i--) {
 				createElement(list.get(i), writer);
 			}
@@ -1077,7 +1015,7 @@ public class SimulationData {
 	}
 
 	public List<Double> getSnapshotTimes() {
-		return Collections.unmodifiableList(snapshotTimes);
+		return snapshotTimes;
 	}
 
 	public void setSnapshotTimes(List<Double> snapshotTimes) {

@@ -19,6 +19,7 @@ import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.probability.CProbabilityCalculation;
 import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.streaming.LiveData;
+import com.plectix.simulator.streaming.LiveDataSourceInterface;
 import com.plectix.simulator.streaming.LiveDataStreamer;
 import com.plectix.simulator.util.MemoryUtil;
 import com.plectix.simulator.util.PlxLogger;
@@ -99,7 +100,7 @@ public class Simulator implements SimulatorInterface {
 			if (simulationArguments.isTime()) {
 				progress = simulatorStatus.getCurrentTime() / simulationArguments.getTimeLength();
 			} else {
-				progress = simulatorStatus.getCurrentEventNumber() * 1.0 / simulationArguments.getEvent();
+				progress = simulatorStatus.getCurrentEventNumber() * 1.0 / simulationArguments.getMaxNumberOfEvents();
 			}
 
 			if (simulationArguments.isStorify()) {
@@ -121,8 +122,8 @@ public class Simulator implements SimulatorInterface {
 	 * @param liveData
 	 * @return
 	 */
-	public final LiveData getLiveData(LiveData liveData) {
-		return liveDataStreamer.getLiveData(liveData);
+	public final LiveData getLiveData() {
+		return liveDataStreamer.getLiveData();
 	}
 	
 	@Override
@@ -134,7 +135,7 @@ public class Simulator implements SimulatorInterface {
 	private final void addIteration(int iteration_num) {
 		// TODO: This method should be rewritten!!!
 		List<List<RunningMetric>> runningMetrics = simulationData.getRunningMetrics();
-		int number_of_observables = simulationData.getKappaSystem().getObservables().getComponentListForXMLOutput().size();
+		int number_of_observables = simulationData.getKappaSystem().getObservables().getUniqueComponentList().size();
 
 		if (iteration_num == 0) {
 			simulationData.getTimeStamps().add(currentTime);
@@ -147,7 +148,7 @@ public class Simulator implements SimulatorInterface {
 		for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 			// x is the value for the observable_num at the current time
 			double x = simulationData.getKappaSystem().getObservables()
-					.getComponentListForXMLOutput().get(observable_num)
+					.getUniqueComponentList().get(observable_num)
 					.getCurrentState(simulationData.getKappaSystem().getObservables());
 			if (timeStepCounter >= runningMetrics.get(observable_num).size()) {
 				runningMetrics.get(observable_num).add(new RunningMetric());
@@ -257,10 +258,13 @@ public class Simulator implements SimulatorInterface {
 		synchronized (statusLock) {
 			currentEventNumber = 0;
 		}
+		
 		long clash = 0;
 		long max_clash = 0;
 		boolean isEndRules = false;
-		liveDataStreamer.reset(simulationData.getSimulationArguments().getLiveDataInterval(), simulationData.getSimulationArguments().getLiveDataPoints(), simulationData.getKappaSystem().getObservables());
+		LiveDataSourceInterface liveDataSource = new ObservablesLiveDataSource(simulationData.getKappaSystem().getObservables());
+		liveDataStreamer.reset(simulationData.getSimulationArguments().getLiveDataInterval(), simulationData.getSimulationArguments().getLiveDataPoints(), 
+				simulationData.getSimulationArguments().getLiveDataConsumerClassname(), liveDataSource);
 		simulatorStatus.setStatusMessage(STATUS_RUNNING);
 		
 		while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
@@ -347,7 +351,7 @@ public class Simulator implements SimulatorInterface {
 					simulationData.getKappaSystem().doPositiveUpdate(rule, newInjections);
 					}
 	
-					simulationData.getKappaSystem().getSolution().applyChanges(rule.getPool());
+					simulationData.getKappaSystem().getSolution().flushPoolContent(rule.getPool());
 				
 					simulationData.getKappaSystem().getObservables().calculateObs(currentTime, currentEventNumber, simulationData.getSimulationArguments().isTime());
 				} else {
@@ -368,7 +372,7 @@ public class Simulator implements SimulatorInterface {
 				synchronized (statusLock) {
 					currentTime += simulationData.getKappaSystem().getTimeValue();
 				}
-				liveDataStreamer.addNewDataPoint(currentEventNumber, currentTime, simulationData.getKappaSystem().getObservables());
+				liveDataStreamer.addNewDataPoint(currentEventNumber, currentTime);
 			}
 			
 			if (CSiteration) {
@@ -376,6 +380,7 @@ public class Simulator implements SimulatorInterface {
 			}
 		}
 	
+		liveDataStreamer.stop();
 		simulatorStatus.setStatusMessage(STATUS_WRAPPING);
 		
 		simulationData.checkOutputFinalState(currentTime);
@@ -389,9 +394,7 @@ public class Simulator implements SimulatorInterface {
 	public final void runIterations() throws Exception {
 		CSiteration = true;
 		int seed = simulationData.getSimulationArguments().getSeed();
-		List<Double> timeStamps = new ArrayList<Double>();
-		List<List<RunningMetric>> runningMetrics = new ArrayList<List<RunningMetric>>();
-		simulationData.initIterations(timeStamps, runningMetrics);
+		simulationData.initIterations();
 		
 		for (int iteration_num = 0; iteration_num < simulationData.getSimulationArguments().getIterations(); iteration_num++) {
 			// Initialize the Random Number Generator with seed = initialSeed +
@@ -554,7 +557,6 @@ public class Simulator implements SimulatorInterface {
 		
 		PlxTimer mergeTimer= new PlxTimer();
 		mergeTimer.startTimer();
-		stories.merge();
 		endOfMerge(mergeTimer);
 	}
 	

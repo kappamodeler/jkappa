@@ -1,0 +1,29 @@
+# The triangle example from the kappa/mkappa compilation
+
+'start_ac' a(x,y) -> a(x,y!1) 
+'start_ab' a(x) , b(x) -> a(x!1) , b(x!1)
+
+'init' a(x~u!_,y~u!_,f~u) <-> a(x~u!_,y~u!_,f~p)
+
+'fc1_ab' a(x~u!1,f~p) , b(x~u!1,y~u) <-> a(x~p!1,f~p) , b(x~p!1,y~u)
+'fc1_ac' a(y~u!1,f~p) , c(y~u!1,x~u) <-> a(y~p!1,f~p) , c(y~p!1,x~u)
+'lc2_bc' b(x~p,y~u!_) , c(y~p,x~u!_) -> b(x~p,y~p!_) , c(y~p,x~p!_)
+#'lc2_bc' b(x~p,y~u) , c(x~u) -> b(x~p,y!2~p) , c(x!2~p)
+
+#c(y~p!0) , a(y~p!0,f~p) <-> c(y~q!0) , a(y~q!0,f~p)
+#c(x~p!0) , b(x~p!_,y~p!0) <-> c(x~q!0) , b(x~p!_,y~q!0)
+#'resp_ba' b(x~p!0,y~q!_) , a(x~p!0,f~p) <-> b(x~q!0,y~q!_) , a(x~q!0,f~p)
+
+'ps' a(x~q!_,y~q!_,f~p) -> a(x~q!_,y~q!_,f~r)
+
+'pp_ab' a(x~q!0,f~r) , b(x~q!0,y~q!_) -> a(x~r!0,f~r) , b(x~r!0,y~q!_)
+'pp_ac' a(y~q!0,f~r) , c(y~q!0) -> a(y~r!0,f~r) , c(y~r!0)
+#'pp_bc' b(x~r!_,y~q!0) ,  c(x~q!0) -> b(x~r!_,y~r!0) ,  c(x~r!0)
+
+# f~s is a trick to prevent further inits and facilitate observation
+'exit_a' a(x~r!_,y~r!_,f~r!_) -> a(x~u!_,y~u!_,f~s!_)
+'exit_b' b(x~r!_,y~r!_) -> b(x~u!_,y~u!_)
+'exit_c' c(x~r!_,y~r!_) -> c(x~u!_,y~u!_)
+
+%init: a(x~u,y~u,f~u) , b(x~u,y~u)  , c(x~u,y~u)
+%obs: a(x~u,y~u,f~u)

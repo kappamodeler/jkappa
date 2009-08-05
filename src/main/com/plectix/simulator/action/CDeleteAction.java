@@ -47,12 +47,10 @@ public class CDeleteAction extends CAction {
 		setType(CActionType.DELETE);
 	}
 
+	@Override
 	public final void doAction(RuleApplicationPool pool, CInjection injection,
-			CEvent eventContainer,
-			SimulationData simulationData) {
-		/**
-		 * Done.
-		 */
+			CEvent eventContainer, SimulationData simulationData) {
+		
 		CAgent agent = injection.getAgentFromImageById(myFromAgent.getIdInConnectedComponent());
 		ThreadLocalData.getTypeById().setTypeOfAgent(agent.getId(), agent.getNameId());
 		
@@ -63,9 +61,6 @@ public class CDeleteAction extends CAction {
 			CSite solutionSite = (CSite) site.getLinkState().getConnectedSite();
 
 			if (solutionSite != null) {
-//				addToNetworkNotation(StateType.BEFORE,
-//						netNotation, solutionSite);
-
 				addToEventContainerConnectedSites(eventContainer, solutionSite,
 						CEvent.BEFORE_STATE);
 				addSiteToConnectedWithDeleted(solutionSite);
@@ -73,13 +68,9 @@ public class CDeleteAction extends CAction {
 				solutionSite.getLinkState().setStatusLink(
 						CLinkStatus.FREE);
 				solutionSite.setLinkIndex(-1);
-//				addToNetworkNotation(StateType.AFTER,
-//						netNotation, solutionSite);
-//				addRuleSitesToNetworkNotation(false, netNotation, solutionSite);
 
 				addToEventContainerConnectedSites(eventContainer, solutionSite,
 						CEvent.AFTER_STATE);
-				// solutionSite.removeInjectionsFromCCToSite(injection);
 			}
 		}
 
@@ -91,9 +82,6 @@ public class CDeleteAction extends CAction {
 		}
 
 		for (CSite site : agent.getSites()) {
-//			addToNetworkNotation(StateType.BEFORE, netNotation,
-//					site);
-//			addRuleSitesToNetworkNotation(true, netNotation, site);
 			for (CLiftElement lift : site.getLift()) {
 				site.clearIncomingInjections(lift.getInjection());
 				lift.getInjection().getConnectedComponent().removeInjection(
@@ -102,23 +90,18 @@ public class CDeleteAction extends CAction {
 			site.clearLifts();
 			injection.removeSiteFromSitesList(site);
 		}
-		// injection.getConnectedComponent().getInjectionsList()
-		// .remove(injection);
-
 		pool.removeAgent(agent);
 	}
 
-	private void addToEventContainerConnectedSites(
+	private final void addToEventContainerConnectedSites(
 			CEvent eventContainer, CSite siteFromSolution,
 			boolean isBefore) {
 		if (eventContainer == null)
 			return;
-		long agentId = siteFromSolution.getAgentLink().getId();
+		long agentId = siteFromSolution.getParentAgent().getId();
 		int siteId = siteFromSolution.getNameId();
 
-//		eventContainer.addAtomicEvent(new WireHashKey(agentId, ETypeOfWire.AGENT),
-//				null, EActionOfAEvent.MODIFICATION, isBefore);
-		ThreadLocalData.getTypeById().setTypeOfAgent(siteFromSolution.getAgentLink().getId(), siteFromSolution.getAgentLink().getNameId());
+		ThreadLocalData.getTypeById().setTypeOfAgent(siteFromSolution.getParentAgent().getId(), siteFromSolution.getParentAgent().getNameId());
 		
 		eventContainer.addAtomicEvent(new WireHashKey(agentId, siteId,
 				ETypeOfWire.BOUND_FREE), siteFromSolution, EActionOfAEvent.MODIFICATION,
@@ -136,107 +119,28 @@ public class CDeleteAction extends CAction {
 		long agentId = agentFromInSolution.getId();
 		ThreadLocalData.getTypeById().setTypeOfAgent(agentFromInSolution.getId(), agentFromInSolution.getNameId());
 
-		// eventContainer.addEvent(new UHashKey(agentId,EKeyOfState.AGENT),
-		// null, ECheck.MODIFICATION, )
 		for (CSite siteFromSolution : agentFromInSolution.getSites()) {
 			int siteId = siteFromSolution.getNameId();
-//			if (myFromAgent.getSiteById(siteId) != null) {
-//				if (myFromAgent.getSiteById(siteId).getInternalState()
-//						.getNameId() == CInternalState.EMPTY_STATE.getNameId())
-//					eventContainer.addEvent(new WireHashKey(agentId, siteId,
-//							EKeyOfState.INTERNAL_STATE), siteFromSolution,
-//							ECheck.MODIFICATION, CEventContainer.BEFORE_STATE);
-//
-//				continue;
-//			}
 			try {
-			WireHashKey key = new WireHashKey(agentId, siteId,ETypeOfWire.BOUND_FREE);
-			eventContainer.addAtomicEvent(key, siteFromSolution,EActionOfAEvent.MODIFICATION, CEvent.BEFORE_STATE);
-			eventContainer.getAtomicEvent(key).getState().setAfterState(null);
-			
-			key = new WireHashKey(agentId, siteId,	ETypeOfWire.LINK_STATE);
-			eventContainer.addAtomicEvent(key, siteFromSolution,EActionOfAEvent.MODIFICATION, CEvent.BEFORE_STATE);
-			eventContainer.getAtomicEvent(key).getState().setAfterState(null);
-			
-			key = new WireHashKey(agentId, siteId,ETypeOfWire.INTERNAL_STATE);
-			if(siteFromSolution.getInternalState().getNameId() != CInternalState.EMPTY_STATE.getNameId()){
+				WireHashKey key = new WireHashKey(agentId, siteId,ETypeOfWire.BOUND_FREE);
 				eventContainer.addAtomicEvent(key, siteFromSolution,EActionOfAEvent.MODIFICATION, CEvent.BEFORE_STATE);
 				eventContainer.getAtomicEvent(key).getState().setAfterState(null);
-			}
 			
+				key = new WireHashKey(agentId, siteId,	ETypeOfWire.LINK_STATE);
+				eventContainer.addAtomicEvent(key, siteFromSolution,EActionOfAEvent.MODIFICATION, CEvent.BEFORE_STATE);
+				eventContainer.getAtomicEvent(key).getState().setAfterState(null);
+				
+				key = new WireHashKey(agentId, siteId,ETypeOfWire.INTERNAL_STATE);
+				if(siteFromSolution.getInternalState().getNameId() != CInternalState.EMPTY_STATE.getNameId()){
+					eventContainer.addAtomicEvent(key, siteFromSolution,EActionOfAEvent.MODIFICATION, CEvent.BEFORE_STATE);
+					eventContainer.getAtomicEvent(key).getState().setAfterState(null);
+				}
 			} catch (StoryStorageException e) {
 				e.printStackTrace();
 			}
 		}
-
-		// if (eventContainer != null) {
-		// // AGENT
-		// AEvent<Boolean> event = (AEvent<Boolean>) eventContainer
-		// .getEvent(new UHashKey(agentFromInSolution.getId(),
-		// EKeyOfState.AGENT));
-		// event.correctingType(ECheck.MODIFICATION);
-		// for (CSite s : agentFromInSolution.getSites()) {
-		// if(getAgentFrom().getSiteById(s.getNameId()) != null)
-		// continue;
-		// CSite site =s; //agentFromInSolution.getSiteById(s.getNameId());
-		// CLinkRank linkRank = s.getLinkState().getStatusLinkRank();
-		// if (linkRank != CLinkRank.BOUND_OR_FREE) {
-		// // FREE/BOUND
-		// AEvent<Boolean> event2 = new AEvent<Boolean>(
-		// eventContainer, ECheck.MODIFICATION);
-		// AState<Boolean> state2 = new AState<Boolean>();
-		// state2.setBeforeState(linkRank.equals(CLinkRank.FREE));
-		// event2.setState(state2);
-		// eventContainer.addEvent(
-		// new UHashKey(agentFromInSolution.getId(), site
-		// .getNameId(), EKeyOfState.BOUND_FREE),
-		// event2);
-		//
-		// if (linkRank != CLinkRank.SEMI_LINK) {
-		// AEvent<CStateOfLink> event3 = new AEvent<CStateOfLink>(
-		// eventContainer, ECheck.MODIFICATION);
-		// AState<CStateOfLink> state3 = new AState<CStateOfLink>();
-		// if (linkRank == CLinkRank.FREE)
-		// state3.setBeforeState(new CStateOfLink(
-		// CStateOfLink.FREE, CStateOfLink.FREE));
-		// else
-		// state3.setBeforeState(new CStateOfLink(site
-		// .getLinkState().getConnectedSite()
-		// .getAgentLink().getId(), site
-		// .getLinkState().getConnectedSite()
-		// .getNameId()));
-		// event3.setState(state3);
-		// eventContainer.addEvent(new UHashKey(
-		// agentFromInSolution.getId(), site.getNameId(),
-		// EKeyOfState.LINK_STATE), event3);
-		// }
-		// }
-		//
-		// eventContainer.addEvent(new UHashKey(agentFromInSolution
-		// .getId(), site.getNameId(),
-		// EKeyOfState.INTERNAL_STATE), agentFromInSolution, s,
-		// ECheck.MODIFICATION, true);
-		// // if (s.getInternalState().getNameId() !=
-		// // CInternalState.EMPTY_STATE
-		// // .getNameId()) {
-		// // AEvent<Integer> event2 = new AEvent<Integer>(
-		// // eventContainer, ECheck.MODIFICATION);
-		// // AState<Integer> state2 = new AState<Integer>();
-		// // state2.setBeforeState(s.getInternalState().getNameId());
-		// // event2.setState(state2);
-		// // eventContainer.addEvent(new UHashKey(agentFromInSolution
-		// // .getId(), site.getNameId(),
-		// // EKeyOfState.INTERNAL_STATE), event2);
-		// // }
-		//
-		// }
-		// }
 	}
 
-	/**
-	 * Util method. Uses for fill {@link CRule#addSiteConnectedWithBroken(CSite)}.
-	 * @param checkedSite given site.
-	 */
 	private final void addSiteToConnectedWithDeleted(CSite checkedSite) {
 		for (CSite site : myRule.getSitesConnectedWithDeleted()) {
 			if (site == checkedSite) {
@@ -246,10 +150,6 @@ public class CDeleteAction extends CAction {
 		myRule.addSiteConnectedWithDeleted(checkedSite);
 	}
 
-	/**
-	 * Util method. Uses for removed <b>checkSite</b> from util list in rule.
-	 * @param checkedSite given site
-	 */
 	private final void removeSiteToConnectedWithDeleted(CSite checkedSite) {
 		int size = myRule.getSitesConnectedWithDeleted().size();
 		for (int i = 0; i < size; i++) {

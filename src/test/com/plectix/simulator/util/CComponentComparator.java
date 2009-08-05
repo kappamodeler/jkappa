@@ -37,7 +37,7 @@ public class CComponentComparator {
 	
 	
 	public static IConnectedComponent findCC(IConnectedComponent c,
-			List<IConnectedComponent> list) {
+			Collection<IConnectedComponent> list) {
 		int size = c.getAgents().size();
 		for (IConnectedComponent tmpC : list) {
 			if (tmpC.getAgents().size() == size) {

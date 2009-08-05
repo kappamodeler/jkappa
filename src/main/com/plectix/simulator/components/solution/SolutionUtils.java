@@ -1,16 +1,22 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.CSite;
+import com.plectix.simulator.components.*;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
-public class SolutionUtils {
+/**
+ * This class contains some util static methods to work with substances from solution 
+ */
+// TODO all the methods from here to special util class 
+public final class SolutionUtils {
+	/**
+	 * This method takes an agent and finds all agents which somehow connected to it.
+	 * I.e. it finds connected component, containing this agent.
+	 * <br> NOTE: this method DOES NOT use link indexes! So we CAN use it during the simulation process
+	 * @param agent agent to find component for
+	 * @return connected component, containing this agent
+	 */
 	public static final IConnectedComponent getConnectedComponent(CAgent agent) {
 		if (agent != null) {
 			Map<Long, CAgent> adjacentAgents = new LinkedHashMap<Long, CAgent>();
@@ -18,7 +24,8 @@ public class SolutionUtils {
 			adjacentAgents = getAdjacentAgents(agent, adjacentAgents);
 			int index = 0;
 			for (CAgent agentIn : adjacentAgents.values()) {
-//				agentIn.setIdInRuleSide(index);
+				// TODO notice the line commented below
+				// agentIn.setIdInRuleSide(index);
 				agentIn.setIdInConnectedComponent(index++);
 			}
 
@@ -35,8 +42,8 @@ public class SolutionUtils {
 		for (CSite site : agent.getSites()) {
 			CSite siteLink = site.getLinkState().getConnectedSite();
 			if ((siteLink != null)
-					&& (!allAgents.keySet().contains(siteLink.getAgentLink().getId()))) {
-				CAgent agentLink = siteLink.getAgentLink();
+					&& (!allAgents.keySet().contains(siteLink.getParentAgent().getId()))) {
+				CAgent agentLink = siteLink.getParentAgent();
 				agentAddList.add(agentLink);
 				allAgents.put(agentLink.getId(), agentLink);
 			}

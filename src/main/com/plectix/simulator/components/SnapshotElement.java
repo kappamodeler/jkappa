@@ -1,7 +1,8 @@
 package com.plectix.simulator.components;
 
+import com.plectix.simulator.components.solution.SuperSubstance;
+import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.simulator.SimulationUtils;
 
 /**
  * This class implements snapshot element entity.
@@ -9,7 +10,7 @@ import com.plectix.simulator.simulator.SimulationUtils;
  *
  */
 public final class SnapshotElement {
-	private int count;
+	private long count;
 	private IConnectedComponent component;
 	private final String ccName;
 
@@ -19,18 +20,19 @@ public final class SnapshotElement {
 	 * @param isOcamlStyleObsName <tt>true</tt> if we use O'caml styled observables names, 
 	 * otherwise <tt>false</tt>
 	 */
-	public SnapshotElement(IConnectedComponent connectedComponent, boolean isOcamlStyleObsName) {
-		count = 1;
+	public SnapshotElement(IConnectedComponent connectedComponent, long count, boolean isOcamlStyleObsName) {
+		this.count = count;
 		component = connectedComponent;
-		component.initSpanningTreeMap();
-		ccName = SimulationUtils.printPartRule(component, new int[] {0}, isOcamlStyleObsName);
+//		component.initSpanningTreeMap();
+		ccName = component.getHash();
+		//SimulationUtils.printPartRule(component, new int[] {0}, isOcamlStyleObsName);
 	}
 	
 	/**
 	 * This method returns counter of this snapshot element
 	 * @return counter of this snapshot element
 	 */
-	public final int getCount() {
+	public final long getCount() {
 		return count;
 	}
 
@@ -52,11 +54,17 @@ public final class SnapshotElement {
 	public final boolean exists(IConnectedComponent connectedComponent) {
 		if (component == connectedComponent)
 			return true;
-		connectedComponent.initSpanningTreeMap();
+//		connectedComponent.initSpanningTreeMap();
 		//if (cc.isAutomorphism(ccEx.getAgents().get(0))) {
-		if (component.unify(connectedComponent.getAgents().get(0)) 
-				&& connectedComponent.unify(component.getAgents().get(0))) {
-			count++;
+//		if (component.unify(connectedComponent.getAgents().get(0)) 
+//				&& connectedComponent.unify(component.getAgents().get(0))) {
+		if(ccName.equals(connectedComponent.getHash())){
+			SuperSubstance substance = connectedComponent.getSubstance();
+			if (substance != null) {
+				count += substance.getQuantity();
+			} else {
+				count++;
+			}
 			return true;
 		}
 

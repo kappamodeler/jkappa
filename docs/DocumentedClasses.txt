@@ -16,6 +16,8 @@ Classes with full javadoc
 - com.plectix.simulator.components.CSpanningTree
 - com.plectix.simulator.components.ObservablesRuleComponent
 - com.plectix.simulator.components.SnapshotElement
+
+- com.plectix.simulator.components.solution.*
 --------------------------------------------------
 
 these ones are unfinished and need to be checked :

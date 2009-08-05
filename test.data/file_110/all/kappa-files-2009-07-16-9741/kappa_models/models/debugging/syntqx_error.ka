@@ -1,0 +1,112 @@
+# Rules:
+#######
+# Chapter 'New Chapter 1'
+'Rule1' EGFR(pge2),PGE2(egfr) -> EGFR(pge2!1),PGE2(egfr!1) @ 1.0
+'Rule2' EGFR(pge2!1,x~u),PGE2(egfr!1) -> EGFR(pge2,x~p),PGE2(egfr) @ 1.0
+'Rule3' Gq11(piplcb),PIPLCB(galpha) -> Gq11(piplcb!1),PIPLCB(galpha!1) @ 1.0
+'ADAM15.Abl' ADAM15(Y715~p,Y735~p,c),Abl(SH3) -> ADAM15(Y715~p,Y735~p,c!1),Abl(SH3!1) @ 1.0
+'ADAM15.Fyn' ADAM15(Y715~p,Y735~p,c),Fyn(SH3) -> ADAM15(Y715~p,Y735~p,c!1),Fyn(SH3!1) @ 1.0
+'ADAM15.Grb2' ADAM15(Y715~p,Y735~p,c),Grb2(SH3) -> ADAM15(Y715~p,Y735~p,c!1),Grb2(SH3!1) @ 1.0
+'ADAM15.Hck' ADAM15(Y715~p,Y735~p,c),Hck(SH3) -> ADAM15(Y715~p,Y735~p,c!1),Hck(SH3!1) @ 1.0
+'ADAM15.Lck' ADAM15(Y715~p,Y735~p,c),Lck(SH3) -> ADAM15(Y715~p,Y735~p,c!1),Lck(SH3!1) @ 1.0
+'ADAM15.MAD2' ADAM15(c),MAD2(adam15) -> ADAM15(c!1),MAD2(adam15!1) @ 1.0
+'ADAM15.Src' ADAM15(Y715~p,Y735~p,c),Src(SH3) -> ADAM15(Y715~p,Y735~p,c!1),Src(SH3!1) @ 1.0
+'ADAM15@y_p' ADAM15(Y715~p,Y735~p,c!1,y~u),Hck(SH3!1) -> ADAM15(Y715~p,Y735~p,c,y~p),Hck(SH3) @ 1.0
+'ADAM15@y_p1' ADAM15(Y715~p,Y735~p,c!1,y~u),Lck(SH3!1) -> ADAM15(Y715~p,Y735~p,c,y~p),Lck(SH3) @ 1.0
+'AT2R1_Galphai' AT2R1(galphai),Galphai(at2r1,gbeta!1,x~gdp),Gbeta(Ggamma,galphai!1) <-> AT2R1(galphai!1),Galphai(at2r1!1,gbeta!2,x~gdp),Gbeta(Ggamma,galphai!2) @ 1.0,1.0
+'AT2R1_Galphao' AT2R1(galphao),Galphao(at2r1,gbeta!1,x~gdp),Gbeta(Ggamma,galphao!1) <-> AT2R1(galphao!2),Galphao(at2r1!2,gbeta!1,x~gdp),Gbeta(Ggamma,galphao!1) @ 1.0,1.0
+'AT2R1_Gq11@gq11_at2r1' AT2R1(gq11),Gbeta(gamma,gq11!1),Gq11(at2r1,gbeta!1,x~gdp) <-> AT2R1(gq11!1),Gbeta(gamma,gq11!2),Gq11(at2r1!1,gbeta!2,x~gdp) @ 1.0,1.0
+'EGFR_PLCG1@Y992_SH2' EGFR(Y992~p),PLCG1(SH2) -> EGFR(Y992~p!1),PLCG1(SH2!1) @ 1.0
+'G12.LARG' G12(gbeta!1,larg,x~gdp),Gbeta(Ggamma,g12!1),LARG(g12) -> G12(gbeta!1,larg!2,x~gdp),Gbeta(Ggamma,g12!1),LARG(g12!2) @ 1.0
+'G13_PYK2@pyk2_g13' G13(pyk2),PYK2(g13) -> G13(pyk2!1),PYK2(g13!1) @ 1.0
+'Galphai_Gbeta_op' Galphai(gbeta!1,x~gtp),Gbeta(Ggamma,galphai!1) -> Galphai(gbeta,x~gtp),Gbeta(Ggamma,galphai) @ 1.0
+'Galphai_Gbeta_op1' Galphao(gbeta!1,x~gtp),Gbeta(Ggamma,galphao!1) -> Galphao(gbeta,x~gtp),Gbeta(Ggamma,galphao) @ 1.0
+'Galphai_p@x' AT2R1(galphai!1),Galphai(at2r1!1,gbeta!2,x~gdp),Gbeta(Ggamma,galphai!2) -> AT2R1(galphai),Galphai(at2r1,gbeta!1,x~gtp),Gbeta(Ggamma,galphai!1) @ 1.0
+'Galphao_p@x' AT2R1(galphao!1),Galphao(at2r1!1,gbeta!2,x~gdp),Gbeta(Ggamma,galphao!2) -> AT2R1(galphao),Galphao(at2r1,gbeta!1,x~gtp),Gbeta(Ggamma,galphao!1) @ 1.0
+'Gaq_PLCb@plcb_C' Gaq(plcb),PLCb(C) -> Gaq(plcb!1),PLCb(C!1) @ 1.0
+'Gaq_PLCb@plcb_gaq' Gaq(plcb),PLCb(gaq) -> Gaq(plcb!1),PLCb(gaq!1) @ 1.0
+'Gbeta_PIPLCB@piplcb_gbeta' Gbeta(gamma,piplcb),PIPLCB(gbeta) -> Gbeta(gamma,piplcb!1),PIPLCB(gbeta!1) @ 1.0
+'Gbeta_p@x' Gbeta(gamma,piplcb!1),PIPLCB(gbeta!1,x~u) -> Gbeta(gamma,piplcb),PIPLCB(gbeta,x~p) @ 1.0
+'Gbeta_u@x' Gbeta(gamma,rgs!1,x~gtp),RGS(gbeta!1) -> Gbeta(gamma,rgs,x~gdp),RGS(gbeta) @ 1.0
+'LARG@x_p' G12(gbeta!1,larg!2,x~gdp),Gbeta(Ggamma,g12!1),LARG(g12!2,x~u) -> G12(gbeta!1,larg!2,x~gdp),Gbeta(Ggamma,g12!1),LARG(g12!2,x~p) @ 1.0
+'PKA.cAMP' PKA(CS),cAMP(pka) -> PKA(CS!1),cAMP(pka!1) @ 1.0
+'PKA_PLCb@plcb_pka' PKA(plcb),PLCb(pka) -> PKA(plcb!1),PLCb(pka!1) @ 1.0
+'PKA_Rho@rho_pka' PKA(rho),Rho(pka) -> PKA(rho!1),Rho(pka!1) @ 1.0
+'PKA_p@x' Rho(pka!1,x~u),PKA(rho!1) -> Rho(pka,x~p),PKA(rho) @ 1.0
+'PKC_PLCb@plcb_pkc' PKC(plcb),PLCb(pkc) -> PKC(plcb!1),PLCb(pkc!1) @ 1.0
+'PLCG1_p@783' EGFR(Y992~p!1),PLCG1(SH2!1,Y783~u) -> EGFR(Y992~p),PLCG1(SH2,Y783~p) @ 1.0
+'PLCG1_p@Y1254' EGFR(Y992~p!1),PLCG1(SH2!1,Y1254~u) -> EGFR(Y992~p),PLCG1(SH2,Y1254~p) @ 1.0
+'PLCG1_p@Y472' EGFR(Y992~p!1),PLCG1(SH2!1,Y472~u) -> EGFR(Y992~p),PLCG1(SH2,Y472~p) @ 1.0
+'PLCG1_p@Y771' EGFR(Y992~p!1),PLCG1(SH2!1,Y771~u) -> EGFR(Y992~p),PLCG1(SH2,Y771~p) @ 1.0
+'PLCb_p@S1105' PKC(plcb!1),PLCb(S1105~u,pkc!1) -> PKC(plcb),PLCb(S1105~p,pkc) @ 1.0
+'PLCb_p@S1' PKA(plcb!1),PLCb(S1105~u,pka!1) -> PKA(plcb),PLCb(S1105~p,pka) @ 1.0
+'PLCb_p@S26' PKA(plcb!1),PLCb(S26~u,pka!1) -> PKA(plcb),PLCb(S26~p,pka) @ 1.0
+'PLD1_ARF@arf_pld1' ARF(pld1),PLD1(arf) -> ARF(pld1!1),PLD1(arf!1) @ 1.0
+'PLD1_Cdc42@cdc42_pld1' Cdc42(pld1),PLD1(cdc42) -> Cdc42(pld1!1),PLD1(cdc42!1) @ 1.0
+'PLD1_PKA@pka_pld1' PKA(pld1),PLD1(pka) -> PKA(pld1!1),PLD1(pka!1) @ 1.0
+'PLD1_PKC@NC_pld1' PKC(pld1),PLD1(NC) -> PKC(pld1!1),PLD1(NC!1) @ 1.0
+'PLD1_Rac1@rac1_pld1' PLD1(rac1),Rac1(pld1) -> PLD1(rac1!1),Rac1(pld1!1) @ 1.0
+'PLD1_Rho@C_pld1' PLD1(C),Rho(pld1) -> PLD1(C!1),Rho(pld1!1) @ 1.0
+'PLD1_p@x' ARF(pld1!1),PLD1(arf!1,x~u) -> ARF(pld1),PLD1(arf,x~p) @ 1.0
+'PLD1_p@x1' PLD1(C!1,x~u),Rho(pld1!1) -> PLD1(C,x~p),Rho(pld1) @ 1.0
+'PLD1_p@x2' PLD1(rac1!1,x~u),Rac1(pld1!1) -> PLD1(rac1,x~p),Rac1(pld1) @ 1.0
+'PLD1_p@x3' Cdc42(pld1!1),PLD1(cdc42!1,x~u) -> Cdc42(pld1),PLD1(cdc42,x~p) @ 1.0
+'PLD1_p@x4' PKA(pld1!1),PLD1(pka!1,x~u) -> PKA(pld1),PLD1(pka,x~p) @ 1.0
+'PYK2_p@y' G13(pyk2!1),PYK2(g13!1,y~u) -> G13(pyk2),PYK2(g13,y~p) @ 1.0
+'RGS12_CXCR2@cxcr2_rgs12' CXCR2(rgs12),RGS12(cxcr2) -> CXCR2(rgs12!1),RGS12(cxcr2!1) @ 1.0
+'RGS3_1433@N_rgs3' X1433(rgs3),RGS3(N,S264~p) <-> X1433(rgs3!1),RGS3(N!1,S264~p) @ 1.0,1.0
+'RGS3_u@S264' X1433(rgs3!1),RGS3(N!1,S264~p) -> X1433(rgs3!1),RGS3(N!1,S264~u) @ 1.0
+'RGS7_X1433@RGS_rgs7' X1433(rgs7),RGS7(RGS,S434~p) <-> X1433(rgs7!1),RGS7(RGS!1,S434~p) @ 1.0,1.0
+'RGS7_u@S434' X1433(rgs7!1),RGS7(RGS!1,S434~p) -> X1433(rgs7!1),RGS7(RGS!1,S434~u) @ 1.0
+'RGS9_Gbeta@GGL_rgs9' Gbeta(gamma,rgs9),RGS9(GGL) -> Gbeta(gamma,rgs9!1),RGS9(GGL!1) @ 1.0
+'RGS_X1433@X1433_rgs' X1433(rgs),RGS(X1433,y~p) -> X1433(rgs!1),RGS(X1433!1,y~p) @ 1.0
+'RGS_Gbeta@gbeta_rgs' Gbeta(gamma,rgs,x~gtp),RGS(gbeta) -> Gbeta(gamma,rgs!1,x~gtp),RGS(gbeta!1) @ 1.0
+'RGS_PKA@pka_rgs' PKA(rgs),RGS(pka) -> PKA(rgs!1),RGS(pka!1) @ 1.0
+'RGS_p@y' PKA(rgs!1),RGS(pka!1,y~u) -> PKA(rgs),RGS(pka,y~p) @ 1.0
+'cAMP_p@x' PKA(CS!1),cAMP(pka!1,x~u) -> PKA(CS),cAMP(pka,x~p) @ 1.0
+
+
+# Initial Conditions:
+%init: 100 * (CXCR2(rgs12))
+%init: 100 * (ADAM15(c,Y735~p,y,Y715~p))
+%init: 100 * (AT2R1(galphao,galphai,gq11))
+%init: 100 * (Rac1(pld1))
+%init: 100 * (Galphao(gbeta,at2r1,x~gdp))
+%init: 100 * (X1433(rgs7,rgs,rgs3))
+%init: 100 * (cAMP(pka,x))
+%init: 100 * (RGS12(cxcr2))
+%init: 100 * (PIPLCB(gbeta,galpha,x))
+%init: 100 * (Grb2(SH3))
+%init: 100 * (PGE2(egfr))
+%init: 100 * (Gaq(plcb))
+%init: 100 * (Rho(pka,rho,x,pld1))
+%init: 100 * (Galphai(gbeta,at2r1,x~gdp))
+%init: 100 * (PKC(plcb,pld1))
+%init: 100 * (Src(SH3))
+%init: 100 * (EGFR(pge2,Y992,x))
+%init: 100 * (G12(gbeta,larg2,x~gdp,larg))
+%init: 100 * (PLD1(NC,arf,pka,cdc42,C,rac1,x))
+%init: 100 * (PYK2(y,g13))
+%init: 100 * (MAD2(adam15))
+%init: 100 * (Fyn(SH3))
+%init: 100 * (PLCb(pkc,gaq,pka,C,S26,S1105))
+%init: 100 * (RGS3(S264~p,N))
+%init: 100 * (ARF(pld1))
+%init: 100 * (RGS(gbeta,pka,X1433,y))
+%init: 100 * (Lck(SH3))
+%init: 100 * (LARG(g12,x))
+%init: 100 * (Cdc42(pld1))
+%init: 100 * (PKA(rgs,plcb,pka,rho,CS,x,pld1))
+%init: 100 * (RGS9(GGL))
+%init: 100 * (Abl(SH3))
+%init: 100 * (RGS7(RGS,S434~p))
+%init: 100 * (Gbeta(Ggamma,rgs,piplcb,gamma,g12,rgs9,galphaio,galphao,galphai,x,gq11))
+%init: 100 * (PLCG1(Y771,Y783,Y472,SH2,Y1254))
+%init: 100 * (Hck(SH3))
+%init: 100 * (Gq11(gbeta,piplcb,at2r1,x~gdp))
+%init: 100 * (G13(pyk2))
+
+# Simulation:
+
+# Stories:
+

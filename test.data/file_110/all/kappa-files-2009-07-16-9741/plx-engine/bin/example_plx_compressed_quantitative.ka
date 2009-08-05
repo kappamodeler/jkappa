@@ -1,0 +1,89 @@
+#rules
+#former rule:
+######### R(l,r),E(r) <-> R(l!1,r),E(r!1)  
+#simplified  rule:
+'%Auto_1' R(l),E(r) -> R(l!1),E(r!1) # 1
+#simplified  rule:
+'%Auto_2' R(l!_,r) -> R(l,r) # 2
+
+#former rule:
+######### R(l!_,r),R(l!_,r) -> R(l!_,r!1),R(l!_,r!1)
+#simplified  rule:
+'%Auto_3' R(l!_,r),R(l!_,r) -> R(l!_,r!1),R(l!_,r!1) # 3
+#former rule:
+######### R(r!1),R(r!1) -> R(r),R(r) 
+#simplified  rule:
+'%Auto_4' R(r!_) -> R(r) # 4
+
+#former rule:
+###'Grb_Shc' Sh(Y7~p),G(a) <-> Sh(Y7~p!1),G(a!1)
+#simplified  rule:
+'Grb_Shc_op' Sh(Y7!_) -> Sh(Y7) # 5
+#simplified  rule:
+'Grb_Shc' Sh(Y7~p),G(a) -> Sh(Y7~p!1),G(a!1) # 6
+#former rule:
+###'Grb_R' R(Y68~p),G(a) <-> R(Y68~p!1),G(a!1)
+#simplified  rule:
+'Grb_R_op' R(Y68!_) -> R(Y68) # 7
+#simplified  rule:
+'Grb_R' R(Y68~p),G(a) -> R(Y68~p!1),G(a!1) # 8
+#former rule:
+######### So(d),G(b) <-> So(d!1),G(b!1)
+#simplified  rule:
+'%Auto_9' So(d),G(b) -> So(d!1),G(b!1) # 9
+#simplified  rule:
+'%Auto_10' So(d!_) -> So(d) #10
+#former rule:
+###'Shc_R' R(Y48~p),Sh(pi) <-> R(Y48~p!1),Sh(pi!1) 
+#simplified  rule:
+'Shc_R_op' R(Y48!_) -> R(Y48) #11
+#simplified  rule:
+'Shc_R' R(Y48~p),Sh(pi) -> R(Y48~p!1),Sh(pi!1) #12
+
+
+
+#mods
+#former rule:
+########## R(r!_,Y68~u) -> R(r!_,Y68~p)
+#simplified  rule:
+'%Auto_13' R(Y68~u?,r!_) -> R(Y68~p?,r!_) #13
+
+#former rule:
+#'Y68_dephos' R(Y68~p) -> R(Y68~u)
+#simplified  rule:
+ 'Y68_dephos' R(Y68~p) -> R(Y68~u) #14
+
+#'Y68_dephos' R(Y68!?~p) -> R(Y68!?~u)
+
+#former rule:
+########## R(r!_,Y48~u) -> R(r!_,Y48~p)
+#simplified  rule:
+'%Auto_15' R(Y48~u?,r!_) -> R(Y48~p?,r!_) #15
+
+#'Y48_dephos' R(Y48!?~p) -> R(Y48!?~u)
+#former rule:
+#'Y48_dephos' R(Y48~p) -> R(Y48~u)
+#simplified  rule:
+ 'Y48_dephos' R(Y48~p) -> R(Y48~u) #16
+
+#former rule:
+########## R(r!_,Y48~p!1),Sh(pi!1,Y7~u) -> R(r!_,Y48~p!1), Sh(pi!1,Y7~p) 
+#simplified  rule:
+'%Auto_17' Sh(Y7~u?,pi!1),R(Y48!1,r!_) -> Sh(Y7~p?,pi!1),R(Y48!1,r!_) #17
+
+#former rule:
+########## Sh(Y7~p) -> Sh(Y7~u)
+#simplified  rule:
+'%Auto_18' Sh(Y7~p) -> Sh(Y7~u) #18
+
+#Initial solution
+%init: 1000 * (R(l,r,Y48~u,Y68~u),E(r),G(a,b),So(d),Sh(pi,Y7~u)) 
+
+#Observation
+%obs: 'R_Grb2_Sos' R(l!_,Y68~p!3),G(b!2,a!3),So(d!2)
+%obs: 'R_Shc_Grb2_Sos' R(l!_,Y48~p!2),Sh(pi!2,Y7~p!3),G(a!3,b!4),So(d!4)
+#%obs: R(Y68!3),G(a!3) 
+#%obs: R(Y48!2),Sh(pi!2) 
+#%obs: 'Grb_R'
+%story: 'Grb_Shc'
+

@@ -1,0 +1,18 @@
+A(l),B(r) <-> A(l!1),B(r!1) 
+B(r!_,x~u) -> B(r!_,x~p)
+B(r!_,y~u) -> B(r!_,y~p)
+B(x~p) -> B(x~u)
+B(y~p) -> B(y~u)
+
+%init: 100*(A(l),B(r,x~u,y~u))
+%obs: B(r!_,x~p)
+%obs: B(r!_,y~p)
+%obs: B(r,x~p)
+%obs: B(r,y~p)
+%obs: A(l)
+%obs: A(l!_) 
+%obs: B(r!_,x~u)
+%obs: B(r!_,y~u)
+%obs: B(r,x~u)
+%obs: B(r,y~u)
+

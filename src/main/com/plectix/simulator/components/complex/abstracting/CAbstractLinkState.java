@@ -22,7 +22,7 @@ public class CAbstractLinkState {
 	 */
 	public CAbstractLinkState(CLink linkState) {
 		if (linkState.getConnectedSite() != null) {
-			this.agentNameID = linkState.getConnectedSite().getAgentLink().getNameId();
+			this.agentNameID = linkState.getConnectedSite().getParentAgent().getNameId();
 			this.linkSiteNameID = linkState.getConnectedSite().getNameId();
 //			this.internalStateNameID = linkState.getConnectedSite().getInternalState()
 //					.getNameId();

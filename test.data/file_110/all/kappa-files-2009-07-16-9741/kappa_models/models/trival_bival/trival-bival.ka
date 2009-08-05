@@ -1,0 +1,25 @@
+#'L1R1' L(r1), R(l1) {$1<>$2} <-> L(r1!1), R(l1!1) 
+#'L2R1' L(r2), R(l1) {$1<>$2} <-> L(r2!1), R(l1!1)  
+#'L3R1' L(r3), R(l1) {$1<>$2} <-> L(r3!1), R(l1!1) 
+#'L1R2' L(r1), R(l2) {$1<>$2} <-> L(r1!1), R(l2!1)  
+#'L2R2' L(r2), R(l2) {$1<>$2} <-> L(r2!1), R(l2!1)  
+#'L3R2' L(r3), R(l2) {$1<>$2} <-> L(r3!1), R(l2!1) 
+
+'L1R1' L(r1), R(l1) <-> L(r1!1), R(l1!1) 
+'L2R1' L(r2), R(l1) <-> L(r2!1), R(l1!1)  
+'L3R1' L(r3), R(l1) <-> L(r3!1), R(l1!1) 
+'L1R2' L(r1), R(l2) <-> L(r1!1), R(l2!1)  
+'L2R2' L(r2), R(l2) <-> L(r2!1), R(l2!1)  
+'L3R2' L(r3), R(l2) <-> L(r3!1), R(l2!1) 
+
+%init: 200 * (L(r1,r2,r3)) + 300 * (R(l1,l2))
+%obs: L(r1!1),R(l1!1)
+%obs: L(r2!1),R(l1!1)
+%obs: L(r3!1),R(l1!1)
+%obs: L(r1!1),R(l2!1)
+%obs: L(r2!1),R(l2!1)
+%obs: L(r3!1),R(l2!1)
+
+#generate_network({overwrite=>1});
+#generate_network({overwrite=>1,check_iso=>0,max_iter=>1});
+#simulate_ssa({t_end=>100,n_steps=>1000,print_net=>1});

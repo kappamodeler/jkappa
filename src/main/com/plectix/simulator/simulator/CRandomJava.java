@@ -4,12 +4,15 @@ import java.util.Random;
 
 import com.plectix.simulator.interfaces.IRandom;
 
-/*package*/ final class CRandomJava implements IRandom {
+final class CRandomJava implements IRandom {
 
 	private final Random rand;
 
 	public CRandomJava(int seed) {
-		rand = new Random(seed);
+		if(seed == SimulationArguments.DEFAULT_SEED)
+			rand = new Random();
+		else
+			rand = new Random(seed);
 	}
 
 	public final double getDouble() {
@@ -21,6 +24,7 @@ import com.plectix.simulator.interfaces.IRandom;
 	}
 	
 	public final void setSeed(long seed) {
-		rand.setSeed(seed);
+		if(seed != SimulationArguments.DEFAULT_SEED)
+			rand.setSeed(seed);
 	}
 }

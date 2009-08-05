@@ -146,6 +146,22 @@ public interface IWireStorage
 	void markAllNull() throws StoryStorageException;
 	
 	int getIteration();
+	/**
+	 * old1 and new1 has same siteId
+	 * old2 and new2 has same siteId
+	 * a_1(x!1),b_1(x!1) <-> a_2(x!1),b_2(x!2)
+	 * old1 - linkstate a_1(x) on wk1
+	 * new1 - linkstate a_2(x) on wk2
+	 * old2 - linkstate b_1(x) on wk3
+	 * new2 - linkstate b_2(x) on wk4
+	 * 
+	 * @param old1 
+	 * @param new1
+	 * @param old2
+	 * @param new2
+	 * "first" events changes too. if top =true than initial event may be changed
+	 */
+	public void correctLinkStates(CStateOfLink old1,WireHashKey wk1,CStateOfLink new1,WireHashKey wk2, CStateOfLink old2,WireHashKey wk3,CStateOfLink new2, WireHashKey wk4, Long first, boolean top);
 
 
 }

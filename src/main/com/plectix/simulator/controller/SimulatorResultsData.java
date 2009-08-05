@@ -34,7 +34,7 @@ public class SimulatorResultsData {
 	}
 	
 	public List<Source> getResultSource() {
-		return Collections.unmodifiableList(myResultSource);
+		return myResultSource;
 	}
 	                               
 	

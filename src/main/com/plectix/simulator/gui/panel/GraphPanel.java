@@ -8,8 +8,12 @@ import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.util.Collection;
 
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.text.PlainDocument;
 
 import org.apache.log4j.Logger;
 import org.jfree.chart.JFreeChart;
@@ -22,10 +26,13 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.time.FixedMillisecond;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import com.plectix.simulator.gui.lib.ColorMap;
 import com.plectix.simulator.gui.lib.GridBagPanel;
 import com.plectix.simulator.streaming.LiveData;
+import com.plectix.simulator.streaming.LiveDataPoint;
 
 /**
  * <p>TODO document GraphPanel
@@ -41,7 +48,9 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 	private static final Logger LOGGER = Logger.getLogger(GraphPanel.class);
 
 	private static final boolean SHOW_LEGEND = true;
-	
+
+	private static final Shape SMALL_RECTANGLE = new Rectangle(-1, -1, 2, 2);
+	@SuppressWarnings("unused")
 	private static final Shape RECTANGLE = new Rectangle(-3, -3, 6, 6);
 	@SuppressWarnings("unused")
 	private static final Shape UP_TRIANGLE = new Polygon(new int[]{-5, 0, 5}, new int[]{12, 0, 12}, 3);
@@ -50,12 +59,15 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 
 	private org.jfree.chart.ChartPanel observablesChartPanel = null;
 	private org.jfree.chart.ChartPanel memoryChartPanel = null;
+	private JTextArea  textArea= new JTextArea();
 	
 	private ChartZoomInfo chartZoomInfo = new ChartZoomInfo();
 	
 	private TimeSeries memoryUsageTimeSeriesHeap = null;
 	private TimeSeries memoryUsageTimeSeriesNonHeap = null;
 	private TimeSeries memoryUsageTimeSeriesTotal = null;
+	
+	private XYSeriesCollection seriesCollection = null;
 	
 	public GraphPanel() {
 		super();
@@ -75,6 +87,12 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 
 		tabbedPane.addTab("Memory", memoryChartPanel);
 		tabbedPane.setMnemonicAt(1, KeyEvent.VK_2);
+
+		textArea.setLineWrap(false);
+		textArea.setEditable(false);
+		JScrollPane scrollPane = new JScrollPane(textArea);
+		tabbedPane.addTab("Console", scrollPane);
+		tabbedPane.setMnemonicAt(2, KeyEvent.VK_3);
 		
 		tabbedPane.setSelectedIndex(1);
 		
@@ -93,11 +111,32 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 	}
 
 	public void updateLiveDataChart(LiveData liveData) {
-		// TODO update XY Series for observablesChartPanel
-		// Then call updateLiveDataChartPanel()
+		// LOGGER.info("Entered updateLiveDataChart with liveData having " + liveData.getNumberOfPlots() + " plots.");
+		seriesCollection = new XYSeriesCollection();
+			
+		int numberOfPlots = liveData.getNumberOfPlots();
+		for (int i= 0; i<  numberOfPlots; i++) {
+			seriesCollection.addSeries(new XYSeries(liveData.getPlotNames()[i]));
+		}
 		
+		Collection<LiveDataPoint> liveDataPoints = liveData.getData();
+		if (liveDataPoints == null) {
+			return;
+		}
+		// LOGGER.info("Each curve has " + liveData.getData().size() + " points.");
+		
+		for (LiveDataPoint liveDataPoint : liveDataPoints) {
+			double time = liveDataPoint.getEventTime();
+			double[] values = liveDataPoint.getPlotValues();
+			for (int i= 0; i<  numberOfPlots; i++) {
+				seriesCollection.getSeries(i).add(time, values[i]);
+			}
+		}
+		// LOGGER.info("Drawing " + liveDataPoints.size() + " points for " + seriesCollection.getSeriesCount() + " series!");
+		updateLiveDataChartPanel(seriesCollection.getSeriesCount());
 	}
 	
+
 	public final void updateMemoryUsageChart() {
 		final MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
 		final long currentHeap = mbean.getHeapMemoryUsage().getUsed();
@@ -105,9 +144,9 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 		final long currentTimeMillis = System.currentTimeMillis();
 		
 		// LOGGER.info(currentTimeMillis + ": " + (memoryUsage/1024.0/1024.0));
-		memoryUsageTimeSeriesHeap.add(new FixedMillisecond(currentTimeMillis), currentHeap/MEGA);	
-		memoryUsageTimeSeriesNonHeap.add(new FixedMillisecond(currentTimeMillis), currentNonHeap/MEGA);	
-		memoryUsageTimeSeriesTotal.add(new FixedMillisecond(currentTimeMillis), (currentHeap + currentNonHeap)/MEGA);	
+		memoryUsageTimeSeriesHeap.addOrUpdate(new FixedMillisecond(currentTimeMillis), currentHeap/MEGA);	
+		memoryUsageTimeSeriesNonHeap.addOrUpdate(new FixedMillisecond(currentTimeMillis), currentNonHeap/MEGA);	
+		memoryUsageTimeSeriesTotal.addOrUpdate(new FixedMillisecond(currentTimeMillis), (currentHeap + currentNonHeap)/MEGA);	
 		
 		updateMemoryChartPanel();
 	}
@@ -116,7 +155,49 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 		memoryUsageTimeSeriesHeap = new TimeSeries("Heap Memory Usage (MB)");
 		memoryUsageTimeSeriesNonHeap = new TimeSeries("Non-Heap Memory Usage (MB)");
 		memoryUsageTimeSeriesTotal = new TimeSeries("Total Memory Usage (MB)");
+		
+		seriesCollection = new XYSeriesCollection();
 	}
+
+	private final void updateLiveDataChartPanel(int numberOfPlots) {
+		// LOGGER.info("Entered updateLiveDataChartPanel with " + numberOfPlots + " plots.");
+		
+		// Create X axis:
+        NumberAxis xAxis = new NumberAxis();
+		xAxis.setLowerMargin(0.02);
+		xAxis.setUpperMargin(0.02);
+        xAxis.setAutoRangeIncludesZero(true);
+        
+		// Create Y axis:
+        NumberAxis yAxis = new NumberAxis();
+		yAxis.setLowerMargin(0.02);
+		yAxis.setUpperMargin(0.02);
+        yAxis.setAutoRangeIncludesZero(true);
+
+        // Plot:
+        XYPlot plot = new XYPlot();
+		plot.setBackgroundPaint(new Color(255,255,240));
+		plot.setDomainAxis(xAxis);
+		plot.setRangeAxis(yAxis);
+		
+		plot.setDataset(seriesCollection);
+		
+		for (int i = 0; i < numberOfPlots; i++)  {
+			plot.setRenderer(i, new ItemRenderer(ColorMap.getColor(i)));  // XYLineAndShapeRenderer(true, false);
+		}
+
+		// Combine the plots
+        CombinedDomainXYPlot combinedPlot = new CombinedDomainXYPlot(xAxis);
+        combinedPlot.setOrientation(PlotOrientation.VERTICAL);
+        combinedPlot.setGap(8);
+        
+        combinedPlot.add(plot, 1);
+
+        observablesChartPanel.setChart(new JFreeChart(null, JFreeChart.DEFAULT_TITLE_FONT, combinedPlot, SHOW_LEGEND));
+        observablesChartPanel.getChart().setBackgroundPaint(new Color(0, 0, 0, 0));
+		// LOGGER.info("--> Done with updateLiveDataChartPanel...");
+	}
+	
 	
 	/**
 	 * 
@@ -132,19 +213,14 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
         CombinedDomainXYPlot combinedPlot = new CombinedDomainXYPlot(xAxis);
         combinedPlot.setOrientation(PlotOrientation.VERTICAL);
         combinedPlot.setGap(8);
-        
-        boolean seriesExists = true;
+
         combinedPlot.add(createTimeSeriesPlot(xAxis), 1);
-        
+
         // Create Chart:
-        if (seriesExists) {
-        	memoryChartPanel.setChart(new JFreeChart(null, JFreeChart.DEFAULT_TITLE_FONT, combinedPlot, SHOW_LEGEND));
-        	memoryChartPanel.getChart().setBackgroundPaint(new Color(0, 0, 0, 0));
-        } else {
-            memoryChartPanel.setChart(null);
-        }
+        memoryChartPanel.setChart(new JFreeChart(null, JFreeChart.DEFAULT_TITLE_FONT, combinedPlot, SHOW_LEGEND));
+        memoryChartPanel.getChart().setBackgroundPaint(new Color(0, 0, 0, 0));
 	}
-	
+
 	private XYPlot createTimeSeriesPlot(DateAxis xAxis) {
 		// Create Y axis:
         NumberAxis yAxis = new NumberAxis();
@@ -176,6 +252,14 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 	
 		return plot;
 	}
+
+	public final void clearConsole() {
+		textArea.setDocument(new PlainDocument());
+	}
+	
+	public final JTextArea getTextArea() {
+		return textArea;
+	}
 	
 	//***************************************************************************************
 	/**
@@ -186,9 +270,9 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 		private static final long serialVersionUID = 1L;
 		
 		public ItemRenderer(final Color color) {
-			super(true, true);
+			super(true, false);
 
-			Shape shape = RECTANGLE;
+			Shape shape = SMALL_RECTANGLE;
 			
 			setBaseShape(shape);
 			setBaseShape(shape);
@@ -196,6 +280,7 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 			setBasePaint(color);
 		}
 	}
+
 
 
 }

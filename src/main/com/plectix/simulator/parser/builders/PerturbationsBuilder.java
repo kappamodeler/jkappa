@@ -79,10 +79,8 @@ public class PerturbationsBuilder {
 		ModificationType modificationType = arg.getModification().getType();
 		List<CPerturbation> result = new ArrayList<CPerturbation>();
 		boolean rateModification = (modificationType == ModificationType.RATE);
-//		boolean deleteOnceModification = (modificationType == ModificationType.DELETEONCE);
 		boolean addOnceModification = (modificationType == ModificationType.ADDONCE);
 
-		int id = arg.getId();
 		// TODO worry about type conversion?
 		switch (arg.getCondition().getType()) {
 		case TIME: {
@@ -93,7 +91,7 @@ public class PerturbationsBuilder {
 			if (rateModification) {
 				AbstractRateModification modification = (AbstractRateModification) arg
 						.getModification();
-				result.add(new CPerturbation(id, timeBound,
+				result.add(new CPerturbation(timeBound,
 						findRule(modification
 								.getArgument()),
 						createRateExpression(modification)));
@@ -111,10 +109,6 @@ public class PerturbationsBuilder {
 					ccL.add(cc);
 					CRulePerturbation rule;
 					if (addOnceModification) {
-						//TODO
-//						if (countToFile == Double.MAX_VALUE)
-//							throw new ParseErrorException(perturbationStr,
-//									"$ADDONCE has not used with $INF");
 						rule = new CRulePerturbation(null, ccL, "", 0,
 								(int) myData.generateNextRuleId(), myArguments.isStorify());
 					} else {
@@ -123,7 +117,7 @@ public class PerturbationsBuilder {
 					}
 					rule.setCount(modification.getQuantity());
 					myData.addRule(rule);
-					result.add(new CPerturbation(id, timeBound,
+					result.add(new CPerturbation(timeBound,
 							rule));
 				}
 				return result;
@@ -158,7 +152,7 @@ public class PerturbationsBuilder {
 				CRule rule = findRule(modification.getArgument());
 				IObservablesComponent component = checkInObservables(condition
 						.getArgument());
-				result.add(new CPerturbation(id, obsID, parameters, component
+				result.add(new CPerturbation(obsID, parameters, component
 						.getId(), 
 						rule, condition.isGreater(), createRateExpression(modification), 
 						myData.getObservables()));

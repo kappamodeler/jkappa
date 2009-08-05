@@ -109,7 +109,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 					CAgent[] rootAgents = new CAgent[2];
 					int i = 0;
 					for (CSite site : boundingSiteImages) {
-						CAgent boundingAgent = site.getAgentLink();
+						CAgent boundingAgent = site.getParentAgent();
 						IConnectedComponent cc = agentComponentMap.get(boundingAgent);
 						rootAgents[i] = rootComponentMap.get(cc);
 						if (rootAgents[i] == null) {
@@ -120,10 +120,10 @@ import com.plectix.simulator.simulator.KappaSystem;
 					actionsInfo.add(createActionInfo(act, rootAgents));
 				}
 			} else {
-				IConnectedComponent cc = agentComponentMap.get(act.getSiteFrom().getAgentLink());
+				IConnectedComponent cc = agentComponentMap.get(act.getSiteFrom().getParentAgent());
 				CAgent root = rootComponentMap.get(cc);
 				if (cc == null) {
-					root = act.getSiteFrom().getAgentLink();
+					root = act.getSiteFrom().getParentAgent();
 				}
 				actionsInfo.add(createActionInfo(act, root));
 			}

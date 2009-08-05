@@ -5,24 +5,22 @@ import com.plectix.simulator.components.injections.CInjection;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 import com.plectix.simulator.simulator.KappaSystem;
 
-public class CFourthSolution extends CAbstractSuperSolution {
+/*package*/ final class CFourthSolution extends CAbstractSuperSolution {
 	private final SuperStorage mySuperStorage;
 	
-	public CFourthSolution(KappaSystem system) {
+	CFourthSolution(KappaSystem system) {
 		super(system);
 		mySuperStorage = getSuperStorage();
 	}
 
 	@Override
 	protected final void addConnectedComponent(IConnectedComponent component) {
-		if (!mySuperStorage.tryIncrement(component)) { 
-			mySuperStorage.addNewSuperSubstance(component);
-		}
+		mySuperStorage.addConnectedComponent(component);
 	}
 
 	@Override
 	public final RuleApplicationPool prepareRuleApplicationPool() {
-		return new StandardRuleApplicationPool(new StraightStorage());
+		return new StandardRuleApplicationPool();
 	}
 	
 	@Override

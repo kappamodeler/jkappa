@@ -1,0 +1,11 @@
+A(x~p),B(x~p) -> A(x~p!1),B(x~p!1)
+A(x!_) -> A(x)
+B(x~p!1),A(x!1,y~u) -> B(x~u!1),A(x!1,y~u)  # to make the link solid
+A(x~u) <-> A(x~p)
+B(x~u) <-> B(x~p)
+A(x!_,y~u) <-> A(x!_,y~p)
+A(x!_,z~u) <-> A(x!_,z~p)
+
+%init:A(x~u,y~u,z~u)
+%init:B(x~u)
+

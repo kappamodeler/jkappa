@@ -25,7 +25,7 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 public class CBoundAction extends CAction {
 	private final CSite mySiteFrom;
 	private final CSite mySiteTo;
-	private CRule myRule;
+	private final CRule myRule;
 
 	/**
 	 * Constructor of CBoundAction.<br>
@@ -65,47 +65,35 @@ public class CBoundAction extends CAction {
 		setType(CActionType.BOUND);
 	}
 
+	@Override
 	public final void doAction(RuleApplicationPool pool, CInjection injection,
 			CEvent eventContainer,
 			SimulationData simulationData) {
-		// TODO remove copypaste
-		/**
-		 * Done.
-		 */
-
+		// TODO copypaste detected =(
 		CAgent agentFromInSolution;
-		if (mySiteFrom.getAgentLink().getIdInRuleHandside() > myRule.getAgentsFromConnectedComponent(
+		if (mySiteFrom.getParentAgent().getIdInRuleHandside() > myRule.getAgentsFromConnectedComponent(
 				myRule.getLeftHandSide()).size()) {
-			agentFromInSolution = myRule.getAgentAdd(mySiteFrom.getAgentLink());
+			agentFromInSolution = myRule.getAgentAdd(mySiteFrom.getParentAgent());
 		} else {
-			int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getAgentLink());
+			int agentIdInCC = getAgentIdInCCBySideId(mySiteFrom.getParentAgent());
 
 			agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 
-			// /////////////////////////////////////////////
 			CSite injectedSite = agentFromInSolution.getSiteByNameId(mySiteFrom
 					.getNameId());
 			injection.addToChangedSites(injectedSite);
 
-//			addToNetworkNotation(StateType.BEFORE, netNotation,
-//					injectedSite);
-//			addRuleSitesToNetworkNotation(false, netNotation, injectedSite);
-			// /////////////////////////////////////////////
 		}
 
 		CAgent agentToInSolution;
-		if (mySiteTo.getAgentLink().getIdInRuleHandside() > myRule.getAgentsFromConnectedComponent(
+		if (mySiteTo.getParentAgent().getIdInRuleHandside() > myRule.getAgentsFromConnectedComponent(
 				myRule.getLeftHandSide()).size()) {
-			agentToInSolution = myRule.getAgentAdd(mySiteTo.getAgentLink());
+			agentToInSolution = myRule.getAgentAdd(mySiteTo.getParentAgent());
 		} else {
-			int agentIdInCC = getAgentIdInCCBySideId(mySiteTo.getAgentLink());
+			int agentIdInCC = getAgentIdInCCBySideId(mySiteTo.getParentAgent());
 			CInjection inj = myRule.getInjectionBySiteToFromLHS(mySiteTo);
 			agentToInSolution = inj.getAgentFromImageById(agentIdInCC);
 		}
-//		addToEventContainer(eventContainer, agentFromInSolution
-//				.getSiteByNameId(mySiteFrom.getNameId()),CEvent.BEFORE_STATE);
-//		addToEventContainer(eventContainer, agentToInSolution
-//				.getSiteByNameId(mySiteTo.getNameId()),CEvent.BEFORE_STATE);
 
 		ThreadLocalData.getTypeById().setTypeOfAgent(agentFromInSolution.getId(), agentFromInSolution.getNameId());
 		ThreadLocalData.getTypeById().setTypeOfAgent(agentToInSolution.getId(), agentToInSolution.getNameId());
@@ -114,15 +102,10 @@ public class CBoundAction extends CAction {
 
 		agentToInSolution.getSiteByNameId(mySiteTo.getNameId()).getLinkState()
 		.connectSite(agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()));
-		//======================================================================
-
-//		addToNetworkNotation(StateType.AFTER, netNotation,
-//				agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()));
 		addToEventContainer(eventContainer, agentFromInSolution
 				.getSiteByNameId(mySiteFrom.getNameId()),CEvent.AFTER_STATE);
 		addToEventContainer(eventContainer, agentToInSolution
 				.getSiteByNameId(mySiteTo.getNameId()),CEvent.AFTER_STATE);
-		//======================================================================
 
 		agentFromInSolution.getSiteByNameId(mySiteFrom.getNameId()).setLinkIndex(
 				mySiteFrom.getLinkIndex());
@@ -131,40 +114,28 @@ public class CBoundAction extends CAction {
 
 	}
 
-	private static void addToEventContainer(CEvent eventContainer,
+	private final void addToEventContainer(CEvent eventContainer,
 			CSite site, boolean state) {
 		if (eventContainer == null)
 			return;
 		
-		ThreadLocalData.getTypeById().setTypeOfAgent(site.getAgentLink().getId(), site.getAgentLink().getNameId());
-		eventContainer.addAtomicEvent(new WireHashKey(site.getAgentLink().getId(), site
+		ThreadLocalData.getTypeById().setTypeOfAgent(site.getParentAgent().getId(), site.getParentAgent().getNameId());
+		eventContainer.addAtomicEvent(new WireHashKey(site.getParentAgent().getId(), site
 				.getNameId(), ETypeOfWire.LINK_STATE), site,
 				EActionOfAEvent.MODIFICATION, state);
 
-		// UHashKey key = new
-		// UHashKey(site.getAgentLink().getId(),site.getNameId
-		// (),EKeyOfState.LINK_STATE);
-		// AEvent<CStateOfLink> event = (AEvent<CStateOfLink>)
-		// eventContainer.getEvent(key);
-		// CSite connectedSite = site.getLinkState().getConnectedSite();
-		// event.getState().setAfterState(new
-		// CStateOfLink(connectedSite.getAgentLink
-		// ().getId(),connectedSite.getNameId()));
-		// event.correctingType(ECheck.MODIFICATION);
-
-		eventContainer.addAtomicEvent(new WireHashKey(site.getAgentLink().getId(), site
+		eventContainer.addAtomicEvent(new WireHashKey(site.getParentAgent().getId(), site
 				.getNameId(), ETypeOfWire.BOUND_FREE), site,
 				EActionOfAEvent.MODIFICATION, state);
-
-		// key = new UHashKey(site.getAgentLink().getId(), site.getNameId(),
-		// EKeyOfState.BOUND_FREE);
-		// AEvent<Boolean> event2 = (AEvent<Boolean>) eventContainer
-		// .getEvent(key);
-		// event2.getState().setAfterState(false);
-		// event2.correctingType(ECheck.MODIFICATION);
-
 	}
-		public Set<CSite> getBoundingSites() {
+	
+	/**
+	 * This method returns actual sites, which this action performs bounding to.
+	 * They can be not the same as siteTo and siteFrom! The point is that bound 
+	 * action can be applied to the new sites, created by some add-actions before.
+	 * @return actual sites (exactly 2), which this action performs bounding to.
+	 */
+	public final Set<CSite> getBoundingSites() {
 		Set<CSite> set = new LinkedHashSet<CSite>();
 		CSite imageTo = null;
 		CSite imageFrom = null;
@@ -176,13 +147,13 @@ public class CBoundAction extends CAction {
 			for (CAgent agentL : lhsAgents) {
 				int id = agentL.getIdInRuleHandside();
 
-				CAgent tryThis = this.getSiteFrom().getAgentLink();
+				CAgent tryThis = this.getSiteFrom().getParentAgent();
 				if (id == tryThis.getIdInRuleHandside()) {
 					imageFrom = agentL.getSiteByNameId(this.getSiteFrom().getNameId());
 					set.add(imageFrom);
 				}
 				
-				tryThis = this.getSiteTo().getAgentLink();
+				tryThis = this.getSiteTo().getParentAgent();
 				if (id == tryThis.getIdInRuleHandside()) {
 					imageTo = agentL.getSiteByNameId(this.getSiteTo().getNameId());
 					set.add(imageTo);

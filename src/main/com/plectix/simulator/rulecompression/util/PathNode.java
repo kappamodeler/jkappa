@@ -18,7 +18,7 @@ import com.plectix.simulator.rulecompression.SitePath;
 		for (CSite site : root.getSites()) {
 			CSite connectedOne = site.getLinkState().getConnectedSite();
 			if (connectedOne != null) {
-				CAgent agent = connectedOne.getAgentLink();
+				CAgent agent = connectedOne.getParentAgent();
 				pf.spotLinkIndex(connectedOne.getLinkIndex());
 				children.add(new PathNode(mainTreeRoot, agent, pf));
 			}
@@ -31,7 +31,7 @@ import com.plectix.simulator.rulecompression.SitePath;
 		for (CSite site : root.getSites()) {
 			CSite connectedOne = site.getLinkState().getConnectedSite();
 			if (connectedOne != null) {
-				CAgent agent = connectedOne.getAgentLink();
+				CAgent agent = connectedOne.getParentAgent();
 				if (!pf.getSpottedAgents().contains(connectedOne.getLinkIndex())) {
 					pf.spotLinkIndex(connectedOne.getLinkIndex());
 					children.add(new PathNode(mainTreeRoot, agent, pf));
@@ -46,7 +46,7 @@ import com.plectix.simulator.rulecompression.SitePath;
 	 * @return a sequence of sites, defining the path from root to the site IN REVERSED ORDER
 	 */
 	public SitePath getPath(CSite site) {
-		if (site.getAgentLink() == this.currentSubtreeRoot) {
+		if (site.getParentAgent() == this.currentSubtreeRoot) {
 			SitePath sp = new SitePath(this.mainTreeRoot);
 			sp.addSite(site);
 			return sp;
@@ -56,7 +56,7 @@ import com.plectix.simulator.rulecompression.SitePath;
 				if (previous != null) {
 					for (CSite siteOfRoot : currentSubtreeRoot.getSites()) {
 						CSite connectedOne = siteOfRoot.getLinkState().getConnectedSite();
-						if (connectedOne != null && connectedOne.getAgentLink() == pn.currentSubtreeRoot) {
+						if (connectedOne != null && connectedOne.getParentAgent() == pn.currentSubtreeRoot) {
 							previous.addSite(connectedOne);
 							previous.addSite(siteOfRoot);
 							break;

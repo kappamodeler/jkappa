@@ -1,0 +1,22 @@
+
+A(x~u,y!1),B(x~u,z!1) -> A(x~u,y!1),B(x~p,z!1) 
+A(x~u) <-> A(x~p) @ 3.4,2.3
+A(y~u) <-> A(y~p)
+A(y),B(z) <-> A(y!1),B(z!1)
+
+
+%init:100*(A(x~u,y~u,z),B(x~u,z))
+%obs:B(x~u,z!1),A(x~u,y~u!1)
+%obs:B(x~p,z!1),A(x~u,y~u!1)
+%obs:B(x~u,z!1),A(x~p,y~u!1)
+%obs:B(x~p,z!1),A(x~p,y~u!1)
+%obs:B(x~u,z!1),A(x~u,y~p!1)
+%obs:B(x~p,z!1),A(x~u,y~p!1)
+%obs:B(x~u,z!1),A(x~p,y~p!1)
+%obs:B(x~p,z!1),A(x~p,y~p!1)
+%obs:A(x~p,y~p)
+%obs:A(x~u,y~p)
+%obs:A(x~p,y~u)
+%obs:A(x~u,y~u)
+%obs:B(x~p,z)
+%obs:B(x~u,z)

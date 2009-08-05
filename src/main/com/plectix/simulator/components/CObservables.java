@@ -2,7 +2,6 @@ package com.plectix.simulator.components;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -318,16 +317,16 @@ public class CObservables implements Serializable {
 	//------------------------GETTERS AND SETTERS------------------------------
 	
 	public final List<IObservablesComponent> getComponentList() {
-		return Collections.unmodifiableList(componentList);
+		return componentList;
 	}
 	
-	public final List<IObservablesComponent> getComponentListForXMLOutput() {
+	public final List<IObservablesComponent> getUniqueComponentList() {
 		if (componentListForXMLOutput == null) {
-			List<Integer> map = new ArrayList<Integer>();
+			Set<Integer> set = new LinkedHashSet<Integer>();
 			List<IObservablesComponent> list = new ArrayList<IObservablesComponent>();
 			for (IObservablesComponent cc : componentList) {
-				if (!map.contains(cc.getId())) {
-					map.add(cc.getId());
+				if (!set.contains(cc.getId())) {
+					set.add(cc.getId());
 					list.add(cc);
 				}
 			}
@@ -337,7 +336,7 @@ public class CObservables implements Serializable {
 	}
 
 	public final List<IObservablesConnectedComponent> getConnectedComponentList() {
-		return Collections.unmodifiableList(connectedComponentList);
+		return connectedComponentList;
 	}
 
 	public final List<IObservablesConnectedComponent> getConnectedComponentListForXMLOutput() {

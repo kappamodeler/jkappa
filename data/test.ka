@@ -1,0 +1,45 @@
+# Rules:
+#######
+# Chapter 'New Chapter 1'
+'Akt...PDK1' PDK1(akt!1),Akt(T308!1) -> PDK1(akt),Akt(T308) @ 1.0
+'Akt...PP2A' Akt(T308!1),PP2A(B55-a!1) -> Akt(T308),PP2A(B55-a) @ 1.0
+'Akt.PDK1' PDK1(PH!1,akt),PIP(three~p!1),Akt(PH!2,T308~u),PIP(three~p!2) -> PDK1(PH!2,akt!1),PIP(three~p!2),Akt(PH!3,T308~u!1),PIP(three~p!3) @ 1.0
+'Akt.PP2A' Akt(T308~p),PP2A(B55-a) -> Akt(T308~p!1),PP2A(B55-a!1) @ 1.0
+'Akt@T308_p' PDK1(akt!1,PH!3),PIP(three~p!2),Akt(T308~u!1,PH!2),PIP(three~p!3) -> PDK1(akt!1,PH!3),PIP(three~p!2),Akt(T308~p!1,PH!2),PIP(three~p!3) @ 1.0
+'Akt@T308_u' Akt(T308~p!1),PP2A(B55-a!1) -> Akt(T308~u!1),PP2A(B55-a!1) @ 1.0
+'IRS1...PI3K' IRS1(pi3k!1),PI3K(SH2-p85!1) -> IRS1(pi3k),PI3K(SH2-p85) @ 1.0
+'IRS1.PI3K' IRS1(pi3k,Y~p),PI3K(p110~u,SH2-p85) -> IRS1(pi3k!1,Y~p),PI3K(p110~u,SH2-p85!1) @ 1.0
+'PI3K...PIP' PIP(three!1),PI3K(subs!1) -> PIP(three),PI3K(subs) @ 1.0
+'PI3K.PIP' PI3K(p110~p,subs),PIP(three~u) -> PI3K(p110~p,subs!1),PIP(three~u!1) @ 1.0
+'PI3K@p110_p' IRS1(pi3k!1),PI3K(p110~u,SH2-p85!1) -> IRS1(pi3k!1),PI3K(p110~p,SH2-p85!1) @ 1.0
+'PIP...Akt' Akt(PH!1),PIP(three!1) -> Akt(PH),PIP(three) @ 1.0
+'PIP...PDK1' PDK1(PH!1),PIP(three!1) -> PDK1(PH),PIP(three) @ 1.0
+'PIP.Akt' Akt(PH),PIP(three~p) -> Akt(PH!1),PIP(three~p!1) @ 1.0
+'PIP.PDK1' PDK1(PH),PIP(three~p) -> PDK1(PH!1),PIP(three~p!1) @ 1.0
+'PIP@three_p' PI3K(subs!1),PIP(three~u!1) -> PI3K(subs!1),PIP(three~p!1) @ 1.0
+'PIP@three_u' PIP(three~p!1),PTEN(subs!1) -> PIP(three~u!1),PTEN(subs!1) @ 1.0
+'PTEN...PIP' PIP(three!1),PTEN(subs!1) -> PIP(three),PTEN(subs) @ 1.0
+'PTEN.PIP' PTEN(subs),PIP(three~p) -> PTEN(subs!1),PIP(three~p!1) @ 1.0
+
+
+# Initial Conditions:
+%init: 100 * (Akt(subs,PH,S473~u,T308~u))
+%init: 100 * (PI3K(p110~u,subs,SH2-p85))
+%init: 1 * (PP2A(B55-a))
+%init: 100 * (PTEN(subs))
+%init: 100 * (IRS1(S302~u,pi3k,Y~p))
+%init: 100 * (PIP(three~u))
+%init: 100 * (PDK1(akt,s6k1,PH))
+
+# Simulation:
+%obs: Akt(PH?,T308~p?)
+%obs: PIP(three~p?)
+%obs: IRS1(Y~p,pi3k?)
+# %obs: PTEN(subs)
+%obs: PI3K(subs?,p110~p,SH2-p85?)
+%obs: Akt(PH?,T308~u?)
+# %obs: PP2A(B55-a)
+
+# Stories:
+%story: 'Akt@T308_p'
+

@@ -30,9 +30,7 @@ public class TestWeightedItemSelector {
 	
 	@Before
 	public void setUp() throws Exception {
-		IRandom irandom = ThreadLocalData.getRandom();
-		irandom.setSeed(DEFAULT_SEED);
-		weightedItemSelector= new SkipListSelector<WeightedItemWithId>(irandom);
+		weightedItemSelector= new SkipListSelector<WeightedItemWithId>();
 		for (int i= 0; i< numberOfWeightedItems; i++) { 
 			weightedItemList.add(new WeightedItemWithId(i, numberOfWeightedItems, WeightFunction.LINEAR)); 
 			}
@@ -133,9 +131,7 @@ public class TestWeightedItemSelector {
 	@Test
 	public void testSelectorCompare() throws Exception{
 		TestSelectorCompare testSelector= new TestSelectorCompare();
-		IRandom irandom = ThreadLocalData.getRandom();
-		irandom.setSeed(DEFAULT_SEED);
-		weightedItemSelector= new SkipListSelector<WeightedItemWithId>(irandom);
+		weightedItemSelector= new SkipListSelector<WeightedItemWithId>();
 		
 		testSelector.setUp(weightedItemSelector, numberOfWeightedItems, numberOfUpdates, numberOfSelection, WeightFunction.LINEAR);
 		if (!testSelector.testRandom()){

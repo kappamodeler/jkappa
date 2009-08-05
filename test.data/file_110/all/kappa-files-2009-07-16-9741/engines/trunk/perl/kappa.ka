@@ -1,0 +1,17 @@
+# Rules:
+#######
+# Chapter 'New Chapter 1'
+'A,B assoc' A(b),B(a) -> A(b!0),B(a!0) @ 1.0
+'A,B disassoc' A(b!0),B(a!0) -> A(b),B(a) @ 1000.0
+
+
+# Initial Conditions:
+%init: 100 * (A(b))
+%init: 100 * (B(a))
+
+# Simulation:
+%obs: A(b)
+%obs: B(a)
+%obs: B(a!0),A(b!0)
+
+# Stories:

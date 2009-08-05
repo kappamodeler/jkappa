@@ -1,78 +1,92 @@
 package com.plectix.simulator.components.solution;
 
-import java.util.List;
-
-import com.plectix.simulator.components.CAgent;
 import com.plectix.simulator.components.string.ConnectedComponentToSmilesString;
 import com.plectix.simulator.interfaces.IConnectedComponent;
 
-public class SuperSubstance {
-	private long myQuantity = 0;
-	private IConnectedComponent myComponent;
-	
-	//TODO build hash only with first needed
-	private String myHash;
-	
-	public SuperSubstance(IConnectedComponent component) {
-		myComponent = component;
-		myComponent.setSuperSubstance(this);
-		refreshHash();
-	}
+/**
+ * SuperSubstance is a wrap for connected component with counter.
+ * We use this object to represents groups of complexes in higher operation modes.
+ * @see OperationMode
+ */
+public final class SuperSubstance {
+	private long quantity = 0;
+	private IConnectedComponent component;
+	private final String stringHash;
 	
 	public SuperSubstance(long quant, IConnectedComponent component) {
-		myComponent = component;
-		myQuantity = quant;
-		myComponent.setSuperSubstance(this);
-		refreshHash();
+		this.component = component;
+		this.component.setSuperSubstance(this);
+		quantity = quant;
+		stringHash = ConnectedComponentToSmilesString.getInstance().toUniqueString(this.component);
 	}
 	
-	private void refreshHash() {
-		myHash = ConnectedComponentToSmilesString.getInstance().toUniqueString(myComponent);
-	}
-	
-	// TODO catch exception
-	public IConnectedComponent extract() {
+	/**
+	 * This method just decreases counter of this SuperSubstance and returns component
+	 * of this SuperSubstance. If counter is already zero, then we return null.
+	 * @return connected component of this substance
+	 */
+	public final IConnectedComponent extract() {
 		if (isEmpty()) { 
 			return null;
 		}
-		myQuantity--;
-		return myComponent;
+		quantity--;
+		return component;
 	}
 	
-	public void setComponent(IConnectedComponent component) {
-		myComponent = component;
-//		refreshHash();
+	/**
+	 * We use this method to switch component's pointer to other connected component
+	 * (different physical object) with the same hash, i.e. the same structure. 
+	 * @param component component to switch pointer to
+	 */
+	public final void setComponent(IConnectedComponent component) {
+		this.component = component;
 	}
 	
-	public List<CAgent> getAgents() {
-		return myComponent.getAgents();
+	/**
+	 * @return <tt>true</tt> if the counter of this SuperSubstance is zero, otherwise <tt>false</tt>
+	 */
+	public final boolean isEmpty() {
+		return quantity == 0;
 	}
 	
-	public boolean isEmpty() {
-		return myQuantity == 0;
+	/**
+	 * This method just increases counter of this SuperSubstance
+	 */
+	public final void add() {
+		quantity++;
 	}
 	
-	public void add() {
-		myQuantity++;
+	/**
+	 * This method just increases counter of this SuperSubstance on a given value
+	 * @param quant value to add to counter
+	 */
+	public final void add(long quant) {
+		quantity += quant;
 	}
 	
-	public void add(long quant) {
-		myQuantity += quant;
-	}
-	
-	public IConnectedComponent getComponent() {
-		return myComponent;
+	/**
+	 * @return connected component which this SuperSubstance stores
+	 */
+	public final IConnectedComponent getComponent() {
+		return this.component;
 	}
 
-	public long getQuantity() {
-		return myQuantity;
+	/**
+	 * @return counter of this SuperSubstance
+	 */
+	public final long getQuantity() {
+		return quantity;
 	}
 	
-	public String getHash() {
-		return myHash;
+	/**
+	 * @return string representation of connected component stored in this SuperSubstance.
+	 */
+	public final String getHash() {
+		return stringHash;
 	}
 	
-	public String toString() {
-		return "ss:" + myComponent + " * " + myQuantity;
+	@Override
+	public final String toString() {
+		return "ss:" + this.component + " * " + quantity;
 	}
 }

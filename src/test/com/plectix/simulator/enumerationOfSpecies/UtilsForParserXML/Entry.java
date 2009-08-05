@@ -1,11 +1,9 @@
 package com.plectix.simulator.enumerationOfSpecies.UtilsForParserXML;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class Entry {
@@ -13,18 +11,17 @@ public class Entry {
 	private String type;
 	private String weight;
 	private String data;
-	private int index;
-	private Map<String, Integer> mapIndex = new HashMap<String, Integer>();
-	
 	private List<String> listData = new ArrayList<String>();
-	
+
+	private int index;
 	private List<String> dataList;
+
 	
 	public Entry(String _type, String _weight, String _data) {
 		this.type = _type;
 		this.weight = _weight;
 		this.data = _data;
-		parseEntry(false);
+		parseEntry();
 	}
 	
 	public String getType() {
@@ -39,8 +36,8 @@ public class Entry {
 		return data;
 	}
 
-	public List<String> getDataList() {
-		return dataList;
+	public List<String> getListData() {
+		return listData;
 	}
 	
 	public boolean equals(Object aEntry){
@@ -60,21 +57,14 @@ public class Entry {
 
 	private boolean equalsWithThis(Entry entry) {
 
-		if(dataList.size() != entry.getDataList().size()) return false;
-		
-		if (data.equals("EGFR(dimer!0,ligand,tail~u),EGFR(dimer!0,ligand,tail~u)")) {
-			boolean is = true;
-			is = is && is;
-			System.out.println(is);
-		}
-		
-		boolean result = true;
+		if(listData.size() != entry.getListData().size()) return false;
 
-//		for (int i = 0; i < dataList.size(); i++) {
-//			
-//			result = result && 
-//			
-//		}
+		if(data.equals(entry.data)) return true;
+			
+		List<String> listNode = saveIndex(entry.listData);
+		
+		replaceNodeSitesAndCreateDataList(listNode);
+				
 		StringBuffer tmp1 = new StringBuffer();
 		StringBuffer tmp2 = new StringBuffer();
 		
@@ -82,62 +72,59 @@ public class Entry {
 			tmp1.append(dataComponent);
 		}
 		
-		for(String dataComponent : entry.getDataList()) {
+		for(String dataComponent : entry.listData) {
 			tmp2.append(dataComponent);
 		}
 		
-		return tmp1.toString().equals(tmp2.toString());
-		
-//		Iterator<String> itL = dataList.listIterator();
-//		
-//		while (itL.hasNext()) {
-//			String type = itL.next();
-//			if(!entry.getDataList().contains(type)) return false;
-////			itL.remove();
-//			entry.getDataList().remove(type);
-//			
-//		}
-		
-		
-//		for(String dataComponent : dataList) {
-//			if(!entry.getDataList().contains(dataComponent)) return false;
-//		}
-//		return true;
+		final boolean isEqualString = tmp1.toString().equals(tmp2.toString());
+
+		return isEqualString;
+
 	}
 
-	public void parseEntry(boolean isIncrement) {
-
-		dataList = new ArrayList<String>();
+	private void parseEntry() {
 		
-		String step1This[] = this.data.split("[)],");
+		createRawListData();
+		sortList(listData);
+		
+	}
 
-		for(String elementStep1 : step1This) {
-	
+	private List<String> saveIndex(List<String> aListData) {
+		
+		List<String> listNode = new ArrayList<String>();
+		
+		for(String elements : aListData) {
 			
-			listData.add(elementStep1);
+			String step1This[] = elements.split("[(]");
+			
+			if (step1This.length == 2 ) {
+		
+				String step1aThis[] = step1This[1].split("[)]");
+				String step2This[] = step1aThis[0].split(",");
+				
+				for(String element : step2This){
+				
+					String step3This[] = element.split("!");
+				
+					if (step3This.length == 2 ) {
 
+						listNode.add(step3This[1]);
+
+					} 					
+				}
+			}
 		}
 		
-		String[] dataArray = new String[listData.size()];
+		return listNode;
 		
-		Arrays.sort(listData.toArray(dataArray) , new Comparator<String>() {
-
-			@Override
-			public int compare(String o1, String o2) {
-				
-				String o1Split[] = o1.split("[(]");
-				String o2Split[] = o2.split("[(]");
-				
-				if ((o1Split.length == 2) && (o2Split.length == 2)) {
-
-					return (o1Split[0] + o1Split[1].length()).compareTo((o2Split[0] + o1Split[0].length()));
-					
-				}
-				return 0;
-			}
-		});
+	}
+	
+	private void replaceNodeSitesAndCreateDataList(List<String> listNode) {
 		
-		for(String elements : dataArray) {
+		dataList = new ArrayList<String>();
+		index = 0;
+		
+		for(String elements : listData) {
 		
 			String step3This[] = elements.split("[(]");
 			
@@ -158,7 +145,7 @@ public class Entry {
 				
 					if (step5This.length == 2 ) {
 						
-						String newElement = step5This[0] + "!" + newIndex(step5This[1]);
+						String newElement = step5This[0] + "!" + getIndex(listNode);
 						componentInside.add(newElement);
 						
 					} else {
@@ -166,8 +153,6 @@ public class Entry {
 					}	
 				} 					
 			
-				Arrays.sort(componentInside.toArray());
-								
 				for(String componentInsideString : componentInside) {
 					component.append(componentInsideString + ",");			
 				}
@@ -181,33 +166,185 @@ public class Entry {
 		}
 	}
 	
-	private String incrementIntbyString(String value) {
+	private String getIndex(List<String> listNode) {
 		
-		Integer stringToInteger = Integer.valueOf(value);
+		if(index >= listNode.size()) {
+			return "";
+		}
 		
-		int incrementInteget = stringToInteger.intValue() + 1;
-		
-		return String.valueOf(incrementInteget);
-		
-		
+		String result = listNode.get(index);
+		index++;
+			
+		return result; 
 	}
-	
-	private String newIndex(String value) {
+
+	private void createRawListData() {
 		
-		if(!mapIndex.containsKey(value)) {
+		String[] step1This = this.data.split("[)],");
+
+		for(String elementStep1 : step1This) {
 			
-			index++;
+			String[] subStep1 = elementStep1.split("[)]");
 			
-			mapIndex.put(value, Integer.valueOf(index));
+			String[] step2 = subStep1[0].split("[(]");
+		
+			String literStep2 = step2[0];
 			
-			return Integer.valueOf(index).toString();
+			String[] sites = step2[1].split(",");
 			
-		} 
-		
-		
-		return mapIndex.get(value).toString();
-		
-		
+			List<String> sitesList = new ArrayList<String>();
+			
+			sortSites(sites, sitesList);
+
+			StringBuffer newElement = new StringBuffer();
+			
+			newElement.append(literStep2);
+			newElement.append("(");
+						
+			for(String site : sitesList) {
+				
+				newElement.append(site);
+				newElement.append(",");
+				
+			}
+			
+			newElement.delete(newElement.length() - 1, newElement.length());
+			newElement.append(")");
+			listData.add(newElement.toString());
+
+		}
 	}
+
+	private void sortList(List<String> list) {
+		
+		Collections.sort(list, new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				
+				String[] subElements1 = o1.split("[(]");
+				String[] subElements2 = o2.split("[(]");
+				
+				String liter1 = subElements1[0];
+				String liter2 = subElements2[0];
+				
+				final int compareLiter = liter1.compareTo(liter2);
+				
+				if(compareLiter == 0) {
+					
+					int amount1 = calcNumIndex(subElements1[1]);
+					int amount2 = calcNumIndex(subElements2[1]);
+					
+					final int compareAmountIndex = String.valueOf(amount1).compareTo(String.valueOf(amount2));
+					
+					if(compareAmountIndex == 0) {
+					
+						String sites1 = sitesStringWhithoutNumber(subElements1[1]);
+						String sites2 = sitesStringWhithoutNumber(subElements2[1]);
+						
+						final int compareSitesWhithoutIndex = sites1.compareTo(sites2);
+						
+						if(compareSitesWhithoutIndex == 0) {
+						
+							return subElements1[1].compareTo(subElements2[1]);
+						
+						}
+						
+						return compareSitesWhithoutIndex;
+					
+					}
+					
+					return compareAmountIndex;
 	
+				}
+				
+				return compareLiter;
+			}
+
+			private int calcNumIndex(String elements) {
+				
+				String[] sites1 = elements.split("[)]");
+				String[] sites = sites1[0].split(",");
+				
+				int count = 0;
+				
+				for (String site : sites) {
+					
+					String[] node = site.split("!");
+					
+					if(node.length == 2) {
+						count++;
+					}
+					
+				}
+				
+				return count;
+				
+			}
+			
+			private String sitesStringWhithoutNumber(String elements) {
+				
+				String[] sites1 = elements.split("[)]");
+				String[] sites = sites1[0].split(",");
+				
+				StringBuffer newSitesString = new StringBuffer();
+				
+				for (String site : sites) {
+					
+					String[] node = site.split("!");
+
+					newSitesString.append(node[0]);
+					
+					newSitesString.append(",");
+				}
+				
+				newSitesString.delete(newSitesString.length() - 1, newSitesString.length());
+				
+				return newSitesString.toString();
+				
+			}
+
+		
+		});
+	}
+
+	private void sortSites(String[] sites, List<String> sitesList) {
+		
+		for (String site : sites) {
+			
+			sitesList.add(site);
+			
+		}
+		
+		Collections.sort(sitesList, new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				
+				String[] siteSub1 = o1.split("!");
+				String[] siteSub2 = o2.split("!");
+				
+				String literSite1 = siteSub1[0];
+				String literSite2 = siteSub2[0];
+				
+				final int compareLiter = literSite1.compareTo(literSite2);
+				
+				if(compareLiter == 0) {
+					
+					String numNode1 = String.valueOf(siteSub1.length - 1);
+					String numNode2 = String.valueOf(siteSub2.length - 1); 
+					
+					final int compareNode = numNode1.compareTo(numNode2);
+					
+					return compareNode;
+					
+					
+				}
+				
+				return compareLiter;
+			}
+
+			
+		});
+	}
 }

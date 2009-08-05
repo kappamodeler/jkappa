@@ -90,7 +90,11 @@ public interface CompressionPassport {
 	 */
 	void removeEventWithMarkDelete() throws StoryStorageException;
 
-	boolean isFirstEvent (long eventId);
+	/**
+	 * Get count of all events
+	 * @return
+	 */
+	int eventCount ();
 	
 	TreeMap<Long, AtomicEvent<?>> getAllEventsByNumber();
 

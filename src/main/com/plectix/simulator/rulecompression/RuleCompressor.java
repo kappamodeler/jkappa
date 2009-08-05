@@ -94,7 +94,7 @@ public class RuleCompressor {
 		return associationMap;
 	}
 	
-	private RootedRulesGroup addRuleToGroup(Map<CRule, RootedRulesGroup> groups, CRule rule) {
+	private void addRuleToGroup(Map<CRule, RootedRulesGroup> groups, CRule rule) {
 		Set<RootedRule> rootedVersions = this.createAllPossibleRootedVersions(rule);
 		RootedRulesGroup rulesGroup = null;
 		for (RootedRule rr : rootedVersions) {
@@ -107,14 +107,13 @@ public class RuleCompressor {
 				rulesGroup = group.tryAdd(rr);
 				// it can be already existing group
 				if (groups.containsValue(rulesGroup)) {
-					return rulesGroup;
+					return;
 				}
 			}
  		}
 		if (rulesGroup != null) {
 			groups.put(rule, rulesGroup);	
 		}
-		return rulesGroup;
 	}
 	
 	private Set<RootedRule> createAllPossibleRootedVersions(CRule rule) {

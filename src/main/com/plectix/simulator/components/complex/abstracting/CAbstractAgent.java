@@ -85,6 +85,10 @@ public class CAbstractAgent {
 	public CAbstractAgent(CAgent agent) {
 		this.nameID = agent.getNameId();
 		this.sitesMap = new LinkedHashMap<Integer, CAbstractSite>();
+		for (CSite s : agent.getSites()) {
+			CAbstractSite newSite = new CAbstractSite(s, this);
+			addSite(newSite);
+		}
 	}
 
 	public CAbstractAgent(int nameId) {
@@ -106,9 +110,28 @@ public class CAbstractAgent {
 		for (Map.Entry<Integer, CAbstractSite> entry : agent.getSitesMap()
 				.entrySet()) {
 			CAbstractSite newSite = entry.getValue().clone();
-			newSite.setAgentLink(this);
+			newSite.setParentAgent(this);
 			sitesMap.put(entry.getKey(), newSite);
 		}
+	}
+
+	public CAbstractAgent(CAgent agent, CAbstractAgent modelAgent) {
+		this.nameID = agent.getNameId();
+		this.sitesMap = new LinkedHashMap<Integer, CAbstractSite>();
+		for (CSite site : agent.getSites()) {
+			Integer key = site.getNameId();
+			CAbstractSite abstractSite = new CAbstractSite(site, this);
+			sitesMap.put(key, abstractSite);
+		}
+
+		for (Map.Entry<Integer, CAbstractSite> entry : modelAgent
+				.getSitesMap().entrySet()) {
+			CAbstractSite abstractSite = this.sitesMap.get(entry.getKey());
+			if (abstractSite == null) {
+				this.sitesMap.put(entry.getKey(), entry.getValue());
+			}
+		}
+
 	}
 
 	/**
@@ -130,36 +153,6 @@ public class CAbstractAgent {
 	 */
 	public final void addSite(CAbstractSite newSite) {
 		this.sitesMap.put(newSite.getNameId(), newSite);
-	}
-
-	/**
-	 * This method adds sites to sites map by given agent and fills missing
-	 * data.
-	 * 
-	 * @param agent
-	 *            given agent
-	 * @param agentNameIdToAgent
-	 *            map of full state of agent
-	 */
-	public final void addSites(CAgent agent,
-			Map<Integer, CAbstractAgent> agentNameIdToAgent) {
-
-		CAbstractAgent abstractModelAgent = agentNameIdToAgent.get(agent
-				.getNameId());
-
-		for (CSite site : agent.getSites()) {
-			Integer key = site.getNameId();
-			CAbstractSite abstractSite = new CAbstractSite(site, this);
-			sitesMap.put(key, abstractSite);
-		}
-
-		for (Map.Entry<Integer, CAbstractSite> entry : abstractModelAgent
-				.getSitesMap().entrySet()) {
-			CAbstractSite abstractSite = this.sitesMap.get(entry.getKey());
-			if (abstractSite == null) {
-				this.sitesMap.put(entry.getKey(), entry.getValue());
-			}
-		}
 	}
 
 	/**

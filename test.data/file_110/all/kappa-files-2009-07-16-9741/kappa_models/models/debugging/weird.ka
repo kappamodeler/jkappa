@@ -1,0 +1,7 @@
+'int_state' A(x) -> A(x~p)
+#'link' A(x?) -> A(x)
+#'bind' A(x),A(x) -> A(x!1),A(x!1)
+
+%init: 5*A(x~u) + 5*A(x~m)
+#%obs:A(x!_)
+%obs:A(x~p)

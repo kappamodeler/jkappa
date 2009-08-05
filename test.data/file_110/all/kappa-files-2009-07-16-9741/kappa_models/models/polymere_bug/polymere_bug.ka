@@ -1,0 +1,8 @@
+A(x~u,y~u,z~u) -> A(x~p,y~u,z~u)
+A(a) , B(c) -> A(a!1) , B(c!1)
+A(x~p,y~u,a!1) , B(c!1) -> A(x~p,y~p,a!1) , B(c!1) 
+A(y~p,z~u,a!_) -> A(y~p,a!_,z~p)
+A(a,y~p) , A(z~p,b) -> A(a!1,y~p) , A(z~p,b!1)
+A(a!1,b!_) , B(c!1) -> A(a,b!_) , B(c) 
+
+%init: A(x~u,y~u,z~u,a,b) , B(c~u)

@@ -161,7 +161,7 @@ public class Species {
 					CSite siteOldLink = lsOld.getConnectedSite();
 					int j = 0;
 					for (; j < instance.size(); j++) {
-						if (instance.get(j) == siteOldLink.getAgentLink())
+						if (instance.get(j) == siteOldLink.getParentAgent())
 							break;
 					}
 					int index = j;
@@ -175,7 +175,7 @@ public class Species {
 
 	private List<CAbstractAgent> getMasks(CAgent agent) {
 		List<CAbstractAgent> list = new LinkedList<CAbstractAgent>();
-		CAbstractAgent abstractAgent = new CAbstractAgent(agent);
+		CAbstractAgent abstractAgent = new CAbstractAgent(agent.getNameId());
 		abstractAgent.addSite(new CAbstractSite(agent.getSites().iterator()
 				.next(), abstractAgent));
 

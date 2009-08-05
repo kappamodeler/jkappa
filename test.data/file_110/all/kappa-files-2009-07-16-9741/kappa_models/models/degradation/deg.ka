@@ -1,0 +1,19 @@
+
+'ab' a(x),b(x) <-> a(x!1),b(x!1) 
+'deg c' a(x),c() -> a(x)
+'deg b' b() -> 
+'intro b' -> b(x)
+
+#%obs:c()
+#%obs:'b' b()
+
+%obs: 'ab'
+%obs: 'deg c'
+%obs: 'deg b'
+
+
+%init: 100 * (a(x),b(x)) + 10000 * c()
+
+
+
+

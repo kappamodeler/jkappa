@@ -83,7 +83,7 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 		if (checkSites(this.getDefaultSite(), injection, cc))
 			return true;
 		for (CSite site : siteMap.values()) {
-			if (checkSites(site.getAgentLink().getDefaultSite(), injection, cc))
+			if (checkSites(site.getParentAgent().getDefaultSite(), injection, cc))
 				return true;
 			if (checkSites(site, injection, cc))
 				return true;
@@ -116,10 +116,10 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 		if (agent == null || siteCollection.size() == 0)
 			return null;
 		CAgent imageAgent = (CAgent) this.getSiteByNameId(siteCollection.get(0).getNameId())
-				.getLinkState().getConnectedSite().getAgentLink();
+				.getLinkState().getConnectedSite().getParentAgent();
 		for (CSite siteF : siteCollection) {
 			CAgent agent2 = (CAgent) this.getSiteByNameId(siteF.getNameId())
-					.getLinkState().getConnectedSite().getAgentLink();
+					.getLinkState().getConnectedSite().getParentAgent();
 			if (imageAgent != agent2)
 				return null;
 		}
@@ -135,7 +135,7 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 	 * @param site site we want to add
 	 */
 	public final void addSite(CSite site) {
-		site.setAgentLink(this);
+		site.setParentAgent(this);
 		siteMap.put(site.getNameId(), site);
 	}
 	
@@ -279,7 +279,7 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 	 * This method returns collection of current agent's sites
 	 */
 	public final Collection<CSite> getSites() {
-		return Collections.unmodifiableCollection(siteMap.values());
+		return siteMap.values();
 	}
 
 	/**
@@ -290,14 +290,6 @@ public final class CAgent implements Comparable<CAgent>, Serializable {
 		return id;
 	}
 
-	/**
-	 * This method returns something like a hashCode for the agent.
-	 * We use it to keep agents in more convenient storage, which we can remove from fast enough. 
-	 * @return hash code of this agent
-	 */
-	public long getHash() {
-		return id;
-	}
 	
 	public String toString() {
 		StringBuffer sb = new StringBuffer(getName() + "(");

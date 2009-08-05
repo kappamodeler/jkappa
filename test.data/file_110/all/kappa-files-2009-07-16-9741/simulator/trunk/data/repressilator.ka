@@ -1,0 +1,20 @@
+'b synthesis' Gene_ab(x) -> Gene_ab(x),Prot_b(x) @ 0.1
+Gene_ab(x),Prot_a(x) <-> Gene_ab(x!1),Prot_a(x!1) @ 1.0 ,0.0001
+'c synthesis' Gene_bc(x) -> Gene_bc(x),Prot_c(x) @ 0.1
+Gene_bc(x),Prot_b(x) <-> Gene_bc(x!1),Prot_b(x!1) @ 1.0 , 0.0001
+'a synthesis' Gene_ca(x) -> Gene_ca(x),Prot_a(x) @ 0.1
+Gene_ca(x),Prot_c(x) <-> Gene_ca(x!1),Prot_c(x!1) @ 1.0 , 0.0001
+
+'a degradation' Prot_a(x) ->  @ 0.001
+'a degradation2' Gene_ab(x!1),Prot_a(x!1) ->  Gene_ab(x) @ 0.001
+'b degradation' Prot_b(x) ->  @ 0.001
+'b degradation2' Gene_bc(x!1),Prot_b(x!1) ->  Gene_bc(x) @ 0.001
+'c degradation' Prot_c(x) ->  @ 0.001
+'c degradation' Gene_ca(x!1),Prot_c(x!1) -> Gene_ca(x) @ 0.001
+
+
+%init: 100 * (Gene_ab(x),Gene_bc(x),Gene_ca(x))
+%obs: Prot_a()
+%obs: Prot_b()
+%obs: Prot_c()
+

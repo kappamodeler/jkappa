@@ -16,7 +16,7 @@ public class SitePath implements Comparable<SitePath> {
 	}
 	
 	public List<CSite> getValue() {
-		return Collections.unmodifiableList(data);
+		return data;
 	}
 	
 	public String toString() {

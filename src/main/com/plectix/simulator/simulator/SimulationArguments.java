@@ -27,6 +27,7 @@ public class SimulationArguments {
 	public static final String DEFAULT_SERIALIZATION_FILE_NAME = "~tmp.sd";
 	public static final int DEFAULT_AGENTS_LIMIT = 100;
 	public static final int DEFAULT_LIVE_DATA_POINTS = 500;
+	public static final String DEFAULT_LIVE_DATA_CONSUMER_CLASSNAME = "com.plectix.simulator.streaming.DensityDependantLiveDataConsumer";
 
 	public enum SimulationType { 
 		NONE,
@@ -66,7 +67,7 @@ public class SimulationArguments {
 	private double rescale = Double.NaN;
 	private int seed = DEFAULT_SEED;
 	private long maxClashes = DEFAULT_MAX_CLASHES;
-	private long event;
+	private long maxNumberOfEvents;
 	private double timeLength = 0;
 	private boolean isTime = false;
 	private int iterations = 1;
@@ -99,10 +100,11 @@ public class SimulationArguments {
 	private StoryCompressionMode storifyMode = StoryCompressionMode.NONE;
 	private SerializationMode serializationMode = SerializationMode.NONE;
 	private OperationMode operationMode = OperationMode.DEFAULT;
-	private boolean allowIncompletes = false;
+	private boolean allowIncompletes = true;
 	private int agentsLimit = DEFAULT_AGENTS_LIMIT;
-	private long liveDataInterval = -1;
+	private int liveDataInterval = -1;
 	private int liveDataPoints = DEFAULT_LIVE_DATA_POINTS;
+	private String liveDataConsumerClassname = DEFAULT_LIVE_DATA_CONSUMER_CLASSNAME;
 	private boolean enumerationOfSpecies;
 	private boolean quantitativeCompression = false;
 	private boolean qualitativeCompression = false;
@@ -238,7 +240,11 @@ public class SimulationArguments {
 	public final void setSeed(int seed) {
 		this.seed = seed;
 	}
-	
+
+	public void updateRandom(){
+		ThreadLocalData.getRandom().setSeed(seed);
+	}
+
 	public final long getMaxClashes() {
 		return maxClashes;
 	}
@@ -274,7 +280,7 @@ public class SimulationArguments {
 	 * 
 	 * @param isTime
 	 * @see #setTimeLength(double)
-	 * @see #setEvent(long)
+	 * @see #setMaxNumberOfEvents(long)
 	 */
 	public final void setTime(boolean isTime) {
 		this.isTime = isTime;
@@ -297,8 +303,8 @@ public class SimulationArguments {
 		this.timeLength = timeLength;
 	}
 
-	public final long getEvent() {
-		return event;
+	public final long getMaxNumberOfEvents() {
+		return maxNumberOfEvents;
 	}
 
 	/**
@@ -310,15 +316,15 @@ public class SimulationArguments {
 	 * @param event
 	 * @see #isTime()
 	 */
-	public final void setEvent(long event) {
-		this.event = event;
+	public final void setMaxNumberOfEvents(long event) {
+		this.maxNumberOfEvents = event;
 	}
 
 	
 	public final String getRandomizer() {
 		return randomizer;
 	}
-	
+
 	/**
 	 * Registers an optional executable to use as an external random number generator.
 	 * <br><br>
@@ -775,7 +781,7 @@ public class SimulationArguments {
 		this.version = version;
 	}
 	
-	public boolean isShortConsoleOutput() {
+	public final boolean isShortConsoleOutput() {
 		return shortConsoleOutput;
 	}
 
@@ -784,24 +790,24 @@ public class SimulationArguments {
 	 * 
 	 * @param shortConsoleOutput
 	 */
-	public void setShortConsoleOutput(boolean shortConsoleOutput) {
+	public final void setShortConsoleOutput(boolean shortConsoleOutput) {
 		this.shortConsoleOutput = shortConsoleOutput;
 	}
 
-	public boolean isSolutionRead() {
+	public final boolean isSolutionRead() {
 		return true;//return simulationType != SimulationType.GENERATE_MAP;
 	}
 
-	public void setOperationMode(String value) {
+	public final void setOperationMode(String value) {
 		operationMode = OperationMode.getValue(value);
 	}
 
-	public OperationMode getOperationMode() {
+	public final OperationMode getOperationMode() {
 		return operationMode;
 	}
 
-	public final void allowIncompletes() {
-		this.allowIncompletes  = true;
+	public final void rejectIncompletes() {
+		this.allowIncompletes = false;
 	}
 	
 	public final boolean incompletesAllowed() {
@@ -816,11 +822,11 @@ public class SimulationArguments {
 		subViews = b;
 	}
 
-	public void setAgentsLimit(int limit) {
+	public final void setAgentsLimit(int limit) {
 		agentsLimit = limit;
 	}
 	
-	public int getAgentsLimit() {
+	public final int getAgentsLimit() {
 		return agentsLimit;
 	}
 
@@ -828,33 +834,33 @@ public class SimulationArguments {
 		deadRules = b;
 	}
 
-	public boolean isDeadRules(){
+	public final boolean isDeadRules(){
 		return deadRules;
 	}
 	
-	public void setLocalViews(Boolean b){
+	public final void setLocalViews(Boolean b){
 		if(b)
 			this.subViews = true;
 		this.localViews = b;
 	}
 	
-	public boolean isLocalViews(){
+	public final boolean isLocalViews(){
 		return localViews;
 	}
 
-	public void setEnumerationOfSpecies(boolean b) {
+	public final void setEnumerationOfSpecies(boolean b) {
 		this.enumerationOfSpecies = b;
 	}
 	
-	public boolean isEnumerationOfSpecies(){
+	public final boolean isEnumerationOfSpecies(){
 		return enumerationOfSpecies;
 	}
 
-	public final long getLiveDataInterval() {
+	public final int getLiveDataInterval() {
 		return liveDataInterval;
 	}
 
-	public final void setLiveDataInterval(long liveDataInterval) {
+	public final void setLiveDataInterval(int liveDataInterval) {
 		this.liveDataInterval = liveDataInterval;
 	}
 
@@ -888,5 +894,14 @@ public class SimulationArguments {
 	public boolean isQualitativeCompression(){
 		return qualitativeCompression;
 	}
+
+	public final String getLiveDataConsumerClassname() {
+		return liveDataConsumerClassname;
+	}
+
+	public final void setLiveDataConsumerClassname(String liveDataConsumerClassname) {
+		this.liveDataConsumerClassname = liveDataConsumerClassname;
+	}
+
 
 }

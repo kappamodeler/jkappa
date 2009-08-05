@@ -76,9 +76,6 @@ public class AbstractAction {
 			if (sideEffect == null)
 				sideEffect = new LinkedList<Integer>();
 			sideEffect.add(leftSite.getNameId());
-			// if (sitesShouldBeBreak == null)
-			// sitesShouldBeBreak = new LinkedList<CAbstractSite>();
-			// sitesShouldBeBreak.add(leftSite);
 		}
 	}
 

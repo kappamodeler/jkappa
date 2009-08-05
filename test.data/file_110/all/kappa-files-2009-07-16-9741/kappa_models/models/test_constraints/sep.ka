@@ -1,0 +1,13 @@
+'AxxB' A(x),B(x) {$1//B,$2//A} <-> A(x!1),B(x!1) 
+'AyxB' A(y),B(x) {$1//B} <-> A(y!1),B(x!1)
+
+%init: 100*(A(x,y),B(x))
+%obs: A(x,y)
+%obs: B(x)
+%obs: A(x!_,y)
+%obs: A(x,y!_)
+%obs: A(x!_,y!_) #should be 0
+
+
+
+

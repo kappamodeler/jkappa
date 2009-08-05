@@ -135,8 +135,8 @@ public class InitTestAction extends DirectoryTestsRunner{
 		if (injections.size() == 2) {
 			for (CSite siteCC1 : injections.get(0).getSiteList())
 				for (CSite siteCC2 : injections.get(1).getSiteList())
-					if (siteCC1.getAgentLink().getId() == siteCC2
-							.getAgentLink().getId())
+					if (siteCC1.getParentAgent().getId() == siteCC2
+							.getParentAgent().getId())
 						return true;
 		}
 		return false;

@@ -33,7 +33,7 @@
 'MKP3_ERK@187' MKP3(s),ERK(Y187~p) -> MKP3(s!1),ERK(Y187~p!1) @ 1.0
 'ERK@187_op' MKP3(s!1),ERK(Y187~p!1) -> MKP3(s!1),ERK(Y187~u!1) @ 1.0
 'MKP3_ERK@187_op' MKP3(s!1),ERK(Y187!1) -> MKP3(s),ERK(Y187) @ 1.0
-
+'DeadRules' A(x)->B(x)
 
 # Initial Conditions:
 %init: 300 * (Ras(S1S2~gtp))
@@ -48,3 +48,5 @@
 %obs: Raf(x~p?)
 %obs: ERK(T185~p?,Y187~p?)
 %obs: MEK(S218~p?,S222~p?)
+
+%story: 'MKP3_ERK@187_op'
