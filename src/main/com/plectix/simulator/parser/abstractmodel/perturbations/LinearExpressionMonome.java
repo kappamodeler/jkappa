@@ -1,28 +1,29 @@
 package com.plectix.simulator.parser.abstractmodel.perturbations;
 
-public class LinearExpressionMonome {
+public final class LinearExpressionMonome {
 	// this String can be null, if we've got free coefficient
-	private final String myObsName;
-	private final double myMultiplier;
+	private final String observableName;
+	private final double coefficient;
 	
-	public LinearExpressionMonome(String ruleName, double coef) {
-		myMultiplier = coef;
-		myObsName = ruleName;
+	public LinearExpressionMonome(String ruleName, double coefficient) {
+		this.coefficient = coefficient;
+		this.observableName = ruleName;
 	}
 	
-	public String getObsName() {
-		return myObsName;
+	public final String getObsName() {
+		return observableName;
 	}
 	
-	public double getMultiplier() {
-		return myMultiplier;
+	public final double getMultiplier() {
+		return coefficient;
 	}
 	
-	public String toString() {
-		if (myObsName == null) {
-			return myMultiplier + "";
+	@Override
+	public final String toString() {
+		if (observableName == null) {
+			return coefficient + "";
 		}
-		return myMultiplier + " * '" + myObsName + "'";
+		return coefficient + " * '" + observableName + "'";
 	}
 	                          
 }

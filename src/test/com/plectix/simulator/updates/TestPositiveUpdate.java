@@ -9,10 +9,11 @@ import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.RunAllTests;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.component.injections.Injection;
+import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.util.DefaultPropertiesForTest;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.QuantityDataParser;
 
@@ -44,18 +45,21 @@ public class TestPositiveUpdate extends TestUpdate {
 	public void testObs() {
 		int solutionLinkingForCurrentObs = 0;
 
-		for (IObservablesConnectedComponent cc : getInitializator()
+		for (ObservableConnectedComponentInterface cc : getInitializator()
 				.getObservables()) {
-			for (CInjection injection : cc.getInjectionsList()) {
+			for (Injection injection : cc.getInjectionsList()) {
 				if (injection.isSuper()) {
-					solutionLinkingForCurrentObs += injection.getAgentLinkList().size() 
+					solutionLinkingForCurrentObs += injection
+							.getCorrespondence().size()
 							* injection.getWeight();
 				} else {
-					solutionLinkingForCurrentObs += injection.getAgentLinkList().size();
+					solutionLinkingForCurrentObs += injection
+							.getCorrespondence().size();
 				}
 			}
-//			myFailer.assertEquals("Observables injections",
-//					myObsInjectionsQuantity.get(myTestFileName), cc.getCommonPower());
+			// myFailer.assertEquals("Observables injections",
+			// myObsInjectionsQuantity.get(myTestFileName),
+			// cc.getCommonPower());
 		}
 
 		myFailer.assertEquals("Observatory injections", myObsInjectionsQuantity
@@ -66,15 +70,18 @@ public class TestPositiveUpdate extends TestUpdate {
 	// the same way, we're checking common injections quantity for all the cc
 	// from lhs
 	public void testLHS() {
-		List<IConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
-		for (IConnectedComponent cc : leftHand) {
+		List<ConnectedComponentInterface> leftHand = getActiveRule()
+				.getLeftHandSide();
+		for (ConnectedComponentInterface cc : leftHand) {
 			if (!lhsIsEmpty(leftHand)) {
-				myFailer.assertEquals("LHS injections",
-						myLHSInjectionsQuantity.get(myTestFileName), 
-						(int)cc.getInjectionsWeight());
+				myFailer.assertEquals("LHS injections", myLHSInjectionsQuantity
+						.get(myTestFileName), (int) cc.getInjectionsWeight());
 			} else {
-				myFailer.assertTrue("LHS injections", (cc.getInjectionsWeight() == 1)
-						&& (cc.getInjectionsList().contains(ThreadLocalData.getEmptyInjection())));
+				myFailer.assertTrue("LHS injections",
+						(cc.getInjectionsWeight() == 1)
+								&& (cc.getInjectionsList()
+										.contains(ThreadLocalData
+												.getEmptyInjection())));
 			}
 		}
 	}
@@ -92,8 +99,10 @@ public class TestPositiveUpdate extends TestUpdate {
 	@Override
 	public void init() {
 		myObsInjectionsQuantity = (new QuantityDataParser(myPrefixFileName
-				+ "ObsInjectionsData" + RunAllTests.FILENAME_EXTENSION)).parse();
+				+ "ObsInjectionsData" + DEFAULT_EXTENSION_FILE))
+				.parse();
 		myLHSInjectionsQuantity = (new QuantityDataParser(myPrefixFileName
-				+ "LHSInjectionsData" + RunAllTests.FILENAME_EXTENSION)).parse();
+				+ "LHSInjectionsData" + DEFAULT_EXTENSION_FILE))
+				.parse();
 	}
 }

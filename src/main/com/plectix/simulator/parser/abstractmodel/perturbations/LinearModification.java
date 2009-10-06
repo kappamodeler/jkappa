@@ -1,36 +1,37 @@
 package com.plectix.simulator.parser.abstractmodel.perturbations;
 
-public class LinearModification {
-	private LinearExpression myRightHandSitePolynome = new LinearExpression();
-	private final String myLeftHandsideVariable;
+public abstract class LinearModification {
+	private LinearExpression expression = new LinearExpression();
+	private final String leftHandSideObservableName;
 
-	public LinearModification(String leftVariable) {
-		myLeftHandsideVariable = leftVariable;
+	public LinearModification(String leftHandSideVariable) {
+		leftHandSideObservableName = leftHandSideVariable;
 	}
 
-	public void addMonome(String ruleName, double coef) {
-		myRightHandSitePolynome.addMonome(new LinearExpressionMonome(ruleName, coef));
+	public final void addMonome(String ruleName, double coefficient) {
+		this.expression.addMonome(new LinearExpressionMonome(ruleName, coefficient));
 	}
 
-	public void addMonome(LinearExpressionMonome monome) {
-		myRightHandSitePolynome.addMonome(monome);
+	public final void addMonome(LinearExpressionMonome monome) {
+		this.expression.addMonome(monome);
 	}
 	
-	public void setExpression(LinearExpression expression) {
-		myRightHandSitePolynome = expression;
+	public final void setExpression(LinearExpression expression) {
+		this.expression = expression;
 	}
 
-	public String getModifiableRule() {
-		return myLeftHandsideVariable;
+	public final String getModifiableRule() {
+		return leftHandSideObservableName;
 	}
 
-	public LinearExpression getRightHandSideExpression() {
-		return myRightHandSitePolynome;
+	public final LinearExpression getRightHandSideExpression() {
+		return expression;
 	}
 
-	public String toString() {
+	@Override
+	public final String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("'" + myLeftHandsideVariable + "' := " + myRightHandSitePolynome);
+		sb.append("'" + leftHandSideObservableName + "' := " + expression);
 		return sb.toString();
 	}
 }

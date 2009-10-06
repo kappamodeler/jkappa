@@ -2,24 +2,19 @@ package com.plectix.simulator.parser;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
-public class KappaFileParagraph {
-	private Collection<KappaFileLine> myParagraph = new ArrayList<KappaFileLine>();
+public final class KappaFileParagraph {
+	private final Collection<KappaFileLine> paragraphLines = new ArrayList<KappaFileLine>();
 	
-	public KappaFileParagraph() {
-		
-	}
-	
-	public void addLine(KappaFileLine line) { 
-		myParagraph.add(line);
+	public final void addLine(KappaFileLine line) { 
+		paragraphLines.add(line);
 	}
 
-	public boolean isEmpty() {
-		return myParagraph.isEmpty();
+	public final boolean isEmpty() {
+		return paragraphLines.isEmpty();
 	}
 	
-	public Collection<KappaFileLine> getLines() { 
-		return myParagraph;
+	public final Collection<KappaFileLine> getLines() { 
+		return paragraphLines;
 	}
 }

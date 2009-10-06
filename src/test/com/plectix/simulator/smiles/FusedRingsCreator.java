@@ -15,7 +15,7 @@ public class FusedRingsCreator {
 		for (int i = 2; i < 9; i++) {
 			count += createFusedRings(i);
 		}
-//		System.out.println("\nThere are " + count + " fused rings");
+		// System.out.println("\nThere are " + count + " fused rings");
 	}
 
 	private static int createFusedRings(int quantity) {
@@ -28,7 +28,7 @@ public class FusedRingsCreator {
 				ccomp.append(addRing(i, j, quantity, numberOfAgentsName));
 			}
 			count++;
-//			System.out.println(ccomp.substring(0, ccomp.length() - 1));
+			// System.out.println(ccomp.substring(0, ccomp.length() - 1));
 			ccomp = null;
 			ccomp = new StringBuffer();
 		}
@@ -50,8 +50,8 @@ public class FusedRingsCreator {
 		if (number == 0) {
 			linkcounter = 0;
 			for (int i = 0; i < vertices - 2; i++) {
-				ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
-						.asList(linkcounter, ++linkcounter)));
+				ring.append(createAgent(linkcounter % numberOfAgentsName,
+						Arrays.asList(linkcounter, ++linkcounter)));
 			}
 			ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
 					.asList(linkcounter, ++linkcounter, linkcounter + 1)));
@@ -59,8 +59,8 @@ public class FusedRingsCreator {
 					.asList(0, linkcounter, linkcounter + 2)));
 		} else if (number < quantity - 1) {
 			for (int i = 0; i < vertices - 4; i++) {
-				ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
-						.asList(++linkcounter, linkcounter + 2)));
+				ring.append(createAgent(linkcounter % numberOfAgentsName,
+						Arrays.asList(++linkcounter, linkcounter + 2)));
 			}
 
 			ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
@@ -72,8 +72,8 @@ public class FusedRingsCreator {
 					.asList(++linkcounter, linkcounter + 2)));
 			++linkcounter;
 			for (int i = 1; i < vertices - 3; i++) {
-				ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
-						.asList(++linkcounter, linkcounter + 1)));
+				ring.append(createAgent(linkcounter % numberOfAgentsName,
+						Arrays.asList(++linkcounter, linkcounter + 1)));
 			}
 			ring.append(createAgent(linkcounter % numberOfAgentsName, Arrays
 					.asList(++linkcounter, linkcounter - vertices + 3)));

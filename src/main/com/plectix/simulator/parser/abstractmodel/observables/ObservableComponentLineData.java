@@ -3,42 +3,41 @@ package com.plectix.simulator.parser.abstractmodel.observables;
 import java.util.Collections;
 import java.util.List;
 
-import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
+import com.plectix.simulator.parser.abstractmodel.ModelAgent;
 import com.plectix.simulator.parser.util.StringUtil;
 
-public class ObservableComponentLineData extends ObservablesLineData{
-	private final List<AbstractAgent> myAgents;
-	private final String myName;
-	private final String myLine; 
+public final class ObservableComponentLineData extends ObservablesLineData{
+	private final List<ModelAgent> agents;
+	private final String name;
+	private final String line; 
 
-	public ObservableComponentLineData(List<AbstractAgent> agents, String name, String line, int id) {
+	public ObservableComponentLineData(List<ModelAgent> agents, String name, String line, int id) {
 		super(id);
-		myAgents = agents;
-		myName = name;
-		myLine = line;
+		this.agents = agents;
+		this.name = name;
+		this.line = line;
 	}
 	
-	public String getName() {
-		return myName;
+	public final String getName() {
+		return name;
 	}
 	
-	public List<AbstractAgent> getAgents() {
-		return myAgents;
+	public final List<ModelAgent> getAgents() {
+		return agents;
 	}
 	
-	public String getLine() {
-		return myLine;
+	public final String getLine() {
+		return line;
 	}
 	
-	//-----------------toString--------------
-	
-	public String toString() {
-		Collections.sort(myAgents);
+	@Override
+	public final String toString() {
+		Collections.sort(agents);
 		StringBuffer sb = new StringBuffer();
-		if (myName != null) {
-			sb.append("'" + myName + "' ");
+		if (name != null) {
+			sb.append("'" + name + "' ");
 		}
-		sb.append(StringUtil.listToString(myAgents));
+		sb.append(StringUtil.listToString(agents));
 		return sb.toString();
 	}
 }

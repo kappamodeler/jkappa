@@ -36,6 +36,7 @@ import com.plectix.simulator.streaming.LiveData;
  * @version $Id$
  * @author ecemis
  */
+@SuppressWarnings("serial")
 public class ControlPanel extends GridBagPanel implements ActionListener {
 	private static final Logger LOGGER = Logger.getLogger(ControlPanel.class);
 

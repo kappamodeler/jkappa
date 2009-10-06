@@ -19,18 +19,20 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.RunAllTests;
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
-import com.plectix.simulator.parser.abstractmodel.AbstractSite;
-import com.plectix.simulator.parser.exceptions.DocumentFormatException;
-import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.component.ConnectedComponent;
+import com.plectix.simulator.component.InternalState;
+import com.plectix.simulator.component.Site;
+import com.plectix.simulator.parser.DocumentFormatException;
+import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.abstractmodel.ModelAgent;
+import com.plectix.simulator.parser.abstractmodel.ModelSite;
 import com.plectix.simulator.parser.util.AgentFactory;
+import com.plectix.simulator.util.DefaultPropertiesForTest;
+import com.plectix.simulator.util.NameDictionary;
 
 @RunWith(Parameterized.class)
-public class RunSmilesTest {
+public class RunSmilesTest extends DefaultPropertiesForTest {
 
 	private static final String separator = File.separator;
 	private static final String prefix = "test.data" + separator + "smiles"
@@ -42,16 +44,16 @@ public class RunSmilesTest {
 
 	@Parameters
 	public static Collection<Object[]> data() {
-		String[] files = new String[] { 
-				"twoagents" + RunAllTests.FILENAME_EXTENSION, 
-				"ring" + RunAllTests.FILENAME_EXTENSION, 
-				"tworings" + RunAllTests.FILENAME_EXTENSION,
-				"polymer" + RunAllTests.FILENAME_EXTENSION, 
-				"branchstructure" + RunAllTests.FILENAME_EXTENSION, 
-				"cubane" + RunAllTests.FILENAME_EXTENSION, 
-				"polyhedron" + RunAllTests.FILENAME_EXTENSION,
-				"fullerene" + RunAllTests.FILENAME_EXTENSION, 
-				"fusedrings" + RunAllTests.FILENAME_EXTENSION};
+		String[] files = new String[] {
+				"twoagents" + DEFAULT_EXTENSION_FILE,
+				"ring" + DEFAULT_EXTENSION_FILE,
+				"tworings" + DEFAULT_EXTENSION_FILE,
+				"polymer" + DEFAULT_EXTENSION_FILE,
+				"branchstructure" + DEFAULT_EXTENSION_FILE,
+				"cubane" + DEFAULT_EXTENSION_FILE,
+				"polyhedron" + DEFAULT_EXTENSION_FILE,
+				"fullerene" + DEFAULT_EXTENSION_FILE,
+				"fusedrings" + DEFAULT_EXTENSION_FILE };
 		Collection<Object[]> data = new ArrayList<Object[]>();
 		for (String string : files) {
 			Object[] obj = new Object[1];
@@ -71,16 +73,16 @@ public class RunSmilesTest {
 		String line = "";
 		int lineCounter = 0;
 		AgentFactory af = new AgentFactory(false);
-		CConnectedComponent cc;
+		ConnectedComponent cc;
 		StringBuffer fails;
 		SmilesTest smilestest;
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(filepath));
 			line = br.readLine();
-			
+
 			while (line != null) {
 				lineCounter++;
-				cc = new CConnectedComponent(buildAgents(af.parseAgent(line)));
+				cc = new ConnectedComponent(buildAgents(af.parseAgent(line)));
 				fails = new StringBuffer();
 				smilestest = new SmilesTest(cc);
 				fails.append(smilestest.test());
@@ -102,26 +104,26 @@ public class RunSmilesTest {
 	}
 
 	// / SubstanceBuilder
-	public static List<CAgent> buildAgents(List<AbstractAgent> agents) {
+	public static List<Agent> buildAgents(List<ModelAgent> agents) {
 		if (agents == null) {
 			return null;
 		}
 
-		List<CAgent> result = new LinkedList<CAgent>();
+		List<Agent> result = new LinkedList<Agent>();
 
-		for (AbstractAgent agent : agents) {
-			CAgent newAgent = buildAgent(agent);
+		for (ModelAgent agent : agents) {
+			Agent newAgent = buildAgent(agent);
 			result.add(newAgent);
 		}
 
-		Map<Integer, CSite> map = new LinkedHashMap<Integer, CSite>();
-		for (CAgent agent : result) {
-			for (CSite site : agent.getSites()) {
+		Map<Integer, Site> map = new LinkedHashMap<Integer, Site>();
+		for (Agent agent : result) {
+			for (Site site : agent.getSites()) {
 				int index = site.getLinkIndex();
 				if (index == -1) {
 					continue;
 				}
-				CSite connectedSite = map.get(index);
+				Site connectedSite = map.get(index);
 				if (connectedSite == null) {
 					map.put(index, site);
 				} else {
@@ -135,11 +137,10 @@ public class RunSmilesTest {
 		return result;
 	}
 
-	private static CAgent buildAgent(AbstractAgent agent) {
-		CAgent resultAgent = new CAgent(agent.getNameId(),
-				generateNextAgentId());
-		for (AbstractSite site : agent.getSites()) {
-			CSite newSite = buildSite(site);
+	private static Agent buildAgent(ModelAgent agent) {
+		Agent resultAgent = new Agent(agent.getName(), generateNextAgentId());
+		for (ModelSite site : agent.getSites()) {
+			Site newSite = buildSite(site);
 			resultAgent.addSite(newSite);
 		}
 
@@ -150,14 +151,14 @@ public class RunSmilesTest {
 		return ++id;
 	}
 
-	private static CSite buildSite(AbstractSite site) {
-		CSite newSite = new CSite(site.getNameId());
+	private static Site buildSite(ModelSite site) {
+		Site newSite = new Site(site.getName());
 		newSite.getLinkState().setStatusLink(
 				site.getLinkState().getStatusLink());
 		newSite.setLinkIndex(site.getLinkIndex());
-		int internalStateNameId = site.getInternalStateNameId();
-		if (internalStateNameId != CSite.NO_INDEX) {
-			newSite.setInternalState(new CInternalState(internalStateNameId));
+		String internalStateName = site.getInternalStateName();
+		if (!NameDictionary.isDefaultInternalStateName(internalStateName)) {
+			newSite.setInternalState(new InternalState(internalStateName));
 		}
 		return newSite;
 	}

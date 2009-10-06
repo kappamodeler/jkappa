@@ -6,6 +6,7 @@ package com.plectix.simulator.gui.lib;
  * 
  * @author ecemis
  */
+@SuppressWarnings("serial")
 public class MainPanel extends GridBagPanel {
 	
 	public MainPanel() {

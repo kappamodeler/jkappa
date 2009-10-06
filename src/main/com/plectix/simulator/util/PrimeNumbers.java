@@ -1,6 +1,6 @@
 package com.plectix.simulator.util;
 
-public class PrimeNumbers {
+public final class PrimeNumbers {
 
 	// We can only compile 8242 integers, more exceeds 65536 bytes limit!
 	public static final int[] FIRST_8242 = {

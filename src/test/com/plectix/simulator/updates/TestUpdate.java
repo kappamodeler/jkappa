@@ -9,28 +9,28 @@ import org.junit.Before;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
-import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.probability.CProbabilityCalculation;
+import com.plectix.simulator.component.Rule;
+import com.plectix.simulator.component.Site;
+import com.plectix.simulator.component.injections.Injection;
+import com.plectix.simulator.component.stories.storage.StoryStorageException;
+import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.PlxLogger;
-import com.plectix.simulator.util.Info.InfoType;
 
 public abstract class TestUpdate extends DirectoryTestsRunner {
 
 	private Simulator mySimulator;
-	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(Simulator.class);
+	private static final PlxLogger LOGGER = ThreadLocalData
+			.getLogger(Simulator.class);
 	private double currentTime = 0.;
-	private CRule myActiveRule;
+	private Rule myActiveRule;
 
 	private String myTestFileName = "";
 
-	private List<CInjection> myCurrentInjectionsList;
+	private List<Injection> myCurrentInjectionsList;
 
 	protected TestUpdate(String fileName) {
 		super();
@@ -45,7 +45,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	public abstract boolean isDoingPositive();
 
 	@Before
-	public void setup() {
+	public void setup() throws StoryStorageException {
 		String fullTestFilePath = getPrefixFileName() + myTestFileName;
 		Initializator initializator = getInitializator();
 
@@ -55,22 +55,22 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		init();
 	}
 
-	public CRule getActiveRule() {
+	public Rule getActiveRule() {
 		return myActiveRule;
 	}
 
-	public Collection<CRule> getRules() {
+	public Collection<Rule> getRules() {
 		return mySimulator.getSimulationData().getKappaSystem().getRules();
 	}
 
-	public List<CInjection> getCurrentInjectionsList() {
+	public List<Injection> getCurrentInjectionsList() {
 		return myCurrentInjectionsList;
 	}
 
-	private boolean isClash(List<CInjection> injections) {
+	private boolean isClash(List<Injection> injections) {
 		if (injections.size() == 2) {
-			for (CSite siteCC1 : injections.get(0).getSiteList())
-				for (CSite siteCC2 : injections.get(1).getSiteList())
+			for (Site siteCC1 : injections.get(0).getSiteList())
+				for (Site siteCC2 : injections.get(1).getSiteList())
 					if (siteCC1.getParentAgent().getId() == siteCC2
 							.getParentAgent().getId())
 						return true;
@@ -78,12 +78,18 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		return false;
 	}
 
-	private void run() {
-		CProbabilityCalculation ruleProbabilityCalculation = new CProbabilityCalculation(InfoType.OUTPUT,mySimulator.getSimulationData());
+	private void run() throws StoryStorageException {
+		KappaSystem kappaSystem = mySimulator.getSimulationData()
+				.getKappaSystem();
 
-		mySimulator.getSimulationData().getKappaSystem().getObservables().calculateObs(currentTime,
-				1, mySimulator.getSimulationData().getSimulationArguments().isTime());
-		myActiveRule = mySimulator.getSimulationData().getKappaSystem().getRandomRule();
+		mySimulator.getSimulationData().getKappaSystem().getObservables()
+				.calculateObs(
+						currentTime,
+						1,
+						mySimulator.getSimulationData()
+								.getSimulationArguments().isTime());
+		myActiveRule = mySimulator.getSimulationData().getKappaSystem()
+				.getRandomRule();
 
 		if (myActiveRule == null) {
 			mySimulator.getSimulationData().setTimeLength(currentTime);
@@ -93,21 +99,26 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		if (LOGGER.isDebugEnabled())
 			LOGGER.debug("Rule: " + myActiveRule.getName());
 
-//		myCurrentInjectionsList = ruleProbabilityCalculation
-//				.getSomeInjectionList(myActiveRule);
-		myCurrentInjectionsList = ruleProbabilityCalculation.chooseInjectionsForRuleApplication(myActiveRule);
-		currentTime += mySimulator.getSimulationData().getKappaSystem().getTimeValue();
+		// myCurrentInjectionsList = ruleProbabilityCalculation
+		// .getSomeInjectionList(myActiveRule);
+		myCurrentInjectionsList = kappaSystem
+				.chooseInjectionsForRuleApplication(myActiveRule);
+		currentTime += mySimulator.getSimulationData().getKappaSystem()
+				.getTimeValue();
 
 		if (myCurrentInjectionsList != null) {
 			// negative update
 			if (LOGGER.isDebugEnabled())
 				LOGGER.debug("negative update");
 
-			myActiveRule.applyRule(myCurrentInjectionsList, mySimulator.getSimulationData());
+			myActiveRule.applyRule(myCurrentInjectionsList, mySimulator
+					.getSimulationData());
 			SimulationUtils.doNegativeUpdate(myCurrentInjectionsList);
 			if (isDoingPositive()) {
-				mySimulator.getSimulationData().getKappaSystem().doPositiveUpdate(myActiveRule,
-						myCurrentInjectionsList);
+				mySimulator
+						.getSimulationData()
+						.getKappaSystem()
+						.doPositiveUpdate(myActiveRule, myCurrentInjectionsList);
 			}
 
 		} else {
@@ -116,7 +127,8 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		}
 	}
 
-	public static boolean lhsIsEmpty(List<IConnectedComponent> lh) {
-		return (lh.size() == 1) && (lh.contains(ThreadLocalData.getEmptyConnectedComponent()));
+	public static boolean lhsIsEmpty(List<ConnectedComponentInterface> lh) {
+		return (lh.size() == 1)
+				&& (lh.contains(ThreadLocalData.getEmptyConnectedComponent()));
 	}
 }

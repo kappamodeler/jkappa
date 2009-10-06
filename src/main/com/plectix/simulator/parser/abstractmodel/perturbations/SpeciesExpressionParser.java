@@ -1,19 +1,16 @@
 package com.plectix.simulator.parser.abstractmodel.perturbations;
 
 import com.plectix.simulator.parser.KappaFileLine;
-import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.util.StringUtil;
 
-public class SpeciesExpressionParser extends SpecifiedLinearModificationParser {
-
+public final class SpeciesExpressionParser extends SpecifiedLinearModificationParser {
 	@Override
-	protected String parseName(String almostName, KappaFileLine line) throws ParseErrorException {
-		StringUtil.checkString("[", almostName, line);
-		almostName = almostName.substring(almostName.indexOf("[") + 1).trim();
-		StringUtil.checkString("'", almostName, line);
-		almostName = almostName.substring(almostName.indexOf("'") + 1).trim();
-
-		return StringUtil.getName(almostName);
+	protected final String parseName(String lineToParse, KappaFileLine perturbationLine) throws ParseErrorException {
+		StringUtil.checkString("[", lineToParse, perturbationLine);
+		lineToParse = lineToParse.substring(lineToParse.indexOf("[") + 1).trim();
+		StringUtil.checkString("'", lineToParse, perturbationLine);
+		lineToParse = lineToParse.substring(lineToParse.indexOf("'") + 1).trim();
+		return StringUtil.parseRuleName(lineToParse);
 	}
-
 }

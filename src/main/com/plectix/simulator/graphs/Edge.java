@@ -1,25 +1,27 @@
 package com.plectix.simulator.graphs;
 
 public class Edge {
-	private Vertex first = null;
-	private Vertex end = null;
+	private Vertex firstVertex;
+	private Vertex lastVertex;
 	
-	public void setSource(Vertex first) {
-		this.first = first;
-	}
-	public Vertex getSource() {
-		return first;
-	}
-	public void setTarget(Vertex end) {
-		this.end = end;
-	}
-	public Vertex getTarget() {
-		return end;
+	public Edge(Vertex firstVertex, Vertex lastVertex){
+		this.firstVertex = firstVertex;
+		this.lastVertex = lastVertex;
 	}
 	
-	public Edge(Vertex v1, Vertex v2){
-		first = v1;
-		end = v2;
+	public final Vertex getSource() {
+		return firstVertex;
 	}
-
+	
+	public final Vertex getTarget() {
+		return lastVertex;
+	}
+	
+	public final void setTarget(Vertex lastVertex) {
+		this.lastVertex = lastVertex;
+	}
+	
+	public final void setSource(Vertex firstTarget) {
+		this.firstVertex = firstTarget;
+	}
 }

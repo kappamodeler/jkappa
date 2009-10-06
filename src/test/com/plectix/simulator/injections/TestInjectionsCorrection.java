@@ -2,7 +2,6 @@ package com.plectix.simulator.injections;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -10,28 +9,30 @@ import java.util.TreeSet;
 import org.junit.Test;
 
 import com.plectix.simulator.RunAllTests;
-import com.plectix.simulator.components.CAgentLink;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.component.injections.Injection;
+import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.util.CorrectionsDataParser;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.MessageConstructor;
 
 public class TestInjectionsCorrection extends TestInjections {
 	private static final String separator = File.separator;
-	private static Map<String, SortedSet<Long>> myCompareData = new LinkedHashMap<String, SortedSet<Long>>();
-	private Failer myFailer = new Failer();
+	private final Map<String, SortedSet<Long>> compareData;
+	private final Failer failer = new Failer();
 	private boolean antiFlag = false;
 
 	public TestInjectionsCorrection() {
-		myCompareData = (new CorrectionsDataParser(
-				"test.data" + separator +"InjectionsCorrectionData" + RunAllTests.FILENAME_EXTENSION)).parse();
+		compareData = (new CorrectionsDataParser("test.data" + separator
+				+ "InjectionsCorrectionData" + DEFAULT_EXTENSION_FILE))
+				.parse();
 	}
 
 	@Test
 	public void test0() {
 		MessageConstructor mc = new MessageConstructor();
-		for (IObservablesConnectedComponent c : getInitializator().getObservables()) {
+		for (ObservableConnectedComponentInterface c : getInitializator()
+				.getObservables()) {
 			if (!c.getName().startsWith("q")) {
 				if (!testCC(c)) {
 					mc.addValue(c.getName());
@@ -39,31 +40,30 @@ public class TestInjectionsCorrection extends TestInjections {
 			}
 		}
 		if (!mc.isEmpty()) {
-			myFailer.failOnMC(mc);
+			failer.failOnMC(mc);
 		}
 	}
 
-	public boolean testCC(IObservablesConnectedComponent c) {
+	public boolean testCC(ObservableConnectedComponentInterface c) {
 		if (c.getName().startsWith("scary")) {
 			return true;
 		}
 		SortedSet<Long> solutionLinkingForCurrentObs = new TreeSet<Long>();
 
-		Collection<CInjection> injectionsList = c.getInjectionsList();
-		for (CInjection injection : injectionsList) {
-			for (CAgentLink agentLink : injection.getAgentLinkList()) {
-				solutionLinkingForCurrentObs
-						.add(agentLink.getAgentTo().getId());
+		Collection<Injection> injectionsList = c.getInjectionsList();
+		for (Injection injection : injectionsList) {
+			for (Agent agent : injection.getCorrespondence().values()) {
+				solutionLinkingForCurrentObs.add(agent.getId());
 			}
 		}
-		
-		boolean ohohoh = solutionLinkingForCurrentObs.equals(myCompareData
-				.get(c.getName()));
-		
+
+		boolean fail = solutionLinkingForCurrentObs.equals(compareData.get(c
+				.getName()));
+
 		// print first failed test info in console
-		if (!ohohoh & !antiFlag) {
+		if (!fail & !antiFlag) {
 			antiFlag = true;
 		}
-		return (ohohoh);
+		return (fail);
 	}
 }

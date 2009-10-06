@@ -7,32 +7,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-public class Graph {
-	private LinkedList<Edge> edges = null;
-	private ArrayList<Vertex> vertices = null;
-	public int numberOfVertices;
+public final class Graph {
+	private final LinkedList<Edge> edges = new LinkedList<Edge>();
+	private final ArrayList<Vertex> vertices = new ArrayList<Vertex>();
 
-	public Graph() {
-		edges = new LinkedList<Edge>();
-		vertices = new ArrayList<Vertex>();
-		numberOfVertices = 0;
-
-	}
-
-	public void setEdges(LinkedList<Edge> edges) {
-		this.edges = edges;
-	}
-
-	public List<Edge> getEdges() {
-		return edges;
-	}
-
-	public void setVertices(ArrayList<Vertex> vertices) {
-		this.vertices = vertices;
-		numberOfVertices = vertices.size();
-	}
-
-	public ArrayList<Vertex> getVertices() {
+	public final ArrayList<Vertex> getVertices() {
 		return vertices;
 	}
 
@@ -41,14 +20,14 @@ public class Graph {
 	 * 
 	 * @return
 	 */
-	public List<Edge> getAllEdgesInDirectedCycles() {
-		clearTags();
+	public final List<Edge> getAllEdgesInDirectedCycles() {
+		this.clearTags();
 		LinkedList<Edge> list = new LinkedList<Edge>();
 
 		Stack<Vertex> stack = new Stack<Vertex>();
-		vertices.get(0).parent = null;
+		vertices.get(0).setParentVertex(null);
 		vertices.get(0).setTag(true);
-		vertices.get(0).mark2 = true;
+		vertices.get(0).setMark2(true);
 		stack.push(vertices.get(0));
 
 		int temp = 0;
@@ -62,7 +41,7 @@ public class Graph {
 					Vertex v = vertices.get(temp);
 					stack.push(v);
 					v.setTag(true);
-					v.mark2 = true;
+					v.setMark2(true);
 				}
 			}
 		}
@@ -76,7 +55,7 @@ public class Graph {
 	 * @param stack
 	 * @param list
 	 */
-	private void doStep(Stack<Vertex> stack, LinkedList<Edge> list) {
+	private final void doStep(Stack<Vertex> stack, LinkedList<Edge> list) {
 		Vertex from = stack.peek();
 		Vertex to = from.next();
 		if (to == from) {
@@ -85,8 +64,8 @@ public class Graph {
 		}
 		if (to != null) {
 			if (!to.isTag()) {
-				to.parent = from;
-				to.mark2 = true;
+				to.setParentVertex(from);
+				to.setMark2(true);
 				to.setTag(true);
 				stack.push(to);
 			} else {
@@ -98,9 +77,9 @@ public class Graph {
 
 	}
 
-	private int needExploreMore() {
-		for (int i = 0; i < numberOfVertices; i++) {
-			if (!vertices.get(i).mark2) {
+	private final int needExploreMore() {
+		for (int i = 0; i < vertices.size(); i++) {
+			if (!vertices.get(i).isMark2()) {
 				return i;
 			}
 		}
@@ -108,83 +87,79 @@ public class Graph {
 	}
 
 	// redraw all egdes from vertices of cycle form one Big vertex
-	private void extractCycle(Vertex from, Vertex to, LinkedList<Edge> list,
-			Stack<Vertex> stack) {
-		addEdgeToAnswer(list, from, to);
-		while (from != to) {
-			addEdgeToAnswer(list, from.parent, from);
-			mergeVertices(to, from);
-			from = from.parent;
-			stack.pop();
+	private final void extractCycle(Vertex startVertex, Vertex lastVertex, LinkedList<Edge> edges,
+			Stack<Vertex> verticesStack) {
+		addEdgeToAnswer(edges, startVertex, lastVertex);
+		while (startVertex != lastVertex) {
+			addEdgeToAnswer(edges, startVertex.getParentVertex(), startVertex);
+			mergeVertices(lastVertex, startVertex);
+			startVertex = startVertex.getParentVertex();
+			verticesStack.pop();
 		}
-
 	}
 
-	private void addEdgeToAnswer(LinkedList<Edge> answer, Vertex from, Vertex to) {
-		Edge e = getEdge(from, to);
-		answer.add(e);
-		from.edges.remove(e);
-		to.edges.remove(e);
-		to.explored=0;
-		from.explored = 0;
-		edges.remove(e);
+	private final void addEdgeToAnswer(LinkedList<Edge> answer, Vertex startVertex, Vertex endVertex) {
+		Edge edge = getEdge(startVertex, endVertex);
+		answer.add(edge);
+		startVertex.removeEdge(edge);
+		endVertex.removeEdge(edge);
+		endVertex.setExplored(0);
+		startVertex.setExplored(0);
+		edges.remove(edge);
 	}
 
-	private void mergeVertices(Vertex merged, Vertex vertex) {
-		for (Edge eTemp : vertex.edges) {
+	private final void mergeVertices(Vertex mergedVertex, Vertex vertex) {
+		for (Edge eTemp : vertex.getEdges()) {
 			if (eTemp.getTarget() == vertex) {
-				eTemp.setTarget(merged);
-				merged.edges.add(eTemp);
+				eTemp.setTarget(mergedVertex);
+				mergedVertex.addEdge(eTemp);
 			}
 			if (eTemp.getSource() == vertex) {
-				eTemp.setSource(merged);
-				merged.edges.add(eTemp);
+				eTemp.setSource(mergedVertex);
+				mergedVertex.addEdge(eTemp);
 			}
 		}
-		vertex.edges.clear();
+		vertex.clearEdges();
 	}
 
-	public ArrayList<ArrayList<Vertex>> getAllWeakClosureComponent() {
+	public final ArrayList<ArrayList<Vertex>> getAllWeakClosureComponent() {
+		this.closeGraph();
+		this.sortVerticesByOutDegree();
+		this.clearTags();
 
-		closeGraph();
-		sortVerticesByOutDegree();
-		clearTags();
+		ArrayList<ArrayList<Vertex>> result = new ArrayList<ArrayList<Vertex>>();
+		int vertexIndex = 0;
 
-		ArrayList<ArrayList<Vertex>> answer = new ArrayList<ArrayList<Vertex>>();
-		int i = 0;
-
-		while (i < numberOfVertices) {
-			if (vertices.get(i).isTag()) {
-				i++;
+		while (vertexIndex < vertices.size()) {
+			if (vertices.get(vertexIndex).isTag()) {
+				vertexIndex++;
 			} else {
-				ArrayList<Vertex> newSet = new ArrayList<Vertex>();
-				vertices.get(i).setTag(true);
-				newSet.add(vertices.get(i));
-				for (Edge e : vertices.get(i).edges) {
-					if (e.getSource() == vertices.get(i)) {
-						newSet.add(e.getTarget());
+				ArrayList<Vertex> anotherSet = new ArrayList<Vertex>();
+				vertices.get(vertexIndex).setTag(true);
+				anotherSet.add(vertices.get(vertexIndex));
+				for (Edge e : vertices.get(vertexIndex).getEdges()) {
+					if (e.getSource() == vertices.get(vertexIndex)) {
+						anotherSet.add(e.getTarget());
 						e.getTarget().setTag(true);
 					}
 				}
-				answer.add(newSet);
+				result.add(anotherSet);
 			}
-
 		}
 
-		return answer;
+		return result;
 	}
 
-	private void sortVerticesByOutDegree() {
-
-		for (int i = 0; i < numberOfVertices; i++) {
+	private final void sortVerticesByOutDegree() {
+		for (int i = 0; i < vertices.size(); i++) {
 			outDegree(vertices.get(i));
 		}
 		// may be optimize
 		Vertex temp = new Vertex();
-		for (int i = 0; i < numberOfVertices - 1; i++) {
-			for (int j = i + 1; j < numberOfVertices; j++) {
-				if (vertices.get(i).neighbors.size() < vertices.get(j).neighbors
-						.size()) {
+		for (int i = 0; i < vertices.size() - 1; i++) {
+			for (int j = i + 1; j < vertices.size(); j++) {
+				if (vertices.get(i).getNeighbourVertices().size() < 
+						vertices.get(j).getNeighbourVertices().size()) {
 					temp = vertices.get(i);
 					vertices.set(i, vertices.get(j));
 					vertices.set(j, temp);
@@ -195,16 +170,16 @@ public class Graph {
 	}
 
 	// change neighbors
-	private void outDegree(Vertex v) {
-		for (Edge e : v.edges) {
+	private final void outDegree(Vertex v) {
+		for (Edge e : v.getEdges()) {
 			if (e.getTarget() == v)
-				v.neighbors.remove(e.getSource());
+				v.removeNeighbour(e.getSource());
 		}
 
 	}
 
-	private void clearTags() {
-		for (int i = 0; i < numberOfVertices; i++) {
+	private final void clearTags() {
+		for (int i = 0; i < vertices.size(); i++) {
 			vertices.get(i).setTag(false);
 		}
 	}
@@ -215,8 +190,7 @@ public class Graph {
 	 * @param graph
 	 *            - Graph to compute transitive closure for.
 	 */
-	public void closeGraph() {
-
+	public final void closeGraph() {
 		Set<Vertex> newEdgeTargets = new LinkedHashSet<Vertex>();
 
 		// At every iteration of the outer loop, we add a path of length 1
@@ -224,17 +198,17 @@ public class Graph {
 		// case, we need to make floor(log |V|) + 1 iterations. We stop earlier
 		// if there is no change to the output graph.
 
-		int bound = computeBinaryLog(numberOfVertices);
+		int bound = computeBinaryLog(vertices.size());
 		boolean done = false;
 		for (int i = 0; !done && (i < bound); ++i) {
 			done = true;
 			for (Vertex v1 : vertices) {
 				newEdgeTargets.clear();
 
-				for (Edge v1OutEdge : v1.edges) {
+				for (Edge v1OutEdge : v1.getEdges()) {
 					Vertex v2 = v1OutEdge.getTarget();
 					if (v2 != v1) {
-						for (Edge v2OutEdge : v2.edges) {
+						for (Edge v2OutEdge : v2.getEdges()) {
 							Vertex v3 = v2OutEdge.getTarget();
 							if (v3 != v2) {
 								if (v1.equals(v3)) {
@@ -262,38 +236,33 @@ public class Graph {
 		}
 	}
 
-	public void addVertex(Vertex v) {
-		vertices.add(v);
-		numberOfVertices++;
-
+	public final void addVertex(Vertex vertex) {
+		vertices.add(vertex);
 	}
 
-	private Edge getEdge(Vertex v1, Vertex v2) {
-
-		for (Edge edge : v1.edges) {
-			if (edge.getTarget() == v2)
+	private final Edge getEdge(Vertex startVertex, Vertex endVertex) {
+		for (Edge edge : startVertex.getEdges()) {
+			if (edge.getTarget() == endVertex)
 				return edge;
 		}
 		return null;
 
 	}
 
-	private void addEdge(Vertex v1, Vertex v2) {
-		Edge newEdge = new Edge(v1, v2);
+	private final void addEdge(Vertex startVertex, Vertex endVertex) {
+		Edge newEdge = new Edge(startVertex, endVertex);
 		edges.add(newEdge);
-		v1.edges.add(newEdge);
-		v2.edges.add(newEdge);
-		v1.neighbors.add(v2);
-		v2.neighbors.add(v1);
-
+		startVertex.addEdge(newEdge);
+		endVertex.addEdge(newEdge);
+		startVertex.addNeighbourVertex(endVertex);
+		endVertex.addNeighbourVertex(startVertex);
 	}
 
 	/**
 	 * Computes floor(log_2(n)) + 1
 	 */
-	private int computeBinaryLog(int n) {
+	private final int computeBinaryLog(int n) {
 		assert n >= 0;
-
 		int result = 0;
 		while (n > 0) {
 			n >>= 1;
@@ -303,14 +272,13 @@ public class Graph {
 		return result;
 	}
 
-	public void addEdge(Edge e) {
-		if (getEdge(e.getSource(), e.getTarget()) == null) {
-
-			edges.add(e);
-			e.getSource().edges.add(e);
-			e.getSource().neighbors.add(e.getTarget());
-			e.getTarget().edges.add(e);
-			e.getTarget().neighbors.add(e.getSource());
+	public final void addEdge(Edge edge) {
+		if (getEdge(edge.getSource(), edge.getTarget()) == null) {
+			edges.add(edge);
+			edge.getSource().addEdge(edge);
+			edge.getSource().addNeighbourVertex(edge.getTarget());
+			edge.getTarget().addEdge(edge);
+			edge.getTarget().addNeighbourVertex(edge.getSource());
 		}
 	}
 

@@ -1,29 +1,28 @@
 package com.plectix.simulator.parser.abstractmodel.reader;
 
+import com.plectix.simulator.parser.DocumentFormatException;
 import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
-import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.abstractmodel.observables.AbstractObservables;
-import com.plectix.simulator.parser.exceptions.DocumentFormatException;
-import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.abstractmodel.observables.ModelObservables;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 
-/*package*/class ObservablesParagraphReader extends
-		KappaParagraphReader<AbstractObservables> {
+/*package*/ final class ObservablesParagraphReader extends KappaParagraphReader<ModelObservables> {
 
-	public ObservablesParagraphReader(KappaModel model, SimulationArguments arguments,
-			AgentFactory factory) {
-		super(model, arguments, factory);
+	public ObservablesParagraphReader(SimulationArguments simulationArguments, 
+			AgentFactory agentFactory) {
+		super(simulationArguments, agentFactory);
 	}
 
-	public final AbstractObservables readComponent(KappaFileParagraph observablesParagraph)
+	public final ModelObservables readComponent(KappaFileParagraph observablesParagraph)
 			throws ParseErrorException, DocumentFormatException {
-		AbstractObservables observables = new AbstractObservables();
-		int obsId = 0;
+		
+		ModelObservables observables = new ModelObservables();
+		int observableId = 0;
 
-		for (KappaFileLine itemDS : observablesParagraph.getLines()) {
-			String line = itemDS.getLine().trim();
+		for (KappaFileLine observableLine : observablesParagraph.getLines()) {
+			String line = observableLine.getLine().trim();
 			try {
 				String name = null;
 				if (line.indexOf("'") != -1) {
@@ -37,13 +36,13 @@ import com.plectix.simulator.simulator.SimulationArguments;
 
 				if (line.length() == 0) {
 					//TODO
-					observables.addRuleName(name, obsId);
+					observables.addRuleName(name, observableId);
 				} else
-					observables.addComponent(parseAgent(line), name, line,
-							obsId);//, getArguments().isOcamlStyleObservableNames());
-				obsId++;
+					observables.addComponent(parseAgents(line), name, line,
+							observableId);//, getArguments().isOcamlStyleObservableNames());
+				observableId++;
 			} catch (ParseErrorException e) {
-				e.setLineDescription(itemDS);
+				e.setLineDescription(observableLine);
 				throw e;
 			}
 		}

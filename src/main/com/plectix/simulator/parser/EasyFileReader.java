@@ -5,28 +5,36 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * This is easy file reader - wrapping class for BufferedReader with couple of changes made
+ */
 /*package*/ class EasyFileReader {
-	private BufferedReader myReader;
-	private String myDataFilePath;
+	private final BufferedReader reader;
+	private final String filePath;
 	
 	public EasyFileReader(String path) throws FileNotFoundException {
-		myDataFilePath = path;
-		myReader = new BufferedReader(new FileReader(myDataFilePath));
+		this.filePath = path;
+		this.reader = new BufferedReader(new FileReader(filePath));
 	}
 	
-	public String getLine() {
+	/**
+	 * Reads line from file
+	 * @return another line
+	 */
+	public final String getLine() {
 		try {
-			return myReader.readLine();
+			return reader.readLine();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public void close() {
+	public final void close() {
 		try {
-			myReader.close();
-		} catch(IOException e) {
-			System.err.println("Can't close reader for file " + myDataFilePath);
+			reader.close();
+		} catch (IOException e) {
+			// TODO something
+			System.err.println("Can't close reader for file " + filePath);
 		}
 	}
 }

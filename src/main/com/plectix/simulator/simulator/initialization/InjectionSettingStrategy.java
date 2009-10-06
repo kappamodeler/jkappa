@@ -1,10 +1,10 @@
 package com.plectix.simulator.simulator.initialization;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 
 public interface InjectionSettingStrategy {
 	
-	public void process(IConnectedComponent component, CAgent agent);
+	public void process(ConnectedComponentInterface component, Agent agent);
 	
 }

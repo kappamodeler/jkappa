@@ -1,22 +1,19 @@
 package com.plectix.simulator.parser.abstractmodel.observables;
 
-public class ObservableRuleLineData extends ObservablesLineData {
-	private final String myRuleName;
+public final class ObservableRuleLineData extends ObservablesLineData {
+	private final String ruleName;
 	
 	public ObservableRuleLineData(String ruleName, int id) {
 		super(id);
-		myRuleName = ruleName;
+		this.ruleName = ruleName;
 	}
 	
-	public String getRuleName() {
-		return myRuleName;
+	public final String getRuleName() {
+		return ruleName;
 	}
 	
-	
-	//-----------------------toString--------------------------
-	
-	
-	public String toString() {
-		return "'" + myRuleName + "'";
+	@Override
+	public final String toString() {
+		return "'" + ruleName + "'";
 	}
 }

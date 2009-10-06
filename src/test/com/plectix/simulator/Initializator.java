@@ -1,31 +1,29 @@
 package com.plectix.simulator;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
+import com.plectix.simulator.util.DefaultPropertiesForTest;
 import com.plectix.simulator.util.Info.InfoType;
 
-public class Initializator {
+public class Initializator extends DefaultPropertiesForTest {
 	private Simulator mySimulator;
-	private List<IObservablesConnectedComponent> myObsComponents;
+	private List<ObservableConnectedComponentInterface> myObsComponents;
 	private Double myRescale = null;
-	
+
 	private static boolean myFirstRun = true;
-	
-	private final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 
 	public void setRescale(double rescale) {
 		myRescale = rescale;
 	}
-	
+
 	private String[] prepareTestArgs(String filePath) {
 		boolean rescale = (myRescale != null);
 		String[] args;
@@ -47,8 +45,9 @@ public class Initializator {
 		args[8] = "1";
 		return args;
 	}
-	
-	public static SimulationArguments prepareDefaultArguments(String filePath) throws ParseException{
+
+	public static SimulationArguments prepareDefaultArguments(String filePath)
+			throws ParseException {
 		String[] args = new String[2];
 		args[0] = "--compile";
 		args[1] = filePath;
@@ -56,7 +55,9 @@ public class Initializator {
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
-	public static SimulationArguments prepareDefaultSimArguments(String filePath) throws ParseException{
+
+	public static SimulationArguments prepareDefaultSimArguments(String filePath)
+			throws ParseException {
 		String[] args = new String[2];
 		args[0] = "--sim";
 		args[1] = filePath;
@@ -64,17 +65,17 @@ public class Initializator {
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
-	
-	public static SimulationArguments prepareInitTimeArguments(String filePath, Double initTime) throws ParseException{
+
+	public static SimulationArguments prepareInitTimeArguments(String filePath,
+			Double initTime) throws ParseException {
 		String[] args = null;
-		if (initTime.equals(-1.0)){
+		if (initTime.equals(-1.0)) {
 			args = new String[4];
 			args[0] = "--sim";
 			args[1] = filePath;
 			args[2] = "--time";
 			args[3] = Double.toString(50.0);
-		}
-		else {
+		} else {
 			args = new String[6];
 			args[0] = "--sim";
 			args[1] = filePath;
@@ -87,40 +88,98 @@ public class Initializator {
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
-	
-	
-	public static SimulationArguments prepareStorifyArguments(String filePath, boolean isSlow, boolean isWeak, boolean isStrong) throws ParseException{
+
+	public static SimulationArguments prepareStorifyArguments(String filePath,
+			boolean isSlow, boolean isWeak, boolean isStrong, boolean isEvent,
+			Long numberOfEventOrTime, Integer seed) throws ParseException {
 		String[] args = new String[10];
-		if (isStrong){
+		if (isStrong) {
 			args[8] = "--compress-stories";
 			args[9] = "--use-strong-compression";
-		}else if (isWeak){
+		} else if (isWeak) {
 			args[8] = "--compress-stories";
 			args[9] = "--no-use-strong-compression";
-		}else{
+		} else {
 			args[8] = "--no-compress-stories";
 			args[9] = "--no-use-strong-compression";
-			
+
 		}
 		args[0] = "--storify";
 		args[1] = filePath;
-		args[2] = "--event";
-		args[3] = "1000";
+		if (isEvent) {
+			args[2] = "--event";
+			args[3] = numberOfEventOrTime.toString();
+		} else {
+			args[2] = "--time";
+			args[3] = numberOfEventOrTime.toString();
+		}
 		args[4] = "--iteration";
-		if (isSlow){
+		if (isSlow) {
 			args[5] = "100";
-		}else {
+		} else {
 			args[5] = "10";
 		}
 		args[6] = "--seed";
-		args[7] = "13";
-		
+		args[7] = seed.toString();
+
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
-	
-	public static SimulationArguments prepareEventNumberArguments(String filePath, Integer eventNumber) throws ParseException{
+
+	public static SimulationArguments prepareContactMapArguments(
+			String directory, String count, boolean isFocus)
+			throws ParseException {
+		String[] args;
+		if (isFocus) {
+			args = new String[11];
+			args[9] = "--focus-on";
+			args[10] = directory + "~focus" + count
+					+ DEFAULT_EXTENSION_FILE;
+		} else {
+			args = new String[9];
+		}
+		args[0] = "--short-console-output";
+		args[1] = "--contact-map";
+		args[2] = directory + "~kappa" + count + DEFAULT_EXTENSION_FILE;
+		args[3] = "--no-dump-iteration-number";
+		args[4] = "--no-dump-rule-iteration";
+		args[5] = "--no-build-influence-map";
+		args[6] = "--no-compute-quantitative-compression";
+		args[7] = "--no-compute-qualitative-compression";
+		args[8] = "--no-enumerate-complexes";
+
+		SimulatorCommandLine commandLine = null;
+		commandLine = new SimulatorCommandLine(args);
+		return commandLine.getSimulationArguments();
+	}
+
+	public static SimulationArguments prepareRuleCompressionArguments(
+			String directory, String count, boolean isQuantitative)
+			throws ParseException {
+		String[] args;
+		args = new String[9];
+		args[0] = "--short-console-output";
+		args[1] = "--contact-map";
+		args[2] = directory + "~kappa" + count + DEFAULT_EXTENSION_FILE;
+		args[3] = "--no-dump-iteration-number";
+		args[4] = "--no-dump-rule-iteration";
+		args[5] = "--no-build-influence-map";
+		if (isQuantitative) {
+			args[6] = "--output-quantitative-compression";
+		} else {
+			args[6] = "--output-qualitative-compression";
+		}
+		args[7] = "temp.out";
+		args[8] = "--no-enumerate-complexes";
+
+		SimulatorCommandLine commandLine = null;
+		commandLine = new SimulatorCommandLine(args);
+		return commandLine.getSimulationArguments();
+	}
+
+	public static SimulationArguments prepareEventNumberArguments(
+			String filePath, Integer eventNumber) throws ParseException {
 		String[] args = new String[4];
 		args[0] = "--sim";
 		args[1] = filePath;
@@ -130,8 +189,9 @@ public class Initializator {
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
-	
-	public static SimulationArguments prepareTimeArguments(String filePath, Integer time) throws ParseException{
+
+	public static SimulationArguments prepareTimeArguments(String filePath,
+			Integer time) throws ParseException {
 		String[] args = new String[4];
 		args[0] = "--sim";
 		args[1] = filePath;
@@ -141,16 +201,18 @@ public class Initializator {
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
-	
-	public static SimulationArguments prepareSimulationArguments(String[] args) throws ParseException {
+
+	public static SimulationArguments prepareSimulationArguments(String[] args)
+			throws ParseException {
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
-	
+
 	public void reset(String filePath) {
 		try {
-			mySimulator.getSimulationData().setSimulationArguments(InfoType.OUTPUT, 
+			mySimulator.getSimulationData().setSimulationArguments(
+					InfoType.OUTPUT,
 					prepareSimulationArguments(prepareTestArgs(filePath)));
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -158,12 +220,12 @@ public class Initializator {
 		}
 		mySimulator.resetSimulation(InfoType.OUTPUT);
 	}
-	
+
 	public void init(String filePath) {
 		String[] testArgs = prepareTestArgs(filePath);
 		if (myFirstRun) {
 			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
-			
+
 			mySimulator = new Simulator();
 
 			SimulationData simulationData = mySimulator.getSimulationData();
@@ -175,25 +237,27 @@ public class Initializator {
 				e.printStackTrace();
 				throw new IllegalArgumentException(e);
 			}
-			
-			simulationData.setSimulationArguments(InfoType.OUTPUT,commandLine.getSimulationArguments());
+
+			simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
+					.getSimulationArguments());
 			simulationData.readSimulatonFile(InfoType.OUTPUT);
 			simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
-			
+
 			myFirstRun = false;
-			myObsComponents = mySimulator.getSimulationData().getKappaSystem().getObservables().getConnectedComponentList();
+			myObsComponents = mySimulator.getSimulationData().getKappaSystem()
+					.getObservables().getConnectedComponentList();
 		} else {
 			reset(filePath);
 		}
 
 	}
-	
-	public Simulator getSimulator() { 
+
+	public Simulator getSimulator() {
 		return mySimulator;
 	}
-	
-	public List<IObservablesConnectedComponent> getObservables() {
-		return Collections.unmodifiableList(myObsComponents);
+
+	public List<ObservableConnectedComponentInterface> getObservables() {
+		return myObsComponents;
 	}
-	
+
 }

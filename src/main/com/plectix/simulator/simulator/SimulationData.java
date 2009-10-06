@@ -12,7 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -23,36 +22,29 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.cli.HelpFormatter;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.SimulationMain;
-import com.plectix.simulator.action.CAction;
-import com.plectix.simulator.action.CActionType;
-import com.plectix.simulator.components.CObservables;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.CSnapshot;
-import com.plectix.simulator.components.SnapshotElement;
-import com.plectix.simulator.components.complex.contactMap.EContactMapMode;
-import com.plectix.simulator.components.perturbations.CPerturbation;
-import com.plectix.simulator.components.solution.SolutionLine;
-import com.plectix.simulator.components.stories.CStoryType;
-import com.plectix.simulator.components.stories.CStoryType.StoryOutputType;
-import com.plectix.simulator.components.stories.storage.StoryStorageException;
-import com.plectix.simulator.interfaces.IObservablesComponent;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.action.Action;
+import com.plectix.simulator.component.Observables;
+import com.plectix.simulator.component.Rule;
+import com.plectix.simulator.component.Site;
+import com.plectix.simulator.component.Snapshot;
+import com.plectix.simulator.component.SnapshotElement;
+import com.plectix.simulator.component.complex.contactmap.ContactMapMode;
+import com.plectix.simulator.component.perturbations.Perturbation;
+import com.plectix.simulator.component.solution.SolutionLine;
+import com.plectix.simulator.component.stories.storage.StoriesAgentTypesStorage;
+import com.plectix.simulator.component.stories.storage.StoryStorageException;
+import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
+import com.plectix.simulator.interfaces.ObservableInterface;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
 import com.plectix.simulator.parser.KappaSystemParser;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
 import com.plectix.simulator.parser.abstractmodel.reader.RulesParagraphReader;
 import com.plectix.simulator.parser.builders.RuleBuilder;
 import com.plectix.simulator.parser.util.AgentFactory;
-import com.plectix.simulator.simulator.xml.EntityModifier;
-import com.plectix.simulator.simulator.xml.RelationModifier;
 import com.plectix.simulator.util.DecimalFormatter;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.MemoryUtil;
@@ -60,96 +52,83 @@ import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
 
-public class SimulationData {
-
-
+public final class SimulationData {
 	private static final double DEFAULT_NUMBER_OF_POINTS = 1000;
-
 	private static final int NUMBER_OF_SIGNIFICANT_DIGITS = 6;
+	private static final String DEFAULT_XML_SESSION_NAME = "simplx.tmp";
 
 	private List<Double> timeStamps = null;
 	private List<List<RunningMetric>> runningMetrics = null;
-
-	private List<CSnapshot> snapshots = null;
-
-	private List<Info> infoList = new ArrayList<Info>();
-
-	private String tmpSessionName = "simplx.tmp";
-
+	private List<Snapshot> snapshots = null;
+	private final List<Info> infoList = new ArrayList<Info>();
 	private PrintStream printStream = null;
-
 	private List<Double> snapshotTimes = null;
 
 	private long clockStamp;
-
 	private double step;
 	private double nextStep;
 	private double stepStories;
 	private double nextStepStories;
-
-
 	private boolean argumentsSet = false;
-	private SimulationArguments simulationArguments = new SimulationArguments();
 
-	private KappaModel myInitialModel = null;
-	private KappaSystem myKappaSystem = new KappaSystem(this);
+	private SimulationArguments simulationArguments = new SimulationArguments();
+	private KappaModel initialModel = null;
+	private final KappaSystem kappaSystem = new KappaSystem(this);
 
 	public SimulationData() {
 		super();
 	}
 
-	public KappaSystem getKappaSystem() {
-		return myKappaSystem;
+	public final KappaSystem getKappaSystem() {
+		return kappaSystem;
 	}
 
-
-	public KappaModel getInitialModel() {
-		return myInitialModel;
+	public final KappaModel getInitialModel() {
+		return initialModel;
 	}
 
-	public void setInitialModel(KappaModel model) {
-		myInitialModel = model;
+	public final void setInitialModel(KappaModel kappaModel) {
+		initialModel = kappaModel;
 	}
 
 	public final void resetSimulation(InfoType outputType) {
-		if (!simulationArguments.isShortConsoleOutput())
-			outputType = InfoType.OUTPUT;
+		outputType = simulationArguments.getOutputTypeForAdditionalInfo();
 		addInfo(outputType, InfoType.INFO, "-Reset simulation data.");
 		addInfo(outputType, InfoType.INFO, "-Initialization...");
 
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
 
-		myKappaSystem.clearRules();
-		myKappaSystem.getObservables().resetLists();
-		myKappaSystem.getSolution().clear();
-		myKappaSystem.getSolution().clearSolutionLines();
+		kappaSystem.clearRules();
+		kappaSystem.getObservables().resetLists();
+		kappaSystem.getSolution().clear();
+		kappaSystem.getSolution().clearSolutionLines();
 
-		myKappaSystem.resetIdGenerators();
+		kappaSystem.resetIdGenerators();
 
-		if (myKappaSystem.getPerturbations() != null) {
-			myKappaSystem.clearPerturbations();
+		if (kappaSystem.getPerturbations() != null) {
+			kappaSystem.clearPerturbations();
 		}
 
 		if (simulationArguments.getSerializationMode() != SimulationArguments.SerializationMode.READ) {
 			readSimulatonFile(outputType);
 		}
 
-		myKappaSystem.initialize(outputType);
+		kappaSystem.initialize(outputType);
 
 		stopTimer(outputType, timer, "-Initialization:");
 		setClockStamp(System.currentTimeMillis());
 	}
 
-	public final boolean isOcamlStyleObsName() {
-		return simulationArguments.isOcamlStyleObservableNames();
+	public final boolean isOcamlStyleNamingInUse() {
+		return simulationArguments.isOcamlStyleNameingInUse();
 	}
 
 	public final void setSimulationArguments(InfoType outputType,
 			SimulationArguments arguments) {
 		this.simulationArguments = arguments;
 		this.simulationArguments.updateRandom();
-		
+
 		if (simulationArguments.isNoDumpStdoutStderr()) {
 			printStream = null;
 		}
@@ -163,7 +142,7 @@ public class SimulationData {
 				HelpFormatter formatter = new HelpFormatter();
 				formatter.printHelp(printWriter, HelpFormatter.DEFAULT_WIDTH,
 						SimulationMain.COMMAND_LINE_SYNTAX, null,
-						SimulatorOptions.COMMAND_LINE_OPTIONS,
+						SimulatorOption.COMMAND_LINE_OPTIONS,
 						HelpFormatter.DEFAULT_LEFT_PAD,
 						HelpFormatter.DEFAULT_DESC_PAD, null, false);
 				printWriter.flush();
@@ -171,7 +150,7 @@ public class SimulationData {
 		}
 
 		if (simulationArguments.isVersion()) {
-			println("Java simulator SVN Revision: "
+			println("Java Simulator Revision: "
 					+ BuildConstants.BUILD_SVN_REVISION);
 		}
 
@@ -213,8 +192,8 @@ public class SimulationData {
 		// part of reading the simulation file!
 		// They are here now because this method used to parse arguments!
 		resetBar();
-		myKappaSystem.getObservables().setOcamlStyleObsName(
-				simulationArguments.isOcamlStyleObservableNames());
+		kappaSystem.getObservables().setOcamlStyleObsName(
+				simulationArguments.isOcamlStyleNameingInUse());
 		if (simulationArguments.getSnapshotsTimeString() != null) {
 			setSnapshotTime(simulationArguments.getSnapshotsTimeString());
 		}
@@ -225,12 +204,13 @@ public class SimulationData {
 
 			if (simulationArguments.getFocusFilename() != null) {
 				setFocusOn(simulationArguments.getFocusFilename());
+			}else{
+				kappaSystem.getContactMap().setMode(ContactMapMode.MODEL);
 			}
 
 			KappaFile kappaFile = kappaFileReader.parse();
 
 			KappaSystemParser parser = new KappaSystemParser(kappaFile, this);
-			// parser.setForwarding(simulationArguments.isForwardOnly());
 			parser.parse(outputType);
 		} catch (Exception e) {
 			println("Error in file \"" + simulationArguments.getInputFilename()
@@ -280,7 +260,7 @@ public class SimulationData {
 		nextStep = step;
 	}
 
-	private void checkAndInitStoriesBar() {
+	private final void checkAndInitStoriesBar() {
 		if (simulationArguments.isStorify()) {
 			stepStories = simulationArguments.getIterations() * 1.0
 					/ simulationArguments.getClockPrecision();
@@ -288,8 +268,8 @@ public class SimulationData {
 		}
 	}
 
-	public void checkStoriesBar(int i) {
-		if (i >= nextStepStories) {
+	public final void checkStoriesBar(int index) {
+		if (index >= nextStepStories) {
 			double r;
 			if (stepStories >= 1)
 				r = 1;
@@ -320,16 +300,15 @@ public class SimulationData {
 	}
 
 	public final void initIterations() {
-		this.timeStamps =  new ArrayList<Double>();
+		this.timeStamps = new ArrayList<Double>();
 		this.runningMetrics = new ArrayList<List<RunningMetric>>();
-		int observable_num = myKappaSystem.getObservables()
+		int observable_num = kappaSystem.getObservables()
 				.getUniqueComponentList().size();
 		for (int i = 0; i < observable_num; i++) {
 			runningMetrics.add(new ArrayList<RunningMetric>());
 		}
 
 	}
-
 
 	public final void stopTimer(InfoType outputType, PlxTimer timer,
 			String message) {
@@ -362,7 +341,7 @@ public class SimulationData {
 	}
 
 	public final void createSnapshots(double currentTime) {
-		addSnapshot(new CSnapshot(this, currentTime));
+		addSnapshot(new Snapshot(this, currentTime));
 		// simulationData.setSnapshotTime(currentTime);
 	}
 
@@ -379,20 +358,21 @@ public class SimulationData {
 	}
 
 	private final void setFocusOn(String fileNameFocusOn) throws Exception {
+		
 		KappaFileReader kappaFileReader = new KappaFileReader(fileNameFocusOn);
 		KappaFile kappaFile = kappaFileReader.parse();
-		KappaModel model = (new KappaModelCreator(simulationArguments))
-				.createModel(kappaFile);
-		List<CRule> ruleList = (new RuleBuilder(new KappaSystem(this)))
-				.build(new RulesParagraphReader(model, simulationArguments,
+		List<Rule> ruleList = (new RuleBuilder(new KappaSystem(this)))
+				.build(new RulesParagraphReader(simulationArguments,
 						new AgentFactory(false)).readComponent(kappaFile
 						.getRules()));
 
-		myKappaSystem.getContactMap().setSimulationData(this);
+		kappaSystem.getContactMap().setSimulationData(kappaSystem);
 		if (ruleList != null && !ruleList.isEmpty()) {
-			myKappaSystem.getContactMap().setFocusRule(ruleList.get(0));
-			myKappaSystem.getContactMap()
-					.setMode(EContactMapMode.AGENT_OR_RULE);
+			kappaSystem.getContactMap().setFocusRule(ruleList.get(0));
+			kappaSystem.getContactMap().setMode(ContactMapMode.AGENT_OR_RULE);
+		}
+		else{
+			kappaSystem.getContactMap().setFocusRule(null);
 		}
 	}
 
@@ -403,9 +383,7 @@ public class SimulationData {
 	// TODO separate info output
 
 	public final void addInfo(InfoType outputType, InfoType type, String message) {
-		if (!simulationArguments.isShortConsoleOutput()) {
-			outputType = InfoType.OUTPUT;
-		}
+		outputType = simulationArguments.getOutputTypeForAdditionalInfo();
 		addInfo(new Info(outputType, type, message, printStream));
 	}
 
@@ -440,7 +418,7 @@ public class SimulationData {
 	}
 
 	protected final void printlnBar() {
-		if (!simulationArguments.isShortConsoleOutput())
+		if (simulationArguments.getOutputTypeForAdditionalInfo() != InfoType.DO_NOT_OUTPUT)
 			if (printStream != null) {
 				printStream.println("#");
 			}
@@ -460,10 +438,9 @@ public class SimulationData {
 
 	private final void outputSolution() {
 		println("INITIAL SOLUTION:");
-		for (SolutionLine sl : (myKappaSystem.getSolution())
-				.getSolutionLines()) {
+		for (SolutionLine sl : (kappaSystem.getSolution()).getSolutionLines()) {
 			print("-");
-			print("" + sl.getCount());
+			print("" + sl.getNumber());
 			print("*[");
 			print(sl.getLine());
 			println("]");
@@ -471,29 +448,30 @@ public class SimulationData {
 	}
 
 	private final void outputRules() {
-		for (CRule rule : myKappaSystem.getRules()) {
+		for (Rule rule : kappaSystem.getRules()) {
 			// int countAgentsInLHS = rule.getCountAgentsLHS();
 			// int indexNewAgent = countAgentsInLHS;
 
-			for (CAction action : rule.getActionList()) {
-				switch (CActionType.getById(action.getTypeId())) {
+			for (Action action : rule.getActionList()) {
+				switch (action.getType()) {
 				case BREAK: {
-					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
+					Site siteTo = ((Site) action.getSourceSite().getLinkState()
 							.getConnectedSite());
-					if (action.getSiteFrom().getParentAgent()
+					if (action.getSourceSite().getParentAgent()
 							.getIdInRuleHandside() < siteTo.getParentAgent()
 							.getIdInRuleHandside()) {
 						// BRK (#0,a) (#1,x)
 						print("BRK (#");
 						print(""
-								+ (action.getSiteFrom().getParentAgent()
+								+ (action.getSourceSite().getParentAgent()
 										.getIdInRuleHandside() - 1));
 						print(",");
-						print(action.getSiteFrom().getName());
+						print(action.getSourceSite().getName());
 						print(") ");
 						print("(#");
 						print(""
-								+ (siteTo.getParentAgent().getIdInRuleHandside() - 1));
+								+ (siteTo.getParentAgent()
+										.getIdInRuleHandside() - 1));
 						print(",");
 						print(siteTo.getName());
 						print(") ");
@@ -505,22 +483,22 @@ public class SimulationData {
 					// DEL #0
 					print("DEL #");
 					println(""
-							+ (action.getAgentFrom().getIdInRuleHandside() - 1));
+							+ (action.getSourceAgent().getIdInRuleHandside() - 1));
 					break;
 				}
 				case ADD: {
 					// ADD a#0(x)
-					print("ADD " + action.getAgentTo().getName() + "#");
+					print("ADD " + action.getTargetAgent().getName() + "#");
 
-					print("" + (action.getAgentTo().getIdInRuleHandside() - 1));
+					print("" + (action.getTargetAgent().getIdInRuleHandside() - 1));
 					print("(");
 					int i = 1;
-					for (CSite site : action.getAgentTo().getSites()) {
+					for (Site site : action.getTargetAgent().getSites()) {
 						print(site.getName());
 						if ((site.getInternalState() != null)
-								&& (site.getInternalState().getNameId() >= 0))
+								&& (!site.getInternalState().hasDefaultName()))
 							print("~" + site.getInternalState().getName());
-						if (action.getAgentTo().getSites().size() > i++)
+						if (action.getTargetAgent().getSites().size() > i++)
 							print(",");
 					}
 					println(") ");
@@ -529,21 +507,21 @@ public class SimulationData {
 				}
 				case BOUND: {
 					// BND (#1,x) (#0,a)
-					CSite siteTo = ((CSite) action.getSiteFrom().getLinkState()
+					Site siteTo = ((Site) action.getSourceSite().getLinkState()
 							.getConnectedSite());
-					if (action.getSiteFrom().getParentAgent()
+					if (action.getSourceSite().getParentAgent()
 							.getIdInRuleHandside() > siteTo.getParentAgent()
 							.getIdInRuleHandside()) {
 						print("BND (#");
 						print(""
-								+ (action.getSiteFrom().getParentAgent()
+								+ (action.getSourceSite().getParentAgent()
 										.getIdInRuleHandside() - 1));
 						print(",");
-						print(action.getSiteFrom().getName());
+						print(action.getSourceSite().getName());
 						print(") ");
 						print("(#");
 						print(""
-								+ (action.getSiteTo().getParentAgent()
+								+ (action.getTargetSite().getParentAgent()
 										.getIdInRuleHandside() - 1));
 						print(",");
 						print(siteTo.getName());
@@ -556,12 +534,12 @@ public class SimulationData {
 					// MOD (#1,x) with p
 					print("MOD (#");
 					print(""
-							+ (action.getSiteFrom().getParentAgent()
+							+ (action.getSourceSite().getParentAgent()
 									.getIdInRuleHandside() - 1));
 					print(",");
-					print(action.getSiteFrom().getName());
+					print(action.getSourceSite().getName());
 					print(") with ");
-					print(action.getSiteTo().getInternalState().getName());
+					print(action.getTargetSite().getInternalState().getName());
 					println();
 					break;
 				}
@@ -571,10 +549,10 @@ public class SimulationData {
 
 			StringBuffer sb = new StringBuffer();
 			sb.append(SimulationUtils.printPartRule(rule.getLeftHandSide(),
-					isOcamlStyleObsName()));
+					isOcamlStyleNamingInUse()));
 			sb.append("->");
 			sb.append(SimulationUtils.printPartRule(rule.getRightHandSide(),
-					isOcamlStyleObsName()));
+					isOcamlStyleNamingInUse()));
 			StringBuffer ch = new StringBuffer();
 			for (int j = 0; j < sb.length(); j++)
 				ch.append("-");
@@ -595,29 +573,28 @@ public class SimulationData {
 	private final void outputPertubation() {
 		println("PERTURBATIONS:");
 
-		for (CPerturbation perturbation : myKappaSystem.getPerturbations()) {
+		for (Perturbation perturbation : kappaSystem.getPerturbations()) {
 			println(perturbationToString(perturbation));
 		}
 
 	}
 
-	private final String perturbationToString(CPerturbation perturbation) {
+	private final String perturbationToString(Perturbation perturbation) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("-");
-		String greater = (perturbation.getGreater()) ? "> " : "< ";
 		switch (perturbation.getType()) {
 		case TIME: {
 			sb.append("Whenever current time ");
-			sb.append(greater);
+			sb.append(perturbation.inequalitySign().toString());
 			sb.append(perturbation.getTimeCondition());
 			break;
 		}
 		case NUMBER: {
 			sb.append("Whenever [");
-			sb.append(myKappaSystem.getObservables().getComponentList().get(
-					perturbation.getObsNameID()).getName());
+			sb.append(kappaSystem.getObservables().getComponentList().get(
+					perturbation.getObservableName()).getName());
 			sb.append("] ");
-			sb.append(greater);
+			sb.append(perturbation.inequalitySign().toString());
 			sb.append(SimulationUtils
 					.perturbationParametersToString(perturbation
 							.getLHSParametersList()));
@@ -634,8 +611,8 @@ public class SimulationData {
 		return sb.toString();
 	}
 
-	private void outputBar() {
-		if (!simulationArguments.isShortConsoleOutput()
+	private final void outputBar() {
+		if (simulationArguments.getOutputTypeForAdditionalInfo() != InfoType.DO_NOT_OUTPUT
 				|| !simulationArguments.isStorify())
 			print("#");
 	}
@@ -645,14 +622,14 @@ public class SimulationData {
 		PlxTimer timer = new PlxTimer();
 		timer.startTimer();
 
-		int number_of_observables = myKappaSystem.getObservables()
+		int number_of_observables = kappaSystem.getObservables()
 				.getUniqueComponentList().size();
 		try {
 			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
 				int oCamlObservableNo = number_of_observables - observable_num
 						- 1; // everything is backward with OCaml!
 				BufferedWriter writer = new BufferedWriter(new FileWriter(
-						tmpSessionName + "-" + oCamlObservableNo));
+						DEFAULT_XML_SESSION_NAME + "-" + oCamlObservableNo));
 
 				double timeSampleMin = 0.;
 				double timeNext = 0.;
@@ -725,42 +702,23 @@ public class SimulationData {
 		writer.writeStartDocument("utf-8", "1.0");
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 			writer.writeStartElement("ComplxSession");
-			// simplxSession.setAttribute("xsi:schemaLocation",
-			// "http://synthesisstudios.com ComplxSession.xsd");
-
-			/*
-			 * simplxSession.setAttribute("xsi:schemaLocation","http://synthesisstudios.com ComplxSession.xsd"
-			 * );
-			 * 
-			 * // "unexpected element (uri:"", local:"ComplxSession //
-			 * "). Expected elements are <{http://plectix.synthesisstudios.com/schemas/kappasession}ComplxSession>,<{http://plectix.synthesisstudios.com/schemas/kappasession}KappaResults>,<{http://plectix.synthesisstudios.com/schemas/kappasession}SimplxSession>"
-			 * Element element = doc.createElement("Refinement");
-			 * element.setAttribute("Name", "DAG");
-			 * simplxSession.appendChild(element); element =
-			 * doc.createElement("Refinement");
-			 * element.setAttribute("Name","Maximal");
-			 * simplxSession.appendChild(element);
-			 * 
-			 * Element ruleSet = doc.createElement("RuleSet");
-			 * ruleSet.setAttribute("Name", "Original"); addRulesToXML(ruleSet,
-			 * myKappaSystem.getRules().size(), doc);
-			 * simplxSession.appendChild(ruleSet);
-			 */
 		} else {
 			writer.writeStartElement("SimplxSession");
-			writer.writeAttribute("xsi:schemaLocation", "http://plectix.synthesisstudios.com SimplxSession.xsd");
-			/*
-			 * simplxSession.setAttribute("xsi:schemaLocation",
-			 * "http://plectix.synthesisstudios.com SimplxSession.xsd");
-			 */
+			writer.writeAttribute("xsi:schemaLocation",
+					"http://plectix.synthesisstudios.com SimplxSession.xsd");
 		}
-		writer.setDefaultNamespace("http://plectix.synthesisstudios.com/schemas/kappasession");
-		writer.writeDefaultNamespace("http://plectix.synthesisstudios.com/schemas/kappasession");
-		writer.writeNamespace("xsi","http://www.w3.org/2001/XMLSchema-instance");
+		writer
+				.setDefaultNamespace("http://plectix.synthesisstudios.com/schemas/kappasession");
+		writer
+				.writeDefaultNamespace("http://plectix.synthesisstudios.com/schemas/kappasession");
+		writer.writeNamespace("xsi",
+				"http://www.w3.org/2001/XMLSchema-instance");
 
-		writer.writeAttribute("CommandLine", simulationArguments.getCommandLineString());
+		writer.writeAttribute("CommandLine", simulationArguments
+				.getCommandLineString());
 
-		writer.writeAttribute("InputFile", simulationArguments.getInputFilename());
+		writer.writeAttribute("InputFile", simulationArguments
+				.getInputFilename());
 		Date d = new Date();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		writer.writeAttribute("TimeStamp", df.format(d));
@@ -768,44 +726,46 @@ public class SimulationData {
 		timer.startTimer();
 
 		// TODO check it
-		if (simulationArguments.isSubViews()) {
-			myKappaSystem.getSubViews().createXML(writer);
-		}
-		
-		if(simulationArguments.isEnumerationOfSpecies()){
-			myKappaSystem.getEnumerationOfSpecies().writeToXML(writer);
+		if (simulationArguments.createSubViews()) {
+			kappaSystem.getSubViews().createXML(writer);
 		}
 
-		if(simulationArguments.isLocalViews()){
-			myKappaSystem.getLocalViews().writeToXML(writer);
+		if (simulationArguments.useEnumerationOfSpecies()) {
+			kappaSystem.getEnumerationOfSpecies().writeToXML(writer);
 		}
-		
-		if (simulationArguments.isQualitativeCompression() || simulationArguments.isQuantitativeCompression()){
-			myKappaSystem.getRuleCompressionBuilder().writeToXML(writer, isOcamlStyleObsName());
+
+		if (simulationArguments.createLocalViews()) {
+			kappaSystem.getLocalViews().writeToXML(writer);
+		}
+
+		if (simulationArguments.runQualitativeCompression()
+				|| simulationArguments.runQuantitativeCompression()) {
+			kappaSystem.getRuleCompressionBuilder().writeToXML(writer,
+					isOcamlStyleNamingInUse());
 		}
 
 		// TODO check it
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-			myKappaSystem.getContactMap().createXML(writer);
+			kappaSystem.getContactMap().createXML(writer);
 		}
 
 		if (simulationArguments.isActivationMap()) {
-			myKappaSystem.getInfluenceMap().createXML(
+			kappaSystem.getInfluenceMap().createXML(
 					writer,
-					myKappaSystem.getRules().size(),
-					myKappaSystem.getObservables()
+					kappaSystem.getRules().size(),
+					kappaSystem.getObservables()
 							.getConnectedComponentListForXMLOutput(),
-					simulationArguments.isInhibitionMap(), myKappaSystem,
-					simulationArguments.isOcamlStyleObservableNames());
+					simulationArguments.isInhibitionMap(), kappaSystem,
+					simulationArguments.isOcamlStyleNameingInUse());
 			stopTimer(InfoType.OUTPUT, timer,
 					"-Building xml tree for influence map:");
 		}
 
 		// //TODO STORIES!!!!!!!!!!!
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY) {
-			
-			myKappaSystem.getStories().createXML(writer, myKappaSystem, simulationArguments.getIterations());
-		
+
+			kappaSystem.getStories().createXML(writer, kappaSystem,
+					simulationArguments.getIterations());
 
 		}
 
@@ -817,24 +777,26 @@ public class SimulationData {
 		}
 
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.SIM) {
-			int obsCountTimeListSize = myKappaSystem.getObservables()
+			int obsCountTimeListSize = kappaSystem.getObservables()
 					.getCountTimeList().size();
 			writer.writeStartElement("Simulation");
 			writer.writeAttribute("TotalEvents", Long
 					.toString(simulationArguments.getMaxNumberOfEvents()));
-			writer.writeAttribute("TotalTime", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(simulationArguments.getTimeLength(),
+			writer.writeAttribute("TotalTime", DecimalFormatter
+					.toStringWithSetNumberOfSignificantDigits(
+							simulationArguments.getTimeLength(),
 							NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
 			writer.writeAttribute("InitTime", DecimalFormatter
 					.toStringWithSetNumberOfSignificantDigits(
 							simulationArguments.getInitialTime(),
 							NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
 
-			writer.writeAttribute("TimeSample", DecimalFormatter.toStringWithSetNumberOfSignificantDigits(myKappaSystem
-							.getObservables().getTimeSampleMin(),
+			writer.writeAttribute("TimeSample", DecimalFormatter
+					.toStringWithSetNumberOfSignificantDigits(
+							kappaSystem.getObservables().getTimeSampleMin(),
 							NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
 
-			
-			List<IObservablesComponent> list = myKappaSystem.getObservables()
+			List<ObservableInterface> list = kappaSystem.getObservables()
 					.getUniqueComponentList();
 			for (int i = list.size() - 1; i >= 0; i--) {
 				createElement(list.get(i), writer);
@@ -845,9 +807,7 @@ public class SimulationData {
 			writer.writeStartElement("CSV");
 			StringBuffer cdata = new StringBuffer();
 			for (int i = 0; i < obsCountTimeListSize; i++) {
-				cdata
-						.append(appendData(myKappaSystem.getObservables(),
-								list, i));
+				cdata.append(appendData(kappaSystem.getObservables(), list, i));
 			}
 			writer.writeCData(cdata.toString());
 			writer.writeEndElement();
@@ -865,9 +825,9 @@ public class SimulationData {
 
 	}
 
-	private void writeSnapshotsToXML(XMLStreamWriter writer)
+	private final void writeSnapshotsToXML(XMLStreamWriter writer)
 			throws XMLStreamException {
-		for (CSnapshot snapshot : snapshots) {
+		for (Snapshot snapshot : snapshots) {
 			writer.writeStartElement("FinalState");
 			writer.writeAttribute("Time", String.valueOf(snapshot
 					.getSnapshotTime()));
@@ -876,8 +836,7 @@ public class SimulationData {
 			for (SnapshotElement se : snapshotElementList) {
 				writer.writeStartElement("Species");
 				writer.writeAttribute("Kappa", se.getComponentsName());
-				writer.writeAttribute("Number", String.valueOf(se
-						.getCount()));
+				writer.writeAttribute("Number", String.valueOf(se.getCount()));
 				writer.writeEndElement();
 			}
 			writer.writeEndElement();
@@ -898,14 +857,14 @@ public class SimulationData {
 		writer.writeEndElement();
 	}
 
-	private final void createElement(IObservablesComponent obs,
+	private final void createElement(ObservableInterface observableComponent,
 			XMLStreamWriter writer) throws XMLStreamException {
 		writer.writeStartElement("Plot");
-		String obsName = obs.getName();
+		String obsName = observableComponent.getName();
 		if (obsName == null)
-			obsName = obs.getLine();
+			obsName = observableComponent.getLine();
 
-		if (obs instanceof IObservablesConnectedComponent) {
+		if (observableComponent instanceof ObservableConnectedComponentInterface) {
 			writer.writeAttribute("Type", "OBSERVABLE");
 			writer.writeAttribute("Text", '[' + obsName + ']');
 		} else {
@@ -915,45 +874,48 @@ public class SimulationData {
 		writer.writeEndElement();
 	}
 
+	public final void outputXMLData()
+			throws ParserConfigurationException, TransformerException,
+			XMLStreamException, IOException, StoryStorageException {
+		outputXMLData(new BufferedWriter(new FileWriter(getXmlSessionPath())));
+	}
 
-
-	public final void outputData(long count)
+	public final void outputXMLData(Writer writer)
 			throws ParserConfigurationException, TransformerException,
 			XMLStreamException, IOException, StoryStorageException {
 		PlxTimer timerOutput = new PlxTimer();
 		timerOutput.startTimer();
-		createXMLOutput(new BufferedWriter(new FileWriter(getXmlSessionPath())));
+		createXMLOutput(writer);
 		stopTimer(InfoType.OUTPUT, timerOutput,
 				"-Results outputted in xml session:");
-
 	}
 
-	private final StringBuffer appendData(CObservables obs,
-			List<IObservablesComponent> list, int index) {
+	private final StringBuffer appendData(Observables obs,
+			List<ObservableInterface> list, int index) {
 		StringBuffer cdata = new StringBuffer();
 		cdata.append(DecimalFormatter.toStringWithSetNumberOfSignificantDigits(
-				myKappaSystem.getObservables().getCountTimeList().get(index),
+				kappaSystem.getObservables().getCountTimeList().get(index),
 				NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
 		for (int j = list.size() - 1; j >= 0; j--) {
 			cdata.append(",");
-			IObservablesComponent oCC = list.get(j);
+			ObservableInterface oCC = list.get(j);
 			cdata.append(getItem(obs, index, oCC));
 		}
 		cdata.append("\n");
 		return cdata;
 	}
 
-	private final String getItem(CObservables obs, int index,
-			IObservablesComponent oCC) {
+	private final String getItem(Observables observables, int index,
+			ObservableInterface oCC) {
 		if (oCC.isUnique()) {
-			return oCC.getStringItem(index, obs);
+			return oCC.getStringItem(index, observables);
 		}
 
 		long value = 1;
-		for (IObservablesConnectedComponent cc : obs
+		for (ObservableConnectedComponentInterface cc : observables
 				.getConnectedComponentList()) {
 			if (cc.getId() == oCC.getId()) {
-				value *= cc.getItem(index, obs);
+				value *= cc.getItem(index, observables);
 			}
 		}
 
@@ -970,7 +932,7 @@ public class SimulationData {
 	 *            enabled, otherwise <tt>false</tt>
 	 * @return string representation of given rule
 	 */
-	public static final String getData(CRule rule, boolean isOcamlStyleObsName) {
+	public static final String getData(Rule rule, boolean isOcamlStyleObsName) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(SimulationUtils.printPartRule(rule.getLeftHandSide(),
 				isOcamlStyleObsName));
@@ -990,9 +952,9 @@ public class SimulationData {
 		return simulationArguments;
 	}
 
-	public final void addSnapshot(CSnapshot snapshot) {
+	public final void addSnapshot(Snapshot snapshot) {
 		if (snapshots == null) {
-			snapshots = new ArrayList<CSnapshot>();
+			snapshots = new ArrayList<Snapshot>();
 		}
 		this.snapshots.add(snapshot);
 	}
@@ -1014,7 +976,7 @@ public class SimulationData {
 		return timeStamps;
 	}
 
-	public List<Double> getSnapshotTimes() {
+	public final List<Double> getSnapshotTimes() {
 		return snapshotTimes;
 	}
 
@@ -1032,5 +994,10 @@ public class SimulationData {
 
 	public final void setPrintStream(PrintStream printStream) {
 		this.printStream = printStream;
+	}
+
+	public StoriesAgentTypesStorage getStoriesAgentTypesStorage() {
+		return kappaSystem.getStories() != null ? kappaSystem.getStories()
+				.getStoriesAgentTypesStorage() : null;
 	}
 }

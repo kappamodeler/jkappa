@@ -4,43 +4,43 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
-import com.plectix.simulator.parser.abstractmodel.AbstractRule;
-import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.component.Rule;
+import com.plectix.simulator.parser.abstractmodel.ModelAgent;
+import com.plectix.simulator.parser.abstractmodel.ModelRule;
+import com.plectix.simulator.simulator.KappaSystemInterface;
 import com.plectix.simulator.simulator.SimulationUtils;
 
-public class RuleBuilder {
-	private final SubstanceBuilder mySubstanceBuilder;
-	private final KappaSystem myKappaSystem;
+public final class RuleBuilder {
+	private final SubstanceBuilder substanceBuilder;
+	private final KappaSystemInterface kappaSystem;
 	
-	public RuleBuilder(KappaSystem system) {
-		myKappaSystem = system;
-		mySubstanceBuilder = new SubstanceBuilder(system);
+	public RuleBuilder(KappaSystemInterface system) {
+		this.kappaSystem = system;
+		this.substanceBuilder = new SubstanceBuilder(system);
 	}
 	
-	public List<CRule> build(Collection<AbstractRule> rules) {
-		List<CRule> result = new ArrayList<CRule>();
-		for (AbstractRule rule : rules) {
+	public final List<Rule> build(Collection<ModelRule> rules) {
+		List<Rule> result = new ArrayList<Rule>();
+		for (ModelRule rule : rules) {
 			result.add(convert(rule));
 		}
 		return result;
 	}
 	
-	private CRule convert(AbstractRule rule) {
-		String name = rule.getName();
-		List<AbstractAgent> lhs = rule.getLHS();
-		List<AbstractAgent> rhs = rule.getRHS();
-		double rate = rule.getRate();
-		int id = rule.getID();
-		boolean isStorify = rule.isStorify();
+	public final Rule convert(ModelRule abstractRule) {
+		String name = abstractRule.getName();
+		List<ModelAgent> lhs = abstractRule.getLHS();
+		List<ModelAgent> rhs = abstractRule.getRHS();
+		double rate = abstractRule.getRate();
+		int id = abstractRule.getID();
+		boolean isStorify = abstractRule.isStorify();
 		
-		List<CAgent> lhsAgents = mySubstanceBuilder.buildAgents(lhs);
-		List<CAgent> rhsAgents = mySubstanceBuilder.buildAgents(rhs);
-		CRule newRule = SimulationUtils.buildRule(lhsAgents, rhsAgents, name, rate, id, isStorify);
-		newRule.setAdditionalRate(rule.getBinaryRate());
-		myKappaSystem.generateNextRuleId();
+		List<Agent> lhsAgents = substanceBuilder.buildAgents(lhs);
+		List<Agent> rhsAgents = substanceBuilder.buildAgents(rhs);
+		Rule newRule = SimulationUtils.buildRule(lhsAgents, rhsAgents, name, rate, id, isStorify);
+		newRule.setAdditionalRate(abstractRule.getBinaryRate());
+		kappaSystem.generateNextRuleId();
 		return newRule;
 	}
 }

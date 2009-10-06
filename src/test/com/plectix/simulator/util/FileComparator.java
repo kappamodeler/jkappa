@@ -8,22 +8,24 @@ import java.io.IOException;
 public class FileComparator {
 	private final String myFirstPath;
 	private final String mySecondPath;
-	
+
 	public FileComparator(String path1, String path2) {
 		myFirstPath = path1;
 		mySecondPath = path2;
 	}
-	
+
 	/**
 	 * 
-	 * @return line, where the first difference found
-	 * 		or -1 if there's no difference
+	 * @return line, where the first difference found or -1 if there's no
+	 *         difference
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
 	public int compare() throws FileNotFoundException, IOException {
-		BufferedReader myFirstReader = new BufferedReader(new FileReader(myFirstPath));
-		BufferedReader mySecondReader = new BufferedReader(new FileReader(mySecondPath));
+		BufferedReader myFirstReader = new BufferedReader(new FileReader(
+				myFirstPath));
+		BufferedReader mySecondReader = new BufferedReader(new FileReader(
+				mySecondPath));
 		String first;
 		String second;
 		int line = 1;
@@ -37,7 +39,7 @@ public class FileComparator {
 				first = myFirstReader.readLine();
 				second = mySecondReader.readLine();
 				line++;
-			}	
+			}
 		} finally {
 			myFirstReader.close();
 			mySecondReader.close();
@@ -49,4 +51,3 @@ public class FileComparator {
 		}
 	}
 }
-

@@ -1,9 +1,0 @@
-# Rules:
-
-'Rule_0' A() -> @ 1.0
-
-%init: 5.71 * A(x)									
-
-# Simulation:
-
-%obs: '001' A()

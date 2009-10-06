@@ -7,9 +7,9 @@ import java.util.Map;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.plectix.simulator.components.stories.CStories;
-import com.plectix.simulator.components.stories.storage.IWireStorage;
-import com.plectix.simulator.components.stories.storage.StoryStorageException;
+import com.plectix.simulator.component.stories.Stories;
+import com.plectix.simulator.component.stories.storage.StoryStorageException;
+import com.plectix.simulator.component.stories.storage.WireStorageInterface;
 
 public class TestStoryCorrectness extends InitStoriesTests {
 
@@ -27,8 +27,8 @@ public class TestStoryCorrectness extends InitStoriesTests {
 
 	public TestStoryCorrectness(String fileName) {
 
-		//3 boolean variables: isSlow, isWeak, isStrong 
-		super(path, fileName, false, true, false);
+		// 3 boolean variables: isSlow, isWeak, isStrong isFirst mode
+		super(path, fileName, true, false, true, true);
 
 		this.fileName = fileName;
 	}
@@ -38,42 +38,31 @@ public class TestStoryCorrectness extends InitStoriesTests {
 		System.out
 				.println("\n\n**************************************fileName = "
 						+ fileName);
-		CStories stories = getStories();
-		Map<Integer, IWireStorage> storages = stories
+		Stories stories = getStories();
+		Map<Integer, WireStorageInterface> storages = stories
 				.getEventsMapForCurrentStory();
 		try {
-			for (IWireStorage storage : storages.values()) {
+			for (WireStorageInterface storage : storages.values()) {
 				if (!storage.isImportantStory())
 					continue;
 
-//				printStorage(storage);
+				// printStorage(storage);
 				StoryCorrectness.testStorage(storage);
 
-				//StoryCorrectness.testWires(storage);
+				StoryCorrectness.testWires(storage);
 				StoryCorrectness.testOfStates(storage);
 				StoryCorrectness.testOfParallelCorrectness(storage);
 				StoryCorrectness.testInternalStatesIterator(storage);
 				StoryCorrectness.testWireWithMinUnresolved(storage);
 				StoryCorrectness.testCompareStorageMaps(storage);
 				StoryCorrectness.testCountUnresolvedOnWire(storage);
+				StoryCorrectness.testLinks(storage);
 
 			}
 		} catch (StoryStorageException e) {
 			e.printStackTrace();
+			junit.framework.Assert.fail(e.getMessage());
 		}
-
 	}
 
-	
-
-	
-
-	
-
-	
-
-	
-
-	
 }
-

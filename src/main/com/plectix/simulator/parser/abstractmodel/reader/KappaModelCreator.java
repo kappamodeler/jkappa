@@ -4,57 +4,51 @@ import java.util.Collection;
 import java.util.List;
 
 import com.plectix.simulator.parser.KappaFile;
-import com.plectix.simulator.parser.abstractmodel.AbstractPerturbation;
-import com.plectix.simulator.parser.abstractmodel.AbstractRule;
-import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
-import com.plectix.simulator.parser.abstractmodel.AbstractStories;
+import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.abstractmodel.observables.AbstractObservables;
-import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
+import com.plectix.simulator.parser.abstractmodel.ModelPerturbation;
+import com.plectix.simulator.parser.abstractmodel.ModelRule;
+import com.plectix.simulator.parser.abstractmodel.ModelSolution;
+import com.plectix.simulator.parser.abstractmodel.ModelStories;
+import com.plectix.simulator.parser.abstractmodel.observables.ModelObservables;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 
-public class KappaModelCreator {
+public final class KappaModelCreator {
+	private final SimulationArguments simulationArguments;
+	private final AgentFactory defaultAgentFactory = new AgentFactory(true);
+	private final AgentFactory solutionAgentFactory;
 
-	private final SimulationArguments myArguments;
-	private AgentFactory myAgentFactory = new AgentFactory(false);
-	private AgentFactory mySolutionAgentFactory = myAgentFactory;
-
-	public KappaModelCreator(SimulationArguments arguments) {
-		myArguments = arguments;
-		if (!myArguments.incompletesAllowed()) {
-			mySolutionAgentFactory = new AgentFactory(true);
-		}
+	public KappaModelCreator(SimulationArguments simulationArguments) {
+		this.simulationArguments = simulationArguments;
+		solutionAgentFactory = new AgentFactory(simulationArguments.incompletesAllowed());
 	}
 
-	public KappaModel createModel(KappaFile file) throws SimulationDataFormatException {
+	public final KappaModel createModel(KappaFile kappaFile) throws SimulationDataFormatException {
 		KappaModel model = new KappaModel();
 
-		// simulationData.addInfo(InfoType.INFO,"--Computing initial state");
-
-		if (myArguments.getSimulationType() != SimulationType.GENERATE_MAP) {
-			AbstractSolution solution = (new SolutionParagraphReader(model,
-					myArguments, mySolutionAgentFactory)).readComponent(file
+		if (simulationArguments.getSimulationType() != SimulationType.GENERATE_MAP) {
+			ModelSolution solution = (new SolutionParagraphReader(
+					simulationArguments, solutionAgentFactory)).readComponent(kappaFile
 					.getSolution());
 			model.setSolution(solution);
 		}
 
-		Collection<AbstractRule> rules = (new RulesParagraphReader(model,
-				myArguments, myAgentFactory)).readComponent(file.getRules());
+		Collection<ModelRule> rules = (new RulesParagraphReader(
+				simulationArguments, defaultAgentFactory)).readComponent(kappaFile.getRules());
 		model.setRules(rules);
 
-		AbstractStories stories = (new StoriesParagraphReader(model,
-				myArguments, myAgentFactory)).readComponent(file.getStories());
+		ModelStories stories = (new StoriesParagraphReader(
+				simulationArguments, defaultAgentFactory)).readComponent(kappaFile.getStories());
 		model.setStories(stories);
 
-		AbstractObservables observables = (new ObservablesParagraphReader(
-				model, myArguments, myAgentFactory)).readComponent(file
-				.getObservables());
+		ModelObservables observables = (new ObservablesParagraphReader(
+				simulationArguments, defaultAgentFactory)).readComponent(kappaFile.getObservables());
 		model.setObservables(observables);
 
-		List<AbstractPerturbation> perturbations = (new PerturbationsParagraphReader(
-				model, myArguments, myAgentFactory)).readComponent(file
+		List<ModelPerturbation> perturbations = (new PerturbationsParagraphReader(
+				simulationArguments, defaultAgentFactory)).readComponent(kappaFile
 				.getPerturbations());
 		model.setPerturbations(perturbations);
 

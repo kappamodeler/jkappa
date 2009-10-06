@@ -6,11 +6,10 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.plectix.simulator.smiles.RunSmilesTest;
 
-@RunWith(value=Suite.class)
-@SuiteClasses(value = {
-		RunSmilesTest.class
-//		TestContactMap.class
-	})
+@RunWith(value = Suite.class)
+@SuiteClasses(value = { RunSmilesTest.class
+// TestContactMap.class
+})
 public class RunAllSlowTests {
 
 }

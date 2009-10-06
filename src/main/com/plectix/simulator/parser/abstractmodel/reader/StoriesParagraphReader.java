@@ -2,26 +2,21 @@ package com.plectix.simulator.parser.abstractmodel.reader;
 
 import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
-import com.plectix.simulator.parser.abstractmodel.AbstractStories;
-import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.exceptions.ParseErrorException;
+import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.abstractmodel.ModelStories;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 
-/*package*/class StoriesParagraphReader extends
-		KappaParagraphReader<AbstractStories> {
-	public StoriesParagraphReader(KappaModel model,
-			SimulationArguments arguments, AgentFactory factory) {
-		super(model, arguments, factory);
+/*package*/ final class StoriesParagraphReader extends KappaParagraphReader<ModelStories> {
+	public StoriesParagraphReader(SimulationArguments arguments, AgentFactory factory) {
+		super(arguments, factory);
 	}
 
-	public final AbstractStories readComponent(KappaFileParagraph storiesParagraph)
+	public final ModelStories readComponent(KappaFileParagraph storiesParagraph)
 			throws ParseErrorException {
-		AbstractStories stories = new AbstractStories();
-
-		for (KappaFileLine itemDS : storiesParagraph.getLines()) {
-			String line = itemDS.getLine().trim();
-
+		ModelStories stories = new ModelStories();
+		for (KappaFileLine storyLine : storiesParagraph.getLines()) {
+			String line = storyLine.getLine().trim();
 			if (line.indexOf("'") != -1) {
 				line = line.substring(line.indexOf("'") + 1);
 				String name = line.substring(0, line.indexOf("'")).trim();

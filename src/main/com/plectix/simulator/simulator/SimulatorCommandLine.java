@@ -6,22 +6,22 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
 
-public class SimulatorCommandLine {
+public final class SimulatorCommandLine {
 	private final String commandLineString;
 	
 	private final CommandLine commandLine;
 	
 	private final SimulationArguments simulationArguments;
 
-	public SimulatorCommandLine(String[] args) throws ParseException {
+	public SimulatorCommandLine(String[] commandLineArguments) throws ParseException {
 		// let's get the original command line before we change it below:
-		this.commandLineString = SimulationUtils.getCommandLineString(args);
+		this.commandLineString = SimulationUtils.getCommandLineString(commandLineArguments);
 		// let's create the parser
 		CommandLineParser parser = new PosixParser();
 		// let's replace all '-' by '_' 
-		args = SimulationUtils.changeArguments(args);
+		commandLineArguments = SimulationUtils.changeArguments(commandLineArguments);
 		// let's parse the command line
-		this.commandLine = parser.parse(SimulatorOptions.COMMAND_LINE_OPTIONS, args);
+		this.commandLine = parser.parse(SimulatorOption.COMMAND_LINE_OPTIONS, commandLineArguments);
 		// let's create simulation arguments:
 		this.simulationArguments = createSimulationArguments();
 	}
@@ -32,7 +32,7 @@ public class SimulatorCommandLine {
 		// let's replace all '-' by '_' 
 		String[] args = SimulationUtils.changeArguments(commandLineString.split(" "));
 		// let's parse the command line
-		this.commandLine = (new PosixParser()).parse(SimulatorOptions.COMMAND_LINE_OPTIONS, args);
+		this.commandLine = (new PosixParser()).parse(SimulatorOption.COMMAND_LINE_OPTIONS, args);
 		// let's create simulation arguments:
 		this.simulationArguments = createSimulationArguments();
 	}
@@ -41,69 +41,69 @@ public class SimulatorCommandLine {
 		return simulationArguments;
 	}
 
-	private final boolean hasOption(SimulatorOptions option) {
+	private final boolean hasOption(SimulatorOption option) {
 		return commandLine.hasOption(option.getLongName());
 	}
 
-	private final String getValue(SimulatorOptions option) {
+	private final String getValue(SimulatorOption option) {
 		return commandLine.getOptionValue(option.getLongName());
 	}
 
-	private final int getIntValue(SimulatorOptions option) {
+	private final int getIntValue(SimulatorOption option) {
 		return Integer.parseInt(getValue(option));
 	}
 
-	private final long getLongValue(SimulatorOptions option) {
+	private final long getLongValue(SimulatorOption option) {
 		return Long.parseLong(getValue(option));
 	}
 
-	private final Double getDoubleValue(SimulatorOptions option) {
+	private final Double getDoubleValue(SimulatorOption option) {
 		return Double.parseDouble(getValue(option));
 	}
 	
-	private SimulationArguments createSimulationArguments() {
+	private final SimulationArguments createSimulationArguments() {
 		SimulationArguments simulationArguments = new SimulationArguments();
 
 		simulationArguments.setCommandLineString(commandLineString);
 		
-		if (hasOption(SimulatorOptions.NO_DUMP_STDOUT_STDERR)) {
+		if (hasOption(SimulatorOption.NO_DUMP_STDOUT_STDERR)) {
 			simulationArguments.setNoDumpStdoutStderr(true);
 		}
 
-		if (hasOption(SimulatorOptions.HELP)) {
+		if (hasOption(SimulatorOption.HELP)) {
 			simulationArguments.setHelp(true);
 		}
 
-		if (hasOption(SimulatorOptions.VERSION)) {
+		if (hasOption(SimulatorOption.VERSION)) {
 			simulationArguments.setVersion(true);
 		}
 		
-		if (hasOption(SimulatorOptions.SHORT_CONSOLE_OUTPUT)) {
-			simulationArguments.setShortConsoleOutput(true);
+		if (hasOption(SimulatorOption.SHORT_CONSOLE_OUTPUT)) {
+			simulationArguments.setShortConsoleOutput();
 		}
 		
-		if (hasOption(SimulatorOptions.OPERATION_MODE)) {
-			simulationArguments.setOperationMode(getValue(SimulatorOptions.OPERATION_MODE));
+		if (hasOption(SimulatorOption.OPERATION_MODE)) {
+			simulationArguments.setOperationMode(getValue(SimulatorOption.OPERATION_MODE));
 		}
 
-		if (hasOption(SimulatorOptions.XML_SESSION_NAME)) {
-			simulationArguments.setXmlSessionName(getValue(SimulatorOptions.XML_SESSION_NAME));
+		if (hasOption(SimulatorOption.XML_SESSION_NAME)) {
+			simulationArguments.setXmlSessionName(getValue(SimulatorOption.XML_SESSION_NAME));
 		}
 
-		if (hasOption(SimulatorOptions.OUTPUT_XML)) {
-			simulationArguments.setXmlSessionName(getValue(SimulatorOptions.OUTPUT_XML));
+		if (hasOption(SimulatorOption.OUTPUT_XML)) {
+			simulationArguments.setXmlSessionName(getValue(SimulatorOption.OUTPUT_XML));
 		}
 		
-		if (hasOption(SimulatorOptions.INIT)) {
-			simulationArguments.setInitialTime(getDoubleValue(SimulatorOptions.INIT));
+		if (hasOption(SimulatorOption.INIT)) {
+			simulationArguments.setInitialTime(getDoubleValue(SimulatorOption.INIT));
 		}
 
-		if (hasOption(SimulatorOptions.POINTS)) {
-			simulationArguments.setPoints(getIntValue(SimulatorOptions.POINTS));
+		if (hasOption(SimulatorOption.POINTS)) {
+			simulationArguments.setPoints(getIntValue(SimulatorOption.POINTS));
 		}
 
-		if (hasOption(SimulatorOptions.RESCALE)) {
-			double rescale = getDoubleValue(SimulatorOptions.RESCALE);
+		if (hasOption(SimulatorOption.RESCALE)) {
+			double rescale = getDoubleValue(SimulatorOption.RESCALE);
 			if (rescale > 0) {
 				simulationArguments.setRescale(rescale);
 			} else {
@@ -111,17 +111,17 @@ public class SimulatorCommandLine {
 			}
 		}
 
-		if (hasOption(SimulatorOptions.NO_SEED)) {
+		if (hasOption(SimulatorOption.NO_SEED)) {
 			simulationArguments.setSeed(0);
 		}
 
 		// TODO else?
-		if (hasOption(SimulatorOptions.SEED)) {
-			simulationArguments.setSeed(Integer.valueOf(getValue(SimulatorOptions.SEED)));
+		if (hasOption(SimulatorOption.SEED)) {
+			simulationArguments.setSeed(Integer.valueOf(getValue(SimulatorOption.SEED)));
 		}
 
-		if (hasOption(SimulatorOptions.MAX_CLASHES)) {
-			long max_clashes = getLongValue(SimulatorOptions.MAX_CLASHES);
+		if (hasOption(SimulatorOption.MAX_CLASHES)) {
+			long max_clashes = getLongValue(SimulatorOption.MAX_CLASHES);
 			if (max_clashes > 0) {
 				simulationArguments.setMaxClashes(max_clashes);
 			} else {
@@ -129,65 +129,70 @@ public class SimulatorCommandLine {
 			}
 		}
 
-		if (hasOption(SimulatorOptions.ITERATION)) {
-			simulationArguments.setIterations(getIntValue(SimulatorOptions.ITERATION));
+		if (hasOption(SimulatorOption.ITERATION)) {
+			simulationArguments.setIterations(getIntValue(SimulatorOption.ITERATION));
 		}
 
-		if (hasOption(SimulatorOptions.RANDOMIZER_JAVA)) {
+		if (hasOption(SimulatorOption.RANDOMIZER_JAVA)) {
 			//simulationArguments.setRandomizer(getValue(SimulatorOptions.RANDOMIZER_JAVA));
 		}
 
-		if (hasOption(SimulatorOptions.NO_ACTIVATION_MAP)
-				|| (hasOption(SimulatorOptions.NO_MAPS))
-				|| (hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+		if (hasOption(SimulatorOption.NO_ACTIVATION_MAP)
+				|| (hasOption(SimulatorOption.NO_MAPS))
+				|| (hasOption(SimulatorOption.NO_BUILD_INFLUENCE_MAP))) {
 			simulationArguments.setActivationMap(false);
 		}
 		
-		if (hasOption(SimulatorOptions.MERGE_MAPS)) {
+		if (hasOption(SimulatorOption.MERGE_MAPS)) {
 			simulationArguments.setInhibitionMap(true);
 			simulationArguments.setActivationMap(true);
 		}
 		
-		if (hasOption(SimulatorOptions.NO_INHIBITION_MAP)
-				|| (hasOption(SimulatorOptions.NO_MAPS))
-				|| (hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+		if (hasOption(SimulatorOption.NO_INHIBITION_MAP)
+				|| (hasOption(SimulatorOption.NO_MAPS))
+				|| (hasOption(SimulatorOption.NO_BUILD_INFLUENCE_MAP))) {
 			simulationArguments.setInhibitionMap(false);
 		}
 		
-		if (hasOption(SimulatorOptions.INHIBITION_MAP)
-				&& !(hasOption(SimulatorOptions.NO_MAPS))
-				&& !(hasOption(SimulatorOptions.NO_BUILD_INFLUENCE_MAP))) {
+		if (hasOption(SimulatorOption.INHIBITION_MAP)
+				&& !(hasOption(SimulatorOption.NO_MAPS))
+				&& !(hasOption(SimulatorOption.NO_BUILD_INFLUENCE_MAP))) {
 			simulationArguments.setInhibitionMap(true);
 		}
 
-		if (hasOption(SimulatorOptions.COMPILE)) {
+		if (hasOption(SimulatorOption.BUILD_INFLUENCE_MAP)){
+			simulationArguments.setActivationMap(true);
+			simulationArguments.setInhibitionMap(true);
+		}
+
+		if (hasOption(SimulatorOption.COMPILE)) {
 			simulationArguments.setCompile(true);
 		}
 
-		if (hasOption(SimulatorOptions.DEBUG_INIT)) {
+		if (hasOption(SimulatorOption.DEBUG_INIT)) {
 			simulationArguments.setDebugInit(true);
 		}
 
-		if (hasOption(SimulatorOptions.CONTACT_MAP)) {
+		if (hasOption(SimulatorOption.CONTACT_MAP)) {
 			simulationArguments.setContactMap(true);
 		}
 
-		if (hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
+		if (hasOption(SimulatorOption.NUMBER_OF_RUNS)) {
 			simulationArguments.setNumberOfRuns(true);
 		}
 
-		if (hasOption(SimulatorOptions.STORIFY)) {
+		if (hasOption(SimulatorOption.STORIFY)) {
 			simulationArguments.setStorify(true);
 		}
 
-		if (hasOption(SimulatorOptions.OCAML_STYLE_OBS_NAME)) {
+		if (hasOption(SimulatorOption.OCAML_STYLE_OBS_NAME)) {
 			simulationArguments.setOcamlStyleObservableNames(true);
 		}
 
-		if (hasOption(SimulatorOptions.NUMBER_OF_RUNS)) {
-			simulationArguments.setIterations(getIntValue(SimulatorOptions.NUMBER_OF_RUNS));
+		if (hasOption(SimulatorOption.NUMBER_OF_RUNS)) {
+			simulationArguments.setIterations(getIntValue(SimulatorOption.NUMBER_OF_RUNS));
 
-			if (!hasOption(SimulatorOptions.SEED)) {
+			if (!hasOption(SimulatorOption.SEED)) {
 				throw new IllegalArgumentException("No SEED OPTION");
 			}
 
@@ -203,94 +208,94 @@ public class SimulatorCommandLine {
 		 *   
 		 */
 		
-		if (hasOption(SimulatorOptions.WALL_CLOCK_TIME_LIMIT)) {
-			simulationArguments.setWallClockTimeLimit(getLongValue(SimulatorOptions.WALL_CLOCK_TIME_LIMIT));
+		if (hasOption(SimulatorOption.WALL_CLOCK_TIME_LIMIT)) {
+			simulationArguments.setWallClockTimeLimit(getLongValue(SimulatorOption.WALL_CLOCK_TIME_LIMIT));
 		}
 
-		if (hasOption(SimulatorOptions.MONITOR_PEAK_MEMORY)) {
-			simulationArguments.setMonitorPeakMemory(getLongValue(SimulatorOptions.MONITOR_PEAK_MEMORY));
+		if (hasOption(SimulatorOption.MONITOR_PEAK_MEMORY)) {
+			simulationArguments.setMonitorPeakMemory(getLongValue(SimulatorOption.MONITOR_PEAK_MEMORY));
 		}
 
-		if (hasOption(SimulatorOptions.REJECT_INCOMPLETES)) {
+		if (hasOption(SimulatorOption.REJECT_INCOMPLETES)) {
 			simulationArguments.rejectIncompletes();
 		}
 		
-		if (hasOption(SimulatorOptions.CLOCK_PRECISION)) {
-			simulationArguments.setClockPrecision(getIntValue(SimulatorOptions.CLOCK_PRECISION));
+		if (hasOption(SimulatorOption.CLOCK_PRECISION)) {
+			simulationArguments.setClockPrecision(getIntValue(SimulatorOption.CLOCK_PRECISION));
 		}
 		
-		if (hasOption(SimulatorOptions.OUTPUT_FINAL_STATE)) {
+		if (hasOption(SimulatorOption.OUTPUT_FINAL_STATE)) {
 			simulationArguments.setOutputFinalState(true);
 		}
 
-		if (hasOption(SimulatorOptions.OUTPUT_SCHEME)) {
-			simulationArguments.setXmlSessionPath(getValue(SimulatorOptions.OUTPUT_SCHEME));
+		if (hasOption(SimulatorOption.OUTPUT_SCHEME)) {
+			simulationArguments.setXmlSessionPath(getValue(SimulatorOption.OUTPUT_SCHEME));
 		}
 
-		if (hasOption(SimulatorOptions.NO_SAVE_ALL)) {
+		if (hasOption(SimulatorOption.NO_SAVE_ALL)) {
 			simulationArguments.setSerializationMode(SimulationArguments.SerializationMode.NONE);
 		}
 
-		if (hasOption(SimulatorOptions.SAVE_ALL)) {
-			simulationArguments.setSerializationFileName(getValue(SimulatorOptions.SAVE_ALL)) ;
+		if (hasOption(SimulatorOption.SAVE_ALL)) {
+			simulationArguments.setSerializationFileName(getValue(SimulatorOption.SAVE_ALL)) ;
 		}
 
 		/**=====================================================================**/
 		/*							STORIES										**/
 		/**=====================================================================**/
 
-		if(hasOption(SimulatorOptions.DONT_COMPRESS_STORIES) && hasOption(SimulatorOptions.DONT_USE_STRONG_COMPRESSION)){
+		if(hasOption(SimulatorOption.DONT_COMPRESS_STORIES) && hasOption(SimulatorOption.DONT_USE_STRONG_COMPRESSION)){
 			simulationArguments.setStorifyMode(SimulationArguments.StoryCompressionMode.NONE);
 		}
 
-		if (hasOption(SimulatorOptions.USE_STRONG_COMPRESSION) || hasOption(SimulatorOptions.COMPRESS_STORIES)) {
+		if (hasOption(SimulatorOption.USE_STRONG_COMPRESSION) || hasOption(SimulatorOption.COMPRESS_STORIES)) {
 			simulationArguments.setStorifyMode(SimulationArguments.StoryCompressionMode.STRONG);
 		}
 
-		if(hasOption(SimulatorOptions.COMPRESS_STORIES) && hasOption(SimulatorOptions.DONT_USE_STRONG_COMPRESSION)){
+		if(hasOption(SimulatorOption.COMPRESS_STORIES) && hasOption(SimulatorOption.DONT_USE_STRONG_COMPRESSION)){
 			simulationArguments.setStorifyMode(SimulationArguments.StoryCompressionMode.WEAK);
 		}
 
-		if (hasOption(SimulatorOptions.EVENT)) {
-			simulationArguments.setMaxNumberOfEvents(getLongValue(SimulatorOptions.EVENT));
+		if (hasOption(SimulatorOption.EVENT)) {
+			simulationArguments.setMaxNumberOfEvents(getLongValue(SimulatorOption.EVENT));
 			simulationArguments.setTime(false);
 		}
 		
-		if (hasOption(SimulatorOptions.TIME)) {
-			simulationArguments.setTimeLength(getDoubleValue(SimulatorOptions.TIME));
+		if (hasOption(SimulatorOption.TIME)) {
+			simulationArguments.setTimeLength(getDoubleValue(SimulatorOption.TIME));
 			simulationArguments.setTime(true);
 		} 
 
-		if (hasOption(SimulatorOptions.AGENTS_LIMIT)) {
-			simulationArguments.setAgentsLimit(getIntValue(SimulatorOptions.AGENTS_LIMIT));
+		if (hasOption(SimulatorOption.AGENTS_LIMIT)) {
+			simulationArguments.setAgentsLimit(getIntValue(SimulatorOption.AGENTS_LIMIT));
 		}
 		
-		if (hasOption(SimulatorOptions.LIVE_DATA_INTERVAL)) {
-			simulationArguments.setLiveDataInterval(getIntValue(SimulatorOptions.LIVE_DATA_INTERVAL));
+		if (hasOption(SimulatorOption.LIVE_DATA_INTERVAL)) {
+			simulationArguments.setLiveDataInterval(getIntValue(SimulatorOption.LIVE_DATA_INTERVAL));
 		}
 		
-		if (hasOption(SimulatorOptions.LIVE_DATA_POINTS)) {
-			simulationArguments.setLiveDataPoints(getIntValue(SimulatorOptions.LIVE_DATA_POINTS));
+		if (hasOption(SimulatorOption.LIVE_DATA_POINTS)) {
+			simulationArguments.setLiveDataPoints(getIntValue(SimulatorOption.LIVE_DATA_POINTS));
 		}
 		
 		
 		boolean option = false;
 		String fileName = null;
 		
-		if (hasOption(SimulatorOptions.STORIFY)) {
-			fileName = getValue(SimulatorOptions.STORIFY);
+		if (hasOption(SimulatorOption.STORIFY)) {
+			fileName = getValue(SimulatorOption.STORIFY);
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.STORIFY);
 			option = true;
 		}
 		
 	
-		if (!option && (hasOption(SimulatorOptions.SIMULATIONFILE))) {
+		if (!option && (hasOption(SimulatorOption.SIMULATIONFILE))) {
 			option = true;
-			fileName = getValue(SimulatorOptions.SIMULATIONFILE);
-			if (hasOption(SimulatorOptions.SNAPSHOT_TIME)) {
+			fileName = getValue(SimulatorOption.SIMULATIONFILE);
+			if (hasOption(SimulatorOption.SNAPSHOT_TIME)) {
 				option = true;
 				try {
-					simulationArguments.setSnapshotsTimeString(getValue(SimulatorOptions.SNAPSHOT_TIME));
+					simulationArguments.setSnapshotsTimeString(getValue(SimulatorOption.SNAPSHOT_TIME));
 				} catch (Exception e) {
 					throw new IllegalArgumentException(e);
 				}
@@ -298,20 +303,20 @@ public class SimulatorCommandLine {
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.SIM);
 		}
 		
-		if (hasOption(SimulatorOptions.COMPILE)) {
+		if (hasOption(SimulatorOption.COMPILE)) {
 			if (!option) {
 				option = true;
-				fileName = getValue(SimulatorOptions.COMPILE);
+				fileName = getValue(SimulatorOption.COMPILE);
 			} else {
 				option = false;
 			}
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.COMPILE);
 		}
 	
-		if (hasOption(SimulatorOptions.GENERATE_MAP)) {
+		if (hasOption(SimulatorOption.GENERATE_MAP)) {
 			if (!option) {
 				option = true;
-				fileName = getValue(SimulatorOptions.GENERATE_MAP);
+				fileName = getValue(SimulatorOption.GENERATE_MAP);
 			} else {
 				option = false;
 			}
@@ -319,18 +324,18 @@ public class SimulatorCommandLine {
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.GENERATE_MAP);
 		}
 		
-		if (hasOption(SimulatorOptions.COMPUTE_SUB_VIEWS)) {
-			simulationArguments.setSubViews(true);
+		if (hasOption(SimulatorOption.COMPUTE_SUB_VIEWS)) {
+			simulationArguments.setCreateSubViews(true);
 		}
 	
-		if (hasOption(SimulatorOptions.COMPUTE_DEAD_RILES)) {
-			simulationArguments.setDeadRules(true);
+		if (hasOption(SimulatorOption.COMPUTE_DEAD_RILES)) {
+			simulationArguments.setShowDeadRules(true);
 		}
 
-		if (hasOption(SimulatorOptions.CONTACT_MAP)) {
+		if (hasOption(SimulatorOption.CONTACT_MAP)) {
 			if (!option) {
 				option = true;
-				fileName = getValue(SimulatorOptions.CONTACT_MAP);
+				fileName = getValue(SimulatorOption.CONTACT_MAP);
 			} else {
 				option = false;
 			}
@@ -339,27 +344,27 @@ public class SimulatorCommandLine {
 		}
 		
 		
-		if (hasOption(SimulatorOptions.COMPUTE_LOCAL_VIEWS)) {
-			simulationArguments.setLocalViews(true);
+		if (hasOption(SimulatorOption.COMPUTE_LOCAL_VIEWS)) {
+			simulationArguments.setCreateLocalViews(true);
 		}
 
-		if (hasOption(SimulatorOptions.NO_COMPUTE_LOCAL_VIEWS)) {
-			simulationArguments.setLocalViews(false);
+		if (hasOption(SimulatorOption.NO_COMPUTE_LOCAL_VIEWS)) {
+			simulationArguments.setCreateLocalViews(false);
 		}
 		
-		if (hasOption(SimulatorOptions.ENUMERATE_COMPLEXES)) {
+		if (hasOption(SimulatorOption.ENUMERATE_COMPLEXES)) {
 			simulationArguments.setEnumerationOfSpecies(true);
 		}
 
-		if(hasOption(SimulatorOptions.OUTPUT_QUANTITATIVE_COMPRESSION)){
-			simulationArguments.setQuantitativeCompression(true);
+		if(hasOption(SimulatorOption.OUTPUT_QUANTITATIVE_COMPRESSION)){
+			simulationArguments.setRunQuantitativeCompression(true);
 		}
 
-		if(hasOption(SimulatorOptions.OUTPUT_QUALITATIVE_COMPRESSION)){
-			simulationArguments.setQualitativeCompression(true);
+		if(hasOption(SimulatorOption.OUTPUT_QUALITATIVE_COMPRESSION)){
+			simulationArguments.setRunQualitativeCompression(true);
 		}
 
-		if (hasOption(SimulatorOptions.NO_ENUMERATE_COMPLEXES)) {
+		if (hasOption(SimulatorOption.NO_ENUMERATE_COMPLEXES)) {
 			simulationArguments.setEnumerationOfSpecies(false);
 		}
 
@@ -374,12 +379,12 @@ public class SimulatorCommandLine {
 		simulationArguments.setInputFilename(fileName);
 		
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-			if (hasOption(SimulatorOptions.FOCUS_ON)) {
-				simulationArguments.setFocusFilename(getValue(SimulatorOptions.FOCUS_ON));
+			if (hasOption(SimulatorOption.FOCUS_ON)) {
+				simulationArguments.setFocusFilename(getValue(SimulatorOption.FOCUS_ON));
 			}
 		}
 		
-		simulationArguments.setForwardOnly(hasOption(SimulatorOptions.FORWARD));
+		simulationArguments.setForwardOnly(hasOption(SimulatorOption.FORWARD));
 		
 		return simulationArguments;
 	}

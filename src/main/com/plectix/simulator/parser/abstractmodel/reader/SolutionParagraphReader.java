@@ -2,31 +2,30 @@ package com.plectix.simulator.parser.abstractmodel.reader;
 
 import java.util.List;
 
+import com.plectix.simulator.parser.BadOptionException;
 import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.KappaFileParagraph;
-import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
-import com.plectix.simulator.parser.abstractmodel.AbstractSolution;
-import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.exceptions.BadOptionException;
-import com.plectix.simulator.parser.exceptions.ParseErrorException;
-import com.plectix.simulator.parser.exceptions.ParseErrorMessage;
-import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
+import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.ParseErrorMessage;
+import com.plectix.simulator.parser.SimulationDataFormatException;
+import com.plectix.simulator.parser.abstractmodel.ModelAgent;
+import com.plectix.simulator.parser.abstractmodel.ModelSolution;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 
-/*package*/class SolutionParagraphReader extends
-		KappaParagraphReader<AbstractSolution> {
-	private final SimulationArguments myArguments;
+/*package*/ final class SolutionParagraphReader extends
+		KappaParagraphReader<ModelSolution> {
+	private final SimulationArguments simulationArguments;
 	
-	public SolutionParagraphReader(KappaModel model, SimulationArguments arguments,
-			AgentFactory factory) {
-		super(model, arguments, factory);
-		myArguments = getArguments();
+	public SolutionParagraphReader(SimulationArguments simulationArguments,
+			AgentFactory agentFactory) {
+		super(simulationArguments, agentFactory);
+		this.simulationArguments = getArguments();
 	}
 
-	public final AbstractSolution readComponent(KappaFileParagraph solutionParagraph)
+	public final ModelSolution readComponent(KappaFileParagraph solutionParagraph)
 			throws SimulationDataFormatException {
-		AbstractSolution solution = new AbstractSolution();
+		ModelSolution solution = new ModelSolution();
 		long count;
 		String line;
 		String[] result;
@@ -40,7 +39,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 			count = 1;
 			double countInFile = 1;
 			if (length != 1) {
-				double rescale = myArguments.getRescale();
+				double rescale = simulationArguments.getRescale();
 				if (rescale < 0 || Double.isNaN(rescale)) {
 					rescale = 1.;
 				}
@@ -65,15 +64,14 @@ import com.plectix.simulator.simulator.SimulationArguments;
 			line = result[length - 1].trim();
 
 			// In the future will be create another addAgents to Solution,
-			// without
-			// parse "count" once "line"
+			// without parse "count" once "line"
 			try {
 				if (countInFile > 0) {
 					line = line.replaceAll("[ 	]", "");
-					List<AbstractAgent> listAgent = parseAgent(line);
+					List<ModelAgent> listAgent = parseAgents(line);
 					solution.addAgents(count, listAgent);
 
-					if (myArguments.getSimulationType() == SimulationArguments.SimulationType.COMPILE) {
+					if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.COMPILE) {
 						solution.checkSolutionLinesAndAdd(line, count);
 					}
 				}

@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.PlxLogger;
 
-public class LiveDataStreamer {
+public final class LiveDataStreamer {
 	
 	private static final LiveDataConsumerInterface DUMMY_LIVE_DATA_CONSUMER = new LiveDataConsumerInterface() {
 

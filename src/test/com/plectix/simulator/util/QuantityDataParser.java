@@ -1,6 +1,5 @@
 package com.plectix.simulator.util;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -29,6 +28,6 @@ public class QuantityDataParser extends Parser<Map<String, Integer>> {
 			}
 			line = myReader.getStringFromFile();
 		}
-		return Collections.unmodifiableMap(map);
+		return map;
 	}
 }

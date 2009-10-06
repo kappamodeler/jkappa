@@ -1,25 +1,24 @@
 package com.plectix.simulator.parser.abstractmodel.perturbations;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.plectix.simulator.parser.util.StringUtil;
 
-public class LinearExpression {
-	private final List<LinearExpressionMonome> myRightHandSidePolynome = new ArrayList<LinearExpressionMonome>();
+public final class LinearExpression {
+	private final List<LinearExpressionMonome> monomes 
+			= new ArrayList<LinearExpressionMonome>();
 
-	public void addMonome(LinearExpressionMonome linearExpressionMonome) {
-		myRightHandSidePolynome.add(linearExpressionMonome);
+	public final void addMonome(LinearExpressionMonome linearExpressionMonome) {
+		monomes.add(linearExpressionMonome);
 	}
 	
-	public List<LinearExpressionMonome> getPolynome() {
-		return myRightHandSidePolynome;
+	public final List<LinearExpressionMonome> getPolynome() {
+		return monomes;
 	}
 	
-	//--------------toString----------------
-	
-	public String toString() {
-		return StringUtil.listToString(myRightHandSidePolynome, " + ");
+	@Override
+	public final String toString() {
+		return StringUtil.listToString(monomes, " + ");
 	}
 }

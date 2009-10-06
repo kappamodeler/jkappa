@@ -2,60 +2,38 @@ package com.plectix.simulator.util;
 
 import java.util.List;
 
-public class BoundContactMap {
-	private int agentNameIdFrom;
-	private int agentNameIdTo;
-	private int siteNameIdFrom;
-	private int siteNameIdTo;
+public final class BoundContactMap {
+	private final String sourceAgentName;
+	private final String targetAgentName;
+	private final String sourceSiteName;
+	private final String targetSiteName;
 
-	public BoundContactMap(int agentNameIdFrom, int siteNameIdFrom,
-			int agentNameIdTo, int siteNameIdTo) {
-		this.agentNameIdFrom = agentNameIdFrom;
-		this.agentNameIdTo = agentNameIdTo;
-		this.siteNameIdFrom = siteNameIdFrom;
-		this.siteNameIdTo = siteNameIdTo;
+	public BoundContactMap(String sourceAgentName, String sourceSiteName,
+			String targetAgentName, String targetSiteName) {
+		this.sourceAgentName = sourceAgentName;
+		this.targetAgentName = targetAgentName;
+		this.sourceSiteName = sourceSiteName;
+		this.targetSiteName = targetSiteName;
 	}
 
 
-	public boolean equalz(Object obj) {
-		if (!(obj instanceof BoundContactMap))
-			return false;
-
-		BoundContactMap from = (BoundContactMap) obj;
-		if(agentNameIdFrom == from.getAgentNameIdTo() && agentNameIdTo == from.getAgentNameIdFrom() && siteNameIdFrom == from.getSiteNameIdTo() && siteNameIdTo == from.getSiteNameIdFrom())
+	public final boolean equalz(BoundContactMap boundContactMap) {
+		if (this == boundContactMap)
 			return true;
-		
-//		if (!(((agentNameIdFrom == from.getAgentNameIdFrom()) && (agentNameIdTo == from
-//				.getAgentNameIdTo())) || ((agentNameIdFrom == from
-//				.getAgentNameIdTo()) && (agentNameIdTo == from
-//				.getAgentNameIdFrom()))))
-//			return false;		
-		return false;
+
+		return (sourceAgentName.equals(boundContactMap.sourceAgentName) 
+				&& targetAgentName.equals(boundContactMap.targetAgentName) 
+				&& sourceSiteName.equals(boundContactMap.sourceSiteName) 
+				&& targetSiteName.equals(boundContactMap.targetSiteName));
 	}
 	
 	public final boolean includedInCollection(
 			List<BoundContactMap> collection) {
-		for (BoundContactMap b : collection) {
-			if (this.equalz(b)) {
+		for (BoundContactMap element : collection) {
+			if (this.equalz(element)) {
 				return true;
 			}
 		}
 		return false;
-	}
-
-	public int getAgentNameIdFrom() {
-		return agentNameIdFrom;
-	}
-
-	public int getAgentNameIdTo() {
-		return agentNameIdTo;
-	}
-
-	public int getSiteNameIdFrom() {
-		return siteNameIdFrom;
-	}
-
-	public int getSiteNameIdTo() {
-		return siteNameIdTo;
 	}
 }

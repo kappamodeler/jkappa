@@ -14,8 +14,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.Initializator;
-import com.plectix.simulator.components.perturbations.CPerturbation;
-import com.plectix.simulator.components.perturbations.CPerturbationType;
+import com.plectix.simulator.component.perturbations.Perturbation;
+import com.plectix.simulator.component.perturbations.PerturbationType;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
@@ -29,14 +29,15 @@ public class TestPerturbationsTriggering {
 	private static final String separator = File.separator;
 	private static final String testDirectory = "test.data" + separator
 			+ "perturbations" + separator + "triggering" + separator;
-	private static String prefixFileName = "";
+	private final String prefixFileName;
 
 	private Simulator mySimulator;
 	private Integer[] times = { 200 };
 
 	@Parameters
 	public static Collection<Object[]> data() {
-		String[] files = new String[] { "test" ,  "test01" ,  "test02" ,  "test03" , "test04"};
+		String[] files = new String[] { "test", "test01", "test02", "test03",
+				"test04" };
 		Collection<Object[]> data = new ArrayList<Object[]>();
 		for (String string : files) {
 			Object[] obj = new Object[1];
@@ -56,16 +57,24 @@ public class TestPerturbationsTriggering {
 			setup(times[i]);
 			KappaSystem kappaSystem = mySimulator.getSimulationData()
 					.getKappaSystem();
-			List<CPerturbation> perturbations = kappaSystem.getPerturbations();
-			
-			//check the perturbations have been triggered
-			for (CPerturbation perturbation : perturbations) {
-				if (!perturbation.isDo() && perturbation.getType() == CPerturbationType.TIME && perturbation.getTimeCondition() < times[i])
-					fail("perturbation: $T > " + perturbation.getTimeCondition() + " has not been triggered");
-				else if (perturbation.isDo() && perturbation.getType() == CPerturbationType.TIME && perturbation.getTimeCondition() > times[i])
-					fail("perturbation: $T > " + perturbation.getTimeCondition() + " has been triggered, but it must not to");
+			List<Perturbation> perturbations = kappaSystem.getPerturbations();
+
+			// check the perturbations have been triggered
+			for (Perturbation perturbation : perturbations) {
+				if (!perturbation.isDo()
+						&& perturbation.getType() == PerturbationType.TIME
+						&& perturbation.getTimeCondition() < times[i])
+					fail("perturbation: $T > "
+							+ perturbation.getTimeCondition()
+							+ " has not been triggered");
+				else if (perturbation.isDo()
+						&& perturbation.getType() == PerturbationType.TIME
+						&& perturbation.getTimeCondition() > times[i])
+					fail("perturbation: $T > "
+							+ perturbation.getTimeCondition()
+							+ " has been triggered, but it must not to");
 			}
-			
+
 		}
 	}
 

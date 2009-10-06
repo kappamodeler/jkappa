@@ -4,10 +4,10 @@ import com.plectix.simulator.streaming.LiveData.PlotType;
 
 public interface LiveDataSourceInterface {
 
-	public abstract double[] getPlotValues();
+	public double[] getPlotValues();
 
-	public abstract String[] getPlotNames();
+	public String[] getPlotNames();
 
-	public abstract PlotType[] getPlotTypes();
+	public PlotType[] getPlotTypes();
 
 }

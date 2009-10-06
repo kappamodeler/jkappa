@@ -5,41 +5,41 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CLinkRank;
-import com.plectix.simulator.components.CLinkStatus;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.component.LinkRank;
+import com.plectix.simulator.component.LinkStatus;
+import com.plectix.simulator.component.Site;
+import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 
 public class Converter {
-	public static String toString(CSite site) {
+	public static String toString(Site site) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(site.getName());
-		if (site.getInternalState().getNameId() != CSite.NO_INDEX) {
+		if (!site.getInternalState().hasDefaultName()) {
 			sb.append("~" + site.getInternalState().getName());
 		}
-		if (site.getLinkState().getStatusLinkRank() == CLinkRank.SEMI_LINK) {
+		if (site.getLinkState().getStatusLinkRank() == LinkRank.SEMI_LINK) {
 			sb.append("!_");
 		} else if (site.getLinkIndex() != -1) {
 			sb.append("!" + site.getLinkIndex());
-		} else if (site.getLinkState().getStatusLink() == CLinkStatus.WILDCARD) {
+		} else if (site.getLinkState().getStatusLink() == LinkStatus.WILDCARD) {
 			sb.append("?");
 		}
 		return sb.toString();
 	}
-	
-	public static String toString(CAgent agent) {
+
+	public static String toString(Agent agent) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(agent.getName());
 		sb.append("(");
 		boolean first = true;
-		
-		TreeMap<String, CSite> sites = new TreeMap<String, CSite>();
-		for (CSite site : agent.getSites()) {
+
+		TreeMap<String, Site> sites = new TreeMap<String, Site>();
+		for (Site site : agent.getSites()) {
 			sites.put(site.getName(), site);
 		}
-		
-		for (CSite site : sites.values()) {
+
+		for (Site site : sites.values()) {
 			if (!first) {
 				sb.append(", ");
 			} else {
@@ -50,34 +50,34 @@ public class Converter {
 		sb.append(")");
 		return sb.toString();
 	}
-	
-	public static String toString(IConnectedComponent c) {
+
+	public static String toString(ConnectedComponentInterface c) {
 		StringBuffer sb = new StringBuffer();
-		if (c==null)
+		if (c == null)
 			return "null";
 		boolean first = true;
-		Map<String, List<CAgent>> agents = new TreeMap<String, List<CAgent>>();
-		CAgent empty = new CAgent();
-		List<CAgent> list;
-		String agentString; 
-		for (CAgent agent : c.getAgents()) {
+		Map<String, List<Agent>> agents = new TreeMap<String, List<Agent>>();
+		Agent empty = new Agent();
+		List<Agent> list;
+		String agentString;
+		for (Agent agent : c.getAgents()) {
 			if (empty.equalz(agent)) {
 				return "";
 			}
-			
+
 			agentString = toString(agent).intern();
-			
+
 			list = agents.get(agentString);
 			if (list == null) {
-				list = new ArrayList<CAgent>();
+				list = new ArrayList<Agent>();
 				agents.put(agentString, list);
 			}
 			list.add(agent);
-			
+
 		}
-		
-		for (List<CAgent> agentList : agents.values()) {
-			for (CAgent agent : agentList) {
+
+		for (List<Agent> agentList : agents.values()) {
+			for (Agent agent : agentList) {
 				if (!first) {
 					sb.append(", ");
 				} else {

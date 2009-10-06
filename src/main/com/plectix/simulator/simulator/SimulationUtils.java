@@ -6,21 +6,21 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.CLinkRank;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.ObservablesConnectedComponent;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.components.injections.CLiftElement;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.IPerturbationExpression;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.component.ConnectedComponent;
+import com.plectix.simulator.component.LinkRank;
+import com.plectix.simulator.component.ObservableConnectedComponent;
+import com.plectix.simulator.component.Rule;
+import com.plectix.simulator.component.Site;
+import com.plectix.simulator.component.injections.Injection;
+import com.plectix.simulator.component.injections.LiftElement;
+import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
+import com.plectix.simulator.interfaces.PerturbationExpressionInterface;
 
-public class SimulationUtils {
+public final class SimulationUtils {
 
-	public final static String getCommandLineString(String[] args) {
+	public static final String getCommandLineString(String[] args) {
 		if (args.length == 0) {
 			return null;
 		}
@@ -32,20 +32,22 @@ public class SimulationUtils {
 		return stringBuffer.toString();
 	}
 
-	public static final String printPartRule(List<IConnectedComponent> ccList, boolean isOcamlStyleObsName) {
+	public static final String printPartRule(
+			List<ConnectedComponentInterface> components, 
+			boolean ocamlStyleNaming) {
 		StringBuffer sb = new StringBuffer();
 		int[] indexLink = new int[] { 0 };
 		int length = 0;
-		if (ccList == null)
+		if (components == null)
 			return sb.toString();
-		for (IConnectedComponent cc : ccList)
+		for (ConnectedComponentInterface cc : components)
 			length = length + cc.getAgents().size();
 		int index = 1;
-		for (IConnectedComponent cc : ccList) {
+		for (ConnectedComponentInterface cc : components) {
 			if (cc.isEmpty())
 				return sb.toString();
-			sb.append(printPartRule(cc, indexLink, isOcamlStyleObsName));
-			if (index < ccList.size())
+			sb.append(printPartRule(cc, indexLink, ocamlStyleNaming));
+			if (index < components.size())
 				sb.append(",");
 			index++;
 
@@ -53,52 +55,53 @@ public class SimulationUtils {
 		return sb.toString();
 	}
 
-	public static final String printPartRule(IConnectedComponent cc, int[] index, boolean isOcamlStyleObsName) {
+	public static final String printPartRule(
+			ConnectedComponentInterface component, int[] index, boolean ocamlStyleNaming) {
 		StringBuffer sb = new StringBuffer();
 		int length = 0;
-		if (cc == null)
+		if (component == null)
 			return sb.toString();
-		length = cc.getAgents().size();
+		length = component.getAgents().size();
 
 		int j = 1;
-		if (cc.isEmpty())
+		if (component.isEmpty())
 			return sb.toString();
 
-		List<CAgent> sortedAgents = cc.getAgentsSortedByIdInRule();
+		List<Agent> sortedAgents = component.getAgentsSortedByIdInRule();
 
-		for (CAgent agent : sortedAgents) {
+		for (Agent agent : sortedAgents) {
 			sb.append(agent.getName());
 			sb.append("(");
 
 			List<String> sitesList = new ArrayList<String>();
 
-			for (CSite site : agent.getSites()) {
+			for (Site site : agent.getSites()) {
 				String siteStr = new String(site.getName());
 				// line = line + site.getName();
 				if ((site.getInternalState() != null)
-						&& (site.getInternalState().getNameId() >= 0)) {
+						&& (!site.getInternalState().hasDefaultName())) {
 					siteStr = siteStr + "~" + site.getInternalState().getName();
 					// line = line + "~" + site.getInternalState().getName();
 				}
 				switch (site.getLinkState().getStatusLink()) {
 				case BOUND: {
-					if (site.getLinkState().getStatusLinkRank() == CLinkRank.SEMI_LINK) {
+					if (site.getLinkState().getStatusLinkRank() == LinkRank.SEMI_LINK) {
 						siteStr = siteStr + "!_";
 						// line = line + "!_";
-					} else if (site.getParentAgent().getIdInRuleHandside() < ((CSite) site
+					} else if (site.getParentAgent().getIdInRuleHandside() < ((Site) site
 							.getLinkState().getConnectedSite()).getParentAgent()
 							.getIdInRuleHandside()) {
 						site.getLinkState().getConnectedSite().getLinkState()
-								.setLinkStateID(index[0]);
+								.setLinkStateId(index[0]);
 						siteStr = siteStr + "!" + index[0];
 						index[0]++;
 						// line = line + "!" + indexLink++;
 					} else {
 						siteStr = siteStr + "!"
-								+ site.getLinkState().getLinkStateID();
+								+ site.getLinkState().getLinkStateId();
 						// line = line + "!"
 						// + site.getLinkState().getLinkStateID();
-						site.getLinkState().setLinkStateID(-1);
+						site.getLinkState().setLinkStateId(-1);
 					}
 
 					break;
@@ -115,7 +118,7 @@ public class SimulationUtils {
 				sitesList.add(siteStr);
 			}
 
-			sb.append(getSitesLine(sortSitesStr(sitesList, isOcamlStyleObsName)));
+			sb.append(prepareSiteDescription(sortSiteLines(sitesList, ocamlStyleNaming)));
 			sb.append((length > j) ? "),":")");
 			sitesList.clear();
 			j++;
@@ -124,75 +127,74 @@ public class SimulationUtils {
 		return sb.toString();
 	}
 
-	private static final String getSitesLine(List<String> list) {
+	private static final String prepareSiteDescription(List<String> siteLines) {
 		StringBuffer sb = new StringBuffer();
-		if (list.size() == 0)
+		if (siteLines.size() == 0)
 			return sb.toString();
-		for (int i = 0; i < list.size() - 1; i++) {
-			sb.append(list.get(i) + ",");
+		for (int i = 0; i < siteLines.size() - 1; i++) {
+			sb.append(siteLines.get(i) + ",");
 		}
-		sb.append(list.get(list.size() - 1));
+		sb.append(siteLines.get(siteLines.size() - 1));
 
 		return sb.toString();
 	}
 
-	private static final List<String> sortSitesStr(List<String> list,
+	private static final List<String> sortSiteLines(List<String> siteLines,
 			boolean isOcamlStyleObsName) {
 		if (isOcamlStyleObsName) {
-			Collections.sort(list);
+			Collections.sort(siteLines);
 		}
-
-		return list;
+		return siteLines;
 	}
 
-	public static final List<IConnectedComponent> buildConnectedComponents(
-			Collection<CAgent> listOfAgents) {
+	public static final List<ConnectedComponentInterface> buildConnectedComponents(
+			Collection<Agent> agents) {
 
-		if (listOfAgents == null || listOfAgents.isEmpty()) {
+		if (agents == null || agents.isEmpty()) {
 			return null;
 		}
 
-		List<CAgent> agents = new ArrayList<CAgent>();
-		agents.addAll(listOfAgents);
-		List<IConnectedComponent> result = new ArrayList<IConnectedComponent>();
+		List<Agent> agentsCopy = new ArrayList<Agent>();
+		agentsCopy.addAll(agents);
+		List<ConnectedComponentInterface> result = new ArrayList<ConnectedComponentInterface>();
 
 		int index = 1;
-		for (CAgent agent : agents)
+		for (Agent agent : agentsCopy)
 			agent.setIdInRuleSide(index++);
 
-		while (!agents.isEmpty()) {
+		while (!agentsCopy.isEmpty()) {
 
-			List<CAgent> connectedAgents = new ArrayList<CAgent>();
+			List<Agent> connectedAgents = new ArrayList<Agent>();
 
-			findConnectedComponent(agents.get(0), agents, connectedAgents);
+			findConnectedComponent(agentsCopy.get(0), agentsCopy, connectedAgents);
 
 			// It needs recursive tree search of connected component
-			result.add(new CConnectedComponent(connectedAgents));
+			result.add(new ConnectedComponent(connectedAgents));
 		}
 
 		return result;
 	}
 
-	private static final void findConnectedComponent(CAgent rootAgent,
-			List<CAgent> hsRulesList, List<CAgent> agentsList) {
-		agentsList.add(rootAgent);
-		rootAgent.setIdInConnectedComponent(agentsList.size() - 1);
-		removeAgent(hsRulesList, rootAgent);
+	private static final void findConnectedComponent(Agent rootAgent,
+			List<Agent> agentsFromRules, List<Agent> agents) {
+		agents.add(rootAgent);
+		rootAgent.setIdInConnectedComponent(agents.size() - 1);
+		agentsFromRules.remove(rootAgent);
 		// hsRulesList.remove(rootAgent);
-		for (CSite site : rootAgent.getSites()) {
-			if (site.getLinkIndex() != CSite.NO_INDEX) {
-				CAgent linkedAgent = findLink(hsRulesList, site.getLinkIndex());
+		for (Site site : rootAgent.getSites()) {
+			if (site.getLinkIndex() != -1) {
+				Agent linkedAgent = findAgentByLinkIndex(agentsFromRules, site.getLinkIndex());
 				if (linkedAgent != null) {
-					if (!isAgentInList(agentsList, linkedAgent))
-						findConnectedComponent(linkedAgent, hsRulesList,
-								agentsList);
+					if (!isAgentInList(agents, linkedAgent))
+						findConnectedComponent(linkedAgent, agentsFromRules,
+								agents);
 				}
 			}
 		}
 	}
 
-	private static final boolean isAgentInList(List<CAgent> list, CAgent agent) {
-		for (CAgent lagent : list) {
+	private static final boolean isAgentInList(List<Agent> agentsList, Agent agent) {
+		for (Agent lagent : agentsList) {
 			if (lagent == agent) {
 				return true;
 			}
@@ -200,9 +202,9 @@ public class SimulationUtils {
 		return false;
 	}
 
-	private static final CAgent findLink(List<CAgent> agents, int linkIndex) {
-		for (CAgent tmp : agents) {
-			for (CSite s : tmp.getSites()) {
+	private static final Agent findAgentByLinkIndex(List<Agent> agents, int linkIndex) {
+		for (Agent tmp : agents) {
+			for (Site s : tmp.getSites()) {
 				if (s.getLinkIndex() == linkIndex) {
 					return tmp;
 				}
@@ -211,33 +213,17 @@ public class SimulationUtils {
 		return null;
 	}
 
-	private static final void removeAgent(List<CAgent> agents, CAgent agent) {
-		int i = 0;
-		for (i = 0; i < agents.size(); i++) {
-			if (agents.get(i) == agent)
-				break;
-		}
-		agents.remove(i);
-	}
-
-//	public static final CRule buildRule(List<CAgent> left, List<CAgent> right,
-//			String name, ConstraintData activity, int ruleID, boolean isStorify) {
-//		return new CRule(buildConnectedComponents(left),
-//				buildConnectedComponents(right), name, activity, ruleID,
-//				isStorify);
-//	}
-	
-	public static final CRule buildRule(List<CAgent> left, List<CAgent> right,
-			String name, double activity, int ruleID, boolean isStorify) {
-		return new CRule(buildConnectedComponents(left),
-				buildConnectedComponents(right), name, activity, ruleID,
+	public static final Rule buildRule(List<Agent> leftHandSideAgents, List<Agent> rightHandSideAgents,
+			String name, double activity, int id, boolean isStorify) {
+		return new Rule(buildConnectedComponents(leftHandSideAgents),
+				buildConnectedComponents(rightHandSideAgents), name, activity, id,
 				isStorify);
 	}
 			
-	public final static String[] changeArguments(String[] args) {
-		String[] argsNew = new String[args.length];
+	public static final String[] changeArguments(String[] commandLineArguments) {
+		String[] argsNew = new String[commandLineArguments.length];
 		int i = 0;
-		for (String st : args)
+		for (String st : commandLineArguments)
 			if (st.startsWith("-"))
 				argsNew[i++] = st.substring(0, 2)
 						+ st.substring(2).replaceAll("-", "_");
@@ -246,19 +232,17 @@ public class SimulationUtils {
 		return argsNew;
 	}
 
-	public final static void addToAgentList(List<CAgent> list, CAgent agent) {
-
-		// if (list.contains(agent)) {
+	public static final void addToAgentList(List<Agent> list, Agent agent) {
 		if (agent.includedInCollection(list)) {
 			return;
 		}
 		list.add(agent);
 	}
 
-	public final static void doNegativeUpdate(List<CInjection> injectionsList) {
-		for (CInjection injection : injectionsList) {
+	public static final void doNegativeUpdate(List<Injection> injections) {
+		for (Injection injection : injections) {
 			if (injection != ThreadLocalData.getEmptyInjection()) {
-				for (CSite site : injection.getChangedSites()) {
+				for (Site site : injection.getChangedSites()) {
 					site.getParentAgent().getDefaultSite()
 							.clearIncomingInjections(injection);
 					site.getParentAgent().getDefaultSite().clearLifts();
@@ -266,7 +250,7 @@ public class SimulationUtils {
 					site.clearLifts();
 				}
 				if (injection.getChangedSites().size() != 0) {
-					for (CSite site : injection.getSiteList()) {
+					for (Site site : injection.getSiteList()) {
 						if (!injection
 								.checkSiteExistanceAmongChangedSites(site)) {
 							site.removeInjectionFromLift(injection);
@@ -279,62 +263,39 @@ public class SimulationUtils {
 		}
 	}
 	
-	public final static void doNegativeUpdate(CInjection injection) {
+	public static final void doNegativeUpdate(Injection injection) {
 		if (injection != ThreadLocalData.getEmptyInjection()) {
-		for (CSite site : injection.getChangedSites()) {
-			site.getParentAgent().getDefaultSite().clearIncomingInjections(injection);
-			site.getParentAgent().getDefaultSite().clearLifts();
-			site.clearIncomingInjections(injection);
-			site.clearLifts();
-		}
-		for (CSite site : injection.getSiteList()) {
-			site.removeInjectionFromLift(injection);
-		}
-		injection.getConnectedComponent().removeInjection(injection);
+			for (Site site : injection.getChangedSites()) {
+				site.getParentAgent().getDefaultSite().clearIncomingInjections(injection);
+				site.getParentAgent().getDefaultSite().clearLifts();
+				site.clearIncomingInjections(injection);
+				site.clearLifts();
+			}
+			for (Site site : injection.getSiteList()) {
+				site.removeInjectionFromLift(injection);
+			}
+			injection.getConnectedComponent().removeInjection(injection);
 		}
 	}
 	
-	public final static void doNegativeUpdateForContactMap(List<CInjection> injectionsList, CRule rule) {
-		for (CInjection injection : injectionsList) {
-			if (injection != ThreadLocalData.getEmptyInjection()) {
-				for (CSite site : injection.getChangedSites()) {
-					site.getParentAgent().getDefaultSite()
-							.clearIncomingInjections(injection);
-					site.getParentAgent().getDefaultSite().clearLifts();
-					site.clearIncomingInjections(injection);
-					site.clearLifts();
-				}
-				if (injection.getChangedSites().size() != 0) {
-					for (CSite site : injection.getSiteList()) {
-						if (!injection.checkSiteExistanceAmongChangedSites(site)) {
-							site.removeInjectionFromLift(injection);
-						}
-					}
-					injection.getConnectedComponent()
-							.removeInjection(injection);
-				}
-			}
-		}
-	}
-
-	public final static List<CAgent> doNegativeUpdateForDeletedAgents(
-			CRule rule, List<CInjection> injectionsList) {
-		List<CAgent> freeAgents = new ArrayList<CAgent>();
-		for (CInjection injection : injectionsList) {
-			for (CSite checkedSite : rule.getSitesConnectedWithDeleted()) {
+	public static final List<Agent> doNegativeUpdateForDeletedAgents(
+			Rule rule, List<Injection> injections) {
+		List<Agent> freeAgents = new ArrayList<Agent>();
+		for (Injection injection : injections) {
+			for (Site checkedSite : rule.getSitesConnectedWithDeleted()) {
 				if (!injection.checkSiteExistanceAmongChangedSites(checkedSite)) {
 
-					CAgent checkedAgent = checkedSite.getParentAgent();
+					Agent checkedAgent = checkedSite.getParentAgent();
 					addToAgentList(freeAgents, checkedAgent);
-					for (CLiftElement lift : checkedAgent.getDefaultSite()
+					for (LiftElement lift : checkedAgent.getDefaultSite()
 							.getLift()) {
 						lift.getConnectedComponent().removeInjection(
 								lift.getInjection());
 					}
 					checkedAgent.getDefaultSite().clearLifts();
-					for (CLiftElement lift : checkedSite.getLift()) {
+					for (LiftElement lift : checkedSite.getLift()) {
 
-						for (CSite site : lift.getInjection().getSiteList()) {
+						for (Site site : lift.getInjection().getSiteList()) {
 							if (site != checkedSite)
 								site.removeInjectionFromLift(lift
 										.getInjection());
@@ -347,25 +308,26 @@ public class SimulationUtils {
 				}
 			}
 		}
-		for (CSite checkedSite : rule.getSitesConnectedWithBroken()) {
-			CAgent checkedAgent = checkedSite.getParentAgent();
+		for (Site checkedSite : rule.getSitesConnectedWithBroken()) {
+			Agent checkedAgent = checkedSite.getParentAgent();
 			addToAgentList(freeAgents, checkedAgent);
 		}
 		return freeAgents;
 	}
 
-	public final static String perturbationParametersToString(List<IPerturbationExpression> sumParameters) {
+	public static final String perturbationParametersToString(
+			List<PerturbationExpressionInterface> perturbationExpressions) {
 		StringBuffer sb = new StringBuffer();
 
 		int index = 1;
-		for (IPerturbationExpression parameters : sumParameters) {
-			sb.append(parameters.getValueToString());
-			if (parameters.getName() != null) {
+		for (PerturbationExpressionInterface expression : perturbationExpressions) {
+			sb.append(expression.getValueToString());
+			if (expression.getName() != null) {
 				sb.append("*[");
-				sb.append(parameters.getName());
+				sb.append(expression.getName());
 				sb.append("]");
 			}
-			if (index < sumParameters.size())
+			if (index < perturbationExpressions.size())
 				sb.append(" + ");
 			index++;
 		}
@@ -373,33 +335,17 @@ public class SimulationUtils {
 		return sb.toString();
 	}
 
-	public final static void positiveUpdate(List<CRule> rulesList,
-			List<IObservablesConnectedComponent> list, CRule rule) {
-		for (CRule rules : rulesList) {
+	public static final void positiveUpdate(List<Rule> rulesList,
+			List<ObservableConnectedComponentInterface> rules, Rule rule) {
+		for (Rule ruleFromList : rulesList) {
 			// if(rules!=rule)
-			for (IConnectedComponent cc : rules.getLeftHandSide()) {
+			for (ConnectedComponentInterface cc : ruleFromList.getLeftHandSide()) {
 				cc.doPositiveUpdate(rule.getRightHandSide());
 			}
 		}
-		for (IObservablesConnectedComponent oCC : list) {
-			if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX)
+		for (ObservableConnectedComponentInterface oCC : rules) {
+			if (oCC.getMainAutomorphismNumber() == ObservableConnectedComponent.NO_INDEX)
 				oCC.doPositiveUpdate(rule.getRightHandSide());
-		}
-	}
-
-	public final static void positiveUpdateForContactMap(List<CRule> rulesList,
-			CRule rule, List<CRule> invokedRulesList) {
-		for (CRule rules : rulesList) {
-		//	if (rule != rules)
-			int g=0;
-				for (IConnectedComponent cc : rules.getLeftHandSide()) {
-					cc.doPositiveUpdate(rule.getRightHandSide());
-				}
-			
-			if (rules.canBeApplied()
-					&& !rules.includedInCollection(invokedRulesList)) {
-				invokedRulesList.add(rules);
-			}
 		}
 	}
 
@@ -410,11 +356,11 @@ public class SimulationUtils {
 	 * @return
 	 */
 	// currentAgent is the biggest one. solutionAgent should be contained in it.
-	public final static boolean justCompareAgents(CAgent solutionAgent, CAgent currentAgent) {
+	public static final boolean justCompareAgents(Agent solutionAgent, Agent currentAgent) {
 		if (currentAgent == null || solutionAgent == null)
 			return false;
-		for (CSite site : currentAgent.getSites()) {
-			CSite solutionSite = solutionAgent.getSiteByNameId(site.getNameId());
+		for (Site site : currentAgent.getSites()) {
+			Site solutionSite = solutionAgent.getSiteByName(site.getName());
 			if (solutionSite == null)
 				return false;
 			if (!site.expandedEqualz(solutionSite, false))
@@ -423,14 +369,14 @@ public class SimulationUtils {
 		return true;
 	}
 	
-	public static List<IConnectedComponent> splitAndCopy(KappaSystem ks, Collection<CAgent> agents) {
-		List<IConnectedComponent> set = new LinkedList<IConnectedComponent>();
-		Collection<IConnectedComponent> split = split(agents);
+	public static final List<ConnectedComponentInterface> splitAndCopy(KappaSystem ks, Collection<Agent> agents) {
+		List<ConnectedComponentInterface> set = new LinkedList<ConnectedComponentInterface>();
+		Collection<ConnectedComponentInterface> split = split(agents);
 		if (split == null) {
-			set.add(new CConnectedComponent());
+			set.add(new ConnectedComponent());
 			return set;
 		}
-		for (IConnectedComponent cc : split) {
+		for (ConnectedComponentInterface cc : split) {
 			set.add(ks.getSolution().cloneConnectedComponent(cc));
 		}
 		if (set.isEmpty()) {
@@ -439,21 +385,7 @@ public class SimulationUtils {
 		return set;
 	}
 	
-//	public static Collection<IConnectedComponent> split(Collection<CAgent> agents) {
-//		Collection<IConnectedComponent> set = new LinkedHashSet<IConnectedComponent>();
-//		List<CAgent> copiedAgents = new ArrayList<CAgent>(agents);
-//		for (CAgent agent : agents) {
-//			IConnectedComponent cc = SolutionUtils.getConnectedComponent(agent);
-//			set.add(cc);
-//			copiedAgents.removeAll(cc.getAgents());
-//			if (copiedAgents.isEmpty()) {
-//				break;
-//			}
-//		}
-//		return set;
-//	}
-	
-	public static Collection<IConnectedComponent> split(Collection<CAgent> agents){
+	private static final Collection<ConnectedComponentInterface> split(Collection<Agent> agents){
 		return SimulationUtils.buildConnectedComponents(agents);
 	}
 }

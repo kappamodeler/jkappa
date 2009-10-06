@@ -2,10 +2,10 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.List;
 
-import com.plectix.simulator.parser.abstractmodel.AbstractStories;
+import com.plectix.simulator.parser.abstractmodel.ModelStories;
 
-public class StoriesBuilder {
-	public List<String> build(AbstractStories stories) {
+public final class StoriesBuilder {
+	public final List<String> build(ModelStories stories) {
 		return stories.getStorifiedNames();
 	}
 }

@@ -9,19 +9,13 @@ import org.junit.runners.Suite.SuiteClasses;
 import com.plectix.simulator.TestRunner;
 
 @RunWith(value = Suite.class)
-@SuiteClasses(value = { 
-//		TestParseRuleCorrection.class,
-//		TestParseAgentCorrection.class,
-//		TestParseAgents.class,
-//		TestParseResult.class,
-//		TestSuccessParsing.class,
-//		TestParseStoriesCorrection.class
-		})
+@SuiteClasses(value = { TestParser.class, ExceptionsTest.class })
 public class RunParserTests extends TestRunner {
 	private static final String separator = File.separator;
-	private static final String myTestFileNamePrefix = "test.data" + separator + "parser" + separator;
-	
-	public static String getFileNamePrefix() { 
+	private static final String myTestFileNamePrefix = "test.data" + separator
+			+ "new_parser" + separator;
+
+	public static String getFileNamePrefix() {
 		return myTestFileNamePrefix;
 	}
 }

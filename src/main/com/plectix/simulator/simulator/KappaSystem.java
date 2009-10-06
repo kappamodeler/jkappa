@@ -8,29 +8,28 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CObservables;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.complex.abstracting.CAbstractAgent;
-import com.plectix.simulator.components.complex.contactMap.CContactMap;
-import com.plectix.simulator.components.complex.detectionOfCycles.Detector;
-import com.plectix.simulator.components.complex.enumerationOfSpecies.GeneratorSpecies;
-import com.plectix.simulator.components.complex.influenceMap.AInfluenceMap;
-import com.plectix.simulator.components.complex.influenceMap.withFuture.CInfluenceMapWithFuture;
-import com.plectix.simulator.components.complex.localviews.CLocalViewsMain;
-import com.plectix.simulator.components.complex.subviews.CMainSubViews;
-import com.plectix.simulator.components.complex.subviews.IAllSubViewsOfAllAgents;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.components.perturbations.CPerturbation;
-import com.plectix.simulator.components.stories.CStories;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.ISolution;
-import com.plectix.simulator.parser.util.IdGenerator;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.component.Observables;
+import com.plectix.simulator.component.Rule;
+import com.plectix.simulator.component.complex.abstracting.AbstractAgent;
+import com.plectix.simulator.component.complex.contactmap.ContactMap;
+import com.plectix.simulator.component.complex.cyclesdetection.Detector;
+import com.plectix.simulator.component.complex.influencemap.InfluenceMap;
+import com.plectix.simulator.component.complex.influencemap.future.InfluenceMapWithFuture;
+import com.plectix.simulator.component.complex.localviews.LocalViewsMain;
+import com.plectix.simulator.component.complex.speciesenumeration.GeneratorSpecies;
+import com.plectix.simulator.component.complex.subviews.AllSubViewsOfAllAgentsInterface;
+import com.plectix.simulator.component.complex.subviews.MainSubViews;
+import com.plectix.simulator.component.injections.Injection;
+import com.plectix.simulator.component.injections.InjectionsUtil;
+import com.plectix.simulator.component.perturbations.Perturbation;
+import com.plectix.simulator.component.stories.Stories;
+import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
+import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.probability.WeightedItemSelector;
 import com.plectix.simulator.probability.skiplist.SkipListSelector;
 import com.plectix.simulator.rulecompression.CompressionResults;
@@ -38,32 +37,35 @@ import com.plectix.simulator.rulecompression.RuleCompressionType;
 import com.plectix.simulator.rulecompression.RuleCompressor;
 import com.plectix.simulator.rulecompression.writer.RuleCompressionXMLWriter;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
+import com.plectix.simulator.util.IdGenerator;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.Info.InfoType;
 
-public class KappaSystem {
-	private WeightedItemSelector<CRule> rules = new SkipListSelector<CRule>();
-	private List<CRule> orderedRulesList = new ArrayList<CRule>();
-	private CStories stories = null;
-	private List<CPerturbation> perturbations = null;
-	private CObservables observables = new CObservables();
-	private ISolution solution;// = new CSolution(); // soup of initial components
-	private CContactMap contactMap = new CContactMap();
-	private IAllSubViewsOfAllAgents subViews;
-	private AInfluenceMap influenceMap;
-	private CLocalViewsMain localViews;
+public final class KappaSystem implements KappaSystemInterface {
+	private WeightedItemSelector<Rule> rules = new SkipListSelector<Rule>();
+	private List<Rule> orderedRulesList = new ArrayList<Rule>();
+	private Stories stories = null;
+	private List<Perturbation> perturbations = null;
+	private Observables observables = new Observables();
+	private SolutionInterface solution;// = new CSolution(); // soup of initial components
+	private ContactMap contactMap = new ContactMap();
+	private AllSubViewsOfAllAgentsInterface subViews;
+	private InfluenceMap influenceMap;
+	private LocalViewsMain localViews;
 	private GeneratorSpecies enumerationOfSpecies;
 	private RuleCompressionXMLWriter ruleCompressionWriter; 
 
 	private final IdGenerator agentsIdGenerator = new IdGenerator();
 	private final IdGenerator ruleIdGenerator = new IdGenerator();
-
 	private final SimulationData simulationData;
 
 	public KappaSystem(SimulationData data) {
 		simulationData = data;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#initialize(com.plectix.simulator.util.Info.InfoType)
+	 */
 	public final void initialize(InfoType outputType) {
 		SimulationArguments args = simulationData.getSimulationArguments();
 		if (args.getSerializationMode() == SimulationArguments.SerializationMode.READ) {
@@ -71,11 +73,11 @@ public class KappaSystem {
 			try {
 				ois = new ObjectInputStream(new FileInputStream(args
 						.getSerializationFileName()));
-				solution = (ISolution) ois.readObject();
-				rules = (WeightedItemSelector<CRule>) ois.readObject();
-				orderedRulesList = (List<CRule>) ois.readObject();
-				observables = (CObservables) ois.readObject();
-				perturbations = (List<CPerturbation>) ois.readObject();
+				solution = (SolutionInterface) ois.readObject();
+				rules = (WeightedItemSelector<Rule>) ois.readObject();
+				orderedRulesList = (List<Rule>) ois.readObject();
+				observables = (Observables) ois.readObject();
+				perturbations = (List<Perturbation>) ois.readObject();
 				simulationData.setSnapshotTimes((List<Double>) ois
 						.readObject());
 				args.setMaxNumberOfEvents((long) ois.readLong());
@@ -112,7 +114,7 @@ public class KappaSystem {
 
 		observables.init(args.getTimeLength(), args.getInitialTime(), args
 				.getMaxNumberOfEvents(), args.getPoints(), args.isTime());
-		List<CRule> rules = getRules();
+		List<Rule> rules = getRules();
 
 		observables.checkAutomorphisms();
 
@@ -126,70 +128,75 @@ public class KappaSystem {
 		}
 
 		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP
-				|| args.isSubViews() || args.isDeadRules() || args.isActivationMap() 
+				|| args.createSubViews() || args.isDeadRulesShow() || args.isActivationMap() 
 				|| args.isInhibitionMap()) {
 			// contactMap.initAbstractSolution();
 			// contactMap.constructAbstractRules(rules);
 			// contactMap.constructAbstractContactMap();
-			subViews = new CMainSubViews();
+			subViews = new MainSubViews();
 			subViews.build(solution, rules);
-			if(args.isDeadRules())
+			if(args.isDeadRulesShow())
 				subViews.initDeadRules();
 			if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-				contactMap.fillingContactMap(rules,subViews,simulationData);
+				contactMap.fillingContactMap(rules,subViews,simulationData.getKappaSystem());
 			}
 			
 			if(args.isActivationMap() || args.isInhibitionMap()){
 				PlxTimer timer = new PlxTimer();
 				simulationData.addInfo(outputType, InfoType.INFO,
 						"--Abstracting influence map...");
-				influenceMap = new CInfluenceMapWithFuture();
-				if(!contactMap.isInit())
-					contactMap.fillingContactMap(rules,subViews,simulationData);
-				influenceMap.initInfluenceMap(subViews.getRules(),observables, contactMap, subViews.getAgentNameIdToAgent());
-				influenceMap.fillingActivatedInhibitedRules(rules,this, observables);
+				influenceMap = new InfluenceMapWithFuture();
+				if(!contactMap.isInitialized())
+					contactMap.fillingContactMap(rules,subViews,simulationData.getKappaSystem());
+				influenceMap.initInfluenceMap(subViews.getRules(),observables, contactMap, subViews.getAgentNameToAgent());
+				influenceMap.fillActivatedInhibitedRules(rules,this, observables);
 				simulationData.stopTimer(outputType, timer, "--Abstraction:");
 				simulationData.addInfo(outputType, InfoType.INFO,
 						"--influence map computed");
 			}
 			
-			if(args.isLocalViews() || args.isEnumerationOfSpecies()){
-				localViews = new CLocalViewsMain(subViews);
+			if(args.createLocalViews() || args.useEnumerationOfSpecies()){
+				localViews = new LocalViewsMain(subViews);
 				localViews.buildLocalViews();
-				if(args.isEnumerationOfSpecies()){
+				if(args.useEnumerationOfSpecies()){
 					enumerationOfSpecies = new GeneratorSpecies(localViews.getLocalViews());
-					List<CAbstractAgent> list = new LinkedList<CAbstractAgent>();
-					list.addAll(contactMap.getAbstractSolution().getAgentNameIdToAgent().values());
+					List<AbstractAgent> list = new LinkedList<AbstractAgent>();
+					list.addAll(contactMap.getAbstractSolution().getAgentNameToAgent().values());
 					Detector detector = new Detector(subViews,list);
 					if(detector.extractCycles().isEmpty())
 						enumerationOfSpecies.enumerate();
 					else
-						enumerationOfSpecies.setUnbounded();
+						enumerationOfSpecies.unbound();
 				}
 			}
 		}
 		
-		if (args.isQualitativeCompression()){
+		if (args.runQualitativeCompression()){
 			compressRules(RuleCompressionType.QUALITATIVE, rules);
 		}
 		
-		if (args.isQuantitativeCompression()){
+		if (args.runQuantitativeCompression()){
 			compressRules(RuleCompressionType.QUANTITATIVE, rules);
 		}
 	}
 
-	private void compressRules(RuleCompressionType type, Collection<CRule> rules) {
-		RuleCompressor compressor = new RuleCompressor(type, this);
+	private final void compressRules(RuleCompressionType type, Collection<Rule> rules) {
+		RuleCompressor compressor = new RuleCompressor(type, this.getLocalViews());
 		CompressionResults results = compressor.compress(rules);
-		CMainSubViews newSubViews = new CMainSubViews();
-		newSubViews.build(solution, new ArrayList<CRule>(results.getCompressedRules()));
+		MainSubViews newSubViews = new MainSubViews();
+
+		newSubViews.build(solution, results.getCompressedRules());
 		newSubViews.initDeadRules();
 		ruleCompressionWriter = new RuleCompressionXMLWriter(this, results, newSubViews);
 	}
+	
 	// ---------------------POSITIVE UPDATE-----------------------------
 
-	public final void doPositiveUpdate(CRule rule,
-			List<CInjection> currentInjectionsList) {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#doPositiveUpdate(com.plectix.simulator.component.Rule, java.util.List)
+	 */
+	public final void doPositiveUpdate(Rule rule,
+			List<Injection> currentInjectionsList) {
 		if (simulationData.getSimulationArguments().isActivationMap()) {
 			SimulationUtils.positiveUpdate(rule.getActivatedRules(), rule
 					.getActivatedObservable(), rule);
@@ -198,26 +205,26 @@ public class KappaSystem {
 					.getConnectedComponentList(), rule);
 		}
 
-		List<CAgent> freeAgents = SimulationUtils
+		List<Agent> freeAgents = SimulationUtils
 				.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
 		doPositiveUpdateForDeletedAgents(freeAgents);
 	}
 
 
-	private final void doPositiveUpdateForDeletedAgents(List<CAgent> agentsList) {
-		for (CAgent agent : agentsList) {
-			for (CRule rule : getRules()) {
-				for (IConnectedComponent cc : rule.getLeftHandSide()) {
-					CInjection inj = cc.createInjection(agent);
+	private final void doPositiveUpdateForDeletedAgents(List<Agent> agents) {
+		for (Agent agent : agents) {
+			for (Rule rule : getRules()) {
+				for (ConnectedComponentInterface cc : rule.getLeftHandSide()) {
+					Injection inj = cc.createInjection(agent);
 					if (inj != null) {
 						if (!agent.hasSimilarInjection(inj))
 							cc.setInjection(inj);
 					}
 				}
 			}
-			for (IObservablesConnectedComponent obsCC : observables
+			for (ObservableConnectedComponentInterface obsCC : observables
 					.getConnectedComponentList()) {
-				CInjection inj = obsCC.createInjection(agent);
+				Injection inj = obsCC.createInjection(agent);
 				if (inj != null) {
 					if (!agent.hasSimilarInjection(inj))
 						obsCC.setInjection(inj);
@@ -229,14 +236,35 @@ public class KappaSystem {
 
 	// ------------------MISC--------------------------------
 
-	public void setRules(List<CRule> rules2) {
-		orderedRulesList = rules2;
-		rules.updatedItems(rules2);
+	public final List<Injection> chooseInjectionsForRuleApplication(Rule rule) {
+		List<Injection> list = new ArrayList<Injection>();
+		rule.preparePool(simulationData);
+		for (ConnectedComponentInterface cc : rule.getLeftHandSide()) {
+			Injection inj = cc.getRandomInjection();
+			list.add(inj);
+			solution.addInjectionToPool(rule.getPool(), inj);
+		}
+		if (!InjectionsUtil.isClash(list)) {
+			return list;
+		} else {
+			return null;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#setRules(java.util.List)
+	 */
+	public final void setRules(List<Rule> rules) {
+		orderedRulesList = rules;
+		this.rules.updatedItems(rules);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#checkPerturbation(double)
+	 */
 	public final void checkPerturbation(double currentTime) {
 		if (perturbations.size() != 0) {
-			for (CPerturbation pb : perturbations) {
+			for (Perturbation pb : perturbations) {
 				switch (pb.getType()) {
 				case TIME: {
 					if (!pb.isDo())
@@ -260,14 +288,20 @@ public class KappaSystem {
 
 	// ----------------------GETTERS-------------------------------
 
-	public final List<CRule> getRules() {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getRules()
+	 */
+	public final List<Rule> getRules() {
 		return orderedRulesList;
 	}
 
-	public final CRule getRuleByID(int ruleID) {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getRuleById(int)
+	 */
+	public final Rule getRuleById(int ruleId) {
 		// TODO: We are scanning a list linearly, can't we use a LinkedHashMap here?
-		for (CRule rule : orderedRulesList) {
-			if (rule.getRuleID() == ruleID) {
+		for (Rule rule : orderedRulesList) {
+			if (rule.getRuleId() == ruleId) {
 				return rule;
 			}
 		}
@@ -275,67 +309,106 @@ public class KappaSystem {
 	}
 
 
-	public final ISolution getSolution() {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getSolution()
+	 */
+	public final SolutionInterface getSolution() {
 		return solution;
 	}
 
-	public final CObservables getObservables() {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getObservables()
+	 */
+	public final Observables getObservables() {
 		return observables;
 	}
 
-	public final CStories getStories() {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getStories()
+	 */
+	public final Stories getStories() {
 		return stories;
 	}
 
-	public final CContactMap getContactMap() {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getContactMap()
+	 */
+	public final ContactMap getContactMap() {
 		return contactMap;
 	}
 
-	public final IAllSubViewsOfAllAgents getSubViews() {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getSubViews()
+	 */
+	public final AllSubViewsOfAllAgentsInterface getSubViews() {
 		return subViews;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#generateNextRuleId()
+	 */
 	public final long generateNextRuleId() {
 		return ruleIdGenerator.generateNext();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#generateNextAgentId()
+	 */
 	public final long generateNextAgentId() {
 		return agentsIdGenerator.generateNext();
 	}
 
-	public final List<CPerturbation> getPerturbations() {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getPerturbations()
+	 */
+	public final List<Perturbation> getPerturbations() {
 		return perturbations;
 	}
 
 	// ----------------------SETTERS / ADDERS-------------------------------
 
-	public final void addRule(CRule rule) {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#addRule(com.plectix.simulator.component.Rule)
+	 */
+	public final void addRule(Rule rule) {
 		orderedRulesList.add(rule);
 		rules.updatedItem(rule);
 	}
 
-	public void setSolution(ISolution solution) {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#setSolution(com.plectix.simulator.interfaces.SolutionInterface)
+	 */
+	public void setSolution(SolutionInterface solution) {
 		this.solution = solution;
 	}
 
-	public void setObservables(CObservables observables) {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#setObservables(com.plectix.simulator.component.Observables)
+	 */
+	public void setObservables(Observables observables) {
 		this.observables = observables;
 	}
 
-	public final void setStories(CStories stories) {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#setStories(com.plectix.simulator.component.stories.Stories)
+	 */
+	public final void setStories(Stories stories) {
 		this.stories = stories;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#addStories(java.lang.String)
+	 */
 	public final void addStories(String name) {
 		byte index = 0;
 		List<Integer> ruleIDs = new ArrayList<Integer>();
-		for (CRule rule : orderedRulesList) {
+		for (Rule rule : orderedRulesList) {
 			if ((rule.getName() != null)
 					&& (rule.getName().startsWith(name) && ((name.length() == rule
 							.getName().length()) || ((rule.getName()
 							.startsWith(name + "_op")) && ((name.length() + 3) == rule
 							.getName().length()))))) {
-				ruleIDs.add(rule.getRuleID());
+				ruleIDs.add(rule.getRuleId());
 				index++;
 			}
 			if (index == 2) {
@@ -346,33 +419,49 @@ public class KappaSystem {
 		this.stories.addToStories(ruleIDs);
 	}
 
-	public final void setPerturbations(List<CPerturbation> perturbations) {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#setPerturbations(java.util.List)
+	 */
+	public final void setPerturbations(List<Perturbation> perturbations) {
 		this.perturbations = perturbations;
 	}
 
-	public void resetIdGenerators() {
+	//--------------------CLEANUP---------------------
+	
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#resetIdGenerators()
+	 */
+	public final void resetIdGenerators() {
 		agentsIdGenerator.reset();
 		ruleIdGenerator.reset();
 	}
 
-	public void clearRules() {
-		rules = new SkipListSelector<CRule>();
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#clearRules()
+	 */
+	public final void clearRules() {
+		rules = new SkipListSelector<Rule>();
 		orderedRulesList.clear();
 	}
 
-	public void clearPerturbations() {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#clearPerturbations()
+	 */
+	public final void clearPerturbations() {
 		perturbations.clear();
 	}
 
-	// --------------------METHODS FROM PROBABILITY
-	// CALCULATION--------------------
-
-	public final CRule getRandomRule() {
-		List<CRule> infinitRules = new ArrayList<CRule>();
-		for (CRule rule : orderedRulesList) {
+	//---------------------MISC------------------------
+	
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getRandomRule()
+	 */
+	public final Rule getRandomRule() {
+		List<Rule> infinitRules = new ArrayList<Rule>();
+		for (Rule rule : orderedRulesList) {
 			double oldActivity = rule.getActivity();
 			rule.calculateActivity();
-			if(rule.isInfiniteRated() && rule.getActivity() > 0){
+			if(rule.hasInfiniteRate() && rule.getActivity() > 0){
 				infinitRules.add(rule);
 				rule.setActivity(0.);
 			}
@@ -386,6 +475,9 @@ public class KappaSystem {
 		return rules.select();
 	}
 
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getTimeValue()
+	 */
 	public final double getTimeValue() {
 		double randomValue = 0;
 
@@ -395,19 +487,37 @@ public class KappaSystem {
 		return -1. / rules.getTotalWeight() * java.lang.Math.log(randomValue);
 	}
 	
-	public AInfluenceMap getInfluenceMap(){
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getInfluenceMap()
+	 */
+	public final InfluenceMap getInfluenceMap(){
 		return influenceMap;
 	}
 	
-	public CLocalViewsMain getLocalViews(){
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getLocalViews()
+	 */
+	public final LocalViewsMain getLocalViews(){
+		if(localViews == null){
+			MainSubViews sViews = new MainSubViews();
+			sViews.build(getSolution(), getRules());
+			localViews = new LocalViewsMain(sViews);
+			localViews.buildLocalViews();
+		}
 		return localViews;
 	}
 
-	public GeneratorSpecies getEnumerationOfSpecies() {
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getEnumerationOfSpecies()
+	 */
+	public final GeneratorSpecies getEnumerationOfSpecies() {
 		return enumerationOfSpecies;
 	}
 
-	public RuleCompressionXMLWriter getRuleCompressionBuilder(){
+	/* (non-Javadoc)
+	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getRuleCompressionBuilder()
+	 */
+	public final RuleCompressionXMLWriter getRuleCompressionBuilder(){
 		return ruleCompressionWriter;
 	}
 }

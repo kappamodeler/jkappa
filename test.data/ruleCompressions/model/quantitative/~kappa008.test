@@ -1,0 +1,7 @@
+E(r!1) , E(r!2) , R(l!1,r) , R(l!2,r) ->E(r!1) , E(r!2) ,  R(l!1,r!3) , R(l!2,r!3)
+
+#Initial solution
+%init: 2*(R(l,r,Y48~u,Y68~u),E(r))
+
+
+

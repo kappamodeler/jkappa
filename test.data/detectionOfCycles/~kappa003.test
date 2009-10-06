@@ -43,10 +43,3 @@
 %init: 1000 * (MEK(s,S222~p,S218~p))
 %init: 1000 * (ERK(s,T185~u,Y187~u))
 %init: 200 * (MKP3(s))
-
-# Simulation:
-%obs: Raf(x~p?)
-%obs: ERK(T185~p?,Y187~p?)
-%obs: MEK(S218~p?,S222~p?)
-
-%story: 'MKP3_ERK@187_op'

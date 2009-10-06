@@ -4,7 +4,7 @@ package com.plectix.simulator.util;
  * 
  * @author ecemis
  */
-public class ExponentialMovingAverage {
+public final class ExponentialMovingAverage {
 	private static final String NAME_PREFIX = "EMA-";
 	// parameters:
 	private String name;
@@ -32,7 +32,7 @@ public class ExponentialMovingAverage {
 	 *
 	 * @param timePeriod
 	 */
-	private void reset(int timePeriod) {
+	private final void reset(int timePeriod) {
 		if (timePeriod <= 0) {
 			throw new RuntimeException("timePeriod " + timePeriod + " is not allowed!");
 		}
@@ -52,7 +52,7 @@ public class ExponentialMovingAverage {
 	 *
 	 * @param newValue
 	 */
-	public double addValue(double newValue) {
+	public final double addValue(double newValue) {
 		itemCount++;
 		if (itemCount <= timePeriod) {
 			// add new value:
@@ -71,7 +71,7 @@ public class ExponentialMovingAverage {
 	 * 
 	 * @return the current value
 	 */
-	public double getCurrentValue() {
+	public final double getCurrentValue() {
 		if (itemCount < timePeriod) {
 			return currentEMA / itemCount;
 		}
@@ -83,7 +83,7 @@ public class ExponentialMovingAverage {
 	 *
 	 * @return the time period
 	 */
-	public int getTimePeriod() {
+	public final int getTimePeriod() {
 		return timePeriod;
 	}
 
@@ -92,20 +92,11 @@ public class ExponentialMovingAverage {
 	 *
 	 * @param timePeriod
 	 */
-	public void setTimePeriod(int timePeriod) {
+	public final void setTimePeriod(int timePeriod) {
 		this.timePeriod = timePeriod;
 		reset(timePeriod);
 	}
 
-
-	//*****************************************************************************
-	/**
-	 * 
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
 
 	//*****************************************************************************
 	/*

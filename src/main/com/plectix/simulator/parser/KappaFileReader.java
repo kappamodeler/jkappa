@@ -3,12 +3,12 @@ package com.plectix.simulator.parser;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.plectix.simulator.parser.exceptions.DocumentFormatException;
-import com.plectix.simulator.parser.exceptions.ParseErrorException;
-
-
+/**
+ * File reader, which ignores kappa-style comments.
+ * @see EasyFileReader 
+ * @author evlasov
+ */
 public class KappaFileReader extends Parser<KappaFile> {
-
 	public KappaFileReader(String path) throws FileNotFoundException {
 		super(path);
 	}
@@ -27,7 +27,7 @@ public class KappaFileReader extends Parser<KappaFile> {
 			if (line.startsWith("#"))
 				continue;
 			if (line.indexOf("#") != -1)
-				line = dellComment(line);
+				line = removeComment(line);
 
 			if (line.indexOf("\\") != -1) {
 				String nextLine;
@@ -55,14 +55,14 @@ public class KappaFileReader extends Parser<KappaFile> {
 
 		}
 
-		if (kappaFile.hasNoRules()) {
+		if (kappaFile.containsNoRules()) {
 			throw new DocumentFormatException("There are no rules in the input data");
 		}
 
 		return kappaFile;
 	}
 
-	private final String dellComment(String line) {
+	private final String removeComment(String line) {
 		String st = new String(line);
 
 		int indexComment = st.lastIndexOf("#");
@@ -123,5 +123,4 @@ public class KappaFileReader extends Parser<KappaFile> {
 	private final boolean startsWithWhiteSpace(String str) {
 		return str.startsWith(" ") || str.startsWith("\t");
 	}
-	
 }

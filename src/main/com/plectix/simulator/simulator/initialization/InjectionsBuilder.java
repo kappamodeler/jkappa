@@ -2,34 +2,34 @@ package com.plectix.simulator.simulator.initialization;
 
 import java.util.Collection;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.ObservablesConnectedComponent;
-import com.plectix.simulator.components.solution.SuperSubstance;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
-import com.plectix.simulator.interfaces.ISolution;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.component.ObservableConnectedComponent;
+import com.plectix.simulator.component.Rule;
+import com.plectix.simulator.component.solution.SuperSubstance;
+import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
+import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.simulator.KappaSystem;
 
-public class InjectionsBuilder {
+public final class InjectionsBuilder {
 	private final KappaSystem kappaSystem;
 	
 	public InjectionsBuilder(KappaSystem system) {
 		kappaSystem = system;
 	}
 	
-	private final void walkInjectingComponents(InjectionSettingStrategy strategy, CAgent solutionAgent) {
-		for (CRule rule : kappaSystem.getRules()) {
-			for (IConnectedComponent cc : rule.getLeftHandSide()) {
+	private final void walkInjectingComponents(InjectionSettingStrategy strategy, Agent solutionAgent) {
+		for (Rule rule : kappaSystem.getRules()) {
+			for (ConnectedComponentInterface cc : rule.getLeftHandSide()) {
 				if (cc != null) {
 					strategy.process(cc, solutionAgent);
 				}
 			}
 		}
 
-		for (IObservablesConnectedComponent oCC : kappaSystem.getObservables().getConnectedComponentList()) {
+		for (ObservableConnectedComponentInterface oCC : kappaSystem.getObservables().getConnectedComponentList()) {
 			if (oCC != null) {
-				if (oCC.getMainAutomorphismNumber() == ObservablesConnectedComponent.NO_INDEX) {
+				if (oCC.getMainAutomorphismNumber() == ObservableConnectedComponent.NO_INDEX) {
 					strategy.process(oCC, solutionAgent);
 				}
 			}
@@ -38,12 +38,12 @@ public class InjectionsBuilder {
 	
 	public final void build() {
 		InjectionSettingStrategy strategy = new StraightInjectionSettingStrategy();
-		for (CAgent agent : getSolution().getStraightStorage().getAgents()) {
+		for (Agent agent : getSolution().getStraightStorage().getAgents()) {
 			this.walkInjectingComponents(strategy, agent);
 		}
 		for (SuperSubstance substance : getSolution().getSuperStorage().getComponents()) {
 			strategy = new SuperInjectionSettingStrategy(substance);  
-			for (CAgent agent : substance.getComponent().getAgents()) {
+			for (Agent agent : substance.getComponent().getAgents()) {
 				this.walkInjectingComponents(strategy, agent);
 			}
 		}
@@ -51,19 +51,19 @@ public class InjectionsBuilder {
 	
 	public final void build(SuperSubstance substance) {
 		InjectionSettingStrategy strategy = new SuperInjectionSettingStrategy(substance);
-		for (CAgent agent : substance.getComponent().getAgents()) {
+		for (Agent agent : substance.getComponent().getAgents()) {
 			walkInjectingComponents(strategy, agent);
 		}
 	}
 	
-	public final void build(Collection<CAgent> agents) {
+	public final void build(Collection<Agent> agents) {
 		InjectionSettingStrategy strategy = new StraightInjectionSettingStrategy();
-		for (CAgent agent : agents) {
+		for (Agent agent : agents) {
 			walkInjectingComponents(strategy, agent);
 		}
 	}
 
-	public final ISolution getSolution() {
+	public final SolutionInterface getSolution() {
 		return kappaSystem.getSolution();
 	}
 }

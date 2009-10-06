@@ -1,34 +1,19 @@
 package com.plectix.simulator.util;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.component.InternalState;
+import com.plectix.simulator.component.Site;
 
 public final class NameDictionary {
-	private final List<String> idToNamesList = new ArrayList<String>();
-	private final Map<String, Integer> namesToIdMap = new LinkedHashMap<String, Integer>();
-	
-	public final int addName(String name) {
-		Integer id = namesToIdMap.get(name);
-		if (id == null) {
-			id = idToNamesList.size();
-			idToNamesList.add(name);
-			namesToIdMap.put(name, id);
-		}
-		return id;
+	public static final boolean isDefaultAgentName(String name) { 
+		return Agent.DEFAULT_NAME.equals(name);
 	}
 	
-	/**
-	 * Name dictionary.
-	 * @param id - id of name
-	 * @return Strting by id
-	 */
-	public final String getName(int id) {
-		return idToNamesList.get(id);
+	public static final boolean isDefaultSiteName(String name) { 
+		return Site.DEFAULT_NAME.equals(name);
 	}
-
-	public int getId(String argument) {
-		return namesToIdMap.get(argument);
+	
+	public static final boolean isDefaultInternalStateName(String name) { 
+		return InternalState.DEFAULT_NAME.equals(name);
 	}
 }

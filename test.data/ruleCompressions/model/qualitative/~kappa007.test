@@ -1,5 +1,5 @@
-'1' A(x~q), A(x~q, t!1), B(y!1) -> A(x~p), A(x~r, t), B(y)
-'2' A(x~q), A(x~q, t!1), B(y!1) -> A(x~r), A(x~p, t), B(y)
+a(x~u),b(x) -> a(x~p),b(x)
+#b(x) -> 
+a(x~u) -> a(x~u),b(x)
 
-%init : 1*(A(x~q, t!1), B(y!1))
-%init : 1*(A(x~q, t))
+%init : 10*(a(x~u),b(x))

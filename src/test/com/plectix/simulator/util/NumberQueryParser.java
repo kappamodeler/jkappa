@@ -1,6 +1,6 @@
 package com.plectix.simulator.util;
 
-/*package*/ class NumberQueryParser {	
+/*package*/class NumberQueryParser {
 	public static Piece parse(String str) throws NumberFormatException {
 		try {
 			return new Piece(Long.parseLong(str));

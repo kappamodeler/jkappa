@@ -4,36 +4,37 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CAgentLink;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.component.injections.Injection;
+import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 
 @RunWith(value = Parameterized.class)
 public class TestInjectionsAgentLinking extends TestInjections {
-	private static int myNumber = 0;
-	private static int[] myObsAgentsOrder;
+	private final int number;
+	private final int[] obsAgentsOrder;
 	private static final int myScaryQuantity = 3;
 	private static final int myHalfInitPower = 199;
-	private static final int myStraightInitPower = myScaryQuantity * 100 + 28 + myHalfInitPower + 2;
-	/* 
-	 * myScaryQuantity * 10 + 14 is quantity of agents in scary substances
-	 * myHalfInitPower - 1 - previous agents (-1 caused by 2 * D() in one place)
+	private static final int myStraightInitPower = myScaryQuantity * 100 + 28
+			+ myHalfInitPower + 2;
+	/*
+	 * myScaryQuantity 10 + 14 is quantity of agents in scary substances
+	 * myHalfInitPower - 1 - previous agents (-1 caused by 2 D() in one place)
 	 */
-	private static final int mySuperInitPower = myScaryQuantity * 10 + 14 + myHalfInitPower + 2 - 1;
-	
+	private static final int mySuperInitPower = myScaryQuantity * 10 + 14
+			+ myHalfInitPower + 2 - 1;
+
 	private int shiftStraight(int a) {
 		return a + myStraightInitPower;
 	}
-	
+
 	private int shiftSuper(int a) {
 		return a + mySuperInitPower;
 	}
@@ -41,21 +42,20 @@ public class TestInjectionsAgentLinking extends TestInjections {
 	@Parameters
 	public static Collection<Object[]> regExValues() {
 		Object[][] parameters = new Object[][] {
-				{ 1, new int[] { 8, 9, 0, 1, 2, 3, 4, 5, 6, 7}},
-				{ 2, new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9}},
-				{ 3, new int[] { 1, 0, 2, 3, 4, 5, 6, 7, 8, 9}},
-				{ 4, new int[] { 12, 13, 10, 11, 9, 8, 7, 6, 5, 4, 2, 3, 0, 1}}
-			};
-		return Collections.unmodifiableList(Arrays.asList(parameters));
+				{ 1, new int[] { 8, 9, 0, 1, 2, 3, 4, 5, 6, 7 } },
+				{ 2, new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 } },
+				{ 3, new int[] { 1, 0, 2, 3, 4, 5, 6, 7, 8, 9 } },
+				{ 4, new int[] { 12, 13, 10, 11, 9, 8, 7, 6, 5, 4, 2, 3, 0, 1 } } };
+		return Arrays.asList(parameters);
 	}
 
 	public TestInjectionsAgentLinking(int number, int[] obsAgentsOrder) {
-		myNumber = number;
-		myObsAgentsOrder = obsAgentsOrder;
+		this.number = number;
+		this.obsAgentsOrder = obsAgentsOrder;
 	}
 
-	private CAgent getAgentFromCCById(IConnectedComponent cc, int id) {
-		for (CAgent agent : cc.getAgents()) {
+	private Agent getAgentFromCCById(ConnectedComponentInterface cc, int id) {
+		for (Agent agent : cc.getAgents()) {
 			if (agent.getIdInConnectedComponent() == id) {
 				return agent;
 			}
@@ -66,7 +66,7 @@ public class TestInjectionsAgentLinking extends TestInjections {
 	private int trimInteger(int arg, int trimTo) {
 		int value = arg;
 		int sign = 0;
-		
+
 		if (value >= trimTo) {
 			sign = 1;
 		} else if (value <= 0) {
@@ -75,42 +75,46 @@ public class TestInjectionsAgentLinking extends TestInjections {
 			return arg;
 		}
 
-		while((value >= trimTo) || (value < 0)) {
-			value = value - sign*trimTo;
+		while ((value >= trimTo) || (value < 0)) {
+			value = value - sign * trimTo;
 		}
 		return value;
 	}
-	
+
 	@Test
 	public void testScaryAgentLinking() {
 
-		for (IObservablesConnectedComponent c : getInitializator().getObservables()) {
+		for (ObservableConnectedComponentInterface c : getInitializator()
+				.getObservables()) {
 			StringBuffer name = new StringBuffer("scary");
-			if (myNumber < 10) {
+			if (number < 10) {
 				name.append(0);
 			}
-			name.append(myNumber);
+			name.append(number);
 			if (name.toString().equals(c.getName())) {
-				Collection<CInjection> injectionsList = c.getInjectionsList();
+				Collection<Injection> injectionsList = c.getInjectionsList();
 
-				for (CInjection injection : injectionsList) {
-					IConnectedComponent cc = injection.getConnectedComponent();
-					for (CAgentLink link : injection.getAgentLinkList()) {
-						int from = link.getIdAgentFrom();
-						CAgent agentFrom = getAgentFromCCById(cc, from);
-						int to = (int) link.getAgentTo().getId();
-						
+				for (Injection injection : injectionsList) {
+					ConnectedComponentInterface cc = injection
+							.getConnectedComponent();
+					for (Map.Entry<Integer, Agent> link : injection
+							.getCorrespondence().entrySet()) {
+						int from = link.getKey();
+						Agent agentFrom = getAgentFromCCById(cc, from);
+						int to = (int) link.getValue().getId();
 
 						if (injection.isSuper()) {
-							int index = to - myHalfInitPower + 1 - 10 * (myNumber - 1);
-							assertEquals(shiftSuper(myObsAgentsOrder[index]) + (myNumber - 1) * 10, 
-									agentFrom.getId());
+							int index = to - myHalfInitPower + 1 - 10
+									* (number - 1);
+							assertEquals(shiftSuper(obsAgentsOrder[index])
+									+ (number - 1) * 10, agentFrom.getId());
 							break;
 						} else {
-							int index = to - myHalfInitPower - 100 * (myNumber - 1);
-							index = trimInteger(index, myObsAgentsOrder.length);
-							assertEquals(shiftStraight(myObsAgentsOrder[index]) + (myNumber - 1) * 10, 
-									agentFrom.getId());
+							int index = to - myHalfInitPower - 100
+									* (number - 1);
+							index = trimInteger(index, obsAgentsOrder.length);
+							assertEquals(shiftStraight(obsAgentsOrder[index])
+									+ (number - 1) * 10, agentFrom.getId());
 						}
 					}
 				}

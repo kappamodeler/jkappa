@@ -2,7 +2,6 @@ package com.plectix.simulator.util;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -44,7 +43,7 @@ import java.util.TreeSet;
 				}
 			}
 		}
-		return Collections.unmodifiableSet(set);
+		return set;
 	}
 
 	public static Set<Long> allA() {
@@ -59,7 +58,7 @@ import java.util.TreeSet;
 		for (long i = 73; i <= aQuantity; i++) {
 			add(set, i);
 		}
-		return Collections.unmodifiableSet(set);
+		return set;
 	}
 
 	public static Set<Long> allXInternal() {
@@ -70,31 +69,31 @@ import java.util.TreeSet;
 				107, 108, 109, 112, 116, 119, 120, 121, 123, 124, 125, 128,
 				130, 132, 133, 134, 135, 136, 137 }));
 
-		return Collections.unmodifiableSet(set);
+		return set;
 	}
 
 	public static Set<Long> allXLinked() {
-		return Collections.unmodifiableSet(fillByLine("6=71 72-137"));
+		return fillByLine("6=71 72-137");
 	}
 
 	public static Set<Long> allYLinked() {
-		return Collections.unmodifiableSet(fillByLine("60=70 126-137"));
+		return fillByLine("60=70 126-137");
 	}
 
 	public static Set<Long> allWithNoY() {
-		return Collections.unmodifiableSet(fillByLine("0-2 6=10 72-77 79=93"));
+		return fillByLine("0-2 6=10 72-77 79=93");
 	}
 
 	public static Set<Long> allJustY() {
-		return Collections.unmodifiableSet(fillByLine("0-2 6=10 72-77 79=93"));
+		return fillByLine("0-2 6=10 72-77 79=93");
 	}
 
 	public static Set<Long> allAA() {
-		return Collections.unmodifiableSet(fillByLine("72-137"));
+		return fillByLine("72-137");
 	}
 
 	public static Set<Long> allB() {
-		return Collections.unmodifiableSet(fillByLine("7=71"));
+		return fillByLine("7=71");
 	}
 
 	public static Set<Long> findAndAddBPart(Set<Long> aParts) {
@@ -105,7 +104,7 @@ import java.util.TreeSet;
 				set.add(l + 1);
 			}
 		}
-		return Collections.unmodifiableSet(set);
+		return set;
 	}
 
 	public static Set<Long> findAndAddAPart(Set<Long> bParts) {
@@ -116,7 +115,7 @@ import java.util.TreeSet;
 				set.add(l);
 			}
 		}
-		return Collections.unmodifiableSet(set);
+		return set;
 	}
 
 	public static Set<Long> findAndAddAALink(Set<Long> aParts) {
@@ -132,23 +131,23 @@ import java.util.TreeSet;
 				}
 			}
 		}
-		return Collections.unmodifiableSet(set);
+		return set;
 	}
 
 	public static Set<Long> allLInternal() {
-		return Collections.unmodifiableSet(fillByLine("45=59 71"));
+		return fillByLine("45=59 71");
 	}
 
 	public static Set<Long> allAADoubleLinked() {
-		return Collections.unmodifiableSet(fillByLine("126-137"));
+		return fillByLine("126-137");
 	}
 
 	public static Set<Long> allL() {
-		return Collections.unmodifiableSet(fillByLine("29=59"));
+		return fillByLine("29=59");
 	}
 
 	public static Set<Long> allLLinked() {
-		return Collections.unmodifiableSet(fillByLine("61=71"));
+		return fillByLine("61=71");
 	}
 
 	public static Set<Long> allKLinked() {
@@ -156,14 +155,13 @@ import java.util.TreeSet;
 	}
 
 	public static Set<Long> allKInternal() {
-		return Collections
-				.unmodifiableSet(fillByLine("11 21=27 37=43 53=59 67=71"));
+		return fillByLine("11 21=27 37=43 53=59 67=71");
 	}
 
 	public static Set<Long> allYInternal() {
-		return Collections.unmodifiableSet(fillByLine("5 16 18 24 26 "
+		return fillByLine("5 16 18 24 26 "
 				+ "32 34 40 42 48 50 56 58 64 68 70 82 84 90 92 98 100 "
-				+ "106 108 111 113-117 119 121-125 130 134 136 137"));
+				+ "106 108 111 113-117 119 121-125 130 134 136 137");
 	}
 
 	public static Set<Long> not(Set<Long> set1) {
@@ -173,11 +171,10 @@ import java.util.TreeSet;
 				set.add(i);
 			}
 		}
-		return Collections.unmodifiableSet(set);
+		return set;
 	}
 
 	public static Set<Long> allY() {
-		return Collections
-				.unmodifiableSet(fillByLine("3 4 5 12=58 78=92 94-125"));
+		return fillByLine("3 4 5 12=58 78=92 94-125");
 	}
 }

@@ -19,6 +19,7 @@ import javax.swing.JPanel;
  * @version $Id$
  * @author ecemis
  */
+@SuppressWarnings("serial")
 public class DialogPanel extends JDialog {
 	public boolean accepted = false;
 	

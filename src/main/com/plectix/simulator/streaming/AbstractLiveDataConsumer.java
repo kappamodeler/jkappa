@@ -5,21 +5,17 @@ import java.util.LinkedList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-abstract class AbstractLiveDataConsumer implements LiveDataConsumerInterface {
+/*package*/ abstract class AbstractLiveDataConsumer implements LiveDataConsumerInterface {
 
 	private final LiveDataSourceInterface liveDataSource;
-
-	protected Collection<LiveDataPoint> rawDataPoints;
+	private Collection<LiveDataPoint> rawDataPoints;
 	private Collection<LiveDataPoint> processedDataPoints;
 
 	private final Lock processedDatalock = new ReentrantLock();
 	private final Lock rawDataLock = new ReentrantLock();
 
-	protected int liveDataPoints;
-
 	public AbstractLiveDataConsumer(LiveDataSourceInterface dataSource, int liveDataPoints) {
 		this.liveDataSource = dataSource;
-		this.liveDataPoints = liveDataPoints;
 		rawDataPoints = createLiveDataBuffer();
 	}
 
@@ -38,7 +34,7 @@ abstract class AbstractLiveDataConsumer implements LiveDataConsumerInterface {
 		}
 	}
 	
-	protected LiveDataPoint createDataPoint(long currentEventNumber, double currentTime) {
+	private final LiveDataPoint createDataPoint(long currentEventNumber, double currentTime) {
 		return new LiveDataPoint(currentEventNumber, currentTime, liveDataSource.getPlotValues());
 	}
 
@@ -61,9 +57,9 @@ abstract class AbstractLiveDataConsumer implements LiveDataConsumerInterface {
 		}
 	}
 
-	abstract protected Collection<LiveDataPoint> processRawDataPoints(Collection<LiveDataPoint> rawDataPoints);
+	protected abstract Collection<LiveDataPoint> processRawDataPoints(Collection<LiveDataPoint> rawDataPoints);
 
-	protected Collection<LiveDataPoint> createLiveDataBuffer() {
+	protected final Collection<LiveDataPoint> createLiveDataBuffer() {
 		return new LinkedList<LiveDataPoint>();
 	}
 
@@ -77,9 +73,5 @@ abstract class AbstractLiveDataConsumer implements LiveDataConsumerInterface {
 			processedDatalock.unlock();
 		}
 		return result;
-	}
-
-	protected final LiveDataSourceInterface getLiveDataSource() {
-		return liveDataSource;
 	}
 }

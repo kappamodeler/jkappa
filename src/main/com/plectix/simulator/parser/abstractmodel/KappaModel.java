@@ -2,86 +2,83 @@ package com.plectix.simulator.parser.abstractmodel;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-import com.plectix.simulator.parser.abstractmodel.observables.AbstractObservables;
-import com.plectix.simulator.parser.util.IdGenerator;
+import com.plectix.simulator.parser.abstractmodel.observables.ModelObservables;
+import com.plectix.simulator.util.IdGenerator;
 
-public class KappaModel {
+public final class KappaModel {
+	private List<ModelPerturbation> perturbations = new ArrayList<ModelPerturbation>();
+	private ModelObservables observables = new ModelObservables();
+	private ModelSolution solution = new ModelSolution();
+	private ModelStories stories = null;
+	private Collection<ModelRule> rules = new ArrayList<ModelRule>();
 	
-	private List<AbstractPerturbation> myPerturbations = new ArrayList<AbstractPerturbation>();
+	private final IdGenerator agentIdGenerator = new IdGenerator();
+	private final IdGenerator ruleIdGenerator = new IdGenerator();
 	
-	private AbstractObservables myObservables = new AbstractObservables();
-	private AbstractSolution mySolution = new AbstractSolution(); // soup of initial components
-	private AbstractStories myStories = null;
-	
-	private Collection<AbstractRule> myRules = new ArrayList<AbstractRule>();
-	
-	private final IdGenerator myAgentIdGenerator = new IdGenerator();
-	private final IdGenerator myRuleIdGenerator = new IdGenerator();
-	
-	public IdGenerator getAgentIdGenerator() {
-		return myAgentIdGenerator;
+	public final IdGenerator getAgentIdGenerator() {
+		return agentIdGenerator;
 	}
 	
-	public IdGenerator getRuleIdGenerator() {
-		return myRuleIdGenerator;
+	public final IdGenerator getRuleIdGenerator() {
+		return ruleIdGenerator;
 	}
 	
-	public AbstractObservables getObservables() {
-		return myObservables;
+	public final ModelObservables getObservables() {
+		return observables;
 	}
 
-	public Collection<AbstractRule> getRules() {
-		return myRules;
+	public final Collection<ModelRule> getRules() {
+		return rules;
 	}
 
-	public AbstractSolution getSolution() {
-		return mySolution;
+	public final ModelSolution getSolution() {
+		return solution;
 	}
 
-	public void setSolution(AbstractSolution solution) {
-		mySolution = solution;
+	public final void setSolution(ModelSolution solution) {
+		this.solution = solution;
 	}
 	
-	public void setStories(AbstractStories stories) {
-		myStories = stories;
+	public final void setStories(ModelStories stories) {
+		this.stories = stories;
 	}
 
-	public void setRules(Collection<AbstractRule> rules) {
-		myRules = rules;
+	public final void setRules(Collection<ModelRule> rules) {
+		this.rules = rules;
 	}
 
-	public void addRule(AbstractRule rule) {
-		myRules.add(rule);
+	public final void addRule(ModelRule rule) {
+		this.rules.add(rule);
 	}
 	
-	public AbstractStories getStories() {
-		return myStories;
+	public final ModelStories getStories() {
+		return stories;
 	}
 
-	public void setObservables(AbstractObservables observables) {
-		myObservables = observables;
+	public final void setObservables(ModelObservables observables) {
+		this.observables = observables;
 	}
 	
-	public void setPerturbations(List<AbstractPerturbation> perturbations) {
-		myPerturbations = perturbations;
+	public final void setPerturbations(List<ModelPerturbation> perturbations) {
+		this.perturbations = perturbations;
 	}
 	
-	public List<AbstractPerturbation> getPerturbations() {
-		return myPerturbations;
+	public final List<ModelPerturbation> getPerturbations() {
+		return perturbations;
 	}
 	
-	public String toString() {
+	@Override
+	public final String toString() {
 		StringBuffer sb = new StringBuffer();
-		for (AbstractRule rule : myRules) {
+		for (ModelRule rule : rules) {
 			sb.append(rule + "\n");
 		}
-		sb.append("\n" + mySolution + "\n");
-		sb.append(myObservables + "\n");
-		sb.append(myStories + "\n");
-		for (AbstractPerturbation perturbation : myPerturbations) {
+		sb.append("\n" + solution + "\n");
+		sb.append(observables + "\n");
+		sb.append(stories + "\n");
+		for (ModelPerturbation perturbation : perturbations) {
 			sb.append(perturbation + "\n");
 		}
 		return sb.toString();

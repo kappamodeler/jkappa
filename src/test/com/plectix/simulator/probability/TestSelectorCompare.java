@@ -123,11 +123,6 @@ public class TestSelectorCompare {
 				if (!confidenceTest(weightedItemList.get(i).getCount(),
 						weightedItemList.get(i).getWeight() / sumOfWeights)) {
 					errors++;
-					// if(errors==1){
-					// System.out.println("outliers");
-					// }
-					// System.out.println(weightedItemList.get(i).getCount());
-					// System.out.println(weightedItemList.get(i).getWeight()/sumOfWeights);
 				}
 			} else {
 				if (weightedItemList.get(i).getCount() > 0)
@@ -139,10 +134,11 @@ public class TestSelectorCompare {
 		return errors < CONFIDENCE_BOUND * numberOfWeightedItems;
 	}
 
-	// 1.92 - from tables for 95% confidence interval 1.92 ->2 for convenience :)
+	// 1.92 - from tables for 95% confidence interval 1.92 ->2 for convenience
+	// :)
 	private boolean confidenceTest(int numberOfEvents,
 			double expectedProbability) {
-		return Math.abs((double) (numberOfEvents - expectedProbability
+		return Math.abs((numberOfEvents - expectedProbability
 				* numberOfSelection)
 				/ Math.sqrt(numberOfSelection * expectedProbability
 						* (1 - expectedProbability))) < 2;

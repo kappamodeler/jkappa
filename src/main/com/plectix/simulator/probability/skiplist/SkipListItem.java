@@ -1,13 +1,9 @@
-/**
- * 
- */
 package com.plectix.simulator.probability.skiplist;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.probability.WeightedItem;
-
 
 public final class SkipListItem<E extends WeightedItem> {
 	private E weightedItem = null;

@@ -2,7 +2,7 @@ package com.plectix.simulator.streaming;
 
 import java.util.Collection;
 
-public class RawLiveDataConsumer extends AbstractLiveDataConsumer {
+public final class RawLiveDataConsumer extends AbstractLiveDataConsumer {
 	
 	private final Collection<LiveDataPoint> allDataPoints = createLiveDataBuffer();
 	
@@ -11,7 +11,7 @@ public class RawLiveDataConsumer extends AbstractLiveDataConsumer {
 	}
 
 	@Override
-	protected Collection<LiveDataPoint> processRawDataPoints(Collection<LiveDataPoint> rawDataPoints) {
+	protected final Collection<LiveDataPoint> processRawDataPoints(Collection<LiveDataPoint> rawDataPoints) {
 		allDataPoints.addAll(rawDataPoints);
 		// We need to make return an independent copy:
 		Collection<LiveDataPoint> copyOfAllDataPoints = createLiveDataBuffer();

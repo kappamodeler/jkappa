@@ -1,5 +1,10 @@
 package com.plectix.simulator.rulecompression;
-
+/**
+ * QUALITATIVE("Qualitative"),
+ * QUANTITATIVE("Quantitative"
+ * @author nkalinin
+ *
+ */
 public enum RuleCompressionType {
 	QUALITATIVE("Qualitative"),
 	QUANTITATIVE("Quantitative");

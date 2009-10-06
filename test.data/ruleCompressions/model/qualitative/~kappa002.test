@@ -1,4 +1,38 @@
-'1' A(x~p,y~u,z~u!1),B(z!1) -> A(x~u,y~u,z~u!1),B(z!1)
+#first group "bound"
+'a1' a(x),b(y) -> a(x!1),b(y!1)
+'a2' a(x~p),b(y) -> a(x~p!1),b(y!1)
+'a3' a(x,y~p),b(y) -> a(x!1,y~p),b(y!1)
+'a4' a(x,y!1),c(x!1),b(y) -> a(x!2,y!1),c(x!1),b(y!2)
 
-%init: 1 * (A(x~p,y~u,z~u!1),B(z!1))
-%init: 1 * (A(x~p,y~p,z~u!1),B(z!1))
+# second group "add"
+'b1' -> c(x)
+'b1' d(x)->d(x), c(x)
+'b1' d(x!_)->d(x!_), c(x)
+
+# third group "delete"
+'c1' a(x) -> 
+'c2' b(x),a(x) ->b(x) 
+'c3' a(x~p) -> 
+'c4' d(x!1),e(z!1),a(x) -> d(x!1),e(z!1)
+
+# fourth group "modify"
+'d1' a(x~p) -> a(x~u)
+'d2' a(x~p),b(x) -> a(x~u),b(x)
+'d3' a(x~p,y!1),b(x!1) -> a(x~u,y!1),b(x!1)
+'d4' a(x~p,y!1),b(x~u!1) -> a(x~u,y!1),b(x~u!1)
+
+# fifth group "break"
+'e1' a(x!1),b(x!1) -> a(x),b(x)
+'e2' a(x~u!1),b(x!1) -> a(x~u),b(x)
+'e3' a(x!1),b(x!1,y!2),d(x!2) -> a(x),b(x,y!1),d(x!1)
+'e4' a(x!1),b(x!1),c(x) -> a(x),b(x),c(x)
+
+
+%init : 1*(b(x),a(x))
+%init : 1*(d(x))
+%init : 1*(d(x!1),e(z!1),a(x))
+
+
+
+
+

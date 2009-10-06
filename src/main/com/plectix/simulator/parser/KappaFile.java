@@ -1,60 +1,63 @@
 package com.plectix.simulator.parser;
 
-public class KappaFile {
-	private KappaFileParagraph myRules = new KappaFileParagraph();
-	private KappaFileParagraph myObservables = new KappaFileParagraph();
-	private KappaFileParagraph myStories = new KappaFileParagraph();
-	private KappaFileParagraph myInitialSolution = new KappaFileParagraph();
-	private KappaFileParagraph myPerturbations = new KappaFileParagraph();
+/**
+ * Inner representation of kappa file content.
+ * It consists of KappaFileParagraphs, which in their order, consist of KappaFileLines.
+ * There are 5 different paragraphs, each for each purpose description:
+ * rules, initial species, stories, observables and perturbations
+ */
+public final class KappaFile {
+	private final KappaFileParagraph rulesParagraph = new KappaFileParagraph();
+	private final KappaFileParagraph observablesParagraph = new KappaFileParagraph();
+	private final KappaFileParagraph storiesParagraph = new KappaFileParagraph();
+	private final KappaFileParagraph solutionParagraph = new KappaFileParagraph();
+	private final KappaFileParagraph perturbationsParagraph = new KappaFileParagraph();
 	
-	public boolean hasNoRules() {
-		return myRules.isEmpty();
+	public final boolean containsNoRules() {
+		return rulesParagraph.isEmpty();
 	}
 	
 	//----------------------ADDERS =)------------------------------
 	
-	public void addRuleLine(KappaFileLine line) {
-		myRules.addLine(line);
+	public final void addRuleLine(KappaFileLine line) {
+		rulesParagraph.addLine(line);
 	}
 	
-	public void addObservableLine(KappaFileLine line) {
-		myObservables.addLine(line);
+	public final void addObservableLine(KappaFileLine line) {
+		observablesParagraph.addLine(line);
 	}
 	
-	public void addStoryLine(KappaFileLine line) {
-		myStories.addLine(line);
+	public final void addStoryLine(KappaFileLine line) {
+		storiesParagraph.addLine(line);
 	}
 	
-	public void addInitialSolutionLine(KappaFileLine line) {
-		myInitialSolution.addLine(line);
+	public final void addInitialSolutionLine(KappaFileLine line) {
+		solutionParagraph.addLine(line);
 	}
 	
-	public void addPerturbationLine(KappaFileLine line) {
-		myPerturbations.addLine(line);
+	public final void addPerturbationLine(KappaFileLine line) {
+		perturbationsParagraph.addLine(line);
 	}
 	
 	//----------------------GETTERS-------------------------------
 	
-	public KappaFileParagraph getRules() {
-		return myRules;
+	public final KappaFileParagraph getRules() {
+		return rulesParagraph;
 	}
 
-	public KappaFileParagraph getObservables() {
-		return myObservables;
+	public final KappaFileParagraph getObservables() {
+		return observablesParagraph;
 	}
 
-	public KappaFileParagraph getStories() {
-		return myStories;
+	public final KappaFileParagraph getStories() {
+		return storiesParagraph;
 	}
 
-	public KappaFileParagraph getSolution() {
-		return myInitialSolution;
+	public final KappaFileParagraph getSolution() {
+		return solutionParagraph;
 	}
 
-	public KappaFileParagraph getPerturbations() {
-		return myPerturbations;
+	public final KappaFileParagraph getPerturbations() {
+		return perturbationsParagraph;
 	}
-
-	
-	
 }

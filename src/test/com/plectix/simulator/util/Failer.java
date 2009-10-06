@@ -5,7 +5,7 @@ import java.util.Collection;
 public class Failer {
 	private String myCurrentTestFileName;
 	private boolean myIsFailed = false;
-	
+
 	public Failer() {
 	}
 
@@ -21,7 +21,7 @@ public class Failer {
 	public boolean isFailed() {
 		return myIsFailed;
 	}
-	
+
 	private void myFail(String message) {
 		if (myCurrentTestFileName != null) {
 			fail(myCurrentTestFileName + " : " + message);
@@ -47,7 +47,7 @@ public class Failer {
 	}
 
 	private String failedEquals(Object a, Object b) {
-		return "expected " + a.toString() + ", but was " + b.toString();
+		return "expected " + a + ", but was " + b;
 	}
 
 	public void assertEquals(String message, Object a, Object b) {
@@ -62,12 +62,12 @@ public class Failer {
 	private boolean close(double a, double b) {
 		return (Math.abs(a - b) < 1e-10);
 	}
-	
+
 	public void assertDoubleEquals(String message, double a, double b) {
 		String newMessage = message + " " + failedEquals(a, b);
 		assertTrue(newMessage, close(a, b));
 	}
-	
+
 	public boolean collectionElementEquals(Object a, Object b) {
 		if (a != null) {
 			return a.equals(b);
@@ -75,7 +75,7 @@ public class Failer {
 			return b == null;
 		}
 	}
-	
+
 	public <E> boolean collectionsEquals(Collection<E> a, Collection<E> b) {
 		CollectionsComparator cc = new CollectionsComparator() {
 			@Override

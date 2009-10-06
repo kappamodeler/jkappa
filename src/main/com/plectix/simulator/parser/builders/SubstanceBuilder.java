@@ -5,50 +5,41 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.CInternalState;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
-import com.plectix.simulator.parser.abstractmodel.AbstractSite;
-import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.component.InternalState;
+import com.plectix.simulator.component.Site;
+import com.plectix.simulator.parser.abstractmodel.ModelAgent;
+import com.plectix.simulator.parser.abstractmodel.ModelSite;
+import com.plectix.simulator.simulator.KappaSystemInterface;
+import com.plectix.simulator.util.NameDictionary;
 
-/*package*/ class SubstanceBuilder {
-	private final KappaSystem myKappaSystem;
+/*package*/ public final class SubstanceBuilder {
+	private final KappaSystemInterface kappaSystem;
 
-	public SubstanceBuilder(KappaSystem system) {
-		myKappaSystem = system;
+	public SubstanceBuilder(KappaSystemInterface system) {
+		this.kappaSystem = system;
 	}
 
-	private CAgent buildAgent(AbstractAgent agent) {
-		CAgent resultAgent = new CAgent(agent.getNameId(), myKappaSystem.generateNextAgentId());
-		for (AbstractSite site : agent.getSites()) {
-			CSite newSite = buildSite(site);
-			resultAgent.addSite(newSite);
-		} 
-		
-		return resultAgent;
-	}
-
-	public List<CAgent> buildAgents(List<AbstractAgent> agents) {
-		if (agents == null) {
+	public final List<Agent> buildAgents(List<ModelAgent> abstractAgents) {
+		if (abstractAgents == null) {
 			return null;
 		}
 
-		List<CAgent> result = new LinkedList<CAgent>();
+		List<Agent> actualAgents = new LinkedList<Agent>();
 		
-		for (AbstractAgent agent : agents) {
-			CAgent newAgent = buildAgent(agent);
-			result.add(newAgent);
+		for (ModelAgent agent : abstractAgents) {
+			Agent newAgent = this.convertAgent(agent);
+			actualAgents.add(newAgent);
 		}
 
-		Map<Integer, CSite> map = new LinkedHashMap<Integer, CSite>();
-		for (CAgent agent : result) {
-			for (CSite site : agent.getSites()) {
+		Map<Integer, Site> map = new LinkedHashMap<Integer, Site>();
+		for (Agent agent : actualAgents) {
+			for (Site site : agent.getSites()) {
 				int index = site.getLinkIndex();
 				if (index == -1) {
 					continue;
 				}
-				CSite connectedSite = map.get(index);
+				Site connectedSite = map.get(index);
 				if (connectedSite == null) {
 					map.put(index, site);
 				} else {
@@ -59,16 +50,26 @@ import com.plectix.simulator.simulator.KappaSystem;
 			}
 		}
 		
-		return result;
+		return actualAgents;
 	}
 
-	private CSite buildSite(AbstractSite site) {
-		CSite newSite = new CSite(site.getNameId());
-		newSite.getLinkState().setStatusLink(site.getLinkState().getStatusLink());
-		newSite.setLinkIndex(site.getLinkIndex());
-		int internalStateNameId = site.getInternalStateNameId();
-		if (internalStateNameId != CSite.NO_INDEX) {
-			newSite.setInternalState(new CInternalState(internalStateNameId));
+	private final Agent convertAgent(ModelAgent abstractAgent) {
+		Agent resultAgent = new Agent(abstractAgent.getName(), kappaSystem.generateNextAgentId());
+		for (ModelSite site : abstractAgent.getSites()) {
+			Site newSite = convertSite(site);
+			resultAgent.addSite(newSite);
+		} 
+		
+		return resultAgent;
+	}
+	
+	private final Site convertSite(ModelSite abstractSite) {
+		Site newSite = new Site(abstractSite.getName());
+		newSite.getLinkState().setStatusLink(abstractSite.getLinkState().getStatusLink());
+		newSite.setLinkIndex(abstractSite.getLinkIndex());
+		String internalStateName = abstractSite.getInternalStateName();
+		if (!NameDictionary.isDefaultInternalStateName(internalStateName)) {
+			newSite.setInternalState(new InternalState(internalStateName));
 		}
 		return newSite;
 	}

@@ -18,6 +18,7 @@ import com.plectix.simulator.gui.lib.GradientPanelUI;
  * @version $Id$
  * @author ecemis
  */
+@SuppressWarnings("serial")
 public class MainPanel extends com.plectix.simulator.gui.lib.MainPanel {
 	private ControlPanel controlPanel = null; 
 	private GraphPanel graphPanel = null; 

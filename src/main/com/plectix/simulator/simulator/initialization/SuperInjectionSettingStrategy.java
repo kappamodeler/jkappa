@@ -1,11 +1,11 @@
 package com.plectix.simulator.simulator.initialization;
 
-import com.plectix.simulator.components.CAgent;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.components.solution.SuperSubstance;
-import com.plectix.simulator.interfaces.IConnectedComponent;
+import com.plectix.simulator.component.Agent;
+import com.plectix.simulator.component.injections.Injection;
+import com.plectix.simulator.component.solution.SuperSubstance;
+import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 
-public class SuperInjectionSettingStrategy implements InjectionSettingStrategy {
+public final class SuperInjectionSettingStrategy implements InjectionSettingStrategy {
 
 	private final SuperSubstance superSubstance;
 	
@@ -13,8 +13,8 @@ public class SuperInjectionSettingStrategy implements InjectionSettingStrategy {
 		superSubstance = substance;
 	}
 	
-	public final void process(IConnectedComponent component, CAgent agent) {
-		CInjection injection = component.createInjection(agent);
+	public final void process(ConnectedComponentInterface component, Agent agent) {
+		Injection injection = component.createInjection(agent);
 		if (injection != null) {
 			injection.setSuperSubstance(superSubstance);
 			if (!agent.hasSimilarInjection(injection)) {

@@ -14,17 +14,15 @@ import java.util.Collection;
        -) 1 value for each plot
  * @author ecemis
  */
-public class LiveData {
+public final class LiveData {
 
-	public enum PlotType {
-		OBSERVABLE, RULE
+	public interface PlotType {
+		public String getName();
 	}
 	
-	private String[] plotNames;
-	
-	private PlotType[] plotTypes;
-	
-	private Collection<LiveDataPoint> compressedData;
+	private final String[] plotNames;
+	private final PlotType[] plotTypes;
+	private final Collection<LiveDataPoint> compressedData;
 
 	public LiveData(String[] plotNames, PlotType[] plotTypes, Collection<LiveDataPoint> compressedData) {
 		super();

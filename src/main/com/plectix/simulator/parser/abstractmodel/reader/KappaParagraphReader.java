@@ -2,43 +2,32 @@ package com.plectix.simulator.parser.abstractmodel.reader;
 
 import java.util.List;
 
+import com.plectix.simulator.parser.DocumentFormatException;
+import com.plectix.simulator.parser.IncompletesDisabledException;
 import com.plectix.simulator.parser.KappaFileParagraph;
-import com.plectix.simulator.parser.abstractmodel.AbstractAgent;
-import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.exceptions.DocumentFormatException;
-import com.plectix.simulator.parser.exceptions.IncompletesDisabledException;
-import com.plectix.simulator.parser.exceptions.ParseErrorException;
-import com.plectix.simulator.parser.exceptions.SimulationDataFormatException;
+import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.SimulationDataFormatException;
+import com.plectix.simulator.parser.abstractmodel.ModelAgent;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 
 public abstract class KappaParagraphReader<E> {
-	private final KappaModel myModel;
-	private final SimulationArguments myArgs;
-	private final AgentFactory myAgentFactory;
+	private final SimulationArguments simulationArguments;
+	private final AgentFactory agentFactory;
 	
-	public KappaParagraphReader(KappaModel model, SimulationArguments args, AgentFactory factory) {
-		myModel = model;
-		myArgs = args;
-		myAgentFactory = factory;
+	public KappaParagraphReader(SimulationArguments simulationArguments, 
+			AgentFactory factory) {
+		this.simulationArguments = simulationArguments;
+		this.agentFactory = factory;
 	}
 	
-	protected final List<AbstractAgent> parseAgent(String line) 
+	protected final List<ModelAgent> parseAgents(String line) 
 			throws ParseErrorException, DocumentFormatException, IncompletesDisabledException {
-		return myAgentFactory.parseAgent(line);
+		return agentFactory.parseAgent(line);
 	}
 	
-	protected final List<AbstractAgent> parseSolutionAgent(String line) 
-			throws ParseErrorException, DocumentFormatException, IncompletesDisabledException {
-		return myAgentFactory.parseAgent(line);
-	}
-	
-	protected SimulationArguments getArguments() {
-		return myArgs;
-	}
-	
-	protected KappaModel getModel() {
-		return myModel;
+	protected final SimulationArguments getArguments() {
+		return simulationArguments;
 	}
 	
 	public abstract E readComponent(KappaFileParagraph paragraph) throws SimulationDataFormatException;

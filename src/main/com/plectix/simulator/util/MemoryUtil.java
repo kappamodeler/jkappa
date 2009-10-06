@@ -6,7 +6,7 @@ import java.lang.management.MemoryMXBean;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MemoryUtil {
+public final class MemoryUtil {
 	private static PeakMemoryUsage peakMemoryUsage = null;
 	
 	/**
@@ -75,7 +75,7 @@ public class MemoryUtil {
 	    		   + mbean.getHeapMemoryUsage().getUsed();
 	}
 	
-	public static class PeakMemoryUsage {
+	public static final class PeakMemoryUsage {
 		private long heap = 0;
 		private long nonHeap = 0;
 		private long total = 0;

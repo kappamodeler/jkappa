@@ -5,31 +5,31 @@ import java.util.List;
 public class RuleStructure {
 	private List<String> myLHS;
 	private List<String> myRHS;
-	
+
 	public RuleStructure(List<String> lhs, List<String> rhs) {
 		myLHS = lhs;
 		myRHS = rhs;
 	}
-	
+
 	public List<String> getLHS() {
 		return myLHS;
 	}
-	
+
 	public List<String> getRHS() {
 		return myRHS;
 	}
-	
+
 	@Override
 	public boolean equals(Object a) {
 		if (a == this) {
 			return true;
 		}
-		
+
 		if (!(a instanceof RuleStructure)) {
 			return false;
 		}
-		
-		RuleStructure aa = (RuleStructure)a;
+
+		RuleStructure aa = (RuleStructure) a;
 		CollectionsComparator comparator = new CollectionsComparator() {
 			@Override
 			public boolean equals(Object a, Object b) {
@@ -38,13 +38,14 @@ public class RuleStructure {
 				} else {
 					return b == null;
 				}
-				
+
 			}
 		};
-		
-		return comparator.areEqual(myLHS, aa.myLHS) && comparator.areEqual(myRHS, aa.myRHS);
+
+		return comparator.areEqual(myLHS, aa.myLHS)
+				&& comparator.areEqual(myRHS, aa.myRHS);
 	}
-	
+
 	@Override
 	public String toString() {
 		return myLHS.toString() + " -> " + myRHS.toString();

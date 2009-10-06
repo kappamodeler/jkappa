@@ -12,6 +12,7 @@ import javax.swing.JSplitPane;
  * 
  * @author ecemis
  */
+@SuppressWarnings("serial")
 public class SplitPanel extends MainPanel {
 
 	private JPanel treePanel;

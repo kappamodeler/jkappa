@@ -3,31 +3,24 @@ package com.plectix.simulator.parser.util;
 import java.util.List;
 
 import com.plectix.simulator.parser.KappaFileLine;
-import com.plectix.simulator.parser.exceptions.ParseErrorException;
-import com.plectix.simulator.parser.exceptions.ParseErrorMessage;
+import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.ParseErrorMessage;
 
-public class StringUtil {
-	/**
-	 * checks string st
-	 * @param ch char, which we're searching for
-	 * @param st string, where we're searching for ch
-	 * @param perturbationStr
-	 * @throws ParseErrorException
-	 */
-	public static void checkString(String ch, String st, KappaFileLine perturbationStr)
+public final class StringUtil {
+	public static final void checkString(String stringToFind, String line, KappaFileLine kappaFileLine)
 			throws ParseErrorException {
-		int index = st.indexOf(ch);
+		int index = line.indexOf(stringToFind);
 		if (index == -1) {
 			String quote = "'";
-			if ("'".equals(ch)) {
+			if ("'".equals(stringToFind)) {
 				quote = "\"";
 			}
-			throw new ParseErrorException(perturbationStr, quote + ch + quote
-					+ " expected : " + st + "");
+			throw new ParseErrorException(kappaFileLine, quote + stringToFind + quote
+					+ " expected : " + line + "");
 		}
 	}
 	
-	public final static String getName(String line) throws ParseErrorException {
+	public static final String parseRuleName(String line) throws ParseErrorException {
 		// Example: "abc']..."
 		String name = null;
 		int index = line.indexOf("'");
@@ -39,11 +32,11 @@ public class StringUtil {
 		return name;
 	}
 	
-	public final static <E> String listToString(List<E> list) {
+	public static final <E> String listToString(List<E> list) {
 		return listToString(list, ", ");
 	}
 	
-	public final static <E> String listToString(List<E> list, String separator) {
+	public static final <E> String listToString(List<E> list, String separator) {
 		StringBuffer sb = new StringBuffer();
 		
 		boolean first = true;

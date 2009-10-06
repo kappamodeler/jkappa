@@ -1,9 +1,9 @@
 package com.plectix.simulator.streaming;
 
-import java.util.LinkedList;
 import java.util.Collection;
+import java.util.LinkedList;
 
-/*package*/ class InterpolatingLiveDataConsumer extends AbstractLiveDataConsumer {
+/*package*/ final class InterpolatingLiveDataConsumer extends AbstractLiveDataConsumer {
 	private Collection<LiveDataPoint> allDataPoints = createLiveDataBuffer();
 	private final int pointsLimit;
 	
@@ -13,7 +13,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	protected Collection<LiveDataPoint> processRawDataPoints(Collection<LiveDataPoint> rawDataPoints) {
+	protected final Collection<LiveDataPoint> processRawDataPoints(Collection<LiveDataPoint> rawDataPoints) {
 		allDataPoints = this.join(allDataPoints, rawDataPoints);
 		// We need to make return an independent copy:
 		Collection<LiveDataPoint> copyOfAllDataPoints = createLiveDataBuffer();
@@ -21,7 +21,7 @@ import java.util.Collection;
 		return copyOfAllDataPoints;
 	}
 
-	private Collection<LiveDataPoint> join(Collection<LiveDataPoint> initial, Collection<LiveDataPoint> next) {
+	private final Collection<LiveDataPoint> join(Collection<LiveDataPoint> initial, Collection<LiveDataPoint> next) {
 		LinkedList<LiveDataPoint> allPoints = new LinkedList<LiveDataPoint>(initial);
 		allPoints.addAll(next);
 		if (allPoints.size() <= pointsLimit) {
@@ -59,7 +59,7 @@ import java.util.Collection;
 		return result;
 	}
 	
-	private LiveDataPoint createNewDataPoint(LiveDataPoint p1, LiveDataPoint p2, double time, int eventNumber) {
+	private final LiveDataPoint createNewDataPoint(LiveDataPoint p1, LiveDataPoint p2, double time, int eventNumber) {
 		if (p1.getEventTime() < time && p2.getEventTime() >= time) {
 			double[] averageValues = getAverageLiveData(p1, p2, time);
 			LiveDataPoint result = new LiveDataPoint(eventNumber, time, averageValues);
@@ -69,7 +69,7 @@ import java.util.Collection;
 		}
 	}
 	
-	private double[] getAverageLiveData(LiveDataPoint p1, LiveDataPoint p2, double time) {
+	private final double[] getAverageLiveData(LiveDataPoint p1, LiveDataPoint p2, double time) {
 		double timeDeviation = p2.getEventTime() - p1.getEventTime();
 		double timeProportionValue = time - p1.getEventTime();
 		int observablesNumber = p1.getPlotValues().length;

@@ -36,7 +36,7 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * 
  * @author ecemis
  */
-public class PersistenceUtils {
+public final class PersistenceUtils {
 	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	
 	/** common xml extension */
@@ -47,14 +47,14 @@ public class PersistenceUtils {
 
 	private static XStream xStream = null;
 
-	public static XStream getXStream(){
+	public static final XStream getXStream(){
 		initialize();
 		return xStream;
 	}
 	
 	// ************************************************************************************
 	
-	public static void saveToXML(Object object, String filename, boolean zipped)
+	public static final void saveToXML(Object object, String filename, boolean zipped)
 			throws IOException {
 		initialize();
 		OutputStream outputStream = getOutputStream(filename, zipped);
@@ -65,7 +65,7 @@ public class PersistenceUtils {
 	
 	// ************************************************************************************
 	
-	public static Object loadFromXML(String filename, boolean zipped)
+	public static final Object loadFromXML(String filename, boolean zipped)
 			throws IOException {
 		initialize();
 		return xStream.fromXML(getInputStream(filename, zipped));
@@ -78,7 +78,7 @@ public class PersistenceUtils {
 	 * @param filename
 	 * @throws IOException
 	 */
-	public static void saveToSerializedBinary(Object object, String filename, boolean zipped) throws IOException {
+	public static final void saveToSerializedBinary(Object object, String filename, boolean zipped) throws IOException {
 		OutputStream outputStream = getOutputStream(filename, zipped);
 		ObjectOutputStream objStream = new ObjectOutputStream(outputStream);
 		objStream.writeObject(object);
@@ -94,7 +94,7 @@ public class PersistenceUtils {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	public static Object loadFromSerializedBinary(String filename,
+	public static final Object loadFromSerializedBinary(String filename,
 			boolean zipped) throws IOException, ClassNotFoundException {
 		ObjectInputStream objStream = new ObjectInputStream(getInputStream(filename, zipped));
 		return objStream.readObject();
@@ -111,7 +111,7 @@ public class PersistenceUtils {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	public static void convertFile(String fromFilename, boolean fromXML,
+	public static final void convertFile(String fromFilename, boolean fromXML,
 			String toFilename, boolean toXML, boolean zipped)
 			throws IOException, ClassNotFoundException {
 		Object object;
@@ -137,7 +137,7 @@ public class PersistenceUtils {
 	 * @return an input stream
 	 * @throws IOException
 	 */
-	public static InputStream getInputStream(String filename, boolean zipped)
+	public static final InputStream getInputStream(String filename, boolean zipped)
 			throws IOException {
 		if (zipped) {
 			ZipInputStream zipInputStream = new ZipInputStream(
@@ -158,7 +158,7 @@ public class PersistenceUtils {
 	 * @return an output stream
 	 * @throws IOException
 	 */
-	public static OutputStream getOutputStream(String filename, boolean zipped)
+	public static final OutputStream getOutputStream(String filename, boolean zipped)
 			throws IOException {
 		if (zipped) {
 			OutputStream outputStream = new BufferedOutputStream(
@@ -177,7 +177,7 @@ public class PersistenceUtils {
 	 * 
 	 * 
 	 */
-	private static void initialize() {
+	private static final void initialize() {
 		if (xStream != null) {
 			return;
 		}
@@ -249,7 +249,7 @@ public class PersistenceUtils {
 	 * 
 	 * 
 	 */
-	public static class DateConverter implements Converter {
+	public static final class DateConverter implements Converter {
 		public DateConverter() {
 			super();
 		}
@@ -291,7 +291,7 @@ public class PersistenceUtils {
 	 *             security settings prevent access to private fields. Also
 	 *             fails if a field name is repeated in a class's hierarchy.
 	 */
-	public static Map<String, Object> getNonTransientFields(Object o) {
+	public static final Map<String, Object> getNonTransientFields(Object o) {
 		Map<String, Object> ret = new LinkedHashMap<String, Object>();
 		// copied from DMComposite r6104
 		Class c = o.getClass();
@@ -335,7 +335,7 @@ public class PersistenceUtils {
 	 *             if a field name can't be found or the specified value can't
 	 *             be assigned to that field (typically a ClassCastException).
 	 */
-	public static void setFields(Object o, Map<String,?> m) throws IOException {
+	public static final void setFields(Object o, Map<String,?> m) throws IOException {
 		Class c = o.getClass();
 		// ERROR must call c.setAccessible true if we have a private inner class
 		do {

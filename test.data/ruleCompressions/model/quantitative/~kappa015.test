@@ -1,0 +1,5 @@
+A(x1~u,x2~p)->  #we shall notice that the test x1~u is useless since the agent A(x1~p,x2~p)is unreachable
+-> A(x1~u,x2~u) #initialization
+A(x1~u,x2~u) -> A(x1~u,x2~p)
+A(x1~u,x2~u) -> A(x1~p,x2~u)
+A(x1~u,x2~u) -> A(x1~u,x2~u)

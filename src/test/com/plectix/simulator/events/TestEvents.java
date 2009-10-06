@@ -20,20 +20,18 @@ import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.util.Info.InfoType;
 
 @RunWith(value = Parameterized.class)
-public class TestEvents {
-	private static final String separator = File.separator;
-	private static final String testDirectory = "test.data"+ separator + "events" + separator;
-	private static String prefixFileName = "";
+public final class TestEvents {
+	private static final String SEPARATOR = File.separator;
+	private static final String TEST_DIRECTORY = "test.data" + SEPARATOR
+			+ "events" + SEPARATOR;
+	private final String prefixFileName;
+	private Simulator simulator;
+	private final Integer[] eventsNumbers = { 0, 1, 10, 100, 500, 1000, 1001,
+			1002 };
 
-	private Simulator mySimulator;
-	private Integer [] eventsNumbers = {0, 1, 10, 100, 500, 1000, 1001, 1002};
-
-	
 	@Parameters
 	public static Collection<Object[]> data() {
-		String[] files = new String[] { 
-				"test" 
-					 };
+		String[] files = new String[] { "test" };
 		Collection<Object[]> data = new ArrayList<Object[]>();
 		for (String string : files) {
 			Object[] obj = new Object[1];
@@ -42,39 +40,40 @@ public class TestEvents {
 		}
 		return data;
 	}
-	
+
 	public TestEvents(String filename) {
-		prefixFileName  = filename;
+		prefixFileName = filename;
 	}
 
 	@Test
 	public void test() {
 		for (int i = 0; i < eventsNumbers.length; i++) {
 			setup(eventsNumbers[i]);
-			assertTrue(eventsNumbers[i] == mySimulator.getSimulationData().getSimulationArguments().getMaxNumberOfEvents());
-			
+			assertTrue(eventsNumbers[i] == simulator.getSimulationData()
+					.getSimulationArguments().getMaxNumberOfEvents());
+
 		}
 	}
-	
+
 	public void setup(Integer eventNumber) {
-		init(testDirectory + prefixFileName, eventNumber);
+		init(TEST_DIRECTORY + prefixFileName, eventNumber);
 		try {
-			mySimulator.run(new SimulatorInputData(mySimulator.getSimulationData().getSimulationArguments()));
+			simulator.run(new SimulatorInputData(simulator.getSimulationData()
+					.getSimulationArguments()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			junit.framework.Assert.fail(e.getMessage());
 		}
 	}
 
-	
-	
 	public void init(String filePath, Integer eventNumber) {
-		mySimulator = null;
-		mySimulator = new Simulator();
-		SimulationData simulationData = mySimulator.getSimulationData();
+		simulator = null;
+		simulator = new Simulator();
+		SimulationData simulationData = simulator.getSimulationData();
 		SimulationArguments args = null;
 		try {
-			args = Initializator.prepareEventNumberArguments(filePath, eventNumber);
+			args = Initializator.prepareEventNumberArguments(filePath,
+					eventNumber);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);

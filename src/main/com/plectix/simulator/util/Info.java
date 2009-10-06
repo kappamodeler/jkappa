@@ -4,39 +4,40 @@ import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Formatter;
 
-public class Info implements Serializable{
+@SuppressWarnings("serial")
+public final class Info implements Serializable{
 	public enum InfoType {
 		INFO,
 		INTERNAL,
 		WARNING,
 		OUTPUT,
-		NOT_OUTPUT;
+		DO_NOT_OUTPUT;
 	}
 	
 	private int count;
-	private boolean isHaveTime = false;
-	private String message;
-	private double position;
+	private final boolean haveTime;
+	private final String message;
+	private final double position;
 	private double time;
 	private InfoType type;
 
-	public Info(InfoType outputType,InfoType type, String message, double time, int count) {
-		setType(type);
+	public Info(InfoType outputType, InfoType type, String message, double time, int count) {
+		this.type = type;
 		this.count = count;
-		isHaveTime = true;
+		this.haveTime = true;
 		this.time = time;
 		this.message = message;// + " sec. CPU";
 		this.position = System.currentTimeMillis() / 1000.0;
 	}
 
-	public Info(InfoType outputType,InfoType type, String message, PrintStream printStream) {
-		setType(type);
+	public Info(InfoType outputType, InfoType type, String message, PrintStream printStream) {
+		this.type = type;
 		this.count = 1;
+		this.haveTime = false;
 		this.message = message;
 		this.position = System.currentTimeMillis() / 1000.0;
 		switch (outputType) {
 		case OUTPUT:
-//		case INFO:
 			if (printStream != null) {
 				printStream.println(message);
 			}
@@ -49,7 +50,7 @@ public class Info implements Serializable{
 	}
 
 	public final String getMessageWithTime() {
-		if (isHaveTime)
+		if (haveTime)
 			return message + time + " sec. CPU";
 		else
 			return message;
@@ -71,10 +72,6 @@ public class Info implements Serializable{
 
 	public final InfoType getType() {
 		return type;
-	}
-
-	private final void setType(InfoType type) {
-		this.type = type;
 	}
 
 	public final void upCount(double time) {

@@ -17,6 +17,7 @@ import javax.swing.JPanel;
  * 
  * @author ecemis
  */
+@SuppressWarnings("serial")
 public class GridBagPanel extends JPanel {
 	
 	private boolean debug;

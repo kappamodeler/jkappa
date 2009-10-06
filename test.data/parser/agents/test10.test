@@ -1,9 +1,0 @@
-#substance A(x!1, y!2), A(x~u!1, y!2)
-
-#agent A
-#site x~u!1
-#site y!2
-
-#agent A
-#site x!1
-#site y!2

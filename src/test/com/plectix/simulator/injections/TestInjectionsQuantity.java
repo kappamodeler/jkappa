@@ -1,9 +1,7 @@
 package com.plectix.simulator.injections;
 
-
 import java.io.File;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
@@ -14,40 +12,42 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.RunAllTests;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.component.injections.Injection;
+import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.QuantityDataParser;
 
 @RunWith(Parameterized.class)
-public class TestInjectionsQuantity extends TestInjections  {
+public class TestInjectionsQuantity extends TestInjections {
 	private static final String separator = File.separator;
-	private String myNameParameter;
-	private static Map<String, Integer> myDataMap = new TreeMap<String, Integer>();
-	private IObservablesConnectedComponent myCurrentCC;
-	private Failer myFailer = new Failer();
-	
-	public TestInjectionsQuantity(String name) {
-		myNameParameter = name;
+	private final String nameParameter;
+	private static Map<String, Integer> data = new TreeMap<String, Integer>();
+	private ObservableConnectedComponentInterface myCurrentCC;
+	private final Failer myFailer = new Failer();
+
+	public TestInjectionsQuantity(String nameParameter) {
+		this.nameParameter = nameParameter;
 	}
-	
+
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		myDataMap = (new QuantityDataParser(
-			"test.data" + separator + "InjectionsQuantityData" + RunAllTests.FILENAME_EXTENSION)).parse();
+		data = (new QuantityDataParser("test.data" + separator
+				+ "InjectionsQuantityData" + DEFAULT_EXTENSION_FILE))
+				.parse();
 		LinkedList<Object[]> parameters = new LinkedList<Object[]>();
 		int i = 0;
-		for (String name : myDataMap.keySet()) {
-			parameters.add( new String[] {name});
+		for (String name : data.keySet()) {
+			parameters.add(new String[] { name });
 			i++;
 		}
-		return Collections.unmodifiableList(parameters);
+		return parameters;
 	}
-	
+
 	private void createInjectionsList(String ccName) {
-		Integer expectedQuantity = myDataMap.get(ccName);
+		Integer expectedQuantity = data.get(ccName);
 		boolean exists = false;
-		for (IObservablesConnectedComponent c : getInitializator().getObservables()) {
+		for (ObservableConnectedComponentInterface c : getInitializator()
+				.getObservables()) {
 			if (ccName.equals(c.getName())) {
 				myCurrentCC = c;
 				exists = true;
@@ -56,25 +56,19 @@ public class TestInjectionsQuantity extends TestInjections  {
 		if (!exists) {
 			myFailer.fail("There's no component with name " + ccName);
 		}
-		Collection<CInjection> injectionsList = myCurrentCC.getInjectionsList();
+		Collection<Injection> injectionsList = myCurrentCC.getInjectionsList();
 		double quant = myCurrentCC.getInjectionsWeight();
-//		for (CInjection injection : myCurrentCC.getInjectionsList()) {
-//			if (injection.isSuper()) {
-//				quant += injection.getSuperSubstance().getQuantity();
-//			} else {
-//				quant++;
-//			}
-//		}
-			
+
 		if (injectionsList != null) {
-			myFailer.assertEquals("failed on " + ccName, (long)expectedQuantity, (long)quant);
+			myFailer.assertEquals("failed on " + ccName,
+					(long) expectedQuantity, (long) quant);
 		} else {
 			myFailer.assertEquals("failed on " + ccName, expectedQuantity, 0);
 		}
 	}
-	
+
 	@Test
 	public void testCCInjectionsQuantity() {
-		createInjectionsList(myNameParameter);
+		createInjectionsList(nameParameter);
 	}
 }

@@ -1,7 +1,6 @@
 package com.plectix.simulator.util;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,7 @@ public class RuleCCDataParser extends Parser<Map<String, RuleStructure>> {
 			list.add("");
 		}
 	}
-	
+
 	@Override
 	protected Map<String, RuleStructure> unsafeParse() {
 		Map<String, RuleStructure> map = new LinkedHashMap<String, RuleStructure>();
@@ -28,14 +27,15 @@ public class RuleCCDataParser extends Parser<Map<String, RuleStructure>> {
 		List<String> leftCCs = new ArrayList<String>();
 		List<String> rightCCs = new ArrayList<String>();
 		List<String> currentList = leftCCs;
-		
+
 		while (line != null) {
 			if (!"".equals(line)) {
 				if (line.startsWith("#")) {
 					if (!"".equals(currentTest)) {
 						fillEmpty(leftCCs);
 						fillEmpty(rightCCs);
-						map.put(currentTest, new RuleStructure(leftCCs, rightCCs));
+						map.put(currentTest, new RuleStructure(leftCCs,
+								rightCCs));
 						leftCCs = new ArrayList<String>();
 						rightCCs = new ArrayList<String>();
 					}
@@ -52,6 +52,6 @@ public class RuleCCDataParser extends Parser<Map<String, RuleStructure>> {
 		fillEmpty(leftCCs);
 		fillEmpty(rightCCs);
 		map.put(currentTest, new RuleStructure(leftCCs, rightCCs));
-		return Collections.unmodifiableMap(map);
+		return map;
 	}
 }

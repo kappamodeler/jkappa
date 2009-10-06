@@ -5,11 +5,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.nio.CharBuffer;
 
-import com.plectix.simulator.components.solution.OperationMode;
+import com.plectix.simulator.component.solution.OperationMode;
 import com.plectix.simulator.util.PersistenceUtils;
+import com.plectix.simulator.util.Info.InfoType;
 
-public class SimulationArguments {
-
+public final class SimulationArguments {
 	public static final int NUMBER_OF_MILLISECONDS_IN_SECOND = 1000;
 	public static final int NUMBER_OF_MILLISECONDS_IN_MINUTE = 60 * NUMBER_OF_MILLISECONDS_IN_SECOND;
 	public static final int NUMBER_OF_MILLISECONDS_IN_HOUR = 60 * NUMBER_OF_MILLISECONDS_IN_MINUTE;
@@ -60,7 +60,7 @@ public class SimulationArguments {
 	private boolean noDumpStdoutStderr = false;
 	private boolean help = false;
 	private boolean version = false;
-	private boolean shortConsoleOutput = false;
+	private InfoType shortConsoleOutput = InfoType.OUTPUT;
 	private String xmlSessionName = DEFAULT_XML_SESSION_NAME;
 	private double initialTime = 0.0;
 	private int points = -1;
@@ -72,19 +72,19 @@ public class SimulationArguments {
 	private boolean isTime = false;
 	private int iterations = 1;
 	private String randomizer = null;
-	private boolean activationMap = true;
+	private boolean activationMap = false;
 	private boolean inhibitionMap = false;
-	private boolean subViews = false;
+	private boolean createSubViews = false;
 	private boolean deadRules = false;
 	private boolean compile = false;
 	private boolean debugInit = false;
 	private boolean genereteMap = false;
 	private boolean contactMap = false;
-	private boolean localViews = false;
+	private boolean createLocalViews = false;
 	private boolean numberOfRuns = false;
 	private boolean storify = false;
 	private boolean forwardOnly = false;
-	private boolean ocamlStyleObservableNames = false;
+	private boolean ocamlStyleNaming = false;
 	private long wallClockTimeLimit = DEFAULT_WALL_CLOCK_TIME_LIMIT;
 	private long monitorPeakMemory = DEFAULT_MONITOR_PEAK_MEMORY;
 	private int clockPrecision = DEFAULT_CLOCK_PRECISION;
@@ -105,9 +105,9 @@ public class SimulationArguments {
 	private int liveDataInterval = -1;
 	private int liveDataPoints = DEFAULT_LIVE_DATA_POINTS;
 	private String liveDataConsumerClassname = DEFAULT_LIVE_DATA_CONSUMER_CLASSNAME;
-	private boolean enumerationOfSpecies;
-	private boolean quantitativeCompression = false;
-	private boolean qualitativeCompression = false;
+	private boolean useEnumerationOfSpecies;
+	private boolean runQuantitativeCompression = false;
+	private boolean runQualitativeCompression = false;
 
 	
 	public SimulationArguments() {
@@ -241,7 +241,7 @@ public class SimulationArguments {
 		this.seed = seed;
 	}
 
-	public void updateRandom(){
+	public final void updateRandom(){
 		ThreadLocalData.getRandom().setSeed(seed);
 	}
 
@@ -456,8 +456,8 @@ public class SimulationArguments {
 		this.forwardOnly = forwardOption;
 	}
 	
-	public final boolean isOcamlStyleObservableNames() {
-		return ocamlStyleObservableNames;
+	public final boolean isOcamlStyleNameingInUse() {
+		return ocamlStyleNaming;
 	}
 	
 	/**
@@ -483,7 +483,7 @@ public class SimulationArguments {
 	 * @param ocamlStyleObservableNames
 	 */
 	public final void setOcamlStyleObservableNames(boolean ocamlStyleObservableNames) {
-		this.ocamlStyleObservableNames = ocamlStyleObservableNames;
+		this.ocamlStyleNaming = ocamlStyleObservableNames;
 	}
 	
 	public final long getWallClockTimeLimit() {
@@ -781,8 +781,8 @@ public class SimulationArguments {
 		this.version = version;
 	}
 	
-	public final boolean isShortConsoleOutput() {
-		return shortConsoleOutput;
+	public final InfoType getOutputTypeForAdditionalInfo() {
+		return this.shortConsoleOutput;
 	}
 
 	/**
@@ -790,8 +790,8 @@ public class SimulationArguments {
 	 * 
 	 * @param shortConsoleOutput
 	 */
-	public final void setShortConsoleOutput(boolean shortConsoleOutput) {
-		this.shortConsoleOutput = shortConsoleOutput;
+	public final void setShortConsoleOutput() {
+		this.shortConsoleOutput = InfoType.DO_NOT_OUTPUT;
 	}
 
 	public final boolean isSolutionRead() {
@@ -814,14 +814,6 @@ public class SimulationArguments {
 		return this.allowIncompletes;
 	}
 	
-	public final boolean isSubViews(){
-		return subViews;
-	}
-	
-	public final void setSubViews(boolean b){
-		subViews = b;
-	}
-
 	public final void setAgentsLimit(int limit) {
 		agentsLimit = limit;
 	}
@@ -830,30 +822,38 @@ public class SimulationArguments {
 		return agentsLimit;
 	}
 
-	public void setDeadRules(boolean b) {
-		deadRules = b;
+	public final void setShowDeadRules(boolean mindDeadRules) {
+		deadRules = mindDeadRules;
 	}
 
-	public final boolean isDeadRules(){
+	public final boolean isDeadRulesShow(){
 		return deadRules;
 	}
 	
-	public final void setLocalViews(Boolean b){
-		if(b)
-			this.subViews = true;
-		this.localViews = b;
+	public final void setCreateLocalViews(boolean createLocalViews){
+		if(createLocalViews)
+			this.createSubViews = true;
+		this.createLocalViews = createLocalViews;
 	}
 	
-	public final boolean isLocalViews(){
-		return localViews;
+	public final void setCreateSubViews(boolean createSubViews){
+		this.createSubViews = createSubViews;
 	}
 
-	public final void setEnumerationOfSpecies(boolean b) {
-		this.enumerationOfSpecies = b;
+	public final boolean createSubViews(){
+		return createSubViews;
 	}
 	
-	public final boolean isEnumerationOfSpecies(){
-		return enumerationOfSpecies;
+	public final boolean createLocalViews(){
+		return createLocalViews;
+	}
+
+	public final void setEnumerationOfSpecies(boolean useEnumerationOfSpecies) {
+		this.useEnumerationOfSpecies = useEnumerationOfSpecies;
+	}
+	
+	public final boolean useEnumerationOfSpecies(){
+		return useEnumerationOfSpecies;
 	}
 
 	public final int getLiveDataInterval() {
@@ -879,20 +879,20 @@ public class SimulationArguments {
 		this.liveDataPoints = liveDataPoints;
 	}
 
-	public void setQuantitativeCompression(boolean b) {
-		this.quantitativeCompression = b;
+	public final void setRunQuantitativeCompression(boolean runQuantitativeCompression) {
+		this.runQuantitativeCompression = runQuantitativeCompression;
 	}
 	
-	public boolean isQuantitativeCompression(){
-		return quantitativeCompression;
+	public final boolean runQuantitativeCompression(){
+		return runQuantitativeCompression;
 	}
 
-	public void setQualitativeCompression(boolean b) {
-		this.qualitativeCompression = b;
+	public final void setRunQualitativeCompression(boolean runQualitativeCompression) {
+		this.runQualitativeCompression = runQualitativeCompression;
 	}
 	
-	public boolean isQualitativeCompression(){
-		return qualitativeCompression;
+	public final boolean runQualitativeCompression(){
+		return runQualitativeCompression;
 	}
 
 	public final String getLiveDataConsumerClassname() {
@@ -902,6 +902,4 @@ public class SimulationArguments {
 	public final void setLiveDataConsumerClassname(String liveDataConsumerClassname) {
 		this.liveDataConsumerClassname = liveDataConsumerClassname;
 	}
-
-
 }

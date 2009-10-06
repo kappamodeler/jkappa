@@ -2,12 +2,11 @@ package com.plectix.simulator.simulator;
 
 import java.text.DecimalFormat;
 
-import com.plectix.simulator.components.CConnectedComponent;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.IRandom;
+import com.plectix.simulator.component.ConnectedComponent;
+import com.plectix.simulator.component.injections.Injection;
+import com.plectix.simulator.interfaces.RandomInterface;
 import com.plectix.simulator.util.NameDictionary;
 import com.plectix.simulator.util.PlxLogger;
-import com.plectix.simulator.util.TypeById;
 
 /**
  * This class hold data local to each <code>Thread</code> (i.e. Simulation). 
@@ -16,48 +15,48 @@ import com.plectix.simulator.util.TypeById;
  * 
  * @author ecemis
  */
-public class ThreadLocalData {
+public final class ThreadLocalData {
+	private static abstract class ThreadLocalContainer<E> extends ThreadLocal<E> {
+		@Override
+		protected abstract E initialValue();
+		
+		/*default*/ void reset() { 
+			this.set(initialValue());
+		}
+	}
 	
-	private static ThreadLocal<PlxLogger> plxLogger = null;
-	private static ThreadLocal<IRandom> random = new ThreadLocal<IRandom> () {
+	private static ThreadLocalContainer<PlxLogger> plxLogger = null;
+	private static final ThreadLocalContainer<RandomInterface> random = new ThreadLocalContainer<RandomInterface> () {
 		@Override 
-		protected IRandom initialValue() {
-			return new CRandomJava(SimulationArguments.DEFAULT_SEED);
+		protected RandomInterface initialValue() {
+			return new DefaultRandom(SimulationArguments.DEFAULT_SEED);
 		}
 	};
 
 	/**
 	 * "EMPTY" ConnectedComponent, contains no agents.
 	 */
-	private static ThreadLocal<CConnectedComponent> emptyConnectedComponent = new ThreadLocal<CConnectedComponent> () {
+	private static final ThreadLocal<ConnectedComponent> emptyConnectedComponent = new ThreadLocal<ConnectedComponent> () {
 		@Override 
-		protected CConnectedComponent initialValue() {
-			return new CConnectedComponent();
+		protected ConnectedComponent initialValue() {
+			return new ConnectedComponent();
 		}
 	};
 
-	private static ThreadLocal<CInjection> emptyInjection = new ThreadLocal<CInjection> () {
+	private static final ThreadLocal<Injection> emptyInjection = new ThreadLocal<Injection> () {
 		@Override 
-		protected CInjection initialValue() {
-			return new CInjection();
+		protected Injection initialValue() {
+			return new Injection();
 		}
 	};
 	
-	private static final ThreadLocal<NameDictionary> nameDictionary = new ThreadLocal<NameDictionary> () {
+	private static final ThreadLocalContainer<NameDictionary> nameDictionary = new ThreadLocalContainer<NameDictionary> () {
 		@Override 
 		protected NameDictionary initialValue() {
 			return new NameDictionary();
 		}
 	};
 
-	private static final ThreadLocal<TypeById> typeById = new ThreadLocal<TypeById>(){
-		@Override 
-		protected TypeById initialValue() {
-			return new TypeById();
-		}
-		
-	};
-	
 	private static final ThreadLocal<DecimalFormat[]> decimalFormatters = new ThreadLocal<DecimalFormat[]>() {
 		@Override 
 		protected DecimalFormat[] initialValue() {
@@ -82,11 +81,6 @@ public class ThreadLocalData {
 		return nameDictionary.get();
     }
 
-    public static final TypeById getTypeById(){
-    	return typeById.get();
-    }
-    
-    
     public static final DecimalFormat getDecimalFormat(int i) {
     	DecimalFormat[] decimalFormats = decimalFormatters.get();
     	if (i < 0) {
@@ -98,7 +92,7 @@ public class ThreadLocalData {
     }
 
 	public static final void setLogger(final PlxLogger logger) {		
-		plxLogger = new ThreadLocal<PlxLogger>() {
+		plxLogger = new ThreadLocalContainer<PlxLogger>() {
 			@Override
 			protected PlxLogger initialValue() {
 				return logger;
@@ -113,15 +107,21 @@ public class ThreadLocalData {
 		return plxLogger.get();
 	}
 
-	public static IRandom getRandom() {
+	public static RandomInterface getRandom() {
 		return random.get();
 	}
 	
-	public static CConnectedComponent getEmptyConnectedComponent(){
+	public static ConnectedComponent getEmptyConnectedComponent(){
 		return emptyConnectedComponent.get();
 	}
 
-	public static CInjection getEmptyInjection(){
+	public static Injection getEmptyInjection(){
 		return emptyInjection.get();
+	}
+	
+	public static final void reset() {
+		plxLogger.reset();
+		random.reset();
+		nameDictionary .reset();
 	}
 }

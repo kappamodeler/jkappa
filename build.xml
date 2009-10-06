@@ -58,21 +58,22 @@
     <target name="all" depends="cleanall,build,deploy,doc,test" 
 	        description="Cleanly build, package and test everything"/>
 
-    <target name="clean" description="Clean up build directories">
+    <target name="clean" description="Clean up build and distribution directories">
         <delete dir="${build.dir}"/>
 		<delete dir="${dist.dir}"/>
     </target>
 
-    <target name="cleanall" depends="clean">
+    <target name="cleanall" depends="clean" description="Clean up build, distribution, javadoc, and deploymeny direcotire" >
 		<delete dir="${javadoc.dir}"/>
 		<delete dir="${deploy.dir}"/>
 	</target>
  
-	<target name="build" depends="build-subprojects,set-svn-revision,build-project"/>
+	<target name="build" depends="set-revision,build-subprojects,build-project" 
+	        description="sets the revision numnber, builds sub and this project"/>
     
 	<target name="build-subprojects"/>
      
-    <target name="init" depends="filter-tpl">
+    <target name="init" depends="filter-tpl" description="Initializes the build directory">
 		<tstamp/>
         <mkdir dir="${build.dir}"/>
         <copy includeemptydirs="false" todir="${build.dir}">
@@ -80,7 +81,7 @@
         </copy>
     </target>
 
-	<target name="build-project" depends="filter-tpl,init" description="Building project">
+	<target name="build-project" depends="filter-tpl,init" description="Builds the project">
         <echo message="OS: ${os.name} "/>
         <echo message="Java: ${java.version} "/>
         <echo message="Ant Java: ${ant.java.version} "/>
@@ -90,7 +91,7 @@
         </javac>
     </target>
 		
-	<target name="package" depends="build-project" description="Create JAR file">
+	<target name="package" depends="build-project" description="Creates the JAR file">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${dist.dir}/simulator.jar" compress="false">
 			<fileset dir="${build.dir}">
@@ -99,7 +100,7 @@
 		</jar>
 	</target>
 	
-	<target name="deploy" depends="build,package,createPaths" description="Deploying the package">
+	<target name="deploy" depends="build,package,createPaths" description="Deploys the package by building the project, creating the JAR file, and setting the paths">
 		<mkdir dir="${deploy.dir}"/>
 		<property name="deploy-dest" value="Plectix-Simulator-${DSTAMP}"/>
 		<property name="deploy-zip.dir" value="${deploy.dir}/${deploy-dest}"/>
@@ -112,6 +113,7 @@
 				<include name="data/*.ka"/>
 				<include name="${dist.dir}/simulator.jar"/>
 				<exclude name="**/.svn"/>
+				<exclude name="**/.git"/>
 			</fileset>
 		</copy>
 		<copy todir="${deploy-zip.dir}/${lib.dir}">
@@ -143,7 +145,7 @@
 		</zip>
 	</target>
 
-	<target name="SimulationMain">
+	<target name="SimulationMain" description="Executes the simulator through the command line options. Equivalent to simplx or complx.">
         <java classname="com.plectix.simulator.SimulationMain" failonerror="true" fork="yes">
             <arg line="--sim data/Example.ka --time 10"/>
             <classpath refid="simulator.classpath"/>
@@ -177,15 +179,22 @@
 	</target>
 
 
-   <!-- for xpath task below -->
+  <!-- Set version -->
+
+    <available file=".svn" type="dir" property="set-svn-revision" />
+
+    <available file=".git" type="dir" property="set-git-revision" />
+
+    <target name="set-revision" depends="set-svn-revision,set-git-revision" description="Sets the source code repository revision number in the code" />
+
+  <!-- for xpath task below -->
     <taskdef resource="net/uworks/andariel/andariel.properties">
         <classpath>
                 <pathelement location="${lib.dir}/ant/andariel-1.2.3.jar"/>
 	    </classpath>
 	</taskdef>
 
-  <!-- Set version -->
-    <target name="set-svn-revision">
+    <target name="set-svn-revision" if="set-svn-revision">
 		<echo message="${lib.dir}/ant/andariel-1.2.3.jar"/>
 	    <property name="svn.info" value="svn.info" />
 
@@ -198,13 +207,28 @@
         <!-- Query revision. -->
         <xpath file="${svn.info}"
              expression="//entry/@revision"
-             outputproperty="build.svn.revision" />
+             outputproperty="svn.build.revision" />
+
+	    <property name="build.revision" value="SVN ${svn.build.revision}"/>
 
         <!-- Delete temp revision file. -->
         <delete file="${svn.info}" />
 
 		<!-- Show version -->
-		<echo message="SVN Revision ${build.svn.revision}" />
+		<echo message="Repository Revision: ${build.revision}" />
+    </target>
+
+    <target name="set-git-revision" if="set-git-revision">
+        <!-- Get last SVN revision. -->
+        <exec executable="git" outputproperty="git.build.revision">
+             <arg value="rev-parse" />
+             <arg value="HEAD" />
+        </exec>
+
+	    <property name="build.revision" value="GIT ${git.build.revision}"/>
+
+		<!-- Show version -->
+		<echo message="Repository Revision: ${build.revision}" />
     </target>
 
     <target name="filter-tpl">
@@ -217,7 +241,7 @@
                 <include name="**/*.tpl" />
             </fileset>
             <filterset>
-	            <filter token="build.svn.revision" value="${build.svn.revision}" />
+	            <filter token="build.revision" value="${build.revision}" />
 	            <filter token="build.date" value="${build.date}" />
 	            <filter token="build.os.name" value="${os.name}" />
 	            <filter token="java.version" value="${java.version}" />
@@ -231,6 +255,7 @@
 	<!-- ################################### Javadoc Targets ################################### -->
 	
 	<target name="doc" description="Create all Javadoc documentation">
+		<echo>Building Javadocs</echo>
 		<mkdir dir="${javadoc.dir}"/>
 		<javadoc destdir="${javadoc.dir}" windowtitle="JSIM: Plectix Java Simulator" source="1.6" author="true" version="true" use="true" Overview="src/overview.html" access="private" >
 			<doctitle><![CDATA[<h1>JSIM: Plectix Java Simulator</h1>]]></doctitle>
@@ -247,6 +272,7 @@
 	<!-- ################################### Test Targets ################################### -->
 	
 	<target name="build-tests" depends="init" description="Building tests">
+		<echo>Building tests</echo>
 		<mkdir dir="${build.dir}/test"/>
 	    <echo message="OS: ${os.name} "/>
         <echo message="Java: ${java.version} "/>
@@ -257,7 +283,7 @@
 		</javac>
 	</target>
 	
-	<target name="test" description="Run JUnit tests" depends="build-tests">
+	<target name="test" depends="build-tests" description="Run JUnit tests">
 		<echo>Running JUnit Tests</echo>
 		<junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="no">
 			<classpath refid="test.classpath" />
@@ -267,7 +293,7 @@
 		<echo message="Tests are complete - check log for errors"/>
 	</target>
 
-	<target name="slowTests" description="Run Slow JUnit tests" depends="build-tests">
+	<target name="slowTests" depends="build-tests" description="Run Slow JUnit tests">
 		<echo>Running Slow JUnit Tests</echo>
 		<junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="no">
 			<classpath refid="test.classpath" />
@@ -276,4 +302,34 @@
 		</junit>
 		<echo message="Slow Tests are complete - check log for errors"/>
 	</target>
+	
+	
+	<!-- ################################### findbugs Targets ################################### -->
+
+	<property name="findbugs.home" value="3rd.party/findbugs-1.3.9-rc1" />
+
+	<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" >
+        <classpath>
+                <pathelement location="${findbugs.home}/lib/findbugs-ant.jar"/>
+	    </classpath>
+	</taskdef>
+
+	<target name="findbugs" depends="package" description="Runs the 3rd party findbugs application to analyze and locate bugs statically">
+		<echo>Running findbugs</echo>
+		<findbugs home="${findbugs.home}"
+				  effort="max"
+				  reportLevel="low"
+				  jvmargs="-Xmx1G"
+				  stylesheet="fancy-hist.xsl"
+			      output="html"
+				  outputFile="simulator-fb.html" >
+		     <auxClasspath>
+			      <fileset refid="external.jars"/>
+		     </auxClasspath>
+			 <sourcePath path="${src.dir}" />
+			 <class location="${dist.dir}/simulator.jar" />
+		</findbugs>
+   </target>
+
+
 </project>

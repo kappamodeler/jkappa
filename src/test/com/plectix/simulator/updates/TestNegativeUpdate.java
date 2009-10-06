@@ -11,10 +11,10 @@ import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.RunAllTests;
-import com.plectix.simulator.components.CSite;
-import com.plectix.simulator.components.injections.CInjection;
-import com.plectix.simulator.interfaces.IConnectedComponent;
-import com.plectix.simulator.interfaces.IObservablesConnectedComponent;
+import com.plectix.simulator.component.Site;
+import com.plectix.simulator.component.injections.Injection;
+import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.QuantityDataParser;
@@ -44,18 +44,18 @@ public class TestNegativeUpdate extends TestUpdate {
 
 	@Test
 	public void testLHS() {
-		List<IConnectedComponent> leftHand = getActiveRule().getLeftHandSide();
-		for (IConnectedComponent cc : leftHand) {
-			Collection<CInjection> componentInjections = cc.getInjectionsList();
+		List<ConnectedComponentInterface> leftHand = getActiveRule()
+				.getLeftHandSide();
+		for (ConnectedComponentInterface cc : leftHand) {
+			Collection<Injection> componentInjections = cc.getInjectionsList();
 			if (!lhsIsEmpty(leftHand)) {
 
-				myFailer.assertEquals("LHS injections",
-						myLHSInjectionsQuantity.get(myTestFileName), 
-						(int)cc.getInjectionsWeight());
-				for (CInjection injection : getCurrentInjectionsList()) {
+				myFailer.assertEquals("LHS injections", myLHSInjectionsQuantity
+						.get(myTestFileName), (int) cc.getInjectionsWeight());
+				for (Injection injection : getCurrentInjectionsList()) {
 
 					assertFalse(cc.getInjectionsList().contains(injection));
-					for (CSite site : injection.getChangedSites()) {
+					for (Site site : injection.getChangedSites()) {
 
 						myFailer.assertEmpty("LHS lifts", site.getLift());
 					}
@@ -63,18 +63,19 @@ public class TestNegativeUpdate extends TestUpdate {
 			} else {
 				myFailer.assertTrue("LHS injections", (componentInjections
 						.size() == 1)
-						&& (componentInjections
-								.contains(ThreadLocalData.getEmptyInjection())));
+						&& (componentInjections.contains(ThreadLocalData
+								.getEmptyInjection())));
 			}
 		}
 	}
 
 	@Test
 	public void testObs() {
-		for (IObservablesConnectedComponent cc : getInitializator()
+		for (ObservableConnectedComponentInterface cc : getInitializator()
 				.getObservables()) {
 			myFailer.assertEquals("Observables injections",
-					myObsInjectionsQuantity.get(myTestFileName), (int)cc.getInjectionsWeight());
+					myObsInjectionsQuantity.get(myTestFileName), (int) cc
+							.getInjectionsWeight());
 		}
 	}
 
@@ -91,8 +92,10 @@ public class TestNegativeUpdate extends TestUpdate {
 	@Override
 	public void init() {
 		myObsInjectionsQuantity = (new QuantityDataParser(myPrefixFileName
-				+ "ObsInjectionsData" + RunAllTests.FILENAME_EXTENSION)).parse();
+				+ "ObsInjectionsData" + DEFAULT_EXTENSION_FILE))
+				.parse();
 		myLHSInjectionsQuantity = (new QuantityDataParser(myPrefixFileName
-				+ "LHSInjectionsData" + RunAllTests.FILENAME_EXTENSION)).parse();
+				+ "LHSInjectionsData" + DEFAULT_EXTENSION_FILE))
+				.parse();
 	}
 }

@@ -1,4 +1,6 @@
-'Rule1' R(l,r),E(r) <-> R(l!1,r),E(r!1) @ 1.0,1.0
+a(b!1,c!2,d!3,e!4),b(a!1,c,d!5,e),c(a!2,b,d,e!6),d(a!3,b!5,c,e),e(a!4,b,c!6,d)->a(b!1,c!2,d!3,e!4),b(a!1,c,d,e),c(a!2,b,d,e),d(a!3,b,c,e),e(a!4,b,c,d)
+a(b!1,c!2,d!3,e!4),b(a!1,c,d!6,e),c(a!2,b,d,e!5),d(a!3,b!5,c,e),e(a!4,b,c!6,d)->a(b!1,c!2,d!3,e!4),b(a!1,c,d,e),c(a!2,b,d,e),d(a!3,b,c,e),e(a!4,b,c,d)
 
-# Initial Conditions:
-%init: 2 * (R(l,r,Y48~u,Y68~u),E(r))
+#%init: 10*(a(b!1,c!2,d!3,e!4),b(a!1,c,d!6,e),c(a!2,b,d,e!5),d(a!3,b!5,c,e),e(a!4,b,c!6,d))
+#%init: 10*(a(b!1,c!2,d!3,e!4),b(a!1,c,d!5,e),c(a!2,b,d,e!6),d(a!3,b!5,c,e),e(a!4,b,c!6,d))
+

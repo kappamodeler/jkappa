@@ -1,9 +1,0 @@
-# Rules:
-
-'Rule_0' A(x!_, y!_) -> A(x, y!_) @ 1.0
-
-%init: 2 * A(x!1, y!2), A(x!1, y!2)
-
-# Simulation:
-
-%obs: '001' A(x, y!_)

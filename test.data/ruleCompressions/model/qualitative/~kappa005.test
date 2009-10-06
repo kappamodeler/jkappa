@@ -1,4 +1,7 @@
-'1' A(x~p,y~u,z~u!1),B(z~p!1,x~p) -> A(x~u,y~u,z~u!1),B(z~p!1,x~p)
+'1' a(x~u!1),b(x!1) -> a(x~u!1),b(x!1), c(x) @ 1.0
+'2' a(x~p!1),d(x!1) -> a(x~p!1),d(x!1), c(x) @ 1.0
 
-%init: 1 * (A(x~p,y~u,z~u!1),B(z~p!1,x~p))
-%init: 1 * (A(x~p,y~p,z~u!1),B(z~p!1,x~p))
+%init: 10*(a(x~u!1),b(x!1))
+%init: 10*(a(x~u!1),d(x!1))
+%init: 10*(a(x~p!1),b(x!1))
+%init: 10*(a(x~p!1),d(x!1))

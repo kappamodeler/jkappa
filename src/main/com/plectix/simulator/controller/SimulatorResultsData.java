@@ -1,6 +1,5 @@
 package com.plectix.simulator.controller;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class SimulatorResultsData {
 
 	private SimulatorCallableExitReport simulatorCallableExitReport = new SimulatorCallableExitReport();
 	
-	private List<Source> myResultSource = null;
+	private List<Source> sources = null;
 	
     //***********************************************************************************
 	/**
@@ -27,14 +26,14 @@ public class SimulatorResultsData {
 	}
 
 	public void addResultSource(Source source) {
-		if (myResultSource == null) {
-			myResultSource = new LinkedList<Source>();
+		if (sources == null) {
+			sources = new LinkedList<Source>();
 		}
-		myResultSource.add(source);
+		sources.add(source);
 	}
 	
 	public List<Source> getResultSource() {
-		return myResultSource;
+		return sources;
 	}
 	                               
 	

@@ -7,7 +7,7 @@ public abstract class ObservablesLineData  {
 		this.id = id;
 	}
 	
-	public int getId() {
+	public final int getId() {
 		return id;
 	}
 }

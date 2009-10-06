@@ -1,6 +1,6 @@
 package com.plectix.simulator.streaming;
 
-public class LiveDataPoint {
+public final class LiveDataPoint {
 
 	private final long eventNumber;
 	private final double eventTime;
@@ -25,7 +25,8 @@ public class LiveDataPoint {
 		return plotValues;
 	}
 	
-	public String toString() {
+	@Override
+	public final String toString() {
 		return "(" + eventNumber + ", " + eventTime + ", " + plotValues[0] + ")";
 	}
 

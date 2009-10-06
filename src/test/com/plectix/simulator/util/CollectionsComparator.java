@@ -6,18 +6,18 @@ import java.util.Stack;
 
 public abstract class CollectionsComparator {
 	public abstract boolean equals(Object a, Object b);
-	
+
 	public <E> boolean areEqual(Collection<E> a, Collection<E> b) {
 		Stack<E> bStack = new Stack<E>();
 		bStack.addAll(b);
-		
+
 		ArrayList<E> aArrayList = new ArrayList<E>();
 		aArrayList.addAll(a);
-				
+
 		int foundIndex = -1;
 		E bElement;
 		E elementA;
-		
+
 		while (!bStack.isEmpty()) {
 			boolean contains = false;
 			bElement = bStack.pop();
@@ -38,9 +38,9 @@ public abstract class CollectionsComparator {
 			} else {
 				aArrayList.remove(foundIndex);
 			}
-		
+
 		}
-		
+
 		if (!aArrayList.isEmpty()) {
 			return false;
 		} else {

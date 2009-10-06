@@ -4,52 +4,44 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.plectix.simulator.XMLmaps.TestContactMap;
-import com.plectix.simulator.XMLmaps.TestInfluenceMap;
-import com.plectix.simulator.doAction.RunActionTest;
-import com.plectix.simulator.enumerationOfSpecies.TestEnumOfSpecies;
-import com.plectix.simulator.enumerationOfSpecies.TestEnumOfSpeciesCompareXML;
 import com.plectix.simulator.injections.RunInjectionsTests;
-import com.plectix.simulator.localViews.TestLocalViews;
-import com.plectix.simulator.localViews.TestLocalViewsCompareXML;
-import com.plectix.simulator.parser.newtests.RunParserTests;
+import com.plectix.simulator.localviews.TestLocalViews;
+import com.plectix.simulator.localviews.TestLocalViewsCompareXML;
+import com.plectix.simulator.parser.RunParserTests;
 import com.plectix.simulator.perturbations.RunPerturbationsTests;
-import com.plectix.simulator.smokeTests.SmokeTestMain;
-import com.plectix.simulator.stories.weakCompression.RunTestWeakCompression;
-import com.plectix.simulator.subViews.TestSubViews;
+import com.plectix.simulator.ruleapplication.RunActionTest;
+import com.plectix.simulator.rulecompression.TestsRuleCompressions;
+import com.plectix.simulator.smoke.SmokeTestMain;
+import com.plectix.simulator.speciesenumeration.TestEnumOfSpecies;
+import com.plectix.simulator.speciesenumeration.TestEnumOfSpeciesCompareXML;
+import com.plectix.simulator.stories.weakcompression.RunTestWeakCompression;
+import com.plectix.simulator.subviews.TestSubViews;
 import com.plectix.simulator.updates.RunUpdateTests;
+import com.plectix.simulator.xmlmap.TestContactMap;
+import com.plectix.simulator.xmlmap.TestInfluenceMap;
 
-@RunWith(value=Suite.class)
+@RunWith(value = Suite.class)
 @SuiteClasses(value = {
 		SmokeTestMain.class,
-		
-		RunInjectionsTests.class, 
+
+		RunInjectionsTests.class,
 		RunUpdateTests.class,
-		//RunParserTests.class,
+		// RunParserTests.class,
 		RunPerturbationsTests.class,
-//		RunTestStories.class,
+		// RunTestStories.class,
 		RunParserTests.class,
-//		TestAction.class
+		// TestAction.class
 		RunActionTest.class,
-		//TestJavaXMLCompare.class,	
-		TestContactMap.class,
+		// TestJavaXMLCompare.class,
+		
 		// Add nfedorov
-		TestInfluenceMap.class,
-		
-		TestSubViews.class,
-		
-		TestEnumOfSpecies.class,
-		TestEnumOfSpeciesCompareXML.class,
-		
-		TestLocalViews.class,
-		TestLocalViewsCompareXML.class,
-		
-		
-		
-		RunTestWeakCompression.class
-	})
+		TestInfluenceMap.class, TestSubViews.class, TestEnumOfSpecies.class,
+		TestEnumOfSpeciesCompareXML.class, TestLocalViews.class,
+		TestLocalViewsCompareXML.class, 
+		RunAllUnitTests.class,
+		RunTestWeakCompression.class,
+		TestContactMap.class})
 public class RunAllTests {
-	public static final String FILENAME_EXTENSION = ".test";
-	public static final String RESULTS_EXTENSION = ".tmp";
-	public static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
+//	public static final String FILENAME_EXTENSION = ".test";
+//	public static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
 }

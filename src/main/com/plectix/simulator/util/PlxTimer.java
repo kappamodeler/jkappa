@@ -7,13 +7,11 @@ import java.lang.management.ManagementFactory;
  * 
  * @author ecemis
  */
-public class PlxTimer {
+public final class PlxTimer {
 	private long timeStart;
 	private double wallClockTimeInSeconds = -1;
-
 	private long timeStartThread;
 	private double threadTimeInSeconds = -1;
-
 	private boolean running = false;
 
 	public PlxTimer() {

@@ -11,6 +11,7 @@ import java.awt.Dimension;
  * @author ecemis
  */
 
+@SuppressWarnings("serial")
 public class HorizontalLinePanel extends GridBagPanel {
 	
     public HorizontalLinePanel(int preferredWidth, boolean bright) {

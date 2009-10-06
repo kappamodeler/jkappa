@@ -42,7 +42,7 @@ public class SimulationMain  {
 		
 		// Dump important info:
 		LOGGER.info("Build Date: " + BuildConstants.BUILD_DATE);
-		LOGGER.info("SVN Revision: " + BuildConstants.BUILD_SVN_REVISION);
+		LOGGER.info("Revision: " + BuildConstants.BUILD_SVN_REVISION);
 		LOGGER.info("Build OS: " + BuildConstants.BUILD_OS_NAME);
 		LOGGER.info("Build Java Version: " + BuildConstants.JAVA_VERSION);
 		LOGGER.info("Ant Java Version: " + BuildConstants.ANT_JAVA_VERSION);

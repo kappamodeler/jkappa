@@ -5,28 +5,29 @@ import java.util.List;
 
 import com.plectix.simulator.parser.util.StringUtil;
 
-public class SolutionLineData {
-	private final List<AbstractAgent> myAgents;
-	private final long myCount;
+public final class SolutionLineData {
+	private final List<ModelAgent> agents;
+	private final long counter;
 	
-	public SolutionLineData(List<AbstractAgent> agents, long count) {
-		myAgents = agents;
-		myCount = count;
+	public SolutionLineData(List<ModelAgent> agents, long count) {
+		this.agents = agents;
+		this.counter = count;
 	}
 
-	public List<AbstractAgent> getAgents() {
-		return myAgents;
+	public final List<ModelAgent> getAgents() {
+		return agents;
 	}
 
-	public long getCount() {
-		return myCount;
+	public final long getCount() {
+		return counter;
 	}
 	
-	public String toString() {
+	@Override
+	public final String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append(myCount + " * (");
-		Collections.sort(myAgents);
-		sb.append(StringUtil.listToString(myAgents) + ")");
+		sb.append(counter + " * (");
+		Collections.sort(agents);
+		sb.append(StringUtil.listToString(agents) + ")");
 		return sb.toString();
 	}
 }

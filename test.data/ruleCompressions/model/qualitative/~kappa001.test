@@ -1,3 +1,8 @@
-'1' A(x~p,y~u,z~u!1),B(z!1) -> A(x~u,y~u,z~u!1),B(z!1)
+Sh(Y7~p!3,pi!1),G(a!3,b!2),So(d!2),R(Y48~p!1) -> Sh(Y7~p,pi!1),G(a,b!2),So(d!2),R(Y48~p!1)
+Sh(Y7~p!2,pi!1),G(a!2,b),R(Y48~p!1) -> Sh(Y7~p,pi!1),G(a,b),R(Y48~p!1)
+Sh(Y7~p!1,pi),G(a!1,b) -> Sh(Y7~p,pi),G(a,b)
+Sh(Y7~p!1,pi),G(a!1,b!_) -> Sh(Y7~p,pi),G(a,b!_)
 
-%init: 1 * (A(x~p,y~u,z~u!1),B(z!1))
+
+%init: (Sh(Y7~p!3,pi!1),G(a!3,b!2),So(d!2),R(Y48~p!1))
+

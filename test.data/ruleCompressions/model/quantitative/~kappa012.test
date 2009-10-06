@@ -1,0 +1,27 @@
+'B-catenin.APC-Axin-GSK3B complex{102655}' GSK3beta(axin!2,apc!3),APC(mod~p,axin!1,gsk!3,bcat),Axin(mod~p,apc!1,gsk!2),Beta-catenin(mod~u,apc,tcf) <-> GSK3beta(axin!3,apc!1),APC(mod~p,axin!2,gsk!1,bcat!4),Axin(mod~p,apc!2,gsk!3),Beta-catenin(mod~u,apc!4,tcf) @ 3.05808247359618e-06,2.0
+'APC, Axin@mod_u{102647}' GSK3beta(axin!1,apc!3),APC(mod~p,axin!2,gsk!3,bcat),Axin(mod~p,apc!2,gsk!1) -> GSK3beta(axin!2,apc!1),APC(mod~u,axin!3,gsk!1,bcat),Axin(mod~u,apc!3,gsk!2) @ 0.00221666666666667
+'Gsk3B.Apc,Axin{102622}' GSK3beta(axin,apc),APC(mod~u,axin!2,gsk,bcat),Axin(mod~u,apc!2,gsk) <-> GSK3beta(axin!3,apc!2),APC(mod~u,axin!1,gsk!2,bcat),Axin(mod~u,apc!1,gsk!3) @ 2.77979696849893e-07,0.01515
+'B-catenin release{102645}' GSK3beta(axin!3,apc!1),Beta-catenin(mod~p,apc!4,tcf),APC(mod~p,axin!2,gsk!1,bcat!4),Axin(mod~p,apc!2,gsk!3) -> GSK3beta(axin!1,apc!2),Beta-catenin(mod~p,apc,tcf),APC(mod~p,axin!3,gsk!2,bcat),Axin(mod~p,apc!3,gsk!1) @ 3.43333333333333
+'GSK3beta release{102617}' GSK3beta(axin!2,apc!1),Dsh(act~a),APC(mod~u,axin!3,gsk!1,bcat),Axin(mod~u,apc!3,gsk!2) -> GSK3beta(axin,apc),Dsh(act~a),APC(mod~u,axin!1,gsk,bcat),Axin(mod~u,apc!1,gsk) @ 1.52904123679809e-06
+'APC, Axin@mod_p{102646}' GSK3beta(axin!1,apc!3),APC(mod~u,axin!2,gsk!3,bcat),Axin(mod~u,apc!2,gsk!1) -> GSK3beta(axin!2,apc!1),APC(mod~p,axin!3,gsk!1,bcat),Axin(mod~p,apc!3,gsk!2) @ 0.00445
+'Axin deg{102602}' Axin(apc,gsk,mod~u) -> @ 0.00278333333333333
+'Apc.Beta-catenin{102623}' APC(mod~u,axin,gsk,bcat),Beta-catenin(mod~u,apc,tcf) <-> APC(mod~u,axin,gsk,bcat!1),Beta-catenin(mod~u,apc!1,tcf) @ 3.05808247359618e-05,20.0
+'B.catenin create{102703}' -> Beta-catenin(mod~u,apc,tcf) @ 38.4227701556475
+'Axin create{102612}' -> Axin(mod~u,apc,gsk) @ 0.0074665524983315
+'TCF.Beta-catenin, TCF...B-catenin{102624}' TCF(bcat),Beta-catenin(mod~u,apc,tcf) <-> TCF(bcat!1),Beta-catenin(mod~u,apc,tcf!1) @ 0.0166666666666667,0.5
+'B.catenin deg{102701}' Beta-catenin(tcf,apc,mod~u) -> @ 4.28333333333333e-06
+'B.catenin-phos deg{102699}' Beta-catenin(mod~p,apc,tcf) -> @ 0.00695
+'B-catenin@mod_p{102698}' GSK3beta(axin!2,apc!3),APC(mod~p,axin!1,gsk!3,bcat!4),Axin(mod~p,apc!1,gsk!2),Beta-catenin(mod~u,apc!4,tcf) -> GSK3beta(axin!3,apc!1),APC(mod~p,axin!2,gsk!1,bcat!4),Axin(mod~p,apc!2,gsk!3),Beta-catenin(mod~p,apc!4,tcf) @ 3.43333333333333
+'Apc.Axin{100225}' Axin(mod~u,apc,gsk),APC(mod~u,axin,gsk,bcat) <-> Axin(mod~u,apc!1,gsk),APC(mod~u,axin!1,gsk,bcat) @ 3.05808247359618e-05,0.833333333333333
+'Dsh@act_i{100224}' Dsh(act~a) -> Dsh(act~i) @ 0.000303333333333333
+'Dsh@act_a{99647}' Dsh(act~i) -> Dsh(act~a) @ 0.0
+
+
+# Initial Conditions:
+%init: 8172 * (TCF(bcat))
+%init: 19000 * (Beta-catenin(mod~u,apc,tcf))
+%init: 27000 * (GSK3beta(apc,axin))
+%init: 545 * (Beta-catenin(apc,mod~u,tcf))
+%init: 11 * (Axin(mod~u,apc,gsk))
+%init: 54481 * (Dsh(act~i))
+%init: 54481 * (APC(mod~u,axin,gsk,bcat))

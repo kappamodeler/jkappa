@@ -1,15 +1,16 @@
 package com.plectix.simulator.parser.util;
 
-/*package*/enum SitePropertyKey {
+//TODO REMOVE!
+/*package*/ enum SitePropertyKey {
 	INTERNAL_STATE("~"), BLIND_CONNECTION("!_"), WILDCARD("?"), CONNECTION("!");
 
-	private final String mySymbol;
+	private final String symbol;
 
 	private SitePropertyKey(String symbol) {
-		mySymbol = symbol;
+		this.symbol = symbol;
 	}
 
-	public String getSymbol() {
-		return mySymbol;
+	public final String getSymbol() {
+		return symbol;
 	}
 }

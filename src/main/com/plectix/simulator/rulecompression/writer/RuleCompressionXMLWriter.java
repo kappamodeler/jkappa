@@ -11,32 +11,32 @@ import java.util.TreeMap;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-import com.plectix.simulator.components.CRule;
-import com.plectix.simulator.components.complex.subviews.CMainSubViews;
+import com.plectix.simulator.component.Rule;
+import com.plectix.simulator.component.complex.subviews.MainSubViews;
 import com.plectix.simulator.rulecompression.CompressionResults;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
 
 public class RuleCompressionXMLWriter {
-	private final Map<Integer, CRule> initialRulesMap = new LinkedHashMap<Integer, CRule>();
-	private final CMainSubViews qualitativeSubViews;
+	private final Map<Integer, Rule> initialRulesMap = new LinkedHashMap<Integer, Rule>();
+	private final MainSubViews qualitativeSubViews;
 	private final Map<Integer, Integer> associationQualitativeMap 
 			= new TreeMap<Integer, Integer>();
-	private final Set<CRule> qualitativeRules = new LinkedHashSet<CRule>();
+	private final Set<Rule> qualitativeRules = new LinkedHashSet<Rule>();
 	private final Map<Integer, List<Integer>> associationQualitativeBackMap
 				= new LinkedHashMap<Integer, List<Integer>>();
 	private final CompressionResults results;
 	
 	public RuleCompressionXMLWriter(KappaSystem ks, CompressionResults results,
-			CMainSubViews qualitativeSubViews) {
+			MainSubViews qualitativeSubViews) {
 		this.qualitativeSubViews = qualitativeSubViews;
 		this.results = results;
-		for (CRule rule : ks.getRules()) {
-			this.initialRulesMap.put(rule.getRuleID(), rule);
+		for (Rule rule : ks.getRules()) {
+			this.initialRulesMap.put(rule.getRuleId(), rule);
 		}
-		for (Map.Entry<CRule, CRule> associationEntry : results.getAssociations()) {
-			int idRealRule = associationEntry.getKey().getRuleID();
-			int idCompressedRule = associationEntry.getValue().getRuleID();
+		for (Map.Entry<Rule, Rule> associationEntry : results.getAssociations()) {
+			int idRealRule = associationEntry.getKey().getRuleId();
+			int idCompressedRule = associationEntry.getValue().getRuleId();
 			associationQualitativeMap.put(idRealRule, idCompressedRule);
 			qualitativeRules.add(associationEntry.getValue());
 			
@@ -63,10 +63,10 @@ public class RuleCompressionXMLWriter {
 	private void writeToXMLInitialRules(XMLStreamWriter xtw, boolean isOcamlStyleObsName) throws XMLStreamException{
 		xtw.writeStartElement("RuleSet");
 		xtw.writeAttribute("Name", "Original");
-		for(CRule rule : initialRulesMap.values()){
+		for(Rule rule : initialRulesMap.values()){
 			//<Rule Id="1" Name="Rule1" Data="R(l,r),E(r)->R(l!0,r),E(r!0)" ForwardRate="1"/>
 			xtw.writeStartElement("Rule");
-			xtw.writeAttribute("Id", Integer.valueOf(rule.getRuleID()).toString());
+			xtw.writeAttribute("Id", Integer.valueOf(rule.getRuleId()).toString());
 			xtw.writeAttribute("ForwardRate", Double.valueOf(rule.getRate()).toString());
 			String name = rule.getName();
 			String data = SimulationData.getData(rule,isOcamlStyleObsName);
@@ -95,9 +95,9 @@ public class RuleCompressionXMLWriter {
 	
 	private void writeToXMLQualitativeRules(XMLStreamWriter xtw, boolean isOcamlStyleObsName)
 	throws XMLStreamException {
-		for (CRule rule : qualitativeRules) {
+		for (Rule rule : qualitativeRules) {
 			xtw.writeStartElement("Rule");
-			Integer id = rule.getRuleID();
+			Integer id = rule.getRuleId();
 			xtw.writeAttribute("Id", id.toString());
 			if(qualitativeSubViews.getDeadRules().contains(id))
 				xtw.writeAttribute("Data", "Cannot be applied");
@@ -112,7 +112,7 @@ public class RuleCompressionXMLWriter {
 			int size = list.size();
 			int counter = 1;
 			for (Integer key : list) {
-				CRule initRule = initialRulesMap.get(key);
+				Rule initRule = initialRulesMap.get(key);
 				String name = initRule.getName();
 				if (name != null)
 					sb.append(name);

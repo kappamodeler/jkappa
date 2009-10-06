@@ -23,7 +23,6 @@ public abstract class DirectoryTestsRunner extends TestRunner {
 		} catch (Exception e) {
 			org.junit.Assert.fail("Cannot instantiate fileName parameters");
 		}
-		//return Collections.unmodifiableList(parameters);
 		return parameters;
 	}
 

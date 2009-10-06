@@ -13,14 +13,10 @@ import com.plectix.simulator.controller.SimulatorStatusInterface;
  * 
  * @author ecemis
  */
-public class SimulatorStatus implements SimulatorStatusInterface {
-
+public final class SimulatorStatus implements SimulatorStatusInterface {
 	private long currentEventNumber = 0;
-
 	private int currentIterationNumber = 0;
-	
 	private double currentTime = Double.NaN;
-
 	private double progress = Double.NaN;
 	private String statusMessage = null;
 
