@@ -80,7 +80,7 @@ public class Rule implements Serializable, WeightedItem {
 	private List<ChangedSite> changedInhibitedSites;
 	private double activity = 0.;
 	private double rate;
-	
+
 	private static NullEvent nullEvent = new NullEvent();
 
 	private RuleApplicationPoolInterface pool;
@@ -110,8 +110,8 @@ public class Rule implements Serializable, WeightedItem {
 	 *            otherwise
 	 */
 	public Rule(List<ConnectedComponentInterface> leftHandsideComponents,
-			List<ConnectedComponentInterface> rightHandsideComponents, String ruleName,
-			double ruleRate, int ruleId, boolean isStorify) {
+			List<ConnectedComponentInterface> rightHandsideComponents,
+			String ruleName, double ruleRate, int ruleId, boolean isStorify) {
 		if (leftHandsideComponents == null) {
 			leftHandside = new ArrayList<ConnectedComponentInterface>();
 			leftHandside.add(ThreadLocalData.getEmptyConnectedComponent());
@@ -192,7 +192,8 @@ public class Rule implements Serializable, WeightedItem {
 	 *         substances, otherwise <tt>false</tt>
 	 */
 	public final boolean leftHandSideIsEmpty() {
-		return leftHandside.contains(ThreadLocalData.getEmptyConnectedComponent());
+		return leftHandside.contains(ThreadLocalData
+				.getEmptyConnectedComponent());
 	}
 
 	/**
@@ -216,6 +217,7 @@ public class Rule implements Serializable, WeightedItem {
 
 	/**
 	 * Sets rate of this rule to infinity
+	 * 
 	 * @param infiniteRate
 	 */
 	public final void setInfinityRateFlag(boolean infiniteRate) {
@@ -236,12 +238,12 @@ public class Rule implements Serializable, WeightedItem {
 	 * @param lastApplication
 	 *            is <tt>true</tt> if and only if this application is the latest
 	 *            in current simulation, otherwise false
-	 * @throws StoryStorageException 
+	 * @throws StoryStorageException
 	 */
 	public void applyRuleForStories(List<Injection> injections,
-			EventBuilder eventBuilder, SimulationData simulationData, boolean lastApplication) throws StoryStorageException {
-		apply(injections, eventBuilder, simulationData,
-				lastApplication);
+			EventBuilder eventBuilder, SimulationData simulationData,
+			boolean lastApplication) throws StoryStorageException {
+		apply(injections, eventBuilder, simulationData, lastApplication);
 	}
 
 	/**
@@ -253,7 +255,7 @@ public class Rule implements Serializable, WeightedItem {
 	 *            be applied to
 	 * @param simulationData
 	 *            simulation data
-	 * @throws StoryStorageException 
+	 * @throws StoryStorageException
 	 */
 	public void applyRule(List<Injection> injectionList,
 			SimulationData simulationData) throws StoryStorageException {
@@ -273,7 +275,6 @@ public class Rule implements Serializable, WeightedItem {
 	public final Agent getAgentAdd(Agent agent) {
 		return agentAddList.get(agent);
 	}
-
 
 	/**
 	 * This method puts agent in solution, which was added with the latest
@@ -303,10 +304,11 @@ public class Rule implements Serializable, WeightedItem {
 	 * @param lastApplication
 	 *            is <tt>true</tt> if and only if this application is the latest
 	 *            in current simulation, otherwise false
-	 * @throws StoryStorageException 
+	 * @throws StoryStorageException
 	 */
 	protected final void apply(List<Injection> injections,
-			ActionObserverInteface event, SimulationData simulationData, boolean lastApplication) throws StoryStorageException {
+			ActionObserverInteface event, SimulationData simulationData,
+			boolean lastApplication) throws StoryStorageException {
 		agentAddList = new LinkedHashMap<Agent, Agent>();
 		sitesConnectedWithDeleted = new ArrayList<Site>();
 		sitesConnectedWithBroken = new ArrayList<Site>();
@@ -320,12 +322,11 @@ public class Rule implements Serializable, WeightedItem {
 		event.setTypeById(simulationData.getStoriesAgentTypesStorage());
 		for (Action action : actionList) {
 			if (action.getLeftCComponent() == null) {
-				action.doAction(pool, null,event,
-						simulationData);
+				action.doAction(pool, null, event, simulationData);
 			} else {
 				action.doAction(pool, injections.get(leftHandside
-						.indexOf(action.getLeftCComponent())), 
-						event, simulationData);
+						.indexOf(action.getLeftCComponent())), event,
+						simulationData);
 			}
 		}
 
@@ -336,7 +337,8 @@ public class Rule implements Serializable, WeightedItem {
 	}
 
 	public final void preparePool(SimulationData simulationData) {
-		SolutionInterface solution = simulationData.getKappaSystem().getSolution();
+		SolutionInterface solution = simulationData.getKappaSystem()
+				.getSolution();
 		pool = solution.prepareRuleApplicationPool();
 	}
 
@@ -377,8 +379,8 @@ public class Rule implements Serializable, WeightedItem {
 				break;
 			}
 			// filling of fixed agents
-//			if (index < rhsAgents.size() && isStorify)
-//				fillFixedSites(lhsAgent, rhsAgents.get(index));
+			// if (index < rhsAgents.size() && isStorify)
+			// fillFixedSites(lhsAgent, rhsAgents.get(index));
 			index++;
 		}
 
@@ -389,7 +391,6 @@ public class Rule implements Serializable, WeightedItem {
 				rhsAgents.get(i).setIdInRuleSide(lhsAgents.size() + i);
 		}
 	}
-
 
 	/**
 	 * This method sorts agents by id in rule's handside
@@ -418,7 +419,8 @@ public class Rule implements Serializable, WeightedItem {
 	private final void sortActionList() {
 		for (int i = 0; i < actionList.size(); i++) {
 			for (int j = 0; j < actionList.size(); j++) {
-				if (actionList.get(i).getType().compareTo(actionList.get(j).getType()) < 0) {
+				if (actionList.get(i).getType().compareTo(
+						actionList.get(j).getType()) < 0) {
 					Action actionMin = actionList.get(j);
 					Action actionR = actionList.get(i);
 					actionList.set(j, actionR);
@@ -448,7 +450,6 @@ public class Rule implements Serializable, WeightedItem {
 		changedInhibitedSites.add(new ChangedSite(sourceSite, internalState,
 				linkState));
 	}
-
 
 	/**
 	 * This methods creates atomic-actions list for this rule
@@ -516,8 +517,8 @@ public class Rule implements Serializable, WeightedItem {
 			for (Agent rAgent : ccR.getAgents()) {
 				if (lAgent.getIdInRuleHandside() == rAgent
 						.getIdInRuleHandside()) {
-					Action newAction = new DefaultAction(this, lAgent,
-							rAgent, ccL, ccR);
+					Action newAction = new DefaultAction(this, lAgent, rAgent,
+							ccL, ccR);
 					actionList.add(newAction);
 					actionList.addAll(newAction.createAtomicActions());
 					return;
@@ -531,14 +532,34 @@ public class Rule implements Serializable, WeightedItem {
 	 * Calculates automorphism number for this rule
 	 */
 	private final void calculateAutomorphismsNumber() {
-		if (leftHandside != null)
-			if (this.leftHandside.size() == 2) {
-				if (this.leftHandside.get(0).getAgents().size() == this.leftHandside
-						.get(1).getAgents().size())
-					if (this.leftHandside.get(0).isAutomorphicTo(
-							this.leftHandside.get(1).getAgents().get(0)))
-						automorphismNumber = 2;
+		if (leftHandside != null) {
+			Map<String, Integer> repetitionFactor = new LinkedHashMap<String, Integer>();
+			for (ConnectedComponentInterface component : leftHandside) {
+				String hashForComponent = component.getSmilesString();
+				Integer old = repetitionFactor.get(hashForComponent);
+				if(old ==null){
+					repetitionFactor.put(hashForComponent, Integer.valueOf(1));
+				}
+				else{
+					repetitionFactor.put(hashForComponent, Integer.valueOf(old+1));	
+				}
 			}
+			
+			for(Integer i : repetitionFactor.values()){
+				automorphismNumber*=factorial(i);
+			}
+		}
+	}
+
+	private int factorial(int i) {
+		if(i==0){
+			throw new RuntimeException("internal error : repetition factor for component equals 0");
+		}
+		int answer = 1;
+		for(int j = 1;j<=i;j++){
+			answer*=j;
+		}
+		return answer;
 	}
 
 	/**
@@ -556,7 +577,7 @@ public class Rule implements Serializable, WeightedItem {
 			double k1 = rate;
 			// additional rate
 			double k2 = additionalRate;
-			
+
 			long commonInjectionsWeight = 0;
 			for (ConnectedComponentInterface cc : this.leftHandside) {
 				commonInjectionsWeight += cc.getInjectionsWeight();
@@ -575,6 +596,10 @@ public class Rule implements Serializable, WeightedItem {
 	 */
 	public final String getName() {
 		return ruleName;
+	}
+	
+	public int getAutomorphismNumber(){
+		return automorphismNumber;
 	}
 
 	/**
@@ -762,22 +787,23 @@ public class Rule implements Serializable, WeightedItem {
 	public final List<Rule> getActivatedRules() {
 		return activatedRules;
 	}
-	
-	public final void addActivatedRule(Rule rule){
+
+	public final void addActivatedRule(Rule rule) {
 		activatedRules.add(rule);
 	}
-	
-	public final void addinhibitedRule(Rule rule){
+
+	public final void addinhibitedRule(Rule rule) {
 		inhibitedRule.add(rule);
 	}
-	
-	public final void addActivatedObs(ObservableConnectedComponentInterface obs){
+
+	public final void addActivatedObs(ObservableConnectedComponentInterface obs) {
 		activatedObservable.add(obs);
 	}
-	public final void addinhibitedObs(ObservableConnectedComponentInterface obs){
+
+	public final void addinhibitedObs(ObservableConnectedComponentInterface obs) {
 		inhibitedObservable.add(obs);
 	}
-	
+
 	/**
 	 * Returns list of actions, which this rule performs
 	 * 
