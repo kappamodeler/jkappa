@@ -1,6 +1,6 @@
 package com.plectix.simulator.interfaces;
 
-import com.plectix.simulator.component.Observables;
+import com.plectix.simulator.staticanalysis.Observables;
 
 /**
  * This interface describes observable component entity.

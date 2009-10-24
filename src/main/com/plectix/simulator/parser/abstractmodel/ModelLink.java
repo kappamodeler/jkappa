@@ -1,7 +1,7 @@
 package com.plectix.simulator.parser.abstractmodel;
 
-import com.plectix.simulator.component.LinkRank;
-import com.plectix.simulator.component.LinkStatus;
+import com.plectix.simulator.staticanalysis.LinkRank;
+import com.plectix.simulator.staticanalysis.LinkStatus;
 
 public final class ModelLink {
 	private LinkStatus linkStatus;

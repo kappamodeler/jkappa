@@ -1,8 +1,8 @@
 package com.plectix.simulator.simulator.initialization;
 
-import com.plectix.simulator.component.Agent;
-import com.plectix.simulator.component.injections.Injection;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.simulationclasses.injections.Injection;
+import com.plectix.simulator.staticanalysis.Agent;
 
 public final class StraightInjectionSettingStrategy implements InjectionSettingStrategy {
 

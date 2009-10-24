@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import com.plectix.simulator.component.LinkStatus;
 import com.plectix.simulator.parser.DocumentFormatException;
 import com.plectix.simulator.parser.IncompletesDisabledException;
 import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.ParseErrorMessage;
 import com.plectix.simulator.parser.abstractmodel.ModelAgent;
 import com.plectix.simulator.parser.abstractmodel.ModelSite;
+import com.plectix.simulator.staticanalysis.LinkStatus;
 
 /**
  *	It's not a factory, as a OOP-pattern, just named such 

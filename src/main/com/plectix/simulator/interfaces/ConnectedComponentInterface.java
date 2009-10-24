@@ -1,7 +1,7 @@
 package com.plectix.simulator.interfaces;
 
-import com.plectix.simulator.component.injections.Injection;
-import com.plectix.simulator.component.solution.SuperSubstance;
+import com.plectix.simulator.simulationclasses.injections.Injection;
+import com.plectix.simulator.simulationclasses.solution.SuperSubstance;
 
 /**
  * Interface of Connected Component.

@@ -2,14 +2,14 @@ package com.plectix.simulator.simulator.initialization;
 
 import java.util.Collection;
 
-import com.plectix.simulator.component.Agent;
-import com.plectix.simulator.component.ObservableConnectedComponent;
-import com.plectix.simulator.component.Rule;
-import com.plectix.simulator.component.solution.SuperSubstance;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.interfaces.SolutionInterface;
+import com.plectix.simulator.simulationclasses.solution.SuperSubstance;
 import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.staticanalysis.ObservableConnectedComponent;
+import com.plectix.simulator.staticanalysis.Rule;
 
 public final class InjectionsBuilder {
 	private final KappaSystem kappaSystem;

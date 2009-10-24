@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.plectix.simulator.component.NamedEntity;
 import com.plectix.simulator.parser.util.StringUtil;
+import com.plectix.simulator.staticanalysis.NamedEntity;
 
 public final class ModelAgent extends NamedEntity implements Comparable<ModelAgent> {
 	private static final String DEFAULT_NAME = null;

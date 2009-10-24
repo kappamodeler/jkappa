@@ -3,13 +3,13 @@ package com.plectix.simulator.interfaces;
 import java.util.Collection;
 import java.util.List;
 
-import com.plectix.simulator.component.Agent;
-import com.plectix.simulator.component.injections.Injection;
-import com.plectix.simulator.component.solution.RuleApplicationPoolInterface;
-import com.plectix.simulator.component.solution.SolutionLine;
-import com.plectix.simulator.component.solution.StraightStorage;
-import com.plectix.simulator.component.solution.SuperStorage;
+import com.plectix.simulator.simulationclasses.injections.Injection;
+import com.plectix.simulator.simulationclasses.solution.RuleApplicationPoolInterface;
+import com.plectix.simulator.simulationclasses.solution.SolutionLine;
+import com.plectix.simulator.simulationclasses.solution.StraightStorage;
+import com.plectix.simulator.simulationclasses.solution.SuperStorage;
 import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.staticanalysis.Agent;
 
 /**
  * Solution is the place, where all the species, which are

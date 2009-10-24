@@ -2,15 +2,15 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.List;
 
-import com.plectix.simulator.component.Agent;
-import com.plectix.simulator.component.solution.SolutionFactory;
-import com.plectix.simulator.component.solution.SolutionLine;
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.parser.abstractmodel.ModelSolution;
 import com.plectix.simulator.parser.abstractmodel.SolutionLineData;
+import com.plectix.simulator.simulationclasses.solution.SolutionFactory;
+import com.plectix.simulator.simulationclasses.solution.SolutionLine;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.staticanalysis.Agent;
 
 public final class SolutionBuilder {
 	private final KappaSystem kappaSystem;

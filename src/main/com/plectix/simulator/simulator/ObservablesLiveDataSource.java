@@ -2,9 +2,9 @@ package com.plectix.simulator.simulator;
 
 import java.util.List;
 
-import com.plectix.simulator.component.Observables;
 import com.plectix.simulator.interfaces.ObservableInterface;
 import com.plectix.simulator.interfaces.ObservableRuleInterface;
+import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.streaming.LiveDataSourceInterface;
 import com.plectix.simulator.streaming.LiveData.PlotType;
 

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.plectix.simulator.component.solution.SolutionLine;
+import com.plectix.simulator.simulationclasses.solution.SolutionLine;
 
 public final class ModelSolution {
 	private final List<SolutionLineData> solutionLinesData = new LinkedList<SolutionLineData>();

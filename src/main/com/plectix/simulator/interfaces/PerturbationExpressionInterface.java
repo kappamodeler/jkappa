@@ -1,7 +1,7 @@
 package com.plectix.simulator.interfaces;
 
-import com.plectix.simulator.component.Observables;
-import com.plectix.simulator.component.perturbations.Perturbation;
+import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
+import com.plectix.simulator.staticanalysis.Observables;
 
 /**
  * This class implements standard interface, used for

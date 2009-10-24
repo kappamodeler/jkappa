@@ -5,12 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.plectix.simulator.component.Agent;
-import com.plectix.simulator.component.InternalState;
-import com.plectix.simulator.component.Site;
 import com.plectix.simulator.parser.abstractmodel.ModelAgent;
 import com.plectix.simulator.parser.abstractmodel.ModelSite;
 import com.plectix.simulator.simulator.KappaSystemInterface;
+import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.staticanalysis.InternalState;
+import com.plectix.simulator.staticanalysis.Site;
 import com.plectix.simulator.util.NameDictionary;
 
 /*package*/ public final class SubstanceBuilder {

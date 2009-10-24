@@ -1,8 +1,8 @@
 package com.plectix.simulator.parser.abstractmodel;
 
-import com.plectix.simulator.component.InternalState;
-import com.plectix.simulator.component.LinkRank;
-import com.plectix.simulator.component.LinkStatus;
+import com.plectix.simulator.staticanalysis.InternalState;
+import com.plectix.simulator.staticanalysis.LinkRank;
+import com.plectix.simulator.staticanalysis.LinkStatus;
 import com.plectix.simulator.util.NameDictionary;
 
 public final class ModelSite {

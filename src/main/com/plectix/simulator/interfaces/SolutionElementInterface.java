@@ -3,9 +3,9 @@ package com.plectix.simulator.interfaces;
 import java.util.Collection;
 import java.util.List;
 
-import com.plectix.simulator.component.Agent;
-import com.plectix.simulator.component.Rule;
-import com.plectix.simulator.component.injections.Injection;
+import com.plectix.simulator.simulationclasses.injections.Injection;
+import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.staticanalysis.Rule;
 
 /**
  * Entity that can be contained in solution. It is obviously connected component

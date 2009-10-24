@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.nio.CharBuffer;
 
-import com.plectix.simulator.component.solution.OperationMode;
+import com.plectix.simulator.simulationclasses.solution.OperationMode;
 import com.plectix.simulator.util.PersistenceUtils;
 import com.plectix.simulator.util.Info.InfoType;
 

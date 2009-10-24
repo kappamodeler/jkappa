@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.plectix.simulator.component.Agent;
-import com.plectix.simulator.component.Rule;
 import com.plectix.simulator.parser.abstractmodel.ModelAgent;
 import com.plectix.simulator.parser.abstractmodel.ModelRule;
 import com.plectix.simulator.simulator.KappaSystemInterface;
 import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.staticanalysis.Rule;
 
 public final class RuleBuilder {
 	private final SubstanceBuilder substanceBuilder;

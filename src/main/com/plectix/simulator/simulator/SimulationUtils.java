@@ -6,17 +6,17 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.plectix.simulator.component.Agent;
-import com.plectix.simulator.component.ConnectedComponent;
-import com.plectix.simulator.component.LinkRank;
-import com.plectix.simulator.component.ObservableConnectedComponent;
-import com.plectix.simulator.component.Rule;
-import com.plectix.simulator.component.Site;
-import com.plectix.simulator.component.injections.Injection;
-import com.plectix.simulator.component.injections.LiftElement;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.interfaces.PerturbationExpressionInterface;
+import com.plectix.simulator.simulationclasses.injections.Injection;
+import com.plectix.simulator.simulationclasses.injections.LiftElement;
+import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.staticanalysis.ConnectedComponent;
+import com.plectix.simulator.staticanalysis.LinkRank;
+import com.plectix.simulator.staticanalysis.ObservableConnectedComponent;
+import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.Site;
 
 public final class SimulationUtils {
 

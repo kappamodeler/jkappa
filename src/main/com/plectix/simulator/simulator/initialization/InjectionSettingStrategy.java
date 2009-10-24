@@ -1,7 +1,7 @@
 package com.plectix.simulator.simulator.initialization;
 
-import com.plectix.simulator.component.Agent;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.staticanalysis.Agent;
 
 public interface InjectionSettingStrategy {
 	

@@ -1,8 +1,8 @@
 package com.plectix.simulator.util;
 
-import com.plectix.simulator.component.Agent;
-import com.plectix.simulator.component.InternalState;
-import com.plectix.simulator.component.Site;
+import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.staticanalysis.InternalState;
+import com.plectix.simulator.staticanalysis.Site;
 
 public final class NameDictionary {
 	public static final boolean isDefaultAgentName(String name) { 

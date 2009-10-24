@@ -2,17 +2,17 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.List;
 
-import com.plectix.simulator.component.Observables;
-import com.plectix.simulator.component.Rule;
-import com.plectix.simulator.component.perturbations.Perturbation;
-import com.plectix.simulator.component.stories.Stories;
 import com.plectix.simulator.parser.DocumentFormatException;
 import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.abstractmodel.ModelSolution;
+import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.staticanalysis.Observables;
+import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.stories.Stories;
 
 public final class KappaSystemBuilder {
 	private final SimulationData simulationData;

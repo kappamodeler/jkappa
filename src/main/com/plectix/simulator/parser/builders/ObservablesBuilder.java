@@ -2,9 +2,6 @@ package com.plectix.simulator.parser.builders;
 
 import java.util.List;
 
-import com.plectix.simulator.component.Agent;
-import com.plectix.simulator.component.Observables;
-import com.plectix.simulator.component.Rule;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.parser.abstractmodel.observables.ModelObservables;
 import com.plectix.simulator.parser.abstractmodel.observables.ObservableComponentLineData;
@@ -12,6 +9,9 @@ import com.plectix.simulator.parser.abstractmodel.observables.ObservableRuleLine
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.staticanalysis.Observables;
+import com.plectix.simulator.staticanalysis.Rule;
 
 public final class ObservablesBuilder {
 	private final Observables existingObservables;

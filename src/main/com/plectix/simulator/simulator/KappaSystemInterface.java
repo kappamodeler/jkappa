@@ -2,18 +2,18 @@ package com.plectix.simulator.simulator;
 
 import java.util.List;
 
-import com.plectix.simulator.component.Observables;
-import com.plectix.simulator.component.Rule;
-import com.plectix.simulator.component.complex.contactmap.ContactMap;
-import com.plectix.simulator.component.complex.influencemap.InfluenceMap;
-import com.plectix.simulator.component.complex.localviews.LocalViewsMain;
-import com.plectix.simulator.component.complex.speciesenumeration.GeneratorSpecies;
-import com.plectix.simulator.component.complex.subviews.AllSubViewsOfAllAgentsInterface;
-import com.plectix.simulator.component.injections.Injection;
-import com.plectix.simulator.component.perturbations.Perturbation;
-import com.plectix.simulator.component.stories.Stories;
 import com.plectix.simulator.interfaces.SolutionInterface;
-import com.plectix.simulator.rulecompression.writer.RuleCompressionXMLWriter;
+import com.plectix.simulator.simulationclasses.injections.Injection;
+import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
+import com.plectix.simulator.staticanalysis.Observables;
+import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.contactmap.ContactMap;
+import com.plectix.simulator.staticanalysis.influencemap.InfluenceMap;
+import com.plectix.simulator.staticanalysis.localviews.LocalViewsMain;
+import com.plectix.simulator.staticanalysis.rulecompression.RuleCompressionXMLWriter;
+import com.plectix.simulator.staticanalysis.speciesenumeration.GeneratorSpecies;
+import com.plectix.simulator.staticanalysis.stories.Stories;
+import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
 import com.plectix.simulator.util.Info.InfoType;
 
 public interface KappaSystemInterface {

@@ -1,0 +1,50 @@
+##
+#		ENG-119 part 2.
+##
+
+# Rules:
+#######
+# Chapter 'New Chapter 1'
+'a. Pheromone.Ste2' Pheromone(ste2),Ste2(pheromone) -> Pheromone(ste2!1),Ste2(pheromone!1),Pheromone(ste2) @ 1.09e-5
+'a. Pheromone...Ste2' Ste2(pheromone!1),Pheromone(ste2!1) -> Ste2(pheromone) @ 1.0e-3
+'b. Ste2.Gpa1' Ste2(gpa1),Gpa1(ste2) -> Ste2(gpa1!1),Gpa1(ste2!1) @ 1.15e-3
+'b. Ste2...Gpa1' Ste2(gpa1!1),Gpa1(ste2!1) -> Ste2(gpa1),Gpa1(ste2) @ 0
+'b. Ste2...Gpa1 Ref1' Ste2(gpa1!1),Gpa1(ste2!1,ste4) -> Ste2(gpa1),Gpa1(ste2,ste4) @ 0.1
+'b. Ste2...Gpa1 Ref2' Ste2(gpa1!1),Gpa1(ste2!1,ste4!2),Ste4(gpa1!2) -> Ste2(gpa1),Gpa1(ste2,ste4!2),Ste4(gpa1!2) @ 0.02
+'b. Gpa1.Ste4' Gpa1(ste4),Ste4(gpa1,ste5,ste20) -> Gpa1(ste4!1),Ste4(gpa1!1,ste5,ste20) @ 1.15e-3
+'b. Gpa1...Ste4' Gpa1(ste4!1),Ste4(gpa1!1) -> Gpa1(ste4),Ste4(gpa1) @ 0
+'b. Gpa1...Ste4 Ref1' Ste4(gpa1!1),Gpa1(ste4!1,ste2,nuc~GDP) -> Ste4(gpa1),Gpa1(ste4,ste2,nuc~GDP) @ 5.0e-3
+'b. Gpa1...Ste4 Ref2' Ste4(gpa1!1),Gpa1(ste4!1,ste2,nuc~GTP) -> Ste4(gpa1),Gpa1(ste4,ste2,nuc~GTP) @ 5
+'b. Gpa1...Ste4 Ref3' Ste4(gpa1!1),Gpa1(ste4!1,ste2!_,nuc~GDP) -> Ste4(gpa1),Gpa1(ste4,ste2!_,nuc~GDP) @ 1.0e-3
+'b. Gpa1...Ste4 Ref4' Ste4(gpa1!1),Gpa1(ste4!1,ste2!_,nuc~GTP) -> Ste4(gpa1),Gpa1(ste4,ste2!_,nuc~GTP) @ 1
+'c. Gpa1@nuc_GTP' Gpa1(nuc~GDP) -> Gpa1(nuc~GTP) @ 0.0
+'c. Gpa1@nuc_GTP Ref1' Gpa1(nuc~GDP,ste2) -> Gpa1(nuc~GTP,ste2) @ 6.2e-4
+'c. Gpa1@nuc_GTP Ref2' Ste2(pheromone,gpa1!2),Gpa1(nuc~GDP,ste2!2) -> Ste2(pheromone,gpa1!2),Gpa1(nuc~GTP,ste2!2) @ 6.2e-4
+'c. Gpa1@nuc_GTP Ref3' Pheromone(ste2!1),Ste2(pheromone!1,gpa1!2),Gpa1(nuc~GDP,ste2!2) -> Pheromone(ste2!1),Ste2(pheromone!1,gpa1!2),Gpa1(nuc~GTP,ste2!2) @ 1.5
+'d. Sst2.Ste2' Ste2(sst2),Sst2(ste2) <-> Ste2(sst2!1),Sst2(ste2!1) @ 5.73e-5,0.1
+'d. Gpa1@nuc_GDP' Gpa1(nuc~GTP) -> Gpa1(nuc~GDP) @ 0.0
+'d. Gpa1@nuc_GDP Ref1' Gpa1(nuc~GTP,ste2) -> Gpa1(nuc~GDP,ste2) @ 0.01
+'d. Gpa1@nuc_GDP Ref2' Gpa1(nuc~GTP,ste2!2),Ste2(gpa1!2,sst2) -> Gpa1(nuc~GDP,ste2!2),Ste2(gpa1!2,sst2) @ 0.01
+'d. Gpa1@nuc_GDP Ref3' Gpa1(nuc~GTP,ste2!2),Ste2(gpa1!2,sst2!1),Sst2(ste2!1) -> Gpa1(nuc~GDP,ste2!2),Ste2(gpa1!2,sst2!1),Sst2(ste2!1) @ 10.0
+'b. -Ste2' Ste2(pheromone) -> @ 2.9e-4
+'b. -PheromoneSte2' Pheromone(ste2!1),Ste2(pheromone!1) -> @ 1.7e-3
+'c. -Gpa1' Gpa1() -> @ 2.3e-4
+'d. -Sst2' Sst2() -> @ 0
+'d. -Sst2 Ref1' Sst2(S539~u) -> @ 2.6e-4
+'a. Ste4.Ste20' Ste20(ste4),Ste4(gpa1,ste20) <-> Ste20(ste4!1),Ste4(gpa1,ste20!1) @ 5.73e-5,0.1
+'b. Ste4.Ste5' Ste5(ste4),Ste4(ste5,gpa1) -> Ste5(ste4!1),Ste4(ste5!1,gpa1) @ 0.0
+'b. Ste4.Ste5 Ref1' Ste5(ste4,ste5!1),Ste4(ste5!2),Ste4(ste5,gpa1),Ste5(ste5!1,ste4!2) -> Ste5(ste4!3,ste5!1),Ste4(ste5!2),Ste4(ste5!3,gpa1),Ste5(ste5!1,ste4!2) @ 1.15e-3
+'b. Ste4.Ste5 Ref2' Ste5(ste5!1,ste4),Ste5(ste5!1,ste4),Ste4(ste5,gpa1) -> Ste5(ste5!1,ste4!3),Ste5(ste5!1,ste4),Ste4(ste5!3,gpa1) @ 5.73e-5
+'b. Ste4.Ste5 Ref3' Ste5(ste5,ste4),Ste4(gpa1,ste5) -> Ste5(ste5,ste4!3),Ste4(gpa1,ste5!3) @ 5.73e-5
+'b. Ste4...Ste5' Ste5(ste4!1),Ste4(ste5!1) -> Ste5(ste4),Ste4(ste5) @ 0.0
+'b. Ste4...Ste5 Ref1' Ste4(ste5!1),Ste5(ste4!1,ste5) -> Ste4(ste5),Ste5(ste4,ste5) @ 0.05
+'b. Ste4...Ste5 Ref2' Ste4(ste5!1),Ste5(ste4!1,ste5!2),Ste5(ste5!2) -> Ste4(ste5),Ste5(ste4,ste5!2),Ste5(ste5!2) @ 0.005
+'b. Ste5.Ste5' Ste5(ste5),Ste5(ste5) -> Ste5(ste5!1),Ste5(ste5!1) @ 0.0
+'b. Ste5.Ste5 Ref1' Ste5(ste5,ste4),Ste5(ste5,ste4) -> Ste5(ste5!3,ste4),Ste5(ste5!3,ste4) @ 5.73e-5
+'b. Ste5.Ste5 Ref2' Ste5(ste5,ste4!1),Ste5(ste5,ste4),Ste4(ste5!1) -> Ste5(ste5!1,ste4!2),Ste5(ste5!1,ste4),Ste4(ste5!2) @ 5.73e-5
+'b. Ste5.Ste5 Ref3' Ste4(ste5!2),Ste5(ste5,ste4!2),Ste5(ste5,ste4!1),Ste4(ste5!1) -> Ste4(ste5!3),Ste5(ste5!1,ste4!3),Ste5(ste5!1,ste4!2),Ste4(ste5!2) @ 1.15e-3
+'b. Ste5...Ste5' Ste5(ste5!1),Ste5(ste5!1) -> Ste5(ste5),Ste5(ste5) @ 0.0
+'b. Ste5...Ste5 Ref1' Ste5(ste5!1,ste4),Ste5(ste5!1,ste4) -> Ste5(ste5,ste4),Ste5(ste5,ste4) @ 0.05
+'b. Ste5...Ste5 Ref2' Ste5(ste4!2,ste5!1),Ste5(ste5!1,ste4),Ste4(ste5!2) -> Ste5(ste4!2,ste5),Ste5(ste5,ste4),Ste4(ste5!2) @ 0.005
+'b. Ste5...Ste5 Ref3' Ste5(ste4!3,ste5!1),Ste5(ste5!1,ste4!2),Ste4(ste5!3),Ste4(ste5!2) -> Ste5(ste4!3,ste5),Ste5(ste5,ste4!2),Ste4(ste5!3),Ste4(ste5!2) @ 0.0005
+

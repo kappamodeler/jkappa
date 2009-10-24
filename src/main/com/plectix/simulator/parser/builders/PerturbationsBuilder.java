@@ -3,11 +3,6 @@ package com.plectix.simulator.parser.builders;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.component.Agent;
-import com.plectix.simulator.component.Rule;
-import com.plectix.simulator.component.perturbations.Perturbation;
-import com.plectix.simulator.component.perturbations.PerturbationRule;
-import com.plectix.simulator.component.perturbations.RateExpression;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableInterface;
 import com.plectix.simulator.interfaces.PerturbationExpressionInterface;
@@ -20,10 +15,15 @@ import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.TimeC
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractOnceModification;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.ModelRateModification;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.ModificationType;
+import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
+import com.plectix.simulator.simulationclasses.perturbations.PerturbationRule;
+import com.plectix.simulator.simulationclasses.perturbations.RateExpression;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.staticanalysis.Rule;
 
 public final class PerturbationsBuilder {
 	private final SubstanceBuilder substanceBuilder;

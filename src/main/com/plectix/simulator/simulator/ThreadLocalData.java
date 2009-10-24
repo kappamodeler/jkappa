@@ -2,9 +2,9 @@ package com.plectix.simulator.simulator;
 
 import java.text.DecimalFormat;
 
-import com.plectix.simulator.component.ConnectedComponent;
-import com.plectix.simulator.component.injections.Injection;
 import com.plectix.simulator.interfaces.RandomInterface;
+import com.plectix.simulator.simulationclasses.injections.Injection;
+import com.plectix.simulator.staticanalysis.ConnectedComponent;
 import com.plectix.simulator.util.NameDictionary;
 import com.plectix.simulator.util.PlxLogger;
 
