@@ -355,7 +355,7 @@ public final class Simulator implements SimulatorInterface {
 		simulatorStatus.setStatusMessage(STATUS_WRAPPING);
 		
 		simulationData.checkOutputFinalState(currentTime);
-		simulationData.getKappaSystem().getObservables().calculateObsLast(currentTime);
+		simulationData.getKappaSystem().getObservables().calculateObsLast(currentTime, currentEventNumber);
 		simulationData.setTimeLength(currentTime);
 		simulationData.setEvent(currentEventNumber);
 		

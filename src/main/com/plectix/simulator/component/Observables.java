@@ -12,6 +12,7 @@ import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableInterface;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.util.ObservableState;
 
 /**
  * This class describes observables storage.
@@ -27,7 +28,8 @@ import com.plectix.simulator.simulator.SimulationUtils;
 @SuppressWarnings("serial")
 public class Observables implements Serializable {
 	private boolean ocamlStyleObsName = false;
-	private final List<Double> countTimeList = new ArrayList<Double>();;
+	private boolean unifiedTimeSeriesOutput = false;
+	private final List<ObservableState> countTimeList = new ArrayList<ObservableState>();;
 	private List<ObservableConnectedComponentInterface> connectedComponentList 
 				= new ArrayList<ObservableConnectedComponentInterface>();;
 	private List<ObservableInterface> componentList = new ArrayList<ObservableInterface>();
@@ -99,7 +101,7 @@ public class Observables implements Serializable {
 	 * This method returns list of time-points on "x" axis in graphic for observables.
 	 * @return list of time-points on "x" axis in graphic for observables.
 	 */
-	public final List<Double> getCountTimeList() {
+	public final List<ObservableState> getCountTimeList() {
 		return countTimeList;
 	}
 
@@ -130,13 +132,13 @@ public class Observables implements Serializable {
 		int size = countTimeList.size();
 
 		if ((size > 0)
-				&& (Math.abs(countTimeList.get(size - 1) - time) < 1e-16)) {
+				&& (Math.abs(countTimeList.get(size - 1).getTime() - time) < 1e-16)) {
 			if (isTime) {
 				calculateAll(true);
 			} else {
 				updateLastValueAll(time);
 				calculateAll(false);
-				countTimeList.add(time);
+				addToCountTimeList(time, count);
 				changeLastTime = false;
 			}
 			return;
@@ -144,7 +146,7 @@ public class Observables implements Serializable {
 
 		if (isCalculateNow(time, count, isTime)) {
 			if (flag){
-				countTimeList.add(initialTime);
+				addToCountTimeList(initialTime, count);
 				calculateAll(false);
 				lastTime = initialTime;
 				changeLastTime = false;
@@ -155,7 +157,7 @@ public class Observables implements Serializable {
 			if (!changeLastTime) {
 				updateLastValueAll(time);
 			}
-			countTimeList.add(lastTime);
+			addToCountTimeList(lastTime, count);
 			calculateAll(false);
 			lastTime = time;
 			changeLastTime = false;
@@ -190,7 +192,7 @@ public class Observables implements Serializable {
 					this.initializeMinSampleTime(fullTime, points);
 					timeNext = count + timeSampleMin;
 					updateLastValueAll(time);
-					countTimeList.add(time);
+					addToCountTimeList(time, count);
 					calculateAll(false);
 					changeTimeNext = true;
 				}
@@ -230,15 +232,22 @@ public class Observables implements Serializable {
 	 * This method saves observables state (quantity, activity, etc) in the latest moment of simulation.  
 	 * @param time current time
 	 */
-	public final void calculateObsLast(double time) {
+	public final void calculateObsLast(double time, long event) {
 		int size = countTimeList.size();
 		if (size == 0)
 			return;
-		if (Math.abs(countTimeList.get(size - 1) - time) < 1e-16)
+		if (Math.abs(countTimeList.get(size - 1).getTime() - time) < 1e-16)
 			return;
 		updateLastValueAll(time);
-		countTimeList.add(time);
+		addToCountTimeList(time, event);
 		calculateAll(false);
+	}
+	
+	private void addToCountTimeList(double time, long event){
+		if(unifiedTimeSeriesOutput)
+			countTimeList.add(new ObservableState(time, event));
+		else
+			countTimeList.add(new ObservableState(time));
 	}
 
 	//--------------------------ADDERS------------------------------------------
@@ -354,4 +363,9 @@ public class Observables implements Serializable {
 	public final void setOcamlStyleObsName(boolean ocamlStyleObsName) {
 		this.ocamlStyleObsName = ocamlStyleObsName;
 	}
+
+	public final void setUnifiedTimeSeriesOutput(boolean unifiedTimeSeriesOutput) {
+		this.unifiedTimeSeriesOutput = unifiedTimeSeriesOutput;
+	}
+	
 }

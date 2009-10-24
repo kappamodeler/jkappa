@@ -32,6 +32,7 @@ import com.plectix.simulator.component.Site;
 import com.plectix.simulator.component.Snapshot;
 import com.plectix.simulator.component.SnapshotElement;
 import com.plectix.simulator.component.complex.contactmap.ContactMapMode;
+import com.plectix.simulator.component.complex.influencemap.InfluenceMap;
 import com.plectix.simulator.component.perturbations.Perturbation;
 import com.plectix.simulator.component.solution.SolutionLine;
 import com.plectix.simulator.component.stories.storage.StoriesAgentTypesStorage;
@@ -48,6 +49,7 @@ import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.util.DecimalFormatter;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.MemoryUtil;
+import com.plectix.simulator.util.ObservableState;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
@@ -194,6 +196,8 @@ public final class SimulationData {
 		resetBar();
 		kappaSystem.getObservables().setOcamlStyleObsName(
 				simulationArguments.isOcamlStyleNameingInUse());
+		kappaSystem.getObservables().setUnifiedTimeSeriesOutput(
+				simulationArguments.isUnifiedTimeSeriesOutput());
 		if (simulationArguments.getSnapshotsTimeString() != null) {
 			setSnapshotTime(simulationArguments.getSnapshotsTimeString());
 		}
@@ -691,6 +695,14 @@ public final class SimulationData {
 			return simulationArguments.getXmlSessionName();
 		}
 	}
+	
+	private final void writeToXMLRuleSet(XMLStreamWriter writer) throws XMLStreamException{
+		writer.writeStartElement("RuleSet");
+		writer.writeAttribute("Name", "Original");
+		int size = kappaSystem.getRules().size();
+		InfluenceMap.addRulesToXML(size, writer, size, isOcamlStyleNamingInUse(), kappaSystem, false);
+		writer.writeEndElement();
+	}
 
 	public final void createXMLOutput(Writer outstream)
 			throws ParserConfigurationException, TransformerException,
@@ -746,6 +758,7 @@ public final class SimulationData {
 
 		// TODO check it
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
+			writeToXMLRuleSet(writer);
 			kappaSystem.getContactMap().createXML(writer);
 		}
 
@@ -798,6 +811,7 @@ public final class SimulationData {
 
 			List<ObservableInterface> list = kappaSystem.getObservables()
 					.getUniqueComponentList();
+
 			for (int i = list.size() - 1; i >= 0; i--) {
 				createElement(list.get(i), writer);
 			}
@@ -824,7 +838,7 @@ public final class SimulationData {
 		writer.close();
 
 	}
-
+	
 	private final void writeSnapshotsToXML(XMLStreamWriter writer)
 			throws XMLStreamException {
 		for (Snapshot snapshot : snapshots) {
@@ -893,9 +907,15 @@ public final class SimulationData {
 	private final StringBuffer appendData(Observables obs,
 			List<ObservableInterface> list, int index) {
 		StringBuffer cdata = new StringBuffer();
-		cdata.append(DecimalFormatter.toStringWithSetNumberOfSignificantDigits(
-				kappaSystem.getObservables().getCountTimeList().get(index),
+		ObservableState state = kappaSystem.getObservables().getCountTimeList().get(index); 
+		cdata.append(DecimalFormatter.toStringWithSetNumberOfSignificantDigits(state.getTime(),
 				NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
+		
+		if(simulationArguments.isUnifiedTimeSeriesOutput()){
+			cdata.append(",");
+			cdata.append(Long.toString(state.getEvent()));
+		}
+			
 		for (int j = list.size() - 1; j >= 0; j--) {
 			cdata.append(",");
 			ObservableInterface oCC = list.get(j);

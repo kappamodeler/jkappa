@@ -189,6 +189,10 @@ public final class SimulatorCommandLine {
 			simulationArguments.setOcamlStyleObservableNames(true);
 		}
 
+		if (hasOption(SimulatorOption.UNIFIED_TIME_SERIES_OUTPUT)) {
+			simulationArguments.setUnifiedTimeSeriesOutput(true);
+		}
+
 		if (hasOption(SimulatorOption.NUMBER_OF_RUNS)) {
 			simulationArguments.setIterations(getIntValue(SimulatorOption.NUMBER_OF_RUNS));
 

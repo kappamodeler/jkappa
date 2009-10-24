@@ -82,7 +82,7 @@ public abstract class InfluenceMap {
 		 * add rules
 		 * */
 		addRulesToXML(rulesAndObsNumber, writer, rules, isOcamlStyleObsName,
-				kappaSystem);
+				kappaSystem, true);
 
 		/**
 		 * add activation map
@@ -133,19 +133,24 @@ public abstract class InfluenceMap {
 		}
 	}
 
-	private static final void addRulesToXML(int rulesAndObsNumber,
+	public static final void addRulesToXML(int rulesAndObsNumber,
 			XMLStreamWriter writer, int rules, boolean isOcamlStyleObsName,
-			KappaSystem kappaSystem) throws XMLStreamException {
+			KappaSystem kappaSystem, boolean writeText) throws XMLStreamException {
 		for (int i = rules - 1; i >= 0; i--) {
 			Rule rule = kappaSystem.getRuleById(i);
-			writer.writeStartElement("Node");
+			if(writeText)
+				writer.writeStartElement("Node");
+			else 
+				writer.writeStartElement("Rule");
 			writer.writeAttribute("Type", "RULE");
 			if (rule.getName() != null) {
-				writer.writeAttribute("Text", rule.getName());
+				if(writeText)
+					writer.writeAttribute("Text", rule.getName());
 				writer.writeAttribute("Name", rule.getName());
 			} else {
 				Integer ruleId = rule.getRuleId() + 1;
-				writer.writeAttribute("Text", "%Auto_" + ruleId);
+				if(writeText)
+					writer.writeAttribute("Text", "%Auto_" + ruleId);
 				writer.writeAttribute("Name", "%Auto_" + ruleId);
 //				writer.writeAttribute("Text", SimulationData.getData(rule,
 //						isOcamlStyleObsName));

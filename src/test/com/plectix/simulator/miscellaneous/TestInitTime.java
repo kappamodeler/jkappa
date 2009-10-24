@@ -59,7 +59,7 @@ public class TestInitTime extends DefaultPropertiesForTest {
 			setup(initTimes[i]);
 			Observables observables = simulator.getSimulationData()
 					.getKappaSystem().getObservables();
-			Double time = observables.getCountTimeList().get(0);
+			Double time = observables.getCountTimeList().get(0).getTime();
 			String message = "initTime = " + initTimes[i] + "\nfirstTime = "
 					+ time + "\n";
 			assertTrue(message, !initTimes[i].equals(-1.0) ? initTimes[i]

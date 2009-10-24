@@ -85,6 +85,8 @@ public final class SimulationArguments {
 	private boolean storify = false;
 	private boolean forwardOnly = false;
 	private boolean ocamlStyleNaming = false;
+	private boolean unifiedTimeSeriesOutput = false;
+
 	private long wallClockTimeLimit = DEFAULT_WALL_CLOCK_TIME_LIMIT;
 	private long monitorPeakMemory = DEFAULT_MONITOR_PEAK_MEMORY;
 	private int clockPrecision = DEFAULT_CLOCK_PRECISION;
@@ -459,6 +461,10 @@ public final class SimulationArguments {
 	public final boolean isOcamlStyleNameingInUse() {
 		return ocamlStyleNaming;
 	}
+
+	public final boolean isUnifiedTimeSeriesOutput() {
+		return unifiedTimeSeriesOutput;
+	}
 	
 	/**
 	 * If <code>true</code>, the observable names match those of simplx.
@@ -485,6 +491,11 @@ public final class SimulationArguments {
 	public final void setOcamlStyleObservableNames(boolean ocamlStyleObservableNames) {
 		this.ocamlStyleNaming = ocamlStyleObservableNames;
 	}
+	
+	public final void setUnifiedTimeSeriesOutput(boolean unifiedTimeSeriesOutput) {
+		this.unifiedTimeSeriesOutput = unifiedTimeSeriesOutput;
+	}
+
 	
 	public final long getWallClockTimeLimit() {
 		return wallClockTimeLimit;
