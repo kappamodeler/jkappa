@@ -1,0 +1,12 @@
+'Au + Au{148567}' A(x,y~u), A(x,y~u) -> A(x,y~u), A(x,y~u) @ 1.0
+'A + Au{148566}' A(x,y~u), A(x) -> A(x,y~u), A(x) @ 1.0
+'A+A{148565}' A(x), A(x) -> A(x), A(x) @ 1.0
+'A+A+A' A(x),A(x),A(x) -> A(x),A(x),A(x) @ 1.0
+'A+A+Au+Au' A(x), A(x),A(x,y~u), A(x,y~u) -> A(x),A(x), A(x,y~u), A(x,y~u) @ 1.0
+%init: 100 * (A(x,y~u))
+%obs: 'A+A{148565}'
+%obs: 'A + Au{148566}'
+%obs: 'Au + Au{148567}'
+%obs: 'A+A+A'
+%obs: 'A+A+Au+Au'
+

@@ -1,0 +1,18 @@
+'Ligand-dependent receptor autophosphorylation{8133}' RTK(tyrosine~unphospho,ligand!1), Ligand(rtk!1) -> RTK(tyrosine~phospho,ligand!1), Ligand(rtk!1) @ 0.01
+'Kinase binding to adaptor{8134}' Adaptor(kinase,SH2!_), Kinase(adaptor) <-> Adaptor(kinase!1,SH2!_), Kinase(adaptor!1) @ 1.0e-05,0.1
+'Adaptor binding to receptor{8135}' RTK(tyrosine~phospho), Adaptor(SH2) <-> RTK(tyrosine~phospho!1), Adaptor(SH2!1) @ 1.0e-05,0.1
+'Receptor dephosphorylation{8137}' RTK(tyrosine~phospho) -> RTK(tyrosine~unphospho) @ 0.01
+'Receptor autophosphorylation{8138}' RTK(tyrosine~unphospho,ligand) -> RTK(tyrosine~phospho,ligand) @ 0.0001
+'Kinase phosphorylation{8139}' Kinase(adaptor!2,active_site~unphospho), Adaptor(SH2!1,kinase!2), RTK(tyrosine~phospho!1) -> Kinase(adaptor!2,active_site~phospho), Adaptor(SH2!1,kinase!2), RTK(tyrosine~phospho!1) @ 1.0
+'Kinase dephosphorylation{8140}' Kinase(active_site~phospho) -> Kinase(active_site~unphospho) @ 0.01
+'Receptor-ligand binding{8136}' Ligand(rtk), RTK(ligand) <-> Ligand(rtk!1), RTK(ligand!1) @ 1.0e-05,0.1
+%init: 5000 * (Ligand(rtk))
+%init: 3000 * (Adaptor(SH2,kinase))
+%init: 8000 * (Kinase(adaptor,active_site~unphospho))
+%init: 5000 * (RTK(ligand,tyrosine~unphospho))
+%obs: 'Active kinase' Kinase(active_site~phospho)
+%obs: 'Ligand-bound RTK' Ligand(rtk!1), RTK(ligand!1)
+%obs: 'RTK.adaptor.kinase' Adaptor(kinase!1,SH2!2), Kinase(adaptor!1), RTK(tyrosine~phospho!2)
+%obs: 'RTK-bound adaptor' Adaptor(SH2!1), RTK(tyrosine~phospho!1)
+%obs: 'Active RTK' RTK(tyrosine~phospho)
+

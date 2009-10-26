@@ -1,0 +1,11 @@
+'r' A(x) ->  @ 1
+
+%init: 1 * ULF(Head,Tail,left!0,right!1,t1~f,t2~f,t3~f,t4~f,t5~f,t6~f,t7~f,t8~f),ULF(Head,Tail,left!2,right!0,t1~f,t2~f,t3~f,t4~f,t5~f,t6~f,t7~f,t8~f),ULF(Head,Tail,left!1,right!3,t1~f,t2~f,t3~f,t4~f,t5~f,t6~f,t7~f,t8~f),ULF(Head,Tail,left!4,right!2,t1~f,t2~f,t3~f,t4~f,t5~f,t6~f,t7~f,t8~f),ULF(Head,Tail!5,left!3,right,t1~f,t2~f,t3~f,t4~f,t5~f,t6~f,t7~f,t8~f),ULF(Head!5,Tail,left,right!4,t1~f,t2~f,t3~f,t4~f,t5~f,t6~f,t7~f,t8~f)
+%init: 2 * ULF(Head,Tail,left!0,right!1,t1~f,t2~f,t3~f,t4~f,t5~f,t6~f,t7~f,t8~f),ULF(Head,Tail!2,left!1,right,t1~f,t2~f,t3~f,t4~f,t5~f,t6~f,t7~f,t8~f),ULF(Head!2,Tail,left,right!0,t1~f,t2~f,t3~f,t4~f,t5~f,t6~f,t7~f,t8~f)
+%init: 100 * A(x)
+
+%obs: 'A' A()
+%obs: 'size 3' ULF(left,Tail,Head!3,right!1),ULF(left!1,Tail,Head,right!2),ULF(left!2,Tail!3,Head,right)
+%obs: 'total parts' ULF(left,Tail,Head!1,right!_),ULF(left!_,Tail!1,Head,right)
+%obs: 'size 2' ULF(left,Tail,Head!2,right!1), ULF(left!1,Tail!2,Head,right)
+
