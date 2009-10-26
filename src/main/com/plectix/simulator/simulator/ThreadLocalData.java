@@ -72,25 +72,54 @@ public final class ThreadLocalData {
 					new DecimalFormat("0.########"),
 					new DecimalFormat("0.#########"),
 					new DecimalFormat("0.##########"),
-					new DecimalFormat("0.###########")
+					new DecimalFormat("0.###########"),
 			};
 		}
 	};
+
+	private static final ThreadLocal<DecimalFormat[]> exponentialDecimalFormatters = new ThreadLocal<DecimalFormat[]>() {
+        @Override 
+        protected DecimalFormat[] initialValue() {
+            return new DecimalFormat[] {
+                    new DecimalFormat("0.E0"),
+                    new DecimalFormat("0.#E0"),
+                    new DecimalFormat("0.##E0"),
+                    new DecimalFormat("0.###E0"),
+                    new DecimalFormat("0.####E0"),
+                    new DecimalFormat("0.#####E0"),
+                    new DecimalFormat("0.######E0"),
+                    new DecimalFormat("0.#######E0"),
+                    new DecimalFormat("0.########E0"),
+                    new DecimalFormat("0.#########E0"),
+                    new DecimalFormat("0.##########E0"),
+                    new DecimalFormat("0.###########E0"),
+                    new DecimalFormat("0.############E0"),
+                    new DecimalFormat("0.#############E0"),
+                    new DecimalFormat("0.##############E0"),
+            };
+        }
+    };
 
     public static final NameDictionary getNameDictionary() {
 		return nameDictionary.get();
     }
 
     public static final DecimalFormat getDecimalFormat(int i) {
-    	DecimalFormat[] decimalFormats = decimalFormatters.get();
-    	if (i < 0) {
-    		i = 0;
-    	} else if (i >= decimalFormats.length) {
-    		i = decimalFormats.length - 1;
-    	}
-    	return decimalFormats[i];
+        DecimalFormat[] decimalFormats = decimalFormatters.get();
+        if (i < 0) {
+            i = 0;
+        } else if (i >= decimalFormats.length) {
+            decimalFormats = exponentialDecimalFormatters.get();
+            i = SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS-1;
+             if (i >= decimalFormats.length) {
+                 i = decimalFormats.length - 1;
+             }
+            return decimalFormats[i];  // 
+        }
+        return decimalFormats[i];
     }
 
+    
 	public static final void setLogger(final PlxLogger logger) {		
 		plxLogger = new ThreadLocalContainer<PlxLogger>() {
 			@Override

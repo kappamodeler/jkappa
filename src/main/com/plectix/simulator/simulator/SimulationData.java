@@ -55,8 +55,8 @@ import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
 
 public final class SimulationData {
+	public static final int NUMBER_OF_SIGNIFICANT_DIGITS = 6;
 	private static final double DEFAULT_NUMBER_OF_POINTS = 1000;
-	private static final int NUMBER_OF_SIGNIFICANT_DIGITS = 6;
 	private static final String DEFAULT_XML_SESSION_NAME = "simplx.tmp";
 
 	private List<Double> timeStamps = null;
