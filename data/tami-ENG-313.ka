@@ -1,0 +1,25 @@
+'+ComS{152412}' PcomS(BS) -> PcomS(BS), ComS(MecA) @ 0.057
+'ComK dimerization{152503}' ComK(dimer), ComK(dimer) <-> ComK(dimer!1), ComK(dimer!1) @ 0.005,0.5
+'ComK tetramer{152887}' ComK(dimer!1,tetramer), ComK(dimer!1,tetramer), ComK(dimer!2,tetramer), ComK(dimer!2,tetramer) <-> ComK(dimer!1,tetramer!2), ComK(dimer!1,tetramer!4), ComK(dimer!3,tetramer!2), ComK(dimer!3,tetramer!4) @ 0.001,0.5
+'+Comk from activation{153602}' ComK(dimer!1,tetramer!3), ComK(dimer!2,tetramer!3), ComK(dimer!1,tetramer!4), ComK(TFdomian!5,dimer!2,tetramer!4), PcomK(BS!5) -> ComK(dimer!1,tetramer!3), ComK(dimer!2,tetramer!3), ComK(dimer!1,tetramer!4), ComK(TFdomian!5,dimer!2,tetramer!4), PcomK(BS!5), ComK(TFdomian,dimer,tetramer,MecA) @ 0.049
+'+ComS from repression{153624}' ComK(dimer!1,tetramer!3), ComK(dimer!2,tetramer!3), ComK(dimer!1,tetramer!4), ComK(TFdomian!5,dimer!2,tetramer!4), PcomS(BS!5) -> ComK(dimer!1,tetramer!3), ComK(dimer!2,tetramer!3), ComK(dimer!1,tetramer!4), ComK(TFdomian!5,dimer!2,tetramer!4), PcomS(BS!5), ComS(MecA) @ 0.0
+'MecA.ComS{153637}' MecA(BD), ComS(MecA) <-> MecA(BD!1), ComS(MecA!1) @ 0.0001,0.0001
+'-ComS{153677}' MecA(BD!1), ComS(MecA!1) -> MecA(BD) @ 0.005
+'-ComK{153689}' MecA(BD!1), ComK(TFdomian,dimer,tetramer,MecA!1) -> MecA(BD) @ 0.05
+'PcomK.ComK4{152927}' ComK(dimer!1,tetramer!3), ComK(dimer!2,tetramer!3), ComK(dimer!1,tetramer!4), ComK(TFdomian,dimer!2,tetramer!4), PcomK(BS) <-> ComK(dimer!1,tetramer!3), ComK(dimer!2,tetramer!3), ComK(dimer!1,tetramer!4), ComK(TFdomian!5,dimer!2,tetramer!4), PcomK(BS!5) @ 1.0,0.05
+'+ComK{153639}' PcomK(BS) -> PcomK(BS), ComK(TFdomian,dimer,tetramer,MecA) @ 0.0028
+'MecA.ComK{160249}' ComK(TFdomian,dimer,tetramer,MecA), MecA(BD) <-> ComK(TFdomian,dimer,tetramer,MecA!1), MecA(BD!1) @ 0.0001,0.0001
+'PcomS.ComK4{160250}' ComK(dimer!1,tetramer!3), ComK(dimer!2,tetramer!3), ComK(dimer!1,tetramer!4), ComK(TFdomian,dimer!2,tetramer!4), PcomS(BS) <-> ComK(dimer!1,tetramer!3), ComK(dimer!2,tetramer!3), ComK(dimer!1,tetramer!4), ComK(TFdomian!5,dimer!2,tetramer!4), PcomS(BS!5) @ 1.0,0.05
+%init: 1 * (PcomK(BS))
+%init: 1 * (PcomS(BS))
+%init: 14 * (MecA(BD))
+%init: 50 * (ComS(MecA))
+%init: 500 * (ComK(TFdomian,dimer,tetramer,MecA))
+%obs: 'ComK(dimer!1,tetramer!3), ComK(dimer!1,tetramer!4), ComK(dimer!2,tetramer!3), ComK(dimer!2,tetramer!4)' ComK(dimer!1,tetramer!3), ComK(dimer!1,tetramer!4), ComK(dimer!2,tetramer!3), ComK(dimer!2,tetramer!4)
+%obs: 'ComK(dimer!1,tetramer), ComK(dimer!1,tetramer)' ComK(dimer!1,tetramer), ComK(dimer!1,tetramer)
+%obs: 'ComK()' ComK()
+%obs: 'ComS()' ComS()
+%obs: 'PcomK.ComK4{152927}'
+%obs: 'PcomS.ComK4{160250}'
+%mod: $T>1.0 do '+ComS{152412}':=1.0
+

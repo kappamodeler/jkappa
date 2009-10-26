@@ -127,22 +127,27 @@ Example files:
     Seda_111008_Insulin_Present.ka	   received it from Isha in Seda_111008.xml KF file
                                        run with --time 15
 
-    ABC_ring.ka						   received it from Ty via https://jira2.plectix.com/browse/ENG-275
+    ABC_ring.ka						   received it from Ty via https://jira.plectix.com/browse/ENG-275
 									   run with --event 1000
 									   the final state doesn't have any observable "ABC ring"
 									   therefore the count for observable "ABC ring" should be zero. All non-zero numbers are the result of a bug 
 
-    Initialization-bug.ka			   received from Ty via https://jira2.plectix.com/browse/ENG-301
+    Initialization-bug.ka			   received from Ty via https://jira.plectix.com/browse/ENG-301
 									   According to this bug, the initialization step for this model is really really slow in JSIM (~150s) compared to simplx (~1s)
 
-    Symmetry.ka						   received from Ty via https://jira2.plectix.com/browse/ENG-305
+    Symmetry.ka						   received from Ty via https://jira.plectix.com/browse/ENG-305
 									   rule activity must be divided by the symmetry of the rule. this file includes a few rules with different symmetries.
 									   we should make sure that the rule activities are computed correctly and match simplx
 
-    eugen-ENG-312.ka				   received from Ty via https://jira2.plectix.com/browse/ENG-312
+    eugen-ENG-312.ka				   received from Ty via https://jira.plectix.com/browse/ENG-312
 									   Note that the rule and the agent A are just there so something happens. 
 									   The real interesting stuff is with the complexes involving ULF, which don't change, so the observables are essentially measuring the initial conditions. 
 									   The results reported by jsim for the observable 'size 3' are wrong.
+
+    tami-ENG-313.ka					   received from Ty via https://jira.plectix.com/browse/ENG-313
+									   if you run it for 100 events it runs without an error, so the bug is dependent on the simulation time. try:
+									   --sim tami-ENG-313.ka --no-maps --event 10000 --points 1000 --output-final-state --rescale 1.0 --xml-session-name tmp.xml 
+									
 
 
 Options for simulator:
