@@ -3,7 +3,6 @@ package com.plectix.simulator.staticanalysis;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.plectix.simulator.mocks.MockKappaSystemForRules;
 import com.plectix.simulator.parser.DocumentFormatException;
 import com.plectix.simulator.parser.IncompletesDisabledException;
 import com.plectix.simulator.parser.KappaFileLine;
@@ -13,6 +12,7 @@ import com.plectix.simulator.parser.abstractmodel.reader.RulesParagraphReader;
 import com.plectix.simulator.parser.builders.RuleBuilder;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.KappaSystemInterface;
+import com.plectix.simulator.simulator.MockKappaSystemForRules;
 
 public final class LibraryOfRules {
 

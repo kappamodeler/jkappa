@@ -2,7 +2,6 @@ package com.plectix.simulator.staticanalysis.localviews;
 
 import java.util.List;
 
-import com.plectix.simulator.mocks.MockKappaSystemForRules;
 import com.plectix.simulator.parser.DocumentFormatException;
 import com.plectix.simulator.parser.IncompletesDisabledException;
 import com.plectix.simulator.parser.ParseErrorException;
@@ -10,6 +9,7 @@ import com.plectix.simulator.parser.abstractmodel.ModelAgent;
 import com.plectix.simulator.parser.builders.SubstanceBuilder;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.KappaSystemInterface;
+import com.plectix.simulator.simulator.MockKappaSystemForRules;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 

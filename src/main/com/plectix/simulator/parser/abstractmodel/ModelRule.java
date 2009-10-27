@@ -14,10 +14,10 @@ public final class ModelRule {
 	private final boolean isStorify;
 	// -1 is default value
 	private final double binaryRate;
-	
-	public ModelRule(List<ModelAgent> left,
-			List<ModelAgent> right, String name,
-			double ruleRate, double binaryRate, int ruleID, boolean isStorify) {
+
+	public ModelRule(List<ModelAgent> left, List<ModelAgent> right,
+			String name, double ruleRate, double binaryRate, int ruleID,
+			boolean isStorify) {
 		this.rate = ruleRate;
 		this.leftHandSideAgents = left;
 		this.rightHandSideAgents = right;
@@ -26,19 +26,19 @@ public final class ModelRule {
 		this.binaryRate = binaryRate;
 		this.isStorify = isStorify;
 	}
-	
+
 	public final String getName() {
 		return name;
 	}
-	
+
 	public final double getRate() {
 		return rate;
 	}
-	
+
 	public final List<ModelAgent> getRHS() {
 		return rightHandSideAgents;
 	}
-	
+
 	public final List<ModelAgent> getLHS() {
 		return leftHandSideAgents;
 	}
@@ -50,21 +50,23 @@ public final class ModelRule {
 	public final double getBinaryRate() {
 		return binaryRate;
 	}
-	
+
 	public final boolean isStorify() {
 		return isStorify;
 	}
-	
+
 	@Override
 	public final String toString() {
 		final StringBuffer sb = new StringBuffer();
-		if(leftHandSideAgents != null)
+		if (leftHandSideAgents != null)
 			Collections.sort(leftHandSideAgents);
-		Collections.sort(rightHandSideAgents);
+		if (rightHandSideAgents != null)
+			Collections.sort(rightHandSideAgents);
 		sb.append("'" + name + "' ");
-		if(leftHandSideAgents != null)
+		if (leftHandSideAgents != null)
 			sb.append(StringUtil.listToString(leftHandSideAgents));
 		sb.append(" -> ");
+		if(rightHandSideAgents!=null)
 		sb.append(StringUtil.listToString(rightHandSideAgents));
 		return sb.toString();
 	}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<stringAttribute key="bad_container_name" value="\simulator\launches\launch"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/simulator/src/main/com/plectix/simulator/SimulationMain.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.plectix.simulator.SimulationMain"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--clock-precision 50 --short-console-output --sim data/eugen-E313 --event 10000 --operation-mode 1 --no-maps --key 07CFC00409EA2375"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="simulator"/>
+</launchConfiguration>
