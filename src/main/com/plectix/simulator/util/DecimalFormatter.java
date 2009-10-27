@@ -10,38 +10,49 @@ public final class DecimalFormatter {
     public static final String toStringWithSetNumberOfFractionDigits(double number, int numberOfFractionDigits) {
     	return ThreadLocalData.getDecimalFormat(numberOfFractionDigits).format(number);
     }
-
+    
     public static final String toStringWithSetNumberOfSignificantDigits(double number, int numberOfSignificantDigits) {
+    	if (number > 0.0) {
+    		return toStringWithSetNumberOfSignificantDigitsForPositiveNumbers(number, numberOfSignificantDigits);
+    	} else if (number < 0.0) {
+    		return "-" + toStringWithSetNumberOfSignificantDigitsForPositiveNumbers(Math.abs(number), numberOfSignificantDigits);
+    	} else {
+    		return "0.0"; 
+    	}
+    }
+    
+    private static final String toStringWithSetNumberOfSignificantDigitsForPositiveNumbers(double number, int numberOfSignificantDigits) {
     	if (number < 1.0) {
-    		if (Math.abs(number) < Double.MIN_NORMAL) {
-    			// return "0.0";  // I think returning this should be fine...
+    		if (number < Double.MIN_VALUE) {
+    			return "0.0";  // I think returning this should be fine...
     			// This returns extra zeros... But creates a new Formatter for each time we have this small numbers...
-    			String format = "%." + numberOfSignificantDigits + "G";
+    			/* String format = "%." + numberOfSignificantDigits + "G";
     			Formatter fmt = new Formatter();
     			fmt.format(format, number);
     			return fmt.toString();
+    			*/
     			
     		}
-        	return findNumberOfSignificantDigitsForNumbersLessThanOne(number, 1, numberOfSignificantDigits);
+        	return findNumberOfSignificantDigitsForPositiveNumbersLessThanOne(number, 1, numberOfSignificantDigits);
     	}
-    	return findNumberOfSignificantDigits(number, 1, numberOfSignificantDigits);
+    	return findNumberOfSignificantDigitsForPositiveNumbersGreaterThanOne(number, 1, numberOfSignificantDigits);
     }
 
-    private static final String findNumberOfSignificantDigitsForNumbersLessThanOne(double number, double upperLimit, int numberOfSignificantDigitsLeft) {
+    private static final String findNumberOfSignificantDigitsForPositiveNumbersLessThanOne(double number, double upperLimit, int numberOfSignificantDigitsLeft) {
     	if (number > upperLimit) {
     		return ThreadLocalData.getDecimalFormat(numberOfSignificantDigitsLeft-1).format(number);
     	}
-    	return findNumberOfSignificantDigitsForNumbersLessThanOne(number, upperLimit/10.0, numberOfSignificantDigitsLeft+1);
+    	return findNumberOfSignificantDigitsForPositiveNumbersLessThanOne(number, upperLimit/10.0, numberOfSignificantDigitsLeft+1);
     }
     
-    private static final String findNumberOfSignificantDigits(double number, int upperLimit, int numberOfSignificantDigitsLeft) {
+    private static final String findNumberOfSignificantDigitsForPositiveNumbersGreaterThanOne(double number, int upperLimit, int numberOfSignificantDigitsLeft) {
     	if (numberOfSignificantDigitsLeft <= 0) {
     		return ThreadLocalData.getDecimalFormat(0).format(number);
     	}
     	if (number < upperLimit) {
     		return ThreadLocalData.getDecimalFormat(numberOfSignificantDigitsLeft).format(number);
     	}
-    	return findNumberOfSignificantDigits(number, 10*upperLimit, numberOfSignificantDigitsLeft-1);
+    	return findNumberOfSignificantDigitsForPositiveNumbersGreaterThanOne(number, 10*upperLimit, numberOfSignificantDigitsLeft-1);
     }
 
     public static void main(String[] args) {
@@ -97,8 +108,12 @@ public final class DecimalFormatter {
 
     	System.err.println("-1.E-323/10.0 --> " + toStringWithSetNumberOfSignificantDigits(-1.E-323/10.0, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
     	System.err.println("+1.E-323/10.0 --> " + toStringWithSetNumberOfSignificantDigits(+1.E-323/10.0, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
-    	System.err.println("-1.E-323 --> " + toStringWithSetNumberOfSignificantDigits(-1.E-33, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
-    	System.err.println("+1.E-323 --> " + toStringWithSetNumberOfSignificantDigits(+1.E-33, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+    	System.err.println("-1.E-323 --> " + toStringWithSetNumberOfSignificantDigits(-1.E-323, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+    	System.err.println("+1.E-323 --> " + toStringWithSetNumberOfSignificantDigits(+1.E-323, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+    	System.err.println("-1.E-33 --> " + toStringWithSetNumberOfSignificantDigits(-1.E-33, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+    	System.err.println("+1.E-33 --> " + toStringWithSetNumberOfSignificantDigits(+1.E-33, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+    	System.err.println("-1.E-3 --> " + toStringWithSetNumberOfSignificantDigits(-1.E-3, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+    	System.err.println("+1.E-3 --> " + toStringWithSetNumberOfSignificantDigits(+1.E-3, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
     	System.err.println("-0.0000 --> " + toStringWithSetNumberOfSignificantDigits(-0.0000, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
     	System.err.println("+0.0000 --> " + toStringWithSetNumberOfSignificantDigits(+0.0000, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
     }
