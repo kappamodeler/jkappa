@@ -1,5 +1,7 @@
 package com.plectix.simulator.util;
 
+import java.util.Formatter;
+
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
@@ -11,6 +13,11 @@ public final class DecimalFormatter {
 
     public static final String toStringWithSetNumberOfSignificantDigits(double number, int numberOfSignificantDigits) {
     	if (number < 1.0) {
+    		if(Math.abs(number)<Double.MIN_NORMAL){
+        		String format = "%."+numberOfSignificantDigits +  "G";
+        		Formatter fmt = new Formatter();
+        		fmt.format(format, number);
+        		return fmt.toString();}
         	return findNumberOfSignificantDigitsForNumbersLessThanOne(number, 1, numberOfSignificantDigits);
     	}
     	return findNumberOfSignificantDigits(number, 1, numberOfSignificantDigits);
