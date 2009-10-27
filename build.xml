@@ -12,6 +12,7 @@
 	<property name="lib.dir" value="lib"/>
 	<property name="src.dir" value="src/main"/>
 	<property name="test.dir" value="src/test"/>
+	<property name="acceptance-tests.dir" value="tests"/>
 	<property name="resources.dir" value="resources"/>
 	<property name="dist.dir" value="jar"/>
 	<property name="javadoc.dir" value="javadoc"/>
@@ -278,7 +279,7 @@
         <echo message="Java: ${java.version} "/>
         <echo message="Ant Java: ${ant.java.version} "/>
 	    <echo message="${ant.project.name}: ${ant.file} "/>
-		<javac srcdir="${test.dir};${src.dir}" destdir="${build.dir}/test" debug="true" failonerror="true">
+		<javac srcdir="${test.dir};${src.dir};${acceptance-tests.dir}" destdir="${build.dir}/test" debug="true" failonerror="true">
 			<classpath refid="test.classpath"/>
 		</javac>
 	</target>

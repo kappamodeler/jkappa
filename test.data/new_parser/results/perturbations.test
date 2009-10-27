@@ -55,7 +55,7 @@
 %mod: ['4'] <7.0 * ['1'] + 4.0 * ['4'] do 'time' := 5.0 * 'time'
 %mod: ['4'] <13.0 * ['1'] + 4.0 * ['3'] do 'time2' := 1.0 * 'time2'
 %mod: $T > 10.0 do  $ADDONCE a()
-%mod: $T > 5.0 do  $DELETEONCE a(x!1), b(i!1, u)
+%mod: $T > 5.0 do  $DELETEONCE a(x!0), b(i!0, u)
 %mod: $T > 5.0 do  $DELETEONCE c(x)
 %mod: ['4'] <13.0 * ['1'] + 4.0 * ['3'] do 'time2' := 1.0 * 'time2'
 %mod: $T > 1.0 do 'rule' := - 7.0 * 'rule' + 15.0
