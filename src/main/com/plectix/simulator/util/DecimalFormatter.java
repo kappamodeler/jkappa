@@ -1,5 +1,7 @@
 package com.plectix.simulator.util;
 
+import java.util.Formatter;
+
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.ThreadLocalData;
 
@@ -12,13 +14,13 @@ public final class DecimalFormatter {
     public static final String toStringWithSetNumberOfSignificantDigits(double number, int numberOfSignificantDigits) {
     	if (number < 1.0) {
     		if (Math.abs(number) < Double.MIN_NORMAL) {
-    			return "0.0";  // I think returning this should be fine...
-    			/* This returns extra zeros... But creates a new Formatter for each time we have this small numbers...
+    			// return "0.0";  // I think returning this should be fine...
+    			// This returns extra zeros... But creates a new Formatter for each time we have this small numbers...
     			String format = "%." + numberOfSignificantDigits + "G";
     			Formatter fmt = new Formatter();
     			fmt.format(format, number);
     			return fmt.toString();
-    			*/
+    			
     		}
         	return findNumberOfSignificantDigitsForNumbersLessThanOne(number, 1, numberOfSignificantDigits);
     	}
@@ -92,8 +94,12 @@ public final class DecimalFormatter {
     	System.err.println("12345678912.3 --> " + toStringWithSetNumberOfSignificantDigits( 12345678912.3, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
 
     	System.err.println("\n");
-    	
-    	System.err.println("1.E-323/10.0 --> " + toStringWithSetNumberOfSignificantDigits(1.E-323/10.0, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
-    	System.err.println("0.0 --> " + toStringWithSetNumberOfSignificantDigits(0.0, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+
+    	System.err.println("-1.E-323/10.0 --> " + toStringWithSetNumberOfSignificantDigits(-1.E-323/10.0, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+    	System.err.println("+1.E-323/10.0 --> " + toStringWithSetNumberOfSignificantDigits(+1.E-323/10.0, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+    	System.err.println("-1.E-323 --> " + toStringWithSetNumberOfSignificantDigits(-1.E-33, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+    	System.err.println("+1.E-323 --> " + toStringWithSetNumberOfSignificantDigits(+1.E-33, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+    	System.err.println("-0.0000 --> " + toStringWithSetNumberOfSignificantDigits(-0.0000, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
+    	System.err.println("+0.0000 --> " + toStringWithSetNumberOfSignificantDigits(+0.0000, SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS));
     }
 }
