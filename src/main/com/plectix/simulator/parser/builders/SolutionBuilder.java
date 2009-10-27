@@ -3,6 +3,8 @@ package com.plectix.simulator.parser.builders;
 import java.util.List;
 
 import com.plectix.simulator.interfaces.SolutionInterface;
+import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.ParseErrorMessage;
 import com.plectix.simulator.parser.abstractmodel.ModelSolution;
 import com.plectix.simulator.parser.abstractmodel.SolutionLineData;
 import com.plectix.simulator.simulationclasses.solution.SolutionFactory;
@@ -23,12 +25,15 @@ public final class SolutionBuilder {
 		substanceBuilder = new SubstanceBuilder(kappaSystem);
 	}
 	
-	public final SolutionInterface build(ModelSolution abstractSolution) {
+	public final SolutionInterface build(ModelSolution abstractSolution, MasterSolutionModel masterSolutionModel) throws ParseErrorException {
 		SolutionInterface solution = (new SolutionFactory()).produce(simulationArguments.getOperationMode(), kappaSystem);
 		for (SolutionLineData lineData : abstractSolution.getAgents()) {
 			List<Agent> list = substanceBuilder.buildAgents(lineData.getAgents());
+			if(masterSolutionModel != null)
+				masterSolutionModel.checkCorrect(list, lineData);
+
 			long quant = lineData.getCount();
-			
+
 			if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP 
 					|| simulationArguments.getSimulationType() == SimulationArguments.SimulationType.GENERATE_MAP) {
 				kappaSystem.getContactMap().setSimulationData(kappaSystem);

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.ModelAgent;
 import com.plectix.simulator.parser.abstractmodel.ModelRule;
 import com.plectix.simulator.simulator.KappaSystemInterface;
@@ -20,10 +21,13 @@ public final class RuleBuilder {
 		this.substanceBuilder = new SubstanceBuilder(system);
 	}
 	
-	public final List<Rule> build(Collection<ModelRule> rules) {
+	public final List<Rule> build(Collection<ModelRule> rules, MasterSolutionModel masterSolutionModel) throws ParseErrorException {
 		List<Rule> result = new ArrayList<Rule>();
 		for (ModelRule rule : rules) {
-			result.add(convert(rule));
+			Rule newRule = convert(rule);
+			if(masterSolutionModel != null)
+				masterSolutionModel.checkCorrect(newRule, rule.toString());
+			result.add(newRule);
 		}
 		return result;
 	}

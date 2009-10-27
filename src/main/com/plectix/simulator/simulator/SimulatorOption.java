@@ -154,6 +154,7 @@ public enum SimulatorOption {
 	AGENTS_LIMIT("agents_limit", true, "Limits the number of agents which can form super substance in operation modes 2-4"),
 	LIVE_DATA_INTERVAL("live_data_interval", true, "Time interval to update live data in milliseconds (default: -1)"),
 	LIVE_DATA_POINTS("live_data_points", true, "Approximate number of data points to report live (default: 500)"),
+	ALLOW_INCOMPLETE_SUBSTANCE("allow_incomplete_substance", false, "AllowIncompleteSubstance"),
 	;
 
 	private String shortName = null;

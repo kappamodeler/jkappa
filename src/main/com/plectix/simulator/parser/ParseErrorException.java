@@ -20,7 +20,7 @@ public class ParseErrorException extends SimulationDataFormatException {
 	}
 	
 	public ParseErrorException(ParseErrorMessage message, String sourceLine) {
-		super(message);
+		super(message, sourceLine);
 	}
 	
 	public ParseErrorException(KappaFileLine kappaFileLine, String message) {

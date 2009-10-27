@@ -39,6 +39,7 @@ public enum ParseErrorMessage {
 			+ "rate modification or (a_1*['specie_1'] + ... + a_n*['specie_n'] + K) for species condition"),
 	SENSE_OF_INEQUALITY_EXPECTED("> or < expected"),
 	INCOMPLETES_DISABLED("Incomplete substances are disabled!"),
+	INCOMPLETE_SUBSTANCE("Incomplete substance: "),
 	
 	;
 	

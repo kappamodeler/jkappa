@@ -110,7 +110,8 @@ public final class SimulationArguments {
 	private boolean useEnumerationOfSpecies;
 	private boolean runQuantitativeCompression = false;
 	private boolean runQualitativeCompression = false;
-
+	
+	private boolean allowIncompleteSubstance = false;
 	
 	public SimulationArguments() {
 		super();
@@ -912,5 +913,13 @@ public final class SimulationArguments {
 
 	public final void setLiveDataConsumerClassname(String liveDataConsumerClassname) {
 		this.liveDataConsumerClassname = liveDataConsumerClassname;
+	}
+
+	public void setAllowIncompleteSubstance(boolean allowIncompleteSubstance) {
+		this.allowIncompleteSubstance = allowIncompleteSubstance;
+	}
+
+	public boolean isAllowIncompleteSubstance() {
+		return allowIncompleteSubstance;
 	}
 }

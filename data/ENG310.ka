@@ -1,0 +1,724 @@
+'1' PI3K(rec) ,Ras(g~GTP,PI3k) <-> PI3K(rec!1),Ras(g~GTP,PI3k!1) @ 1,1
+'2' PI3K(rec!1,PIP),Ras(g~GTP,PI3k!1) ,PIP(PI3) <-> PI3K(rec!1,PIP!2),Ras(g~GTP,PI3k!1),PIP(PI3!2) @ 1,1
+'3' PI3K(rec!1,PIP!2),Ras(g~GTP,PI3k!1),PIP(PI3!2,P~Y) -> PI3K(rec!1,PIP!2),Ras(g~GTP,PI3k!1),PIP(PI3!2,P~pY) @ 1
+'4' PIP(PI3) ,PI3K(rec!3,PIP),GAB1(e1~pY!3,e2~Y,PRD!1),GRB2(GA!1,SH2s!2,SH2r),SHC(a317~pY!2,PTB!_) <-> PIP(PI3!4),PI3K(rec!3,PIP!4),GAB1(e1~pY!3,e2~Y,PRD!1),GRB2(GA!1,SH2s!2,SH2r),SHC(a317~pY!2,PTB!_)     @ 1,1
+'5' PIP(PI3) ,PI3K(rec!3,PIP),GAB1(e1~pY!3,e2~Y,PRD!1),GRB2(GA!1,SH2s,SH2r!_) <-> PIP(PI3!4),PI3K(rec!3,PIP!4),GAB1(e1~pY!3,e2~Y,PRD!1),GRB2(GA!1,SH2s,SH2r!_)     @ 1,1
+'6' PIP(PI3!4,P~Y),PI3K(rec!3,PIP!4),GAB1(e1~pY!3,e2~Y,PRD!1),GRB2(GA!1,SH2s!2,SH2r),SHC(a317~pY!2,PTB!_) -> PIP(PI3!4,P~pY),PI3K(rec!3,PIP!4),GAB1(e1~pY!3,e2~Y,PRD!1),GRB2(GA!1,SH2s!2,SH2r),SHC(a317~pY!2,PTB!_)		@ 1
+'7' PIP(PI3!2,P~Y),PI3K(rec!3,PIP!2),GAB1(e1~pY!3,e2~Y,PRD!1),GRB2(GA!1,SH2s,SH2r!_) -> PIP(PI3!4,P~pY),PI3K(rec!3,PIP!4),GAB1(e1~pY!3,e2~Y,PRD!1),GRB2(GA!1,SH2s,SH2r!_)	@ 1
+'8' PI3K(rec!_,PIP) ,PIP(PI3) <-> PI3K(rec!_,PIP!1),PIP(PI3!1)		@ 1,1
+'9' PI3K(rec!_,PIP!1),PIP(PI3!1,P~Y) -> PI3K(rec!_,PIP!1),PIP(PI3!1,P~pY)	@ 1
+'10' PI3K(PIP!1),PIP(PI3!1) <-> PI3K(PIP) ,PIP(PI3)       @ 1,1
+'11' PIP(PI3,P~pY) -> PIP(PI3,P~Y)          @ 1
+'12' SOS(PRD,ras) ,GRB2(SO,SH2r!_,SH2s,GA!2),GAB1(PRD!2) <-> SOS(PRD!1,ras),GRB2(SO!1,SH2r!_,SH2s,GA!2),GAB1(PRD!2)   @ 1,1
+'13' SOS(PRD,ras) ,SHC(PTB!_,a317~pY!3),GRB2(SO,SH2s!3,SH2r,GA!2),GAB1(PRD!2) <-> SOS(PRD!1,ras),SHC(PTB!_,a317~pY!3),GRB2(SO!1,SH2s!3,SH2r,GA!2),GAB1(PRD!2) @ 1,1
+'14' GRB2(SO,SH2r,SH2s) ,SHC(a317~pY,PTB!_) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!_)       @ 1,1
+'15' GRB2(SO,SH2r,SH2s) ,SHC(a317~pY,PTB) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB)         @ 1,1
+'16' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,SHC(a317~pY,PTB!_) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!_)  @ 1,1
+'17' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,SHC(a317~pY,PTB) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB)    @ 1,1
+'18' SOS(PRD,ras) ,GRB2(SO,SH2s,SH2r,GA) <-> SOS(PRD!1,ras),GRB2(SO!1,SH2s,SH2r,GA)	@ 1,1
+'19' SOS(PRD,ras) ,GRB2(SO,SH2s!2,SH2r,GA),SHC(a317~pY!2,PTB) <-> SOS(PRD!1,ras),GRB2(SO!1,SH2s!2,SH2r,GA),SHC(a317~pY!2,PTB)	@ 1,1
+'20' AKT(PIP) ,PIP(P~pY) <-> AKT(PIP!1),PIP(P~pY!1)         @ 1,1
+'21' RAF(Ras,S338~pY,Mek) -> RAF(Ras,S338~Y,Mek)     @ 1
+'22' RAF(Ras,Aloop~pY,Mek) -> RAF(Ras,Aloop~Y,Mek)   @ 1
+'23' MEK(Raf,S218~pY,Erk) -> MEK(Raf,S218~Y,Erk)     @ 1
+'24' MEK(Raf,S22~pY,Erk) -> MEK(Raf,S22~Y,Erk)       @ 1
+'25' ERK(Mek,Y1~pY,Reg) -> ERK(Mek,Y1~Y,Reg)       @ 1
+'26' ERK(Mek,Y2~pY,Reg) -> ERK(Mek,Y2~Y,Reg)       @ 1  
+'27' ERBB1(ecto) ,EGF(rec) <-> ERBB1(ecto!1),EGF(rec!1)     @ 1,1
+'28' ERBB3(ecto) ,HRG(rec) <-> ERBB3(ecto!1),HRG(rec!1)     @ 1,1   
+'29' ERBB4(ecto) ,HRG(rec) <-> ERBB4(ecto!1),HRG(rec!1)     @ 1,1
+'30' ERBB1(ecto) ,INH(rec) <-> ERBB1(ecto!1),INH(rec!1)		@ 1,1
+'31' ERBB2(ecto) ,INH(rec) <-> ERBB2(ecto!1),INH(rec!1)		@ 1,1
+'32' ERBB3(ecto) ,INH(rec) <-> ERBB3(ecto!1),INH(rec!1)		@ 1,1
+'33' ERBB4(ecto) ,INH(rec) <-> ERBB4(ecto!1),INH(rec!1)		@ 1,1
+'34' ERBB1(ecto!1,dim),EGF(rec!1) ,ERBB1(ecto!2,dim),EGF(rec!2) <-> ERBB1(ecto!1,dim!3),EGF(rec!1),ERBB1(ecto!2,dim!3),EGF(rec!2)   @ 1,1
+'35' ERBB1(ecto!1,dim),EGF(rec!1) ,ERBB1(ecto,dim) <-> ERBB1(ecto!1,dim!2),EGF(rec!1),ERBB1(ecto,dim!2)     @ 1,1
+'36' ERBB1(ecto,dim) ,ERBB1(ecto,dim) <-> ERBB1(ecto,dim!1),ERBB1(ecto,dim!1)       @ 1,1
+'37' ERBB1(ecto!1,dim),EGF(rec!1) ,ERBB2(ecto,dim) <-> ERBB1(ecto!1,dim!2),EGF(rec!1),ERBB2(ecto,dim!2)     @ 1,1
+'38' ERBB1(ecto,dim) ,ERBB2(ecto,dim) <-> ERBB1(ecto,dim!1),ERBB2(ecto,dim!1)       @ 1,1
+'39' ERBB1(ecto!1,dim),EGF(rec!1) ,ERBB3(ecto!2,dim),HRG(rec!2) <-> ERBB1(ecto!1,dim!3),EGF(rec!1),ERBB3(ecto!2,dim!3),HRG(rec!2)   @ 1,1
+'40' ERBB1(ecto!1,dim),EGF(rec!1) ,ERBB3(ecto,dim) <-> ERBB1(ecto!1,dim!2),EGF(rec!1),ERBB3(ecto,dim!2)     @ 1,1
+'41' ERBB3(ecto!1,dim),HRG(rec!1) ,ERBB1(ecto,dim) <-> ERBB3(ecto!1,dim!2),HRG(rec!1),ERBB1(ecto,dim!2)     @ 1,1
+'42' ERBB1(ecto,dim) ,ERBB3(ecto,dim) <-> ERBB1(ecto,dim!1),ERBB3(ecto,dim!1)       @ 1,1
+'43' ERBB1(ecto!1,dim),EGF(rec!1) ,ERBB4(ecto!2,dim),HRG(rec!2) <-> ERBB1(ecto!1,dim!3),EGF(rec!1),ERBB4(ecto!2,dim!3),HRG(rec!2)   @ 1,1
+'44' ERBB1(ecto!1,dim),EGF(rec!1) ,ERBB4(ecto,dim) <-> ERBB1(ecto!1,dim!2),EGF(rec!1),ERBB4(ecto,dim!2)     @ 1,1
+'45' ERBB4(ecto!1,dim),HRG(rec!1) ,ERBB1(ecto,dim) <-> ERBB4(ecto!1,dim!2),HRG(rec!1),ERBB1(ecto,dim!2)     @ 1,1
+'46' ERBB1(ecto,dim) ,ERBB4(ecto,dim) <-> ERBB1(ecto,dim!1),ERBB4(ecto,dim!1)       @ 1,1
+'47' ERBB2(ecto,dim) ,ERBB2(ecto,dim) <-> ERBB2(ecto,dim!1),ERBB2(ecto,dim!1)       @ 1,1
+'48' ERBB3(ecto!1,dim),HRG(rec!1) ,ERBB2(ecto,dim) <-> ERBB3(ecto!1,dim!2),HRG(rec!1),ERBB2(ecto,dim!2)     @ 1,1
+'49' ERBB2(ecto,dim) ,ERBB3(ecto,dim) <-> ERBB2(ecto,dim!1),ERBB3(ecto,dim!1)       @ 1,1
+'50' ERBB4(ecto!1,dim),HRG(rec!1) ,ERBB2(ecto,dim) <-> ERBB4(ecto!1,dim!2),HRG(rec!1),ERBB2(ecto,dim!2)     @ 1,1
+'51' ERBB2(ecto,dim) ,ERBB4(ecto,dim) <-> ERBB2(ecto,dim!1),ERBB4(ecto,dim!1)       @ 1,1
+'52' ERBB3(ecto!1,dim),HRG(rec!1) ,ERBB3(ecto!2,dim),HRG(rec!2) <-> ERBB3(ecto!1,dim!3),HRG(rec!1),ERBB3(ecto!2,dim!3),HRG(rec!2)   @ 1,1
+'53' ERBB3(ecto!1,dim),HRG(rec!1) ,ERBB3(ecto,dim) <-> ERBB3(ecto!1,dim!2),HRG(rec!1),ERBB3(ecto,dim!2)     @ 1,1
+'54' ERBB3(ecto,dim) ,ERBB3(ecto,dim) <-> ERBB3(ecto,dim!1),ERBB3(ecto,dim!1)       @ 1,1
+'55' ERBB3(ecto!1,dim),HRG(rec!1) ,ERBB4(ecto!2,dim),HRG(rec!2)<-> ERBB3(ecto!1,dim!3),HRG(rec!1),ERBB4(ecto!2,dim!3),HRG(rec!2)    @ 1,1
+'56' ERBB3(ecto!1,dim),HRG(rec!1) ,ERBB4(ecto,dim) <-> ERBB3(ecto!1,dim!2),HRG(rec!1),ERBB4(ecto,dim!2)        @ 1,1
+'57' ERBB4(ecto!1,dim),HRG(rec!1) ,ERBB3(ecto,dim) <-> ERBB4(ecto!1,dim!2),HRG(rec!1),ERBB3(ecto,dim!2)     @ 1,1
+'58' ERBB3(ecto,dim) ,ERBB4(ecto,dim) <-> ERBB3(ecto,dim!1),ERBB4(ecto,dim!1)       @ 1,1
+'59' ERBB4(ecto!1,dim),HRG(rec!1) ,ERBB4(ecto!2,dim),HRG(rec!2) <-> ERBB4(ecto!1,dim!3),HRG(rec!1),ERBB4(ecto!2,dim!3),HRG(rec!2)   @ 1,1
+'60' ERBB4(ecto!1,dim),HRG(rec!1) ,ERBB4(ecto,dim) <->ERBB4(ecto!1,dim!2),HRG(rec!1),ERBB4(ecto,dim!2)      @ 1,1
+'61' ERBB4(ecto,dim) ,ERBB4(ecto,dim) <-> ERBB4(ecto,dim!1),ERBB4(ecto,dim!1)       @ 1,1
+'62' ERBB1(dim!1,T669~Y),ERBB1(dim!1,a727~Y) -> ERBB1(dim!1,T669~Y),ERBB1(dim!1,a727~pY) @ 1
+'63' ERBB1(dim!1,T669~Y),ERBB1(dim!1,a998~Y) -> ERBB1(dim!1,T669~Y),ERBB1(dim!1,a998~pY) @ 1
+'64' ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1092~Y) -> ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1092~pY) @ 1
+'65' ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1110~Y) -> ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1110~pY) @ 1
+'66' ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1125~Y) -> ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1125~pY) @ 1
+'67' ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1138~Y) -> ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1138~pY) @ 1
+'68' ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1172~Y) -> ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1172~pY) @ 1
+'69' ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1197~Y) -> ERBB1(dim!1,T669~Y),ERBB1(dim!1,a1197~pY) @ 1
+'70' ERBB2(dim!1,T669~Y),ERBB1(dim!1,a727~Y) -> ERBB2(dim!1,T669~Y),ERBB1(dim!1,a727~pY) @ 1
+'71' ERBB2(dim!1,T669~Y),ERBB1(dim!1,a998~Y) -> ERBB2(dim!1,T669~Y),ERBB1(dim!1,a998~pY) @ 1
+'72' ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1092~Y) -> ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1092~pY) @ 1
+'73' ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1110~Y) -> ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1110~pY) @ 1
+'74' ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1125~Y) -> ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1125~pY) @ 1
+'75' ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1138~Y) -> ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1138~pY) @ 1
+'76' ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1172~Y) -> ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1172~pY) @ 1
+'77' ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1197~Y) -> ERBB2(dim!1,T669~Y),ERBB1(dim!1,a1197~pY) @ 1
+'78' ERBB3(dim!1),ERBB1(dim!1,a727~Y) -> ERBB3(dim!1),ERBB1(dim!1,a727~pY) @ 1
+'79' ERBB3(dim!1),ERBB1(dim!1,a998~Y) -> ERBB3(dim!1),ERBB1(dim!1,a998~pY) @ 1
+'80' ERBB3(dim!1),ERBB1(dim!1,a1092~Y) -> ERBB3(dim!1),ERBB1(dim!1,a1092~pY) @ 1
+'81' ERBB3(dim!1),ERBB1(dim!1,a1110~Y) -> ERBB3(dim!1),ERBB1(dim!1,a1110~pY) @ 1
+'82' ERBB3(dim!1),ERBB1(dim!1,a1125~Y) -> ERBB3(dim!1),ERBB1(dim!1,a1125~pY) @ 1
+'83' ERBB3(dim!1),ERBB1(dim!1,a1138~Y) -> ERBB3(dim!1),ERBB1(dim!1,a1138~pY) @ 1
+'84' ERBB3(dim!1),ERBB1(dim!1,a1172~Y) -> ERBB3(dim!1),ERBB1(dim!1,a1172~pY) @ 1
+'85' ERBB3(dim!1),ERBB1(dim!1,a1197~Y) -> ERBB3(dim!1),ERBB1(dim!1,a1197~pY) @ 1
+'86' ERBB4(dim!1,T669~Y),ERBB1(dim!1,a727~Y) -> ERBB4(dim!1,T669~Y),ERBB1(dim!1,a727~pY) @ 1
+'87' ERBB4(dim!1,T669~Y),ERBB1(dim!1,a998~Y) -> ERBB4(dim!1,T669~Y),ERBB1(dim!1,a998~pY) @ 1
+'88' ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1092~Y) -> ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1092~pY) @ 1
+'89' ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1110~Y) -> ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1110~pY) @ 1
+'90' ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1125~Y) -> ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1125~pY) @ 1
+'91' ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1138~Y) -> ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1138~pY) @ 1
+'92' ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1172~Y) -> ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1172~pY) @ 1
+'93' ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1197~Y) -> ERBB4(dim!1,T669~Y),ERBB1(dim!1,a1197~pY) @ 1
+'94' ERBB1(dim!1,T669~Y),ERBB2(dim!1,a735~Y) -> ERBB1(dim!1,T669~Y),ERBB2(dim!1,a735~pY) @ 1
+'95' ERBB1(dim!1,T669~Y),ERBB2(dim!1,a1005~Y) -> ERBB1(dim!1,T669~Y),ERBB2(dim!1,a1005~pY) @ 1
+'96' ERBB1(dim!1,T669~Y),ERBB2(dim!1,a1139~Y) -> ERBB1(dim!1,T669~Y),ERBB2(dim!1,a1139~pY) @ 1
+'97' ERBB1(dim!1,T669~Y),ERBB2(dim!1,a1196~Y) -> ERBB1(dim!1,T669~Y),ERBB2(dim!1,a1196~pY) @ 1
+'98' ERBB1(dim!1,T669~Y),ERBB2(dim!1,a1222~Y) -> ERBB1(dim!1,T669~Y),ERBB2(dim!1,a1222~pY) @ 1
+'99' ERBB1(dim!1,T669~Y),ERBB2(dim!1,a1248~Y) -> ERBB1(dim!1,T669~Y),ERBB2(dim!1,a1248~pY) @ 1
+'100' ERBB3(dim!1),ERBB2(dim!1,a735~Y) -> ERBB3(dim!1),ERBB2(dim!1,a735~pY) @ 1
+'101' ERBB3(dim!1),ERBB2(dim!1,a1005~Y) -> ERBB3(dim!1),ERBB2(dim!1,a1005~pY) @ 1
+'102' ERBB3(dim!1),ERBB2(dim!1,a1139~Y) -> ERBB3(dim!1),ERBB2(dim!1,a1139~pY) @ 1
+'103' ERBB3(dim!1),ERBB2(dim!1,a1196~Y) -> ERBB3(dim!1),ERBB2(dim!1,a1196~pY) @ 1
+'104' ERBB3(dim!1),ERBB2(dim!1,a1222~Y) -> ERBB3(dim!1),ERBB2(dim!1,a1222~pY) @ 1
+'105' ERBB3(dim!1),ERBB2(dim!1,a1248~Y) -> ERBB3(dim!1),ERBB2(dim!1,a1248~pY) @ 1
+'106' ERBB4(dim!1,T669~Y),ERBB2(dim!1,a735~Y) -> ERBB4(dim!1,T669~Y),ERBB2(dim!1,a735~pY) @ 1
+'107' ERBB4(dim!1,T669~Y),ERBB2(dim!1,a1005~Y) -> ERBB4(dim!1,T669~Y),ERBB2(dim!1,a1005~pY) @ 1
+'108' ERBB4(dim!1,T669~Y),ERBB2(dim!1,a1139~Y) -> ERBB4(dim!1,T669~Y),ERBB2(dim!1,a1139~pY) @ 1
+'109' ERBB4(dim!1,T669~Y),ERBB2(dim!1,a1196~Y) -> ERBB4(dim!1,T669~Y),ERBB2(dim!1,a1196~pY) @ 1
+'110' ERBB4(dim!1,T669~Y),ERBB2(dim!1,a1222~Y) -> ERBB4(dim!1,T669~Y),ERBB2(dim!1,a1222~pY) @ 1
+'111' ERBB4(dim!1,T669~Y),ERBB2(dim!1,a1248~Y) -> ERBB4(dim!1,T669~Y),ERBB2(dim!1,a1248~pY) @ 1
+'112' ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1199~Y) -> ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1199~pY) @ 1
+'113' ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1262~Y) -> ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1262~pY) @ 1
+'114' ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1328~Y) -> ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1328~pY) @ 1
+'115' ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1199~Y) -> ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1199~pY) @ 1
+'116' ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1262~Y) -> ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1262~pY) @ 1
+'117' ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1328~Y) -> ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1328~pY) @ 1
+'118' ERBB3(dim!1),ERBB3(dim!1,a1199~Y) -> ERBB3(dim!1),ERBB3(dim!1,a1199~pY) @ 1
+'119' ERBB3(dim!1),ERBB3(dim!1,a1262~Y) -> ERBB3(dim!1),ERBB3(dim!1,a1262~pY) @ 1
+'120' ERBB3(dim!1),ERBB3(dim!1,a1328~Y) -> ERBB3(dim!1),ERBB3(dim!1,a1328~pY) @ 1
+'121' ERBB4(dim!1,T669~Y),ERBB3(dim!1,a1199~Y) -> ERBB4(dim!1,T669~Y),ERBB3(dim!1,a1199~pY) @ 1
+'122' ERBB4(dim!1,T669~Y),ERBB3(dim!1,a1262~Y) -> ERBB4(dim!1,T669~Y),ERBB3(dim!1,a1262~pY) @ 1
+'123' ERBB4(dim!1,T669~Y),ERBB3(dim!1,a1328~Y) -> ERBB4(dim!1,T669~Y),ERBB3(dim!1,a1328~pY) @ 1
+'124' ERBB1(dim!1,T669~Y),ERBB4(dim!1,a733~Y) -> ERBB1(dim!1,T669~Y),ERBB4(dim!1,a733~pY) @ 1
+'125' ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1162~Y) -> ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1162~pY) @ 1
+'126' ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1188~Y) -> ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1188~pY) @ 1
+'127' ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1202~Y) -> ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1202~pY) @ 1
+'128' ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1208~Y) -> ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1208~pY) @ 1
+'129' ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1221~Y) -> ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1221~pY) @ 1
+'130' ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1242~Y) -> ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1242~pY) @ 1
+'131' ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1268~Y) -> ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1268~pY) @ 1
+'132' ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1284~Y) -> ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1284~pY) @ 1
+'133' ERBB2(dim!1,T669~Y),ERBB4(dim!1,a733~Y) -> ERBB2(dim!1,T669~Y),ERBB4(dim!1,a733~pY) @ 1
+'134' ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1162~Y) -> ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1162~pY) @ 1
+'135' ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1188~Y) -> ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1188~pY) @ 1
+'136' ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1202~Y) -> ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1202~pY) @ 1
+'137' ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1208~Y) -> ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1208~pY) @ 1
+'138' ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1221~Y) -> ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1221~pY) @ 1
+'139' ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1242~Y) -> ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1242~pY) @ 1
+'140' ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1268~Y) -> ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1268~pY) @ 1
+'141' ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1284~Y) -> ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1284~pY) @ 1
+'142' ERBB3(dim!1),ERBB4(dim!1,a733~Y) -> ERBB3(dim!1),ERBB4(dim!1,a733~pY) @ 1
+'143' ERBB3(dim!1),ERBB4(dim!1,a1162~Y) -> ERBB3(dim!1),ERBB4(dim!1,a1162~pY) @ 1
+'144' ERBB3(dim!1),ERBB4(dim!1,a1188~Y) -> ERBB3(dim!1),ERBB4(dim!1,a1188~pY) @ 1
+'145' ERBB3(dim!1),ERBB4(dim!1,a1202~Y) -> ERBB3(dim!1),ERBB4(dim!1,a1202~pY) @ 1
+'146' ERBB3(dim!1),ERBB4(dim!1,a1208~Y) -> ERBB3(dim!1),ERBB4(dim!1,a1208~pY) @ 1
+'147' ERBB3(dim!1),ERBB4(dim!1,a1221~Y) -> ERBB3(dim!1),ERBB4(dim!1,a1221~pY) @ 1
+'148' ERBB3(dim!1),ERBB4(dim!1,a1242~Y) -> ERBB3(dim!1),ERBB4(dim!1,a1242~pY) @ 1
+'149' ERBB3(dim!1),ERBB4(dim!1,a1268~Y) -> ERBB3(dim!1),ERBB4(dim!1,a1268~pY) @ 1
+'150' ERBB3(dim!1),ERBB4(dim!1,a1284~Y) -> ERBB3(dim!1),ERBB4(dim!1,a1284~pY) @ 1
+'151' ERBB4(dim!1,T669~Y),ERBB4(dim!1,a733~Y) -> ERBB4(dim!1,T669~Y),ERBB4(dim!1,a733~pY) @ 1
+'152' ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1162~Y) -> ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1162~pY) @ 1
+'153' ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1188~Y) -> ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1188~pY) @ 1
+'154' ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1202~Y) -> ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1202~pY) @ 1
+'155' ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1208~Y) -> ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1208~pY) @ 1
+'156' ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1221~Y) -> ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1221~pY) @ 1
+'157' ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1242~Y) -> ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1242~pY) @ 1
+'158' ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1268~Y) -> ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1268~pY) @ 1
+'159' ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1284~Y) -> ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1284~pY) @ 1
+'160' ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1054~Y) -> ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1054~pY) @ 1
+'161' ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1197~Y) -> ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1197~pY) @ 1
+'162' ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1222~Y) -> ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1222~pY) @ 1
+'163' ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1260~Y) -> ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1260~pY) @ 1
+'164' ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1276~Y) -> ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1276~pY) @ 1
+'165' ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1289~Y) -> ERBB1(dim!1,T669~Y),ERBB3(dim!1,a1289~pY) @ 1
+'166' ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1054~Y) -> ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1054~pY) @ 1
+'167' ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1197~Y) -> ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1197~pY) @ 1
+'168' ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1222~Y) -> ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1222~pY) @ 1
+'169' ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1260~Y) -> ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1260~pY) @ 1
+'170' ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1276~Y) -> ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1276~pY) @ 1
+'171' ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1289~Y) -> ERBB2(dim!1,T669~Y),ERBB3(dim!1,a1289~pY) @ 1
+'172' ERBB3(dim!1),ERBB3(dim!1,a1054~Y) -> ERBB3(dim!1),ERBB3(dim!1,a1054~pY) @ 1
+'173' ERBB3(dim!1),ERBB3(dim!1,a1197~Y) -> ERBB3(dim!1),ERBB3(dim!1,a1197~pY) @ 1
+'174' ERBB3(dim!1),ERBB3(dim!1,a1222~Y) -> ERBB3(dim!1),ERBB3(dim!1,a1222~pY) @ 1
+'175' ERBB3(dim!1),ERBB3(dim!1,a1260~Y) -> ERBB3(dim!1),ERBB3(dim!1,a1260~pY) @ 1
+'176' ERBB3(dim!1),ERBB3(dim!1,a1276~Y) -> ERBB3(dim!1),ERBB3(dim!1,a1276~pY) @ 1
+'177' ERBB3(dim!1),ERBB3(dim!1,a1289~Y) -> ERBB3(dim!1),ERBB3(dim!1,a1289~pY) @ 1
+'178' ERBB4(dim!1),ERBB3(dim!1,a1054~Y) -> ERBB4(dim!1),ERBB3(dim!1,a1054~pY) @ 1
+'179' ERBB4(dim!1),ERBB3(dim!1,a1197~Y) -> ERBB4(dim!1),ERBB3(dim!1,a1197~pY) @ 1
+'180' ERBB4(dim!1),ERBB3(dim!1,a1222~Y) -> ERBB4(dim!1),ERBB3(dim!1,a1222~pY) @ 1
+'181' ERBB4(dim!1),ERBB3(dim!1,a1260~Y) -> ERBB4(dim!1),ERBB3(dim!1,a1260~pY) @ 1
+'182' ERBB4(dim!1),ERBB3(dim!1,a1276~Y) -> ERBB4(dim!1),ERBB3(dim!1,a1276~pY) @ 1
+'183' ERBB4(dim!1),ERBB3(dim!1,a1289~Y) -> ERBB4(dim!1),ERBB3(dim!1,a1289~pY) @ 1
+'184' ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1056~Y) -> ERBB1(dim!1,T669~Y),ERBB4(dim!1,a1056~pY) @ 1
+'185' ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1056~Y) -> ERBB2(dim!1,T669~Y),ERBB4(dim!1,a1056~pY) @ 1
+'186' ERBB3(dim!1),ERBB4(dim!1,a1056~Y) -> ERBB3(dim!1),ERBB4(dim!1,a1056~pY) @ 1
+'187' ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1056~Y) -> ERBB4(dim!1,T669~Y),ERBB4(dim!1,a1056~pY) @ 1
+'188' ERBB1(dim!1),ERBB1(dim!1,PTP~Y) -> ERBB1(dim!1),ERBB1(dim!1,PTP~pY) @ 1   
+'189' ERBB2(dim!1),ERBB1(dim!1,PTP~Y) -> ERBB2(dim!1),ERBB1(dim!1,PTP~pY) @ 1  
+'190' ERBB3(dim!1),ERBB1(dim!1,PTP~Y) -> ERBB3(dim!1),ERBB1(dim!1,PTP~pY) @ 1   
+'191' ERBB4(dim!1),ERBB1(dim!1,PTP~Y) -> ERBB4(dim!1),ERBB1(dim!1,PTP~pY) @ 1  
+'192' ERBB1(dim!1),ERBB2(dim!1,PTP~Y) -> ERBB1(dim!1),ERBB2(dim!1,PTP~pY) @ 1  
+'193' ERBB3(dim!1),ERBB2(dim!1,PTP~Y) -> ERBB3(dim!1),ERBB2(dim!1,PTP~pY) @ 1   
+'194' ERBB4(dim!1),ERBB2(dim!1,PTP~Y) -> ERBB4(dim!1),ERBB2(dim!1,PTP~pY) @ 1  
+'195' ERBB1(dim!1),ERBB3(dim!1,PTP~Y) -> ERBB1(dim!1),ERBB3(dim!1,PTP~pY) @ 1  
+'196' ERBB2(dim!1),ERBB3(dim!1,PTP~Y) -> ERBB2(dim!1),ERBB3(dim!1,PTP~pY) @ 1  
+'197' ERBB3(dim!1),ERBB3(dim!1,PTP~Y) -> ERBB3(dim!1),ERBB3(dim!1,PTP~pY) @ 1  
+'198' ERBB4(dim!1),ERBB3(dim!1,PTP~Y) -> ERBB4(dim!1),ERBB3(dim!1,PTP~pY) @ 1 
+'199' ERBB1(dim!1),ERBB4(dim!1,PTP~Y) -> ERBB1(dim!1),ERBB4(dim!1,PTP~pY) @ 1  
+'200' ERBB2(dim!1),ERBB4(dim!1,PTP~Y) -> ERBB2(dim!1),ERBB4(dim!1,PTP~pY) @ 1  
+'201' ERBB3(dim!1),ERBB4(dim!1,PTP~Y) -> ERBB3(dim!1),ERBB4(dim!1,PTP~pY) @ 1  
+'202' ERBB4(dim!1),ERBB4(dim!1,PTP~Y) -> ERBB4(dim!1),ERBB4(dim!1,PTP~pY) @ 1  
+'203' ERBB1(PTP~pY) -> ERBB1(PTP~Y) @ 1 
+'204' ERBB2(PTP~pY) -> ERBB2(PTP~Y) @ 1  
+'205' ERBB3(PTP~pY) -> ERBB3(PTP~Y) @ 1  
+'206' ERBB4(PTP~pY) -> ERBB4(PTP~Y) @ 1  
+'207' ERBB1(dim!1),ERBB1(dim!1,rGAP~Y) -> ERBB1(dim!1),ERBB1(dim!1,rGAP~pY) @ 1  
+'208' ERBB2(dim!1),ERBB1(dim!1,rGAP~Y) -> ERBB2(dim!1),ERBB1(dim!1,rGAP~pY) @ 1   
+'209' ERBB3(dim!1),ERBB1(dim!1,rGAP~Y) -> ERBB3(dim!1),ERBB1(dim!1,rGAP~pY) @ 1   
+'210' ERBB4(dim!1),ERBB1(dim!1,rGAP~Y) -> ERBB4(dim!1),ERBB1(dim!1,rGAP~pY) @ 1   
+'211' ERBB1(dim!1),ERBB2(dim!1,rGAP~Y) -> ERBB1(dim!1),ERBB2(dim!1,rGAP~pY) @ 1   
+'212' ERBB3(dim!1),ERBB2(dim!1,rGAP~Y) -> ERBB3(dim!1),ERBB2(dim!1,rGAP~pY) @ 1   
+'213' ERBB4(dim!1),ERBB2(dim!1,rGAP~Y) -> ERBB4(dim!1),ERBB2(dim!1,rGAP~pY) @ 1   
+'214' ERBB1(dim!1),ERBB3(dim!1,rGAP~Y) -> ERBB1(dim!1),ERBB3(dim!1,rGAP~pY) @ 1   
+'215' ERBB2(dim!1),ERBB3(dim!1,rGAP~Y) -> ERBB2(dim!1),ERBB3(dim!1,rGAP~pY) @ 1   
+'216' ERBB3(dim!1),ERBB3(dim!1,rGAP~Y) -> ERBB3(dim!1),ERBB3(dim!1,rGAP~pY) @ 1   
+'217' ERBB4(dim!1),ERBB3(dim!1,rGAP~Y) -> ERBB4(dim!1),ERBB3(dim!1,rGAP~pY) @ 1   
+'218' ERBB1(dim!1),ERBB4(dim!1,rGAP~Y) -> ERBB1(dim!1),ERBB4(dim!1,rGAP~pY) @ 1   
+'219' ERBB2(dim!1),ERBB4(dim!1,rGAP~Y) -> ERBB2(dim!1),ERBB4(dim!1,rGAP~pY) @ 1   
+'220' ERBB3(dim!1),ERBB4(dim!1,rGAP~Y) -> ERBB3(dim!1),ERBB4(dim!1,rGAP~pY) @ 1   
+'221' ERBB4(dim!1),ERBB4(dim!1,rGAP~Y) -> ERBB4(dim!1),ERBB4(dim!1,rGAP~pY) @ 1   
+'222' ERBB1(rGAP~pY) -> ERBB1(rGAP~Y) @ 1
+'223' ERBB2(rGAP~pY) -> ERBB2(rGAP~Y) @ 1  
+'224' ERBB3(rGAP~pY) -> ERBB3(rGAP~Y) @ 1  
+'225' ERBB4(rGAP~pY) -> ERBB4(rGAP~Y) @ 1  
+'226' ERBB1(T669~pY)-> ERBB1(T669~Y)          @ 1
+'227' ERBB2(T669~pY)-> ERBB2(T669~Y)          @ 1
+'228' ERBB4(T669~pY)-> ERBB4(T669~Y)          @ 1
+'229' ERBB1(a727~pY,PTP~pY) -> ERBB1(a727~Y,PTP~pY) @ 1
+'230' ERBB1(a998~pY,PTP~pY) -> ERBB1(a998~Y,PTP~pY) @ 1
+'231' ERBB1(a1092~pY,PTP~pY) -> ERBB1(a1092~Y,PTP~pY) @ 1
+'232' ERBB1(a1110~pY,PTP~pY) -> ERBB1(a1110~Y,PTP~pY) @ 1
+'233' ERBB1(a1125~pY,PTP~pY) -> ERBB1(a1125~Y,PTP~pY) @ 1
+'234' ERBB1(a1138~pY,PTP~pY) -> ERBB1(a1138~Y,PTP~pY) @ 1
+'235' ERBB1(a1172~pY,PTP~pY) -> ERBB1(a1172~Y,PTP~pY) @ 1
+'236' ERBB1(a1197~pY,PTP~pY) -> ERBB1(a1197~Y,PTP~pY) @ 1
+'237' ERBB2(a735~pY,PTP~pY) -> ERBB2(a735~Y,PTP~pY) @ 1
+'238' ERBB2(a1005~pY,PTP~pY) -> ERBB2(a1005~Y,PTP~pY) @ 1
+'239' ERBB2(a1139~pY,PTP~pY) -> ERBB2(a1139~Y,PTP~pY) @ 1
+'240' ERBB2(a1196~pY,PTP~pY) -> ERBB2(a1196~Y,PTP~pY) @ 1
+'241' ERBB2(a1222~pY,PTP~pY) -> ERBB2(a1222~Y,PTP~pY) @ 1
+'242' ERBB2(a1248~pY,PTP~pY) -> ERBB2(a1248~Y,PTP~pY) @ 1
+'243' ERBB3(a1199~pY,PTP~pY) -> ERBB3(a1199~Y,PTP~pY) @ 1
+'244' ERBB3(a1262~pY,PTP~pY) -> ERBB3(a1262~Y,PTP~pY) @ 1
+'245' ERBB3(a1328~pY,PTP~pY) -> ERBB3(a1328~Y,PTP~pY) @ 1
+'246' ERBB3(a1054~pY,PTP~pY) -> ERBB3(a1054~Y,PTP~pY) @ 1
+'247' ERBB3(a1197~pY,PTP~pY) -> ERBB3(a1197~Y,PTP~pY) @ 1
+'248' ERBB3(a1222~pY,PTP~pY) -> ERBB3(a1222~Y,PTP~pY) @ 1
+'249' ERBB3(a1260~pY,PTP~pY) -> ERBB3(a1260~Y,PTP~pY) @ 1
+'250' ERBB3(a1276~pY,PTP~pY) -> ERBB3(a1276~Y,PTP~pY) @ 1
+'251' ERBB3(a1289~pY,PTP~pY) -> ERBB3(a1289~Y,PTP~pY) @ 1
+'252' ERBB4(a733~pY,PTP~pY) -> ERBB4(a733~Y,PTP~pY) @ 1
+'253' ERBB4(a1162~pY,PTP~pY) -> ERBB4(a1162~Y,PTP~pY) @ 1
+'254' ERBB4(a1188~pY,PTP~pY) -> ERBB4(a1188~Y,PTP~pY) @ 1
+'255' ERBB4(a1202~pY,PTP~pY) -> ERBB4(a1202~Y,PTP~pY) @ 1
+'256' ERBB4(a1208~pY,PTP~pY) -> ERBB4(a1208~Y,PTP~pY) @ 1
+'257' ERBB4(a1221~pY,PTP~pY) -> ERBB4(a1221~Y,PTP~pY) @ 1
+'258' ERBB4(a1242~pY,PTP~pY) -> ERBB4(a1242~Y,PTP~pY) @ 1
+'259' ERBB4(a1268~pY,PTP~pY) -> ERBB4(a1268~Y,PTP~pY) @ 1
+'260' ERBB4(a1284~pY,PTP~pY) -> ERBB4(a1284~Y,PTP~pY) @ 1
+'261' ERBB4(a1056~pY,PTP~pY) -> ERBB4(a1056~Y,PTP~pY) @ 1
+'262' ERBB1(a727~pY,PTP~Y) -> ERBB1(a727~Y,PTP~Y) @ 1
+'263' ERBB1(a998~pY,PTP~Y) -> ERBB1(a998~Y,PTP~Y) @ 1
+'264' ERBB1(a1092~pY,PTP~Y) -> ERBB1(a1092~Y,PTP~Y) @ 1
+'265' ERBB1(a1110~pY,PTP~Y) -> ERBB1(a1110~Y,PTP~Y) @ 1
+'266' ERBB1(a1125~pY,PTP~Y) -> ERBB1(a1125~Y,PTP~Y) @ 1
+'267' ERBB1(a1138~pY,PTP~Y) -> ERBB1(a1138~Y,PTP~Y) @ 1
+'268' ERBB1(a1172~pY,PTP~Y) -> ERBB1(a1172~Y,PTP~Y) @ 1
+'269' ERBB1(a1197~pY,PTP~Y) -> ERBB1(a1197~Y,PTP~Y) @ 1
+'270' ERBB2(a735~pY,PTP~Y) -> ERBB2(a735~Y,PTP~Y) @ 1
+'271' ERBB2(a1005~pY,PTP~Y) -> ERBB2(a1005~Y,PTP~Y) @ 1
+'272' ERBB2(a1139~pY,PTP~Y) -> ERBB2(a1139~Y,PTP~Y) @ 1
+'273' ERBB2(a1196~pY,PTP~Y) -> ERBB2(a1196~Y,PTP~Y) @ 1
+'274' ERBB2(a1222~pY,PTP~Y) -> ERBB2(a1222~Y,PTP~Y) @ 1
+'275' ERBB2(a1248~pY,PTP~Y) -> ERBB2(a1248~Y,PTP~Y) @ 1
+'276' ERBB3(a1199~pY,PTP~Y) -> ERBB3(a1199~Y,PTP~Y) @ 1
+'277' ERBB3(a1262~pY,PTP~Y) -> ERBB3(a1262~Y,PTP~Y) @ 1
+'278' ERBB3(a1328~pY,PTP~Y) -> ERBB3(a1328~Y,PTP~Y) @ 1
+'279' ERBB3(a1054~pY,PTP~Y) -> ERBB3(a1054~Y,PTP~Y) @ 1
+'280' ERBB3(a1197~pY,PTP~Y) -> ERBB3(a1197~Y,PTP~Y) @ 1
+'281' ERBB3(a1222~pY,PTP~Y) -> ERBB3(a1222~Y,PTP~Y) @ 1
+'282' ERBB3(a1260~pY,PTP~Y) -> ERBB3(a1260~Y,PTP~Y) @ 1
+'283' ERBB3(a1276~pY,PTP~Y) -> ERBB3(a1276~Y,PTP~Y) @ 1
+'284' ERBB3(a1289~pY,PTP~Y) -> ERBB3(a1289~Y,PTP~Y) @ 1
+'285' ERBB4(a733~pY,PTP~Y) -> ERBB4(a733~Y,PTP~Y) @ 1
+'286' ERBB4(a1162~pY,PTP~Y) -> ERBB4(a1162~Y,PTP~Y) @ 1
+'287' ERBB4(a1188~pY,PTP~Y) -> ERBB4(a1188~Y,PTP~Y) @ 1
+'288' ERBB4(a1202~pY,PTP~Y) -> ERBB4(a1202~Y,PTP~Y) @ 1
+'289' ERBB4(a1208~pY,PTP~Y) -> ERBB4(a1208~Y,PTP~Y) @ 1
+'290' ERBB4(a1221~pY,PTP~Y) -> ERBB4(a1221~Y,PTP~Y) @ 1
+'291' ERBB4(a1242~pY,PTP~Y) -> ERBB4(a1242~Y,PTP~Y) @ 1
+'292' ERBB4(a1268~pY,PTP~Y) -> ERBB4(a1268~Y,PTP~Y) @ 1
+'293' ERBB4(a1284~pY,PTP~Y) -> ERBB4(a1284~Y,PTP~Y) @ 1
+'294' ERBB4(a1056~pY,PTP~Y) -> ERBB4(a1056~Y,PTP~Y) @ 1
+'295' ERBB1(a1092~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB1(a1092~pY!1),GRB2(SO,SH2r!1,SH2s) @ 1,1
+'296' ERBB1(a1110~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB1(a1110~pY!1),GRB2(SO,SH2r!1,SH2s)         @ 1,1
+'297' ERBB1(a1125~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB1(a1125~pY!1),GRB2(SO,SH2r!1,SH2s)         @ 1,1
+'298' ERBB1(a1138~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB1(a1138~pY!1),GRB2(SO,SH2r!1,SH2s)         @ 1,1
+'299' ERBB1(a1172~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB1(a1172~pY!1),GRB2(SO,SH2r!1,SH2s)         @ 1,1
+'300' ERBB1(a1197~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB1(a1197~pY!1),GRB2(SO,SH2r!1,SH2s)         @ 1,1
+'301' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB1(a1092~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB1(a1092~pY!1)       @ 1,1
+'302' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB1(a1110~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB1(a1110~pY!1)       @ 1,1
+'303' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB1(a1125~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB1(a1125~pY!1)       @ 1,1
+'304' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB1(a1138~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB1(a1138~pY!1)       @ 1,1
+'305' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB1(a1172~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB1(a1172~pY!1)       @ 1,1
+'306' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB1(a1197~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB1(a1197~pY!1)       @ 1,1
+'307' ERBB2(a1139~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB2(a1139~pY!1),GRB2(SO,SH2r!1,SH2s)         @ 1,1
+'308' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB2(a1139~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB2(a1139~pY!1)       @ 1,1
+'309' ERBB3(a1199~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB3(a1199~pY!1),GRB2(SO,SH2r!1,SH2s)         @ 1,1
+'310' ERBB3(a1262~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB3(a1262~pY!1),GRB2(SO,SH2r!1,SH2s)         @ 1,1
+'311' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB3(a1199~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB3(a1199~pY!1)       @ 1,1
+'312' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB3(a1262~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB3(a1262~pY!1)       @ 1,1
+'313' ERBB4(a1162~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB4(a1162~pY!1),GRB2(SO,SH2r!1,SH2s)         @ 1,1
+'314' ERBB4(a1188~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB4(a1188~pY!1),GRB2(SO,SH2r!1,SH2s) @ 1,1
+'315' ERBB4(a1202~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB4(a1202~pY!1),GRB2(SO,SH2r!1,SH2s) @ 1,1
+'316' ERBB4(a1208~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB4(a1208~pY!1),GRB2(SO,SH2r!1,SH2s) @ 1,1
+'317' ERBB4(a1221~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB4(a1221~pY!1),GRB2(SO,SH2r!1,SH2s) @ 1,1
+'318' ERBB4(a1242~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB4(a1242~pY!1),GRB2(SO,SH2r!1,SH2s) @ 1,1
+'319' ERBB4(a1268~pY) ,GRB2(SO,SH2r,SH2s) <-> ERBB4(a1268~pY!1),GRB2(SO,SH2r!1,SH2s) @ 1,1
+'320' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB4(a1162~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB4(a1162~pY!1)       @ 1,1
+'321' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB4(a1188~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB4(a1188~pY!1) @ 1,1
+'322' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB4(a1202~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB4(a1202~pY!1) @ 1,1
+'323' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB4(a1208~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB4(a1208~pY!1) @ 1,1
+'324' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB4(a1221~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB4(a1221~pY!1) @ 1,1
+'325' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB4(a1242~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB4(a1242~pY!1) @ 1,1
+'326' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s) ,ERBB4(a1268~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!1,SH2s),ERBB4(a1268~pY!1) @ 1,1
+'327' ERBB1(a727~pY) ,SHC(a317~Y,PTB) <-> ERBB1(a727~pY!1),SHC(a317~Y,PTB!1)         @ 1,1
+'328' ERBB1(a998~pY) ,SHC(a317~Y,PTB) <-> ERBB1(a998~pY!1),SHC(a317~Y,PTB!1)         @ 1,1
+'329' ERBB1(a1110~pY) ,SHC(a317~Y,PTB) <-> ERBB1(a1110~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'330' ERBB1(a1138~pY) ,SHC(a317~Y,PTB) <-> ERBB1(a1138~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'331' ERBB1(a1172~pY) ,SHC(a317~Y,PTB) <-> ERBB1(a1172~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'332' ERBB1(a1197~pY) ,SHC(a317~Y,PTB) <-> ERBB1(a1197~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'333' ERBB1(a727~pY) ,SHC(a317~pY,PTB) <-> ERBB1(a727~pY!1),SHC(a317~pY,PTB!1)       @ 1,1
+'334' ERBB1(a998~pY) ,SHC(a317~pY,PTB) <-> ERBB1(a998~pY!1),SHC(a317~pY,PTB!1)       @ 1,1
+'335' ERBB1(a1110~pY) ,SHC(a317~pY,PTB) <-> ERBB1(a1110~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'336' ERBB1(a1138~pY) ,SHC(a317~pY,PTB) <-> ERBB1(a1138~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'337' ERBB1(a1172~pY) ,SHC(a317~pY,PTB) <-> ERBB1(a1172~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'338' ERBB1(a1197~pY) ,SHC(a317~pY,PTB) <-> ERBB1(a1197~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'339' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a727~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB1(a727~pY!2)        @ 1,1
+'340' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a998~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB1(a998~pY!2)        @ 1,1
+'341' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a1110~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB1(a1110~pY!2)      @ 1,1
+'342' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a1138~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB1(a1138~pY!2)      @ 1,1
+'343' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a1172~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB1(a1172~pY!2)      @ 1,1
+'344' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a1197~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB1(a1197~pY!2)      @ 1,1
+'345' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a727~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB1(a727~pY!3)      @ 1,1
+'346' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a998~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB1(a998~pY!3)      @ 1,1
+'347' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a1110~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB1(a1110~pY!3)    @ 1,1
+'348' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a1138~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB1(a1138~pY!3)    @ 1,1
+'349' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a1172~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB1(a1172~pY!3)    @ 1,1
+'350' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB1(a1197~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB1(a1197~pY!3)    @ 1,1
+'351' ERBB2(a735~pY) ,SHC(a317~Y,PTB) <-> ERBB2(a735~pY!1),SHC(a317~Y,PTB!1)         @ 1,1
+'352' ERBB2(a1005~pY) ,SHC(a317~Y,PTB) <-> ERBB2(a1005~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'353' ERBB2(a1196~pY) ,SHC(a317~Y,PTB) <-> ERBB2(a1196~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'354' ERBB2(a1222~pY) ,SHC(a317~Y,PTB) <-> ERBB2(a1222~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'355' ERBB2(a1248~pY) ,SHC(a317~Y,PTB) <-> ERBB2(a1248~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'356' ERBB2(a735~pY) ,SHC(a317~pY,PTB) <-> ERBB2(a735~pY!1),SHC(a317~pY,PTB!1)       @ 1,1
+'357' ERBB2(a1005~pY) ,SHC(a317~pY,PTB) <-> ERBB2(a1005~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'358' ERBB2(a1196~pY) ,SHC(a317~pY,PTB) <-> ERBB2(a1196~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'359' ERBB2(a1222~pY) ,SHC(a317~pY,PTB) <-> ERBB2(a1222~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'360' ERBB2(a1248~pY) ,SHC(a317~pY,PTB) <-> ERBB2(a1248~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'361' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB2(a735~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB2(a735~pY!2)        @ 1,1
+'362' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB2(a1005~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB2(a1005~pY!2)      @ 1,1
+'363' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB2(a1196~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB2(a1196~pY!2)      @ 1,1
+'364' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB2(a1222~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB2(a1222~pY!2)      @ 1,1
+'365' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB2(a1248~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB2(a1248~pY!2)      @ 1,1
+'366' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB2(a735~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB2(a735~pY!3)      @ 1,1
+'367' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB2(a1005~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB2(a1005~pY!3)    @ 1,1
+'368' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB2(a1196~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB2(a1196~pY!3)    @ 1,1
+'369' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB2(a1222~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB2(a1222~pY!3)    @ 1,1
+'370' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB2(a1248~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB2(a1248~pY!3)    @ 1,1
+'371' ERBB3(a1328~pY) ,SHC(a317~Y,PTB) <-> ERBB3(a1328~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'372' ERBB3(a1328~pY) ,SHC(a317~pY,PTB) <-> ERBB3(a1328~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'373' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB3(a1328~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB3(a1328~pY!2)      @ 1,1
+'374' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB3(a1328~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB3(a1328~pY!3)    @ 1,1
+'375' ERBB4(a733~pY) ,SHC(a317~Y,PTB) <-> ERBB4(a733~pY!1),SHC(a317~Y,PTB!1)         @ 1,1
+'376' ERBB4(a1188~pY) ,SHC(a317~Y,PTB) <-> ERBB4(a1188~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'377' ERBB4(a1242~pY) ,SHC(a317~Y,PTB) <-> ERBB4(a1242~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'378' ERBB4(a1284~pY) ,SHC(a317~Y,PTB) <-> ERBB4(a1284~pY!1),SHC(a317~Y,PTB!1)       @ 1,1
+'379' ERBB4(a733~pY) ,SHC(a317~pY,PTB) <-> ERBB4(a733~pY!1),SHC(a317~pY,PTB!1)       @ 1,1
+'380' ERBB4(a1188~pY) ,SHC(a317~pY,PTB) <-> ERBB4(a1188~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'381' ERBB4(a1242~pY) ,SHC(a317~pY,PTB) <-> ERBB4(a1242~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'382' ERBB4(a1284~pY) ,SHC(a317~pY,PTB) <-> ERBB4(a1284~pY!1),SHC(a317~pY,PTB!1)     @ 1,1
+'383' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB4(a733~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB4(a733~pY!2)        @ 1,1
+'384' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB4(a1188~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB4(a1188~pY!2)      @ 1,1
+'385' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB4(a1242~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB4(a1242~pY!2)      @ 1,1
+'386' GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB4(a1284~pY) <-> GRB2(SO,SH2r,SH2s!1),SHC(a317~pY!1,PTB!2),ERBB4(a1284~pY!2)      @ 1,1
+'387' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB4(a733~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB4(a733~pY!3)      @ 1,1
+'388' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB4(a1188~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB4(a1188~pY!3)    @ 1,1
+'389' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB4(a1242~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB4(a1242~pY!3)    @ 1,1
+'390' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB) ,ERBB4(a1284~pY) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(a317~pY!1,PTB!3),ERBB4(a1284~pY!3)    @ 1,1
+'393' SOS(PRD,ras) ,GRB2(SO,SH2r!_,SH2s) <-> SOS(PRD!1,ras),GRB2(SO!1,SH2r!_,SH2s)   @ 1,1 
+'394' SOS(PRD,ras) ,GRB2(SO,SH2r,SH2s!1),SHC(PTB!_,a317~pY!1) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(PTB!_,a317~pY!1)         @ 1,1
+'395' SOS(PRD!2,ras),GRB2(SO!2,SH2r!_,SH2s) ,Ras(so,g~GDP,raf) <-> SOS(PRD!2,ras!3),GRB2(SO!2,SH2r!_,SH2s),Ras(so!3,g~GDP,raf)       @ 1,1
+'396' SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(PTB!_,a317~pY!1) ,Ras(so,g~GDP,raf) <-> SOS(PRD!2,ras!3),GRB2(SO!2,SH2r,SH2s!1),SHC(PTB!_,a317~pY!1),Ras(so!3,g~GDP,raf)     @ 1,1
+'397' SOS(PRD!2,ras!3,e~Y),GRB2(SO!2,SH2r!_,SH2s),Ras(so!3,g~GDP,raf) <-> SOS(PRD!2,ras!3,e~Y),GRB2(SO!2,SH2r!_,SH2s),Ras(so!3,g~GTP,raf)     @ 1,1
+'398' SOS(PRD!2,ras!3,e~Y),GRB2(SO!2,SH2r,SH2s!1),SHC(PTB!_,a317~pY!1),Ras(so!3,g~GDP,raf) <-> SOS(PRD!2,ras!3,e~Y),GRB2(SO!2,SH2r,SH2s!1),SHC(PTB!_,a317~pY!1),Ras(so!3,g~GTP,raf)   @ 1,1
+'399' SOS(PRD!2,ras!3),GRB2(SO!2,SH2r!_,SH2s),Ras(so!3,g~GTP,raf) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r!_,SH2s) ,Ras(so,g~GTP,raf)       @ 1,1
+'400' SOS(PRD!2,ras!3),GRB2(SO!2,SH2r,SH2s!1),SHC(PTB!_,a317~pY!1),Ras(so!3,g~GTP,raf) <-> SOS(PRD!2,ras),GRB2(SO!2,SH2r,SH2s!1),SHC(PTB!_,a317~pY!1) ,Ras(so,g~GTP,raf)     @ 1,1
+'401' Ras(g~GTP,raf) ,RAF(Ras) -> RAF(Ras!1),Ras(g~GTP,raf!1)       @ 1
+'402' RAF(Ras!1,S338~Y),Ras(raf!1,g~GTP) -> RAF(Ras!1,S338~pY),Ras(raf!1,g~GTP)              @ 1
+'403' RAF(Ras!1,S259~pY),Ras(raf!1,g~GTP) -> RAF(Ras!1,S259~Y),Ras(raf!1,g~GTP)              @ 1
+'404' RAF(Ras!1,Aloop~Y),Ras(raf!1,g~GTP) -> RAF(Ras!1,Aloop~pY),Ras(raf!1,g~GTP)            @ 1
+'405' RAF(Ras!1),Ras(raf!1) ->  RAF(Ras) ,Ras(raf)              @ 1
+'406' RAF(S338~pY,S259~Y,Aloop~pY,S29~Y,S289~Y,S296~Y,S301~Y,S642~Y,Mek) ,MEK(Raf) -> RAF(S338~pY,S259~Y,Aloop~pY,S29~Y,S289~Y,S296~Y,S301~Y,S642~Y,Mek!1),MEK(Raf!1)       @ 1
+'407' RAF(S338~pY,S259~Y,Aloop~pY,S29~Y,S289~Y,S296~Y,S301~Y,S642~Y,Mek!1),MEK(Raf!1,S218~Y) <-> RAF(S338~pY,S259~Y,Aloop~pY,S29~Y,S289~Y,S296~Y,S301~Y,S642~Y,Mek!1),MEK(Raf!1,S218~pY)       @ 1,1
+'408' RAF(S338~pY,S259~Y,Aloop~pY,S29~Y,S289~Y,S296~Y,S301~Y,S642~Y,Mek!1),MEK(Raf!1,S22~Y) <-> RAF(S338~pY,S259~Y,Aloop~pY,S29~Y,S289~Y,S296~Y,S301~Y,S642~Y,Mek!1),MEK(Raf!1,S22~pY)             @ 1,1
+'409' RAF(Mek!1),MEK(Raf!1) -> MEK(Raf) ,RAF(Mek)            @ 1
+'410' MEK(Raf,S218~pY,S22~pY,T292~Y,Erk) ,ERK(Mek) -> MEK(Raf,S218~pY,S22~pY,T292~Y,Erk!1),ERK(Mek!1)     @ 1
+'411' ERK(Mek!1,Y1~Y),MEK(S218~pY,S22~pY,T292~Y,Erk!1) <-> ERK(Mek!1,Y1~pY),MEK(S218~pY,S22~pY,T292~Y,Erk!1)        @ 1,1
+'412' ERK(Mek!1,Y2~Y),MEK(S218~pY,S22~pY,T292~Y,Erk!1) <-> ERK(Mek!1,Y2~pY),MEK(S218~pY,S22~pY,T292~Y,Erk!1)        @ 1,1
+'413' ERK(Mek!1),MEK(Erk!1) -> ERK(Mek) ,MEK(Erk)            @ 1
+'414' RAF(S29~pY,Mek!1,Erk),MEK(Raf!1,Erk) <-> RAF(S29~Y,Mek!1,Erk),MEK(Raf!1,Erk)    @ 1,1
+'415' RAF(S289~pY,Mek!1,Erk),MEK(Raf!1,Erk) <-> RAF(S289~Y,Mek!1,Erk),MEK(Raf!1,Erk)  @ 1,1
+'416' RAF(S296~pY,Mek!1,Erk),MEK(Raf!1,Erk) <-> RAF(S296~Y,Mek!1,Erk),MEK(Raf!1,Erk)  @ 1,1
+'417' RAF(S301~pY,Mek!1,Erk),MEK(Raf!1,Erk) <-> RAF(S301~Y,Mek!1,Erk),MEK(Raf!1,Erk)  @ 1,1
+'418' RAF(S642~pY,Mek!1,Erk),MEK(Raf!1,Erk) <-> RAF(S642~Y,Mek!1,Erk),MEK(Raf!1,Erk)  @ 1,1
+'419' ERK(Reg,Y1~pY,Y2~pY) ,SOS(Erk) <-> ERK(Reg!1,Y1~pY,Y2~pY),SOS(Erk!1)   @ 1,1
+'420' ERK(Reg,Y1~pY,Y2~pY) ,GAB1(MBD) <-> ERK(Reg!1,Y1~pY,Y2~pY),GAB1(MBD!1) @ 1,1
+'421' ERK(Reg,Y1~pY,Y2~pY) ,ERBB1(Erk) <-> ERK(Reg!2,Y1~pY,Y2~pY),ERBB1(Erk!2)       @ 1,1
+'422' ERK(Reg,Y1~pY,Y2~pY) ,ERBB2(Erk) <-> ERK(Reg!2,Y1~pY,Y2~pY),ERBB2(Erk!2)       @ 1,1
+'423' ERK(Reg,Y1~pY,Y2~pY) ,ERBB4(Erk) <-> ERK(Reg!2,Y1~pY,Y2~pY),ERBB4(Erk!2)       @ 1,1
+'424' RAF(Erk) ,ERK(Y1~pY,Y2~pY,Reg) <-> RAF(Erk!1),ERK(Y1~pY,Y2~pY,Reg!1)   @1,1       
+'425' ERK(Reg,Y1~pY,Y2~pY),MEK(Erk,T292~Y) <-> ERK(Reg!1,Y1~pY,Y2~pY),MEK(Erk!1,T292~Y)      @ 1,1
+'426' ERK(Reg!1,Y1~pY,Y2~pY),SOS(Erk!1,e~Y) <-> ERK(Reg!1,Y1~pY,Y2~pY),SOS(Erk!1,e~pY)        @ 1,1
+'427' ERK(Reg!1,Y1~pY,Y2~pY),GAB1(MBD!1,e2~Y) <-> ERK(Reg!1,Y1~pY,Y2~pY),GAB1(MBD!1,e2~pY)    @ 1,1
+'428' RAF(S29~Y,Erk!1),ERK(Y1~pY,Y2~pY,Reg!1) <-> RAF(S29~pY,Erk!1),ERK(Y1~pY,Y2~pY,Reg!1)    @ 1,1
+'429' RAF(S289~Y,Erk!1),ERK(Y1~pY,Y2~pY,Reg!1) <-> RAF(S289~pY,Erk!1),ERK(Y1~pY,Y2~pY,Reg!1)  @ 1,1
+'430' RAF(S296~Y,Erk!1),ERK(Y1~pY,Y2~pY,Reg!1) <-> RAF(S296~pY,Erk!1),ERK(Y1~pY,Y2~pY,Reg!1)  @ 1,1
+'431' RAF(S301~Y,Erk!1),ERK(Y1~pY,Y2~pY,Reg!1) <-> RAF(S301~pY,Erk!1),ERK(Y1~pY,Y2~pY,Reg!1)  @ 1,1
+'432' RAF(S642~Y,Erk!1),ERK(Y1~pY,Y2~pY,Reg!1) <-> RAF(S642~pY,Erk!1),ERK(Y1~pY,Y2~pY,Reg!1)  @ 1,1
+'433' ERK(Reg!1,Y1~pY,Y2~pY),MEK(Erk!1,T292~Y)   <-> ERK(Reg!1,Y1~pY,Y2~pY),MEK(Erk!1,T292~pY)        @ 1,1
+'434' ERK(Reg!2,Y1~pY,Y2~pY),ERBB1(Erk!2,T669~Y) <-> ERK(Reg!2,Y1~pY,Y2~pY),ERBB1(Erk!2,T669~pY)      @ 1,1
+'435' ERK(Reg!2,Y1~pY,Y2~pY),ERBB2(Erk!2,T669~Y) <-> ERK(Reg!2,Y1~pY,Y2~pY),ERBB2(Erk!2,T669~pY)      @ 1,1
+'436' ERK(Reg!2,Y1~pY,Y2~pY),ERBB4(Erk!2,T669~Y) <-> ERK(Reg!2,Y1~pY,Y2~pY),ERBB4(Erk!2,T669~pY)      @ 1,1
+'437' ERK(Reg!1),SOS(Erk!1) -> ERK(Reg) ,SOS(Erk)   @ 1
+'438' ERK(Reg!1),GAB1(MBD!1) -> ERK(Reg) ,GAB1(MBD)	@ 1
+'439' ERK(Reg!2),ERBB1(Erk!2) -> ERK(Reg) ,ERBB1(Erk)      @ 1
+'440' ERK(Reg!2),ERBB2(Erk!2) -> ERK(Reg) ,ERBB2(Erk)     @ 1
+'441' ERK(Reg!2),ERBB4(Erk!2) -> ERK(Reg) ,ERBB4(Erk)      @ 1
+'442' RAF(Erk!1),ERK(Reg!1) -> RAF(Erk) ,ERK(Reg)   @ 1    
+'443' ERK(Reg!1),MEK(Erk!1) -> ERK(Reg) ,MEK(Erk)     @ 1
+'444' PTP1B(pY) ,ERBB1(PTP~pY) <-> PTP1B(pY!1),ERBB1(PTP~pY!1)       @ 1,1
+'445' PTP1B(pY) ,ERBB2(PTP~pY) <-> PTP1B(pY!1),ERBB2(PTP~pY!1)       @ 1,1
+'446' PTP1B(pY) ,ERBB3(PTP~pY) <-> PTP1B(pY!1),ERBB3(PTP~pY!1)       @ 1,1
+'447' PTP1B(pY) ,ERBB4(PTP~pY) <-> PTP1B(pY!1),ERBB4(PTP~pY!1)       @ 1,1
+'448' PTP1B(pY!1),ERBB1(a727~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB1(a727~Y,PTP~pY!1)       @ 1
+'449' PTP1B(pY!1),ERBB1(a998~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB1(a998~Y,PTP~pY!1)       @ 1
+'450' PTP1B(pY!1),ERBB1(a1092~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB1(a1092~Y,PTP~pY!1)     @ 1
+'451' PTP1B(pY!1),ERBB1(a1110~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB1(a1110~Y,PTP~pY!1)     @ 1
+'452' PTP1B(pY!1),ERBB1(a1125~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB1(a1125~Y,PTP~pY!1)     @ 1
+'453' PTP1B(pY!1),ERBB1(a1138~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB1(a1138~Y,PTP~pY!1)     @ 1
+'454' PTP1B(pY!1),ERBB1(a1172~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB1(a1172~Y,PTP~pY!1)     @ 1
+'455' PTP1B(pY!1),ERBB1(a1197~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB1(a1197~Y,PTP~pY!1)     @ 1
+'456' PTP1B(pY!1),ERBB2(a735~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB2(a735~Y,PTP~pY!1)       @ 1
+'457' PTP1B(pY!1),ERBB2(a1005~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB2(a1005~Y,PTP~pY!1)     @ 1
+'458' PTP1B(pY!1),ERBB2(a1139~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB2(a1139~Y,PTP~pY!1)     @ 1
+'459' PTP1B(pY!1),ERBB2(a1196~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB2(a1196~Y,PTP~pY!1)     @ 1
+'460' PTP1B(pY!1),ERBB2(a1222~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB2(a1222~Y,PTP~pY!1)     @ 1
+'461' PTP1B(pY!1),ERBB2(a1248~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB2(a1248~Y,PTP~pY!1)     @ 1
+'462' PTP1B(pY!1),ERBB3(a1199~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB3(a1199~Y,PTP~pY!1)     @ 1
+'463' PTP1B(pY!1),ERBB3(a1262~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB3(a1262~Y,PTP~pY!1)     @ 1
+'464' PTP1B(pY!1),ERBB3(a1328~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB3(a1328~Y,PTP~pY!1)     @ 1
+'465' PTP1B(pY!1),ERBB3(a1054~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB3(a1054~Y,PTP~pY!1)     @ 1
+'466' PTP1B(pY!1),ERBB3(a1197~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB3(a1197~Y,PTP~pY!1)     @ 1
+'467' PTP1B(pY!1),ERBB3(a1222~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB3(a1222~Y,PTP~pY!1)     @ 1
+'468' PTP1B(pY!1),ERBB3(a1260~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB3(a1260~Y,PTP~pY!1)     @ 1
+'469' PTP1B(pY!1),ERBB3(a1276~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB3(a1276~Y,PTP~pY!1)     @ 1
+'470' PTP1B(pY!1),ERBB3(a1289~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB3(a1289~Y,PTP~pY!1)     @ 1
+'471' PTP1B(pY!1),ERBB4(a733~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB4(a733~Y,PTP~pY!1)       @ 1
+'472' PTP1B(pY!1),ERBB4(a1162~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB4(a1162~Y,PTP~pY!1)     @ 1
+'473' PTP1B(pY!1),ERBB4(a1188~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB4(a1188~Y,PTP~pY!1)     @ 1
+'474' PTP1B(pY!1),ERBB4(a1202~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB4(a1202~Y,PTP~pY!1)     @ 1
+'475' PTP1B(pY!1),ERBB4(a1208~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB4(a1208~Y,PTP~pY!1)     @ 1
+'476' PTP1B(pY!1),ERBB4(a1221~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB4(a1221~Y,PTP~pY!1)     @ 1
+'477' PTP1B(pY!1),ERBB4(a1242~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB4(a1242~Y,PTP~pY!1)     @ 1
+'478' PTP1B(pY!1),ERBB4(a1268~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB4(a1268~Y,PTP~pY!1)     @ 1
+'479' PTP1B(pY!1),ERBB4(a1284~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB4(a1284~Y,PTP~pY!1)     @ 1
+'480' PTP1B(pY!1),ERBB4(a1056~pY,PTP~pY!1) -> PTP1B(pY!1),ERBB4(a1056~Y,PTP~pY!1)     @ 1
+'481' PTP1B(pY!1),ERBB1(PTP~pY!1,a727~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a727~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4)        @ 1
+'482' PTP1B(pY!1),ERBB1(PTP~pY!1,a998~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a998~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4)        @ 1
+'483' PTP1B(pY!1),ERBB1(PTP~pY!1,a1110~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a1110~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4) @ 1
+'484' PTP1B(pY!1),ERBB1(PTP~pY!1,a1138~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a1138~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4) @ 1
+'485' PTP1B(pY!1),ERBB1(PTP~pY!1,a1172~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a1172~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4) @ 1
+'486' PTP1B(pY!1),ERBB1(PTP~pY!1,a1197~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a1197~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4) @ 1
+'487' PTP1B(pY!1),ERBB2(PTP~pY!1,a735~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB2(PTP~pY!1,a735~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4)        @ 1
+'488' PTP1B(pY!1),ERBB2(PTP~pY!1,a1005~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB2(PTP~pY!1,a1005~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4) @ 1
+'489' PTP1B(pY!1),ERBB2(PTP~pY!1,a1196~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB2(PTP~pY!1,a1196~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4) @ 1
+'490' PTP1B(pY!1),ERBB2(PTP~pY!1,a1222~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB2(PTP~pY!1,a1222~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4) @ 1
+'491' PTP1B(pY!1),ERBB2(PTP~pY!1,a1248~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB2(PTP~pY!1,a1248~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4) @ 1
+'492' PTP1B(pY!1),ERBB3(PTP~pY!1,a1328~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB3(PTP~pY!1,a1328~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4)      @ 1
+'493' PTP1B(pY!1),ERBB4(PTP~pY!1,a733~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB4(PTP~pY!1,a733~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4)        @ 1
+'494' PTP1B(pY!1),ERBB4(PTP~pY!1,a1188~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB4(PTP~pY!1,a1188~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4) @ 1
+'495' PTP1B(pY!1),ERBB4(PTP~pY!1,a1242~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB4(PTP~pY!1,a1242~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4) @ 1
+'496' PTP1B(pY!1),ERBB4(PTP~pY!1,a1284~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB4(PTP~pY!1,a1284~pY!2),SHC(a317~pY!3,PTB!2),GRB2(GA!4,SH2r,SH2s!3),GAB1(e1~Y,PRD!4) @ 1
+'497' PTP1B(pY!1),ERBB1(PTP~pY!1,a1092~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a1092~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'498' PTP1B(pY!1),ERBB1(PTP~pY!1,a1110~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a1110~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'499' PTP1B(pY!1),ERBB1(PTP~pY!1,a1125~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a1125~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'500' PTP1B(pY!1),ERBB1(PTP~pY!1,a1138~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a1138~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'501' PTP1B(pY!1),ERBB1(PTP~pY!1,a1172~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a1172~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'502' PTP1B(pY!1),ERBB1(PTP~pY!1,a1197~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB1(PTP~pY!1,a1197~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'503' PTP1B(pY!1),ERBB2(PTP~pY!1,a1139~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB2(PTP~pY!1,a1139~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'504' PTP1B(pY!1),ERBB3(PTP~pY!1,a1199~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB3(PTP~pY!1,a1199~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'505' PTP1B(pY!1),ERBB3(PTP~pY!1,a1262~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB3(PTP~pY!1,a1262~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'506' PTP1B(pY!1),ERBB4(PTP~pY!1,a1162~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB4(PTP~pY!1,a1162~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'507' PTP1B(pY!1),ERBB4(PTP~pY!1,a1188~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB4(PTP~pY!1,a1188~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'508' PTP1B(pY!1),ERBB4(PTP~pY!1,a1202~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB4(PTP~pY!1,a1202~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'509' PTP1B(pY!1),ERBB4(PTP~pY!1,a1208~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB4(PTP~pY!1,a1208~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'510' PTP1B(pY!1),ERBB4(PTP~pY!1,a1221~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB4(PTP~pY!1,a1221~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'511' PTP1B(pY!1),ERBB4(PTP~pY!1,a1242~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB4(PTP~pY!1,a1242~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'512' PTP1B(pY!1),ERBB4(PTP~pY!1,a1268~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~pY,PRD!4)-> PTP1B(pY!1),ERBB4(PTP~pY!1,a1268~pY!2),GRB2(GA!4,SH2r!2,SH2s),GAB1(e1~Y,PRD!4)        @ 1
+'513' PTP1B(pY!1),ERBB1(PTP~pY!1,a727~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB1(PTP~pY!1,a727~pY!2),SHC(a317~Y,PTB!2)     @ 1
+'514' PTP1B(pY!1),ERBB1(PTP~pY!1,a998~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB1(PTP~pY!1,a998~pY!2),SHC(a317~Y,PTB!2)     @ 1
+'515' PTP1B(pY!1),ERBB1(PTP~pY!1,a1110~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB1(PTP~pY!1,a1110~pY!2),SHC(a317~Y,PTB!2)   @ 1
+'516' PTP1B(pY!1),ERBB1(PTP~pY!1,a1138~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB1(PTP~pY!1,a1138~pY!2),SHC(a317~Y,PTB!2)   @ 1
+'517' PTP1B(pY!1),ERBB1(PTP~pY!1,a1172~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB1(PTP~pY!1,a1172~pY!2),SHC(a317~Y,PTB!2)   @ 1 
+'518' PTP1B(pY!1),ERBB1(PTP~pY!1,a1197~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB1(PTP~pY!1,a1197~pY!2),SHC(a317~Y,PTB!2)   @ 1
+'519' PTP1B(pY!1),ERBB2(PTP~pY!1,a735~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB2(PTP~pY!1,a735~pY!2),SHC(a317~Y,PTB!2)     @ 1
+'520' PTP1B(pY!1),ERBB2(PTP~pY!1,a1005~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB2(PTP~pY!1,a1005~pY!2),SHC(a317~Y,PTB!2)   @ 1
+'521' PTP1B(pY!1),ERBB2(PTP~pY!1,a1196~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB2(PTP~pY!1,a1196~pY!2),SHC(a317~Y,PTB!2)   @ 1
+'522' PTP1B(pY!1),ERBB2(PTP~pY!1,a1222~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB2(PTP~pY!1,a1222~pY!2),SHC(a317~Y,PTB!2)   @ 1
+'523' PTP1B(pY!1),ERBB2(PTP~pY!1,a1248~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB2(PTP~pY!1,a1248~pY!2),SHC(a317~Y,PTB!2)   @ 1
+'524' PTP1B(pY!1),ERBB3(PTP~pY!1,a1328~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB3(PTP~pY!1,a1328~pY!2),SHC(a317~Y,PTB!2)   @ 1
+'525' PTP1B(pY!1),ERBB4(PTP~pY!1,a733~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB4(PTP~pY!1,a733~pY!2),SHC(a317~Y,PTB!2)     @ 1
+'526' PTP1B(pY!1),ERBB4(PTP~pY!1,a1188~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB4(PTP~pY!1,a1188~pY!2),SHC(a317~Y,PTB!2)   @ 1
+'527' PTP1B(pY!1),ERBB4(PTP~pY!1,a1242~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB4(PTP~pY!1,a1242~pY!2),SHC(a317~Y,PTB!2)   @ 1
+'528' PTP1B(pY!1),ERBB4(PTP~pY!1,a1284~pY!2),SHC(a317~pY,PTB!2) -> PTP1B(pY!1),ERBB4(PTP~pY!1,a1284~pY!2),SHC(a317~Y,PTB!2)   @ 1
+'529' PTP1B(pY!1),ERBB1(PTP~pY!1,rGAP~pY!2),RasGAP(rec!2,e1~pY) -> PTP1B(pY!1),ERBB1(PTP~pY!1,rGAP~pY!2),RasGAP(rec!2,e1~Y)   @ 1
+'530' PTP1B(pY!1),ERBB2(PTP~pY!1,rGAP~pY!2),RasGAP(rec!2,e1~pY) -> PTP1B(pY!1),ERBB2(PTP~pY!1,rGAP~pY!2),RasGAP(rec!2,e1~Y)   @ 1
+'531' PTP1B(pY!1),ERBB3(PTP~pY!1,rGAP~pY!2),RasGAP(rec!2,e1~pY) -> PTP1B(pY!1),ERBB3(PTP~pY!1,rGAP~pY!2),RasGAP(rec!2,e1~Y)   @ 1
+'532' PTP1B(pY!1),ERBB4(PTP~pY!1,rGAP~pY!2),RasGAP(rec!2,e1~pY) -> PTP1B(pY!1),ERBB4(PTP~pY!1,rGAP~pY!2),RasGAP(rec!2,e1~Y)   @ 1
+'533' GAB1(e1~Y,PRD) ,GRB2(GA,SH2s!2,SH2r),SHC(a317~pY!2,PTB!_) <-> GAB1(e1~Y,PRD!1),GRB2(GA!1,SH2s!2,SH2r),SHC(a317~pY!2,PTB!_)     @ 1,1
+'534' GAB1(e1~Y,PRD) ,GRB2(GA,SH2r!_,SH2s) <-> GAB1(e1~Y,PRD!1),GRB2(GA!1,SH2r!_,SH2s)       @ 1,1
+'535' GAB1(e1~Y,PRD!1),GRB2(GA!1,SH2s!2,SH2r),SHC(a317~pY!2,PTB!_) <-> GAB1(e1~pY,PRD!1),GRB2(GA!1,SH2s!2,SH2r),SHC(a317~pY!2,PTB!_)  @ 1,1
+'536' GAB1(e1~Y,PRD!1),GRB2(GA!1,SH2r!_,SH2s)<-> GAB1(e1~pY,PRD!1),GRB2(GA!1,SH2r!_,SH2s)     @ 1,1
+'537' PI3K(rec) ,GAB1(e1~pY,e2~Y,PRD!1),GRB2(GA!1,SH2s!2,SH2r),SHC(a317~pY!2,PTB!_) <-> PI3K(rec!3),GAB1(e1~pY!3,e2~Y,PRD!1),GRB2(GA!1,SH2s!2,SH2r),SHC(a317~pY!2,PTB!_)     @ 1,1
+'538' PI3K(rec) ,GAB1(e1~pY,e2~Y,PRD!1),GRB2(GA!1,SH2r!_,SH2s) <-> PI3K(rec!2),GAB1(e1~pY!2,e2~Y,PRD!1),GRB2(GA!1,SH2r!_,SH2s)       @ 1,1
+'539' GAB1(e2~pY) <-> GAB1(e2~Y)      @ 1,1
+'540' RasGAP(rec) ,ERBB1(rGAP~pY) <-> RasGAP(rec!1),ERBB1(rGAP~pY!1) @ 1,1
+'541' RasGAP(rec) ,ERBB2(rGAP~pY) <-> RasGAP(rec!1),ERBB2(rGAP~pY!1) @ 1,1
+'542' RasGAP(rec) ,ERBB3(rGAP~pY) <-> RasGAP(rec!1),ERBB3(rGAP~pY!1) @ 1,1
+'543' RasGAP(rec) ,ERBB4(rGAP~pY) <-> RasGAP(rec!1),ERBB4(rGAP~pY!1) @ 1,1
+'544' RasGAP(rec!_,e1~pY,rGXP) ,Ras(so,g~GTP) <-> RasGAP(rec!_,e1~pY,rGXP!1),Ras(so!1,g~GTP) @ 1,1
+'545' RasGAP(rec!_,e1~pY,rGXP!1),Ras(so!1,g~GTP) <-> RasGAP(rec!_,e1~pY,rGXP!1),Ras(so!1,g~GDP) @ 1,1
+'546' RasGAP(rec!_,e1~Y,rGXP) ,Ras(so,g~GTP) <-> RasGAP(rec!_,e1~Y,rGXP!1),Ras(so!1,g~GTP) @ 1,1
+'547' RasGAP(rec!_,e1~Y,rGXP!1),Ras(so!1,g~GTP) <-> RasGAP(rec!_,e1~Y,rGXP!1),Ras(so!1,g~GDP) @ 1,1
+'548' RasGAP(rec!_,e1~pY,rGXP!1),Ras(so!1,g~GDP) <-> RasGAP(rec!_,e1~pY,rGXP) ,Ras(so,g~GDP)    @ 1,1
+'549' RasGAP(rec!_,e1~Y,rGXP!1),Ras(so!1,g~GDP) <-> RasGAP(rec!_,e1~Y,rGXP) ,Ras(so,g~GDP)      @ 1,1
+'550' PI3K(rec) ,ERBB3(a1054~pY) <-> PI3K(rec!1),ERBB3(a1054~pY!1)  @ 1,1
+'551' PI3K(rec) ,ERBB3(a1197~pY) <-> PI3K(rec!1),ERBB3(a1197~pY!1)  @ 1,1
+'552' PI3K(rec) ,ERBB3(a1222~pY) <-> PI3K(rec!1),ERBB3(a1222~pY!1)  @ 1,1
+'553' PI3K(rec) ,ERBB3(a1260~pY) <-> PI3K(rec!1),ERBB3(a1260~pY!1)  @ 1,1
+'554' PI3K(rec) ,ERBB3(a1276~pY) <-> PI3K(rec!1),ERBB3(a1276~pY!1)  @ 1,1
+'555' PI3K(rec) ,ERBB3(a1289~pY) <-> PI3K(rec!1),ERBB3(a1289~pY!1)  @ 1,1
+'556' PI3K(rec) ,ERBB4(a1056~pY) <-> PI3K(rec!1),ERBB4(a1056~pY!1)   @ 1,1
+'WEE1 phosphorylates CDK1{150034}' WEE1(cdk!1), CDK1(wee!1,s~Y) -> WEE1(cdk), CDK1(wee,s~P) @ 1.0
+'WEE1 is dephosphorylated{150036}' WEE1(s~P) -> WEE1(s~Y) @ 1.0
+'WEE1 binds to CDK1{150030}' WEE1(cdk,s~Y), CDK1(wee,s~Y) <-> WEE1(cdk!1,s~Y), CDK1(wee!1,s~Y) @ 1.0,0.0
+'Unphosphorylated smad3 breaks off from smad4{150189}' smad3(mh1!1,s423~U), smad4(mh2!1) -> smad3(mh1,s423~U), smad4(mh2) @ 1.0
+'Unphosphorylated smad2 breaks off from smad4{150187}' smad2(mh1!1,s467~U), smad4(mh2!1) -> smad2(mh1,s467~U), smad4(mh2) @ 1.0
+'Ubiquitinated Cyclin E rapidly dissacssoicate f{150083}' CYCLINE(cdk!1,s~U), CDK2(cyclin!1) -> CYCLINE(cdk,s~U), CDK2(cyclin) @ 1.0
+'Ubiquitinated Cyclin D rapidly dissacssoicate f{150081}' CYCLIND(cdk!1,s~U), CDK4(cyclin!1) -> CYCLIND(cdk,s~U), CDK4(cyclin) @ 1.0
+'Ubiquitinated Cyclin B1 rapidly dissacssoicate {150077}' CYCLINB1(cdk!1,s~U), CDK1(cyclin!1) -> CYCLINB1(cdk,s~U), CDK1(cyclin) @ 1.0
+'Ubiquitinated Cyclin A rapidly dissacssoicate f{150079}' CYCLINA(cdk!1,s~U), CDK2(cyclin!1) -> CYCLINA(cdk,s~U), CDK2(cyclin) @ 1.0
+'Type 1 Receptors phosphorylates smad3 - s423{150180}' alk5(gs~P!1,loc~M), smad3(mh2!1,s423~U,loc~C) -> alk5(gs~U,loc~M), smad3(mh2,s423~P,loc~C) @ 1.0
+'Type 1 Receptors phosphorylates smad2 - s467{150177}' alk5(gs~P!1,loc~M), smad2(mh2!1,s467~U,loc~C) -> alk5(gs~U,loc~M), smad2(mh2,s467~P,loc~C) @ 1.0
+'TGF-B receptor Dimerization{150156}' tgfb(r!1,loc~M), tgfbr2(ecto!1,d,loc~M), alk5(d,ty~U,loc~M) <-> tgfb(r!1,loc~M), tgfbr2(ecto!1,d!2,loc~M), alk5(d!2,ty~U,loc~M) @ 1.0,0.0
+'TGF-B Ligand-receptor binding{150152}' tgfb(r,loc~M), tgfbr2(ecto,loc~M) <-> tgfb(r!1,loc~M), tgfbr2(ecto!1,loc~M) @ 1.0,0.0
+'smurf breaks off smad3{150236}' smurf2(ww!1,loc~C), smad3(py!1,s423~U,s~Ub,loc~C) <-> smurf2(ww,loc~C),smad3(py,s423~U,s~Ub,loc~C) @ 1.0,0.0
+'smurf breaks off smad2{150233}' smurf2(ww!1,loc~C), smad2(py!1,s467~U,s~Ub,loc~C) <-> smurf2(ww,loc~C),smad2(py,s467~U,s~Ub,loc~C) @ 1.0,0.0
+'smurf2 binds to smad3{150223}' smurf2(ww,loc~C), smad3(py,s423~U,s~A,loc~C) -> smurf2(ww!1,loc~C), smad3(py!1,s423~U,s~A,loc~C) @ 1.0
+'smurf2 binds to smad2{150221}' smurf2(ww,loc~C), smad2(py,s467~U,s~A,loc~C) -> smurf2(ww!1,loc~C), smad2(py!1,s467~U,s~A,loc~C) @ 1.0
+'smad7 binds TGFB-receptor 1 with smurf2  SMURF {150217}' alk5(gs~P,loc~M), smad7(r,py!1,loc~C), smurf2(ww!1,loc~C) <-> alk5(gs~P!2,loc~M), smad7(r!2,py!1,loc~C), smurf2(ww!1,loc~M) @ 1.0,0.0
+'Smad7 binds smurf2{150211}' smad7(py,loc~N), smurf2(ww,loc~N) -> smad7(py!1,loc~N), smurf2(ww!1,loc~N) @ 1.0
+'smad4 without cofactor dissociates from p21 gen{150256}' smad4(mh1!2,mh2), p21(g!2) -> smad4(mh1,mh2), p21(g) @ 1.0
+'smad4 without cofactor dissociates from ismad7 {150269}' smad4(mh2,promo!2), ismad7gene(g!2) -> smad4(mh2,promo), ismad7gene(g) @ 1.0
+'smad4 leaves the nucleus if not bound to DNA or{150204}' smad4(mh2,loc~N) -> smad4(mh2,loc~C) @ 1.0
+'Smad4 and smad3 make ismad7{150265}' smad3(mh1!1,s423~P,loc~N), smad4(mh1,mh2!1,promo!2,ndom,cterm,loc~N), ismad7gene(g!2) -> smad3(mh1!1,s423~P,loc~N), smad4(mh1,mh2!1,promo!2,ndom,cterm,loc~N), ismad7gene(g!2), smad7(r,py,loc~C,s~A) @ 1.0
+'Smad4 and smad3 bind p21{150241}' smad4(mh1,mh2!1,promo,ndom,cterm,loc~N), smad3(mh1!1,s423~P,loc~N), p21(g) <-> smad4(mh1!2,mh2!1,promo,ndom,cterm,loc~N), smad3(mh1!1,s423~P,loc~N), p21(g!2) @ 1.0,0.0
+'Smad4 and smad3 bind ismad7gene{150262}' smad3(mh1!1,s423~P,loc~N), smad4(mh1,mh2!1,promo,ndom,cterm,loc~N), ismad7gene(g) <-> smad3(mh1!1,s423~P,loc~N), smad4(mh1,mh2!1,promo!2,ndom,cterm,loc~N), ismad7gene(g!2) @ 1.0,0.0
+'Smad4 and smad2 make ismad7{150263}' smad2(mh1!1,s467~P,loc~N), smad4(mh1,mh2!1,promo!2,ndom,cterm,loc~N), ismad7gene(g!2) -> smad2(mh1!1,s467~P,loc~N), smad4(mh1,mh2!1,promo!2,ndom,cterm,loc~N), ismad7gene(g!2), smad7(r,py,loc~C,s~A) @ 1.0
+'Smad4 and smad2 bind p21{150244}' smad4(mh1,mh2!1,promo,ndom,cterm,loc~N), smad2(mh1!1,s467~P,loc~N), p21(g) <-> smad4(mh1!2,mh2!1,promo,ndom,cterm,loc~N), smad2(mh1!1,s467~P,loc~N), p21(g!2) @ 1.0,0.0
+'Smad4 and smad2 bind ismad7gene{150258}' smad2(mh1!1,s467~P,loc~N), smad4(mh1,mh2!1,promo,ndom,cterm,loc~N), ismad7gene(g) <-> smad2(mh1!1,s467~P,loc~N), smad4(mh1,mh2!1,promo!2,ndom,cterm,loc~N), ismad7gene(g!2) @ 1.0,0.0
+'smad3,smad4 complexe enters nucleus{150202}' smad3(mh1!1,mh2,s423~P,loc~C), smad4(mh2!1,loc~C) <-> smad3(mh1!1,mh2,s423~P,loc~N), smad4(mh2!1,loc~N) @ 1.0,0.0
+'smad3 leaves the nucleus if not bound to DNA or{150209}' smad3(mh1,mh2,s423~P,loc~N) -> smad3(mh1,mh2,s423~P,loc~C) @ 1.0
+'smad3 dimerizes with smad4 and themselves in th-1{150197}' smad3(mh1,mh2,s423~P,loc~N), smad4(mh2,ndom,cterm,sand,loc~N) <-> smad3(mh1!1,mh2,s423~P,loc~N), smad4(mh2!1,ndom,cterm,sand,loc~N) @ 1.0,0.0
+'smad3 dimerizes with smad4 and themselves in th{150193}' smad3(mh1,mh2,s423~P,loc~C), smad4(mh2,mh1,promo,ndom,cterm,sand,loc~C) <-> smad3(mh1!1,mh2,s423~P,loc~C), smad4(mh2!1,mh1,promo,ndom,cterm,sand,loc~C) @ 1.0,0.0
+'SMAD3 binds active receptor 1{150169}' alk5(gs~P,ty~U,loc~M), smad3(py,mh2,sar,loc~C) <-> alk5(gs~P!1,ty~U,loc~M), smad3(py,mh2!1,sar,loc~C) @ 1.0,0.0
+'Smad3,4 on p21gene make p21{150245}' smad4(mh1!2,mh2!1,promo,ndom,cterm,loc~N), smad3(mh1!1,s423~P,loc~N), p21(g!2) -> smad4(mh1!2,mh2!1,promo,ndom,cterm,loc~N), smad3(mh1!1,s423~P,loc~N), p21(g!2), p21m(m) @ 1.0
+'smad2,smad4 complexe enters nucleus{150199}' smad2(mh1!1,mh2,s467~P,loc~C), smad4(mh2!1,loc~C) <-> smad2(mh1!1,mh2,s467~P,loc~N), smad4(mh2!1,loc~N) @ 1.0,0.0
+'smad2 leaves the nucleus if not bound to DNA or{150207}' smad2(mh1,mh2,s467~P,loc~N) -> smad2(mh1,mh2,s467~P,loc~C) @ 1.0
+'smad2 dimerizes with smad4 and themselves in th-1{150195}' smad2(mh1,mh2,s467~P,loc~N), smad4(mh2,ndom,cterm,sand,loc~N) <-> smad2(mh1!1,mh2,s467~P,loc~N), smad4(mh2!1,ndom,cterm,sand,loc~N) @ 1.0,0.0
+'smad2 dimerizes with smad4 and themselves in th{150191}' smad2(mh1,mh2,s467~P,loc~C), smad4(mh2,mh1,promo,ndom,cterm,sand,loc~C) <-> smad2(mh1!1,mh2,s467~P,loc~C), smad4(mh2!1,mh1,promo,ndom,cterm,sand,loc~C) @ 1.0,0.0
+'SMAD2 binds active receptor 1{150165}' alk5(gs~P,ty~U,loc~M), smad2(py,mh2,sar,loc~C) <-> alk5(gs~P!1,ty~U,loc~M), smad2(py,mh2!1,sar,loc~C) @ 1.0,0.0
+'Smad2,4 on p21gene make p21{150249}' smad4(mh1!2,mh2!1,promo,ndom,cterm,loc~N), smad2(mh1!1,s467~P,loc~N), p21(g!2) -> smad4(mh1!2,mh2!1,promo,ndom,cterm,loc~N), smad2(mh1!1,s467~P,loc~N), p21(g!2), p21m(m) @ 1.0
+'Receptors dissociate without ligand{150161}' tgfbr2(ecto,d), alk5(d) <-> tgfbr2(ecto,d!1), alk5(d!1) @ 1.0,0.0
+'RB is dephosphorylated{149963}' RB(s~P) -> RB(s~Y) @ 1.0
+'RB inhibits E2F{149967}' RB(e2f,s~Y), E2F(rb) <-> RB(e2f!1,s~Y), E2F(rb!1) @ 1.0,0.0
+'RB inhibits active E2F on E{149982}' RB(e2f!2), E2F(gene!1,rb!2), CYCLINE_GENE(e2f!1) -> RB(e2f!2), E2F(gene,rb!2), CYCLINE_GENE(e2f) @ 1.0
+'RB inhibits active E2F on A{149984}' RB(e2f!2), E2F(gene!1,rb!2), CYCLINA_GENE(e2f!1) -> RB(e2f!2), E2F(gene,rb!2), CYCLINA_GENE(e2f) @ 1.0
+'Phosphorylated RB dissassociates E2F{149970}' RB(e2f!1,s~P), E2F(rb!1) -> RB(e2f,s~P), E2F(rb) @ 1.0
+'Phosphorylated E2F dissassociates from the CYCL-1{149980}' E2F(gene!1,s~P), CYCLINA_GENE(e2f!1) -> E2F(gene,s~P), CYCLINA_GENE(e2f) @ 1.0
+'Phosphorylated E2F dissassociates from the CYCL{149978}' E2F(gene!1,s~P), CYCLINE_GENE(e2f!1) -> E2F(gene,s~P), CYCLINE_GENE(e2f) @ 1.0
+'Phosphatase activity removes phosphates from sm-1{150185}' smad3(mh2,s423~P) -> smad3(mh2,s423~U) @ 1.0
+'Phosphatase activity removes phosphates from sm{150184}' smad2(mh2,s467~P) -> smad2(mh2,s467~U) @ 1.0
+'p21 inhibits CDK4{150147}' p21m(m), CDK4(p) <-> p21m(m!1), CDK4(p!1) @ 1.0,0.0
+'Open Smurfs in cyto are sent to Nucleus{150239}' smurf2(ww,loc~C) -> smurf2(ww,loc~N) @ 1.0
+'NUCLEAR EXPORT OF SMAD/SMURF{150215}' smad7(py!1,loc~N), smurf2(ww!1,loc~N) -> smad7(py!1,loc~C), smurf2(ww!1,loc~C) @ 1.0
+'NF-YT is phosphorylated{150131}' NFY(s~P) -> NFY(s~Y) @ 1.0
+'NF-Y makes CYCLINB1{150129}' NFY(s~P,l~N) -> NFY(s~P,l~N), CYCLINB1(cdk,ub,s~A) @ 1.0
+'NF-Y goes to the nucleous{150132}' NFY(s~P,l~C) -> NFY(s~P,l~N) @ 1.0
+'NF-Y goes to the cytoplasm{150134}' NFY(s~Y,l~N) -> NFY(s~Y,l~C) @ 1.0
+'MAP kinase/ERK pathway produces cyclinD{149952}' ERK(Y1~pY,Y2~pY,loc~N) -> ERK(Y1~pY,Y2~pY,loc~N), CYCLIND(cdk,ub,s~A) @ 1.0
+'MAP kinase/ERK moves to the nucleus{149959}' ERK(Y1~pY,Y2~pY,loc~C) -> ERK(Y1~pY,Y2~pY,loc~N) @ 1.0
+'MAP kinase/ERK moves to the cytoplasm{149960}' ERK(Y1~pY,Y2~pY,loc~N) -> ERK(Y1~pY,Y2~pY,loc~C) @ 1.0
+'Free CYCLINE is ubiquitinated{150121}' CYCLINE(cdk,s~A) -> CYCLINE(cdk,s~U) @ 1.0
+'fkbp12 dissociates in the presence of a ligand{150175}' tgfbr2(ecto!_,d!2,loc~M), alk5(d!2,gs~U!3,loc~M), fkbp12(r!3) -> tgfbr2(ecto!_,d!2,loc~M), alk5(d!2,gs~U,loc~M), fkbp12(r) @ 1.0
+'fkbp12 binds receptor 1{150172}' alk5(gs~U,loc~M), fkbp12(r) -> alk5(gs~U!1,loc~M), fkbp12(r!1) @ 1.0
+'E2F makes cyclin E{149999}' E2F(gene!1), CYCLINE_GENE(e2f!1) -> E2F(gene!1), CYCLINE_GENE(e2f!1), CYCLINE(cdk,ub,s~A) @ 1.0
+'E2F makes cyclin A{149994}' E2F(gene!1), CYCLINA_GENE(e2f!1) -> E2F(gene!1), CYCLINA_GENE(e2f!1), CYCLINA(cdk,ub,s~A) @ 1.0
+'E2F is dephosphorylated{150142}' E2F(s~P) -> E2F(s~Y) @ 1.0
+'E2F binds to CYCLIN E gene{149972}' E2F(rb,gene,s~Y), CYCLINE_GENE(e2f) <-> E2F(rb,gene!1,s~Y), CYCLINE_GENE(e2f!1) @ 1.0,0.0
+'E2F binds to CYCLIN A gene{149975}' E2F(rb,gene,s~Y), CYCLINA_GENE(e2f) <-> E2F(rb,gene!1,s~Y), CYCLINA_GENE(e2f!1) @ 1.0,0.0
+'deactivated CDK1 fails to phosphorylate CDH1{150098}' CDK1(cdh!1,s~P), CDH1(cdk!1,s~Y) -> CDK1(cdh,s~P), CDH1(cdk,s~Y) @ 1.0
+'Cyclin E is ubiquitinated by CDK2{150143}' CYCLINE(cdk!1,s~A), CDK2(cyclin!1) -> CYCLINE(cdk,s~U), CDK2(cyclin) @ 1.0
+'Cyclin E is lost due to catalytic function{150116}' CYCLINE(cdk!1,s~A), CDK2(cyclin!1,rb!2), RB(cdk!2,s~Y) -> CYCLINE(cdk,s~A), CDK2(cyclin,rb!2), RB(cdk!2,s~Y) @ 1.0
+'CYCLINE,CDK2 bind to RB{150113}' CYCLINE(cdk!1,s~A), CDK2(cyclin!1,rb), RB(cdk,s~Y) <-> CYCLINE(cdk!1,s~A), CDK2(cyclin!1,rb!2), RB(cdk!2,s~Y) @ 1.0,0.0
+'CYCLINE binds to CDK2{150112}' CYCLINE(cdk,s~A), CDK2(cyclin) <-> CYCLINE(cdk!1,s~A), CDK2(cyclin!1) @ 1.0,0.0
+'CyclinD is excluded by p21{150150}' CYCLIND(cdk!1), CDK4(cyclin!1,p!2), p21m(m!2) -> CYCLIND(cdk), CDK4(cyclin,p!2), p21m(m!2) @ 1.0
+'CyclinD,CDK4/6 inhibit Rb{149987}' CYCLIND(cdk!1,s~A), CDK4(cyclin!1,rb), RB(cdk,s~Y) <-> CYCLIND(cdk!1,s~A), CDK4(cyclin!1,rb!2), RB(cdk!2,s~Y) @ 1.0,0.0
+'CyclinD,CDK4/6 binds to CDH1{150087}' CYCLIND(cdk!1,s~A), CDK4(cyclin!1,cdh), CDH1(cdk,s~Y) <-> CYCLIND(cdk!1,s~A), CDK4(cyclin!1,cdh!2), CDH1(cdk!2,s~Y) @ 1.0,0.0
+'CyclinD binds to CDK4/6{150085}' CYCLIND(cdk,s~A), CDK4(cyclin,p) <-> CYCLIND(cdk!1,s~A), CDK4(cyclin!1,p) @ 1.0,0.0
+'CYCLINB1,CDK1 binds to WEE1{150024}' CYCLINB1(cdk!1), CDK1(cyclin!1,cdc,s~Y), WEE1(cdk,s~Y) <-> CYCLINB1(cdk!1), CDK1(cyclin!1,cdc!2,s~Y), WEE1(cdk!2,s~Y) @ 1.0,0.0
+'CyclinB1,CDK1 binds to CDH1{150094}' CYCLINB1(cdk!1), CDK1(cyclin!1,cdh,s~Y), CDH1(cdk,s~Y) <-> CYCLINB1(cdk!1), CDK1(cyclin!1,cdh!2,s~Y), CDH1(cdk!2,s~Y) @ 1.0,0.0
+'CYCLINB1,CDK1 binds to CDC25{150020}' CYCLINB1(cdk!1), CDK1(cyclin!1,cdc,s~Y), CDC25(cdk,s~Y) <-> CYCLINB1(cdk!1), CDK1(cyclin!1,cdc!2,s~Y), CDC25(cdk!2,s~Y) @ 1.0,0.0
+'CYCLINB1,CDK1* binds to CDC20{150043}' CYCLINB1(cdk!1), CDK1(cyclin!1,cdc_2,s~Y), CDC20(cdk,s~Y) <-> CYCLINB1(cdk!1), CDK1(cyclin!1,cdc_2!2,s~Y), CDC20(cdk!2,s~Y) @ 1.0,0.0
+'CYCLINB1 binds to CDK1{150006}' CYCLINB1(cdk,s~A), CDK1(cyclin) <-> CYCLINB1(cdk!1,s~A), CDK1(cyclin!1) @ 1.0,0.0
+'CyclinA,CDK2 bind to NF-Y{150122}' CYCLINA(cdk!1,s~A), CDK2(cyclin!1,nfy), NFY(cdk,s~Y,l~C) <-> CYCLINA(cdk!1,s~A), CDK2(cyclin!1,nfy!2), NFY(cdk!2,s~Y,l~C) @ 1.0,0.0
+'CyclinA,CDK2 binds to E2F{150136}' CYCLINA(cdk!1), CDK2(cyclin!1,e2f), E2F(cdk,s~Y) <-> CYCLINA(cdk!1), CDK2(cyclin!1,e2f!2), E2F(cdk!2,s~Y) @ 1.0,0.0
+'CYCLINA,CDK2 binds to CDC25{150010}' CYCLINA(cdk!1), CDK2(cyclin!1,cdc), CDC25(cdk,s~Y) <-> CYCLINA(cdk!1), CDK2(cyclin!1,cdc!2), CDC25(cdk!2,s~Y) @ 1.0,0.0
+'CYCLINA binds to CDK2{150003}' CYCLINA(cdk,s~A), CDK2(cyclin,rb) <-> CYCLINA(cdk!1,s~A), CDK2(cyclin!1,rb) @ 1.0,0.0
+'Cross-phosphorylation of receptor 1{150163}' alk5(d!_,gs~U) <-> alk5(d!_,gs~P) @ 1.0,0.0
+'CDK4 phosphorylates Rb{149992}' CDK4(rb!2), RB(cdk!2,s~Y) -> CDK4(rb), RB(cdk,s~P) @ 1.0
+'CDK4 phosphorylates CDH1{150091}' CDK4(cdh!2), CDH1(cdk!2,s~Y) -> CDK4(cdh), CDH1(cdk,s~P) @ 1.0
+'CDK2 phosphorylates RB{150119}' CDK2(cyclin,rb!2), RB(cdk!2,s~Y) -> CDK2(cyclin,rb), RB(cdk,s~P) @ 1.0
+'CDK2 phosphorylates NF-Y{150127}' CDK2(nfy!2), NFY(cdk!2,s~Y,l~C) -> CDK2(nfy), NFY(cdk,s~P,l~C) @ 1.0
+'CDK2 phosphorylates E2F{150140}' CDK2(e2f!2), E2F(cdk!2,s~Y) -> CDK2(e2f), E2F(cdk,s~P) @ 1.0
+'CDK2 Phosphorylates CDC25{150013}' CDK2(cdc!2), CDC25(cdk!2,s~Y) -> CDK2(cdc), CDC25(cdk,s~P) @ 1.0
+'CDK1 phosphorylates WEE1{150028}' CDK1(cdc!1), WEE1(cdk!1,s~Y) -> CDK1(cdc), WEE1(cdk,s~P) @ 1.0
+'CDK1 phosphorylates CDH1{150096}' CDK1(cdh!1,s~Y), CDH1(cdk!1,s~Y) -> CDK1(cdh,s~Y), CDH1(cdk,s~P) @ 1.0
+'CDK1 phosphorylates cdc25{150022}' CDK1(cdc!1), CDC25(cdk!1,s~Y) -> CDK1(cdc), CDC25(cdk,s~P) @ 1.0
+'CDK1* Phosphorylates CDC20{150047}' CDK1(cdc_2!2,s~Y), CDC20(cdk!2,s~Y) <-> CDK1(cdc_2,s~Y), CDC20(cdk,s~P) @ 1.0,0.0
+'CDK1 fails to phosphorylate CDC20{150049}' CDK1(cdc_2!2,s~P), CDC20(cdk!2,s~Y) -> CDK1(cdc_2,s~P), CDC20(cdk,s~Y) @ 1.0
+'CDH1 is dephosphorylated{150092}' CDH1(s~P) -> CDH1(s~Y) @ 1.0
+'CDC25_P dephosphorylates CDK1{150017}' CDC25(cdk!2,s~P), CDK1(cdc!2,s~P) -> CDC25(cdk,s~P), CDK1(cdc,s~Y) @ 1.0
+'CDC25_P binds to CDK1{150015}' CDC25(cdk,s~P), CYCLINB1(cdk!1), CDK1(cyclin!1,cdc,s~P) <-> CDC25(cdk!2,s~P), CYCLINB1(cdk!1), CDK1(cyclin!1,cdc!2,s~P) @ 1.0,0.0
+'CDC25 is dephosphorylated{150041}' CDC25(s~P) -> CDC25(s~Y) @ 1.0
+'CDC20 ubiquitinates cyclin E{150060}' CDC20(ub!1), CYCLINE(ub!1,s~A) -> CDC20(ub), CYCLINE(ub,s~U) @ 1.0
+'CDC20 ubiquitinates cyclin D{150066}' CDC20(ub!1), CYCLIND(ub!1,s~A) -> CDC20(ub), CYCLIND(ub,s~U) @ 1.0
+'CDC20 ubiquitinates cyclin B1{150056}' CDC20(ub!1), CYCLINB1(ub!1,s~A) -> CDC20(ub), CYCLINB1(ub,s~U) @ 1.0
+'CDC20 ubiquitinates cyclin A{150071}' CDC20(ub!1), CYCLINA(ub!1,s~A) -> CDC20(ub), CYCLINA(ub,s~U) @ 1.0
+'CDC20 is dephosphorylated and loses APC{150073}' CDC20(apc!1,s~Y), APC(cdh!1) -> CDC20(apc,s~Y), APC(cdh) @ 1.0
+'CDC20 is dephosphorylated{150075}' CDC20(s~P) -> CDC20(s~Y) @ 1.0
+'CDC20 does not reubiquitinate cyclin E{150062}' CDC20(ub!1), CYCLINE(ub!1,s~U) -> CDC20(ub), CYCLINE(ub,s~U) @ 1.0
+'CDC20* binds to cyclin E{150058}' CDC20(apc!1,ub,s~P), APC(cdh!1), CYCLINE(ub,s~A) <-> CDC20(apc!1,ub!2,s~P), APC(cdh!1), CYCLINE(ub!2,s~A) @ 1.0,0.0
+'CDC20* binds to cyclin D{150064}' CDC20(apc!1,ub,s~P), APC(cdh!1), CYCLIND(ub,s~A) <-> CDC20(apc!1,ub!2,s~P), APC(cdh!1), CYCLIND(ub!2,s~A) @ 1.0,0.0
+'CDC20* binds to cyclin B1{150054}' CDC20(apc!1,ub,s~P), APC(cdh!1), CYCLINB1(ub,s~A) <-> CDC20(apc!1,ub!2,s~P), APC(cdh!1), CYCLINB1(ub!2,s~A) @ 1.0,0.0
+'CDC20* binds to cyclin A{150068}' CDC20(apc!1,ub,s~P), APC(cdh!1), CYCLINA(ub,s~A) <-> CDC20(apc!1,ub!2,s~P), APC(cdh!1), CYCLINA(ub!2,s~A) @ 1.0,0.0
+'CDC20* binds to APC{150051}' APC(cdh), CDC20(apc,s~P) <-> APC(cdh!1), CDC20(apc!1,s~P) @ 1.0,0.0
+'APC dissacociates with CDH1{150102}' APC(cdh!1), CDH1(apc!1,s~P) -> APC(cdh), CDH1(apc,s~P) @ 1.0
+'APC,CDH1* ubiquitinates cyclin B1{150106}' CDH1(ub!1), CYCLINB1(ub!1,s~A) -> CDH1(ub), CYCLINB1(ub,s~U) @ 1.0
+'APC,CDH1* ubiquitinates cyclin A{150110}' CDH1(ub!1), CYCLINA(ub!1,s~A) -> CDH1(ub), CYCLINA(ub,s~U) @ 1.0
+'APC,CDH1* binds to cyclin B1{150104}' APC(cdh!1), CDH1(apc!1,ub), CYCLINB1(ub,s~A) <-> APC(cdh!1), CDH1(apc!1,ub!2), CYCLINB1(ub!2,s~A) @ 1.0,0.0
+'APC,CDH1* binds to cyclin A{150108}' APC(cdh!1), CDH1(apc!1,ub), CYCLINA(ub,s~A) <-> APC(cdh!1), CDH1(apc!1,ub!2), CYCLINA(ub!2,s~A) @ 1.0,0.0
+'APC binds to CDH1*{150100}' APC(cdh), CDH1(apc,s~Y) <-> APC(cdh!1), CDH1(apc!1,s~Y) @ 1.0,0.0
+'Addition of ubiquitin to complex to smad3{150227}' smurf2(ww!1,loc~C), smad3(py!1,s423~U,s~A,loc~C) <-> smad3(py!1,s423~U,s~Ub,loc~C), smurf2(ww!1,loc~C) @ 1.0,0.0
+'Addition of ubiquitin to complex to smad2{150225}' smurf2(ww!1,loc~C), smad2(py!1,s467~U,s~A,loc~C) <-> smad2(py!1,s467~U,s~Ub,loc~C), smurf2(ww!1,loc~C) @ 1.0,0.0
+'Addition of ubiquitin to complex, smurf breaks {150219}' alk5(gs~P!2,loc~M,s~A), smad7(r!2,py!1,loc~C,s~A), smurf2(ww!1,loc~M) <-> alk5(gs~P!2,loc~M,s~Ub), smad7(r!2,py,loc~C,s~Ub), smurf2(ww,loc~C) @ 1.0,0.0
+%init:  10000 * INH(rec,loc~o) 
+%init:  10000 * PIP(PI3,P~Y,loc~m) 
+%init:  10000 * AKT(PIP,loc~c) 
+%init:  10000 * EGF(rec,loc~o)  
+%init:  10000 * HRG(rec,loc~o)  
+%init:  10000 * ERBB1(ecto,dim,a727~Y,a998~Y,a1092~Y,a1110~Y,a1125~Y,a1138~Y,a1172~Y,a1197~Y,Erk,PTP~Y,rGAP~Y,T669~Y,loc~m)     
+%init:  10000 * ERBB2(ecto,dim,a735~Y,a1005~Y,a1139~Y,a1196~Y,a1222~Y,a1248~Y,PTP~Y,rGAP~Y,Erk,T669~Y,loc~m)    
+%init:  10000 * ERBB3(ecto,dim,a1199~Y,a1262~Y,a1328~Y,a1054~Y,a1197~Y,a1222~Y,a1260~Y,a1276~Y,a1289~Y,PTP~Y,rGAP~Y,loc~m)      
+%init:  10000 * ERBB4(ecto,dim,a733~Y,a1162~Y,a1188~Y,a1202~Y,a1208~Y,a1221~Y,a1242~Y,a1268~Y,a1284~Y,a1056~Y,PTP~Y,rGAP~Y,Erk,T669~Y,loc~m)    
+%init:  10000 * SHC(PTB,a317~Y,loc~c)   
+%init:  10000 * GRB2(SH2r,SH2s,GA,SO,loc~c)     
+%init:  10000 * SOS(PRD,ras,Erk,e~Y,loc~c)      
+%init:  10000 * PTP1B(pY)       
+%init:  10000 * RasGAP(rec,rGXP,e1~Y,loc~c)     
+%init:  10000 * GAB1(PRD,e1~Y,e2~Y,MBD,loc~c)         
+%init:  10000 * Ras(so,g~GDP,raf,PI3k,loc~c) 
+%init:  10000 * RAF(Ras,S259~Y,S338~Y,Aloop~Y,Mek,Erk,S29~Y,S289~Y,S296~Y,S301~Y,S642~Y,loc~c)  
+%init:  10000 * MEK(Raf,S218~Y,S22~Y,Erk,T292~Y,loc~c)  
+%init:  10000 * ERK(Mek,Y1~Y,Y2~Y,Reg,loc~C)    
+%init:  10000 * PI3K(rec,PIP)   
+%init:  10000 * E2F(gene,rb!1,cdk,cyc,s~Y),RB(cdk,e2f!1,s~Y)	
+%init:  10000 * CDK1(cyclin,wee,cdc,cdc2,cdh,s~P) 
+%init:  10000 * CDK2(cyclin,cdc,cdh,rb,nfy,e2f,s~Y)	
+%init:  10000 * CDC25(cdk,s~P)	
+%init:  10000 * WEE1(cdk,s~P)	
+%init:  10000 * CDH1(cdk,apc,rbe2f,ub,s~Y)  
+%init:  10000 * CDC20(cdk,apc,ub,s~Y) 
+%init:  10000 * APC(cdh) 
+%init:  10000 * CDK4(cyclin,cdh,rb,p) 
+%init:  10000 * RB(cdk,e2f,s~Y)	 
+%init:  10000 * NFY(cdk,s~Y,l~C) 
+%init:  10000 * CYCLINE_GENE(e2f) 
+%init:  10000 * CYCLINA_GENE(e2f) 
+%init:  10000 * tgfbr2(ecto,d,gs~U,loc~M,s~A) 
+%init:  10000 * tgfb(r,loc~M) 	
+%init:  10000 * alk5(d,gs~U,ty~U,loc~M,s~A) 
+%init:  10000 * smad2(py,ppxy,mh1,mh2,sar,t8~U,s47~U,s110~U,s197~U,t220~U,s240~U,s245~U,s250~U,s255~U,s260~U,s465~U,s467~U,loc~C,s~A) 
+%init:  10000 * smad3(py,mh1,mh2,sar,t8~U,s37~U,t66~U,s70~U,s157~U,t179~U,s199~U,s204~U,s208~U,s213~U,s260~U,s418~U,s423~U,s425~U,loc~C,s~A) 
+%init:  10000 * smad4(py,mh1,mh2,promo,ndom,cterm,sand,t277~U,loc~C,s~A) 
+%init:  10000 * smurf2(ww,loc~N) 
+%init:  10000 * smad7(r,py,loc~N,s~A) 
+%init:  10000 * fkbp12(r,loc~C) 
+%init:  10000 * p21m(m)	
+%init:  10000 * p21(g) 
+%init:  10000 * ismad7gene(g) 
+%obs:  'AKT_PIP' AKT(PIP!1),PIP(P~pY!1)
+%obs:  'Erk_Active' ERK(Y1~pY,Y2~pY)

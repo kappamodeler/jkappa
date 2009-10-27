@@ -58,10 +58,12 @@ public final class ModelRule {
 	@Override
 	public final String toString() {
 		final StringBuffer sb = new StringBuffer();
-		Collections.sort(leftHandSideAgents);
+		if(leftHandSideAgents != null)
+			Collections.sort(leftHandSideAgents);
 		Collections.sort(rightHandSideAgents);
 		sb.append("'" + name + "' ");
-		sb.append(StringUtil.listToString(leftHandSideAgents));
+		if(leftHandSideAgents != null)
+			sb.append(StringUtil.listToString(leftHandSideAgents));
 		sb.append(" -> ");
 		sb.append(StringUtil.listToString(rightHandSideAgents));
 		return sb.toString();

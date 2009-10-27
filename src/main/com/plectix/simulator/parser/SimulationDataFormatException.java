@@ -54,9 +54,9 @@ package com.plectix.simulator.parser;
 	@Override
 	public final String getMessage(){
 		if (lineDetails != null) {
-			return lineDetails + "\n" + this.getMessage();
+			return lineDetails + "\n" + super.getMessage();
 		} else {
-			return "\n" + this.getMessage();
+			return "\n" + super.getMessage();
 		}
 	}
 }

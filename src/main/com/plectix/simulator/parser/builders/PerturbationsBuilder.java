@@ -36,11 +36,13 @@ public final class PerturbationsBuilder {
 		this.substanceBuilder = new SubstanceBuilder(kappaSystem);
 	}
 
-	public final List<Perturbation> build(List<ModelPerturbation> perturbations)
+	public final List<Perturbation> build(List<ModelPerturbation> perturbations, MasterSolutionModel masterSolutionModel)
 			throws ParseErrorException, DocumentFormatException {
 		List<Perturbation> result = new ArrayList<Perturbation>();
 		for (ModelPerturbation perturbation : perturbations) {
 			List<Perturbation> res = convert(perturbation);
+			if(masterSolutionModel != null)
+				masterSolutionModel.checkCorrect(res, perturbation);
 			if (res != null) {
 				result.addAll(res);
 			}

@@ -368,7 +368,7 @@ public final class SimulationData {
 		List<Rule> ruleList = (new RuleBuilder(new KappaSystem(this)))
 				.build(new RulesParagraphReader(simulationArguments,
 						new AgentFactory(false)).readComponent(kappaFile
-						.getRules()));
+						.getRules()), null);
 
 		kappaSystem.getContactMap().setSimulationData(kappaSystem);
 		if (ruleList != null && !ruleList.isEmpty()) {
