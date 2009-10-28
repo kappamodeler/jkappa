@@ -17,8 +17,8 @@ public class TestSelector {
 	List<WeightedItemWithId> weightedItemList;
 	WeightedItemSelector<WeightedItemWithId> weightedItemSelector;
 
-	// true -> using Random()
-	private boolean permitRandom = true;
+	// true -> using Random() false Random()
+	private boolean permitRandom = false;
 
 	public void setUp(WeightedItemSelector<WeightedItemWithId> testedSelector,
 			int testedNumberOfWeightedItems, int testedNumberOfUpdates,

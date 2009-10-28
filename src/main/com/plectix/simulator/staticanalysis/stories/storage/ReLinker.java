@@ -9,11 +9,8 @@ import com.plectix.simulator.staticanalysis.stories.TypeOfWire;
 
 public class ReLinker {
 
-	public static void bottom(
-			Long firstEventId,
-			StateOfLink oldState,
-			StateOfLink newState,
-			WireHashKey wk,
+	public static void bottom(Long firstEventId, StateOfLink oldState,
+			StateOfLink newState, WireHashKey wk,
 			Map<WireHashKey, TreeMap<Long, AtomicEvent<?>>> storageWires)
 			throws StoryStorageException {
 		TreeMap<Long, AtomicEvent<?>> map = storageWires.get(wk);
@@ -25,26 +22,23 @@ public class ReLinker {
 			if (afterState != null) {
 				StateOfLink sl = (StateOfLink) afterState;
 				if (sl.getAgentId() != -1)
-					addWireForRelinking(set, sl);
+					set.add(createWireByStateOfLink(sl));
 			}
 			Object beforeState = ae.getState().getBeforeState();
 			if (beforeState != null) {
 				StateOfLink sl = (StateOfLink) beforeState;
 				if (sl.getAgentId() != -1)
-					addWireForRelinking(set, sl);
+					set.add(createWireByStateOfLink(sl));
 			}
 
 			entry = map.higherEntry(entry.getKey());
 		}
 
-		relinkBottom(set, newState, oldState, firstEventId,storageWires);
+		relinkBottom(set, newState, oldState, firstEventId, storageWires);
 	}
 
-	public static void top(
-			Long firstEventId,
-			StateOfLink oldState,
-			StateOfLink newState,
-			WireHashKey wk,
+	public static void top(Long firstEventId, StateOfLink oldState,
+			StateOfLink newState, WireHashKey wk,
 			Map<WireHashKey, TreeMap<Long, AtomicEvent<?>>> storageWires)
 			throws StoryStorageException {
 		TreeMap<Long, AtomicEvent<?>> map = storageWires.get(wk);
@@ -56,12 +50,12 @@ public class ReLinker {
 			if (ae.getState().getAfterState() != null) {
 				StateOfLink sl = (StateOfLink) ae.getState().getAfterState();
 				if (sl.getAgentId() != -1)
-					addWireForRelinking(set, sl);
+					set.add(createWireByStateOfLink(sl));
 			}
 			if (ae.getState().getBeforeState() != null) {
 				StateOfLink sl = (StateOfLink) ae.getState().getBeforeState();
 				if (sl.getAgentId() != -1)
-					addWireForRelinking(set, sl);
+					set.add(createWireByStateOfLink(sl));
 			}
 
 			entry = map.lowerEntry(entry.getKey());
@@ -69,27 +63,29 @@ public class ReLinker {
 
 		relinkTop(set, newState, oldState, firstEventId, storageWires);
 	}
-	
+
 	public final static void relinkBottom(HashSet<WireHashKey> wireKeys,
-			StateOfLink newState, StateOfLink oldState, long first,Map<WireHashKey, TreeMap<Long, AtomicEvent<?>>> storageWires)
+			StateOfLink newState, StateOfLink oldState, long first,
+			Map<WireHashKey, TreeMap<Long, AtomicEvent<?>>> storageWires)
 			throws StoryStorageException {
 		for (WireHashKey wk : wireKeys) {
-			reLinkBottom(wk, newState, oldState, first,storageWires.get(wk));
+			reLinkBottom(wk, newState, oldState, first, storageWires.get(wk));
 		}
 
 	}
 
 	public final static void relinkTop(HashSet<WireHashKey> wireKeys,
-			StateOfLink newState, StateOfLink oldState, long first,Map<WireHashKey, TreeMap<Long, AtomicEvent<?>>> storageWires)
+			StateOfLink newState, StateOfLink oldState, long first,
+			Map<WireHashKey, TreeMap<Long, AtomicEvent<?>>> storageWires)
 			throws StoryStorageException {
 		for (WireHashKey wk : wireKeys) {
 			reLinkTop(storageWires.get(wk), newState, oldState, first);
 		}
 	}
 
-	
-	protected final static void reLinkTop(TreeMap<Long, AtomicEvent<?>> wire, StateOfLink newState,
-			StateOfLink oldState, long first) throws StoryStorageException {
+	protected final static void reLinkTop(TreeMap<Long, AtomicEvent<?>> wire,
+			StateOfLink newState, StateOfLink oldState, long first)
+			throws StoryStorageException {
 		if (newState == null || oldState == null) {
 			throw new StoryStorageException("relink null!");
 		}
@@ -109,10 +105,9 @@ public class ReLinker {
 		}
 	}
 
-
 	protected final static void reLinkBottom(WireHashKey wireKey,
-			StateOfLink newState, StateOfLink oldState, long first,TreeMap<Long, AtomicEvent<?>> wire)
-			throws StoryStorageException {
+			StateOfLink newState, StateOfLink oldState, long first,
+			TreeMap<Long, AtomicEvent<?>> wire) throws StoryStorageException {
 		if (newState == null || oldState == null) {
 			throw new StoryStorageException("relink null!");
 		}
@@ -128,18 +123,21 @@ public class ReLinker {
 			ceilingEntry = wire.higherEntry(first);
 		}
 	}
-	
 
-
-	private static void addWireForRelinking(HashSet<WireHashKey> set,
-			StateOfLink sl) {
-		WireHashKey e = new WireHashKey(sl.getAgentId(), sl.getSiteName(),
+	/**
+	 * stateOfLink will be point to this wire
+	 * @param sl
+	 * @return
+	 */
+	private static WireHashKey createWireByStateOfLink(StateOfLink sl) {
+		return new WireHashKey(sl.getAgentId(), sl.getSiteName(),
 				TypeOfWire.LINK_STATE);
-		set.add(e);
+		 
 	}
-	
+
 	public static final void reLinkTop(StateOfLink newState,
-			StateOfLink oldState, long first,TreeMap<Long, AtomicEvent<?>> wire) throws StoryStorageException {
+			StateOfLink oldState, long first, TreeMap<Long, AtomicEvent<?>> wire)
+			throws StoryStorageException {
 		if (newState == null || oldState == null) {
 			throw new StoryStorageException("relink null!");
 		}
@@ -177,8 +175,8 @@ public class ReLinker {
 		}
 	}
 
-	public static final void reLinkBottom(
-			StateOfLink newState, StateOfLink oldState, long first,TreeMap<Long, AtomicEvent<?>> wire)
+	public static final void reLinkBottom(StateOfLink newState,
+			StateOfLink oldState, long first, TreeMap<Long, AtomicEvent<?>> wire)
 			throws StoryStorageException {
 		if (newState == null || oldState == null) {
 			throw new StoryStorageException("relink null!");

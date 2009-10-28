@@ -62,15 +62,11 @@ public class TestQuantitativeCompressions {
 			for (ConnectedComponentInterface ic : comp.getLeftHandSide()) {
 				if (ic.getAgents().isEmpty())
 					continue;
-				// System.out.println(((ConnectedComponent)(ic)).getHash());
 			}
 			for (ConnectedComponentInterface ic : comp.getRightHandSide()) {
 				if (ic.getAgents().isEmpty())
 					continue;
-				// System.out.println(((ConnectedComponent)(ic)).getHash());
 			}
-			// for(Action av : comp.getActionList())
-			// System.out.println(av);
 
 		}
 

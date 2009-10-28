@@ -4,13 +4,16 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.plectix.simulator.injections.RunInjectionsTests;
+import com.plectix.simulator.simulationclasses.probability.TestWeightedItemSelector;
 import com.plectix.simulator.staticanalysis.graphs.GraphsTest;
 import com.plectix.simulator.staticanalysis.rulecompression.TestsRuleCompressions;
 
 @RunWith(value = Suite.class)
 @SuiteClasses(value = { 
 		TestsRuleCompressions.class,
-		GraphsTest.class})
+		GraphsTest.class, RunInjectionsTests.class,
+		TestWeightedItemSelector.class})
 
 public class RunAllUnitTests {
 
