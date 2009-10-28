@@ -21,7 +21,7 @@ public class LibraryOfSpecies {
 		substanceBuilder = new SubstanceBuilder(mockKappaSystem);
 	}
 
-	protected final List<Agent> getAgentListByString(String agentSrt)
+	public final List<Agent> getAgentListByString(String agentSrt)
 			throws IncompletesDisabledException, ParseErrorException,
 			DocumentFormatException {
 		AgentFactory factory = new AgentFactory(true);

@@ -199,6 +199,7 @@ public final class SimulationData {
 		kappaSystem.getObservables().setUnifiedTimeSeriesOutput(
 				simulationArguments.isUnifiedTimeSeriesOutput());
 		if (simulationArguments.getSnapshotsTimeString() != null) {
+			
 			setSnapshotTime(simulationArguments.getSnapshotsTimeString());
 		}
 
@@ -223,8 +224,8 @@ public final class SimulationData {
 			if (printStream != null) {
 				e.printStackTrace(printStream);
 			}
-			e.printStackTrace();
-			// throw new IllegalArgumentException(e);
+//			e.printStackTrace();
+			throw new IllegalArgumentException(e);
 		}
 	}
 

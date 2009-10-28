@@ -7,7 +7,6 @@ import java.util.Map;
 import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.ParseErrorMessage;
 import com.plectix.simulator.parser.abstractmodel.ModelPerturbation;
-import com.plectix.simulator.parser.abstractmodel.ModelRule;
 import com.plectix.simulator.parser.abstractmodel.SolutionLineData;
 import com.plectix.simulator.simulationclasses.action.Action;
 import com.plectix.simulator.simulationclasses.action.ActionType;
@@ -16,7 +15,7 @@ import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
 
-class MasterSolutionModel {
+public class MasterSolutionModel {
 	private Map<String, Agent> masterMap;
 
 	public MasterSolutionModel() {
@@ -48,7 +47,6 @@ class MasterSolutionModel {
 	}
 
 	public void checkCorrect(Rule rule, String line) throws ParseErrorException {
-		// TODO Auto-generated method stub
 		for(Action action : rule.getActionList()){
 			if(action.getType() != ActionType.ADD)
 				continue;

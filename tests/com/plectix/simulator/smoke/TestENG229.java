@@ -2,8 +2,6 @@ package com.plectix.simulator.smoke;
 
 import static org.junit.Assert.fail;
 
-import java.io.File;
-
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Test;
@@ -11,18 +9,14 @@ import org.junit.Test;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
-import com.plectix.simulator.util.DefaultPropertiesForTest;
 import com.plectix.simulator.util.MemoryUtil;
 import com.plectix.simulator.util.StringBufferWriter;
 import com.plectix.simulator.util.Info.InfoType;
 import com.plectix.simulator.util.MemoryUtil.PeakMemoryUsage;
 
-public class TestENG229 extends DefaultPropertiesForTest {
-	private static final String separator = File.separator;
-	private static final String inputDirectory = "test.data" + separator
-			+ "smoke_test" + separator + "source" + separator;
+public class TestENG229 extends SmokeTest {
 	private static final String inputFile = "eng229"
-			+ DEFAULT_EXTENSION_FILE;
+		+ DEFAULT_EXTENSION_FILE;
 
 	public TestENG229() {
 
@@ -77,7 +71,7 @@ public class TestENG229 extends DefaultPropertiesForTest {
 		}
 	}
 
-	private static String[] prepareTestArgs() {
+	protected String[] prepareTestArgs() {
 		/**
 		 * --sim data/calcium2.ka --time 0.5 --operation-mode 1 --agents-limit
 		 * 100 --xml-session-name Session.xml --seed 1 --live-data-interval 1000
