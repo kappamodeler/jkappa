@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.simulator.KappaSystem;
@@ -51,7 +51,7 @@ public abstract class InfluenceMap {
 	}
 
 	// TODO move out
-	public final void createXML(XMLStreamWriter writer, int rules,
+	public final void createXML(XMLSimulatorWriter writer, int rules,
 			List<ObservableConnectedComponentInterface> observableComponents,
 			boolean isInhibitionMap, KappaSystem kappaSystem,
 			boolean isOcamlStyleObsName) throws XMLStreamException {
@@ -105,7 +105,7 @@ public abstract class InfluenceMap {
 		writer.writeEndElement();
 	}
 
-	private static final void printMap(XMLStreamWriter writer, String mapType,
+	private static final void printMap(XMLSimulatorWriter writer, String mapType,
 			Rule rule, List<InfluenceMapEdge> rulesToPrint,
 			List<InfluenceMapEdge> influenceMapEdges, int allRules)
 			throws XMLStreamException {
@@ -134,7 +134,7 @@ public abstract class InfluenceMap {
 	}
 
 	public static final void addRulesToXML(int rulesAndObsNumber,
-			XMLStreamWriter writer, int rules, boolean isOcamlStyleObsName,
+			XMLSimulatorWriter writer, int rules, boolean isOcamlStyleObsName,
 			KappaSystem kappaSystem, boolean writeText) throws XMLStreamException {
 		for (int i = rules - 1; i >= 0; i--) {
 			Rule rule = kappaSystem.getRuleById(i);

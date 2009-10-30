@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.staticanalysis.LinkStatus;
@@ -166,7 +166,7 @@ public final class ContactMap {
 		isInitialized = true;
 	}
 
-	public final void createXML(XMLStreamWriter writer)
+	public final void createXML(XMLSimulatorWriter writer)
 			throws XMLStreamException {
 		// Element contactMapElement = doc.createElement("ContactMap");
 		writer.writeStartElement("ContactMap");
@@ -246,7 +246,7 @@ public final class ContactMap {
 	}
 
 	private final void addSiteToContactMapAgent(ContactMapChangedSite site,
-			XMLStreamWriter writer) throws XMLStreamException {
+			XMLSimulatorWriter writer) throws XMLStreamException {
 		boolean isDefaultSite = site.getSite().hasDefaultName();
 		if (isDefaultSite) {
 			for (Integer ruleID : site.getUsedRuleIDs()) {

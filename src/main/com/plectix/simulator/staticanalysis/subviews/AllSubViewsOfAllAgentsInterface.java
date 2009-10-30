@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 
 import com.plectix.simulator.interfaces.SolutionInterface;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.subviews.base.AbstractionRule;
@@ -30,7 +31,7 @@ public interface AllSubViewsOfAllAgentsInterface {
 
 	public Map<String, AbstractAgent> getAgentNameToAgent();
 
-	public void createXML(XMLStreamWriter writer) throws XMLStreamException;
+	public void createXML(XMLSimulatorWriter writer) throws XMLStreamException;
 
 	public boolean isEmpty();
 }

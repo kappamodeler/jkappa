@@ -18,7 +18,7 @@ import java.util.StringTokenizer;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.cli.HelpFormatter;
@@ -697,7 +697,7 @@ public final class SimulationData {
 		}
 	}
 	
-	private final void writeToXMLRuleSet(XMLStreamWriter writer) throws XMLStreamException{
+	private final void writeToXMLRuleSet(XMLSimulatorWriter writer) throws XMLStreamException{
 		writer.writeStartElement("RuleSet");
 		writer.writeAttribute("Name", "Original");
 		int size = kappaSystem.getRules().size();
@@ -709,10 +709,10 @@ public final class SimulationData {
 			throws ParserConfigurationException, TransformerException,
 			XMLStreamException, StoryStorageException {
 		PlxTimer timer = new PlxTimer();
-		XMLOutputFactory output = XMLOutputFactory.newInstance();
-		XMLStreamWriter writer = output.createXMLStreamWriter(outstream);
-
-		writer.writeStartDocument("utf-8", "1.0");
+//		XMLOutputFactory output = XMLOutputFactory.newInstance();
+//		XMLSimulatorWriter writer = output.createXMLSimulatorWriter(outstream);
+		XMLSimulatorWriter writer = new XMLSimulatorWriter(outstream);
+		writer.writeStartDocument();
 		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
 			writer.writeStartElement("ComplxSession");
 		} else {
@@ -840,7 +840,7 @@ public final class SimulationData {
 
 	}
 	
-	private final void writeSnapshotsToXML(XMLStreamWriter writer)
+	private final void writeSnapshotsToXML(XMLSimulatorWriter writer)
 			throws XMLStreamException {
 		for (Snapshot snapshot : snapshots) {
 			writer.writeStartElement("FinalState");
@@ -858,7 +858,7 @@ public final class SimulationData {
 		}
 	}
 
-	private final void appendInfo(XMLStreamWriter writer)
+	private final void appendInfo(XMLSimulatorWriter writer)
 			throws XMLStreamException {
 		writer.writeStartElement("Log");
 		for (Info info : infoList) {
@@ -873,7 +873,7 @@ public final class SimulationData {
 	}
 
 	private final void createElement(ObservableInterface observableComponent,
-			XMLStreamWriter writer) throws XMLStreamException {
+			XMLSimulatorWriter writer) throws XMLStreamException {
 		writer.writeStartElement("Plot");
 		String obsName = observableComponent.getName();
 		if (obsName == null)

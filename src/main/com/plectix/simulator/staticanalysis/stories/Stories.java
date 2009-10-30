@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
@@ -104,7 +104,7 @@ public final class Stories {
 		return eventsMapForCurrentStory;
 	}
 
-	public final void createXML(XMLStreamWriter writer, KappaSystem kappaSystem,
+	public final void createXML(XMLSimulatorWriter writer, KappaSystem kappaSystem,
 			int numberOfIterations) throws XMLStreamException,
 			StoryStorageException {
 
@@ -140,7 +140,7 @@ public final class Stories {
 
 	}
 
-	private final void addConnections2(StoriesGraphs graph, XMLStreamWriter writer)
+	private final void addConnections2(StoriesGraphs graph, XMLSimulatorWriter writer)
 			throws XMLStreamException {
 
 		for (Connection connection : graph.getConnections2().getConnections()) {
@@ -156,7 +156,7 @@ public final class Stories {
 
 	}
 
-	private final void addIntros(StoriesGraphs graph, XMLStreamWriter writer)
+	private final void addIntros(StoriesGraphs graph, XMLSimulatorWriter writer)
 			throws XMLStreamException, StoryStorageException {
 		for (Entry<Long, String> entry : graph.getIntroComponentIdtoData().entrySet()) {
 			int depth = graph.getIntroDepth(entry.getKey());
@@ -175,7 +175,7 @@ public final class Stories {
 	}
 
 	private final void addNode(long eventId, StoriesGraphs graph,
-			XMLStreamWriter writer, KappaSystem kappaSystem)
+			XMLSimulatorWriter writer, KappaSystem kappaSystem)
 			throws XMLStreamException, StoryStorageException {
 		writer.writeStartElement("Node");
 		writer.writeAttribute("Id", Long.valueOf(

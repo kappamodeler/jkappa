@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
@@ -48,7 +48,7 @@ public class RuleCompressionXMLWriter {
 		}
 	}
 
-	public void writeToXML(XMLStreamWriter xtw, boolean isOcamlStyleObsName)
+	public void writeToXML(XMLSimulatorWriter xtw, boolean isOcamlStyleObsName)
 			throws XMLStreamException {
 		writeToXMLInitialRules(xtw,isOcamlStyleObsName);
 		xtw.writeStartElement("RuleSet");
@@ -59,7 +59,7 @@ public class RuleCompressionXMLWriter {
 		xtw.writeEndElement();
 	}
 	
-	private void writeToXMLInitialRules(XMLStreamWriter xtw, boolean isOcamlStyleObsName) throws XMLStreamException{
+	private void writeToXMLInitialRules(XMLSimulatorWriter xtw, boolean isOcamlStyleObsName) throws XMLStreamException{
 		xtw.writeStartElement("RuleSet");
 		xtw.writeAttribute("Name", "Original");
 		for(Rule rule : initialRulesMap.values()){
@@ -79,7 +79,7 @@ public class RuleCompressionXMLWriter {
 		xtw.writeEndElement();
 	}
 	
-	private void writeToXMLAssociationQualitativeMap(XMLStreamWriter xtw) throws XMLStreamException{
+	private void writeToXMLAssociationQualitativeMap(XMLSimulatorWriter xtw) throws XMLStreamException{
 		xtw.writeStartElement("Map");
 		xtw.writeAttribute("FromSet", "Original");
 		for(Map.Entry<Integer, Integer> entry : associationQualitativeMap.entrySet()){
@@ -92,7 +92,7 @@ public class RuleCompressionXMLWriter {
 	}
 	
 	
-	private void writeToXMLQualitativeRules(XMLStreamWriter xtw, boolean isOcamlStyleObsName)
+	private void writeToXMLQualitativeRules(XMLSimulatorWriter xtw, boolean isOcamlStyleObsName)
 	throws XMLStreamException {
 		for (Rule rule : qualitativeRules) {
 			xtw.writeStartElement("Rule");

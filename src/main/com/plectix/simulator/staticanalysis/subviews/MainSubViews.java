@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -19,6 +19,7 @@ import org.w3c.dom.Element;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.simulationclasses.solution.SuperSubstance;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
@@ -215,36 +216,6 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 		return answer;
 	}
 
-	public final Element createXML(Document document) {
-		Element reachables = document.createElement("Reachables");
-		reachables.setAttribute("Name", "Subviews");
-		for (String agentType : agentNameToAgent.keySet()) {
-			for (SubViewsInterface subViews : this.getSubViews().get(agentType)) {
-				Element set = document.createElement("Set");
-				set.setAttribute("Agent", agentType);
-				Element tag = document.createElement("Tag");
-				String data = "Agent: " + agentType + " ; Sites: ";
-				String sites = new String("");
-				for (String siteName : subViews.getSubViewClass().getSitesNames()) {
-					if (sites.length() != 0)
-						sites += ",";
-					sites += siteName;
-				}
-				data += sites + " ";
-				tag.setAttribute("Data", data);
-				set.appendChild(tag);
-
-				for (AbstractAgent agent : subViews.getAllSubViews()) {
-					Element entry = document.createElement("Entry");
-					entry.setAttribute("Data", agent.toStringForXML());
-					set.appendChild(entry);
-				}
-				reachables.appendChild(set);
-			}
-		}
-		return reachables;
-	}
-
 	public final Map<String, AbstractAgent> getFullMapOfAgents() {
 		return agentNameToAgent;
 	}
@@ -265,7 +236,7 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 	}
 
 	@Override
-	public final void createXML(XMLStreamWriter writer) throws XMLStreamException {
+	public final void createXML(XMLSimulatorWriter writer) throws XMLStreamException {
 		// TODO Auto-generated method stub
 		writer.writeStartElement("Reachables");
 		writer.writeAttribute("Name", "Subviews");

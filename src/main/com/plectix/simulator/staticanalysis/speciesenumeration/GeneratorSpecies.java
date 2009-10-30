@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 
@@ -59,7 +59,7 @@ public final class GeneratorSpecies {
 		}
 	}
 
-	public final void writeToXML(XMLStreamWriter writer)
+	public final void writeToXML(XMLSimulatorWriter writer)
 			throws XMLStreamException {
 		writer.writeStartElement("Reachables");
 		writer.writeAttribute("Name", "Species");

@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
@@ -132,7 +132,7 @@ public final class LocalViewsMain {
 		return localViews;
 	}
 
-	public final void writeToXML(XMLStreamWriter streamWriter) throws XMLStreamException {
+	public final void writeToXML(XMLSimulatorWriter streamWriter) throws XMLStreamException {
 		streamWriter.writeStartElement("Reachables");
 		streamWriter.writeAttribute("Name", "Views");
 		for (Map.Entry<String, List<AbstractAgent>> entry : localViews
