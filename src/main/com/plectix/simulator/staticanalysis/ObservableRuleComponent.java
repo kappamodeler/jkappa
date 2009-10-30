@@ -49,7 +49,7 @@ public final class ObservableRuleComponent implements ObservableRuleInterface, S
 
 		for (ConnectedComponentInterface cc : rule.getLeftHandSide())
 			count *= cc.getInjectionsWeight();
-		return count;
+		return count/rule.getAutomorphismNumber();
 	}
 
 	/**
