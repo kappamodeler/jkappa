@@ -368,8 +368,8 @@
 		<echo file="latest" append="false" message = "${latest}"/>
 		<S3Upload 
 		    verbose    = "true" 
-			accessId   = "${aws.accessId}"
-		    secretKey  = "${aws.secretKey}"
+			accessId   = "${env.AWS_SECRET_ACCESS_KEY}"
+		    secretKey  = "${env.AWS_ACCESS_KEY_ID}"
 			bucket     = "${aws.bucket}"
 			prefix     = "${aws.prefix}/"
 			publicRead = "false" >
