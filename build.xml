@@ -186,7 +186,13 @@
 
     <available file=".git" type="dir" property="set-git-revision" />
 
-    <target name="set-revision" depends="set-svn-revision,set-git-revision" description="Sets the source code repository revision number in the code" />
+    <target name="set-revision" depends="set-svn-revision,set-git-revision" 
+	        description="Sets the source code repository revision number in the code">
+
+		<!-- Show revision -->
+	    <property name="build.revision" value="${scm.name} ${revision.id}"/>
+		<echo message="Repository Revision: ${build.revision}" />
+    </target>
 
   <!-- for xpath task below -->
     <taskdef resource="net/uworks/andariel/andariel.properties">
@@ -210,13 +216,11 @@
              expression="//entry/@revision"
              outputproperty="svn.build.revision" />
 
-	    <property name="build.revision" value="SVN ${svn.build.revision}"/>
+	    <property name="scm.name"       value="SVN"/>
+	    <property name="revision.id"    value="${svn.build.revision}"/>
 
         <!-- Delete temp revision file. -->
         <delete file="${svn.info}" />
-
-		<!-- Show version -->
-		<echo message="Repository Revision: ${build.revision}" />
     </target>
 
     <target name="set-git-revision" if="set-git-revision">
@@ -226,10 +230,8 @@
              <arg value="HEAD" />
         </exec>
 
-	    <property name="build.revision" value="GIT ${git.build.revision}"/>
-
-		<!-- Show version -->
-		<echo message="Repository Revision: ${build.revision}" />
+	    <property name="scm.name"       value="GIT"/>
+	    <property name="revision.id"    value="${git.build.revision}"/>
     </target>
 
     <target name="filter-tpl">
@@ -332,5 +334,46 @@
 		</findbugs>
    </target>
 
+	<!-- ################################### release at S3 target  ################################### -->
+
+	<taskdef name="S3Upload" classname="dak.ant.taskdefs.S3Upload">
+        <classpath>
+			<pathelement location="${lib.dir}/ant/awstasks-0.3.jar"/>
+			<pathelement location="${lib.dir}/ant/commons-codec-1.4.jar"/>
+			<pathelement location="${lib.dir}/ant/commons-httpclient-3.1.jar"/>
+			<pathelement location="${lib.dir}/ant/jets3t-0.7.1.jar"/>
+			<pathelement location="${lib.dir}/commons-logging/commons-logging-1.1.1.jar"/>
+	    </classpath>
+	</taskdef>
+
+	<target name="releaseS3" depends="all">
+		<property file="config/aws.properties"/>
+	    <property name="latest"        value="${scm.name}-${revision.id}"/>
+		<property name="s3.target.dir" value="${aws.prefix}/${latest}/"/>
+		<echo message = "Latest: ${latest}"/>
+		<echo message = "S3 Target Dir: ${s3.target.dir}"/>
+		<echo message = "Uploading jar files to ${aws.bucket}/${s3.target.dir}"/>
+		<S3Upload 
+		    verbose    = "true" 
+			accessId   = "${aws.accessId}"
+		    secretKey  = "${aws.secretKey}"
+			bucket     = "${aws.bucket}"
+			prefix     = "${s3.target.dir}"
+			publicRead = "false" >
+		    <fileset dir="${deploy-zip.dir}" includes="**/*.jar"/>
+		</S3Upload>
+
+		<echo file="latest" append="false" message = "${latest}"/>
+		<S3Upload 
+		    verbose    = "true" 
+			accessId   = "${aws.accessId}"
+		    secretKey  = "${aws.secretKey}"
+			bucket     = "${aws.bucket}"
+			prefix     = "${aws.prefix}/"
+			publicRead = "false" >
+		    <fileset dir="." includes="latest"/>
+		</S3Upload>
+		<delete file="latest"/>
+	</target>
 
 </project>
