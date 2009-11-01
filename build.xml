@@ -81,6 +81,7 @@
             <fileset dir="${src.dir}" excludes="**/*.launch, **/*.java, **/*.tpl"/>
         </copy>
     </target>
+	
 
 	<target name="build-project" depends="filter-tpl,init" description="Builds the project">
         <echo message="OS: ${os.name} "/>
@@ -347,6 +348,7 @@
 	</taskdef>
 
 	<target name="releaseS3" depends="all">
+	    <property environment="env"/>
 		<property file="config/aws.properties"/>
 	    <property name="latest"        value="${scm.name}-${revision.id}"/>
 		<property name="s3.target.dir" value="${aws.prefix}/${latest}/"/>
@@ -355,8 +357,8 @@
 		<echo message = "Uploading jar files to ${aws.bucket}/${s3.target.dir}"/>
 		<S3Upload 
 		    verbose    = "true" 
-			accessId   = "${aws.accessId}"
-		    secretKey  = "${aws.secretKey}"
+			accessId   = "${env.AWS_SECRET_ACCESS_KEY}"
+		    secretKey  = "${env.AWS_ACCESS_KEY_ID}"
 			bucket     = "${aws.bucket}"
 			prefix     = "${s3.target.dir}"
 			publicRead = "false" >
