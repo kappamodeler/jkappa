@@ -30,18 +30,21 @@ public class InitTestAction extends DirectoryTestsRunner {
 	private static int iterationNumber = 0;
 	private static int iterationsLimit = 70;
 	private final String filePath;
+	private Integer operationMode;
 
-	public InitTestAction(String testFilePath) {
+	public InitTestAction(String testFilePath, Integer opMode) {
 		this.filePath = testFilePath;
+		this.operationMode = opMode;
 	}
 
-	private static SimulatorTestOptions prepareTestArgs(String filePath) {
+	private static SimulatorTestOptions prepareTestArgs(String filePath, Integer opMode) {
 		SimulatorTestOptions options = new SimulatorTestOptions();
 		options.append(SimulatorOption.ALLOW_INCOMPLETE_SUBSTANCE);
 		options.append(SimulatorOption.DEBUG_INIT);
 		options.append(SimulatorOption.NO_SAVE_ALL);
 		options.append(SimulatorOption.NO_MAPS);
 		options.appendSimulation(filePath);
+		options.appendOperationMode(opMode);
 		return options;
 	}
 
@@ -53,7 +56,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 
 		SimulatorCommandLine commandLine = null;
 		try {
-			commandLine = prepareTestArgs(filePath).toCommandLine();
+			commandLine = prepareTestArgs(filePath, operationMode).toCommandLine();
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);
@@ -68,10 +71,10 @@ public class InitTestAction extends DirectoryTestsRunner {
 	}
 
 	@Override
-	public void reset(String filePath) {
+	public void reset(String filePath, Integer opMode) {
 		SimulatorCommandLine commandLine = null;
 		try {
-			commandLine = prepareTestArgs(filePath).toCommandLine();
+			commandLine = prepareTestArgs(filePath, opMode).toCommandLine();
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);
@@ -85,7 +88,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 	@After
 	public void teardown() {
 		if (iterationNumber != iterationsLimit) {
-			reset(filePath);
+			reset(filePath, operationMode);
 		}
 	}
 

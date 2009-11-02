@@ -9,6 +9,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
@@ -30,29 +31,32 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	private boolean isStrong;
 	private boolean mode;
 
+	private Integer operationMode;
+
 	@Override
 	public String getPrefixFileName() {
 		return testDirectory;
 	}
 
-	@Parameters
-	public static Collection<Object[]> regExValues() {
-		return getAllTestFileNames(getDirectory());
-	}
+//	@Parameters
+//	public static Collection<Object[]> regExValues() {
+//		return OperationModeCollectionGenerator.generate(getAllTestFileNames(getDirectory()));
+//	}
 
 	public InitStoriesTests(String path, String fileName, boolean isSlow,
-			boolean isWeak, boolean isStrong, boolean mode) {
+			boolean isWeak, boolean isStrong, boolean mode, Integer opMode) {
 		testDirectory = path;
 		FileName = fileName;
 		this.isSlow = isSlow;
 		this.isWeak = isWeak;
 		this.mode = mode;
 		this.isStrong = isStrong;
+		operationMode = opMode;
 	}
 
 	@Before
 	public void setup() {
-		init(testDirectory + FileName);
+		init(testDirectory + FileName, operationMode);
 		if (mode) {
 			mySimulator.getSimulationData().setTimeLength(time);
 		}
@@ -65,7 +69,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	}
 
 	@Override
-	public void init(String filePath) {
+	public void init(String filePath, Integer opMode) {
 		mySimulator = new Simulator();
 
 		SimulationData simulationData = mySimulator.getSimulationData();
@@ -78,11 +82,11 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 			if (mode) {
 				args = Initializator.prepareStorifyArguments(filePath, isSlow,
 						isWeak, isStrong, true, Long.valueOf(1000), Integer
-								.valueOf(13));
+								.valueOf(13), opMode);
 			} else {
 				args = Initializator.prepareStorifyArguments(filePath, isSlow,
 						isWeak, isStrong, false, Long.valueOf(500), Integer
-								.valueOf(5));
+								.valueOf(5), opMode);
 
 			}
 		} catch (ParseException e) {

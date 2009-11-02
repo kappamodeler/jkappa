@@ -19,6 +19,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.InputSource;
 
 import com.plectix.simulator.FileNameCollectionGenerator;
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.util.StringBufferReader;
 
 @RunWith(value = Parameterized.class)
@@ -51,13 +52,13 @@ public class TestContactMap {
 		FileNameCollectionGenerator.getAllFileNamesWithPathWithModifyName(
 				prefixSourceRules, "~kappa");
 
-		return FileNameCollectionGenerator
+		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 				.addAllFileNamesWithPathWithModifyName(prefixSourceModel,
-						"~kappa");
+						"~kappa"));
 	}
 
-	public TestContactMap(String count, String patch) throws ParseException {
-		currentXMLData = initTestContactMap.generateXML(patch, count);
+	public TestContactMap(String count, String patch, Integer opMode) throws ParseException {
+		currentXMLData = initTestContactMap.generateXML(patch, count, opMode);
 	}
 
 	@Before

@@ -10,6 +10,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.simulationclasses.injections.Injection;
@@ -28,18 +29,18 @@ public class TestNegativeUpdate extends TestUpdate {
 	private Map<String, Integer> myObsInjectionsQuantity;
 	private Map<String, Integer> myLHSInjectionsQuantity;
 	private Failer myFailer = new Failer();
+	@Parameters
+	public static Collection<Object[]> regExValues() {
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(myPrefixFileName));
+	}
 
-	public TestNegativeUpdate(String fileName) {
-		super(fileName);
+	public TestNegativeUpdate(String fileName, Integer opMode) {
+		super(fileName, opMode);
 
 		myTestFileName = fileName;
 		myFailer.loadTestFile(myTestFileName);
 	}
 
-	@Parameters
-	public static Collection<Object[]> regExValues() {
-		return getAllTestFileNames(myPrefixFileName);
-	}
 
 	@Test
 	public void testLHS() {

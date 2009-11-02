@@ -29,7 +29,7 @@ public class TestWeakCompressionByWires extends InitStoriesTests {
 	private String fileName;
 
 	public TestWeakCompressionByWires(String fileName) {
-		super(path, fileName, false, true, false, true);
+		super(path, fileName, false, true, false, true, null);
 		this.fileName = path + fileName;
 	}
 

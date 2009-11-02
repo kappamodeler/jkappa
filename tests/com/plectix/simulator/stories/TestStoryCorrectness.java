@@ -7,6 +7,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.staticanalysis.stories.Stories;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
 import com.plectix.simulator.staticanalysis.stories.storage.WireStorageInterface;
@@ -20,15 +21,15 @@ public class TestStoryCorrectness extends InitStoriesTests {
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return getAllTestFileNames(path);
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(path));
 	}
 
 	private String fileName;
 
-	public TestStoryCorrectness(String fileName) {
+	public TestStoryCorrectness(String fileName, Integer opMode) {
 
 		// 3 boolean variables: isSlow, isWeak, isStrong isFirst mode
-		super(path, fileName, true, false, true, true);
+		super(path, fileName, true, false, true, true, opMode);
 
 		this.fileName = fileName;
 	}

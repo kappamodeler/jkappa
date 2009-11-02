@@ -12,7 +12,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.FileNameCollectionGenerator;
 import com.plectix.simulator.Initializator;
+import com.plectix.simulator.OperationModeCollectionGenerator;
+import com.plectix.simulator.SimulatorTestOptions;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
@@ -28,21 +31,18 @@ public final class TestEvents {
 	private Simulator simulator;
 	private final Integer[] eventsNumbers = { 0, 1, 10, 100, 500, 1000, 1001,
 			1002 };
+	private Integer operationMode;
 
 	@Parameters
 	public static Collection<Object[]> data() {
-		String[] files = new String[] { "test" };
-		Collection<Object[]> data = new ArrayList<Object[]>();
-		for (String string : files) {
-			Object[] obj = new Object[1];
-			obj[0] = string;
-			data.add(obj);
-		}
-		return data;
+		Collection<Object[]> allFileNames = FileNameCollectionGenerator
+				.getAllFileNames(TEST_DIRECTORY);
+		return OperationModeCollectionGenerator.generate(allFileNames);
 	}
 
-	public TestEvents(String filename) {
+	public TestEvents(String filename, Integer opMode) {
 		prefixFileName = filename;
+		operationMode = opMode;
 	}
 
 	@Test
@@ -73,7 +73,8 @@ public final class TestEvents {
 		SimulationArguments args = null;
 		try {
 			args = Initializator.prepareEventNumberArguments(filePath,
-					eventNumber);
+					eventNumber, operationMode);
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);

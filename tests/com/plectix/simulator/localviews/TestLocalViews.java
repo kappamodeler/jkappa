@@ -14,6 +14,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.FileNameCollectionGenerator;
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.localviews.LocalViewsMain;
 import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
@@ -37,13 +38,14 @@ public class TestLocalViews {
 
 	@Parameters
 	public static Collection<Object[]> configs() {
-		return FileNameCollectionGenerator
+		Collection<Object[]> fileNames = FileNameCollectionGenerator
 				.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
 						"~kappa");
+		return OperationModeCollectionGenerator.generate(fileNames);
 	}
 
-	public TestLocalViews(String count, String pathSourse) {
-		initTestLocalViews.initializeSimulation(pathSourse, count);
+	public TestLocalViews(String count, String pathSourse, Integer opMode) {
+		initTestLocalViews.initializeSimulation(pathSourse, count, opMode);
 		init(initTestLocalViews.getSourcePath());
 	}
 

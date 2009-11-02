@@ -13,7 +13,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.FileNameCollectionGenerator;
 import com.plectix.simulator.Initializator;
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
 import com.plectix.simulator.simulationclasses.perturbations.PerturbationType;
@@ -33,22 +35,17 @@ public class TestPerturbationsTriggering {
 
 	private Simulator mySimulator;
 	private Integer[] times = { 200 };
+	private Integer operationMode;
 
 	@Parameters
 	public static Collection<Object[]> data() {
-		String[] files = new String[] { "test", "test01", "test02", "test03",
-				"test04" };
-		Collection<Object[]> data = new ArrayList<Object[]>();
-		for (String string : files) {
-			Object[] obj = new Object[1];
-			obj[0] = string;
-			data.add(obj);
-		}
-		return data;
+		Collection<Object[]> coll = FileNameCollectionGenerator.getAllFileNames(testDirectory);
+		return OperationModeCollectionGenerator.generate(coll);
 	}
 
-	public TestPerturbationsTriggering(String filename) {
+	public TestPerturbationsTriggering(String filename, Integer opMode) {
 		prefixFileName = filename;
+		operationMode = opMode;
 	}
 
 	@Test
@@ -95,7 +92,7 @@ public class TestPerturbationsTriggering {
 		SimulationData simulationData = mySimulator.getSimulationData();
 		SimulationArguments args = null;
 		try {
-			args = Initializator.prepareTimeArguments(filePath, time);
+			args = Initializator.prepareTimeArguments(filePath, time, operationMode);
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);

@@ -18,6 +18,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.InputSource;
 
 import com.plectix.simulator.FileNameCollectionGenerator;
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.speciesenumeration.util.Entry;
 import com.plectix.simulator.speciesenumeration.util.Reachables;
 import com.plectix.simulator.speciesenumeration.util.Set;
@@ -43,14 +44,14 @@ public class TestEnumOfSpeciesCompareXML {
 
 	@Parameters
 	public static Collection<Object[]> configs() {
-		return FileNameCollectionGenerator
+		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 				.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
-						"~kappa");
+						"~kappa"));
 	}
 
-	public TestEnumOfSpeciesCompareXML(String prefixFile, String path) {
+	public TestEnumOfSpeciesCompareXML(String prefixFile, String path, Integer opMode) {
 		currentXMLData = initTestEnumOfSpeciesCompareXML.generateXML(path,
-				prefixFile);
+				prefixFile, opMode);
 	}
 
 	@Before

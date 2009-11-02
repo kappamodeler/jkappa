@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.staticanalysis.stories.Stories;
 import com.plectix.simulator.staticanalysis.stories.compressions.CompressionPassport;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
@@ -24,11 +25,11 @@ public class TestStrong extends InitStoriesTests {
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return getAllTestFileNames(path);
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(path));
 	}
 
-	public TestStrong(String fileName) {
-		super(path, fileName, false, false, true, false);
+	public TestStrong(String fileName, Integer opMode) {
+		super(path, fileName, false, false, true, false, opMode);
 		passports = new TreeMap<Integer, CompressionPassport>();
 	}
 

@@ -44,7 +44,7 @@ public class TestParser extends TestRunner {
 		try {
 			KappaFile kf = (new KappaFileReader(sourceDir + fileName)).parse();
 			SimulationArguments args = Initializator
-					.prepareDefaultArguments(sourceDir + fileName);
+					.prepareDefaultArguments(sourceDir + fileName, null);
 			KappaModel model = new KappaModelCreator(args).createModel(kf);
 			pw = new PrintWriter(resultsDir + ABSTRACT + fileName);
 			pw.print(model.toString());

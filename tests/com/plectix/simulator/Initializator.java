@@ -24,7 +24,7 @@ public class Initializator extends DefaultPropertiesForTest {
 		myRescale = rescale;
 	}
 
-	private String[] prepareTestArgs(String filePath) {
+	private String[] prepareTestArgs(String filePath, Integer opMode) {
 		boolean rescale = (myRescale != null);
 		String[] args;
 		if (!rescale) {
@@ -44,51 +44,59 @@ public class Initializator extends DefaultPropertiesForTest {
 		args[5] = "--seed";
 		args[6] = "10";
 		args[7] = "--operation-mode";
-		args[8] = "1";
+		if (opMode != null)
+			args[8] = opMode.toString();
+		else
+			args[8] = "1";
+			
 		return args;
 	}
 
-	public static SimulationArguments prepareDefaultArguments(String filePath)
+	public static SimulationArguments prepareDefaultArguments(String filePath, Integer opMode)
 			throws ParseException {
-		String[] args = new String[3];
+		String[] args = new String[5];
 		args[0] = "--compile";
 		args[1] = filePath;
 		args[2] = "--allow-incomplete-substance";
-		SimulatorCommandLine commandLine = null;
-		commandLine = new SimulatorCommandLine(args);
-		return commandLine.getSimulationArguments();
-	}
-
-	public static SimulationArguments prepareDefaultSimArguments(String filePath)
-			throws ParseException {
-		String[] args = new String[3];
-		args[0] = "--sim";
-		args[1] = filePath;
-		args[3] = "--allow-incomplete-substance";
+		args[3] = "--operation-mode";
+		if (opMode == null)
+			args[4] = "1";
+		else
+			args[4] = opMode.toString();
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
 
 	public static SimulationArguments prepareInitTimeArguments(String filePath,
-			Double initTime) throws ParseException {
+			Double initTime, Integer opMode) throws ParseException {
 		String[] args = null;
 		if (initTime.equals(-1.0)) {
-			args = new String[5];
-			args[0] = "--sim";
-			args[1] = filePath;
-			args[2] = "--time";
-			args[3] = Double.toString(50.0);
-			args[4] = "--allow-incomplete-substance";
-		} else {
 			args = new String[7];
 			args[0] = "--sim";
 			args[1] = filePath;
 			args[2] = "--time";
-			args[3] = Double.toString(initTime + 100.0);
+			args[3] = Double.toString(5.0);
+			args[4] = "--allow-incomplete-substance";
+			args[5] = "--operation-mode";
+			if (opMode == null)
+				args[6] = "1";
+			else
+				args[6] = opMode.toString();
+		} else {
+			args = new String[9];
+			args[0] = "--sim";
+			args[1] = filePath;
+			args[2] = "--time";
+			args[3] = Double.toString(initTime + 5.0);
 			args[4] = "--init";
 			args[5] = initTime.toString();
 			args[6] = "--allow-incomplete-substance";
+			args[7] = "--operation-mode";
+			if (opMode == null)
+				args[8] = "1";
+			else
+				args[8] = opMode.toString();
 		}
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
@@ -97,8 +105,8 @@ public class Initializator extends DefaultPropertiesForTest {
 
 	public static SimulationArguments prepareStorifyArguments(String filePath,
 			boolean isSlow, boolean isWeak, boolean isStrong, boolean isEvent,
-			Long numberOfEventOrTime, Integer seed) throws ParseException {
-		String[] args = new String[11];
+			Long numberOfEventOrTime, Integer seed, Integer opMode) throws ParseException {
+		String[] args = new String[13];
 		args[10] = "--allow-incomplete-substance";
 		if (isStrong) {
 			args[8] = "--compress-stories";
@@ -128,87 +136,50 @@ public class Initializator extends DefaultPropertiesForTest {
 		}
 		args[6] = "--seed";
 		args[7] = seed.toString();
+		
+		args[11] = "--operation-mode";
+		if (opMode == null)
+			args[12] = "1";
+		else
+			args[12] = opMode.toString();
 
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
 
-	public static SimulationArguments prepareContactMapArguments(
-			String directory, String count, boolean isFocus)
-			throws ParseException {
-		String[] args;
-		if (isFocus) {
-			args = new String[12];
-			args[9] = "--focus-on";
-			args[10] = directory + "~focus" + count
-					+ DEFAULT_EXTENSION_FILE;
-			args[11] = "--allow-incomplete-substance";
-		} else {
-			args = new String[10];
-			args[9] = "--allow-incomplete-substance";
-		}
-		args[0] = "--short-console-output";
-		args[1] = "--contact-map";
-		args[2] = directory + "~kappa" + count + DEFAULT_EXTENSION_FILE;
-		args[3] = "--no-dump-iteration-number";
-		args[4] = "--no-dump-rule-iteration";
-		args[5] = "--no-build-influence-map";
-		args[6] = "--no-compute-quantitative-compression";
-		args[7] = "--no-compute-qualitative-compression";
-		args[8] = "--no-enumerate-complexes";
-
-		SimulatorCommandLine commandLine = null;
-		commandLine = new SimulatorCommandLine(args);
-		return commandLine.getSimulationArguments();
-	}
-
-	public static SimulationArguments prepareRuleCompressionArguments(
-			String directory, String count, boolean isQuantitative)
-			throws ParseException {
-		String[] args;
-		args = new String[10];
-		args[9] = "--allow-incomplete-substance";
-		args[0] = "--short-console-output";
-		args[1] = "--contact-map";
-		args[2] = directory + "~kappa" + count + DEFAULT_EXTENSION_FILE;
-		args[3] = "--no-dump-iteration-number";
-		args[4] = "--no-dump-rule-iteration";
-		args[5] = "--no-build-influence-map";
-		if (isQuantitative) {
-			args[6] = "--output-quantitative-compression";
-		} else {
-			args[6] = "--output-qualitative-compression";
-		}
-		args[7] = "temp.out";
-		args[8] = "--no-enumerate-complexes";
-
-		SimulatorCommandLine commandLine = null;
-		commandLine = new SimulatorCommandLine(args);
-		return commandLine.getSimulationArguments();
-	}
 
 	public static SimulationArguments prepareEventNumberArguments(
-			String filePath, Integer eventNumber) throws ParseException {
-		String[] args = new String[5];
+			String filePath, Integer eventNumber, Integer opMode) throws ParseException {
+		String[] args = new String[7];
 		args[0] = "--sim";
 		args[1] = filePath;
 		args[2] = "--event";
 		args[3] = eventNumber.toString();
 		args[4] = "--allow-incomplete-substance";
+		args[5] = "--operation-mode";
+		if (opMode == null)
+			args[6] = "1";
+		else 
+			args[6] = opMode.toString();
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
 	}
 
 	public static SimulationArguments prepareTimeArguments(String filePath,
-			Integer time) throws ParseException {
-		String[] args = new String[5];
+			Integer time, Integer opMode) throws ParseException {
+		String[] args = new String[7];
 		args[0] = "--sim";
 		args[1] = filePath;
 		args[2] = "--time";
 		args[3] = time.toString();
 		args[4] = "--allow-incomplete-substance";
+		args[5] = "--operation-mode";
+		if (opMode == null)
+			args[6] = "1";
+		else
+			args[6] = opMode.toString();
 		SimulatorCommandLine commandLine = null;
 		commandLine = new SimulatorCommandLine(args);
 		return commandLine.getSimulationArguments();
@@ -221,11 +192,11 @@ public class Initializator extends DefaultPropertiesForTest {
 		return commandLine.getSimulationArguments();
 	}
 
-	public void reset(String filePath) {
+	public void reset(String filePath, Integer opMode) {
 		try {
 			mySimulator.getSimulationData().setSimulationArguments(
 					InfoType.OUTPUT,
-					prepareSimulationArguments(prepareTestArgs(filePath)));
+					prepareSimulationArguments(prepareTestArgs(filePath, opMode)));
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);
@@ -233,8 +204,8 @@ public class Initializator extends DefaultPropertiesForTest {
 		mySimulator.resetSimulation(InfoType.OUTPUT);
 	}
 
-	public void init(String filePath) {
-		String[] testArgs = prepareTestArgs(filePath);
+	public void init(String filePath, Integer opMode) {
+		String[] testArgs = prepareTestArgs(filePath, opMode);
 		if (myFirstRun) {
 			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 
@@ -259,11 +230,10 @@ public class Initializator extends DefaultPropertiesForTest {
 			myObsComponents = mySimulator.getSimulationData().getKappaSystem()
 					.getObservables().getConnectedComponentList();
 		} else {
-			reset(filePath);
+			reset(filePath, opMode);
 		}
 
 	}
-
 	public Simulator getSimulator() {
 		return mySimulator;
 	}

@@ -12,7 +12,7 @@ public class InitTestInfluenceMap extends GenerateXMLByModel{
 
 	@Override
 	public SimulatorTestOptions prepareTestModelArgs() {
-		return SimulatorTestOptions.defaultContactMapOptions(defaultPathModelFileName(), true);
+		return SimulatorTestOptions.defaultContactMapOptions(defaultPathModelFileName(), true, getOperationMode());
 	}
 
 	@Override

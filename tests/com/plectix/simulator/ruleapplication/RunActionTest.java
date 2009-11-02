@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.solution.OperationMode;
@@ -27,14 +28,16 @@ public class RunActionTest extends InitTestAction {
 	private static String FilePath = "test.data" + separator + "actions"
 			+ separator;
 	private Rule activeRule;
+	private Integer opMode;
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return getAllTestFileNames(FilePath);
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(FilePath));
 	}
 
-	public RunActionTest(String fileName) {
-		super(FilePath + fileName);
+	public RunActionTest(String fileName, Integer opMode) {
+		super(FilePath + fileName, opMode);
+		this.opMode = opMode;
 	}
 
 	@Test
@@ -61,13 +64,13 @@ public class RunActionTest extends InitTestAction {
 
 		if (rhs == null) {
 			if (lhs == null)
-				fail("uncorrect rule");
+				fail("operation mode: " + opMode + "\nuncorrect rule");
 			else {
 				if (solution.size() != (lhs.size()))
-					fail("uncorrect size of solution");
+					fail("operation mode: " + opMode + "\nuncorrect size of solution");
 			}
 		} else if (solution.size() != (rhs.size() + lhs.size()))
-			fail("uncorrect size of solution");
+			fail("operation mode: " + opMode + "\nuncorrect size of solution");
 
 		compareWithSolution(rhs, solution, "rhs");
 		compareWithSolution(lhs, solution, "lhs");
@@ -81,7 +84,7 @@ public class RunActionTest extends InitTestAction {
 			for (ConnectedComponentInterface cc : listCC) {
 				foundCC = null;
 				if ((foundCC = CComponentComparator.findComponent(cc, solutionCC)) == null) {
-					fail("Not found connected component from " + ruleName + ":"
+					fail("operation mode: " + opMode + "\nNot found connected component from " + ruleName + ":"
 							+ Converter.toString(cc));
 				} else {
 					solutionCC.remove(foundCC);

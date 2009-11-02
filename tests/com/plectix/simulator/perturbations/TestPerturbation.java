@@ -12,10 +12,12 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements
 		Test {
 	private String myTestFileName = "";
 	private Simulator mySimulator;
+	private Integer operationMode;
 
-	protected TestPerturbation(String fileName) {
+	protected TestPerturbation(String fileName, Integer opMode) {
 		super();
 		myTestFileName = fileName;
+		operationMode = opMode;
 	}
 
 	@Before
@@ -23,7 +25,7 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements
 		String fullTestFilePath = getPrefixFileName() + myTestFileName;
 		Initializator initializator = getInitializator();
 
-		initializator.init(fullTestFilePath);
+		initializator.init(fullTestFilePath, operationMode);
 		mySimulator = initializator.getSimulator();
 		try {
 			mySimulator.getSimulationData().setSnapshotTime("0");

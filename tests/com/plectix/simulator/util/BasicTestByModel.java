@@ -14,15 +14,17 @@ public abstract class BasicTestByModel extends DefaultPropertiesForTest {
 	private Simulator simulator;
 	private String mycount;
 	private String directory;
+	private Integer operationMode;
 
 	public abstract SimulatorTestOptions prepareTestModelArgs();
 
-	public void initializeSimulation(String dir, String filename) {
+	public void initializeSimulation(String dir, String filename, Integer opMode) {
 
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		simulator = new Simulator();
 		directory = dir;
 		mycount = filename;
+		operationMode = opMode;
 
 		SimulationData simulationData = simulator.getSimulationData();
 
@@ -66,6 +68,10 @@ public abstract class BasicTestByModel extends DefaultPropertiesForTest {
 	public String defaultExtentionAndCountFileName(String path,
 			String prefixFileName) {
 		return path + prefixFileName + mycount + DEFAULT_EXTENSION_FILE;
+	}
+	
+	public Integer getOperationMode() {
+		return operationMode;
 	}
 
 }

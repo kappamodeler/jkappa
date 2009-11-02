@@ -15,6 +15,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.FileNameCollectionGenerator;
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
 import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsInterface;
 
@@ -37,13 +38,13 @@ public class TestSubViews {
 	
 	@Parameters
 	public static Collection<Object[]> configs() {
-		return FileNameCollectionGenerator
+		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 		.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
-				"~kappa");
+				"~kappa"));
 	}
 
-	public TestSubViews(String count, String patch) {
-		initTestSubView.initializeSimulation(patch, count);
+	public TestSubViews(String count, String patch, Integer opMode) {
+		initTestSubView.initializeSimulation(patch, count, opMode);
 		init(initTestSubView.getSourcePath());
 	}
 

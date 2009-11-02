@@ -18,6 +18,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.InputSource;
 
 import com.plectix.simulator.FileNameCollectionGenerator;
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.util.StringBufferReader;
 
 @RunWith(value = Parameterized.class)
@@ -43,12 +44,12 @@ public class TestInfluenceMap {
 	
 	@Parameters
 	public static Collection<Object[]> configs() {
-		return FileNameCollectionGenerator.getAllFileNamesWithPathWithModifyName(
-				prefixSourseModel, "~kappa");
+		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator.getAllFileNamesWithPathWithModifyName(
+				prefixSourseModel, "~kappa"));
 	}
 
-	public TestInfluenceMap(String count, String patch) {
-		currentXMLData = initTestInfluenceMap.generateXML(patch, count);
+	public TestInfluenceMap(String count, String patch, Integer opMode) {
+		currentXMLData = initTestInfluenceMap.generateXML(patch, count, opMode);
 	}
 
 	@Before

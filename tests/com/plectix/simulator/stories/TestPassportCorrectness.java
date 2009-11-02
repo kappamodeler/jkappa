@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.simulator.SimulationArguments.StoryCompressionMode;
 import com.plectix.simulator.staticanalysis.stories.MarkOfEvent;
 import com.plectix.simulator.staticanalysis.stories.Stories;
@@ -38,11 +39,11 @@ public class TestPassportCorrectness extends InitStoriesTests {
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return getAllTestFileNames(path);
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(path));
 	}
 
-	public TestPassportCorrectness(String fileName) {
-		super(path, fileName, false, false, true, true);
+	public TestPassportCorrectness(String fileName, Integer opMode) {
+		super(path, fileName, false, false, true, true, opMode);
 		passports = new TreeMap<Integer, CompressionPassport>();
 	}
 

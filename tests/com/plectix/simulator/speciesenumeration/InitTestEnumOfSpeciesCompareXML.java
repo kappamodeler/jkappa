@@ -22,6 +22,7 @@ public class InitTestEnumOfSpeciesCompareXML extends GenerateXMLByModel {
 		options.append(SimulatorOption.ENUMERATE_COMPLEXES);
 		options.append(SimulatorOption.SHORT_CONSOLE_OUTPUT);
 		options.append(SimulatorOption.NO_BUILD_INFLUENCE_MAP);
+		options.appendOperationMode(getOperationMode());
 		return options;
 	}
 }

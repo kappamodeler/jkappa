@@ -15,6 +15,7 @@ public abstract class GenerateXMLByModel extends DefaultPropertiesForTest {
 	private String sessionPath;
 	private String mycount;
 	private String directory;
+	private Integer operationMode;
 
 	public abstract SimulatorTestOptions prepareTestModelArgs();
 
@@ -22,19 +23,20 @@ public abstract class GenerateXMLByModel extends DefaultPropertiesForTest {
 
 	public abstract String getComparePath();
 
-	public String generateXML(String dir, String prefixFile) {
+	public String generateXML(String dir, String prefixFile, Integer opMode) {
 		
-		return generateXML(dir, null, prefixFile);
+		return generateXML(dir, null, prefixFile, opMode);
 		
 	}
 	
-	private String generateXML(String dir, String dirResult, String prefixFile) {
+	private String generateXML(String dir, String dirResult, String prefixFile, Integer opMode) {
 
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		mySimulator = new Simulator();
 		directory = dir;
 		sessionPath = dirResult;
 		mycount = prefixFile;
+		operationMode = opMode;
 		
 		SimulatorCommandLine commandLine;
 		try {
@@ -70,6 +72,10 @@ public abstract class GenerateXMLByModel extends DefaultPropertiesForTest {
 
 	public String getDirectoryInside() {
 		return directory;
+	}
+	
+	public Integer getOperationMode() {
+		return operationMode;
 	}
 	
 	public String fileName(String suffix, String number, String extension) {

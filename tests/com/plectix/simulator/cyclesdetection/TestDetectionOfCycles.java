@@ -11,6 +11,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.FileNameCollectionGenerator;
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMap;
 import com.plectix.simulator.staticanalysis.cycledetection.Detector;
@@ -28,13 +29,14 @@ public class TestDetectionOfCycles {
 
 	@Parameters
 	public static Collection<Object[]> configs() {
-		return FileNameCollectionGenerator
+		Collection<Object[]> allFileNames = FileNameCollectionGenerator
 				.getAllFileNamesWithPathWithModifyName(prefixSourceModel,
 						"~kappa");
+		return OperationModeCollectionGenerator.generate(allFileNames);
 	}
 
-	public TestDetectionOfCycles(String count, String patch) {
-		initTestDetectionOfCycles.initializeSimulation(patch, count);
+	public TestDetectionOfCycles(String count, String path, Integer opMode) {
+		initTestDetectionOfCycles.initializeSimulation(path, count, opMode);
 	}
 
 	@Before
@@ -49,6 +51,6 @@ public class TestDetectionOfCycles {
 		list.addAll(contactMap.getAbstractSolution().getAgentNameToAgent()
 				.values());
 		Detector detector = new Detector(subViews, list);
-		System.out.println(detector.extractCycles().size());
+		//System.out.println(detector.extractCycles().size());
 	}
 }

@@ -13,7 +13,7 @@ public class InitTestDetectionOfCycles extends BasicTestByModel {
 
 	@Override
 	public SimulatorTestOptions prepareTestModelArgs() {
-		return SimulatorTestOptions.defaultContactMapOptions(defaultModelFileName());
+		return SimulatorTestOptions.defaultContactMapOptions(defaultModelFileName(), getOperationMode());
 	}
 
 	public AllSubViewsOfAllAgentsInterface getSubViews() {

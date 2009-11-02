@@ -8,6 +8,7 @@ import java.util.Map;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.simulationclasses.injections.Injection;
@@ -28,11 +29,11 @@ public class TestPositiveUpdate extends TestUpdate {
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return getAllTestFileNames(myPrefixFileName);
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(myPrefixFileName));
 	}
 
-	public TestPositiveUpdate(String filePath) {
-		super(filePath);
+	public TestPositiveUpdate(String filePath, Integer opMode) {
+		super(filePath, opMode);
 		myTestFileName = filePath;
 		myFailer.loadTestFile(myTestFileName);
 	}

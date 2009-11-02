@@ -14,7 +14,7 @@ public class InitTestContactMap extends GenerateXMLByModel {
 	@Override
 	public SimulatorTestOptions prepareTestModelArgs() {
 		
-		SimulatorTestOptions options = SimulatorTestOptions.defaultContactMapOptions(defaultPathModelFileName());
+		SimulatorTestOptions options = SimulatorTestOptions.defaultContactMapOptions(defaultPathModelFileName(), getOperationMode());
 		
 		if (getDirectoryInside().contains(FOLDER_RULES)) {
 			options.appendFocus(fileName(DEFAULT_PREFIX_FOCUS_FILE, getMyCountInside(), DEFAULT_EXTENSION_FILE));

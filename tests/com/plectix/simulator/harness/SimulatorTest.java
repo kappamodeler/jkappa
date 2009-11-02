@@ -28,7 +28,7 @@ public class SimulatorTest extends Thread {
 		simulator = new Simulator();
 		SimulationData simulationData = simulator.getSimulationData();
 		SimulatorCommandLine commandLine = SimulatorTestOptions
-				.defaultContactMapCommandLine(currentFile);
+				.defaultContactMapCommandLine(currentFile, null);
 
 		printSeparator();
 		printNameFile();

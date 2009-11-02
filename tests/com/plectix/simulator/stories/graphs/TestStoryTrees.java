@@ -11,6 +11,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.staticanalysis.stories.graphs.MergeStoriesGraphs;
 import com.plectix.simulator.staticanalysis.stories.graphs.UniqueGraph;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
@@ -27,11 +28,11 @@ public class TestStoryTrees extends InitStoriesTests {
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return getAllTestFileNames(testFileNamePrefix);
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(testFileNamePrefix));
 	}
 
-	public TestStoryTrees(String testFilePath) {
-		super(testFileNamePrefix, testFilePath, false, false, false, true);
+	public TestStoryTrees(String testFilePath, Integer opMode) {
+		super(testFileNamePrefix, testFilePath, false, false, false, true, opMode);
 	}
 
 	@Test

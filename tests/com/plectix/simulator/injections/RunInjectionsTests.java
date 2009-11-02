@@ -20,6 +20,6 @@ public class RunInjectionsTests extends TestRunner {
 	public static void setup() {
 		String fullTestFilePath = "test.data" + separator + "TheGreatTestFile"
 				+ DEFAULT_EXTENSION_FILE;
-		getInitializator().init(fullTestFilePath);
+		getInitializator().init(fullTestFilePath, null);
 	}
 }

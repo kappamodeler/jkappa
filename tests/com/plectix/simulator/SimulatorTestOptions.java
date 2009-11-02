@@ -17,21 +17,21 @@ public final class SimulatorTestOptions {
 		return this.createCommandLine(argumentsArray);
 	}
 	
-	public static final SimulatorCommandLine defaultContactMapCommandLine(String filename) 
+	public static final SimulatorCommandLine defaultContactMapCommandLine(String filename, Integer opMode) 
 				throws ParseException {
-		return defaultContactMapCommandLine(filename, false);
+		return defaultContactMapCommandLine(filename, false, opMode);
 	}
 	
-	public static final SimulatorCommandLine defaultContactMapCommandLine(String filename, boolean influenceMap) 
+	public static final SimulatorCommandLine defaultContactMapCommandLine(String filename, boolean influenceMap, Integer opMode) 
 				throws ParseException {
-		return defaultContactMapOptions(filename, influenceMap).toCommandLine();
+		return defaultContactMapOptions(filename, influenceMap, opMode).toCommandLine();
 	}
 	
-	public static final SimulatorTestOptions defaultContactMapOptions(String filename) {
-		return defaultContactMapOptions(filename, false);
+	public static final SimulatorTestOptions defaultContactMapOptions(String filename, Integer opMode) {
+		return defaultContactMapOptions(filename, false, opMode);
 	}
 	
-	public static final SimulatorTestOptions defaultContactMapOptions(String filename, boolean influenceMap) {
+	public static final SimulatorTestOptions defaultContactMapOptions(String filename, boolean influenceMap, Integer opMode) {
 		SimulatorTestOptions options = new SimulatorTestOptions();
 		options.append(SimulatorOption.SHORT_CONSOLE_OUTPUT);
 		options.appendContactMap(filename);
@@ -46,7 +46,18 @@ public final class SimulatorTestOptions {
 		options.append(SimulatorOption.NO_COMPUTE_QUANTITATIVE_COMPRESSION);
 		options.append(SimulatorOption.NO_ENUMERATE_COMPLEXES);
 		options.append(SimulatorOption.ALLOW_INCOMPLETE_SUBSTANCE);
+		
+		options.appendOperationMode(opMode);
 		return options;
+	}
+
+	public final void appendOperationMode(Integer opMode) {
+		
+		append(SimulatorOption.OPERATION_MODE);
+		if (opMode!= null)
+			append(opMode.toString());
+		else 
+			append("1");
 	}
 	
 	public final void appendContactMap(String filename) {

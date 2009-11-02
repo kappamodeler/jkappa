@@ -31,10 +31,12 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	private String myTestFileName = "";
 
 	private List<Injection> myCurrentInjectionsList;
+	private Integer operationMode;
 
-	protected TestUpdate(String fileName) {
+	protected TestUpdate(String fileName, Integer opMode) {
 		super();
 		myTestFileName = fileName;
+		operationMode = opMode;
 	}
 
 	public abstract void init();
@@ -49,7 +51,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		String fullTestFilePath = getPrefixFileName() + myTestFileName;
 		Initializator initializator = getInitializator();
 
-		initializator.init(fullTestFilePath);
+		initializator.init(fullTestFilePath, operationMode);
 		mySimulator = initializator.getSimulator();
 		run();
 		init();

@@ -60,7 +60,7 @@ public class ExceptionsTest extends DefaultPropertiesForTest {
 		switch (modifier) {
 		case RULES:
 			return new RulesParagraphReader(Initializator
-					.prepareDefaultArguments(mySourceFilePath), myAgentFactory);
+					.prepareDefaultArguments(mySourceFilePath, null), myAgentFactory);
 		}
 		return null;
 	}

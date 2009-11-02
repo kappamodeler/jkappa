@@ -18,6 +18,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.xml.sax.InputSource;
 
 import com.plectix.simulator.FileNameCollectionGenerator;
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.subviews.util.Entry;
 import com.plectix.simulator.subviews.util.Set;
 import com.plectix.simulator.subviews.util.Tag;
@@ -41,13 +42,13 @@ public class TestSubViewsCompareXML {
 
 	@Parameters
 	public static Collection<Object[]> configs() {
-		return FileNameCollectionGenerator
+		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 		.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
-				"~kappa");
+				"~kappa"));
 	}
 
-	public TestSubViewsCompareXML(String prefixFile, String path) {
-		currentXMLData = initTestSubViewsCompareXML.generateXML(path, prefixFile);
+	public TestSubViewsCompareXML(String prefixFile, String path, Integer opMode) {
+		currentXMLData = initTestSubViewsCompareXML.generateXML(path, prefixFile, opMode);
 	}
 
 	@Before

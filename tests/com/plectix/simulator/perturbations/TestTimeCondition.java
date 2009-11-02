@@ -8,6 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.QuantityDataParser;
@@ -20,6 +21,7 @@ public class TestTimeCondition extends TestPerturbation {
 	private String myTestFileName = "";
 	private Failer myFailer = new Failer();
 	private Rule myActiveRule;
+	private Integer operationMode;
 	private static Map<String, Integer> myExpectedData;
 
 	@BeforeClass
@@ -28,15 +30,17 @@ public class TestTimeCondition extends TestPerturbation {
 				+ DEFAULT_EXTENSION_FILE)).parse();
 	}
 
-	public TestTimeCondition(String fileName) {
-		super(fileName);
+	public TestTimeCondition(String fileName, Integer opMode) {
+		super(fileName, opMode);
 		myTestFileName = fileName;
+		operationMode = opMode;
 		myFailer.loadTestFile(myTestFileName);
 	}
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return getAllTestFileNames(myPrefixFileName);
+		return OperationModeCollectionGenerator
+				.generate(getAllTestFileNames(myPrefixFileName));
 	}
 
 	@Override

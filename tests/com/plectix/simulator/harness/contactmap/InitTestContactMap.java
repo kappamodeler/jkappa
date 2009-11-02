@@ -40,10 +40,10 @@ public class InitTestContactMap extends DefaultPropertiesForTest {
 		try {
 			if (dir.contains(testModel)) {
 				String filename = fileName("~kappa", count);
-				commandLine = SimulatorTestOptions.defaultContactMapCommandLine(filename);
+				commandLine = SimulatorTestOptions.defaultContactMapCommandLine(filename, null);
 			} else {
 				String filename = fileName("~kappa", count);
-				SimulatorTestOptions options = SimulatorTestOptions.defaultContactMapOptions(filename);
+				SimulatorTestOptions options = SimulatorTestOptions.defaultContactMapOptions(filename, null);
 				options.appendFocus(fileName("~focus", count));
 				commandLine = options.toCommandLine();
 			}

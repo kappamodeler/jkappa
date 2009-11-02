@@ -12,6 +12,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.FileNameCollectionGenerator;
+import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.localviews.LocalViewsMain;
 import com.plectix.simulator.staticanalysis.rulecompression.RootedRule;
@@ -30,13 +31,13 @@ public class TestQualitative {
 	
 	@Parameters
 	public static Collection<Object[]> configs() {
-		return FileNameCollectionGenerator
+		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 		.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
-				"~kappa");
+				"~kappa"));
 	}
 
-	public TestQualitative(String filenameCount, String pathModel) {
-		initTestRuleCompressions.initializeSimulation(pathModel, filenameCount);
+	public TestQualitative(String filenameCount, String pathModel, Integer opMode) {
+		initTestRuleCompressions.initializeSimulation(pathModel, filenameCount, opMode);
 	}
 
 	@Before
