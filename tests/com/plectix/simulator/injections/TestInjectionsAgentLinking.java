@@ -21,9 +21,9 @@ public class TestInjectionsAgentLinking extends TestInjections {
 	private final int number;
 	private final int[] obsAgentsOrder;
 	private static final int myScaryQuantity = 3;
-	private static final int myHalfInitPower = 199;
+	private static final int myHalfInitPower = 199 + 609;
 	private static final int myStraightInitPower = myScaryQuantity * 100 + 28
-			+ myHalfInitPower + 2;
+			+ myHalfInitPower + 2 - 1136;
 	/*
 	 * myScaryQuantity 10 + 14 is quantity of agents in scary substances
 	 * myHalfInitPower - 1 - previous agents (-1 caused by 2 D() in one place)

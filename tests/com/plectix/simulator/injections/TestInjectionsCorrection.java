@@ -16,6 +16,7 @@ import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.MessageConstructor;
 
 public class TestInjectionsCorrection extends TestInjections {
+	private static int shift = 609;
 	private static final String separator = File.separator;
 	private final Map<String, SortedSet<Long>> compareData;
 	private final Failer failer = new Failer();
@@ -52,7 +53,7 @@ public class TestInjectionsCorrection extends TestInjections {
 		Collection<Injection> injectionsList = c.getInjectionsList();
 		for (Injection injection : injectionsList) {
 			for (Agent agent : injection.getCorrespondence().values()) {
-				solutionLinkingForCurrentObs.add(agent.getId());
+				solutionLinkingForCurrentObs.add(agent.getId()-shift);
 			}
 		}
 

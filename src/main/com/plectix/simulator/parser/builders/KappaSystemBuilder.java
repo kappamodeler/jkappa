@@ -29,11 +29,6 @@ public final class KappaSystemBuilder {
 		MasterSolutionModel masterSolutionModel = null;
 		if(!simulationData.getSimulationArguments().isAllowIncompleteSubstance())
 			masterSolutionModel= new MasterSolutionModel();
-		// solution
-		if (arguments.isSolutionRead()) { 
-			ModelSolution solution = model.getSolution();
-			kappaSystem.setSolution((new SolutionBuilder(simulationData)).build(solution, masterSolutionModel));
-		}
 
 		// rules
 		List<Rule> rules = (new RuleBuilder(kappaSystem)).build(model.getRules(), masterSolutionModel);
@@ -58,5 +53,11 @@ public final class KappaSystemBuilder {
 		List<Perturbation> perturbations = 
 			(new PerturbationsBuilder(simulationData)).build(model.getPerturbations(), masterSolutionModel);
 		kappaSystem.setPerturbations(perturbations);
+
+		// solution
+		if (arguments.isSolutionRead()) { 
+			ModelSolution solution = model.getSolution();
+			kappaSystem.setSolution((new SolutionBuilder(simulationData)).build(solution, masterSolutionModel));
+		}
 	}
 }
