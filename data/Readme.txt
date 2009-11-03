@@ -148,6 +148,9 @@ Example files:
 									   if you run it for 100 events it runs without an error, so the bug is dependent on the simulation time. try:
 									   --sim tami-ENG-313.ka --no-maps --event 10000 --points 1000 --output-final-state --rescale 1.0 --xml-session-name tmp.xml 
 									
+    ENG-326.ka 					       received from Ty via https://jira.plectix.com/browse/ENG-326
+									   The results of JSIM (Plectix-Simulator-20091102) and simplx (SIMulator by PLectiX: 4.2..10037_32) disagree!
+									   Command line parameters are: --no-maps --time 100 
 
 
 Options for simulator:

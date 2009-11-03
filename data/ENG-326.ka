@@ -1,0 +1,53 @@
+'Shf.PDGFR{6191}' PDGFRA(ligand!1,dock,dimer!3), PDGFRA(ligand!2,dimer!3,dock), PDGF(receptor2!1,receptor!2), Shf(receptor) <-> PDGFRA(ligand!1,dock,dimer!3), PDGFRA(ligand!2,dimer!3,dock!4), PDGF(receptor2!1,receptor!2), Shf(receptor!4) @ 1.0,1.0
+'SRF.ELK1.SRF{6212}' ELK1(srf,srf2,S389~PO4,S383~PO4), SRF(elk1,active~yes), SRF(elk1,active~yes) <-> ELK1(srf!2,srf2!1,S389~PO4,S383~PO4), SRF(elk1!1,active~yes), SRF(elk1!2,active~yes) @ 1.0,1.0
+'SHC_Grb2_SOS1_activation{6205}' PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), SHC_Gb2_SOS1(active~no) -> PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), SHC_Gb2_SOS1(active~yes) @ 1.0
+'SHB.PDGFR{6189}' PDGFRA(dimer!3,ligand!2,dock), PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), SHB(receptor) <-> PDGFRA(dimer!3,ligand!2,dock!4), PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), SHB(receptor!4) @ 1.0,1.0
+'PLCG1_phosph{6195}' PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), PLCgamma1(Y1253~unphosph,Y782~unphosph) -> PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), PLCgamma1(Y1253~PO4,Y782~PO4) @ 1.0
+'PKC_activation{6203}' DAG(), Ca(location~cytosol), PKC(active~no) -> DAG(), Ca(location~cytosol), PKC(active~yes) @ 1.0
+'PKC-mediated_ELK1_phosph{6207}' ELK1(S383~unphosph,S389~unphosph), PKC(active~yes) -> ELK1(S383~PO4,S389~PO4), PKC(active~yes) @ 1.0
+'PI3K_activation{6193}' PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), PI3K(active~no) -> PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), PI3K(active~yes) @ 1.0
+'PI-4-5-P2 -> IP3+DAG{6201}' PLCgamma1(Y1253~PO4,Y782~PO4), PI-4-5-P2() -> PLCgamma1(Y1253~PO4,Y782~PO4), IP3(), DAG() @ 1.0
+'PDGFR.PDGF.PDGFR{6188}' PDGFRA(ligand,dock,dimer), PDGFRA(ligand,dimer,dock), PDGF(receptor2,receptor) <-> PDGFRA(ligand!2,dock,dimer!3), PDGFRA(ligand!1,dimer!3,dock), PDGF(receptor2!2,receptor!1) @ 1.0,1.0
+'JUN_activation{6209}' JUN(active~no,fos) -> JUN(active~yes,fos) @ 1.0
+'JAK1_phosph{6196}' PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), JAK1(Y1022~unphosph) -> PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), JAK1(Y1022~PO4) @ 1.0
+'FOS_activation{6211}' ELK1(S383~PO4,S389~PO4,srf2,srf), FOS(active~no,jun) -> ELK1(S383~PO4,S389~PO4,srf2,srf), FOS(active~yes,jun) @ 1.0
+'FOS.JUN{6213}' JUN(fos,active~yes), FOS(active~yes,jun) <-> JUN(fos!1,active~yes), FOS(active~yes,jun!1) @ 1.0,1.0
+'ELK1_phosph{6206}' SHC_Gb2_SOS1(active~yes), ELK1(S383~unphosph,S389~unphosph) -> SHC_Gb2_SOS1(active~yes), ELK1(S383~PO4,S389~PO4) @ 1.0
+'Cav3.PDGFR{6192}' PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), Caveolin-3(receptor) <-> PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock!4), Caveolin-3(receptor!4) @ 1.0,1.0
+'Cav1.PDGFR{6198}' PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), Caveolin-1(receptor) <-> PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock!4), Caveolin-1(receptor!4) @ 1.0,1.0
+'Ca_release{6202}' IP3(), Ca(location~store) -> IP3(), Ca(location~cytosol) @ 1.0
+'CRKL.PDGFR{6199}' PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), CRKL(receptor) <-> PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock!4), CRKL(receptor!4) @ 1.0,1.0
+'CRK.PDGFR{6197}' PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), CRK(receptor) <-> PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock!4), CRK(receptor!4) @ 1.0,1.0
+'C3G.CRK{6200}' PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock!4), CRK(receptor!4,c3g), C3G(crk) <-> PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock!4), CRK(receptor!4,c3g!5), C3G(crk!5) @ 1.0,1.0
+'AlphaV.PDGFR{6194}' PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock), Alpha-V-integrin(receptor) <-> PDGF(receptor!2,receptor2!1), PDGFRA(ligand!1,dimer!3,dock), PDGFRA(ligand!2,dimer!3,dock!4), Alpha-V-integrin(receptor!4) @ 1.0,1.0
+'+FOS{6214}' JUN(active~yes,fos!1), FOS(active~yes,jun!1) -> JUN(active~yes,fos!1), FOS(active~yes,jun!1), FOS(active~no,jun) @ 1.0
+
+'SRF_activation{6208}' CK2A1(), SRF(active~no) -> CK2A1(), SRF(active~yes) @ 1.0
+'JUN_deactivation{6210}' JUN(fos,active~yes), CK2A1() -> JUN(fos,active~no), CK2A1() @ 1.0
+
+%init: 100 * (CK2A1())
+%init: 100 * (FOS(active~no,jun))
+%init: 100 * (SHC_Gb2_SOS1(active~no))
+%init: 100 * (CRK(receptor,c3g))
+%init: 100 * (IP3())
+%init: 100 * (Shf(receptor))
+%init: 100 * (CRKL(receptor))
+%init: 100 * (JAK1(Y1022~unphosph))
+%init: 100 * (SRF(elk1,active~no))
+%init: 100 * (DAG())
+%init: 100 * (JUN(fos,active~no))
+%init: 100 * (PDGF(receptor,receptor2))
+%init: 100 * (PDGFRA(ligand,dimer,dock))
+%init: 100 * (Alpha-V-integrin(receptor))
+%init: 100 * (PI-4-5-P2())
+%init: 100 * (C3G(crk))
+%init: 100 * (PI3K(active~no))
+%init: 100 * (Ca(location~store))
+%init: 100 * (PKC(active~no))
+%init: 100 * (PLCgamma1(Y1253~unphosph,Y782~unphosph))
+%init: 100 * (Caveolin-1(receptor))
+%init: 100 * (ELK1(S383~unphosph,S389~unphosph,srf,srf2))
+%init: 100 * (SHB(receptor))
+%init: 100 * (Caveolin-3(receptor))
+
+%obs: 'JUN' JUN(fos,active~yes) 
