@@ -1,6 +1,6 @@
 package com.plectix.simulator.parser.util;
 
-/*package*/ final class AgentFormatChecker {
+public final class AgentFormatChecker {
 	private static final String PATTERN_LINE_AGENT_SITE = "([0-9[a-zA-Z]]++[0-9[a-zA-Z]*\\_\\^\\-]*)";
 	private static final String PATTERN_LINE_STATE = "([0-9[a-zA-Z]]+)";
 	private static final String PATTERN_LINE_CONNECTED = "((!_)|(![0-9]+)|(\\?))*";
