@@ -1,6 +1,5 @@
 package com.plectix.simulator.staticanalysis;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -25,8 +24,7 @@ import com.plectix.simulator.util.OutputUtils;
  * @author evlasov
  *
  */
-@SuppressWarnings("serial")
-public class Observables implements Serializable {
+public class Observables {
 	private boolean ocamlStyleObsName = false;
 	private boolean unifiedTimeSeriesOutput = false;
 	private final List<ObservableState> countTimeList = new ArrayList<ObservableState>();;

@@ -1,6 +1,5 @@
 package com.plectix.simulator.staticanalysis;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,8 +18,7 @@ import com.plectix.simulator.interfaces.ObservableRuleInterface;
  * @author avokhmin
  *
  */
-@SuppressWarnings("serial")
-public final class ObservableRuleComponent implements ObservableRuleInterface, Serializable {
+public final class ObservableRuleComponent implements ObservableRuleInterface {
 	private final Rule rule;
 	private final int idAsObservable;
 	private final List<Double> stateHistory = new ArrayList<Double>();

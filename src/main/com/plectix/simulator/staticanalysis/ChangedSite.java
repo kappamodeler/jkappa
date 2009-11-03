@@ -1,9 +1,7 @@
 package com.plectix.simulator.staticanalysis;
 
-import java.io.Serializable;
 
-@SuppressWarnings("serial")
-/*package*/ final class ChangedSite implements Serializable {
+/*package*/ final class ChangedSite {
 	private final Site site;
 	private boolean hasLinkState;
 	private boolean hasInternalState;

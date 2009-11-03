@@ -1,6 +1,5 @@
 package com.plectix.simulator.staticanalysis;
 
-import java.io.Serializable;
 
 /**
  * This class implements "link" entity.
@@ -14,8 +13,7 @@ import java.io.Serializable;
  * @author evlasov
  *
  */
-@SuppressWarnings("serial")
-public final class Link implements Serializable {
+public final class Link {
 	private LinkStatus statusLink;	
 	private Site linkSite = null;
 	

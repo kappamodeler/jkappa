@@ -1,11 +1,9 @@
 package com.plectix.simulator.util;
 
 import java.io.PrintStream;
-import java.io.Serializable;
 import java.util.Formatter;
 
-@SuppressWarnings("serial")
-public final class Info implements Serializable{
+public final class Info {
 	public enum InfoType {
 		INFO,
 		INTERNAL,

@@ -1,6 +1,5 @@
 package com.plectix.simulator.staticanalysis;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -15,8 +14,7 @@ import com.plectix.simulator.simulationclasses.injections.LiftElement;
  * 
  * @author avokhmin
  */
-@SuppressWarnings("serial")
-public final class Site extends NamedEntity implements Serializable {
+public final class Site extends NamedEntity {
 	public static final String DEFAULT_NAME = "SITE_DEFAULT_NAME";
 
 	private final String name;

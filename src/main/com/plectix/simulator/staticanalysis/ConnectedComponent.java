@@ -1,6 +1,5 @@
 package com.plectix.simulator.staticanalysis;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,8 +27,7 @@ import com.plectix.simulator.util.string.ConnectedComponentToSmilesString;
  * @author avokhmin
  *
  */
-@SuppressWarnings("serial")
-public class ConnectedComponent implements ConnectedComponentInterface, Serializable {
+public class ConnectedComponent implements ConnectedComponentInterface {
 	
 	private final List<Agent> agents = new ArrayList<Agent>();
 	private Map<String, List<SpanningTree>> spanningTreeMap;

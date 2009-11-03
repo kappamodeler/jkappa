@@ -1,6 +1,5 @@
 package com.plectix.simulator.staticanalysis;
 
-import java.io.Serializable;
 
 /**
  * This class implements internal state of fixed site.
@@ -9,8 +8,7 @@ import java.io.Serializable;
  * @author avokhmin
  *
  */
-@SuppressWarnings("serial")
-public final class InternalState extends NamedEntity implements Serializable {
+public final class InternalState extends NamedEntity {
 
 	public static final String DEFAULT_NAME = "DEFAULT_INTERNAL_STATE_NAME".intern();
 	/**

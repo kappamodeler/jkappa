@@ -1,6 +1,5 @@
 package com.plectix.simulator.staticanalysis;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,9 +17,8 @@ import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
  * @author avokhmin
  *
  */
-@SuppressWarnings("serial")
 public final class ObservableConnectedComponent extends ConnectedComponent
-		implements ObservableConnectedComponentInterface, Serializable {
+		implements ObservableConnectedComponentInterface {
 
 	/**
 	 * If we have several automorphic components in observables list, than

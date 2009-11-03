@@ -1,6 +1,5 @@
 package com.plectix.simulator.staticanalysis;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -17,8 +16,7 @@ import com.plectix.simulator.simulationclasses.injections.Injection;
  * @author avokhmin
  *
  */
-@SuppressWarnings("serial")
-public class Agent extends NamedEntity implements Comparable<Agent>, Serializable {
+public class Agent extends NamedEntity implements Comparable<Agent> {
 	/**
 	 * idInConnectedComponent is the unique id in ConnectedComponent id is an
 	 * unique id for agent

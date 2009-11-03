@@ -1,6 +1,5 @@
 package com.plectix.simulator.staticanalysis;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +8,7 @@ import java.util.List;
  * @author avokhmin
  *
  */
-@SuppressWarnings("serial")
-/*package*/ final class SpanningTree implements Serializable {
+/*package*/ final class SpanningTree {
 
 	private final List<Integer>[] vertices;
 	private final int rootIndex;
