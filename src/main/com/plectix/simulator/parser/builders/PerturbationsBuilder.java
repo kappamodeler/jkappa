@@ -21,9 +21,9 @@ import com.plectix.simulator.simulationclasses.perturbations.RateExpression;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.util.SpeciesManager;
 
 public final class PerturbationsBuilder {
 	private final SubstanceBuilder substanceBuilder;
@@ -102,8 +102,8 @@ public final class PerturbationsBuilder {
 						.getModification();
 				List<Agent> agentList = substanceBuilder
 						.buildAgents(modification.getSubstanceAgents());
-				List<ConnectedComponentInterface> ccList = SimulationUtils
-						.buildConnectedComponents(agentList);
+				List<ConnectedComponentInterface> ccList = SpeciesManager
+						.formConnectedComponents(agentList);
 				
 				for (ConnectedComponentInterface cc : ccList) {
 					List<ConnectedComponentInterface> ccL = new ArrayList<ConnectedComponentInterface>();

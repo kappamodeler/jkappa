@@ -15,7 +15,6 @@ import com.plectix.simulator.staticanalysis.stories.storage.Event;
  * @author avokhmin
  * @see ActionType
  */
-@SuppressWarnings("serial")
 public class BreakAction extends Action {
 	// These name are just as "first" and "second". In fact their 
 	// order doesn't play any role 

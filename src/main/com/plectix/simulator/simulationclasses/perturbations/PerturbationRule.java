@@ -15,7 +15,6 @@ import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageExceptio
  * @author avokhmin
  *
  */
-@SuppressWarnings("serial")
 public final class PerturbationRule extends Rule {
 
 	private int count;

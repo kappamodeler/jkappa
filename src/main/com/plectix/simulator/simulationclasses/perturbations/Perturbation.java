@@ -1,6 +1,5 @@
 package com.plectix.simulator.simulationclasses.perturbations;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +15,7 @@ import com.plectix.simulator.util.InequalitySign;
  * @author avokhmin
  * @see PerturbationType
  */
-@SuppressWarnings("serial")
-public final class Perturbation implements Serializable{
+public final class Perturbation {
 
 	private final PerturbationType type;
 	private final double timeCondition;

@@ -16,7 +16,6 @@ import com.plectix.simulator.simulationclasses.injections.LiftElement;
 import com.plectix.simulator.simulationclasses.probability.SkipListSelector;
 import com.plectix.simulator.simulationclasses.probability.WeightedItemSelector;
 import com.plectix.simulator.simulationclasses.solution.SuperSubstance;
-import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.string.ConnectedComponentToSmilesString;
 
@@ -453,8 +452,19 @@ public class ConnectedComponent implements ConnectedComponentInterface, Serializ
 	}
 	
 	public final void deleteIncomingInjections() {
-		for (Injection inj : getIncomingInjectionsSet()) {
-			SimulationUtils.doNegativeUpdate(inj);
+		for (Injection injection : getIncomingInjectionsSet()) {
+			if (injection != ThreadLocalData.getEmptyInjection()) {
+				for (Site site : injection.getChangedSites()) {
+					site.getParentAgent().getDefaultSite().clearIncomingInjections(injection);
+					site.getParentAgent().getDefaultSite().clearLifts();
+					site.clearIncomingInjections(injection);
+					site.clearLifts();
+				}
+				for (Site site : injection.getSiteList()) {
+					site.removeInjectionFromLift(injection);
+				}
+				injection.getConnectedComponent().removeInjection(injection);
+			}
 		}		
 	}
 	

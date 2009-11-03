@@ -19,7 +19,6 @@ import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageExceptio
  * @author avokhmin
  * @see ActionType
  */
-@SuppressWarnings("serial")
 public class DeleteAction extends Action {
 	private final Rule rule;
 	private final Agent deletedAgent;

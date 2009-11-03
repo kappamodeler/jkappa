@@ -1,6 +1,5 @@
 package com.plectix.simulator.simulationclasses.solution;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
@@ -9,8 +8,7 @@ import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.staticanalysis.Agent;
 
-@SuppressWarnings("serial")
-/*package*/ final class SolutionFirstMode extends AbstractComplexSolution implements Serializable {
+/*package*/ final class SolutionFirstMode extends AbstractComplexSolution {
 	private final StraightStorage straightStorage;
 	
 	// we instantiate this type through UniversalSolution only

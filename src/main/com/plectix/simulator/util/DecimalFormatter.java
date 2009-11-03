@@ -1,7 +1,5 @@
 package com.plectix.simulator.util;
 
-import java.util.Formatter;
-
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.ThreadLocalData;
 

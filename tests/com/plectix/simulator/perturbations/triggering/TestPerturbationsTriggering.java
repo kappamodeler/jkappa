@@ -3,7 +3,6 @@ package com.plectix.simulator.perturbations.triggering;
 import static org.junit.Assert.fail;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 

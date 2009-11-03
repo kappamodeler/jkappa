@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.xml.stream.XMLStreamException;
-import com.plectix.simulator.simulator.XMLSimulatorWriter;
 
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 import com.plectix.simulator.simulator.SimulationArguments.StoryCompressionMode;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.stories.compressions.CompressionPassport;

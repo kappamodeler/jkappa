@@ -9,10 +9,10 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamException;
-import com.plectix.simulator.simulator.XMLSimulatorWriter;
 
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.XMLSimulatorWriter;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.subviews.MainSubViews;
 

@@ -24,7 +24,6 @@ public final class SimulationArguments {
 	public static final long DEFAULT_MONITOR_PEAK_MEMORY = -1;
 	public static final int DEFAULT_CLOCK_PRECISION = 60;
 	public static final String DEFAULT_XML_SESSION_NAME = "simplx.xml";
-	public static final String DEFAULT_SERIALIZATION_FILE_NAME = "~tmp.sd";
 	public static final int DEFAULT_AGENTS_LIMIT = 100;
 	public static final int DEFAULT_LIVE_DATA_POINTS = 500;
 	public static final String DEFAULT_LIVE_DATA_CONSUMER_CLASSNAME = "com.plectix.simulator.streaming.DensityDependantLiveDataConsumer";
@@ -39,6 +38,7 @@ public final class SimulationArguments {
 		CONTACT_MAP
 	}
 
+	// TODO move to Stories, I guess
 	public enum StoryCompressionMode {
 		/** Sets the mode for stories to No Compression */
 		NONE,
@@ -48,14 +48,6 @@ public final class SimulationArguments {
 		STRONG
 	}
 
-	public enum SerializationMode {
-		/** Corresponds to the "no_save_all' option of simplx.*/
-		NONE,
-		/** All data is read from the serialized data instead of the Kappa file */
-		READ,
-		/** All data is saved in serializationFileName */
-		SAVE
-	}
 	
 	private boolean noDumpStdoutStderr = false;
 	private boolean help = false;
@@ -71,7 +63,6 @@ public final class SimulationArguments {
 	private double timeLength = 0;
 	private boolean isTime = false;
 	private int iterations = 1;
-	private String randomizer = null;
 	private boolean activationMap = false;
 	private boolean inhibitionMap = false;
 	private boolean createSubViews = false;
@@ -79,7 +70,6 @@ public final class SimulationArguments {
 	private boolean compile = false;
 	private boolean debugInit = false;
 	private boolean genereteMap = false;
-	private boolean contactMap = false;
 	private boolean createLocalViews = false;
 	private boolean numberOfRuns = false;
 	private boolean storify = false;
@@ -92,15 +82,12 @@ public final class SimulationArguments {
 	private int clockPrecision = DEFAULT_CLOCK_PRECISION;
 	private boolean outputFinalState = false;
 	private String xmlSessionPath = "";
-	private String serializationFileName = DEFAULT_SERIALIZATION_FILE_NAME;
-	private String inputFile = null;
 	private String inputFilename = null;	
 	private String snapshotsTimeString = null;
 	private String focusFilename = null;
 	private String commandLineString = null;
 	private SimulationType simulationType = SimulationType.NONE;
 	private StoryCompressionMode storifyMode = StoryCompressionMode.NONE;
-	private SerializationMode serializationMode = SerializationMode.NONE;
 	private OperationMode operationMode = OperationMode.DEFAULT;
 	private boolean allowIncompletes = true;
 	private int agentsLimit = DEFAULT_AGENTS_LIMIT;
@@ -151,8 +138,6 @@ public final class SimulationArguments {
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		CharBuffer buffer = CharBuffer.allocate((int) file.length());
 		reader.read(buffer);
-		String inputFile = buffer.rewind().toString();
-		simulationArguments.setInputFile(inputFile);
 		System.err.println(PersistenceUtils.getXStream().toXML(simulationArguments));
 
 	}
@@ -323,28 +308,6 @@ public final class SimulationArguments {
 		this.maxNumberOfEvents = event;
 	}
 
-	
-	public final String getRandomizer() {
-		return randomizer;
-	}
-
-	/**
-	 * Registers an optional executable to use as an external random number generator.
-	 * <br><br>
-	 * If set to <code>null</code>, 
-	 * {@link <a href="http://java.sun.com/javase/6/docs/api/java/util/Random.html">java.util.Random</a>} 
-	 * is used as the random number generator.
-	 * Otherwise, the given randomizer is run in a new process through 
-	 * <code>Runtime.getRuntime().exec(randomizer)</code> and its output is scanned to get random numbers.
-	 * <br><br>
-	 * The default value is <code>null</code>.
-	 * 
-	 * @param randomizer
-	 */
-	public final void setRandomizer(String randomizer) {
-		this.randomizer = randomizer;
-	}
-	
 	public final boolean isActivationMap() {
 		return activationMap;
 	}
@@ -414,20 +377,6 @@ public final class SimulationArguments {
 	public final void setGenereteMap(boolean genereteMapOption) {
 		this.genereteMap = genereteMapOption;
 	}
-	
-	public final boolean isContactMap() {
-		return contactMap;
-	}
-	
-	/**
-	 * Corresponds to the "contact_map" option of simplx. 
-	 * 
-	 * @param contactMapOption
-	 */
-	public final void setContactMap(boolean contactMapOption) {
-		this.contactMap = contactMapOption;
-	}
-	
 	
 	public final boolean isStorify() {
 		return storify;
@@ -585,23 +534,6 @@ public final class SimulationArguments {
 		this.xmlSessionPath = xmlSessionPath;
 	}
 	
-	public final String getSerializationFileName() {
-		return serializationFileName;
-	}
-	
-	/**
-	 * Corresponds to the "--save_all" option of simplx which requires
-	 * an argument as the name of the file in which to save the whole 
-	 * initialization's marshalling (including influence maps).
-	 * The default value is {@value #DEFAULT_SERIALIZATION_FILE_NAME}.
-	 * 
-	 * @param serializationFileName
-	 * @see #DEFAULT_SERIALIZATION_FILE_NAME
-	 */
-	public final void setSerializationFileName(String serializationFileName) {
-		this.serializationFileName = serializationFileName;
-	}
-	
 	public final String getInputFilename() {
 		return inputFilename;
 	}
@@ -674,19 +606,6 @@ public final class SimulationArguments {
 		this.noDumpStdoutStderr = noDumpStdoutStderr;
 	}
 
-	public final String getInputFile() {
-		return inputFile;
-	}
-
-	/**
-	 * The contents of the Kappa file to simulate or to construct the maps for
-	 * 
-	 * @param inputFile
-	 */
-	public final void setInputFile(String inputFile) {
-		this.inputFile = inputFile;
-	}
-	
 	public final int getIterations() {
 		return iterations;
 	}
@@ -735,20 +654,6 @@ public final class SimulationArguments {
 	 */
 	public final void setSimulationType(SimulationType simulationType) {
 		this.simulationType = simulationType;
-	}
-
-	public final SerializationMode getSerializationMode() {
-		return serializationMode;
-	}
-
-	/**
-	 * Sets the serialization mode.
-	 *  
-	 * @param serializationMode
-	 * @see SerializationMode
-	 */
-	public final void setSerializationMode(SerializationMode serializationMode) {
-		this.serializationMode = serializationMode;
 	}
 
 	public final StoryCompressionMode getStorifyMode() {

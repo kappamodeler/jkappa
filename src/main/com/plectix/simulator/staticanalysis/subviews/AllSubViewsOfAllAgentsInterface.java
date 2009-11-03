@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.xml.stream.XMLStreamException;
-import com.plectix.simulator.simulator.XMLSimulatorWriter;
 
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.simulator.XMLSimulatorWriter;

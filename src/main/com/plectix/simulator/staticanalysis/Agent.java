@@ -2,6 +2,7 @@ package com.plectix.simulator.staticanalysis;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,47 @@ public class Agent extends NamedEntity implements Comparable<Agent>, Serializabl
 		this.name = DEFAULT_NAME;
 	}
 
+	/**
+	 * This method takes an agent and finds all agents which somehow connected to it.
+	 * I.e. it finds connected component, containing this agent.
+	 * <br> NOTE: this method DOES NOT use link indexes! So we CAN use it during the simulation process
+	 * @param agent agent to find component for
+	 * @return connected component, containing this agent
+	 */
+	public final ConnectedComponentInterface getConnectedComponent() {
+		Map<Long, Agent> adjacentAgents = new LinkedHashMap<Long, Agent>();
+		adjacentAgents.put(id, this);
+		adjacentAgents = this.getAdjacentAgents(adjacentAgents);
+		int index = 0;
+		for (Agent agentIn : adjacentAgents.values()) {
+			// TODO notice the line commented below
+			// agentIn.setIdInRuleSide(index);
+			agentIn.setIdInConnectedComponent(index++);
+		}
+
+		return new ConnectedComponent(adjacentAgents.values());
+	}
+
+	private final Map<Long, Agent> getAdjacentAgents(Map<Long, Agent> agents) {
+		Map<Long, Agent> allAgents = agents;
+		Set<Agent> agentAddList = new LinkedHashSet<Agent>();
+
+		for (Site site : siteMap.values()) {
+			Site siteLink = site.getLinkState().getConnectedSite();
+			if ((siteLink != null)
+					&& (!allAgents.keySet().contains(siteLink.getParentAgent().getId()))) {
+				Agent agentLink = siteLink.getParentAgent();
+				agentAddList.add(agentLink);
+				allAgents.put(agentLink.getId(), agentLink);
+			}
+		}
+		
+		for (Agent agentFromList : agentAddList)
+			allAgents = agentFromList.getAdjacentAgents(allAgents);
+
+		return allAgents;
+	}
+	
 	/**
 	 * This method returns default site from current agent
 	 * @return default site from current agent

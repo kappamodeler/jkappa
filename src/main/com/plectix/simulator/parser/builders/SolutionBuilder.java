@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.parser.ParseErrorException;
-import com.plectix.simulator.parser.ParseErrorMessage;
 import com.plectix.simulator.parser.abstractmodel.ModelSolution;
 import com.plectix.simulator.parser.abstractmodel.SolutionLineData;
 import com.plectix.simulator.simulationclasses.solution.SolutionFactory;

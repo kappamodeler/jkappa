@@ -8,10 +8,10 @@ import com.plectix.simulator.parser.abstractmodel.observables.ObservableComponen
 import com.plectix.simulator.parser.abstractmodel.observables.ObservableRuleLineData;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.util.SpeciesManager;
 
 public final class ObservablesBuilder {
 	private final Observables existingObservables;
@@ -29,8 +29,8 @@ public final class ObservablesBuilder {
 			List<Agent> agentsList = substanceBuilder.buildAgents(componentData.getAgents());
 			String obsName = componentData.getName();
 			int id = componentData.getId();
-			List<ConnectedComponentInterface> listCC = SimulationUtils
-										.buildConnectedComponents(agentsList);
+			List<ConnectedComponentInterface> listCC = SpeciesManager
+										.formConnectedComponents(agentsList);
 			observables.addConnectedComponents(listCC, obsName, componentData.getLine(), id);
 		}
 		

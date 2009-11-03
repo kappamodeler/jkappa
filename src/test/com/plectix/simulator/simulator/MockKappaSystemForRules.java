@@ -5,7 +5,6 @@ import java.util.List;
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
-import com.plectix.simulator.simulator.KappaSystemInterface;
 import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMap;

@@ -3,8 +3,6 @@
  */
 package com.plectix.simulator.simulationclasses.perturbations;
 
-import java.io.Serializable;
-
 import com.plectix.simulator.interfaces.ObservableInterface;
 import com.plectix.simulator.interfaces.PerturbationExpressionInterface;
 import com.plectix.simulator.staticanalysis.Observables;
@@ -14,9 +12,8 @@ import com.plectix.simulator.staticanalysis.Observables;
  * @author avokhmin
  * @see Perturbation
  */
-@SuppressWarnings("serial")
 // TODO rename or get rid
-/*package*/ final class SumParameters implements PerturbationExpressionInterface, Serializable {
+/*package*/ final class SumParameters implements PerturbationExpressionInterface {
 	private final ObservableInterface observableComponent;
 	private double parameter;
 	

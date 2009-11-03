@@ -16,9 +16,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
-import com.plectix.simulator.simulator.XMLSimulatorWriter;
 import javax.xml.transform.TransformerException;
 
 import org.apache.commons.cli.HelpFormatter;
@@ -50,6 +48,7 @@ import com.plectix.simulator.util.DecimalFormatter;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.MemoryUtil;
 import com.plectix.simulator.util.ObservableState;
+import com.plectix.simulator.util.OutputUtils;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
@@ -112,9 +111,7 @@ public final class SimulationData {
 			kappaSystem.clearPerturbations();
 		}
 
-		if (simulationArguments.getSerializationMode() != SimulationArguments.SerializationMode.READ) {
-			readSimulatonFile(outputType);
-		}
+		readSimulatonFile(outputType);
 
 		kappaSystem.initialize(outputType);
 
@@ -553,10 +550,10 @@ public final class SimulationData {
 			}
 
 			StringBuffer sb = new StringBuffer();
-			sb.append(SimulationUtils.printPartRule(rule.getLeftHandSide(),
+			sb.append(OutputUtils.printPartRule(rule.getLeftHandSide(),
 					isOcamlStyleNamingInUse()));
 			sb.append("->");
-			sb.append(SimulationUtils.printPartRule(rule.getRightHandSide(),
+			sb.append(OutputUtils.printPartRule(rule.getRightHandSide(),
 					isOcamlStyleNamingInUse()));
 			StringBuffer ch = new StringBuffer();
 			for (int j = 0; j < sb.length(); j++)
@@ -579,41 +576,9 @@ public final class SimulationData {
 		println("PERTURBATIONS:");
 
 		for (Perturbation perturbation : kappaSystem.getPerturbations()) {
-			println(perturbationToString(perturbation));
+			println(OutputUtils.perturbationToString(perturbation, kappaSystem));
 		}
 
-	}
-
-	private final String perturbationToString(Perturbation perturbation) {
-		StringBuffer sb = new StringBuffer();
-		sb.append("-");
-		switch (perturbation.getType()) {
-		case TIME: {
-			sb.append("Whenever current time ");
-			sb.append(perturbation.inequalitySign().toString());
-			sb.append(perturbation.getTimeCondition());
-			break;
-		}
-		case NUMBER: {
-			sb.append("Whenever [");
-			sb.append(kappaSystem.getObservables().getComponentList().get(
-					perturbation.getObservableName()).getName());
-			sb.append("] ");
-			sb.append(perturbation.inequalitySign().toString());
-			sb.append(SimulationUtils
-					.perturbationParametersToString(perturbation
-							.getLHSParametersList()));
-			break;
-		}
-		}
-
-		sb.append(" do kin(");
-		sb.append(perturbation.getPerturbationRule().getName());
-		sb.append("):=");
-		sb.append(SimulationUtils.perturbationParametersToString(perturbation
-				.getRHSParametersList()));
-
-		return sb.toString();
 	}
 
 	private final void outputBar() {
@@ -955,10 +920,10 @@ public final class SimulationData {
 	 */
 	public static final String getData(Rule rule, boolean isOcamlStyleObsName) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(SimulationUtils.printPartRule(rule.getLeftHandSide(),
+		sb.append(OutputUtils.printPartRule(rule.getLeftHandSide(),
 				isOcamlStyleObsName));
 		sb.append("->");
-		sb.append(SimulationUtils.printPartRule(rule.getRightHandSide(),
+		sb.append(OutputUtils.printPartRule(rule.getRightHandSide(),
 				isOcamlStyleObsName));
 		return sb.toString();
 	}

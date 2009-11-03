@@ -18,7 +18,7 @@ public final class RuleApplicator {
 	}
 	
 	public final List<Injection> applyRule(Rule rule, List<Injection> injections, SimulationData data) throws StoryStorageException {
-		if (!rule.isUnusualBinary()) {
+		if (!rule.bolognaWanted()) {
 			rule.applyRule(injections, data);
 			return injections;
 		} else {

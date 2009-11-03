@@ -6,8 +6,6 @@ import java.util.List;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.injections.LiftElement;
-import com.plectix.simulator.simulationclasses.solution.SolutionUtils;
-import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
@@ -39,8 +37,8 @@ public final class Reaction {
 		this.rule = rule;
 		this.firstInjection = firstInjection;
 		this.secondInjection = secondInjection;
-		this.firstComponent = SolutionUtils.getConnectedComponent(firstInjection.getImageAgent());
-		this.secondComponent = SolutionUtils.getConnectedComponent(secondInjection.getImageAgent());
+		this.firstComponent = firstInjection.getImageAgent().getConnectedComponent();
+		this.secondComponent = secondInjection.getImageAgent().getConnectedComponent();
 		Agent rulesFirstAgent = rule.getLeftHandSide().get(0).getAgents().get(0);
 		Agent rulesSecondAgent = rule.getLeftHandSide().get(1).getAgents().get(0);
 		
@@ -69,15 +67,23 @@ public final class Reaction {
 	private final Agent findSimilarAgent(ConnectedComponentInterface component, 
 			Agent agent, Agent exception) {
 		for (Agent ccAgent : component.getAgents()) {
-			if (SimulationUtils.justCompareAgents(ccAgent, agent) && ccAgent != exception) {
+			boolean tmp = true;
+			if (agent == null || ccAgent == null)
+				tmp =  false;
+			for (Site site : agent.getSites()) {
+				Site solutionSite = ccAgent.getSiteByName(site.getName());
+				if (solutionSite == null || !site.expandedEqualz(solutionSite, false)) {
+					tmp = false;
+					break;
+				}
+			}
+			if (tmp && ccAgent != exception) {
 				return ccAgent;
 			}
 		}
 		return null;
 	}
 
-	
-	
 	public final List<Injection> getInjections() {
 		if (list == null) {
 			list = new ArrayList<Injection>();

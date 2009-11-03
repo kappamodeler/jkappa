@@ -14,7 +14,6 @@ import com.plectix.simulator.staticanalysis.stories.storage.Event;
  * @author avokhmin
  * @see ActionType
  */
-@SuppressWarnings("serial")
 public class ModifyAction extends Action {
 	private final Site targetSite;
 	private final String newInternalStateName;

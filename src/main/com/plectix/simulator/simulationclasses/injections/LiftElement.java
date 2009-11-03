@@ -1,7 +1,5 @@
 package com.plectix.simulator.simulationclasses.injections;
 
-import java.io.Serializable;
-
 import com.plectix.simulator.staticanalysis.ConnectedComponent;
 import com.plectix.simulator.staticanalysis.Site;
 
@@ -11,8 +9,7 @@ import com.plectix.simulator.staticanalysis.Site;
  * @author avokhmin
  * @see Site
  */
-@SuppressWarnings("serial")
-public final class LiftElement implements Serializable {
+public final class LiftElement {
 
 	private final ConnectedComponent connectedComponent;
 	private final Injection injection;

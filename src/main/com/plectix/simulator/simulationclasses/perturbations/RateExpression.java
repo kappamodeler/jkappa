@@ -1,7 +1,5 @@
 package com.plectix.simulator.simulationclasses.perturbations;
 
-import java.io.Serializable;
-
 import com.plectix.simulator.interfaces.PerturbationExpressionInterface;
 import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
@@ -11,8 +9,7 @@ import com.plectix.simulator.staticanalysis.Rule;
  * @author avokhmin
  * @see Perturbation
  */
-@SuppressWarnings("serial")
-public final class RateExpression implements PerturbationExpressionInterface, Serializable {
+public final class RateExpression implements PerturbationExpressionInterface {
 	private final Rule rule;
 	private double value;
 

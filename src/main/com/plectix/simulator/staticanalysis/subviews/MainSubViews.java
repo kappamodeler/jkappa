@@ -11,10 +11,6 @@ import java.util.Map;
 import java.util.Queue;
 
 import javax.xml.stream.XMLStreamException;
-import com.plectix.simulator.simulator.XMLSimulatorWriter;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.SolutionInterface;

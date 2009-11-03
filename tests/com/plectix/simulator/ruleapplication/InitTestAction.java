@@ -41,7 +41,6 @@ public class InitTestAction extends DirectoryTestsRunner {
 		SimulatorTestOptions options = new SimulatorTestOptions();
 		options.append(SimulatorOption.ALLOW_INCOMPLETE_SUBSTANCE);
 		options.append(SimulatorOption.DEBUG_INIT);
-		options.append(SimulatorOption.NO_SAVE_ALL);
 		options.append(SimulatorOption.NO_MAPS);
 		options.appendSimulation(filePath);
 		options.appendOperationMode(opMode);

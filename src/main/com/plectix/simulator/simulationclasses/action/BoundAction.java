@@ -18,7 +18,6 @@ import com.plectix.simulator.staticanalysis.stories.storage.Event;
  * @author avokhmin
  * @see ActionType
  */
-@SuppressWarnings("serial")
 public class BoundAction extends Action {
 	private final Site boundingSourceSite;
 	private final Site boundingTargetSite;

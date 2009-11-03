@@ -1,11 +1,5 @@
 package com.plectix.simulator.simulator;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -74,49 +68,6 @@ public final class KappaSystem implements KappaSystemInterface {
 	 */
 	public final void initialize(InfoType outputType) {
 		SimulationArguments args = simulationData.getSimulationArguments();
-		if (args.getSerializationMode() == SimulationArguments.SerializationMode.READ) {
-			ObjectInputStream ois;
-			try {
-				ois = new ObjectInputStream(new FileInputStream(args
-						.getSerializationFileName()));
-				solution = (SolutionInterface) ois.readObject();
-				rules = (WeightedItemSelector<Rule>) ois.readObject();
-				orderedRulesList = (List<Rule>) ois.readObject();
-				observables = (Observables) ois.readObject();
-				perturbations = (List<Perturbation>) ois.readObject();
-				simulationData
-						.setSnapshotTimes((List<Double>) ois.readObject());
-				args.setMaxNumberOfEvents((long) ois.readLong());
-				args.setTimeLength((double) ois.readDouble());
-				ois.close();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		if (args.getSerializationMode() == SimulationArguments.SerializationMode.SAVE) {
-			try {
-				ObjectOutputStream oos = new ObjectOutputStream(
-						new FileOutputStream(args.getSerializationFileName()));
-				oos.writeObject(solution);
-				oos.writeObject(rules);
-				oos.writeObject(orderedRulesList);
-				oos.writeObject(observables);
-				oos.writeObject(perturbations);
-				oos.writeObject(simulationData.getSnapshotTimes());
-				oos.writeLong(args.getMaxNumberOfEvents());
-				oos.writeDouble(args.getTimeLength());
-				oos.flush();
-				oos.close();
-				args
-						.setSerializationMode(SimulationArguments.SerializationMode.READ);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 
 		observables.init(args.getTimeLength(), args.getInitialTime(), args
 				.getMaxNumberOfEvents(), args.getPoints(), args.isTime());
@@ -226,21 +177,19 @@ public final class KappaSystem implements KappaSystemInterface {
 	public final void doPositiveUpdate(Rule rule,
 			List<Injection> currentInjectionsList) {
 		if (simulationData.getSimulationArguments().isActivationMap()) {
-			SimulationUtils.positiveUpdate(rule.getActivatedRules(), rule
-					.getActivatedObservable(), rule);
+			rule.positiveUpdate(rule.getActivatedRules(), rule
+					.getActivatedObservable());
 		} else {
-			SimulationUtils.positiveUpdate(getRules(), observables
-					.getConnectedComponentList(), rule);
+			rule.positiveUpdate(getRules(), observables.getConnectedComponentList());
 		}
 
-		List<Agent> freeAgents = SimulationUtils
-				.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
+		List<Agent> freeAgents = UpdatesPerformer.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
 		doPositiveUpdateForDeletedAgents(freeAgents);
 	}
 
 	private final void doPositiveUpdateForDeletedAgents(List<Agent> agents) {
 		for (Agent agent : agents) {
-			for (Rule rule : getRules()) {
+			for (Rule rule : orderedRulesList) {
 				for (ConnectedComponentInterface cc : rule.getLeftHandSide()) {
 					Injection inj = cc.createInjection(agent);
 					if (inj != null) {

@@ -72,7 +72,7 @@ public final class StraightStorage implements StorageInterface {
 		for (Agent agent : agentMap) {
 			int index = (int) agent.getId();
 			if (!bitset.get(index)) {
-				ConnectedComponentInterface cc = SolutionUtils.getConnectedComponent(agent);
+				ConnectedComponentInterface cc = agent.getConnectedComponent();
 				for (Agent agentCC : cc.getAgents()) {
 					bitset.set((int) agentCC.getId(), true);
 				}
@@ -92,7 +92,7 @@ public final class StraightStorage implements StorageInterface {
 		}
 		SuperSubstance image = injection.getSuperSubstance();
 		if (image == null) {
-			ConnectedComponentInterface component = SolutionUtils.getConnectedComponent(injection.getImageAgent());
+			ConnectedComponentInterface component = injection.getImageAgent().getConnectedComponent();
 			return component;
 		}
 		return null;

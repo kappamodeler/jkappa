@@ -30,7 +30,7 @@ import com.plectix.simulator.staticanalysis.Agent;
 			storage.addConnectedComponent(superStorage.extractComponent(injection));
 		} else {
 			if (injection.getImageAgent() != null) {
-				ConnectedComponentInterface component = SolutionUtils.getConnectedComponent(injection.getImageAgent());
+				ConnectedComponentInterface component = injection.getImageAgent().getConnectedComponent();
 				for (Agent agent : component.getAgents()) {
 					storage.addAgent(agent);
 				}	

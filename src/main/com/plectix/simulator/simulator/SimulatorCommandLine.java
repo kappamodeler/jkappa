@@ -5,6 +5,8 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 
+import com.plectix.simulator.util.CommandLineUtils;
+
 
 public final class SimulatorCommandLine {
 	private final String commandLineString;
@@ -15,11 +17,11 @@ public final class SimulatorCommandLine {
 
 	public SimulatorCommandLine(String[] commandLineArguments) throws ParseException {
 		// let's get the original command line before we change it below:
-		this.commandLineString = SimulationUtils.getCommandLineString(commandLineArguments);
+		this.commandLineString = CommandLineUtils.getCommandLineString(commandLineArguments);
 		// let's create the parser
 		CommandLineParser parser = new PosixParser();
 		// let's replace all '-' by '_' 
-		commandLineArguments = SimulationUtils.changeArguments(commandLineArguments);
+		commandLineArguments = CommandLineUtils.normalize(commandLineArguments);
 		// let's parse the command line
 		this.commandLine = parser.parse(SimulatorOption.COMMAND_LINE_OPTIONS, commandLineArguments);
 		// let's create simulation arguments:
@@ -30,7 +32,7 @@ public final class SimulatorCommandLine {
 		// let's get the original command line before we change it below:
 		this.commandLineString = commandLineString;
 		// let's replace all '-' by '_' 
-		String[] args = SimulationUtils.changeArguments(commandLineString.split(" "));
+		String[] args = CommandLineUtils.normalize(commandLineString.split(" "));
 		// let's parse the command line
 		this.commandLine = (new PosixParser()).parse(SimulatorOption.COMMAND_LINE_OPTIONS, args);
 		// let's create simulation arguments:
@@ -173,10 +175,6 @@ public final class SimulatorCommandLine {
 			simulationArguments.setDebugInit(true);
 		}
 
-		if (hasOption(SimulatorOption.CONTACT_MAP)) {
-			simulationArguments.setContactMap(true);
-		}
-
 		if (hasOption(SimulatorOption.NUMBER_OF_RUNS)) {
 			simulationArguments.setNumberOfRuns(true);
 		}
@@ -234,14 +232,6 @@ public final class SimulatorCommandLine {
 
 		if (hasOption(SimulatorOption.OUTPUT_SCHEME)) {
 			simulationArguments.setXmlSessionPath(getValue(SimulatorOption.OUTPUT_SCHEME));
-		}
-
-		if (hasOption(SimulatorOption.NO_SAVE_ALL)) {
-			simulationArguments.setSerializationMode(SimulationArguments.SerializationMode.NONE);
-		}
-
-		if (hasOption(SimulatorOption.SAVE_ALL)) {
-			simulationArguments.setSerializationFileName(getValue(SimulatorOption.SAVE_ALL)) ;
 		}
 
 		/**=====================================================================**/

@@ -3,7 +3,6 @@ package com.plectix.simulator.events;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.cli.ParseException;
@@ -15,7 +14,6 @@ import org.junit.runners.Parameterized.Parameters;
 import com.plectix.simulator.FileNameCollectionGenerator;
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.OperationModeCollectionGenerator;
-import com.plectix.simulator.SimulatorTestOptions;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;

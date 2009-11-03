@@ -309,7 +309,7 @@ public final class Simulator implements SimulatorInterface {
 				List<Injection> newInjections = ruleApplicator.applyRule(rule, injectionsList, simulationData);
 				if (newInjections != null) {
 	
-					SimulationUtils.doNegativeUpdate(newInjections);
+					UpdatesPerformer.doNegativeUpdate(newInjections);
 				
 					// positive update
 					if (LOGGER.isDebugEnabled()) {
@@ -482,7 +482,7 @@ public final class Simulator implements SimulatorInterface {
 						currentEventNumber++;
 					}
 
-					SimulationUtils.doNegativeUpdate(injectionsList);
+					UpdatesPerformer.doNegativeUpdate(injectionsList);
 					simulationData.getKappaSystem().doPositiveUpdate(rule, injectionsList);
 				} else {
 					clash++;

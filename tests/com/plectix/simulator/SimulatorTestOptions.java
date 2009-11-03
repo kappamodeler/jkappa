@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import org.apache.commons.cli.ParseException;
 
-import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.simulator.SimulatorOption;
+import com.plectix.simulator.util.CommandLineUtils;
 
 public final class SimulatorTestOptions {
 	private final ArrayList<String> arguments = new ArrayList<String>();
@@ -79,7 +79,7 @@ public final class SimulatorTestOptions {
 	}
 	
 	private final SimulatorCommandLine createCommandLine(String[] args) throws ParseException {
-		return new SimulatorCommandLine(SimulationUtils.changeArguments(args));
+		return new SimulatorCommandLine(CommandLineUtils.normalize(args));
 	}
 
 	public void appendSimulation(String filename) {

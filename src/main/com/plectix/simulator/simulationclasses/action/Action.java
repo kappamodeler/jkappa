@@ -1,6 +1,5 @@
 package com.plectix.simulator.simulationclasses.action;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -20,8 +19,7 @@ import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageExceptio
  * 
  * @see ActionType
  */
-@SuppressWarnings("serial")
-public abstract class Action implements Serializable {
+public abstract class Action {
 	private final Agent sourceAgent;
 	private final Agent targetAgent;
 	private final Rule rule;

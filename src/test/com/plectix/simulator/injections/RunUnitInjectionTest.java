@@ -14,7 +14,6 @@ import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.ModelAgent;
 import com.plectix.simulator.parser.builders.SubstanceBuilder;
 import com.plectix.simulator.parser.util.AgentFactory;
-import com.plectix.simulator.simulationclasses.solution.SolutionUtils;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.staticanalysis.Agent;
@@ -54,13 +53,13 @@ public class RunUnitInjectionTest {
 		try {
 			List<ModelAgent> obsModelAgents = af.parseAgent(OBS);
 			List<Agent> obsList = substanceBuilder.buildAgents(obsModelAgents);
-			ConnectedComponentInterface obsCC = SolutionUtils.getConnectedComponent(obsList.get(0));//new ConnectedComponent(obsList);
+			ConnectedComponentInterface obsCC = obsList.get(0).getConnectedComponent();//new ConnectedComponent(obsList);
 			obsCC.initSpanningTreeMap();
 			for (String cc : CC_LIST) {
 				List<ModelAgent> ccModelAgents = af.parseAgent(cc);
 				List<Agent> ccList = substanceBuilder.buildAgents(ccModelAgents);
 
-				ConnectedComponentInterface ccCC = SolutionUtils.getConnectedComponent(ccList.get(0));//new ConnectedComponent(ccList);
+				ConnectedComponentInterface ccCC = ccList.get(0).getConnectedComponent();//new ConnectedComponent(ccList);
 				ccCC.initSpanningTreeMap();
 				List<ConnectedComponentInterface> list = new LinkedList<ConnectedComponentInterface>();
 				list.add(ccCC);

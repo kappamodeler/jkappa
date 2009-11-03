@@ -13,7 +13,6 @@ import com.plectix.simulator.staticanalysis.stories.ActionOfAEvent;
  * @author avokhmin
  * @see CActionType
  */
-@SuppressWarnings("serial")
 public class DefaultAction extends Action {
 	private final Agent targetAgent;
 

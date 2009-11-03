@@ -6,8 +6,8 @@ import java.util.List;
 
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.util.SpeciesManager;
 
 /**
  * This class describes solutions, which perform any changes to SuperStorage during
@@ -33,7 +33,7 @@ import com.plectix.simulator.staticanalysis.Agent;
 			List<ConnectedComponentInterface> list = new ArrayList<ConnectedComponentInterface>();
 			while (!agentsCopy.isEmpty()) {
 				Agent agent = agentsCopy.get(0);
-				ConnectedComponentInterface component = SolutionUtils.getConnectedComponent(agent);
+				ConnectedComponentInterface component = agent.getConnectedComponent();
 				list.add(component);
 				for (Agent agentFromComponent : component.getAgents()) {
 					agentsCopy.remove(agentFromComponent);
@@ -48,7 +48,7 @@ import com.plectix.simulator.staticanalysis.Agent;
 	}
 	
 	public final void addInitialConnectedComponents(long quantity, List<Agent> agents) {
-		for (ConnectedComponentInterface component : SimulationUtils.buildConnectedComponents(agents)) {
+		for (ConnectedComponentInterface component : SpeciesManager.formConnectedComponents(agents)) {
 			getSuperStorage().addOrEvenIncrement(quantity, component);	
 		}
 	}

@@ -1,6 +1,5 @@
 package com.plectix.simulator.simulationclasses.injections;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -20,8 +19,7 @@ import com.plectix.simulator.staticanalysis.Site;
  * 
  * @author avokhmin
  */
-@SuppressWarnings("serial")
-public final class Injection implements Serializable, WeightedItem {
+public final class Injection implements WeightedItem {
 
 	// idInConnectedComponent -> agent
 	private final Map<Integer, Agent> agentsCorrespondence;

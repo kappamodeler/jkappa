@@ -50,10 +50,6 @@ public enum SimulatorOption {
 	VERSION("version", false, "Print simplx version"),
 	//TODO WE ARE UNABLE TO USE THIS OPTION INSIDE OF OUR SIMULATOR!
 	NO_GC("no_gc", false, "Prevent garbage collection"),
-	SAVE_ALL("save_all", true, 
-			"Name of the file in which to save the whole initialization's marshalling (including influence maps)"),
-	NO_SAVE_ALL("no_save_all",false, 
-			"do not saving the initialization of the simulation data"),
 	
 	//TODO USE THESE OPTIONS TOO =)
 	PROFILE("profile", false, "Produces profile"),
@@ -84,13 +80,6 @@ public enum SimulatorOption {
 	MEMORY_LIMIT("memory_limit", true, "Sets limit the usage of the memory (check in Mb). "
 			+ "Default is infinite (0)"),
 	CORES("cores", true, "Number of cores to use if multithreading is possible"),
-	SAVE_MAP("save_map", true, "Saves influence map into a file"),
-	LOAD_MAP("load_map", true, "Loads serialized influence map from file"),
-	LOAD_COMPILATION("load_compilation", true, "Loads serialized kappa file compilation"),
-	SAVE_COMPILATION("save_compilation", true, "Saves kappa file compilation into a file"),
-	LOAD_ALL("load_all", true, "Loads serialized init file compilation"),
-//	SAVE_ALL("save_all", true, "Saves the whole initialization's marshalling (including influence maps) into a file"),
-	//TODO description
 	QA("QA", false, "Turns QA mode on (slower, but performs more sanity checks"),
 	SNAPSHOT_TMP("snapshot_tmp_file", true, 
 			"Sets the name of temp snapshot files (default snapshots.tmp)"),

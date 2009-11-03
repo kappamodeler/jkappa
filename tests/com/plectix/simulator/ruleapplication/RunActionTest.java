@@ -16,7 +16,7 @@ import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.solution.OperationMode;
 import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.SimulationUtils;
+import com.plectix.simulator.simulator.UpdatesPerformer;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
 import com.plectix.simulator.util.CComponentComparator;
@@ -49,7 +49,7 @@ public class RunActionTest extends InitTestAction {
 
 		apply(injectionsList);
 		if (simulationData.getSimulationArguments().getOperationMode() != OperationMode.FOURTH) {
-			SimulationUtils.doNegativeUpdate(injectionsList);
+			UpdatesPerformer.doNegativeUpdate(injectionsList);
 			simulationData.getKappaSystem().doPositiveUpdate(activeRule,
 					injectionsList);
 		}

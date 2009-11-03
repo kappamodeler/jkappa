@@ -11,8 +11,8 @@ import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableInterface;
 import com.plectix.simulator.simulator.SimulationArguments;
-import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.util.ObservableState;
+import com.plectix.simulator.util.OutputUtils;
 
 /**
  * This class describes observables storage.
@@ -268,7 +268,7 @@ public class Observables implements Serializable {
 		else
 			unique = true;
 		if (ocamlStyleObsName) {
-			line = SimulationUtils.printPartRule(list, ocamlStyleObsName);
+			line = OutputUtils.printPartRule(list, ocamlStyleObsName);
 		}
 
 		for (ConnectedComponentInterface component : list) {

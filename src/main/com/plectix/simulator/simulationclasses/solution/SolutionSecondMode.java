@@ -5,8 +5,8 @@ import java.util.List;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.util.SpeciesManager;
 
 /*package*/ final class SolutionSecondMode extends AbstractComplexSolution {
 	private final SuperStorage superStorage;
@@ -37,7 +37,7 @@ import com.plectix.simulator.staticanalysis.Agent;
 
 	@Override
 	public final void addInitialConnectedComponents(long quantity, List<Agent> agents) {
-		for (ConnectedComponentInterface component : SimulationUtils.buildConnectedComponents(agents)) {
+		for (ConnectedComponentInterface component : SpeciesManager.formConnectedComponents(agents)) {
 			superStorage.addOrEvenIncrement(quantity, component);	
 		}
 	}

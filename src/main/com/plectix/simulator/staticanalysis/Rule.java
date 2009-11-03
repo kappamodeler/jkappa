@@ -1,6 +1,5 @@
 package com.plectix.simulator.staticanalysis;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -52,8 +51,7 @@ import com.plectix.simulator.util.PlxLogger;
  * @see ConnectedComponent
  * @author evlasov
  */
-@SuppressWarnings("serial")
-public class Rule implements Serializable, WeightedItem {
+public class Rule implements WeightedItem {
 	private static final PlxLogger LOGGER = ThreadLocalData
 			.getLogger(Rule.class);
 
@@ -571,7 +569,7 @@ public class Rule implements Serializable, WeightedItem {
 		for (ConnectedComponentInterface cc : this.leftHandside) {
 			activity *= cc.getInjectionsWeight();
 		}
-		if (!this.isUnusualBinary()) {
+		if (!this.bolognaWanted()) {
 			activity *= rate;
 		} else {
 			double k1 = rate;
@@ -833,10 +831,24 @@ public class Rule implements Serializable, WeightedItem {
 	 * @return <tt>true</tt> if and only if this rule is binary and we should
 	 *         consider it's additional rate when applying
 	 */
-	public final boolean isUnusualBinary() {
+	public final boolean bolognaWanted() {
 		return this.isBinary && additionalRate != -1;
 	}
 
+	public final void positiveUpdate(List<Rule> rules,
+			List<ObservableConnectedComponentInterface> observables) {
+		for (Rule ruleFromList : rules) {
+			// if(rules!=rule)
+			for (ConnectedComponentInterface cc : ruleFromList.getLeftHandSide()) {
+				cc.doPositiveUpdate(this.rightHandside);
+			}
+		}
+		for (ObservableConnectedComponentInterface oCC : observables) {
+			if (oCC.getMainAutomorphismNumber() == ObservableConnectedComponent.NO_INDEX)
+				oCC.doPositiveUpdate(this.rightHandside);
+		}
+	}
+	
 	@Override
 	public final String toString() {
 		StringBuffer st = new StringBuffer(leftHandside.toString());

@@ -12,9 +12,9 @@ import com.plectix.simulator.Initializator;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.simulator.SimulationUtils;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.simulator.UpdatesPerformer;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
@@ -115,7 +115,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 
 			myActiveRule.applyRule(myCurrentInjectionsList, mySimulator
 					.getSimulationData());
-			SimulationUtils.doNegativeUpdate(myCurrentInjectionsList);
+			UpdatesPerformer.doNegativeUpdate(myCurrentInjectionsList);
 			if (isDoingPositive()) {
 				mySimulator
 						.getSimulationData()

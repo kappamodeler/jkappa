@@ -19,7 +19,6 @@ import com.plectix.simulator.staticanalysis.stories.storage.WireHashKey;
  * @author avokhmin
  * @see ActionType
  */
-@SuppressWarnings("serial")
 public class AddAction extends Action {
 	private final Agent addedAgent;
 
