@@ -3,7 +3,7 @@ package com.plectix.simulator.parser.abstractmodel;
 import java.util.Collections;
 import java.util.List;
 
-import com.plectix.simulator.parser.util.StringUtil;
+import com.plectix.simulator.parser.util.ParserUtil;
 
 public final class ModelRule {
 	private final String name;
@@ -64,10 +64,10 @@ public final class ModelRule {
 			Collections.sort(rightHandSideAgents);
 		sb.append("'" + name + "' ");
 		if (leftHandSideAgents != null)
-			sb.append(StringUtil.listToString(leftHandSideAgents));
+			sb.append(ParserUtil.listToString(leftHandSideAgents));
 		sb.append(" -> ");
 		if(rightHandSideAgents!=null)
-		sb.append(StringUtil.listToString(rightHandSideAgents));
+		sb.append(ParserUtil.listToString(rightHandSideAgents));
 		return sb.toString();
 	}
 }

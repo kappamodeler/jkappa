@@ -22,7 +22,7 @@ import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.speciesenumeration.util.Entry;
 import com.plectix.simulator.speciesenumeration.util.Reachables;
 import com.plectix.simulator.speciesenumeration.util.Set;
-import com.plectix.simulator.util.StringBufferReader;
+import com.plectix.simulator.util.io.StringBufferReader;
 
 @RunWith(value = Parameterized.class)
 public class TestEnumOfSpeciesCompareXML {

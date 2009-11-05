@@ -18,8 +18,8 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
-import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.Info.InfoType;
+import com.plectix.simulator.util.io.PlxLogger;
 
 public class InitTestAction extends DirectoryTestsRunner {
 	private Simulator simulator;

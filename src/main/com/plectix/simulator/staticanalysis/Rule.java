@@ -23,7 +23,7 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.staticanalysis.stories.storage.EventBuilder;
 import com.plectix.simulator.staticanalysis.stories.storage.NullEvent;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
-import com.plectix.simulator.util.PlxLogger;
+import com.plectix.simulator.util.io.PlxLogger;
 
 /**
  * This class is an implementation of 'rule' entity.

@@ -3,7 +3,7 @@ package com.plectix.simulator.parser.abstractmodel;
 import java.util.Collections;
 import java.util.List;
 
-import com.plectix.simulator.parser.util.StringUtil;
+import com.plectix.simulator.parser.util.ParserUtil;
 
 public final class SolutionLineData {
 	private final List<ModelAgent> agents;
@@ -27,7 +27,7 @@ public final class SolutionLineData {
 		StringBuffer sb = new StringBuffer();
 		sb.append(counter + " * (");
 		Collections.sort(agents);
-		sb.append(StringUtil.listToString(agents) + ")");
+		sb.append(ParserUtil.listToString(agents) + ")");
 		return sb.toString();
 	}
 }

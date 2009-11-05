@@ -3,7 +3,7 @@ package com.plectix.simulator.parser.abstractmodel.perturbations;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.plectix.simulator.parser.util.StringUtil;
+import com.plectix.simulator.parser.util.ParserUtil;
 
 public final class LinearExpression {
 	private final List<LinearExpressionMonome> monomes 
@@ -19,6 +19,6 @@ public final class LinearExpression {
 	
 	@Override
 	public final String toString() {
-		return StringUtil.listToString(monomes, " + ");
+		return ParserUtil.listToString(monomes, " + ");
 	}
 }

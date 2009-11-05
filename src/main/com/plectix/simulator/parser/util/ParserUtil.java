@@ -6,7 +6,7 @@ import com.plectix.simulator.parser.KappaFileLine;
 import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.ParseErrorMessage;
 
-public final class StringUtil {
+public final class ParserUtil {
 	public static final void checkString(String stringToFind, String line, KappaFileLine kappaFileLine)
 			throws ParseErrorException {
 		int index = line.indexOf(stringToFind);

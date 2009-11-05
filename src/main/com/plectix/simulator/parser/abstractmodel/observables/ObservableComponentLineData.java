@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.plectix.simulator.parser.abstractmodel.ModelAgent;
-import com.plectix.simulator.parser.util.StringUtil;
+import com.plectix.simulator.parser.util.ParserUtil;
 
 public final class ObservableComponentLineData extends ObservablesLineData{
 	private final List<ModelAgent> agents;
@@ -37,7 +37,7 @@ public final class ObservableComponentLineData extends ObservablesLineData{
 		if (name != null) {
 			sb.append("'" + name + "' ");
 		}
-		sb.append(StringUtil.listToString(agents));
+		sb.append(ParserUtil.listToString(agents));
 		return sb.toString();
 	}
 }

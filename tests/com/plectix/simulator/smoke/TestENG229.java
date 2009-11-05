@@ -10,9 +10,9 @@ import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.util.MemoryUtil;
-import com.plectix.simulator.util.StringBufferWriter;
 import com.plectix.simulator.util.Info.InfoType;
 import com.plectix.simulator.util.MemoryUtil.PeakMemoryUsage;
+import com.plectix.simulator.util.io.StringBufferWriter;
 
 public class TestENG229 extends SmokeTest {
 	private static final String inputFile = "eng229"

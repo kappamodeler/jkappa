@@ -1,4 +1,4 @@
-package com.plectix.simulator.util;
+package com.plectix.simulator.util.io;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.Priority;
@@ -11,7 +11,7 @@ public final class PlxLogger {
 	
 	private final Logger logger;
 	
-	public PlxLogger(Class clazz) {
+	public PlxLogger(Class<?> clazz) {
 		 this.logger = Logger.getLogger(clazz);
 	}
 

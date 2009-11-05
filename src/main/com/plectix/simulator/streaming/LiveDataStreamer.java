@@ -6,7 +6,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.plectix.simulator.simulator.ThreadLocalData;
-import com.plectix.simulator.util.PlxLogger;
+import com.plectix.simulator.util.io.PlxLogger;
 
 public final class LiveDataStreamer {
 	

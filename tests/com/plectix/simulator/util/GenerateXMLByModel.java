@@ -8,6 +8,7 @@ import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.util.Info.InfoType;
+import com.plectix.simulator.util.io.StringBufferWriter;
 
 public abstract class GenerateXMLByModel extends DefaultPropertiesForTest {
 	

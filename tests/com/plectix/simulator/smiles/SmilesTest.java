@@ -11,8 +11,8 @@ import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.ConnectedComponent;
 import com.plectix.simulator.staticanalysis.Site;
 import com.plectix.simulator.util.DecimalFormatter;
-import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.PlxTimer;
+import com.plectix.simulator.util.io.PlxLogger;
 import com.plectix.simulator.util.string.ConnectedComponentToSmilesString;
 
 public class SmilesTest {

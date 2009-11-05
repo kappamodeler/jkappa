@@ -13,7 +13,7 @@ import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Link;
 import com.plectix.simulator.staticanalysis.LinkStatus;
 import com.plectix.simulator.staticanalysis.Site;
-import com.plectix.simulator.util.PlxLogger;
+import com.plectix.simulator.util.io.PlxLogger;
 
 /**
  * This class is Singleton that creates a unique String from a ConnectedComponent's list of Agents. 

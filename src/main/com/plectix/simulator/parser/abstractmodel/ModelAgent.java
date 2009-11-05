@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.plectix.simulator.parser.util.StringUtil;
+import com.plectix.simulator.parser.util.ParserUtil;
 import com.plectix.simulator.staticanalysis.NamedEntity;
 
 public final class ModelAgent extends NamedEntity implements Comparable<ModelAgent> {
@@ -66,7 +66,7 @@ public final class ModelAgent extends NamedEntity implements Comparable<ModelAge
 		}
 		Collections.sort(sortedSites);
 
-		sb.append(StringUtil.listToString(sortedSites));
+		sb.append(ParserUtil.listToString(sortedSites));
 		
 		sb.append(")");
 		return sb.toString();

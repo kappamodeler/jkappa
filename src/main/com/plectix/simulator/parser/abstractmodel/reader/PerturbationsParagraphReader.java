@@ -22,7 +22,7 @@ import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.Mo
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.ModelRateModification;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.PerturbationModification;
 import com.plectix.simulator.parser.util.AgentFactory;
-import com.plectix.simulator.parser.util.StringUtil;
+import com.plectix.simulator.parser.util.ParserUtil;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.util.InequalitySign;
 
@@ -82,7 +82,7 @@ import com.plectix.simulator.util.InequalitySign;
 					condition = parseSpeciesExpression(st, perturbationStr);
 				}
 
-				StringUtil.checkString("do", st, perturbationStr);
+				ParserUtil.checkString("do", st, perturbationStr);
 				st = st.substring(st.indexOf("do") + 2);
 				
 				// modification
@@ -110,17 +110,17 @@ import com.plectix.simulator.util.InequalitySign;
 			throw new ParseErrorException(perturbationLine,
 					ParseErrorMessage.MODIFICATION_EXPECTED);
 		}
-		StringUtil.checkString("'", line, perturbationLine);
+		ParserUtil.checkString("'", line, perturbationLine);
 		line = line.substring(line.indexOf("'") + 1).trim();
 		if (fail) {
 			throw new ParseErrorException(perturbationLine,
 					ParseErrorMessage.DO_EXPECTED);
 		}
-		StringUtil.checkString("'", line, perturbationLine);
+		ParserUtil.checkString("'", line, perturbationLine);
 		String ruleName = line.substring(0, line.indexOf("'")).trim();
 
 		int index = line.indexOf(":=");
-		StringUtil.checkString(":=", line, perturbationLine);
+		ParserUtil.checkString(":=", line, perturbationLine);
 		line = line.substring(index + 2);
 
 		LinearExpression expressionRHS = new RateExpressionParser().parse(line,
@@ -131,14 +131,14 @@ import com.plectix.simulator.util.InequalitySign;
 
 	private final SpeciesCondition parseSpeciesExpression(String line,
 			KappaFileLine perturbationLine) throws ParseErrorException {
-		StringUtil.checkString("[", line, perturbationLine);
+		ParserUtil.checkString("[", line, perturbationLine);
 
 		line = line.substring(line.indexOf("[") + 1).trim();
-		StringUtil.checkString("'", line, perturbationLine);
+		ParserUtil.checkString("'", line, perturbationLine);
 		line = line.substring(line.indexOf("'") + 1).trim();
-		String argumentObservableName = StringUtil.parseRuleName(line);
+		String argumentObservableName = ParserUtil.parseRuleName(line);
 
-		StringUtil.checkString("]", line, perturbationLine);
+		ParserUtil.checkString("]", line, perturbationLine);
 		line = line.substring(line.indexOf("]") + 1).trim();
 
 		InequalitySign inequalitySign = parseInequalitySign(line, 0);

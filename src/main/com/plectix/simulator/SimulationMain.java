@@ -10,7 +10,7 @@ import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.DefaultSimulatorFactory;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.simulator.ThreadLocalData;
-import com.plectix.simulator.util.PlxLogger;
+import com.plectix.simulator.util.io.PlxLogger;
 
 public class SimulationMain  {
 	private static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";

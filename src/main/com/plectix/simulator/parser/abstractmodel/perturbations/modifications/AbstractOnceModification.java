@@ -3,7 +3,7 @@ package com.plectix.simulator.parser.abstractmodel.perturbations.modifications;
 import java.util.List;
 
 import com.plectix.simulator.parser.abstractmodel.ModelAgent;
-import com.plectix.simulator.parser.util.StringUtil;
+import com.plectix.simulator.parser.util.ParserUtil;
 
 public abstract class AbstractOnceModification implements PerturbationModification {
 	private final List<ModelAgent> substanceAgents;
@@ -25,7 +25,7 @@ public abstract class AbstractOnceModification implements PerturbationModificati
 	
 	@Override
 	public final String toString() {
-		return "$" + actionOnceSymbol() + "ONCE " + getQuantity() + " * " + StringUtil.listToString(getSubstanceAgents());
+		return "$" + actionOnceSymbol() + "ONCE " + getQuantity() + " * " + ParserUtil.listToString(getSubstanceAgents());
 	}
 	
 	protected abstract String actionOnceSymbol();

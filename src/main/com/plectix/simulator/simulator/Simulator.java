@@ -20,11 +20,11 @@ import com.plectix.simulator.streaming.LiveData;
 import com.plectix.simulator.streaming.LiveDataSourceInterface;
 import com.plectix.simulator.streaming.LiveDataStreamer;
 import com.plectix.simulator.util.MemoryUtil;
-import com.plectix.simulator.util.PlxLogger;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
 import com.plectix.simulator.util.MemoryUtil.PeakMemoryUsage;
+import com.plectix.simulator.util.io.PlxLogger;
 
 public final class Simulator implements SimulatorInterface {
 

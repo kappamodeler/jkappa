@@ -6,7 +6,7 @@ import com.plectix.simulator.interfaces.RandomInterface;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.staticanalysis.ConnectedComponent;
 import com.plectix.simulator.util.NameDictionary;
-import com.plectix.simulator.util.PlxLogger;
+import com.plectix.simulator.util.io.PlxLogger;
 
 /**
  * This class hold data local to each <code>Thread</code> (i.e. Simulation). 

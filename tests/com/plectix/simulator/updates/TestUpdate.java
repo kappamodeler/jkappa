@@ -18,7 +18,7 @@ import com.plectix.simulator.simulator.UpdatesPerformer;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
-import com.plectix.simulator.util.PlxLogger;
+import com.plectix.simulator.util.io.PlxLogger;
 
 public abstract class TestUpdate extends DirectoryTestsRunner {
 

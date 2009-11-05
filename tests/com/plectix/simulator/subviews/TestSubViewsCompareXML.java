@@ -22,7 +22,7 @@ import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.subviews.util.Entry;
 import com.plectix.simulator.subviews.util.Set;
 import com.plectix.simulator.subviews.util.Tag;
-import com.plectix.simulator.util.StringBufferReader;
+import com.plectix.simulator.util.io.StringBufferReader;
 
 @RunWith(value = Parameterized.class)
 public class TestSubViewsCompareXML {

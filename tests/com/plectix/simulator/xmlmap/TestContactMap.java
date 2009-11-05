@@ -20,7 +20,7 @@ import org.xml.sax.InputSource;
 
 import com.plectix.simulator.FileNameCollectionGenerator;
 import com.plectix.simulator.OperationModeCollectionGenerator;
-import com.plectix.simulator.util.StringBufferReader;
+import com.plectix.simulator.util.io.StringBufferReader;
 
 @RunWith(value = Parameterized.class)
 public class TestContactMap {
