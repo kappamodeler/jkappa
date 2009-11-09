@@ -11,7 +11,7 @@ import com.plectix.simulator.interfaces.ObservableInterface;
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.builders.KappaSystemBuilder;
-import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
+import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.simulationclasses.solution.SuperSubstance;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
@@ -122,11 +122,10 @@ public class TestSimulationData {
 		} else {
 			sb.append("\n");
 
-			for (Perturbation perturbation : simulationData.getKappaSystem()
+			for (ComplexPerturbation<?, ?> perturbation : simulationData.getKappaSystem()
 					.getPerturbations()) {
 
-				PerturbationReader pr = new PerturbationReader(perturbation);
-				sb.append(pr.read());
+				sb.append("%mod: " + perturbation);
 			}
 		}
 		return sb.toString();

@@ -10,7 +10,9 @@ import com.plectix.simulator.parser.abstractmodel.ModelPerturbation;
 import com.plectix.simulator.parser.abstractmodel.SolutionLineData;
 import com.plectix.simulator.simulationclasses.action.Action;
 import com.plectix.simulator.simulationclasses.action.ActionType;
-import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
+import com.plectix.simulator.simulationclasses.perturbations.AbstractModification;
+import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
+import com.plectix.simulator.simulationclasses.perturbations.OnceModification;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
@@ -61,10 +63,11 @@ public class MasterSolutionModel {
 		throw exeption;
 	}
 
-	public void checkCorrect(List<Perturbation> res,
+	public void checkCorrect(ComplexPerturbation<?, ?>  res,
 			ModelPerturbation perturbation) throws ParseErrorException {
-		for(Perturbation p : res){
-			checkCorrect(p.getPerturbationRule(), perturbation.toString());
+		AbstractModification modification = res.getModification();
+		if (modification instanceof OnceModification) {
+			checkCorrect(((OnceModification)modification).getPerturbationRule(), perturbation.toString());			
 		}
 	}
 }

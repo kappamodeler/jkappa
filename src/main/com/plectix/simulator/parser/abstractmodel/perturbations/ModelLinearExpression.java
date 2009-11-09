@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.plectix.simulator.parser.util.ParserUtil;
 
-public final class LinearExpression {
+public final class ModelLinearExpression {
 	private final List<LinearExpressionMonome> monomes 
 			= new ArrayList<LinearExpressionMonome>();
 

@@ -33,7 +33,7 @@ import com.plectix.simulator.parser.abstractmodel.reader.RulesParagraphReader;
 import com.plectix.simulator.parser.builders.RuleBuilder;
 import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulationclasses.action.Action;
-import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
+import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.simulationclasses.solution.SolutionLine;
 import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
@@ -575,7 +575,7 @@ public final class SimulationData {
 	private final void outputPertubation() {
 		println("PERTURBATIONS:");
 
-		for (Perturbation perturbation : kappaSystem.getPerturbations()) {
+		for (ComplexPerturbation<?, ?> perturbation : kappaSystem.getPerturbations()) {
 			println(OutputUtils.perturbationToString(perturbation, kappaSystem));
 		}
 

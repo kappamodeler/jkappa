@@ -55,7 +55,7 @@ public class SimulatorTest extends Thread {
 
 	private void printNameFile() {
 		printSeparatorText();
-		System.out.println("RUN File = " + currentFile);
+//		System.out.println("RUN File = " + currentFile);
 		printSeparatorText();
 	}
 

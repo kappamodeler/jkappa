@@ -6,7 +6,7 @@ import com.plectix.simulator.parser.DocumentFormatException;
 import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.abstractmodel.ModelSolution;
-import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
+import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
@@ -50,7 +50,7 @@ public final class KappaSystemBuilder {
 		}
 
 		// perturbations
-		List<Perturbation> perturbations = 
+		List<ComplexPerturbation<?,?>> perturbations = 
 			(new PerturbationsBuilder(simulationData)).build(model.getPerturbations(), masterSolutionModel);
 		kappaSystem.setPerturbations(perturbations);
 

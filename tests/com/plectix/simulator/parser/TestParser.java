@@ -80,6 +80,7 @@ public class TestParser extends TestRunner {
 			isStorify = true;
 			prepareResult(fileWithStories, isStorify);
 		} catch (Exception e) {
+			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}
 	}

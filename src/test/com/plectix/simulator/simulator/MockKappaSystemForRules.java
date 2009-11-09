@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.simulationclasses.injections.Injection;
-import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
+import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMap;
@@ -98,7 +98,7 @@ public class MockKappaSystemForRules implements KappaSystemInterface {
 	}
 
 	@Override
-	public List<Perturbation> getPerturbations() {
+	public List<ComplexPerturbation<?, ?>> getPerturbations() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -170,7 +170,7 @@ public class MockKappaSystemForRules implements KappaSystemInterface {
 	}
 
 	@Override
-	public void setPerturbations(List<Perturbation> perturbations) {
+	public void setPerturbations(List<ComplexPerturbation<?, ?>> perturbations) {
 		// TODO Auto-generated method stub
 
 	}

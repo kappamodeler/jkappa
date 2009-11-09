@@ -1,17 +1,17 @@
 package com.plectix.simulator.parser.abstractmodel.perturbations.modifications;
 
-import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpression;
+import com.plectix.simulator.parser.abstractmodel.perturbations.ModelLinearExpression;
 
 public final class ModelRateModification implements PerturbationModification {
-	private final LinearExpression expression;
+	private final ModelLinearExpression expression;
 	private final String argument;
 	
-	public ModelRateModification(String argument, LinearExpression expression) {
+	public ModelRateModification(String argument, ModelLinearExpression expression) {
 		this.expression = expression;
 		this.argument = argument;
 	}
 	
-	public final LinearExpression getExpression() {
+	public final ModelLinearExpression getExpression() {
 		return expression;
 	}
 	

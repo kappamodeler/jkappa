@@ -308,6 +308,6 @@ public class TestContactMap {
 
 	private static void print(String message) {
 		// TODO use logger!
-		System.out.println(message);
+//		System.out.println(message);
 	}
 }

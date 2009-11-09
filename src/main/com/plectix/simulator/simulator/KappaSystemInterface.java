@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.simulationclasses.injections.Injection;
-import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
+import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMap;
@@ -45,7 +45,7 @@ public interface KappaSystemInterface {
 
 	public long generateNextAgentId();
 
-	public List<Perturbation> getPerturbations();
+	public List<ComplexPerturbation<?,?>> getPerturbations();
 
 	public void addRule(Rule rule);
 
@@ -57,7 +57,7 @@ public interface KappaSystemInterface {
 
 	public void addStories(String name);
 
-	public void setPerturbations(List<Perturbation> perturbations);
+	public void setPerturbations(List<ComplexPerturbation<?,?>> perturbations);
 
 	public void resetIdGenerators();
 

@@ -7,9 +7,10 @@ import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.controller.SimulatorStatusInterface;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.ConditionType;
 import com.plectix.simulator.simulationclasses.injections.Injection;
-import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
-import com.plectix.simulator.simulationclasses.perturbations.PerturbationType;
+import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
+import com.plectix.simulator.simulationclasses.perturbations.TimeCondition;
 import com.plectix.simulator.simulationclasses.solution.OperationMode;
 import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.staticanalysis.Rule;
@@ -260,23 +261,30 @@ public final class Simulator implements SimulatorInterface {
 			simulationData.getKappaSystem().checkPerturbation(currentTime);
 			Rule rule = simulationData.getKappaSystem().getRandomRule();
 			if (rule == null) {
-				List<Perturbation> perturbations = simulationData
+				List<ComplexPerturbation<?, ?>> perturbations = simulationData
 						.getKappaSystem().getPerturbations();
 				double tmpTime = simulationData.getSimulationArguments()
 						.getTimeLength();
-				Perturbation tmpPerturbation = null;
-				for (Perturbation perturbation : perturbations) {
-					if (perturbation.getType() == PerturbationType.TIME
-							&& perturbation.getTimeCondition() > currentTime
-							&& perturbation.getTimeCondition() < tmpTime) {
-						tmpTime = perturbation.getTimeCondition();
-						tmpPerturbation = perturbation;
+				ComplexPerturbation <TimeCondition, ?> tmpPerturbation = null;
+				
+				for (ComplexPerturbation<?, ?> perturbation : perturbations) {
+					if (perturbation.getCondition() instanceof TimeCondition) {
+						//TODO awful type cast
+						ComplexPerturbation<TimeCondition, ?> castedPerturbation 
+							= (ComplexPerturbation<TimeCondition, ?>)perturbation;
+						TimeCondition condition = castedPerturbation.getCondition();
+						double conditionTimeLimit = condition.getTimeLimit();
+						if (conditionTimeLimit > currentTime
+								&& conditionTimeLimit < tmpTime) {
+							tmpTime = conditionTimeLimit;
+							tmpPerturbation = castedPerturbation;
+						}
 					}
 				}
 				// TODO is it right way: to add timeSampleMin to currentTime for
 				// applying the perturbation?
 				if (tmpPerturbation != null){
-					currentTime = tmpPerturbation.getTimeCondition()
+					currentTime = tmpPerturbation.getCondition().getTimeLimit()
 							+ simulationData.getKappaSystem().getObservables()
 									.getTimeSampleMin();
 					simulationData.getKappaSystem().checkPerturbation(currentTime);

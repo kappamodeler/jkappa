@@ -5,8 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
-import com.plectix.simulator.interfaces.PerturbationExpressionInterface;
-import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
+import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
+import com.plectix.simulator.simulationclasses.perturbations.SpeciesCondition;
+import com.plectix.simulator.simulationclasses.perturbations.TimeCondition;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.LinkRank;
@@ -129,53 +130,31 @@ public class OutputUtils {
 	}
 	
 	
-	public static final String perturbationToString(Perturbation perturbation, KappaSystem kappaSystem) {
+	public static final String perturbationToString(ComplexPerturbation<?, ?> perturbation, KappaSystem kappaSystem) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("-");
-		switch (perturbation.getType()) {
+		
+		
+		switch (perturbation.getCondition().getType()) {
 		case TIME: {
+			TimeCondition condition = (TimeCondition)perturbation.getCondition();
 			sb.append("Whenever current time ");
-			sb.append(perturbation.inequalitySign().toString());
-			sb.append(perturbation.getTimeCondition());
+			sb.append(condition.inequalitySign());
+			sb.append(condition.getTimeLimit());
 			break;
 		}
-		case NUMBER: {
+		case SPECIES: {
+			SpeciesCondition condition = (SpeciesCondition)perturbation.getCondition();
 			sb.append("Whenever [");
-			sb.append(kappaSystem.getObservables().getComponentList().get(
-					perturbation.getObservableName()).getName());
+			sb.append(condition.getPickedObservable());
 			sb.append("] ");
-			sb.append(perturbation.inequalitySign().toString());
-			sb.append(perturbationParametersToString(perturbation
-							.getLHSParametersList()));
+			sb.append(condition.inequalitySign() + " ");
+			sb.append(condition.getExpression());
 			break;
 		}
 		}
-
-		sb.append(" do kin(");
-		sb.append(perturbation.getPerturbationRule().getName());
-		sb.append("):=");
-		sb.append(perturbationParametersToString(perturbation
-				.getRHSParametersList()));
-
-		return sb.toString();
-	}
-
-	private static final String perturbationParametersToString(
-			List<PerturbationExpressionInterface> perturbationExpressions) {
-		StringBuffer sb = new StringBuffer();
-
-		int index = 1;
-		for (PerturbationExpressionInterface expression : perturbationExpressions) {
-			sb.append(expression.getValueToString());
-			if (expression.getName() != null) {
-				sb.append("*[");
-				sb.append(expression.getName());
-				sb.append("]");
-			}
-			if (index < perturbationExpressions.size())
-				sb.append(" + ");
-			index++;
-		}
+		// TODO match compile option in simplx
+		sb.append(perturbation.getModification());
 
 		return sb.toString();
 	}

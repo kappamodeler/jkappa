@@ -10,12 +10,12 @@ import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.ParseErrorMessage;
 import com.plectix.simulator.parser.abstractmodel.ModelAgent;
 import com.plectix.simulator.parser.abstractmodel.ModelPerturbation;
-import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpression;
+import com.plectix.simulator.parser.abstractmodel.perturbations.ModelLinearExpression;
 import com.plectix.simulator.parser.abstractmodel.perturbations.RateExpressionParser;
 import com.plectix.simulator.parser.abstractmodel.perturbations.SpeciesExpressionParser;
 import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.PerturbationCondition;
-import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.SpeciesCondition;
-import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.TimeCondition;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.ModelSpeciesCondition;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.ModelTimeCondition;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractOnceModification;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.ModelAddOnceModification;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.ModelDeleteOnceModification;
@@ -76,7 +76,7 @@ import com.plectix.simulator.util.InequalitySign;
 								ParseErrorMessage.WRONG_TIME_BOUNDARY, timeStr);
 					}
 
-					condition = new TimeCondition(time);
+					condition = new ModelTimeCondition(time);
 
 				} else {
 					condition = parseSpeciesExpression(st, perturbationStr);
@@ -123,13 +123,13 @@ import com.plectix.simulator.util.InequalitySign;
 		ParserUtil.checkString(":=", line, perturbationLine);
 		line = line.substring(index + 2);
 
-		LinearExpression expressionRHS = new RateExpressionParser().parse(line,
+		ModelLinearExpression expressionRHS = new RateExpressionParser().parse(line,
 				perturbationLine);
 
 		return new ModelRateModification(ruleName, expressionRHS);
 	}
 
-	private final SpeciesCondition parseSpeciesExpression(String line,
+	private final ModelSpeciesCondition parseSpeciesExpression(String line,
 			KappaFileLine perturbationLine) throws ParseErrorException {
 		ParserUtil.checkString("[", line, perturbationLine);
 
@@ -145,10 +145,10 @@ import com.plectix.simulator.util.InequalitySign;
 		line = line.substring(1).trim();
 
 		String condition = line.substring(0, line.indexOf("do"));
-		LinearExpression expressionRHS = new SpeciesExpressionParser().parse(
+		ModelLinearExpression expressionRHS = new SpeciesExpressionParser().parse(
 				condition, perturbationLine);
 
-		return new SpeciesCondition(argumentObservableName,
+		return new ModelSpeciesCondition(argumentObservableName,
 				expressionRHS, inequalitySign);
 	}
 
@@ -184,7 +184,7 @@ import com.plectix.simulator.util.InequalitySign;
 			lineCopy = lineCopy.substring(indexDel + 11);
 		}
 
-		double quantity = 1;
+		int quantity = 1;
 		int indexCount = lineCopy.indexOf("*");
 		if (indexCount != -1) {
 
@@ -197,7 +197,7 @@ import com.plectix.simulator.util.InequalitySign;
 				}
 			} else {
 				try {
-					quantity = Double.valueOf(strCount);
+					quantity = Integer.valueOf(strCount);
 				} catch (NumberFormatException e) {
 					throw new ParseErrorException(perturbationLine,
 							ParseErrorMessage.ONCE_QUANTITY_FORMAT, strCount);

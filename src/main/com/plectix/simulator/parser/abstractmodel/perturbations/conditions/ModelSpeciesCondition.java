@@ -1,22 +1,22 @@
 package com.plectix.simulator.parser.abstractmodel.perturbations.conditions;
 
-import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpression;
+import com.plectix.simulator.parser.abstractmodel.perturbations.ModelLinearExpression;
 import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpressionMonome;
 import com.plectix.simulator.util.InequalitySign;
 
-public final class SpeciesCondition implements PerturbationCondition {
-	private final LinearExpression expression;
+public final class ModelSpeciesCondition implements PerturbationCondition {
+	private final ModelLinearExpression expression;
 	private final String argument;
 	private final InequalitySign inequalitySign; 
 	
-	public SpeciesCondition(String argument, LinearExpression expression, 
+	public ModelSpeciesCondition(String argument, ModelLinearExpression expression, 
 			InequalitySign inequalitySign) {
 		this.expression = expression;
 		this.argument = argument;
 		this.inequalitySign = inequalitySign;
 	}
 	
-	public final LinearExpression getExpression() {
+	public final ModelLinearExpression getExpression() {
 		return expression;
 	}
 	
@@ -24,7 +24,7 @@ public final class SpeciesCondition implements PerturbationCondition {
 		return inequalitySign;
 	}
 	
-	public final String getArgument() {
+	public final String getPickedObservableName() {
 		return argument;
 	}
 	
@@ -38,7 +38,7 @@ public final class SpeciesCondition implements PerturbationCondition {
 		return "['" + argument + "'] " + inequalitySign + " " + expressionToString(expression); 
 	}
 	
-	private final String expressionToString(LinearExpression expression) {
+	private final String expressionToString(ModelLinearExpression expression) {
 		StringBuffer sb = new StringBuffer();
 		boolean first = true;
 		for (LinearExpressionMonome monome : expression.getPolynome()) {
@@ -49,7 +49,7 @@ public final class SpeciesCondition implements PerturbationCondition {
 					sb.append(" + ");
 				}
 			}
-			sb.append(monome.getMultiplier() + " * ['" + monome.getObsName() + "']");
+			sb.append(monome.getMultiplier() + " * ['" + monome.getEntityName() + "']");
 		}
 		return sb.toString();
 	}

@@ -1,9 +1,9 @@
 package com.plectix.simulator.parser.abstractmodel.perturbations.conditions;
 
-public final class TimeCondition implements PerturbationCondition {
+public final class ModelTimeCondition implements PerturbationCondition {
 	private final double timeBoundParameter;
 	
-	public TimeCondition(double timeBound) {
+	public ModelTimeCondition(double timeBound) {
 		this.timeBoundParameter = timeBound;
 	}
 	

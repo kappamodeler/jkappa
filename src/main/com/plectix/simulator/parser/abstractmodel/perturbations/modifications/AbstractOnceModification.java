@@ -8,14 +8,14 @@ import com.plectix.simulator.parser.util.ParserUtil;
 public abstract class AbstractOnceModification implements PerturbationModification {
 	private final List<ModelAgent> substanceAgents;
 	// TODO $INF == -1
-	private final double quantity;
+	private final int quantity;
 	
-	public AbstractOnceModification(List<ModelAgent> agents, double quantity) {
+	public AbstractOnceModification(List<ModelAgent> agents, int quantity) {
 		this.substanceAgents = agents;
 		this.quantity = quantity;
 	}
 	
-	public final double getQuantity() {
+	public final int getQuantity() {
 		return quantity;
 	}
 	
@@ -25,8 +25,6 @@ public abstract class AbstractOnceModification implements PerturbationModificati
 	
 	@Override
 	public final String toString() {
-		return "$" + actionOnceSymbol() + "ONCE " + getQuantity() + " * " + ParserUtil.listToString(getSubstanceAgents());
+		return "$" + this.getType() + "ONCE " + getQuantity() + " * " + ParserUtil.listToString(getSubstanceAgents());
 	}
-	
-	protected abstract String actionOnceSymbol();
 }

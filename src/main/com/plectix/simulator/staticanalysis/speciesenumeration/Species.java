@@ -91,7 +91,7 @@ public class Species {
 
 	private final void initiateAgent(Agent agent, AbstractAgent archetype) {
 		if (agent.getId() != NOT_INITIALIZE) {
-			System.out.println("adfhgh");
+			// TODO FAIL
 		}
 		agent.setId(numberOfInitiatedAgent);
 		numberOfInitiatedAgent++;

@@ -16,8 +16,9 @@ import com.plectix.simulator.FileNameCollectionGenerator;
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.controller.SimulatorInputData;
-import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
-import com.plectix.simulator.simulationclasses.perturbations.PerturbationType;
+import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
+import com.plectix.simulator.simulationclasses.perturbations.ConditionInterface;
+import com.plectix.simulator.simulationclasses.perturbations.TimeCondition;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
@@ -53,22 +54,21 @@ public class TestPerturbationsTriggering {
 			setup(times[i]);
 			KappaSystem kappaSystem = mySimulator.getSimulationData()
 					.getKappaSystem();
-			List<Perturbation> perturbations = kappaSystem.getPerturbations();
+			List<ComplexPerturbation<?, ?>> perturbations = kappaSystem.getPerturbations();
 
 			// check the perturbations have been triggered
-			for (Perturbation perturbation : perturbations) {
-				if (!perturbation.isDo()
-						&& perturbation.getType() == PerturbationType.TIME
-						&& perturbation.getTimeCondition() < times[i])
-					fail("perturbation: $T > "
-							+ perturbation.getTimeCondition()
-							+ " has not been triggered");
-				else if (perturbation.isDo()
-						&& perturbation.getType() == PerturbationType.TIME
-						&& perturbation.getTimeCondition() > times[i])
-					fail("perturbation: $T > "
-							+ perturbation.getTimeCondition()
-							+ " has been triggered, but it must not to");
+			for (ComplexPerturbation<?, ?> perturbation : perturbations) {
+				ConditionInterface condition = perturbation.getCondition();
+				
+				if (condition instanceof TimeCondition) {
+					double timeLimit = ((TimeCondition)condition).getTimeLimit();
+					boolean wasPerformed = perturbation.getModification().wasPerformed() ;
+					
+					if (!wasPerformed && timeLimit < times[i]) {
+						fail("perturbation: $T > " + timeLimit + " has not been triggered");
+					} else if (wasPerformed	&& timeLimit > times[i])
+						fail("perturbation: $T > " + timeLimit	+ " has been triggered, but it must not to");
+				}
 			}
 
 		}

@@ -7,9 +7,9 @@ import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.ParseErrorMessage;
 
 public abstract class SpecifiedLinearModificationParser {
-	public final LinearExpression parse(String line, KappaFileLine perturbationLine) 
+	public final ModelLinearExpression parse(String line, KappaFileLine perturbationLine) 
 						throws ParseErrorException {
-		LinearExpression expressionRHS = new LinearExpression();
+		ModelLinearExpression expressionRHS = new ModelLinearExpression();
 		if (line.indexOf("+") == -1) {
 			LinearExpressionMonome theOnlyMonome = parseMonome(line, perturbationLine);
 			expressionRHS.addMonome(theOnlyMonome);

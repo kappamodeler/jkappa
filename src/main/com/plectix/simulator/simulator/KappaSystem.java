@@ -8,9 +8,12 @@ import java.util.List;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.interfaces.SolutionInterface;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.ConditionType;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.injections.InjectionsUtil;
-import com.plectix.simulator.simulationclasses.perturbations.Perturbation;
+import com.plectix.simulator.simulationclasses.perturbations.AbstractModification;
+import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
+import com.plectix.simulator.simulationclasses.perturbations.ConditionInterface;
 import com.plectix.simulator.simulationclasses.probability.SkipListSelector;
 import com.plectix.simulator.simulationclasses.probability.WeightedItemSelector;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
@@ -40,7 +43,7 @@ public final class KappaSystem implements KappaSystemInterface {
 	private WeightedItemSelector<Rule> rules = new SkipListSelector<Rule>();
 	private List<Rule> orderedRulesList = new ArrayList<Rule>();
 	private Stories stories = null;
-	private List<Perturbation> perturbations = null;
+	private List<ComplexPerturbation<?,?>> perturbations = null;
 	private Observables observables = new Observables();
 	private SolutionInterface solution;// = new CSolution(); // soup of initial
 										// components
@@ -247,24 +250,17 @@ public final class KappaSystem implements KappaSystemInterface {
 	 */
 	public final void checkPerturbation(double currentTime) {
 		if (perturbations.size() != 0) {
-			for (Perturbation pb : perturbations) {
-				switch (pb.getType()) {
-				case TIME: {
-					if (!pb.isDo())
-						pb.checkCondition(currentTime);
-					break;
+			for (ComplexPerturbation<?,?> pb : perturbations) {
+				AbstractModification modification = pb.getModification();
+				ConditionInterface condition = pb.getCondition();
+				if (condition.getType() != ConditionType.SPECIES) {
+					if (modification.wasPerformed()) {
+						return;
+					}
 				}
-				case NUMBER: {
-					pb.checkCondition(observables);
-					break;
+				if (condition.check(currentTime)) {
+					modification.perform();
 				}
-				case ONCE: {
-					if (!pb.isDo())
-						pb.checkConditionOnce(currentTime);
-					break;
-				}
-				}
-
 			}
 		}
 	}
@@ -370,7 +366,7 @@ public final class KappaSystem implements KappaSystemInterface {
 	 * @see
 	 * com.plectix.simulator.simulator.KappaSystemInterface#getPerturbations()
 	 */
-	public final List<Perturbation> getPerturbations() {
+	public final List<ComplexPerturbation<?, ?>> getPerturbations() {
 		return perturbations;
 	}
 
@@ -455,7 +451,7 @@ public final class KappaSystem implements KappaSystemInterface {
 	 * com.plectix.simulator.simulator.KappaSystemInterface#setPerturbations
 	 * (java.util.List)
 	 */
-	public final void setPerturbations(List<Perturbation> perturbations) {
+	public final void setPerturbations(List<ComplexPerturbation<?,?>> perturbations) {
 		this.perturbations = perturbations;
 	}
 

@@ -51,7 +51,7 @@ MEK(s!0,S218~p,S222~p),ERK(Y187!0)
 %mod: ['4'] <             13.0 * ['1'] + 4.0 * ['3'] do 'time2' := 'time2'
 %mod: $T > 10 do $ADDONCE 10 * a()
 #%mod: ['1'] > ['4'] do $ADDONCE 10 * f()
-%mod: $T > 5 do $DELETEONCE 11.3 * a(x!1), b(i!1, u), c(x)
+%mod: $T > 5 do $DELETEONCE 11 * a(x!1), b(i!1, u), c(x)
 %mod:  ['4'] <             13.0 * ['              		1']  + 4.0 * ['3'] do 'time2'  :=  'time2'
 %mod: $T>1 do \\
 'rule' := -7 * 'rule' + 15

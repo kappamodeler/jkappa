@@ -1,7 +1,7 @@
 package com.plectix.simulator.parser.abstractmodel.perturbations;
 
 public abstract class LinearModification {
-	private LinearExpression expression = new LinearExpression();
+	private ModelLinearExpression expression = new ModelLinearExpression();
 	private final String leftHandSideObservableName;
 
 	public LinearModification(String leftHandSideVariable) {
@@ -16,7 +16,7 @@ public abstract class LinearModification {
 		this.expression.addMonome(monome);
 	}
 	
-	public final void setExpression(LinearExpression expression) {
+	public final void setExpression(ModelLinearExpression expression) {
 		this.expression = expression;
 	}
 
@@ -24,7 +24,7 @@ public abstract class LinearModification {
 		return leftHandSideObservableName;
 	}
 
-	public final LinearExpression getRightHandSideExpression() {
+	public final ModelLinearExpression getRightHandSideExpression() {
 		return expression;
 	}
 
