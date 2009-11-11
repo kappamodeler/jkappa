@@ -36,7 +36,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 
 				if (line.length() == 0) {
 					//TODO
-					observables.addRuleName(name, observableId);
+					observables.addRuleName(name, observableId, observableLine);
 				} else
 					observables.addComponent(parseAgents(line), name, line,
 							observableId);//, getArguments().isOcamlStyleObservableNames());

@@ -3,6 +3,8 @@ package com.plectix.simulator.parser.builders;
 import java.util.List;
 
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.ParseErrorMessage;
 import com.plectix.simulator.parser.abstractmodel.observables.ModelObservables;
 import com.plectix.simulator.parser.abstractmodel.observables.ObservableComponentLineData;
 import com.plectix.simulator.parser.abstractmodel.observables.ObservableRuleLineData;
@@ -23,7 +25,7 @@ public final class ObservablesBuilder {
 		this.substanceBuilder = new SubstanceBuilder(kappaSystem);
 	}
 	
-	public final Observables build(ModelObservables abstractObservables, List<Rule> rules) {
+	public final Observables build(ModelObservables abstractObservables, List<Rule> rules) throws ParseErrorException{
 		Observables observables = existingObservables;
 		for (ObservableComponentLineData componentData : abstractObservables.getComponents()) {
 			List<Agent> agentsList = substanceBuilder.buildAgents(componentData.getAgents());
@@ -37,7 +39,10 @@ public final class ObservablesBuilder {
 		for (ObservableRuleLineData obsRule : abstractObservables.getRuleNames()) {
 			String ruleName = obsRule.getRuleName();
 			int id = obsRule.getId();
-			observables.addRulesName(ruleName, id, rules);
+			if(!observables.addRulesName(ruleName, id, rules)){
+				ParseErrorException exeption = new ParseErrorException(obsRule.getKappaFileLine(), ParseErrorMessage.NO_SUCH_RULE);
+				throw exeption;
+			}
 		}
 		return observables;
 	}
