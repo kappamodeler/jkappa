@@ -48,6 +48,9 @@ public class SimulatorCallable implements Callable<SimulatorResultsData> {
         	e.printStackTrace();
         	simulator.getSimulatorResultsData().getSimulatorExitReport().setException(e);
         	simulator.cleanUpAfterException(e);
+        } catch (OutOfMemoryError outOfMemoryError) {
+        	outOfMemoryError.printStackTrace();
+        	System.err.println("Caught an OutOfMemoryError!");
         } finally {
         	simulator.getSimulatorResultsData().getSimulatorExitReport().setEndTimestamp(System.currentTimeMillis());
         	simulator.getSimulatorResultsData().getSimulatorExitReport().setSimulatorCallableId(id);
