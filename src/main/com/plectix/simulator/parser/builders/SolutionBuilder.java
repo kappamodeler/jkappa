@@ -26,6 +26,12 @@ public final class SolutionBuilder {
 	
 	public final SolutionInterface build(ModelSolution abstractSolution, MasterSolutionModel masterSolutionModel) throws ParseErrorException {
 		SolutionInterface solution = (new SolutionFactory()).produce(simulationArguments.getOperationMode(), kappaSystem);
+		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.COMPILE) {
+			for (SolutionLine line : abstractSolution.getSolutionLines()) {
+				solution.checkSolutionLinesAndAdd(line.getLine(), line.getNumber());
+			}
+			return solution;
+		}
 		for (SolutionLineData lineData : abstractSolution.getAgents()) {
 			List<Agent> list = substanceBuilder.buildAgents(lineData.getAgents());
 			if(masterSolutionModel != null)
@@ -39,11 +45,6 @@ public final class SolutionBuilder {
 				solution.addInitialConnectedComponents(1, list);
 			} else {
 				solution.addInitialConnectedComponents(quant, list);
-			}
-			if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.COMPILE) {
-				for (SolutionLine line : abstractSolution.getSolutionLines()) {
-					solution.checkSolutionLinesAndAdd(line.getLine(), line.getNumber());
-				}
 			}
 		}
 		return solution;
