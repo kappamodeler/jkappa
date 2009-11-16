@@ -5,24 +5,28 @@ import java.io.IOException;
 
 /**
  * File reader, which ignores kappa-style comments.
- * @see EasyFileReader 
+ * @see EasyReader 
  * @author evlasov
  */
 public class KappaFileReader extends Parser<KappaFile> {
-	public KappaFileReader(String path) throws FileNotFoundException {
-		super(path);
+	public KappaFileReader(String path, boolean isFilename) throws FileNotFoundException {
+		super(path, isFilename);
 	}
-
+	
+	public KappaFileReader(char[] buf) {
+		super(buf);
+	}
+	
 	@Override
 	protected KappaFile unsafeParse() throws FileReadingException, 
 				ParseErrorException, IOException, DocumentFormatException {
 		
 		KappaFile kappaFile = new KappaFile();
 
-		EasyFileReader fileReader = getFileReader();
+		EasyReader easyReader = getReader();
 		String line;
 		int index = 0;
-		while ((line = fileReader.getLine()) != null) {
+		while ((line = easyReader.getLine()) != null) {
 			index++;
 			if (line.startsWith("#"))
 				continue;
@@ -31,7 +35,7 @@ public class KappaFileReader extends Parser<KappaFile> {
 
 			if (line.indexOf("\\") != -1) {
 				String nextLine;
-				nextLine = fileReader.getLine().trim();
+				nextLine = easyReader.getLine().trim();
 				line = line.replace("\\", "");
 				line = line + nextLine;
 			}

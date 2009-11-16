@@ -195,8 +195,7 @@ public final class SimulationData {
 		}
 
 		try {
-			KappaFileReader kappaFileReader = new KappaFileReader(
-					simulationArguments.getInputFilename());
+			KappaFileReader kappaFileReader = new KappaFileReader(simulationArguments.getInputFilename(), true);
 
 			if (simulationArguments.getFocusFilename() != null) {
 				setFocusOn(simulationArguments.getFocusFilename());
@@ -336,7 +335,7 @@ public final class SimulationData {
 
 	private final void setFocusOn(String fileNameFocusOn) throws Exception {
 		
-		KappaFileReader kappaFileReader = new KappaFileReader(fileNameFocusOn);
+		KappaFileReader kappaFileReader = new KappaFileReader(fileNameFocusOn, true);
 		KappaFile kappaFile = kappaFileReader.parse();
 		List<Rule> ruleList = (new RuleBuilder(new KappaSystem(this)))
 				.build(new RulesParagraphReader(simulationArguments,

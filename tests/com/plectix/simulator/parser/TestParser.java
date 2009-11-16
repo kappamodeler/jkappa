@@ -42,7 +42,7 @@ public class TestParser extends TestRunner {
 			ParseException {
 		PrintWriter pw = null;
 		try {
-			KappaFile kf = (new KappaFileReader(sourceDir + fileName)).parse();
+			KappaFile kf = (new KappaFileReader(sourceDir + fileName, true)).parse();
 			SimulationArguments args = Initializator
 					.prepareDefaultArguments(sourceDir + fileName, null);
 			KappaModel model = new KappaModelCreator(args).createModel(kf);

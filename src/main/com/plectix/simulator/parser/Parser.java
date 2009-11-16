@@ -7,15 +7,19 @@ import java.io.IOException;
  * Helper, wrapping class to file parser
  * @param <E> The structure should be returned by parser after any file reading 
  */
-/*package*/ abstract class Parser<E> {
-	private final EasyFileReader fileReader;
+public abstract class Parser<E> {
+	private final EasyReader easyReader;
 	
-	public Parser(String path) throws FileNotFoundException {
-		this.fileReader = new EasyFileReader(path);
+	public Parser(String string, boolean isFilename) throws FileNotFoundException {
+		this.easyReader = new EasyReader(string, isFilename);
 	}
 	
-	protected final EasyFileReader getFileReader() {
-		return fileReader;
+	public Parser(char[] buf) {
+		this.easyReader = new EasyReader(buf);
+	}
+	
+	protected final EasyReader getReader() {
+		return easyReader;
 	}
 	
 	protected abstract E unsafeParse() throws SimulationDataFormatException, IOException;
@@ -31,7 +35,7 @@ import java.io.IOException;
 		} catch(IOException e) {
 			throw new FileReadingException(e.getMessage());
 		} finally {
-			fileReader.close();
+			easyReader.close();
 		}
 	}
 }
