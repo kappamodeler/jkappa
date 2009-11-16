@@ -33,14 +33,7 @@ public class Observables {
 	private List<ObservableInterface> componentList = new ArrayList<ObservableInterface>();
 	private double timeNext;
 	private double timeSampleMin;
-	private double initialTime = 0.0;
-	private long events = -1;
-	private int points = -1;
-	private double lastTime;
-	private boolean changeLastTime = false;
-	private boolean changeTimeNext = false;
 	private List<ObservableInterface> componentListForXMLOutput = null;
-	private boolean flag = false;
 
 	/**
 	 * This method initializes CObservables within external parameters 
@@ -55,22 +48,25 @@ public class Observables {
 			int points, boolean isTime) {
 		timeSampleMin = 0.;
 		timeNext = 0.;
-		this.initialTime = initialTime;
-		this.events = events;
-		this.points = points;
 
 		if (isTime) {
 			if (initialTime > 0.0) {
 				timeNext = initialTime;
 				fullTime = fullTime - timeNext;
-			} else
+				this.initializeMinSampleTime(fullTime, points);
+			} else{
+				this.initializeMinSampleTime(fullTime, points);
 				timeNext = timeSampleMin;
-			this.initializeMinSampleTime(fullTime, points);
-//			timeNext += timeSampleMin;
+			}
 		} else {
-			this.initializeMinSampleTime(events, points);
-			if (initialTime <= 0.0)
+			if(initialTime > 0){
+				timeNext = initialTime;
+				events = events - Math.round(timeNext);
+				this.initializeMinSampleTime(events, points);
+			} else {
+				this.initializeMinSampleTime(events, points);
 				timeNext = timeSampleMin;
+			}
 		}
 
 	}
@@ -127,80 +123,17 @@ public class Observables {
 	 * observables list, otherwise <tt>false</tt>
 	 */
 	public final void calculateObs(double time, long count, boolean isTime) {
-		int size = countTimeList.size();
-
-		if ((size > 0)
-				&& (Math.abs(countTimeList.get(size - 1).getTime() - time) < 1e-16)) {
-			if (isTime) {
-				calculateAll(true);
-			} else {
-				updateLastValueAll(time);
-				calculateAll(false);
-				addToCountTimeList(time, count);
-				changeLastTime = false;
-			}
-			return;
-		}
-
-		if (isCalculateNow(time, count, isTime)) {
-			if (flag){
-				addToCountTimeList(initialTime, count);
-				calculateAll(false);
-				lastTime = initialTime;
-				changeLastTime = false;
-				flag = false;
-			}
-			// if (time >= timeNext) {
-			timeNext += timeSampleMin;
-			if (!changeLastTime) {
-				updateLastValueAll(time);
-			}
-			addToCountTimeList(lastTime, count);
-			calculateAll(false);
-			lastTime = time;
-			changeLastTime = false;
-			return;
+		if(isTime){
+			if(time < timeNext)
+				return;
+		} else {
+			if(count < timeNext)
+				return;
 		}
 		updateLastValueAll(time);
-	}
-
-	/**
-	 * This method indicates if we have to save an information about current time and 
-	 * observables list
-	 * @param time current time
-	 * @param count is the number of current simulation event
-	 * @param isTime true if we run "time" simulation
-	 * @return <tt>true</tt>, if we have to save an information about current time and 
-	 * observables list, otherwise <tt>false</tt>
-	 */
-	private final boolean isCalculateNow(double time, long count, boolean isTime) {
-		if (isTime) {
-			if (initialTime > 0)
-				if ((!changeTimeNext) && (initialTime < time)) {
-					changeTimeNext = true;
-					flag = true;
-					updateLastValueAll(time);
-				} 
-			if (time >= timeNext)
-				return true;
-		} else {
-			if (initialTime > 0)
-				if ((!changeTimeNext) && (initialTime < time)) {
-					long fullTime = events - count;
-					this.initializeMinSampleTime(fullTime, points);
-					timeNext = count + timeSampleMin;
-					updateLastValueAll(time);
-					addToCountTimeList(time, count);
-					calculateAll(false);
-					changeTimeNext = true;
-				}
-			if (time < initialTime)
-				return false;
-			if (count >= timeNext)
-				return true;
-		}
-
-		return false;
+		calculateAll(false);
+		addToCountTimeList(time, count);
+		timeNext += timeSampleMin;
 	}
 
 	/**
@@ -222,8 +155,6 @@ public class Observables {
 		for (ObservableInterface cc : componentList) {
 			cc.updateLastValue();
 		}
-		lastTime = time;
-		changeLastTime = true;
 	}
 
 	/**
@@ -365,5 +296,11 @@ public class Observables {
 	public final void setUnifiedTimeSeriesOutput(boolean unifiedTimeSeriesOutput) {
 		this.unifiedTimeSeriesOutput = unifiedTimeSeriesOutput;
 	}
-	
+
+	public void addInitialState() {
+		updateLastValueAll(0.0);
+		addToCountTimeList(0.0, 0);
+		calculateAll(false);
+	}
+
 }

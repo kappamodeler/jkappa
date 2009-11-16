@@ -203,11 +203,13 @@ public final class Simulator implements SimulatorInterface {
 		long clash = 0;
 		long max_clash = 0;
 		boolean isEndRules = false;
+		boolean isCalculateObs = false;
 		LiveDataSourceInterface liveDataSource = new ObservablesLiveDataSource(simulationData.getKappaSystem().getObservables());
 		liveDataStreamer.reset(simulationData.getSimulationArguments().getLiveDataInterval(), simulationData.getSimulationArguments().getLiveDataPoints(), 
 				simulationData.getSimulationArguments().getLiveDataConsumerClassname(), liveDataSource);
 		simulatorStatus.setStatusMessage(STATUS_RUNNING);
 		
+		simulationData.getKappaSystem().getObservables().addInitialState();
 		while (!simulationData.isEndSimulation(currentTime, currentEventNumber)
 				&& max_clash <= simulationData.getSimulationArguments().getMaxClashes()) {
 			if (Thread.interrupted())  {
@@ -267,7 +269,7 @@ public final class Simulator implements SimulatorInterface {
 	
 			List<Injection> injectionsList = 
 				simulationData.getKappaSystem().chooseInjectionsForRuleApplication(rule);
-	
+			isCalculateObs = false;
 			if (injectionsList != null) {
 				// negative update
 				max_clash = 0;
@@ -295,8 +297,9 @@ public final class Simulator implements SimulatorInterface {
 					}
 	
 					simulationData.getKappaSystem().getSolution().flushPoolContent(rule.getPool());
+					isCalculateObs = true;
 				
-					simulationData.getKappaSystem().getObservables().calculateObs(currentTime, currentEventNumber, simulationData.getSimulationArguments().isTime());
+//					simulationData.getKappaSystem().getObservables().calculateObs(currentTime, currentEventNumber, simulationData.getSimulationArguments().isTime());
 				} else {
 					if (LOGGER.isDebugEnabled()) {
 						LOGGER.debug("Rule rejected");
@@ -318,6 +321,10 @@ public final class Simulator implements SimulatorInterface {
 				liveDataStreamer.addNewDataPoint(currentEventNumber, currentTime);
 			}
 			
+			if( isCalculateObs )
+				simulationData.getKappaSystem().getObservables().calculateObs(currentTime, currentEventNumber, simulationData.getSimulationArguments().isTime());
+
+
 		}
 	
 		liveDataStreamer.stop();

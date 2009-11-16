@@ -1,0 +1,12 @@
+'P4 - Step 4{130807}' I(out_port!1), C(in_port!3,out_port), A(in_port!1,out_port!2), B(in_port!2,out_port!3) -> I(out_port), C(in_port!3,out_port!1), A(in_port!1,out_port!2), B(in_port!2,out_port!3) @ 1.0
+'P2 - Step 2{130733}' A(in_port!_,out_port), B(in_port,out_port) -> A(in_port!_,out_port!1), B(in_port!1,out_port) @ 0.000415134695790682
+'P3 - Step 3{130734}' B(in_port!_,out_port), C(in_port,out_port) -> B(in_port!_,out_port!1), C(in_port!1,out_port) @ 0.000415134695790682
+'P1 - Step 1{130442}' A(in_port,out_port), I(out_port) -> A(in_port!1,out_port), I(out_port!1) @ 0.000415134695790682
+%init: 100 * (B(in_port,out_port))
+%init: 100 * (I(out_port))
+%init: 100 * (A(in_port,out_port))
+%init: 100 * (C(in_port,out_port))
+%obs: 'I(out_port)' I(out_port)
+%obs: 'A(out_port,in_port)' A(out_port,in_port)
+%obs: 'B(out_port,in_port)' B(out_port,in_port)
+%obs: 'C(in_port,out_port)' C(in_port,out_port)
