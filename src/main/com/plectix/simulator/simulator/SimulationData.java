@@ -195,7 +195,12 @@ public final class SimulationData {
 		}
 
 		try {
-			KappaFileReader kappaFileReader = new KappaFileReader(simulationArguments.getInputFilename(), true);
+			KappaFileReader kappaFileReader = null;
+			if (simulationArguments.getInputFilename() != null) {
+				kappaFileReader = new KappaFileReader(simulationArguments.getInputFilename(), true);
+			} else {
+				kappaFileReader = new KappaFileReader(simulationArguments.getInputCharArray());
+			}
 
 			if (simulationArguments.getFocusFilename() != null) {
 				setFocusOn(simulationArguments.getFocusFilename());

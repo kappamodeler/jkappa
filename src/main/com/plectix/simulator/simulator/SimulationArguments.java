@@ -70,7 +70,6 @@ public final class SimulationArguments {
 	private boolean debugInit = false;
 	private boolean genereteMap = false;
 	private boolean createLocalViews = false;
-	private boolean numberOfRuns = false;
 	private boolean storify = false;
 	private boolean forwardOnly = false;
 	private boolean ocamlStyleNaming = false;
@@ -82,6 +81,7 @@ public final class SimulationArguments {
 	private boolean outputFinalState = false;
 	private String xmlSessionPath = "";
 	private String inputFilename = null;	
+	private char[] inputCharArray = null;
 	private String snapshotsTimeString = null;
 	private String focusFilename = null;
 	private String commandLineString = null;
@@ -544,6 +544,19 @@ public final class SimulationArguments {
 	 */
 	public final void setInputFilename(String inputFilename) {
 		this.inputFilename = inputFilename;
+	}
+	
+	public final char[] getInputCharArray() {
+		return inputCharArray;
+	}
+	
+	/**
+	 * The char array to read the input Kappa from...
+	 *
+	 * @param inputCharArray
+	 */
+	public final void setInputCharArray(char[] inputCharArray) {
+		this.inputCharArray = inputCharArray;
 	}
 	
 	public final String getSnapshotsTimeString() {
