@@ -41,20 +41,21 @@ public class SimulatorCallable implements Callable<SimulatorResultsData> {
      * 
      */
 	public SimulatorResultsData call() throws Exception {
+		SimulatorCallableExitReport simulatorExitReport = simulator.getSimulatorResultsData().getSimulatorExitReport();
         try {
-            simulator.getSimulatorResultsData().getSimulatorExitReport().setStartTimestamp(System.currentTimeMillis());
+        	simulatorExitReport.setStartTimestamp(System.currentTimeMillis());
             simulator.run(simulatorInputData);
         } catch (Exception e) {
         	e.printStackTrace();
-        	simulator.getSimulatorResultsData().getSimulatorExitReport().setException(e);
+        	simulatorExitReport.setException(e);
         	simulator.cleanUpAfterException(e);
         } catch (OutOfMemoryError outOfMemoryError) {
         	outOfMemoryError.printStackTrace();
-        	simulator.getSimulatorResultsData().getSimulatorExitReport().setException(new Exception(outOfMemoryError));
+        	simulatorExitReport.setException(new Exception(outOfMemoryError));
         	System.err.println("Caught an OutOfMemoryError!");
         } finally {
-        	simulator.getSimulatorResultsData().getSimulatorExitReport().setEndTimestamp(System.currentTimeMillis());
-        	simulator.getSimulatorResultsData().getSimulatorExitReport().setSimulatorCallableId(id);
+        	simulatorExitReport.setEndTimestamp(System.currentTimeMillis());
+        	simulatorExitReport.setSimulatorCallableId(id);
                    
         	if (listener != null) {
             	listener.finished(this);
