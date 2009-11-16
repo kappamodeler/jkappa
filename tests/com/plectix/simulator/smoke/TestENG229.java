@@ -43,7 +43,7 @@ public class TestENG229 extends SmokeTest {
 		simulationData.readSimulatonFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 		try {
-			mySimulator.run(0);
+			mySimulator.run();
 		} catch (Exception e) {
 			e.printStackTrace();
 			junit.framework.Assert.fail(e.getMessage());

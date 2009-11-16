@@ -7,7 +7,6 @@ import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
 import com.plectix.simulator.controller.SimulatorStatusInterface;
-import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.ConditionType;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.simulationclasses.perturbations.TimeCondition;
@@ -22,7 +21,6 @@ import com.plectix.simulator.streaming.LiveDataSourceInterface;
 import com.plectix.simulator.streaming.LiveDataStreamer;
 import com.plectix.simulator.util.MemoryUtil;
 import com.plectix.simulator.util.PlxTimer;
-import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
 import com.plectix.simulator.util.MemoryUtil.PeakMemoryUsage;
 import com.plectix.simulator.util.io.PlxLogger;
@@ -47,8 +45,6 @@ public final class Simulator implements SimulatorInterface {
 	private long currentEventNumber = 0;
 	/** Use synchronized (statusLock) when changing the value of this variable */
 	private int currentIterationNumber = 0;
-	private boolean CSiteration = false;
-	private int timeStepCounter = 0;
 	
 	private final SimulationData simulationData = new SimulationData();
 	private final SimulatorStatus simulatorStatus = new SimulatorStatus();
@@ -116,33 +112,6 @@ public final class Simulator implements SimulatorInterface {
 		simulatorStatus.setProgress(1.0);
 	}
 
-	private final void addIteration(int iteration) {
-		// TODO: This method should be rewritten!!!
-		List<List<RunningMetric>> runningMetrics = simulationData.getRunningMetrics();
-		int number_of_observables = simulationData.getKappaSystem().getObservables().getUniqueComponentList().size();
-
-		if (iteration == 0) {
-			simulationData.getTimeStamps().add(currentTime);
-
-			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
-				runningMetrics.get(observable_num).add(new RunningMetric());
-			}
-		}
-
-		for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
-			// x is the value for the observable_num at the current time
-			double x = simulationData.getKappaSystem().getObservables()
-					.getUniqueComponentList().get(observable_num)
-					.getCurrentState(simulationData.getKappaSystem().getObservables());
-			if (timeStepCounter >= runningMetrics.get(observable_num).size()) {
-				runningMetrics.get(observable_num).add(new RunningMetric());
-			}
-			runningMetrics.get(observable_num).get(timeStepCounter).add(x);
-		}
-
-		timeStepCounter++;
-	}
-
 	private final void endMerge(PlxTimer timer){
 		simulationData.stopTimer(InfoType.OUTPUT,timer, "-Merge stories:");
 	}
@@ -196,15 +165,10 @@ public final class Simulator implements SimulatorInterface {
 					simulationData.getSimulationArguments().getSimulationType() == SimulationType.CONTACT_MAP){
 					//simulationData.getSimulationArguments().isContactMap() ) {
 				// nothing to do in this case... outputData is called below...
-			} else if (simulationData.getSimulationArguments().isNumberOfRuns()) {
-				// this mode needs to be re-implemented
-				// runIterations();
-				// throw an Exception for now:
-				throw new RuntimeException("Iterations mode is not supported at this point!");
 			} else if (simulationData.getSimulationArguments().isStorify()) {
 				runStories();
 			} else {
-				run(0);
+				run();
 			}
 		}
 		
@@ -221,7 +185,7 @@ public final class Simulator implements SimulatorInterface {
 		simulatorStatus.setStatusMessage(STATUS_IDLE);
 	}
 
-	public final void run(int iteration_num) throws Exception {
+	public final void run() throws Exception {
 		simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO, "-Simulation...");
 		
 		PlxTimer timer = new PlxTimer();
@@ -354,9 +318,6 @@ public final class Simulator implements SimulatorInterface {
 				liveDataStreamer.addNewDataPoint(currentEventNumber, currentTime);
 			}
 			
-			if (CSiteration) {
-				addIteration(iteration_num);
-			}
 		}
 	
 		liveDataStreamer.stop();
@@ -368,39 +329,6 @@ public final class Simulator implements SimulatorInterface {
 		simulationData.setEvent(currentEventNumber);
 		
 		endSimulation(InfoType.OUTPUT, isEndRules, timer);
-	}
-
-	public final void runIterations() throws Exception {
-		CSiteration = true;
-		int seed = simulationData.getSimulationArguments().getSeed();
-		simulationData.initIterations();
-		
-		for (int iteration_num = 0; iteration_num < simulationData.getSimulationArguments().getIterations(); iteration_num++) {
-			// Initialize the Random Number Generator with seed = initialSeed +
-			// i
-			// We also need a new command line argument to feed the initialSeed.
-			// See --seed argument of simplx.
-			simulationData.getSimulationArguments().setSeed(seed + iteration_num);
-
-			// run the simulator
-			timeStepCounter = 0;
-			// while (true) {
-			// run the simulation until the next time to dump the results
-			run(iteration_num);
-			// }
-
-			// if the simulator's initial state is cached, reload it for next
-			// run
-			if (iteration_num < simulationData.getSimulationArguments().getIterations() - 1) {
-				resetSimulation(InfoType.OUTPUT);
-			}
-
-		}
-
-		// we are done. report the results
-		simulationData.createTMPReport();
-		// Source source = addCompleteSource();
-		// outputData(source, 0);
 	}
 
 	public final void runStories() throws Exception {

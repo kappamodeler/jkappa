@@ -175,10 +175,6 @@ public final class SimulatorCommandLine {
 			simulationArguments.setDebugInit(true);
 		}
 
-		if (hasOption(SimulatorOption.NUMBER_OF_RUNS)) {
-			simulationArguments.setNumberOfRuns(true);
-		}
-
 		if (hasOption(SimulatorOption.STORIFY)) {
 			simulationArguments.setStorify(true);
 		}
@@ -189,16 +185,6 @@ public final class SimulatorCommandLine {
 
 		if (hasOption(SimulatorOption.UNIFIED_TIME_SERIES_OUTPUT)) {
 			simulationArguments.setUnifiedTimeSeriesOutput(true);
-		}
-
-		if (hasOption(SimulatorOption.NUMBER_OF_RUNS)) {
-			simulationArguments.setIterations(getIntValue(SimulatorOption.NUMBER_OF_RUNS));
-
-			if (!hasOption(SimulatorOption.SEED)) {
-				throw new IllegalArgumentException("No SEED OPTION");
-			}
-
-			simulationArguments.setSimulationType(SimulationArguments.SimulationType.AVERAGE_OF_RUNS);
 		}
 
 		/*

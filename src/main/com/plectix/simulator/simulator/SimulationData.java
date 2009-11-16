@@ -50,16 +50,11 @@ import com.plectix.simulator.util.MemoryUtil;
 import com.plectix.simulator.util.ObservableState;
 import com.plectix.simulator.util.OutputUtils;
 import com.plectix.simulator.util.PlxTimer;
-import com.plectix.simulator.util.RunningMetric;
 import com.plectix.simulator.util.Info.InfoType;
 
 public final class SimulationData {
 	public static final int NUMBER_OF_SIGNIFICANT_DIGITS = 6;
-	private static final double DEFAULT_NUMBER_OF_POINTS = 1000;
-	private static final String DEFAULT_XML_SESSION_NAME = "simplx.tmp";
 
-	private List<Double> timeStamps = null;
-	private List<List<RunningMetric>> runningMetrics = null;
 	private List<Snapshot> snapshots = null;
 	private final List<Info> infoList = new ArrayList<Info>();
 	private PrintStream printStream = null;
@@ -168,8 +163,7 @@ public final class SimulationData {
 
 		addInfo(outputType, InfoType.INFO, "-Initialization...");
 
-		// TODO: remove the following lines after checking all the dependencies
-		// to them!!!
+		// TODO: remove the following lines after checking all the dependencies to them!!!
 		if (simulationArguments.isTime()) {
 			setTimeLength(simulationArguments.getTimeLength());
 		} else {
@@ -301,17 +295,6 @@ public final class SimulationData {
 		simulationArguments.setTime(true);
 	}
 
-	public final void initIterations() {
-		this.timeStamps = new ArrayList<Double>();
-		this.runningMetrics = new ArrayList<List<RunningMetric>>();
-		int observable_num = kappaSystem.getObservables()
-				.getUniqueComponentList().size();
-		for (int i = 0; i < observable_num; i++) {
-			runningMetrics.add(new ArrayList<RunningMetric>());
-		}
-
-	}
-
 	public final void stopTimer(InfoType outputType, PlxTimer timer,
 			String message) {
 		if (timer == null) {
@@ -326,14 +309,6 @@ public final class SimulationData {
 		// timer.getTimer();
 		addInfo(new Info(outputType, InfoType.INFO, message, timer
 				.getThreadTimeInSeconds(), 1));
-	}
-
-	private final double getTimeSampleMin(double fullTime) {
-		if (simulationArguments.getPoints() > 0) {
-			return (fullTime / simulationArguments.getPoints());
-		} else {
-			return (fullTime / DEFAULT_NUMBER_OF_POINTS);
-		}
 	}
 
 	public final void checkOutputFinalState(double currentTime) {
@@ -585,67 +560,6 @@ public final class SimulationData {
 		if (simulationArguments.getOutputTypeForAdditionalInfo() != InfoType.DO_NOT_OUTPUT
 				|| !simulationArguments.isStorify())
 			print("#");
-	}
-
-	public final void createTMPReport() {
-		// model.getSimulationData().updateData();
-		PlxTimer timer = new PlxTimer();
-		timer.startTimer();
-
-		int number_of_observables = kappaSystem.getObservables()
-				.getUniqueComponentList().size();
-		try {
-			for (int observable_num = 0; observable_num < number_of_observables; observable_num++) {
-				int oCamlObservableNo = number_of_observables - observable_num
-						- 1; // everything is backward with OCaml!
-				BufferedWriter writer = new BufferedWriter(new FileWriter(
-						DEFAULT_XML_SESSION_NAME + "-" + oCamlObservableNo));
-
-				double timeSampleMin = 0.;
-				double timeNext = 0.;
-				double fullTime = timeStamps.get(timeStamps.size() - 1);
-				if (simulationArguments.getInitialTime() > 0.0) {
-					timeNext = simulationArguments.getInitialTime();
-					fullTime = fullTime - timeNext;
-				} else
-					timeNext = timeSampleMin;
-
-				timeSampleMin = getTimeSampleMin(fullTime);
-
-				for (int timeStepCounter = 0; timeStepCounter < timeStamps
-						.size(); timeStepCounter++) {
-					if (timeStamps.get(timeStepCounter) > timeNext) {
-						timeNext += timeSampleMin;
-						StringBuffer sb = new StringBuffer();
-						sb.append(timeStamps.get(timeStepCounter));
-						sb.append(" ");
-						sb.append(runningMetrics.get(observable_num).get(
-								timeStepCounter).getMin());
-						sb.append(" ");
-						sb.append(runningMetrics.get(observable_num).get(
-								timeStepCounter).getMax());
-						sb.append(" ");
-						sb.append(runningMetrics.get(observable_num).get(
-								timeStepCounter).getMean());
-						sb.append(" ");
-						sb.append(runningMetrics.get(observable_num).get(
-								timeStepCounter).getStd());
-
-						writer.write(sb.toString());
-						writer.newLine();
-					}
-				}
-
-				writer.close();
-			}
-		} catch (IOException e) {
-			if (printStream != null) {
-				e.printStackTrace(printStream);
-			}
-		}
-
-		println("-Results outputted in tmp session: " + timer.getTimeMessage()
-				+ " sec. CPU");
 	}
 
 	// 
@@ -958,20 +872,12 @@ public final class SimulationData {
 		Collections.sort(snapshotTimes);
 	}
 
-	public final List<Double> getTimeStamps() {
-		return timeStamps;
-	}
-
 	public final List<Double> getSnapshotTimes() {
 		return snapshotTimes;
 	}
 
 	public void setSnapshotTimes(List<Double> snapshotTimes) {
 		this.snapshotTimes = snapshotTimes;
-	}
-
-	public final List<List<RunningMetric>> getRunningMetrics() {
-		return runningMetrics;
 	}
 
 	public final void setClockStamp(long clockStamp) {

@@ -37,7 +37,7 @@ public class SimulatorTest extends Thread {
 				.getSimulationArguments());
 		simulationData.readSimulatonFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
-		simulator.run(0);
+		simulator.run();
 		simulationData.outputXMLData();
 	}
 

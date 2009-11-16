@@ -33,7 +33,6 @@ public final class SimulationArguments {
 		COMPILE,
 		STORIFY,
 		SIM,
-		AVERAGE_OF_RUNS,
 		GENERATE_MAP,
 		CONTACT_MAP
 	}
@@ -625,21 +624,6 @@ public final class SimulationArguments {
 	 */
 	public final void setIterations(int iterations) {
 		this.iterations = iterations;
-	}
-
-	public final boolean isNumberOfRuns() {
-		return numberOfRuns;
-	}
-	
-	/**
-	 * Sets the simulation mode to #SimulationType.AVERAGE_OF_RUNS.
-	 * 
-	 * @param numberOfRunsOption
-	 * @see SimulationType#AVERAGE_OF_RUNS
-	 * @see #setIterations(int)
-	 */
-	public final void setNumberOfRuns(boolean numberOfRunsOption) {
-		this.numberOfRuns = numberOfRunsOption;
 	}
 
 	public final SimulationType getSimulationType() {
