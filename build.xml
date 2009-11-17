@@ -57,7 +57,7 @@
 	<!-- ################################### Misc Targets ################################### -->
 
     <target name="all" depends="cleanall,build,deploy,doc,test" 
-	        description="Cleanly build, package and test everything"/>
+	        description="Cleanly build, package and test everything. It runs: cleanall,build,deploy,doc,test"/>
 
     <target name="clean" description="Clean up build and distribution directories">
         <delete dir="${build.dir}"/>
@@ -70,7 +70,7 @@
 	</target>
  
 	<target name="build" depends="set-revision,build-subprojects,build-project" 
-	        description="sets the revision numnber, builds sub and this project"/>
+	        description="Sets the revision numnber, builds sub-projects and this project. It runs: set-revision,build-subprojects,build-project"/>
     
 	<target name="build-subprojects"/>
      
@@ -83,7 +83,7 @@
     </target>
 	
 
-	<target name="build-project" depends="filter-tpl,init" description="Builds the project">
+	<target name="build-project" depends="filter-tpl,init" description="Builds the project. Depends on: filter-tpl,init">
         <echo message="OS: ${os.name} "/>
         <echo message="Java: ${java.version} "/>
         <echo message="Ant Java: ${ant.java.version} "/>
@@ -93,7 +93,7 @@
         </javac>
     </target>
 		
-	<target name="package" depends="build-project" description="Creates the JAR file">
+	<target name="package" depends="build-project" description="Creates the JAR file. Depends on: build-project">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${dist.dir}/simulator.jar" compress="false">
 			<fileset dir="${build.dir}">
@@ -102,7 +102,7 @@
 		</jar>
 	</target>
 	
-	<target name="deploy" depends="build,package,createPaths" description="Deploys the package by building the project, creating the JAR file, and setting the paths">
+	<target name="deploy" depends="build,package,createPaths" description="Deploys the package by building the project, creating the JAR file, and setting the paths. Depends on: build,package,createPaths">
 		<mkdir dir="${deploy.dir}"/>
 		<property name="deploy-dest" value="Plectix-Simulator-${DSTAMP}"/>
 		<property name="deploy-zip.dir" value="${deploy.dir}/${deploy-dest}"/>
@@ -155,7 +155,6 @@
     </target>
 		
 	<target name="createPaths">
-		
 		<!-- Define properties for the full paths to the lib and jar directories,
 		     so we can replace them below with the relative paths -->
 		<property name="lib-location" location="lib"/>
@@ -175,7 +174,7 @@
 		</pathconvert>
 	</target>
 		
-	<target name="showPaths" depends="createPaths">
+	<target name="showPaths" depends="createPaths" description="Shows the paths to the jar files needed for this project." >
 		<echo message="The value of export.classpath.windows is ${export.classpath.windows}"/>
 		<echo message="The value of export.classpath.unix is ${export.classpath.unix}"/>
 	</target>
@@ -275,7 +274,7 @@
 
 	<!-- ################################### Test Targets ################################### -->
 	
-	<target name="build-tests" depends="init" description="Building tests">
+	<target name="build-tests" depends="build" description="Building tests. Depends on: build">
 		<echo>Building tests</echo>
 		<mkdir dir="${build.dir}/test"/>
 	    <echo message="OS: ${os.name} "/>
@@ -287,7 +286,7 @@
 		</javac>
 	</target>
 	
-	<target name="test" depends="build-tests" description="Run JUnit tests">
+	<target name="test" depends="build-tests" description="Run JUnit tests. Depends on: build-tests">
 		<echo>Running JUnit Tests</echo>
 		<junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="no">
 			<classpath refid="test.classpath" />
@@ -297,7 +296,7 @@
 		<echo message="Tests are complete - check log for errors"/>
 	</target>
 
-	<target name="slowTests" depends="build-tests" description="Run Slow JUnit tests">
+	<target name="slowTests" depends="build-tests" description="Run Slow JUnit tests. Depends on: build-tests">
 		<echo>Running Slow JUnit Tests</echo>
 		<junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="no">
 			<classpath refid="test.classpath" />
@@ -318,7 +317,7 @@
 	    </classpath>
 	</taskdef>
 
-	<target name="findbugs" depends="package" description="Runs the 3rd party findbugs application to analyze and locate bugs statically">
+	<target name="findbugs" depends="package" description="Runs the 3rd party findbugs application to analyze and locate bugs statically. Depends on: package">
 		<echo>Running findbugs</echo>
 		<findbugs home="${findbugs.home}"
 				  effort="max"
@@ -347,7 +346,7 @@
 	    </classpath>
 	</taskdef>
 
-	<target name="releaseS3" depends="all">
+	<target name="releaseS3" depends="all" description="Builds and pushes the code to Amazons's S3. Depends on: all">
 	    <property environment="env"/>
 		<property file="config/aws.properties"/>
 	    <property name="latest"        value="${scm.name}-${revision.id}"/>
