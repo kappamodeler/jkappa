@@ -8,7 +8,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses(value = { 
 		TestENG229.class,
 		TestENG310.class,
-		TestENG345.class
+		TestENG345.class,
+		TestENG325.class
 		})
 public class SmokeTestMain {
 

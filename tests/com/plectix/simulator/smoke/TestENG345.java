@@ -32,7 +32,7 @@ public class TestENG345 extends SmokeTest {
 		String[] testArgs = prepareTestArgs();
 
 		SimulationData simulationData = mySimulator.getSimulationData();
-		simulationData.setPrintStream(System.out);
+//		simulationData.setPrintStream(System.out);
 
 		SimulatorCommandLine commandLine = null;
 		try {
@@ -71,7 +71,6 @@ public class TestENG345 extends SmokeTest {
 		}
 
 		timeStamp  = System.currentTimeMillis() - timeStamp;
-		
 		Assert.assertTrue("Too long", timeStamp < 3000);
 	}
 
