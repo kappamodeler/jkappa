@@ -12,7 +12,7 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements
 		Test {
 	private String myTestFileName = "";
 	private Simulator mySimulator;
-	private Integer operationMode;
+	private final Integer operationMode;
 
 	protected TestPerturbation(String fileName, Integer opMode) {
 		super();
@@ -29,6 +29,7 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements
 		mySimulator = initializator.getSimulator();
 		try {
 			mySimulator.getSimulationData().setSnapshotTime("0");
+			mySimulator.getSimulationData().setClockStamp(System.currentTimeMillis());
 			mySimulator.run();
 		} catch (Exception e) {
 			e.printStackTrace();

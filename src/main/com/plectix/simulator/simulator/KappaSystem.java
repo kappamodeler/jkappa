@@ -47,7 +47,7 @@ public final class KappaSystem implements KappaSystemInterface {
 	private Observables observables = new Observables();
 	private SolutionInterface solution;// = new CSolution(); // soup of initial
 										// components
-	private ContactMap contactMap = new ContactMap();
+	private final ContactMap contactMap = new ContactMap();
 	private AllSubViewsOfAllAgentsInterface subViews;
 	private InfluenceMap influenceMap;
 	private LocalViewsMain localViews;
@@ -255,7 +255,7 @@ public final class KappaSystem implements KappaSystemInterface {
 				ConditionInterface condition = pb.getCondition();
 				if (condition.getType() != ConditionType.SPECIES) {
 					if (modification.wasPerformed()) {
-						return;
+						continue;
 					}
 				}
 				if (condition.check(currentTime)) {
