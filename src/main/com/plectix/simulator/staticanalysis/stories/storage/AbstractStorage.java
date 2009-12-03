@@ -23,7 +23,7 @@ public final class AbstractStorage implements WireStorageInterface {
 
 	private Set<Event> events;
 
-	private MasterInformationAboutWires informationAboutWires;
+	private final MasterInformationAboutWires informationAboutWires;
 
 	// initial solution we interpret as initial event. It has Id= -1
 	private Event initialEvent;
@@ -523,10 +523,10 @@ public final class AbstractStorage implements WireStorageInterface {
 	}
 
 	@Override
-	public boolean tryToSwap(long agentId1, WireHashKey wk) {
+	public boolean tryToSwap(long agentId, WireHashKey wk) {
 		if (wk.getTypeOfWire() == TypeOfWire.LINK_STATE) {
 
-			return informationAboutWires.tryToSwapLink(agentId1, storageWires
+			return informationAboutWires.tryToSwapLink(agentId, storageWires
 					.get(wk));
 		}
 		return true;

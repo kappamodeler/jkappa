@@ -111,17 +111,17 @@ public class MasterInformationAboutWires {
 		}
 	}
 
-	public boolean tryToSwapLink(long agentId1, Map<Long, AtomicEvent<?>> wire) {
+	public boolean tryToSwapLink(long agentId, Map<Long, AtomicEvent<?>> wire) {
 
 		for (AtomicEvent<?> ae : wire.values()) {
 			if (ae.getState().getAfterState() != null) {
 				if (((StateOfLink) (ae.getState().getAfterState()))
-						.getAgentId() == agentId1)
+						.getAgentId() == agentId)
 					return false;
 			}
 			if (ae.getState().getBeforeState() != null) {
 				if (((StateOfLink) (ae.getState().getBeforeState()))
-						.getAgentId() == agentId1)
+						.getAgentId() == agentId)
 					return false;
 			}
 		}

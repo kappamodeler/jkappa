@@ -166,7 +166,7 @@ public final class StoragePassport implements CompressionPassport {
 
 		for (WireHashKey wk : wiresByIdAgent.get(agentId1)) {
 			ag1.add(wk.getSmallHash());
-			if(!storage.tryToSwap(agentId1, wk)){
+			if(!storage.tryToSwap(agentId2, wk)){
 				return false;
 			}
 		}
