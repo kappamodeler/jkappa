@@ -1,27 +1,32 @@
--injars jar/simulator.jar
--outjars jar/jsim-obf.jar
+-injars ../jar/simulator.jar
+-outjars ../jar/jsim-obf.jar(!META-INF/MANIFEST.MF)
 
 -libraryjars <java.home>/../Classes/classes.jar
--libraryjars lib
+-libraryjars ../lib
 
--printusage jar/jsim-dead-code.txt
+-printusage ../jar/jsim-dead-code.txt
 -optimizationpasses 5
--printmapping jar/jsim-obf-mapping.txt
--applymapping config/jsim-obfuscation-mapping.txt
--obfuscationdictionary config/proguard4.5beta2-dictionaries-compact.txt
--classobfuscationdictionary config/proguard4.5beta2-dictionaries-windows.txt
--packageobfuscationdictionary config/proguard4.5beta2-dictionaries-windows.txt
+-printmapping ../jar/jsim-obf-mapping.txt
+
+# Files that are located in the "config" folder:
+-applymapping jsim-obfuscation-mapping.txt
+-obfuscationdictionary proguard4.5beta2-dictionaries-compact.txt
+-classobfuscationdictionary proguard4.5beta2-dictionaries-windows.txt
+-packageobfuscationdictionary proguard4.5beta2-dictionaries-windows.txt
+
 -overloadaggressively
--flattenpackagehierarchy ''
--repackageclasses ''
+-flattenpackagehierarchy 'com'
+-repackageclasses 'com'
+
 -keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable
 -renamesourcefileattribute SourceFile
 -adaptresourcefilenames **.properties
--adaptresourcefilecontents **.properties,META-INF/MANIFEST.MF
+-adaptresourcefilecontents **.properties
 -verbose
 -ignorewarnings
--printconfiguration jar/jsim-obf-proguard4.5beta2-config.txt
--printseeds jar/jsim-obf-seeds.txt
+
+-printconfiguration ../jar/jsim-obf-proguard4.5beta2-config.txt
+-printseeds ../jar/jsim-obf-seeds.txt
 
 
 -keep class com.plectix.simulator.api.CommandLineRunner {

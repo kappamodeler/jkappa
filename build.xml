@@ -83,7 +83,7 @@
     </target>
 	
 
-	<target name="build-project" depends="filter-tpl,init" description="Builds the project. Depends on: filter-tpl,init">
+	<target name="build-project" depends="set-revision,filter-tpl,init" description="Builds the project. Depends on: filter-tpl,init">
         <echo message="OS: ${os.name} "/>
         <echo message="Java: ${java.version} "/>
         <echo message="Ant Java: ${ant.java.version} "/>
@@ -332,7 +332,20 @@
 			 <sourcePath path="${src.dir}" />
 			 <class location="${dist.dir}/simulator.jar" />
 		</findbugs>
-   </target>
+    </target>
+
+
+	<!-- ################################### proguard target  ################################### -->
+
+	<property name="proguard.home" value="3rd.party/proguard4.5beta2" />
+
+    <taskdef resource="proguard/ant/task.properties" classpath="${proguard.home}/lib/proguard.jar" />
+
+    <target name="proguard" depends="package" description="Runs the 3rd party proguard application to shrink, optimize, and obfuscate the project jar file. Depends on: package">
+		<echo>Running proguard</echo>
+	    <proguard configuration="config/jsim-obfuscation-proguard4.5beta2-config.pro"/>
+    </target>
+	
 
 	<!-- ################################### release at S3 target  ################################### -->
 

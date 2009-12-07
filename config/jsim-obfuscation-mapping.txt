@@ -1,4 +1,4 @@
-com.plectix.simulator.SimulationMain -> SM:
+com.plectix.simulator.SimulationMain -> com.SM:
     void main(java.lang.String[]) -> main
 com.plectix.simulator.api.CommandLineRunner -> com.CLR:
     com.plectix.simulator.controller.SimulatorFutureTask getSimulatorFutureTask(java.lang.String[]) -> gSFT
