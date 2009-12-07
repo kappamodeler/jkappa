@@ -1,0 +1,18 @@
+com.plectix.simulator.SimulationMain -> SM:
+    boolean loggingInitialized -> Code
+    com.plectix.simulator.util.io.PlxLogger LOGGER -> Code
+    java.io.PrintStream DEFAULT_OUTPUT_STREAM -> Code
+    void main(java.lang.String[]) -> main
+com.plectix.simulator.api.CommandLineRunner -> com.CLR:
+    com.plectix.simulator.controller.SimulatorFutureTask getSimulatorFutureTask(java.lang.String[]) -> gSFT
+com.plectix.simulator.controller.SimulatorFutureTask -> com.SFT:
+com.plectix.simulator.controller.SimulatorResultsData -> com.SRD:
+    boolean isCancelled -> Code
+    com.plectix.simulator.controller.SimulatorCallableExitReport simulatorCallableExitReport -> Code
+    com.plectix.simulator.controller.SimulatorCallableExitReport getSimulatorExitReport() -> getSER
+    boolean isCancelled() -> Code
+    void setCancelled$1385ff() -> Code
+com.plectix.simulator.controller.SimulatorCallableExitReport -> com.SCER:
+    java.lang.Exception exception -> Code
+    java.lang.Exception getException() -> getE
+    void setException(java.lang.Exception) -> Code
