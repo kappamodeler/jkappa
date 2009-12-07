@@ -64,17 +64,17 @@
 		<delete dir="${dist.dir}"/>
     </target>
 
-    <target name="cleanall" depends="clean" description="Clean up build, distribution, javadoc, and deploymeny direcotire" >
+    <target name="cleanall" depends="clean" description="Clean up build, distribution, javadoc, and deployment direcotory." >
 		<delete dir="${javadoc.dir}"/>
 		<delete dir="${deploy.dir}"/>
 	</target>
  
 	<target name="build" depends="set-revision,build-subprojects,build-project" 
-	        description="Sets the revision numnber, builds sub-projects and this project. It runs: set-revision,build-subprojects,build-project"/>
+	        description="Sets the revision numnber, builds sub-projects and this project. Depends on: set-revision,build-subprojects,build-project"/>
     
 	<target name="build-subprojects"/>
      
-    <target name="init" depends="filter-tpl" description="Initializes the build directory">
+    <target name="init" depends="filter-tpl" description="Initializes the build directory. Depends on: filter-tpl">
 		<tstamp/>
         <mkdir dir="${build.dir}"/>
         <copy includeemptydirs="false" todir="${build.dir}">
@@ -83,7 +83,7 @@
     </target>
 	
 
-	<target name="build-project" depends="set-revision,filter-tpl,init" description="Builds the project. Depends on: filter-tpl,init">
+	<target name="build-project" depends="set-revision,filter-tpl,init" description="Builds the project. Depends on: set-revision,filter-tpl,init">
         <echo message="OS: ${os.name} "/>
         <echo message="Java: ${java.version} "/>
         <echo message="Ant Java: ${ant.java.version} "/>
@@ -174,7 +174,7 @@
 		</pathconvert>
 	</target>
 		
-	<target name="showPaths" depends="createPaths" description="Shows the paths to the jar files needed for this project." >
+	<target name="showPaths" depends="createPaths" description="Shows the paths to the jar files needed for this project. Depends on: createPaths" >
 		<echo message="The value of export.classpath.windows is ${export.classpath.windows}"/>
 		<echo message="The value of export.classpath.unix is ${export.classpath.unix}"/>
 	</target>
@@ -187,7 +187,7 @@
     <available file=".git" type="dir" property="set-git-revision" />
 
     <target name="set-revision" depends="set-svn-revision,set-git-revision" 
-	        description="Sets the source code repository revision number in the code">
+	        description="Sets the source code repository revision number in the code. Depends on: set-svn-revision,set-git-revision">
 
 		<!-- Show revision -->
 	    <property name="build.revision" value="${scm.name} ${revision.id}"/>
