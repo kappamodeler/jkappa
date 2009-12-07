@@ -6,6 +6,8 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.controller.SimulationService;
+import com.plectix.simulator.controller.SimulatorCallable;
+import com.plectix.simulator.controller.SimulatorCallableListener;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.DefaultSimulatorFactory;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
@@ -23,12 +25,32 @@ public class SimulationMain  {
 	
 	public static final String COMMAND_LINE_SYNTAX = "use --sim [file] [options]";
 	
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
 		initializeLogging();
 		
-		SimulatorCommandLine commandLine = new SimulatorCommandLine(args);
+		SimulatorCommandLine commandLine = null;
+		try {
+			commandLine = new SimulatorCommandLine(args);
+		} catch (ParseException parseException) {
+			parseException.printStackTrace();
+			LOGGER.fatal("Caught fatal ParseException", parseException);
+			System.exit(-2);
+		}
+		
 		SimulationService service = new SimulationService(new DefaultSimulatorFactory());
-		service.submit(new SimulatorInputData(commandLine.getSimulationArguments(), DEFAULT_OUTPUT_STREAM), null);
+		service.submit(new SimulatorInputData(commandLine.getSimulationArguments(), DEFAULT_OUTPUT_STREAM), new SimulatorCallableListener() {		
+			@Override
+			public void finished(SimulatorCallable simulatorCallable) {
+				Exception exception = simulatorCallable.getSimulatorExitReport().getException();
+				if (exception == null) {
+					System.exit(0);
+				} else {
+					LOGGER.error("Simulator exited with an Exception", exception);
+					System.exit(-1);
+				}
+			}
+		});
+		
 		service.shutdown();
 	}
 
