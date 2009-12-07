@@ -1,5 +1,6 @@
 package com.plectix.simulator.simulationclasses.perturbations;
 
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.ModificationType;
 import com.plectix.simulator.simulationclasses.perturbations.util.LinearExpression;
 import com.plectix.simulator.simulationclasses.perturbations.util.VectorRule;
 import com.plectix.simulator.staticanalysis.Rule;
@@ -31,5 +32,10 @@ public class RateModification extends AbstractModification {
 		sb.append("' := ");
 		sb.append(expression);
 		return sb.toString();
+	}
+
+	@Override
+	public ModificationType getType() {
+		return ModificationType.RATE;
 	}
 }

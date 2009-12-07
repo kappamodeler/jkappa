@@ -56,7 +56,5 @@ public abstract class OnceModification extends AbstractModification {
 	public final PerturbationRule getPerturbationRule() {
 		return rule;
 	}
-	
-	public abstract ModificationType getType();
 }
 

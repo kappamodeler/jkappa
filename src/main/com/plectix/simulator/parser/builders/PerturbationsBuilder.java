@@ -1,6 +1,8 @@
 package com.plectix.simulator.parser.builders;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
@@ -10,13 +12,19 @@ import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.parser.abstractmodel.ModelPerturbation;
 import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpressionMonome;
 import com.plectix.simulator.parser.abstractmodel.perturbations.ModelLinearExpression;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.ModelConjuctionCondition;
 import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.ModelSpeciesCondition;
 import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.ModelTimeCondition;
+import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.PerturbationCondition;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.AbstractOnceModification;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.ModelRateModification;
 import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.ModificationType;
+import com.plectix.simulator.parser.abstractmodel.perturbations.modifications.PerturbationModification;
+import com.plectix.simulator.simulationclasses.perturbations.AbstractModification;
 import com.plectix.simulator.simulationclasses.perturbations.AddOnceModification;
+import com.plectix.simulator.simulationclasses.perturbations.ComplexCondition;
 import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
+import com.plectix.simulator.simulationclasses.perturbations.ConditionInterface;
 import com.plectix.simulator.simulationclasses.perturbations.DeleteOnceModification;
 import com.plectix.simulator.simulationclasses.perturbations.PerturbationRule;
 import com.plectix.simulator.simulationclasses.perturbations.RateModification;
@@ -29,7 +37,6 @@ import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.staticanalysis.Agent;
-import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.util.SpeciesManager;
 
@@ -73,17 +80,6 @@ public final class PerturbationsBuilder {
 		return null;
 	}
 
-//	private final List<MonomeInterface> createRateExpressionOld (
-//			ModelLinearExpression expression) throws DocumentFormatException {
-//		List<MonomeInterface> result = new ArrayList<MonomeInterface>();
-//		for (LinearExpressionMonome monome : expression.getPolynome()) {
-//			Rule foundedRule = findRule(monome.getEntityName());
-//			double multiplier = monome.getMultiplier();
-//			result.add(new RateExpressionMonome(foundedRule, multiplier));
-//		}
-//		return result;
-//	}
-	
 	private final LinearExpression<VectorRule> createRateExpression (
 			ModelLinearExpression expression) throws DocumentFormatException {
 		LinearExpression<VectorRule> result = new LinearExpression<VectorRule>();
@@ -120,99 +116,77 @@ public final class PerturbationsBuilder {
 		return new RateModification(rule, expression);
 	}
 	
-	private final ComplexPerturbation<?, ?> convert(ModelPerturbation abstractPerturbation)
-			throws ParseErrorException, DocumentFormatException {
-		ModificationType modificationType = abstractPerturbation.getModification().getType();
-		ComplexPerturbation<?, ?> result = null;
-		boolean rateModification = (modificationType == ModificationType.RATE);
-		boolean addOnceModification = (modificationType == ModificationType.ADDONCE);
-
-		// TODO worry about type conversion?
-		switch (abstractPerturbation.getCondition().getType()) {
-		case TIME: {
-			// TODO type cast
-			ModelTimeCondition modelCondition = (ModelTimeCondition) abstractPerturbation.getCondition();
-			TimeCondition condition = new TimeCondition(modelCondition.getBounds());
-			
-			if (rateModification) {
-				
-				// TODO type cast
-				ModelRateModification modelModification 
-						= (ModelRateModification) abstractPerturbation.getModification();
-				RateModification modification = this.convert(modelModification);
-				
-				result = new ComplexPerturbation<TimeCondition, RateModification>(condition, modification);
-			} else {
-				
-				// TODO type cast
-				AbstractOnceModification modelModification = (AbstractOnceModification) abstractPerturbation
-						.getModification();
-				List<Agent> agentList = substanceBuilder
-						.buildAgents(modelModification.getSubstanceAgents());
-				List<ConnectedComponentInterface> ccList = SpeciesManager
-						.formConnectedComponents(agentList);
-				
-				for (ConnectedComponentInterface cc : ccList) {
-					List<ConnectedComponentInterface> ccL = new ArrayList<ConnectedComponentInterface>();
-					ccL.add(cc);
-					PerturbationRule rule;
-					int quantity = modelModification.getQuantity();
-					if (addOnceModification) {
-						rule = new PerturbationRule(null, ccL, "", 0,
-								(int) kappaSystem.generateNextRuleId(), simulationArguments.isStorify());
-						
-						AddOnceModification modification = new AddOnceModification(rule, quantity);
-						result = new ComplexPerturbation<TimeCondition, AddOnceModification>(condition, modification);
-					} else {
-						rule = new PerturbationRule(ccL, null, "", 0,
-								(int) kappaSystem.generateNextRuleId(), simulationArguments.isStorify());
-						
-						DeleteOnceModification modification = new DeleteOnceModification(rule, quantity);
-						result = new ComplexPerturbation<TimeCondition, DeleteOnceModification>(condition, modification);
-					}
-					
-					kappaSystem.addRule(rule);
-				}
+	private ConditionInterface convert(PerturbationCondition modelCondition) throws DocumentFormatException {
+		switch (modelCondition.getType()) {
+		case COMPLEX: {
+			ModelConjuctionCondition modelConjuctionCondition = (ModelConjuctionCondition) modelCondition;
+			Collection<ConditionInterface> conditions = new LinkedHashSet<ConditionInterface>();
+			for (PerturbationCondition simpleCondition : modelConjuctionCondition.getConditions()) {
+				conditions.add(this.convert(simpleCondition));
 			}
-			return result;
+			return new ComplexCondition(conditions);
 		}
-		case SPECIES: {
-			Observables observables = kappaSystem.getObservables();
-			
-			// TODO type cast
-			ModelSpeciesCondition modelCondition = (ModelSpeciesCondition) abstractPerturbation
-					.getCondition();
-			if (rateModification) {
-				
-				// TODO type cast
-				ModelRateModification modelModification = (ModelRateModification) abstractPerturbation
-						.getModification();
-
-				ObservableInterface component = checkObservableForExistance(modelCondition
-						.getPickedObservableName());
-				LinearExpression<VectorObservable> speciesExpression 
-						= createSpeciesExpression(modelCondition.getExpression());
-				SpeciesCondition condition = new SpeciesCondition(component, speciesExpression, 
-						modelCondition.inequalitySign(), observables);
-				
-				LinearExpression<VectorRule> expression 
-						= createRateExpression(modelModification.getExpression());
-				Rule rule = findRule(modelModification.getArgument());
-				RateModification modification = new RateModification(rule, expression);
-				
-				result = new ComplexPerturbation<SpeciesCondition, RateModification>(condition, modification);
-				
-//				result = new Perturbation(obsID, parameters, component
-//						.getId(), rule, condition.inequalitySign(), 
-//						createRateExpression(modification.getExpression()), 
-//						kappaSystem.getObservables());
-				return result;
-			} else {
-				// TODO we've not implemented this feature :-(
+		case TIME: {
+			ModelTimeCondition modelTimeCondition = (ModelTimeCondition) modelCondition;
+			return new TimeCondition(modelTimeCondition.getBounds());
+		}
+		case SPECIES : {
+			ModelSpeciesCondition modelSpeciesCondition = (ModelSpeciesCondition) modelCondition;
+			ObservableInterface component = checkObservableForExistance(modelSpeciesCondition
+					.getPickedObservableName());
+			LinearExpression<VectorObservable> speciesExpression 
+					= createSpeciesExpression(modelSpeciesCondition.getExpression());
+			return new SpeciesCondition(component, speciesExpression, 
+					modelSpeciesCondition.inequalitySign(), kappaSystem.getObservables());
+		}
+		}
+		return null;
+	}
+	
+	private AbstractModification convert(PerturbationModification modelModification) throws DocumentFormatException {
+		switch (modelModification.getType()) {
+		case RATE: {
+			return this.convert((ModelRateModification)modelModification);
+		}
+		default: {
+			AbstractOnceModification modelOnceModification = (AbstractOnceModification) modelModification;
+			List<Agent> agentList = substanceBuilder.buildAgents(modelOnceModification.getSubstanceAgents());
+			List<ConnectedComponentInterface> ccList = SpeciesManager.formConnectedComponents(agentList);
+	
+			for (ConnectedComponentInterface cc : ccList) {
+				List<ConnectedComponentInterface> ccL = new ArrayList<ConnectedComponentInterface>();
+				ccL.add(cc);
+				int quantity = modelOnceModification.getQuantity();
+				if (modelOnceModification.getType() == ModificationType.ADDONCE) {
+					PerturbationRule rule = new PerturbationRule(null, ccL, "", 0,
+							(int) kappaSystem.generateNextRuleId(), simulationArguments.isStorify());
+					kappaSystem.addRule(rule);
+					
+					return new AddOnceModification(rule, quantity);
+				} else {
+					PerturbationRule rule = new PerturbationRule(ccL, null, "", 0,
+							(int) kappaSystem.generateNextRuleId(), simulationArguments.isStorify());
+					kappaSystem.addRule(rule);	
+					
+					return new DeleteOnceModification(rule, quantity);
+				}
 			}
 		}
 		}
 		return null;
+	}
+	
+	private final <C extends ConditionInterface, M extends AbstractModification> ComplexPerturbation<?, ?> construct(C condition, M modification) {
+		// tricky one, yeah ;)
+		return new ComplexPerturbation<C, M>(condition, modification);
+	}
+		
+	private final ComplexPerturbation<?, ?> convert(ModelPerturbation abstractPerturbation)
+			throws ParseErrorException, DocumentFormatException {
+
+		ConditionInterface condition = this.convert(abstractPerturbation.getCondition());
+		AbstractModification modification = this.convert(abstractPerturbation.getModification());
+		return this.construct(condition, modification);
 	}
 
 	private final ObservableInterface checkObservableForExistance(String observableName)
