@@ -21,7 +21,7 @@ public class RateModification extends AbstractModification {
 
 	@Override
 	protected void doItAll() {
-		System.out.println(expression.calculate());
+		//System.out.println(expression.calculate());
 		rule.setRuleRate(expression.calculate());
 	}
 	
