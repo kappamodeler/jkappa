@@ -22,7 +22,7 @@ enum WalkResult {
 	DESIRED, FREE, NULL, FAILED
 }
 
-/*package*/ final class WeakCompression {
+/* package */final class WeakCompression {
 	private final WireStorageInterface storage;
 	private final MasterInformationAboutWires information;
 
@@ -32,14 +32,13 @@ enum WalkResult {
 	private boolean maxQueueSizeReached;
 	private Long upperGhostId = null;
 	private Long lowerGhostId = null;
-	private ArrayList<QueueEntry> uninvestigatedQueue = new ArrayList<QueueEntry>();
-	private Stack<StackEntry> wireStack = new Stack<StackEntry>();
-	private ArrayList<EventInterface> candidatesToDelete = new ArrayList<EventInterface>();
+	private final ArrayList<QueueEntry> uninvestigatedQueue = new ArrayList<QueueEntry>();
+	private final Stack<StackEntry> wireStack = new Stack<StackEntry>();
+	private final ArrayList<EventInterface> candidatesToDelete = new ArrayList<EventInterface>();
 	private int currentNodeIdx;
 	private QueueEntry currentNode = null;
 	private StackEntry topEntry = null;
 
-	
 	public WeakCompression(WireStorageInterface storage) {
 		this.storage = storage;
 		information = storage.getInformationAboutWires();
@@ -371,7 +370,8 @@ enum WalkResult {
 			wireStack.pop();
 	}
 
-	public final long getFirstEventId(boolean upwards) throws StoryStorageException {
+	public final long getFirstEventId(boolean upwards)
+			throws StoryStorageException {
 		EventInterface event = currentNode.getEvent();
 
 		if (event.getStepId() != ghostEventId)
@@ -638,7 +638,8 @@ enum WalkResult {
 		return true;
 	}
 
-	private final <E> boolean isWalkSucceeded(E state) throws StoryStorageException {
+	private final <E> boolean isWalkSucceeded(E state)
+			throws StoryStorageException {
 		WalkResult walkResult = walk(state, null);
 
 		if (walkResult == WalkResult.FAILED

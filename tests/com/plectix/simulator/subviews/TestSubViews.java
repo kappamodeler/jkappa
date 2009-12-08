@@ -34,13 +34,13 @@ public class TestSubViews {
 
 //	private static boolean isConsole = InitData.isPrintinConsoleAndFile;
 
-	private InitTestSubView initTestSubView = new InitTestSubView();
+	private final InitTestSubView initTestSubView = new InitTestSubView();
 	
 	@Parameters
 	public static Collection<Object[]> configs() {
 		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 		.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
-				"~kappa"));
+				"~kappa"),false);
 	}
 
 	public TestSubViews(String count, String patch, Integer opMode) {

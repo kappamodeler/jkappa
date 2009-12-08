@@ -26,13 +26,13 @@ public class TestQuantitativeCompressions {
 	private LocalViewsMain localViews;
 	private List<Rule> rules;
 
-	private InitTestRuleCompressions initTestRuleCompressions = new InitTestRuleCompressions();
+	private final InitTestRuleCompressions initTestRuleCompressions = new InitTestRuleCompressions();
 	
 	@Parameters
 	public static Collection<Object[]> configs() {
 		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 		.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
-				"~kappa"));
+				"~kappa"),false);
 	}
 
 	public TestQuantitativeCompressions(String count, String patch, Integer opMode) {

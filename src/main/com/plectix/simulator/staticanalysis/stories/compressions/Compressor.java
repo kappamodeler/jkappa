@@ -6,13 +6,14 @@ import com.plectix.simulator.staticanalysis.stories.storage.WireStorageInterface
 
 public final class Compressor {
 
-	private WireStorageInterface storage;
+	private final WireStorageInterface storage;
 
 	public Compressor(WireStorageInterface storage) {
 		this.storage = storage;
 	}
 
-	public final void execute(StoryCompressionMode compressionMode) throws StoryStorageException {
+	public final void execute(StoryCompressionMode compressionMode)
+			throws StoryStorageException {
 		switch (compressionMode) {
 		case NONE:
 			executeNoneCompression();

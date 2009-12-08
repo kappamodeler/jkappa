@@ -22,7 +22,6 @@ import com.plectix.simulator.staticanalysis.stories.MarkOfEvent;
 import com.plectix.simulator.staticanalysis.stories.Stories;
 import com.plectix.simulator.staticanalysis.stories.compressions.CompressionPassport;
 import com.plectix.simulator.staticanalysis.stories.compressions.Compressor;
-import com.plectix.simulator.staticanalysis.stories.compressions.ExtensionData;
 import com.plectix.simulator.staticanalysis.stories.storage.AtomicEvent;
 import com.plectix.simulator.staticanalysis.stories.storage.EventIteratorInterface;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
@@ -39,7 +38,7 @@ public class TestPassportCorrectness extends InitStoriesTests {
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return OperationModeCollectionGenerator.generate(getAllTestFileNames(path));
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(path),false);
 	}
 
 	public TestPassportCorrectness(String fileName, Integer opMode) {
@@ -308,16 +307,14 @@ public class TestPassportCorrectness extends InitStoriesTests {
 					for (Long l = Long.valueOf(2); l <= passport.getStorage()
 							.observableEvent().getStepId() - 1; l++) {
 						if (k < 1000) {
-							passport.swapAgents(l1, l2,
-									new ArrayList<ExtensionData>(), Long
+							passport.swapAgents(l1, l2, Long
 											.valueOf(l), true);
 							passport.undoSwap();
 
 							StoryCorrectness.testCountUnresolvedOnWire(passport
 									.getStorage());
 
-							passport.swapAgents(l1, l2,
-									new ArrayList<ExtensionData>(), Long
+							passport.swapAgents(l1, l2, Long
 											.valueOf(l), false);
 							passport.undoSwap();
 

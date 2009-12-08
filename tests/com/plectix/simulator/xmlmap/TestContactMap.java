@@ -44,7 +44,7 @@ public class TestContactMap {
 	private ArrayList<Bond> bondsSimplex;
 	private ArrayList<Bond> bondsJava;
 
-	private InitTestContactMap initTestContactMap = new InitTestContactMap();
+	private final InitTestContactMap initTestContactMap = new InitTestContactMap();
 
 	@Parameters
 	public static Collection<Object[]> configs() {
@@ -54,7 +54,7 @@ public class TestContactMap {
 
 		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 				.addAllFileNamesWithPathWithModifyName(prefixSourceModel,
-						"~kappa"));
+						"~kappa"),false);
 	}
 
 	public TestContactMap(String count, String patch, Integer opMode) throws ParseException {

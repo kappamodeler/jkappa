@@ -62,7 +62,7 @@ public interface CompressionPassport {
 	 * 
 	 * @param agentId
 	 * @return
-	 * @throws StoryStorageException 
+	 * @throws StoryStorageException
 	 */
 	String getAgentType(long agentId) throws StoryStorageException;
 
@@ -91,8 +91,7 @@ public interface CompressionPassport {
 	 * @throws StoryStorageException
 	 */
 	EventInterface swapAgents(List<Long> agents1, List<Long> agents2,
-			ArrayList<ExtensionData> extensionLinks, Long firstEventId,
-			boolean swapTop) throws StoryStorageException;
+			Long firstEventId, boolean swapTop) throws StoryStorageException;
 
 	/**
 	 * reverse all swaps

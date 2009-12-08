@@ -28,11 +28,11 @@ public class RunActionTest extends InitTestAction {
 	private static String FilePath = "test.data" + separator + "actions"
 			+ separator;
 	private Rule activeRule;
-	private Integer opMode;
+	private final Integer opMode;
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return OperationModeCollectionGenerator.generate(getAllTestFileNames(FilePath));
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(FilePath),true);
 	}
 
 	public RunActionTest(String fileName, Integer opMode) {

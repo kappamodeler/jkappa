@@ -34,13 +34,13 @@ public class TestPerturbationsTriggering {
 	private final String prefixFileName;
 
 	private Simulator mySimulator;
-	private Integer[] times = { 200 };
-	private Integer operationMode;
+	private final Integer[] times = { 200 };
+	private final Integer operationMode;
 
 	@Parameters
 	public static Collection<Object[]> data() {
 		Collection<Object[]> coll = FileNameCollectionGenerator.getAllFileNames(testDirectory);
-		return OperationModeCollectionGenerator.generate(coll);
+		return OperationModeCollectionGenerator.generate(coll,true);
 	}
 
 	public TestPerturbationsTriggering(String filename, Integer opMode) {

@@ -21,11 +21,11 @@ public class TestStrong extends InitStoriesTests {
 	private static final String separator = File.separator;
 	private static final String path = "test.data" + separator + "stories"
 			+ separator + "strong" + separator;
-	private Map<Integer, CompressionPassport> passports;
+	private final Map<Integer, CompressionPassport> passports;
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return OperationModeCollectionGenerator.generate(getAllTestFileNames(path));
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(path),false);
 	}
 
 	public TestStrong(String fileName, Integer opMode) {

@@ -21,10 +21,10 @@ public class TestStoryCorrectness extends InitStoriesTests {
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return OperationModeCollectionGenerator.generate(getAllTestFileNames(path));
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(path),false);
 	}
 
-	private String fileName;
+	private final String fileName;
 
 	public TestStoryCorrectness(String fileName, Integer opMode) {
 

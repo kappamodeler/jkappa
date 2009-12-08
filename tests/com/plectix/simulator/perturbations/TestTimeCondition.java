@@ -19,9 +19,9 @@ public class TestTimeCondition extends TestPerturbation {
 	private static final String myPrefixFileName = "test.data" + separator
 			+ "perturbations" + separator;
 	private String myTestFileName = "";
-	private Failer myFailer = new Failer();
+	private final Failer myFailer = new Failer();
 	private Rule myActiveRule;
-	private Integer operationMode;
+	private final Integer operationMode;
 	private static Map<String, Integer> myExpectedData;
 
 	@BeforeClass
@@ -40,7 +40,7 @@ public class TestTimeCondition extends TestPerturbation {
 	@Parameters
 	public static Collection<Object[]> regExValues() {
 		return OperationModeCollectionGenerator
-				.generate(getAllTestFileNames(myPrefixFileName));
+				.generate(getAllTestFileNames(myPrefixFileName),true);
 	}
 
 	@Override

@@ -29,13 +29,13 @@ public final class TestEvents {
 	private Simulator simulator;
 	private final Integer[] eventsNumbers = { 0, 1, 10, 100, 500, 1000, 1001,
 			1002 };
-	private Integer operationMode;
+	private final Integer operationMode;
 
 	@Parameters
 	public static Collection<Object[]> data() {
 		Collection<Object[]> allFileNames = FileNameCollectionGenerator
 				.getAllFileNames(TEST_DIRECTORY);
-		return OperationModeCollectionGenerator.generate(allFileNames);
+		return OperationModeCollectionGenerator.generate(allFileNames,true);
 	}
 
 	public TestEvents(String filename, Integer opMode) {

@@ -4,8 +4,8 @@ import com.plectix.simulator.staticanalysis.Site;
 import com.plectix.simulator.util.NameDictionary;
 
 public final class StateOfLink {
-	private long agentId;
-	private String siteName;
+	private final long agentId;
+	private final String siteName;
 
 	public StateOfLink() {
 		agentId = -1;
@@ -31,10 +31,10 @@ public final class StateOfLink {
 		return false;
 	}
 
-	public final void setState(StateOfLink newState) {
-		this.agentId = newState.getAgentId();
-		this.siteName = newState.getSiteName();
-	}
+//	public final void setState(StateOfLink newState) {
+//		this.agentId = newState.getAgentId();
+//		this.siteName = newState.getSiteName();
+//	}
 
 	@Override
 	public final boolean equals(Object obj) {
@@ -47,7 +47,7 @@ public final class StateOfLink {
 	private static final int getResult(int result, Object constant) {
 		return 37 * result + constant.hashCode();
 	}
-	
+
 	@Override
 	public final int hashCode() {
 		int result = 101;

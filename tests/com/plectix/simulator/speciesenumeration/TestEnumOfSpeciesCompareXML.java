@@ -29,7 +29,7 @@ public class TestEnumOfSpeciesCompareXML {
 
 	private static final String prefixSourseModel = InitData.pathForSourseModel;
 
-	private InitTestEnumOfSpeciesCompareXML initTestEnumOfSpeciesCompareXML = new InitTestEnumOfSpeciesCompareXML();
+	private final InitTestEnumOfSpeciesCompareXML initTestEnumOfSpeciesCompareXML = new InitTestEnumOfSpeciesCompareXML();
 
 	private ArrayList<Reachables> reachablesSimplex;
 	private ArrayList<Set> setsSimplex;
@@ -46,7 +46,7 @@ public class TestEnumOfSpeciesCompareXML {
 	public static Collection<Object[]> configs() {
 		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 				.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
-						"~kappa"));
+						"~kappa"),false);
 	}
 
 	public TestEnumOfSpeciesCompareXML(String prefixFile, String path, Integer opMode) {

@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import com.plectix.simulator.staticanalysis.stories.compressions.CompressionPassport;
-import com.plectix.simulator.staticanalysis.stories.compressions.ExtensionData;
 
 public interface WireStorageInterface {
 	/**
@@ -82,32 +81,32 @@ public interface WireStorageInterface {
 	// int getUnresolvedModifyCount(WireHashKey wkey) throws
 	// StoryStorageException;
 
-	//	/**
-	//	 * Put count of UNRESOLVED modify event within wire
-	//	 * 
-	//	 * @param wkey
-	//	 * @return
-	//	 */
-	//	void putUnresolvedModifyEvent(WireHashKey wireHashKey, int valueOf);
+	// /**
+	// * Put count of UNRESOLVED modify event within wire
+	// *
+	// * @param wkey
+	// * @return
+	// */
+	// void putUnresolvedModifyEvent(WireHashKey wireHashKey, int valueOf);
 
-//	/**
-//	 * Get iterator for all atomic states on a wire
-//	 * 
-//	 * @param wkey
-//	 *            . Only for INTERNAL_STATE wire
-//	 * @return
-//	 * @throws StoryStorageException
-//	 */
-//	Iterator<String> wireInternalStateIterator(WireHashKey wkey)
-//			throws StoryStorageException;
+	// /**
+	// * Get iterator for all atomic states on a wire
+	// *
+	// * @param wkey
+	// * . Only for INTERNAL_STATE wire
+	// * @return
+	// * @throws StoryStorageException
+	// */
+	// Iterator<String> wireInternalStateIterator(WireHashKey wkey)
+	// throws StoryStorageException;
 
-//	/**
-//	 * @param wkey
-//	 * @return
-//	 * @throws StoryStorageException
-//	 */
-//	Iterator<StateOfLink> wireLinkStateIterator(WireHashKey wkey)
-//			throws StoryStorageException;
+	// /**
+	// * @param wkey
+	// * @return
+	// * @throws StoryStorageException
+	// */
+	// Iterator<StateOfLink> wireLinkStateIterator(WireHashKey wkey)
+	// throws StoryStorageException;
 
 	/**
 	 * Create interface class for strong compression
@@ -157,29 +156,11 @@ public interface WireStorageInterface {
 
 	int getIteration();
 
-	/**
-	 * old1 and old2 has same siteId new1 and new2 has same siteId
-	 * a_1(x!1),b_1(x!1) <-> a_2(x!1),b_2(x!2) old1 - linkstate a_1(x) on wk1
-	 * new1 - linkstate b_1(x) on wk2 old2 - linkstate a_2(x) on wk3 new2 -
-	 * linkstate b_2(x) on wk4
-	 * 
-	 * @param old1
-	 * @param new1
-	 * @param old2
-	 * @param new2
-	 *            "first" events changes too. if top =true than initial event
-	 *            may be changed
-	 * @throws StoryStorageException 
-	 */
-	public void correctLinkStates(ExtensionData extensionData, long first,
-			boolean top) throws StoryStorageException;
-
 	public StoriesAgentTypesStorage getStoriesAgentTypesStorage();
 
 	void updateWires(Set<WireHashKey> sets) throws StoryStorageException;
 
 	boolean tryToSwap(long agentId1, WireHashKey wk);
-
 
 	MasterInformationAboutWires getInformationAboutWires();
 }

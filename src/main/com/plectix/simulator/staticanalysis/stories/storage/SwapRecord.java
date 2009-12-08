@@ -1,24 +1,19 @@
 package com.plectix.simulator.staticanalysis.stories.storage;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.plectix.simulator.staticanalysis.stories.compressions.ExtensionData;
-
 public final class SwapRecord {
-	
+
 	private List<Long> agentsIdsFirstList;
 	private List<Long> agentsIdsSecondList;
 	private long firstEventId;
 	private boolean swapTop;
 	private Event otherSide;
-	private ArrayList<ExtensionData> extensionLinks;
-	public final List<Map<WireHashKey,WireHashKey>> mapWire
-		= new LinkedList<Map<WireHashKey,WireHashKey>>();;
-	
-	public SwapRecord(){
+	public final List<Map<WireHashKey, WireHashKey>> mapWire = new LinkedList<Map<WireHashKey, WireHashKey>>();;
+
+	public SwapRecord() {
 		otherSide = null;
 	}
 
@@ -62,13 +57,4 @@ public final class SwapRecord {
 		return otherSide;
 	}
 
-
-	public final void setExtensionLinks(ArrayList<ExtensionData> extensionLinks) {
-		this.extensionLinks = extensionLinks;
-	}
-
-
-	public final ArrayList<ExtensionData> getExtensionLinks() {
-		return extensionLinks;
-	}
 }

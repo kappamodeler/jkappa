@@ -30,14 +30,14 @@ public class TestInitTime extends DefaultPropertiesForTest {
 	private String prefixFileName = "";
 
 	private Simulator simulator;
-	private Double[] initTimes = { -1.0, 1.0, 1.213 };
-	private Integer operationMode;
+	private final Double[] initTimes = { -1.0, 1.0, 1.213 };
+	private final Integer operationMode;
 
 	@Parameters
 	public static Collection<Object[]> data() {
 		Collection<Object[]> fileNames = FileNameCollectionGenerator
 				.getAllFileNames(testDirectory);
-		return OperationModeCollectionGenerator.generate(fileNames);
+		return OperationModeCollectionGenerator.generate(fileNames,true);
 	}
 
 	public TestInitTime(String filename, Integer opMode) {

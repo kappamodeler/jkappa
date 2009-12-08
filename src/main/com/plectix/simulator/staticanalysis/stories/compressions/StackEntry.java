@@ -12,7 +12,7 @@ import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageExceptio
 import com.plectix.simulator.staticanalysis.stories.storage.WireHashKey;
 import com.plectix.simulator.staticanalysis.stories.storage.WireStorageInterface;
 
-/*package*/ final class StackEntry {
+/*package*/final class StackEntry {
 	/**
 	 * Wire index in event
 	 */
@@ -71,9 +71,9 @@ import com.plectix.simulator.staticanalysis.stories.storage.WireStorageInterface
 		}
 
 		if (event.getStepId() != WeakCompression.ghostEventId) { // TODO: frozen
-																	// state for
-																	// ghost
-																	// event
+			// state for
+			// ghost
+			// event
 			detectFrozenState(storage, event.getStepId(), event
 					.getWireKey(wireIdx), false);
 			if (frozenState == null)
@@ -84,8 +84,8 @@ import com.plectix.simulator.staticanalysis.stories.storage.WireStorageInterface
 		if (frozenState == null) {
 			switch (type) {
 			case INTERNAL_STATE:
-				this.stateIterator = storage.getInformationAboutWires().wireInternalStateIterator(event
-						.getWireKey(wireIdx));
+				this.stateIterator = storage.getInformationAboutWires()
+						.wireInternalStateIterator(event.getWireKey(wireIdx));
 				break;
 			case BOUND_FREE:
 				this.stateIterator = new BoundSateIterator();
@@ -97,8 +97,9 @@ import com.plectix.simulator.staticanalysis.stories.storage.WireStorageInterface
 		}
 	}
 
-	private final void detectFrozenState(WireStorageInterface storage, long eventId,
-			WireHashKey wireKey, boolean upwards) throws StoryStorageException {
+	private final void detectFrozenState(WireStorageInterface storage,
+			long eventId, WireHashKey wireKey, boolean upwards)
+			throws StoryStorageException {
 		EventIteratorInterface eventIterator = storage.eventIterator(wireKey,
 				eventId, upwards);
 

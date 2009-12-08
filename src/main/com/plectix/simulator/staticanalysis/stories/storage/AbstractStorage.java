@@ -13,7 +13,6 @@ import com.plectix.simulator.staticanalysis.stories.MarkOfEvent;
 import com.plectix.simulator.staticanalysis.stories.State;
 import com.plectix.simulator.staticanalysis.stories.TypeOfWire;
 import com.plectix.simulator.staticanalysis.stories.compressions.CompressionPassport;
-import com.plectix.simulator.staticanalysis.stories.compressions.ExtensionData;
 
 public final class AbstractStorage implements WireStorageInterface {
 
@@ -65,7 +64,6 @@ public final class AbstractStorage implements WireStorageInterface {
 		return storageWires.get(wkey).get(event).getContainer();
 	}
 
-
 	/**
 	 * mark all events (without initial event with stepId=-1)
 	 */
@@ -107,7 +105,6 @@ public final class AbstractStorage implements WireStorageInterface {
 		return observableEvent;
 	}
 
-
 	public final EventIteratorInterface eventIterator(WireHashKey wkey,
 			boolean reverse) throws StoryStorageException {
 		if (reverse) {
@@ -132,7 +129,6 @@ public final class AbstractStorage implements WireStorageInterface {
 
 	public final void addEventContainerAndFullOtherMaps(Event eventContainer)
 			throws StoryStorageException {
-
 		// if (!isOpposite(eventContainer))
 		for (WireHashKey key : eventContainer.getAtomicEvents().keySet()) {
 			TreeMap<Long, AtomicEvent<?>> tree = storageWires.get(key);
@@ -143,7 +139,6 @@ public final class AbstractStorage implements WireStorageInterface {
 			tree.put(eventContainer.getStepId(), eventContainer
 					.getAtomicEvent(key));
 			events.add(eventContainer);
-
 			if (key.getTypeOfWire() == TypeOfWire.INTERNAL_STATE) {
 				if (informationAboutWires.getInternalStatesByWire().get(key) == null) {
 					LinkedHashSet<String> internalStates = new LinkedHashSet<String>();
@@ -194,7 +189,6 @@ public final class AbstractStorage implements WireStorageInterface {
 				}
 			}
 		}
-
 	}
 
 	public final void addEventContainer(Event eventContainer)
@@ -219,7 +213,6 @@ public final class AbstractStorage implements WireStorageInterface {
 
 	}
 
-
 	public final void handling() throws StoryStorageException {
 		LinkedHashSet<Event> needEvents = new LinkedHashSet<Event>();
 		needEvents.add(observableEvent);
@@ -227,6 +220,7 @@ public final class AbstractStorage implements WireStorageInterface {
 		builder = null;
 		clearStorage(needEvents);
 		extractPassportMock();
+
 	}
 
 	/**
@@ -237,13 +231,11 @@ public final class AbstractStorage implements WireStorageInterface {
 	 */
 	protected final void clearStorage(LinkedHashSet<Event> needEvents)
 			throws StoryStorageException {
-
 		storageWires = new LinkedHashMap<WireHashKey, TreeMap<Long, AtomicEvent<?>>>();
 		events = new LinkedHashSet<Event>();
 		for (Event event : needEvents) {
 			addEventContainerAndFullOtherMaps(event);
 		}
-
 		initialize();
 		concordWires();
 	}
@@ -318,7 +310,6 @@ public final class AbstractStorage implements WireStorageInterface {
 		return events;
 	}
 
-
 	public final void extractPassportMock() {
 		passport = new StoragePassport(this);
 	}
@@ -389,14 +380,13 @@ public final class AbstractStorage implements WireStorageInterface {
 		for (Long number : stepIdOfEvents) {
 
 			if (number == null) {
-				System.out.println("dsfaklsdfdfgdfgadfgasdfghsgh");
+				throw new StoryStorageException("wire = null");
 			}
 			if (allEventsByNumber.get(number) == null) {
-				System.out.println(number);
-				System.out.println(observableEvent.getStepId());
+				throw new StoryStorageException(observableEvent.getStepId()+ " " + number);
 			}
 			if (allEventsByNumber.get(number).getContainer() == null) {
-				System.out.println("adsfhkal");
+				throw new StoryStorageException("container = null");
 			}
 			// rebuild event and numberOfUnresolvedevents on wires
 			List<PointRound> changes = allEventsByNumber.get(number)
@@ -469,52 +459,9 @@ public final class AbstractStorage implements WireStorageInterface {
 		return iteration;
 	}
 
-	@Override
-	public final void correctLinkStates(ExtensionData extensionData,
-			long first, boolean top) throws StoryStorageException {
-		if (top) {
-			ReLinker.reLinkTop(new StateOfLink(extensionData.wk2
-					.getAgentId(), extensionData.wk2.getSiteName()),
-					new StateOfLink(extensionData.wk4.getAgentId(),
-							extensionData.wk4.getSiteName()), first,storageWires.get(extensionData.wk1));
-			ReLinker.reLinkTop(new StateOfLink(extensionData.wk4
-					.getAgentId(), extensionData.wk4.getSiteName()),
-					new StateOfLink(extensionData.wk2.getAgentId(),
-							extensionData.wk2.getSiteName()), first,storageWires.get(extensionData.wk3));
-			ReLinker.reLinkTop(new StateOfLink(extensionData.wk1
-					.getAgentId(), extensionData.wk1.getSiteName()),
-					new StateOfLink(extensionData.wk3.getAgentId(),
-							extensionData.wk3.getSiteName()), first,storageWires.get(extensionData.wk2));
-			ReLinker.reLinkTop( new StateOfLink(extensionData.wk3
-					.getAgentId(), extensionData.wk3.getSiteName()),
-					new StateOfLink(extensionData.wk1.getAgentId(),
-							extensionData.wk1.getSiteName()), first,storageWires.get(extensionData.wk4));
-		} else {
-			ReLinker.reLinkBottom(new StateOfLink(extensionData.wk2
-					.getAgentId(), extensionData.wk2.getSiteName()),
-					new StateOfLink(extensionData.wk4.getAgentId(),
-							extensionData.wk4.getSiteName()), first,storageWires.get(extensionData.wk1));
-			ReLinker.reLinkBottom(new StateOfLink(extensionData.wk4
-					.getAgentId(), extensionData.wk4.getSiteName()),
-					new StateOfLink(extensionData.wk2.getAgentId(),
-							extensionData.wk2.getSiteName()), first,storageWires.get(extensionData.wk3));
-			ReLinker.reLinkBottom(new StateOfLink(extensionData.wk1
-					.getAgentId(), extensionData.wk1.getSiteName()),
-					new StateOfLink(extensionData.wk3.getAgentId(),
-							extensionData.wk3.getSiteName()), first,storageWires.get(extensionData.wk2));
-			ReLinker.reLinkBottom(new StateOfLink(extensionData.wk3
-					.getAgentId(), extensionData.wk3.getSiteName()),
-					new StateOfLink(extensionData.wk1.getAgentId(),
-							extensionData.wk1.getSiteName()), first,storageWires.get(extensionData.wk4));
-
-		}
-
-	}
-
 	public final StoriesAgentTypesStorage getStoriesAgentTypesStorage() {
 		return storiesAgentTypesStorage;
 	}
-
 
 	@Override
 	public void updateWires(Set<WireHashKey> sets) throws StoryStorageException {
@@ -532,12 +479,8 @@ public final class AbstractStorage implements WireStorageInterface {
 		return true;
 	}
 
-
-
 	public MasterInformationAboutWires getInformationAboutWires() {
 		return informationAboutWires;
 	}
-
-
 
 }

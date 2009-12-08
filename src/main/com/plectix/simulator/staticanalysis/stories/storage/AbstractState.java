@@ -10,8 +10,12 @@ public final class AbstractState<E> {
 	private E afterState;
 
 	public final void setBeforeState(E state) {
-		if(beforeState == null)
-			beforeState = state;
+		//TODO What is this???
+		if (beforeState == null){
+			beforeState = state;}
+		else{
+			//throw new StoryStorageException();
+		}
 	}
 
 	public final void setAfterState(E state) {
@@ -39,4 +43,19 @@ public final class AbstractState<E> {
 			str += " AFTER: " + afterState.toString();
 		return str;
 	}
+
+	public void setBeforeStateOver(E state) {
+		
+		beforeState = state;
+		
+	}
+
+//	public void setAfterState(StateOfLink stateOfLink) {
+//		afterState = (E)stateOfLink;
+//	}
+//
+//	public void setBeforeState(StateOfLink stateOfLink) {
+//		beforeState = (E)stateOfLink;
+//		
+//	}
 }

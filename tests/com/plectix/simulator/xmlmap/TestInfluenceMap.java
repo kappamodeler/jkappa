@@ -39,13 +39,13 @@ public class TestInfluenceMap {
 	private ArrayList<Connection> connectionsJava;
 	private static String currentXMLData;
 
-	private InitTestInfluenceMap initTestInfluenceMap = new InitTestInfluenceMap();
+	private final InitTestInfluenceMap initTestInfluenceMap = new InitTestInfluenceMap();
 	
 	
 	@Parameters
 	public static Collection<Object[]> configs() {
 		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator.getAllFileNamesWithPathWithModifyName(
-				prefixSourseModel, "~kappa"));
+				prefixSourseModel, "~kappa"),false);
 	}
 
 	public TestInfluenceMap(String count, String patch, Integer opMode) {

@@ -4,7 +4,7 @@ import com.plectix.simulator.staticanalysis.stories.TypeOfWire;
 import com.plectix.simulator.staticanalysis.stories.storage.EventInterface;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
 
-/*package*/ final class QueueEntry {
+/*package*/final class QueueEntry {
 	/**
 	 * Event in queue
 	 */

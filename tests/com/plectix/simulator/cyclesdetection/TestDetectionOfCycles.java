@@ -25,14 +25,14 @@ public class TestDetectionOfCycles {
 	private AllSubViewsOfAllAgentsInterface subViews;
 	private ContactMap contactMap;
 
-	private InitTestDetectionOfCycles initTestDetectionOfCycles = new InitTestDetectionOfCycles();
+	private final InitTestDetectionOfCycles initTestDetectionOfCycles = new InitTestDetectionOfCycles();
 
 	@Parameters
 	public static Collection<Object[]> configs() {
 		Collection<Object[]> allFileNames = FileNameCollectionGenerator
 				.getAllFileNamesWithPathWithModifyName(prefixSourceModel,
 						"~kappa");
-		return OperationModeCollectionGenerator.generate(allFileNames);
+		return OperationModeCollectionGenerator.generate(allFileNames,false);
 	}
 
 	public TestDetectionOfCycles(String count, String path, Integer opMode) {

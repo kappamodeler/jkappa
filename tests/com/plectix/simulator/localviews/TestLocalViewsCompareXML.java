@@ -41,7 +41,7 @@ public class TestLocalViewsCompareXML {
 	public static Collection<Object[]> configs() {
 		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 				.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
-						"~kappa"));
+						"~kappa"),false);
 	}
 
 	public TestLocalViewsCompareXML(String prefixFile, String path, Integer opMode) {

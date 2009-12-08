@@ -31,17 +31,17 @@ public class TestLocalViews {
 	private AllSubViewsOfAllAgentsInterface subViews;
 	private LocalViewsMain localViews;
 
-	private Map<String, Integer> amountsLocalViewsSimplexMap = new LinkedHashMap<String, Integer>();
-	private Map<String, Integer> amountsLocalViewsJavaMap = new LinkedHashMap<String, Integer>();
+	private final Map<String, Integer> amountsLocalViewsSimplexMap = new LinkedHashMap<String, Integer>();
+	private final Map<String, Integer> amountsLocalViewsJavaMap = new LinkedHashMap<String, Integer>();
 
-	private InitTestLocalViews initTestLocalViews = new InitTestLocalViews();
+	private final InitTestLocalViews initTestLocalViews = new InitTestLocalViews();
 
 	@Parameters
 	public static Collection<Object[]> configs() {
 		Collection<Object[]> fileNames = FileNameCollectionGenerator
 				.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
 						"~kappa");
-		return OperationModeCollectionGenerator.generate(fileNames);
+		return OperationModeCollectionGenerator.generate(fileNames,false);
 	}
 
 	public TestLocalViews(String count, String pathSourse, Integer opMode) {

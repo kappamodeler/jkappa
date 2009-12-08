@@ -28,7 +28,7 @@ public class TestStoryTrees extends InitStoriesTests {
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return OperationModeCollectionGenerator.generate(getAllTestFileNames(testFileNamePrefix));
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(testFileNamePrefix),true);
 	}
 
 	public TestStoryTrees(String testFilePath, Integer opMode) {

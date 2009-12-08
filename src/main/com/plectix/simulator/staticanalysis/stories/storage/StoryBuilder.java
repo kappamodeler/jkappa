@@ -8,7 +8,7 @@ import java.util.TreeMap;
 import com.plectix.simulator.staticanalysis.stories.ActionOfAEvent;
 
 public class StoryBuilder {
-	private LinkedHashMap<WireHashKey, TreeMap<Long, AtomicEvent<?>>> storageWires = new LinkedHashMap<WireHashKey, TreeMap<Long, AtomicEvent<?>>>();
+	private final LinkedHashMap<WireHashKey, TreeMap<Long, AtomicEvent<?>>> storageWires = new LinkedHashMap<WireHashKey, TreeMap<Long, AtomicEvent<?>>>();
 	private boolean endFlag;
 
 	public LinkedHashMap<WireHashKey, TreeMap<Long, AtomicEvent<?>>> getStorageWires() {
@@ -28,7 +28,7 @@ public class StoryBuilder {
 				}
 				tree.put(eventContainer.getStepId(), eventContainer
 						.getAtomicEvent(key));
-			}
+			}			
 		}
 
 	}
@@ -161,5 +161,4 @@ public class StoryBuilder {
 
 	}
 
-	
 }

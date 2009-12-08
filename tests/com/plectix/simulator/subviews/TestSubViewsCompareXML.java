@@ -29,7 +29,7 @@ public class TestSubViewsCompareXML {
 
 	private static final String prefixSourseModel = InitData.pathForSourseModel;
 
-	private InitTestSubViewsCompareXML initTestSubViewsCompareXML = new InitTestSubViewsCompareXML();
+	private final InitTestSubViewsCompareXML initTestSubViewsCompareXML = new InitTestSubViewsCompareXML();
 
 	private ArrayList<Set> setsSimplex;
 	private ArrayList<Tag> tagsSimplex;
@@ -38,13 +38,13 @@ public class TestSubViewsCompareXML {
 	private ArrayList<Set> setsJava;
 	private ArrayList<Tag> tagsJava;
 	private ArrayList<Entry> entresJava;
-	private String currentXMLData;
+	private final String currentXMLData;
 
 	@Parameters
 	public static Collection<Object[]> configs() {
 		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 		.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
-				"~kappa"));
+				"~kappa"),false);
 	}
 
 	public TestSubViewsCompareXML(String prefixFile, String path, Integer opMode) {

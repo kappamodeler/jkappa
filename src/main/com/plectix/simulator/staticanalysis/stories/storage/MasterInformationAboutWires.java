@@ -105,6 +105,12 @@ public class MasterInformationAboutWires {
 			if (linkedHashSet2 != null) {
 				linkedHashSet2.clear();
 			}
+			if (map == null) {
+				throw new StoryStorageException("empty map");
+			}
+			if (map.get(wk) == null) {
+				throw new StoryStorageException("miss wire");
+			}
 			for (AtomicEvent<?> atomicEvent : map.get(wk).values()) {
 				fullInformationAboutWires(atomicEvent, wk);
 			}
@@ -181,8 +187,7 @@ public class MasterInformationAboutWires {
 			if (getLinkStatesByWire().get(wkey) == null) {
 				throw new StoryStorageException("empty link states ^(");
 			}
-			return getLinkStatesByWire().get(wkey)
-					.iterator();
+			return getLinkStatesByWire().get(wkey).iterator();
 		} else {
 			throw new StoryStorageException(
 					"wireLinkStateIterator : prohibit type of wire");

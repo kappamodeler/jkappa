@@ -25,11 +25,11 @@ public class TestPositiveUpdate extends TestUpdate {
 	private String myTestFileName = "";
 	private Map<String, Integer> myObsInjectionsQuantity;
 	private Map<String, Integer> myLHSInjectionsQuantity;
-	private Failer myFailer = new Failer();
+	private final Failer myFailer = new Failer();
 
 	@Parameters
 	public static Collection<Object[]> regExValues() {
-		return OperationModeCollectionGenerator.generate(getAllTestFileNames(myPrefixFileName));
+		return OperationModeCollectionGenerator.generate(getAllTestFileNames(myPrefixFileName),true);
 	}
 
 	public TestPositiveUpdate(String filePath, Integer opMode) {

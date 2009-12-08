@@ -21,19 +21,19 @@ public class TestEnumOfSpecies {
 
 	private static final String prefixSourseModel = InitData.pathForSourseModel;
 
-	private InitTestEnumOfSpecies initTestEnumOfSpecies = new InitTestEnumOfSpecies();
+	private final InitTestEnumOfSpecies initTestEnumOfSpecies = new InitTestEnumOfSpecies();
 
 	private LocalViewsMain localViews;
 
 	private GeneratorSpecies generatorSpecies;
 
-	private Map<String, Integer> resultMap = new HashMap<String, Integer>();
+	private final Map<String, Integer> resultMap = new HashMap<String, Integer>();
 
 	@Parameters
 	public static Collection<Object[]> configs() {
 		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator
 				.getAllFileNamesWithPathWithModifyName(prefixSourseModel,
-						"~kappa"));
+						"~kappa"),false);
 	}
 
 	public TestEnumOfSpecies(String count, String patch, Integer opMode) {
