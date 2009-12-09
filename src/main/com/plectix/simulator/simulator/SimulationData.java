@@ -719,7 +719,6 @@ public final class SimulationData {
 		writer.writeEndElement();
 		writer.writeEndDocument();
 		writer.flush();
-		writer.close();
 
 	}
 	
@@ -783,7 +782,12 @@ public final class SimulationData {
 			XMLStreamException, IOException, StoryStorageException {
 		PlxTimer timerOutput = new PlxTimer();
 		timerOutput.startTimer();
-		createXMLOutput(writer);
+		try {
+			createXMLOutput(writer);
+		}
+		finally {
+			writer.close();
+		}
 		stopTimer(InfoType.OUTPUT, timerOutput,
 				"-Results outputted in xml session:");
 	}
