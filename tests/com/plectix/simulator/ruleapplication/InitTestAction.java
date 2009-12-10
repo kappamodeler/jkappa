@@ -30,7 +30,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 	private static int iterationNumber = 0;
 	private static int iterationsLimit = 70;
 	private final String filePath;
-	private Integer operationMode;
+	private final Integer operationMode;
 
 	public InitTestAction(String testFilePath, Integer opMode) {
 		this.filePath = testFilePath;
@@ -94,6 +94,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 	protected List<Injection> run() {
 		KappaSystem kappaSystem = simulator.getSimulationData()
 				.getKappaSystem();
+		kappaSystem.updateRuleActivities();
 		activeRule = kappaSystem.getRandomRule();
 
 		if (activeRule == null) {

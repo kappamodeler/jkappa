@@ -496,23 +496,32 @@ public final class KappaSystem implements KappaSystemInterface {
 	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getRandomRule()
 	 */
 	public final Rule getRandomRule() {
-		List<Rule> infinitRules = new ArrayList<Rule>();
-		for (Rule rule : orderedRulesList) {
-			double oldActivity = rule.getActivity();
-			rule.calculateActivity();
-			if (rule.hasInfiniteRate() && rule.getActivity() > 0) {
-				infinitRules.add(rule);
-				rule.setActivity(0.);
-			}
-
-			if (rule.getActivity() != oldActivity) {
-				rules.updatedItem(rule);
-			}
-		}
+		List<Rule> infinitRules = getInfinitiveRules();
 		if (!infinitRules.isEmpty())
 			return infinitRules.get(ThreadLocalData.getRandom().getInteger(
 					infinitRules.size()));
 		return rules.select();
+	}
+
+	private List<Rule> getInfinitiveRules(){
+		List<Rule> infinitRules = new ArrayList<Rule>();
+		for (Rule rule : orderedRulesList) {
+			if (rule.hasInfiniteRate() && rule.getActivity() > 0) {
+				infinitRules.add(rule);
+				rule.setActivity(0.);
+				rules.updatedItem(rule);
+			}
+		}
+		return infinitRules;
+	}
+	public void updateRuleActivities() {
+		for (Rule rule : orderedRulesList) {
+			double oldActivity = rule.getActivity();
+			rule.calculateActivity();
+			if (rule.getActivity() != oldActivity) {
+				rules.updatedItem(rule);
+			}
+		}
 	}
 
 	/*

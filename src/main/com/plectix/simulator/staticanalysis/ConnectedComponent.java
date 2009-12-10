@@ -120,7 +120,7 @@ public class ConnectedComponent implements ConnectedComponentInterface {
 		injection.eliminate();
 	}
 
-	public final long getInjectionsWeight() {
+	public long getInjectionsWeight() {
 		return (long)(injections.getTotalWeight());
 	}
 	

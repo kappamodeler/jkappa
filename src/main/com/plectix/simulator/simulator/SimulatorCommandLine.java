@@ -257,6 +257,10 @@ public final class SimulatorCommandLine {
 		if (hasOption(SimulatorOption.ALLOW_INCOMPLETE_SUBSTANCE)) {
 			simulationArguments.setAllowIncompleteSubstance(true);
 		}
+		
+		if (hasOption(SimulatorOption.REPORT_EXACT_SAMPLE_TIME)) {
+			simulationArguments.setObsExactSample(true);
+		}
 
 		if (hasOption(SimulatorOption.LIVE_DATA_POINTS)) {
 			simulationArguments.setLiveDataPoints(getIntValue(SimulatorOption.LIVE_DATA_POINTS));

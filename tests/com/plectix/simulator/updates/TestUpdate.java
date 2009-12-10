@@ -31,7 +31,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	private String myTestFileName = "";
 
 	private List<Injection> myCurrentInjectionsList;
-	private Integer operationMode;
+	private final Integer operationMode;
 
 	protected TestUpdate(String fileName, Integer opMode) {
 		super();
@@ -90,8 +90,9 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 						1,
 						mySimulator.getSimulationData()
 								.getSimulationArguments().isTime());
+		mySimulator.getSimulationData().getKappaSystem().updateRuleActivities();
 		myActiveRule = mySimulator.getSimulationData().getKappaSystem()
-				.getRandomRule();
+		.getRandomRule();
 
 		if (myActiveRule == null) {
 			mySimulator.getSimulationData().setTimeLength(currentTime);

@@ -17,7 +17,7 @@ import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
  * @author avokhmin
  *
  */
-public final class ObservableConnectedComponent extends ConnectedComponent
+public class ObservableConnectedComponent extends ConnectedComponent
 		implements ObservableConnectedComponentInterface {
 
 	/**
@@ -33,7 +33,7 @@ public final class ObservableConnectedComponent extends ConnectedComponent
 	private final List<Integer> automorphicObservables;
 	private final List<Long> countList = new ArrayList<Long>();
 	private final boolean unique;
-	private long lastInjectionsQuantity = -1;
+	protected long lastInjectionsQuantity = -1;
 	private int mainAutomorphismNumber = NO_INDEX;
 	
 	/**
@@ -80,7 +80,7 @@ public final class ObservableConnectedComponent extends ConnectedComponent
 		return line;
 	}
 
-	public final void updateLastValue() {
+	public void updateLastValue() {
 		lastInjectionsQuantity = getInjectionsWeight();
 	}
 

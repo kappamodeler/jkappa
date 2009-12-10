@@ -98,6 +98,7 @@ public final class SimulationArguments {
 	private boolean runQualitativeCompression = false;
 	
 	private boolean allowIncompleteSubstance = false;
+	private boolean obsExactSample = false;
 	
 	public SimulationArguments() {
 		super();
@@ -823,5 +824,13 @@ public final class SimulationArguments {
 
 	public boolean isAllowIncompleteSubstance() {
 		return allowIncompleteSubstance;
+	}
+
+	public void setObsExactSample(boolean obsExactSample) {
+		this.obsExactSample = obsExactSample ;
+	}
+
+	public boolean getObsExactSample() {
+		return obsExactSample ;
 	}
 }
