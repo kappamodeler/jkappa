@@ -1,6 +1,7 @@
 package com.plectix.simulator.staticanalysis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,48 +9,89 @@ import java.util.List;
 import org.junit.Test;
 
 import com.plectix.simulator.interfaces.ObservableInterface;
-
+import com.plectix.simulator.util.ObservableState;
 
 public class TestObservables {
-	
+
 	@Test
-	public void testOutputMode(){
-		Observables obs = new Observables();
-		double fullTime=10;
-		double initialTime=0;
-		long events=10;
-		int points=10;
-		boolean isTime=true;
-		obs.init(fullTime, initialTime, events, points, isTime);
-		List<Agent> connectedAgents=new LinkedList<Agent>();
+	public void testCalculateObsTwoModes() {
+
+		double[] times = new double[] {0.01, 0.09, 0.12, 0.13, 0.14, 0.17, 0.24, 0.25,
+				0.34, 0.78, 0.99, 1.03 };
+
+		int[] answer1 = new int[]{-1,2,6,8,9,9,9,9,10,10,11};
+		int[] answer2 = new int[]{-1,3,7,9,10,11,12};
+		double[] answerTime = new double[]{0.0,0.12, 0.24, 0.34, 0.78, 0.99, 1.03};
+		double fullTime = 1;
+		double initialTime = 0;
+		boolean isTime = true;
+		int points = 10;
+
+		// unusing variables
+		long count = 0;
+		int events = 0;
+
+		Observables obsPlainCalculate = new Observables();
+		Observables obsExactCalculate = new Observables();
+
+		List<Agent> connectedAgents = new LinkedList<Agent>();
 		String name = "";
-		String line = ""; 
-		int id =0;
+		String line = "";
+		int id = 0;
 		boolean isUnique = true;
+		ObservableMock obsMock1 = new ObservableMock(connectedAgents, name,
+				line, id, isUnique);
 		
-		ObservableMock obsMock = new ObservableMock(connectedAgents, name, line, id, isUnique);
-		List<ObservableInterface> list = new LinkedList<ObservableInterface>();
-		list.add(obsMock);
+		ObservableMock obsMock2 = new ObservableMock(connectedAgents, name,
+				line, id, isUnique);
 		
-		obs.setComponentList(list);
-		int count = 0;
-		double time = 0;
+		List<ObservableInterface> list1 = new LinkedList<ObservableInterface>();
+		list1.add(obsMock1);
+
+		List<ObservableInterface> list2 = new LinkedList<ObservableInterface>();
+		list2.add(obsMock2);
+
+		obsExactCalculate.init(fullTime, initialTime, events, points, isTime);
+		obsPlainCalculate.init(fullTime, initialTime, events, points, isTime);
+
 		
-		obsMock.setValue(1);
-		obs.addInitialState();
-		assertEquals(Double.valueOf(obs.getCountTimeList().get(0).getTime()),Double.valueOf(0.0));
-		assertEquals(Double.valueOf(obs.getComponentList().get(0).getLastValue()),Double.valueOf(1));
+
+		obsExactCalculate.setComponentList(list1);
+		obsPlainCalculate.setComponentList(list2);
+		obsMock1.setValue(-1);
+		obsMock2.setValue(-1);
 		
-		obsMock.setValue(2);
-		count++;
-		time+=1.5;
-		obs.calculateObs(time, count, isTime);
+		obsExactCalculate.addInitialState();
+		obsPlainCalculate.addInitialState();
+
+		for (int i = 0; i < times.length; i++) {
+			obsExactCalculate.calculateExactSampleObs(times[i], count, isTime);
+			obsMock1.setValue(i+1);
+			obsMock2.setValue(i+1);
+			obsPlainCalculate.calculateObs(times[i], count, isTime);
+			
+		}
+
+		assertEquals(Double.valueOf(obsExactCalculate.getTimeSampleMin()),
+				Double.valueOf(0.1));
+
+		ObservableInterface outputExact = obsExactCalculate.getComponentList()
+				.get(0);
+		ObservableInterface outputPlain = obsPlainCalculate.getComponentList()
+				.get(0);
+
+		List<ObservableState> countTimeExact = obsExactCalculate.getCountTimeList();
+
+		List<ObservableState> countTimePlain = obsPlainCalculate.getCountTimeList();
 		
-		assertEquals(Double.valueOf(obs.getCountTimeList().get(1).getTime()),Double.valueOf(1.5));
-		assertEquals(Double.valueOf(obs.getComponentList().get(0).getLastValue()),Double.valueOf(2));
-	
-		
-		
+		for (int i = 0; i < countTimeExact.size(); i++) {
+			assertTrue((int)outputExact.getItem(i, null)==answer1[i]);
+		}
+		for (int i = 0; i < countTimePlain.size(); i++) {
+			assertTrue(countTimePlain.get(i).getTime()==answerTime[i]);
+			assertTrue(outputPlain.getItem(i, null) == answer2[i]);		
+		}
+
 	}
 
 }

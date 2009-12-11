@@ -154,7 +154,8 @@ public class Observables {
 		timeNext += timeSampleMin;
 	}
 
-	public final void calculateExactSampleObs(double time, long count, boolean isTime) {
+	public final void calculateExactSampleObs(double time, long count,
+			boolean isTime) {
 		if (isTime) {
 			if (time < timeNext)
 				return;
@@ -162,10 +163,12 @@ public class Observables {
 			if (count < timeNext)
 				return;
 		}
-		updateLastValueAll();
-		calculateAll(false);
-		addToCountTimeList(timeNext, count);
-		timeNext += timeSampleMin;
+		while (time >= timeNext) {
+			updateLastValueAll();
+			calculateAll(false);
+			addToCountTimeList(timeNext, count);
+			timeNext += timeSampleMin;
+		}
 	}
 
 	/**
