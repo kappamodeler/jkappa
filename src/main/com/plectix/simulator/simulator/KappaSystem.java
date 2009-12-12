@@ -8,6 +8,7 @@ import java.util.List;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.interfaces.SolutionInterface;
+import com.plectix.simulator.io.xml.RuleCompressionXMLWriter;
 import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.ConditionType;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.injections.InjectionsUtil;
@@ -29,9 +30,8 @@ import com.plectix.simulator.staticanalysis.influencemap.future.InfluenceMapWith
 import com.plectix.simulator.staticanalysis.localviews.LocalViewsMain;
 import com.plectix.simulator.staticanalysis.rulecompression.CompressionResults;
 import com.plectix.simulator.staticanalysis.rulecompression.RuleCompressionType;
-import com.plectix.simulator.staticanalysis.rulecompression.RuleCompressionXMLWriter;
 import com.plectix.simulator.staticanalysis.rulecompression.RuleCompressor;
-import com.plectix.simulator.staticanalysis.speciesenumeration.GeneratorSpecies;
+import com.plectix.simulator.staticanalysis.speciesenumeration.SpeciesEnumeration;
 import com.plectix.simulator.staticanalysis.stories.Stories;
 import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
 import com.plectix.simulator.staticanalysis.subviews.MainSubViews;
@@ -51,7 +51,7 @@ public final class KappaSystem implements KappaSystemInterface {
 	private AllSubViewsOfAllAgentsInterface subViews;
 	private InfluenceMap influenceMap;
 	private LocalViewsMain localViews;
-	private GeneratorSpecies enumerationOfSpecies;
+	private SpeciesEnumeration enumerationOfSpecies;
 	private RuleCompressionXMLWriter ruleCompressionWriter;
 
 	private final IdGenerator agentsIdGenerator = new IdGenerator();
@@ -123,7 +123,7 @@ public final class KappaSystem implements KappaSystemInterface {
 						contactMap, subViews.getAgentNameToAgent());
 				influenceMap.fillActivatedInhibitedRules(rules, this,
 						observables);
-				simulationData.stopTimer(outputType, timer, "--Abstraction:");
+				simulationData.getClock().stopTimer(outputType, timer, "--Abstraction:");
 				simulationData.addInfo(outputType, InfoType.INFO,
 						"--influence map computed");
 			}
@@ -132,7 +132,7 @@ public final class KappaSystem implements KappaSystemInterface {
 				localViews = new LocalViewsMain(subViews);
 				localViews.buildLocalViews();
 				if (args.useEnumerationOfSpecies()) {
-					enumerationOfSpecies = new GeneratorSpecies(localViews
+					enumerationOfSpecies = new SpeciesEnumeration(localViews
 							.getLocalViews());
 					List<AbstractAgent> list = new LinkedList<AbstractAgent>();
 					list.addAll(contactMap.getAbstractSolution()
@@ -485,7 +485,9 @@ public final class KappaSystem implements KappaSystemInterface {
 	 * com.plectix.simulator.simulator.KappaSystemInterface#clearPerturbations()
 	 */
 	public final void clearPerturbations() {
-		perturbations.clear();
+		if (perturbations != null) {
+			perturbations.clear();
+		}
 	}
 
 	// ---------------------MISC------------------------
@@ -570,16 +572,10 @@ public final class KappaSystem implements KappaSystemInterface {
 	 * com.plectix.simulator.simulator.KappaSystemInterface#getEnumerationOfSpecies
 	 * ()
 	 */
-	public final GeneratorSpecies getEnumerationOfSpecies() {
+	public final SpeciesEnumeration getEnumerationOfSpecies() {
 		return enumerationOfSpecies;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @seecom.plectix.simulator.simulator.KappaSystemInterface#
-	 * getRuleCompressionBuilder()
-	 */
 	public final RuleCompressionXMLWriter getRuleCompressionBuilder() {
 		return ruleCompressionWriter;
 	}

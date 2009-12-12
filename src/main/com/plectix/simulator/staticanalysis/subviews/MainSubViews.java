@@ -10,12 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import javax.xml.stream.XMLStreamException;
-
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.simulationclasses.solution.SuperSubstance;
-import com.plectix.simulator.simulator.XMLSimulatorWriter;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
@@ -27,7 +24,6 @@ import com.plectix.simulator.staticanalysis.subviews.base.AbstractClassSubViewBu
 import com.plectix.simulator.staticanalysis.subviews.base.AbstractionRule;
 import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsExeption;
 import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsInterface;
-import com.plectix.simulator.util.NameDictionary;
 
 public final class MainSubViews extends AbstractClassSubViewBuilder implements
 		AllSubViewsOfAllAgentsInterface {
@@ -229,42 +225,5 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 
 	public final List<AbstractionRule> getRules() {
 		return abstractRules;
-	}
-
-	@Override
-	public final void createXML(XMLSimulatorWriter writer) throws XMLStreamException {
-		// TODO Auto-generated method stub
-		writer.writeStartElement("Reachables");
-		writer.writeAttribute("Name", "Subviews");
-		for (String agentType : agentNameToAgent.keySet()) {
-			if (NameDictionary.isDefaultAgentName(agentType))
-				continue;
-			for (SubViewsInterface subViews : this.getSubViews().get(agentType)) {
-				// Element set = doc.createElement("Set");
-				writer.writeStartElement("Set");
-				writer.writeAttribute("Agent", agentType);
-				// Element tag = doc.createElement("Tag");
-				writer.writeStartElement("Tag");
-				String data = "Agent: " + agentType + " ; Sites: ";
-				String sites = new String("");
-				for (String siteName : subViews.getSubViewClass().getSitesNames()) {
-					if (sites.length() != 0)
-						sites += ",";
-					sites += siteName;
-				}
-				data += sites + " ";
-				writer.writeAttribute("Data", data);
-				// set.appendChild(tag);
-				writer.writeEndElement();
-
-				for (AbstractAgent agent : subViews.getAllSubViews()) {
-					writer.writeStartElement("Entry");
-					writer.writeAttribute("Data", agent.toStringForXML());
-					writer.writeEndElement();
-				}
-				writer.writeEndElement();
-			}
-		}
-		writer.writeEndElement();
 	}
 }

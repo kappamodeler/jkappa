@@ -6,17 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import javax.xml.stream.XMLStreamException;
-
-import com.plectix.simulator.simulator.XMLSimulatorWriter;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 
-public final class GeneratorSpecies {
+public final class SpeciesEnumeration {
 	private final Map<String, List<AbstractAgent>> localViews;
 	private final Map<String, Species> species = new LinkedHashMap<String, Species>();
 	private boolean isUnbounded = false;
 
-	public GeneratorSpecies(Map<String, List<AbstractAgent>> localViews) {
+	public SpeciesEnumeration(Map<String, List<AbstractAgent>> localViews) {
 		this.localViews = localViews;
 	}
 
@@ -59,32 +56,11 @@ public final class GeneratorSpecies {
 		}
 	}
 
-	public final void writeToXML(XMLSimulatorWriter writer)
-			throws XMLStreamException {
-		writer.writeStartElement("Reachables");
-		writer.writeAttribute("Name", "Species");
-		if (isUnbounded)
-			writer.writeAttribute("Cardinal", "Unbounded");
-		else {
-			Integer cardinal = Integer.valueOf(species.size());
-			writer.writeAttribute("Cardinal", cardinal.toString());
-			if (cardinal != 0) {
-				writer.writeStartElement("Set");
-				writer.writeAttribute("Name", "All Species");
-				for (Species spesie : species.values()) {
-					writer.writeStartElement("Entry");
-					writer.writeAttribute("Type", "Close");
-					writer.writeAttribute("Weight", "1");
-					writer.writeAttribute("Data", spesie.getHashCode());
-					writer.writeEndElement();
-				}
-				writer.writeEndElement();
-			}
-		}
-		writer.writeEndElement();
-	}
-
 	public final void unbound() {
 		isUnbounded = true;
+	}
+
+	public boolean isUnbounded() {
+		return isUnbounded;
 	}
 }

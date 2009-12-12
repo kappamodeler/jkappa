@@ -22,7 +22,6 @@
 'ERK@187' ERK(Y187~u!0),MEK(S218~p,S222~p,s!0)->ERK(Y187~p!0),MEK(S218~p,S222~p,s!0)
 '' ->a()
 '' a(x!0),b(i!0,u)->
-'' c(x)->
 
 %init: 5000 * (E(r))
 %init: 1 * (ERK(Y187!0), MEK(S218~p, S222~p, s!0))

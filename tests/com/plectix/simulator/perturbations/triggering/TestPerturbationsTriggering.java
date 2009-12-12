@@ -16,6 +16,7 @@ import com.plectix.simulator.FileNameCollectionGenerator;
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.controller.SimulatorInputData;
+import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.simulationclasses.perturbations.ConditionInterface;
 import com.plectix.simulator.simulationclasses.perturbations.TimeCondition;
@@ -98,7 +99,7 @@ public class TestPerturbationsTriggering {
 		}
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, args);
-		simulationData.readSimulatonFile(InfoType.OUTPUT);
+		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 	}
 

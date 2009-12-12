@@ -4,6 +4,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.SimulatorTestOptions;
+import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
@@ -39,7 +40,7 @@ public abstract class BasicTestByModel extends DefaultPropertiesForTest {
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
-		simulationData.readSimulatonFile(InfoType.OUTPUT);
+		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 	}
 

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.PrintStream;
 
 import com.plectix.simulator.SimulatorTestOptions;
+import com.plectix.simulator.io.SimulationDataReader;
+import com.plectix.simulator.io.xml.SimulationDataXMLWriter;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
@@ -35,10 +37,10 @@ public class SimulatorTest extends Thread {
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
-		simulationData.readSimulatonFile(InfoType.OUTPUT);
+		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 		simulator.run();
-		simulationData.outputXMLData();
+		new SimulationDataXMLWriter(simulationData).outputXMLData();
 	}
 
 	private void printSeparator() {

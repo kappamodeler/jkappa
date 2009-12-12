@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
+import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
@@ -44,9 +45,9 @@ public class TestENG325 extends SmokeTest{
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
 		try{
-			simulationData.readSimulatonFile(InfoType.OUTPUT);
+			(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
 			simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			if(!e.getMessage().contains("line 5 : ['rule1']")){
 				fail("Another Bug!!!");
 			}

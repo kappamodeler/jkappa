@@ -1,4 +1,4 @@
-package com.plectix.simulator.simulator;
+package com.plectix.simulator.io.xml;
 
 import java.io.Writer;
 
@@ -6,7 +6,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-public class XMLSimulatorWriter {
+/*package*/ class OurXMLWriter {
 
 	private XMLStreamWriter writer;
 
@@ -15,7 +15,7 @@ public class XMLSimulatorWriter {
 
 	private static int tabCounter = 0;
 
-	public XMLSimulatorWriter(Writer outstream) throws XMLStreamException {
+	public OurXMLWriter(Writer outstream) throws XMLStreamException {
 
 		XMLOutputFactory output = XMLOutputFactory.newInstance();
 		writer = output.createXMLStreamWriter(outstream);

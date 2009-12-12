@@ -9,6 +9,7 @@ import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableInterface;
 import com.plectix.simulator.interfaces.SolutionInterface;
+import com.plectix.simulator.io.SimulationDataOutputUtil;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.parser.builders.KappaSystemBuilder;
 import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
@@ -57,7 +58,7 @@ public class TestSimulationData {
 		List<Rule> rules = simulationData.getKappaSystem().getRules();
 		for (Rule rule : rules) {
 			sb.append("'" + rule.getName() + "' "
-					+ SimulationData.getData(rule, true) + "\n");
+					+ SimulationDataOutputUtil.getData(rule, true) + "\n");
 		}
 		sb.append("\n");
 

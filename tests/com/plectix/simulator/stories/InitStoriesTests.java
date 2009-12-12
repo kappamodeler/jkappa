@@ -7,6 +7,7 @@ import org.junit.Before;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
+import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
@@ -55,7 +56,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	public void setup() {
 		init(testDirectory + FileName, operationMode);
 		if (mode) {
-			mySimulator.getSimulationData().setTimeLength(time);
+			mySimulator.getSimulationData().getClock().setTimeLength(time);
 		}
 		try {
 			mySimulator.runStories();
@@ -92,7 +93,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 		}
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, args);
-		simulationData.readSimulatonFile(InfoType.OUTPUT);
+		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 	}
 

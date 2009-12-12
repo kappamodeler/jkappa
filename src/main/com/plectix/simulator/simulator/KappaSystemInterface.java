@@ -3,6 +3,7 @@ package com.plectix.simulator.simulator;
 import java.util.List;
 
 import com.plectix.simulator.interfaces.SolutionInterface;
+import com.plectix.simulator.io.xml.RuleCompressionXMLWriter;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.staticanalysis.Observables;
@@ -10,8 +11,7 @@ import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMap;
 import com.plectix.simulator.staticanalysis.influencemap.InfluenceMap;
 import com.plectix.simulator.staticanalysis.localviews.LocalViewsMain;
-import com.plectix.simulator.staticanalysis.rulecompression.RuleCompressionXMLWriter;
-import com.plectix.simulator.staticanalysis.speciesenumeration.GeneratorSpecies;
+import com.plectix.simulator.staticanalysis.speciesenumeration.SpeciesEnumeration;
 import com.plectix.simulator.staticanalysis.stories.Stories;
 import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
 import com.plectix.simulator.util.Info.InfoType;
@@ -73,7 +73,7 @@ public interface KappaSystemInterface {
 
 	public LocalViewsMain getLocalViews();
 
-	public GeneratorSpecies getEnumerationOfSpecies();
+	public SpeciesEnumeration getEnumerationOfSpecies();
 
 	public RuleCompressionXMLWriter getRuleCompressionBuilder();
 

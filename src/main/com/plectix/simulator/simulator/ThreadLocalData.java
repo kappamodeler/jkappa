@@ -3,6 +3,7 @@ package com.plectix.simulator.simulator;
 import java.text.DecimalFormat;
 
 import com.plectix.simulator.interfaces.RandomInterface;
+import com.plectix.simulator.io.xml.SimulationDataXMLWriter;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.staticanalysis.ConnectedComponent;
 import com.plectix.simulator.util.NameDictionary;
@@ -110,7 +111,7 @@ public final class ThreadLocalData {
             i = 0;
         } else if (i >= decimalFormats.length) {
             decimalFormats = exponentialDecimalFormatters.get();
-            i = SimulationData.NUMBER_OF_SIGNIFICANT_DIGITS-1;
+            i = SimulationDataXMLWriter.NUMBER_OF_SIGNIFICANT_DIGITS-1;
              if (i >= decimalFormats.length) {
                  i = decimalFormats.length - 1;
              }

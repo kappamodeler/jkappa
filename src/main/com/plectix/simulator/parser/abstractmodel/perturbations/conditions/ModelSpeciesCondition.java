@@ -1,7 +1,7 @@
 package com.plectix.simulator.parser.abstractmodel.perturbations.conditions;
 
-import com.plectix.simulator.parser.abstractmodel.perturbations.ModelLinearExpression;
 import com.plectix.simulator.parser.abstractmodel.perturbations.LinearExpressionMonome;
+import com.plectix.simulator.parser.abstractmodel.perturbations.ModelLinearExpression;
 import com.plectix.simulator.util.InequalitySign;
 
 public final class ModelSpeciesCondition implements PerturbationCondition {

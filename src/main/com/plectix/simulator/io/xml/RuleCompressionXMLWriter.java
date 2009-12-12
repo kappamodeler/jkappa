@@ -1,4 +1,4 @@
-package com.plectix.simulator.staticanalysis.rulecompression;
+package com.plectix.simulator.io.xml;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -10,12 +10,13 @@ import java.util.TreeMap;
 
 import javax.xml.stream.XMLStreamException;
 
+import com.plectix.simulator.io.SimulationDataOutputUtil;
 import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.XMLSimulatorWriter;
 import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.rulecompression.CompressionResults;
 import com.plectix.simulator.staticanalysis.subviews.MainSubViews;
 
+// it should stay public for a while, this is not good =(
 public class RuleCompressionXMLWriter {
 	private final Map<Integer, Rule> initialRulesMap = new LinkedHashMap<Integer, Rule>();
 	private final MainSubViews qualitativeSubViews;
@@ -48,7 +49,7 @@ public class RuleCompressionXMLWriter {
 		}
 	}
 
-	public void writeToXML(XMLSimulatorWriter xtw, boolean isOcamlStyleObsName)
+	public void writeToXML(OurXMLWriter xtw, boolean isOcamlStyleObsName)
 			throws XMLStreamException {
 		writeToXMLInitialRules(xtw,isOcamlStyleObsName);
 		xtw.writeStartElement("RuleSet");
@@ -59,7 +60,7 @@ public class RuleCompressionXMLWriter {
 		xtw.writeEndElement();
 	}
 	
-	private void writeToXMLInitialRules(XMLSimulatorWriter xtw, boolean isOcamlStyleObsName) throws XMLStreamException{
+	private void writeToXMLInitialRules(OurXMLWriter xtw, boolean isOcamlStyleObsName) throws XMLStreamException{
 		xtw.writeStartElement("RuleSet");
 		xtw.writeAttribute("Name", "Original");
 		for(Rule rule : initialRulesMap.values()){
@@ -68,7 +69,7 @@ public class RuleCompressionXMLWriter {
 			xtw.writeAttribute("Id", Integer.valueOf(rule.getRuleId()).toString());
 			xtw.writeAttribute("ForwardRate", Double.valueOf(rule.getRate()).toString());
 			String name = rule.getName();
-			String data = SimulationData.getData(rule,isOcamlStyleObsName);
+			String data = SimulationDataOutputUtil.getData(rule,isOcamlStyleObsName);
 			if(name == null)
 				name = data;
 			xtw.writeAttribute("Name", name);
@@ -79,7 +80,7 @@ public class RuleCompressionXMLWriter {
 		xtw.writeEndElement();
 	}
 	
-	private void writeToXMLAssociationQualitativeMap(XMLSimulatorWriter xtw) throws XMLStreamException{
+	private void writeToXMLAssociationQualitativeMap(OurXMLWriter xtw) throws XMLStreamException{
 		xtw.writeStartElement("Map");
 		xtw.writeAttribute("FromSet", "Original");
 		for(Map.Entry<Integer, Integer> entry : associationQualitativeMap.entrySet()){
@@ -92,7 +93,7 @@ public class RuleCompressionXMLWriter {
 	}
 	
 	
-	private void writeToXMLQualitativeRules(XMLSimulatorWriter xtw, boolean isOcamlStyleObsName)
+	private void writeToXMLQualitativeRules(OurXMLWriter xtw, boolean isOcamlStyleObsName)
 	throws XMLStreamException {
 		for (Rule rule : qualitativeRules) {
 			xtw.writeStartElement("Rule");
@@ -102,7 +103,7 @@ public class RuleCompressionXMLWriter {
 				xtw.writeAttribute("Data", "Cannot be applied");
 			else{
 				xtw.writeAttribute("ForwardRate", Double.valueOf(rule.getRate()).toString());
-				xtw.writeAttribute("Data", SimulationData.getData(rule,isOcamlStyleObsName));
+				xtw.writeAttribute("Data", SimulationDataOutputUtil.getData(rule,isOcamlStyleObsName));
 			}
 			
 
@@ -116,7 +117,7 @@ public class RuleCompressionXMLWriter {
 				if (name != null)
 					sb.append(name);
 				else
-					sb.append(SimulationData.getData(rule,isOcamlStyleObsName));
+					sb.append(SimulationDataOutputUtil.getData(rule,isOcamlStyleObsName));
 				if(counter != size)
 					sb.append(",");
 				counter++;

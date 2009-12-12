@@ -6,6 +6,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Test;
 
+import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
@@ -46,7 +47,7 @@ public class TestENG310 extends SmokeTest {
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
 		try{
-			simulationData.readSimulatonFile(InfoType.OUTPUT);
+			(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
 //			fail("Incomplete substance!!");
 		}catch (Exception e) {
 			if(!e.getMessage().

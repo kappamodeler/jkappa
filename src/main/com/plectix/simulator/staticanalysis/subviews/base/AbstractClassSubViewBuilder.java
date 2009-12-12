@@ -23,7 +23,7 @@ public abstract class AbstractClassSubViewBuilder {
 	public AbstractClassSubViewBuilder() {
 	}
 
-	protected final Map<String, List<SubViewsInterface>> getSubViews() {
+	public final Map<String, List<SubViewsInterface>> getSubViews() {
 		return subViewsMap;
 	}
 	

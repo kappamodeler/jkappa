@@ -6,6 +6,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
+import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
@@ -201,7 +202,7 @@ public class Initializator extends DefaultPropertiesForTest {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);
 		}
-		mySimulator.resetSimulation(InfoType.OUTPUT);
+		mySimulator.resetSimulation();
 	}
 
 	public void init(String filePath, Integer opMode) {
@@ -223,7 +224,7 @@ public class Initializator extends DefaultPropertiesForTest {
 
 			simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 					.getSimulationArguments());
-			simulationData.readSimulatonFile(InfoType.OUTPUT);
+			(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
 			simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 
 			myFirstRun = false;

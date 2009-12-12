@@ -15,6 +15,7 @@ import com.plectix.simulator.FileNameCollectionGenerator;
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.controller.SimulatorInputData;
+import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
@@ -89,7 +90,7 @@ public class TestInitTime extends DefaultPropertiesForTest {
 		}
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, args);
-		simulationData.readSimulatonFile(InfoType.OUTPUT);
+		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 	}
 

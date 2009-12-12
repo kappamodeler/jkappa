@@ -67,7 +67,7 @@ public final class Snapshot {
 			}
 		}
 		if (!isAdd) {
-			snapshotElements.add(new SnapshotElement(component, number, simulationData.isOcamlStyleNamingInUse()));	
+			snapshotElements.add(new SnapshotElement(component, number, simulationData.getSimulationArguments().isOcamlStyleNameingInUse()));	
 		}
 	}
 	/**

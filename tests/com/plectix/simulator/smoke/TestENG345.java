@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
+import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
@@ -43,13 +44,12 @@ public class TestENG345 extends SmokeTest {
 		}
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
-		simulationData.readSimulatonFile(InfoType.OUTPUT);
+		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 
-		simulationData.setClockStamp(System.currentTimeMillis());
+		simulationData.getClock().setClockStamp(System.currentTimeMillis());
 
 		if (simulationData.getSimulationArguments().isCompile()) {
-			simulationData.outputData();
 			timeStamp  = System.currentTimeMillis() - timeStamp;
 			Assert.assertTrue("Too long", timeStamp < 3000);
 			return;

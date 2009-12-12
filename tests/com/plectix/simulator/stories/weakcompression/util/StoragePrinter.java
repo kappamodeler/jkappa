@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
+import com.plectix.simulator.io.SimulationDataOutputUtil;
 import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.staticanalysis.stories.MarkOfEvent;
 import com.plectix.simulator.staticanalysis.stories.storage.AtomicEvent;
 import com.plectix.simulator.staticanalysis.stories.storage.Event;
@@ -47,7 +47,7 @@ public class StoragePrinter {
 						+ "\t"
 						+ event.getMark()
 						+ "\t"
-						+ ((event.getRuleId() != -1) ? SimulationData.getData(
+						+ ((event.getRuleId() != -1) ? SimulationDataOutputUtil.getData(
 								kappaSystem.getRuleById(event.getRuleId()),
 								true) : "initial event")
 						+ "\t"

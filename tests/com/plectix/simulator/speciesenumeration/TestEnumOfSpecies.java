@@ -14,7 +14,7 @@ import org.junit.runners.Parameterized.Parameters;
 import com.plectix.simulator.FileNameCollectionGenerator;
 import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.staticanalysis.localviews.LocalViewsMain;
-import com.plectix.simulator.staticanalysis.speciesenumeration.GeneratorSpecies;
+import com.plectix.simulator.staticanalysis.speciesenumeration.SpeciesEnumeration;
 
 @RunWith(value = Parameterized.class)
 public class TestEnumOfSpecies {
@@ -25,7 +25,7 @@ public class TestEnumOfSpecies {
 
 	private LocalViewsMain localViews;
 
-	private GeneratorSpecies generatorSpecies;
+	private SpeciesEnumeration generatorSpecies;
 
 	private final Map<String, Integer> resultMap = new HashMap<String, Integer>();
 
@@ -59,7 +59,7 @@ public class TestEnumOfSpecies {
 
 	@Test
 	public void test() {
-		generatorSpecies = new GeneratorSpecies(localViews.getLocalViews());
+		generatorSpecies = new SpeciesEnumeration(localViews.getLocalViews());
 		generatorSpecies.enumerate();
 		Assert.assertEquals("[Error] Species", generatorSpecies.getSpecies()
 				.keySet().size(), resultMap.get(initTestEnumOfSpecies.getMyCountInside()).intValue());

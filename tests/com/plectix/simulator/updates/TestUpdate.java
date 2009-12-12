@@ -95,7 +95,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		.getRandomRule();
 
 		if (myActiveRule == null) {
-			mySimulator.getSimulationData().setTimeLength(currentTime);
+			mySimulator.getSimulationData().getClock().setTimeLength(currentTime);
 			fail(myTestFileName + " : there's no active rules");
 		}
 

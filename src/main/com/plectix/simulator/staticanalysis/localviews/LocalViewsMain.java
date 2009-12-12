@@ -6,14 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.stream.XMLStreamException;
-
-import com.plectix.simulator.simulator.XMLSimulatorWriter;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
 import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsInterface;
-import com.plectix.simulator.util.NameDictionary;
 
 public final class LocalViewsMain {
 	private final AllSubViewsOfAllAgentsInterface subviews;
@@ -130,27 +126,6 @@ public final class LocalViewsMain {
 
 	public final Map<String, List<AbstractAgent>> getLocalViews() {
 		return localViews;
-	}
-
-	public final void writeToXML(XMLSimulatorWriter streamWriter) throws XMLStreamException {
-		streamWriter.writeStartElement("Reachables");
-		streamWriter.writeAttribute("Name", "Views");
-		for (Map.Entry<String, List<AbstractAgent>> entry : localViews
-				.entrySet()) {
-			String agentName = entry.getKey();
-			if (NameDictionary.isDefaultAgentName(agentName))
-				continue;
-			List<AbstractAgent> list = entry.getValue();
-			streamWriter.writeStartElement("Set");
-			streamWriter.writeAttribute("Agent", agentName);
-			for (AbstractAgent agent : list) {
-				streamWriter.writeStartElement("Entry");
-				streamWriter.writeAttribute("Data", agent.toStringForXML());
-				streamWriter.writeEndElement();
-			}
-			streamWriter.writeEndElement();
-		}
-		streamWriter.writeEndElement();
 	}
 
 	public final List<AbstractAgent> getCoherentAgents(AbstractAgent mask) {

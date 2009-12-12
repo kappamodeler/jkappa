@@ -8,6 +8,7 @@ import org.junit.Before;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.SimulatorTestOptions;
+import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
@@ -63,7 +64,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
-		simulationData.readSimulatonFile(InfoType.OUTPUT);
+		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 
 		// run();
@@ -81,7 +82,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 
 		simulator.getSimulationData().setSimulationArguments(InfoType.OUTPUT,
 				commandLine.getSimulationArguments());
-		simulator.resetSimulation(InfoType.OUTPUT);
+		simulator.resetSimulation();
 	}
 
 	@After
@@ -98,7 +99,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 		activeRule = kappaSystem.getRandomRule();
 
 		if (activeRule == null) {
-			simulator.getSimulationData().setTimeLength(currentTime);
+			simulator.getSimulationData().getClock().setTimeLength(currentTime);
 			System.exit(0);
 		}
 
