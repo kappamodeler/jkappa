@@ -57,7 +57,7 @@ public class SimulationClock {
 
 	private final void checkAndInitStoriesBar() {
 		SimulationArguments simulationArguments = simulationData.getSimulationArguments();
-		if (simulationArguments.isStorify()) {
+		if (simulationArguments.storiesModeIsOn()) {
 			stepStories = simulationArguments.getIterations() * 1.0
 					/ simulationArguments.getClockPrecision();
 			nextStepStories = stepStories;

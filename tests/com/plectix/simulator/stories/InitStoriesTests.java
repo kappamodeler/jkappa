@@ -53,7 +53,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	}
 
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
 		init(testDirectory + FileName, operationMode);
 		if (mode) {
 			mySimulator.getSimulationData().getClock().setTimeLength(time);
@@ -67,7 +67,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	}
 
 	@Override
-	public void init(String filePath, Integer opMode) {
+	public void init(String filePath, Integer opMode) throws Exception {
 		mySimulator = new Simulator();
 
 		SimulationData simulationData = mySimulator.getSimulationData();

@@ -49,7 +49,7 @@ public class TestEnumOfSpeciesCompareXML {
 						"~kappa"),false);
 	}
 
-	public TestEnumOfSpeciesCompareXML(String prefixFile, String path, Integer opMode) {
+	public TestEnumOfSpeciesCompareXML(String prefixFile, String path, Integer opMode) throws Exception {
 		currentXMLData = initTestEnumOfSpeciesCompareXML.generateXML(path,
 				prefixFile, opMode);
 	}

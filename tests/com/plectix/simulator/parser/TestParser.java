@@ -1,10 +1,8 @@
 package com.plectix.simulator.parser;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
-import org.apache.commons.cli.ParseException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -38,8 +36,7 @@ public class TestParser extends TestRunner {
 	private boolean isStorify;
 
 	private void prepareResult(String fileName, boolean isStorify)
-			throws SimulationDataFormatException, FileNotFoundException,
-			ParseException {
+			throws Exception {
 		PrintWriter pw = null;
 		try {
 			KappaFile kf = (new KappaFileReader(sourceDir + fileName, true)).parse();

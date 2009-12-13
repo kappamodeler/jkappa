@@ -21,7 +21,7 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements
 	}
 
 	@Before
-	public void setup() {
+	public void setup() throws Exception {
 		String fullTestFilePath = getPrefixFileName() + myTestFileName;
 		Initializator initializator = getInitializator();
 
@@ -30,7 +30,7 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements
 		try {
 			mySimulator.getSimulationData().setSnapshotTime("0");
 			mySimulator.getSimulationData().getClock().setClockStamp(System.currentTimeMillis());
-			mySimulator.run();
+			mySimulator.runSimulation();
 		} catch (Exception e) {
 			e.printStackTrace();
 			junit.framework.Assert.fail(e.getMessage());

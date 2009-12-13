@@ -44,7 +44,7 @@ public class TestLocalViewsCompareXML {
 						"~kappa"),false);
 	}
 
-	public TestLocalViewsCompareXML(String prefixFile, String path, Integer opMode) {
+	public TestLocalViewsCompareXML(String prefixFile, String path, Integer opMode) throws Exception {
 		currentXMLData = initTestLocalViewsCompareXML.generateXML(path, prefixFile, opMode);
 	}
 

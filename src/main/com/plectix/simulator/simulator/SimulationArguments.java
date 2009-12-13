@@ -351,7 +351,7 @@ public final class SimulationArguments {
 		this.compile = compile;
 	}
 	
-	public final boolean isDebugInit() {
+	public final boolean debugModeIsOn() {
 		return debugInit;
 	}
 	
@@ -378,7 +378,7 @@ public final class SimulationArguments {
 		this.genereteMap = genereteMapOption;
 	}
 	
-	public final boolean isStorify() {
+	public final boolean storiesModeIsOn() {
 		return storify;
 	}
 	

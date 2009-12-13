@@ -44,7 +44,7 @@ public class TestLocalViews {
 		return OperationModeCollectionGenerator.generate(fileNames,false);
 	}
 
-	public TestLocalViews(String count, String pathSourse, Integer opMode) {
+	public TestLocalViews(String count, String pathSourse, Integer opMode) throws Exception {
 		initTestLocalViews.initializeSimulation(pathSourse, count, opMode);
 		init(initTestLocalViews.getSourcePath());
 	}

@@ -25,7 +25,7 @@ public class TestENG229 extends SmokeTest {
 	}
 
 	@Test
-	public void test() {
+	public void test() throws Exception {
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		Simulator mySimulator = new Simulator();
 
@@ -45,7 +45,7 @@ public class TestENG229 extends SmokeTest {
 		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 		try {
-			mySimulator.run();
+			mySimulator.runSimulation();
 		} catch (Exception e) {
 			e.printStackTrace();
 			junit.framework.Assert.fail(e.getMessage());
@@ -54,7 +54,7 @@ public class TestENG229 extends SmokeTest {
 		// Let's see if we monitor peak memory usage
 		PeakMemoryUsage peakMemoryUsage = MemoryUtil.getPeakMemoryUsage();
 		if (peakMemoryUsage != null) {
-			simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO,
+			simulationData.addInfo(InfoType.INFO,
 					"-Peak Memory Usage (in bytes): "
 							+ peakMemoryUsage
 							+ " [period= "

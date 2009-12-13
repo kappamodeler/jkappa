@@ -28,12 +28,11 @@ public abstract class Parser<E> {
 	 * Reads file and returns some kind of inner representation of it's data
 	 * @return inner representation of it's data
 	 * @throws SimulationDataFormatException if an error occurred
+	 * @throws IOException 
 	 */
-	public final E parse() throws SimulationDataFormatException {
+	public final E parse() throws SimulationDataFormatException, IOException {
 		try {
 			return unsafeParse();
-		} catch(IOException e) {
-			throw new FileReadingException(e.getMessage());
 		} finally {
 			easyReader.close();
 		}

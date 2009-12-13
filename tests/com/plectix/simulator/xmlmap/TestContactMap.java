@@ -10,7 +10,6 @@ import java.util.Collection;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.cli.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,7 +56,7 @@ public class TestContactMap {
 						"~kappa"),false);
 	}
 
-	public TestContactMap(String count, String patch, Integer opMode) throws ParseException {
+	public TestContactMap(String count, String patch, Integer opMode) throws Exception {
 		currentXMLData = initTestContactMap.generateXML(patch, count, opMode);
 	}
 

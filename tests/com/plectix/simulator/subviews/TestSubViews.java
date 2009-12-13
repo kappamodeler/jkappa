@@ -43,7 +43,7 @@ public class TestSubViews {
 				"~kappa"),false);
 	}
 
-	public TestSubViews(String count, String patch, Integer opMode) {
+	public TestSubViews(String count, String patch, Integer opMode) throws Exception {
 		initTestSubView.initializeSimulation(patch, count, opMode);
 		init(initTestSubView.getSourcePath());
 	}

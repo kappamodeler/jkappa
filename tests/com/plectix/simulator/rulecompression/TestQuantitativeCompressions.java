@@ -35,7 +35,7 @@ public class TestQuantitativeCompressions {
 				"~kappa"),false);
 	}
 
-	public TestQuantitativeCompressions(String count, String patch, Integer opMode) {
+	public TestQuantitativeCompressions(String count, String patch, Integer opMode) throws Exception {
 		initTestRuleCompressions.initializeSimulation(patch, count, opMode);
 	}
 

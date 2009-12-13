@@ -1,6 +1,8 @@
 package com.plectix.simulator.io;
 
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.plectix.simulator.simulationclasses.action.Action;
 import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
@@ -10,6 +12,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
+import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.OutputUtils;
 import com.plectix.simulator.util.Info.InfoType;
 
@@ -18,6 +21,7 @@ public class ConsoleOutputManager {
 	
 	private PrintStream printStream = null;
 	private final SimulationData simulationData;
+	private final List<Info> infoList = new ArrayList<Info>();
 	
 	public ConsoleOutputManager(SimulationData simulationData) {
 		this.simulationData = simulationData;
@@ -47,7 +51,7 @@ public class ConsoleOutputManager {
 	public final void outputBar() {
 		SimulationArguments simulationArguments = simulationData.getSimulationArguments();
 		if (simulationArguments.getOutputTypeForAdditionalInfo() != InfoType.DO_NOT_OUTPUT
-				|| !simulationArguments.isStorify())
+				|| !simulationArguments.storiesModeIsOn())
 			print(PROGRESS_BAR_SYMBOL);
 	}
 
@@ -202,5 +206,17 @@ public class ConsoleOutputManager {
 
 	public PrintStream getPrintStream() {
 		return printStream;
+	}
+	public final void addAdditionalInfo(InfoType type, String message) {
+		InfoType outputType = simulationData.getSimulationArguments().getOutputTypeForAdditionalInfo();
+		this.addInfo(outputType, type, message);
+	}
+
+	public List<Info> getInfo() {
+		return infoList;
+	}
+
+	private void addInfo(InfoType outputType, InfoType type, String message) {
+		simulationData.addInfo(new Info(outputType, type, message, printStream));
 	}
 }

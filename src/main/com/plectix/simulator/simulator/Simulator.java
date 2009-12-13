@@ -1,8 +1,14 @@
 package com.plectix.simulator.simulator;
 
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.List;
 
+import org.apache.commons.cli.HelpFormatter;
+
 import com.plectix.simulator.BuildConstants;
+import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.controller.SimulatorInterface;
 import com.plectix.simulator.controller.SimulatorResultsData;
@@ -10,6 +16,7 @@ import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.io.ConsoleOutputManager;
 import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.io.xml.SimulationDataXMLWriter;
+import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.simulationclasses.perturbations.TimeCondition;
@@ -36,6 +43,7 @@ public final class Simulator implements SimulatorInterface {
 			+ BuildConstants.BUILD_SVN_REVISION + ", JRE: "
 			+ System.getProperty("java.vendor") + " "
 			+ System.getProperty("java.version");
+	private static final String STATUS_READING_KAPPA = "Reading Kappa input";
 	private static final String STATUS_INITIALIZING = "Initializing";
 	private static final String STATUS_RUNNING = "Running";
 	private static final String STATUS_WRAPPING = "Wrapping the simulation results";
@@ -99,7 +107,7 @@ public final class Simulator implements SimulatorInterface {
 						/ simulationArguments.getMaxNumberOfEvents();
 			}
 
-			if (simulationArguments.isStorify()) {
+			if (simulationArguments.storiesModeIsOn()) {
 				progress = (progress + simulatorStatus
 						.getCurrentIterationNumber())
 						/ simulationArguments.getIterations();
@@ -151,76 +159,143 @@ public final class Simulator implements SimulatorInterface {
 		}
 	}
 
-	public final void resetSimulation() {
+	public final void reInitializeSimulationData() throws RuntimeException, SimulationDataFormatException, IOException {
 		synchronized (statusLock) {
 			currentTime = 0.0;
 		}
-		simulationData.reset();
+		
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO, "-Reset simulation data.");
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO, "-Initialization...");
+
+		simulationData.clear();
+		this.readInputKappaFile();
+		this.initializeKappaSystem();
 	}
 
-	public final void run(SimulatorInputData simulatorInputData)
-			throws Exception {
-		// add info about JSIM:
-		simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO, INTRO_MESSAGE);
-		simulatorStatus.setStatusMessage(STATUS_INITIALIZING);
-
-		PlxTimer timer = new PlxTimer();
-		timer.startTimer();
-
-		simulationData.setConsolePrintStream(simulatorInputData.getPrintStream());
-		simulationData.setSimulationArguments(InfoType.OUTPUT,
-				simulatorInputData.getSimulationArguments());
+	/**
+	 * This method only reads Kappa File and builds the KappaSystem object
+	 * We should be able to run it independently 
+	 * @throws RuntimeException
+	 * @throws SimulationDataFormatException
+	 * @throws IOException
+	 */
+	// TODO add it's own timer and console message
+	private void readInputKappaFile() throws RuntimeException, SimulationDataFormatException, IOException {
+		PlxTimer readingKappaTimer = new PlxTimer();
+		readingKappaTimer.startTimer();
+		
+		simulatorStatus.setStatusMessage(STATUS_READING_KAPPA);
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO,"--Computing initial state");
 		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
-		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
-
-		simulationData.getClock().stopTimer(InfoType.OUTPUT, timer, "-Initialization:");
-		simulationData.getClock().setClockStamp(System.currentTimeMillis());
-
-		if (simulationData.getSimulationArguments().isCompile()) {
-			consoleOutputManager.outputData();
-			return;
+		
+		simulationData.getClock().stopTimer(InfoType.OUTPUT, readingKappaTimer, "-Reading Kappa input:");
+	}
+	
+	private void loadSimulationArguments(SimulatorInputData simulatorInputData) {
+		SimulationArguments simulationArguments = simulatorInputData.getSimulationArguments();
+		
+		simulationData.setConsolePrintStream(simulatorInputData.getPrintStream());
+		if (simulationArguments.isNoDumpStdoutStderr()) {
+			consoleOutputManager.setPrintStream(null);
 		}
 
-		if (!simulationData.getSimulationArguments().isDebugInit()) {
-			if (simulationData.getSimulationArguments().isGenereteMap()
-					|| simulationData.getSimulationArguments()
-							.getSimulationType() == SimulationType.CONTACT_MAP) {
-				// simulationData.getSimulationArguments().isContactMap() ) {
-				// nothing to do in this case... outputData is called below...
-			} else if (simulationData.getSimulationArguments().isStorify()) {
-				runStories();
-			} else {
-				run();
+		PrintStream printStream = consoleOutputManager.getPrintStream();
+		// do not print anything above because the line above might have turned
+		// the printing off...
+
+		if (simulationArguments.isHelp()) {
+			if (printStream != null) {
+				PrintWriter printWriter = new PrintWriter(printStream);
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp(printWriter, HelpFormatter.DEFAULT_WIDTH,
+						SimulationMain.COMMAND_LINE_SYNTAX, null,
+						SimulatorOption.COMMAND_LINE_OPTIONS,
+						HelpFormatter.DEFAULT_LEFT_PAD,
+						HelpFormatter.DEFAULT_DESC_PAD, null, false);
+				printWriter.flush();
 			}
 		}
 
-		// Let's see if we monitor peak memory usage
+		simulationData.setSimulationArguments(InfoType.OUTPUT, simulatorInputData.getSimulationArguments());
+	}
+	
+	// TODO 
+	private void initializeKappaSystem() {
+		PlxTimer initializationTimer = new PlxTimer();
+		initializationTimer.startTimer();
+		
+		simulatorStatus.setStatusMessage(STATUS_INITIALIZING);
+		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
+		
+		simulationData.getClock().stopTimer(InfoType.OUTPUT, initializationTimer, "-Initialization:");
+	}
+	
+	private void outputCurrentSimulationDataToXML() throws Exception {
+		(new SimulationDataXMLWriter(simulationData)).outputXMLData();
+	}
+	
+	private void checkAndOutputMemory() {
 		PeakMemoryUsage peakMemoryUsage = MemoryUtil.getPeakMemoryUsage();
 		if (peakMemoryUsage != null) {
-			simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO,
+			consoleOutputManager.addAdditionalInfo(InfoType.INFO,
 					"-Peak Memory Usage (in bytes): "
 							+ peakMemoryUsage
 							+ " [period= "
 							+ simulationData.getSimulationArguments()
 									.getMonitorPeakMemory() + " milliseconds]");
 		}
+	}
+	
+	private boolean hasNoNeedToRunAnything(SimulationArguments simulationArguments) {
+		return simulationArguments.isGenereteMap()
+			|| (simulationArguments.getSimulationType() == SimulationType.CONTACT_MAP)
+			|| simulationArguments.debugModeIsOn();
+	}
+	
+	public final void run(SimulatorInputData simulatorInputData)
+			throws Exception {
+		// add info about JSIM:
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO, INTRO_MESSAGE);
+		
+		this.loadSimulationArguments(simulatorInputData);
+		
+		this.readInputKappaFile();
+		this.initializeKappaSystem();
+		
+		
+
+		if (simulationData.getSimulationArguments().isCompile()) {
+			consoleOutputManager.outputData();
+			return;
+		}
+
+		if (!this.hasNoNeedToRunAnything(simulationData.getSimulationArguments())) {
+			simulationData.getClock().setClockStamp(System.currentTimeMillis());
+			if (simulationData.getSimulationArguments().storiesModeIsOn()) {
+				runStories();
+			} else {
+				runSimulation();
+			}
+		}
+
+		// Let's see if we monitor peak memory usage
+		this.checkAndOutputMemory();
 
 		// Output XML data:
-		(new SimulationDataXMLWriter(simulationData)).outputXMLData();
-
+		this.outputCurrentSimulationDataToXML();
+		
 		simulatorStatus.setStatusMessage(STATUS_IDLE);
 	}
 
-	public final void run() throws Exception {
-		simulationData
-				.addInfo(InfoType.OUTPUT, InfoType.INFO, "-Simulation...");
+	public final void runSimulation() throws Exception {
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO, "-Simulation...");
 
-		PlxTimer timer = new PlxTimer();
-		timer.startTimer();
+		PlxTimer simulationTimer = new PlxTimer();
+		simulationTimer.startTimer();
 		SimulationClock clock = simulationData.getClock();
 		
 		int seed = simulationData.getSimulationArguments().getSeed();
-		simulationData.addInfo(InfoType.OUTPUT, InfoType.INFO,
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
 				"--Seeding random number generator with given seed "
 						+ Integer.valueOf(seed).toString());
 
@@ -228,8 +303,8 @@ public final class Simulator implements SimulatorInterface {
 			currentEventNumber = 0;
 		}
 
-		long clash = 0;
-		long max_clash = 0;
+		long clashesNumber = 0;
+		long maxClashes = 0;
 		boolean isEndRules = false;
 		boolean isCalculateObs = false;
 		LiveDataSourceInterface liveDataSource = new ObservablesLiveDataSource(
@@ -242,7 +317,7 @@ public final class Simulator implements SimulatorInterface {
 
 		simulationData.getKappaSystem().getObservables().addInitialState();
 		while (!clock.isEndSimulation(currentTime, currentEventNumber)
-				&& max_clash <= simulationData.getSimulationArguments()
+				&& maxClashes <= simulationData.getSimulationArguments()
 						.getMaxClashes()) {
 			if (Thread.interrupted()) {
 				// TODO: Do any necessary clean-up and collect data we can
@@ -272,9 +347,7 @@ public final class Simulator implements SimulatorInterface {
 					if (perturbation.getCondition() instanceof TimeCondition) {
 						// TODO awful type cast
 						ComplexPerturbation<TimeCondition, ?> castedPerturbation = (ComplexPerturbation<TimeCondition, ?>) perturbation;
-						TimeCondition condition = castedPerturbation
-								.getCondition();
-						double conditionTimeLimit = condition.getTimeLimit();
+						double conditionTimeLimit = castedPerturbation.getCondition().getTimeLimit();
 						if (conditionTimeLimit > currentTime
 								&& conditionTimeLimit < tmpTime) {
 							tmpTime = conditionTimeLimit;
@@ -323,7 +396,7 @@ public final class Simulator implements SimulatorInterface {
 			isCalculateObs = false;
 			if (injectionsList != null) {
 				// negative update
-				max_clash = 0;
+				maxClashes = 0;
 				if (LOGGER.isDebugEnabled())
 					LOGGER.debug("negative update");
 
@@ -364,14 +437,14 @@ public final class Simulator implements SimulatorInterface {
 					}
 				}
 			} else {
-				simulationData.addInfo(InfoType.DO_NOT_OUTPUT,
+				consoleOutputManager.addAdditionalInfo(
 						InfoType.INTERNAL,
 						"Application of rule exp is clashing");
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Clash");
 				}
-				clash++;
-				max_clash++;
+				clashesNumber++;
+				maxClashes++;
 			}
 
 
@@ -395,7 +468,7 @@ public final class Simulator implements SimulatorInterface {
 		clock.setTimeLength(currentTime);
 		clock.setEvent(currentEventNumber);
 
-		endSimulation(InfoType.OUTPUT, isEndRules, timer);
+		endSimulation(InfoType.OUTPUT, isEndRules, simulationTimer);
 	}
 
 	public final void runStories() throws Exception {
@@ -407,7 +480,7 @@ public final class Simulator implements SimulatorInterface {
 
 		InfoType additionalInfoOutputType = simulationData
 				.getSimulationArguments().getOutputTypeForAdditionalInfo();
-		simulationData.addInfo(additionalInfoOutputType, InfoType.INFO,
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
 				"-Simulation...");
 
 		SimulationClock clock = simulationData.getClock();
@@ -422,7 +495,7 @@ public final class Simulator implements SimulatorInterface {
 		}
 
 		int seed = simulationData.getSimulationArguments().getSeed();
-		simulationData.addInfo(additionalInfoOutputType, InfoType.INFO,
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
 				"--Seeding random number generator with given seed "
 						+ Integer.valueOf(seed).toString());
 
@@ -431,7 +504,7 @@ public final class Simulator implements SimulatorInterface {
 				.getIterations()) {
 			PlxTimer timer = null;
 			if (additionalInfoOutputType != InfoType.DO_NOT_OUTPUT) {
-				simulationData.addInfo(additionalInfoOutputType, InfoType.INFO,
+				consoleOutputManager.addAdditionalInfo(InfoType.INFO,
 						"-Simulation...");
 				timer = new PlxTimer();
 				timer.startTimer();
@@ -524,7 +597,7 @@ public final class Simulator implements SimulatorInterface {
 
 			if (currentIterationNumber < simulationData
 					.getSimulationArguments().getIterations() - 1) {
-				resetSimulation();
+				reInitializeSimulationData();
 			}
 
 			// check whether the thread is interrupted above or since then...

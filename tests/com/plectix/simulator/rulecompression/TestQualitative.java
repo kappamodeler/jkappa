@@ -36,7 +36,7 @@ public class TestQualitative {
 				"~kappa"),false);
 	}
 
-	public TestQualitative(String filenameCount, String pathModel, Integer opMode) {
+	public TestQualitative(String filenameCount, String pathModel, Integer opMode) throws Exception {
 		initTestRuleCompressions.initializeSimulation(pathModel, filenameCount, opMode);
 	}
 

@@ -29,8 +29,6 @@ public final class KappaSystemParser {
 	 * @throws SimulationDataFormatException when an error occurred
 	 */
 	public final void parse(InfoType outputType) throws SimulationDataFormatException {
-		simulationData.addInfo(outputType,InfoType.INFO,"--Computing initial state");
-		
 		KappaModel model = (new KappaModelCreator(
 				simulationData.getSimulationArguments())).createModel(kappaFile);
 		simulationData.setInitialModel(model);

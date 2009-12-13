@@ -25,7 +25,7 @@ public class TestENG345 extends SmokeTest {
 	}
 
 	@Override
-	public void test() {
+	public void test() throws Exception {
 		long timeStamp = System.currentTimeMillis();
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		Simulator mySimulator = new Simulator();
@@ -56,14 +56,14 @@ public class TestENG345 extends SmokeTest {
 		}
 
 		try {
-			if (!simulationData.getSimulationArguments().isDebugInit()) {
+			if (!simulationData.getSimulationArguments().debugModeIsOn()) {
 				if (simulationData.getSimulationArguments().isGenereteMap()
 						|| simulationData.getSimulationArguments()
 								.getSimulationType() == SimulationType.CONTACT_MAP) {
-				} else if (simulationData.getSimulationArguments().isStorify()) {
+				} else if (simulationData.getSimulationArguments().storiesModeIsOn()) {
 					mySimulator.runStories();
 				} else {
-					mySimulator.run();
+					mySimulator.runSimulation();
 				}
 			}
 		} catch (Exception e) {

@@ -12,7 +12,7 @@ public abstract class SmokeTest extends DefaultPropertiesForTest{
 			+ "smoke_test" + separator + "source" + separator;
 
 	@Test
-	public abstract void test();
+	public abstract void test() throws Exception;
 	
 	protected abstract String[] prepareTestArgs();
 }

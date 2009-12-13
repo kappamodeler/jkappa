@@ -17,7 +17,7 @@ public class RunInjectionsTests extends TestRunner {
 	private static final String separator = File.separator;
 
 	@BeforeClass
-	public static void setup() {
+	public static void setup() throws Exception {
 		String fullTestFilePath = "test.data" + separator + "TheGreatTestFile"
 				+ DEFAULT_EXTENSION_FILE;
 		getInitializator().init(fullTestFilePath, null);

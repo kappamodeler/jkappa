@@ -47,7 +47,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 	public abstract boolean isDoingPositive();
 
 	@Before
-	public void setup() throws StoryStorageException {
+	public void setup() throws Exception {
 		String fullTestFilePath = getPrefixFileName() + myTestFileName;
 		Initializator initializator = getInitializator();
 

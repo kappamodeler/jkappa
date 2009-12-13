@@ -30,7 +30,7 @@ public class InitTestContactMap extends DefaultPropertiesForTest {
 		return directory + suffix + number + DEFAULT_EXTENSION_FILE;
 	}
 	
-	public static void init(String dir, String dirResult, String count) {
+	public static void init(String dir, String dirResult, String count) throws Exception {
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		simulator = new Simulator();
 		directory = dir;

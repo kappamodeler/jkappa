@@ -229,7 +229,7 @@ public class TestContactMap {
 		return Arrays.asList(object);
 	}
 
-	public TestContactMap(String count, String patch) {
+	public TestContactMap(String count, String patch) throws Exception {
 		InitTestContactMap.init(patch, prefixResult, count);
 	}
 

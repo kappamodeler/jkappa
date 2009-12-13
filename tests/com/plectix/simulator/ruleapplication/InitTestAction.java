@@ -49,7 +49,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 	}
 
 	@Before
-	public void init() {
+	public void init() throws Exception {
 		simulator = new Simulator();
 
 		SimulationData simulationData = simulator.getSimulationData();
@@ -71,7 +71,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 	}
 
 	@Override
-	public void reset(String filePath, Integer opMode) {
+	public void reset(String filePath, Integer opMode) throws Exception {
 		SimulatorCommandLine commandLine = null;
 		try {
 			commandLine = prepareTestArgs(filePath, opMode).toCommandLine();
@@ -82,11 +82,11 @@ public class InitTestAction extends DirectoryTestsRunner {
 
 		simulator.getSimulationData().setSimulationArguments(InfoType.OUTPUT,
 				commandLine.getSimulationArguments());
-		simulator.resetSimulation();
+		simulator.reInitializeSimulationData();
 	}
 
 	@After
-	public void teardown() {
+	public void teardown() throws Exception {
 		if (iterationNumber != iterationsLimit) {
 			reset(filePath, operationMode);
 		}

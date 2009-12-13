@@ -26,13 +26,13 @@ public abstract class GenerateXMLByModel extends DefaultPropertiesForTest {
 
 	public abstract String getComparePath();
 
-	public String generateXML(String dir, String prefixFile, Integer opMode) {
+	public String generateXML(String dir, String prefixFile, Integer opMode) throws Exception {
 		
 		return generateXML(dir, null, prefixFile, opMode);
 		
 	}
 	
-	private String generateXML(String dir, String dirResult, String prefixFile, Integer opMode) {
+	private String generateXML(String dir, String dirResult, String prefixFile, Integer opMode) throws Exception {
 
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		mySimulator = new Simulator();

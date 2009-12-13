@@ -47,7 +47,7 @@ public class TestSubViewsCompareXML {
 				"~kappa"),false);
 	}
 
-	public TestSubViewsCompareXML(String prefixFile, String path, Integer opMode) {
+	public TestSubViewsCompareXML(String prefixFile, String path, Integer opMode) throws Exception {
 		currentXMLData = initTestSubViewsCompareXML.generateXML(path, prefixFile, opMode);
 	}
 

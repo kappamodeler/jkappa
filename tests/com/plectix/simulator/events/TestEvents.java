@@ -45,7 +45,7 @@ public final class TestEvents {
 	}
 
 	@Test
-	public void test() {
+	public void test() throws Exception {
 		for (int i = 0; i < eventsNumbers.length; i++) {
 			setup(eventsNumbers[i]);
 			assertTrue(eventsNumbers[i] == simulator.getSimulationData()
@@ -54,7 +54,7 @@ public final class TestEvents {
 		}
 	}
 
-	public void setup(Integer eventNumber) {
+	public void setup(Integer eventNumber) throws Exception {
 		init(TEST_DIRECTORY + prefixFileName, eventNumber);
 		try {
 			simulator.run(new SimulatorInputData(simulator.getSimulationData()
@@ -65,7 +65,7 @@ public final class TestEvents {
 		}
 	}
 
-	public void init(String filePath, Integer eventNumber) {
+	public void init(String filePath, Integer eventNumber) throws Exception {
 		simulator = null;
 		simulator = new Simulator();
 		SimulationData simulationData = simulator.getSimulationData();

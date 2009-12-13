@@ -1,10 +1,12 @@
 package com.plectix.simulator.io;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.KappaFileReader;
 import com.plectix.simulator.parser.KappaSystemParser;
+import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.parser.abstractmodel.reader.RulesParagraphReader;
 import com.plectix.simulator.parser.builders.RuleBuilder;
 import com.plectix.simulator.parser.util.AgentFactory;
@@ -23,7 +25,7 @@ public class SimulationDataReader {
 	}
 	
 	// TODO separate
-	public final void readSimulationFile(InfoType outputType) {
+	public final void readSimulationFile(InfoType outputType) throws RuntimeException, SimulationDataFormatException, IOException {
 		if (!simulationData.argumentsInitialized()) {
 			throw new RuntimeException(
 					"Simulator Arguments must be set before reading the simulation file!");
@@ -57,18 +59,21 @@ public class SimulationDataReader {
 			KappaFile kappaFile = kappaFileReader.parse();
 			KappaSystemParser parser = new KappaSystemParser(kappaFile, simulationData);
 			parser.parse(outputType);
-		} catch (Exception e) {
+		} catch (SimulationDataFormatException e) {
+			
 			ConsoleOutputManager console = simulationData.getConsoleOutputManager();
 			console.println("Error in file \"" + simulationArguments.getInputFilename()
 						+ "\" :");
 			if (console.initialized()) {
 				e.printStackTrace(console.getPrintStream());
 			}
-			throw new IllegalArgumentException(e);
+			throw e;
+		} catch (IOException e) {
+			throw e;
 		}
 	}
 	
-	private final void setFocusOn(String fileNameFocusOn) throws Exception {
+	private final void setFocusOn(String fileNameFocusOn) throws IOException, SimulationDataFormatException {
 		KappaSystem kappaSystem = simulationData.getKappaSystem();
 		SimulationArguments simulationArguments = simulationData.getSimulationArguments(); 
 		

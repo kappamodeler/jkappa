@@ -193,7 +193,7 @@ public class Initializator extends DefaultPropertiesForTest {
 		return commandLine.getSimulationArguments();
 	}
 
-	public void reset(String filePath, Integer opMode) {
+	public void reset(String filePath, Integer opMode) throws Exception {
 		try {
 			mySimulator.getSimulationData().setSimulationArguments(
 					InfoType.OUTPUT,
@@ -202,10 +202,10 @@ public class Initializator extends DefaultPropertiesForTest {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);
 		}
-		mySimulator.resetSimulation();
+		mySimulator.reInitializeSimulationData();
 	}
 
-	public void init(String filePath, Integer opMode) {
+	public void init(String filePath, Integer opMode) throws Exception {
 		String[] testArgs = prepareTestArgs(filePath, opMode);
 		if (myFirstRun) {
 			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);

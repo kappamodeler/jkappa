@@ -159,13 +159,13 @@ public final class PerturbationsBuilder {
 				int quantity = modelOnceModification.getQuantity();
 				if (modelOnceModification.getType() == ModificationType.ADDONCE) {
 					PerturbationRule rule = new PerturbationRule(null, ccL, "", 0,
-							(int) kappaSystem.generateNextRuleId(), simulationArguments.isStorify());
+							(int) kappaSystem.generateNextRuleId(), simulationArguments.storiesModeIsOn());
 					kappaSystem.addRule(rule);
 					
 					return new AddOnceModification(rule, quantity);
 				} else {
 					PerturbationRule rule = new PerturbationRule(ccL, null, "", 0,
-							(int) kappaSystem.generateNextRuleId(), simulationArguments.isStorify());
+							(int) kappaSystem.generateNextRuleId(), simulationArguments.storiesModeIsOn());
 					kappaSystem.addRule(rule);	
 					
 					return new DeleteOnceModification(rule, quantity);

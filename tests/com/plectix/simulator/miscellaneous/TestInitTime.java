@@ -65,7 +65,7 @@ public class TestInitTime extends DefaultPropertiesForTest {
 		}
 	}
 
-	public void setup(Double initTime) {
+	public void setup(Double initTime) throws Exception {
 		init(testDirectory + prefixFileName, initTime);
 		try {
 			simulator.run(new SimulatorInputData(simulator.getSimulationData()
@@ -76,7 +76,7 @@ public class TestInitTime extends DefaultPropertiesForTest {
 		}
 	}
 
-	public void init(String filePath, Double initTime) {
+	public void init(String filePath, Double initTime) throws Exception {
 		simulator = null;
 		simulator = new Simulator();
 		SimulationData simulationData = simulator.getSimulationData();

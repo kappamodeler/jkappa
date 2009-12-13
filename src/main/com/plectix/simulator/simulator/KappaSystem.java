@@ -113,7 +113,7 @@ public final class KappaSystem implements KappaSystemInterface {
 
 			if (args.isActivationMap() || args.isInhibitionMap()) {
 				PlxTimer timer = new PlxTimer();
-				simulationData.addInfo(outputType, InfoType.INFO,
+				simulationData.addInfo(InfoType.INFO,
 						"--Abstracting influence map...");
 				influenceMap = new InfluenceMapWithFuture();
 				if (!contactMap.isInitialized())
@@ -124,8 +124,7 @@ public final class KappaSystem implements KappaSystemInterface {
 				influenceMap.fillActivatedInhibitedRules(rules, this,
 						observables);
 				simulationData.getClock().stopTimer(outputType, timer, "--Abstraction:");
-				simulationData.addInfo(outputType, InfoType.INFO,
-						"--influence map computed");
+				simulationData.addInfo(InfoType.INFO, "--influence map computed");
 			}
 
 			if (args.createLocalViews() || args.useEnumerationOfSpecies()) {

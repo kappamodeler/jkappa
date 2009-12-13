@@ -35,7 +35,7 @@ public class TestDetectionOfCycles {
 		return OperationModeCollectionGenerator.generate(allFileNames,false);
 	}
 
-	public TestDetectionOfCycles(String count, String path, Integer opMode) {
+	public TestDetectionOfCycles(String count, String path, Integer opMode) throws Exception {
 		initTestDetectionOfCycles.initializeSimulation(path, count, opMode);
 	}
 

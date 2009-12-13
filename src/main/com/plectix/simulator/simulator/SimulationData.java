@@ -1,30 +1,25 @@
 package com.plectix.simulator.simulator;
 
+import java.io.IOException;
 import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.apache.commons.cli.HelpFormatter;
-
 import com.plectix.simulator.BuildConstants;
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.io.ConsoleOutputManager;
-import com.plectix.simulator.io.SimulationDataReader;
+import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.staticanalysis.Snapshot;
 import com.plectix.simulator.staticanalysis.stories.storage.StoriesAgentTypesStorage;
 import com.plectix.simulator.util.Info;
 import com.plectix.simulator.util.MemoryUtil;
-import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.Info.InfoType;
 
 public final class SimulationData {
 	private List<Snapshot> snapshots = null;
 	private final List<Info> infoList = new ArrayList<Info>();
-	private PrintStream printStream = null;
 	private List<Double> snapshotTimes = null;
 
 	private boolean argumentsInitialized = false;
@@ -48,53 +43,19 @@ public final class SimulationData {
 		initialModel = kappaModel;
 	}
 
-	public final void reset() {
-		InfoType outputType = simulationArguments.getOutputTypeForAdditionalInfo();
-		addInfo(outputType, InfoType.INFO, "-Reset simulation data.");
-		addInfo(outputType, InfoType.INFO, "-Initialization...");
-
-		PlxTimer timer = new PlxTimer();
-		timer.startTimer();
-
+	public final void clear() throws RuntimeException, SimulationDataFormatException, IOException {
 		kappaSystem.clearRules();
 		kappaSystem.getObservables().resetLists();
 		kappaSystem.getSolution().clear();
 		kappaSystem.getSolution().clearSolutionLines();
 		kappaSystem.resetIdGenerators();
 		kappaSystem.clearPerturbations();
-
-		(new SimulationDataReader(this)).readSimulationFile(outputType);
-
-		kappaSystem.initialize(outputType);
-
-		clock.stopTimer(outputType, timer, "-Initialization:");
-		clock.setClockStamp(System.currentTimeMillis());
 	}
 
 	public final void setSimulationArguments(InfoType outputType,
 			SimulationArguments arguments) {
 		this.simulationArguments = arguments;
 		this.simulationArguments.updateRandom();
-
-		if (simulationArguments.isNoDumpStdoutStderr()) {
-			printStream = null;
-		}
-
-		// do not print anything above because the line above might have turned
-		// the printing off...
-
-		if (simulationArguments.isHelp()) {
-			if (printStream != null) {
-				PrintWriter printWriter = new PrintWriter(printStream);
-				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp(printWriter, HelpFormatter.DEFAULT_WIDTH,
-						SimulationMain.COMMAND_LINE_SYNTAX, null,
-						SimulatorOption.COMMAND_LINE_OPTIONS,
-						HelpFormatter.DEFAULT_LEFT_PAD,
-						HelpFormatter.DEFAULT_DESC_PAD, null, false);
-				printWriter.flush();
-			}
-		}
 
 		if (simulationArguments.isVersion()) {
 			consoleOutputManager.println("Java Simulator Revision: "
@@ -114,7 +75,7 @@ public final class SimulationData {
 					.getMonitorPeakMemory());
 		}
 
-		addInfo(outputType, InfoType.INFO, "-Initialization...");
+		this.addInfo(InfoType.INFO, "-Initialization...");
 
 		// TODO: remove the following lines after checking all the dependencies to them!!!
 		if (simulationArguments.isTime()) {
@@ -150,14 +111,8 @@ public final class SimulationData {
 	}
 
 	
-
-	// **************************************************************************
-	// INFO LIST STUFF
-	// 
-
-	public final void addInfo(InfoType outputType, InfoType type, String message) {
-		outputType = simulationArguments.getOutputTypeForAdditionalInfo();
-		addInfo(new Info(outputType, type, message, printStream));
+	public final void addInfo(InfoType type, String message) {
+		consoleOutputManager.addAdditionalInfo(type, message);
 	}
 
 	public final void addInfo(Info info) {

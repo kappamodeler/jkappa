@@ -36,7 +36,7 @@ public class TestEnumOfSpecies {
 						"~kappa"),false);
 	}
 
-	public TestEnumOfSpecies(String count, String patch, Integer opMode) {
+	public TestEnumOfSpecies(String count, String patch, Integer opMode) throws Exception {
 		initTestEnumOfSpecies.initializeSimulation(patch, count, opMode);
 		initResult();
 	}

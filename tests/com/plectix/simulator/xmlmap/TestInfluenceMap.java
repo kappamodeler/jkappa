@@ -48,7 +48,7 @@ public class TestInfluenceMap {
 				prefixSourseModel, "~kappa"),false);
 	}
 
-	public TestInfluenceMap(String count, String patch, Integer opMode) {
+	public TestInfluenceMap(String count, String patch, Integer opMode) throws Exception {
 		currentXMLData = initTestInfluenceMap.generateXML(patch, count, opMode);
 	}
 

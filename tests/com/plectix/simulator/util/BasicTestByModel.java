@@ -19,7 +19,7 @@ public abstract class BasicTestByModel extends DefaultPropertiesForTest {
 
 	public abstract SimulatorTestOptions prepareTestModelArgs();
 
-	public void initializeSimulation(String dir, String filename, Integer opMode) {
+	public void initializeSimulation(String dir, String filename, Integer opMode) throws Exception {
 
 		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 		simulator = new Simulator();

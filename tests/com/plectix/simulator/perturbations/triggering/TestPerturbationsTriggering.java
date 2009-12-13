@@ -50,7 +50,7 @@ public class TestPerturbationsTriggering {
 	}
 
 	@Test
-	public void test() {
+	public void test() throws Exception {
 		for (int i = 0; i < times.length; i++) {
 			setup(times[i]);
 			KappaSystem kappaSystem = mySimulator.getSimulationData()
@@ -75,7 +75,7 @@ public class TestPerturbationsTriggering {
 		}
 	}
 
-	public void setup(Integer time) {
+	public void setup(Integer time) throws Exception {
 		init(testDirectory + prefixFileName, time);
 		try {
 			mySimulator.run(new SimulatorInputData(mySimulator
@@ -86,7 +86,7 @@ public class TestPerturbationsTriggering {
 		}
 	}
 
-	public void init(String filePath, Integer time) {
+	public void init(String filePath, Integer time) throws Exception {
 		mySimulator = null;
 		mySimulator = new Simulator();
 		SimulationData simulationData = mySimulator.getSimulationData();
