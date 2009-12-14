@@ -11,8 +11,9 @@
 	<property name="build.dir"  value="tmp/ant"/>
 	<property name="lib.dir" value="lib"/>
 	<property name="src.dir" value="src/main"/>
-	<property name="test.dir" value="src/test"/>
-	<property name="acceptance-tests.dir" value="tests"/>
+	<property name="unit-tests.dir" value="src/test/unit"/>
+	<property name="acceptance-tests.dir" value="src/test/acceptance"/>
+	<property name="slow-tests.dir" value="src/test/slow"/>
 	<property name="resources.dir" value="resources"/>
 	<property name="dist.dir" value="jar"/>
 	<property name="javadoc.dir" value="javadoc"/>
@@ -281,19 +282,33 @@
         <echo message="Java: ${java.version} "/>
         <echo message="Ant Java: ${ant.java.version} "/>
 	    <echo message="${ant.project.name}: ${ant.file} "/>
-		<javac srcdir="${test.dir};${src.dir};${acceptance-tests.dir}" destdir="${build.dir}/test" debug="true" failonerror="true">
+		<javac srcdir="${unit-tests.dir};${src.dir};${acceptance-tests.dir};${slow-tests.dir}" destdir="${build.dir}/test" debug="true" failonerror="true">
 			<classpath refid="test.classpath"/>
 		</javac>
 	</target>
 	
-	<target name="test" depends="build-tests" description="Run JUnit tests. Depends on: build-tests">
+	<target name="test" depends="unit-tests, acceptance-tests" description="Run JUnit tests. Depends on: build-tests">
+			<echo message="All tests are complete - check log for errors"/>
+		</target>
+
+	<target name="acceptance-tests" depends="build-tests" description="Run JUnit tests. Depends on: build-tests">
+			<echo>Running JUnit Tests</echo>
+			<junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="no">
+				<classpath refid="test.classpath" />
+		       	<formatter type="plain"/>
+				<test name="com.plectix.simulator.RunAllAcceptanceTests"/>
+			</junit>
+			<echo message="Acceptance tests are complete - check log for errors"/>
+		</target>
+	
+	<target name="unit-tests" depends="build-tests" description="Run JUnit tests. Depends on: build-tests">
 		<echo>Running JUnit Tests</echo>
 		<junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="no">
 			<classpath refid="test.classpath" />
 	       	<formatter type="plain"/>
-			<test name="com.plectix.simulator.RunAllTests"/>
+			<test name="com.plectix.simulator.RunAllUnitTests"/>
 		</junit>
-		<echo message="Tests are complete - check log for errors"/>
+		<echo message="Unit tests are complete - check log for errors"/>
 	</target>
 
 	<target name="slowTests" depends="build-tests" description="Run Slow JUnit tests. Depends on: build-tests">
