@@ -8,6 +8,7 @@ import com.plectix.simulator.injections.RunInjectionsTests;
 import com.plectix.simulator.localviews.TestLocalViews;
 import com.plectix.simulator.localviews.TestLocalViewsCompareXML;
 import com.plectix.simulator.parser.RunParserTests;
+import com.plectix.simulator.parser.TestParserSites;
 import com.plectix.simulator.perturbations.RunPerturbationsTests;
 import com.plectix.simulator.ruleapplication.RunActionTest;
 import com.plectix.simulator.smoke.SmokeTestMain;
@@ -24,6 +25,7 @@ import com.plectix.simulator.xmlmap.TestInfluenceMap;
 		SmokeTestMain.class,
 
 		RunInjectionsTests.class,
+		TestParserSites.class,
 		RunUpdateTests.class,
 		// RunParserTests.class,
 		RunPerturbationsTests.class,

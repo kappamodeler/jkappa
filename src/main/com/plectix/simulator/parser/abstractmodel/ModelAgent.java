@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.ParseErrorMessage;
 import com.plectix.simulator.parser.util.ParserUtil;
 import com.plectix.simulator.staticanalysis.NamedEntity;
 
@@ -80,5 +82,16 @@ public final class ModelAgent extends NamedEntity implements Comparable<ModelAge
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	public void addCorrectSite(ModelSite parseSite) throws ParseErrorException {
+		for (ModelSite modelSite : sites) {
+			if (modelSite.getName().equals(parseSite.getName())) {
+				throw new ParseErrorException(
+						ParseErrorMessage.REPEATED_SITE_NAME, parseSite.getName());
+			}
+		}
+		addSite(parseSite);
+		
 	}
 }

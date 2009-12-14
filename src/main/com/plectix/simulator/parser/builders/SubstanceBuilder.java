@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.plectix.simulator.parser.ParseErrorException;
+import com.plectix.simulator.parser.ParseErrorMessage;
 import com.plectix.simulator.parser.abstractmodel.ModelAgent;
 import com.plectix.simulator.parser.abstractmodel.ModelSite;
 import com.plectix.simulator.simulator.KappaSystemInterface;
@@ -20,7 +22,7 @@ import com.plectix.simulator.util.NameDictionary;
 		this.kappaSystem = system;
 	}
 
-	public final List<Agent> buildAgents(List<ModelAgent> abstractAgents) {
+	public final List<Agent> buildAgents(List<ModelAgent> abstractAgents) throws ParseErrorException {
 		if (abstractAgents == null) {
 			return null;
 		}
@@ -45,6 +47,9 @@ import com.plectix.simulator.util.NameDictionary;
 				} else {
 					connectedSite.getLinkState().connectSite(site);
 					site.getLinkState().connectSite(connectedSite);
+					if(site.getParentAgent()==connectedSite.getParentAgent()){
+						throw new ParseErrorException(ParseErrorMessage.AGENT_CONNECTED_WITH_HIMSELF, site.getParentAgent().toString()); 
+					}
 					map.remove(site.getLinkIndex());
 				}
 			}

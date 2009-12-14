@@ -33,6 +33,17 @@ import com.plectix.simulator.simulator.SimulationArguments;
 		for (KappaFileLine itemDS : solutionParagraph.getLines()) {
 			String item = itemDS.getLine();
 			count = 1;
+			item = item.replace(" ","" );
+			for(int i=1;i<item.length();i++){
+				if(item.charAt(i)=='*'){
+					try{
+						Integer.parseInt(item.substring(i-1, i));
+					}catch(NumberFormatException e){
+					throw new ParseErrorException(itemDS,
+							ParseErrorMessage.STAR_IN_SITE_NAME, item);
+					}	
+				}
+			}
 			result = item.split("\\*");
 			int length = result.length;
 			result[0] = result[0].trim();

@@ -143,7 +143,7 @@ public final class PerturbationsBuilder {
 		return null;
 	}
 	
-	private AbstractModification convert(PerturbationModification modelModification) throws DocumentFormatException {
+	private AbstractModification convert(PerturbationModification modelModification) throws DocumentFormatException, ParseErrorException {
 		switch (modelModification.getType()) {
 		case RATE: {
 			return this.convert((ModelRateModification)modelModification);

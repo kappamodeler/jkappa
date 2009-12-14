@@ -57,12 +57,12 @@ public final class AgentFactory {
 				listAgent.add(cagent);
 				while (agent.hasMoreTokens()) {
 					site = agent.nextToken().trim(); // Site name or State name.
-					cagent.addSite(parseSite(site, map)); // <-------Agent
+					cagent.addCorrectSite(parseSite(site, map)); // <-------Agent
 				}
 			} else {
 				if (cagent == null)
 					throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_AGENT_NAME, ccomp);
-				cagent.addSite(parseSite(ccomp, map)); // <------Agent
+				cagent.addCorrectSite(parseSite(ccomp, map)); // <------Agent
 			}
 		}
 		if (!map.isEmpty()) {
@@ -96,6 +96,10 @@ public final class AgentFactory {
 			throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_SITE_NAME, line);
 
 		final String siteName = line;
+		
+		if(siteName.contains("*")){
+			throw new ParseErrorException(ParseErrorMessage.UNEXPECTED_SITE_NAME, line);
+		}
 		ModelSite csite = new ModelSite(siteName);
 
 		if (state != null)

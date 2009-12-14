@@ -32,7 +32,7 @@ public final class RuleBuilder {
 		return result;
 	}
 	
-	public final Rule convert(ModelRule abstractRule) {
+	public final Rule convert(ModelRule abstractRule) throws ParseErrorException {
 		String name = abstractRule.getName();
 		List<ModelAgent> lhs = abstractRule.getLHS();
 		List<ModelAgent> rhs = abstractRule.getRHS();
