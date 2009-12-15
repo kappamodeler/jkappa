@@ -379,7 +379,12 @@ public final class Simulator implements SimulatorInterface {
 				}
 				liveDataStreamer.addNewDataPoint(currentEventNumber,
 						currentTime);
-			}			
+			}	
+			if(clock.isEndSimulation(currentTime, currentEventNumber)
+					){
+				simulationData.checkOutputFinalState(currentTime);
+				
+			}
 			if (isCalculateObs
 					&& simulationData.getSimulationArguments()
 							.getReportExactSampleTime()) {
@@ -446,7 +451,12 @@ public final class Simulator implements SimulatorInterface {
 				clashesNumber++;
 				maxClashes++;
 			}
-
+			if(!clock.isEndSimulation(currentTime, currentEventNumber)
+					&& maxClashes > simulationData.getSimulationArguments()
+					.getMaxClashes()){
+				simulationData.checkOutputFinalState(currentTime);
+				
+			}
 
 
 			if (isCalculateObs
@@ -462,7 +472,6 @@ public final class Simulator implements SimulatorInterface {
 		liveDataStreamer.stop();
 		simulatorStatus.setStatusMessage(STATUS_WRAPPING);
 
-		simulationData.checkOutputFinalState(currentTime);
 		simulationData.getKappaSystem().getObservables().calculateObsLast(
 				currentTime, currentEventNumber);
 		clock.setTimeLength(currentTime);
