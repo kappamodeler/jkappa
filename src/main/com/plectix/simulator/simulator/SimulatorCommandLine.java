@@ -259,7 +259,11 @@ public final class SimulatorCommandLine {
 		}
 		
 		if (hasOption(SimulatorOption.REPORT_EXACT_SAMPLE_TIME)) {
-			simulationArguments.setObsExactSample(true);
+			simulationArguments.setReportExactSampleTime(true);
+		}
+
+		if (hasOption(SimulatorOption.REPORT_AFTER_SAMPLE_TIME)) {
+			simulationArguments.setReportExactSampleTime(false);
 		}
 
 		if (hasOption(SimulatorOption.LIVE_DATA_POINTS)) {

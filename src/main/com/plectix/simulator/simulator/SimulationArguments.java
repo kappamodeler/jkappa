@@ -98,7 +98,7 @@ public final class SimulationArguments {
 	private boolean runQualitativeCompression = false;
 	
 	private boolean allowIncompleteSubstance = false;
-	private boolean obsExactSample = false;
+	private boolean reportExactSampleTime = true;
 	
 	public SimulationArguments() {
 		super();
@@ -826,11 +826,11 @@ public final class SimulationArguments {
 		return allowIncompleteSubstance;
 	}
 
-	public void setObsExactSample(boolean obsExactSample) {
-		this.obsExactSample = obsExactSample ;
+	public void setReportExactSampleTime(boolean reportExactSampleTime) {
+		this.reportExactSampleTime = reportExactSampleTime ;
 	}
 
-	public boolean getObsExactSample() {
-		return obsExactSample ;
+	public boolean getReportExactSampleTime() {
+		return reportExactSampleTime ;
 	}
 }

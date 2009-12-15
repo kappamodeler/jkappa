@@ -143,7 +143,8 @@ public enum SimulatorOption {
 	LIVE_DATA_INTERVAL("live_data_interval", true, "Time interval to update live data in milliseconds (default: -1)"),
 	LIVE_DATA_POINTS("live_data_points", true, "Approximate number of data points to report live (default: 500)"),
 	ALLOW_INCOMPLETE_SUBSTANCE("allow_incomplete_substance", false, "AllowIncompleteSubstance"), 
-	REPORT_EXACT_SAMPLE_TIME("report_exact_sample_time",false,"Report observables as exact sample time")
+	REPORT_EXACT_SAMPLE_TIME("report_exact_sample_time",false,"Report observables at exact sample time"),
+	REPORT_AFTER_SAMPLE_TIME("report_after_sample_time",false,"Report observables at first event after sample time")
 	;
 
 	private String shortName = null;

@@ -382,7 +382,7 @@ public final class Simulator implements SimulatorInterface {
 			}			
 			if (isCalculateObs
 					&& simulationData.getSimulationArguments()
-							.getObsExactSample()) {
+							.getReportExactSampleTime()) {
 				simulationData.getKappaSystem().getObservables().calculateExactSampleObs(
 						currentTime, currentEventNumber,
 						simulationData.getSimulationArguments().isTime());
@@ -451,7 +451,7 @@ public final class Simulator implements SimulatorInterface {
 
 			if (isCalculateObs
 					&& !simulationData.getSimulationArguments()
-							.getObsExactSample()) {
+							.getReportExactSampleTime()) {
 				simulationData.getKappaSystem().getObservables().calculateObs(
 						currentTime, currentEventNumber,
 						simulationData.getSimulationArguments().isTime());
