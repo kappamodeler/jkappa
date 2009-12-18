@@ -159,15 +159,22 @@ public class Observables {
 		if (isTime) {
 			if (time < timeNext)
 				return;
+			
+			while (time >= timeNext) {
+				updateLastValueAll();
+				calculateAll(false);
+				addToCountTimeList(timeNext, count);
+				timeNext += timeSampleMin;
+			}
+			
 		} else {
 			if (count < timeNext)
 				return;
-		}
-		while (time >= timeNext) {
 			updateLastValueAll();
 			calculateAll(false);
 			addToCountTimeList(timeNext, count);
 			timeNext += timeSampleMin;
+			
 		}
 	}
 

@@ -61,7 +61,8 @@ public final class Simulator implements SimulatorInterface {
 	private int currentIterationNumber = 0;
 
 	private final SimulationData simulationData = new SimulationData();
-	private final ConsoleOutputManager consoleOutputManager = new ConsoleOutputManager(simulationData);
+	private final ConsoleOutputManager consoleOutputManager = new ConsoleOutputManager(
+			simulationData);
 	private final SimulatorStatus simulatorStatus = new SimulatorStatus();
 	private final SimulatorResultsData simulatorResultsData = new SimulatorResultsData();
 	private final LiveDataStreamer liveDataStreamer = new LiveDataStreamer();
@@ -139,7 +140,8 @@ public final class Simulator implements SimulatorInterface {
 	}
 
 	private final void endMerge(PlxTimer timer) {
-		simulationData.getClock().stopTimer(InfoType.OUTPUT, timer, "-Merge stories:");
+		simulationData.getClock().stopTimer(InfoType.OUTPUT, timer,
+				"-Merge stories:");
 	}
 
 	private final void endSimulation(InfoType outputType, boolean noRulesLeft,
@@ -159,13 +161,16 @@ public final class Simulator implements SimulatorInterface {
 		}
 	}
 
-	public final void reInitializeSimulationData() throws RuntimeException, SimulationDataFormatException, IOException {
+	public final void reInitializeSimulationData() throws RuntimeException,
+			SimulationDataFormatException, IOException {
 		synchronized (statusLock) {
 			currentTime = 0.0;
 		}
-		
-		consoleOutputManager.addAdditionalInfo(InfoType.INFO, "-Reset simulation data.");
-		consoleOutputManager.addAdditionalInfo(InfoType.INFO, "-Initialization...");
+
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
+				"-Reset simulation data.");
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
+				"-Initialization...");
 
 		simulationData.clear();
 		this.readInputKappaFile();
@@ -173,28 +178,35 @@ public final class Simulator implements SimulatorInterface {
 	}
 
 	/**
-	 * This method only reads Kappa File and builds the KappaSystem object
-	 * We should be able to run it independently 
+	 * This method only reads Kappa File and builds the KappaSystem object We
+	 * should be able to run it independently
+	 * 
 	 * @throws RuntimeException
 	 * @throws SimulationDataFormatException
 	 * @throws IOException
 	 */
 	// TODO add it's own timer and console message
-	private void readInputKappaFile() throws RuntimeException, SimulationDataFormatException, IOException {
+	private void readInputKappaFile() throws RuntimeException,
+			SimulationDataFormatException, IOException {
 		PlxTimer readingKappaTimer = new PlxTimer();
 		readingKappaTimer.startTimer();
-		
+
 		simulatorStatus.setStatusMessage(STATUS_READING_KAPPA);
-		consoleOutputManager.addAdditionalInfo(InfoType.INFO,"--Computing initial state");
-		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
-		
-		simulationData.getClock().stopTimer(InfoType.OUTPUT, readingKappaTimer, "-Reading Kappa input:");
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
+				"--Computing initial state");
+		(new SimulationDataReader(simulationData))
+				.readSimulationFile(InfoType.OUTPUT);
+
+		simulationData.getClock().stopTimer(InfoType.OUTPUT, readingKappaTimer,
+				"-Reading Kappa input:");
 	}
-	
+
 	private void loadSimulationArguments(SimulatorInputData simulatorInputData) {
-		SimulationArguments simulationArguments = simulatorInputData.getSimulationArguments();
-		
-		simulationData.setConsolePrintStream(simulatorInputData.getPrintStream());
+		SimulationArguments simulationArguments = simulatorInputData
+				.getSimulationArguments();
+
+		simulationData.setConsolePrintStream(simulatorInputData
+				.getPrintStream());
 		if (simulationArguments.isNoDumpStdoutStderr()) {
 			consoleOutputManager.setPrintStream(null);
 		}
@@ -216,24 +228,26 @@ public final class Simulator implements SimulatorInterface {
 			}
 		}
 
-		simulationData.setSimulationArguments(InfoType.OUTPUT, simulatorInputData.getSimulationArguments());
+		simulationData.setSimulationArguments(InfoType.OUTPUT,
+				simulatorInputData.getSimulationArguments());
 	}
-	
-	// TODO 
+
+	// TODO
 	private void initializeKappaSystem() {
 		PlxTimer initializationTimer = new PlxTimer();
 		initializationTimer.startTimer();
-		
+
 		simulatorStatus.setStatusMessage(STATUS_INITIALIZING);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
-		
-		simulationData.getClock().stopTimer(InfoType.OUTPUT, initializationTimer, "-Initialization:");
+
+		simulationData.getClock().stopTimer(InfoType.OUTPUT,
+				initializationTimer, "-Initialization:");
 	}
-	
+
 	private void outputCurrentSimulationDataToXML() throws Exception {
 		(new SimulationDataXMLWriter(simulationData)).outputXMLData();
 	}
-	
+
 	private void checkAndOutputMemory() {
 		PeakMemoryUsage peakMemoryUsage = MemoryUtil.getPeakMemoryUsage();
 		if (peakMemoryUsage != null) {
@@ -245,31 +259,31 @@ public final class Simulator implements SimulatorInterface {
 									.getMonitorPeakMemory() + " milliseconds]");
 		}
 	}
-	
-	private boolean hasNoNeedToRunAnything(SimulationArguments simulationArguments) {
+
+	private boolean hasNoNeedToRunAnything(
+			SimulationArguments simulationArguments) {
 		return simulationArguments.isGenereteMap()
-			|| (simulationArguments.getSimulationType() == SimulationType.CONTACT_MAP)
-			|| simulationArguments.debugModeIsOn();
+				|| (simulationArguments.getSimulationType() == SimulationType.CONTACT_MAP)
+				|| simulationArguments.debugModeIsOn();
 	}
-	
+
 	public final void run(SimulatorInputData simulatorInputData)
 			throws Exception {
 		// add info about JSIM:
 		consoleOutputManager.addAdditionalInfo(InfoType.INFO, INTRO_MESSAGE);
-		
+
 		this.loadSimulationArguments(simulatorInputData);
-		
+
 		this.readInputKappaFile();
 		this.initializeKappaSystem();
-		
-		
 
 		if (simulationData.getSimulationArguments().isCompile()) {
 			consoleOutputManager.outputData();
 			return;
 		}
 
-		if (!this.hasNoNeedToRunAnything(simulationData.getSimulationArguments())) {
+		if (!this.hasNoNeedToRunAnything(simulationData
+				.getSimulationArguments())) {
 			simulationData.getClock().setClockStamp(System.currentTimeMillis());
 			if (simulationData.getSimulationArguments().storiesModeIsOn()) {
 				runStories();
@@ -283,7 +297,7 @@ public final class Simulator implements SimulatorInterface {
 
 		// Output XML data:
 		this.outputCurrentSimulationDataToXML();
-		
+
 		simulatorStatus.setStatusMessage(STATUS_IDLE);
 	}
 
@@ -293,7 +307,7 @@ public final class Simulator implements SimulatorInterface {
 		PlxTimer simulationTimer = new PlxTimer();
 		simulationTimer.startTimer();
 		SimulationClock clock = simulationData.getClock();
-		
+
 		int seed = simulationData.getSimulationArguments().getSeed();
 		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
 				"--Seeding random number generator with given seed "
@@ -322,7 +336,8 @@ public final class Simulator implements SimulatorInterface {
 			if (Thread.interrupted()) {
 				// TODO: Do any necessary clean-up and collect data we can
 				// return
-				consoleOutputManager.println("Simulation is interrupted because the thread is cancelled");
+				consoleOutputManager
+						.println("Simulation is interrupted because the thread is cancelled");
 				simulatorResultsData.setCancelled(true);
 				simulatorStatus.setProgress(1.0);
 				break;
@@ -335,7 +350,7 @@ public final class Simulator implements SimulatorInterface {
 			simulationData.getKappaSystem().checkPerturbation(currentTime);
 			simulationData.getKappaSystem().updateRuleActivities();
 			Rule rule = simulationData.getKappaSystem().getRandomRule();
-			
+
 			if (rule == null) {
 				List<ComplexPerturbation<?, ?>> perturbations = simulationData
 						.getKappaSystem().getPerturbations();
@@ -347,7 +362,8 @@ public final class Simulator implements SimulatorInterface {
 					if (perturbation.getCondition() instanceof TimeCondition) {
 						// TODO awful type cast
 						ComplexPerturbation<TimeCondition, ?> castedPerturbation = (ComplexPerturbation<TimeCondition, ?>) perturbation;
-						double conditionTimeLimit = castedPerturbation.getCondition().getTimeLimit();
+						double conditionTimeLimit = castedPerturbation
+								.getCondition().getTimeLimit();
 						if (conditionTimeLimit > currentTime
 								&& conditionTimeLimit < tmpTime) {
 							tmpTime = conditionTimeLimit;
@@ -379,18 +395,27 @@ public final class Simulator implements SimulatorInterface {
 				}
 				liveDataStreamer.addNewDataPoint(currentEventNumber,
 						currentTime);
-			}	
-			if(clock.isEndSimulation(currentTime, currentEventNumber)
-					){
-				simulationData.checkOutputFinalState(currentTime);
-				
+			}
+			if (clock.isEndSimulation(currentTime, currentEventNumber)) {
+				if (simulationData.getSimulationArguments().isTime()) {
+					simulationData.checkOutputFinalState(simulationData
+							.getSimulationArguments().getTimeLength());
+				}
+				else{
+					simulationData.checkOutputFinalState(currentTime);
+				}
+
 			}
 			if (isCalculateObs
 					&& simulationData.getSimulationArguments()
-							.getReportExactSampleTime()) {
-				simulationData.getKappaSystem().getObservables().calculateExactSampleObs(
-						currentTime, currentEventNumber,
-						simulationData.getSimulationArguments().isTime());
+							.getReportExactSampleTime()
+					&& simulationData.getSimulationArguments().isTime()) {
+				simulationData.getKappaSystem().getObservables()
+						.calculateExactSampleObs(
+								currentTime,
+								currentEventNumber,
+								simulationData.getSimulationArguments()
+										.isTime());
 			}
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Rule: " + rule.getName());
@@ -442,8 +467,7 @@ public final class Simulator implements SimulatorInterface {
 					}
 				}
 			} else {
-				consoleOutputManager.addAdditionalInfo(
-						InfoType.INTERNAL,
+				consoleOutputManager.addAdditionalInfo(InfoType.INTERNAL,
 						"Application of rule exp is clashing");
 				if (LOGGER.isDebugEnabled()) {
 					LOGGER.debug("Clash");
@@ -451,17 +475,17 @@ public final class Simulator implements SimulatorInterface {
 				clashesNumber++;
 				maxClashes++;
 			}
-			if(!clock.isEndSimulation(currentTime, currentEventNumber)
+			if (!clock.isEndSimulation(currentTime, currentEventNumber)
 					&& maxClashes > simulationData.getSimulationArguments()
-					.getMaxClashes()){
+							.getMaxClashes()) {
 				simulationData.checkOutputFinalState(currentTime);
-				
+
 			}
 
-
 			if (isCalculateObs
-					&& !simulationData.getSimulationArguments()
-							.getReportExactSampleTime()) {
+					&& (!simulationData.getSimulationArguments()
+							.getReportExactSampleTime() || !simulationData
+							.getSimulationArguments().isTime())) {
 				simulationData.getKappaSystem().getObservables().calculateObs(
 						currentTime, currentEventNumber,
 						simulationData.getSimulationArguments().isTime());
@@ -489,11 +513,10 @@ public final class Simulator implements SimulatorInterface {
 
 		InfoType additionalInfoOutputType = simulationData
 				.getSimulationArguments().getOutputTypeForAdditionalInfo();
-		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
-				"-Simulation...");
+		consoleOutputManager.addAdditionalInfo(InfoType.INFO, "-Simulation...");
 
 		SimulationClock clock = simulationData.getClock();
-		
+
 		clock.resetBar();
 		PlxTimer timerAllStories = new PlxTimer();
 		timerAllStories.startTimer();
@@ -524,14 +547,14 @@ public final class Simulator implements SimulatorInterface {
 			long max_clash = 0;
 			simulationData.getStoriesAgentTypesStorage().setIteration(
 					currentIterationNumber);
-			while (!clock.isEndSimulation(currentTime,
-					currentEventNumber)
+			while (!clock.isEndSimulation(currentTime, currentEventNumber)
 					&& max_clash <= simulationData.getSimulationArguments()
 							.getMaxClashes()) {
 				if (Thread.interrupted()) {
 					// TODO: Do any necessary clean-up and collect data we can
 					// return
-					consoleOutputManager.println("Simulation is interrupted because the thread is cancelled");
+					consoleOutputManager
+							.println("Simulation is interrupted because the thread is cancelled");
 					simulatorResultsData.setCancelled(true);
 					simulatorStatus.setProgress(1.0);
 					break;
@@ -613,7 +636,8 @@ public final class Simulator implements SimulatorInterface {
 			if (simulatorResultsData.isCancelled() || Thread.interrupted()) {
 				// TODO: Do any necessary clean-up and collect data we can
 				// return
-				consoleOutputManager.println("Simulation is interrupted because the thread is cancelled");
+				consoleOutputManager
+						.println("Simulation is interrupted because the thread is cancelled");
 				simulatorResultsData.setCancelled(true);
 				simulatorStatus.setProgress(1.0);
 				break;
