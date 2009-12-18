@@ -43,10 +43,10 @@ public final class KappaSystem implements KappaSystemInterface {
 	private WeightedItemSelector<Rule> rules = new SkipListSelector<Rule>();
 	private List<Rule> orderedRulesList = new ArrayList<Rule>();
 	private Stories stories = null;
-	private List<ComplexPerturbation<?,?>> perturbations = null;
+	private List<ComplexPerturbation<?, ?>> perturbations = null;
 	private Observables observables = new Observables();
 	private SolutionInterface solution;// = new CSolution(); // soup of initial
-										// components
+	// components
 	private final ContactMap contactMap = new ContactMap();
 	private AllSubViewsOfAllAgentsInterface subViews;
 	private InfluenceMap influenceMap;
@@ -90,7 +90,10 @@ public final class KappaSystem implements KappaSystemInterface {
 		if ((args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP)
 				|| args.createSubViews()
 				|| args.isDeadRulesShow()
-				|| args.isActivationMap() || args.isInhibitionMap()) {
+				|| args.isActivationMap()
+				|| args.isInhibitionMap()
+				|| args.runQualitativeCompression()
+				|| args.runQuantitativeCompression()) {
 			// contactMap.initAbstractSolution();
 			// contactMap.constructAbstractRules(rules);
 			// contactMap.constructAbstractContactMap();
@@ -99,7 +102,10 @@ public final class KappaSystem implements KappaSystemInterface {
 					.getMode() == ContactMapMode.MODEL)
 					|| args.createSubViews()
 					|| args.isDeadRulesShow()
-					|| args.isActivationMap() || args.isInhibitionMap()) {
+					|| args.isActivationMap()
+					|| args.isInhibitionMap()
+					|| args.runQualitativeCompression()
+					|| args.runQuantitativeCompression()) {
 
 				subViews = new MainSubViews();
 				subViews.build(solution, rules);
@@ -123,8 +129,10 @@ public final class KappaSystem implements KappaSystemInterface {
 						contactMap, subViews.getAgentNameToAgent());
 				influenceMap.fillActivatedInhibitedRules(rules, this,
 						observables);
-				simulationData.getClock().stopTimer(outputType, timer, "--Abstraction:");
-				simulationData.addInfo(InfoType.INFO, "--influence map computed");
+				simulationData.getClock().stopTimer(outputType, timer,
+						"--Abstraction:");
+				simulationData.addInfo(InfoType.INFO,
+						"--influence map computed");
 			}
 
 			if (args.createLocalViews() || args.useEnumerationOfSpecies()) {
@@ -182,10 +190,12 @@ public final class KappaSystem implements KappaSystemInterface {
 			rule.positiveUpdate(rule.getActivatedRules(), rule
 					.getActivatedObservable());
 		} else {
-			rule.positiveUpdate(getRules(), observables.getConnectedComponentList());
+			rule.positiveUpdate(getRules(), observables
+					.getConnectedComponentList());
 		}
 
-		List<Agent> freeAgents = UpdatesPerformer.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
+		List<Agent> freeAgents = UpdatesPerformer
+				.doNegativeUpdateForDeletedAgents(rule, currentInjectionsList);
 		doPositiveUpdateForDeletedAgents(freeAgents);
 	}
 
@@ -249,7 +259,7 @@ public final class KappaSystem implements KappaSystemInterface {
 	 */
 	public final void checkPerturbation(double currentTime) {
 		if (perturbations.size() != 0) {
-			for (ComplexPerturbation<?,?> pb : perturbations) {
+			for (ComplexPerturbation<?, ?> pb : perturbations) {
 				AbstractModification modification = pb.getModification();
 				ConditionInterface condition = pb.getCondition();
 				if (condition.getType() != ConditionType.SPECIES) {
@@ -450,7 +460,8 @@ public final class KappaSystem implements KappaSystemInterface {
 	 * com.plectix.simulator.simulator.KappaSystemInterface#setPerturbations
 	 * (java.util.List)
 	 */
-	public final void setPerturbations(List<ComplexPerturbation<?,?>> perturbations) {
+	public final void setPerturbations(
+			List<ComplexPerturbation<?, ?>> perturbations) {
 		this.perturbations = perturbations;
 	}
 
@@ -504,7 +515,7 @@ public final class KappaSystem implements KappaSystemInterface {
 		return rules.select();
 	}
 
-	private List<Rule> getInfinitiveRules(){
+	private List<Rule> getInfinitiveRules() {
 		List<Rule> infinitRules = new ArrayList<Rule>();
 		for (Rule rule : orderedRulesList) {
 			if (rule.hasInfiniteRate() && rule.getActivity() > 0) {
@@ -515,6 +526,7 @@ public final class KappaSystem implements KappaSystemInterface {
 		}
 		return infinitRules;
 	}
+
 	public void updateRuleActivities() {
 		for (Rule rule : orderedRulesList) {
 			double oldActivity = rule.getActivity();

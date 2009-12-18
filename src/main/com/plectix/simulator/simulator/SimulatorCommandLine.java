@@ -63,7 +63,7 @@ public final class SimulatorCommandLine {
 		return Double.parseDouble(getValue(option));
 	}
 	
-	private final SimulationArguments createSimulationArguments() {
+	private final SimulationArguments createSimulationArguments() throws ParseException {
 		SimulationArguments simulationArguments = new SimulationArguments();
 
 		simulationArguments.setCommandLineString(commandLineString);
@@ -275,7 +275,7 @@ public final class SimulatorCommandLine {
 		String fileName = null;
 		
 		if (hasOption(SimulatorOption.STORIFY)) {
-			fileName = getValue(SimulatorOption.STORIFY);
+			fileName = setNewFileName(fileName,getValue(SimulatorOption.STORIFY));
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.STORIFY);
 			option = true;
 		}
@@ -283,7 +283,7 @@ public final class SimulatorCommandLine {
 	
 		if (!option && (hasOption(SimulatorOption.SIMULATIONFILE))) {
 			option = true;
-			fileName = getValue(SimulatorOption.SIMULATIONFILE);
+			fileName = setNewFileName(fileName,getValue(SimulatorOption.SIMULATIONFILE));
 			if (hasOption(SimulatorOption.SNAPSHOT_TIME)) {
 				option = true;
 				try {
@@ -298,7 +298,7 @@ public final class SimulatorCommandLine {
 		if (hasOption(SimulatorOption.COMPILE)) {
 			if (!option) {
 				option = true;
-				fileName = getValue(SimulatorOption.COMPILE);
+				fileName = setNewFileName(fileName,getValue(SimulatorOption.COMPILE));
 			} else {
 				option = false;
 			}
@@ -308,7 +308,7 @@ public final class SimulatorCommandLine {
 		if (hasOption(SimulatorOption.GENERATE_MAP)) {
 			if (!option) {
 				option = true;
-				fileName = getValue(SimulatorOption.GENERATE_MAP);
+				fileName = setNewFileName(fileName,getValue(SimulatorOption.GENERATE_MAP));
 			} else {
 				option = false;
 			}
@@ -327,7 +327,7 @@ public final class SimulatorCommandLine {
 		if (hasOption(SimulatorOption.CONTACT_MAP)) {
 			if (!option) {
 				option = true;
-				fileName = getValue(SimulatorOption.CONTACT_MAP);
+				fileName = setNewFileName(fileName,getValue(SimulatorOption.CONTACT_MAP));
 			} else {
 				option = false;
 			}
@@ -335,6 +335,28 @@ public final class SimulatorCommandLine {
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.CONTACT_MAP);
 		}
 		
+		if (hasOption(SimulatorOption.QUALITATIVE_COMPRESSION)) {
+			if (!option) {
+				option = true;
+				fileName = setNewFileName(fileName,getValue(SimulatorOption.QUALITATIVE_COMPRESSION));
+				simulationArguments.setRunQualitativeCompression(true);
+				
+			} else {
+				option = false;
+			}
+			simulationArguments.setSimulationType(SimulationArguments.SimulationType.CONTACT_MAP);
+		}
+		
+		if (hasOption(SimulatorOption.QUANTITATIVE_COMPRESSION)) {
+			if (!option) {
+				option = true;
+				fileName = setNewFileName(fileName,getValue(SimulatorOption.QUANTITATIVE_COMPRESSION));
+				simulationArguments.setRunQuantitativeCompression(true);
+			} else {
+				option = false;
+			}
+			simulationArguments.setSimulationType(SimulationArguments.SimulationType.CONTACT_MAP);
+		}
 		
 		if (hasOption(SimulatorOption.COMPUTE_LOCAL_VIEWS)) {
 			simulationArguments.setCreateLocalViews(true);
@@ -379,5 +401,12 @@ public final class SimulatorCommandLine {
 		simulationArguments.setForwardOnly(hasOption(SimulatorOption.FORWARD));
 		
 		return simulationArguments;
+	}
+
+	private String setNewFileName(String fileName, String value) throws ParseException {
+		if(fileName!=null){
+			throw new ParseException("two input files!");
+		}
+		return value;
 	}
 }

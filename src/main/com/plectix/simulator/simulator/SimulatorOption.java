@@ -144,7 +144,9 @@ public enum SimulatorOption {
 	LIVE_DATA_POINTS("live_data_points", true, "Approximate number of data points to report live (default: 500)"),
 	ALLOW_INCOMPLETE_SUBSTANCE("allow_incomplete_substance", false, "AllowIncompleteSubstance"), 
 	REPORT_EXACT_SAMPLE_TIME("report_exact_sample_time",false,"Report observables at exact sample time"),
-	REPORT_AFTER_SAMPLE_TIME("report_after_sample_time",false,"Report observables at first event after sample time")
+	REPORT_AFTER_SAMPLE_TIME("report_after_sample_time",false,"Report observables at first event after sample time"),
+	QUALITATIVE_COMPRESSION("qualitative_compression",true,"execute qualitative compression"),
+	QUANTITATIVE_COMPRESSION("quantitative_compression",true,"execute quantitative compression")
 	;
 
 	private String shortName = null;
