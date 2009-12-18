@@ -350,17 +350,24 @@
     </target>
 
 
-	<!-- ################################### proguard target  ################################### -->
+	<!-- ################################### proguard targets  ################################### -->
 
 	<property name="proguard.home" value="3rd.party/proguard4.5beta2" />
 
     <taskdef resource="proguard/ant/task.properties" classpath="${proguard.home}/lib/proguard.jar" />
 
     <target name="proguard" depends="package" description="Runs the 3rd party proguard application to shrink, optimize, and obfuscate the project jar file. Depends on: package">
-		<echo>Running proguard</echo>
+		<echo>Running proguard for shrinking, optimizing, and obfuscation</echo>
 	    <proguard configuration="config/jsim-obfuscation-proguard4.5beta2-config.pro"/>
     </target>
 	
+    <target name="jsim-all-jar" depends="package" description="Runs the 3rd party proguard application to prepare a jar file with all libs JSIM needs. Depends on: package">
+		<echo>Running proguard to prepare a jar file with all libs JSIM needs</echo>
+	    <proguard configuration="config/jsim-all-proguard4.5beta2-config.pro"/>
+		<move file="${dist.dir}/jsim-all.jar" tofile="${dist.dir}/jsim-all-${scm.name}-${revision.id}.jar"/>
+    </target>
+	
+
 
 	<!-- ################################### release at S3 target  ################################### -->
 
