@@ -400,8 +400,7 @@ public final class Simulator implements SimulatorInterface {
 				if (simulationData.getSimulationArguments().isTime()) {
 					simulationData.checkOutputFinalState(simulationData
 							.getSimulationArguments().getTimeLength());
-				}
-				else{
+				} else {
 					simulationData.checkOutputFinalState(currentTime);
 				}
 
@@ -496,11 +495,19 @@ public final class Simulator implements SimulatorInterface {
 		liveDataStreamer.stop();
 		simulatorStatus.setStatusMessage(STATUS_WRAPPING);
 
-		simulationData.getKappaSystem().getObservables().calculateObsLast(
-				currentTime, currentEventNumber);
-		clock.setTimeLength(currentTime);
-		clock.setEvent(currentEventNumber);
+		// simulationData.getKappaSystem().getObservables().calculateObsLast(
+		// currentTime, currentEventNumber);
+		if (simulationData.getSimulationArguments().isTime()
+				&& currentTime > simulationData.getSimulationArguments()
+						.getTimeLength()) {
+			clock.setTimeLength(simulationData.getSimulationArguments()
+					.getTimeLength());
+			clock.setEvent(currentEventNumber - 1);
 
+		} else {
+			clock.setTimeLength(currentTime);
+			clock.setEvent(currentEventNumber);
+		}
 		endSimulation(InfoType.OUTPUT, isEndRules, simulationTimer);
 	}
 
