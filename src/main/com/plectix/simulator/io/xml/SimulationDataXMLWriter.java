@@ -54,7 +54,7 @@ public class SimulationDataXMLWriter {
 		KappaSystem kappaSystem = simulationData.getKappaSystem();
 		
 		writer.writeStartElement("RuleSet");
-		writer.writeAttribute("Name", "Original");
+		writer.writeAttribute("Name", "ContactMap");
 		int size = kappaSystem.getRules().size();
 		InfluenceMapXMLWriter.addRulesToXML(size, writer, size, 
 				simulationArguments.isOcamlStyleNameingInUse(), kappaSystem, false);
