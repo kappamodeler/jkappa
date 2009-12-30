@@ -14,8 +14,6 @@ import com.plectix.simulator.staticanalysis.stories.ActionOfAEvent;
  * @see CActionType
  */
 public class DefaultAction extends Action {
-	private final Agent targetAgent;
-
 	/**
 	 * Constructor of CDefaultAction.<br>
 	 * <br>
@@ -32,14 +30,13 @@ public class DefaultAction extends Action {
 			ConnectedComponentInterface leftHandSideComponent, 
 			ConnectedComponentInterface rightHandSideComponent) {
 		super(rule, sourceAgent, targetAgent, leftHandSideComponent, rightHandSideComponent);
-		this.targetAgent = targetAgent;
 		setType(ActionType.NONE);
 	}
 
 	@Override
 	public final void doAction(RuleApplicationPoolInterface ruleApplicationPool, 
 			Injection injection, ActionObserverInteface eventContainer, SimulationData simulationData) {
-		int agentIdInCC = getAgentIdInCCBySideId(targetAgent);
+		int agentIdInCC = getAgentIdInCCBySideId(this.getTargetAgent());
 		Agent agentFromInSolution = injection
 				.getAgentFromImageById(agentIdInCC);
 		

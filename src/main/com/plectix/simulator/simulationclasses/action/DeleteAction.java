@@ -20,9 +20,6 @@ import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageExceptio
  * @see ActionType
  */
 public class DeleteAction extends Action {
-	private final Rule rule;
-	private final Agent deletedAgent;
-
 	/**
 	 * Constructor of CDeleteAction.<br>
 	 * <br>
@@ -34,16 +31,14 @@ public class DeleteAction extends Action {
 	 * 
 	 * @param rule
 	 *            given rule
-	 * @param deletedAgent
+	 * @param sourceAgent
 	 *            given agent from left handSide rule
 	 * @param leftHandSideComponent
 	 *            given connected component, contains <b>fromAgent</b>
 	 */
-	public DeleteAction(Rule rule, Agent deletedAgent,
+	public DeleteAction(Rule rule, Agent sourceAgent,
 			ConnectedComponentInterface leftHandSideComponent) {
-		super(rule, deletedAgent, null, leftHandSideComponent, null);
-		this.deletedAgent = deletedAgent;
-		this.rule = rule;
+		super(rule, sourceAgent, null, leftHandSideComponent, null);
 		setType(ActionType.DELETE);
 	}
 
@@ -52,7 +47,7 @@ public class DeleteAction extends Action {
 			Injection injection, ActionObserverInteface event,
 			SimulationData simulationData) throws StoryStorageException {
 
-		Agent agent = injection.getAgentFromImageById(deletedAgent
+		Agent agent = injection.getAgentFromImageById(this.getSourceAgent()
 				.getIdInConnectedComponent());
 		event.registerAgent(agent);
 
@@ -96,6 +91,7 @@ public class DeleteAction extends Action {
 
 
 	private final void checkAndAddSiteConnectedWithDeletedOne(Site siteToCheck) {
+		Rule rule = this.getRule();
 		for (Site site : rule.getSitesConnectedWithDeleted()) {
 			if (site == siteToCheck) {
 				return;
@@ -106,6 +102,7 @@ public class DeleteAction extends Action {
 
 	private final void checkAndRemoveSiteConnectedWithDeletedOne(
 			Site siteToCheck) {
+		Rule rule = this.getRule();
 		int size = rule.getSitesConnectedWithDeleted().size();
 		for (int i = 0; i < size; i++) {
 			if (rule.getSiteConnectedWithDeleted(i) == siteToCheck) {

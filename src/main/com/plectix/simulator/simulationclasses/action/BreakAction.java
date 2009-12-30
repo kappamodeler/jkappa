@@ -16,12 +16,6 @@ import com.plectix.simulator.staticanalysis.stories.storage.Event;
  * @see ActionType
  */
 public class BreakAction extends Action {
-	// These name are just as "first" and "second". In fact their 
-	// order doesn't play any role 
-	private final Site sourceSite;
-	private final Site targetSite;
-	private final Rule rule;
-
 	/**
 	 * Constructor of CBreakAction.<br>
 	 * <br>
@@ -48,9 +42,6 @@ public class BreakAction extends Action {
 	public BreakAction(Rule rule, Site siteFrom, Site siteTo,
 			ConnectedComponentInterface leftHandSideComponent, ConnectedComponentInterface rightHandSideComponent) {
 		super(rule, null, null, leftHandSideComponent, rightHandSideComponent);
-		this.rule = rule;
-		this.sourceSite = siteFrom;
-		this.targetSite = siteTo;
 		setActionApplicationSites(siteFrom, siteTo);
 		setType(ActionType.BREAK);
 	}
@@ -59,6 +50,9 @@ public class BreakAction extends Action {
 	public final void doAction(RuleApplicationPoolInterface pool, Injection injection,
 			ActionObserverInteface event, SimulationData simulationData) {
 		Agent agentFromInSolution;
+		Site sourceSite = this.getSourceSite();
+		Site targetSite = this.getTargetSite();
+		
 		int agentIdInCC = getAgentIdInCCBySideId(sourceSite.getParentAgent());
 		agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
 
@@ -95,6 +89,7 @@ public class BreakAction extends Action {
 
 
 	private final void addSiteToConnectedWithBroken(Site checkedSite) {
+		Rule rule = this.getRule();
 		for (Site site : rule.getSitesConnectedWithBroken()) {
 			if (site == checkedSite) {
 				return;

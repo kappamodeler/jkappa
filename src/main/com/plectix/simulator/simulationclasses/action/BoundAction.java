@@ -19,10 +19,6 @@ import com.plectix.simulator.staticanalysis.stories.storage.Event;
  * @see ActionType
  */
 public class BoundAction extends Action {
-	private final Site boundingSourceSite;
-	private final Site boundingTargetSite;
-	private final Rule rule;
-
 	/**
 	 * Constructor of CBoundAction.<br>
 	 * <br>
@@ -61,10 +57,7 @@ public class BoundAction extends Action {
 			ConnectedComponentInterface leftHandSideComponent,
 			ConnectedComponentInterface rightHandSideComponent) {
 		super(rule, null, null, leftHandSideComponent, rightHandSideComponent);
-		this.rule = rule;
-		boundingSourceSite = sourceSite;
-		boundingTargetSite = targetSite;
-		setActionApplicationSites(boundingSourceSite, boundingTargetSite);
+		setActionApplicationSites(sourceSite, targetSite);
 		setType(ActionType.BOUND);
 	}
 
@@ -74,9 +67,13 @@ public class BoundAction extends Action {
 			SimulationData simulationData) {
 		// TODO copypaste detected =(
 		Agent agentFromInSolution;
+		Site boundingTargetSite = this.getTargetSite();
+		Site boundingSourceSite = this.getSourceSite();
+		Rule parentRule = this.getRule();
+		
 		if (boundingSourceSite.getParentAgent().getIdInRuleHandside() > getAgentsFromConnectedComponent(
-				rule.getLeftHandSide()).size()) {
-			agentFromInSolution = rule.getAgentAdd(boundingSourceSite
+				parentRule.getLeftHandSide()).size()) {
+			agentFromInSolution = parentRule.getAgentAdd(boundingSourceSite
 					.getParentAgent());
 		} else {
 			int agentIdInCC = getAgentIdInCCBySideId(boundingSourceSite
@@ -92,13 +89,13 @@ public class BoundAction extends Action {
 
 		Agent agentToInSolution;
 		if (boundingTargetSite.getParentAgent().getIdInRuleHandside() > getAgentsFromConnectedComponent(
-				rule.getLeftHandSide()).size()) {
-			agentToInSolution = rule.getAgentAdd(boundingTargetSite
+				parentRule.getLeftHandSide()).size()) {
+			agentToInSolution = parentRule.getAgentAdd(boundingTargetSite
 					.getParentAgent());
 		} else {
 			int agentIdInCC = getAgentIdInCCBySideId(boundingTargetSite
 					.getParentAgent());
-			Injection inj = rule
+			Injection inj = parentRule
 					.getInjectionBySiteToFromLHS(boundingTargetSite);
 			agentToInSolution = inj.getAgentFromImageById(agentIdInCC);
 		}

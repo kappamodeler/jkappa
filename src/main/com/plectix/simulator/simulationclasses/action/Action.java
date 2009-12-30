@@ -35,20 +35,20 @@ public abstract class Action {
 	 * 
 	 * @param rule
 	 *            fixed rule
-	 * @param agentFrom
+	 * @param sourceAgent
 	 *            agent from left handSide of the rule
-	 * @param agentTo
+	 * @param targetAgent
 	 *            agent from right handSide of the rule
 	 * @param leftHandSideComponent
 	 *            given connected component, containing <b>fromAgent</b>
 	 * @param rightHandSideComponent
 	 *            given connected component, containing <b>toAgent</b>
 	 */
-	protected Action(Rule rule, Agent agentFrom, Agent agentTo,
+	protected Action(Rule rule, Agent sourceAgent, Agent targetAgent,
 			ConnectedComponentInterface leftHandSideComponent,
 			ConnectedComponentInterface rightHandSideComponent) {
-		this.sourceAgent = agentFrom;
-		this.targetAgent = agentTo;
+		this.sourceAgent = sourceAgent;
+		this.targetAgent = targetAgent;
 		this.rightHandSideComponent = rightHandSideComponent;
 		this.leftHandSideComponent = leftHandSideComponent;
 		this.rule = rule;

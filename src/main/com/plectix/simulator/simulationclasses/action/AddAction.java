@@ -20,8 +20,6 @@ import com.plectix.simulator.staticanalysis.stories.storage.WireHashKey;
  * @see ActionType
  */
 public class AddAction extends Action {
-	private final Agent addedAgent;
-
 	/**
 	 * Constructor of CAddAction.<br>
 	 * <br>
@@ -34,15 +32,14 @@ public class AddAction extends Action {
 	 * 
 	 * @param rule
 	 *            given rule
-	 * @param addedAgent
+	 * @param targetAgent
 	 *            given agent from right handSide rule
 	 * @param rightHandSideComponent
 	 *            given connected component, contains <b>toAgent</b>
 	 */
-	public AddAction(Rule rule, Agent addedAgent,
+	public AddAction(Rule rule, Agent targetAgent,
 			ConnectedComponentInterface rightHandSideComponent) {
-		super(rule, null, addedAgent, null, rightHandSideComponent);
-		this.addedAgent = addedAgent;
+		super(rule, null, targetAgent, null, rightHandSideComponent);
 		this.setType(ActionType.ADD);
 		this.createBound();
 	}
@@ -52,14 +49,15 @@ public class AddAction extends Action {
 			Injection injection, ActionObserverInteface event,
 			SimulationData simulationData) {
 
-		Agent newlyCreatedAgent = new Agent(addedAgent.getName(),
+		Agent targetAgent = this.getTargetAgent();
+		Agent newlyCreatedAgent = new Agent(targetAgent.getName(),
 				simulationData.getKappaSystem().generateNextAgentId());
 
 		event.registerAgent(newlyCreatedAgent);
 		event.addAtomicEvent(new WireHashKey(newlyCreatedAgent.getId(),
 				TypeOfWire.AGENT), null, ActionOfAEvent.MODIFICATION,
 				Event.AFTER_STATE);
-		for (Site site : addedAgent.getSites()) {
+		for (Site site : targetAgent.getSites()) {
 			Site newlyCreatedSite = new Site(site.getName());
 			newlyCreatedSite.setInternalState(new InternalState(site
 					.getInternalState().getName()));
@@ -70,13 +68,13 @@ public class AddAction extends Action {
 		getRightCComponent().addAgentFromSolutionForRHS(newlyCreatedAgent);
 		pool.addAgent(newlyCreatedAgent);
 
-		getRule().registerAddedAgent(addedAgent, newlyCreatedAgent);
+		getRule().registerAddedAgent(targetAgent, newlyCreatedAgent);
 	}
 
 	
 
 	private final void createBound() {
-		for (Site addedAgentSite : addedAgent.getSites()) {
+		for (Site addedAgentSite : this.getTargetAgent().getSites()) {
 			if (addedAgentSite.getLinkState().getConnectedSite() != null) {
 				getRule().addAction(
 						new BoundAction(getRule(), addedAgentSite,

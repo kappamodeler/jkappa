@@ -15,9 +15,6 @@ import com.plectix.simulator.staticanalysis.stories.storage.Event;
  * @see ActionType
  */
 public class ModifyAction extends Action {
-	private final Site targetSite;
-	private final String newInternalStateName;
-
 	/**
 	 * Constructor of CModifyAction.<br>
 	 * <br>
@@ -38,8 +35,6 @@ public class ModifyAction extends Action {
 	public ModifyAction(Rule rule, Site sourceSite, Site targetSite,
 			ConnectedComponentInterface leftHandSideComponent, ConnectedComponentInterface rightHandSideComponent) {
 		super(rule, null, null, leftHandSideComponent, rightHandSideComponent);
-		this.targetSite = targetSite;
-		this.newInternalStateName = targetSite.getInternalState().getName();
 		setActionApplicationSites(sourceSite, targetSite);
 		setType(ActionType.MODIFY);
 	}
@@ -50,14 +45,13 @@ public class ModifyAction extends Action {
 		/**
 		 * Done.
 		 */
-		int agentIdInCC = getAgentIdInCCBySideId(targetSite.getParentAgent());
+		int agentIdInCC = getAgentIdInCCBySideId(this.getTargetSite().getParentAgent());
 		Agent agentFromInSolution = injection.getAgentFromImageById(agentIdInCC);
-		Site injectedSite = agentFromInSolution.getSiteByName(targetSite
-				.getName());
+		Site injectedSite = agentFromInSolution.getSiteByName(this.getTargetSite().getName());
 
 		//event.setTypeById(simulationData.getStoriesAgentTypesStorage());
 		event.modifyAddSite(injectedSite, Event.BEFORE_STATE);
-		injectedSite.getInternalState().setName(newInternalStateName);
+		injectedSite.getInternalState().setName(this.getTargetSite().getInternalState().getName());
 		injection.addToChangedSites(injectedSite);
 
 		event.modifyAddSite( injectedSite, Event.AFTER_STATE);
