@@ -146,7 +146,8 @@ public enum SimulatorOption {
 	REPORT_EXACT_SAMPLE_TIME("report_exact_sample_time",false,"Report observables at exact sample time"),
 	REPORT_AFTER_SAMPLE_TIME("report_after_sample_time",false,"Report observables at first event after sample time"),
 	QUALITATIVE_COMPRESSION("qualitative_compression",true,"execute qualitative compression"),
-	QUANTITATIVE_COMPRESSION("quantitative_compression",true,"execute quantitative compression")
+	QUANTITATIVE_COMPRESSION("quantitative_compression",true,"execute quantitative compression"),
+	LIVE_DATA_CONSUMER_CLASSNAME("live_data_consumer_classname", true, "sets the class name for Live Data ConsumerClass"),
 	;
 
 	private String shortName = null;

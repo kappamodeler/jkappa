@@ -253,6 +253,10 @@ public final class SimulatorCommandLine {
 		if (hasOption(SimulatorOption.LIVE_DATA_INTERVAL)) {
 			simulationArguments.setLiveDataInterval(getIntValue(SimulatorOption.LIVE_DATA_INTERVAL));
 		}
+		
+		if (hasOption(SimulatorOption.LIVE_DATA_CONSUMER_CLASSNAME)) {
+			simulationArguments.setLiveDataConsumerClassname(getValue(SimulatorOption.LIVE_DATA_CONSUMER_CLASSNAME));
+		}
 
 		if (hasOption(SimulatorOption.ALLOW_INCOMPLETE_SUBSTANCE)) {
 			simulationArguments.setAllowIncompleteSubstance(true);
