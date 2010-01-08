@@ -7,3 +7,15 @@ com.plectix.simulator.controller.SimulatorResultsData -> com.SRD:
     com.plectix.simulator.controller.SimulatorCallableExitReport getSimulatorExitReport() -> getSER
 com.plectix.simulator.controller.SimulatorCallableExitReport -> com.SCER:
     java.lang.Exception getException() -> getE
+com.plectix.simulator.streaming.DensityDependantLiveDataConsumer -> com.DDLDC:
+com.plectix.simulator.streaming.LiveData -> com.LD:
+    int getNumberOfPlots() -> gNOP
+    java.util.Collection getData() -> gD
+    java.lang.String[] getPlotNames() -> gPN
+    com.plectix.simulator.streaming.LiveData$PlotType[] getPlotTypes() -> gPT
+com.plectix.simulator.streaming.LiveData$PlotType -> com.LD$PT:
+com.plectix.simulator.streaming.LiveDataPoint -> com.LDP:
+    long getEventNumber() -> gEN
+    double getEventTime() -> gET
+    double[] getPlotValues() -> gPV
+    java.lang.String toString() -> toString

@@ -43,6 +43,18 @@
     *** getException(...);
 }
 
+-keep class com.plectix.simulator.streaming.DensityDependantLiveDataConsumer {
+    public *;
+}
+
+-keep class com.plectix.simulator.streaming.LiveData {
+    public *;
+}
+
+-keep class com.plectix.simulator.streaming.LiveDataPoint {
+    public *;
+}
+
 # Keep - Applications. Keep all application classes, along with their 'main'
 # methods.
 -keepclasseswithmembers public class com.plectix.simulator.SimulationMain {
