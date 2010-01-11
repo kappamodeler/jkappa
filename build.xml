@@ -19,6 +19,9 @@
 	<property name="javadoc.dir" value="javadoc"/>
 	<property name="deploy.dir" value="deploy"/>
 
+	<property name="license.src.dir" value="src/license"/>
+	<property name="license.build.dir" value="${build.dir}/license"/>
+
 	<fileset id="external.jars" dir="${lib.dir}">
         <include name="xstream/xstream-1.3.jar"/>
         <include name="xstream/xpp3_min-1.1.4c.jar"/>
@@ -73,17 +76,17 @@
 	<target name="build" depends="set-revision,build-subprojects,build-project" 
 	        description="Sets the revision numnber, builds sub-projects and this project. Depends on: set-revision,build-subprojects,build-project"/>
     
-	<target name="build-subprojects"/>
+	<target name="build-subprojects" depends="build-license"/>
      
     <target name="init" depends="filter-tpl" description="Initializes the build directory. Depends on: filter-tpl">
 		<tstamp/>
         <mkdir dir="${build.dir}"/>
+        <mkdir dir="${license.build.dir}"/>
         <copy includeemptydirs="false" todir="${build.dir}">
             <fileset dir="${src.dir}" excludes="**/*.launch, **/*.java, **/*.tpl"/>
         </copy>
     </target>
 	
-
 	<target name="build-project" depends="set-revision,filter-tpl,init" description="Builds the project. Depends on: set-revision,filter-tpl,init">
         <echo message="OS: ${os.name} "/>
         <echo message="Java: ${java.version} "/>
@@ -94,6 +97,16 @@
         </javac>
     </target>
 		
+	<target name="build-license" depends="init" description="Builds the code for license management. Depends on: init">
+        <echo message="OS: ${os.name} "/>
+        <echo message="Java: ${java.version} "/>
+        <echo message="Ant Java: ${ant.java.version} "/>
+        <echo message="${ant.project.name}: ${ant.file} "/>
+        <javac srcdir="${license.src.dir}" destdir="${license.build.dir}" debug="true" failonerror="true">
+            <classpath refid="simulator.classpath"/>
+        </javac>
+    </target>
+			
 	<target name="package" depends="build-project" description="Creates the JAR file. Depends on: build-project">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${dist.dir}/simulator.jar" compress="false">
@@ -102,8 +115,26 @@
 			</fileset>
 		</jar>
 	</target>
-	
-	<target name="deploy" depends="build,package,createPaths" description="Deploys the package by building the project, creating the JAR file, and setting the paths. Depends on: build,package,createPaths">
+				
+	<target name="package-license-server" depends="build-license" description="Creates the JAR files for license management. Depends on: build-license">
+		<mkdir dir="${dist.dir}"/>
+		<jar jarfile="${dist.dir}/license-server.jar" compress="false">
+			<fileset dir="${license.build.dir}">
+				<include name="com/**"/>
+			</fileset>
+		</jar>
+	</target>
+		
+	<target name="package-license-client" depends="build-license" description="Creates the JAR files for license management. Depends on: build-license">
+		<mkdir dir="${dist.dir}"/>
+		<jar jarfile="${dist.dir}/license-client.jar" compress="false">
+			<fileset dir="${license.build.dir}">
+				<include name="com/**/client/**"/>
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="deploy" depends="build,package,package-license-server,createPaths" description="Deploys the package by building the project, creating the JAR file, and setting the paths. Depends on: build,package,createPaths">
 		<mkdir dir="${deploy.dir}"/>
 		<property name="deploy-dest" value="Plectix-Simulator-${DSTAMP}"/>
 		<property name="deploy-zip.dir" value="${deploy.dir}/${deploy-dest}"/>
@@ -115,6 +146,7 @@
 				<include name="config/ui.properties"/>
 				<include name="data/*.ka"/>
 				<include name="${dist.dir}/simulator.jar"/>
+				<include name="${dist.dir}/license-server.jar"/>
 				<exclude name="**/.svn"/>
 				<exclude name="**/.git"/>
 			</fileset>
