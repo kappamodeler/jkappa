@@ -1,50 +1,31 @@
 package com.plectix.license.client;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
 public class SecurityUtil {
 	
     private static final int RSA_SIGNATURE_SIZE = 64;
     public static final int RSA_SIGNATURE_HEX_SIZE = 2 * RSA_SIGNATURE_SIZE;
 
-	private static final String SECURITY_ALGORITHM = "RSA";
-	private static final String SIGNATURE_ALGORITHM = "MD5withRSA";
-
-    /**
-     * Convert a byte array to a hex string.
-     * 
-     * @param bytes array of bytes
-     * @return hex string
-     */
-    public static final String convertToHexString(byte[] bytes) {
-        StringBuffer stringBuffer = new StringBuffer();
-
-        for (int i = 0; i < bytes.length; i++)  {
-            int n = (new Byte(bytes[i])).intValue();
-
-            if (n < 0) {
-                n += 256;
-            }
-
-            if (n < 16) {
-                stringBuffer.append('0' + Integer.toHexString(n));
-            } else {
-                stringBuffer.append(Integer.toHexString(n));
-            }
-        }
-
-        return stringBuffer.toString();
-    }
+    private static final int KEY_BYTE_LENGTH = 24;
     
+    public static final String SECURITY_ALGORITHM = "RSA";
+	public static final String SIGNATURE_ALGORITHM = "MD5withRSA";
+	
+	public static final String SECRET_KEY_SPEC_ALGORITHM = "AES";
+	public static final String CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";
+
     /**
      * Convert a hex string to a byte array.
      * 
@@ -60,33 +41,6 @@ public class SecurityUtil {
         }
 
         return bytes;
-    }
-
-    /**
-     * Compute an RSA signature (formatted as a hex string) for the specified string,
-     * using the supplied private key
-     * 
-     * @param string String to sign
-     * @param privateKey key to sign with
-     * @return hex string of signature
-     * @throws SignatureException
-     * @throws NoSuchAlgorithmException
-     * @throws UnsupportedEncodingException
-     */
-    public static final String computeRSASignature(String string, PrivateKey privateKey)
-        throws SignatureException, NoSuchAlgorithmException, InvalidKeyException {
-        Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
-        signature.initSign(privateKey);
-        signature.update(string.getBytes());
-        byte[] signatureBytes = signature.sign();
-
-        String result = convertToHexString(signatureBytes);
-        
-        if (result.length() != RSA_SIGNATURE_HEX_SIZE) {
-            throw new IllegalArgumentException("Unexpected length of RSA signature: " + result.length());
-        }
-        
-        return result;
     }
 
     /**
@@ -107,26 +61,6 @@ public class SecurityUtil {
         return keyFactory.generatePublic(pubKeySpec);
     }
     
-    /**
-     * Read a private key from a hex string of the encoded key bytes.
-     * 
-     * @param hex hex string of encoded key bytes
-     * @return private key
-     * @throws NoSuchAlgorithmException
-     * @throws InvalidKeySpecException
-     */
-    public static PrivateKey readPrivateKeyFromHexString(String hex)
-        throws NoSuchAlgorithmException, InvalidKeySpecException
-    {
-        byte[] privEncoded = SecurityUtil.convertFromHexString(hex);
-
-        PKCS8EncodedKeySpec privKeySpec = new PKCS8EncodedKeySpec(privEncoded);
-        KeyFactory keyFactory = KeyFactory.getInstance(SECURITY_ALGORITHM);
-        PrivateKey key = keyFactory.generatePrivate(privKeySpec);
-
-        return key;
-    }
-
     /**
      * Compute an RSA signature (formatted as a hex string) for the specified string,
      * using the supplied private key
@@ -151,4 +85,37 @@ public class SecurityUtil {
     }
 
 
+	public static final byte[] getKeyBytes(String password) {
+		byte[] keyBytes = new byte[KEY_BYTE_LENGTH];
+		byte[] apiBytes = password.getBytes();
+		
+		if (apiBytes.length >= keyBytes.length) {
+			System.arraycopy(apiBytes, 0, keyBytes, 0, keyBytes.length);
+		} else {
+			for (int i= 0; i< keyBytes.length; i++) {
+				keyBytes[i] = apiBytes[i%apiBytes.length];
+			}
+		}
+		
+		return keyBytes;
+	}
+
+	public static final String decryptWithPassword(String encryptedText, String password) throws Exception {
+		byte[] keyBytes = getKeyBytes(password);
+		SecretKeySpec key = new SecretKeySpec(keyBytes, SECRET_KEY_SPEC_ALGORITHM);
+		Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
+		cipher.init(Cipher.DECRYPT_MODE, key);
+		
+		byte[] cipherText = convertFromHexString(encryptedText);
+	    byte[] plainText = new byte[cipherText.length]; 
+	    cipher.doFinal(cipherText, 0, cipherText.length, plainText, 0); 
+	    
+	    // The returned string can be longer if it is padded! So let's strip the rest:
+	    String plainTextString = new String(plainText);
+	    int index = plainTextString.indexOf('\0');
+	    if (index != -1) {
+	    	plainTextString =  plainTextString.substring(0, index);
+	    }
+	    return plainTextString;
+	}
 }

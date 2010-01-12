@@ -6,7 +6,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 
-import com.plectix.license.client.SecurityUtil;
 
 /**
  *   Generate a new public/private key pair, encode them to bytes, 
@@ -41,8 +40,8 @@ public class KeyGenerator {
         byte[] publicKeyEncoded = publicKey.getEncoded();
 
         // Convert to hex
-        privateKeyEncodedHex = SecurityUtil.convertToHexString(privateKeyEncoded);
-        publicKeyEncodedHex = SecurityUtil.convertToHexString(publicKeyEncoded);
+        privateKeyEncodedHex = ServerSecurityUtil.convertToHexString(privateKeyEncoded);
+        publicKeyEncodedHex = ServerSecurityUtil.convertToHexString(publicKeyEncoded);
 	}
 
 

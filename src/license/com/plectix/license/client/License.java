@@ -1,6 +1,5 @@
 package com.plectix.license.client;
 
-import java.security.PrivateKey;
 import java.security.PublicKey;
 
 /**
@@ -10,7 +9,7 @@ import java.security.PublicKey;
  * @author ecemis
  */
 public abstract class License {
-	private static final String LICENSE_FIELD_SEPARATOR = "-";
+	public static final String LICENSE_FIELD_SEPARATOR = "-";
 	
     // This key was generated with com.plectix.license.server.KeyGenerator, and corresponds
     // to the private key in com.plectix.license.server.LicenseGenerator.
@@ -36,7 +35,7 @@ public abstract class License {
 	 * 
 	 * @return
 	 */
-	protected abstract String getLicenseDataPlain();
+	public abstract String getLicenseDataPlain();
 	
 	/** 
 	 * This method should set the internal variables of a license.
@@ -45,34 +44,6 @@ public abstract class License {
 	 */
 	protected abstract void setLicenseDataPlain(String licenseDataPlain) throws IllegalArgumentException;
 	
-	
-    /**
-     * Completes the creation of a brand-new license and prepare it to be returned to the user.
-     * 
-     * Called exclusively from LicenseGenerator. 
-     * This method assumes that license parameters stored in licenseText are already set.
-     *  
-     * @param privateKey key to sign license
-     * @param apiKey 
-     * @throws IllegalArgumentException
-     */
-    public final void createData(PrivateKey privateKey, String apiKey) {
-        try {
-        	licenseDataPlain = getLicenseDataPlain();
-            String signatureString = SecurityUtil.computeRSASignature(licenseDataPlain, privateKey);
-            String obfuscatedString = SecurityUtil.convertToHexString(licenseDataPlain.getBytes());
-            String apiKeySignatureString = SecurityUtil.computeRSASignature(apiKey, privateKey);
-            String obfuscatedAPIKeyString = SecurityUtil.convertToHexString(apiKey.getBytes());
-            licenseDataEncrypted = versionNumber + LICENSE_FIELD_SEPARATOR 
-                                 + signatureString + LICENSE_FIELD_SEPARATOR
-                                 + obfuscatedString + LICENSE_FIELD_SEPARATOR
-                                 + apiKeySignatureString + LICENSE_FIELD_SEPARATOR
-                                 + obfuscatedAPIKeyString + LICENSE_FIELD_SEPARATOR;
-        } catch (Exception exception) {
-            throw new IllegalArgumentException("Failed to sign license data with supplied key", exception);
-        }
-    }
-
     /**
      * Returns a license for which previously-created data has been supplied.
      * 
@@ -85,42 +56,31 @@ public abstract class License {
      */
     public static final License getLicense(String licenseDataEncrypted, String apiKey) throws LicenseException {
         boolean valid = false;
-        int versionNumber = -1;
 
         try {
+        	String somewhatPlainText = SecurityUtil.decryptWithPassword(licenseDataEncrypted, apiKey);
+        	
             // If this is first time here, initialize the key
             if (publicKey == null) {
                 publicKey = SecurityUtil.readPublicKeyFromHexString(PUBLIC_KEY_HEX);
             }
 
-            int separatorIndex = licenseDataEncrypted.indexOf(LICENSE_FIELD_SEPARATOR);
-            if (separatorIndex > 0) {
-            	String[] fields = licenseDataEncrypted.split(LICENSE_FIELD_SEPARATOR);
-            	
-            	if (fields.length < 5) {
-            		throw new LicenseException.InvalidLicenseException("Not Enough Field In the License: " + fields.length, licenseDataEncrypted);
-            	}
-            	
-                String signatureString = fields[1];
-                String obfuscatedString = fields[2];
-                String apiKeySignatureString = fields[3];
-                String obfuscatedAPIKeyString  = fields[4];
+            int indexOfSeparator = somewhatPlainText.indexOf(LICENSE_FIELD_SEPARATOR);
+            if (indexOfSeparator > 0) {
+            	int versionNumber = Integer.parseInt(somewhatPlainText.substring(0, indexOfSeparator++));
+                String signatureString = somewhatPlainText.substring(indexOfSeparator, indexOfSeparator + SecurityUtil.RSA_SIGNATURE_HEX_SIZE);
+                String obfuscatedString = somewhatPlainText.substring(indexOfSeparator + SecurityUtil.RSA_SIGNATURE_HEX_SIZE);
                 
                 String licenseDataPlain = new String(SecurityUtil.convertFromHexString(obfuscatedString));
                 valid = SecurityUtil.validateRSASignature(licenseDataPlain, signatureString, publicKey);
-
-                // TODO: Use apiKey here!
-                String key2 = new String(SecurityUtil.convertFromHexString(obfuscatedAPIKeyString));
-                valid = SecurityUtil.validateRSASignature(key2, apiKeySignatureString, publicKey);
                 
                 if (valid) {
-                	versionNumber = Integer.parseInt(fields[0]);
                 	if (versionNumber == 1) {
                     	License license = new License_V1();
                     	license.setLicenseDataPlain(licenseDataPlain); // this method can throw an Exception
                     	return license;
                 	} else {
-                		throw new LicenseException.NotLicensedException("Unknown version number" + versionNumber, licenseDataEncrypted);
+                		throw new LicenseException.NotLicensedException("Unknown version number" + versionNumber, somewhatPlainText);
                 	}
                 } 
             }
@@ -128,7 +88,7 @@ public abstract class License {
             throw new LicenseException.InvalidLicenseException("Failed to parse and validate license", licenseDataEncrypted, exception);
         }
 
-        // we didn't get an Exception above... and we couldn't validate and return the license...
+        // we didn't get an Exception above... and we couldn't validate and return the license... so let's throw an Exception...
         throw new LicenseException.InvalidLicenseException("Invalid signature for license data", licenseDataEncrypted);
     }
 
@@ -141,6 +101,10 @@ public abstract class License {
 
 	public final String getLicenseDataEncrypted() {
 		return licenseDataEncrypted;
+	}
+
+	public final void setLicenseDataEncrypted(String licenseDataEncrypted) {
+		this.licenseDataEncrypted = licenseDataEncrypted;
 	}
 
 }

@@ -18,7 +18,7 @@ public class License_V1 extends License {
 	}
 
 	@Override
-	protected String getLicenseDataPlain() {
+	public String getLicenseDataPlain() {
 		if (licenseDataPlain == null) {
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append(creationDate + FIELD_DELIMITER);
