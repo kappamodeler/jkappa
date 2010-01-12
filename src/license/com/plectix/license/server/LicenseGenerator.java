@@ -8,6 +8,7 @@ import java.security.spec.InvalidKeySpecException;
 import com.plectix.license.client.License;
 import com.plectix.license.client.LicenseException;
 import com.plectix.license.client.License_V1;
+import com.plectix.license.client.SecurityUtil;
 
 public class LicenseGenerator {
     // This key was generated with com.plectix.license.server.KeyGenerator, and corresponds
@@ -32,7 +33,7 @@ public class LicenseGenerator {
         	String licenseDataPlain = license.getLicenseDataPlain();
             String signatureString = ServerSecurityUtil.computeRSASignature(licenseDataPlain, privateKey);
             String obfuscatedString = ServerSecurityUtil.convertToHexString(licenseDataPlain.getBytes());
-            String somewhatPlainText = license.getVersionNumber() + License.LICENSE_FIELD_SEPARATOR + signatureString + obfuscatedString;
+            String somewhatPlainText = license.getVersionNumber() + SecurityUtil.LICENSE_FIELD_SEPARATOR + signatureString + obfuscatedString;
             return ServerSecurityUtil.encryptWithPassword(somewhatPlainText, apiKey);
         } catch (Exception exception) {
             throw new IllegalArgumentException("Failed to sign license data with supplied key", exception);
@@ -57,7 +58,7 @@ public class LicenseGenerator {
      * @throws Exception
      */
     public static final License generateLicense(String username, String apiKey, String jsimKey, String pluginsVersion, long expirationDate) throws Exception {
-    	return License.getLicense(getLicenseDataEncrypted(username, apiKey, jsimKey, pluginsVersion, expirationDate), apiKey);
+    	return SecurityUtil.getLicense(getLicenseDataEncrypted(username, apiKey, jsimKey, pluginsVersion, expirationDate), apiKey);
     }
 
 
@@ -66,20 +67,14 @@ public class LicenseGenerator {
      * @param encryptedLicenseData
      * @throws LicenseException 
      */
-	private static final void testLicense(String encryptedLicenseData, String username, String apiKey) throws LicenseException {
-		License license = License.getLicense(encryptedLicenseData, apiKey);
-		int versionNumber = license.getVersionNumber();
-		System.out.println("\nLicense Version Number: " + license.getVersionNumber());
-		
-		if (versionNumber == 1) {
-			License_V1 licenseV1 = (License_V1) license;
-			System.out.println("isAuthorized: " + licenseV1.isAuthorized(username, apiKey));
-			System.out.println("pluginsVersion: " + licenseV1.getPluginsVersion());
-			System.out.println("jsimKey: " + licenseV1.getJsimKey());
-			System.out.println("expirationDate: " + licenseV1.getExpirationDate());
-		}
-		
-	}
+    private static final void testLicense(String encryptedLicenseData, String username, String apiKey) throws LicenseException {
+    	License license = SecurityUtil.getLicense(encryptedLicenseData, apiKey);
+    	
+    	System.out.println("\nLicense Version Number: " + license.getVersionNumber());
+    	System.out.println("isAuthorized: " + license.isAuthorized(username, apiKey));
+    	System.out.println("jsimKey: " + license.getJsimKey());
+    	System.out.println("expirationDate: " + license.getExpirationDate());
+    }
 
     /**
      * Creates a new license and outputs the license data as a string.
@@ -94,7 +89,7 @@ public class LicenseGenerator {
     	String pluginsVersion = args[3];                           
     	long expirationDate = Long.parseLong(args[4]);
     	
-        String encryptedLicenseData = getLicenseDataEncrypted(username, apiKey, jsimKey, pluginsVersion, expirationDate);
+        String encryptedLicenseData = LicenseGenerator.getLicenseDataEncrypted(username, apiKey, jsimKey, pluginsVersion, expirationDate);
         System.out.println(encryptedLicenseData);
         
         testLicense(encryptedLicenseData, username, apiKey);

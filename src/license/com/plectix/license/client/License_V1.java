@@ -58,6 +58,7 @@ public class License_V1 extends License {
      * @param String apiKey
      * @return true if authorized
      */
+	@Override
     public boolean isAuthorized(String username, String apiKey) {
         if (validateExpiry() == false) {
             return false;
@@ -147,12 +148,14 @@ public class License_V1 extends License {
 	public final void setPluginsVersion(String pluginsVersion) {
 		this.pluginsVersion = pluginsVersion;
 	}
-
-	public final long getExpirationDate() {
+	
+	@Override
+	public long getExpirationDate() {
 		return expirationDate;
 	}
-
-	public final String getJsimKey() {
+	
+	@Override
+	public String getJsimKey() {
 		return jsimKey;
 	}
 

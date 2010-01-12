@@ -1,6 +1,5 @@
 package com.plectix.license.client;
 
-import java.security.PublicKey;
 
 /**
  * This class implements the infrastructure to encrypt, verify, and decrypt some license text, 
@@ -9,12 +8,6 @@ import java.security.PublicKey;
  * @author ecemis
  */
 public abstract class License {
-	public static final String LICENSE_FIELD_SEPARATOR = "-";
-	
-    // This key was generated with com.plectix.license.server.KeyGenerator, and corresponds
-    // to the private key in com.plectix.license.server.LicenseGenerator.
-    private static final String PUBLIC_KEY_HEX = "305c300d06092a864886f70d0101010500034b003048024100aff3c80597c966cff656e204837c9a4dbc9e8e9c0c78330ff6445cb5c7456b73937536247890f12a189bf113c035ae70f94059bd2832b25d1c5071f04fb335d90203010001";
-    private static PublicKey publicKey = null;
 
 	private final int versionNumber;
 
@@ -44,57 +37,33 @@ public abstract class License {
 	 */
 	protected abstract void setLicenseDataPlain(String licenseDataPlain) throws IllegalArgumentException;
 	
-    /**
-     * Returns a license for which previously-created data has been supplied.
+	/**
+	 * Checks whether the given user is authorized to use the software under this license.
      * 
-     * We break the data into the signature and the data itself and make sure it's all valid.  
-     * If it is, the other member variables of this object are initialized from the data, 
-     * and the object can be used.
-     * @param apiKey 
+     * The user is authorized if the license is not expired, and the user's credentials match those in the license...
      * 
-     * @throws IllegalArgumentException
-     */
-    public static final License getLicense(String licenseDataEncrypted, String apiKey) throws LicenseException {
-        boolean valid = false;
+	 * @param username
+	 * @param apiKey
+	 * @return
+	 */
+	public abstract boolean isAuthorized(String username, String apiKey);
 
-        try {
-        	String somewhatPlainText = SecurityUtil.decryptWithPassword(licenseDataEncrypted, apiKey);
-        	
-            // If this is first time here, initialize the key
-            if (publicKey == null) {
-                publicKey = SecurityUtil.readPublicKeyFromHexString(PUBLIC_KEY_HEX);
-            }
+	/**
+	 * Returns the Expiration Date of this license, given in terms of milliseconds since Jan 1, 1970.
+	 * 
+	 * @return
+	 */
+	public abstract long getExpirationDate();
 
-            int indexOfSeparator = somewhatPlainText.indexOf(LICENSE_FIELD_SEPARATOR);
-            if (indexOfSeparator > 0) {
-            	int versionNumber = Integer.parseInt(somewhatPlainText.substring(0, indexOfSeparator++));
-                String signatureString = somewhatPlainText.substring(indexOfSeparator, indexOfSeparator + SecurityUtil.RSA_SIGNATURE_HEX_SIZE);
-                String obfuscatedString = somewhatPlainText.substring(indexOfSeparator + SecurityUtil.RSA_SIGNATURE_HEX_SIZE);
-                
-                String licenseDataPlain = new String(SecurityUtil.convertFromHexString(obfuscatedString));
-                valid = SecurityUtil.validateRSASignature(licenseDataPlain, signatureString, publicKey);
-                
-                if (valid) {
-                	if (versionNumber == 1) {
-                    	License license = new License_V1();
-                    	license.setLicenseDataPlain(licenseDataPlain); // this method can throw an Exception
-                    	return license;
-                	} else {
-                		throw new LicenseException.NotLicensedException("Unknown version number" + versionNumber, somewhatPlainText);
-                	}
-                } 
-            }
-        } catch (Exception exception) {
-            throw new LicenseException.InvalidLicenseException("Failed to parse and validate license", licenseDataEncrypted, exception);
-        }
-
-        // we didn't get an Exception above... and we couldn't validate and return the license... so let's throw an Exception...
-        throw new LicenseException.InvalidLicenseException("Invalid signature for license data", licenseDataEncrypted);
-    }
-
-
-
-	public final int getVersionNumber() {
+	/**
+	 * Returns the key to decrypt JSIM.
+	 * 
+	 * @return
+	 */
+	public abstract String getJsimKey();
+	
+	
+    public final int getVersionNumber() {
 		return versionNumber;
 	}
 

@@ -14,6 +14,13 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 public class SecurityUtil {
+
+	public static final String LICENSE_FIELD_SEPARATOR = "-";
+	
+    // This key was generated with com.plectix.license.server.KeyGenerator, and corresponds
+    // to the private key in com.plectix.license.server.LicenseGenerator.
+	private static final String PUBLIC_KEY_HEX = "305c300d06092a864886f70d0101010500034b003048024100aff3c80597c966cff656e204837c9a4dbc9e8e9c0c78330ff6445cb5c7456b73937536247890f12a189bf113c035ae70f94059bd2832b25d1c5071f04fb335d90203010001";
+	private static PublicKey publicKey = null;
 	
     private static final int RSA_SIGNATURE_SIZE = 64;
     public static final int RSA_SIGNATURE_HEX_SIZE = 2 * RSA_SIGNATURE_SIZE;
@@ -117,5 +124,53 @@ public class SecurityUtil {
 	    	plainTextString =  plainTextString.substring(0, index);
 	    }
 	    return plainTextString;
+	}
+
+	/**
+	 * Returns a license for which previously-created data has been supplied.
+	 * 
+	 * We break the data into the signature and the data itself and make sure it's all valid.  
+	 * If it is, the other member variables of this object are initialized from the data, 
+	 * and the object can be used.
+	 * @param apiKey 
+	 * 
+	 * @throws IllegalArgumentException
+	 */
+	public static final License getLicense(String licenseDataEncrypted, String apiKey) throws LicenseException {
+	    boolean valid = false;
+	
+	    try {
+	    	String somewhatPlainText = decryptWithPassword(licenseDataEncrypted, apiKey);
+	    	
+	        // If this is first time here, initialize the key
+	        if (publicKey == null) {
+	            publicKey = readPublicKeyFromHexString(PUBLIC_KEY_HEX);
+	        }
+	
+	        int indexOfSeparator = somewhatPlainText.indexOf(LICENSE_FIELD_SEPARATOR);
+	        if (indexOfSeparator > 0) {
+	        	int versionNumber = Integer.parseInt(somewhatPlainText.substring(0, indexOfSeparator++));
+	            String signatureString = somewhatPlainText.substring(indexOfSeparator, indexOfSeparator + RSA_SIGNATURE_HEX_SIZE);
+	            String obfuscatedString = somewhatPlainText.substring(indexOfSeparator + RSA_SIGNATURE_HEX_SIZE);
+	            
+	            String licenseDataPlain = new String(convertFromHexString(obfuscatedString));
+	            valid = validateRSASignature(licenseDataPlain, signatureString, publicKey);
+	            
+	            if (valid) {
+	            	if (versionNumber == 1) {
+	                	License license = new License_V1();
+	                	license.setLicenseDataPlain(licenseDataPlain); // this method can throw an Exception
+	                	return license;
+	            	} else {
+	            		throw new LicenseException.NotLicensedException("Unknown version number" + versionNumber, somewhatPlainText);
+	            	}
+	            } 
+	        }
+	    } catch (Exception exception) {
+	        throw new LicenseException.InvalidLicenseException("Failed to parse and validate license", licenseDataEncrypted, exception);
+	    }
+	
+	    // we didn't get an Exception above... and we couldn't validate and return the license... so let's throw an Exception...
+	    throw new LicenseException.InvalidLicenseException("Invalid signature for license data", licenseDataEncrypted);
 	}
 }
