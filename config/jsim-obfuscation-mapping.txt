@@ -14,8 +14,22 @@ com.plectix.simulator.streaming.LiveData -> com.LD:
     java.lang.String[] getPlotNames() -> gPN
     com.plectix.simulator.streaming.LiveData$PlotType[] getPlotTypes() -> gPT
 com.plectix.simulator.streaming.LiveData$PlotType -> com.LD$PT:
+    java.lang.String getName() -> gN
 com.plectix.simulator.streaming.LiveDataPoint -> com.LDP:
     long getEventNumber() -> gEN
     double getEventTime() -> gET
     double[] getPlotValues() -> gPV
     java.lang.String toString() -> toString
+com.plectix.simulator.simulator.SimulatorCommandLine -> com.SCL: 
+    com.plectix.simulator.simulator.SimulationArguments getSimulationArguments() -> gSA
+com.plectix.simulator.controller.SimulatorInputData -> com.SID:
+com.plectix.simulator.controller.SimulationService -> com.SS:
+    long submit(com.plectix.simulator.controller.SimulatorInputData,com.plectix.simulator.controller.SimulatorCallableListener) -> sM
+	void shutdown() -> sD
+	boolean cancel(long, boolean, boolean) -> c
+    com.plectix.simulator.streaming.LiveData getSimulatorLiveData(long) -> gSLD
+com.plectix.simulator.simulator.DefaultSimulatorFactory -> com.DSF:
+    com.plectix.simulator.controller.SimulatorInterface createSimulator() -> cS
+com.plectix.simulator.controller.SimulatorStatusInterface -> com.SSI:
+    java.lang.String getStatusMessage() -> gSM
+	double getProgress() -> gP

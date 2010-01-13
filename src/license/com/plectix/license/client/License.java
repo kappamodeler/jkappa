@@ -45,8 +45,9 @@ public abstract class License {
 	 * @param username
 	 * @param apiKey
 	 * @return
+	 * @throws LicenseException 
 	 */
-	public abstract boolean isAuthorized(String username, String apiKey);
+	public abstract boolean isAuthorized(String username, String apiKey) throws LicenseException;
 
 	/**
 	 * Returns the Expiration Date of this license, given in terms of milliseconds since Jan 1, 1970.
@@ -66,7 +67,6 @@ public abstract class License {
     public final int getVersionNumber() {
 		return versionNumber;
 	}
-
 
 	public final String getLicenseDataEncrypted() {
 		return licenseDataEncrypted;

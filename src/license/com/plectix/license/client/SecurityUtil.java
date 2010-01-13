@@ -162,7 +162,7 @@ public class SecurityUtil {
 	                	license.setLicenseDataPlain(licenseDataPlain); // this method can throw an Exception
 	                	return license;
 	            	} else {
-	            		throw new LicenseException.NotLicensedException("Unknown version number" + versionNumber, somewhatPlainText);
+	            		throw new LicenseException.InvalidLicenseException("Unknown version number" + versionNumber, somewhatPlainText);
 	            	}
 	            } 
 	        }

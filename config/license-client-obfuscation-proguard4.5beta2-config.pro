@@ -1,15 +1,15 @@
--injars ../jar/simulator.jar
--outjars ../jar/jsim-obf.jar(!META-INF/MANIFEST.MF)
+-injars ../jar/license-client.jar
+-outjars ../jar/lcnsclnt.jar(!META-INF/MANIFEST.MF)
 
 -libraryjars <java.home>/../Classes/classes.jar
 -libraryjars ../lib
 
--printusage ../jar/jsim-dead-code.txt
--optimizationpasses 5
--printmapping ../jar/jsim-obf-mapping.txt
+-printusage ../jar/lcnsclnt-dead-code.txt
+-optimizationpasses 3
+-printmapping ../jar/lcnsclnt-obf-mapping.txt
 
 # Files that are located in the "config" folder:
--applymapping jsim-obfuscation-mapping.txt
+# -applymapping lcnsclnt-obfuscation-mapping.txt
 -obfuscationdictionary proguard4.5beta2-dictionaries-compact.txt
 -classobfuscationdictionary proguard4.5beta2-dictionaries-windows.txt
 -packageobfuscationdictionary proguard4.5beta2-dictionaries-windows.txt
@@ -25,69 +25,23 @@
 -verbose
 -ignorewarnings
 
--printconfiguration ../jar/jsim-obf-proguard4.5beta2-config.txt
--printseeds ../jar/jsim-obf-seeds.txt
+-printconfiguration ../jar/lcnsclnt-proguard4.5beta2-config.txt
+-printseeds ../jar/lcnsclnt-seeds.txt
 
-
--keep class com.plectix.simulator.api.CommandLineRunner {
-    com.plectix.simulator.controller.SimulatorFutureTask getSimulatorFutureTask(java.lang.String[]);
+-keep class com.plectix.license.client.License {
+    public boolean isAuthorized(...);
+    public long getExpirationDate();
+    public java.lang.String getJsimKey();
+    public int getVersionNumber();
+    public java.lang.String getLicenseDataEncrypted();
 }
 
--keep class com.plectix.simulator.controller.SimulatorFutureTask
+-keep class com.plectix.license.client.LicenseException
 
--keep class com.plectix.simulator.controller.SimulatorResultsData {
-    *** getSimulatorExitReport(...);
-}
+-keep class * extends com.plectix.license.client.LicenseException
 
--keep class com.plectix.simulator.controller.SimulatorCallableExitReport {
-    *** getException(...);
-}
-
--keep class com.plectix.simulator.streaming.DensityDependantLiveDataConsumer {
-    public *;
-}
-
--keep class com.plectix.simulator.streaming.LiveData {
-    public *;
-}
-
--keep class com.plectix.simulator.streaming.LiveData$PlotType {
-    public *;
-}
-
--keep class com.plectix.simulator.streaming.LiveDataPoint {
-    public *;
-}
-
--keep class com.plectix.simulator.simulator.SimulatorCommandLine {
-    <init> (java.lang.String);
-    public *;
-}
-
--keep class com.plectix.simulator.controller.SimulatorInputData
-
--keep class com.plectix.simulator.controller.SimulationService {
-    public long submit(...);
-	public boolean cancel(...);
-	public void shutdown();
-	public com.plectix.simulator.controller.SimulatorStatusInterface getSimulatorStatus(long);
-	public com.plectix.simulator.streaming.LiveData getSimulatorLiveData(long);
-}
-
--keep class com.plectix.simulator.controller.SimulatorStatusInterface {
-    public java.lang.String getStatusMessage();
-	public double getProgress();
-}
-
--keep class com.plectix.simulator.simulator.DefaultSimulatorFactory {
-    public *;
-}
-
-
-# Keep - Applications. Keep all application classes, along with their 'main'
-# methods.
--keepclasseswithmembers public class com.plectix.simulator.SimulationMain {
-    public static void main(java.lang.String[]);
+-keep class com.plectix.license.client.SecurityUtil {
+   public static final com.plectix.license.client.License getLicense(...);
 }
 
 # Also keep - Enumerations. Keep the special static methods that are required in

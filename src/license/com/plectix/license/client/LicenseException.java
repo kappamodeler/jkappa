@@ -17,13 +17,13 @@ public class LicenseException extends Exception {
 		this.licenseDate = licenseData;
 	}
 
-	public static class NotLicensedException extends LicenseException {
+	public static final class NotLicensedException extends LicenseException {
 		public NotLicensedException(String message, String licenseData) {
 			super(message, licenseData);
 		}
 	}
 
-	public static class InvalidLicenseException extends LicenseException {
+	public static final class InvalidLicenseException extends LicenseException {
 		public InvalidLicenseException(String message, String licenseData) {
 			super(message, licenseData);
 		}

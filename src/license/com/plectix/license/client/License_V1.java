@@ -57,17 +57,22 @@ public class License_V1 extends License {
      * @param String username
      * @param String apiKey
      * @return true if authorized
+     * @throws LicenseException 
      */
 	@Override
-    public boolean isAuthorized(String username, String apiKey) {
+    public boolean isAuthorized(String username, String apiKey) throws LicenseException {
         if (validateExpiry() == false) {
-            return false;
+            // return false;
+        	// we should never be here cause validateExpiry() never returns false!
+        	throw new RuntimeException("validateExpiry() returned false instead of throwing an exception");
         }
         if (!username.equals(this.username)) {
-        	return false;
+        	// return false;
+        	throw new LicenseException.NotLicensedException("Username is not valid", getLicenseDataEncrypted());
         }
         if (!apiKey.equals(this.apiKey)) {
-        	return false;
+        	// return false;
+        	throw new LicenseException.NotLicensedException("API key is not valid", getLicenseDataEncrypted());
         }
 
         return true;
@@ -80,18 +85,21 @@ public class License_V1 extends License {
      * 
      * @return
      */
-    protected boolean validateExpiry() {
+    protected boolean validateExpiry() throws LicenseException {
         if (creationDate <= 0) {
             // the license is not initialized properly
-            return false;
+            // return false;
+        	throw new LicenseException.InvalidLicenseException("License creation date is invalid", getLicenseDataEncrypted());
         }
         if (expirationDate <= 0) {
             // we don't let perpetual licenses in this version!!!
-            return false;
+            // return false;
+        	throw new LicenseException.InvalidLicenseException("License expiration date is invalid", getLicenseDataEncrypted());
         }
         if (System.currentTimeMillis() > expirationDate) {
             // license has expired
-            return false;
+            // return false;
+        	throw new LicenseException.NotLicensedException("License has expired", getLicenseDataEncrypted());
         }
         return true;
     }

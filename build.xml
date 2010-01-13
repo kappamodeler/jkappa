@@ -132,6 +132,7 @@
 				<include name="com/**/client/**"/>
 			</fileset>
 		</jar>
+	    <proguard configuration="config/license-client-obfuscation-proguard4.5beta2-config.pro"/>
 	</target>
 
 	<target name="deploy" depends="build,package,package-license-server,createPaths" description="Deploys the package by building the project, creating the JAR file, and setting the paths. Depends on: build,package,createPaths">
