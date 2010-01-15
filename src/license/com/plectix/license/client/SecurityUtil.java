@@ -25,7 +25,7 @@ public class SecurityUtil {
     private static final int RSA_SIGNATURE_SIZE = 64;
     public static final int RSA_SIGNATURE_HEX_SIZE = 2 * RSA_SIGNATURE_SIZE;
 
-    private static final int KEY_BYTE_LENGTH = 24;
+    private static final int KEY_BYTE_LENGTH = 16;
     
     public static final String SECURITY_ALGORITHM = "RSA";
 	public static final String SIGNATURE_ALGORITHM = "MD5withRSA";
@@ -90,7 +90,6 @@ public class SecurityUtil {
         
         return signature.verify(signatureBytes);
     }
-
 
 	public static final byte[] getKeyBytes(String password) {
 		byte[] keyBytes = new byte[KEY_BYTE_LENGTH];
@@ -173,4 +172,5 @@ public class SecurityUtil {
 	    // we didn't get an Exception above... and we couldn't validate and return the license... so let's throw an Exception...
 	    throw new LicenseException.InvalidLicenseException("Invalid signature for license data", licenseDataEncrypted);
 	}
+
 }

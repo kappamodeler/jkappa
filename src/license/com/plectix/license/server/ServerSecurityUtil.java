@@ -11,10 +11,14 @@ import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.ShortBufferException;
 import javax.crypto.spec.SecretKeySpec;
 
+import com.plectix.license.client.LicenseException;
 import com.plectix.license.client.SecurityUtil;
 
 /**
@@ -104,22 +108,38 @@ public class ServerSecurityUtil {
 	 * @param plainText
 	 * @param password
 	 * @return
+	 * @throws LicenseException 
 	 * @throws NoSuchAlgorithmException
 	 * @throws NoSuchPaddingException
 	 * @throws GeneralSecurityException
 	 */
-	protected static final String encryptWithPassword(String plainText, String password) 
-	    throws NoSuchAlgorithmException, NoSuchPaddingException, GeneralSecurityException {
+	protected static final String encryptWithPassword(String plainText, String password) throws LicenseException {
 		byte[] keyBytes = SecurityUtil.getKeyBytes(password);
 		SecretKeySpec key = new SecretKeySpec(keyBytes, SecurityUtil.SECRET_KEY_SPEC_ALGORITHM);
-		Cipher cipher = Cipher.getInstance(SecurityUtil.CIPHER_ALGORITHM);
-		cipher.init(Cipher.ENCRYPT_MODE, key);
+		
+		try {
+			Cipher cipher = Cipher.getInstance(SecurityUtil.CIPHER_ALGORITHM);
+			cipher.init(Cipher.ENCRYPT_MODE, key);
+			
+			byte[] input = plainText.getBytes();
+			byte[] cipherText = new byte[BLOCK_SIZE*(1+input.length/BLOCK_SIZE)];
+		    cipher.doFinal(input, 0, input.length, cipherText, 0); 
+		
+			return convertToHexString(cipherText);
+		} catch (NoSuchAlgorithmException e) {
+			throw new LicenseException.LicenseGenerationException("Caught NoSuchAlgorithmException: ", plainText, e);
+		} catch (NoSuchPaddingException e) {
+			throw new LicenseException.LicenseGenerationException("Caught NoSuchPaddingException: ", plainText, e);
+		} catch (InvalidKeyException e) {
+			throw new LicenseException.LicenseGenerationException("Caught InvalidKeyException: ", plainText, e);
+		} catch (ShortBufferException e) {
+			throw new LicenseException.LicenseGenerationException("Caught ShortBufferException: ", plainText, e);
+		} catch (IllegalBlockSizeException e) {
+			throw new LicenseException.LicenseGenerationException("Caught IllegalBlockSizeException: ", plainText, e);
+		} catch (BadPaddingException e) {
+			throw new LicenseException.LicenseGenerationException("Caught BadPaddingException: ", plainText, e);
+		}
 	
-		byte[] input = plainText.getBytes();
-		byte[] cipherText = new byte[BLOCK_SIZE*(1+input.length/BLOCK_SIZE)];
-	    cipher.doFinal(input, 0, input.length, cipherText, 0); 
-	
-		return convertToHexString(cipherText);
 	}
 
 }

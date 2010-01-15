@@ -5,6 +5,7 @@ package com.plectix.license.client;
  * 
  */
 public class LicenseException extends Exception {
+
 	public String licenseDate = null;
 	
 	public LicenseException(String message, String licenseData) {
@@ -29,6 +30,12 @@ public class LicenseException extends Exception {
 		}
 		
 		public InvalidLicenseException(String message, String licenseData, Throwable ex) {
+			super(message, licenseData, ex);
+		}
+	}
+	
+	public static final class LicenseGenerationException extends LicenseException {
+		public LicenseGenerationException(String message, String licenseData, Throwable ex) {
 			super(message, licenseData, ex);
 		}
 	}

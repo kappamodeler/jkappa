@@ -1,9 +1,10 @@
 package com.plectix.license.client;
 
+import java.util.Random;
 import java.util.StringTokenizer;
 
 public class License_V1 extends License {
-    private static final String FIELD_DELIMITER = ":::::";
+    private static final int FIELD_DELIMITER_LENGTH = 4;
 
 	protected long creationDate = 0;
 	protected long expirationDate = 0;
@@ -20,13 +21,15 @@ public class License_V1 extends License {
 	@Override
 	public String getLicenseDataPlain() {
 		if (licenseDataPlain == null) {
-			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(creationDate + FIELD_DELIMITER);
-			stringBuffer.append(expirationDate + FIELD_DELIMITER);
-			stringBuffer.append(username + FIELD_DELIMITER);
-			stringBuffer.append(apiKey + FIELD_DELIMITER);
-			stringBuffer.append(jsimKey + FIELD_DELIMITER);
-			stringBuffer.append(pluginsVersion + FIELD_DELIMITER);
+			final String fieldDelimiter = createFieldDelimiter(creationDate, expirationDate, username, apiKey, jsimKey, pluginsVersion);
+				
+			StringBuffer stringBuffer = new StringBuffer(fieldDelimiter);
+			stringBuffer.append(creationDate + fieldDelimiter);
+			stringBuffer.append(expirationDate + fieldDelimiter);
+			stringBuffer.append(username + fieldDelimiter);
+			stringBuffer.append(apiKey + fieldDelimiter);
+			stringBuffer.append(jsimKey + fieldDelimiter);
+			stringBuffer.append(pluginsVersion + fieldDelimiter);
 
 	        licenseDataPlain = stringBuffer.toString();
 		}
@@ -37,8 +40,9 @@ public class License_V1 extends License {
 	@Override
 	protected void setLicenseDataPlain(String licenseText) throws IllegalArgumentException {
 		this.licenseDataPlain = licenseText;
-		
-        StringTokenizer fieldTokenizer = new StringTokenizer(licenseText, FIELD_DELIMITER);
+		final String fieldDelimiter = licenseText.substring(0, FIELD_DELIMITER_LENGTH);
+
+        StringTokenizer fieldTokenizer = new StringTokenizer(licenseText.substring(FIELD_DELIMITER_LENGTH), fieldDelimiter);
 
         creationDate = getLong(fieldTokenizer, "Creation Date");
         expirationDate = getLong(fieldTokenizer, "Expiration Date");
@@ -47,6 +51,40 @@ public class License_V1 extends License {
         jsimKey = getString(fieldTokenizer, "JSIM Key");
         pluginsVersion = getString(fieldTokenizer, "Plugins Version");
 	}
+
+	
+    //***************************************************************************************
+	/**
+	 * 
+	 * @param args
+	 * @return
+	 */
+	private static final String createFieldDelimiter(Object... args) {
+		Random random = new Random();
+		String fieldDelimiter = null;
+		
+		boolean done = false;
+		while (!done) {
+			// let's create a random field delimiter:
+			char[] charArray = new char[FIELD_DELIMITER_LENGTH];
+			for (int i= 0; i< charArray.length; i++) {
+				charArray[i] = (char) (33 + random.nextInt(11)); // generates a random char between '!' and '+'
+ 			}
+			fieldDelimiter = new String(charArray);
+			
+			done = true;
+			for (Object arg : args) {
+				if (arg.toString().indexOf(fieldDelimiter) != -1) {
+					// generate another delimiter
+					done = false;
+					break;
+				} 
+			}
+		}
+		
+		return fieldDelimiter;
+	}
+	
 	
     //***************************************************************************************
     /**
