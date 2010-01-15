@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.apache.log4j.PropertyConfigurator;
 import org.junit.Test;
 
 import com.plectix.simulator.parser.DocumentFormatException;
@@ -13,13 +14,17 @@ import com.plectix.simulator.parser.ParseErrorException;
 import com.plectix.simulator.staticanalysis.LibraryOfRules;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
+import com.plectix.simulator.util.DefaultPropertiesForTest;
 
-public class TestRuleMaster {
+public class TestRuleMaster extends DefaultPropertiesForTest {
 	LibraryOfRules libraryOfRules = TestsRuleCompressions.libraryOfRules;
 
 	@Test
 	public void testActionAgents() throws IncompletesDisabledException,
 			ParseErrorException, DocumentFormatException {
+		
+		PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
+		
 		for (String r : libraryOfRules.getElementaryRules()) {
 			Rule rule = libraryOfRules.getRuleByString(r);
 			RuleMaster master = new RuleMaster(rule);

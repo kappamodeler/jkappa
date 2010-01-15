@@ -36,6 +36,8 @@ public class TestIncompleteSubstance {
 		"A6(x6,y6)",
 		"A7(x7)",
 		"B8(y8)",
+		"a(x)",
+		"b(x)"
 	};
 
 	private static final String[] AGENT_2 = {
@@ -46,7 +48,9 @@ public class TestIncompleteSubstance {
 		"A5(y5)",
 		"A6(x6,y6,z6)",
 		"A7(z7)",
-		"C8(x8)"
+		"C8(x8)",
+		"a(x?)",
+		"b(x!_)"
 	};
 	
 	
@@ -59,6 +63,8 @@ public class TestIncompleteSubstance {
 		false,
 		false,
 		true,
+		false,
+		false
 	};
 	
 	@Parameters

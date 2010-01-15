@@ -14,11 +14,13 @@ import com.plectix.simulator.simulationclasses.perturbations.AbstractModificatio
 import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.simulationclasses.perturbations.OnceModification;
 import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.staticanalysis.Link;
+import com.plectix.simulator.staticanalysis.LinkStatus;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
 
 public class MasterSolutionModel {
-	private Map<String, Agent> masterMap;
+	private final Map<String, Agent> masterMap;
 
 	public MasterSolutionModel() {
 		masterMap = new LinkedHashMap<String, Agent>();
@@ -38,6 +40,15 @@ public class MasterSolutionModel {
 				return false;
 		}
 
+		for (Site siteThis : agentIn.getSites()) {
+			Link linkState = siteThis.getLinkState();
+			
+			if (linkState.getStatusLink() == LinkStatus.WILDCARD
+					|| (linkState.getConnectedSite() == null && linkState
+							.getStatusLink() == LinkStatus.BOUND))
+				return false;
+		}
+
 		return true;
 	}
 
@@ -49,25 +60,27 @@ public class MasterSolutionModel {
 	}
 
 	public void checkCorrect(Rule rule, String line) throws ParseErrorException {
-		for(Action action : rule.getActionList()){
-			if(action.getType() != ActionType.ADD)
+		for (Action action : rule.getActionList()) {
+			if (action.getType() != ActionType.ADD)
 				continue;
 			Agent checkAgent = action.getTargetAgent();
-			if(!isCorrect(checkAgent))
+			if (!isCorrect(checkAgent))
 				throwExeption(line);
 		}
 	}
 
-	private void throwExeption(String line) throws ParseErrorException{
-		ParseErrorException exeption = new ParseErrorException(ParseErrorMessage.INCOMPLETE_SUBSTANCE, line);
+	private void throwExeption(String line) throws ParseErrorException {
+		ParseErrorException exeption = new ParseErrorException(
+				ParseErrorMessage.INCOMPLETE_SUBSTANCE, line);
 		throw exeption;
 	}
 
-	public void checkCorrect(ComplexPerturbation<?, ?>  res,
+	public void checkCorrect(ComplexPerturbation<?, ?> res,
 			ModelPerturbation perturbation) throws ParseErrorException {
 		AbstractModification modification = res.getModification();
 		if (modification instanceof OnceModification) {
-			checkCorrect(((OnceModification)modification).getPerturbationRule(), perturbation.toString());			
+			checkCorrect(((OnceModification) modification)
+					.getPerturbationRule(), perturbation.toString());
 		}
 	}
 }
