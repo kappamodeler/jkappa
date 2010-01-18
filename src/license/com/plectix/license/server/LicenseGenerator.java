@@ -53,7 +53,7 @@ public class LicenseGenerator {
 		} catch (NoSuchAlgorithmException e) {
 			throw new LicenseException.LicenseGenerationException("Caught NoSuchAlgorithmException: ", licenseDataPlain, e);
 		}
-    	String obfuscatedString = ServerSecurityUtil.convertToHexString(licenseDataPlain.getBytes());
+    	String obfuscatedString = ServerSecurityUtil.convertFromBytesToHexString(SecurityUtil.getBytes(licenseDataPlain));
     	String somewhatPlainText = license.getVersionNumber() + SecurityUtil.LICENSE_FIELD_SEPARATOR + signatureString + obfuscatedString;
     	return ServerSecurityUtil.encryptWithPassword(somewhatPlainText, apiKey);
     }

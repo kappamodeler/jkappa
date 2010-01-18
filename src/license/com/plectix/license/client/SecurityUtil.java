@@ -33,21 +33,51 @@ public class SecurityUtil {
 	public static final String SECRET_KEY_SPEC_ALGORITHM = "AES";
 	public static final String CIPHER_ALGORITHM = "AES/ECB/PKCS5Padding";
 
+	public static final String DEFAULT_CHARSET = "ISO-8859-1";
+
     /**
      * Convert a hex string to a byte array.
      * 
-     * @param hex hex string
+     * @param hexString hex string
      * @return array of bytes
      */
-    public static byte[] convertFromHexString(String hex) {
-        byte[] bytes = new byte[hex.length() / 2];
+    public static byte[] convertFromHexStringToBytes(String hexString) {
+        byte[] bytes = new byte[hexString.length() / 2];
 
-        for (int i = 0; i < hex.length(); i += 2) {
-            int value = Integer.parseInt(hex.substring(i, i + 2), 16);
+        for (int i = 0; i < hexString.length(); i += 2) {
+            int value = Integer.parseInt(hexString.substring(i, i + 2), 16);
             bytes[i / 2] = (byte) value;
         }
 
         return bytes;
+    }
+    
+    /**
+     * 
+     * @param string
+     * @return
+     */
+    public static final byte[] getBytes(String string) {
+    	try {
+			return string.getBytes(DEFAULT_CHARSET);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Charset " + DEFAULT_CHARSET + " is not supported!");
+		}
+    }
+    
+    /**
+     * 
+     * @param bytes
+     * @return
+     */
+    private static final String getString(byte[] bytes) {
+    	try {
+			return new String(bytes, DEFAULT_CHARSET);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Charset " + DEFAULT_CHARSET + " is not supported!");
+		}
     }
 
     /**
@@ -61,7 +91,7 @@ public class SecurityUtil {
      */
     public static final PublicKey readPublicKeyFromHexString(String hex)
         throws NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] pubEncoded = SecurityUtil.convertFromHexString(hex);
+        byte[] pubEncoded = SecurityUtil.convertFromHexStringToBytes(hex);
 
         X509EncodedKeySpec pubKeySpec = new X509EncodedKeySpec(pubEncoded);
         KeyFactory keyFactory = KeyFactory.getInstance(SECURITY_ALGORITHM);
@@ -82,18 +112,18 @@ public class SecurityUtil {
      */
     public static final boolean validateRSASignature(String string, String hexSignature, PublicKey publicKey)
         throws SignatureException, NoSuchAlgorithmException, InvalidKeyException {
-        byte[] signatureBytes = convertFromHexString(hexSignature);
+        byte[] signatureBytes = convertFromHexStringToBytes(hexSignature);
 
         Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
         signature.initVerify(publicKey);
-        signature.update(string.getBytes());
+        signature.update(SecurityUtil.getBytes(string));
         
         return signature.verify(signatureBytes);
     }
 
 	public static final byte[] getKeyBytes(String password) {
 		byte[] keyBytes = new byte[KEY_BYTE_LENGTH];
-		byte[] apiBytes = password.getBytes();
+		byte[] apiBytes = SecurityUtil.getBytes(password);
 		
 		if (apiBytes.length >= keyBytes.length) {
 			System.arraycopy(apiBytes, 0, keyBytes, 0, keyBytes.length);
@@ -112,12 +142,12 @@ public class SecurityUtil {
 		Cipher cipher = Cipher.getInstance(CIPHER_ALGORITHM);
 		cipher.init(Cipher.DECRYPT_MODE, key);
 		
-		byte[] cipherText = convertFromHexString(encryptedText);
-	    byte[] plainText = new byte[cipherText.length]; 
-	    cipher.doFinal(cipherText, 0, cipherText.length, plainText, 0); 
+		byte[] cipherText = convertFromHexStringToBytes(encryptedText);
+	    byte[] plainTextBytes = new byte[cipherText.length]; 
+	    cipher.doFinal(cipherText, 0, cipherText.length, plainTextBytes, 0); 
 	    
 	    // The returned string can be longer if it is padded! So let's strip the rest:
-	    String plainTextString = new String(plainText);
+	    String plainTextString = SecurityUtil.getString(plainTextBytes);
 	    int index = plainTextString.indexOf('\0');
 	    if (index != -1) {
 	    	plainTextString =  plainTextString.substring(0, index);
@@ -152,7 +182,7 @@ public class SecurityUtil {
 	            String signatureString = somewhatPlainText.substring(indexOfSeparator, indexOfSeparator + RSA_SIGNATURE_HEX_SIZE);
 	            String obfuscatedString = somewhatPlainText.substring(indexOfSeparator + RSA_SIGNATURE_HEX_SIZE);
 	            
-	            String licenseDataPlain = new String(convertFromHexString(obfuscatedString));
+	            String licenseDataPlain = SecurityUtil.getString(convertFromHexStringToBytes(obfuscatedString));
 	            valid = validateRSASignature(licenseDataPlain, signatureString, publicKey);
 	            
 	            if (valid) {

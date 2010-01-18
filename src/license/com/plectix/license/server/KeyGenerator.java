@@ -40,8 +40,8 @@ public class KeyGenerator {
         byte[] publicKeyEncoded = publicKey.getEncoded();
 
         // Convert to hex
-        privateKeyEncodedHex = ServerSecurityUtil.convertToHexString(privateKeyEncoded);
-        publicKeyEncodedHex = ServerSecurityUtil.convertToHexString(publicKeyEncoded);
+        privateKeyEncodedHex = ServerSecurityUtil.convertFromBytesToHexString(privateKeyEncoded);
+        publicKeyEncodedHex = ServerSecurityUtil.convertFromBytesToHexString(publicKeyEncoded);
 	}
 
 
