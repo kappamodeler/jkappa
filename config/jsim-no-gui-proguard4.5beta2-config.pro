@@ -7,7 +7,7 @@
 -injars ../lib/commons-cli/commons-cli-1.1.jar
 -injars ../lib/commons-logging/commons-logging-1.1.1.jar
 
--outjars ../jar/jsim-no-gui.jar(!META-INF/MANIFEST.MF)
+-outjars ../jar/jsim-no-gui.jar
 
 -libraryjars <java.home>/../Classes/classes.jar
 

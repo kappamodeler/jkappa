@@ -13,7 +13,7 @@
 -injars ../lib/spring/spring-context-2.0.2.jar
 -injars ../lib/spring/spring-core-2.0.2.jar
 
--outjars ../jar/jsim-all.jar(!META-INF/MANIFEST.MF)
+-outjars ../jar/jsim-all.jar
 
 -libraryjars <java.home>/../Classes/classes.jar
 
