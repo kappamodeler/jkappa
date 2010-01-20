@@ -68,7 +68,7 @@
 		<delete dir="${dist.dir}"/>
     </target>
 
-    <target name="cleanall" depends="clean" description="Clean up build, distribution, javadoc, and deployment direcotory." >
+    <target name="cleanall" depends="clean" description="Clean up build, distribution, javadoc, and deployment directory. Depends on: clean" >
 		<delete dir="${javadoc.dir}"/>
 		<delete dir="${deploy.dir}"/>
 	</target>
@@ -76,7 +76,7 @@
 	<target name="build" depends="set-revision,build-subprojects,build-project" 
 	        description="Sets the revision numnber, builds sub-projects and this project. Depends on: set-revision,build-subprojects,build-project"/>
     
-	<target name="build-subprojects" depends="build-license"/>
+	<target name="build-subprojects" depends="build-license" description="Build all sub-projects. Depends on: build-license"/>
      
     <target name="init" depends="filter-tpl" description="Initializes the build directory. Depends on: filter-tpl">
 		<tstamp/>
@@ -107,7 +107,7 @@
         </javac>
     </target>
 			
-	<target name="package" depends="build-project" description="Creates the JAR file. Depends on: build-project">
+	<target name="package" depends="build-project" description="Creates the main simulator JAR file. Depends on: build-project">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${dist.dir}/simulator.jar" compress="false">
 			<fileset dir="${build.dir}">
@@ -116,7 +116,7 @@
 		</jar>
 	</target>
 				
-	<target name="package-license-server" depends="build-license" description="Creates the JAR files for license management. Depends on: build-license">
+	<target name="package-license-server" depends="build-license" description="Creates server-side JAR files for license management. Depends on: build-license">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${dist.dir}/license-server.jar" compress="false">
 			<fileset dir="${license.build.dir}">
@@ -125,7 +125,7 @@
 		</jar>
 	</target>
 		
-	<target name="package-license-client" depends="build-license" description="Creates the JAR files for license management. Depends on: build-license">
+	<target name="package-license-client" depends="build-license" description="Creates obfuscated, client-side JAR files for license management. Depends on: build-license">
 		<mkdir dir="${dist.dir}"/>
 		<jar jarfile="${dist.dir}/license-client.jar" compress="false">
 			<fileset dir="${license.build.dir}">
@@ -135,7 +135,8 @@
 	    <proguard configuration="config/license-client-obfuscation-proguard4.5beta2-config.pro"/>
 	</target>
 
-	<target name="deploy" depends="build,package,package-license-server,createPaths" description="Deploys the package by building the project, creating the JAR file, and setting the paths. Depends on: build,package,createPaths">
+	<target name="deploy" depends="build,package,package-license-server,createPaths" 
+         description="Deploys the package by building the project, creating the JAR file, and setting the paths. Depends on: build,package,package-license-server,createPaths">
 		<mkdir dir="${deploy.dir}"/>
 		<property name="deploy-dest" value="Plectix-Simulator-${DSTAMP}"/>
 		<property name="deploy-zip.dir" value="${deploy.dir}/${deploy-dest}"/>
@@ -188,7 +189,7 @@
         </java>
     </target>
 		
-	<target name="createPaths">
+	<target name="createPaths" description="Create paths to be used in sh or bat scripts">
 		<!-- Define properties for the full paths to the lib and jar directories,
 		     so we can replace them below with the relative paths -->
 		<property name="lib-location" location="lib"/>
@@ -308,7 +309,7 @@
 
 	<!-- ################################### Test Targets ################################### -->
 	
-	<target name="build-tests" depends="build" description="Building tests. Depends on: build">
+	<target name="build-tests" depends="build" description="Builds tests. Depends on: build">
 		<echo>Building tests</echo>
 		<mkdir dir="${build.dir}/test"/>
 	    <echo message="OS: ${os.name} "/>
@@ -320,11 +321,11 @@
 		</javac>
 	</target>
 	
-	<target name="test" depends="unit-tests, acceptance-tests" description="Run JUnit tests. Depends on: build-tests">
+	<target name="test" depends="unit-tests, acceptance-tests" description="Runs unit and acceptance tests with junit. Depends on: unit-tests, acceptance-tests">
 			<echo message="All tests are complete - check log for errors"/>
-		</target>
+    </target>
 
-	<target name="acceptance-tests" depends="build-tests" description="Run JUnit tests. Depends on: build-tests">
+	<target name="acceptance-tests" depends="build-tests" description="Run acceptance tests with junit. Depends on: build-tests">
 			<echo>Running JUnit Tests</echo>
 			<junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="no">
 				<classpath refid="test.classpath" />
@@ -334,7 +335,7 @@
 			<echo message="Acceptance tests are complete - check log for errors"/>
 		</target>
 	
-	<target name="unit-tests" depends="build-tests" description="Run JUnit tests. Depends on: build-tests">
+	<target name="unit-tests" depends="build-tests" description="Run unit tests with junit. Depends on: build-tests">
 		<echo>Running JUnit Tests</echo>
 		<junit printsummary="yes" fork="yes" haltonfailure="yes" showoutput="no">
 			<classpath refid="test.classpath" />
@@ -399,7 +400,12 @@
 	    <proguard configuration="config/jsim-all-proguard4.5beta2-config.pro"/>
 		<move file="${dist.dir}/jsim-all.jar" tofile="${dist.dir}/jsim-all-${scm.name}-${revision.id}.jar"/>
     </target>
-	
+		
+    <target name="jsim-no-gui-jar" depends="package" description="Runs the 3rd party proguard application to prepare a jar file with all non-gui libs JSIM needs. Depends on: package">
+		<echo>Running proguard to prepare a jar file with non gui libs JSIM needs</echo>
+	    <proguard configuration="config/jsim-no-gui-proguard4.5beta2-config.pro"/>
+		<move file="${dist.dir}/jsim-no-gui.jar" tofile="${dist.dir}/jsim-no-gui-${scm.name}-${revision.id}.jar"/>
+    </target>
 
 
 	<!-- ################################### release at S3 target  ################################### -->
