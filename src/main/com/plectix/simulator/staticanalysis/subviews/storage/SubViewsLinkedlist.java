@@ -17,8 +17,8 @@ import com.plectix.simulator.staticanalysis.subviews.base.AbstractActionType;
 import com.plectix.simulator.util.NameDictionary;
 
 public class SubViewsLinkedlist implements SubViewsInterface {
-	private SubViewClass subViewClass;
-	private List<AbstractAgent> storage;
+	private final SubViewClass subViewClass;
+	private final List<AbstractAgent> storage;
 
 	public SubViewsLinkedlist(SubViewClass subViewClass) {
 		this.subViewClass = subViewClass;
@@ -285,6 +285,7 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 		return true;
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof SubViewClass))
 			return false;
@@ -295,10 +296,12 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 		return true;
 	}
 
+	@Override
 	public int hashCode() {
 		return subViewClass.hashCode();
 	}
 
+	@Override
 	public String toString() {
 		return subViewClass.toString();
 	}
@@ -330,7 +333,7 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 				if (addAbstractAgent(agent))
 					isAdd = true;
 			} catch (SubViewsExeption e) {
-				// e.printStackTrace();
+				e.printStackTrace();
 			}
 
 		return isAdd;

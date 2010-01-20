@@ -260,6 +260,9 @@ public class SimulationDataXMLWriter {
 		try {
 			createXMLOutput(writer);
 		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 		finally {
 			writer.close();
 		}
