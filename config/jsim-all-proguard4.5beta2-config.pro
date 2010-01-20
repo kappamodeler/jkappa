@@ -1,5 +1,17 @@
 -injars ../jar/simulator.jar
--injars ../lib(**/*.jar;)
+# -injars ../lib(**/*.jar;)
+
+# library jars:
+-injars ../lib/xstream/xstream-1.3.jar
+-injars ../lib/xstream/xpp3_min-1.1.4c.jar
+-injars ../lib/commons-logging/commons-logging-1.1.1.jar
+-injars ../lib/log4j/log4j-1.2.15.jar
+-injars ../lib/commons-cli/commons-cli-1.1.jar
+-injars ../lib/jfreechart/jcommon-1.0.16.jar
+-injars ../lib/jfreechart/jfreechart-1.0.13.jar
+-injars ../lib/spring/spring-beans-2.0.2.jar
+-injars ../lib/spring/spring-context-2.0.2.jar
+-injars ../lib/spring/spring-core-2.0.2.jar
 
 -outjars ../jar/jsim-all.jar(!META-INF/MANIFEST.MF)
 
