@@ -3,6 +3,7 @@ package com.plectix.simulator.staticanalysis.subviews;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.staticanalysis.Rule;
@@ -30,5 +31,7 @@ public interface AllSubViewsOfAllAgentsInterface {
 	public boolean isEmpty();
 
 	public Map<String, List<SubViewsInterface>> getSubViews();
+	
+	public Set<Integer> getDeadRules();
 
 }

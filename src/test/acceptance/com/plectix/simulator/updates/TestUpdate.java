@@ -69,17 +69,6 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		return myCurrentInjectionsList;
 	}
 
-	private boolean isClash(List<Injection> injections) {
-		if (injections.size() == 2) {
-			for (Site siteCC1 : injections.get(0).getSiteList())
-				for (Site siteCC2 : injections.get(1).getSiteList())
-					if (siteCC1.getParentAgent().getId() == siteCC2
-							.getParentAgent().getId())
-						return true;
-		}
-		return false;
-	}
-
 	private void run() throws StoryStorageException {
 		KappaSystem kappaSystem = mySimulator.getSimulationData()
 				.getKappaSystem();
@@ -95,7 +84,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		.getRandomRule();
 
 		if (myActiveRule == null) {
-			mySimulator.getSimulationData().getClock().setTimeLength(currentTime);
+//			mySimulator.getSimulationData().getClock().setTimeLimit(currentTime);
 			fail(myTestFileName + " : there's no active rules");
 		}
 

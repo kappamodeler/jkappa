@@ -151,7 +151,7 @@ public final class ContactMap {
 		return outList;
 	}
 
-	public final void fillingContactMap(List<Rule> rules,
+	public final void fillContactMap(List<Rule> rules,
 			AllSubViewsOfAllAgentsInterface subViews, KappaSystem kappaSystem) {
 		if (!isInitialized) {
 			setSimulationData(kappaSystem);

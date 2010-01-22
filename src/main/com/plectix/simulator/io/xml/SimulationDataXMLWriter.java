@@ -67,7 +67,7 @@ public class SimulationDataXMLWriter {
 		PlxTimer timer = new PlxTimer();
 		SimulationArguments simulationArguments = simulationData.getSimulationArguments();
 		KappaSystem kappaSystem = simulationData.getKappaSystem();
-		SimulationClock clock = simulationData.getClock();
+//		SimulationClock clock = simulationData.getClock();
 		
 //		XMLOutputFactory output = XMLOutputFactory.newInstance();
 //		XMLSimulatorWriter writer = output.createXMLSimulatorWriter(outstream);
@@ -129,7 +129,7 @@ public class SimulationDataXMLWriter {
 							.getConnectedComponentListForXMLOutput(),
 					simulationArguments.isInhibitionMap(), kappaSystem,
 					simulationArguments.isOcamlStyleNameingInUse());
-			clock.stopTimer(InfoType.OUTPUT, timer,
+			SimulationClock.stopTimer(simulationData, InfoType.OUTPUT, timer,
 					"-Building xml tree for influence map:");
 		}
 
@@ -144,7 +144,7 @@ public class SimulationDataXMLWriter {
 		if (simulationData.getSnapshots() != null) {
 			timer.startTimer();
 			writeSnapshotsToXML(writer);
-			clock.stopTimer(InfoType.OUTPUT, timer,
+			SimulationClock.stopTimer(simulationData, InfoType.OUTPUT, timer,
 					"-Building xml tree for snapshots:");
 		}
 
@@ -156,7 +156,7 @@ public class SimulationDataXMLWriter {
 					.toString(simulationArguments.getMaxNumberOfEvents()));
 			writer.writeAttribute("TotalTime", DecimalFormatter
 					.toStringWithSetNumberOfSignificantDigits(
-							simulationArguments.getTimeLength(),
+							simulationArguments.getTimeLimit(),
 							NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
 			writer.writeAttribute("InitTime", DecimalFormatter
 					.toStringWithSetNumberOfSignificantDigits(
@@ -185,7 +185,7 @@ public class SimulationDataXMLWriter {
 			writer.writeCData(cdata.toString());
 			writer.writeEndElement();
 			writer.writeEndElement();
-			clock.stopTimer(InfoType.OUTPUT, timer,
+			SimulationClock.stopTimer(simulationData, InfoType.OUTPUT, timer,
 					"-Building xml tree for data points:");
 		}
 
@@ -266,7 +266,8 @@ public class SimulationDataXMLWriter {
 		finally {
 			writer.close();
 		}
-		simulationData.getClock().stopTimer(InfoType.OUTPUT, timerOutput,
+		
+		SimulationClock.stopTimer(simulationData, InfoType.OUTPUT, timerOutput,
 				"-Results outputted in xml session:");
 	}
 

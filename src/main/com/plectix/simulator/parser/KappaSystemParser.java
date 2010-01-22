@@ -28,10 +28,10 @@ public final class KappaSystemParser {
 	 * @param outputType output mode for logger
 	 * @throws SimulationDataFormatException when an error occurred
 	 */
-	public final void parse(InfoType outputType) throws SimulationDataFormatException {
+	public final KappaSystem parse(InfoType outputType) throws SimulationDataFormatException {
 		KappaModel model = (new KappaModelCreator(
 				simulationData.getSimulationArguments())).createModel(kappaFile);
 		simulationData.setInitialModel(model);
-		new KappaSystemBuilder(simulationData).build();
+		return new KappaSystemBuilder(simulationData).build();
 	}
 }

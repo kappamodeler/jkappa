@@ -59,7 +59,7 @@ public final class SimulationArguments {
 	private int seed = DEFAULT_SEED;
 	private long maxClashes = DEFAULT_MAX_CLASHES;
 	private long maxNumberOfEvents;
-	private double timeLength = 0;
+	private double timeLimit = 0;
 	private boolean isTime = false;
 	private int iterations = 1;
 	private boolean activationMap = false;
@@ -267,15 +267,15 @@ public final class SimulationArguments {
 	 * If "--event" option is specified on the command line, it is set to <code>false</code>.
 	 * 
 	 * @param isTime
-	 * @see #setTimeLength(double)
+	 * @see #setTimeLimit(double)
 	 * @see #setMaxNumberOfEvents(long)
 	 */
 	public final void setTime(boolean isTime) {
 		this.isTime = isTime;
 	}
 	
-	public final double getTimeLength() {
-		return timeLength;
+	public final double getTimeLimit() {
+		return timeLimit;
 	}
 	
 	/**
@@ -284,11 +284,11 @@ public final class SimulationArguments {
 	 * <br><br>
 	 * Corresponds to "--time" option in simplx.
 	 * 
-	 * @param timeLength
+	 * @param timeLimit
 	 * @see #isTime()
 	 */
-	public final void setTimeLength(double timeLength) {
-		this.timeLength = timeLength;
+	public final void setTimeLimit(double timeLimit) {
+		this.timeLimit = timeLimit;
 	}
 
 	public final long getMaxNumberOfEvents() {

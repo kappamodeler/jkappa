@@ -80,7 +80,7 @@ public final class TestEvents {
 		}
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, args);
-		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
+		(new SimulationDataReader(simulationData)).readAndCompile();
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 	}
 

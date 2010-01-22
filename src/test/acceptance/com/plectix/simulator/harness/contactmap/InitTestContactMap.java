@@ -8,6 +8,8 @@ import org.apache.log4j.PropertyConfigurator;
 import com.plectix.simulator.SimulatorTestOptions;
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.io.SimulationDataReader;
+import com.plectix.simulator.parser.KappaFile;
+import com.plectix.simulator.simulator.CompiledKappaFile;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
@@ -55,7 +57,9 @@ public class InitTestContactMap extends DefaultPropertiesForTest {
 		argSimulation = commandLine.getSimulationArguments();
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
-		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
+		SimulationDataReader reader = new SimulationDataReader(simulationData);
+		KappaFile file = reader.readSimulationFile();
+		(new SimulationDataReader(simulationData)).readAndCompile();
 	}
 
 	public static SimulationArguments getSimulationArguments() {

@@ -16,12 +16,14 @@ import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.io.ConsoleOutputManager;
 import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.io.xml.SimulationDataXMLWriter;
+import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.simulationclasses.perturbations.TimeCondition;
 import com.plectix.simulator.simulationclasses.solution.OperationMode;
 import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
+import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.RuleApplicator;
 import com.plectix.simulator.staticanalysis.stories.Stories;
@@ -73,6 +75,16 @@ public final class Simulator implements SimulatorInterface {
 	private final RuleApplicator ruleApplicator = new RuleApplicator(
 			simulationData);
 
+	//---------------------------------------------------
+	
+	private OperationType latestOperationDone;
+	
+	public final OperationType getLatestOperation() {
+		return latestOperationDone;
+	}
+	
+	//---------------------------------------------------
+	
 	public Simulator() {
 		super();
 		simulatorStatus.setStatusMessage(STATUS_IDLE);
@@ -100,7 +112,7 @@ public final class Simulator implements SimulatorInterface {
 					.getSimulationArguments();
 			if (simulationArguments.isTime()) {
 				progress = simulatorStatus.getCurrentTime()
-						/ simulationArguments.getTimeLength();
+						/ simulationArguments.getTimeLimit();
 			} else {
 				progress = simulatorStatus.getCurrentEventNumber() * 1.0
 						/ simulationArguments.getMaxNumberOfEvents();
@@ -138,7 +150,7 @@ public final class Simulator implements SimulatorInterface {
 	}
 
 	private final void endMerge(PlxTimer timer) {
-		simulationData.getClock().stopTimer(InfoType.OUTPUT, timer,
+		SimulationClock.stopTimer(simulationData, InfoType.OUTPUT, timer,
 				"-Merge stories:");
 	}
 
@@ -146,7 +158,7 @@ public final class Simulator implements SimulatorInterface {
 			PlxTimer timer) {
 		outputType = simulationData.getSimulationArguments()
 				.getOutputTypeForAdditionalInfo();
-		simulationData.getClock().stopTimer(outputType, timer, "-Simulation:");
+		SimulationClock.stopTimer(simulationData, outputType, timer, "-Simulation:");
 
 		switch (outputType) {
 		case OUTPUT:
@@ -184,8 +196,7 @@ public final class Simulator implements SimulatorInterface {
 	 * @throws SimulationDataFormatException
 	 * @throws IOException
 	 */
-	// TODO add it's own timer and console message
-	private void readInputKappaFile() throws RuntimeException,
+	public final void readInputKappaFile() throws RuntimeException,
 			SimulationDataFormatException, IOException {
 		PlxTimer readingKappaTimer = new PlxTimer();
 		readingKappaTimer.startTimer();
@@ -193,14 +204,14 @@ public final class Simulator implements SimulatorInterface {
 		simulatorStatus.setStatusMessage(STATUS_READING_KAPPA);
 		simulationData.getConsoleOutputManager().addAdditionalInfo(InfoType.INFO,
 				"--Computing initial state");
-		(new SimulationDataReader(simulationData))
-				.readSimulationFile(InfoType.OUTPUT);
+		
+		new SimulationDataReader(simulationData).readAndCompile();
 
-		simulationData.getClock().stopTimer(InfoType.OUTPUT, readingKappaTimer,
+		SimulationClock.stopTimer(simulationData, InfoType.OUTPUT, readingKappaTimer,
 				"-Reading Kappa input:");
 	}
 
-	private void loadSimulationArguments(SimulatorInputData simulatorInputData) {
+	public final void loadSimulationArguments(SimulatorInputData simulatorInputData) {
 		SimulationArguments simulationArguments = simulatorInputData
 				.getSimulationArguments();
 		ConsoleOutputManager consoleOutputManager = simulationData.getConsoleOutputManager(); 
@@ -226,27 +237,26 @@ public final class Simulator implements SimulatorInterface {
 			}
 		}
 
-		simulationData.setSimulationArguments(InfoType.OUTPUT,
-				simulatorInputData.getSimulationArguments());
+		simulationData.setSimulationArguments(InfoType.OUTPUT, simulationArguments);
 	}
 
 	// TODO
-	private void initializeKappaSystem() {
+	public final void initializeKappaSystem() {
 		PlxTimer initializationTimer = new PlxTimer();
 		initializationTimer.startTimer();
-
+		
 		simulatorStatus.setStatusMessage(STATUS_INITIALIZING);
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 
-		simulationData.getClock().stopTimer(InfoType.OUTPUT,
+		SimulationClock.stopTimer(simulationData, InfoType.OUTPUT,
 				initializationTimer, "-Initialization:");
 	}
 
-	private void outputCurrentSimulationDataToXML() throws Exception {
+	public final void outputCurrentSimulationDataToXML() throws Exception {
 		(new SimulationDataXMLWriter(simulationData)).outputXMLData();
 	}
 
-	private void checkAndOutputMemory() {
+	private final void checkAndOutputMemory() {
 		PeakMemoryUsage peakMemoryUsage = MemoryUtil.getPeakMemoryUsage();
 		if (peakMemoryUsage != null) {
 			simulationData.getConsoleOutputManager().addAdditionalInfo(InfoType.INFO,
@@ -258,7 +268,7 @@ public final class Simulator implements SimulatorInterface {
 		}
 	}
 
-	private boolean hasNoNeedToRunAnything(
+	private final boolean hasNoNeedToRunAnything(
 			SimulationArguments simulationArguments) {
 		return simulationArguments.isGenereteMap()
 				|| (simulationArguments.getSimulationType() == SimulationType.CONTACT_MAP)
@@ -274,6 +284,7 @@ public final class Simulator implements SimulatorInterface {
 		consoleOutputManager.addAdditionalInfo(InfoType.INFO, INTRO_MESSAGE);
 
 		this.loadSimulationArguments(simulatorInputData);
+		SimulationClock clock = this.createClock();
 
 		this.readInputKappaFile();
 		this.initializeKappaSystem();
@@ -283,13 +294,11 @@ public final class Simulator implements SimulatorInterface {
 			return;
 		}
 
-		if (!this.hasNoNeedToRunAnything(simulationData
-				.getSimulationArguments())) {
-			simulationData.getClock().setClockStamp(System.currentTimeMillis());
+		if (!this.hasNoNeedToRunAnything(simulationData.getSimulationArguments())) {
 			if (simulationData.getSimulationArguments().storiesModeIsOn()) {
-				runStories();
+				runStories(clock);
 			} else {
-				runSimulation();
+				runSimulation(clock);
 			}
 		}
 
@@ -302,13 +311,33 @@ public final class Simulator implements SimulatorInterface {
 		simulatorStatus.setStatusMessage(STATUS_IDLE);
 	}
 
+	private final SimulationClock createClock() {
+		SimulationArguments arguments = simulationData.getSimulationArguments();
+		SimulationClock clock = new SimulationClock(simulationData);
+		
+		// TODO we may do it in constructor of SimulationClock
+		if (simulationData.getSimulationArguments().isTime()) {
+			clock.setTimeLimit(arguments.getTimeLimit());
+		} else {
+			clock.setEvent(arguments.getMaxNumberOfEvents());
+			simulationData.getConsoleOutputManager().println("*Warning* No time limit.");
+		}
+		
+		return clock;
+	}
+	
 	public final void runSimulation() throws Exception {
+		this.runSimulation(this.createClock());
+	}
+	
+	public final void runSimulation(SimulationClock clock) throws Exception {
+		clock.setClockStamp(System.currentTimeMillis());
+
 		ConsoleOutputManager consoleOutputManager = simulationData.getConsoleOutputManager();
 		consoleOutputManager.addAdditionalInfo(InfoType.INFO, "-Simulation...");
 
 		PlxTimer simulationTimer = new PlxTimer();
 		simulationTimer.startTimer();
-		SimulationClock clock = simulationData.getClock();
 
 		int seed = simulationData.getSimulationArguments().getSeed();
 		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
@@ -357,7 +386,7 @@ public final class Simulator implements SimulatorInterface {
 				List<ComplexPerturbation<?, ?>> perturbations = simulationData
 						.getKappaSystem().getPerturbations();
 				double tmpTime = simulationData.getSimulationArguments()
-						.getTimeLength();
+						.getTimeLimit();
 				ComplexPerturbation<TimeCondition, ?> tmpPerturbation = null;
 
 				for (ComplexPerturbation<?, ?> perturbation : perturbations) {
@@ -384,7 +413,7 @@ public final class Simulator implements SimulatorInterface {
 					rule = simulationData.getKappaSystem().getRandomRule();
 				} else {
 					isEndRules = true;
-					clock.setTimeLength(currentTime);
+					clock.setTimeLimit(currentTime);
 					consoleOutputManager.println("#");
 					break;
 				}
@@ -401,22 +430,19 @@ public final class Simulator implements SimulatorInterface {
 			if (clock.isEndSimulation(currentTime, currentEventNumber)) {
 				if (simulationData.getSimulationArguments().isTime()) {
 					simulationData.checkOutputFinalState(simulationData
-							.getSimulationArguments().getTimeLength());
+							.getSimulationArguments().getTimeLimit());
 				} else {
 					simulationData.checkOutputFinalState(currentTime);
 				}
 
 			}
-			if (isCalculateObs
-					&& simulationData.getSimulationArguments()
-							.getReportExactSampleTime()
+			if (isCalculateObs 
+					&& simulationData.getSimulationArguments().getReportExactSampleTime()
 					&& simulationData.getSimulationArguments().isTime()) {
-				simulationData.getKappaSystem().getObservables()
-						.calculateExactSampleObs(
+				simulationData.getKappaSystem().getObservables().calculateExactSampleObs(
 								currentTime,
 								currentEventNumber,
-								simulationData.getSimulationArguments()
-										.isTime());
+								simulationData.getSimulationArguments().isTime());
 			}
 			if (LOGGER.isDebugEnabled()) {
 				LOGGER.debug("Rule: " + rule.getName());
@@ -501,19 +527,25 @@ public final class Simulator implements SimulatorInterface {
 		// currentTime, currentEventNumber);
 		if (simulationData.getSimulationArguments().isTime()
 				&& currentTime > simulationData.getSimulationArguments()
-						.getTimeLength()) {
-			clock.setTimeLength(simulationData.getSimulationArguments()
-					.getTimeLength());
+						.getTimeLimit()) {
+			clock.setTimeLimit(simulationData.getSimulationArguments()
+					.getTimeLimit());
 			clock.setEvent(currentEventNumber - 1);
 
 		} else {
-			clock.setTimeLength(currentTime);
+			clock.setTimeLimit(currentTime);
 			clock.setEvent(currentEventNumber);
 		}
 		endSimulation(InfoType.OUTPUT, isEndRules, simulationTimer);
 	}
 
-	public final void runStories() throws Exception {
+	public void runStories() throws Exception {
+		this.runStories(this.createClock());
+	}
+
+	public final void runStories(SimulationClock clock) throws Exception {
+		clock.setClockStamp(System.currentTimeMillis());
+		
 		Stories stories = simulationData.getKappaSystem().getStories();
 		ConsoleOutputManager consoleOutputManager = simulationData.getConsoleOutputManager();
 		
@@ -524,8 +556,6 @@ public final class Simulator implements SimulatorInterface {
 		InfoType additionalInfoOutputType = simulationData
 				.getSimulationArguments().getOutputTypeForAdditionalInfo();
 		consoleOutputManager.addAdditionalInfo(InfoType.INFO, "-Simulation...");
-
-		SimulationClock clock = simulationData.getClock();
 
 		clock.resetBar();
 		PlxTimer timerAllStories = new PlxTimer();
@@ -575,7 +605,7 @@ public final class Simulator implements SimulatorInterface {
 				Rule rule = simulationData.getKappaSystem().getRandomRule();
 
 				if (rule == null) {
-					clock.setTimeLength(currentTime);
+					clock.setTimeLimit(currentTime);
 					consoleOutputManager.println("#");
 					break;
 				}

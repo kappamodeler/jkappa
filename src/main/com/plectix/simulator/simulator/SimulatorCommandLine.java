@@ -242,7 +242,7 @@ public final class SimulatorCommandLine {
 		}
 		
 		if (hasOption(SimulatorOption.TIME)) {
-			simulationArguments.setTimeLength(getDoubleValue(SimulatorOption.TIME));
+			simulationArguments.setTimeLimit(getDoubleValue(SimulatorOption.TIME));
 			simulationArguments.setTime(true);
 		} 
 
@@ -386,13 +386,13 @@ public final class SimulatorCommandLine {
 			simulationArguments.setEnumerationOfSpecies(false);
 		}
 
-		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.NONE) {
-			if (!simulationArguments.isHelp() && !simulationArguments.isVersion()) {
-				// HelpFormatter formatter = new HelpFormatter();
-				// formatter.printHelp("use --sim [file]", cmdLineOptions);
-				throw new IllegalArgumentException("No option specified");
-			}
-		}
+//		if (simulationArguments.getSimulationType() == SimulationArguments.SimulationType.NONE) {
+//			if (!simulationArguments.isHelp() && !simulationArguments.isVersion()) {
+//				// HelpFormatter formatter = new HelpFormatter();
+//				// formatter.printHelp("use --sim [file]", cmdLineOptions);
+//				throw new IllegalArgumentException("No option specified");
+//			}
+//		}
 	
 		simulationArguments.setInputFilename(fileName);
 		

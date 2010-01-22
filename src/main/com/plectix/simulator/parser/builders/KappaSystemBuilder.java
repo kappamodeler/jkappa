@@ -21,7 +21,7 @@ public final class KappaSystemBuilder {
 		this.simulationData = simulationData;
 	}
 	
-	public final void build() throws ParseErrorException, DocumentFormatException {
+	public final KappaSystem build() throws ParseErrorException, DocumentFormatException {
 		KappaModel model = simulationData.getInitialModel();
 		SimulationArguments arguments = simulationData.getSimulationArguments();
 		KappaSystem kappaSystem = simulationData.getKappaSystem();
@@ -59,5 +59,6 @@ public final class KappaSystemBuilder {
 			ModelSolution solution = model.getSolution();
 			kappaSystem.setSolution((new SolutionBuilder(simulationData)).build(solution, masterSolutionModel));
 		}
+		return kappaSystem;
 	}
 }

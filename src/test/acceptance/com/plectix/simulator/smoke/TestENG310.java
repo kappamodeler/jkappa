@@ -47,7 +47,7 @@ public class TestENG310 extends SmokeTest {
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
 		try{
-			(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
+			(new SimulationDataReader(simulationData)).readAndCompile();
 //			fail("Incomplete substance!!");
 		}catch (Exception e) {
 			if(!e.getMessage().

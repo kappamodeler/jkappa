@@ -42,7 +42,7 @@ public class TestENG229 extends SmokeTest {
 		}
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
-		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
+		(new SimulationDataReader(simulationData)).readAndCompile();
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 		try {
 			mySimulator.runSimulation();

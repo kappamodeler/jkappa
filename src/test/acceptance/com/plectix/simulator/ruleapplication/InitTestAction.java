@@ -64,7 +64,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
-		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
+		(new SimulationDataReader(simulationData)).readAndCompile();
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 
 		// run();
@@ -99,7 +99,6 @@ public class InitTestAction extends DirectoryTestsRunner {
 		activeRule = kappaSystem.getRandomRule();
 
 		if (activeRule == null) {
-			simulator.getSimulationData().getClock().setTimeLength(currentTime);
 			System.exit(0);
 		}
 

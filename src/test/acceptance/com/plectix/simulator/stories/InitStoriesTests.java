@@ -55,9 +55,9 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 	@Before
 	public void setup() throws Exception {
 		init(testDirectory + FileName, operationMode);
-		if (mode) {
-			mySimulator.getSimulationData().getClock().setTimeLength(time);
-		}
+//		if (mode) {
+//			mySimulator.getSimulationData().getClock().setTimeLimit(time);
+//		}
 		try {
 			mySimulator.runStories();
 		} catch (Exception e) {
@@ -93,7 +93,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 		}
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, args);
-		(new SimulationDataReader(simulationData)).readSimulationFile(InfoType.OUTPUT);
+		(new SimulationDataReader(simulationData)).readAndCompile();
 		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
 	}
 

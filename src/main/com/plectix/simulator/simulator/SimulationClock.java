@@ -29,7 +29,7 @@ public class SimulationClock {
 		}
 
 		if (simulationArguments.isTime()) {
-			if (currentTime <= simulationArguments.getTimeLength()) {
+			if (currentTime <= simulationArguments.getTimeLimit()) {
 				if (currentTime >= nextStep) {
 					consoleOutputManager.outputBar();
 					nextStep += step;
@@ -91,17 +91,16 @@ public class SimulationClock {
 		simulationArguments.setMaxNumberOfEvents(event);
 	}
 
-	public final void setTimeLength(double timeLength) {
+	public final void setTimeLimit(double timeLimit) {
 		SimulationArguments simulationArguments = simulationData.getSimulationArguments();
 		
 		checkAndInitStoriesBar();
-		step = timeLength / simulationArguments.getClockPrecision();
+		step = timeLimit / simulationArguments.getClockPrecision();
 		nextStep = step;
-		simulationArguments.setTimeLength(timeLength);
-		simulationArguments.setTime(true);
+		simulationData.setTimeLimit(timeLimit);
 	}
 	
-	public final void stopTimer(InfoType outputType, PlxTimer timer,
+	public static final void stopTimer(SimulationData simulationData, InfoType outputType, PlxTimer timer,
 			String message) {
 		if (timer == null) {
 			return;

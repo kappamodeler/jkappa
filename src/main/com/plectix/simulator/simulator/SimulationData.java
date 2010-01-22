@@ -29,7 +29,6 @@ public final class SimulationData {
 	private final KappaSystem kappaSystem = new KappaSystem(this);
 
 	private final ConsoleOutputManager consoleOutputManager = new ConsoleOutputManager(this); 
-	private final SimulationClock clock = new SimulationClock(this);
 	
 	public final KappaSystem getKappaSystem() {
 		return kappaSystem;
@@ -78,14 +77,6 @@ public final class SimulationData {
 
 		this.addInfo(InfoType.INFO, "-Initialization...");
 
-		// TODO: remove the following lines after checking all the dependencies to them!!!
-		if (simulationArguments.isTime()) {
-			clock.setTimeLength(simulationArguments.getTimeLength());
-		} else {
-			clock.setEvent(simulationArguments.getMaxNumberOfEvents());
-			consoleOutputManager.println("*Warning* No time limit.");
-		}
-
 		this.argumentsInitialized = true;
 	}
 
@@ -132,6 +123,20 @@ public final class SimulationData {
 	// GETTERS AND SETTERS
 	//
 
+	// TODO THIS IS VERY BAD, I GONNA CRY, we need to move this part later
+	public final void setTimeLimit(double timeLimit) {
+		double oldValue = simulationArguments.getTimeLimit();
+		simulationArguments.setTime(true);
+		simulationArguments.setTimeLimit(timeLimit);
+		if (Math.abs(timeLimit - oldValue) > 0.001) {
+			kappaSystem.getObservables().init(timeLimit, 
+					simulationArguments.getInitialTime(), 
+					simulationArguments.getMaxNumberOfEvents(),
+					simulationArguments.getPoints(),
+					simulationArguments.isTime());
+		}
+	}
+	
 	public final SimulationArguments getSimulationArguments() {
 		return simulationArguments;
 	}
@@ -179,10 +184,6 @@ public final class SimulationData {
 
 	public boolean argumentsInitialized() {
 		return argumentsInitialized;
-	}
-
-	public SimulationClock getClock() {
-		return clock;
 	}
 
 	public List<Info> getInfo() {
