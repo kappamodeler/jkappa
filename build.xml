@@ -423,7 +423,7 @@
 	    </classpath>
 	</taskdef>
 
-	<target name="releaseS3" depends="all" description="Builds and pushes the code to Amazons's S3. Depends on: all">
+	<target name="releaseS3" depends="all, package-license-server" description="Builds and pushes the code to Amazons's S3. Depends on: all, package-license-server">
 	    <property environment="env"/>
 		<property file="config/aws.properties"/>
 	    <property name="latest"        value="${scm.name}-${revision.id}"/>
