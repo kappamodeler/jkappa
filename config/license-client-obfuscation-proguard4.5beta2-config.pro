@@ -8,6 +8,8 @@
 -optimizationpasses 3
 -printmapping ../jar/lcnsclnt-obf-mapping.txt
 
+-target 1.5
+
 # Files that are located in the "config" folder:
 # -applymapping lcnsclnt-obfuscation-mapping.txt
 -obfuscationdictionary proguard4.5beta2-dictionaries-compact.txt

@@ -1,5 +1,7 @@
 -injars ../jar/simulator.jar
-# -injars ../lib(**/*.jar;)
+# -injars ../config/applicationContext.xml
+# -injars ../config/log4j.properties
+# -injars ../config/ui.properties
 
 # library jars:
 -injars ../lib/xstream/xstream-1.3.jar
