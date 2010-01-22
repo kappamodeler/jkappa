@@ -21,7 +21,7 @@ import javax.swing.JPanel;
  */
 @SuppressWarnings("serial")
 public class DialogPanel extends JDialog {
-	public boolean accepted = false;
+	private boolean accepted = false;
 	
 	public DialogPanel() {
 		super();
