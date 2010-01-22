@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.plectix.simulator.consoleOutput.TestConsoleOutput;
 import com.plectix.simulator.injections.RunInjectionsTests;
 import com.plectix.simulator.localviews.TestLocalViews;
 import com.plectix.simulator.localviews.TestLocalViewsCompareXML;
@@ -43,7 +44,8 @@ import com.plectix.simulator.xmlmap.TestInfluenceMap;
 //		RunAllUnitTests.class,
 		RunTestWeakCompression.class,
 		TestContactMap.class,
-		TestWeightedItemSelector.class})
+		TestWeightedItemSelector.class,
+		TestConsoleOutput.class})
 public class RunAllAcceptanceTests {
 //	public static final String FILENAME_EXTENSION = ".test";
 //	public static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";

@@ -57,6 +57,7 @@ public final class SimulationData {
 		this.simulationArguments = arguments;
 		this.simulationArguments.updateRandom();
 
+		
 		if (simulationArguments.isVersion()) {
 			consoleOutputManager.println("Java Simulator Revision: "
 					+ BuildConstants.BUILD_SVN_REVISION);

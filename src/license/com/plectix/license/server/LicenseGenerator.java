@@ -6,7 +6,6 @@ import java.security.PrivateKey;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 
-
 import com.plectix.license.client.License;
 import com.plectix.license.client.LicenseException;
 import com.plectix.license.client.License_V1;

@@ -1,0 +1,34 @@
+JSIM: Build on N/A from Revision N/A, JRE: Sun Microsystems Inc. 1.6.0_17
+Java --compile data/easy-egfr.ka
+-Initialization...
+*Warning* No time limit.
+--Computing initial state
+-Reading Kappa input: WallClock=0.062 ThreadTime=0.0625 sec. CPU
+-Initialization: WallClock=0.078 ThreadTime=0.0625 sec. CPU
+BND (#1,r) (#0,l) 
+----------------------------
+R(l,r),E(r)->R(l!0,r),E(r!0)
+----------------------------
+
+
+BRK (#0,l) (#1,r) 
+----------------------------
+R(l!0,r),E(r!0)->R(l,r),E(r)
+----------------------------
+
+
+BND (#3,r) (#2,r) 
+--------------------------------------------------------------------
+E(r!0),R(l!0,r),E(r!1),R(l!1,r)->E(r!0),E(r!1),R(l!0,r!2),R(l!1,r!2)
+--------------------------------------------------------------------
+
+
+BRK (#2,r) (#3,r) 
+--------------------------------------------------------------------
+E(r!0),E(r!1),R(l!0,r!2),R(l!1,r!2)->E(r!0),R(l!0,r),E(r!1),R(l!1,r)
+--------------------------------------------------------------------
+
+
+PERTURBATIONS:
+INITIAL SOLUTION:
+-5000*[R(l,r),E(r)]

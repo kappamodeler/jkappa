@@ -153,7 +153,7 @@ public class ConsoleOutputManager {
 										.getIdInRuleHandside() - 1));
 						print(",");
 						print(siteTo.getName());
-						print(") ");
+						println(") ");
 					}
 					break;
 				}

@@ -61,8 +61,6 @@ public final class Simulator implements SimulatorInterface {
 	private int currentIterationNumber = 0;
 
 	private final SimulationData simulationData = new SimulationData();
-	private final ConsoleOutputManager consoleOutputManager = new ConsoleOutputManager(
-			simulationData);
 	private final SimulatorStatus simulatorStatus = new SimulatorStatus();
 	private final SimulatorResultsData simulatorResultsData = new SimulatorResultsData();
 	private final LiveDataStreamer liveDataStreamer = new LiveDataStreamer();
@@ -167,6 +165,7 @@ public final class Simulator implements SimulatorInterface {
 			currentTime = 0.0;
 		}
 
+		ConsoleOutputManager consoleOutputManager = simulationData.getConsoleOutputManager();
 		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
 				"-Reset simulation data.");
 		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
@@ -192,7 +191,7 @@ public final class Simulator implements SimulatorInterface {
 		readingKappaTimer.startTimer();
 
 		simulatorStatus.setStatusMessage(STATUS_READING_KAPPA);
-		consoleOutputManager.addAdditionalInfo(InfoType.INFO,
+		simulationData.getConsoleOutputManager().addAdditionalInfo(InfoType.INFO,
 				"--Computing initial state");
 		(new SimulationDataReader(simulationData))
 				.readSimulationFile(InfoType.OUTPUT);
@@ -204,9 +203,8 @@ public final class Simulator implements SimulatorInterface {
 	private void loadSimulationArguments(SimulatorInputData simulatorInputData) {
 		SimulationArguments simulationArguments = simulatorInputData
 				.getSimulationArguments();
-
-		simulationData.setConsolePrintStream(simulatorInputData
-				.getPrintStream());
+		ConsoleOutputManager consoleOutputManager = simulationData.getConsoleOutputManager(); 
+		
 		if (simulationArguments.isNoDumpStdoutStderr()) {
 			consoleOutputManager.setPrintStream(null);
 		}
@@ -251,7 +249,7 @@ public final class Simulator implements SimulatorInterface {
 	private void checkAndOutputMemory() {
 		PeakMemoryUsage peakMemoryUsage = MemoryUtil.getPeakMemoryUsage();
 		if (peakMemoryUsage != null) {
-			consoleOutputManager.addAdditionalInfo(InfoType.INFO,
+			simulationData.getConsoleOutputManager().addAdditionalInfo(InfoType.INFO,
 					"-Peak Memory Usage (in bytes): "
 							+ peakMemoryUsage
 							+ " [period= "
@@ -270,6 +268,9 @@ public final class Simulator implements SimulatorInterface {
 	public final void run(SimulatorInputData simulatorInputData)
 			throws Exception {
 		// add info about JSIM:
+		ConsoleOutputManager consoleOutputManager = simulationData.getConsoleOutputManager();
+		simulationData.setConsolePrintStream(simulatorInputData.getPrintStream());
+
 		consoleOutputManager.addAdditionalInfo(InfoType.INFO, INTRO_MESSAGE);
 
 		this.loadSimulationArguments(simulatorInputData);
@@ -302,6 +303,7 @@ public final class Simulator implements SimulatorInterface {
 	}
 
 	public final void runSimulation() throws Exception {
+		ConsoleOutputManager consoleOutputManager = simulationData.getConsoleOutputManager();
 		consoleOutputManager.addAdditionalInfo(InfoType.INFO, "-Simulation...");
 
 		PlxTimer simulationTimer = new PlxTimer();
@@ -513,7 +515,8 @@ public final class Simulator implements SimulatorInterface {
 
 	public final void runStories() throws Exception {
 		Stories stories = simulationData.getKappaSystem().getStories();
-
+		ConsoleOutputManager consoleOutputManager = simulationData.getConsoleOutputManager();
+		
 		synchronized (statusLock) {
 			currentEventNumber = 0;
 		}

@@ -1,6 +1,7 @@
 package com.plectix.simulator.parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,8 +21,6 @@ import com.plectix.simulator.parser.builders.KappaSystemBuilder;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.staticanalysis.contactmap.ContactMapMode;
-import com.plectix.simulator.util.Info.InfoType;
 
 public class TestParserSites extends DirectoryTestsRunner {
 

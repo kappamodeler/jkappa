@@ -1,0 +1,16 @@
+#--compile 
+
+#rules
+R(l,r) , E(r) <-> R(l!1,r) , E(r!1)
+#R(l!1,r) , E(r!1) -> R(l,r) , E(r)
+E(r!1) , E(r!2) , R(l!1,r) , R(l!2,r) -> E(r!1) , E(r!2) ,  R(l!1,r!3) , R(l!2,r!3)
+E(r!1) , E(r!2) , R(l!1,r!3) , R(l!2,r!3) -> E(r!1) , E(r!2) , R(l!1,r) , R(l!2,r)
+
+#Initial solution
+%init: 5000*(R(l,r),E(r))
+
+#Observation
+%obs: R(l,r)
+%obs: E(r)
+%obs: R(l!1,r) , E(r!1)
+%obs: E(r!1) , E(r!2) ,  R(l!1,r!3) , R(l!2,r!3)
