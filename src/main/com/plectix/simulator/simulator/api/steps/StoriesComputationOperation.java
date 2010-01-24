@@ -8,7 +8,7 @@ import com.plectix.simulator.simulator.SimulationArguments.StoryCompressionMode;
 import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
 
-public class StoriesComputationOperation extends AbstractOperation {
+class StoriesComputationOperation extends AbstractOperation {
 
 	public StoriesComputationOperation() {
 		super(OperationType.STORIES);
