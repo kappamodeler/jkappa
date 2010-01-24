@@ -51,7 +51,7 @@ public class MasterInformationAboutWires {
 		this.numberOfUnresolvedEventOnWire = numberOfUnresolvedEventOnWire;
 	}
 
-	public void fullInformationAboutWires(AtomicEvent<?> atomicEvent,
+	void fullInformationAboutWires(AtomicEvent<?> atomicEvent,
 			WireHashKey key) throws StoryStorageException {
 		ActionOfAEvent type = atomicEvent.getType();
 		AbstractState<?> state = atomicEvent.getState();

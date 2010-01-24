@@ -8,7 +8,7 @@ import java.util.Locale;
 
 import javax.swing.JTextArea;
 
-public class ConsolePrintStream extends PrintStream {
+class ConsolePrintStream extends PrintStream {
 	
 	private JTextArea textArea = null;
 
@@ -212,7 +212,7 @@ public class ConsolePrintStream extends PrintStream {
 		super.write(b);
 	}
 	
-	public static void printWhereAmI() {
+	private static void printWhereAmI() {
 	    //create exception and write its stack trace to a String
 	    StringWriter sw = new StringWriter();
 	    PrintWriter pw = new PrintWriter(sw);

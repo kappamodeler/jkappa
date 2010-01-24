@@ -23,8 +23,8 @@ import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 		}
 	}
 
-	public MarkAgentWithFuture(AbstractAgent agent, ActionType type) {
-		this.type = type;
+	public MarkAgentWithFuture(AbstractAgent agent) {
+		this.type = ActionType.BREAK;
 		AbstractAgent agentNew = new AbstractAgent(agent.getName());
 		this.agent = agentNew;
 	}

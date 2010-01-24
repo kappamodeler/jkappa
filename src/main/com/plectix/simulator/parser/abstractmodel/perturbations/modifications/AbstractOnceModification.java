@@ -10,7 +10,7 @@ public abstract class AbstractOnceModification implements PerturbationModificati
 	// TODO $INF == -1
 	private final int quantity;
 	
-	public AbstractOnceModification(List<ModelAgent> agents, int quantity) {
+	AbstractOnceModification(List<ModelAgent> agents, int quantity) {
 		this.substanceAgents = agents;
 		this.quantity = quantity;
 	}

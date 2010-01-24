@@ -17,7 +17,7 @@ import com.plectix.simulator.staticanalysis.stories.graphs.UniqueGraph;
 import com.plectix.simulator.staticanalysis.stories.storage.EventIteratorInterface;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
 
-public class StoriesXMLWriter {
+class StoriesXMLWriter {
 	private Stories stories;
 	
 	public StoriesXMLWriter(Stories stories) {

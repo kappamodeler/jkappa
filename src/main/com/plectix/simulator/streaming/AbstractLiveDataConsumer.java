@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 	private final Lock processedDatalock = new ReentrantLock();
 	private final Lock rawDataLock = new ReentrantLock();
 
-	public AbstractLiveDataConsumer(LiveDataSourceInterface dataSource, int liveDataPoints) {
+	AbstractLiveDataConsumer(LiveDataSourceInterface dataSource, int liveDataPoints) {
 		this.liveDataSource = dataSource;
 		rawDataPoints = createLiveDataBuffer();
 	}
@@ -59,7 +59,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 	protected abstract Collection<LiveDataPoint> processRawDataPoints(Collection<LiveDataPoint> rawDataPoints);
 
-	protected final Collection<LiveDataPoint> createLiveDataBuffer() {
+	final Collection<LiveDataPoint> createLiveDataBuffer() {
 		return new LinkedList<LiveDataPoint>();
 	}
 

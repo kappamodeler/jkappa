@@ -18,7 +18,7 @@ public final class ModelAgent extends NamedEntity implements Comparable<ModelAge
 		this.name = name;
 	}
 	
-	public final void addSite(ModelSite site) {
+	final void addSite(ModelSite site) {
 		this.sites.add(site);
 	}
 

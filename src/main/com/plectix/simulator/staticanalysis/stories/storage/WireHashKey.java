@@ -26,10 +26,10 @@ public final class WireHashKey {
 	}
 
 	// for agent_test_existence wires
-	public WireHashKey(long agentId, TypeOfWire state) {
+	public WireHashKey(long agentId) {
 		this.agentId = agentId;
 		this.siteName = Site.DEFAULT_NAME;
-		this.typeOfWire = state;
+		this.typeOfWire = TypeOfWire.AGENT;
 	}
 
 	public final TypeOfWire getTypeOfWire() {

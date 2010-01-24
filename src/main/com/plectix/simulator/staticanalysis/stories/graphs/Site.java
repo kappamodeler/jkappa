@@ -2,7 +2,7 @@ package com.plectix.simulator.staticanalysis.stories.graphs;
 
 import com.plectix.simulator.util.NameDictionary;
 
-public final class Site {
+final class Site {
 	private final String name;
 	private final int linkIndex;
 	private final String internalStateName;

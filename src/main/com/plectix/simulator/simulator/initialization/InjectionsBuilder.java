@@ -63,7 +63,7 @@ public final class InjectionsBuilder {
 		}
 	}
 
-	public final SolutionInterface getSolution() {
+	final SolutionInterface getSolution() {
 		return kappaSystem.getSolution();
 	}
 }

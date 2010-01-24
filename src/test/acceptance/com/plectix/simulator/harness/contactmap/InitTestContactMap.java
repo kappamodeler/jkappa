@@ -9,7 +9,6 @@ import com.plectix.simulator.SimulatorTestOptions;
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.parser.KappaFile;
-import com.plectix.simulator.simulator.CompiledKappaFile;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;

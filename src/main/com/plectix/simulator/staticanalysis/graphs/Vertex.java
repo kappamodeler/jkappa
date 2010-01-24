@@ -73,7 +73,7 @@ public class Vertex {
 		this.explored = explored;
 	}
 
-	public final int getExplored() {
+	final int getExplored() {
 		return explored;
 	}
 

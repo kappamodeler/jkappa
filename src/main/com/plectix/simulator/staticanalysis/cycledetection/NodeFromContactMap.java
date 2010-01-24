@@ -5,7 +5,7 @@ import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 import com.plectix.simulator.staticanalysis.graphs.Vertex;
 
 //TODO should we add some methods here or what?
-public final class NodeFromContactMap extends Vertex{
+final class NodeFromContactMap extends Vertex{
 	private final AbstractAgent agent;
 	private final AbstractSite site;
 	

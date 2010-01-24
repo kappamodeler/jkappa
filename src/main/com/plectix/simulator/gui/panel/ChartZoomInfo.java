@@ -14,7 +14,7 @@ import org.jfree.data.time.DateRange;
  * 
  * @author ecemis
  */
-public class ChartZoomInfo {
+class ChartZoomInfo {
 	private DateRange dateRange = null;
 	private List<NumberAxis> yAxes = new ArrayList<NumberAxis>();
 	
@@ -43,7 +43,7 @@ public class ChartZoomInfo {
 		return restore((CombinedDomainXYPlot) chart.getPlot());
 	}
 	
-	public void save(CombinedDomainXYPlot combinedPlot) {
+	void save(CombinedDomainXYPlot combinedPlot) {
 		DateAxis xAxis = (DateAxis) combinedPlot.getDomainAxis();
 		dateRange = new DateRange(xAxis.getMinimumDate(), xAxis.getMaximumDate());
 		
@@ -54,7 +54,7 @@ public class ChartZoomInfo {
 		}
 	}
 	
-	public boolean restore(CombinedDomainXYPlot combinedPlot) {
+	boolean restore(CombinedDomainXYPlot combinedPlot) {
 		DateAxis xAxis = (DateAxis) combinedPlot.getDomainAxis();
 		xAxis.setRange(dateRange.getLowerDate(), dateRange.getUpperDate());
 		List subPlots = combinedPlot.getSubplots();

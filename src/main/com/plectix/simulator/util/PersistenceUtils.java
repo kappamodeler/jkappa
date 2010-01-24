@@ -37,13 +37,13 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
  * @author ecemis
  */
 public final class PersistenceUtils {
-	public static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 	
 	/** common xml extension */
-	public static final String XML_EXTENSION = ".xml";
+	private static final String XML_EXTENSION = ".xml";
 
 	/** common zip extension */
-	public static final String ZIP_EXTENSION = ".zip";
+	private static final String ZIP_EXTENSION = ".zip";
 
 	private static XStream xStream = null;
 
@@ -54,7 +54,7 @@ public final class PersistenceUtils {
 	
 	// ************************************************************************************
 	
-	public static final void saveToXML(Object object, String filename, boolean zipped)
+	private static void saveToXML(Object object, String filename, boolean zipped)
 			throws IOException {
 		initialize();
 		OutputStream outputStream = getOutputStream(filename, zipped);
@@ -65,7 +65,7 @@ public final class PersistenceUtils {
 	
 	// ************************************************************************************
 	
-	public static final Object loadFromXML(String filename, boolean zipped)
+	private static Object loadFromXML(String filename, boolean zipped)
 			throws IOException {
 		initialize();
 		return xStream.fromXML(getInputStream(filename, zipped));
@@ -78,7 +78,7 @@ public final class PersistenceUtils {
 	 * @param filename
 	 * @throws IOException
 	 */
-	public static final void saveToSerializedBinary(Object object, String filename, boolean zipped) throws IOException {
+	private static void saveToSerializedBinary(Object object, String filename, boolean zipped) throws IOException {
 		OutputStream outputStream = getOutputStream(filename, zipped);
 		ObjectOutputStream objStream = new ObjectOutputStream(outputStream);
 		objStream.writeObject(object);
@@ -94,7 +94,7 @@ public final class PersistenceUtils {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	public static final Object loadFromSerializedBinary(String filename,
+	private static Object loadFromSerializedBinary(String filename,
 			boolean zipped) throws IOException, ClassNotFoundException {
 		ObjectInputStream objStream = new ObjectInputStream(getInputStream(filename, zipped));
 		return objStream.readObject();
@@ -111,7 +111,7 @@ public final class PersistenceUtils {
 	 * @throws IOException
 	 * @throws ClassNotFoundException
 	 */
-	public static final void convertFile(String fromFilename, boolean fromXML,
+	private static void convertFile(String fromFilename, boolean fromXML,
 			String toFilename, boolean toXML, boolean zipped)
 			throws IOException, ClassNotFoundException {
 		Object object;
@@ -137,7 +137,7 @@ public final class PersistenceUtils {
 	 * @return an input stream
 	 * @throws IOException
 	 */
-	public static final InputStream getInputStream(String filename, boolean zipped)
+	private static InputStream getInputStream(String filename, boolean zipped)
 			throws IOException {
 		if (zipped) {
 			ZipInputStream zipInputStream = new ZipInputStream(
@@ -158,7 +158,7 @@ public final class PersistenceUtils {
 	 * @return an output stream
 	 * @throws IOException
 	 */
-	public static final OutputStream getOutputStream(String filename, boolean zipped)
+	private static OutputStream getOutputStream(String filename, boolean zipped)
 			throws IOException {
 		if (zipped) {
 			OutputStream outputStream = new BufferedOutputStream(
@@ -249,7 +249,7 @@ public final class PersistenceUtils {
 	 * 
 	 * 
 	 */
-	public static final class DateConverter implements Converter {
+	private static final class DateConverter implements Converter {
 		public DateConverter() {
 			super();
 		}

@@ -10,33 +10,33 @@ package com.plectix.simulator.parser;
 	private String lineDetails = null;
 	private final ParseErrorMessage errorMessage;
 
-	public SimulationDataFormatException(ParseErrorMessage message) {
+	SimulationDataFormatException(ParseErrorMessage message) {
 		super(message.getMessage());
 		this.errorMessage = message;
 	}
 
-	public SimulationDataFormatException(KappaFileLine line, ParseErrorMessage message) {
+	SimulationDataFormatException(KappaFileLine line, ParseErrorMessage message) {
 		super(line + "\n" + message.getMessage());
 		this.errorMessage = message;
 	}
 
-	public SimulationDataFormatException(KappaFileLine line,
+	SimulationDataFormatException(KappaFileLine line,
 			ParseErrorMessage message, String sourceLine) {
 		super(line + "\n" + message.getMessage() + " : " + sourceLine);
 		this.errorMessage = message;
 	}
 	
-	public SimulationDataFormatException(KappaFileLine line, String message) {
+	SimulationDataFormatException(KappaFileLine line, String message) {
 		super(line + "\n" + message);
 		this.errorMessage = null;
 	}
 
-	public SimulationDataFormatException(String message) {
+	SimulationDataFormatException(String message) {
 		super(message);
 		errorMessage = null;
 	}
 
-	public SimulationDataFormatException(ParseErrorMessage message, String sourceLine) {
+	SimulationDataFormatException(ParseErrorMessage message, String sourceLine) {
 		super(message.getMessage() + " : " + sourceLine);
 		errorMessage = message;
 	}

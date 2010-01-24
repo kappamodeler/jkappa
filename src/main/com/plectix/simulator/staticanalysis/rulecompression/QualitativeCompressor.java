@@ -14,7 +14,7 @@ public class QualitativeCompressor {
 	 * we use localViews for checking reachables 
 	 */
 	private final LocalViewsMain localViews;
-	private Map<Rule, RootedRulesGroup> groups;
+	private final Map<Rule, RootedRulesGroup> groups;
 
 	public QualitativeCompressor(LocalViewsMain localViews) {
 		this.localViews = localViews;
@@ -32,7 +32,7 @@ public class QualitativeCompressor {
 	 * If there in no such group then create new RootedRulesGroup
 	 * @param rule
 	 */
-	protected void addRuleToGroup(Rule rule) {
+    void addRuleToGroup(Rule rule) {
 		RuleMaster master = new RuleMaster(rule);
 		List<RootedRule> rootedVersions = master.getAllRootedVersions();
 		for (RootedRule rr : rootedVersions) {

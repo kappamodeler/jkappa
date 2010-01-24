@@ -149,7 +149,7 @@ public final class AgentInvariant {
 	 * 
 	 * @return
 	 */
-	public final int getNumberOfSites() {
+	final int getNumberOfSites() {
 		return agent.getSites().size();
 	}
 
@@ -158,7 +158,7 @@ public final class AgentInvariant {
 	 * 
 	 * @return
 	 */
-	public final String getName() {
+	final String getName() {
 		return agent.getName();
 	}
 
@@ -230,7 +230,7 @@ public final class AgentInvariant {
 	 * 
 	 * @return
 	 */
-	public final int getNumberOfWildcards() {
+	final int getNumberOfWildcards() {
 		return numberOfWildcards;
 	}
 

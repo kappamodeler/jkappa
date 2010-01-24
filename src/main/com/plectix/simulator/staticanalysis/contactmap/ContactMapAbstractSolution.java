@@ -197,7 +197,7 @@ public final class ContactMapAbstractSolution {
 		}
 	}
 
-	public final boolean addAgentToAgentsMap(AbstractAgent abstractAgent) {
+	final boolean addAgentToAgentsMap(AbstractAgent abstractAgent) {
 		String key = abstractAgent.getKey();
 
 		if (agentsMap.get(key) == null) {
@@ -217,7 +217,7 @@ public final class ContactMapAbstractSolution {
 		return true;
 	}
 
-	public final void addAgentsBoundedWithFocusedAgent(AbstractAgent agent,
+	final void addAgentsBoundedWithFocusedAgent(AbstractAgent agent,
 			List<AbstractAgent> agentsFromRule) {
 		for (AbstractAgent ruleAgent : agentsFromRule) {
 			Map<String, AbstractSite> sitesMapFromRule = ruleAgent

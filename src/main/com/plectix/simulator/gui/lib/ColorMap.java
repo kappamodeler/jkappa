@@ -3,9 +3,9 @@ package com.plectix.simulator.gui.lib;
 import java.awt.Color;
 
 public class ColorMap {
-    public static final int DEFAULT_TRANSPARENCY = 196;
+    private static final int DEFAULT_TRANSPARENCY = 196;
 
-    public static final int HISTOGRAM_COLOR_INDEX = 12;
+    private static final int HISTOGRAM_COLOR_INDEX = 12;
     
     private static int colorCount = 0;
 

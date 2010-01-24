@@ -13,7 +13,7 @@ public final class ModelSite {
 	
 	public ModelSite(String name) {
 		this.name = name;
-		this.linkState = new ModelLink(LinkStatus.FREE);
+		this.linkState = new ModelLink();
 	}
 	
 	public final String getName() {

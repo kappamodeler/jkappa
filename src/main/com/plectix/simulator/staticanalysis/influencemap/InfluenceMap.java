@@ -19,7 +19,7 @@ public abstract class InfluenceMap {
 	private final Map<Integer, List<InfluenceMapEdge>> inhibitionMapObservables;
 	private Map<Integer, List<AbstractionRule>> observbableRules;
 
-	public InfluenceMap() {
+	protected InfluenceMap() {
 		activationMap = new LinkedHashMap<Integer, List<InfluenceMapEdge>>();
 		inhibitionMap = new LinkedHashMap<Integer, List<InfluenceMapEdge>>();
 		activationMapObservables = new LinkedHashMap<Integer, List<InfluenceMapEdge>>();
@@ -89,11 +89,11 @@ public abstract class InfluenceMap {
 		return inhibitionMapObservables;
 	}
 
-	public final Map<Integer, List<AbstractionRule>> getObservbableRules() {
+	protected final Map<Integer, List<AbstractionRule>> getObservbableRules() {
 		return observbableRules;
 	}
 
-	public final void setObservbableRules(
+	protected final void setObservbableRules(
 			Map<Integer, List<AbstractionRule>> observbableRules) {
 		this.observbableRules = observbableRules;
 	}

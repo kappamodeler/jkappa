@@ -12,7 +12,7 @@ import java.awt.Dimension;
  */
 
 @SuppressWarnings("serial")
-public class HorizontalLinePanel extends GridBagPanel {
+class HorizontalLinePanel extends GridBagPanel {
 	
     public HorizontalLinePanel(int preferredWidth, boolean bright) {
             super();

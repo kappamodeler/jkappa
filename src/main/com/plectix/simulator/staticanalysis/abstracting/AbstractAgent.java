@@ -23,9 +23,8 @@ public final class AbstractAgent extends NamedEntity {
 	private final String name;
 	
 	private Map<String, AbstractSite> sitesMap = new LinkedHashMap<String, AbstractSite>();
-	private boolean add = false;
 
-	/**
+    /**
 	 * Constructor of CContactMapAbstractAgent.<br>
 	 * Sets <b>nameID</b> only. No fills sites map.
 	 * 
@@ -171,7 +170,7 @@ public final class AbstractAgent extends NamedEntity {
 	 * @return <tt>true</tt> if given agent equals to current agent, otherwise
 	 *         <tt>false</tt>
 	 */
-	public final boolean equalz(AbstractAgent agent) {
+	final boolean equalz(AbstractAgent agent) {
 		if (this == agent) {
 			return true;
 		}

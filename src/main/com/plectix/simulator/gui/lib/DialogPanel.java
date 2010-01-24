@@ -20,7 +20,7 @@ import javax.swing.JPanel;
  * @author ecemis
  */
 @SuppressWarnings("serial")
-public class DialogPanel extends JDialog {
+class DialogPanel extends JDialog {
 	private boolean accepted = false;
 	
 	public DialogPanel() {

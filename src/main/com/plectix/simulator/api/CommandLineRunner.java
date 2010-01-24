@@ -8,7 +8,7 @@ import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 
-public class CommandLineRunner {
+class CommandLineRunner {
 	
 	public static final SimulatorFutureTask getSimulatorFutureTask(String[] commandLineArguments) throws ParseException {
 		Simulator simulator = new Simulator();

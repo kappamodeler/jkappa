@@ -4,7 +4,7 @@ public class DocumentFormatException extends SimulationDataFormatException {
 
 	private static final long serialVersionUID = -7652416240591595915L;
 
-	public DocumentFormatException(ParseErrorMessage message) {
+	DocumentFormatException(ParseErrorMessage message) {
 		super(message);
 	}
 

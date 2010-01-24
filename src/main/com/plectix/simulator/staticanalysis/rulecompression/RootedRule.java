@@ -150,7 +150,7 @@ public class RootedRule {
 		return correspondence;
 	}
 
-	public Integer idAgentByConnectedSite(Integer idAgent, String siteName) {
+	Integer idAgentByConnectedSite(Integer idAgent, String siteName) {
 		ShadowAgent shadowAgent = mapBefore.get(idAgent);
 		if (shadowAgent == null) {
 			shadowAgent = mapAfter.get(idAgent);
@@ -188,7 +188,7 @@ public class RootedRule {
 		return null;
 	}
 
-	public Set<Site> getNeighboorsSites(ShadowAgent agent) {
+	Set<Site> getNeighboorsSites(ShadowAgent agent) {
 		Set<Site> siteToNeighboors = new HashSet<Site>();
 		for (Site s : agent.getSites()) {
 			if (s.getLinkState().getStatusLink() == LinkStatus.BOUND) {
@@ -255,7 +255,7 @@ public class RootedRule {
 
 	// ============================================================
 	// getters
-	public Map<Integer, List<String>> getActions() {
+	Map<Integer, List<String>> getActions() {
 		return actionStringsByAgentIDInRuleHandSide;
 	}
 

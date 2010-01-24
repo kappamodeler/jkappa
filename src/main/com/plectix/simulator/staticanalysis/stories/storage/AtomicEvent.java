@@ -13,7 +13,7 @@ public final class AtomicEvent<E> {
 		this.type = type;
 	}
 
-	public final void setState(AbstractState<E> state) {
+	final void setState(AbstractState<E> state) {
 		this.state = state;
 	}
 

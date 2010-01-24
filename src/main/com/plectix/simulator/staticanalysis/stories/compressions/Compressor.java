@@ -27,16 +27,16 @@ public final class Compressor {
 		}
 	}
 
-	public final void executeNoneCompression() {
+	final void executeNoneCompression() {
 		// TODO Auto-generated method stub
 	}
 
-	public final void executeWeakCompression() throws StoryStorageException {
+	final void executeWeakCompression() throws StoryStorageException {
 		WeakCompression weak = new WeakCompression(storage);
 		weak.process();
 	}
 
-	public final void executeStrongCompression() throws StoryStorageException {
+	final void executeStrongCompression() throws StoryStorageException {
 		CompressionPassport passport = storage.extractPassport();
 		StrongCompression strong = new StrongCompression(passport);
 		strong.process();

@@ -44,7 +44,7 @@ public abstract class Action {
 	 * @param rightHandSideComponent
 	 *            given connected component, containing <b>toAgent</b>
 	 */
-	protected Action(Rule rule, Agent sourceAgent, Agent targetAgent,
+    Action(Rule rule, Agent sourceAgent, Agent targetAgent,
 			ConnectedComponentInterface leftHandSideComponent,
 			ConnectedComponentInterface rightHandSideComponent) {
 		this.sourceAgent = sourceAgent;
@@ -82,7 +82,7 @@ public abstract class Action {
 	 *            given agent
 	 * @return {@link Agent#getIdInConnectedComponent()}
 	 */
-	protected final int getAgentIdInCCBySideId(Agent toAgentRight) {
+	final int getAgentIdInCCBySideId(Agent toAgentRight) {
 		// TODO May be should optimize?
 		for (ConnectedComponentInterface cc : getRule().getLeftHandSide())
 			for (Agent leftHandSideComponentAgent : cc.getAgents())
@@ -165,7 +165,7 @@ public abstract class Action {
 	 * @param target
 	 *            site from the right handside of the rule
 	 */
-	protected final void setActionApplicationSites(Site source, Site target) {
+	final void setActionApplicationSites(Site source, Site target) {
 		targetSite = target;
 		sourceSite = source;
 	}
@@ -177,7 +177,7 @@ public abstract class Action {
 	 *            type to be set
 	 * @see ActionType
 	 */
-	protected final void setType(ActionType actionType) {
+	final void setType(ActionType actionType) {
 		this.type = actionType;
 	}
 
@@ -215,7 +215,7 @@ public abstract class Action {
 	 * This method returns connected component from right handSide rule, which
 	 * this action should be applied to (may be "null").
 	 */
-	public final ConnectedComponentInterface getRightCComponent() {
+	final ConnectedComponentInterface getRightCComponent() {
 		return rightHandSideComponent;
 	}
 

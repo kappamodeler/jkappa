@@ -25,7 +25,7 @@ public class GridBagPanel extends JPanel {
 	/**
 	 * Create a panel with a GridBagLayout.
 	 */
-	public GridBagPanel() {
+    protected GridBagPanel() {
 		super();
 		setLayout(new GridBagLayout());
 
@@ -41,7 +41,7 @@ public class GridBagPanel extends JPanel {
 	 * and the component boundaries are drawn in green.
 	 * @param debug
 	 */
-	public void setDebug(boolean debug) {
+    void setDebug(boolean debug) {
 		this.debug = debug;
 
 		for (Component c : getComponents()) {
@@ -136,7 +136,7 @@ public class GridBagPanel extends JPanel {
 	 * </pre>
 	 * @param gc
 	 */
-	public void addGlue(GridBagConstraintsEx gc, int direction) {
+    protected void addGlue(GridBagConstraintsEx gc, int direction) {
 		switch (direction) {
 		case GridBagConstraints.BOTH:
 			add(Box.createGlue(), gc.incy().fillBoth());
@@ -158,7 +158,7 @@ public class GridBagPanel extends JPanel {
 	 * 
 	 * @return enhanced GridBagConstraints
 	 */
-	public GridBagConstraintsEx createNewConstraints() {
+    protected GridBagConstraintsEx createNewConstraints() {
 		return new GridBagConstraintsEx();
 	}
 

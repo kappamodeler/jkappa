@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 import com.plectix.simulator.staticanalysis.stories.ActionOfAEvent;
 
-public class StoryBuilder {
+class StoryBuilder {
 	private final LinkedHashMap<WireHashKey, TreeMap<Long, AtomicEvent<?>>> storageWires = new LinkedHashMap<WireHashKey, TreeMap<Long, AtomicEvent<?>>>();
 	private boolean endFlag;
 
@@ -37,7 +37,7 @@ public class StoryBuilder {
 		endFlag = true;
 	}
 
-	protected final boolean tryToRemoveOppositeBlock(Event eventIn) {
+	final boolean tryToRemoveOppositeBlock(Event eventIn) {
 		// may be need for all non-observable events
 		if (endFlag) {
 			return false;
@@ -81,7 +81,7 @@ public class StoryBuilder {
 		return true;
 	}
 
-	protected final LinkedHashMap<WireHashKey, AtomicEvent<?>> getModificationAction(
+	final LinkedHashMap<WireHashKey, AtomicEvent<?>> getModificationAction(
 			Event eventIn) {
 		LinkedHashMap<WireHashKey, AtomicEvent<?>> mapIn = new LinkedHashMap<WireHashKey, AtomicEvent<?>>();
 		for (Map.Entry<WireHashKey, AtomicEvent<?>> entry : eventIn
@@ -94,7 +94,7 @@ public class StoryBuilder {
 		return mapIn;
 	}
 
-	protected final AtomicEvent<?> getAtomicLastModificationAtomicEvent(
+	final AtomicEvent<?> getAtomicLastModificationAtomicEvent(
 			WireHashKey key, AtomicEvent<?> aEventIn, Long stepId) {
 		TreeMap<Long, AtomicEvent<?>> wire = storageWires.get(key);
 
@@ -117,7 +117,7 @@ public class StoryBuilder {
 	}
 
 	// It needs change LinkedHashSet<Event> -> LinkedHashSet<Long>
-	protected final void handling(Event event, LinkedHashSet<Event> needEvents)
+	final void handling(Event event, LinkedHashSet<Event> needEvents)
 			throws StoryStorageException {
 		for (Map.Entry<WireHashKey, AtomicEvent<?>> entry : event
 				.getAtomicEvents().entrySet()) {
@@ -136,7 +136,7 @@ public class StoryBuilder {
 		}
 	}
 
-	protected final Event findCausing(WireHashKey key, AtomicEvent<?> event,
+	final Event findCausing(WireHashKey key, AtomicEvent<?> event,
 			Long stepId) throws StoryStorageException {
 
 		TreeMap<Long, AtomicEvent<?>> wire = storageWires.get(key);

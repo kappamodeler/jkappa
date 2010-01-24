@@ -21,15 +21,15 @@ import com.plectix.simulator.util.NameDictionary;
  */
 public class RuleMaster {
 
-	private Map<Integer, ShadowAgent> mapAfter;
-	private Map<Integer, ShadowAgent> mapBefore;
-	private Rule rule;
+	private final Map<Integer, ShadowAgent> mapAfter;
+	private final Map<Integer, ShadowAgent> mapBefore;
+	private final Rule rule;
 
 	/**
 	 *  agent's ids from each of left component in rule
 	 *  needs for creating roots sets
 	 */
-	private List<Set<Integer>> leftComponents;
+	private final List<Set<Integer>> leftComponents;
 
 	/**
 	 * RuleMaster work with one rule. Find all possibilities for roots, find all

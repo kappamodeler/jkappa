@@ -190,7 +190,7 @@ public final class Graph {
 	 * @param graph
 	 *            - Graph to compute transitive closure for.
 	 */
-	public final void closeGraph() {
+	final void closeGraph() {
 		Set<Vertex> newEdgeTargets = new LinkedHashSet<Vertex>();
 
 		// At every iteration of the outer loop, we add a path of length 1

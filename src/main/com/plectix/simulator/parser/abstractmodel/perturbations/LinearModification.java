@@ -4,7 +4,7 @@ public abstract class LinearModification {
 	private ModelLinearExpression expression = new ModelLinearExpression();
 	private final String leftHandSideObservableName;
 
-	public LinearModification(String leftHandSideVariable) {
+	LinearModification(String leftHandSideVariable) {
 		leftHandSideObservableName = leftHandSideVariable;
 	}
 

@@ -17,7 +17,7 @@ public final class BoundContactMap {
 	}
 
 
-	public final boolean equalz(BoundContactMap boundContactMap) {
+	final boolean equalz(BoundContactMap boundContactMap) {
 		if (this == boundContactMap)
 			return true;
 

@@ -5,7 +5,7 @@ import javax.xml.stream.XMLStreamException;
 import com.plectix.simulator.staticanalysis.speciesenumeration.Species;
 import com.plectix.simulator.staticanalysis.speciesenumeration.SpeciesEnumeration;
 
-public class SpeciesXMLWriter {
+class SpeciesXMLWriter {
 	private final SpeciesEnumeration species;
 	
 	public SpeciesXMLWriter(SpeciesEnumeration species) {

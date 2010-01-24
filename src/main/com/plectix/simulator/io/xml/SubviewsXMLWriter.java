@@ -7,7 +7,7 @@ import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInter
 import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsInterface;
 import com.plectix.simulator.util.NameDictionary;
 
-public class SubviewsXMLWriter {
+class SubviewsXMLWriter {
 private final AllSubViewsOfAllAgentsInterface subViewsInstance;
 	
 	public SubviewsXMLWriter(AllSubViewsOfAllAgentsInterface subViews) {

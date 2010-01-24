@@ -13,7 +13,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.staticanalysis.Agent;
 
-public final class SolutionBuilder {
+final class SolutionBuilder {
 	private final KappaSystem kappaSystem;
 	private final SimulationArguments simulationArguments;
 	private final SubstanceBuilder substanceBuilder;

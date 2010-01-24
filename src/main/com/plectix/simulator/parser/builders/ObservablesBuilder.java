@@ -15,7 +15,7 @@ import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.util.SpeciesManager;
 
-public final class ObservablesBuilder {
+final class ObservablesBuilder {
 	private final Observables existingObservables;
 	private final SubstanceBuilder substanceBuilder;
 	

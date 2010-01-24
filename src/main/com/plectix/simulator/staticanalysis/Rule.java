@@ -189,7 +189,7 @@ public class Rule implements WeightedItem {
 	 * @return <tt>true</tt> if left handside of this rule contains no
 	 *         substances, otherwise <tt>false</tt>
 	 */
-	public final boolean leftHandSideIsEmpty() {
+	final boolean leftHandSideIsEmpty() {
 		return leftHandside.contains(ThreadLocalData
 				.getEmptyConnectedComponent());
 	}

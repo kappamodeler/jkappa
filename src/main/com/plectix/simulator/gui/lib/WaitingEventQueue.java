@@ -23,7 +23,7 @@ import javax.swing.SwingUtilities;
  * 
  * @author ecemis
  */
-public class WaitingEventQueue extends EventQueue {
+class WaitingEventQueue extends EventQueue {
 	private static final String TIMEOUT_PROPERTY_STRING = "timeout.waitcursor.millis"; 
 	
 	private Timer timer = new Timer();

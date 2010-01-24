@@ -71,7 +71,7 @@ public class GraphPanel extends GridBagPanel implements ControlPanelListener {
 	private XYSeriesCollection seriesCollectionObservables = null;
 	private XYSeriesCollection seriesCollectionRules = null;
 	
-	public GraphPanel() {
+	private GraphPanel() {
 		super();
 	}
 

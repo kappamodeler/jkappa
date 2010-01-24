@@ -10,23 +10,23 @@ import com.plectix.simulator.util.PersistenceUtils;
 import com.plectix.simulator.util.Info.InfoType;
 
 public final class SimulationArguments {
-	public static final int NUMBER_OF_MILLISECONDS_IN_SECOND = 1000;
-	public static final int NUMBER_OF_MILLISECONDS_IN_MINUTE = 60 * NUMBER_OF_MILLISECONDS_IN_SECOND;
-	public static final int NUMBER_OF_MILLISECONDS_IN_HOUR = 60 * NUMBER_OF_MILLISECONDS_IN_MINUTE;
-	public static final int NUMBER_OF_MILLISECONDS_IN_DAY = 24 * NUMBER_OF_MILLISECONDS_IN_HOUR;
+	private static final int NUMBER_OF_MILLISECONDS_IN_SECOND = 1000;
+	private static final int NUMBER_OF_MILLISECONDS_IN_MINUTE = 60 * NUMBER_OF_MILLISECONDS_IN_SECOND;
+	private static final int NUMBER_OF_MILLISECONDS_IN_HOUR = 60 * NUMBER_OF_MILLISECONDS_IN_MINUTE;
+	private static final int NUMBER_OF_MILLISECONDS_IN_DAY = 24 * NUMBER_OF_MILLISECONDS_IN_HOUR;
 	
 	public static final int DEFAULT_SEED = -1;
-	public static final long DEFAULT_MAX_CLASHES = 10000;
+	private static final long DEFAULT_MAX_CLASHES = 10000;
 	public static final int DEFAULT_NUMBER_OF_POINTS = 1000;
 	
 	/** Maximum simulation time is 100 days */
-	public static final long DEFAULT_WALL_CLOCK_TIME_LIMIT = 100L* NUMBER_OF_MILLISECONDS_IN_DAY;
-	public static final long DEFAULT_MONITOR_PEAK_MEMORY = -1;
-	public static final int DEFAULT_CLOCK_PRECISION = 60;
-	public static final String DEFAULT_XML_SESSION_NAME = "simplx.xml";
-	public static final int DEFAULT_AGENTS_LIMIT = 100;
+	private static final long DEFAULT_WALL_CLOCK_TIME_LIMIT = 100L* NUMBER_OF_MILLISECONDS_IN_DAY;
+	private static final long DEFAULT_MONITOR_PEAK_MEMORY = -1;
+	private static final int DEFAULT_CLOCK_PRECISION = 60;
+	private static final String DEFAULT_XML_SESSION_NAME = "simplx.xml";
+	private static final int DEFAULT_AGENTS_LIMIT = 100;
 	public static final int DEFAULT_LIVE_DATA_POINTS = 500;
-	public static final String DEFAULT_LIVE_DATA_CONSUMER_CLASSNAME = "com.plectix.simulator.streaming.DensityDependantLiveDataConsumer";
+	private static final String DEFAULT_LIVE_DATA_CONSUMER_CLASSNAME = "com.plectix.simulator.streaming.DensityDependantLiveDataConsumer";
 
 	public enum SimulationType { 
 		NONE,

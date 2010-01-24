@@ -370,7 +370,7 @@ enum WalkResult {
 			wireStack.pop();
 	}
 
-	public final long getFirstEventId(boolean upwards)
+	final long getFirstEventId(boolean upwards)
 			throws StoryStorageException {
 		EventInterface event = currentNode.getEvent();
 
@@ -395,7 +395,7 @@ enum WalkResult {
 	}
 
 	@SuppressWarnings("unchecked")
-	public final <E> WalkResult walk(E state, WalkResult tillValue)
+    final <E> WalkResult walk(E state, WalkResult tillValue)
 			throws StoryStorageException {
 		EventInterface event = currentNode.getEvent();
 		WireHashKey wireKey = event.getWireKey(topEntry.getWireIdx());
@@ -464,7 +464,7 @@ enum WalkResult {
 	}
 
 	@SuppressWarnings("unchecked")
-	public final boolean walkOnAgentWire() throws StoryStorageException {
+    final boolean walkOnAgentWire() throws StoryStorageException {
 		EventInterface event = currentNode.getEvent();
 		AtomicEvent<State> atomicEvent = (AtomicEvent<State>) event
 				.getAtomicEvent(topEntry.getWireIdx());

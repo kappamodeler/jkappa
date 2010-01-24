@@ -2,7 +2,7 @@ package com.plectix.simulator.staticanalysis.stories.graphs;
 
 import com.plectix.simulator.staticanalysis.InternalState;
 
-public final class BoundedCouple {
+final class BoundedCouple {
 	private final long firstAgentId;
 	private final long secondAgentId;
 	private final String firstSiteName;

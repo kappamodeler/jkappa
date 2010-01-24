@@ -64,11 +64,11 @@ public final class MemoryUtil {
 		timer.scheduleAtFixedRate(timerTask, 0, period);
 	}
 
-	public static final void dumpUsedMemory(PrintStream printStream) {
+	private static void dumpUsedMemory(PrintStream printStream) {
 	       printStream.println(getUsedMemory());
 	}
 
-	public static final String getUsedMemory() {
+	private static String getUsedMemory() {
 	       MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
 	       return "Memory: "
 	    		   + mbean.getNonHeapMemoryUsage().getUsed() + " "
@@ -83,7 +83,7 @@ public final class MemoryUtil {
 		private MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
 		private Timer peakMemoryTimer = new Timer();
 		
-		protected PeakMemoryUsage(long period) {
+		PeakMemoryUsage(long period) {
 			super();
 			peakMemoryTimer.scheduleAtFixedRate(new TimerTask() {
 				@Override
@@ -95,7 +95,7 @@ public final class MemoryUtil {
 			}, 0, period);
 		}
 		
-		protected final boolean stopTimer() {
+		final boolean stopTimer() {
 			if (peakMemoryTimer == null) {
 				return false;
 			}

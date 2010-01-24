@@ -61,7 +61,7 @@ public class SimulationDataXMLWriter {
 		writer.writeEndElement();
 	}
 
-	public final void createXMLOutput(Writer outstream)
+	final void createXMLOutput(Writer outstream)
 			throws ParserConfigurationException, TransformerException,
 			XMLStreamException, StoryStorageException {
 		PlxTimer timer = new PlxTimer();

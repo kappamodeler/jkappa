@@ -4,7 +4,7 @@ public abstract class NamedEntity {
 	
 	protected abstract String getDefaultName();
 	
-	public abstract String getName();
+	protected abstract String getName();
 	
 	public final boolean hasDefaultName() { 
 		return this.getDefaultName().equals(this.getName());

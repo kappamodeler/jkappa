@@ -9,7 +9,7 @@ public abstract class OnceModification extends AbstractModification {
 	private final PerturbationRule rule;
 	private final int quantity;
 	
-	public OnceModification(PerturbationRule rule, int quantity) {
+	OnceModification(PerturbationRule rule, int quantity) {
 		if (quantity < 0) {
 			throw new IllegalArgumentException(
 					"Failed on attempt of setting negative argument to " + this.getType() + "ONCE modification");

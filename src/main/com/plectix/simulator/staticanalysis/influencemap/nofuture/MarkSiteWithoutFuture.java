@@ -12,8 +12,8 @@ import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 		this.type = type;
 	}
 
-	public MarkSiteWithoutFuture(AbstractAgent agent, Action type) {
-		this.type = type;
+	public MarkSiteWithoutFuture(AbstractAgent agent) {
+		this.type = Action.LINK_STATE;
 		this.site = agent.getSitesMap().values().iterator().next();
 	}
 	

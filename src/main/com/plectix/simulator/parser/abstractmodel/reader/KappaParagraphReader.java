@@ -15,18 +15,18 @@ public abstract class KappaParagraphReader<E> {
 	private final SimulationArguments simulationArguments;
 	private final AgentFactory agentFactory;
 	
-	public KappaParagraphReader(SimulationArguments simulationArguments, 
+	KappaParagraphReader(SimulationArguments simulationArguments,
 			AgentFactory factory) {
 		this.simulationArguments = simulationArguments;
 		this.agentFactory = factory;
 	}
 	
-	protected final List<ModelAgent> parseAgents(String line) 
+	final List<ModelAgent> parseAgents(String line)
 			throws ParseErrorException, DocumentFormatException, IncompletesDisabledException {
 		return agentFactory.parseAgent(line);
 	}
 	
-	protected final SimulationArguments getArguments() {
+	final SimulationArguments getArguments() {
 		return simulationArguments;
 	}
 	

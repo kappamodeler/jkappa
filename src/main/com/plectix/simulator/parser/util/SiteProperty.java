@@ -21,7 +21,7 @@ package com.plectix.simulator.parser.util;
 		this.propertyLine = st2;
 	}
 
-	protected SiteProperty(String st1) {
+	SiteProperty(String st1) {
 		this.siteLine = st1;
 	}
 }

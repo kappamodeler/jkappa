@@ -83,7 +83,7 @@ public final class ExponentialMovingAverage {
 	 *
 	 * @return the time period
 	 */
-	public final int getTimePeriod() {
+	final int getTimePeriod() {
 		return timePeriod;
 	}
 

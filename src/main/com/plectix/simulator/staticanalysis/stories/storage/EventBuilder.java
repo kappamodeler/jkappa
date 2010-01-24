@@ -36,7 +36,7 @@ public class EventBuilder implements ActionObserverInteface {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void addEventLinkState(WireHashKey key, Link linkState,
+    void addEventLinkState(WireHashKey key, Link linkState,
 			ActionOfAEvent type, boolean isBefore) {
 		AtomicEvent<StateOfLink> aEvent = (AtomicEvent<StateOfLink>) event
 				.addAtomicEvent(key, type, TypeOfWire.LINK_STATE);
@@ -58,7 +58,7 @@ public class EventBuilder implements ActionObserverInteface {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void addEventInternalState(WireHashKey key,
+    void addEventInternalState(WireHashKey key,
 			InternalState internalState, ActionOfAEvent type, boolean isBefore) {
 		if (internalState.hasDefaultName())
 			return;
@@ -73,7 +73,7 @@ public class EventBuilder implements ActionObserverInteface {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void addEventBoundFree(WireHashKey key, Link linkState,
+    void addEventBoundFree(WireHashKey key, Link linkState,
 			ActionOfAEvent type, boolean isBefore) {
 		AtomicEvent<State> aEvent = (AtomicEvent<State>) event.addAtomicEvent(
 				key, type, TypeOfWire.BOUND_FREE);
@@ -91,7 +91,7 @@ public class EventBuilder implements ActionObserverInteface {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void addEventAgent(WireHashKey key, ActionOfAEvent type,
+    void addEventAgent(WireHashKey key, ActionOfAEvent type,
 			boolean existsBefore) {
 		AtomicEvent<State> aEvent = (AtomicEvent<State>) event.addAtomicEvent(
 				key, type, TypeOfWire.AGENT);
@@ -112,7 +112,7 @@ public class EventBuilder implements ActionObserverInteface {
 
 		typeById.setTypeOfAgent(id, agent.getName());
 
-		addAtomicEvent(new WireHashKey(id, TypeOfWire.AGENT), null, type,
+		addAtomicEvent(new WireHashKey(id), null, type,
 				Event.BEFORE_STATE);
 		for (Site agentFromSite : agentFrom.getSites()) {
 			Site site = agent.getSiteByName(agentFromSite.getName());

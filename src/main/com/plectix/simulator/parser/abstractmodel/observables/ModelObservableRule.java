@@ -1,6 +1,6 @@
 package com.plectix.simulator.parser.abstractmodel.observables;
 
-public final class ModelObservableRule {
+final class ModelObservableRule {
 	private final String name;
 	private final int id;
 	

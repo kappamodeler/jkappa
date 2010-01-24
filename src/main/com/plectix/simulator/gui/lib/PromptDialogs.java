@@ -53,7 +53,7 @@ public class PromptDialogs {
 		e.printStackTrace();
 	}
 
-	public void promptError(String message) {
+	void promptError(String message) {
 		JOptionPane.showMessageDialog(frame, message, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 

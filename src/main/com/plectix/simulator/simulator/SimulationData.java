@@ -141,7 +141,7 @@ public final class SimulationData {
 		return simulationArguments;
 	}
 
-	public final void addSnapshot(Snapshot snapshot) {
+	final void addSnapshot(Snapshot snapshot) {
 		if (snapshots == null) {
 			snapshots = new ArrayList<Snapshot>();
 		}

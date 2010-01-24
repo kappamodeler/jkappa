@@ -40,7 +40,7 @@ import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.util.SpeciesManager;
 
-public final class PerturbationsBuilder {
+final class PerturbationsBuilder {
 	private final SubstanceBuilder substanceBuilder;
 	private final SimulationArguments simulationArguments;
 	private final KappaSystem kappaSystem;

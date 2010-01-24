@@ -24,8 +24,8 @@ public final class Link {
 	 * Constructor
 	 * @param statusLink status of new link 
 	 */
-	public Link(LinkStatus statusLink) {
-		this.statusLink = statusLink;
+	public Link() {
+		this.statusLink = LinkStatus.FREE;
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public final class Link {
 	 * This method returns <tt>true</tt> if status of this link is "free"
 	 * @return <tt>true</tt> if status of this link is "free", otherwise <tt>false</tt>
 	 */
-	public final boolean hasFreeStatus() {
+	final boolean hasFreeStatus() {
 		return statusLink == LinkStatus.FREE;
 	}
 

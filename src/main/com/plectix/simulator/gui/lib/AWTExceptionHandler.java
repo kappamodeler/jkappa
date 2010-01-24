@@ -15,10 +15,10 @@ import org.apache.log4j.Logger;
  * 
  * @author ecemis
  */
-public class AWTExceptionHandler {
+class AWTExceptionHandler {
 	private static Logger log = Logger.getLogger(AWTExceptionHandler.class.getName());
 	
-	public AWTExceptionHandler() {
+	private AWTExceptionHandler() {
 		super();
 	}
 

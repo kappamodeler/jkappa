@@ -162,13 +162,11 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 			AbstractSite clearSite = clearAgent.getSiteByName(sideEffectSiteId);
 			for (AbstractAgent sideEffectAgent : contactMap
 					.getSideEffect(clearSite)) {
-				inhibitedSites.add(new MarkAgentWithFuture(sideEffectAgent,
-						ActionType.BREAK));
+				inhibitedSites.add(new MarkAgentWithFuture(sideEffectAgent));
 				AbstractAgent actAgent = new AbstractAgent(sideEffectAgent);
 				for (AbstractSite actSite : actAgent.getSitesMap().values())
 					actSite.getLinkState().setFreeLinkState();
-				activatedSites.add(new MarkAgentWithFuture(actAgent,
-						ActionType.BREAK));
+				activatedSites.add(new MarkAgentWithFuture(actAgent));
 			}
 		}
 	}

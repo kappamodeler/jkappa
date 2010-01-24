@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.plectix.simulator.parser.abstractmodel.ModelStories;
 
-public final class StoriesBuilder {
+final class StoriesBuilder {
 	public final List<String> build(ModelStories stories) {
 		return stories.getStorifiedNames();
 	}

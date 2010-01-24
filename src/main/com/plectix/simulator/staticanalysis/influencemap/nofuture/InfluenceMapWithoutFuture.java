@@ -162,15 +162,14 @@ public final class InfluenceMapWithoutFuture extends InfluenceMap{
 				// CActionType.BREAK));
 				MarkAgentWithoutFuture mAgent = getMarkAgent(inhibitedAgents,
 						sideEffectAgent);
-				mAgent.addMarkSite(new MarkSiteWithoutFuture(sideEffectAgent,
-						Action.LINK_STATE));
+				mAgent.addMarkSite(new MarkSiteWithoutFuture(sideEffectAgent));
 				AbstractAgent actAgent = new AbstractAgent(sideEffectAgent);
 				for (AbstractSite actSite : actAgent.getSitesMap().values())
 					actSite.getLinkState().setFreeLinkState();
 				// activatedSites.add(new MarkAgent(actAgent,
 				// CActionType.BREAK));
 				mAgent = getMarkAgent(activatedAgents, actAgent);
-				mAgent.addMarkSite(new MarkSiteWithoutFuture(actAgent, Action.LINK_STATE));
+				mAgent.addMarkSite(new MarkSiteWithoutFuture(actAgent));
 			}
 		}
 	}

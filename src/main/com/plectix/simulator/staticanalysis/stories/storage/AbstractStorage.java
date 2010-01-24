@@ -60,11 +60,7 @@ public final class AbstractStorage implements WireStorageInterface {
 		return storageWires.get(wkey).get(event);
 	}
 
-	public final Event getEvent(WireHashKey wkey, Long event) {
-		return storageWires.get(wkey).get(event).getContainer();
-	}
-
-	/**
+    /**
 	 * mark all events (without initial event with stepId=-1)
 	 */
 	public final void markAllUnresolved() throws StoryStorageException {
@@ -127,7 +123,7 @@ public final class AbstractStorage implements WireStorageInterface {
 		handling();
 	}
 
-	public final void addEventContainerAndFullOtherMaps(Event eventContainer)
+	final void addEventContainerAndFullOtherMaps(Event eventContainer)
 			throws StoryStorageException {
 		// if (!isOpposite(eventContainer))
 		for (WireHashKey key : eventContainer.getAtomicEvents().keySet()) {
@@ -229,7 +225,7 @@ public final class AbstractStorage implements WireStorageInterface {
 	 * @param needEvents
 	 * @throws StoryStorageException
 	 */
-	protected final void clearStorage(LinkedHashSet<Event> needEvents)
+	final void clearStorage(LinkedHashSet<Event> needEvents)
 			throws StoryStorageException {
 		storageWires = new LinkedHashMap<WireHashKey, TreeMap<Long, AtomicEvent<?>>>();
 		events = new LinkedHashSet<Event>();
@@ -240,7 +236,7 @@ public final class AbstractStorage implements WireStorageInterface {
 		concordWires();
 	}
 
-	protected final void initialize() throws StoryStorageException {
+	final void initialize() throws StoryStorageException {
 		initialEvent = new Event(-1, -1);
 		AtomicEvent<?> initialAEvent;
 		Long p;
@@ -310,7 +306,7 @@ public final class AbstractStorage implements WireStorageInterface {
 		return events;
 	}
 
-	public final void extractPassportMock() {
+	final void extractPassportMock() {
 		passport = new StoragePassport(this);
 	}
 
@@ -396,7 +392,7 @@ public final class AbstractStorage implements WireStorageInterface {
 
 	}
 
-	protected final Set<Long> stepIdEventsOnWire(WireHashKey wk,
+	final Set<Long> stepIdEventsOnWire(WireHashKey wk,
 			Long firstEventId, boolean swapTop) {
 
 		if (swapTop) {
@@ -409,7 +405,7 @@ public final class AbstractStorage implements WireStorageInterface {
 	}
 
 	// change storageWires,internalStatesByWire
-	protected final void correctChanges(List<PointRound> changes)
+	final void correctChanges(List<PointRound> changes)
 			throws StoryStorageException {
 		for (PointRound pr : changes) {
 			Long stepIdOfEvent = pr.number;

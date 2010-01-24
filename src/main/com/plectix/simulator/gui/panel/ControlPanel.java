@@ -37,7 +37,7 @@ import com.plectix.simulator.streaming.LiveData;
  * @author ecemis
  */
 @SuppressWarnings("serial")
-public class ControlPanel extends GridBagPanel implements ActionListener {
+class ControlPanel extends GridBagPanel implements ActionListener {
 	private static final Logger LOGGER = Logger.getLogger(ControlPanel.class);
 
 	private static final PrintStream DEFAULT_OUTPUT_STREAM = System.err;
@@ -78,7 +78,7 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 
 	private int liveDataPoints = SimulationArguments.DEFAULT_LIVE_DATA_POINTS;
 	
-	public ControlPanel() {
+	private ControlPanel() {
 		super();
 
 		simulationService = new SimulationService(new DefaultSimulatorFactory());

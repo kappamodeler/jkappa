@@ -1,6 +1,6 @@
 package com.plectix.simulator.simulationclasses.perturbations.util;
 
-public class Monome<T extends Vector> {
+class Monome<T extends Vector> {
 	private final T vector;
 	private double value;
 

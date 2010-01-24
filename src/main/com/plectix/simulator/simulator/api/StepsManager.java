@@ -12,7 +12,7 @@ import com.plectix.simulator.simulator.api.steps.SimulatorInitializationOperatio
 import com.plectix.simulator.simulator.api.steps.SolutionInitializationOperation;
 import com.plectix.simulator.simulator.api.steps.SubviewsComputationOperation;
 
-public class StepsManager {
+class StepsManager {
 	private static Map<OperationType, AbstractOperation> defaultOperations = new LinkedHashMap<OperationType, AbstractOperation>();
 	
 	static {

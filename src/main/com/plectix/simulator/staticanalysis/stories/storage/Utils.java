@@ -3,7 +3,7 @@ package com.plectix.simulator.staticanalysis.stories.storage;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Utils {
+class Utils {
 	
 	public static final void buildCorrespondence(
 			Map<WireHashKey, WireHashKey> mapWire,

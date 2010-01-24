@@ -1,6 +1,6 @@
 package com.plectix.simulator.staticanalysis.stories.storage;
 
-public class ReLinker {
+class ReLinker {
 
 	// public static void bottom(Long firstEventId, StateOfLink oldState,
 	// StateOfLink newState, WireHashKey wk,

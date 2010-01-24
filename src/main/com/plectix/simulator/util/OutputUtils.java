@@ -37,7 +37,7 @@ public class OutputUtils {
 		return sb.toString();
 	}
 
-	public static final String printPartRule(
+	private static String printPartRule(
 			ConnectedComponentInterface component, int[] index, boolean ocamlStyleNaming) {
 		StringBuffer sb = new StringBuffer();
 		int length = 0;

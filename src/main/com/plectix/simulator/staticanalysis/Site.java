@@ -22,7 +22,7 @@ public final class Site extends NamedEntity {
 	private InternalState internalState = InternalState.EMPTY_STATE;
 	private Agent parentAgent = null;
 	private int linkIndex = -1;
-	private Set<LiftElement> liftElements = new LinkedHashSet<LiftElement>();
+	private final Set<LiftElement> liftElements = new LinkedHashSet<LiftElement>();
 
 	/**
 	 * Constructor by id
@@ -30,7 +30,7 @@ public final class Site extends NamedEntity {
 	 */
 	public Site(String name) {
 		this.name = name.intern();
-		linkState = new Link(LinkStatus.FREE);
+		linkState = new Link();
 	}
 
 	//------------------------GETTERS AND SETTERS------------------------------
@@ -42,7 +42,7 @@ public final class Site extends NamedEntity {
 	 */
 	public Site(String name, Agent agent) {
 		this.name = name.intern();
-		linkState = new Link(LinkStatus.FREE);
+		linkState = new Link();
 		parentAgent = agent;
 	}
 
@@ -192,6 +192,7 @@ public final class Site extends NamedEntity {
 	 * @see com.plectix.simulator.util.NameDictionary NameDictionary
 	 * @return name of this site
 	 */
+	@Override
 	public final String getName() {
 		return name;
 	}

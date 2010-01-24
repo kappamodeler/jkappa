@@ -10,15 +10,15 @@ import java.io.IOException;
 public abstract class Parser<E> {
 	private final EasyReader easyReader;
 	
-	public Parser(String string, boolean isFilename) throws FileNotFoundException {
+	Parser(String string, boolean isFilename) throws FileNotFoundException {
 		this.easyReader = new EasyReader(string, isFilename);
 	}
 	
-	public Parser(char[] buf) {
+	Parser(char[] buf) {
 		this.easyReader = new EasyReader(buf);
 	}
 	
-	protected final EasyReader getReader() {
+	final EasyReader getReader() {
 		return easyReader;
 	}
 	

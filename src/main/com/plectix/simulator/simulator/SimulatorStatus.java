@@ -20,7 +20,7 @@ public final class SimulatorStatus implements SimulatorStatusInterface {
 	private double progress = Double.NaN;
 	private String statusMessage = null;
 
-	protected SimulatorStatus() {
+	SimulatorStatus() {
 		super();
 	}
 	
@@ -56,23 +56,23 @@ public final class SimulatorStatus implements SimulatorStatusInterface {
 		return statusMessage;
 	}
 
-	protected final void setCurrentEventNumber(long currentEventNumber) {
+	final void setCurrentEventNumber(long currentEventNumber) {
 		this.currentEventNumber = currentEventNumber;
 	}
 
-	protected final void setCurrentIterationNumber(int currentIterationNumber) {
+	final void setCurrentIterationNumber(int currentIterationNumber) {
 		this.currentIterationNumber = currentIterationNumber;
 	}
 
-	protected final void setCurrentTime(double currentTime) {
+	final void setCurrentTime(double currentTime) {
 		this.currentTime = currentTime;
 	}
 
-	protected final void setProgress(double progress) {
+	final void setProgress(double progress) {
 		this.progress = progress;
 	}
 
-	protected final void setStatusMessage(String statusMessage) {
+	final void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
 	}
 }

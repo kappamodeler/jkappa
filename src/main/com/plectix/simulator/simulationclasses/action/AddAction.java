@@ -9,7 +9,6 @@ import com.plectix.simulator.staticanalysis.InternalState;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
 import com.plectix.simulator.staticanalysis.stories.ActionOfAEvent;
-import com.plectix.simulator.staticanalysis.stories.TypeOfWire;
 import com.plectix.simulator.staticanalysis.stories.storage.Event;
 import com.plectix.simulator.staticanalysis.stories.storage.WireHashKey;
 
@@ -54,8 +53,7 @@ public class AddAction extends Action {
 				simulationData.getKappaSystem().generateNextAgentId());
 
 		event.registerAgent(newlyCreatedAgent);
-		event.addAtomicEvent(new WireHashKey(newlyCreatedAgent.getId(),
-				TypeOfWire.AGENT), null, ActionOfAEvent.MODIFICATION,
+		event.addAtomicEvent(new WireHashKey(newlyCreatedAgent.getId()), null, ActionOfAEvent.MODIFICATION,
 				Event.AFTER_STATE);
 		for (Site site : targetAgent.getSites()) {
 			Site newlyCreatedSite = new Site(site.getName());

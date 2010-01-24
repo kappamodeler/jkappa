@@ -37,7 +37,7 @@ public class RuleCompressor {
 	 * @param rules
 	 * @return
 	 */
-	protected Map<Rule,Rule> compressQuality(Collection<Rule> rules){
+    Map<Rule,Rule> compressQuality(Collection<Rule> rules){
 		Map<Rule,Rule> answer = new LinkedHashMap<Rule, Rule>();
 		QualitativeCompressor compressor = new QualitativeCompressor(localViews);
 		compressor.buildGroups(rules);
@@ -67,7 +67,7 @@ public class RuleCompressor {
 	 * @param rules
 	 * @return
 	 */
-	protected Map<Rule, Rule> compressQuantity(Collection<Rule> rules) {
+    Map<Rule, Rule> compressQuantity(Collection<Rule> rules) {
 		Map<Rule, Rule> associationMap = new LinkedHashMap<Rule, Rule>();
 		int id = 1;
 		for (Rule rule : rules) {

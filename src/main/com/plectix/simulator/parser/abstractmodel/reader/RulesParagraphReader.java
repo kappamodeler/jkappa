@@ -23,6 +23,7 @@ public final class RulesParagraphReader extends KappaParagraphReader<Collection<
 		this.simulationArguments = getArguments();
 	}
 	
+	@Override
 	public final Collection<ModelRule> readComponent(
 			KappaFileParagraph rulesParagraph) throws ParseErrorException,
 			DocumentFormatException {

@@ -46,7 +46,7 @@ public class SimulationService {
 	 * @param simulatorFactoryInterface
 	 * @param numberOfThreads
 	 */
-	public SimulationService(SimulatorFactoryInterface simulatorFactoryInterface, int numberOfThreads) {
+    private SimulationService(SimulatorFactoryInterface simulatorFactoryInterface, int numberOfThreads) {
 		if (simulatorFactoryInterface == null) {
 			throw new RuntimeException("We need a simulator factory!");
 		}

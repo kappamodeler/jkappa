@@ -31,7 +31,7 @@ public final class StraightStorage implements StorageInterface {
 	 * This method lets us add an agent to this storage. Notice that it's not public.
 	 * @param agent agent to be added
 	 */
-	protected final void addAgent(Agent agent) {
+	final void addAgent(Agent agent) {
 		if (agent != null) {
 			agentMap.add(agent);
 		}
@@ -41,7 +41,7 @@ public final class StraightStorage implements StorageInterface {
 	 * This method lets us remove an agent from this storage. Notice that it's not public.
 	 * @param agent agent to be deleted
 	 */
-	protected final void removeAgent(Agent agent) {
+	final void removeAgent(Agent agent) {
 		if (agent == null) {
 			return;
 		}

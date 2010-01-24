@@ -1,6 +1,6 @@
 package com.plectix.simulator.util;
 
-public final class PrimeNumbers2 {
+final class PrimeNumbers2 {
 
 	public static final int[] NEXT_1758 = {
 		84551,84559,84589,84629,84631,84649,84653,84659,

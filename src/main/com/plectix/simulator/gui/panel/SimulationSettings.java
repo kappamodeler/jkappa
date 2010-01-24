@@ -2,8 +2,8 @@ package com.plectix.simulator.gui.panel;
 
 import java.io.File;
 
-public class SimulationSettings {
-	public static final String DATA_DIRECTORY = "data" + File.separator;
+class SimulationSettings {
+	private static final String DATA_DIRECTORY = "data" + File.separator;
 	
 	private String kappaFileName = null;
 	private boolean isTime = true;	

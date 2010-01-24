@@ -7,7 +7,7 @@ package com.plectix.simulator.util;
  * The stdev formula divides by n-1 (raw score stdev), not n (population stdev).
  * 
  */
-public final class RunningMetric {
+final class RunningMetric {
     private String name = null;
     private double n = 0;
     private double sum = 0;
@@ -29,7 +29,7 @@ public final class RunningMetric {
     /** 
      * Resets - as if no values have been added 
      */
-    public final void reset() {
+    final void reset() {
         n = sum = absoluteSum = sumSquare = sumCube = 0;
         min = Double.POSITIVE_INFINITY;
         max = Double.NEGATIVE_INFINITY;
@@ -69,7 +69,7 @@ public final class RunningMetric {
     /** 
      * The mean thusfar of all values that have been added 
      */
-    public final double getAverage() {
+    final double getAverage() {
         if (n == 0)
             return 0;
         else
@@ -97,7 +97,7 @@ public final class RunningMetric {
     /** 
      * The variance of all values that have been added (sample variance) 
      */
-    public final double getVariance() {
+    final double getVariance() {
         if (n < 2)
             return 0;
         else {
@@ -115,7 +115,7 @@ public final class RunningMetric {
     /** 
      * The skewness of all values that have been added (sample skewness) 
      */
-    public final double getSkewness() {
+    final double getSkewness() {
         if (n < 3) {
             return 0;
         } else {

@@ -17,7 +17,7 @@ import com.plectix.simulator.util.OutputUtils;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class ConsoleOutputManager {
-	public final String PROGRESS_BAR_SYMBOL = "#";
+	private final String PROGRESS_BAR_SYMBOL = "#";
 	
 	private PrintStream printStream = null;
 	private final SimulationData simulationData;
@@ -37,7 +37,7 @@ public class ConsoleOutputManager {
 		}
 	}
 
-	public final void println() {
+	final void println() {
 		if (this.initialized()) {
 			printStream.println();
 		}

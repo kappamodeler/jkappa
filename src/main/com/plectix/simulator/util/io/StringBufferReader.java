@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class StringBufferReader extends Reader {
-	private char[] data;
+	private final char[] data;
 	private int numberSymbolsRead = 0;
 	
 	public StringBufferReader(String source) {

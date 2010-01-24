@@ -90,7 +90,7 @@ public final class AbstractAction {
 		sitesSideEffect.add(breakingSite);
 	}
 
-	public final void addSubViews(SubViewsInterface subViews) {
+	final void addSubViews(SubViewsInterface subViews) {
 		subViewsList.add(subViews);
 	}
 

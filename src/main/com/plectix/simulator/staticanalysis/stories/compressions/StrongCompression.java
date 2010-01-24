@@ -140,7 +140,7 @@ import com.plectix.simulator.staticanalysis.stories.storage.WireStorageInterface
 		return true;
 	}
 
-	protected final boolean extendPair(EventInterface event, int pairIdx,
+	final boolean extendPair(EventInterface event, int pairIdx,
 			boolean swapTop) throws StoryStorageException {
 		Long agentId1 = agents1.get(pairIdx);
 		Long agentId2 = agents2.get(pairIdx);
@@ -327,7 +327,7 @@ import com.plectix.simulator.staticanalysis.stories.storage.WireStorageInterface
 		return true;
 	}
 
-	protected boolean checkCoincidence(Long first, Long second)
+	boolean checkCoincidence(Long first, Long second)
 			throws StoryStorageException {
 		long number1 = -1;
 		long number2 = -1;

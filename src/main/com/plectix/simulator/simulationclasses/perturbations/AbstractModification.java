@@ -21,5 +21,5 @@ public abstract class AbstractModification {
 		performed = false;
 	}
 	
-	public abstract ModificationType getType();
+	protected abstract ModificationType getType();
 }

@@ -64,7 +64,7 @@ public final class SuperStorage implements StorageInterface {
 	 * @param quant
 	 * @param component
 	 */
-	protected final void addOrEvenIncrement(long quant, ConnectedComponentInterface component) {
+	final void addOrEvenIncrement(long quant, ConnectedComponentInterface component) {
 		String hash = component.getSmilesString();
 		SuperSubstance substanceToAdd = new SuperSubstance(quant, component);
 		SuperSubstance previousEntry = data.get(hash);

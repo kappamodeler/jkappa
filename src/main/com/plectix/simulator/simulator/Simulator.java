@@ -16,7 +16,6 @@ import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.io.ConsoleOutputManager;
 import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.io.xml.SimulationDataXMLWriter;
-import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
@@ -196,7 +195,7 @@ public final class Simulator implements SimulatorInterface {
 	 * @throws SimulationDataFormatException
 	 * @throws IOException
 	 */
-	public final void readInputKappaFile() throws RuntimeException,
+	final void readInputKappaFile() throws RuntimeException,
 			SimulationDataFormatException, IOException {
 		PlxTimer readingKappaTimer = new PlxTimer();
 		readingKappaTimer.startTimer();

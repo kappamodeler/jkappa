@@ -46,7 +46,7 @@ public class UIProperties {
 	 * @see UIProperties#getFont(String)
 	 * @see UIProperties#getImage(String)
 	 */
-	public UIProperties() throws Exception {
+    private UIProperties() throws Exception {
 		
 		// Load properties file
 		loadPropertyFile(Settings.PROPERTIES_FILENAME);
@@ -159,7 +159,7 @@ public class UIProperties {
 	 * @param property property key to check
 	 * @return true if property key exists
 	 */
-	public static boolean propertyExists(String property) {
+	private static boolean propertyExists(String property) {
 		return props.containsKey(property);
 	}
 
@@ -256,7 +256,7 @@ public class UIProperties {
 	 * @return java.awt.Image image with specified filename
 	 * @throws IllegalArgumentException if property key is not found
 	 */
-	public static Image getImage(String property) {
+	private static Image getImage(String property) {
 		String result = getCheckedProperty(property);
 		return images.get(result);
 	}

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public final class IteratorAtomicEventWithinEvent implements
+final class IteratorAtomicEventWithinEvent implements
 		Iterator<WireHashKey> {
 
 	private final List<AtomicEvent<?>> listOfEvent = new ArrayList<AtomicEvent<?>>();

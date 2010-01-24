@@ -7,8 +7,8 @@ public final class ModelLink {
 	private LinkStatus linkStatus;
 	private ModelSite linkedSite = null;
 	
-	public ModelLink(LinkStatus status) {
-		linkStatus = status;
+	public ModelLink() {
+		linkStatus = LinkStatus.FREE;
 	}
 
 	public final void setStatusLink(LinkStatus status) {

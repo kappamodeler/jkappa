@@ -9,7 +9,7 @@ package com.plectix.simulator.gui.lib;
 @SuppressWarnings("serial")
 public class MainPanel extends GridBagPanel {
 	
-	public MainPanel() {
+	protected MainPanel() {
 		super();
 	}
 

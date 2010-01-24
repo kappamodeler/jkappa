@@ -54,7 +54,7 @@ public class SimulationMain  {
 		service.shutdown();
 	}
 
-	public static final void initializeLogging() {
+	public static void initializeLogging() {
 		if (loggingInitialized) {
 			return;
 		}

@@ -115,7 +115,7 @@ public class RootedRulesGroup {
 	 * 
 	 * @return problemSites empty - not problem. not empty - there are problem
 	 */
-	protected void examineProblemSites() {
+    void examineProblemSites() {
 		for (Site s : noProblemSites) {
 			problemSites.remove(s);
 		}
@@ -166,7 +166,7 @@ public class RootedRulesGroup {
 		return answer;
 	}
 
-	protected Rule buildCompressedRule() {
+	Rule buildCompressedRule() {
 		QuantitativeCompressor q = new QuantitativeCompressor(localViews);
 		if (rulesAndGluingThem.size() == 0) {
 			q.compress(headerRule.getRule());
@@ -230,7 +230,7 @@ public class RootedRulesGroup {
 	 * @param id
 	 * @param commonTestedInformation
 	 */
-	protected void brushAgents(Integer id, ShadowAgent commonTestedInformation) {
+    void brushAgents(Integer id, ShadowAgent commonTestedInformation) {
 
 		List<AbstractAgent> masks = new LinkedList<AbstractAgent>();
 		for (RootedRule r : rulesAndGluingThem.keySet()) {
@@ -261,7 +261,7 @@ public class RootedRulesGroup {
 	 * @param brushedAgent
 	 * @param realAgent
 	 */
-	protected void generalize(ShadowAgent brushedAgent, Agent realAgent) {
+    void generalize(ShadowAgent brushedAgent, Agent realAgent) {
 
 		for (Site realSite : realAgent.getSites()) {
 			String siteName = realSite.getName();

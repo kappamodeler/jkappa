@@ -24,12 +24,12 @@ public class QuantitativeCompressor {
 
 	// TODO -> subViews
 	// private IAllSubViewsOfAllAgents allSubViews;
-	private LocalViewsMain localviews;
+	private final LocalViewsMain localviews;
 	private Rule compressedRule;
 
-	Map<Integer, Agent> mapAfter;
-	Map<Integer, Agent> mapBefore;
-	List<Integer> removedList;
+	private Map<Integer, Agent> mapAfter;
+	private Map<Integer, Agent> mapBefore;
+	private List<Integer> removedList;
 
 	public QuantitativeCompressor(LocalViewsMain localviews) {
 		this.localviews = localviews;
@@ -177,7 +177,7 @@ public class QuantitativeCompressor {
 
 	}
 
-	protected boolean decreaseStates() {
+	boolean decreaseStates() {
 		boolean changed = false;
 
 		for (int idInRule : mapBefore.keySet()) {
@@ -195,7 +195,7 @@ public class QuantitativeCompressor {
 	 * 
 	 * @return
 	 */
-	protected boolean deleteEmptyEnds() {
+    boolean deleteEmptyEnds() {
 		removedList = new LinkedList<Integer>();
 		boolean removed = false;
 		Stack<Agent> stack = new Stack<Agent>();
@@ -234,7 +234,7 @@ public class QuantitativeCompressor {
 		return removed;
 	}
 
-	protected boolean decreaseLinkSite(Site site) {
+	boolean decreaseLinkSite(Site site) {
 		Site connectedSite = site.getLinkState().getConnectedSite();
 		Agent agent = connectedSite.getParentAgent();
 		AbstractAgent aAgent = RuleCompressionUtils.clone(agent);
@@ -275,7 +275,7 @@ public class QuantitativeCompressor {
 		return compressedRule;
 	}
 
-	protected boolean decreaseInternalStatesAndFreeLinkStateToWild(
+	boolean decreaseInternalStatesAndFreeLinkStateToWild(
 			Agent agentBefore, Agent agentAfter) {
 		boolean decreased = false;
 		if (agentBefore == null) {

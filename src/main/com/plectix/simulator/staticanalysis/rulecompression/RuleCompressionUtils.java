@@ -18,7 +18,7 @@ import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 import com.plectix.simulator.staticanalysis.localviews.LocalViewsMain;
 
-public class RuleCompressionUtils {
+class RuleCompressionUtils {
 		
 	public static ArrayList<ShadowAgent> shadowClone(ArrayList<Agent> list) {
 		ArrayList<ShadowAgent> newAgentsList = new ArrayList<ShadowAgent>();
@@ -150,7 +150,7 @@ public class RuleCompressionUtils {
 	 * @param site
 	 * @return
 	 */
-	public static AbstractAgent buildAgentBySite(AbstractSite site) {
+	private static AbstractAgent buildAgentBySite(AbstractSite site) {
 		AbstractAgent first = new AbstractAgent(site.getParentAgent()
 				.getName());
 		AbstractSite newSite = new AbstractSite(site);

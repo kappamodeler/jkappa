@@ -36,7 +36,7 @@ public class Species {
 		hashCode = (new ConnectedComponent(instance)).getSmilesString();
 	}
 
-	public Species(ArrayList<Agent> cloneInstance,
+	private Species(ArrayList<Agent> cloneInstance,
 			Map<String, List<AbstractAgent>> availableListOfViews2,
 			int numberOfInitiatedAgent2, AbstractAgent mask) {
 		instance = cloneInstance;
