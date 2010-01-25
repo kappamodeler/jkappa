@@ -8,14 +8,43 @@ import com.plectix.simulator.simulator.SimulationArguments.StoryCompressionMode;
 import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
 
-class StoriesComputationOperation extends AbstractOperation {
-
-	public StoriesComputationOperation() {
-		super(OperationType.STORIES);
+public class StoriesComputationOperation extends AbstractOperation<Object> {
+	private final Simulator simulator; 
+	private final int events;
+	private final double time; 
+	private final StoryCompressionMode mode; 
+	private final int iterationsNumber;
+	
+	public StoriesComputationOperation(Simulator simulator, double time, StoryCompressionMode mode,
+			int iterationsNumber) {
+		super(simulator.getSimulationData(), OperationType.STORIES);
+		this.simulator = simulator; 
+		this.events = -1;
+		this.time = time; 
+		this.mode = mode; 
+		this.iterationsNumber = iterationsNumber;
 	}
 	
-	public void computeTimeStories(Simulator simulator, double time, StoryCompressionMode mode,
-				int iterationsNumber) throws Exception {
+	public StoriesComputationOperation(Simulator simulator, int events, StoryCompressionMode mode,
+			int iterationsNumber) {
+		super(simulator.getSimulationData(), OperationType.STORIES);
+		this.simulator = simulator; 
+		this.events = events;
+		this.time = -1; 
+		this.mode = mode; 
+		this.iterationsNumber = iterationsNumber;
+	}
+	
+	protected Object performDry() throws Exception {
+		if (time < 0) {
+			this.computeEventStories();
+		} else {
+			this.computeTimeStories();
+		}
+		return null;
+	}
+	
+	private void computeTimeStories() throws Exception {
 		SimulationArguments simulationArguments = simulator.getSimulationData().getSimulationArguments();
 		simulationArguments.setIterations(iterationsNumber);
 		simulationArguments.setStorifyMode(mode);
@@ -25,8 +54,7 @@ class StoriesComputationOperation extends AbstractOperation {
 		simulator.runStories(clock);
 	}
 	
-	public void computeEventStories(Simulator simulator, int events, StoryCompressionMode mode,
-				int iterationsNumber) throws Exception {
+	private void computeEventStories() throws Exception {
 		SimulationArguments simulationArguments = simulator.getSimulationData().getSimulationArguments();
 		simulationArguments.setIterations(iterationsNumber);
 		simulationArguments.setStorifyMode(mode);

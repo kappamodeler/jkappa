@@ -6,12 +6,13 @@ import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
-import com.plectix.simulator.staticanalysis.subviews.MainSubViews;
 
-public class DeadRuleDetectionOperation extends AbstractOperation {
-
-	public DeadRuleDetectionOperation() {
-		super(OperationType.DEAD_RULE_DETECTION);
+public class DeadRuleDetectionOperation extends AbstractOperation<Set<Integer>> {
+	private final KappaSystem kappaSystem;
+	
+	public DeadRuleDetectionOperation(KappaSystem kappaSystem) {
+		super(kappaSystem.getSimulationData(), OperationType.DEAD_RULE_DETECTION);
+		this.kappaSystem = kappaSystem;
 	}
 	
 	/**
@@ -19,7 +20,7 @@ public class DeadRuleDetectionOperation extends AbstractOperation {
 	 * @param simulator
 	 * @return
 	 */
-	public Set<Integer> perform(KappaSystem kappaSystem) {
+	protected Set<Integer> performDry() {
 //		AllSubViewsOfAllAgentsInterface subViews = simulator.getSimulationData().getKappaSystem().getSubViews();
 		
 		AllSubViewsOfAllAgentsInterface subViews = kappaSystem.getSubViews();

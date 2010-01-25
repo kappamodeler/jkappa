@@ -1,6 +1,5 @@
 package com.plectix.simulator.simulator;
 
-import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.List;
@@ -16,7 +15,6 @@ import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.io.ConsoleOutputManager;
 import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.io.xml.SimulationDataXMLWriter;
-import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation;
 import com.plectix.simulator.simulationclasses.perturbations.TimeCondition;
@@ -170,8 +168,7 @@ public final class Simulator implements SimulatorInterface {
 		}
 	}
 
-	public final void reInitializeSimulationData() throws RuntimeException,
-			SimulationDataFormatException, IOException {
+	public final void reInitializeSimulationData() throws Exception {
 		synchronized (statusLock) {
 			currentTime = 0.0;
 		}
@@ -190,13 +187,9 @@ public final class Simulator implements SimulatorInterface {
 	/**
 	 * This method only reads Kappa File and builds the KappaSystem object We
 	 * should be able to run it independently
-	 * 
-	 * @throws RuntimeException
-	 * @throws SimulationDataFormatException
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	final void readInputKappaFile() throws RuntimeException,
-			SimulationDataFormatException, IOException {
+	private final void readInputKappaFile() throws Exception {
 		PlxTimer readingKappaTimer = new PlxTimer();
 		readingKappaTimer.startTimer();
 
@@ -240,7 +233,7 @@ public final class Simulator implements SimulatorInterface {
 	}
 
 	// TODO
-	public final void initializeKappaSystem() {
+	public final void initializeKappaSystem() throws Exception {
 		PlxTimer initializationTimer = new PlxTimer();
 		initializationTimer.startTimer();
 		

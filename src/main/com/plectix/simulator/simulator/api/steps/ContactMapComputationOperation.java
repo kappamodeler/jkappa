@@ -6,15 +6,16 @@ import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMap;
-import com.plectix.simulator.staticanalysis.subviews.MainSubViews;
 
-public class ContactMapComputationOperation extends AbstractOperation {
-
-	public ContactMapComputationOperation() {
-		super(OperationType.CONTACT_MAP);
+public class ContactMapComputationOperation extends AbstractOperation<ContactMap> {
+	private final SimulationData simulationData;
+	
+	public ContactMapComputationOperation(SimulationData simulationData) {
+		super(simulationData, OperationType.CONTACT_MAP);
+		this.simulationData = simulationData;
 	}
 	
-	public ContactMap perform(SimulationData simulationData) {
+	protected ContactMap performDry() {
 		simulationData.getSimulationArguments().setSimulationType(SimulationType.CONTACT_MAP);
 		KappaSystem kappaSystem = simulationData.getKappaSystem();
 		ContactMap contactMap = kappaSystem.getContactMap();

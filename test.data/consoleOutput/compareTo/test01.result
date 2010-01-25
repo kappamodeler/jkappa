@@ -3,8 +3,12 @@ Java --compile data/easy-egfr.ka
 -Initialization...
 *Warning* No time limit.
 --Computing initial state
--Reading Kappa input: WallClock=0.062 ThreadTime=0.0625 sec. CPU
+-Kappa file loading: WallClock=0.062 ThreadTime=0.0625 sec. CPU
+-Kappa file compilation: WallClock=0.062 ThreadTime=0.0625 sec. CPU
+-Reading kappa input: WallClock=0.062 ThreadTime=0.0625 sec. CPU
+-Injections building: WallClock=0.0 ThreadTime=0.0 sec. CPU
 -Initialization: WallClock=0.078 ThreadTime=0.0625 sec. CPU
+
 BND (#1,r) (#0,l) 
 ----------------------------
 R(l,r),E(r)->R(l!0,r),E(r!0)

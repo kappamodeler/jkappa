@@ -5,12 +5,15 @@ import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
 
-public class SimulatorInitializationOperation extends AbstractOperation {
-	public SimulatorInitializationOperation() {
-		super(OperationType.SIMULATOR_INITIALIZATION);
+public class SimulatorInitializationOperation extends AbstractOperation<Simulator> {
+	private final SimulatorInputData inputData;
+	
+	public SimulatorInitializationOperation(SimulatorInputData inputData) {
+		super(null, OperationType.SIMULATOR_INITIALIZATION);
+		this.inputData = inputData;
 	}
 	
-	public Simulator perform(SimulatorInputData inputData) {
+	protected Simulator performDry() {
 		Simulator simulator = new Simulator();
 		simulator.loadSimulationArguments(inputData);
 		return simulator;

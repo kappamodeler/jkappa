@@ -5,14 +5,17 @@ import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.simulator.initialization.InjectionsBuilder;
 
-public class InjectionBuildingOperation extends AbstractOperation {
-
-	public InjectionBuildingOperation() {
-		super(OperationType.INJECTIONS);
+public class InjectionBuildingOperation extends AbstractOperation<KappaSystem> {
+	private final KappaSystem kappaSystem;
+	
+	public InjectionBuildingOperation(KappaSystem kappaSystem) {
+		super(kappaSystem.getSimulationData(), OperationType.INJECTIONS_BUILDING);
+		this.kappaSystem = kappaSystem;
 	}
 	
-	public void perform(KappaSystem kappaSystem) {
+	protected KappaSystem performDry() {
 		(new InjectionsBuilder(kappaSystem)).build();
+		return kappaSystem;
 	}
 
 }

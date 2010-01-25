@@ -65,6 +65,9 @@ public final class KappaSystem implements KappaSystemInterface {
 		simulationData = data;
 	}
 
+	public SimulationData getSimulationData() {
+		return simulationData;
+	}
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -72,18 +75,16 @@ public final class KappaSystem implements KappaSystemInterface {
 	 * com.plectix.simulator.simulator.KappaSystemInterface#initialize(com.plectix
 	 * .simulator.util.Info.InfoType)
 	 */
-	public final void initialize(InfoType outputType) {
+	public final void initialize(InfoType outputType) throws Exception {
 		SimulationArguments args = simulationData.getSimulationArguments();
 
 		observables.init(args.getTimeLimit(), args.getInitialTime(), args
 				.getMaxNumberOfEvents(), args.getPoints(), args.isTime());
-		List<Rule> rules = getRules();
-
 		observables.checkAutomorphisms();
 
 		// !!!!!!!!INJECTIONS!!!!!!!!!
 		if (args.isSolutionRead()) {
-			new InjectionBuildingOperation().perform(this);
+			new InjectionBuildingOperation(this).perform();
 		}
 
 		if (solution.getSuperStorage() != null) {
@@ -111,32 +112,32 @@ public final class KappaSystem implements KappaSystemInterface {
 					|| args.runQuantitativeCompression()) {
 
 				
-				subViews = new SubviewsComputationOperation().perform(this);
+				subViews = new SubviewsComputationOperation(this).perform();
 			}
 			if (args.isDeadRulesShow())
-				new DeadRuleDetectionOperation().perform(this);
+				new DeadRuleDetectionOperation(this).perform();
 			if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-				new ContactMapComputationOperation().perform(simulationData);
+				new ContactMapComputationOperation(simulationData).perform();
 			}
 
 			if (args.isActivationMap() || args.isInhibitionMap()) {
-				influenceMap = new InfluenceMapComputationOperation().perform(simulationData);
+				influenceMap = new InfluenceMapComputationOperation(simulationData).perform();
 			}
 
 			if (args.createLocalViews() || args.useEnumerationOfSpecies()) {
-				localViews = new LocalViewsComputationOperation().perform(simulationData);
+				localViews = new LocalViewsComputationOperation(simulationData).perform();
 				if (args.useEnumerationOfSpecies()) {
-					enumerationOfSpecies = new SpeciesEnumerationOperation().perform(this);
+					enumerationOfSpecies = new SpeciesEnumerationOperation(this).perform();
 				}
 			}
 		}
 
 		if (args.runQualitativeCompression()) {
-			new RuleCompressionOperation().perform(this, RuleCompressionType.QUALITATIVE);
+			new RuleCompressionOperation(this, RuleCompressionType.QUALITATIVE).perform();
 		}
 
 		if (args.runQuantitativeCompression()) {
-			new RuleCompressionOperation().perform(this, RuleCompressionType.QUANTITATIVE);
+			new RuleCompressionOperation(this, RuleCompressionType.QUANTITATIVE).perform();
 		}
 	}
 

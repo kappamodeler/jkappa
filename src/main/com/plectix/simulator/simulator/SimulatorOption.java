@@ -34,6 +34,10 @@ public enum SimulatorOption {
 	POINTS("points", true, "Number of data points per plots"),
 	MAX_CLASHES("max_clashes", true,
 			"Max number of consequtive clashes before aborting (default 10000, 0=infinite)"),
+			
+	/**
+	 * It is possible that we don't need this one
+	 */
 	GENERATE_MAP("generate_map", true,
 			"Name of the kappa file for which the influence map should be computed"),
 	CONTACT_MAP("contact_map", true, "Name of the kappa file to build contact map"),
@@ -109,10 +113,10 @@ public enum SimulatorOption {
 	NO_DUMP_RULE_ITERATION("no_dump_rule_iteration", false, "No dump rule iteration"),
 	
 	NO_COMPUTE_QUANTITATIVE_COMPRESSION("no_compute_quantitative_compression", false, "No compute quantitative compression"),
-	OUTPUT_QUANTITATIVE_COMPRESSION("output_quantitative_compression", true, "Output compute quantitative compression"),
+	OUTPUT_QUANTITATIVE_COMPRESSION("output_quantitative_compression", false, "Output compute quantitative compression"),
 
 	NO_COMPUTE_QUALITATIVE_COMPRESSION("no_compute_qualitative_compression", false, "No compute qualitative compression"),
-	OUTPUT_QUALITATIVE_COMPRESSION("output_qualitative_compression", true, "Output compute qualitative compression"),
+	OUTPUT_QUALITATIVE_COMPRESSION("output_qualitative_compression", false, "Output compute qualitative compression"),
 	
 	NO_ENUMERATE_COMPLEXES("no_enumerate_complexes", false, "No enumerate complexes"),
 	ENUMERATE_COMPLEXES("enumerate_complexes", false, "Enumerate complexes"),

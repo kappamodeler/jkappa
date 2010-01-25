@@ -52,6 +52,9 @@ public final class SimulatorStatus implements SimulatorStatusInterface {
 		return progress ;
 	}
 	
+	/**
+	 * Unused method?
+	 */
 	public final String getStatusMessage() {
 		return statusMessage;
 	}

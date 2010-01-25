@@ -13,6 +13,7 @@ import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
+import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.util.EasyFileReader;
 import com.plectix.simulator.util.Failer;
 
@@ -73,9 +74,9 @@ public class TestConsoleOutput extends DirectoryTestsRunner {
 		for (int i = 0; psItem != null && resultItem != null; i++) {
 			if (!bothStartsWithOneOfThese(psItem, resultItem, 
 					"-Reading Kappa input", 
-					"-Initialization",
 					"JSIM: Build on",
-					"java ")) {
+					"java "
+					)) {
 				
 				failer.assertEquals("line " + i + " : ", resultItem.trim(), psItem.trim());
 			}
@@ -85,12 +86,20 @@ public class TestConsoleOutput extends DirectoryTestsRunner {
 		failer.assertTrue("One output contains more information than the other", psItem == null && resultItem == null);
 	}
 	
-	private boolean bothStartsWithOneOfThese(String s1, String s2, String...ex) {
+	private boolean bothStartsWithOneOfThese(String s1, String s2, String...exceptions) {
 		s1 = s1.toLowerCase();
 		s2 = s2.toLowerCase();
-		for (String exElement : ex) {
+		
+		for (String exElement : exceptions) {
 			exElement = exElement.toLowerCase();
 			if (s1.startsWith(exElement) && s2.startsWith(exElement)) {
+				return true;
+			}
+		}
+		
+		for (OperationType exElement : OperationType.values()) {
+			String currentHeader = ("-" + exElement).toLowerCase();
+			if (s1.startsWith(currentHeader) && s2.startsWith(currentHeader)) {
 				return true;
 			}
 		}

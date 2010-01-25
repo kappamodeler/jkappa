@@ -18,7 +18,7 @@ import com.plectix.simulator.util.Info.InfoType;
 
 public interface KappaSystemInterface {
 
-	public void initialize(InfoType outputType);
+	public void initialize(InfoType outputType) throws Exception;
 
 	public void doPositiveUpdate(Rule rule,
 			List<Injection> currentInjectionsList);

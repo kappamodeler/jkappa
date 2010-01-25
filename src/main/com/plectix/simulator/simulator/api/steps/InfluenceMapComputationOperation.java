@@ -16,13 +16,15 @@ import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInter
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.Info.InfoType;
 
-public class InfluenceMapComputationOperation extends AbstractOperation {
-
-	public InfluenceMapComputationOperation() {
-		super(OperationType.INFLUENCE_MAP);
+public class InfluenceMapComputationOperation extends AbstractOperation<InfluenceMap> {
+	private final SimulationData simulationData;
+	
+	public InfluenceMapComputationOperation(SimulationData simulationData) {
+		super(simulationData, OperationType.INFLUENCE_MAP);
+		this.simulationData = simulationData;
 	}
 	
-	public InfluenceMap perform(SimulationData simulationData) {
+	protected InfluenceMap performDry() {
 		KappaSystem kappaSystem = simulationData.getKappaSystem();
 		
 		InfluenceMap influenceMap = new InfluenceMapWithFuture();

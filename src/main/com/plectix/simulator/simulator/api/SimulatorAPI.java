@@ -13,6 +13,7 @@ import com.plectix.simulator.simulator.api.steps.KappaFileLoadingOperation;
 import com.plectix.simulator.simulator.api.steps.SimulationOperation;
 import com.plectix.simulator.simulator.api.steps.SimulatorInitializationOperation;
 import com.plectix.simulator.simulator.api.steps.SolutionInitializationOperation;
+import com.plectix.simulator.util.Info.InfoType;
 
 public abstract class SimulatorAPI {
 	/*
@@ -31,11 +32,11 @@ public abstract class SimulatorAPI {
 //			simulator.outputCurrentSimulationDataToXML();
 			
 			inputData = new SimulatorInputData(new SimulatorCommandLine(args).getSimulationArguments(), System.out);
-			Simulator simulator = new SimulatorInitializationOperation().perform(inputData);
-			KappaFile kappaFile = new KappaFileLoadingOperation().perform(simulator, "data" + File.separator + "example.ka");
-			new KappaFileCompilationOperation().perform(simulator, kappaFile);
-			new SolutionInitializationOperation().perform(simulator);
-			new SimulationOperation().performTimeSimulation(simulator, 10);
+			Simulator simulator = new SimulatorInitializationOperation(inputData).perform();
+			KappaFile kappaFile = new KappaFileLoadingOperation(simulator.getSimulationData(), "data" + File.separator + "example.ka").perform();
+			new KappaFileCompilationOperation(simulator.getSimulationData(), kappaFile, InfoType.OUTPUT).perform();
+			new SolutionInitializationOperation(simulator).perform();
+			new SimulationOperation(simulator, 10.0).perform();
 			simulator.outputCurrentSimulationDataToXML();
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

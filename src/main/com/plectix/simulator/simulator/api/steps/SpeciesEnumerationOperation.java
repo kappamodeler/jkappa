@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
@@ -14,13 +13,15 @@ import com.plectix.simulator.staticanalysis.localviews.LocalViewsMain;
 import com.plectix.simulator.staticanalysis.speciesenumeration.SpeciesEnumeration;
 import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
 
-public class SpeciesEnumerationOperation extends AbstractOperation {
-
-	public SpeciesEnumerationOperation() {
-		super(OperationType.SPECIES_ENUMERATION);
+public class SpeciesEnumerationOperation extends AbstractOperation<SpeciesEnumeration> {
+	private final KappaSystem kappaSystem;
+	
+	public SpeciesEnumerationOperation(KappaSystem kappaSystem) {
+		super(kappaSystem.getSimulationData(), OperationType.SPECIES_ENUMERATION);
+		this.kappaSystem = kappaSystem;
 	}
 	
-	public SpeciesEnumeration perform(KappaSystem kappaSystem) {
+	protected SpeciesEnumeration performDry() {
 		ContactMap contactMap = kappaSystem.getContactMap();
 		AllSubViewsOfAllAgentsInterface subViews = kappaSystem.getSubViews();
 		LocalViewsMain localViews = kappaSystem.getLocalViews();

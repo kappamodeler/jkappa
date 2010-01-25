@@ -4,14 +4,17 @@ import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
 
-public class SolutionInitializationOperation extends AbstractOperation {
-
-	public SolutionInitializationOperation() {
-		super(OperationType.SOLUTION_INITIALIZATION);
+public class SolutionInitializationOperation extends AbstractOperation<Object> {
+	private final Simulator simulator;
+	
+	public SolutionInitializationOperation(Simulator simulator) {
+		super(simulator.getSimulationData(), OperationType.INITIALIZATION);
+		this.simulator = simulator;
 	}
 	
-	public void perform(Simulator simulator) {
+	protected Object performDry() throws Exception {
 		simulator.initializeKappaSystem();
+		return null;
 	}
 
 }

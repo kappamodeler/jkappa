@@ -1,26 +1,34 @@
 package com.plectix.simulator.simulator.api;
 
-import java.io.IOException;
+import com.plectix.simulator.simulator.SimulationClock;
+import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.util.PlxTimer;
+import com.plectix.simulator.util.Info.InfoType;
 
-import org.apache.commons.cli.ParseException;
-
-import com.plectix.simulator.parser.SimulationDataFormatException;
-import com.plectix.simulator.simulator.Simulator;
-
-public abstract class AbstractOperation {
+public abstract class AbstractOperation<E> {
 	private final OperationType type;
+	private final SimulationData simulationData;
 	
-	protected AbstractOperation(OperationType type) {
+	protected AbstractOperation(SimulationData simulationData, OperationType type) {
 		this.type = type;
+		this.simulationData = simulationData;
 	}
-	                          
-//	private void performPreviousSteps(Simulator simulator) throws ParseException {
-//		OperationType latestOperationDone = simulator.getLatestOperation();
-//		OperationType currentOperation = type;
-//		
-//		while (latestOperationDone != currentOperation) { 
-//			currentOperation.createDefaultOperation().perform(simulator);
-//			
-//		}
-//	}
+	          
+	public E perform() throws Exception {
+		if (simulationData != null) {
+			PlxTimer initializationTimer = new PlxTimer();
+			initializationTimer.startTimer();
+		
+			E result = this.performDry();
+		
+			SimulationClock.stopTimer(simulationData, InfoType.OUTPUT,
+					initializationTimer, "-" + type + ":");
+		
+			return result;
+		} else {
+			return this.performDry();
+		}
+	}
+
+	protected abstract E performDry() throws Exception;
 }

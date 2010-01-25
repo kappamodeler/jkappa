@@ -23,7 +23,7 @@ public enum OperationType {
 	SIMULATOR_INITIALIZATION, 
 	KAPPA_FILE_LOADING, 
 	KAPPA_FILE_COMPILATION,
-	SOLUTION_INITIALIZATION,
+	INITIALIZATION,
 	STORIES,
 	SIMULATION,
 	
@@ -37,7 +37,7 @@ public enum OperationType {
 	RULE_COMPRESSION,
 	SPECIES_ENUMERATION,
 	DEAD_RULE_DETECTION, 
-	INJECTIONS
+	INJECTIONS_BUILDING
 	
 	;
 	
@@ -49,10 +49,10 @@ public enum OperationType {
 		addPair(KAPPA_FILE_LOADING, SIMULATOR_INITIALIZATION);
 		addPair(KAPPA_FILE_COMPILATION, KAPPA_FILE_LOADING);
 
-		addPair(SOLUTION_INITIALIZATION, KAPPA_FILE_COMPILATION);
+		addPair(INITIALIZATION, KAPPA_FILE_COMPILATION);
 		
-		addPair(SIMULATION, SOLUTION_INITIALIZATION);
-		addPair(STORIES, SOLUTION_INITIALIZATION);
+		addPair(SIMULATION, INITIALIZATION);
+		addPair(STORIES, INITIALIZATION);
 		
 		addPair(SUBVIEWS, KAPPA_FILE_COMPILATION);
 		
@@ -67,5 +67,11 @@ public enum OperationType {
 	
 	private static void addPair(OperationType step, OperationType previousStep) {
 		ordering.put(step, previousStep);
+	}
+	
+	@Override
+	public final String toString() {
+		String string = ("" + super.toString()).replaceAll("_", " ").toLowerCase();
+		return (string.substring(0,1).toUpperCase() + string.substring(1)).intern() ;
 	}
 }
