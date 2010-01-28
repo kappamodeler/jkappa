@@ -7,7 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 @SuppressWarnings("serial")
-class MainWindow extends JFrame {
+public class MainWindow extends JFrame {
 
 	private MainPanel mainPanel;
 	

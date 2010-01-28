@@ -494,6 +494,11 @@ public final class Simulator implements SimulatorInterface {
 				clashesNumber++;
 				maxClashes++;
 			}
+			
+			if (simulationData.getSimulationArguments().getLiveDataInterval() != -1) {
+				simulationData.getKappaSystem().getObservables().updateLastValues();
+			}
+			
 			if (!clock.isEndSimulation(currentTime, currentEventNumber)
 					&& maxClashes > simulationData.getSimulationArguments()
 							.getMaxClashes()) {

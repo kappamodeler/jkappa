@@ -148,7 +148,7 @@ public class Observables {
 			if (count < timeNext)
 				return;
 		}
-		updateLastValueAll();
+		updateLastValues();
 		calculateAll(false);
 		addToCountTimeList(time, count);
 		timeNext += timeSampleMin;
@@ -161,7 +161,7 @@ public class Observables {
 				return;
 			
 			while (time >= timeNext) {
-				updateLastValueAll();
+				updateLastValues();
 				calculateAll(false);
 				addToCountTimeList(timeNext, count);
 				timeNext += timeSampleMin;
@@ -170,7 +170,7 @@ public class Observables {
 		} else {
 			if (count < timeNext)
 				return;
-			updateLastValueAll();
+			updateLastValues();
 			calculateAll(false);
 			addToCountTimeList(timeNext, count);
 			timeNext += timeSampleMin;
@@ -198,7 +198,7 @@ public class Observables {
 	 * @param time
 	 *            current time
 	 */
-	private final void updateLastValueAll() {
+	public final void updateLastValues() {
 		for (ObservableInterface cc : componentList) {
 			cc.updateLastValue();
 		}
@@ -217,7 +217,7 @@ public class Observables {
 			return;
 		if (Math.abs(countTimeList.get(size - 1).getTime() - time) < 1e-16)
 			return;
-		updateLastValueAll();
+		updateLastValues();
 		addToCountTimeList(time, event);
 		calculateAll(false);
 	}
@@ -361,7 +361,7 @@ public class Observables {
 	}
 
 	public void addInitialState() {
-		updateLastValueAll();
+		updateLastValues();
 		addToCountTimeList(0.0, 0);
 		calculateAll(false);
 	}

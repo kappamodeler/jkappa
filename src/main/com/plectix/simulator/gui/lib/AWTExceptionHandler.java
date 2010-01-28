@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
  * 
  * @author ecemis
  */
-class AWTExceptionHandler {
+public class AWTExceptionHandler {
 	private static Logger log = Logger.getLogger(AWTExceptionHandler.class.getName());
 	
 	private AWTExceptionHandler() {
