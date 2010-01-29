@@ -1,6 +1,8 @@
 package com.plectix.simulator.injections;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Map;
@@ -12,6 +14,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
+import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.QuantityDataParser;
@@ -29,7 +32,7 @@ public class TestInjectionsQuantity extends TestInjections {
 	}
 
 	@Parameters
-	public static Collection<Object[]> regExValues() {
+	public static Collection<Object[]> regExValues() throws FileNotFoundException, SimulationDataFormatException, IOException {
 		data = (new QuantityDataParser("test.data" + separator
 				+ "InjectionsQuantityData" + DEFAULT_EXTENSION_FILE))
 				.parse();

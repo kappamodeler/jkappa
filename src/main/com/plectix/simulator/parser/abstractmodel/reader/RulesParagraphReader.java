@@ -105,7 +105,6 @@ public final class RulesParagraphReader extends KappaParagraphReader<Collection<
 				}
 			} catch (Exception e) {
 				String details = rulesStr.substring(index).trim();
-				e.printStackTrace();
 				throw new ParseErrorException(ruleLine,
 						ParseErrorMessage.UNEXPECTED_RULE_RATE, details);
 			}

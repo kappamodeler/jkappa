@@ -1,14 +1,18 @@
 package com.plectix.simulator.util;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RuleCCDataParser extends Parser<Map<String, RuleStructure>> {
-	private EasyFileReader myReader = getFileReader();
+import com.plectix.simulator.parser.EasyReader;
+import com.plectix.simulator.parser.GeneralReader;
 
-	public RuleCCDataParser(String path) {
+public class RuleCCDataParser extends GeneralReader<Map<String, RuleStructure>> {
+	private EasyReader reader = getReader();
+
+	public RuleCCDataParser(String path) throws FileNotFoundException {
 		super(path);
 	}
 
@@ -19,10 +23,10 @@ public class RuleCCDataParser extends Parser<Map<String, RuleStructure>> {
 	}
 
 	@Override
-	protected Map<String, RuleStructure> unsafeParse() {
+	protected Map<String, RuleStructure> unsafeRead() {
 		Map<String, RuleStructure> map = new LinkedHashMap<String, RuleStructure>();
 
-		String line = myReader.getStringFromFile();
+		String line = reader.getLine();
 		String currentTest = "";
 		List<String> leftCCs = new ArrayList<String>();
 		List<String> rightCCs = new ArrayList<String>();
@@ -47,7 +51,7 @@ public class RuleCCDataParser extends Parser<Map<String, RuleStructure>> {
 					currentList.add(line);
 				}
 			}
-			line = myReader.getStringFromFile();
+			line = reader.getLine();
 		}
 		fillEmpty(leftCCs);
 		fillEmpty(rightCCs);

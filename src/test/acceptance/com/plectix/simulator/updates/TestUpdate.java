@@ -2,6 +2,8 @@ package com.plectix.simulator.updates;
 
 import static org.junit.Assert.fail;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -10,13 +12,13 @@ import org.junit.Before;
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.Initializator;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.simulator.UpdatesPerformer;
 import com.plectix.simulator.staticanalysis.Rule;
-import com.plectix.simulator.staticanalysis.Site;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
 import com.plectix.simulator.util.io.PlxLogger;
 
@@ -39,7 +41,7 @@ public abstract class TestUpdate extends DirectoryTestsRunner {
 		operationMode = opMode;
 	}
 
-	public abstract void init();
+	public abstract void init() throws FileNotFoundException, SimulationDataFormatException, IOException;
 
 	@Override
 	public abstract String getPrefixFileName();

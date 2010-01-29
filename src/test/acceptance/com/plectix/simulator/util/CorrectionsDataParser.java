@@ -1,12 +1,16 @@
 package com.plectix.simulator.util;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-public class CorrectionsDataParser extends Parser<Map<String, SortedSet<Long>>> {
+import com.plectix.simulator.parser.EasyReader;
+import com.plectix.simulator.parser.GeneralReader;
+
+public class CorrectionsDataParser extends GeneralReader<Map<String, SortedSet<Long>>> {
 
 	private static class ParseOptions {
 		private boolean myNot = false;
@@ -57,9 +61,9 @@ public class CorrectionsDataParser extends Parser<Map<String, SortedSet<Long>>> 
 		FIND_A, FIND_B, LINK_AA, EMPTY;
 	}
 
-	private EasyFileReader myReader = getFileReader();
+	private EasyReader reader = getReader();
 
-	public CorrectionsDataParser(String path) {
+	public CorrectionsDataParser(String path) throws FileNotFoundException {
 		super(path);
 	}
 
@@ -175,7 +179,7 @@ public class CorrectionsDataParser extends Parser<Map<String, SortedSet<Long>>> 
 	}
 
 	@Override
-	protected Map<String, SortedSet<Long>> unsafeParse() {
+	protected Map<String, SortedSet<Long>> unsafeRead() {
 		Map<String, SortedSet<Long>> map = new LinkedHashMap<String, SortedSet<Long>>();
 
 		String line = "";
@@ -242,7 +246,7 @@ public class CorrectionsDataParser extends Parser<Map<String, SortedSet<Long>>> 
 
 			options.resetFlags();
 
-			line = myReader.getStringFromFile();
+			line = reader.getLine();
 		}
 		return map;
 	}

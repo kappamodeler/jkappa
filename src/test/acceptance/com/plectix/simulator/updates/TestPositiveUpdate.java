@@ -1,6 +1,8 @@
 package com.plectix.simulator.updates;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.junit.runners.Parameterized.Parameters;
 import com.plectix.simulator.OperationModeCollectionGenerator;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
+import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.util.Failer;
@@ -96,7 +99,7 @@ public class TestPositiveUpdate extends TestUpdate {
 	}
 
 	@Override
-	public void init() {
+	public void init() throws FileNotFoundException, SimulationDataFormatException, IOException {
 		myObsInjectionsQuantity = (new QuantityDataParser(myPrefixFileName
 				+ "ObsInjectionsData" + DEFAULT_EXTENSION_FILE))
 				.parse();

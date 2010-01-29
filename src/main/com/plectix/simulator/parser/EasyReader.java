@@ -24,6 +24,11 @@ public class EasyReader {
 		}
 	}
 	
+	public EasyReader(String string) throws FileNotFoundException {
+		this.filePath = string;
+		this.bufferedReader = new BufferedReader(new FileReader(filePath));
+	}
+	
 	public EasyReader(char[] buf) {
 		this.filePath = null;
 		this.bufferedReader = new BufferedReader(new CharArrayReader(buf));

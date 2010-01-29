@@ -259,11 +259,7 @@ public class SimulationDataXMLWriter {
 		timerOutput.startTimer();
 		try {
 			createXMLOutput(writer);
-		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			writer.close();
 		}
 		

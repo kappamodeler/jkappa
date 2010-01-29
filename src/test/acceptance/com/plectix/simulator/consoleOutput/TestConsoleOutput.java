@@ -11,10 +11,10 @@ import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.DirectoryTestsRunner;
 import com.plectix.simulator.controller.SimulatorInputData;
+import com.plectix.simulator.parser.EasyReader;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.simulator.api.OperationType;
-import com.plectix.simulator.util.EasyFileReader;
 import com.plectix.simulator.util.Failer;
 
 @RunWith(Parameterized.class)
@@ -39,21 +39,21 @@ public class TestConsoleOutput extends DirectoryTestsRunner {
 	}
 	
 	private BackingUpPrintStream getResultFileContent(String fileName) throws FileNotFoundException {
-		EasyFileReader reader = new EasyFileReader(fileName);
-		String line = reader.getStringFromFile();
+		EasyReader reader = new EasyReader(fileName);
+		String line = reader.getLine();
 		BackingUpPrintStream ps = new BackingUpPrintStream();
 		
 		while (line != null) {
 			ps.println(line);
-			line = reader.getStringFromFile();	
+			line = reader.getLine();	
 		}
 		return ps;
 	}
 	
 	public TestConsoleOutput(String fileName) throws FileNotFoundException {
 		String fullPath = prefixFileName + fileName;
-		EasyFileReader reader = new EasyFileReader(fullPath);
-		String line = reader.getStringFromFile();
+		EasyReader reader = new EasyReader(fullPath);
+		String line = reader.getLine();
 		line = line.substring(1);
 		currentCommandLine = line + fullPath;
 		resultFileContent = this.getResultFileContent(this.resultFilePath(fileName));

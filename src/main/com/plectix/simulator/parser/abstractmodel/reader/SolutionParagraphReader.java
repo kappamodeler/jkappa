@@ -39,7 +39,7 @@ import com.plectix.simulator.simulator.SimulationArguments;
 					try{
 						Integer.parseInt(item.substring(i-1, i));
 					}catch(NumberFormatException e){
-					throw new ParseErrorException(itemDS,
+						throw new ParseErrorException(itemDS,
 							ParseErrorMessage.STAR_IN_SITE_NAME, item);
 					}	
 				}

@@ -1,6 +1,8 @@
 package com.plectix.simulator.injections;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.SortedSet;
@@ -9,6 +11,7 @@ import java.util.TreeSet;
 import org.junit.Test;
 
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
+import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.simulationclasses.injections.Injection;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.util.CorrectionsDataParser;
@@ -22,7 +25,7 @@ public class TestInjectionsCorrection extends TestInjections {
 	private final Failer failer = new Failer();
 	private boolean antiFlag = false;
 
-	public TestInjectionsCorrection() {
+	public TestInjectionsCorrection() throws FileNotFoundException, SimulationDataFormatException, IOException {
 		compareData = (new CorrectionsDataParser("test.data" + separator
 				+ "InjectionsCorrectionData" + DEFAULT_EXTENSION_FILE))
 				.parse();

@@ -1,6 +1,8 @@
 package com.plectix.simulator.perturbations;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
@@ -9,6 +11,7 @@ import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
 
 import com.plectix.simulator.OperationModeCollectionGenerator;
+import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.util.Failer;
 import com.plectix.simulator.util.QuantityDataParser;
@@ -21,11 +24,10 @@ public class TestTimeCondition extends TestPerturbation {
 	private String myTestFileName = "";
 	private final Failer myFailer = new Failer();
 	private Rule myActiveRule;
-	private final Integer operationMode;
 	private static Map<String, Integer> myExpectedData;
 
 	@BeforeClass
-	public static void initialize() {
+	public static void initialize() throws FileNotFoundException, SimulationDataFormatException, IOException {
 		myExpectedData = (new QuantityDataParser(myPrefixFileName + "RateData"
 				+ DEFAULT_EXTENSION_FILE)).parse();
 	}
@@ -33,7 +35,6 @@ public class TestTimeCondition extends TestPerturbation {
 	public TestTimeCondition(String fileName, Integer opMode) {
 		super(fileName, opMode);
 		myTestFileName = fileName;
-		operationMode = opMode;
 		myFailer.loadTestFile(myTestFileName);
 	}
 

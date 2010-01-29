@@ -6,9 +6,9 @@ import java.io.FileNotFoundException;
 import org.junit.Test;
 
 import com.plectix.simulator.controller.SimulatorInputData;
+import com.plectix.simulator.parser.EasyReader;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
-import com.plectix.simulator.util.EasyFileReader;
 import com.plectix.simulator.util.SilentPrintStream;
 
 public class TestENG388 {
@@ -35,8 +35,8 @@ public class TestENG388 {
 	}
 	
 	private void checkFile(String filePath) throws FileNotFoundException {
-		EasyFileReader reader = new EasyFileReader(filePath);
-		String line = reader.getStringFromFile().trim();
+		EasyReader reader = new EasyReader(filePath);
+		String line = reader.getLine().trim();
 		boolean csvStarted = false;
 		int i = 0;
 		while (!line.startsWith("]]>")) {
@@ -49,7 +49,7 @@ public class TestENG388 {
 					i++;
 				}
 			}
-			line = reader.getStringFromFile().trim();
+			line = reader.getLine().trim();
 		}
 		if (i < 100) {
 			org.junit.Assert.fail("Output file contains not enough lines");

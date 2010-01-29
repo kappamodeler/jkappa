@@ -8,7 +8,7 @@ import java.io.IOException;
  * @see EasyReader 
  * @author evlasov
  */
-public class KappaFileReader extends Parser<KappaFile> {
+public class KappaFileReader extends GeneralReader<KappaFile> {
 	public KappaFileReader(String path, boolean isFilename) throws FileNotFoundException {
 		super(path, isFilename);
 	}
@@ -18,7 +18,7 @@ public class KappaFileReader extends Parser<KappaFile> {
 	}
 	
 	@Override
-	protected KappaFile unsafeParse() throws FileReadingException, 
+	protected KappaFile unsafeRead() throws FileReadingException, 
 				ParseErrorException, IOException, DocumentFormatException {
 		
 		KappaFile kappaFile = new KappaFile();
