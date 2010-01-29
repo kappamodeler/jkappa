@@ -490,14 +490,50 @@ public final class KappaSystem implements KappaSystemInterface {
 	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getRandomRule()
 	 */
 	public final Rule getRandomRule() {
-		List<Rule> infinitRules = getInfinitiveRules();
-		if (!infinitRules.isEmpty())
-			return infinitRules.get(ThreadLocalData.getRandom().getInteger(
-					infinitRules.size()));
+		List<Rule> infiniteRules = getInfiniteRatedRules();
+		if (!infiniteRules.isEmpty() && !this.anyRuleCannotBeApplied(infiniteRules)) {
+			return infiniteRules.get(ThreadLocalData.getRandom().getInteger(
+					infiniteRules.size()));
+		}
 		return rules.select();
 	}
 
-	private List<Rule> getInfinitiveRules() {
+	/**
+	 * We check whether any rule with infinite rate cannot be applied because of clashes
+	 * @return
+	 */
+	private final boolean anyRuleCannotBeApplied(List<Rule> rules) {
+		for (Rule rule : rules) {
+			if (!ruleIsBlockedWithClashes(rule)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	/**
+	 * We assume that left hand side of the rule can contain only 2 connected components
+	 * @param rule
+	 * @return
+	 */
+	private final boolean ruleIsBlockedWithClashes(Rule rule) {
+		List<Injection> pair = new ArrayList<Injection>();
+		if (rule.getLeftHandSide().size() < 2) {
+			return false;
+		}
+		for (Injection injection0 : rule.getLeftHandSide().get(0).getInjectionsList()) {
+			pair.add(injection0);
+			for (Injection injection1 : rule.getLeftHandSide().get(1).getInjectionsList()) {
+				pair.add(injection1);
+				if (!InjectionsUtil.isClash(pair)) {
+					return false;
+				}
+				pair.remove(injection1);
+			}
+		}
+		return true;
+	}
+	
+	private List<Rule> getInfiniteRatedRules() {
 		List<Rule> infinitRules = new ArrayList<Rule>();
 		for (Rule rule : orderedRulesList) {
 			if (rule.hasInfiniteRate() && rule.getActivity() > 0) {

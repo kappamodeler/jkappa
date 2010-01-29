@@ -9,7 +9,8 @@ import org.junit.runners.Suite.SuiteClasses;
 		TestENG229.class,
 		TestENG310.class,
 		TestENG345.class,
-		TestENG325.class
+		TestENG325.class,
+		TestENG388.class
 		})
 public class SmokeTestMain {
 
