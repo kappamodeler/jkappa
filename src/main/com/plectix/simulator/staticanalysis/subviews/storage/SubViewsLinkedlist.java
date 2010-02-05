@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.LinkStatus;
+import com.plectix.simulator.staticanalysis.StaticAnalysisException;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractLinkState;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
@@ -42,15 +43,15 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 				getNeedAgentsBySolution(agents), needAgent))
 			try {
 				addAbstractAgent(agent);
-			} catch (SubViewsExeption e) {
+			} catch (StaticAnalysisException e) {
 				e.printStackTrace();
 			}
 	}
 
-	public boolean addAbstractAgent(AbstractAgent agent)
-			throws SubViewsExeption {
+	public boolean addAbstractAgent(AbstractAgent agent) throws StaticAnalysisException
+			{
 		if (agent.getSitesMap().size() < subViewClass.getSitesNames().size())
-			throw new SubViewsExeption(subViewClass, agent);
+			throw new StaticAnalysisException(subViewClass, agent);
 
 		if (test(agent))
 			return false;
@@ -58,7 +59,7 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 		return true;
 	}
 
-	public boolean burnRule(AbstractAction action) throws SubViewsExeption {
+	public boolean burnRule(AbstractAction action) throws StaticAnalysisException{
 		AbstractAgent oldViews = action.getLeftHandSideAgent();
 		AbstractAgent newViews = action.getRightHandSideAgent();
 
@@ -165,36 +166,16 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 		return hashValue;
 	}
 
-	public boolean burnRule(AbstractAgent oldViews, AbstractAgent newViews)
-			throws SubViewsExeption {
-		// if (oldViews == null)
-		// return addAbstractAgent(newViews);
-		//
-		// if (newViews == null) {
-		// // TODO DELETE Action!!!
-		// }
-		// boolean isAdd = false;
-		// List<CAbstractAgent> agentsList = getAllSubViews(oldViews);
-		// for (CAbstractAgent storageAgent : agentsList) {
-		// CAbstractAgent newAgent = storageAgent.clone();
-		// newAgent.addAllStates(newViews);
-		// if (addAbstractAgent(newAgent))
-		// isAdd = true;
-		// }
-		// return isAdd;
-		return false;
-	}
-
-	public boolean test(AbstractAction action) throws SubViewsExeption {
+	public boolean test(AbstractAction action) throws StaticAnalysisException {
 		AbstractAgent agent = action.getLeftHandSideAgent();
 		if (agent == null)
 			return true;
 		return test(agent);
 	}
 
-	public boolean test(AbstractAgent testView) throws SubViewsExeption {
+	public boolean test(AbstractAgent testView) throws StaticAnalysisException  {
 		if (!testView.getName().equals(subViewClass.getAgentType()))
-			throw new SubViewsExeption(subViewClass, testView);
+			throw new StaticAnalysisException(subViewClass, testView);
 		boolean isHave = false;
 		if (testView.getSitesMap().isEmpty())
 			if (!storage.isEmpty()) {
@@ -206,7 +187,7 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 			if (subViewClass.hasSite(site.getName()))
 				isHave = true;
 		if (!isHave)
-			throw new SubViewsExeption(subViewClass, testView);
+			throw new StaticAnalysisException(subViewClass, testView);
 
 		for (AbstractAgent aAgent : storage) {
 			isHave = true;
@@ -332,7 +313,7 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 			try {
 				if (addAbstractAgent(agent))
 					isAdd = true;
-			} catch (SubViewsExeption e) {
+			} catch (StaticAnalysisException e) {
 				e.printStackTrace();
 			}
 

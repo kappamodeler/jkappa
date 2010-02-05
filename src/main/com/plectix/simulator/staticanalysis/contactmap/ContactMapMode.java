@@ -8,5 +8,5 @@ package com.plectix.simulator.staticanalysis.contactmap;
  *
  */
 public enum ContactMapMode {
-	MODEL, AGENT_OR_RULE;
+	SEMANTIC, FOCUS_ON_AGENT_OR_RULE, SYNTACTIC;
 }

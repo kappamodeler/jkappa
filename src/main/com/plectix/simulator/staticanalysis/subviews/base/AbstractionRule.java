@@ -13,10 +13,10 @@ import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.StaticAnalysisException;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 import com.plectix.simulator.staticanalysis.subviews.WrapperTwoSet;
-import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsExeption;
 import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsInterface;
 
 public final class AbstractionRule {
@@ -61,7 +61,7 @@ public final class AbstractionRule {
 
 	public final WrapperTwoSet apply(Map<String, AbstractAgent> agentNameToAgent,
 			Map<String, List<SubViewsInterface>> subViewsMap)
-			throws SubViewsExeption {
+			throws StaticAnalysisException {
 
 		if (!wasApplied) {
 			for (AbstractAction action : actions) {
@@ -75,7 +75,7 @@ public final class AbstractionRule {
 						} else if (action.getActionType() == AbstractActionType.TEST_ONLY
 								|| action.getActionType() == AbstractActionType.DELETE)
 							return null;
-					} catch (SubViewsExeption e) {
+					} catch (StaticAnalysisException e) {
 						if (action.getActionType() != AbstractActionType.DELETE)
 							e.printStackTrace();
 					}

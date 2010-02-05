@@ -14,19 +14,18 @@ public class OperationModeCollectionGenerator {
 			Object[] obj = new Object[objects.length + 1];
 			for (int i = 0; i < objects.length; i++) {
 				obj[i] = objects[i];
-				if (allModes) {
-					for (int j = 1; j <= OPERATION_MODES_NUMBER; j++) {
-						obj[objects.length] = j;
-						collection.add(obj);
-					}
-				} else {
-					obj[objects.length] = 1;
+			}
+			if (allModes) {
+				for (int j = 1; j <= OPERATION_MODES_NUMBER; j++) {
+					obj[objects.length] = j;
 					collection.add(obj);
-
 				}
+			} else {
+				obj[objects.length] = 1;
+				collection.add(obj);
+				
 			}
 		}
-
 		return collection;
 
 	}

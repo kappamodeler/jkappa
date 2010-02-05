@@ -20,7 +20,6 @@ public class InitTestLocalViews extends BasicTestByModel {
 		options.append(SimulatorOption.COMPUTE_LOCAL_VIEWS);
 		options.append(SimulatorOption.SHORT_CONSOLE_OUTPUT);
 		options.append(SimulatorOption.NO_BUILD_INFLUENCE_MAP);
-		options.append(SimulatorOption.ALLOW_INCOMPLETE_SUBSTANCE);
 		return options;
 	}
 	

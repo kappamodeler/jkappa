@@ -9,6 +9,7 @@ import java.util.Map;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.staticanalysis.LinkStatus;
 import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.StaticAnalysisException;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
@@ -22,7 +23,7 @@ import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsInterface;
  * 
  */
 public final class ContactMap {
-	private ContactMapMode mode = ContactMapMode.MODEL;
+	private ContactMapMode mode = ContactMapMode.SEMANTIC;
 	private KappaSystem kappaSystem;
 	private ContactMapAbstractSolution abstractSolution;
 	private Rule focusRule;
@@ -72,7 +73,7 @@ public final class ContactMap {
 	public final void constructAbstractContactMapFromSubViews(
 			AllSubViewsOfAllAgentsInterface subViews, List<Rule> rules) {
 		switch (getMode()) {
-		case MODEL:
+		case SEMANTIC:
 			// semantic contact map
 			if (subViews != null && !subViews.isEmpty()) {
 				Iterator<String> iterator = subViews.getAllTypesIdOfAgents();
@@ -85,9 +86,14 @@ public final class ContactMap {
 			} else {
 			//syntactic contact map
 				abstractSolution.addAllRules(rules);
+				break;
 			}
+		case SYNTACTIC:
+			
+			abstractSolution.addAllRules(rules);
+			break;
 
-		case AGENT_OR_RULE:
+		case FOCUS_ON_AGENT_OR_RULE:
 			if (focusRule != null) {
 				AbstractionRule abstractRule = new AbstractionRule(focusRule);
 				Collection<AbstractAgent> agentsFromFocusedRule = abstractRule
@@ -110,7 +116,14 @@ public final class ContactMap {
 					abstractSolution.addData(listOfSubViews);
 				}
 				abstractSolution.addAllRules(rules);
-
+				break;
+			}
+		default:
+			try {
+				throw new StaticAnalysisException("unknown type of contact map");
+			} catch (StaticAnalysisException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 

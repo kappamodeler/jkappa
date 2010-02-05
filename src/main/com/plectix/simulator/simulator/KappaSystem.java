@@ -103,7 +103,7 @@ public final class KappaSystem implements KappaSystemInterface {
 			// contactMap.constructAbstractContactMap();
 
 			if ((args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP && contactMap
-					.getMode() == ContactMapMode.MODEL)
+					.getMode() == ContactMapMode.SEMANTIC)
 					|| args.createSubViews()
 					|| args.isDeadRulesShow()
 					|| args.isActivationMap()

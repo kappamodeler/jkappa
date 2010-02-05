@@ -45,7 +45,7 @@ public final class SimulatorTestOptions {
 		options.append(SimulatorOption.NO_COMPUTE_QUALITATIVE_COMPRESSION);
 		options.append(SimulatorOption.NO_COMPUTE_QUANTITATIVE_COMPRESSION);
 		options.append(SimulatorOption.NO_ENUMERATE_COMPLEXES);
-		options.append(SimulatorOption.ALLOW_INCOMPLETE_SUBSTANCE);
+//		options.append(SimulatorOption.ALLOW_INCOMPLETE_SUBSTANCE);
 		
 		options.appendOperationMode(opMode);
 		return options;

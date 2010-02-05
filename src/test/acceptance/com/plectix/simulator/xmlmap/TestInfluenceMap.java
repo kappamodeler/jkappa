@@ -33,9 +33,9 @@ public class TestInfluenceMap {
 	private SAXParser parserxml;
 	private File sessionSimplex;
 	private SAXHandler handler;
-	private ArrayList<Node> nodesSimplex;
+	private ArrayList<Node> nodesComplex;
 	private ArrayList<Node> nodesJava;
-	private ArrayList<Connection> connectionsSimplex;
+	private ArrayList<Connection> connectionsComplex;
 	private ArrayList<Connection> connectionsJava;
 	private static String currentXMLData;
 
@@ -61,8 +61,8 @@ public class TestInfluenceMap {
 			parserxml = parserFactory.newSAXParser();
 			handler = new SAXHandler();
 			parserxml.parse(sessionSimplex, handler);
-			nodesSimplex = handler.getNodes();
-			connectionsSimplex = handler.getConnections();
+			nodesComplex = handler.getNodes();
+			connectionsComplex = handler.getConnections();
 
 			parserxml.parse(new InputSource(new StringBufferReader(currentXMLData)), handler);
 			nodesJava = handler.getNodes();
@@ -78,11 +78,11 @@ public class TestInfluenceMap {
 	public void testNodesInfluenceMap() {
 
 		Assert.assertEquals("[Error] Nodes in XML (JAVA,SIMPLEX) ", nodesJava
-				.size(), nodesSimplex.size());
+				.size(), nodesComplex.size());
 
 		StringBuffer errors = new StringBuffer();
 
-		for (Node node : nodesSimplex) {
+		for (Node node : nodesComplex) {
 			if (!contains(node, nodesJava))
 				errors.append("there is no Node = '" + node.getName()
 						+ "' >  in Java \n");
@@ -95,7 +95,13 @@ public class TestInfluenceMap {
 		
 		errors = new StringBuffer();
 
-		for (Connection connection : connectionsSimplex) {
+//		Assert.assertEquals("[Error] Connectiones in XML (JAVA,SIMPLEX) ", connectionsJava
+//				.size(), connectionsComplex.size());
+
+		System.err.println(connectionsJava
+				.size() + "  "+ connectionsComplex.size());
+		
+		for (Connection connection : connectionsComplex) {
 			if (!contains(connection, connectionsJava))
 				errors.append("there is no connection \n < connection "
 						+ "fromNode = " + connection.getFromNode()

@@ -19,6 +19,10 @@ import com.plectix.simulator.staticanalysis.subviews.base.AbstractionRule;
 import com.plectix.simulator.util.NameDictionary;
 
 public final class InfluenceMapWithoutFuture extends InfluenceMap{
+	
+	static Map<String, MarkAgentWithoutFuture> activatedAgents = new LinkedHashMap<String, MarkAgentWithoutFuture>();
+	static Map<String, MarkAgentWithoutFuture> inhibitedAgents = new LinkedHashMap<String, MarkAgentWithoutFuture>();
+	
 	public InfluenceMapWithoutFuture() {
 		super();
 	}
@@ -28,10 +32,7 @@ public final class InfluenceMapWithoutFuture extends InfluenceMap{
 			ContactMap contactMap,
 			Map<String, AbstractAgent> agentNameToAgent) {
 		for (AbstractionRule rule : rules) {
-			Map<String, MarkAgentWithoutFuture> activatedAgents = new LinkedHashMap<String, MarkAgentWithoutFuture>();
-			Map<String, MarkAgentWithoutFuture> inhibitedAgents = new LinkedHashMap<String, MarkAgentWithoutFuture>();
-			fillingActivatedAndInhibitedSites(activatedAgents, inhibitedAgents,
-					contactMap, rule, agentNameToAgent);
+			fillingActivatedAndInhibitedSites(contactMap, rule, agentNameToAgent);
 			for (AbstractionRule ruleCheck : rules) {
 				int ruleId = rule.getRuleId();
 				int ruleCheckId = ruleCheck.getRuleId();
@@ -43,9 +44,7 @@ public final class InfluenceMapWithoutFuture extends InfluenceMap{
 		}
 	}
 
-	private static final void fillingActivatedAndInhibitedSites(
-			Map<String, MarkAgentWithoutFuture> activatedAgents,
-			Map<String, MarkAgentWithoutFuture> inhibitedAgents, ContactMap contactMap,
+	private static final void fillingActivatedAndInhibitedSites(ContactMap contactMap,
 			AbstractionRule rule, Map<String, AbstractAgent> agentNameToAgent) {
 		for (AbstractAction action : rule.getActions()) {
 			switch (action.getActionType()) {
@@ -53,7 +52,7 @@ public final class InfluenceMapWithoutFuture extends InfluenceMap{
 				AbstractAgent agent = action.getRightHandSideAgent();
 				MarkAgentWithoutFuture aAgent = getMarkAgent(activatedAgents, agent);
 				for (AbstractSite site : agent.getSitesMap().values())
-					aAgent.addMarkSite(new MarkSiteWithoutFuture(site, Action.ALL));
+					aAgent.addMarkSite(new MarkSiteWithoutFuture(site, Quark.EXISTENCE_QUARK));
 				break;
 			}
 			case DELETE: {
@@ -62,7 +61,7 @@ public final class InfluenceMapWithoutFuture extends InfluenceMap{
 				LinkedHashSet<String > sideEffect = new LinkedHashSet<String>();
 				for (AbstractSite siteLHS : agent.getSitesMap().values()) {
 					if (!isLinkStateHasSideEffect(siteLHS))
-						aAgent.addMarkSite(new MarkSiteWithoutFuture(siteLHS, Action.ALL));
+						aAgent.addMarkSite(new MarkSiteWithoutFuture(siteLHS, Quark.EXISTENCE_QUARK));
 					else
 						sideEffect.add(siteLHS.getName());
 				}
@@ -90,13 +89,13 @@ public final class InfluenceMapWithoutFuture extends InfluenceMap{
 						modSite.getLinkState().setFreeLinkState();
 						MarkAgentWithoutFuture mAgent = getMarkAgent(inhibitedAgents, agent);
 						mAgent.addMarkSite(new MarkSiteWithoutFuture(modSite,
-								Action.INTERNAL_STATE));
+								Quark.INTERNAL_STATE_QUARK));
 						// inhibitedAgents.add(new MarkAgent(agent, modSite,
 						// CActionType.MODIFY));
 						modSite = siteRHS.clone();
 						mAgent = getMarkAgent(activatedAgents, agent);
 						mAgent.addMarkSite(new MarkSiteWithoutFuture(modSite,
-								Action.INTERNAL_STATE));
+								Quark.INTERNAL_STATE_QUARK));
 						// modSite.getLinkState().setFreeLinkState();
 						// activatedAgents.add(new MarkAgent(agent, modSite,
 						// CActionType.MODIFY));
@@ -112,19 +111,19 @@ public final class InfluenceMapWithoutFuture extends InfluenceMap{
 							MarkAgentWithoutFuture mAgent = getMarkAgent(activatedAgents,
 									agent);
 							mAgent.addMarkSite(new MarkSiteWithoutFuture(siteRHS,
-									Action.LINK_STATE));
+									Quark.LINK_STATE_QUARK));
 							mAgent = getMarkAgent(inhibitedAgents, agent);
 							mAgent.addMarkSite(new MarkSiteWithoutFuture(siteLHS,
-									Action.LINK_STATE));
+									Quark.LINK_STATE_QUARK));
 						} else
 							sideEffect.add(siteLHS.getName());
 					} else {
 						MarkAgentWithoutFuture mAgent = getMarkAgent(activatedAgents, agent);
 						mAgent.addMarkSite(new MarkSiteWithoutFuture(siteRHS,
-								Action.LINK_STATE));
+								Quark.LINK_STATE_QUARK));
 						mAgent = getMarkAgent(inhibitedAgents, agent);
 						mAgent.addMarkSite(new MarkSiteWithoutFuture(siteLHS,
-								Action.LINK_STATE));
+								Quark.LINK_STATE_QUARK));
 					}
 
 				}
@@ -210,7 +209,7 @@ public final class InfluenceMapWithoutFuture extends InfluenceMap{
 				isOneIntersection = true;
 				for (MarkSiteWithoutFuture mSite : sitesList) {
 					switch (mSite.getType()) {
-					case INTERNAL_STATE: {
+					case INTERNAL_STATE_QUARK: {
 						hasInternalState = true;
 						if (isEndInternalState)
 							break;
@@ -218,13 +217,13 @@ public final class InfluenceMapWithoutFuture extends InfluenceMap{
 								checkSite, mSite);
 						break;
 					}
-					case LINK_STATE: {
+					case LINK_STATE_QUARK: {
 						if (isEndLinkState)
 							break;
 						isEndLinkState = intersectionLinkState(checkSite, mSite);
 						break;
 					}
-					case ALL: {
+					case EXISTENCE_QUARK: {
 						if (isEndInternalState && isEndLinkState)
 							break;
 						if (intersectionInternalState(checkSite, mSite)

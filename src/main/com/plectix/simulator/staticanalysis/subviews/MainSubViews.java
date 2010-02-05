@@ -16,19 +16,19 @@ import com.plectix.simulator.simulationclasses.solution.SuperSubstance;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
+import com.plectix.simulator.staticanalysis.StaticAnalysisException;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 import com.plectix.simulator.staticanalysis.influencemap.InfluenceMap;
 import com.plectix.simulator.staticanalysis.influencemap.nofuture.InfluenceMapWithoutFuture;
 import com.plectix.simulator.staticanalysis.subviews.base.AbstractClassSubViewBuilder;
 import com.plectix.simulator.staticanalysis.subviews.base.AbstractionRule;
-import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsExeption;
 import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsInterface;
 
 public final class MainSubViews extends AbstractClassSubViewBuilder implements
 		AllSubViewsOfAllAgentsInterface {
-	private Map<String, AbstractAgent> agentNameToAgent;
-	private List<AbstractionRule> abstractRules;
+	private final Map<String, AbstractAgent> agentNameToAgent;
+	private final List<AbstractionRule> abstractRules;
 	private LinkedHashSet<Integer> deadRules;
 
 	public MainSubViews() {
@@ -51,10 +51,10 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 		initBoundRulesAndSubViews();
 		try {
 			// we use this original heuristic TODO
-			constructAbstractContactMap(wI);
-			constructAbstractContactMap(wI);
-			constructAbstractContactMap(wI);
-		} catch (SubViewsExeption e) {
+			constructSubViews(wI);
+			constructSubViews(wI);
+			constructSubViews(wI);
+		} catch (StaticAnalysisException e) {
 			e.printStackTrace();
 		}
 	}
@@ -155,8 +155,8 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 
 	}
 
-	private final void constructAbstractContactMap(InfluenceMap influenceMap)
-			throws SubViewsExeption {
+	private final void constructSubViews(InfluenceMap influenceMap)
+			throws StaticAnalysisException {
 		// RuleId
 		Queue<Integer> activeRule = new LinkedList<Integer>();
 		// RuleId -> isIncluded

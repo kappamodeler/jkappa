@@ -5,15 +5,15 @@ import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 
 /*package*/ final class MarkSiteWithoutFuture {
 	private final AbstractSite site;
-	private final Action type;
+	private final Quark type;
 
-	public MarkSiteWithoutFuture(AbstractSite site, Action type) {
+	public MarkSiteWithoutFuture(AbstractSite site, Quark type) {
 		this.site = site.clone();
 		this.type = type;
 	}
 
 	public MarkSiteWithoutFuture(AbstractAgent agent) {
-		this.type = Action.LINK_STATE;
+		this.type = Quark.LINK_STATE_QUARK;
 		this.site = agent.getSitesMap().values().iterator().next();
 	}
 	
@@ -21,7 +21,7 @@ import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 		return site;
 	}
 
-	public final Action getType() {
+	public final Quark getType() {
 		return type;
 	}
 }

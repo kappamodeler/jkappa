@@ -1,0 +1,10 @@
+'1' A(x~u,y~u) -> A(x~p,y~u) 
+'2' A(x~p,y~u) -> A(x~p,y~z) 
+'3' A(x~p,y~z) -> A(x~u,y~z) 
+
+'4' A(x~u,y~u) -> A(x~u,y~u!1),B(x!1) 
+'5' B(x!_) -> B(x) 
+'6' B(x) -> B(x!1),B(x!1) 
+
+
+%init: A(x~u,y~u) 

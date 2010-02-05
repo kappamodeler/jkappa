@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<ComplxSession xmlns="http://plectix.synthesisstudios.com/schemas/kappasession" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" CommandLine="--no-compute-qualitative-compression --no-compute-quantitative-compression --no-dump-iteration-number --no-dump-rule-iteration --no-enumerate-complexes --contact-map test.data\influenceMap\model\~kappa006.test --xml-session-name map.xml --build-influence-map" InputFile="test.data\influenceMap\model\~kappa006.test" TimeStamp="2010-02-05 12:41:22">
+		<RuleSet Name="ContactMap">
+			<Rule Type="RULE" Name="6" Id="6" Data="B(x)-&gt;B(x!0),B(x!0)">
+			</Rule>
+			<Rule Type="RULE" Name="5" Id="5" Data="B(x!_)-&gt;B(x)">
+			</Rule>
+			<Rule Type="RULE" Name="4" Id="4" Data="A(x~u,y~u)-&gt;A(x~u,y~u!0),B(x!0)">
+			</Rule>
+			<Rule Type="RULE" Name="3" Id="3" Data="A(x~p,y~z)-&gt;A(x~u,y~z)">
+			</Rule>
+			<Rule Type="RULE" Name="2" Id="2" Data="A(x~p,y~u)-&gt;A(x~p,y~z)">
+			</Rule>
+			<Rule Type="RULE" Name="1" Id="1" Data="A(x~u,y~u)-&gt;A(x~p,y~u)">
+			</Rule>
+		</RuleSet>
+		<ContactMap Name="High resolution">
+			<Agent Name="A">
+				<Site Name="x" CanChangeState="true" CanBeBound="false">
+				</Site>
+				<Site Name="y" CanChangeState="true" CanBeBound="false">
+				</Site>
+			</Agent>
+		</ContactMap>
+		<InfluenceMap>
+			<Node Type="RULE" Text="6" Name="6" Id="6" Data="B(x)-&gt;B(x!0),B(x!0)">
+			</Node>
+			<Node Type="RULE" Text="5" Name="5" Id="5" Data="B(x!_)-&gt;B(x)">
+			</Node>
+			<Node Type="RULE" Text="4" Name="4" Id="4" Data="A(x~u,y~u)-&gt;A(x~u,y~u!0),B(x!0)">
+			</Node>
+			<Node Type="RULE" Text="3" Name="3" Id="3" Data="A(x~p,y~z)-&gt;A(x~u,y~z)">
+			</Node>
+			<Node Type="RULE" Text="2" Name="2" Id="2" Data="A(x~p,y~u)-&gt;A(x~p,y~z)">
+			</Node>
+			<Node Type="RULE" Text="1" Name="1" Id="1" Data="A(x~u,y~u)-&gt;A(x~p,y~u)">
+			</Node>
+			<Connection FromNode="6" ToNode="5" Relation="POSITIVE">
+			</Connection>
+			<Connection FromNode="5" ToNode="6" Relation="POSITIVE">
+			</Connection>
+			<Connection FromNode="4" ToNode="5" Relation="POSITIVE">
+			</Connection>
+			<Connection FromNode="3" ToNode="4" Relation="POSITIVE">
+			</Connection>
+			<Connection FromNode="3" ToNode="1" Relation="POSITIVE">
+			</Connection>
+			<Connection FromNode="2" ToNode="3" Relation="POSITIVE">
+			</Connection>
+			<Connection FromNode="1" ToNode="3" Relation="POSITIVE">
+			</Connection>
+			<Connection FromNode="1" ToNode="2" Relation="POSITIVE">
+			</Connection>
+			<Connection FromNode="6" ToNode="6" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="5" ToNode="5" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="4" ToNode="4" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="4" ToNode="3" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="4" ToNode="2" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="4" ToNode="1" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="3" ToNode="3" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="3" ToNode="2" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="2" ToNode="4" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="2" ToNode="2" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="2" ToNode="1" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="1" ToNode="4" Relation="NEGATIVE">
+			</Connection>
+			<Connection FromNode="1" ToNode="1" Relation="NEGATIVE">
+			</Connection>
+		</InfluenceMap>
+		<Log>
+			<Entry Position="1265362881.543" Count="1" Message="JSIM: Build on N/A from Revision N/A, JRE: Sun Microsystems Inc. 1.6.0_17" Type="INFO">
+			</Entry>
+			<Entry Position="1265362881.543" Count="1" Message="-Initialization..." Type="INFO">
+			</Entry>
+			<Entry Position="1265362881.543" Count="1" Message="--Computing initial state" Type="INFO">
+			</Entry>
+			<Entry Position="1265362881.558" Count="1" Message="-Kappa file loading: 0.015625 sec. CPU" Type="INFO">
+			</Entry>
+			<Entry Position="1265362882.058" Count="1" Message="-Kappa file compilation: 0.0625 sec. CPU" Type="INFO">
+			</Entry>
+			<Entry Position="1265362882.058" Count="1" Message="-Reading Kappa input: 0.078125 sec. CPU" Type="INFO">
+			</Entry>
+			<Entry Position="1265362882.090" Count="1" Message="-Injections building: 0.015625 sec. CPU" Type="INFO">
+			</Entry>
+			<Entry Position="1265362882.277" Count="1" Message="-Subviews: 0.0 sec. CPU" Type="INFO">
+			</Entry>
+			<Entry Position="1265362882.293" Count="1" Message="-Contact map: 0.0 sec. CPU" Type="INFO">
+			</Entry>
+			<Entry Position="1265362882.293" Count="1" Message="--Abstracting influence map..." Type="INFO">
+			</Entry>
+			<Entry Position="1265362882.293" Count="1" Message="--Abstraction:0.09375 sec. CPU" Type="INFO">
+			</Entry>
+			<Entry Position="1265362882.293" Count="1" Message="--influence map computed" Type="INFO">
+			</Entry>
+			<Entry Position="1265362882.293" Count="1" Message="-Influence map: 0.0 sec. CPU" Type="INFO">
+			</Entry>
+			<Entry Position="1265362882.293" Count="1" Message="-Initialization: 0.015625 sec. CPU" Type="INFO">
+			</Entry>
+			<Entry Position="1265362882.449" Count="1" Message="-Building xml tree for influence map: 0.0 sec. CPU" Type="INFO">
+			</Entry>
+		</Log>
+	</ComplxSession>

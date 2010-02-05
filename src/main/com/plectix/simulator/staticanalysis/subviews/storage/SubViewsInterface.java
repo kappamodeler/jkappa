@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.staticanalysis.Agent;
+import com.plectix.simulator.staticanalysis.StaticAnalysisException;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.subviews.SubViewClass;
 import com.plectix.simulator.staticanalysis.subviews.base.AbstractAction;
@@ -15,10 +16,10 @@ public interface SubViewsInterface {
 	 * @param agent
 	 *            given agent
 	 * @return <tt>true</tt> if given agent is new, else <tt>false</tt>
-	 * @throws SubViewsExeption
+	 * @throws StaticAnalysisException 
 	 */
 	public boolean addAbstractAgent(AbstractAgent agent)
-			throws SubViewsExeption;
+			throws StaticAnalysisException;
 
 	/**
 	 * @param view
@@ -37,22 +38,13 @@ public interface SubViewsInterface {
 	 * @param agent
 	 *            agent is SubView from LHS rule.
 	 * @return <tt>true</tt> if rule may be applied
-	 * @throws SubViewsExeption
+	 * @throws StaticAnalysisException 
 	 */
-	public boolean test(AbstractAgent testView) throws SubViewsExeption;
+	public boolean test(AbstractAgent testView) throws StaticAnalysisException;
 
-	public boolean test(AbstractAction action) throws SubViewsExeption;
+	public boolean test(AbstractAction action) throws StaticAnalysisException;
 
-	public boolean burnRule(AbstractAction action) throws SubViewsExeption;
-
-	/**
-	 * 
-	 * @param oldAgent
-	 * @param newAgent
-	 * @throws SubViewsExeption
-	 */
-	public boolean burnRule(AbstractAgent oldAgent, AbstractAgent newAgent)
-			throws SubViewsExeption;
+	public boolean burnRule(AbstractAction action) throws StaticAnalysisException;
 
 	public void fillingInitialState(
 			Map<String, AbstractAgent> agentNameToAgent,

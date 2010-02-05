@@ -22,6 +22,9 @@ import com.plectix.simulator.util.NameDictionary;
 
 public final class InfluenceMapWithFuture extends InfluenceMap {
 
+	static List<MarkAgentWithFuture> activatedSites = new LinkedList<MarkAgentWithFuture>();
+	static List<MarkAgentWithFuture> inhibitedSites = new LinkedList<MarkAgentWithFuture>();
+	
 	public InfluenceMapWithFuture() {
 		super();
 	}
@@ -33,10 +36,7 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 		initObsRules(observables);
 
 		for (AbstractionRule rule : rules) {
-			List<MarkAgentWithFuture> activatedSites = new LinkedList<MarkAgentWithFuture>();
-			List<MarkAgentWithFuture> inhibitedSites = new LinkedList<MarkAgentWithFuture>();
-			fillingActivatedAndInhibitedSites(activatedSites, inhibitedSites,
-					contactMap, rule, agentNameToAgent);
+			fillingActivatedAndInhibitedSites(contactMap, rule, agentNameToAgent);
 			int ruleId = rule.getRuleId();
 			for (AbstractionRule ruleCheck : rules) {
 				int ruleCheckId = ruleCheck.getRuleId();
@@ -72,8 +72,7 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 	}
 
 	private static final void fillingActivatedAndInhibitedSites(
-			List<MarkAgentWithFuture> activatedSites,
-			List<MarkAgentWithFuture> inhibitedSites, ContactMap contactMap,
+			ContactMap contactMap,
 			AbstractionRule rule, Map<String, AbstractAgent> agentNameToAgent) {
 		for (AbstractAction action : rule.getActions()) {
 			switch (action.getActionType()) {

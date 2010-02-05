@@ -62,7 +62,7 @@ public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 			if (simulationArguments.getFocusFilename() != null) {
 				this.setFocusOn(simulationArguments.getFocusFilename());
 			} else {
-				kappaSystem.getContactMap().setMode(ContactMapMode.MODEL);
+				kappaSystem.getContactMap().setMode(ContactMapMode.SEMANTIC);
 			}
 
 			return kappaFileReader.parse();
@@ -88,7 +88,7 @@ public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 		kappaSystem.getContactMap().setSimulationData(kappaSystem);
 		if (ruleList != null && !ruleList.isEmpty()) {
 			kappaSystem.getContactMap().setFocusRule(ruleList.get(0));
-			kappaSystem.getContactMap().setMode(ContactMapMode.AGENT_OR_RULE);
+			kappaSystem.getContactMap().setMode(ContactMapMode.FOCUS_ON_AGENT_OR_RULE);
 		} else {
 			kappaSystem.getContactMap().setFocusRule(null);
 		}
