@@ -1,113 +1,193 @@
-<?xml version="1.0" encoding="utf-8"?>
-	<ComplxSession xmlns="http://plectix.synthesisstudios.com/schemas/kappasession" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" CommandLine="--no-compute-qualitative-compression --no-compute-quantitative-compression --no-dump-iteration-number --no-dump-rule-iteration --no-enumerate-complexes --contact-map test.data\influenceMap\model\~kappa006.test --xml-session-name map.xml --build-influence-map" InputFile="test.data\influenceMap\model\~kappa006.test" TimeStamp="2010-02-05 12:41:22">
-		<RuleSet Name="ContactMap">
-			<Rule Type="RULE" Name="6" Id="6" Data="B(x)-&gt;B(x!0),B(x!0)">
-			</Rule>
-			<Rule Type="RULE" Name="5" Id="5" Data="B(x!_)-&gt;B(x)">
-			</Rule>
-			<Rule Type="RULE" Name="4" Id="4" Data="A(x~u,y~u)-&gt;A(x~u,y~u!0),B(x!0)">
-			</Rule>
-			<Rule Type="RULE" Name="3" Id="3" Data="A(x~p,y~z)-&gt;A(x~u,y~z)">
-			</Rule>
-			<Rule Type="RULE" Name="2" Id="2" Data="A(x~p,y~u)-&gt;A(x~p,y~z)">
-			</Rule>
-			<Rule Type="RULE" Name="1" Id="1" Data="A(x~u,y~u)-&gt;A(x~p,y~u)">
-			</Rule>
-		</RuleSet>
-		<ContactMap Name="High resolution">
-			<Agent Name="A">
-				<Site Name="x" CanChangeState="true" CanBeBound="false">
-				</Site>
-				<Site Name="y" CanChangeState="true" CanBeBound="false">
-				</Site>
-			</Agent>
-		</ContactMap>
-		<InfluenceMap>
-			<Node Type="RULE" Text="6" Name="6" Id="6" Data="B(x)-&gt;B(x!0),B(x!0)">
-			</Node>
-			<Node Type="RULE" Text="5" Name="5" Id="5" Data="B(x!_)-&gt;B(x)">
-			</Node>
-			<Node Type="RULE" Text="4" Name="4" Id="4" Data="A(x~u,y~u)-&gt;A(x~u,y~u!0),B(x!0)">
-			</Node>
-			<Node Type="RULE" Text="3" Name="3" Id="3" Data="A(x~p,y~z)-&gt;A(x~u,y~z)">
-			</Node>
-			<Node Type="RULE" Text="2" Name="2" Id="2" Data="A(x~p,y~u)-&gt;A(x~p,y~z)">
-			</Node>
-			<Node Type="RULE" Text="1" Name="1" Id="1" Data="A(x~u,y~u)-&gt;A(x~p,y~u)">
-			</Node>
-			<Connection FromNode="6" ToNode="5" Relation="POSITIVE">
-			</Connection>
-			<Connection FromNode="5" ToNode="6" Relation="POSITIVE">
-			</Connection>
-			<Connection FromNode="4" ToNode="5" Relation="POSITIVE">
-			</Connection>
-			<Connection FromNode="3" ToNode="4" Relation="POSITIVE">
-			</Connection>
-			<Connection FromNode="3" ToNode="1" Relation="POSITIVE">
-			</Connection>
-			<Connection FromNode="2" ToNode="3" Relation="POSITIVE">
-			</Connection>
-			<Connection FromNode="1" ToNode="3" Relation="POSITIVE">
-			</Connection>
-			<Connection FromNode="1" ToNode="2" Relation="POSITIVE">
-			</Connection>
-			<Connection FromNode="6" ToNode="6" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="5" ToNode="5" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="4" ToNode="4" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="4" ToNode="3" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="4" ToNode="2" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="4" ToNode="1" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="3" ToNode="3" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="3" ToNode="2" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="2" ToNode="4" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="2" ToNode="2" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="2" ToNode="1" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="1" ToNode="4" Relation="NEGATIVE">
-			</Connection>
-			<Connection FromNode="1" ToNode="1" Relation="NEGATIVE">
-			</Connection>
-		</InfluenceMap>
-		<Log>
-			<Entry Position="1265362881.543" Count="1" Message="JSIM: Build on N/A from Revision N/A, JRE: Sun Microsystems Inc. 1.6.0_17" Type="INFO">
-			</Entry>
-			<Entry Position="1265362881.543" Count="1" Message="-Initialization..." Type="INFO">
-			</Entry>
-			<Entry Position="1265362881.543" Count="1" Message="--Computing initial state" Type="INFO">
-			</Entry>
-			<Entry Position="1265362881.558" Count="1" Message="-Kappa file loading: 0.015625 sec. CPU" Type="INFO">
-			</Entry>
-			<Entry Position="1265362882.058" Count="1" Message="-Kappa file compilation: 0.0625 sec. CPU" Type="INFO">
-			</Entry>
-			<Entry Position="1265362882.058" Count="1" Message="-Reading Kappa input: 0.078125 sec. CPU" Type="INFO">
-			</Entry>
-			<Entry Position="1265362882.090" Count="1" Message="-Injections building: 0.015625 sec. CPU" Type="INFO">
-			</Entry>
-			<Entry Position="1265362882.277" Count="1" Message="-Subviews: 0.0 sec. CPU" Type="INFO">
-			</Entry>
-			<Entry Position="1265362882.293" Count="1" Message="-Contact map: 0.0 sec. CPU" Type="INFO">
-			</Entry>
-			<Entry Position="1265362882.293" Count="1" Message="--Abstracting influence map..." Type="INFO">
-			</Entry>
-			<Entry Position="1265362882.293" Count="1" Message="--Abstraction:0.09375 sec. CPU" Type="INFO">
-			</Entry>
-			<Entry Position="1265362882.293" Count="1" Message="--influence map computed" Type="INFO">
-			</Entry>
-			<Entry Position="1265362882.293" Count="1" Message="-Influence map: 0.0 sec. CPU" Type="INFO">
-			</Entry>
-			<Entry Position="1265362882.293" Count="1" Message="-Initialization: 0.015625 sec. CPU" Type="INFO">
-			</Entry>
-			<Entry Position="1265362882.449" Count="1" Message="-Building xml tree for influence map: 0.0 sec. CPU" Type="INFO">
-			</Entry>
-		</Log>
-	</ComplxSession>
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Automaticaly generated by Complx 4.321..10523 -->
+<ComplxSession Timestamp="02/05/2010 (17:41:00)" CommandLine="engine/osim/mac/complx-build-4.321..10523 --no-compute-qualitative-compression --no-compute-quantitative-compression --no-dump-iteration-number --no-dump-rule-iteration --no-enumerate-complexes ~kappa004.test --output-xml map004.xml --inhibition-map --build-influence-map" InputFile="~kappa004.test" 
+xsi:schemaLocation="http://plectix.synthesisstudios.com
+KappaSession.xsd" xmlns="http://plectix.synthesisstudios.com/schemas/kappasession"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" >
+<Log>
+<Entry Type="INFO" Message="Compilation(simplx)                      0.000382 s."/>
+<Entry Type="INFO" Message="Second compilation(pretty printing)      8.6e-05 s."/>
+<Entry Type="INFO" Message="Translation                              0.000139 s."/>
+<Entry Type="INFO" Message="Renaming                                 0.000149 s."/>
+<Entry Type="INFO" Message="Boolean encoding of the initial system   0.00011 s."/>
+<Entry Type="INFO" Message="Quotienting rules                        0.00028 s."/>
+<Entry Type="INFO" Message="Boolean encoding of the quotiented system0.000213 s."/>
+<Entry Type="INFO" Message="Low-res contact map                      1.8e-05 s."/>
+<Entry Type="INFO" Message="Reachability analysis                    0.000653 s."/>
+<Entry Type="INFO" Message="Quark computation                        3.8e-05 s."/>
+<Entry Type="INFO" Message="compute refinement relation closure      8.4e-05 s."/>
+<Entry Type="INFO" Message="compute maximal refinement relation      5e-06 s."/>
+<Entry Type="INFO" Message="compute dag-like refinement relation     1.3e-05 s."/>
+</Log>
+<RuleSet Name="Original">
+<Rule Id="1" Name="1" Data="A(x~u,y~u)->A(x~p,y~u)" ForwardRate="1" />
+<Rule Id="2" Name="2" Data="A(x~p,y~u)->A(x~p,y~z)" ForwardRate="1" />
+<Rule Id="3" Name="3" Data="A(x~p,y~z)->A(x~u,y~z)" ForwardRate="1" />
+<Rule Id="4" Name="4" Data="A(x~u,y~u)->A(x~u,y~u!0),B(x!0)" ForwardRate="1" />
+<Rule Id="5" Name="5" Data="B(x!_)->B(x)" ForwardRate="1" />
+<Rule Id="6" Name="6" Data="B(x)->B(x!0),B(x!0)" ForwardRate="1" />
+</RuleSet>
+<ContactMap Name="Low resolution">
+<Agent Name="B">
+<RuleSet Name="Mod">
+<Rule Id="4"/>
+<Rule Id="6"/>
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="5"/>
+<Rule Id="6"/>
+</RuleSet><Site Name="x" CanChangeState="false" CanBeBound="true">
+<RuleSet Name="Mod">
+</RuleSet>
+<RuleSet Name="Test">
+</RuleSet></Site>
+</Agent>
+<Agent Name="A">
+<RuleSet Name="Mod">
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="1"/>
+<Rule Id="2"/>
+<Rule Id="3"/>
+<Rule Id="4"/>
+</RuleSet><Site Name="x" CanChangeState="true" CanBeBound="true">
+<RuleSet Name="Mod">
+<Rule Id="1"/>
+<Rule Id="3"/>
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="1"/>
+<Rule Id="2"/>
+<Rule Id="3"/>
+<Rule Id="4"/>
+</RuleSet></Site>
+<Site Name="y" CanChangeState="true" CanBeBound="true">
+<RuleSet Name="Mod">
+<Rule Id="2"/>
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="1"/>
+<Rule Id="2"/>
+<Rule Id="3"/>
+<Rule Id="4"/>
+</RuleSet></Site>
+</Agent>
+<Bond FromAgent="B" FromSite="x" ToAgent="A" ToSite="y">
+<RuleSet Name="Mod">
+<Rule Id="4"/>
+<Rule Id="5"/>
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="1"/>
+<Rule Id="2"/>
+<Rule Id="3"/>
+<Rule Id="4"/>
+<Rule Id="5"/>
+<Rule Id="6"/>
+</RuleSet></Bond><Bond FromAgent="B" FromSite="x" ToAgent="B" ToSite="x">
+<RuleSet Name="Mod">
+<Rule Id="5"/>
+<Rule Id="6"/>
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="5"/>
+<Rule Id="6"/>
+</RuleSet></Bond></ContactMap>
+<ContactMap Name="High resolution">
+<Agent Name="B">
+<RuleSet Name="Mod">
+<Rule Id="4"/>
+<Rule Id="6"/>
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="5"/>
+<Rule Id="6"/>
+</RuleSet><Site Name="x" CanChangeState="false" CanBeBound="true">
+<RuleSet Name="Mod">
+</RuleSet>
+<RuleSet Name="Test">
+</RuleSet></Site>
+</Agent>
+<Agent Name="A">
+<RuleSet Name="Mod">
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="1"/>
+<Rule Id="2"/>
+<Rule Id="3"/>
+<Rule Id="4"/>
+</RuleSet><Site Name="x" CanChangeState="true" CanBeBound="true">
+<RuleSet Name="Mod">
+<Rule Id="1"/>
+<Rule Id="3"/>
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="1"/>
+<Rule Id="2"/>
+<Rule Id="3"/>
+<Rule Id="4"/>
+</RuleSet></Site>
+<Site Name="y" CanChangeState="true" CanBeBound="true">
+<RuleSet Name="Mod">
+<Rule Id="2"/>
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="1"/>
+<Rule Id="2"/>
+<Rule Id="3"/>
+<Rule Id="4"/>
+</RuleSet></Site>
+</Agent>
+<Bond FromAgent="B" FromSite="x" ToAgent="B" ToSite="x">
+<RuleSet Name="Mod">
+<Rule Id="5"/>
+<Rule Id="6"/>
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="5"/>
+<Rule Id="6"/>
+</RuleSet></Bond><Bond FromAgent="A" FromSite="y" ToAgent="B" ToSite="x">
+<RuleSet Name="Mod">
+<Rule Id="4"/>
+<Rule Id="5"/>
+</RuleSet>
+<RuleSet Name="Test">
+<Rule Id="1"/>
+<Rule Id="2"/>
+<Rule Id="3"/>
+<Rule Id="4"/>
+<Rule Id="5"/>
+<Rule Id="6"/>
+</RuleSet></Bond></ContactMap>
+<InfluenceMap Name="Low resolution">
+<Node Type="RULE" Text="1" Id="1" Name="1" Data="A(x~u,y~u)->A(x~p,y~u)"/>
+<Node Type="RULE" Text="2" Id="2" Name="2" Data="A(x~p,y~u)->A(x~p,y~z)"/>
+<Node Type="RULE" Text="3" Id="3" Name="3" Data="A(x~p,y~z)->A(x~u,y~z)"/>
+<Node Type="RULE" Text="4" Id="4" Name="4" Data="A(x~u,y~u)->A(x~u,y~u!0),B(x!0)"/>
+<Node Type="RULE" Text="5" Id="5" Name="5" Data="B(x!_)->B(x)"/>
+<Node Type="RULE" Text="6" Id="6" Name="6" Data="B(x)->B(x!0),B(x!0)"/>
+<Connection FromNode="1" ToNode="2" Relation="POSITIVE"/>
+<Connection FromNode="1" ToNode="3" Relation="POSITIVE"/>
+<Connection FromNode="2" ToNode="3" Relation="POSITIVE"/>
+<Connection FromNode="3" ToNode="1" Relation="POSITIVE"/>
+<Connection FromNode="3" ToNode="4" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="5" Relation="POSITIVE"/>
+<Connection FromNode="4" ToNode="6" Relation="POSITIVE"/>
+<Connection FromNode="5" ToNode="1" Relation="POSITIVE"/>
+<Connection FromNode="5" ToNode="2" Relation="POSITIVE"/>
+<Connection FromNode="5" ToNode="3" Relation="POSITIVE"/>
+<Connection FromNode="5" ToNode="4" Relation="POSITIVE"/>
+<Connection FromNode="5" ToNode="6" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="5" Relation="POSITIVE"/>
+<Connection FromNode="6" ToNode="6" Relation="POSITIVE"/>
+<Connection FromNode="1" ToNode="4" Relation="NEGATIVE"/>
+<Connection FromNode="2" ToNode="1" Relation="NEGATIVE"/>
+<Connection FromNode="2" ToNode="4" Relation="NEGATIVE"/>
+<Connection FromNode="3" ToNode="2" Relation="NEGATIVE"/>
+<Connection FromNode="4" ToNode="1" Relation="NEGATIVE"/>
+<Connection FromNode="4" ToNode="2" Relation="NEGATIVE"/>
+<Connection FromNode="4" ToNode="3" Relation="NEGATIVE"/>
+</InfluenceMap>
+<Refinement Name="DAG"></Refinement>
+<Refinement Name="Maximal"></Refinement>
+</ComplxSession>

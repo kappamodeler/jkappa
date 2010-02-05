@@ -19,10 +19,6 @@ import com.plectix.simulator.staticanalysis.subviews.base.AbstractionRule;
 import com.plectix.simulator.util.NameDictionary;
 
 public final class InfluenceMapWithoutFuture extends InfluenceMap{
-	
-	static Map<String, MarkAgentWithoutFuture> activatedAgents = new LinkedHashMap<String, MarkAgentWithoutFuture>();
-	static Map<String, MarkAgentWithoutFuture> inhibitedAgents = new LinkedHashMap<String, MarkAgentWithoutFuture>();
-	
 	public InfluenceMapWithoutFuture() {
 		super();
 	}
@@ -32,7 +28,10 @@ public final class InfluenceMapWithoutFuture extends InfluenceMap{
 			ContactMap contactMap,
 			Map<String, AbstractAgent> agentNameToAgent) {
 		for (AbstractionRule rule : rules) {
-			fillingActivatedAndInhibitedSites(contactMap, rule, agentNameToAgent);
+			Map<String, MarkAgentWithoutFuture> activatedAgents = new LinkedHashMap<String, MarkAgentWithoutFuture>();
+			Map<String, MarkAgentWithoutFuture> inhibitedAgents = new LinkedHashMap<String, MarkAgentWithoutFuture>();
+			fillingActivatedAndInhibitedSites(activatedAgents, inhibitedAgents,
+					contactMap, rule, agentNameToAgent);
 			for (AbstractionRule ruleCheck : rules) {
 				int ruleId = rule.getRuleId();
 				int ruleCheckId = ruleCheck.getRuleId();
@@ -44,7 +43,9 @@ public final class InfluenceMapWithoutFuture extends InfluenceMap{
 		}
 	}
 
-	private static final void fillingActivatedAndInhibitedSites(ContactMap contactMap,
+	private static final void fillingActivatedAndInhibitedSites(
+			Map<String, MarkAgentWithoutFuture> activatedAgents,
+			Map<String, MarkAgentWithoutFuture> inhibitedAgents, ContactMap contactMap,
 			AbstractionRule rule, Map<String, AbstractAgent> agentNameToAgent) {
 		for (AbstractAction action : rule.getActions()) {
 			switch (action.getActionType()) {

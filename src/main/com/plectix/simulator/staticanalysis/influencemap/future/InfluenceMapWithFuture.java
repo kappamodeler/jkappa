@@ -22,9 +22,6 @@ import com.plectix.simulator.util.NameDictionary;
 
 public final class InfluenceMapWithFuture extends InfluenceMap {
 
-	static List<MarkAgentWithFuture> activatedSites = new LinkedList<MarkAgentWithFuture>();
-	static List<MarkAgentWithFuture> inhibitedSites = new LinkedList<MarkAgentWithFuture>();
-	
 	public InfluenceMapWithFuture() {
 		super();
 	}
@@ -36,7 +33,10 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 		initObsRules(observables);
 
 		for (AbstractionRule rule : rules) {
-			fillingActivatedAndInhibitedSites(contactMap, rule, agentNameToAgent);
+			List<MarkAgentWithFuture> activatedSites = new LinkedList<MarkAgentWithFuture>();
+			List<MarkAgentWithFuture> inhibitedSites = new LinkedList<MarkAgentWithFuture>();
+			fillingActivatedAndInhibitedSites(activatedSites, inhibitedSites,
+					contactMap, rule, agentNameToAgent);
 			int ruleId = rule.getRuleId();
 			for (AbstractionRule ruleCheck : rules) {
 				int ruleCheckId = ruleCheck.getRuleId();
@@ -72,17 +72,18 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 	}
 
 	private static final void fillingActivatedAndInhibitedSites(
-			ContactMap contactMap,
+			List<MarkAgentWithFuture> activatedSites,
+			List<MarkAgentWithFuture> inhibitedSites, ContactMap contactMap,
 			AbstractionRule rule, Map<String, AbstractAgent> agentNameToAgent) {
 		for (AbstractAction action : rule.getActions()) {
 			switch (action.getActionType()) {
 			case ADD: {
 				AbstractAgent agent = action.getRightHandSideAgent();
-				if (agent.getSitesMap().isEmpty()) {
+//				if (agent.getSitesMap().isEmpty()) {
 					activatedSites.add(new MarkAgentWithFuture(agent, null,
 							ActionType.ADD));
-					break;
-				}
+//					break;
+//				}
 				for (AbstractSite site : agent.getSitesMap().values())
 					activatedSites.add(new MarkAgentWithFuture(agent, site,
 							ActionType.ADD));
@@ -90,11 +91,11 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 			}
 			case DELETE: {
 				AbstractAgent agent = action.getLeftHandSideAgent();
-				if (agent.getSitesMap().isEmpty()) {
+//				if (agent.getSitesMap().isEmpty()) {
 					inhibitedSites.add(new MarkAgentWithFuture(agent, null,
 							ActionType.DELETE));
-					break;
-				}
+//					break;
+//				}
 				LinkedHashSet<String> sideEffect = new LinkedHashSet<String>();
 				for (AbstractSite siteLHS : agent.getSitesMap().values()) {
 					if (!isLinkStateHasSideEffect(siteLHS)) {
@@ -125,10 +126,11 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 						modSite.getLinkState().setFreeLinkState();
 						inhibitedSites.add(new MarkAgentWithFuture(agent,
 								modSite, ActionType.MODIFY));
-						modSite = siteRHS.clone();
-						modSite.getLinkState().setFreeLinkState();
+						
+						AbstractSite modSite2 = siteRHS.clone();
+						modSite2.getLinkState().setFreeLinkState();
 						activatedSites.add(new MarkAgentWithFuture(agent,
-								modSite, ActionType.MODIFY));
+								modSite2, ActionType.MODIFY));
 					}
 					AbstractLinkState linkStateLHS = siteLHS.getLinkState();
 					AbstractLinkState linkStateRHS = siteRHS.getLinkState();
