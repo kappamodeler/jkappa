@@ -24,7 +24,7 @@ public interface AllSubViewsOfAllAgentsInterface {
 
 	public void initDeadRules();
 
-	public List<AbstractionRule> getRules();
+	public List<AbstractionRule> getAbstractRules();
 
 	public Map<String, AbstractAgent> getAgentNameToAgent();
 

@@ -41,7 +41,7 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 		Collection<Agent> agents = prepareSolutionAgents(solution);
 		fillModelMapOfAgents(agents, rules);
 		constructAbstractRules(rules);
-		constructClasses(abstractRules, agentNameToAgent);
+		constructClasses(abstractRules);
 
 		InfluenceMap wI = new InfluenceMapWithoutFuture();
 		// AInfluenceMap wI = new CInfluenceMapWithFuture();
@@ -104,7 +104,7 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 
 	}
 
-	private final void fillModelMapOfAgents(Collection<Agent> agents, List<Rule> rules) {
+	public final void fillModelMapOfAgents(Collection<Agent> agents, List<Rule> rules) {
 		fillModelMapByAgentList(agents);
 
 		for (Rule rule : rules) {
@@ -139,15 +139,14 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 	 * @param rules
 	 *            given rules
 	 */
-	private final void constructAbstractRules(List<Rule> rules) {
+	public final void constructAbstractRules(List<Rule> rules) {
 		for (Rule rule : rules) {
 			AbstractionRule abstractRule = new AbstractionRule(rule);
 			abstractRules.add(abstractRule);
 		}
 	}
 
-	private final void constructClasses(List<AbstractionRule> abstractRules,
-			Map<String, AbstractAgent> agentNameToAgent) {
+	public final void constructClasses(List<AbstractionRule> abstractRules) {
 		List<AbstractionRule> list = new LinkedList<AbstractionRule>();
 		for (AbstractionRule abstraction : abstractRules)
 			list.add(abstraction);
@@ -223,7 +222,7 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 		return deadRules;
 	}
 
-	public final List<AbstractionRule> getRules() {
+	public final List<AbstractionRule> getAbstractRules() {
 		return abstractRules;
 	}
 }

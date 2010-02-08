@@ -42,6 +42,18 @@ public abstract class InfluenceMap {
 		return answer;
 	}
 
+	public final List<Integer> getInhibitionByRule(Integer ruleId) {
+		List<Integer> answer = new LinkedList<Integer>();
+		List<InfluenceMapEdge> list = inhibitionMap.get(ruleId);
+		if (list == null) {
+			return null;
+		}
+		for (InfluenceMapEdge iE : inhibitionMap.get(ruleId)) {
+			answer.add(iE.getTargetRule());
+		}
+		return answer;
+	}
+	
 	public final void fillActivatedInhibitedRules(List<Rule> rules,
 			KappaSystem kappaSystem, Observables observables) {
 		for (Rule rule : rules) {

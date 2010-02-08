@@ -41,7 +41,7 @@ public class InfluenceMapComputationOperation extends AbstractOperation<Influenc
 			contactMap.fillContactMap(rules, subViews,
 					simulationData.getKappaSystem());
 		}
-		influenceMap.initInfluenceMap(subViews.getRules(), observables,
+		influenceMap.initInfluenceMap(subViews.getAbstractRules(), observables,
 				contactMap, subViews.getAgentNameToAgent());
 		influenceMap.fillActivatedInhibitedRules(rules, kappaSystem,
 				observables);

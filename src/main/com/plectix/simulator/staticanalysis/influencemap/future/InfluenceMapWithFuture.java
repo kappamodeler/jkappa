@@ -40,34 +40,38 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 			int ruleId = rule.getRuleId();
 			for (AbstractionRule ruleCheck : rules) {
 				int ruleCheckId = ruleCheck.getRuleId();
-				fillingMap(this.getActivationMap(), activatedSites, ruleId, ruleCheckId,
-						ruleCheck.getLeftHandSideActions());
-				fillingMap(this.getInhibitionMap(), inhibitedSites, ruleId, ruleCheckId,
-						ruleCheck.getLeftHandSideActions());
+				fillingMap(this.getActivationMap(), activatedSites, ruleId,
+						ruleCheckId, ruleCheck.getLeftHandSideActions());
+				fillingMap(this.getInhibitionMap(), inhibitedSites, ruleId,
+						ruleCheckId, ruleCheck.getLeftHandSideActions());
 			}
 
-			for (List<AbstractionRule> rulesCheck : this.getObservbableRules().values())
+			for (List<AbstractionRule> rulesCheck : this.getObservbableRules()
+					.values())
 				for (AbstractionRule ruleCheck : rulesCheck) {
-					fillingMap(this.getActivationMapObservables(), activatedSites, ruleId,
-							ruleCheck.getRuleId(), ruleCheck.getLeftHandSideActions());
-					fillingMap(this.getInhibitionMapObservables(), inhibitedSites, ruleId,
-							ruleCheck.getRuleId(), ruleCheck.getLeftHandSideActions());
+					fillingMap(this.getActivationMapObservables(),
+							activatedSites, ruleId, ruleCheck.getRuleId(),
+							ruleCheck.getLeftHandSideActions());
+					fillingMap(this.getInhibitionMapObservables(),
+							inhibitedSites, ruleId, ruleCheck.getRuleId(),
+							ruleCheck.getLeftHandSideActions());
 				}
 		}
 	}
 
 	private final void initObsRules(Observables observables) {
 		Map<Integer, List<AbstractionRule>> map = new HashMap<Integer, List<AbstractionRule>>();
-		for (ObservableConnectedComponentInterface cc : observables
-				.getConnectedComponentList()) {
-			AbstractionRule rule = new AbstractionRule(cc);
-			List<AbstractionRule> list = map.get(rule.getRuleId());
-			if(list == null){
-				list = new LinkedList<AbstractionRule>();
-				map.put(rule.getRuleId(), list);
+		if (observables != null)
+			for (ObservableConnectedComponentInterface cc : observables
+					.getConnectedComponentList()) {
+				AbstractionRule rule = new AbstractionRule(cc);
+				List<AbstractionRule> list = map.get(rule.getRuleId());
+				if (list == null) {
+					list = new LinkedList<AbstractionRule>();
+					map.put(rule.getRuleId(), list);
+				}
+				list.add(rule);
 			}
-			list.add(rule);
-		}
 		this.setObservbableRules(map);
 	}
 
@@ -84,6 +88,7 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 							ActionType.ADD));
 //					break;
 //				}
+
 				for (AbstractSite site : agent.getSitesMap().values())
 					activatedSites.add(new MarkAgentWithFuture(agent, site,
 							ActionType.ADD));
@@ -96,6 +101,7 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 							ActionType.DELETE));
 //					break;
 //				}
+
 				LinkedHashSet<String> sideEffect = new LinkedHashSet<String>();
 				for (AbstractSite siteLHS : agent.getSitesMap().values()) {
 					if (!isLinkStateHasSideEffect(siteLHS)) {
@@ -129,6 +135,7 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 						
 						AbstractSite modSite2 = siteRHS.clone();
 						modSite2.getLinkState().setFreeLinkState();
+
 						activatedSites.add(new MarkAgentWithFuture(agent,
 								modSite2, ActionType.MODIFY));
 					}
@@ -172,7 +179,8 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 		}
 	}
 
-	private static final void fillingMap(Map<Integer, List<InfluenceMapEdge>> map,
+	private static final void fillingMap(
+			Map<Integer, List<InfluenceMapEdge>> map,
 			List<MarkAgentWithFuture> sites, int ruleId, int ruleCheckId,
 			List<AbstractAction> actions) {
 		if (isIntersection(sites, actions)) {
@@ -185,20 +193,20 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 		}
 	}
 
-	private static final boolean isIntersection(List<MarkAgentWithFuture> agents,
-			List<AbstractAction> actions) {
+	private static final boolean isIntersection(
+			List<MarkAgentWithFuture> agents, List<AbstractAction> actions) {
 		for (AbstractAction action : actions)
 			for (MarkAgentWithFuture mAgent : agents) {
-				if (!mAgent.getAgent().hasSimilarName(action
-						.getLeftHandSideAgent()))
+				if (!mAgent.getAgent().hasSimilarName(
+						action.getLeftHandSideAgent()))
 					continue;
 				AbstractSite mSite = mAgent.getSite();
 				if (mSite == null)
 					return true;
-				if(action.getLeftHandSideAgent().getSitesMap().isEmpty())
+				if (action.getLeftHandSideAgent().getSitesMap().isEmpty())
 					return true;
-				AbstractSite aSite = action.getLeftHandSideAgent().getSiteByName(
-						mSite.getName());
+				AbstractSite aSite = action.getLeftHandSideAgent()
+						.getSiteByName(mSite.getName());
 				if (aSite == null)
 					continue;
 				if (mAgent.getType() == ActionType.MODIFY) {
@@ -210,11 +218,14 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 					AbstractLinkState aLinkState = aSite.getLinkState();
 
 					if (aLinkState.compareLinkStates(mLinkState)) {
-						if (NameDictionary.isDefaultAgentName(aLinkState.getAgentName()))
+						if (NameDictionary.isDefaultAgentName(aLinkState
+								.getAgentName()))
 							return true;
-						if ((aLinkState.getAgentName().equals(mLinkState.getAgentName()))
-								&& (aLinkState.getConnectedSiteName().equals(mLinkState
-										.getConnectedSiteName())))
+						if ((aLinkState.getAgentName().equals(mLinkState
+								.getAgentName()))
+								&& (aLinkState.getConnectedSiteName()
+										.equals(mLinkState
+												.getConnectedSiteName())))
 							return true;
 					}
 				}
