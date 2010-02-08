@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
+import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.ConnectedComponent;
 import com.plectix.simulator.staticanalysis.InternalState;
@@ -19,8 +20,12 @@ import com.plectix.simulator.staticanalysis.abstracting.AbstractLinkState;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 import com.plectix.simulator.staticanalysis.localviews.LocalViewsMain;
 import com.plectix.simulator.staticanalysis.subviews.base.AbstractAction;
+import com.plectix.simulator.util.io.PlxLogger;
 
 public class QuantitativeCompressor {
+
+	private static final PlxLogger LOGGER = ThreadLocalData
+			.getLogger(QuantitativeCompressor.class);
 
 	// TODO -> subViews
 	// private IAllSubViewsOfAllAgents allSubViews;
@@ -195,7 +200,7 @@ public class QuantitativeCompressor {
 	 * 
 	 * @return
 	 */
-    boolean deleteEmptyEnds() {
+	boolean deleteEmptyEnds() {
 		removedList = new LinkedList<Integer>();
 		boolean removed = false;
 		Stack<Agent> stack = new Stack<Agent>();
@@ -203,6 +208,7 @@ public class QuantitativeCompressor {
 
 		while (!stack.isEmpty()) {
 			Agent agent = stack.pop();
+			LOGGER.debug("try do remove as end " + agent.getName());
 			// may be trouble with empty agents TODO
 			if (agent.getSites().size() > 1 || agent.getSites().size() == 0) {
 				continue;
@@ -217,15 +223,34 @@ public class QuantitativeCompressor {
 			if (site.getLinkState().getStatusLink() != LinkStatus.BOUND) {
 				continue;
 			}
-
+			if (mapAfter.get(agent.getIdInRuleHandside()) == null) {
+				continue;
+			}
 			Site connectedSite = site.getLinkState().getConnectedSite();
 			if (connectedSite != null) {
 				if (decreaseLinkSite(site)) {
 					Agent parentAgent = connectedSite.getParentAgent();
-					stack.add(parentAgent);
+					if (!stack.contains(parentAgent))
+						stack.add(parentAgent);
+					// LOGGER.debug("agent before"+mapBefore
+					// .get(parentAgent.getIdInRuleHandside()));
+					// LOGGER.debug("agent after"+mapAfter
+					// .get(parentAgent.getIdInRuleHandside()));
+
 					decreaseInternalStatesAndFreeLinkStateToWild(mapBefore
-							.get(parentAgent.getIdInRuleHandside()), mapAfter.get(parentAgent.getIdInRuleHandside()));
+							.get(parentAgent.getIdInRuleHandside()), mapAfter
+							.get(parentAgent.getIdInRuleHandside()));
 					removed = true;
+					//					
+					// LOGGER.debug("agent before"+mapBefore
+					// .get(parentAgent.getIdInRuleHandside()));
+					// LOGGER.debug("agent after"+mapAfter
+					// .get(parentAgent.getIdInRuleHandside()));
+
+					LOGGER.debug("removed as tested end=" + agent);
+					// LOGGER.debug("try to remove as tested end=" +
+					// parentAgent);
+
 				}
 			}
 
@@ -241,25 +266,30 @@ public class QuantitativeCompressor {
 		int size = localviews.getCountOfCoherentAgent(aAgent);
 
 		Agent agent2 = mapAfter.get(agent.getIdInRuleHandside());
-		if(agent2==null){
-			return false;
-		}
-		aAgent.getSiteByName(connectedSite.getName()).getLinkState().setSemiLink();
+		LOGGER.debug(connectedSite.getName() + " " + aAgent);
+		aAgent.getSiteByName(connectedSite.getName()).getLinkState()
+				.setSemiLink();
 		if (size == localviews.getCountOfCoherentAgent(aAgent)) {
 			connectedSite.getLinkState().setSemiLink();
+			if (agent2 != null) {
 
-			Link linkState = agent2
-					.getSiteByName(connectedSite.getName()).getLinkState();
+				Link linkState = agent2.getSiteByName(connectedSite.getName())
+						.getLinkState();
 
-			if (linkState.getStatusLink() != LinkStatus.FREE) {
-				linkState.setSemiLink();
-				aAgent.getSiteByName(connectedSite.getName()).getLinkState().setWildLinkState();
-				if(size ==localviews.getCountOfCoherentAgent(aAgent)){
-					connectedSite.getLinkState().setWildLinkState();
-					linkState.setWildLinkState();
+				if (linkState.getStatusLink() != LinkStatus.FREE) {
+					linkState.setSemiLink();
+					aAgent.getSiteByName(connectedSite.getName())
+							.getLinkState().setWildLinkState();
+					if (size == localviews.getCountOfCoherentAgent(aAgent)) {
+						connectedSite.getLinkState().setWildLinkState();
+						linkState.setWildLinkState();
+						LOGGER
+								.debug("decrease link state"
+										+ agent2.getSiteByName(connectedSite
+												.getName()));
+					}
 				}
 			}
-			
 
 			Integer removedId = site.getParentAgent().getIdInRuleHandside();
 			mapBefore.remove(removedId);
@@ -275,8 +305,8 @@ public class QuantitativeCompressor {
 		return compressedRule;
 	}
 
-	boolean decreaseInternalStatesAndFreeLinkStateToWild(
-			Agent agentBefore, Agent agentAfter) {
+	boolean decreaseInternalStatesAndFreeLinkStateToWild(Agent agentBefore,
+			Agent agentAfter) {
 		boolean decreased = false;
 		if (agentBefore == null) {
 			return decreased;
@@ -313,19 +343,20 @@ public class QuantitativeCompressor {
 			boolean tested, int sizeOfProper) {
 		// TODO optimize
 
-		AbstractLinkState oldLinkState = new AbstractLinkState(aAgent.getSiteByName(
-				site.getName()).getLinkState());
+		AbstractLinkState oldLinkState = new AbstractLinkState(aAgent
+				.getSiteByName(site.getName()).getLinkState());
 
 		Agent dualAgent = mapAfter.get(site.getParentAgent()
 				.getIdInRuleHandside());
 		if (oldLinkState.getStatusLink() == LinkStatus.FREE) {
-			aAgent.getSiteByName(site.getName()).getLinkState().setWildLinkState();
+			aAgent.getSiteByName(site.getName()).getLinkState()
+					.setWildLinkState();
 			if (sizeOfProper == localviews.getCountOfCoherentAgent(aAgent)) {
 
 				site.getLinkState().setWildLinkState();
 				if (dualAgent != null) {
-					Link linkState = dualAgent
-							.getSiteByName(site.getName()).getLinkState();
+					Link linkState = dualAgent.getSiteByName(site.getName())
+							.getLinkState();
 					if (linkState.getStatusLink() == LinkStatus.FREE) {
 						linkState.setWildLinkState();
 					}
@@ -343,8 +374,8 @@ public class QuantitativeCompressor {
 		} else {
 			if (oldLinkState.getStatusLink() == LinkStatus.BOUND) {
 				return false;
-				
-				//wildcard case
+
+				// wildcard case
 			} else {
 				if (tested && site.getInternalState().hasDefaultName()) {
 					site.getParentAgent().removeSite(site.getName());
@@ -362,9 +393,10 @@ public class QuantitativeCompressor {
 	private boolean decreaseInternalState(AbstractAgent aAgent, Site site,
 			int sizeOfProper) {
 		// TODO optimize
-		String oldInternal = aAgent.getSiteByName(site.getName()).getInternalState()
-				.getName();
-		aAgent.getSiteByName(site.getName()).getInternalState().setName(InternalState.DEFAULT_NAME);
+		String oldInternal = aAgent.getSiteByName(site.getName())
+				.getInternalState().getName();
+		aAgent.getSiteByName(site.getName()).getInternalState().setName(
+				InternalState.DEFAULT_NAME);
 		if (sizeOfProper == localviews.getCountOfCoherentAgent(aAgent)) {
 			site.getInternalState().setName(InternalState.DEFAULT_NAME);
 			return true;

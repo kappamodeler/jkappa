@@ -83,11 +83,11 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 			switch (action.getActionType()) {
 			case ADD: {
 				AbstractAgent agent = action.getRightHandSideAgent();
-//				if (agent.getSitesMap().isEmpty()) {
-					activatedSites.add(new MarkAgentWithFuture(agent, null,
-							ActionType.ADD));
-//					break;
-//				}
+				// if (agent.getSitesMap().isEmpty()) {
+				activatedSites.add(new MarkAgentWithFuture(agent, null,
+						ActionType.ADD));
+				// break;
+				// }
 
 				for (AbstractSite site : agent.getSitesMap().values())
 					activatedSites.add(new MarkAgentWithFuture(agent, site,
@@ -96,11 +96,11 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 			}
 			case DELETE: {
 				AbstractAgent agent = action.getLeftHandSideAgent();
-//				if (agent.getSitesMap().isEmpty()) {
-					inhibitedSites.add(new MarkAgentWithFuture(agent, null,
-							ActionType.DELETE));
-//					break;
-//				}
+				// if (agent.getSitesMap().isEmpty()) {
+				inhibitedSites.add(new MarkAgentWithFuture(agent, null,
+						ActionType.DELETE));
+				// break;
+				// }
 
 				LinkedHashSet<String> sideEffect = new LinkedHashSet<String>();
 				for (AbstractSite siteLHS : agent.getSitesMap().values()) {
@@ -132,7 +132,7 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 						modSite.getLinkState().setFreeLinkState();
 						inhibitedSites.add(new MarkAgentWithFuture(agent,
 								modSite, ActionType.MODIFY));
-						
+
 						AbstractSite modSite2 = siteRHS.clone();
 						modSite2.getLinkState().setFreeLinkState();
 

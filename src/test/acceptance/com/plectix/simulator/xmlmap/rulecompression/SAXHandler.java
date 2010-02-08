@@ -12,7 +12,7 @@ public class SAXHandler extends DefaultHandler {
 	private Set<Association> associations;
 
 	private boolean isQuantitative = false;
-
+	
 	private boolean isMap;
 
 	@Override

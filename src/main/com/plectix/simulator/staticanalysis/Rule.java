@@ -64,11 +64,11 @@ public class Rule implements WeightedItem {
 
 	private int automorphismNumber = 1;
 	private boolean hasInfiniteRate = false;
-	private List<Rule> activatedRules = new LinkedList<Rule>();
-	private List<Rule> inhibitedRule = new LinkedList<Rule>();
+	private final List<Rule> activatedRules = new LinkedList<Rule>();
+	private final List<Rule> inhibitedRule = new LinkedList<Rule>();
 
-	private List<ObservableConnectedComponentInterface> activatedObservable = new LinkedList<ObservableConnectedComponentInterface>();
-	private List<ObservableConnectedComponentInterface> inhibitedObservable = new LinkedList<ObservableConnectedComponentInterface>();
+	private final List<ObservableConnectedComponentInterface> activatedObservable = new LinkedList<ObservableConnectedComponentInterface>();
+	private final List<ObservableConnectedComponentInterface> inhibitedObservable = new LinkedList<ObservableConnectedComponentInterface>();
 
 	private int ruleId;
 	private List<Action> actionList;
@@ -535,27 +535,28 @@ public class Rule implements WeightedItem {
 			for (ConnectedComponentInterface component : leftHandside) {
 				String hashForComponent = component.getSmilesString();
 				Integer old = repetitionFactor.get(hashForComponent);
-				if(old ==null){
+				if (old == null) {
 					repetitionFactor.put(hashForComponent, Integer.valueOf(1));
-				}
-				else{
-					repetitionFactor.put(hashForComponent, Integer.valueOf(old+1));	
+				} else {
+					repetitionFactor.put(hashForComponent, Integer
+							.valueOf(old + 1));
 				}
 			}
-			
-			for(Integer i : repetitionFactor.values()){
-				automorphismNumber*=factorial(i);
+
+			for (Integer i : repetitionFactor.values()) {
+				automorphismNumber *= factorial(i);
 			}
 		}
 	}
 
 	private int factorial(int i) {
-		if(i==0){
-			throw new RuntimeException("internal error : repetition factor for component equals 0");
+		if (i == 0) {
+			throw new RuntimeException(
+					"internal error : repetition factor for component equals 0");
 		}
 		int answer = 1;
-		for(int j = 1;j<=i;j++){
-			answer*=j;
+		for (int j = 1; j <= i; j++) {
+			answer *= j;
 		}
 		return answer;
 	}
@@ -595,8 +596,8 @@ public class Rule implements WeightedItem {
 	public final String getName() {
 		return ruleName;
 	}
-	
-	public int getAutomorphismNumber(){
+
+	public int getAutomorphismNumber() {
 		return automorphismNumber;
 	}
 
@@ -720,7 +721,7 @@ public class Rule implements WeightedItem {
 			return false;
 		}
 
-		Rule rule = (Rule) obj;
+		Rule rule = obj;
 		return rule.toString().equals(this.toString());
 	}
 
@@ -839,7 +840,8 @@ public class Rule implements WeightedItem {
 			List<ObservableConnectedComponentInterface> observables) {
 		for (Rule ruleFromList : rules) {
 			// if(rules!=rule)
-			for (ConnectedComponentInterface cc : ruleFromList.getLeftHandSide()) {
+			for (ConnectedComponentInterface cc : ruleFromList
+					.getLeftHandSide()) {
 				cc.doPositiveUpdate(this.rightHandside);
 			}
 		}
@@ -848,12 +850,16 @@ public class Rule implements WeightedItem {
 				oCC.doPositiveUpdate(this.rightHandside);
 		}
 	}
-	
+
 	@Override
 	public final String toString() {
 		StringBuffer st = new StringBuffer(leftHandside.toString());
 		st.append("->");
-		st.append(rightHandside);
+		if (rightHandside == null) {
+			st.append("[]");
+		} else {
+			st.append(rightHandside);
+		}
 		return st.toString();
 	}
 }

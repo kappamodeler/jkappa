@@ -21,10 +21,10 @@ public class RootedRule {
 	private List<ShadowAgent> roots;
 
 	// actions for all agents
-	private Map<Integer, List<String>> actionStringsByAgentIDInRuleHandSide;
+	private final Map<Integer, List<String>> actionStringsByAgentIDInRuleHandSide;
 
-	private Map<Integer, ShadowAgent> mapAfter;
-	private Map<Integer, ShadowAgent> mapBefore;
+	private final Map<Integer, ShadowAgent> mapAfter;
+	private final Map<Integer, ShadowAgent> mapBefore;
 
 	// parent rule
 	private Rule rule;
@@ -79,7 +79,7 @@ public class RootedRule {
 		for (Integer i : actionStringsByAgentIDInRuleHandSide.keySet()) {
 			Integer j = getSecondRuleAction(
 					actionStringsByAgentIDInRuleHandSide.get(i),
-					secondRuleActions);
+					secondRuleActions,used);
 			if (j != null) {
 				correspondence.put(i, j);
 				used.add(j);
@@ -176,11 +176,14 @@ public class RootedRule {
 	 * @param list
 	 *            of action-string
 	 * @param secondRuleActions
+	 * @param used 
 	 * @return
 	 */
 	private Integer getSecondRuleAction(List<String> list,
-			Map<Integer, List<String>> secondRuleActions) {
+			Map<Integer, List<String>> secondRuleActions, Set<Integer> used) {
 		for (Entry<Integer, List<String>> entry : secondRuleActions.entrySet()) {
+			if(used.contains(entry.getKey()))
+				continue;
 			if (RuleCompressionUtils.equiv(entry.getValue(), list)) {
 				return entry.getKey();
 			}

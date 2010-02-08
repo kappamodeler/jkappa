@@ -13,7 +13,7 @@ import com.plectix.simulator.staticanalysis.localviews.LibraryOfLocalViews;
 @RunWith(value = Suite.class)
 @SuiteClasses(value = { TestRuleMaster.class, TestRootedRule.class,
 		TestRootedRulesGroup.class, TestQualitativeCompression.class,
-		//TestQuantitativeCompression.class, 
+		TestQuantitativeCompression.class, 
 		TestRuleUtils.class })
 public class TestsRuleCompressions {
 	public static LibraryOfRules libraryOfRules = new LibraryOfRules();
