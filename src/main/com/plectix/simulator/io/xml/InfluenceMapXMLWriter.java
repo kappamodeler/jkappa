@@ -82,21 +82,26 @@ import com.plectix.simulator.staticanalysis.influencemap.InfluenceMapEdge;
 		int rulesNumber = allRules + 1;
 		if (influenceMapEdges != null)
 		for (int j = influenceMapEdges.size() - 1; j >= 0; j--) {
+			int fromNode = rule.getRuleId() + 1;
+			int toNode = influenceMapEdges.get(j).getTargetRule() + rulesNumber;
+			if(mapType == TYPE_NEGATIVE_MAP && fromNode == toNode)
+				continue;
 			writer.writeStartElement("Connection");
-			writer.writeAttribute("FromNode", Integer
-					.toString(rule.getRuleId() + 1));
-			writer.writeAttribute("ToNode", Integer.toString(influenceMapEdges.get(j).getTargetRule() + rulesNumber));
+			writer.writeAttribute("FromNode", Integer.toString(fromNode));
+			writer.writeAttribute("ToNode", Integer.toString(toNode));
 			writer.writeAttribute("Relation", mapType);
 			writer.writeEndElement();
 		}
 		
 		if (rulesToPrint != null)
 		for (int j = rulesToPrint.size() - 1; j >= 0; j--) {
+			int fromNode = rule.getRuleId() + 1;
+			int toNode = rulesToPrint.get(j).getTargetRule() + 1;
+			if(mapType == TYPE_NEGATIVE_MAP && fromNode == toNode)
+				continue;
 			writer.writeStartElement("Connection");
-			writer.writeAttribute("FromNode", Integer
-					.toString(rule.getRuleId() + 1));
-			writer.writeAttribute("ToNode", Integer.toString(rulesToPrint
-					.get(j).getTargetRule() + 1));
+			writer.writeAttribute("FromNode", Integer.toString(fromNode));
+			writer.writeAttribute("ToNode", Integer.toString(toNode));
 			// .getRuleID() + 1));
 			writer.writeAttribute("Relation", mapType);
 			writer.writeEndElement();
