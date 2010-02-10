@@ -18,7 +18,11 @@ public class SimulationClock {
 		this.simulationData = simulationData;
 	}
 	
-	public final boolean isEndSimulation(SimulationState state) {
+	public final boolean isEndSimulation(SimulationState state, long clashes) {
+		if (clashes > simulationData.getSimulationArguments().getMaxClashes()) {
+			return true;
+		}
+		
 		double currentTime = state.getCurrentTime();
 		long count = state.getCurrentEventNumber();
 		

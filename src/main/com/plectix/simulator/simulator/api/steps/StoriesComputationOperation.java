@@ -136,12 +136,10 @@ public class StoriesComputationOperation extends AbstractOperation<Object> {
 
 			boolean isEndRules = false;
 			long clash = 0;
-			long max_clash = 0;
+			long currentNumberOfClashes = 0;
 			simulationData.getStoriesAgentTypesStorage().setIteration(
 					state.getCurrentIterationNumber());
-			while (!clock.isEndSimulation(state)
-					&& max_clash <= simulationData.getSimulationArguments()
-							.getMaxClashes()) {
+			while (!clock.isEndSimulation(state, currentNumberOfClashes)) {
 				if (Thread.interrupted()) {
 					// TODO: Do any necessary clean-up and collect data we can
 					// return
@@ -174,7 +172,7 @@ public class StoriesComputationOperation extends AbstractOperation<Object> {
 				if (injectionsList != null) {
 					eventBuilder.setNewEvent(state.getCurrentEventNumber(), rule
 							.getRuleId());
-					max_clash = 0;
+					currentNumberOfClashes = 0;
 					// what is this??
 					if (stories.checkRule(rule.getRuleId(),
 							state.getCurrentIterationNumber())) {
@@ -206,7 +204,7 @@ public class StoriesComputationOperation extends AbstractOperation<Object> {
 							injectionsList);
 				} else {
 					clash++;
-					max_clash++;
+					currentNumberOfClashes++;
 				}
 
 			} // end of simulation here...

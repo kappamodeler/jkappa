@@ -73,7 +73,6 @@ public enum SimulatorOption {
 	MERGE_MAPS("merge_maps", false, "Also constructs inhibition maps"),
 	WARNINGS("W", false, "Output all warnings on standard error channel"),
 	ITERATION("iteration", true, "Number of stories to be searched for (with --storify option only)"),
-	FINAL_STATE("output_final_state", false, "Output final state"),
 	NO_ARROW_CLOSURE("no_arrow_closure", false, 
 			"Do not perform arrows transitive closure when displaying stories"),
 	NO_MEASURE("no_measure", false, "Causes simplx to ignore observables"),

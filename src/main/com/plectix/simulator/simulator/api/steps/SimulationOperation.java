@@ -81,6 +81,18 @@ public class SimulationOperation extends AbstractOperation<Object> {
 		this.runSimulation(clock);
 	}
 
+	private void updateFinalState(Simulator simulator) {
+		SimulationState state = simulator.getState();
+		SimulationData simulationData = simulator.getSimulationData();
+		
+		if (simulationData.getSimulationArguments().isTime()) {
+			simulationData.checkOutputFinalState(simulationData
+					.getSimulationArguments().getTimeLimit());
+		} else {
+			simulationData.checkOutputFinalState(state.getCurrentTime());
+		}
+	}
+	
 	private void runSimulation(SimulationClock clock) throws StoryStorageException {
 		Object statusLock = simulator.getStatusLock();
 		
@@ -108,8 +120,10 @@ public class SimulationOperation extends AbstractOperation<Object> {
 			state.setEventsToZero();
 		}
 
+		boolean finalStateIsAlreadyComputed = false; 
+		
 		long clashesNumber = 0;
-		long maxClashes = 0;
+		long currentNumberOfClashes = 0;
 		boolean isEndRules = false;
 		boolean isCalculateObs = false;
 		LiveDataSourceInterface liveDataSource = new ObservablesLiveDataSource(
@@ -121,9 +135,7 @@ public class SimulationOperation extends AbstractOperation<Object> {
 		simulatorStatus.setStatusMessage(SimulatorMessage.STATUS_RUNNING);
 
 		simulationData.getKappaSystem().getObservables().addInitialState();
-		while (!clock.isEndSimulation(state)
-				&& maxClashes <= simulationData.getSimulationArguments()
-						.getMaxClashes()) {
+		while (!clock.isEndSimulation(state, currentNumberOfClashes)) {
 			if (Thread.interrupted()) {
 				// TODO: Do any necessary clean-up and collect data we can
 				// return
@@ -179,6 +191,10 @@ public class SimulationOperation extends AbstractOperation<Object> {
 				}
 			}
 
+			/*
+			 *  update current time
+			 */
+			
 			if (!rule.hasInfiniteRate()) {
 				synchronized (statusLock) {
 					state.setCurrentTime(state.getCurrentTime() + simulationData.getKappaSystem()
@@ -188,15 +204,17 @@ public class SimulationOperation extends AbstractOperation<Object> {
 						state.getCurrentTime());
 			}
 			
-			if (clock.isEndSimulation(state)) {
-				if (simulationData.getSimulationArguments().isTime()) {
-					simulationData.checkOutputFinalState(simulationData
-							.getSimulationArguments().getTimeLimit());
-				} else {
-					simulationData.checkOutputFinalState(state.getCurrentTime());
-				}
-
+			/*
+			 *  if this is the last iteration we need to make final snapshots
+			 *  BEFORE the application of choosen rule
+			 *    
+			 */
+			
+			if (clock.isEndSimulation(state, currentNumberOfClashes)) {
+				this.updateFinalState(simulator);
+				finalStateIsAlreadyComputed = true;
 			}
+			
 			if (isCalculateObs 
 					&& simulationData.getSimulationArguments().getReportExactSampleTime()
 					&& simulationData.getSimulationArguments().isTime()) {
@@ -206,6 +224,7 @@ public class SimulationOperation extends AbstractOperation<Object> {
 								state.getCurrentEventNumber(),
 								simulationData.getSimulationArguments().isTime());
 			}
+			
 			if (logger.isDebugEnabled()) {
 				logger.debug("Rule: " + rule.getName());
 			}
@@ -215,7 +234,7 @@ public class SimulationOperation extends AbstractOperation<Object> {
 			isCalculateObs = false;
 			if (injectionsList != null) {
 				// negative update
-				maxClashes = 0;
+				currentNumberOfClashes = 0;
 				if (logger.isDebugEnabled())
 					logger.debug("negative update");
 
@@ -225,6 +244,7 @@ public class SimulationOperation extends AbstractOperation<Object> {
 
 				List<Injection> newInjections = ruleApplicator.applyRule(rule,
 						injectionsList, simulationData);
+
 				if (newInjections != null) {
 
 					UpdatesPerformer.doNegativeUpdate(newInjections);
@@ -262,20 +282,13 @@ public class SimulationOperation extends AbstractOperation<Object> {
 					logger.debug("Clash");
 				}
 				clashesNumber++;
-				maxClashes++;
+				currentNumberOfClashes++;
 			}
 			
 			if (simulationData.getSimulationArguments().getLiveDataInterval() != -1) {
 				simulationData.getKappaSystem().getObservables().updateLastValues();
 			}
 			
-			if (!clock.isEndSimulation(state)
-					&& maxClashes > simulationData.getSimulationArguments()
-							.getMaxClashes()) {
-				simulationData.checkOutputFinalState(state.getCurrentTime());
-
-			}
-
 			if (isCalculateObs
 					&& (!simulationData.getSimulationArguments()
 							.getReportExactSampleTime() || !simulationData
@@ -287,21 +300,19 @@ public class SimulationOperation extends AbstractOperation<Object> {
 
 		}
 
+		/*
+		 * If we still 
+		 */
+		if (!finalStateIsAlreadyComputed
+				&& clock.isEndSimulation(state, currentNumberOfClashes)) {
+			this.updateFinalState(simulator);
+		}
+		
 		liveDataStreamer.stop();
 		simulatorStatus.setStatusMessage(SimulatorMessage.STATUS_WRAPPING);
 
 		// simulationData.getKappaSystem().getObservables().calculateObsLast(
 		// currentTime, currentEventNumber);
-		if (simulationData.getSimulationArguments().isTime()
-				&& state.getCurrentTime() > simulationData.getSimulationArguments()
-						.getTimeLimit()) {
-			clock.setTimeLimit(simulationData.getSimulationArguments()
-					.getTimeLimit());
-			clock.setEvent(state.getCurrentEventNumber() - 1);
-		} else {
-			clock.setTimeLimit(state.getCurrentTime());
-			clock.setEvent(state.getCurrentEventNumber());
-		}
 		endSimulation(simulationData.getSimulationArguments()
 				.getOutputTypeForAdditionalInfo(), isEndRules, logger);
 	}
