@@ -41,7 +41,7 @@ public abstract class BasicTestByModel extends DefaultPropertiesForTest {
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
 		(new SimulationDataReader(simulationData)).readAndCompile();
-		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
+		simulationData.getKappaSystem().initialize();
 	}
 
 	public Simulator getSimulator() {

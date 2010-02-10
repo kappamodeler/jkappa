@@ -71,11 +71,11 @@ public final class SimulatorStatus implements SimulatorStatusInterface {
 		this.currentTime = currentTime;
 	}
 
-	final void setProgress(double progress) {
+	public final void setProgress(double progress) {
 		this.progress = progress;
 	}
 
-	final void setStatusMessage(String statusMessage) {
+	public final void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
 	}
 }

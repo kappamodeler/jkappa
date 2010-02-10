@@ -1,6 +1,8 @@
 package com.plectix.simulator.staticanalysis.stories.storage;
 
 @SuppressWarnings("serial")
+
+//TODO please do something with this class 
 public final class StoryStorageException extends Exception {
 	public StoryStorageException(){
 		super();

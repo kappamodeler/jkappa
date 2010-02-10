@@ -1,5 +1,7 @@
 package com.plectix.simulator.util;
 
+import java.util.ArrayList;
+
 public class CommandLineUtils {
 	public static final String[] normalize(String[] commandLineArguments) {
 		String[] argsNew = new String[commandLineArguments.length];
@@ -10,7 +12,8 @@ public class CommandLineUtils {
 						+ st.substring(2).replaceAll("-", "_");
 			else
 				argsNew[i++] = st;
-		return argsNew;
+		
+		return processTokens(argsNew);
 	}
 	
 	public static final String getCommandLineString(String[] args) {
@@ -23,5 +26,34 @@ public class CommandLineUtils {
 		}
 		stringBuffer.deleteCharAt(stringBuffer.length() - 1);
 		return stringBuffer.toString();
+	}
+	
+	private static final String[] processTokens(String[] commandLineArguments) {
+		ArrayList<String> result = new ArrayList<String>();
+		
+		StringBuffer currentToken = new StringBuffer();
+		boolean currentTokenIsComplex = false;
+		for (String token2 : commandLineArguments) {
+			String token = token2.trim();
+			
+			if (token.startsWith("\"")
+				&& !currentTokenIsComplex) {
+					currentTokenIsComplex = true;
+			}
+			
+			currentToken.append(token + " ");						
+			
+			if (token.endsWith("\"") 
+				&& currentTokenIsComplex) {
+					currentTokenIsComplex = false;
+			}
+			
+			if (!currentTokenIsComplex) {
+				result.add(currentToken.toString().trim());
+				currentToken = new StringBuffer();
+			}
+		}
+		
+		return result.toArray(new String[result.size()]);
 	}
 }

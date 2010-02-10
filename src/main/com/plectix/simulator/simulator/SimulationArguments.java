@@ -34,7 +34,14 @@ public final class SimulationArguments {
 		STORIFY,
 		SIM,
 		GENERATE_MAP,
-		CONTACT_MAP
+		CONTACT_MAP;
+		
+		//TODO maybe some corrections here
+		public boolean hasSimilarCompilationStage(SimulationType type) {
+			return (this == type) || (this == NONE); 
+//				|| (this == NONE && type == SIM)
+//				|| (this == NONE && type == COMPILE);
+		}
 	}
 
 	// TODO move to Stories, I guess
@@ -47,12 +54,12 @@ public final class SimulationArguments {
 		STRONG
 	}
 
-	
 	private boolean noDumpStdoutStderr = false;
 	private boolean help = false;
 	private boolean version = false;
 	private InfoType shortConsoleOutput = InfoType.OUTPUT;
 	private String xmlSessionName = DEFAULT_XML_SESSION_NAME;
+	private String xmlOutputDestinaion = null;
 	private double initialTime = 0.0;
 	private int points = -1;
 	private double rescale = Double.NaN;
@@ -149,7 +156,27 @@ public final class SimulationArguments {
 	// 
 	//
 	
-	public final String getXmlSessionName() {
+	/**
+	 * Use only this method to check XMLOutputPath
+	 */
+	public final String getXmlOutputDestination() {
+		if (xmlOutputDestinaion != null) {
+			return xmlOutputDestinaion;
+		}
+		if (this.getXmlSessionPath().length() > 0) {
+			return this.getXmlSessionPath() + File.separator
+					+ this.getXmlSessionName();
+		} else {
+			return this.getXmlSessionName();
+		}
+	}
+	
+	public final void setXmlOutputDestination(String xmlOutputDestinaion) {
+		this.xmlOutputDestinaion = xmlOutputDestinaion;
+	}
+	
+	
+	private final String getXmlSessionName() {
 		return xmlSessionName;
 	}
 	
@@ -520,7 +547,7 @@ public final class SimulationArguments {
 		this.outputFinalState = outputFinalState;
 	}
 	
-	public final String getXmlSessionPath() {
+	private final String getXmlSessionPath() {
 		return xmlSessionPath;
 	}
 	
@@ -540,7 +567,7 @@ public final class SimulationArguments {
 	
 	/**
 	 * The name of the Kappa file to simulate or to construct the maps for
-	 * 
+	 * BEWARE! you'd better use a higher level methods to load new kappa file
 	 * @param inputFilename
 	 */
 	public final void setInputFilename(String inputFilename) {

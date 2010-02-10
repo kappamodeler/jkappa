@@ -37,7 +37,7 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 		abstractRules = new LinkedList<AbstractionRule>();
 	}
 
-	public final void build(SolutionInterface solution, List<Rule> rules) {
+	public final void build(SolutionInterface solution, List<Rule> rules) throws StaticAnalysisException {
 		Collection<Agent> agents = prepareSolutionAgents(solution);
 		fillModelMapOfAgents(agents, rules);
 		constructAbstractRules(rules);
@@ -49,14 +49,10 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 
 		fillingClasses(agents);
 		initBoundRulesAndSubViews();
-		try {
 			// we use this original heuristic TODO
-			constructSubViews(wI);
-			constructSubViews(wI);
-			constructSubViews(wI);
-		} catch (StaticAnalysisException e) {
-			e.printStackTrace();
-		}
+		constructSubViews(wI);
+		constructSubViews(wI);
+		constructSubViews(wI);
 	}
 
 	private final void initBoundRulesAndSubViews() {
@@ -64,7 +60,7 @@ public final class MainSubViews extends AbstractClassSubViewBuilder implements
 			rule.initActionsToSubViews(getSubViews());
 	}
 
-	private final void fillingClasses(Collection<Agent> agents) {
+	private final void fillingClasses(Collection<Agent> agents) throws StaticAnalysisException {
 		for (List<SubViewsInterface> subViewsList : this.getSubViews().values()) {
 			for (SubViewsInterface subViews : subViewsList)
 				subViews.fillingInitialState(agentNameToAgent, agents);

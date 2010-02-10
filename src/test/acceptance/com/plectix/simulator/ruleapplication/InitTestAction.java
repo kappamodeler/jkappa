@@ -19,6 +19,7 @@ import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
+import com.plectix.simulator.util.SimulatorRenewer;
 import com.plectix.simulator.util.Info.InfoType;
 import com.plectix.simulator.util.io.PlxLogger;
 
@@ -65,7 +66,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
 		(new SimulationDataReader(simulationData)).readAndCompile();
-		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
+		simulationData.getKappaSystem().initialize();
 
 		// run();
 	}
@@ -82,7 +83,7 @@ public class InitTestAction extends DirectoryTestsRunner {
 
 		simulator.getSimulationData().setSimulationArguments(InfoType.OUTPUT,
 				commandLine.getSimulationArguments());
-		simulator.reInitializeSimulationData();
+		SimulatorRenewer.renew(simulator);
 	}
 
 	@After

@@ -29,9 +29,8 @@ public final class KappaSystemParser {
 	 * @throws SimulationDataFormatException when an error occurred
 	 */
 	public final KappaSystem parse(InfoType outputType) throws SimulationDataFormatException {
-		KappaModel model = (new KappaModelCreator(
-				simulationData.getSimulationArguments())).createModel(kappaFile);
+		KappaModel model = (new KappaModelCreator(simulationData.getSimulationArguments())).createModel(kappaFile);
 		simulationData.setInitialModel(model);
-		return new KappaSystemBuilder(simulationData).build();
+		return new KappaSystemBuilder(simulationData).build(model);
 	}
 }

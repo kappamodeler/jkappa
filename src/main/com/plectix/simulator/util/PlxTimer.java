@@ -13,6 +13,7 @@ public final class PlxTimer {
 	private long timeStartThread;
 	private double threadTimeInSeconds = -1;
 	private boolean running = false;
+	private boolean stoppedImmediately = false;
 
 	public PlxTimer() {
 		super();
@@ -27,8 +28,16 @@ public final class PlxTimer {
 	public final void stopTimer() {
 		updateTimes();
 		running = false;
+		if (wallClockTimeInSeconds < 0.0001
+				&& threadTimeInSeconds < 0.0001) {
+			stoppedImmediately = true;
+		}
 	}
 
+	public final boolean stoppedImmediately() {
+		return stoppedImmediately;
+	}
+	
 	public final String getTimeMessage() {
 		if (running) {
 			updateTimes();

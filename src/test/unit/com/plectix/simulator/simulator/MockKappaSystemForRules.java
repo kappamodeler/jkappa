@@ -14,7 +14,6 @@ import com.plectix.simulator.staticanalysis.localviews.LocalViewsMain;
 import com.plectix.simulator.staticanalysis.speciesenumeration.SpeciesEnumeration;
 import com.plectix.simulator.staticanalysis.stories.Stories;
 import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
-import com.plectix.simulator.util.Info.InfoType;
 
 public class MockKappaSystemForRules implements KappaSystemInterface {
 
@@ -152,7 +151,7 @@ public class MockKappaSystemForRules implements KappaSystemInterface {
 	}
 
 	@Override
-	public void initialize(InfoType outputType) {
+	public void initialize() {
 		// TODO Auto-generated method stub
 
 	}

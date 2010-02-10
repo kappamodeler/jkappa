@@ -27,5 +27,9 @@ public interface SimulatorStatusInterface {
 	public String getObservableName(int i);
 	
 	public int getObservableCount(int i);
+
+	public void setStatusMessage(String statusRunning);
+
+	public void setProgress(double d);
 	
 }

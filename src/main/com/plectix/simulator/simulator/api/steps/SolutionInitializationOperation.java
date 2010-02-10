@@ -1,20 +1,87 @@
 package com.plectix.simulator.simulator.api.steps;
 
-import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.simulator.api.AbstractOperation;
+import com.plectix.simulator.interfaces.SolutionInterface;
+import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.simulator.SimulationArguments;
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.api.OperationType;
+import com.plectix.simulator.staticanalysis.Observables;
+import com.plectix.simulator.staticanalysis.rulecompression.RuleCompressionType;
 
-public class SolutionInitializationOperation extends AbstractOperation<Object> {
-	private final Simulator simulator;
+public class SolutionInitializationOperation extends AbstractOperation<KappaSystem> {
+	private final SimulationData simulationData;
 	
-	public SolutionInitializationOperation(Simulator simulator) {
-		super(simulator.getSimulationData(), OperationType.INITIALIZATION);
-		this.simulator = simulator;
+	public SolutionInitializationOperation(SimulationData simulationData) {
+		super(simulationData, OperationType.INITIALIZATION);
+		this.simulationData = simulationData;
 	}
 	
-	protected Object performDry() throws Exception {
-		simulator.initializeKappaSystem();
-		return null;
+	protected KappaSystem performDry() throws Exception {
+		SimulationArguments args = simulationData.getSimulationArguments();
+
+		KappaSystem kappaSystem = simulationData.getKappaSystem();
+		OperationManager manager = kappaSystem.getOperationManager();
+		
+		Observables observables = kappaSystem.getObservables();
+		SolutionInterface solution = kappaSystem.getSolution();
+		
+		observables.init(args.getTimeLimit(), args.getInitialTime(), args
+				.getMaxNumberOfEvents(), args.getPoints(), args.isTime());
+		observables.checkAutomorphisms();
+
+		// !!!!!!!!INJECTIONS!!!!!!!!!
+		if (args.isSolutionRead()) {
+			manager.perform(new InjectionBuildingOperation(kappaSystem));
+		}
+
+		if (solution.getSuperStorage() != null) {
+			solution.getSuperStorage().setAgentsLimit(args.getAgentsLimit());
+		}
+
+		if (args.createSubViews()) {
+			manager.perform(new SubviewsComputationOperation(kappaSystem));
+		}
+			
+		if (args.isDeadRulesShow()) {
+			manager.perform(new DeadRuleDetectionOperation(kappaSystem));
+		}
+		
+		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
+			manager.perform(new ContactMapComputationOperation(simulationData));
+		}
+
+		if (args.isActivationMap() || args.isInhibitionMap()) {
+			kappaSystem.setInfluenceMap(manager.perform(new InfluenceMapComputationOperation(simulationData)));
+		}
+
+		if (args.createLocalViews()) {
+			kappaSystem.setLocalViews(manager.perform(new LocalViewsComputationOperation(simulationData)));
+		}
+
+		if (args.useEnumerationOfSpecies()) {
+			manager.perform(new SpeciesEnumerationOperation(kappaSystem));
+		}
+
+		if (args.runQualitativeCompression()) {
+			manager.perform(new RuleCompressionOperation(kappaSystem, RuleCompressionType.QUALITATIVE));
+		}
+
+		if (args.runQuantitativeCompression()) {
+			manager.perform(new RuleCompressionOperation(kappaSystem, RuleCompressionType.QUANTITATIVE));
+		}
+		
+		return kappaSystem;
+	}
+
+	@Override
+	protected boolean noNeedToPerform() {
+		return simulationData.getKappaSystem().getState().kappaSystemIsInitialized();
+//		return false;
+	}
+
+	@Override
+	protected KappaSystem retrievePreparedResult() {
+		return simulationData.getKappaSystem();
 	}
 
 }

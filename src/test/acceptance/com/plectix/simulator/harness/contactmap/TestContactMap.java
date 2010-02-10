@@ -194,6 +194,7 @@ import org.junit.runners.Parameterized.Parameters;
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.StaticAnalysisException;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMap;
 import com.plectix.simulator.staticanalysis.subviews.MainSubViews;
 import com.plectix.simulator.util.Memory;
@@ -234,7 +235,7 @@ public class TestContactMap {
 	}
 
 	@Test
-	public void test() {
+	public void test() throws StaticAnalysisException {
 
 		SimulationArguments args = InitTestContactMap.getSimulationArguments();
 

@@ -9,6 +9,7 @@ import java.util.StringTokenizer;
 
 import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.io.ConsoleOutputManager;
+import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
 import com.plectix.simulator.staticanalysis.Snapshot;
@@ -25,30 +26,35 @@ public final class SimulationData {
 	private boolean argumentsInitialized = false;
 
 	private SimulationArguments simulationArguments = new SimulationArguments();
-	private KappaModel initialModel = null;
 	private final KappaSystem kappaSystem = new KappaSystem(this);
-
-	private final ConsoleOutputManager consoleOutputManager = new ConsoleOutputManager(this); 
+	private final ConsoleOutputManager consoleOutputManager = new ConsoleOutputManager(this);
 	
-	public final KappaSystem getKappaSystem() {
-		return kappaSystem;
+	private KappaFile kappaInput = null;
+	/**
+	 * We'll keep this one to perform faster reset
+	 */
+	private KappaModel initialModel = null;
+	
+	public final void clearAll() throws RuntimeException, SimulationDataFormatException, IOException {
+		this.reset();
+		kappaInput = null;
+		initialModel = null;
 	}
-
-	public final KappaModel getInitialModel() {
-		return initialModel;
-	}
-
-	public final void setInitialModel(KappaModel kappaModel) {
-		initialModel = kappaModel;
-	}
-
-	public final void clear() throws RuntimeException, SimulationDataFormatException, IOException {
+	
+	/**
+	 * This one does not delete information about read and parsed kappaInput
+	 * @throws RuntimeException
+	 * @throws SimulationDataFormatException
+	 * @throws IOException
+	 */
+	public final void reset() throws RuntimeException, SimulationDataFormatException, IOException {
 		kappaSystem.clearRules();
 		kappaSystem.getObservables().resetLists();
 		kappaSystem.getSolution().clear();
 		kappaSystem.getSolution().clearSolutionLines();
 		kappaSystem.resetIdGenerators();
 		kappaSystem.clearPerturbations();
+		kappaSystem.resetState();
 	}
 
 	public final void setSimulationArguments(InfoType outputType,
@@ -56,7 +62,6 @@ public final class SimulationData {
 		this.simulationArguments = arguments;
 		this.simulationArguments.updateRandom();
 
-		
 		if (simulationArguments.isVersion()) {
 			consoleOutputManager.println("Java Simulator Revision: "
 					+ BuildConstants.BUILD_SVN_REVISION);
@@ -192,5 +197,25 @@ public final class SimulationData {
 	
 	public List<Snapshot> getSnapshots() {
 		return snapshots;
+	}
+
+	public void setInitialModel(KappaModel initialModel) {
+		this.initialModel = initialModel;
+	}
+
+	public KappaModel getInitialModel() {
+		return initialModel;
+	}
+	
+	public final KappaSystem getKappaSystem() {
+		return kappaSystem;
+	}
+
+	public final KappaFile getKappaInput() {
+		return kappaInput;
+	}
+
+	public final void setKappaFile(KappaFile kappaFile) {
+		kappaInput = kappaFile;
 	}
 }

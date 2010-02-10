@@ -16,21 +16,15 @@ import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation
 import com.plectix.simulator.simulationclasses.perturbations.ConditionInterface;
 import com.plectix.simulator.simulationclasses.probability.SkipListSelector;
 import com.plectix.simulator.simulationclasses.probability.WeightedItemSelector;
-import com.plectix.simulator.simulator.api.steps.ContactMapComputationOperation;
-import com.plectix.simulator.simulator.api.steps.DeadRuleDetectionOperation;
-import com.plectix.simulator.simulator.api.steps.InfluenceMapComputationOperation;
-import com.plectix.simulator.simulator.api.steps.InjectionBuildingOperation;
-import com.plectix.simulator.simulator.api.steps.LocalViewsComputationOperation;
-import com.plectix.simulator.simulator.api.steps.RuleCompressionOperation;
-import com.plectix.simulator.simulator.api.steps.SpeciesEnumerationOperation;
-import com.plectix.simulator.simulator.api.steps.SubviewsComputationOperation;
+import com.plectix.simulator.simulator.api.SimulatorState;
+import com.plectix.simulator.simulator.api.steps.OperationManager;
+import com.plectix.simulator.simulator.api.steps.SolutionInitializationOperation;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.StaticAnalysisException;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMap;
-import com.plectix.simulator.staticanalysis.contactmap.ContactMapMode;
 import com.plectix.simulator.staticanalysis.influencemap.InfluenceMap;
-import com.plectix.simulator.staticanalysis.influencemap.future.InfluenceMapWithFuture;
 import com.plectix.simulator.staticanalysis.localviews.LocalViewsMain;
 import com.plectix.simulator.staticanalysis.rulecompression.CompressionResults;
 import com.plectix.simulator.staticanalysis.rulecompression.RuleCompressionType;
@@ -40,7 +34,6 @@ import com.plectix.simulator.staticanalysis.stories.Stories;
 import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
 import com.plectix.simulator.staticanalysis.subviews.MainSubViews;
 import com.plectix.simulator.util.IdGenerator;
-import com.plectix.simulator.util.Info.InfoType;
 
 public final class KappaSystem implements KappaSystemInterface {
 	private WeightedItemSelector<Rule> rules = new SkipListSelector<Rule>();
@@ -52,109 +45,69 @@ public final class KappaSystem implements KappaSystemInterface {
 	// components
 	private final ContactMap contactMap = new ContactMap();
 	private AllSubViewsOfAllAgentsInterface subViews;
-	private InfluenceMap influenceMap = new InfluenceMapWithFuture();
-	private LocalViewsMain localViews;
-	private SpeciesEnumeration enumerationOfSpecies;
-	private RuleCompressionXMLWriter ruleCompressionWriter;
+	private InfluenceMap influenceMap = null;
+	private LocalViewsMain localViews = null;
+	private SpeciesEnumeration enumerationOfSpecies = null;
+	private RuleCompressionXMLWriter ruleCompressionWriter = null;
 
 	private final IdGenerator agentsIdGenerator = new IdGenerator();
 	private final IdGenerator ruleIdGenerator = new IdGenerator();
 	private final SimulationData simulationData;
-
+	private SimulatorState state = null;
+	private boolean initialized = false;
+	
+	private final OperationManager manager;
+	
 	public KappaSystem(SimulationData data) {
 		simulationData = data;
+		state = new SimulatorState(data);
+		manager = new OperationManager(this);
 	}
 
 	public SimulationData getSimulationData() {
 		return simulationData;
 	}
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.plectix.simulator.simulator.KappaSystemInterface#initialize(com.plectix
-	 * .simulator.util.Info.InfoType)
-	 */
-	public final void initialize(InfoType outputType) throws Exception {
-		SimulationArguments args = simulationData.getSimulationArguments();
+	
+	public final SimulatorState getState() {
+		return state;
+	}
+	
+	public final void resetState() {
+		state.reset();
+//		state = new SimulatorState(simulationData);
+	}
+	
+	public boolean isInitialized() {
+		return initialized;
+	}
 
-		observables.init(args.getTimeLimit(), args.getInitialTime(), args
-				.getMaxNumberOfEvents(), args.getPoints(), args.isTime());
-		observables.checkAutomorphisms();
+	public void markAsNotInitialized() {
+		this.initialized = false;
+	}
 
-		// !!!!!!!!INJECTIONS!!!!!!!!!
-		if (args.isSolutionRead()) {
-			new InjectionBuildingOperation(this).perform();
-		}
-
-		if (solution.getSuperStorage() != null) {
-			solution.getSuperStorage().setAgentsLimit(args.getAgentsLimit());
-		}
-
-		if ((args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP)
-				|| args.createSubViews()
-				|| args.isDeadRulesShow()
-				|| args.isActivationMap()
-				|| args.isInhibitionMap()
-				|| args.runQualitativeCompression()
-				|| args.runQuantitativeCompression()) {
-			// contactMap.initAbstractSolution();
-			// contactMap.constructAbstractRules(rules);
-			// contactMap.constructAbstractContactMap();
-
-			if ((args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP && contactMap
-					.getMode() == ContactMapMode.SEMANTIC)
-					|| args.createSubViews()
-					|| args.isDeadRulesShow()
-					|| args.isActivationMap()
-					|| args.isInhibitionMap()
-					|| args.runQualitativeCompression()
-					|| args.runQuantitativeCompression()) {
-
-				
-				subViews = new SubviewsComputationOperation(this).perform();
-			}
-			if (args.isDeadRulesShow())
-				new DeadRuleDetectionOperation(this).perform();
-			if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP) {
-				new ContactMapComputationOperation(simulationData).perform();
-			}
-
-			if (args.isActivationMap() || args.isInhibitionMap()) {
-				influenceMap = new InfluenceMapComputationOperation(simulationData).perform();
-			}
-
-			if (args.createLocalViews() || args.useEnumerationOfSpecies()) {
-				localViews = new LocalViewsComputationOperation(simulationData).perform();
-				if (args.useEnumerationOfSpecies()) {
-					enumerationOfSpecies = new SpeciesEnumerationOperation(this).perform();
-				}
-			}
-		}
-
-		if (args.runQualitativeCompression()) {
-			new RuleCompressionOperation(this, RuleCompressionType.QUALITATIVE).perform();
-		}
-
-		if (args.runQuantitativeCompression()) {
-			new RuleCompressionOperation(this, RuleCompressionType.QUANTITATIVE).perform();
-		}
+	
+	//TODO move this code to the corresponding operation class body
+	public final void initialize() throws Exception {
+		manager.perform(new SolutionInitializationOperation(simulationData));
+		initialized = true;
 	}
 
 	public final List<Rule> compressRules(RuleCompressionType type,
-			Collection<Rule> rules) {
+			Collection<Rule> rules) throws StaticAnalysisException {
 		RuleCompressor compressor = new RuleCompressor(type, this
 				.getLocalViews());
 		CompressionResults results = compressor.compress(rules);
 		MainSubViews newSubViews = new MainSubViews();
 
-		newSubViews.build(solution, results.getCompressedRules());
+		List<Rule> compressedRules = results.getCompressedRules();
+		
+		newSubViews.build(solution, compressedRules);
 		newSubViews.initDeadRules();
 		
 		//TODO separate output stuff
 		ruleCompressionWriter = new RuleCompressionXMLWriter(this, results,
 				newSubViews);
-		return results.getCompressedRules();
+		return compressedRules;
 	}
 
 	// ---------------------POSITIVE UPDATE-----------------------------
@@ -584,7 +537,7 @@ public final class KappaSystem implements KappaSystemInterface {
 	 * 
 	 * @see com.plectix.simulator.simulator.KappaSystemInterface#getLocalViews()
 	 */
-	public final LocalViewsMain getLocalViews() {
+	public final LocalViewsMain getLocalViews() throws StaticAnalysisException {
 		if (localViews == null) {
 			MainSubViews sViews = new MainSubViews();
 			sViews.build(getSolution(), getRules());
@@ -607,5 +560,25 @@ public final class KappaSystem implements KappaSystemInterface {
 
 	public final RuleCompressionXMLWriter getRuleCompressionBuilder() {
 		return ruleCompressionWriter;
+	}
+
+	public OperationManager getOperationManager() {
+		return manager;
+	}
+
+	public void setEnumerationOfSpecies(SpeciesEnumeration enumerationOfSpecies) {
+		this.enumerationOfSpecies = enumerationOfSpecies;
+	}
+
+	public void setSubviews(AllSubViewsOfAllAgentsInterface subviews) {
+		this.subViews = subviews;
+	}
+
+	public void setInfluenceMap(InfluenceMap influenceMap) {
+		this.influenceMap = influenceMap;
+	}
+
+	public void setLocalViews(LocalViewsMain localViews) {
+		this.localViews = localViews;
 	}
 }

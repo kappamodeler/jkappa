@@ -43,8 +43,7 @@ public abstract class TestPerturbation extends DirectoryTestsRunner implements
 	public abstract void init();
 
 	public Rule getRuleByName(String name) {
-		for (Rule rule : mySimulator.getSimulationData().getKappaSystem()
-				.getRules()) {
+		for (Rule rule : mySimulator.getSimulationData().getKappaSystem().getRules()) {
 			if (name.equals(rule.getName())) {
 				return rule;
 			}

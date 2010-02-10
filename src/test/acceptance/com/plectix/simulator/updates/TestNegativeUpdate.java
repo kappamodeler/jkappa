@@ -74,12 +74,12 @@ public class TestNegativeUpdate extends TestUpdate {
 
 	@Test
 	public void testObs() {
-		for (ObservableConnectedComponentInterface cc : getInitializator()
-				.getObservables()) {
+		for (ObservableConnectedComponentInterface cc : getInitializator().getObservables()) {
 			myFailer.assertEquals("Observables injections",
-					myObsInjectionsQuantity.get(myTestFileName), (int) cc
+					myObsInjectionsQuantity.get(myTestFileName), (int)cc
 							.getInjectionsWeight());
 		}
+		
 	}
 
 	@Override

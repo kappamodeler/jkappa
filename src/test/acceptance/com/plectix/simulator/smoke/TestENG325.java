@@ -46,7 +46,7 @@ public class TestENG325 extends SmokeTest{
 				.getSimulationArguments());
 		try{
 			(new SimulationDataReader(simulationData)).readAndCompile();
-			simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
+			simulationData.getKappaSystem().initialize();
 		} catch (Exception e) {
 			if(!e.getMessage().contains("line 5 : ['rule1']")){
 				fail("Another Bug!!!");

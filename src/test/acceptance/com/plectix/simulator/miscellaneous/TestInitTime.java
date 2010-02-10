@@ -91,7 +91,7 @@ public class TestInitTime extends DefaultPropertiesForTest {
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, args);
 		(new SimulationDataReader(simulationData)).readAndCompile();
-		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
+		simulationData.getKappaSystem().initialize();
 	}
 
 }

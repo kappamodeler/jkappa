@@ -29,7 +29,7 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 
 	public void fillingInitialState(
 			Map<String, AbstractAgent> agentNameToAgent,
-			Collection<Agent> agents) {
+			Collection<Agent> agents) throws StaticAnalysisException {
 		AbstractAgent defAgent = agentNameToAgent.get(subViewClass
 				.getAgentType());
 		AbstractAgent needAgent = new AbstractAgent(defAgent);
@@ -40,12 +40,9 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 		}
 		// storage.add(needAgent);
 		for (AbstractAgent agent : convertAgentsToAbstract(
-				getNeedAgentsBySolution(agents), needAgent))
-			try {
-				addAbstractAgent(agent);
-			} catch (StaticAnalysisException e) {
-				e.printStackTrace();
-			}
+				getNeedAgentsBySolution(agents), needAgent)) {
+			addAbstractAgent(agent);
+		}
 	}
 
 	public boolean addAbstractAgent(AbstractAgent agent) throws StaticAnalysisException
@@ -287,7 +284,7 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 		return subViewClass.toString();
 	}
 
-	public boolean burnBreakAllNeedLinkState(AbstractAction action) {
+	public boolean burnBreakAllNeedLinkState(AbstractAction action) throws StaticAnalysisException {
 		List<AbstractSite> breakingSites = action.getSitesSideEffect();
 		List<AbstractAgent> addlist = new LinkedList<AbstractAgent>();
 		if (breakingSites == null)
@@ -309,13 +306,10 @@ public class SubViewsLinkedlist implements SubViewsInterface {
 			}
 		}
 		boolean isAdd = false;
-		for (AbstractAgent agent : addlist)
-			try {
-				if (addAbstractAgent(agent))
-					isAdd = true;
-			} catch (StaticAnalysisException e) {
-				e.printStackTrace();
-			}
+		for (AbstractAgent agent : addlist) {
+			if (addAbstractAgent(agent))
+				isAdd = true;
+		}
 
 		return isAdd;
 	}

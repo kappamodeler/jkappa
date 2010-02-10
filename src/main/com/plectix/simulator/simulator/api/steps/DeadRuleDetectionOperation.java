@@ -3,7 +3,6 @@ package com.plectix.simulator.simulator.api.steps;
 import java.util.Set;
 
 import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.staticanalysis.subviews.AllSubViewsOfAllAgentsInterface;
 
@@ -26,6 +25,19 @@ public class DeadRuleDetectionOperation extends AbstractOperation<Set<Integer>> 
 		AllSubViewsOfAllAgentsInterface subViews = kappaSystem.getSubViews();
 		subViews.initDeadRules();
 		return subViews.getDeadRules();
+	}
+
+	@Override
+	protected boolean noNeedToPerform() {
+		if (kappaSystem.getSubViews() == null) {
+			return false;
+		}
+		return kappaSystem.getSubViews().getDeadRules() != null;
+	}
+
+	@Override
+	protected Set<Integer> retrievePreparedResult() {
+		return kappaSystem.getSubViews().getDeadRules();
 	}
 
 }

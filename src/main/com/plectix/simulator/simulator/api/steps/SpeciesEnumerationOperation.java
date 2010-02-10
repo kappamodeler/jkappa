@@ -4,8 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
+import com.plectix.simulator.staticanalysis.StaticAnalysisException;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMap;
 import com.plectix.simulator.staticanalysis.cycledetection.Detector;
@@ -19,15 +19,16 @@ public class SpeciesEnumerationOperation extends AbstractOperation<SpeciesEnumer
 	public SpeciesEnumerationOperation(KappaSystem kappaSystem) {
 		super(kappaSystem.getSimulationData(), OperationType.SPECIES_ENUMERATION);
 		this.kappaSystem = kappaSystem;
+		kappaSystem.getSimulationData().getSimulationArguments().setEnumerationOfSpecies(true);
 	}
 	
-	protected SpeciesEnumeration performDry() {
+	protected SpeciesEnumeration performDry() throws StaticAnalysisException {
 		ContactMap contactMap = kappaSystem.getContactMap();
 		AllSubViewsOfAllAgentsInterface subViews = kappaSystem.getSubViews();
 		LocalViewsMain localViews = kappaSystem.getLocalViews();
 		
-		SpeciesEnumeration enumerationOfSpecies = new SpeciesEnumeration(localViews
-				.getLocalViews());
+		SpeciesEnumeration enumerationOfSpecies = new SpeciesEnumeration(localViews.getLocalViews());
+		
 		List<AbstractAgent> list = new LinkedList<AbstractAgent>();
 		list.addAll(contactMap.getAbstractSolution().getAgentNameToAgent().values());
 		Detector detector = new Detector(subViews, list);
@@ -37,7 +38,19 @@ public class SpeciesEnumerationOperation extends AbstractOperation<SpeciesEnumer
 			enumerationOfSpecies.unbound();
 		}
 		
+		kappaSystem.setEnumerationOfSpecies(enumerationOfSpecies);
+		
 		return enumerationOfSpecies;
+	}
+
+	@Override
+	protected boolean noNeedToPerform() {
+		return kappaSystem.getEnumerationOfSpecies() != null;
+	}
+
+	@Override
+	protected SpeciesEnumeration retrievePreparedResult() {
+		return kappaSystem.getEnumerationOfSpecies();
 	}
 
 }

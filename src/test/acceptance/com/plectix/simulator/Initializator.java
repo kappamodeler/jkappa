@@ -6,16 +6,18 @@ import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
-import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
+import com.plectix.simulator.simulator.api.steps.OperationManager;
+import com.plectix.simulator.simulator.api.steps.SolutionInitializationOperation;
 import com.plectix.simulator.util.DefaultPropertiesForTest;
+import com.plectix.simulator.util.SimulatorRenewer;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class Initializator extends DefaultPropertiesForTest {
-	private Simulator mySimulator;
+	private Simulator simulator;
 	private List<ObservableConnectedComponentInterface> myObsComponents;
 	private Double myRescale = null;
 
@@ -195,14 +197,14 @@ public class Initializator extends DefaultPropertiesForTest {
 
 	public void reset(String filePath, Integer opMode) throws Exception {
 		try {
-			mySimulator.getSimulationData().setSimulationArguments(
+			simulator.getSimulationData().setSimulationArguments(
 					InfoType.OUTPUT,
 					prepareSimulationArguments(prepareTestArgs(filePath, opMode)));
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(e);
 		}
-		mySimulator.reInitializeSimulationData();
+		SimulatorRenewer.renew(simulator);
 	}
 
 	public void init(String filePath, Integer opMode) throws Exception {
@@ -210,9 +212,9 @@ public class Initializator extends DefaultPropertiesForTest {
 		if (myFirstRun) {
 			PropertyConfigurator.configure(LOG4J_PROPERTIES_FILENAME);
 
-			mySimulator = new Simulator();
+			simulator = new Simulator();
 
-			SimulationData simulationData = mySimulator.getSimulationData();
+			SimulationData simulationData = simulator.getSimulationData();
 
 			SimulatorCommandLine commandLine = null;
 			try {
@@ -222,21 +224,23 @@ public class Initializator extends DefaultPropertiesForTest {
 				throw new IllegalArgumentException(e);
 			}
 
-			simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
-					.getSimulationArguments());
-			(new SimulationDataReader(simulationData)).readAndCompile();
-			simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
+			simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine.getSimulationArguments());
+			
+//			(new SimulationDataReader(simulationData)).readAndCompile();
+//			simulationData.getKappaSystem().initialize();
+			
+			OperationManager manager = simulationData.getKappaSystem().getOperationManager();
+			manager.perform(new SolutionInitializationOperation(simulationData));
 
 			myFirstRun = false;
-			myObsComponents = mySimulator.getSimulationData().getKappaSystem()
-					.getObservables().getConnectedComponentList();
+			myObsComponents = simulator.getSimulationData().getKappaSystem().getObservables().getConnectedComponentList();
 		} else {
 			reset(filePath, opMode);
 		}
 
 	}
 	public Simulator getSimulator() {
-		return mySimulator;
+		return simulator;
 	}
 
 	public List<ObservableConnectedComponentInterface> getObservables() {

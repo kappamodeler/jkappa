@@ -12,26 +12,32 @@ import com.plectix.simulator.parser.util.AgentFactory;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMapMode;
 
 public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 	private final SimulationData simulationData;
-	private final String kappaFileId;
+	private String kappaFileId;
+	private char[] charKappaInput;
 
 	public KappaFileLoadingOperation(SimulationData simulationData, String kappaFileId) {
 		super(simulationData, OperationType.KAPPA_FILE_LOADING);
 		this.simulationData = simulationData;
 		this.kappaFileId = kappaFileId;
+		simulationData.getSimulationArguments().setInputFilename(kappaFileId);
 	}
 
+	public KappaFileLoadingOperation(SimulationData simulationData, char[] inputCharArray) {
+		super(simulationData, OperationType.KAPPA_FILE_LOADING);
+		this.simulationData = simulationData;
+		simulationData.getSimulationArguments().setInputCharArray(inputCharArray);
+		charKappaInput = inputCharArray;
+	}
+	
 	protected KappaFile performDry() throws RuntimeException,
 			SimulationDataFormatException, IOException {
 		SimulationArguments simulationArguments = simulationData.getSimulationArguments();
-		
-		simulationArguments.setInputFilename(kappaFileId);
 
 		if (!simulationData.argumentsInitialized()) {
 			throw new RuntimeException(
@@ -50,25 +56,24 @@ public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 					.getSnapshotsTimeString());
 		}
 
-		try {
-			KappaFileReader kappaFileReader;
-			String inputFileName = simulationArguments.getInputFilename();
-			if (inputFileName != null) {
-				kappaFileReader = new KappaFileReader(inputFileName, true);
-			} else {
-				kappaFileReader = new KappaFileReader(simulationArguments.getInputCharArray());
-			}
-
-			if (simulationArguments.getFocusFilename() != null) {
-				this.setFocusOn(simulationArguments.getFocusFilename());
-			} else {
-				kappaSystem.getContactMap().setMode(ContactMapMode.SEMANTIC);
-			}
-
-			return kappaFileReader.parse();
-		} catch (IOException e) {
-			throw e;
+		KappaFileReader kappaFileReader;
+		String inputFileName = kappaFileId;
+		if (inputFileName != null) {
+			kappaFileReader = new KappaFileReader(inputFileName, true);
+		} else {
+			kappaFileReader = new KappaFileReader(charKappaInput);
 		}
+
+		if (simulationArguments.getFocusFilename() != null) {
+			this.setFocusOn(simulationArguments.getFocusFilename());
+		} else {
+			kappaSystem.getContactMap().setMode(ContactMapMode.SEMANTIC);
+		}
+		KappaFile kappaFile = kappaFileReader.parse();
+	
+		simulationData.setKappaFile(kappaFile);
+			
+		return kappaFile;
 	}
 
 	private final void setFocusOn(String fileNameFocusOn) throws IOException,
@@ -92,5 +97,15 @@ public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 		} else {
 			kappaSystem.getContactMap().setFocusRule(null);
 		}
+	}
+
+	@Override
+	protected boolean noNeedToPerform() {
+		return simulationData.getKappaInput() != null;
+	}
+
+	@Override
+	protected KappaFile retrievePreparedResult() {
+		return simulationData.getKappaInput();
 	}
 }

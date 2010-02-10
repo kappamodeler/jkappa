@@ -95,8 +95,7 @@ public class TestParserSites extends DirectoryTestsRunner {
 		try {
 			KappaModel model = new KappaModelCreator(args)
 					.createModel(kappaFile);
-			simulationData.setInitialModel(model);
-			new KappaSystemBuilder(simulationData).build();
+			new KappaSystemBuilder(simulationData).build(model);
 		} catch (SimulationDataFormatException e) {
 			if (fileName.equals("test00.test")) {
 				assertTrue(e.getErrorType().getMessage().equals(

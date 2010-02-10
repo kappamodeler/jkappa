@@ -29,7 +29,8 @@ public enum OperationType {
 	
 	SUBVIEWS,
 	
-	CONTACT_MAP,
+	NON_MODEL_CONTACT_MAP,
+	MODEL_CONTACT_MAP,
 	ACTIVATION_MAP,
 	INHIBITION_MAP,
 	INFLUENCE_MAP,
@@ -37,27 +38,34 @@ public enum OperationType {
 	RULE_COMPRESSION,
 	SPECIES_ENUMERATION,
 	DEAD_RULE_DETECTION, 
-	INJECTIONS_BUILDING
+	INJECTIONS_BUILDING, 
+	
+	STANDARD_WORKFLOW("Workflow total time"), 
+	DUMP_HELP,
+	
 	
 	;
 	
 	private static Map<OperationType, OperationType> ordering 
-		= new LinkedHashMap<OperationType, OperationType>(); 
+		= new LinkedHashMap<OperationType, OperationType>();
+	
+	private final String message;
 
 	static {
-		addPair(SIMULATOR_INITIALIZATION, DO_NOTHING);
-		addPair(KAPPA_FILE_LOADING, SIMULATOR_INITIALIZATION);
 		addPair(KAPPA_FILE_COMPILATION, KAPPA_FILE_LOADING);
 
 		addPair(INITIALIZATION, KAPPA_FILE_COMPILATION);
+		addPair(INJECTIONS_BUILDING, KAPPA_FILE_COMPILATION);
 		
 		addPair(SIMULATION, INITIALIZATION);
 		addPair(STORIES, INITIALIZATION);
 		
 		addPair(SUBVIEWS, KAPPA_FILE_COMPILATION);
 		
-		addPair(CONTACT_MAP, SUBVIEWS);
+		addPair(MODEL_CONTACT_MAP, SUBVIEWS);
+		addPair(ACTIVATION_MAP, SUBVIEWS);
 		addPair(INHIBITION_MAP, SUBVIEWS);
+		addPair(INFLUENCE_MAP, SUBVIEWS);
 		addPair(LOCAL_VIEWS, SUBVIEWS);
 		addPair(RULE_COMPRESSION, SUBVIEWS);
 		addPair(DEAD_RULE_DETECTION, SUBVIEWS);
@@ -65,12 +73,28 @@ public enum OperationType {
 		addPair(SPECIES_ENUMERATION, LOCAL_VIEWS);
 	}
 	
+	private OperationType() {
+		message = null;
+	}
+	
+	private OperationType(String message) {
+		this.message = message;
+	}
+	
 	private static void addPair(OperationType step, OperationType previousStep) {
 		ordering.put(step, previousStep);
 	}
 	
+	public OperationType getNecessaryOperation() {
+		return ordering.get(this);
+	}
+	
 	@Override
 	public final String toString() {
+		if (message != null) {
+			return message;
+		}
+		
 		String string = ("" + super.toString()).replaceAll("_", " ").toLowerCase();
 		return (string.substring(0,1).toUpperCase() + string.substring(1)).intern() ;
 	}

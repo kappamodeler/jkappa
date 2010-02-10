@@ -38,7 +38,7 @@ public final class SimulatorCommandLine {
 		// let's create simulation arguments:
 		this.simulationArguments = createSimulationArguments();
 	}
-
+	
 	public final SimulationArguments getSimulationArguments() {
 		return simulationArguments;
 	}
@@ -175,10 +175,6 @@ public final class SimulatorCommandLine {
 			simulationArguments.setDebugInit(true);
 		}
 
-		if (hasOption(SimulatorOption.STORIFY)) {
-			simulationArguments.setStorify(true);
-		}
-
 		if (hasOption(SimulatorOption.OCAML_STYLE_OBS_NAME)) {
 			simulationArguments.setOcamlStyleObservableNames(true);
 		}
@@ -279,6 +275,7 @@ public final class SimulatorCommandLine {
 		String fileName = null;
 		
 		if (hasOption(SimulatorOption.STORIFY)) {
+			simulationArguments.setStorify(true);
 			fileName = setNewFileName(fileName,getValue(SimulatorOption.STORIFY));
 			simulationArguments.setSimulationType(SimulationArguments.SimulationType.STORIFY);
 			option = true;

@@ -5,7 +5,6 @@ import java.util.List;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationClock;
 import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.simulator.api.AbstractOperation;
 import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
@@ -48,9 +47,19 @@ public class InfluenceMapComputationOperation extends AbstractOperation<Influenc
 		SimulationClock.stopTimer(simulationData, InfoType.INFO, timer,
 				"--Abstraction:");
 		simulationData.addInfo(InfoType.INFO,
-				"--influence map computed");
+				"--Influence map computed");
 		
 		return influenceMap;
+	}
+
+	@Override
+	protected boolean noNeedToPerform() {
+		return simulationData.getKappaSystem().getInfluenceMap() != null;
+	}
+
+	@Override
+	protected InfluenceMap retrievePreparedResult() {
+		return simulationData.getKappaSystem().getInfluenceMap();
 	}
 
 }

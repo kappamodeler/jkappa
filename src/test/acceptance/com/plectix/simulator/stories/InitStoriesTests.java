@@ -94,7 +94,7 @@ public class InitStoriesTests extends DirectoryTestsRunner {
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, args);
 		(new SimulationDataReader(simulationData)).readAndCompile();
-		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
+		simulationData.getKappaSystem().initialize();
 	}
 
 	public static String getDirectory() {

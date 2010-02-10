@@ -21,8 +21,7 @@ public final class KappaSystemBuilder {
 		this.simulationData = simulationData;
 	}
 	
-	public final KappaSystem build() throws ParseErrorException, DocumentFormatException {
-		KappaModel model = simulationData.getInitialModel();
+	public final KappaSystem build(KappaModel model) throws ParseErrorException, DocumentFormatException {
 		SimulationArguments arguments = simulationData.getSimulationArguments();
 		KappaSystem kappaSystem = simulationData.getKappaSystem();
 		
@@ -34,12 +33,11 @@ public final class KappaSystemBuilder {
 		List<Rule> rules = (new RuleBuilder(kappaSystem)).build(model.getRules(), masterSolutionModel);
 		kappaSystem.setRules(rules);
 
-		if ((kappaSystem.getStories() == null)
+		if ((kappaSystem.getStories() == null) 
 				&& (arguments.getSimulationType() == SimulationArguments.SimulationType.STORIFY)) {
 			// stories
 			kappaSystem.setStories(new Stories(simulationData));
-			for (String storifiedName : (new StoriesBuilder()).build(model
-					.getStories())) {
+			for (String storifiedName : (new StoriesBuilder()).build(model.getStories())) {
 				kappaSystem.addStories(storifiedName);
 			}
 		} else {

@@ -62,8 +62,6 @@ public final class Stories {
 			compressor.execute(storifyMode);
 
 		}
-
-		
 	}
 
 	public final void addToStories(List<Integer> ruleIDs) {
@@ -72,7 +70,7 @@ public final class Stories {
 
 	public final void addEventToStory(int index, Event eventContainer)
 			throws StoryStorageException {
-		eventsMapForCurrentStory.get(Integer.valueOf(index)).addEventContainer(
+		eventsMapForCurrentStory.get(index).addEventContainer(
 				eventContainer);
 	}
 

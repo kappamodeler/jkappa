@@ -126,4 +126,8 @@ public class RuleCompressionXMLWriter {
 			xtw.writeEndElement();
 		}
 	}
+	
+	public CompressionResults getResults() {
+		return results;
+	}
 }

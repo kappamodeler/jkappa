@@ -5,6 +5,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.api.steps.KappaFileCompilationOperation;
 import com.plectix.simulator.simulator.api.steps.KappaFileLoadingOperation;
+import com.plectix.simulator.simulator.api.steps.OperationManager;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class SimulationDataReader {
@@ -14,12 +15,14 @@ public class SimulationDataReader {
 		this.simulationData = simulationData;
 	}
 
-	public final KappaFile readSimulationFile()	throws Exception {
-		return (new KappaFileLoadingOperation(simulationData, simulationData.getSimulationArguments().getInputFilename())).perform();
+	private final KappaFile readSimulationFile()	throws Exception {
+		OperationManager manager = simulationData.getKappaSystem().getOperationManager();
+		return manager.performSequentially(new KappaFileLoadingOperation(simulationData, simulationData.getSimulationArguments().getInputFilename()));
 	}
 
 	public final KappaSystem compileKappaFile(KappaFile kappaFile, InfoType outputType) throws Exception {
-		return (new KappaFileCompilationOperation(simulationData, kappaFile, outputType)).perform();
+		OperationManager manager = simulationData.getKappaSystem().getOperationManager();
+		return manager.performSequentially(new KappaFileCompilationOperation(simulationData, kappaFile, outputType));
 	}
 
 	public final KappaSystem readAndCompile() throws Exception {

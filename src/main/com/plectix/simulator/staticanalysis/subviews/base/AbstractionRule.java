@@ -77,7 +77,7 @@ public final class AbstractionRule {
 							return null;
 					} catch (StaticAnalysisException e) {
 						if (action.getActionType() != AbstractActionType.DELETE)
-							e.printStackTrace();
+							throw e;
 					}
 				if (isEnd)
 					return null;

@@ -1,4 +1,4 @@
-package com.plectix.simulator.consoleOutput;
+package com.plectix.simulator.util;
 
 import java.io.PrintStream;
 import java.util.LinkedList;
@@ -54,5 +54,9 @@ public class BackingUpPrintStream extends PrintStream {
 		} else {
 			return null;
 		}
+	}
+	
+	public final boolean hasEqualContent(BackingUpPrintStream stream2) {
+		return this.content.equals(stream2.content);
 	}
 }

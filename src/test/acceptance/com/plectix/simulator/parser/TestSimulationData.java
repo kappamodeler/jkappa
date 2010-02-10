@@ -37,14 +37,13 @@ public class TestSimulationData {
 	public void build() throws ParseErrorException, DocumentFormatException,
 			FileNotFoundException {
 		initSimulationData(isStorify);
-		new KappaSystemBuilder(simulationData).build();
+		new KappaSystemBuilder(simulationData).build(model);
 	}
 
 	private void initSimulationData(boolean isStorify) {
 		Simulator mySimulator = new Simulator();
 		simulationData = mySimulator.getSimulationData();
 		simulationData.getSimulationArguments().setAllowIncompleteSubstance(true);
-		simulationData.setInitialModel(model);
 		if (isStorify) {
 			simulationData.getSimulationArguments().setStorify(true);
 			simulationData.getSimulationArguments().setSimulationType(

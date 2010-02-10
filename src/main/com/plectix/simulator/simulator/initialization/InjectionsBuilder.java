@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
-import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.simulationclasses.solution.SuperSubstance;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.staticanalysis.Agent;
@@ -38,21 +37,14 @@ public final class InjectionsBuilder {
 	
 	public final void build() {
 		InjectionSettingStrategy strategy = new StraightInjectionSettingStrategy();
-		for (Agent agent : getSolution().getStraightStorage().getAgents()) {
+		for (Agent agent : kappaSystem.getSolution().getStraightStorage().getAgents()) {
 			this.walkInjectingComponents(strategy, agent);
 		}
-		for (SuperSubstance substance : getSolution().getSuperStorage().getComponents()) {
+		for (SuperSubstance substance : kappaSystem.getSolution().getSuperStorage().getComponents()) {
 			strategy = new SuperInjectionSettingStrategy(substance);  
 			for (Agent agent : substance.getComponent().getAgents()) {
 				this.walkInjectingComponents(strategy, agent);
 			}
-		}
-	}
-	
-	public final void build(SuperSubstance substance) {
-		InjectionSettingStrategy strategy = new SuperInjectionSettingStrategy(substance);
-		for (Agent agent : substance.getComponent().getAgents()) {
-			walkInjectingComponents(strategy, agent);
 		}
 	}
 	
@@ -62,8 +54,11 @@ public final class InjectionsBuilder {
 			walkInjectingComponents(strategy, agent);
 		}
 	}
-
-	final SolutionInterface getSolution() {
-		return kappaSystem.getSolution();
+	
+	public final void build(SuperSubstance substance) {
+		InjectionSettingStrategy strategy = new SuperInjectionSettingStrategy(substance);
+		for (Agent agent : substance.getComponent().getAgents()) {
+			walkInjectingComponents(strategy, agent);
+		}
 	}
 }

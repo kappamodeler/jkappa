@@ -7,6 +7,7 @@ import java.util.Set;
 
 import com.plectix.simulator.interfaces.SolutionInterface;
 import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.StaticAnalysisException;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.subviews.base.AbstractionRule;
 import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsInterface;
@@ -14,7 +15,7 @@ import com.plectix.simulator.staticanalysis.subviews.storage.SubViewsInterface;
 // TODO please rename
 public interface AllSubViewsOfAllAgentsInterface {
 
-	public void build(SolutionInterface solution, List<Rule> rules);
+	public void build(SolutionInterface solution, List<Rule> rules) throws StaticAnalysisException;
 
 	public Iterator<String> getAllTypesIdOfAgents();
 

@@ -1,7 +1,7 @@
 JSIM: Build on N/A from Revision N/A, JRE: Sun Microsystems Inc. 1.6.0_17
 Java --compile data/egfr.ka
 -Initialization...
-*Warning* No time limit.
+-Simulator Initialization: WallClock=0.062 ThreadTime=0.0625 sec. CPU
 --Computing initial state
 -Kappa file loading: WallClock=0.062 ThreadTime=0.0625 sec. CPU
 -Kappa file compilation: WallClock=0.062 ThreadTime=0.0625 sec. CPU
@@ -250,3 +250,5 @@ INITIAL SOLUTION:
 -10000*[So(d)]
 -10000*[Sh(pi,Y7~u)]
 -10000*[E(r)]
+
+-Workflow total time: WallClock=0.078 ThreadTime=0.0625 sec. CPU

@@ -48,7 +48,7 @@ public interface SubViewsInterface {
 
 	public void fillingInitialState(
 			Map<String, AbstractAgent> agentNameToAgent,
-			Collection<Agent> agents);
+			Collection<Agent> agents) throws StaticAnalysisException;
 
 	public boolean isAgentFit(AbstractAgent agent);
 
@@ -58,8 +58,9 @@ public interface SubViewsInterface {
 	 * @param deletedLinks
 	 * @param b
 	 * @return
+	 * @throws StaticAnalysisException 
 	 */
-	public boolean burnBreakAllNeedLinkState(AbstractAction action);
+	public boolean burnBreakAllNeedLinkState(AbstractAction action) throws StaticAnalysisException;
 
 	public SubViewClass getSubViewClass();
 

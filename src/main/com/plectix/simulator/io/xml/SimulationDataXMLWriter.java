@@ -1,7 +1,6 @@
 package com.plectix.simulator.io.xml;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -23,6 +22,7 @@ import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Snapshot;
 import com.plectix.simulator.staticanalysis.SnapshotElement;
+import com.plectix.simulator.staticanalysis.StaticAnalysisException;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
 import com.plectix.simulator.util.DecimalFormatter;
 import com.plectix.simulator.util.Info;
@@ -36,17 +36,6 @@ public class SimulationDataXMLWriter {
 	
 	public SimulationDataXMLWriter(SimulationData simulationData) {
 		this.simulationData = simulationData;
-	}
-	
-	private final String getXmlSessionPath() {
-		SimulationArguments simulationArguments = simulationData.getSimulationArguments();
-		
-		if (simulationArguments.getXmlSessionPath().length() > 0) {
-			return simulationArguments.getXmlSessionPath() + File.separator
-					+ simulationArguments.getXmlSessionName();
-		} else {
-			return simulationArguments.getXmlSessionName();
-		}
 	}
 	
 	private final void writeRulesToXML(OurXMLWriter writer) throws XMLStreamException{
@@ -63,7 +52,7 @@ public class SimulationDataXMLWriter {
 
 	final void createXMLOutput(Writer outstream)
 			throws ParserConfigurationException, TransformerException,
-			XMLStreamException, StoryStorageException {
+			XMLStreamException, StoryStorageException, StaticAnalysisException {
 		PlxTimer timer = new PlxTimer();
 		SimulationArguments simulationArguments = simulationData.getSimulationArguments();
 		KappaSystem kappaSystem = simulationData.getKappaSystem();
@@ -85,8 +74,13 @@ public class SimulationDataXMLWriter {
 		writer.writeNamespace("xsi",
 				"http://www.w3.org/2001/XMLSchema-instance");
 
-		writer.writeAttribute("CommandLine", simulationArguments
-				.getCommandLineString());
+		if (simulationArguments.getCommandLineString() != null) {
+			writer.writeAttribute("CommandLine", simulationArguments
+					.getCommandLineString());
+		} else {
+			// TODO implement
+			writer.writeAttribute("CommandLine", "custom command line");
+		}
 
 		writer.writeAttribute("InputFile", simulationArguments
 				.getInputFilename());
@@ -248,13 +242,14 @@ public class SimulationDataXMLWriter {
 
 	public final void outputXMLData()
 			throws ParserConfigurationException, TransformerException,
-			XMLStreamException, IOException, StoryStorageException {
-		outputXMLData(new BufferedWriter(new FileWriter(getXmlSessionPath())));
+			XMLStreamException, IOException, StoryStorageException, StaticAnalysisException {
+		String destination = simulationData.getSimulationArguments().getXmlOutputDestination();
+		outputXMLData(new BufferedWriter(new FileWriter(destination)));
 	}
 
 	public final void outputXMLData(Writer writer)
 			throws ParserConfigurationException, TransformerException,
-			XMLStreamException, IOException, StoryStorageException {
+			XMLStreamException, IOException, StoryStorageException, StaticAnalysisException {
 		PlxTimer timerOutput = new PlxTimer();
 		timerOutput.startTimer();
 		try {

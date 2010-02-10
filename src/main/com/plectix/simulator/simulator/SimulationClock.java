@@ -18,7 +18,10 @@ public class SimulationClock {
 		this.simulationData = simulationData;
 	}
 	
-	public final boolean isEndSimulation(double currentTime, long count) {
+	public final boolean isEndSimulation(SimulationState state) {
+		double currentTime = state.getCurrentTime();
+		long count = state.getCurrentEventNumber();
+		
 		ConsoleOutputManager consoleOutputManager = simulationData.getConsoleOutputManager();
 		SimulationArguments simulationArguments = simulationData.getSimulationArguments();
 		
@@ -106,6 +109,10 @@ public class SimulationClock {
 			return;
 		}
 		timer.stopTimer();
+		
+//		if (timer.stoppedImmediately()) {
+//			return;
+//		}
 
 		if (outputType == InfoType.OUTPUT) {
 			message += " ";

@@ -15,6 +15,7 @@ import com.plectix.simulator.parser.EasyReader;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.simulator.api.OperationType;
+import com.plectix.simulator.util.BackingUpPrintStream;
 import com.plectix.simulator.util.Failer;
 
 @RunWith(Parameterized.class)
@@ -83,7 +84,7 @@ public class TestConsoleOutput extends DirectoryTestsRunner {
 			psItem = ps.getContentItem(i);
 			resultItem = resultFileContent.getContentItem(i);
 		}
-		failer.assertTrue("One output contains more information than the other", psItem == null && resultItem == null);
+		failer.assertTrue("One output contains more information than the other" + psItem, psItem == null && resultItem == null);
 	}
 	
 	private boolean bothStartsWithOneOfThese(String s1, String s2, String...exceptions) {

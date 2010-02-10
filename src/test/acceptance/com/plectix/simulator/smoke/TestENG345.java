@@ -45,7 +45,7 @@ public class TestENG345 extends SmokeTest {
 		simulationData.setSimulationArguments(InfoType.OUTPUT, commandLine
 				.getSimulationArguments());
 		(new SimulationDataReader(simulationData)).readAndCompile();
-		simulationData.getKappaSystem().initialize(InfoType.OUTPUT);
+		simulationData.getKappaSystem().initialize();
 
 //		simulationData.getClock().setClockStamp(System.currentTimeMillis());
 
