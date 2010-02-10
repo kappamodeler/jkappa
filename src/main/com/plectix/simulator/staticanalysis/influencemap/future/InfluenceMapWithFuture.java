@@ -201,9 +201,10 @@ public final class InfluenceMapWithFuture extends InfluenceMap {
 						action.getLeftHandSideAgent()))
 					continue;
 				AbstractSite mSite = mAgent.getSite();
-				if (mSite == null)
-					return true;
 				if (action.getLeftHandSideAgent().getSitesMap().isEmpty())
+					return true;
+
+				if (mSite == null)
 					return true;
 				AbstractSite aSite = action.getLeftHandSideAgent()
 						.getSiteByName(mSite.getName());

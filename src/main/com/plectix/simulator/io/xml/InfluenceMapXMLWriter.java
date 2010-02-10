@@ -129,6 +129,7 @@ import com.plectix.simulator.staticanalysis.influencemap.InfluenceMapEdge;
 				writer.writeAttribute("Name", "%Auto_" + ruleId);
 			}
 			writer.writeAttribute("Id", Integer.toString(rulesAndObsNumber--));
+			// TODO ENG-419
 			writer.writeAttribute("Data", SimulationDataOutputUtil.getData(rule,
 					isOcamlStyleObsName));
 			writer.writeEndElement();

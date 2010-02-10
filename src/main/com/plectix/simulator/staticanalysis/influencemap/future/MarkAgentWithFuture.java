@@ -27,6 +27,12 @@ import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 		this.type = ActionType.BREAK;
 		AbstractAgent agentNew = new AbstractAgent(agent.getName());
 		this.agent = agentNew;
+		for(AbstractSite site : agent.getSitesMap().values()){
+			AbstractSite siteNew = site.clone();
+			siteNew.setParentAgent(agentNew);
+			agentNew.addSite(siteNew);
+			siteName = siteNew.getName();
+		}
 	}
 
 	public final ActionType getType() {
