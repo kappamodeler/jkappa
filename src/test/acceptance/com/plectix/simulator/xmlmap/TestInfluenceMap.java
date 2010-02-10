@@ -1,5 +1,6 @@
 package com.plectix.simulator.xmlmap;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -27,8 +28,6 @@ public class TestInfluenceMap {
 	private static final String prefixSourseModel = "test.data" + separator
 			+ "influenceMap" + separator + "model" + separator;
 
-
-
 	private SAXParserFactory parserFactory;
 	private SAXParser parserxml;
 	private File sessionSimplex;
@@ -40,15 +39,17 @@ public class TestInfluenceMap {
 	private static String currentXMLData;
 
 	private final InitTestInfluenceMap initTestInfluenceMap = new InitTestInfluenceMap();
-	
-	
+
 	@Parameters
 	public static Collection<Object[]> configs() {
-		return OperationModeCollectionGenerator.generate(FileNameCollectionGenerator.getAllFileNamesWithPathWithModifyName(
-				prefixSourseModel, "~kappa"),false);
+		return OperationModeCollectionGenerator.generate(
+				FileNameCollectionGenerator
+						.getAllFileNamesWithPathWithModifyName(
+								prefixSourseModel, "~kappa"), false);
 	}
 
-	public TestInfluenceMap(String count, String patch, Integer opMode) throws Exception {
+	public TestInfluenceMap(String count, String patch, Integer opMode)
+			throws Exception {
 		currentXMLData = initTestInfluenceMap.generateXML(patch, count, opMode);
 	}
 
@@ -64,7 +65,8 @@ public class TestInfluenceMap {
 			nodesComplex = handler.getNodes();
 			connectionsComplex = handler.getConnections();
 
-			parserxml.parse(new InputSource(new StringBufferReader(currentXMLData)), handler);
+			parserxml.parse(new InputSource(new StringBufferReader(
+					currentXMLData)), handler);
 			nodesJava = handler.getNodes();
 			connectionsJava = handler.getConnections();
 
@@ -92,15 +94,16 @@ public class TestInfluenceMap {
 			fail(errors.toString());
 			return;
 		}
-		
+
 		errors = new StringBuffer();
 
-//		Assert.assertEquals("[Error] Connectiones in XML (JAVA,SIMPLEX) ", connectionsJava
-//				.size(), connectionsComplex.size());
+		if (connectionsJava.size() != connectionsComplex.size()) {
+			System.err.println(connectionsJava.size() + "  "
+					+ connectionsComplex.size());
+		}
+		Assert.assertEquals("[Error] Connectiones in XML (JAVA,SIMPLEX) ",
+				connectionsJava.size(), connectionsComplex.size());
 
-		System.err.println(connectionsJava
-				.size() + "  "+ connectionsComplex.size());
-		
 		for (Connection connection : connectionsComplex) {
 			if (!contains(connection, connectionsJava))
 				errors.append("there is no connection \n < connection "
@@ -112,6 +115,7 @@ public class TestInfluenceMap {
 
 		if (errors.length() > 0) {
 			System.err.println(errors.toString());
+			assertTrue(false);
 		}
 	}
 
