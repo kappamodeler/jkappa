@@ -43,4 +43,8 @@ public class RuleTag {
 		return "Id=\"" + id + "\" Data=\"" + data + "\" Name=\"" + name + "\"";
 	}
 
+	public int getId(){
+		return id;
+	}
+
 }

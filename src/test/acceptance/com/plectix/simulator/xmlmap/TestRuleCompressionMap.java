@@ -85,35 +85,60 @@ public class TestRuleCompressionMap {
 		assertTrue(message + " jsimSize=" + jsimAss.size() + " complxSize=" + complxAss.size(),
 				jsimAss.size()==complxAss.size());
 		boolean isFail = false;
+		StringBuffer sb = new StringBuffer(message);
+		sb.append("\n");
 		for(Association as : jsimAss){
 			if(!complxAss.contains(as)){
-				System.err.println("JSim:" + as);
+				sb.append("JSim:");
+				sb.append(as);
+				sb.append("\n");
+//				System.err.println("JSim:" + as);
 				isFail = true;
 			}
 //			assertTrue(complxAss.contains(as));
 		}
 		
-		if(isFail)
+		if(isFail){
+			System.err.println(sb.toString());
 			fail(message);
+		}
 	}
 
-//	@Test
-//	public void testRules(){
-//		String message = "Fail in:" + sessionSimplex.getName();
-//		assertTrue(message + " jsimSize=" + jsimRules.size() + " complxSize=" + complxRules.size(),
-//				jsimRules.size()==complxRules.size());
-//		boolean isFail = false;
-//		for(RuleTag rt : jsimRules){
-//			if(!complxRules.contains(rt)){
+	@Test
+	public void testRules(){
+		String message = "Fail in:" + sessionSimplex.getName();
+		assertTrue(message + " jsimSize=" + jsimRules.size() + " complxSize=" + complxRules.size(),
+				jsimRules.size()==complxRules.size());
+		boolean isFail = false;
+		StringBuffer sb = new StringBuffer(message);
+		sb.append("\n");
+		for(RuleTag rt : jsimRules){
+			if(!complxRules.contains(rt)){
+				sb.append("\nJSim:");
+				sb.append(rt);
+				sb.append("\n");
+				sb.append("OSim:");
+				sb.append(getComplxRuleById(rt.getId()));
+				sb.append("\n---------------------------");
 //				System.err.println("JSim:" + rt);
-//				isFail = true;
-//			}
-////			assertTrue(complxRules.contains(rt));
-//		}
-//		
-//		if(isFail)
-//			fail(message);
-//	}
+				isFail = true;
+			}
+//			assertTrue(complxRules.contains(rt));
+		}
+		
+		if(isFail){
+			System.err.println(sb.toString());
+			fail(message);
+		}
+	}
+	
+	private RuleTag getComplxRuleById(int id){
+		for(RuleTag rt : complxRules){
+			if(rt.getId() == id)
+				return rt;
+		}
+		return null;
+	}
 	
 	
 }
