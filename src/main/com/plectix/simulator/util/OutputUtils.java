@@ -14,6 +14,8 @@ import com.plectix.simulator.staticanalysis.LinkRank;
 import com.plectix.simulator.staticanalysis.Site;
 
 public class OutputUtils {
+	private final static String AGENT_DEFAULT_NAME = Agent.DEFAULT_NAME + "()";
+
 	public static final String printPartRule(
 			List<ConnectedComponentInterface> components, 
 			boolean ocamlStyleNaming) {
@@ -34,6 +36,8 @@ public class OutputUtils {
 			index++;
 
 		}
+		if(sb.toString().equals(AGENT_DEFAULT_NAME))
+			return "";
 		return sb.toString();
 	}
 
