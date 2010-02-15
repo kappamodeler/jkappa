@@ -66,12 +66,12 @@ public class TestRuleCompressionMap {
 			parserxml = parserFactory.newSAXParser();
 			handler = new com.plectix.simulator.xmlmap.rulecompression.SAXHandler();
 			parserxml.parse(sessionSimplex, handler);
-			jsimAss = handler.getAssociations();
-			jsimRules = handler.getRules();
-			
-			parserxml.parse(new InputSource(new StringBufferReader(currentXMLData)), handler);
 			complxAss = handler.getAssociations();
 			complxRules = handler.getRules();
+			
+			parserxml.parse(new InputSource(new StringBufferReader(currentXMLData)), handler);
+			jsimAss = handler.getAssociations();
+			jsimRules = handler.getRules();
 
 		} catch (Exception e) {
 			e.printStackTrace();
