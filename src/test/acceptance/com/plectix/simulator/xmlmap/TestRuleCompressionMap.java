@@ -43,8 +43,8 @@ public class TestRuleCompressionMap {
 	private SAXHandler handler;
 	private Set<Association> complxAss;
 	private Set<Association> jsimAss;
-	private Set<RuleTag> rules;
-	
+	private Set<RuleTag> jsimRules;
+	private Set<RuleTag> complxRules;
 	
 	@Parameters
 	public static Collection<Object[]> configs() {
@@ -67,11 +67,11 @@ public class TestRuleCompressionMap {
 			handler = new com.plectix.simulator.xmlmap.rulecompression.SAXHandler();
 			parserxml.parse(sessionSimplex, handler);
 			jsimAss = handler.getAssociations();
+			jsimRules = handler.getRules();
 			
 			parserxml.parse(new InputSource(new StringBufferReader(currentXMLData)), handler);
 			complxAss = handler.getAssociations();
-			
-			rules = handler.getRules();
+			complxRules = handler.getRules();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -80,14 +80,40 @@ public class TestRuleCompressionMap {
 	}
 	
 	@Test
-	public void test(){
-		assertTrue(jsimAss.size()==complxAss.size());
-		
+	public void testAssociation(){
+		String message = "Fail in:" + sessionSimplex.getName();
+		assertTrue(message + " jsimSize=" + jsimAss.size() + " complxSize=" + complxAss.size(),
+				jsimAss.size()==complxAss.size());
+		boolean isFail = false;
 		for(Association as : jsimAss){
-			assertTrue(complxAss.contains(as));
+			if(!complxAss.contains(as)){
+				System.err.println("JSim:" + as);
+				isFail = true;
+			}
+//			assertTrue(complxAss.contains(as));
 		}
 		
+		if(isFail)
+			fail(message);
 	}
+
+//	@Test
+//	public void testRules(){
+//		String message = "Fail in:" + sessionSimplex.getName();
+//		assertTrue(message + " jsimSize=" + jsimRules.size() + " complxSize=" + complxRules.size(),
+//				jsimRules.size()==complxRules.size());
+//		boolean isFail = false;
+//		for(RuleTag rt : jsimRules){
+//			if(!complxRules.contains(rt)){
+//				System.err.println("JSim:" + rt);
+//				isFail = true;
+//			}
+////			assertTrue(complxRules.contains(rt));
+//		}
+//		
+//		if(isFail)
+//			fail(message);
+//	}
 	
 	
 }

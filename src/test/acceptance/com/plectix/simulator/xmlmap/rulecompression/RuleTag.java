@@ -9,7 +9,7 @@ public class RuleTag {
 	public RuleTag(int _id, String _data, String _name) {
 
 		id = _id;
-		data = _data;
+		data = _data.replaceAll("&gt;", ">");
 		name = _name;
 	}
 
@@ -20,7 +20,8 @@ public class RuleTag {
 		if (obj == null || !(obj instanceof RuleTag))
 			return false;
 		RuleTag r = (RuleTag) obj;
-		return (id == r.id && name.equals(r.name));
+		return (id == r.id && data.equals(r.data));
+//		return (id == r.id && name.equals(r.name));
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class RuleTag {
 		int result = 101;
 		result = getResult(result, id);
 		result = getResult(result, data.hashCode());
-		result = getResult(result, name.hashCode());
+//		result = getResult(result, name.hashCode());
 		return result;
 	}
 
@@ -39,7 +40,7 @@ public class RuleTag {
 	@Override
 	public String toString() {
 
-		return "Id=\"" + id + "\" Data=\"" + data + "\" Name" + name + "\"";
+		return "Id=\"" + id + "\" Data=\"" + data + "\" Name=\"" + name + "\"";
 	}
 
 }

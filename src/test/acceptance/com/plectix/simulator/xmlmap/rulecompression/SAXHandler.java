@@ -28,19 +28,22 @@ public class SAXHandler extends DefaultHandler {
 		if ("RuleSet".equals(qName)) {
 			if (attributes.getValue("Name").equals("Quantitative compression")) {
 				isQuantitative = true;
+				return;
 			}
 		}
 
 		if (isQuantitative) {
-			if (attributes.getValue("Data").equals("Cannot be applied")) {
+			if ("Rule".equals(qName)){// && attributes.getValue("Data").equals("Cannot be applied")) {
 				rules.add(new RuleTag(Integer.parseInt(attributes
 						.getValue("Id")), attributes.getValue("Data"),
 						attributes.getValue("Name")));
+				return;
 			}
 
 			if ("Map".equals(qName)) {
 				if (attributes.getValue("FromSet").equals("Original")) {
 					isMap = true;
+					return;
 				}
 			}
 			if (isMap) {
@@ -48,6 +51,7 @@ public class SAXHandler extends DefaultHandler {
 					associations.add(new Association(attributes
 							.getValue("FromRule"), attributes
 							.getValue("ToRule")));
+					return;
 				}
 			}
 

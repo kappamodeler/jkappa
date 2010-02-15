@@ -66,7 +66,7 @@ public class RuleCompressionXMLWriter {
 		for(Rule rule : initialRulesMap.values()){
 			//<Rule Id="1" Name="Rule1" Data="R(l,r),E(r)->R(l!0,r),E(r!0)" ForwardRate="1"/>
 			xtw.writeStartElement("Rule");
-			xtw.writeAttribute("Id", Integer.valueOf(rule.getRuleId()).toString());
+			xtw.writeAttribute("Id", Integer.valueOf(rule.getRuleId()+1).toString());
 			xtw.writeAttribute("ForwardRate", Double.valueOf(rule.getRate()).toString());
 			String name = rule.getName();
 			String data = SimulationDataOutputUtil.getData(rule,isOcamlStyleObsName);
@@ -85,7 +85,7 @@ public class RuleCompressionXMLWriter {
 		xtw.writeAttribute("FromSet", "Original");
 		for(Map.Entry<Integer, Integer> entry : associationQualitativeMap.entrySet()){
 			xtw.writeStartElement("Association");
-			xtw.writeAttribute("FromRule", entry.getKey().toString());
+			xtw.writeAttribute("FromRule", Integer.toString(entry.getKey()+1));
 			xtw.writeAttribute("ToRule", entry.getValue().toString());
 			xtw.writeEndElement();
 		}
