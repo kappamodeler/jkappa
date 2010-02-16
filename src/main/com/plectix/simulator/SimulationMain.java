@@ -1,6 +1,7 @@
 package com.plectix.simulator;
 
 import java.io.PrintStream;
+import java.util.Locale;
 
 import org.apache.commons.cli.ParseException;
 import org.apache.log4j.PropertyConfigurator;
@@ -94,6 +95,8 @@ public class SimulationMain  {
 				+ System.getProperties().get("java.specification.vendor"));
 		
 		LOGGER.info("Timezone: " + System.getProperties().get("user.timezone"));
+		
+		LOGGER.info("Default Locale: " + Locale.getDefault());
 		
 		loggingInitialized = true;
 	}
