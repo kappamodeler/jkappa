@@ -160,8 +160,8 @@ public class Observables {
 			if (time < timeNext)
 				return;
 			
+			updateLastValues();
 			while (time >= timeNext) {
-				updateLastValues();
 				calculateAll(false);
 				addToCountTimeList(timeNext, count);
 				timeNext += timeSampleMin;

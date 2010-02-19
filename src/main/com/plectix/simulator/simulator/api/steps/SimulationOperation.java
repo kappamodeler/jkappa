@@ -125,7 +125,7 @@ public class SimulationOperation extends AbstractOperation<Object> {
 		long clashesNumber = 0;
 		long currentNumberOfClashes = 0;
 		boolean isEndRules = false;
-		boolean isCalculateObs = false;
+		boolean isCalculateObs = true;
 		LiveDataSourceInterface liveDataSource = new ObservablesLiveDataSource(
 				simulationData.getKappaSystem().getObservables());
 		liveDataStreamer.reset(simulationData.getSimulationArguments()
@@ -288,8 +288,11 @@ public class SimulationOperation extends AbstractOperation<Object> {
 				simulationData.getKappaSystem().getObservables().updateLastValues();
 			}
 			
-			if (isCalculateObs) {
-				this.checkoutObservables(simulationData, state, 
+			if (isCalculateObs && 
+					!(simulationData.getSimulationArguments().getReportExactSampleTime()
+					&& simulationData.getSimulationArguments().isTime())) {
+				simulationData.getKappaSystem().getObservables().calculateObs(
+						state.getCurrentTime(), state.getCurrentEventNumber(),
 						simulationData.getSimulationArguments().isTime());
 			}
 
@@ -310,21 +313,6 @@ public class SimulationOperation extends AbstractOperation<Object> {
 		// currentTime, currentEventNumber);
 		endSimulation(simulationData.getSimulationArguments()
 				.getOutputTypeForAdditionalInfo(), isEndRules, logger);
-	}
-	
-	private final void checkoutObservables(SimulationData simulationData, SimulationState state, boolean flag) {
-		if (simulationData.getSimulationArguments().getReportExactSampleTime()) {
-			if (!flag) {
-				simulationData.getKappaSystem().getObservables().calculateExactSampleObs(
-							state.getCurrentTime(),
-							state.getCurrentEventNumber(),
-							simulationData.getSimulationArguments().isTime());
-			}
-		} else {
-			simulationData.getKappaSystem().getObservables().calculateObs(
-					state.getCurrentTime(), state.getCurrentEventNumber(),
-					simulationData.getSimulationArguments().isTime());
-		}
 	}
 	
 	private final void endSimulation(InfoType outputType, boolean noRulesLeft, PlxLogger logger) {
