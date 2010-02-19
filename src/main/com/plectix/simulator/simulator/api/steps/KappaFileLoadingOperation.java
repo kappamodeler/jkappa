@@ -15,6 +15,7 @@ import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMapMode;
+import com.plectix.simulator.util.Info.InfoType;
 
 public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 	private final SimulationData simulationData;
@@ -56,12 +57,14 @@ public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 					.getSnapshotsTimeString());
 		}
 
-		KappaFileReader kappaFileReader;
+		KappaFileReader kappaFileReader = null;
 		String inputFileName = kappaFileId;
 		if (inputFileName != null) {
 			kappaFileReader = new KappaFileReader(inputFileName, true);
-		} else {
+		} else if (charKappaInput != null){
 			kappaFileReader = new KappaFileReader(charKappaInput);
+		} else {
+			throw new NoKappaInputException();
 		}
 
 		if (simulationArguments.getFocusFilename() != null) {

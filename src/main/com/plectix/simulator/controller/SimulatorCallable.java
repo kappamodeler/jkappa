@@ -3,6 +3,12 @@ package com.plectix.simulator.controller;
 import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicLong;
 
+import com.plectix.simulator.simulator.SimulationData;
+import com.plectix.simulator.simulator.api.steps.DumpHelpOperation;
+import com.plectix.simulator.simulator.api.steps.NoKappaInputException;
+import com.plectix.simulator.simulator.api.steps.OperationManager;
+import com.plectix.simulator.util.Info.InfoType;
+
 //**********************************************************************************************************
 /**
  * 
@@ -45,7 +51,13 @@ public class SimulatorCallable implements Callable<SimulatorResultsData> {
         try {
         	simulatorExitReport.setStartTimestamp(System.currentTimeMillis());
             simulator.run(simulatorInputData);
-        } catch (Exception e) {
+        } catch (NoKappaInputException e) {
+        	SimulationData simulationData = simulator.getSimulationData();
+        	simulationData.addInfo(InfoType.WARNING, e.getMessage());
+			OperationManager manager = simulationData.getKappaSystem().getOperationManager();
+			manager.performSequentially(new DumpHelpOperation(simulationData));
+		}
+		catch (Exception e) {
         	e.printStackTrace();
         	simulatorExitReport.setException(e);
         	simulator.cleanUpAfterException(e);

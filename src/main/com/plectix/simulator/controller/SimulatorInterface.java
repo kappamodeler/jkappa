@@ -1,5 +1,6 @@
 package com.plectix.simulator.controller;
 
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.streaming.LiveData;
 
 public interface SimulatorInterface {
@@ -44,5 +45,7 @@ public interface SimulatorInterface {
      * @param e the Exception thrown
      */
 	public void cleanUpAfterException(Exception e);
+
+	public SimulationData getSimulationData();
 
 }

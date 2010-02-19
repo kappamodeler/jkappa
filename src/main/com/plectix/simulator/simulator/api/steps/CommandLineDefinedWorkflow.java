@@ -84,7 +84,7 @@ public class CommandLineDefinedWorkflow extends AbstractOperation<File> {
 				"--Computing initial state");
 		
 		new SimulationDataReader(simulationData).readAndCompile();
-
+		
 		SimulationClock.stopTimer(simulationData, InfoType.OUTPUT, readingKappaTimer,
 				"-Reading Kappa input:");
 	}

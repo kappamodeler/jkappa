@@ -218,11 +218,10 @@ public class SimulationOperation extends AbstractOperation<Object> {
 			if (isCalculateObs 
 					&& simulationData.getSimulationArguments().getReportExactSampleTime()
 					&& simulationData.getSimulationArguments().isTime()) {
-				
 				simulationData.getKappaSystem().getObservables().calculateExactSampleObs(
 								state.getCurrentTime(),
 								state.getCurrentEventNumber(),
-								simulationData.getSimulationArguments().isTime());
+								true);
 			}
 			
 			if (logger.isDebugEnabled()) {
@@ -289,12 +288,8 @@ public class SimulationOperation extends AbstractOperation<Object> {
 				simulationData.getKappaSystem().getObservables().updateLastValues();
 			}
 			
-			if (isCalculateObs
-					&& (!simulationData.getSimulationArguments()
-							.getReportExactSampleTime() || !simulationData
-							.getSimulationArguments().isTime())) {
-				simulationData.getKappaSystem().getObservables().calculateObs(
-						state.getCurrentTime(), state.getCurrentEventNumber(),
+			if (isCalculateObs) {
+				this.checkoutObservables(simulationData, state, 
 						simulationData.getSimulationArguments().isTime());
 			}
 
@@ -315,6 +310,21 @@ public class SimulationOperation extends AbstractOperation<Object> {
 		// currentTime, currentEventNumber);
 		endSimulation(simulationData.getSimulationArguments()
 				.getOutputTypeForAdditionalInfo(), isEndRules, logger);
+	}
+	
+	private final void checkoutObservables(SimulationData simulationData, SimulationState state, boolean flag) {
+		if (simulationData.getSimulationArguments().getReportExactSampleTime()) {
+			if (!flag) {
+				simulationData.getKappaSystem().getObservables().calculateExactSampleObs(
+							state.getCurrentTime(),
+							state.getCurrentEventNumber(),
+							simulationData.getSimulationArguments().isTime());
+			}
+		} else {
+			simulationData.getKappaSystem().getObservables().calculateObs(
+					state.getCurrentTime(), state.getCurrentEventNumber(),
+					simulationData.getSimulationArguments().isTime());
+		}
 	}
 	
 	private final void endSimulation(InfoType outputType, boolean noRulesLeft, PlxLogger logger) {

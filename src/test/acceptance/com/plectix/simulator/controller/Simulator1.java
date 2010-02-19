@@ -1,5 +1,6 @@
 package com.plectix.simulator.controller;
 
+import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.streaming.LiveData;
 
@@ -54,6 +55,12 @@ public class Simulator1 implements SimulatorInterface {
 	@Override
 	public final void cleanUpAfterException(Exception e) {
 		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public SimulationData getSimulationData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
