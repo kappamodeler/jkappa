@@ -72,6 +72,7 @@
 	public void shutdown();
 	public com.plectix.simulator.controller.SimulatorStatusInterface getSimulatorStatus(long);
 	public com.plectix.simulator.streaming.LiveData getSimulatorLiveData(long);
+	public com.plectix.simulator.controller.SimulatorResultsData getSimulatorResultsData(...);
 }
 
 -keep class com.plectix.simulator.controller.SimulatorStatusInterface {

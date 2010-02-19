@@ -119,7 +119,12 @@ public class LicenseGenerator {
     	long expirationDate = Long.parseLong(args[4]);
     	
         String encryptedLicenseData = LicenseGenerator.getLicenseDataEncrypted(username, apiKey, jsimKey, pluginsVersion, expirationDate);
-        System.out.println(encryptedLicenseData);
+        System.out.println("username = " + username);
+        System.out.println("apiKey = " + apiKey);
+        System.out.println("jsimKey = " + jsimKey);
+        System.out.println("pluginsVersion = " + pluginsVersion);
+        System.out.println("expirationDate = " + expirationDate);
+        System.out.println("encryptedLicenseData = \"" + encryptedLicenseData + "\"");
         
         testLicense(encryptedLicenseData, username, apiKey);
     }

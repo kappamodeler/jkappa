@@ -28,6 +28,7 @@ com.plectix.simulator.controller.SimulationService -> com.SS:
 	void shutdown() -> sD
 	boolean cancel(long, boolean, boolean) -> c
     com.plectix.simulator.streaming.LiveData getSimulatorLiveData(long) -> gSLD
+    com.plectix.simulator.controller.SimulatorResultsData getSimulatorResultsData(long,long,java.util.concurrent.TimeUnit) -> gSRD
 com.plectix.simulator.simulator.DefaultSimulatorFactory -> com.DSF:
     com.plectix.simulator.controller.SimulatorInterface createSimulator() -> cS
 com.plectix.simulator.controller.SimulatorStatusInterface -> com.SSI:

@@ -56,8 +56,7 @@ public class SimulatorCallable implements Callable<SimulatorResultsData> {
         	simulationData.addInfo(InfoType.WARNING, e.getMessage());
 			OperationManager manager = simulationData.getKappaSystem().getOperationManager();
 			manager.performSequentially(new DumpHelpOperation(simulationData));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
         	e.printStackTrace();
         	simulatorExitReport.setException(e);
         	simulator.cleanUpAfterException(e);
