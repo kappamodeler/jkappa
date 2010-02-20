@@ -29,7 +29,7 @@ public final class RulesParagraphReader extends KappaParagraphReader<Collection<
 			DocumentFormatException {
 		List<ModelRule> rules = new ArrayList<ModelRule>();
 		int ruleID = 0;
-		boolean isStorify = simulationArguments.storiesModeIsOn();
+		boolean isStorify = simulationArguments.needToStorify();
 		
 		for (KappaFileLine ruleLine : rulesParagraph.
 				getLines()) {

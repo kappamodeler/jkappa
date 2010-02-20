@@ -12,8 +12,8 @@ import com.plectix.simulator.io.ConsoleOutputManager;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.simulator.SimulatorOption;
 import com.plectix.simulator.simulator.api.OperationType;
+import com.plectix.simulator.simulator.options.OptionsSetSingleton;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class SimulatorInitializationOperation extends AbstractOperation<Simulator> {
@@ -44,22 +44,23 @@ public class SimulatorInitializationOperation extends AbstractOperation<Simulato
 			consoleOutputManager.setPrintStream(null);
 		}
 
-		PrintStream printStream = consoleOutputManager.getPrintStream();
-		// do not print anything above because the line above might have turned
-		// the printing off...
-
-		if (simulationArguments.isHelp()) {
-			if (printStream != null) {
-				PrintWriter printWriter = new PrintWriter(printStream);
-				HelpFormatter formatter = new HelpFormatter();
-				formatter.printHelp(printWriter, HelpFormatter.DEFAULT_WIDTH,
-						SimulationMain.COMMAND_LINE_SYNTAX, null,
-						SimulatorOption.COMMAND_LINE_OPTIONS,
-						HelpFormatter.DEFAULT_LEFT_PAD,
-						HelpFormatter.DEFAULT_DESC_PAD, null, false);
-				printWriter.flush();
-			}
-		}
+		// TODO move this code to DumpHelpOperation
+//		PrintStream printStream = consoleOutputManager.getPrintStream();
+//		// do not print anything above because the line above might have turned
+//		// the printing off...
+//
+//		if (simulationArguments.needToDumpHelp()) {
+//			if (printStream != null) {
+//				PrintWriter printWriter = new PrintWriter(printStream);
+//				HelpFormatter formatter = new HelpFormatter();
+//				formatter.printHelp(printWriter, HelpFormatter.DEFAULT_WIDTH,
+//						SimulationMain.COMMAND_LINE_SYNTAX, null,
+//						OptionsSetSingleton.getInstance(),
+//						HelpFormatter.DEFAULT_LEFT_PAD,
+//						HelpFormatter.DEFAULT_DESC_PAD, null, false);
+//				printWriter.flush();
+//			}
+//		}
 
 		simulationData.setSimulationArguments(InfoType.OUTPUT, simulationArguments);
 		return simulator;

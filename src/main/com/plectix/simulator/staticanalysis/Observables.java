@@ -10,6 +10,7 @@ import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableInterface;
 import com.plectix.simulator.simulator.SimulationArguments;
+import com.plectix.simulator.simulator.options.SimulatorArgumentsDefaultValues;
 import com.plectix.simulator.util.ObservableState;
 import com.plectix.simulator.util.OutputUtils;
 
@@ -121,7 +122,7 @@ public class Observables {
 	private final void initializeMinSampleTime(double simulationParameter,
 			int points) {
 		if (points == -1) {
-			timeSampleMin = (simulationParameter / SimulationArguments.DEFAULT_NUMBER_OF_POINTS);
+			timeSampleMin = (simulationParameter / SimulatorArgumentsDefaultValues.DEFAULT_NUMBER_OF_POINTS);
 		} else {
 			timeSampleMin = (simulationParameter / points);
 		}

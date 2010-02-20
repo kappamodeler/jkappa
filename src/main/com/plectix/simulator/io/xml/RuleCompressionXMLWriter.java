@@ -1,5 +1,6 @@
 package com.plectix.simulator.io.xml;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -14,24 +15,31 @@ import com.plectix.simulator.io.SimulationDataOutputUtil;
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.rulecompression.CompressionResults;
+import com.plectix.simulator.staticanalysis.rulecompression.RuleCompressionType;
 import com.plectix.simulator.staticanalysis.subviews.MainSubViews;
 
 // it should stay public for a while, this is not good =(
 public class RuleCompressionXMLWriter {
 	private final Map<Integer, Rule> initialRulesMap = new LinkedHashMap<Integer, Rule>();
-	private final MainSubViews qualitativeSubViews;
 	private final Map<Integer, Integer> associationQualitativeMap 
 			= new TreeMap<Integer, Integer>();
 	private final Set<Rule> qualitativeRules = new LinkedHashSet<Rule>();
 	private final Map<Integer, List<Integer>> associationQualitativeBackMap
 				= new LinkedHashMap<Integer, List<Integer>>();
-	private final CompressionResults results;
+	private Set<RuleCompressionType> performedCompressions;
+	private final KappaSystem kappaSystem;
 	
-	public RuleCompressionXMLWriter(KappaSystem ks, CompressionResults results,
-			MainSubViews qualitativeSubViews) {
-		this.qualitativeSubViews = qualitativeSubViews;
-		this.results = results;
-		for (Rule rule : ks.getRules()) {
+	//TODO do adequate data structure for those results
+	private Map<CompressionResults, MainSubViews> compressionResults
+			= new HashMap<CompressionResults, MainSubViews>();
+	
+	public RuleCompressionXMLWriter(KappaSystem ks) {
+		this.kappaSystem = ks;
+	}
+
+	public void addData(CompressionResults results, MainSubViews newSubViews) {
+		compressionResults.put(results, newSubViews);
+		for (Rule rule : kappaSystem.getRules()) {
 			this.initialRulesMap.put(rule.getRuleId(), rule);
 		}
 		for (Map.Entry<Rule, Rule> associationEntry : results.getAssociations()) {
@@ -48,16 +56,18 @@ public class RuleCompressionXMLWriter {
 			list.add(idRealRule);
 		}
 	}
-
+	
 	public void writeToXML(OurXMLWriter xtw, boolean isOcamlStyleObsName)
 			throws XMLStreamException {
 		writeToXMLInitialRules(xtw,isOcamlStyleObsName);
-		xtw.writeStartElement("RuleSet");
-		xtw.writeAttribute("Name", this.results.getCompressionType() + " compression");
-		writeToXMLQualitativeRules(xtw, isOcamlStyleObsName);
-		writeToXMLAssociationQualitativeMap(xtw);
+		for (Map.Entry<CompressionResults, MainSubViews> entry : this.compressionResults.entrySet()) {
+			xtw.writeStartElement("RuleSet");
+			xtw.writeAttribute("Name", entry.getKey().getCompressionType() + " compression");
+			writeToXMLQualitativeRules(xtw, isOcamlStyleObsName, entry.getValue());
+			writeToXMLAssociationQualitativeMap(xtw);
 
-		xtw.writeEndElement();
+			xtw.writeEndElement();
+		}
 	}
 	
 	private void writeToXMLInitialRules(OurXMLWriter xtw, boolean isOcamlStyleObsName) throws XMLStreamException{
@@ -93,13 +103,14 @@ public class RuleCompressionXMLWriter {
 	}
 	
 	
-	private void writeToXMLQualitativeRules(OurXMLWriter xtw, boolean isOcamlStyleObsName)
+	private void writeToXMLQualitativeRules(OurXMLWriter xtw, boolean isOcamlStyleObsName, 
+			MainSubViews subViews)
 	throws XMLStreamException {
 		for (Rule rule : qualitativeRules) {
 			xtw.writeStartElement("Rule");
 			Integer id = rule.getRuleId();
 			xtw.writeAttribute("Id", id.toString());
-			if(qualitativeSubViews.getDeadRules().contains(id))
+			if(subViews.getDeadRules().contains(id))
 				xtw.writeAttribute("Data", "Cannot be applied");
 			else{
 				xtw.writeAttribute("ForwardRate", Double.valueOf(rule.getRate()).toString());
@@ -126,8 +137,13 @@ public class RuleCompressionXMLWriter {
 			xtw.writeEndElement();
 		}
 	}
-	
-	public CompressionResults getResults() {
-		return results;
+
+	public CompressionResults getResults(RuleCompressionType type) {
+		for (CompressionResults results : compressionResults.keySet()) {
+			if (results.getCompressionType() == type) {
+				return results;
+			}
+		}
+		return null;
 	}
 }

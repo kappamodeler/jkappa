@@ -28,6 +28,7 @@ import com.plectix.simulator.gui.lib.UIProperties;
 import com.plectix.simulator.simulator.DefaultSimulatorFactory;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
+import com.plectix.simulator.simulator.options.SimulatorArgumentsDefaultValues;
 import com.plectix.simulator.streaming.LiveData;
 
 /**
@@ -76,7 +77,7 @@ public class ControlPanel extends GridBagPanel implements ActionListener {
 	private JSlider liveDataIntervalSlider = null;
 	private int liveDataInterval = 200;
 
-	private int liveDataPoints = SimulationArguments.DEFAULT_LIVE_DATA_POINTS;
+	private int liveDataPoints = SimulatorArgumentsDefaultValues.DEFAULT_LIVE_DATA_POINTS;
 	
 	public ControlPanel() {
 		super();

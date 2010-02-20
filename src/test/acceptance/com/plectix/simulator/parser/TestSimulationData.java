@@ -43,7 +43,7 @@ public class TestSimulationData {
 	private void initSimulationData(boolean isStorify) {
 		Simulator mySimulator = new Simulator();
 		simulationData = mySimulator.getSimulationData();
-		simulationData.getSimulationArguments().setAllowIncompleteSubstance(true);
+		simulationData.getSimulationArguments().setAllowIncompleteSubstance();
 		if (isStorify) {
 			simulationData.getSimulationArguments().setStorify(true);
 			simulationData.getSimulationArguments().setSimulationType(

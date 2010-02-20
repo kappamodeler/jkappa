@@ -49,18 +49,18 @@ public class TestENG345 extends SmokeTest {
 
 //		simulationData.getClock().setClockStamp(System.currentTimeMillis());
 
-		if (simulationData.getSimulationArguments().isCompile()) {
+		if (simulationData.getSimulationArguments().needToCompile()) {
 			timeStamp  = System.currentTimeMillis() - timeStamp;
 			Assert.assertTrue("Too long", timeStamp < 3000);
 			return;
 		}
 
 		try {
-			if (!simulationData.getSimulationArguments().debugModeIsOn()) {
+			if (!simulationData.getSimulationArguments().needToOutputDebugInformation()) {
 				if (simulationData.getSimulationArguments().isGenereteMap()
 						|| simulationData.getSimulationArguments()
 								.getSimulationType() == SimulationType.CONTACT_MAP) {
-				} else if (simulationData.getSimulationArguments().storiesModeIsOn()) {
+				} else if (simulationData.getSimulationArguments().needToStorify()) {
 					mySimulator.runStories();
 				} else {
 					mySimulator.runSimulation();

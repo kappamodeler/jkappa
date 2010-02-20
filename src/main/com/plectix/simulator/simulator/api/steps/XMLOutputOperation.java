@@ -9,7 +9,7 @@ public class XMLOutputOperation extends AbstractOperation<Object> {
 	private final String destination;
 	
 	public XMLOutputOperation(SimulationData simulationData, String destination) {
-		super(simulationData, OperationType.DEAD_RULE_DETECTION);
+		super(simulationData, OperationType.XML_OUTPUT);
 		this.simulationData = simulationData;
 		this.destination = destination;
 	}

@@ -1,0 +1,4 @@
+--input filename --simulate-please
+--input filename --contact-map-please
+--qualitative-compression filename
+--quantitative-compression filename  

@@ -1,13 +1,7 @@
 JSIM: Build on N/A from Revision N/A, JRE: Sun Microsystems Inc. 1.6.0_17
 Java --compile data/egfr.ka
--Initialization...
--Simulator Initialization: WallClock=0.062 ThreadTime=0.0625 sec. CPU
---Computing initial state
 -Kappa file loading: WallClock=0.062 ThreadTime=0.0625 sec. CPU
 -Kappa file compilation: WallClock=0.062 ThreadTime=0.0625 sec. CPU
--Reading kappa input: WallClock=0.062 ThreadTime=0.0625 sec. CPU
--Injections building: WallClock=0.0 ThreadTime=0.0 sec. CPU
--Initialization: WallClock=0.078 ThreadTime=0.0625 sec. CPU
 
 BND (#1,r) (#0,l) 
 ----------------------------
@@ -251,4 +245,6 @@ INITIAL SOLUTION:
 -10000*[Sh(pi,Y7~u)]
 -10000*[E(r)]
 
+-Output compiled data: WallClock=0.0 ThreadTime=0.0 sec. CPU
+-Results output to xml: WallClock=0.0 ThreadTime=0.0 sec. CPU
 -Workflow total time: WallClock=0.078 ThreadTime=0.0625 sec. CPU

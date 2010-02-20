@@ -2,7 +2,9 @@ package com.plectix.simulator.simulator;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
@@ -48,7 +50,11 @@ public final class KappaSystem implements KappaSystemInterface {
 	private InfluenceMap influenceMap = null;
 	private LocalViewsMain localViews = null;
 	private SpeciesEnumeration enumerationOfSpecies = null;
-	private RuleCompressionXMLWriter ruleCompressionWriter = null;
+	private RuleCompressionXMLWriter ruleCompressionWriter 
+		= new RuleCompressionXMLWriter(this);
+	
+	private final Set<RuleCompressionType> performedCompressions =
+		new HashSet<RuleCompressionType>();
 
 	private final IdGenerator agentsIdGenerator = new IdGenerator();
 	private final IdGenerator ruleIdGenerator = new IdGenerator();
@@ -105,11 +111,16 @@ public final class KappaSystem implements KappaSystemInterface {
 		newSubViews.initDeadRules();
 		
 		//TODO separate output stuff
-		ruleCompressionWriter = new RuleCompressionXMLWriter(this, results,
-				newSubViews);
+		ruleCompressionWriter.addData(results, newSubViews);
+		
+		performedCompressions.add(type);
 		return compressedRules;
 	}
 
+	public final boolean ruleCompressionWasPerformed(RuleCompressionType type) {
+		return performedCompressions.contains(type);
+	}
+	
 	// ---------------------POSITIVE UPDATE-----------------------------
 
 	/*
@@ -121,7 +132,7 @@ public final class KappaSystem implements KappaSystemInterface {
 	 */
 	public final void doPositiveUpdate(Rule rule,
 			List<Injection> currentInjectionsList) {
-		if (simulationData.getSimulationArguments().isActivationMap()) {
+		if (simulationData.getSimulationArguments().needToBuildActivationMap()) {
 			rule.positiveUpdate(rule.getActivatedRules(), rule
 					.getActivatedObservable());
 		} else {
@@ -182,6 +193,7 @@ public final class KappaSystem implements KappaSystemInterface {
 	 */
 	public final void setRules(List<Rule> rules) {
 		orderedRulesList = rules;
+		performedCompressions.clear();
 		this.rules.updatedItems(rules);
 	}
 
@@ -419,6 +431,7 @@ public final class KappaSystem implements KappaSystemInterface {
 	 * @see com.plectix.simulator.simulator.KappaSystemInterface#clearRules()
 	 */
 	public final void clearRules() {
+		performedCompressions.clear();
 		rules = new SkipListSelector<Rule>();
 		orderedRulesList.clear();
 	}

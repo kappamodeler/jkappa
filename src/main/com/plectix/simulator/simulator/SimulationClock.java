@@ -64,7 +64,7 @@ public class SimulationClock {
 
 	private final void checkAndInitStoriesBar() {
 		SimulationArguments simulationArguments = simulationData.getSimulationArguments();
-		if (simulationArguments.storiesModeIsOn()) {
+		if (simulationArguments.needToStorify()) {
 			stepStories = simulationArguments.getIterations() * 1.0
 					/ simulationArguments.getClockPrecision();
 			nextStepStories = stepStories;
@@ -95,7 +95,6 @@ public class SimulationClock {
 		checkAndInitStoriesBar();
 		step = event * 1.0 / simulationArguments.getClockPrecision();
 		nextStep = step;
-		simulationArguments.setMaxNumberOfEvents(event);
 	}
 
 	public final void setTimeLimit(double timeLimit) {

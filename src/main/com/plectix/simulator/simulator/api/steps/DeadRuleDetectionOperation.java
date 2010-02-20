@@ -20,8 +20,6 @@ public class DeadRuleDetectionOperation extends AbstractOperation<Set<Integer>> 
 	 * @return
 	 */
 	protected Set<Integer> performDry() {
-//		AllSubViewsOfAllAgentsInterface subViews = simulator.getSimulationData().getKappaSystem().getSubViews();
-		
 		AllSubViewsOfAllAgentsInterface subViews = kappaSystem.getSubViews();
 		subViews.initDeadRules();
 		return subViews.getDeadRules();

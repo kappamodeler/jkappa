@@ -51,7 +51,7 @@ public class ConsoleOutputManager {
 	public final void outputBar() {
 		SimulationArguments simulationArguments = simulationData.getSimulationArguments();
 		if (simulationArguments.getOutputTypeForAdditionalInfo() != InfoType.DO_NOT_OUTPUT
-				|| !simulationArguments.storiesModeIsOn())
+				|| !simulationArguments.needToStorify())
 			print(PROGRESS_BAR_SYMBOL);
 	}
 

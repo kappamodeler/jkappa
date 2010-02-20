@@ -1,29 +1,36 @@
 package com.plectix.simulator.simulator.api.steps;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import com.plectix.simulator.simulator.SimulationClock;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.Info.InfoType;
 
-/*package*/ abstract class AbstractOperation<E> {
+@SuppressWarnings("serial")
+public abstract class AbstractOperation<E> {
 	private final OperationType type;
 	private final SimulationData simulationData;
 	
-	private boolean isOn = false;
-	private boolean isPerformed = false;
+	private static Set<OperationType> silentSteps = new LinkedHashSet<OperationType>() {{
+		add(OperationType.DUMP_HELP);
+		add(OperationType.DUMP_VERSION);
+		add(OperationType.SIMULATOR_INITIALIZATION);
+	}};
 	
 	protected AbstractOperation(SimulationData simulationData, OperationType type) {
 		this.type = type;
 		this.simulationData = simulationData;
 	}
 	
-	protected OperationType getType() {
+	public OperationType getType() {
 		return type;
 	}
 	          
 	protected E perform() throws Exception {
-		if (simulationData != null) {
+		if (simulationData != null && !this.isSilent()) {
 			PlxTimer initializationTimer = new PlxTimer();
 			initializationTimer.startTimer();
 		
@@ -35,6 +42,10 @@ import com.plectix.simulator.util.Info.InfoType;
 		} else {
 			return this.performDry();
 		}
+	}
+
+	private boolean isSilent() {
+		return silentSteps.contains(this.getType());
 	}
 
 	protected abstract E performDry() throws Exception;

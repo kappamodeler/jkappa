@@ -3,13 +3,14 @@ package com.plectix.simulator.simulator;
 import java.util.Random;
 
 import com.plectix.simulator.interfaces.RandomInterface;
+import com.plectix.simulator.simulator.options.SimulatorArgumentsDefaultValues;
 
 /*package*/ final class DefaultRandom implements RandomInterface {
 
 	private final Random random;
 
 	public DefaultRandom(int seed) {
-		if(seed == SimulationArguments.DEFAULT_SEED)
+		if(seed == SimulatorArgumentsDefaultValues.DEFAULT_SEED)
 			random = new Random();
 		else
 			random = new Random(seed);
@@ -24,7 +25,7 @@ import com.plectix.simulator.interfaces.RandomInterface;
 	}
 	
 	public final void setSeed(long seed) {
-		if(seed != SimulationArguments.DEFAULT_SEED)
+		if(seed != SimulatorArgumentsDefaultValues.DEFAULT_SEED)
 			random.setSeed(seed);
 	}
 }

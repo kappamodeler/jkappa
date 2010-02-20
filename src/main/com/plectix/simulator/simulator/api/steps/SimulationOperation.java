@@ -153,7 +153,7 @@ public class SimulationOperation extends AbstractOperation<Object> {
 			simulationData.getKappaSystem().checkPerturbation(state.getCurrentTime());
 			simulationData.getKappaSystem().updateRuleActivities();
 			Rule rule = simulationData.getKappaSystem().getRandomRule();
-
+			
 			if (rule == null) {
 				List<ComplexPerturbation<?, ?>> perturbations = simulationData
 						.getKappaSystem().getPerturbations();

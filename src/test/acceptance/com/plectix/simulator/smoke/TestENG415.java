@@ -36,6 +36,7 @@ public class TestENG415 {
 				org.junit.Assert.fail();
 			}
 		} catch(Exception e) {
+			e.printStackTrace();
 			org.junit.Assert.fail("Exception thrown from simulator : " + e.getMessage());
 		}
 	}

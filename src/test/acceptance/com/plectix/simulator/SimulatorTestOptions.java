@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import org.apache.commons.cli.ParseException;
 
 import com.plectix.simulator.simulator.SimulatorCommandLine;
-import com.plectix.simulator.simulator.SimulatorOption;
+import com.plectix.simulator.simulator.options.SimulatorFlagOption;
+import com.plectix.simulator.simulator.options.SimulatorOption;
+import com.plectix.simulator.simulator.options.SimulatorParameterizedOption;
 import com.plectix.simulator.util.CommandLineUtils;
 
 public final class SimulatorTestOptions {
@@ -33,18 +35,18 @@ public final class SimulatorTestOptions {
 	
 	public static final SimulatorTestOptions defaultContactMapOptions(String filename, boolean influenceMap, Integer opMode) {
 		SimulatorTestOptions options = new SimulatorTestOptions();
-		options.append(SimulatorOption.SHORT_CONSOLE_OUTPUT);
+		options.append(SimulatorFlagOption.SHORT_CONSOLE_OUTPUT);
 		options.appendContactMap(filename);
-		options.append(SimulatorOption.NO_DUMP_ITERATION_NUMBER);
-		options.append(SimulatorOption.NO_DUMP_RULE_ITERATION);
+		options.append(SimulatorFlagOption.NO_DUMP_ITERATION_NUMBER);
+		options.append(SimulatorFlagOption.NO_DUMP_RULE_ITERATION);
 		if (influenceMap) {
-			options.append(SimulatorOption.BUILD_INFLUENCE_MAP);
+			options.append(SimulatorFlagOption.BUILD_INFLUENCE_MAP);
 		} else {
-			options.append(SimulatorOption.NO_BUILD_INFLUENCE_MAP);			
+			options.append(SimulatorFlagOption.NO_BUILD_INFLUENCE_MAP);			
 		}
-		options.append(SimulatorOption.NO_COMPUTE_QUALITATIVE_COMPRESSION);
-		options.append(SimulatorOption.NO_COMPUTE_QUANTITATIVE_COMPRESSION);
-		options.append(SimulatorOption.NO_ENUMERATE_COMPLEXES);
+		options.append(SimulatorFlagOption.NO_COMPUTE_QUALITATIVE_COMPRESSION);
+		options.append(SimulatorFlagOption.NO_COMPUTE_QUANTITATIVE_COMPRESSION);
+		options.append(SimulatorFlagOption.NO_ENUMERATE_COMPLEXES);
 //		options.append(SimulatorOption.ALLOW_INCOMPLETE_SUBSTANCE);
 		
 		options.appendOperationMode(opMode);
@@ -53,7 +55,7 @@ public final class SimulatorTestOptions {
 
 	public final void appendOperationMode(Integer opMode) {
 		
-		append(SimulatorOption.OPERATION_MODE);
+		append(SimulatorParameterizedOption.OPERATION_MODE);
 		if (opMode!= null)
 			append(opMode.toString());
 		else 
@@ -61,12 +63,12 @@ public final class SimulatorTestOptions {
 	}
 	
 	public final void appendContactMap(String filename) {
-		append(SimulatorOption.CONTACT_MAP);
+		append(SimulatorParameterizedOption.CONTACT_MAP);
 		append(filename);
 	}
 	
 	public final void appendFocus(String filename) {
-		append(SimulatorOption.FOCUS_ON);
+		append(SimulatorParameterizedOption.FOCUS_ON);
 		append(filename);
 	}
 	
@@ -83,12 +85,12 @@ public final class SimulatorTestOptions {
 	}
 
 	public void appendSimulation(String filename) {
-		append(SimulatorOption.SIMULATIONFILE);
+		append(SimulatorParameterizedOption.SIMULATIONFILE);
 		append(filename);
 	}
 
 	public void appendQuantitativeCompression(String filename) {
-		append(SimulatorOption.OUTPUT_QUANTITATIVE_COMPRESSION);
+		append(SimulatorFlagOption.OUTPUT_QUANTITATIVE_COMPRESSION);
 		append(filename);
 	}
 	

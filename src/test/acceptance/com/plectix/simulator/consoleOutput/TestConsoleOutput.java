@@ -76,7 +76,8 @@ public class TestConsoleOutput extends DirectoryTestsRunner {
 			if (!bothStartsWithOneOfThese(psItem, resultItem, 
 					"-Reading Kappa input", 
 					"JSIM: Build on",
-					"java "
+					"java ",
+					"-Results outputted in xml session"
 					)) {
 				
 				failer.assertEquals("line " + i + " : ", resultItem.trim(), psItem.trim());
@@ -84,7 +85,7 @@ public class TestConsoleOutput extends DirectoryTestsRunner {
 			psItem = ps.getContentItem(i);
 			resultItem = resultFileContent.getContentItem(i);
 		}
-		failer.assertTrue("One output contains more information than the other" + psItem, psItem == null && resultItem == null);
+		failer.assertTrue("One output contains more information than the other" + resultItem, psItem == null && resultItem == null);
 	}
 	
 	private boolean bothStartsWithOneOfThese(String s1, String s2, String...exceptions) {

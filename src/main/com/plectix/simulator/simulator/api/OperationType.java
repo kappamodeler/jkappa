@@ -42,6 +42,9 @@ public enum OperationType {
 	
 	STANDARD_WORKFLOW("Workflow total time"), 
 	DUMP_HELP,
+	DUMP_VERSION,
+	OUTPUT_COMPILED_DATA, 
+	XML_OUTPUT("Results output to xml"),
 	
 	
 	;
@@ -71,6 +74,9 @@ public enum OperationType {
 		addPair(DEAD_RULE_DETECTION, SUBVIEWS);
 		
 		addPair(SPECIES_ENUMERATION, LOCAL_VIEWS);
+		
+		addPair(OUTPUT_COMPILED_DATA, KAPPA_FILE_COMPILATION);
+		addPair(XML_OUTPUT, KAPPA_FILE_COMPILATION);
 	}
 	
 	private OperationType() {

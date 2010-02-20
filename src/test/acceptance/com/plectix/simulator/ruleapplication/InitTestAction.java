@@ -14,8 +14,8 @@ import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
-import com.plectix.simulator.simulator.SimulatorOption;
 import com.plectix.simulator.simulator.ThreadLocalData;
+import com.plectix.simulator.simulator.options.SimulatorFlagOption;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.Site;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
@@ -41,9 +41,9 @@ public class InitTestAction extends DirectoryTestsRunner {
 
 	private static SimulatorTestOptions prepareTestArgs(String filePath, Integer opMode) {
 		SimulatorTestOptions options = new SimulatorTestOptions();
-		options.append(SimulatorOption.ALLOW_INCOMPLETE_SUBSTANCE);
-		options.append(SimulatorOption.DEBUG_INIT);
-		options.append(SimulatorOption.NO_MAPS);
+		options.append(SimulatorFlagOption.ALLOW_INCOMPLETE_SUBSTANCE);
+		options.append(SimulatorFlagOption.DEBUG_INIT);
+		options.append(SimulatorFlagOption.NO_MAPS);
 		options.appendSimulation(filePath);
 		options.appendOperationMode(opMode);
 		return options;

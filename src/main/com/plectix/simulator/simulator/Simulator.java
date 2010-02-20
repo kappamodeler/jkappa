@@ -63,7 +63,7 @@ public final class Simulator implements SimulatorInterface {
 						/ simulationArguments.getMaxNumberOfEvents();
 			}
 
-			if (simulationArguments.storiesModeIsOn()) {
+			if (simulationArguments.needToStorify()) {
 				progress = (progress + simulatorStatus
 						.getCurrentIterationNumber())
 						/ simulationArguments.getIterations();

@@ -26,7 +26,7 @@ public final class KappaSystemBuilder {
 		KappaSystem kappaSystem = simulationData.getKappaSystem();
 		
 		MasterSolutionModel masterSolutionModel = null;
-		if(!simulationData.getSimulationArguments().isAllowIncompleteSubstance())
+		if(!simulationData.getSimulationArguments().incompletesAllowed())
 			masterSolutionModel= new MasterSolutionModel();
 
 		// rules
@@ -53,7 +53,7 @@ public final class KappaSystemBuilder {
 		kappaSystem.setPerturbations(perturbations);
 
 		// solution
-		if (arguments.isSolutionRead()) { 
+		if (arguments.solutionNeedsToBeRead()) { 
 			ModelSolution solution = model.getSolution();
 			kappaSystem.setSolution((new SolutionBuilder(simulationData)).build(solution, masterSolutionModel));
 		}

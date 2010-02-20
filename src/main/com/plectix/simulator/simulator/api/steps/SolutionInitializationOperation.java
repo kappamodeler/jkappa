@@ -30,7 +30,7 @@ public class SolutionInitializationOperation extends AbstractOperation<KappaSyst
 		observables.checkAutomorphisms();
 
 		// !!!!!!!!INJECTIONS!!!!!!!!!
-		if (args.isSolutionRead()) {
+		if (args.solutionNeedsToBeRead()) {
 			manager.perform(new InjectionBuildingOperation(kappaSystem));
 		}
 
@@ -42,7 +42,7 @@ public class SolutionInitializationOperation extends AbstractOperation<KappaSyst
 			manager.perform(new SubviewsComputationOperation(kappaSystem));
 		}
 			
-		if (args.isDeadRulesShow()) {
+		if (args.needToFindDeadRules()) {
 			manager.perform(new DeadRuleDetectionOperation(kappaSystem));
 		}
 		
@@ -50,7 +50,7 @@ public class SolutionInitializationOperation extends AbstractOperation<KappaSyst
 			manager.perform(new ContactMapComputationOperation(simulationData));
 		}
 
-		if (args.isActivationMap() || args.isInhibitionMap()) {
+		if (args.needToBuildActivationMap() || args.needToBuildInhibitionMap()) {
 			kappaSystem.setInfluenceMap(manager.perform(new InfluenceMapComputationOperation(simulationData)));
 		}
 
@@ -58,15 +58,15 @@ public class SolutionInitializationOperation extends AbstractOperation<KappaSyst
 			kappaSystem.setLocalViews(manager.perform(new LocalViewsComputationOperation(simulationData)));
 		}
 
-		if (args.useEnumerationOfSpecies()) {
+		if (args.needToEnumerationOfSpecies()) {
 			manager.perform(new SpeciesEnumerationOperation(kappaSystem));
 		}
 
-		if (args.runQualitativeCompression()) {
+		if (args.needToRunQualitativeCompression()) {
 			manager.perform(new RuleCompressionOperation(kappaSystem, RuleCompressionType.QUALITATIVE));
 		}
 
-		if (args.runQuantitativeCompression()) {
+		if (args.needToRunQuantitativeCompression()) {
 			manager.perform(new RuleCompressionOperation(kappaSystem, RuleCompressionType.QUANTITATIVE));
 		}
 		

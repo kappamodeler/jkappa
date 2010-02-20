@@ -36,6 +36,7 @@ public class TestENG388 {
 	
 	private void checkFile(String filePath) throws FileNotFoundException {
 		EasyReader reader = new EasyReader(filePath);
+		System.out.println(filePath);
 		String line = reader.getLine().trim();
 		boolean csvStarted = false;
 		int i = 0;

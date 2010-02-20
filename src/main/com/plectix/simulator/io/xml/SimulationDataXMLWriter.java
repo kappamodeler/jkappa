@@ -95,7 +95,7 @@ public class SimulationDataXMLWriter {
 			new SubviewsXMLWriter(kappaSystem.getSubViews()).write(writer);
 		}
 
-		if (simulationArguments.useEnumerationOfSpecies()) {
+		if (simulationArguments.needToEnumerationOfSpecies()) {
 			new SpeciesXMLWriter(kappaSystem.getEnumerationOfSpecies()).write(writer);
 		}
 
@@ -103,8 +103,8 @@ public class SimulationDataXMLWriter {
 			new LocalViewsXMLWriter(kappaSystem.getLocalViews()).write(writer);
 		}
 
-		if (simulationArguments.runQualitativeCompression()
-				|| simulationArguments.runQuantitativeCompression()) {
+		if (simulationArguments.needToRunQualitativeCompression()
+				|| simulationArguments.needToRunQuantitativeCompression()) {
 			kappaSystem.getRuleCompressionBuilder().writeToXML(writer,
 					simulationArguments.isOcamlStyleNameingInUse());
 		}
@@ -115,13 +115,13 @@ public class SimulationDataXMLWriter {
 			new ContactMapXMLWriter(kappaSystem.getContactMap()).write(writer);
 		}
 
-		if (simulationArguments.isActivationMap()) {
+		if (simulationArguments.needToBuildActivationMap()) {
 			new InfluenceMapXMLWriter(kappaSystem.getInfluenceMap()).write(
 					writer,
 					kappaSystem.getRules().size(),
 					kappaSystem.getObservables()
 							.getConnectedComponentListForXMLOutput(),
-					simulationArguments.isInhibitionMap(), kappaSystem,
+					simulationArguments.needToBuildInhibitionMap(), kappaSystem,
 					simulationArguments.isOcamlStyleNameingInUse());
 			SimulationClock.stopTimer(simulationData, InfoType.OUTPUT, timer,
 					"-Building xml tree for influence map:");
@@ -257,9 +257,6 @@ public class SimulationDataXMLWriter {
 		} finally {
 			writer.close();
 		}
-		
-		SimulationClock.stopTimer(simulationData, InfoType.OUTPUT, timerOutput,
-				"-Results outputted in xml session:");
 	}
 
 	private final StringBuffer appendData(Observables obs,

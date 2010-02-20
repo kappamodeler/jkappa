@@ -16,17 +16,6 @@ public class RuleCompressionOperation extends AbstractOperation<List<Rule>> {
 		super(kappaSystem.getSimulationData(), OperationType.RULE_COMPRESSION);
 		this.kappaSystem = kappaSystem;
 		this.type = type;
-//		switch (type) {
-//		case QUALITATIVE:	{
-//			kappaSystem.getSimulationData().getSimulationArguments().setRunQualitativeCompression(true);
-//			break;
-//		}
-//		case QUANTITATIVE: {
-//			kappaSystem.getSimulationData().getSimulationArguments().setRunQuantitativeCompression(true);
-//			break;
-//		}
-//		}
-			
 	}
 	
 	protected List<Rule> performDry() throws StaticAnalysisException {
@@ -36,13 +25,12 @@ public class RuleCompressionOperation extends AbstractOperation<List<Rule>> {
 
 	@Override
 	protected boolean noNeedToPerform() {
-		//TODO we can optimize this
-		return kappaSystem.getRuleCompressionBuilder() != null;
+		return kappaSystem.ruleCompressionWasPerformed(type);
 	}
 
 	@Override
 	protected List<Rule> retrievePreparedResult() {
 		//TODO we can optimize this
-		return kappaSystem.getRuleCompressionBuilder().getResults().getCompressedRules();
+		return kappaSystem.getRuleCompressionBuilder().getResults(type).getCompressedRules();
 	}
 }

@@ -106,4 +106,8 @@ public enum SimulatorParameterizedOption implements SimulatorOption {
 	public Class<?> getParameterType() {
 		return parameterClass;
 	}
+	
+	public boolean shouldHavePositivePrameter() {
+		return this == RESCALE || this == MAX_CLASHES;
+	}
 }

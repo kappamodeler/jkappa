@@ -62,10 +62,10 @@ public final class SimulationData {
 		this.simulationArguments = arguments;
 		this.simulationArguments.updateRandom();
 
-		if (simulationArguments.isVersion()) {
-			consoleOutputManager.println("Java Simulator Revision: "
-					+ BuildConstants.BUILD_SVN_REVISION);
-		}
+//		if (simulationArguments.needToDumpVersion()) {
+//			consoleOutputManager.println("Java Simulator Revision: "
+//					+ BuildConstants.BUILD_SVN_REVISION);
+//		}
 
 		// let's dump the command line arguments
 		if (simulationArguments.getCommandLineString() != null) {
@@ -80,7 +80,7 @@ public final class SimulationData {
 					.getMonitorPeakMemory());
 		}
 
-		this.addInfo(InfoType.INFO, "-Initialization...");
+//		this.addInfo(InfoType.INFO, "-Initialization...");
 
 		this.argumentsInitialized = true;
 	}

@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import com.plectix.simulator.interfaces.RandomInterface;
 import com.plectix.simulator.io.xml.SimulationDataXMLWriter;
 import com.plectix.simulator.simulationclasses.injections.Injection;
+import com.plectix.simulator.simulator.options.SimulatorArgumentsDefaultValues;
 import com.plectix.simulator.staticanalysis.ConnectedComponent;
 import com.plectix.simulator.util.NameDictionary;
 import com.plectix.simulator.util.io.PlxLogger;
@@ -30,7 +31,7 @@ public final class ThreadLocalData {
 	private static final ThreadLocalContainer<RandomInterface> random = new ThreadLocalContainer<RandomInterface> () {
 		@Override 
 		protected RandomInterface initialValue() {
-			return new DefaultRandom(SimulationArguments.DEFAULT_SEED);
+			return new DefaultRandom(SimulatorArgumentsDefaultValues.DEFAULT_SEED);
 		}
 	};
 
