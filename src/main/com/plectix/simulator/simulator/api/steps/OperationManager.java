@@ -30,8 +30,8 @@ public class OperationManager {
 		
 		SimulationArguments args = simulationData.getSimulationArguments();
 		
-		if (args.getInputFilename() != null) {
-			defaultOperations.put(OperationType.KAPPA_FILE_LOADING, new KappaFileLoadingOperation(simulationData, args.getInputFilename()));
+		if (args.getInputFileName() != null) {
+			defaultOperations.put(OperationType.KAPPA_FILE_LOADING, new KappaFileLoadingOperation(simulationData, args.getInputFileName()));
 		} else if (args.getInputCharArray() != null) {
 			defaultOperations.put(OperationType.KAPPA_FILE_LOADING, new KappaFileLoadingOperation(simulationData, args.getInputCharArray()));
 		} else {

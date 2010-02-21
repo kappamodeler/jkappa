@@ -42,7 +42,7 @@ public class KappaFileCompilationOperation extends AbstractOperation<KappaSystem
 					.getConsoleOutputManager();
 			SimulationArguments simulationArguments = simulationData.getSimulationArguments();
 			console.println("Error in file \""
-					+ simulationArguments.getInputFilename() + "\" :");
+					+ simulationArguments.getInputFileName() + "\" :");
 			throw e;
 			//TODO HANDLE THIS ERROR
 			/*

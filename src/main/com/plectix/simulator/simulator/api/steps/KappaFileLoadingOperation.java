@@ -26,7 +26,7 @@ public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 		super(simulationData, OperationType.KAPPA_FILE_LOADING);
 		this.simulationData = simulationData;
 		this.kappaFileId = kappaFileId;
-		simulationData.getSimulationArguments().setInputFilename(kappaFileId);
+		simulationData.getSimulationArguments().setInputFileName(kappaFileId);
 	}
 
 	public KappaFileLoadingOperation(SimulationData simulationData, char[] inputCharArray) {

@@ -83,7 +83,7 @@ public class SimulationDataXMLWriter {
 		}
 
 		writer.writeAttribute("InputFile", simulationArguments
-				.getInputFilename());
+				.getInputFileName());
 		Date d = new Date();
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		writer.writeAttribute("TimeStamp", df.format(d));

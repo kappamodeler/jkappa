@@ -131,7 +131,6 @@ public final class SimulationData {
 	// TODO THIS IS VERY BAD, I GONNA CRY, we need to move this part later
 	public final void setTimeLimit(double timeLimit) {
 		double oldValue = simulationArguments.getTimeLimit();
-		simulationArguments.setTime(true);
 		simulationArguments.setTimeLimit(timeLimit);
 		if (Math.abs(timeLimit - oldValue) > 0.001) {
 			kappaSystem.getObservables().init(timeLimit, 

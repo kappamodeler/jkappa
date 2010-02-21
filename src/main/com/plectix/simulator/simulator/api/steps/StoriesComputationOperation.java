@@ -56,7 +56,7 @@ public class StoriesComputationOperation extends AbstractOperation<Object> {
 	private void correctSimulationArguments() {
 		SimulationArguments simulationArguments = simulator.getSimulationData().getSimulationArguments();
 		simulationArguments.setSimulationType(SimulationType.STORIFY);
-		simulationArguments.setStorify(true);
+		simulationArguments.setStorifyFlag(true);
 		simulationArguments.setIterations(iterationsNumber);
 		simulationArguments.setStorifyMode(mode);
 	}

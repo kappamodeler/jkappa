@@ -210,7 +210,7 @@ public class SimulationArguments {
 			throw new ParseException("two input files!");
 		} else {
 			String newName = commandLineManager.retrieveParameterAsString(option);
-			this.setInputFilename(newName);
+			this.setInputFileName(newName);
 			this.addParameter(option, new SimulatorParameter<String>(newName));
 			return newName;
 		}
@@ -315,6 +315,10 @@ public class SimulationArguments {
 		}
 	}
 	
+	private void removeParameter(SimulatorParameterizedOption option) {
+		this.parameters.remove(option);
+	}
+
 	
 	
 	/*
@@ -403,7 +407,7 @@ public class SimulationArguments {
 		return this.containsParameter(GENERATE_INFLUENCE_MAP);
 	}
 	
-	public void setInputFilename(String fileName) {
+	public void setInputFileName(String fileName) {
 		this.addUncheckedParameter(INPUT, new SimulatorParameter<String>(fileName));
 	}
 	
@@ -431,8 +435,13 @@ public class SimulationArguments {
 		return nullSafeValueRetrieve(EVENT, Long.class);
 	}
 
+	public void setStorifyFlag(boolean b) {
+		this.addUncheckedFlag(SimulatorFlagOption.STORIFY, b);
+	}
+	
 	public boolean needToStorify() {
-		return this.containsParameter(STORIFY);
+		return this.containsFlag(SimulatorFlagOption.STORIFY)
+			|| this.containsParameter(STORIFY);
 	}
 
 	public int getIterations() {
@@ -441,10 +450,6 @@ public class SimulationArguments {
 
 	public int getClockPrecision() {
 		return nullSafeValueRetrieve(CLOCK_PRECISION, Integer.class);
-	}
-
-	public void setMaxNumberOfEvents(long event) {
-		this.addUncheckedParameter(EVENT, new SimulatorParameter<Long>(event));
 	}
 
 	public void updateRandom() {
@@ -463,12 +468,26 @@ public class SimulationArguments {
 		return this.containsFlag(OUTPUT_FINAL_STATE);
 	}
 
-	public void setTime(boolean b) {
-		//TODO does nothing, remove when finish refactoring
+	/**
+	 * When you use this method, you should remember that
+	 * it's triggers simulation mode to the "events" one.
+	 * i.e. you lose the data about previous time limit 
+	 * @param event new events number limit
+	 */
+	public void setMaxNumberOfEvents(long event) {
+		this.addUncheckedParameter(EVENT, new SimulatorParameter<Long>(event));
+		this.addUncheckedParameter(TIME, SimulatorArgumentsDefaultValues.DEFAULT_VALUES.get(TIME));
 	}
 
+	/**
+	 * When you use this method, you should remember that
+	 * it's triggers simulation mode to the "time" one.
+	 * i.e. you lose the data about previous events limit 
+	 * @param timeLimit new time limit
+	 */
 	public void setTimeLimit(double timeLimit) {
 		this.addUncheckedParameter(TIME, new SimulatorParameter<Double>(timeLimit));
+		this.addUncheckedParameter(EVENT, SimulatorArgumentsDefaultValues.DEFAULT_VALUES.get(EVENT));
 	}
 
 	public double getInitialTime() {
@@ -487,7 +506,7 @@ public class SimulationArguments {
 		return this.containsFlag(OCAML_STYLE_OBS_NAME);
 	}
 
-	public String getInputFilename() {
+	public String getInputFileName() {
 		return nullSafeValueRetrieve(INPUT, String.class);
 	}
 
@@ -515,10 +534,6 @@ public class SimulationArguments {
 
 	public boolean isUnifiedTimeSeriesOutput() {
 		return unifiedTimeSeriesOutput;
-	}
-
-	public boolean incompletesAllowed() {
-		return this.containsFlag(ALLOW_INCOMPLETE_SUBSTANCE);
 	}
 
 	public boolean isForwardOnly() {
@@ -598,16 +613,16 @@ public class SimulationArguments {
 		return this.storifyMode;
 	}
 
-	public void setStorify(boolean b) {
-		//TODO i don't know what should be here, guess it should be removed
-	}
-
 	public void setIterations(int iterationsNumber) {
 		this.addUncheckedParameter(ITERATION, new SimulatorParameter<Integer>(iterationsNumber));
 	}
 
-	public void setAllowIncompleteSubstance() {
-		this.addUncheckedFlag(ALLOW_INCOMPLETE_SUBSTANCE);
+	public void setAllowIncompleteSubstance(boolean b) {
+		this.addUncheckedFlag(ALLOW_INCOMPLETE_SUBSTANCE, b);
+	}
+
+	public boolean incompletesAllowed() {
+		return this.containsFlag(ALLOW_INCOMPLETE_SUBSTANCE);
 	}
 
 	public boolean needToSimulate() {
@@ -644,7 +659,9 @@ public class SimulationArguments {
 			return false;
 		}
 		SimulatorParameter<?> parameter = parameters.get(option);
-		if (defaultValue.getValue().equals(Double.NaN) 
+		if (parameter == null) {
+			return false;
+		} else if (defaultValue.getValue().equals(Double.NaN) 
 				&& parameter.getValue().equals(Double.NaN)) {
 			return true;
 		}

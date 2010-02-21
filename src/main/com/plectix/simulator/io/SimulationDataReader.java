@@ -17,7 +17,7 @@ public class SimulationDataReader {
 
 	private final KappaFile readSimulationFile()	throws Exception {
 		OperationManager manager = simulationData.getKappaSystem().getOperationManager();
-		return manager.performSequentially(new KappaFileLoadingOperation(simulationData, simulationData.getSimulationArguments().getInputFilename()));
+		return manager.performSequentially(new KappaFileLoadingOperation(simulationData, simulationData.getSimulationArguments().getInputFileName()));
 	}
 
 	public final KappaSystem compileKappaFile(KappaFile kappaFile, InfoType outputType) throws Exception {
