@@ -19,7 +19,7 @@ import com.plectix.simulator.util.io.XMLOutputOracle;
 public class TestRuleStudioOptionsSets {
 
 	@Test
-	public final void testCase1a() {
+	public final void testSimulationA() {
 		try {
 			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
 			String kappaFile = "data" + File.separator + "example.ka";
@@ -44,7 +44,7 @@ public class TestRuleStudioOptionsSets {
 	}
 	
 	@Test
-	public final void testCase1b() {
+	public final void testSimulationB() {
 		try {
 			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
 			String kappaFile = "data" + File.separator + "example.ka";
@@ -80,7 +80,7 @@ public class TestRuleStudioOptionsSets {
 	}
 	
 	@Test
-	public final void testCase2() {
+	public final void testStories() {
 		try {
 			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
 			String kappaFile = "data" + File.separator + "ex_stories.ka";
@@ -109,7 +109,7 @@ public class TestRuleStudioOptionsSets {
 	}
 	
 	@Test
-	public final void testCase3a() {
+	public final void testLiveDataA() {
 		try {
 			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
 			String kappaFile = "data" + File.separator + "easy-egfr.ka";
@@ -133,7 +133,7 @@ public class TestRuleStudioOptionsSets {
 	}
 	
 	@Test
-	public final void testCase3b() {
+	public final void testLiveDataB() {
 		try {
 			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
 			String kappaFile = "data" + File.separator + "easy-egfr.ka";
@@ -164,8 +164,7 @@ public class TestRuleStudioOptionsSets {
 		Assert.assertTrue("Wrong simulation mode", arguments.needToSimulate());
 	}
 	
-	@Test
-	public final void testCase4() {
+//	public final void testCase4() {
 //		try {
 //			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
 //			String kappaFile = "data" + File.separator + "abc2.ka";
@@ -190,9 +189,8 @@ public class TestRuleStudioOptionsSets {
 //			e.printStackTrace();
 //			Assert.fail(e.getMessage());
 //		}
-	}
+//	}
 	
-//	@Test
 //	public final void testCase5() {
 //		try {
 //			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
@@ -223,7 +221,6 @@ public class TestRuleStudioOptionsSets {
 //		}
 //	}
 //	
-//	@Test
 //	public final void testCase6() {
 //		try {
 //			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");

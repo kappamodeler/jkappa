@@ -16,7 +16,7 @@ import com.plectix.simulator.simulator.api.steps.OperationManager;
 
 public class TestENG423 {
 	@Test
-	public final void testCase3b() {
+	public final void test() {
 		try {
 			String kappaFile = "data" + File.separator + "example.ka";
 			this.processCommandLine(

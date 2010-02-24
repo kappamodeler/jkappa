@@ -17,7 +17,7 @@ import com.plectix.simulator.util.io.XMLOutputOracle;
 
 public class TestENG413 {
 	@Test
-	public final void testCase3b() {
+	public final void test() {
 		try {
 			String kappaFile = "data" + File.separator + "example.ka";
 			KappaSystem kappaSystem = this.processCommandLine("--sim " + kappaFile 
