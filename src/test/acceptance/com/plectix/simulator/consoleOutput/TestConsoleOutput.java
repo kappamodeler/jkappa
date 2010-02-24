@@ -15,8 +15,8 @@ import com.plectix.simulator.parser.EasyReader;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.simulator.api.OperationType;
-import com.plectix.simulator.util.BackingUpPrintStream;
 import com.plectix.simulator.util.Failer;
+import com.plectix.simulator.util.io.BackingUpPrintStream;
 
 @RunWith(Parameterized.class)
 public class TestConsoleOutput extends DirectoryTestsRunner {

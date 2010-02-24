@@ -11,7 +11,9 @@ import org.junit.runners.Suite.SuiteClasses;
 		TestENG345.class,
 		TestENG325.class,
 		TestENG388.class,
-		TestENG415.class
+		TestENG415.class,
+		TestENG413.class,
+		TestENG423.class
 		})
 public class SmokeTestMain {
 

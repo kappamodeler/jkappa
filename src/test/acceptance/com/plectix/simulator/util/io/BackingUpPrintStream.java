@@ -1,4 +1,4 @@
-package com.plectix.simulator.util;
+package com.plectix.simulator.util.io;
 
 import java.io.PrintStream;
 import java.util.LinkedList;

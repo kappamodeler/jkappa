@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
-import com.plectix.simulator.util.BackingUpPrintStream;
+import com.plectix.simulator.util.io.BackingUpPrintStream;
 
 public class TestENG415 {
 	private final String generateCommand(String fileName) {

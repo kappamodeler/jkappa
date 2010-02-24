@@ -645,7 +645,8 @@ public class SimulationArguments {
 
 	public boolean needToBuildInfluenceMap() {
 		return this.containsFlag(SimulatorFlagOption.GENERATE_INFLUENCE_MAP)
-			|| this.containsParameter(GENERATE_INFLUENCE_MAP);
+			|| this.containsParameter(GENERATE_INFLUENCE_MAP)
+			|| this.containsFlag(SimulatorFlagOption.BUILD_INFLUENCE_MAP);
 	}
 	
 	/*

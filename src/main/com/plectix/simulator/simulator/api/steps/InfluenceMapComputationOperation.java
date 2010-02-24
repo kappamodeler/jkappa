@@ -49,6 +49,7 @@ public class InfluenceMapComputationOperation extends AbstractOperation<Influenc
 		simulationData.addInfo(InfoType.INFO,
 				"--Influence map computed");
 		
+		kappaSystem.setInfluenceMap(influenceMap);
 		return influenceMap;
 	}
 

@@ -23,11 +23,16 @@ import com.plectix.simulator.util.MemoryUtil.PeakMemoryUsage;
 public class CommandLineDefinedWorkflow extends AbstractOperation<File> {
 	private final Simulator simulator; 
 	private final SimulatorInputData simulatorInputData;
+	private boolean xmlOutputIsTurnedOn = true; 
 	
 	public CommandLineDefinedWorkflow(Simulator simulator, SimulatorInputData simulatorInputData) {
 		super(simulator.getSimulationData(), OperationType.STANDARD_WORKFLOW);
 		this.simulator = simulator;
 		this.simulatorInputData = simulatorInputData;
+	}
+	
+	public final void turnOffXMLOutput() {
+		xmlOutputIsTurnedOn = false;
 	}
 
 	/**
@@ -94,7 +99,9 @@ public class CommandLineDefinedWorkflow extends AbstractOperation<File> {
 		
 		// Output XML data:
 		String destination = simulationData.getSimulationArguments().getXmlOutputDestination();
-		operations.add(new XMLOutputOperation(simulationData, destination));
+		if (xmlOutputIsTurnedOn) {
+			operations.add(new XMLOutputOperation(simulationData, destination));
+		}
 		return operations;
 	}
 	
