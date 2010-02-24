@@ -46,8 +46,9 @@ import com.plectix.simulator.xmlmap.TestInfluenceMap;
 		RunTestWeakCompression.class,
 		TestContactMap.class,
 		TestWeightedItemSelector.class,
-		TestConsoleOutput.class,
-		TestRuleStudioOptionsSets.class})
+		TestConsoleOutput.class
+//		TestRuleStudioOptionsSets.class
+		})
 public class RunAllAcceptanceTests {
 //	public static final String FILENAME_EXTENSION = ".test";
 //	public static final String LOG4J_PROPERTIES_FILENAME = "config/log4j.properties";
