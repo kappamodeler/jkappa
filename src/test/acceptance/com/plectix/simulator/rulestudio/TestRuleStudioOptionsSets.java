@@ -164,7 +164,7 @@ public class TestRuleStudioOptionsSets {
 		Assert.assertTrue("Wrong simulation mode", arguments.needToSimulate());
 	}
 	
-//	public final void testCase4() {
+//	public final void testCaseQualitativeCompression() {
 //		try {
 //			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
 //			String kappaFile = "data" + File.separator + "abc2.ka";
@@ -190,65 +190,108 @@ public class TestRuleStudioOptionsSets {
 //			Assert.fail(e.getMessage());
 //		}
 //	}
-	
-//	public final void testCase5() {
-//		try {
-//			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
-//			String kappaFile = "data" + File.separator + "example.ka";
-//			KappaSystem kappaSystem = this.processCommandLine("--no-build-influence-map",
-//	                "--no-compute-qualitative-compression",
-//	                "--no-compute-quantitative-compression",
-//	                "--no-dump-iteration-number",
-//	                "--no-dump-rule-iteration",
-//	                "--no-enumerate-complexes",
-//	                "--contact-map",
-//	                kappaFile,
-//	                "--xml-session-name",
-//	                xmlOutputFile.getPath());
-//			
-//			Assert.assertTrue("simulation plot contains no data", 
-//					XMLOutputOracle.simulationPlotDataIsNotEmpty(kappaSystem));
-//				
-//			SimulationArguments arguments = kappaSystem.getSimulationData().getSimulationArguments();
-//			Assert.assertTrue("Wrong output file path", 
-//					arguments.getXmlOutputDestination().equals(xmlOutputFile.getPath()));
-//			Assert.assertFalse("We enumerate complexes", arguments.needToEnumerationOfSpecies());
-//			Assert.assertFalse("We dump rule iterations", arguments.);
-//			Assert.assertTrue("Wrong simulation mode", arguments.needToBuildContactMap());
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			Assert.fail(e.getMessage());
-//		}
-//	}
 //	
-//	public final void testCase6() {
-//		try {
-//			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
-//			String kappaFile = "data" + File.separator + "example.ka";
-//			KappaSystem kappaSystem = this.processCommandLine("--no-compute-qualitative-compression",
-//	                "--no-compute-quantitative-compression",
-//	                "--no-dump-iteration-number",
-//	                "--no-dump-rule-iteration",
-//	                "--no-enumerate-complexes",
-//	                "--contact-map",
-//	                kappaFile,
-//	                "--xml-session-name",
-//	                xmlOutputFile.getPath(),
-//	                "--build-influence-map");
+//	public final void testCaseQuantitativeCompression() {
+//	try {
+//		File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
+//		String kappaFile = "data" + File.separator + "abc2.ka";
+//		KappaSystem kappaSystem = this.processCommandLine("--build-influence-map",
+//                "--no-dump-iteration-number",
+//                "--no-dump-rule-iteration",
+//                "--no-enumerate-complexes",
+//                "--contact-map",
+//                kappaFile,
+//                "--output-quantitative-compression",
+//                outputFilename,
+//                "--xml-session-name", xmlOutputFile);
+//		
+//		Assert.assertTrue("simulation plot contains no data", 
+//				XMLOutputOracle.simulationPlotDataIsNotEmpty(kappaSystem));
 //			
-//			Assert.assertTrue("simulation plot contains no data", 
-//					XMLOutputOracle.simulationPlotDataIsNotEmpty(kappaSystem));
-//				
-//			SimulationArguments arguments = kappaSystem.getSimulationData().getSimulationArguments();
-//			Assert.assertTrue("Wrong output file path", 
-//					arguments.getXmlOutputDestination().equals(xmlOutputFile.getPath()));
-//			Assert.assertFalse("We enumerate complexes", arguments.needToEnumerationOfSpecies());
-//			Assert.assertTrue("Wrong simulation mode", arguments.needToBuildContactMap());
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			Assert.fail(e.getMessage());
-//		}
+//		SimulationArguments arguments = kappaSystem.getSimulationData().getSimulationArguments();
+//		Assert.assertTrue("Wrong output file path", 
+//				arguments.getXmlOutputDestination().equals(xmlOutputFile.getPath()));
+//		Assert.assertTrue("Wrong time limit number", arguments.getMaxNumberOfEvents() == 35);
+//	} catch(Exception e) {
+//		e.printStackTrace();
+//		Assert.fail(e.getMessage());
 //	}
+//}
+	
+	@Test
+	public final void testCaseContactMap() {
+		try {
+			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
+			String kappaFile = "data" + File.separator + "example.ka";
+			KappaSystem kappaSystem = this.processCommandLine(
+					"--no-build-influence-map",
+	                "--no-compute-qualitative-compression",
+	                "--no-compute-quantitative-compression",
+	                "--no-dump-iteration-number",
+
+	                //TODO handle handle
+	                "--no-dump-rule-iteration",
+	                "--no-enumerate-complexes",
+
+	                "--contact-map",
+	                kappaFile,
+	                "--xml-session-name",
+	                xmlOutputFile.getPath());
+			
+			Assert.assertFalse("simulation plot contains no data", 
+					XMLOutputOracle.simulationPlotDataIsNotEmpty(kappaSystem));
+				
+			SimulationArguments arguments = kappaSystem.getSimulationData().getSimulationArguments();
+			Assert.assertTrue("Wrong output file path", 
+					arguments.getXmlOutputDestination().equals(xmlOutputFile.getPath()));
+			Assert.assertFalse("We enumerate complexes", arguments.needToEnumerationOfSpecies());
+			Assert.assertFalse("We compress rules", arguments.needToRunQuantitativeCompression());
+			Assert.assertFalse("We compress rules", arguments.needToRunQualitativeCompression());
+			Assert.assertFalse("We do not build influence map", arguments.needToBuildInfluenceMap());
+			Assert.assertTrue("We do not build contact map", arguments.needToBuildContactMap());
+			Assert.assertTrue("Wrong simulation mode", arguments.needToBuildContactMap());
+		} catch(Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public final void testCaseInfluenceMap() {
+		try {
+			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
+			String kappaFile = "data" + File.separator + "example.ka";
+			KappaSystem kappaSystem = this.processCommandLine(
+					"--no-compute-qualitative-compression",
+	                "--no-compute-quantitative-compression",
+	                
+	                //TODO handle handle
+	                "--no-dump-iteration-number",
+	                "--no-dump-rule-iteration",
+	                "--no-enumerate-complexes",
+	                "--contact-map",
+	                kappaFile,
+	                "--xml-session-name",
+	                xmlOutputFile.getPath(),
+	                "--build-influence-map" );
+			
+			Assert.assertFalse("simulation plot contains no data", 
+					XMLOutputOracle.simulationPlotDataIsNotEmpty(kappaSystem));
+				
+			SimulationArguments arguments = kappaSystem.getSimulationData().getSimulationArguments();
+			Assert.assertTrue("Wrong output file path", 
+					arguments.getXmlOutputDestination().equals(xmlOutputFile.getPath()));
+			Assert.assertFalse("We enumerate complexes", arguments.needToEnumerationOfSpecies());
+			Assert.assertFalse("We compress rules", arguments.needToRunQuantitativeCompression());
+			Assert.assertFalse("We compress rules", arguments.needToRunQualitativeCompression());
+			Assert.assertTrue("We do not build influence map", arguments.needToBuildInfluenceMap());
+			Assert.assertTrue("We do not build contact map", arguments.needToBuildContactMap());
+			Assert.assertTrue("Wrong simulation mode", arguments.needToBuildContactMap());
+		} catch(Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
 	
 	private KappaSystem processCommandLine(String commandLine) throws Exception {
 		return this.processCommandLine(commandLine.split(" "));
