@@ -41,10 +41,17 @@ public class TestRuleCompressionMap {
 	private SAXParser parserxml;
 	private File sessionSimplex;
 	private SAXHandler handler;
-	private Set<Association> complxAss;
-	private Set<Association> jsimAss;
-	private Set<RuleTag> jsimRules;
-	private Set<RuleTag> complxRules;
+	private Set<Association> complxQuantitativeAss;
+	private Set<Association> complxQualitativeAss;
+	
+	private Set<Association> jsimQuantitativeAss;
+	private Set<Association> jsimQualitativeAss;
+	
+	private Set<RuleTag> jsimQuantitativeRules;
+	private Set<RuleTag> jsimQualitativeRules;
+	
+	private Set<RuleTag> complxQuantitativeRules;
+	private Set<RuleTag> complxQualitativeRules;
 	
 	@Parameters
 	public static Collection<Object[]> configs() {
@@ -66,12 +73,20 @@ public class TestRuleCompressionMap {
 			parserxml = parserFactory.newSAXParser();
 			handler = new com.plectix.simulator.xmlmap.rulecompression.SAXHandler();
 			parserxml.parse(sessionSimplex, handler);
-			complxAss = handler.getAssociations();
-			complxRules = handler.getRules();
+			
+			complxQuantitativeAss = handler.getQuantitativeAssociations();
+			complxQualitativeAss = handler.getQualitativeAssociations();
+			
+			complxQuantitativeRules = handler.getQuantitativeRules();
+			complxQualitativeRules = handler.getQualitativeRules();
 			
 			parserxml.parse(new InputSource(new StringBufferReader(currentXMLData)), handler);
-			jsimAss = handler.getAssociations();
-			jsimRules = handler.getRules();
+			
+			jsimQuantitativeAss = handler.getQuantitativeAssociations();
+			jsimQualitativeAss = handler.getQualitativeAssociations();
+			
+			jsimQuantitativeRules = handler.getQuantitativeRules();
+			jsimQualitativeRules = handler.getQualitativeRules();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,10 +97,27 @@ public class TestRuleCompressionMap {
 	@Test
 	public void testAssociation(){
 		String message = "Fail in:" + sessionSimplex.getName();
-		assertTrue(message + " jsimSize=" + jsimAss.size() + " complxSize=" + complxAss.size(),
-				jsimAss.size()==complxAss.size());
+		assertTrue(message + " jsimQuantitativeSize=" + jsimQuantitativeAss.size() + 
+				" complxQuantitativeSize=" + complxQuantitativeAss.size() + 
+				" jsimQualitativeSize=" + jsimQualitativeAss.size() + 
+				" complxQualitativeSize=" + complxQualitativeAss.size(),
+					(
+						jsimQuantitativeAss.size()==complxQuantitativeAss.size() &&
+						jsimQualitativeAss.size()==complxQualitativeAss.size()
+					)
+				);
 		boolean isFail = false;
 		StringBuffer sb = new StringBuffer(message);
+		checkSets(sb, isFail, jsimQuantitativeAss, complxQuantitativeAss);
+		checkSets(sb, isFail, jsimQualitativeAss, complxQualitativeAss);
+		
+		if(isFail){
+			System.err.println(sb.toString());
+			fail(message);
+		}
+	}
+	
+	private void checkSets(StringBuffer sb, boolean isFail, Set<Association> jsimAss, Set<Association> complxAss){
 		sb.append("\n");
 		for(Association as : jsimAss){
 			if(!complxAss.contains(as)){
@@ -97,23 +129,29 @@ public class TestRuleCompressionMap {
 			}
 //			assertTrue(complxAss.contains(as));
 		}
-		
-		if(isFail){
-			System.err.println(sb.toString());
-			fail(message);
-		}
 	}
 
 	@Test
 	public void testRules(){
 		String message = "Fail in:" + sessionSimplex.getName();
-		assertTrue(message + " jsimSize=" + jsimRules.size() + " complxSize=" + complxRules.size(),
-				jsimRules.size()==complxRules.size());
+		assertTrue(message + " jsimQuantitativeSize=" + jsimQuantitativeRules.size() + 
+				" complxQuantitativeSize=" + complxQuantitativeRules.size() +
+				" jsimQualitativeSize=" + jsimQualitativeRules.size() + 
+				" complxQualitativeSize=" + complxQualitativeRules.size(),
+					(
+							jsimQuantitativeRules.size()==complxQuantitativeRules.size() &&
+							jsimQualitativeRules.size()==complxQualitativeRules.size()
+							
+					)
+				);
+				
+		
+		
 		boolean isFail = false;
 		StringBuffer sb = new StringBuffer(message);
 		sb.append("\n");
-		for(RuleTag rt : jsimRules){
-			if(!complxRules.contains(rt)){
+		for(RuleTag rt : jsimQuantitativeRules){
+			if(!complxQuantitativeRules.contains(rt)){
 				sb.append("\nJSim:");
 				sb.append(rt);
 				sb.append("\n");
@@ -133,7 +171,7 @@ public class TestRuleCompressionMap {
 	}
 	
 	private RuleTag getComplxRuleById(int id){
-		for(RuleTag rt : complxRules){
+		for(RuleTag rt : complxQuantitativeRules){
 			if(rt.getId() == id)
 				return rt;
 		}
