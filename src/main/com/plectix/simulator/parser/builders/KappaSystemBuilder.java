@@ -10,8 +10,8 @@ import com.plectix.simulator.simulationclasses.perturbations.ComplexPerturbation
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 import com.plectix.simulator.staticanalysis.stories.Stories;
 
 public final class KappaSystemBuilder {

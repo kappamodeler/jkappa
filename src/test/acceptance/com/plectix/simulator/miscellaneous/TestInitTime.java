@@ -19,7 +19,7 @@ import com.plectix.simulator.io.SimulationDataReader;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.staticanalysis.Observables;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 import com.plectix.simulator.util.DefaultPropertiesForTest;
 import com.plectix.simulator.util.Info.InfoType;
 

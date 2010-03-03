@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.simulator.KappaSystem;
-import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMap;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 import com.plectix.simulator.staticanalysis.subviews.base.AbstractionRule;
 
 public abstract class InfluenceMap {

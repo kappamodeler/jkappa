@@ -4,7 +4,7 @@ import com.plectix.simulator.interfaces.ObservableInterface;
 import com.plectix.simulator.parser.abstractmodel.perturbations.conditions.ConditionType;
 import com.plectix.simulator.simulationclasses.perturbations.util.LinearExpression;
 import com.plectix.simulator.simulationclasses.perturbations.util.VectorObservable;
-import com.plectix.simulator.staticanalysis.Observables;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 import com.plectix.simulator.util.InequalitySign;
 
 public class SpeciesCondition implements ConditionInterface {

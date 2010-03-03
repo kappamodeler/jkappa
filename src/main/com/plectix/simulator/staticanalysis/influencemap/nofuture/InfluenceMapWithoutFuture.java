@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.plectix.simulator.staticanalysis.LinkRank;
-import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractAgent;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractLinkState;
 import com.plectix.simulator.staticanalysis.abstracting.AbstractSite;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMap;
 import com.plectix.simulator.staticanalysis.influencemap.InfluenceMap;
 import com.plectix.simulator.staticanalysis.influencemap.InfluenceMapEdge;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 import com.plectix.simulator.staticanalysis.subviews.base.AbstractAction;
 import com.plectix.simulator.staticanalysis.subviews.base.AbstractionRule;
 import com.plectix.simulator.util.NameDictionary;

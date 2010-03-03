@@ -1,7 +1,7 @@
 package com.plectix.simulator.simulationclasses.perturbations.util;
 
 import com.plectix.simulator.interfaces.ObservableInterface;
-import com.plectix.simulator.staticanalysis.Observables;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 
 public class VectorObservable implements Vector {
 	private final ObservableInterface observable;

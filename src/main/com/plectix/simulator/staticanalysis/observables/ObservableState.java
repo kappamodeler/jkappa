@@ -1,4 +1,4 @@
-package com.plectix.simulator.util;
+package com.plectix.simulator.staticanalysis.observables;
 
 public class ObservableState {
 	private static byte NO_VALUE = -1;

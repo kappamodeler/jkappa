@@ -1,7 +1,7 @@
 package com.plectix.simulator.interfaces;
 
 import com.plectix.simulator.simulator.api.steps.experiments.Pattern;
-import com.plectix.simulator.staticanalysis.Observables;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 
 /**
  * This interface describes observable component entity.

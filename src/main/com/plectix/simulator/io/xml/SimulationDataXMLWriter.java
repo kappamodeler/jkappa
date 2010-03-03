@@ -20,14 +20,14 @@ import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationClock;
 import com.plectix.simulator.simulator.SimulationData;
-import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Snapshot;
 import com.plectix.simulator.staticanalysis.SnapshotElement;
 import com.plectix.simulator.staticanalysis.StaticAnalysisException;
+import com.plectix.simulator.staticanalysis.observables.ObservableState;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 import com.plectix.simulator.staticanalysis.stories.storage.StoryStorageException;
 import com.plectix.simulator.util.DecimalFormatter;
 import com.plectix.simulator.util.Info;
-import com.plectix.simulator.util.ObservableState;
 import com.plectix.simulator.util.PlxTimer;
 import com.plectix.simulator.util.Info.InfoType;
 

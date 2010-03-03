@@ -10,6 +10,10 @@ import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.simulator.api.steps.experiments.ConnectedComponentPattern;
+import com.plectix.simulator.staticanalysis.observables.MaxStateFinder;
+import com.plectix.simulator.staticanalysis.observables.ObservableComponentsManager;
+import com.plectix.simulator.staticanalysis.observables.Observables;
+import com.plectix.simulator.staticanalysis.observables.ObservablesStatesVisitor;
 import com.plectix.simulator.util.io.PlxLogger;
 
 public class TestExperimentRunner implements ExperimentListener {
@@ -48,7 +52,7 @@ public class TestExperimentRunner implements ExperimentListener {
 	}
 
 	private final int seedValueByRunNumber(int runNo) {
-		return runNo;
+		return runNo + 1;
 	}
 	
 	@Override
@@ -60,7 +64,10 @@ public class TestExperimentRunner implements ExperimentListener {
 
 	@Override
 	public void finishedRun(int runNo, Simulator simulator) {
-		double count = simulator.getSimulationData().getKappaSystem().getObservables().getFinalComponentState(new ConnectedComponentPattern("A(r)")); 
+		Observables observables = simulator.getSimulationData().getKappaSystem().getObservables();
+		ObservableComponentsManager manager = observables.getComponentManager();
+//		double count = manager.getFinalComponentState(new ConnectedComponentPattern("A(r)"));
+		double count = manager.getMaxComponentState(new ConnectedComponentPattern("A(r)"));
 		sum = sum + count;
 	}
 	

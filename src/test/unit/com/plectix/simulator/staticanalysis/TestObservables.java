@@ -9,7 +9,8 @@ import java.util.List;
 import org.junit.Test;
 
 import com.plectix.simulator.interfaces.ObservableInterface;
-import com.plectix.simulator.util.ObservableState;
+import com.plectix.simulator.staticanalysis.observables.ObservableState;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 
 public class TestObservables {
 

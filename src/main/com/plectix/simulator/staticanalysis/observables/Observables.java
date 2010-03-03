@@ -1,4 +1,4 @@
-package com.plectix.simulator.staticanalysis;
+package com.plectix.simulator.staticanalysis.observables;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -11,7 +11,9 @@ import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableInterface;
 import com.plectix.simulator.simulator.api.steps.experiments.Pattern;
 import com.plectix.simulator.simulator.options.SimulatorArgumentsDefaultValues;
-import com.plectix.simulator.util.ObservableState;
+import com.plectix.simulator.staticanalysis.ObservableConnectedComponent;
+import com.plectix.simulator.staticanalysis.ObservableRuleComponent;
+import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.util.OutputUtils;
 
 /**
@@ -34,6 +36,7 @@ public class Observables {
 	private double timeNext;
 	private double timeSampleMin;
 	private List<ObservableInterface> componentListForXMLOutput = null;
+	private final ObservableComponentsManager componentManager = new ObservableComponentsManager(this);
 
 	/**
 	 * This method initializes CObservables within external parameters
@@ -370,22 +373,8 @@ public class Observables {
 	public void setComponentList(List<ObservableInterface> componentList) {
 		this.componentList = componentList;
 	}
-
-	public final double getFinalComponentState(String observableName) {
-		for (ObservableInterface observable : this.componentList) {
-			if (observableName.equals(observable.getName())) {
-				return observable.getLastValue();
-			}
-		}
-		return -1;
-	}
-
-	public final double getFinalComponentState(Pattern<?> pattern) {
-		for (ObservableInterface observable : this.componentList) {
-			if (observable.matches(pattern)) {
-				return observable.getLastValue();
-			}
-		}
-		return -1;
+	
+	public final ObservableComponentsManager getComponentManager() {
+		return componentManager;
 	}
 }

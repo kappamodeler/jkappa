@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.simulator.api.steps.experiments.Pattern;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 
 /**
  * This class implements observable connected component. In fact, this is connected component

@@ -18,8 +18,8 @@ import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.staticanalysis.ObservableRuleComponent;
-import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 import com.plectix.simulator.staticanalysis.stories.Stories;
 import com.plectix.simulator.util.Converter;
 

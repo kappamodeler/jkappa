@@ -11,8 +11,8 @@ import com.plectix.simulator.parser.abstractmodel.observables.ObservableRuleLine
 import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.staticanalysis.Agent;
-import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 import com.plectix.simulator.util.SpeciesManager;
 
 final class ObservablesBuilder {

@@ -33,4 +33,9 @@ public class ConnectedComponentPattern implements Pattern<ConnectedComponentInte
 	public boolean matches(String componentRepresentation) {
 		return componentStringRepresentation.equals(componentRepresentation);
 	}
+	
+	@Override
+	public final String toString() {
+		return componentStringRepresentation;
+	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableRuleInterface;
 import com.plectix.simulator.simulator.api.steps.experiments.Pattern;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 
 /**
  * This class implements rule observable. This one is the object which affected by fixed rule,

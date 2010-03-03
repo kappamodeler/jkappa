@@ -5,7 +5,7 @@ import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.api.OperationType;
-import com.plectix.simulator.staticanalysis.Observables;
+import com.plectix.simulator.staticanalysis.observables.Observables;
 import com.plectix.simulator.staticanalysis.rulecompression.RuleCompressionType;
 
 public class SolutionInitializationOperation extends AbstractOperation<KappaSystem> {
