@@ -8,10 +8,9 @@ import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorMessage;
 import com.plectix.simulator.simulator.SimulatorStatus;
 import com.plectix.simulator.simulator.api.OperationType;
-import com.plectix.simulator.simulator.api.steps.experiments.ExperimentOutput;
 import com.plectix.simulator.staticanalysis.rulecompression.RuleCompressionType;
 
-public class ExperimentWorkflow extends AbstractOperation<ExperimentOutput> {
+public class ExperimentWorkflow extends AbstractOperation<Object> {
 	private final Simulator simulator; 
 	
 	public ExperimentWorkflow(Simulator simulator) {
@@ -86,7 +85,7 @@ public class ExperimentWorkflow extends AbstractOperation<ExperimentOutput> {
 	
 	
 	@Override
-	protected ExperimentOutput performDry() throws Exception {
+	protected Object performDry() throws Exception {
 		SimulationData simulationData = simulator.getSimulationData();
 		SimulatorStatus simulatorStatus = simulator.getLatestFreezedStatus();
 		 
@@ -96,7 +95,8 @@ public class ExperimentWorkflow extends AbstractOperation<ExperimentOutput> {
 		}
 
 		simulatorStatus.setStatusMessage(SimulatorMessage.STATUS_IDLE);
-		return new ExperimentOutput(simulationData);
+		return null;
+//		return new ExperimentOutput(simulationData);
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class ExperimentWorkflow extends AbstractOperation<ExperimentOutput> {
 	}
 
 	@Override
-	protected ExperimentOutput retrievePreparedResult() throws Exception {
+	protected Object retrievePreparedResult() throws Exception {
 		return null;
 	}
 

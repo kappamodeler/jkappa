@@ -37,8 +37,8 @@ public class OperationManager {
 			defaultOperations.put(OperationType.KAPPA_FILE_LOADING, new KappaFileLoadingOperation(simulationData, args.getInputCharArray()));
 		} else {
 			// if kappa input cannot be found (i.e. simulator is not properly fed with arguments) we report error
-			if (defaultOperations.get(OperationType.KAPPA_FILE_LOADING) != null) {
-				defaultOperations.put(OperationType.KAPPA_FILE_LOADING, new ReportErrorOperation("Kappa input cannot be found"));	
+			if (defaultOperations.get(OperationType.KAPPA_FILE_LOADING) == null) {
+				defaultOperations.put(OperationType.KAPPA_FILE_LOADING, new ReportErrorOperation("Kappa input was not set"));	
 			}
 			
 			// we'll keep refreshing until success. 

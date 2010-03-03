@@ -1,5 +1,6 @@
 package com.plectix.simulator.io.xml;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -23,7 +24,10 @@ public class RuleCompressionXMLWriter {
 	private final Map<Integer, Rule> initialRulesMap = new LinkedHashMap<Integer, Rule>();
 	private final Map<Integer, Integer> associationQualitativeMap 
 			= new TreeMap<Integer, Integer>();
-	private final Set<Rule> qualitativeRules = new LinkedHashSet<Rule>();
+	
+	private final Map<RuleCompressionType, Set<Rule>> compressedRules 
+		= new LinkedHashMap<RuleCompressionType, Set<Rule>>();
+	
 	private final Map<Integer, List<Integer>> associationQualitativeBackMap
 				= new LinkedHashMap<Integer, List<Integer>>();
 	private Set<RuleCompressionType> performedCompressions;
@@ -42,11 +46,12 @@ public class RuleCompressionXMLWriter {
 		for (Rule rule : kappaSystem.getRules()) {
 			this.initialRulesMap.put(rule.getRuleId(), rule);
 		}
+		Set<Rule> rulesAfterCompression = new LinkedHashSet<Rule>();
 		for (Map.Entry<Rule, Rule> associationEntry : results.getAssociations()) {
 			int idRealRule = associationEntry.getKey().getRuleId();
 			int idCompressedRule = associationEntry.getValue().getRuleId();
 			associationQualitativeMap.put(idRealRule, idCompressedRule);
-			qualitativeRules.add(associationEntry.getValue());
+			rulesAfterCompression.add(associationEntry.getValue());
 			
 			List<Integer> list = associationQualitativeBackMap.get(idCompressedRule);
 			if (list == null) {
@@ -55,15 +60,17 @@ public class RuleCompressionXMLWriter {
 			}
 			list.add(idRealRule);
 		}
+		compressedRules.put(results.getCompressionType(), rulesAfterCompression);
 	}
 	
 	public void writeToXML(OurXMLWriter xtw, boolean isOcamlStyleObsName)
 			throws XMLStreamException {
 		writeToXMLInitialRules(xtw,isOcamlStyleObsName);
 		for (Map.Entry<CompressionResults, MainSubViews> entry : this.compressionResults.entrySet()) {
+			RuleCompressionType currentCompressionType = entry.getKey().getCompressionType();
 			xtw.writeStartElement("RuleSet");
-			xtw.writeAttribute("Name", entry.getKey().getCompressionType() + " compression");
-			writeToXMLQualitativeRules(xtw, isOcamlStyleObsName, entry.getValue());
+			xtw.writeAttribute("Name", currentCompressionType + " compression");
+			writeToXMLQualitativeRules(xtw, isOcamlStyleObsName, entry.getValue(), currentCompressionType);
 			writeToXMLAssociationQualitativeMap(xtw);
 
 			xtw.writeEndElement();
@@ -104,9 +111,9 @@ public class RuleCompressionXMLWriter {
 	
 	
 	private void writeToXMLQualitativeRules(OurXMLWriter xtw, boolean isOcamlStyleObsName, 
-			MainSubViews subViews)
+			MainSubViews subViews, RuleCompressionType currentCompressionType)
 	throws XMLStreamException {
-		for (Rule rule : qualitativeRules) {
+		for (Rule rule : compressedRules.get(currentCompressionType)) {
 			xtw.writeStartElement("Rule");
 			Integer id = rule.getRuleId();
 			xtw.writeAttribute("Id", id.toString());

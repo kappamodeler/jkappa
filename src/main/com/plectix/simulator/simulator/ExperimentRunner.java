@@ -4,7 +4,6 @@ import org.apache.commons.cli.ParseException;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.controller.SimulatorInputData;
-import com.plectix.simulator.simulator.api.steps.experiments.ExperimentOutput;
 import com.plectix.simulator.util.io.PlxLogger;
 
 public class ExperimentRunner implements ExperimentListener {
@@ -46,7 +45,7 @@ public class ExperimentRunner implements ExperimentListener {
 	}
 
 	@Override
-	public void finishedRun(int runNo, ExperimentOutput experimentOutput) {
+	public void finishedRun(int runNo, Simulator simulator) {
 		int count = 0;  // TODO: Get the count for A(r)
 		sum = sum + count;
 	}

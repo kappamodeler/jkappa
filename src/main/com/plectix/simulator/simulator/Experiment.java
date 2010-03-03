@@ -5,7 +5,6 @@ import com.plectix.simulator.simulator.api.steps.ExperimentWorkflow;
 import com.plectix.simulator.simulator.api.steps.KappaModelBuildingOperation;
 import com.plectix.simulator.simulator.api.steps.OperationManager;
 import com.plectix.simulator.simulator.api.steps.SimulatorInitializationOperation;
-import com.plectix.simulator.simulator.api.steps.experiments.ExperimentOutput;
 
 public class Experiment {
 	private Simulator simulator = new Simulator();
@@ -28,10 +27,10 @@ public class Experiment {
                 }
                 
                 // run the simulator
-                ExperimentOutput output = manager.perform(new ExperimentWorkflow(simulator));
+                manager.perform(new ExperimentWorkflow(simulator));
                 
                 if (experimentListener != null) {
-                	experimentListener.finishedRun(runNo, output);   // the listener processes the results here...
+                	experimentListener.finishedRun(runNo, simulator);   // the listener processes the results here...
                 }
                 
                 // reset the solution, observables, etc. in the simulator but not the kappa file, keep that in memory...

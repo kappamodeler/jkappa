@@ -21,6 +21,13 @@ public abstract class SimulationDataProcessor {
 		}
 	}
 	
+	protected final void setRuleRate(String ruleName, double rate) {
+		Rule rule = simulationData.getKappaSystem().getRuleByName(ruleName);
+		if (rule != null) {
+			rule.setRuleRate(rate);
+		}
+	}
+	
 	protected final void incRuleRate(RulePattern pattern, double additionalRate) { 
 		ModelRule modelRule = simulationData.getInitialModel().getRuleByPattern(pattern);
 		if (modelRule != null) {

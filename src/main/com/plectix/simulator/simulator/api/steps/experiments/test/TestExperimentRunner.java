@@ -10,7 +10,6 @@ import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.simulator.api.steps.experiments.ConnectedComponentPattern;
-import com.plectix.simulator.simulator.api.steps.experiments.ExperimentOutput;
 import com.plectix.simulator.util.io.PlxLogger;
 
 public class TestExperimentRunner implements ExperimentListener {
@@ -48,15 +47,20 @@ public class TestExperimentRunner implements ExperimentListener {
 		}
 	}
 
+	private final int seedValueByRunNumber(int runNo) {
+		return runNo;
+	}
+	
 	@Override
 	public void startingRun(int runNo, Simulator simulator) throws Exception {
 		// TODO: Create methods to change important simulation parameters such as seed, rescale, time/event option, operation mode, etc.
 		// TODO: simulatorInputData.getSimulationArguments().setSeed(i+1);
+		simulator.getSimulationData().getSimulationArguments().setSeed(this.seedValueByRunNumber(runNo));
 	}
 
 	@Override
-	public void finishedRun(int runNo, ExperimentOutput experimentOutput) {
-		double count = experimentOutput.getObservableFinalState(new ConnectedComponentPattern("A(r)"));  // TODO: Get the count for A(r)
+	public void finishedRun(int runNo, Simulator simulator) {
+		double count = simulator.getSimulationData().getKappaSystem().getObservables().getFinalComponentState(new ConnectedComponentPattern("A(r)")); 
 		sum = sum + count;
 	}
 	

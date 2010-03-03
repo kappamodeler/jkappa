@@ -701,4 +701,8 @@ public class SimulationArguments {
 		}
 		return counter == nonDefaultsCounter;
 	}
+
+	public void setSeed(int seed) {
+		this.addUncheckedParameter(SEED, new SimulatorParameter<Integer>(seed));
+	}
 }
