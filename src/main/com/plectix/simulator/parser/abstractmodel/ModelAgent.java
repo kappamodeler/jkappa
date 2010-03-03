@@ -27,7 +27,7 @@ public final class ModelAgent extends NamedEntity implements Comparable<ModelAge
 	}
 
 	public final int compareTo(ModelAgent agent) {
-		return name.compareTo(agent.name);
+		return this.toString().compareTo(agent.toString());
 	}
 	
 	//-------------------------------toString-----------------

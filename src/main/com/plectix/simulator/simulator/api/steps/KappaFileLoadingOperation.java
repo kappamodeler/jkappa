@@ -13,9 +13,9 @@ import com.plectix.simulator.simulator.KappaSystem;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.api.OperationType;
+import com.plectix.simulator.simulator.api.SimulatorState;
 import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.staticanalysis.contactmap.ContactMapMode;
-import com.plectix.simulator.util.Info.InfoType;
 
 public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 	private final SimulationData simulationData;
@@ -34,6 +34,13 @@ public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 		this.simulationData = simulationData;
 		simulationData.getSimulationArguments().setInputCharArray(inputCharArray);
 		charKappaInput = inputCharArray;
+	}
+	
+	public KappaFileLoadingOperation(SimulationData simulationData) {
+		super(simulationData, OperationType.KAPPA_FILE_LOADING);
+		this.simulationData = simulationData;
+		this.kappaFileId = simulationData.getSimulationArguments().getInputFileName();
+		this.charKappaInput = simulationData.getSimulationArguments().getInputCharArray();
 	}
 	
 	protected KappaFile performDry() throws RuntimeException,
@@ -58,9 +65,8 @@ public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 		}
 
 		KappaFileReader kappaFileReader = null;
-		String inputFileName = kappaFileId;
-		if (inputFileName != null) {
-			kappaFileReader = new KappaFileReader(inputFileName, true);
+		if (kappaFileId != null) {
+			kappaFileReader = new KappaFileReader(kappaFileId, true);
 		} else if (charKappaInput != null){
 			kappaFileReader = new KappaFileReader(charKappaInput);
 		} else {
@@ -74,8 +80,11 @@ public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 		}
 		KappaFile kappaFile = kappaFileReader.parse();
 	
-		simulationData.setKappaFile(kappaFile);
-			
+		simulationData.setKappaInput(kappaFile);
+		
+		if (kappaFileId != null) {
+			simulationData.getKappaSystem().getState().setLatestLoadedFileName(kappaFileId);
+		}
 		return kappaFile;
 	}
 
@@ -104,7 +113,13 @@ public class KappaFileLoadingOperation extends AbstractOperation<KappaFile> {
 
 	@Override
 	protected boolean noNeedToPerform() {
-		return simulationData.getKappaInput() != null;
+		SimulatorState state = simulationData.getKappaSystem().getState();
+		String latestFile = state.getLatestLoadedFileName();
+		if (latestFile == null) {
+			return false;
+		}
+		return simulationData.getKappaInput() != null
+			&& state.getLatestLoadedFileName().equals(simulationData.getSimulationArguments().getInputFileName());
 	}
 
 	@Override

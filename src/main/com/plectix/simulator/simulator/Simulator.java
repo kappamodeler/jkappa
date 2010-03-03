@@ -88,17 +88,17 @@ public final class Simulator implements SimulatorInterface {
 	public final void run(SimulatorInputData simulatorInputData)
 			throws Exception {
 		OperationManager manager = simulationData.getKappaSystem().getOperationManager();
-		manager.performSequentially(new CommandLineDefinedWorkflow(this, simulatorInputData));
+		manager.perform(new CommandLineDefinedWorkflow(this, simulatorInputData));
 	}
 
 	public final void runSimulation() throws Exception {
 		OperationManager manager = simulationData.getKappaSystem().getOperationManager();
-		manager.performSequentially(new SimulationOperation(this));
+		manager.perform(new SimulationOperation(this));
 	}
 
 	public final void runStories() throws Exception {
 		OperationManager manager = simulationData.getKappaSystem().getOperationManager();
-		manager.performSequentially(new StoriesComputationOperation(this));
+		manager.perform(new StoriesComputationOperation(this));
 	}
 	
 	/**
@@ -110,7 +110,7 @@ public final class Simulator implements SimulatorInterface {
 	public final void initializeKappaSystem() throws Exception {
 		simulatorStatus.setStatusMessage(SimulatorMessage.STATUS_INITIALIZING);
 		simulationData.getKappaSystem().getOperationManager()
-				.performSequentially(new SolutionInitializationOperation(simulationData)); 
+				.perform(new SolutionInitializationOperation(simulationData)); 
 	}
 	
 

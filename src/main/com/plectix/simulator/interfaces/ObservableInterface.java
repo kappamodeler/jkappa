@@ -1,5 +1,6 @@
 package com.plectix.simulator.interfaces;
 
+import com.plectix.simulator.simulator.api.steps.experiments.Pattern;
 import com.plectix.simulator.staticanalysis.Observables;
 
 /**
@@ -77,4 +78,11 @@ public interface ObservableInterface {
 	 * otherwise <tt>false</tt> 
 	 */
 	public boolean isUnique();
+	
+	/**
+	 * Returns <tt>true</tt> if and only if this observable matches given pattern
+	 * @param pattern pattern to match
+	 * @return
+	 */
+	public boolean matches(Pattern<?> pattern);
 }

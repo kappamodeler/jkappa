@@ -13,6 +13,13 @@ public class SimulatorState {
 	private boolean kappaFileCompiled = false;
 	private SimulationType latestSimulationType = SimulationType.NONE;
 
+	private String latestCompiledKappaFileName = null;
+	private char[] latestCompiledKappaInputArray = null;
+
+	private boolean kappaModelCreated = false;
+
+	private String latestLoadedKappaFileName = null;
+
 	public SimulatorState(SimulationData simulationData) {
 		this.simulationData = simulationData;
 	}
@@ -62,11 +69,36 @@ public class SimulatorState {
 		return simulationData.getKappaSystem();
 	}
 
-	public void setKappaFileCompilationStatus(boolean kappaFileCompiled) {
-		this.kappaFileCompiled = kappaFileCompiled;
+	public void setKappaFileCompiled() {
+		this.kappaFileCompiled = true;
+		this.latestCompiledKappaFileName = simulationData.getSimulationArguments().getInputFileName();
+		this.latestCompiledKappaInputArray = simulationData.getSimulationArguments().getInputCharArray();
 	}
 
 	public boolean isKappaFileCompiled() {
-		return kappaFileCompiled;
+		if (this.latestCompiledKappaFileName != null) {
+			String currentFileName = simulationData.getSimulationArguments().getInputFileName();
+			return kappaFileCompiled && this.latestCompiledKappaFileName.equals(currentFileName);	
+		} else if (this.latestCompiledKappaInputArray != null) {
+			char[] currentInputArray = simulationData.getSimulationArguments().getInputCharArray();
+			return kappaFileCompiled && this.latestCompiledKappaInputArray.equals(currentInputArray);	
+		}
+		return false;
+	}
+
+	public void setKappaModelCreationStatus(boolean b) {
+		kappaModelCreated = b;
+	}
+	
+	public boolean isKappaModelCreated() {
+		return this.kappaModelCreated;
+	}
+
+	public String getLatestLoadedFileName() {
+		return this.latestLoadedKappaFileName ;
+	}
+	
+	public void setLatestLoadedFileName(String latestLoadedFileName) {
+		this.latestLoadedKappaFileName = latestLoadedFileName;
 	}
 }

@@ -8,5 +8,16 @@ public class SimulatorRenewer {
 		simulator.getSimulationData().clearAll();
 		new SimulationDataReader(simulator.getSimulationData()).readAndCompile();
 		simulator.initializeKappaSystem();
+		
+//		SimulationData simulationData = simulator.getSimulationData();
+//		simulationData.clearAll();
+//		System.out.println("----------------start----------------------");
+//		OperationManager manager = simulationData.getKappaSystem().getOperationManager();
+//		manager.performSequentially(new KappaFileLoadingOperation(simulationData));
+//		manager.perform(new KappaModelBuildingOperation(simulationData));
+//		System.out.println("----------------finishlol----------------------");
+//		manager.perform(new KappaFileCompilationOperation(simulationData));
+//		manager.perform(new SolutionInitializationOperation(simulationData));
+		
 	}
 }

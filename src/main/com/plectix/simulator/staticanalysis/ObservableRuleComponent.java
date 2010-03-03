@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableRuleInterface;
+import com.plectix.simulator.simulator.api.steps.experiments.Pattern;
 
 /**
  * This class implements rule observable. This one is the object which affected by fixed rule,
@@ -92,5 +93,10 @@ public final class ObservableRuleComponent implements ObservableRuleInterface {
 	@Override
 	public double getLastValue() {
 		return lastState;
+	}
+
+	@Override
+	public boolean matches(Pattern<?> pattern) {
+		return pattern.matches(this.rule.getCanonicalRuleString());
 	}
 }

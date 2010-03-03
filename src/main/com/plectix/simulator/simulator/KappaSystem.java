@@ -21,6 +21,7 @@ import com.plectix.simulator.simulationclasses.probability.WeightedItemSelector;
 import com.plectix.simulator.simulator.api.SimulatorState;
 import com.plectix.simulator.simulator.api.steps.OperationManager;
 import com.plectix.simulator.simulator.api.steps.SolutionInitializationOperation;
+import com.plectix.simulator.simulator.api.steps.experiments.RulePattern;
 import com.plectix.simulator.staticanalysis.Agent;
 import com.plectix.simulator.staticanalysis.Observables;
 import com.plectix.simulator.staticanalysis.Rule;
@@ -238,11 +239,32 @@ public final class KappaSystem implements KappaSystemInterface {
 	 * @see
 	 * com.plectix.simulator.simulator.KappaSystemInterface#getRuleById(int)
 	 */
+	//TODO we have three similar methods here! It is time for refactoring =)
 	public final Rule getRuleById(int ruleId) {
 		// TODO: We are scanning a list linearly, can't we use a LinkedHashMap
 		// here?
 		for (Rule rule : orderedRulesList) {
 			if (rule.getRuleId() == ruleId) {
+				return rule;
+			}
+		}
+		return null;
+	}
+	
+	//TODO we have three similar methods here! It is time for refactoring =)
+	public final Rule getRuleByName(String ruleName) {
+		for (Rule rule : orderedRulesList) {
+			if (ruleName.equals(rule.getName())) {
+				return rule;
+			}
+		}
+		return null;
+	}
+	
+	//TODO we have three similar methods here! It is time for refactoring =)
+	public final Rule getRuleByPattern(RulePattern pattern) {
+		for (Rule rule : orderedRulesList) {
+			if (pattern.matches(rule)) {
 				return rule;
 			}
 		}

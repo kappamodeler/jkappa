@@ -1,13 +1,11 @@
 package com.plectix.simulator.simulator.api;
 
 import com.plectix.simulator.controller.SimulatorInputData;
-import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.api.steps.ContactMapComputationOperation;
 import com.plectix.simulator.simulator.api.steps.DeadRuleDetectionOperation;
 import com.plectix.simulator.simulator.api.steps.InfluenceMapComputationOperation;
 import com.plectix.simulator.simulator.api.steps.InjectionBuildingOperation;
-import com.plectix.simulator.simulator.api.steps.KappaFileCompilationOperation;
 import com.plectix.simulator.simulator.api.steps.KappaFileLoadingOperation;
 import com.plectix.simulator.simulator.api.steps.LocalViewsComputationOperation;
 import com.plectix.simulator.simulator.api.steps.OperationManager;
@@ -21,7 +19,6 @@ import com.plectix.simulator.simulator.api.steps.StoriesComputationOperation;
 import com.plectix.simulator.simulator.api.steps.SubviewsComputationOperation;
 import com.plectix.simulator.simulator.api.steps.XMLOutputOperation;
 import com.plectix.simulator.staticanalysis.rulecompression.RuleCompressionType;
-import com.plectix.simulator.util.Info.InfoType;
 
 public class SimulatorAPI implements SimulatorAPIInterface {
 	@Override
@@ -36,11 +33,11 @@ public class SimulatorAPI implements SimulatorAPIInterface {
 		manager.perform(new InjectionBuildingOperation(simulator.getSimulationData().getKappaSystem()));
 	}
 
-	@Override
-	public void compileKappaFile(Simulator simulator, KappaFile kappaInput) throws Exception {
-		OperationManager manager = simulator.getSimulationData().getKappaSystem().getOperationManager();
-		manager.perform(new KappaFileCompilationOperation(simulator.getSimulationData(), kappaInput, InfoType.OUTPUT));
-	}
+//	@Override
+//	public void compileKappaFile(Simulator simulator, KappaFile kappaInput) throws Exception {
+//		OperationManager manager = simulator.getSimulationData().getKappaSystem().getOperationManager();
+//		manager.perform(new KappaFileCompilationOperation(simulator.getSimulationData(), kappaInput, InfoType.OUTPUT));
+//	}
 
 	@Override
 	public void compressRulesQuality(Simulator simulator) throws Exception {

@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import com.plectix.simulator.BuildConstants;
 import com.plectix.simulator.io.ConsoleOutputManager;
 import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.SimulationDataFormatException;
@@ -30,6 +29,7 @@ public final class SimulationData {
 	private final ConsoleOutputManager consoleOutputManager = new ConsoleOutputManager(this);
 	
 	private KappaFile kappaInput = null;
+	
 	/**
 	 * We'll keep this one to perform faster reset
 	 */
@@ -214,7 +214,7 @@ public final class SimulationData {
 		return kappaInput;
 	}
 
-	public final void setKappaFile(KappaFile kappaFile) {
+	public final void setKappaInput(KappaFile kappaFile) {
 		kappaInput = kappaFile;
 	}
 }

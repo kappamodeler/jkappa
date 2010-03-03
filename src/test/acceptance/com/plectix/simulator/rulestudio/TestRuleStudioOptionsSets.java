@@ -305,7 +305,7 @@ public class TestRuleStudioOptionsSets {
 		KappaSystem kappaSystem = simulator.getSimulationData().getKappaSystem();
 		OperationManager manager = kappaSystem.getOperationManager();
 		
-		manager.performSequentially(new CommandLineDefinedWorkflow(simulator, inputData));
+		manager.perform(new CommandLineDefinedWorkflow(simulator, inputData));
 		return kappaSystem;
 	}
 }

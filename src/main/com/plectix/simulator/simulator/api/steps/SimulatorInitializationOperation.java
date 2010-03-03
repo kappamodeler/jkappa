@@ -1,19 +1,12 @@
 package com.plectix.simulator.simulator.api.steps;
 
-import java.io.PrintStream;
-import java.io.PrintWriter;
-
-import org.apache.commons.cli.HelpFormatter;
-
 import com.plectix.simulator.BuildConstants;
-import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.io.ConsoleOutputManager;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.api.OperationType;
-import com.plectix.simulator.simulator.options.OptionsSetSingleton;
 import com.plectix.simulator.util.Info.InfoType;
 
 public class SimulatorInitializationOperation extends AbstractOperation<Simulator> {

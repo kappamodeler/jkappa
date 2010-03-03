@@ -39,6 +39,9 @@ public class TestParser extends TestRunner {
 			throws Exception {
 		PrintWriter pw = null;
 		try {
+//			SimulationData simulationData = new SimulationData();
+//			OperationManager manager = new OperationManager(simulationData.getKappaSystem());
+//			KappaFile kf = manager.perform(new KappaFileLoadingOperation(simulationData));
 			KappaFile kf = (new KappaFileReader(sourceDir + fileName, true)).parse();
 			SimulationArguments args = Initializator
 					.prepareDefaultArguments(sourceDir + fileName, null);

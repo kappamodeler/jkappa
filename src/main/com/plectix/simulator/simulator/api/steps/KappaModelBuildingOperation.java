@@ -1,43 +1,44 @@
 package com.plectix.simulator.simulator.api.steps;
 
 import com.plectix.simulator.io.ConsoleOutputManager;
+import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.parser.abstractmodel.KappaModel;
-import com.plectix.simulator.parser.builders.KappaSystemBuilder;
-import com.plectix.simulator.simulator.KappaSystem;
+import com.plectix.simulator.parser.abstractmodel.reader.KappaModelCreator;
 import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
 import com.plectix.simulator.simulator.api.OperationType;
 import com.plectix.simulator.simulator.api.SimulatorState;
+import com.plectix.simulator.util.Info.InfoType;
 
-public class KappaFileCompilationOperation extends AbstractOperation<KappaSystem> {
+public class KappaModelBuildingOperation extends AbstractOperation<KappaModel> {
 	private final SimulationData simulationData;
-	private KappaModel kappaModel = null;
+	private KappaFile kappaFile;
 		
-	public KappaFileCompilationOperation(SimulationData simulationData, KappaModel kappaModel) {
-		super(simulationData, OperationType.KAPPA_FILE_COMPILATION);
+	public KappaModelBuildingOperation(SimulationData simulationData, KappaFile kappaFile, InfoType infoType) {
+		super(simulationData, OperationType.KAPPA_MODEL_BUILDING);
 		this.simulationData = simulationData;
-		this.kappaModel = kappaModel;
+		this.kappaFile = kappaFile;
 	}
 	
-	public KappaFileCompilationOperation(SimulationData simulationData) {
-		super(simulationData, OperationType.KAPPA_FILE_COMPILATION);
+	public KappaModelBuildingOperation(SimulationData simulationData) {
+		super(simulationData, OperationType.KAPPA_MODEL_BUILDING);
 		this.simulationData = simulationData;
 	}
 	
-	protected KappaSystem performDry() throws SimulationDataFormatException {
-		if (kappaModel == null) {
-			kappaModel = simulationData.getInitialModel();
-			if (kappaModel == null) {
+	protected KappaModel performDry() throws SimulationDataFormatException {
+		if (kappaFile == null) {
+			if (simulationData.getKappaInput() == null) {
 				throw new NoKappaInputException();
+			} else {
+				this.kappaFile = simulationData.getKappaInput();
 			}
 		}
-		
 		try {
-			KappaSystem kappaSystem = new KappaSystemBuilder(simulationData).build(kappaModel);
-			kappaSystem.getState().setKappaFileCompiled();
-			return kappaSystem;
+			KappaModel model = (new KappaModelCreator(simulationData.getSimulationArguments())).createModel(kappaFile);
+			simulationData.setInitialModel(model);
+			return model;
 		} catch (SimulationDataFormatException e) {
 			ConsoleOutputManager console = simulationData
 					.getConsoleOutputManager();
@@ -47,7 +48,7 @@ public class KappaFileCompilationOperation extends AbstractOperation<KappaSystem
 			throw e;
 			//TODO HANDLE THIS ERROR
 			/*
-			 * return new CompiledkappaModel(kappaModel); + exceptions!
+			 * return new CompiledKappaFile(kappaFile); + exceptions!
 			 */
 		}
 	}
@@ -57,12 +58,12 @@ public class KappaFileCompilationOperation extends AbstractOperation<KappaSystem
 		SimulatorState state = simulationData.getKappaSystem().getState();
 		SimulationType latestType = state.getLatestSimulationType();
 		SimulationType currentType = simulationData.getSimulationArguments().getSimulationType();
-		return state.isKappaFileCompiled() && latestType.hasSimilarCompilationStage(currentType);
+		return simulationData.getInitialModel() != null && latestType.hasSimilarCompilationStage(currentType);
 	}
 
 	@Override
-	protected KappaSystem retrievePreparedResult() {
-		return simulationData.getKappaSystem();
+	protected KappaModel retrievePreparedResult() {
+		return simulationData.getInitialModel();
 	}
 
 }

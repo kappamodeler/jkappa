@@ -26,7 +26,6 @@ import com.plectix.simulator.controller.SimulatorStatusInterface;
 import com.plectix.simulator.gui.lib.GridBagPanel;
 import com.plectix.simulator.gui.lib.UIProperties;
 import com.plectix.simulator.simulator.DefaultSimulatorFactory;
-import com.plectix.simulator.simulator.SimulationArguments;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.simulator.options.SimulatorArgumentsDefaultValues;
 import com.plectix.simulator.streaming.LiveData;

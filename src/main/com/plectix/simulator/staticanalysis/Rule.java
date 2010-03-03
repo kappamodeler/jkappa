@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
@@ -860,6 +862,33 @@ public class Rule implements WeightedItem {
 		} else {
 			st.append(rightHandside);
 		}
+		return st.toString();
+	}
+	
+	public final String getCanonicalRuleString() {
+		Set<String> leftHandSideSorted = new TreeSet<String>();
+		if (this.getLeftHandSide() != null) {
+			for (ConnectedComponentInterface component : this.getLeftHandSide()) {
+				leftHandSideSorted.add(component.getSmilesString());
+			}
+		}
+		
+		Set<String> rightHandSideSorted = new TreeSet<String>();
+		if (this.getRightHandSide() != null) {
+			for (ConnectedComponentInterface component : this.getRightHandSide()) {
+				rightHandSideSorted.add(component.getSmilesString());
+			}
+		}
+		
+		StringBuffer st = new StringBuffer();
+		for (String leftComponent : leftHandSideSorted) {
+			st.append(leftComponent + " ");
+		}
+		st.append("->");
+		for (String rightComponent : rightHandSideSorted) {
+			st.append(" " + rightComponent);
+		}
+		
 		return st.toString();
 	}
 }

@@ -40,7 +40,7 @@ public class TestENG413 {
 		OperationManager manager = kappaSystem.getOperationManager();
 		CommandLineDefinedWorkflow operation = new CommandLineDefinedWorkflow(simulator, inputData);
 		operation.turnOffXMLOutput();
-		manager.performSequentially(operation);
+		manager.perform(operation);
 		
 		return kappaSystem;
 	}

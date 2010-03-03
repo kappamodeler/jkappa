@@ -1,7 +1,6 @@
 package com.plectix.simulator.simulator.api;
 
 import com.plectix.simulator.controller.SimulatorInputData;
-import com.plectix.simulator.parser.KappaFile;
 import com.plectix.simulator.simulator.Simulator;
 
 /**
@@ -20,7 +19,7 @@ public interface SimulatorAPIInterface {
 	
 	public void buildInjections(Simulator simulator) throws Exception;
 	
-	public void compileKappaFile(Simulator simulator, KappaFile kappaInput) throws Exception;
+//	public void compileKappaFile(Simulator simulator, KappaFile kappaInput) throws Exception;
 	
 	public void loadKappaFile(Simulator simulator, String kappaInputId) throws Exception;
 	

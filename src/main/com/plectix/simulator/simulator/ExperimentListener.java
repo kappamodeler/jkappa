@@ -3,6 +3,8 @@
  */
 package com.plectix.simulator.simulator;
 
+import com.plectix.simulator.simulator.api.steps.experiments.ExperimentOutput;
+
 public interface ExperimentListener {
 
 	/**
@@ -12,8 +14,9 @@ public interface ExperimentListener {
 	 * 
 	 * @param runNo the run number the simulator is going to start 
 	 * @param simulator
+	 * @throws Exception 
 	 */
-	public void startingRun(int runNo, Simulator simulator);
+	public void startingRun(int runNo, Simulator simulator) throws Exception;
 	
 	/**
 	 * Called after a simulation run has ended.
@@ -23,7 +26,8 @@ public interface ExperimentListener {
 	 * @param runNo the run number the simulator has just finished
 	 * @param simulator
 	 */
-	public void finishedRun(int runNo, Simulator simulator);
+	public void finishedRun(int runNo, ExperimentOutput experimentData);
+//	void finishedRun(int runNo, Simulator simulator);
 
 	/**
 	 * Called when all simulation runs are ended.
@@ -35,5 +39,5 @@ public interface ExperimentListener {
 	 * @param simulator
 	 */
 	public void finishedAll(int runNo, Simulator simulator);
-	
+
 }

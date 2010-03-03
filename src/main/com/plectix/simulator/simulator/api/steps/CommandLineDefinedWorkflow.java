@@ -115,7 +115,7 @@ public class CommandLineDefinedWorkflow extends AbstractOperation<File> {
 		OperationManager manager = simulationData.getKappaSystem().getOperationManager();
 
 		// feeding simulator with simulation arguments
-		manager.performSequentially(new SimulatorInitializationOperation(simulator, simulatorInputData));
+		manager.perform(new SimulatorInitializationOperation(simulator, simulatorInputData));
 		
 		// reading and compiling kappa file
 //		this.readAndCompileKappaInput();
@@ -155,7 +155,7 @@ public class CommandLineDefinedWorkflow extends AbstractOperation<File> {
 		SimulationData simulationData = simulator.getSimulationData();
 		OperationManager manager = simulationData.getKappaSystem().getOperationManager();
 
-		manager.performSequentially(new SimulatorInitializationOperation(simulator, simulatorInputData));
+		manager.perform(new SimulatorInitializationOperation(simulator, simulatorInputData));
 		
 		return this.prepareOperations(simulationData.getSimulationArguments());
 	}

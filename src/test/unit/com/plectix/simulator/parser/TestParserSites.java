@@ -3,8 +3,8 @@ package com.plectix.simulator.parser;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Collection;
 
 import org.apache.commons.cli.ParseException;
@@ -77,21 +77,23 @@ public class TestParserSites extends DirectoryTestsRunner {
 	}
 
 	@Test
-	public void test() throws SimulationDataFormatException, IOException {
+	public void test() throws Exception {
 		KappaFileReader kappaFileReader = null;
 
 		try {
-			kappaFileReader = new KappaFileReader(testDirectory + "/"
+			kappaFileReader = new KappaFileReader(testDirectory + File.separator
 					+ fileName, true);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		KappaFile kappaFile;
-
-		kappaFile = kappaFileReader.parse();
-
+		KappaFile kappaFile = kappaFileReader.parse();
+		
+//		SimulationData simulationData = new SimulationData();
+//		OperationManager manager = new OperationManager(simulationData.getKappaSystem());
+//		KappaFile kappaFile = manager.perform(new KappaFileLoadingOperation(simulationData));
+		
 		try {
 			KappaModel model = new KappaModelCreator(args)
 					.createModel(kappaFile);

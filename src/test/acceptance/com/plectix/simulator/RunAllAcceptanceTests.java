@@ -12,7 +12,6 @@ import com.plectix.simulator.parser.RunParserTests;
 import com.plectix.simulator.parser.TestParserSites;
 import com.plectix.simulator.perturbations.RunPerturbationsTests;
 import com.plectix.simulator.ruleapplication.RunActionTest;
-import com.plectix.simulator.rulestudio.TestRuleStudioOptionsSets;
 import com.plectix.simulator.simulationclasses.probability.TestWeightedItemSelector;
 import com.plectix.simulator.smoke.SmokeTestMain;
 import com.plectix.simulator.speciesenumeration.TestEnumOfSpecies;

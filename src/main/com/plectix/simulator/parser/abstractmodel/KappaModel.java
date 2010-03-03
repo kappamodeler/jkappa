@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.plectix.simulator.parser.abstractmodel.observables.ModelObservables;
+import com.plectix.simulator.simulator.api.steps.experiments.RulePattern;
 import com.plectix.simulator.util.IdGenerator;
 
 public final class KappaModel {
@@ -82,5 +83,14 @@ public final class KappaModel {
 			sb.append(perturbation + "\n");
 		}
 		return sb.toString();
+	}
+
+	public ModelRule getRuleByPattern(RulePattern pattern) {
+		for (ModelRule modelRule : rules) {
+			if (pattern.matches(modelRule)) {
+				return modelRule;
+			}
+		}
+		return null;
 	}
 }

@@ -9,7 +9,7 @@ import java.util.Set;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableInterface;
-import com.plectix.simulator.simulator.SimulationArguments;
+import com.plectix.simulator.simulator.api.steps.experiments.Pattern;
 import com.plectix.simulator.simulator.options.SimulatorArgumentsDefaultValues;
 import com.plectix.simulator.util.ObservableState;
 import com.plectix.simulator.util.OutputUtils;
@@ -86,27 +86,6 @@ public class Observables {
 		componentListForXMLOutput = null;
 		componentList.clear();
 		connectedComponentList.clear();
-	}
-
-	/**
-	 * This method returns minimal difference between two time points in graphic
-	 * for observables, i.e. precision.
-	 * 
-	 * @return minimal difference between two time points in graphic for
-	 *         observables.
-	 */
-	public final double getTimeSampleMin() {
-		return timeSampleMin;
-	}
-
-	/**
-	 * This method returns list of time-points on "x" axis in graphic for
-	 * observables.
-	 * 
-	 * @return list of time-points on "x" axis in graphic for observables.
-	 */
-	public final List<ObservableState> getCountTimeList() {
-		return countTimeList;
 	}
 
 	/**
@@ -318,6 +297,27 @@ public class Observables {
 
 	// ------------------------GETTERS AND SETTERS------------------------------
 
+	/**
+	 * This method returns minimal difference between two time points in graphic
+	 * for observables, i.e. precision.
+	 * 
+	 * @return minimal difference between two time points in graphic for
+	 *         observables.
+	 */
+	public final double getTimeSampleMin() {
+		return timeSampleMin;
+	}
+
+	/**
+	 * This method returns list of time-points on "x" axis in graphic for
+	 * observables.
+	 * 
+	 * @return list of time-points on "x" axis in graphic for observables.
+	 */
+	public final List<ObservableState> getCountTimeList() {
+		return countTimeList;
+	}
+	
 	public final List<ObservableInterface> getComponentList() {
 		return componentList;
 	}
@@ -371,4 +371,21 @@ public class Observables {
 		this.componentList = componentList;
 	}
 
+	public final double getFinalComponentState(String observableName) {
+		for (ObservableInterface observable : this.componentList) {
+			if (observableName.equals(observable.getName())) {
+				return observable.getLastValue();
+			}
+		}
+		return -1;
+	}
+
+	public final double getFinalComponentState(Pattern<?> pattern) {
+		for (ObservableInterface observable : this.componentList) {
+			if (observable.matches(pattern)) {
+				return observable.getLastValue();
+			}
+		}
+		return -1;
+	}
 }

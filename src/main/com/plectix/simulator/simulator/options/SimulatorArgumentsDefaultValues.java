@@ -1,13 +1,27 @@
 package com.plectix.simulator.simulator.options;
 
-import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.*;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.AGENTS_LIMIT;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.CLOCK_PRECISION;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.EVENT;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.INIT;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.ITERATION;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.LIVE_DATA_CONSUMER_CLASSNAME;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.LIVE_DATA_INTERVAL;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.LIVE_DATA_POINTS;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.MAX_CLASHES;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.MONITOR_PEAK_MEMORY;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.OPERATION_MODE;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.POINTS;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.RESCALE;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.SEED;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.TIME;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.WALL_CLOCK_TIME_LIMIT;
+import static com.plectix.simulator.simulator.options.SimulatorParameterizedOption.XML_SESSION_NAME;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import com.plectix.simulator.simulationclasses.solution.OperationMode;
-import com.plectix.simulator.simulator.SimulationArguments.SimulationType;
-import com.plectix.simulator.simulator.SimulationArguments.StoryCompressionMode;
-import com.plectix.simulator.util.Info.InfoType;
 
 public class SimulatorArgumentsDefaultValues {
 	public static final int NUMBER_OF_MILLISECONDS_IN_SECOND = 1000;

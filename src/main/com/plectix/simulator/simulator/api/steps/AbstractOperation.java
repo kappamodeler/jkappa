@@ -12,7 +12,7 @@ import com.plectix.simulator.util.Info.InfoType;
 @SuppressWarnings("serial")
 public abstract class AbstractOperation<E> {
 	private final OperationType type;
-	private final SimulationData simulationData;
+	final SimulationData simulationData;
 	
 	private static Set<OperationType> silentSteps = new LinkedHashSet<OperationType>() {{
 		add(OperationType.DUMP_HELP);

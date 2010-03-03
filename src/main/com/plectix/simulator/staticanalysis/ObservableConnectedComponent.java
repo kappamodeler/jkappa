@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
+import com.plectix.simulator.simulator.api.steps.experiments.Pattern;
 
 /**
  * This class implements observable connected component. In fact, this is connected component
@@ -131,5 +132,10 @@ public class ObservableConnectedComponent extends ConnectedComponent
 	@Override
 	public final double getLastValue() {
 		return lastInjectionsQuantity;
+	}
+
+	@Override
+	public boolean matches(Pattern<?> pattern) {
+		return pattern.matches(this.getSmilesString());
 	}
 }

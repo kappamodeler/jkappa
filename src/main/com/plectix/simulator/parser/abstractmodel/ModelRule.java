@@ -9,7 +9,7 @@ public final class ModelRule {
 	private final String name;
 	private final List<ModelAgent> leftHandSideAgents;
 	private final List<ModelAgent> rightHandSideAgents;
-	private final double rate;
+	private double rate;
 	private final int id;
 	private final boolean isStorify;
 	// -1 is default value
@@ -33,6 +33,10 @@ public final class ModelRule {
 
 	public final double getRate() {
 		return rate;
+	}
+	
+	public final void setRate(double newRate) {
+		this.rate = newRate;
 	}
 
 	public final List<ModelAgent> getRHS() {
