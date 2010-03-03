@@ -19,6 +19,8 @@ public class InitTestRuleCompression  extends GenerateXMLByModel {
 		options.append(SimulatorFlagOption.NO_COMPUTE_LOCAL_VIEWS);
 		options.append(SimulatorFlagOption.SHORT_CONSOLE_OUTPUT);
 		options.append(SimulatorFlagOption.NO_BUILD_INFLUENCE_MAP);
+		options.append(SimulatorFlagOption.QUALITATIVE_COMPRESSION);
+		options.append(SimulatorFlagOption.QUANTITATIVE_COMPRESSION);
 		return options;
 	}
 	

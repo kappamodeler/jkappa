@@ -117,13 +117,19 @@ public class TestRuleCompressionMap {
 		}
 	}
 	
-	private void checkSets(StringBuffer sb, boolean isFail, Set<Association> jsimAss, Set<Association> complxAss){
+	private <T> void checkSets(StringBuffer sb, boolean isFail, Set<T> jsim, Set<T> complx){
 		sb.append("\n");
-		for(Association as : jsimAss){
-			if(!complxAss.contains(as)){
+		for(T as : jsim){
+			if(!complx.contains(as)){
 				sb.append("JSim:");
 				sb.append(as);
-				sb.append("\n");
+				if(as instanceof RuleTag){
+					sb.append("\n");
+					sb.append("OSim:");
+					sb.append(getComplxRuleById(((RuleTag) as).getId()));
+					sb.append("\n---------------------------");
+				} else
+					sb.append("\n");
 //				System.err.println("JSim:" + as);
 				isFail = true;
 			}
@@ -149,20 +155,8 @@ public class TestRuleCompressionMap {
 		
 		boolean isFail = false;
 		StringBuffer sb = new StringBuffer(message);
-		sb.append("\n");
-		for(RuleTag rt : jsimQuantitativeRules){
-			if(!complxQuantitativeRules.contains(rt)){
-				sb.append("\nJSim:");
-				sb.append(rt);
-				sb.append("\n");
-				sb.append("OSim:");
-				sb.append(getComplxRuleById(rt.getId()));
-				sb.append("\n---------------------------");
-//				System.err.println("JSim:" + rt);
-				isFail = true;
-			}
-//			assertTrue(complxRules.contains(rt));
-		}
+		checkSets(sb, isFail, jsimQuantitativeRules,complxQuantitativeRules);
+		checkSets(sb, isFail, jsimQualitativeRules,complxQualitativeRules);
 		
 		if(isFail){
 			System.err.println(sb.toString());
