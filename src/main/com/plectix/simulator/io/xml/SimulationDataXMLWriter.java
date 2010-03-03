@@ -7,6 +7,7 @@ import java.io.Writer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -162,19 +163,16 @@ public class SimulationDataXMLWriter {
 							kappaSystem.getObservables().getTimeSampleMin(),
 							NUMBER_OF_SIGNIFICANT_DIGITS).replace(",", "."));
 
-			List<ObservableInterface> list = kappaSystem.getObservables()
-					.getUniqueComponentList();
-
-			for (int i = list.size() - 1; i >= 0; i--) {
-				createElement(list.get(i), writer);
-			}
-
+			List<ObservableInterface> oiObs = new LinkedList<ObservableInterface>();
+			List<ObservableInterface> oiRules = new LinkedList<ObservableInterface>();
+			initOILists(kappaSystem.getObservables().getUniqueComponentList(), oiObs, oiRules);
+			writePlots(writer,oiObs, oiRules);
 			// CData right
 			timer.startTimer();
 			writer.writeStartElement("CSV");
 			StringBuffer cdata = new StringBuffer();
 			for (int i = 0; i < obsCountTimeListSize; i++) {
-				cdata.append(appendData(kappaSystem.getObservables(), list, i));
+				cdata.append(appendData(kappaSystem.getObservables(), oiObs, oiRules, i));
 			}
 			writer.writeCData(cdata.toString());
 			writer.writeEndElement();
@@ -189,6 +187,29 @@ public class SimulationDataXMLWriter {
 		writer.writeEndDocument();
 		writer.flush();
 
+	}
+	
+	private void initOILists(List<ObservableInterface> list,
+			List<ObservableInterface> oiObs,
+			List<ObservableInterface> oiRules){
+		for (int i = list.size() - 1; i >= 0; i--) {
+			ObservableInterface oi = list.get(i); 
+			if(oi instanceof ObservableConnectedComponentInterface)
+				oiObs.add(oi);
+			else
+				oiRules.add(oi);
+		}
+	}
+	
+	private void writePlots(OurXMLWriter writer, 
+			List<ObservableInterface> oiObs,
+			List<ObservableInterface> oiRules) throws XMLStreamException{
+		for (ObservableInterface oi : oiObs) {
+			createElement(oi, writer);
+		}
+		for (ObservableInterface oi : oiRules) {
+			createElement(oi, writer);
+		}
 	}
 	
 	private final void writeSnapshotsToXML(OurXMLWriter writer)
@@ -260,7 +281,7 @@ public class SimulationDataXMLWriter {
 	}
 
 	private final StringBuffer appendData(Observables obs,
-			List<ObservableInterface> list, int index) {
+			List<ObservableInterface> oiObs, List<ObservableInterface> oiRules, int index) {
 		StringBuffer cdata = new StringBuffer();
 		SimulationArguments simulationArguments = simulationData.getSimulationArguments();
 		KappaSystem kappaSystem = simulationData.getKappaSystem();
@@ -274,13 +295,20 @@ public class SimulationDataXMLWriter {
 			cdata.append(Long.toString(state.getEvent()));
 		}
 			
-		for (int j = list.size() - 1; j >= 0; j--) {
-			cdata.append(",");
-			ObservableInterface oCC = list.get(j);
-			cdata.append(getItem(obs, index, oCC));
-		}
+		writeOItoCData(cdata, obs, oiObs, index);
+		writeOItoCData(cdata, obs, oiRules, index);
 		cdata.append("\n");
 		return cdata;
+	}
+	
+	private final void writeOItoCData(StringBuffer cdata, 
+			Observables obs,
+			List<ObservableInterface> oi,
+			int index){
+		for (ObservableInterface oCC : oi) {
+			cdata.append(",");
+			cdata.append(getItem(obs, index, oCC));
+		}
 	}
 
 	private final String getItem(Observables observables, int index,
