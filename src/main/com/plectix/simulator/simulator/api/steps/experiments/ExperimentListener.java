@@ -1,7 +1,9 @@
 /**
  * 
  */
-package com.plectix.simulator.simulator;
+package com.plectix.simulator.simulator.api.steps.experiments;
+
+import com.plectix.simulator.simulator.Simulator;
 
 
 public interface ExperimentListener {

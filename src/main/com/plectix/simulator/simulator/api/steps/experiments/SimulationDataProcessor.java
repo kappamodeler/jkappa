@@ -4,8 +4,10 @@ import com.plectix.simulator.parser.abstractmodel.ModelRule;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 
-public class SimulationDataProcessor {
+public abstract class SimulationDataProcessor {
 	private final SimulationData simulationData;
+	
+	public abstract void process();
 	
 	public SimulationDataProcessor(Simulator simulator) {
 		this.simulationData = simulator.getSimulationData();

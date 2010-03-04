@@ -1,6 +1,7 @@
-package com.plectix.simulator.simulator;
+package com.plectix.simulator.simulator.api.steps.experiments;
 
 import com.plectix.simulator.controller.SimulatorInputData;
+import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.api.steps.ExperimentWorkflow;
 import com.plectix.simulator.simulator.api.steps.KappaModelBuildingOperation;
 import com.plectix.simulator.simulator.api.steps.OperationManager;

@@ -1,15 +1,15 @@
-package com.plectix.simulator.simulator.api.steps.experiments.test;
+package com.plectix.simulator.experiments;
 
 import org.apache.commons.cli.ParseException;
 
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.controller.SimulatorInputData;
-import com.plectix.simulator.simulator.Experiment;
-import com.plectix.simulator.simulator.ExperimentListener;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
 import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.simulator.api.steps.experiments.ConnectedComponentPattern;
+import com.plectix.simulator.simulator.api.steps.experiments.Experiment;
+import com.plectix.simulator.simulator.api.steps.experiments.ExperimentListener;
 import com.plectix.simulator.simulator.api.steps.experiments.RulePattern;
 import com.plectix.simulator.simulator.api.steps.experiments.SimulationDataProcessor;
 import com.plectix.simulator.staticanalysis.observables.ObservableComponentsManager;
@@ -33,7 +33,13 @@ public class TestExperimentRunner implements ExperimentListener {
 	
 	private void run() throws Exception {
 		Experiment experiment = new Experiment(simulatorInputData);
-		TestSimulationDataProcessor simulationDataProcessor = new TestSimulationDataProcessor(experiment.getEngine());
+		
+		final double additionalRate = 0.05;
+		SimulationDataProcessor simulationDataProcessor = new SimulationDataProcessor(experiment.getEngine()){
+			public void process() {
+				this.incrementRuleRate(new RulePattern("a(x) -> a(x), a(x)"), additionalRate);
+			}
+		};
 		
 		for (int experimentNo= 0; experimentNo < 11; experimentNo++) {
 			// simulate 100 runs
@@ -44,7 +50,7 @@ public class TestExperimentRunner implements ExperimentListener {
 			// update variables:
 			sumMax = 0.0;
 			sumFinal = 0.0;
-			simulationDataProcessor.process(0.05);
+			simulationDataProcessor.process();
 			rateConstant = rateConstant + 0.05;
 		}
 	}
@@ -92,15 +98,5 @@ public class TestExperimentRunner implements ExperimentListener {
 		
 		TestExperimentRunner experimentRunner = new TestExperimentRunner(new SimulatorInputData(commandLine.getSimulationArguments()));
 		experimentRunner.run();
-	}
-	
-	public static final class TestSimulationDataProcessor extends SimulationDataProcessor {
-		public TestSimulationDataProcessor(Simulator simulator) {
-			super(simulator);
-		}
-		
-		public void process(double additionalRate) {
-			this.incrementRuleRate(new RulePattern("a(x) -> a(x), a(x)"), additionalRate);
-		}
 	}
 }
