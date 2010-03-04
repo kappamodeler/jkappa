@@ -116,7 +116,7 @@ public class SimulationDataXMLWriter {
 			new ContactMapXMLWriter(kappaSystem.getContactMap()).write(writer);
 		}
 
-		if (simulationArguments.needToBuildActivationMap()) {
+		if (simulationArguments.needToBuildInfluenceMap()) {
 			new InfluenceMapXMLWriter(kappaSystem.getInfluenceMap()).write(
 					writer,
 					kappaSystem.getRules().size(),
