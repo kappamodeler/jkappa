@@ -1,14 +1,14 @@
 package com.plectix.simulator.simulator.options;
 
 public enum SimulatorFlagOption implements SimulatorOption {
-	STORIFY("storify_please", "Tells simulator that it's time to compute some stories"),
-	SIMULATE("simulate_please", "Asks simulator to perform a simulation"),
-	COMPILE("compile_please",	"Forces simulator to compile "),
-	CONTACT_MAP("contact_map_please", "Asks simulator to build contact map"),
-	GENERATE_INFLUENCE_MAP("generate_map_please", 
+	STORIFY("storify_job", "Tells simulator that it's time to compute some stories"),
+	SIMULATE("simulate_job", "Asks simulator to perform a simulation"),
+	COMPILE("compile_job",	"Forces simulator to compile "),
+	CONTACT_MAP("contact_map_job", "Asks simulator to build contact map"),
+	GENERATE_INFLUENCE_MAP("generate_map_job", 
 			"Tells simulator to generate influence and inhibition maps"),
-	QUALITATIVE_COMPRESSION("qualitative_compression_please", "execute qualitative compression"),
-	QUANTITATIVE_COMPRESSION("quantitative_compression_please", "execute quantitative compression"),
+	QUALITATIVE_COMPRESSION("qualitative_compression_job", "execute qualitative compression"),
+	QUANTITATIVE_COMPRESSION("quantitative_compression_job", "execute quantitative compression"),
 			
 			
 	NO_SEED("no_seed", "Equivalent to --seed 0. Kept for compatibilty issue"),
