@@ -11,6 +11,6 @@ public class TestSimulationDataProcessor extends SimulationDataProcessor {
 	
 	@Override
 	public void process(int experimentNumber) {
-		this.incRuleRate(new RulePattern("A(l), A(r) -> A(l!1), A(r!1)"), experimentNumber + 1);
+		this.incrementRuleRate(new RulePattern("A(l), A(r) -> A(l!1), A(r!1)"), experimentNumber + 1);
 	}
 }
