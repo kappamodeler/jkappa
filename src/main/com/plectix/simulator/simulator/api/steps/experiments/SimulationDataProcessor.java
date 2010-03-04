@@ -5,14 +5,12 @@ import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.staticanalysis.Rule;
 
-public abstract class SimulationDataProcessor {
+public class SimulationDataProcessor {
 	private final SimulationData simulationData;
 	
 	public SimulationDataProcessor(Simulator simulator) {
 		this.simulationData = simulator.getSimulationData();
 	}
-	
-	public abstract void process(int experimentNumber);
 	
 	protected final void setRuleRate(RulePattern pattern, double rate) { 
 		Rule rule = simulationData.getKappaSystem().getRuleByPattern(pattern);
