@@ -28,7 +28,7 @@ public abstract class SimulationDataProcessor {
 		}
 	}
 	
-	protected final void incRuleRate(RulePattern pattern, double additionalRate) { 
+	protected final void incrementRuleRate(RulePattern pattern, double additionalRate) { 
 		ModelRule modelRule = simulationData.getInitialModel().getRuleByPattern(pattern);
 		if (modelRule != null) {
 			modelRule.setRate(modelRule.getRate() + additionalRate);
