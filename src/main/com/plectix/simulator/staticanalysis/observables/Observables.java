@@ -9,7 +9,6 @@ import java.util.Set;
 import com.plectix.simulator.interfaces.ConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableConnectedComponentInterface;
 import com.plectix.simulator.interfaces.ObservableInterface;
-import com.plectix.simulator.simulator.api.steps.experiments.Pattern;
 import com.plectix.simulator.simulator.options.SimulatorArgumentsDefaultValues;
 import com.plectix.simulator.staticanalysis.ObservableConnectedComponent;
 import com.plectix.simulator.staticanalysis.ObservableRuleComponent;

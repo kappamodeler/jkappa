@@ -16,6 +16,10 @@ public final class ModelSolution {
 		}
 		this.solutionLinesData.add(new SolutionLineData(agents, quant));
 	}
+	
+	public final void removeLineData(SolutionLineData lineData) {
+		this.solutionLinesData.remove(lineData);
+	}
 
 	public final List<SolutionLineData> getAgents() {
 		return solutionLinesData;

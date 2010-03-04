@@ -1,7 +1,6 @@
 package com.plectix.simulator.staticanalysis.observables;
 
 import com.plectix.simulator.interfaces.ObservableInterface;
-import com.plectix.simulator.simulator.api.steps.experiments.ConnectedComponentPattern;
 import com.plectix.simulator.simulator.api.steps.experiments.Pattern;
 
 public class ObservableComponentsManager {
