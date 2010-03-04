@@ -3,7 +3,6 @@ package com.plectix.simulator.simulator.api.steps.experiments;
 import com.plectix.simulator.parser.abstractmodel.ModelRule;
 import com.plectix.simulator.simulator.SimulationData;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.staticanalysis.Rule;
 
 public class SimulationDataProcessor {
 	private final SimulationData simulationData;
@@ -13,16 +12,16 @@ public class SimulationDataProcessor {
 	}
 	
 	protected final void setRuleRate(RulePattern pattern, double rate) { 
-		Rule rule = simulationData.getKappaSystem().getRuleByPattern(pattern);
+		ModelRule rule = simulationData.getInitialModel().getRuleByPattern(pattern);
 		if (rule != null) {
-			rule.setRuleRate(rate);
+			rule.setRate(rate);
 		}
 	}
 	
 	protected final void setRuleRate(String ruleName, double rate) {
-		Rule rule = simulationData.getKappaSystem().getRuleByName(ruleName);
+		ModelRule rule = simulationData.getInitialModel().getRuleByName(ruleName);
 		if (rule != null) {
-			rule.setRuleRate(rate);
+			rule.setRate(rate);
 		}
 	}
 	

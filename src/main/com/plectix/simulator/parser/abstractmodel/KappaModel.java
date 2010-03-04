@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.plectix.simulator.parser.abstractmodel.observables.ModelObservables;
 import com.plectix.simulator.simulator.api.steps.experiments.RulePattern;
+import com.plectix.simulator.staticanalysis.Rule;
 import com.plectix.simulator.util.IdGenerator;
 
 public final class KappaModel {
@@ -88,6 +89,15 @@ public final class KappaModel {
 	public ModelRule getRuleByPattern(RulePattern pattern) {
 		for (ModelRule modelRule : rules) {
 			if (pattern.matches(modelRule)) {
+				return modelRule;
+			}
+		}
+		return null;
+	}
+
+	public ModelRule getRuleByName(String ruleName) {
+		for (ModelRule modelRule : rules) {
+			if (ruleName.equals(modelRule.getName())) {
 				return modelRule;
 			}
 		}
