@@ -7,13 +7,12 @@ import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.api.steps.experiments.ConnectedComponentPattern;
 import com.plectix.simulator.simulator.api.steps.experiments.ExperimentRunner;
-import com.plectix.simulator.simulator.api.steps.experiments.ExperimentRunnerListener;
 import com.plectix.simulator.simulator.api.steps.experiments.RulePattern;
 import com.plectix.simulator.simulator.api.steps.experiments.SimulationDataProcessor;
 import com.plectix.simulator.staticanalysis.observables.ObservableComponentsManager;
 import com.plectix.simulator.staticanalysis.observables.Observables;
 
-public class TestExperimentRunner extends ExperimentRunner implements ExperimentRunnerListener {
+public class TestExperimentRunner extends ExperimentRunner {
 	
 	private double sumMax = 0.0;
 	private double sumFinal = 0.0;
@@ -52,14 +51,9 @@ public class TestExperimentRunner extends ExperimentRunner implements Experiment
 	}
 	
 	@Override
-	public void finishedAll(int runNo, Simulator simulator) {
+	public void finishedAllRuns(int runNo, Simulator simulator) {
 		sumFinal = sumFinal / runNo;
 		sumMax = sumMax / runNo;
-	}
-
-	@Override
-	public void startingExperiment(int numberOfExperiments, Simulator simulator) throws Exception {
-		// don't need to do anything...
 	}
 
 	@Override
@@ -84,12 +78,6 @@ public class TestExperimentRunner extends ExperimentRunner implements Experiment
 		}
 	}
 	
-	@Override
-	public void finishedAllExperiments(int numberOfExperiments, Simulator simulator) {
-		// don't need to do anything...
-	}
-
-	
 	// Command Line Arguments = "--sim debugging-link.ka --time 50.0 --operation-mode 1"  // make sure all XML and console output are turned off...
 	// New Command line arguments: "--sim data/exponentielle.ka --time 5.0 --operation-mode 1"
 	public static void main(String[] args) throws Exception {
@@ -98,7 +86,7 @@ public class TestExperimentRunner extends ExperimentRunner implements Experiment
 		SimulatorInputData simulatorInputData = SimulationMain.getSimulatorInputData(args, null);
 		
 		TestExperimentRunner experimentRunner = new TestExperimentRunner(simulatorInputData);
-		experimentRunner.run(11, 100, experimentRunner);
+		experimentRunner.run(11, 100);
 	}
 
 }

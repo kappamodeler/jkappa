@@ -49,7 +49,7 @@ public class Experiment {
         	System.err.println("Caught an OutOfMemoryError!");
         } finally {
         	if (experimentListener != null) {
-        		experimentListener.finishedAll(runNo, simulator);
+        		experimentListener.finishedAllRuns(runNo, simulator);
         	}
         }
 	}

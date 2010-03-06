@@ -1,43 +1,52 @@
 package com.plectix.simulator.simulator.api.steps.experiments;
 
 import com.plectix.simulator.controller.SimulatorInputData;
+import com.plectix.simulator.simulator.Simulator;
 
-abstract public class ExperimentRunner implements ExperimentListener {
-	
-	protected Experiment experiment = null;
-	
+/**
+ * Implements <code>ExperimentRunnerListener</code> and provides empty methods if the 
+ * class extending this class doesn't want to use them...
+ * 
+ * @author ecemis
+ */
+public class ExperimentRunner extends AbstractExperimentRunner implements ExperimentRunnerListener {
+
 	public ExperimentRunner(SimulatorInputData simulatorInputData) throws Exception {
-		super();
-		this.experiment = new Experiment(simulatorInputData);
+		super(simulatorInputData);
 	}
 
-	public void run(int numberOfExperiments, int numberOfRuns, ExperimentRunnerListener experimentRunnerListener) {
-		int experimentNo= 0;
-		try {
-			while (experimentNo < numberOfExperiments) {
-	            if (experimentRunnerListener != null) {
-	            	experimentRunnerListener.startingExperiment(experimentNo, experiment.getSimulator());
-	            }
-				
-				// run numberOfRuns simulations:
-				experiment.run(numberOfRuns, this);
+	public void run(int numberOfExperiments, int numberOfRuns) {
+		super.run(numberOfExperiments, numberOfRuns, this);
+	}
+	
+	@Override
+	public void startingRun(int runNo, Simulator simulator) throws Exception {
+		
+	}
 
-	            if (experimentRunnerListener != null) {
-	            	experimentRunnerListener.finishedExperiment(experimentNo, experiment.getSimulator());
-	            }
-	            
-	            experimentNo++;
-			}
-		} catch (Exception e) {
-        	e.printStackTrace();
-        } catch (OutOfMemoryError outOfMemoryError) {
-        	outOfMemoryError.printStackTrace();
-        	System.err.println("Caught an OutOfMemoryError!");
-        } finally {
-        	if (experimentRunnerListener != null) {
-        		experimentRunnerListener.finishedAllExperiments(experimentNo, experiment.getSimulator());
-        	}
-        }
+	@Override
+	public void finishedRun(int runNo, Simulator simulator) {
+		
+	}
+
+	@Override
+	public void finishedAllRuns(int runNo, Simulator simulator) {
+	
+	}
+
+	@Override
+	public void startingExperiment(int experimentNo, Simulator simulator) throws Exception {
+		
+	}
+
+	@Override
+	public void finishedExperiment(int experimentNo, Simulator simulator) {  
+		
+	}
+	
+	@Override
+	public void finishedAllExperiments(int experimentNo, Simulator simulator) { 
+		
 	}
 
 }

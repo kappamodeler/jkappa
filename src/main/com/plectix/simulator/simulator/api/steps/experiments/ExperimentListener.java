@@ -38,6 +38,6 @@ public interface ExperimentListener {
 	 * @param runNo the number of runs the simulator has successfully completed
 	 * @param simulator
 	 */
-	public void finishedAll(int runNo, Simulator simulator);
+	public void finishedAllRuns(int runNo, Simulator simulator);
 
 }
