@@ -1,58 +1,34 @@
 package com.plectix.simulator.experiments;
 
-import org.apache.commons.cli.ParseException;
-
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.controller.SimulatorInputData;
+import com.plectix.simulator.parser.IncompletesDisabledException;
+import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.simulator.Simulator;
-import com.plectix.simulator.simulator.SimulatorCommandLine;
-import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.simulator.api.steps.experiments.ConnectedComponentPattern;
-import com.plectix.simulator.simulator.api.steps.experiments.Experiment;
-import com.plectix.simulator.simulator.api.steps.experiments.ExperimentListener;
+import com.plectix.simulator.simulator.api.steps.experiments.ExperimentRunner;
+import com.plectix.simulator.simulator.api.steps.experiments.ExperimentRunnerListener;
 import com.plectix.simulator.simulator.api.steps.experiments.RulePattern;
 import com.plectix.simulator.simulator.api.steps.experiments.SimulationDataProcessor;
 import com.plectix.simulator.staticanalysis.observables.ObservableComponentsManager;
 import com.plectix.simulator.staticanalysis.observables.Observables;
-import com.plectix.simulator.util.io.PlxLogger;
 
-public class TestExperimentRunner implements ExperimentListener {
-	
-	private static final PlxLogger LOGGER = ThreadLocalData.getLogger(TestExperimentRunner.class);
-	
-	private SimulatorInputData simulatorInputData = null;
+public class TestExperimentRunner extends ExperimentRunner implements ExperimentRunnerListener {
 	
 	private double sumMax = 0.0;
 	private double sumFinal = 0.0;
 	private double rateConstant = 1.0;
 	
-	public TestExperimentRunner(SimulatorInputData simulatorInputData) {
-		super();
-		this.simulatorInputData = simulatorInputData;
-	}
+	private SimulationDataProcessor simulationDataProcessor = null;
 	
-	private void run() throws Exception {
-		Experiment experiment = new Experiment(simulatorInputData);
+	public TestExperimentRunner(SimulatorInputData simulatorInputData) throws Exception {
+		super(simulatorInputData);
 		
-		final double additionalRate = 0.05;
-		SimulationDataProcessor simulationDataProcessor = new SimulationDataProcessor(experiment.getEngine()){
-			public void process() {
-				this.incrementRuleRate(new RulePattern("a(x) -> a(x), a(x)"), additionalRate);
+		simulationDataProcessor = new SimulationDataProcessor(experiment.getSimulator()){
+			public void updateInitialModel() {
+				this.setRuleRate(new RulePattern("a(x) -> a(x), a(x)"), rateConstant);
 			}
 		};
-		
-		for (int experimentNo= 0; experimentNo < 11; experimentNo++) {
-			// simulate 100 runs
-			experiment.run(100, this);
-			// dump the average of 50 runs for this rateConstant
-			System.err.println(rateConstant + " " + sumFinal + " " + sumMax);
-			
-			// update variables:
-			sumMax = 0.0;
-			sumFinal = 0.0;
-			simulationDataProcessor.process();
-			rateConstant = rateConstant + 0.05;
-		}
 	}
 
 	private final int seedValueByRunNumber(int runNo) {
@@ -81,22 +57,48 @@ public class TestExperimentRunner implements ExperimentListener {
 		sumMax = sumMax / runNo;
 	}
 
+	@Override
+	public void startingExperiment(int numberOfExperiments, Simulator simulator) throws Exception {
+		// don't need to do anything...
+	}
+
+	@Override
+	public void finishedExperiment(int numberOfExperiments, Simulator simulator) {
+		// dump the average of 50 runs for this rateConstant
+		System.err.println(rateConstant + " " + sumFinal + " " + sumMax);
+		
+		// update variables:
+		sumMax = 0.0;
+		sumFinal = 0.0;
+		rateConstant = rateConstant + 0.05;
+		try {
+			simulationDataProcessor.updateInitialModel();
+		} catch (IncompletesDisabledException e) {
+			e.printStackTrace();
+			System.err.println("Could not update initial model");
+			System.exit(-3);
+		} catch (SimulationDataFormatException e) {
+			e.printStackTrace();
+			System.err.println("Could not update initial model");
+			System.exit(-4);
+		}
+	}
+	
+	@Override
+	public void finishedAllExperiments(int numberOfExperiments, Simulator simulator) {
+		// don't need to do anything...
+	}
+
+	
+	// Command Line Arguments = "--sim debugging-link.ka --time 50.0 --operation-mode 1"  // make sure all XML and console output are turned off...
+	// New Command line arguments: "--sim data/exponentielle.ka --time 5.0 --operation-mode 1"
 	public static void main(String[] args) throws Exception {
 		SimulationMain.initializeLogging();
 		
-		// Command Line Arguments = "--sim debugging-link.ka --time 50.0 --operation-mode 1"  // make sure all XML and console output are turned off...
- 		// New Command line arguments: "--sim data/exponentielle.ka --time 5.0 --operation-mode 1"
+		SimulatorInputData simulatorInputData = SimulationMain.getSimulatorInputData(args, null);
 		
-		SimulatorCommandLine commandLine = null;
-		try {
-			commandLine = new SimulatorCommandLine(args);
-		} catch (ParseException parseException) {
-			parseException.printStackTrace();
-			LOGGER.fatal("Caught fatal ParseException", parseException);
-			System.exit(-2);
-		}
-		
-		TestExperimentRunner experimentRunner = new TestExperimentRunner(new SimulatorInputData(commandLine.getSimulationArguments()));
-		experimentRunner.run();
+		TestExperimentRunner experimentRunner = new TestExperimentRunner(simulatorInputData);
+		experimentRunner.run(11, 100, experimentRunner);
 	}
+
 }

@@ -54,7 +54,7 @@ public class Experiment {
         }
 	}
 	
-	public final Simulator getEngine() {
+	public final Simulator getSimulator() {
 		return simulator;
 	}
 }

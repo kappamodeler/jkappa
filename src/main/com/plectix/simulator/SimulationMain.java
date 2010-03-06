@@ -28,18 +28,9 @@ public class SimulationMain  {
 	
 	public static void main(String[] args) {
 		initializeLogging();
-		
-		SimulatorCommandLine commandLine = null;
-		try {
-			commandLine = new SimulatorCommandLine(args);
-		} catch (ParseException parseException) {
-			parseException.printStackTrace();
-			LOGGER.fatal("Caught fatal ParseException", parseException);
-			System.exit(-2);
-		}
-		
+	
 		SimulationService service = new SimulationService(new DefaultSimulatorFactory());
-		service.submit(new SimulatorInputData(commandLine.getSimulationArguments(), DEFAULT_OUTPUT_STREAM), new SimulatorCallableListener() {		
+		service.submit(getSimulatorInputData(args, DEFAULT_OUTPUT_STREAM), new SimulatorCallableListener() {		
 			@Override
 			public void finished(SimulatorCallable simulatorCallable) {
 				Exception exception = simulatorCallable.getSimulatorExitReport().getException();
@@ -54,8 +45,20 @@ public class SimulationMain  {
 		
 		service.shutdown();
 	}
+	
+	public static final SimulatorInputData getSimulatorInputData(String[] args, PrintStream printStream) {
+		SimulatorCommandLine commandLine = null;
+		try {
+			commandLine = new SimulatorCommandLine(args);
+		} catch (ParseException parseException) {
+			parseException.printStackTrace();
+			LOGGER.fatal("Caught fatal ParseException", parseException);
+			System.exit(-2);
+		}
+		return new SimulatorInputData(commandLine.getSimulationArguments(), printStream);
+	}
 
-	public static void initializeLogging() {
+	public static final void initializeLogging() {
 		if (loggingInitialized) {
 			return;
 		}

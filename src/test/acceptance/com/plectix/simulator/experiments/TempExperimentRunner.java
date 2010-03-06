@@ -35,8 +35,8 @@ public class TempExperimentRunner implements ExperimentListener {
 	private void run() throws Exception {
 		Experiment experiment = new Experiment(simulatorInputData);
 		
-		SimulationDataProcessor simulationDataProcessor = new SimulationDataProcessor(experiment.getEngine()){
-			public void process() throws IncompletesDisabledException, SimulationDataFormatException {
+		SimulationDataProcessor simulationDataProcessor = new SimulationDataProcessor(experiment.getSimulator()){
+			public void updateInitialModel() throws IncompletesDisabledException, SimulationDataFormatException {
 				this.changeInitialCondition("a(x)", 12);
 			}
 		};
@@ -50,7 +50,7 @@ public class TempExperimentRunner implements ExperimentListener {
 			// update variables:
 			sumMax = 0.0;
 			sumFinal = 0.0;
-			simulationDataProcessor.process();
+			simulationDataProcessor.updateInitialModel();
 			rateConstant = rateConstant + 0.05;
 		}
 	}
