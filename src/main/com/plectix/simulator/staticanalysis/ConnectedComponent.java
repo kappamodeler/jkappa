@@ -49,7 +49,37 @@ public class ConnectedComponent implements ConnectedComponentInterface {
 	public ConnectedComponent() {
 		isEmpty = true;
 		agents.add(new Agent());
-		injections.updatedItem(ThreadLocalData.getEmptyInjection());
+		injections = new WeightedItemSelector<Injection>() {
+			private final Injection injection = ThreadLocalData.getEmptyInjection();
+			
+			@Override
+			public Set<Injection> asSet() {
+				Set<Injection> oneItemSet = new LinkedHashSet<Injection>();
+				oneItemSet.add(injection);
+				return oneItemSet;
+			}
+
+			@Override
+			public double getTotalWeight() {
+				return injection.getWeight();
+			}
+
+			@Override
+			public Injection select() {
+				return injection;
+			}
+
+			@Override
+			public void updatedItem(Injection item) {
+				
+			}
+
+			@Override
+			public void updatedItems(
+					Collection<Injection> changedWeightedItemList) {
+				
+			}
+		};
 		agentFromSolutionForRightHandSide = new ArrayList<Agent>();
 	}
 
