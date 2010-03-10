@@ -2,37 +2,63 @@ package com.plectix.simulator.random;
 
 import java.io.File;
 
-import junit.framework.Assert;
-
-import org.apache.commons.cli.ParseException;
 import org.junit.Test;
 
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.SimulatorCommandLine;
-import com.plectix.simulator.simulator.ThreadLocalData;
 import com.plectix.simulator.simulator.api.steps.OperationManager;
-import com.plectix.simulator.simulator.api.steps.SimulationOperation;
 import com.plectix.simulator.simulator.api.steps.SimulatorInitializationOperation;
 import com.plectix.simulator.util.io.BackingUpPrintStream;
 
 public class TestSimulationIdentity {
+//	@Test
+//	public final void test1() throws Exception {
+//		testCommandLine(new String[]{"--sim", "data" + File.separator + "exponentielle.ka",
+//							"--event", "10", "--seed", "2"});
+//	}
+	
 	@Test
-	public final void test() throws Exception {
-		BackingUpPrintStream stream1 = this.getSimulationResult();
-		BackingUpPrintStream stream2 = this.getSimulationResult();
-		BackingUpPrintStream stream3 = this.getSimulationResult();
-		BackingUpPrintStream stream4 = this.getSimulationResult();
-		BackingUpPrintStream stream5 = this.getSimulationResult();
-		this.debugOutput(stream1, stream2, stream3, stream4, stream5);
-		Assert.assertTrue(stream1.hasEqualContent(stream2));
+	public final void testAll() throws Exception {
+		for (String fileName : new File("data").list()) {
+			if (fileName.endsWith(".ka") && !this.skipFile(fileName)) {
+				try {
+					testCommandLine(new String[]{"--sim", "data" + File.separator + fileName,
+					"--event", "10", "--seed", "2"});
+				} catch(OutOfMemoryError e) {
+					System.out.println("OutOfMemory detected : "  + fileName);
+					System.gc();
+				} catch(Exception e) {
+					System.out.println(e + " : " + fileName);
+				}
+			}
+		}
 	}
 	
-	private final BackingUpPrintStream getSimulationResult() throws Exception {
+	private final boolean skipFile(String fileName) {
+		return fileName.equals("StaticAnalysisLARGE.ka")
+			|| fileName.startsWith("large_systems")
+			|| fileName.equals("invexp.ka")
+			|| fileName.equals("egfr.ka")
+			|| fileName.equals("debugging-compression.ka")
+			|| fileName.equals("Simulation.ka")
+			|| fileName.equals("TyThomson-ReceptorAndGProtein.ka")
+			|| fileName.equals("Seda_111008_Insulin_Present.ka")
+			|| fileName.startsWith("ENG");
+	}
+	
+	private final void testCommandLine(String[] commandLine) throws Exception {
+		BackingUpPrintStream[] simulationsOutput = new BackingUpPrintStream[10];
+		for (int i = 0; i< simulationsOutput.length; i++) {
+			simulationsOutput[i] = this.generateSimulationResult(commandLine);
+		}
+		this.streamsHaveSimilarContent(simulationsOutput);
+	}
+	
+	private final BackingUpPrintStream generateSimulationResult(String[] commandLine) throws Exception {
 		Simulator simulator = new Simulator();
 		SimulatorInputData inputData = new SimulatorInputData(new SimulatorCommandLine(
-				new String[]{"--sim", "data" + File.separator + "exponentielle.ka",
-						"--event", "10", "--seed", "2"}).getSimulationArguments());
+				commandLine).getSimulationArguments());
 		OperationManager manager = simulator.getSimulationData().getKappaSystem().getOperationManager();
 		manager.perform(new SimulatorInitializationOperation(simulator, inputData));
 
@@ -40,7 +66,6 @@ public class TestSimulationIdentity {
 		simulator.getSimulationData().setConsolePrintStream(stream1);
 		
 		manager.perform(new TalkingAlotSimulationOperation(simulator));
-		System.out.println("----------------------------------------------------");
 		return stream1;
 	}
 	
@@ -51,11 +76,34 @@ public class TestSimulationIdentity {
 				return;
 			}
 			System.out.println("---");
-			System.out.println(streams[0].getContentItem(index));
-			System.out.println(streams[1].getContentItem(index));
-			System.out.println(streams[2].getContentItem(index));
-			System.out.println(streams[3].getContentItem(index));
-			System.out.println(streams[4].getContentItem(index));
+			for (BackingUpPrintStream stream : streams) {
+				System.out.println(stream.getContentItem(index));	
+			}
+		}
+	}
+	
+	private final boolean streamsHaveSimilarContent(BackingUpPrintStream...streams) {
+		for (int index = 0; ;index++) {
+			String firstStringItem = streams[0].getContentItem(index); 
+			if (firstStringItem == null) {
+				for (BackingUpPrintStream stream : streams) {
+					if (stream.getContentItem(index) != null) {
+						return false;
+					}
+				}
+				return true;
+			} else {
+				for (BackingUpPrintStream stream : streams) {
+					try {
+						Double.valueOf(firstStringItem);
+						if (!firstStringItem.equals(stream.getContentItem(index))) {
+							return false;
+						}
+					} catch(NumberFormatException e) {
+						
+					}
+				}
+			}
 		}
 	}
 }
