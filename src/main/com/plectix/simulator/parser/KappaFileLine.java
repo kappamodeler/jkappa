@@ -5,7 +5,7 @@ package com.plectix.simulator.parser;
  * @see KappaFile
  * @author evlasov
  */
-public final class KappaFileLine{
+public class KappaFileLine{
 	private final int lineNumber;
 	private final String line;
 	

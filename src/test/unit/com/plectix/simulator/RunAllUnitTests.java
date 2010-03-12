@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.plectix.simulator.commandline.TestCommandLineOptionsToBeSet;
+import com.plectix.simulator.experiments.TestSimulationDataProcessor;
 import com.plectix.simulator.injections.RunInjectionsTests;
 import com.plectix.simulator.parser.TestParserSites;
 import com.plectix.simulator.parser.incomplete.TestIncompleteSubstance;
@@ -23,7 +24,8 @@ import com.plectix.simulator.staticanalysis.rulecompression.TestsRuleCompression
 		TestObservables.class,
 //		TestCommandLineHandling.class,
 		TestCommandLineOptionsToBeSet.class,
-		TestSimulationData.class
+		TestSimulationData.class,
+		TestSimulationDataProcessor.class
 		
 		})
 
