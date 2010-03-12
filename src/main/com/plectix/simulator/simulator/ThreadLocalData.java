@@ -151,7 +151,9 @@ public final class ThreadLocalData {
 	}
 	
 	public static final void reset() {
-		plxLogger.reset();
+		if (plxLogger != null) {
+			plxLogger.reset();
+		}
 		random.reset();
 		nameDictionary .reset();
 	}

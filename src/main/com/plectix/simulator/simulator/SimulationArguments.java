@@ -704,5 +704,6 @@ public class SimulationArguments {
 
 	public void setSeed(int seed) {
 		this.addUncheckedParameter(SEED, new SimulatorParameter<Integer>(seed));
+		this.updateRandom();
 	}
 }
