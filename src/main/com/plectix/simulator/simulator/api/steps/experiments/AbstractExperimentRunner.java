@@ -4,7 +4,7 @@ import com.plectix.simulator.controller.SimulatorInputData;
 
 abstract public class AbstractExperimentRunner implements ExperimentListener {
 	
-	protected Experiment experiment = null;
+	private Experiment experiment = null;
 	
 	public AbstractExperimentRunner(SimulatorInputData simulatorInputData) throws Exception {
 		super();
@@ -38,6 +38,10 @@ abstract public class AbstractExperimentRunner implements ExperimentListener {
         		experimentRunnerListener.finishedAllExperiments(experimentNo, experiment.getSimulator());
         	}
         }
+	}
+	
+	public final Experiment getExperiment() { 
+		return experiment;
 	}
 
 }
