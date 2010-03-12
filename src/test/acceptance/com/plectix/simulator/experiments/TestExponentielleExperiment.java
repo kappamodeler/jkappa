@@ -1,5 +1,13 @@
 package com.plectix.simulator.experiments;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.plectix.simulator.SimulationMain;
 import com.plectix.simulator.controller.SimulatorInputData;
 import com.plectix.simulator.parser.IncompletesDisabledException;
@@ -7,27 +15,60 @@ import com.plectix.simulator.parser.SimulationDataFormatException;
 import com.plectix.simulator.simulator.Simulator;
 import com.plectix.simulator.simulator.api.steps.experiments.ConnectedComponentPattern;
 import com.plectix.simulator.simulator.api.steps.experiments.ExperimentRunner;
+import com.plectix.simulator.simulator.api.steps.experiments.RulePattern;
 import com.plectix.simulator.simulator.api.steps.experiments.SimulationDataProcessor;
 import com.plectix.simulator.staticanalysis.observables.ObservableComponentsManager;
 import com.plectix.simulator.staticanalysis.observables.Observables;
 
-public class TempExperimentRunner extends ExperimentRunner {
+public class TestExponentielleExperiment extends ExperimentRunner {
 	
 	private double sumMax = 0.0;
 	private double sumFinal = 0.0;
 	private double rateConstant = 1.0;
 	
-	private SimulationDataProcessor simulationDataProcessor = null;
+	private final Set<String> experimentsResults = new LinkedHashSet<String>();
 	
-	public TempExperimentRunner(SimulatorInputData simulatorInputData) throws Exception {
-		super(simulatorInputData);
+	private SimulationDataProcessor simulationDataProcessor = null;
 
-		simulationDataProcessor = new SimulationDataProcessor(experiment.getSimulator()){
-			public void updateInitialModel() throws IncompletesDisabledException, SimulationDataFormatException {
-				this.changeInitialCondition("a(x)", 12);
+	public TestExponentielleExperiment() throws Exception {
+		super(SimulationMain.getSimulatorInputData(
+				new String[]{
+						"--sim", "data/exponentielle.ka",
+						"--time", "5.0" 
+				},
+				null));
+	}
+
+	
+	@Test
+	public void test() throws Exception {
+		try {
+			this.run(11, 100);
+		} catch(ExperimentFailedException e) {
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Before
+	public void testExperimentRunner() throws Exception {
+		simulationDataProcessor = new SimulationDataProcessor(this.getExperiment().getSimulator()){
+			public void updateInitialModel() {
+				this.setRuleRate(new RulePattern("a(x) -> a(x), a(x)"), rateConstant);
 			}
 		};
+		experimentsResults.add("1.0 148.63 148.63");
+		experimentsResults.add("1.05 190.79 190.79");
+		experimentsResults.add("1.1 244.05 244.05");
+		experimentsResults.add("1.1500000000000001 314.43 314.43");
+		experimentsResults.add("1.2000000000000002 403.59 403.59");
+		experimentsResults.add("1.2500000000000002 518.05 518.05");
+		experimentsResults.add("1.3000000000000003 667.99 667.99");
+		experimentsResults.add("1.3500000000000003 856.3 856.3");
+		experimentsResults.add("1.4000000000000004 1099.17 1099.17");
+		experimentsResults.add("1.4500000000000004 1407.56 1407.56");
+		experimentsResults.add("1.5000000000000004 1807.06 1807.06");
 	}
+
 	
 	private final int seedValueByRunNumber(int runNo) {
 		return runNo + 1;
@@ -54,11 +95,11 @@ public class TempExperimentRunner extends ExperimentRunner {
 		sumFinal = sumFinal / runNo;
 		sumMax = sumMax / runNo;
 	}
-	
+
 	@Override
-	public void finishedExperiment(int numberOfExperiments, Simulator simulator) {
+	public void finishedExperiment(int numberOfExperiments, Simulator simulator) throws ExperimentFailedException {
 		// dump the average of 50 runs for this rateConstant
-		System.err.println(rateConstant + " " + sumFinal + " " + sumMax);
+		this.checkLine(rateConstant + " " + sumFinal + " " + sumMax);
 		
 		// update variables:
 		sumMax = 0.0;
@@ -76,15 +117,10 @@ public class TempExperimentRunner extends ExperimentRunner {
 			System.exit(-4);
 		}
 	}
-
-	// Command Line Arguments = "--sim debugging-link.ka --time 50.0 --operation-mode 1"  // make sure all XML and console output are turned off...
-	// New Command line arguments: "--sim data/exponentielle.ka --time 5.0 --operation-mode 1"
-	public static void main(String[] args) throws Exception {
-		SimulationMain.initializeLogging();
-		
-		SimulatorInputData simulatorInputData = SimulationMain.getSimulatorInputData(args, null);
-		
-		TempExperimentRunner experimentRunner = new TempExperimentRunner(simulatorInputData);
-		experimentRunner.run(11, 100);
+	
+	private final void checkLine(String line) throws ExperimentFailedException {
+		if (!experimentsResults.contains(line)) {
+			throw new ExperimentFailedException("No experiment should end with result : " + line);
+		}
 	}
 }

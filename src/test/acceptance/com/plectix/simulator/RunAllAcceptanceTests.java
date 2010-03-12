@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.plectix.simulator.consoleOutput.TestConsoleOutput;
+import com.plectix.simulator.experiments.ExperimentTestSuite;
 import com.plectix.simulator.injections.RunInjectionsTests;
 import com.plectix.simulator.localviews.TestLocalViews;
 import com.plectix.simulator.localviews.TestLocalViewsCompareXML;
@@ -45,8 +46,9 @@ import com.plectix.simulator.xmlmap.TestInfluenceMap;
 		RunTestWeakCompression.class,
 		TestContactMap.class,
 		TestWeightedItemSelector.class,
-		TestConsoleOutput.class
+		TestConsoleOutput.class,
 //		TestRuleStudioOptionsSets.class
+		ExperimentTestSuite.class
 		})
 public class RunAllAcceptanceTests {
 //	public static final String FILENAME_EXTENSION = ".test";
