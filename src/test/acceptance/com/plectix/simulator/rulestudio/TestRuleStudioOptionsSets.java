@@ -335,6 +335,28 @@ public class TestRuleStudioOptionsSets {
 		}
 	}
 	
+	@Test
+	public final void testCaseCompilation() {
+		try {
+			String kappaFile = "data" + File.separator + "example.ka";
+			KappaSystem kappaSystem = this.processCommandLine(
+	                "--compile",
+	                kappaFile);
+			
+			Assert.assertFalse("simulation plot contains no data", 
+					XMLOutputOracle.simulationPlotDataIsNotEmpty(kappaSystem));
+				
+			SimulationArguments arguments = kappaSystem.getSimulationData().getSimulationArguments();
+			Assert.assertTrue("We do not compile", arguments.needToCompile());
+			Assert.assertFalse("We simulate", arguments.needToSimulate());
+			Assert.assertFalse("We compute stories", arguments.needToStorify());
+			Assert.assertFalse("We compute contact map", arguments.needToBuildContactMap());
+		} catch(Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+	
 	private KappaSystem processCommandLine(String commandLine) throws Exception {
 		return this.processCommandLine(commandLine.split(" "));
 	}
