@@ -114,6 +114,33 @@ public abstract class SimulationDataProcessor {
 		this.addInitialCondition(connectedComponents, newCount);
 	}
 	
+	protected final void removeInitialCondition(ConnectedComponentPattern connectedComponents) {
+		ModelSolution solution = this.getInitialModel().getSolution();
+		ModelSolutionManager solutionManager = new ModelSolutionManager(solution);
+		solutionManager.removeSubstance(connectedComponents.toString());
+	}
+	
+	/**
+	 * Please notice that this method does not add any data needed for XML Output
+	 * @see ModelSolution
+	 * @see SolutionLine
+	 * @param connectedComponent
+	 * @param count
+	 * @throws IncompletesDisabledException
+	 * @throws SimulationDataFormatException
+	 */
+	protected final void addInitialCondition(ConnectedComponentPattern connectedComponent, int count) 
+				throws IncompletesDisabledException, SimulationDataFormatException {
+		List<ModelAgent> agents = ModelParseHelper.readAgents(true, connectedComponent.toString());
+		this.getInitialModel().getSolution().addAgents(count, agents);
+	}
+	
+	protected final void changeInitialCondition(ConnectedComponentPattern connectedComponents, int newCount) 
+				throws IncompletesDisabledException, SimulationDataFormatException {
+		this.removeInitialCondition(connectedComponents);
+		this.addInitialCondition(connectedComponents, newCount);
+	}
+	
 	private final KappaModel getInitialModel() {
 		return simulationData.getInitialModel();
 	}
