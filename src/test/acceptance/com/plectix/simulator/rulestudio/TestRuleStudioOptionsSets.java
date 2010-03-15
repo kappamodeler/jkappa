@@ -76,7 +76,7 @@ public class TestRuleStudioOptionsSets {
 		Assert.assertTrue("Wrong points number", arguments.getPoints() == 1000);
 		Assert.assertTrue("Wrong clock precision", arguments.getClockPrecision() == 50);
 		Assert.assertFalse("Wrong simulation mode", arguments.isTime());
-		Assert.assertFalse("We calculate subviews", arguments.createSubViews());
+		Assert.assertFalse("We calculate subviews", arguments.needToCreateSubViews());
 	}
 	
 	@Test
@@ -99,7 +99,7 @@ public class TestRuleStudioOptionsSets {
 			Assert.assertTrue("Wrong output file path", 
 					arguments.getXmlOutputDestination().equals(xmlOutputFile.getPath()));
 			Assert.assertTrue("Wrong time limit number", Math.abs(arguments.getTimeLimit() - 10) < 0.1);
-			Assert.assertFalse("We calculate subviews", arguments.createSubViews());
+			Assert.assertFalse("We calculate subviews", arguments.needToCreateSubViews());
 			Assert.assertTrue("Wrong simulation mode", arguments.needToStorify());
 			Assert.assertTrue("Wrong iterations number", arguments.getIterations() == 10);
 		} catch(Exception e) {
@@ -164,54 +164,56 @@ public class TestRuleStudioOptionsSets {
 		Assert.assertTrue("Wrong simulation mode", arguments.needToSimulate());
 	}
 	
+	//TODO implement --output-*** options
+//	@Test
 //	public final void testCaseQualitativeCompression() {
 //		try {
 //			File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
 //			String kappaFile = "data" + File.separator + "abc2.ka";
-//			KappaSystem kappaSystem = this.processCommandLine("--build-influence-map",
-//	                "--no-dump-iteration-number",
-//	                "--no-dump-rule-iteration",
-//	                "--no-enumerate-complexes",
-//	                "--contact-map",
-//	                kappaFile,
-//	                "--output-qualitative-compression",
-//	                outputFilename,
-//	                "--xml-session-name", xmlOutputFile);
+//			KappaSystem kappaSystem = this.processCommandLine("--build-influence-map"
+//	                + " --no-dump-iteration-number"
+//	                + " --no-dump-rule-iteration"
+//	                + " --no-enumerate-complexes"
+//	                + " --contact-map " + kappaFile
+//	                + " --output-qualitative-compression " + xmlOutputFile
+//	                + " --xml-session-name " + xmlOutputFile);
 //			
-//			Assert.assertTrue("simulation plot contains no data", 
+//			Assert.assertFalse("simulation plot contains no data", 
 //					XMLOutputOracle.simulationPlotDataIsNotEmpty(kappaSystem));
 //				
 //			SimulationArguments arguments = kappaSystem.getSimulationData().getSimulationArguments();
 //			Assert.assertTrue("Wrong output file path", 
 //					arguments.getXmlOutputDestination().equals(xmlOutputFile.getPath()));
-//			Assert.assertTrue("Wrong time limit number", arguments.getMaxNumberOfEvents() == 35);
+//			Assert.assertTrue("We do not compress rules", arguments.needToRunQualitativeCompression());
+//			Assert.assertFalse("We do wrong compression", arguments.needToRunQuantitativeCompression());
 //		} catch(Exception e) {
 //			e.printStackTrace();
 //			Assert.fail(e.getMessage());
 //		}
 //	}
 //	
+//  TODO implement --output-*** options
+//	@Test
 //	public final void testCaseQuantitativeCompression() {
 //	try {
 //		File xmlOutputFile = File.createTempFile("testOptionsSet", "test");
 //		String kappaFile = "data" + File.separator + "abc2.ka";
-//		KappaSystem kappaSystem = this.processCommandLine("--build-influence-map",
-//                "--no-dump-iteration-number",
-//                "--no-dump-rule-iteration",
-//                "--no-enumerate-complexes",
-//                "--contact-map",
-//                kappaFile,
-//                "--output-quantitative-compression",
-//                outputFilename,
-//                "--xml-session-name", xmlOutputFile);
+//		KappaSystem kappaSystem = this.processCommandLine("--build-influence-map"
+//                + " --no-dump-iteration-number"
+//                + " --no-dump-rule-iteration"
+//                + " --no-enumerate-complexes"
+//                + " --contact-map " + kappaFile
+//                + " --output-quantitative-compression " + xmlOutputFile
+//                + " --xml-session-name " + xmlOutputFile);
 //		
-//		Assert.assertTrue("simulation plot contains no data", 
+//		Assert.assertFalse("simulation plot contains no data", 
 //				XMLOutputOracle.simulationPlotDataIsNotEmpty(kappaSystem));
 //			
 //		SimulationArguments arguments = kappaSystem.getSimulationData().getSimulationArguments();
 //		Assert.assertTrue("Wrong output file path", 
 //				arguments.getXmlOutputDestination().equals(xmlOutputFile.getPath()));
-//		Assert.assertTrue("Wrong time limit number", arguments.getMaxNumberOfEvents() == 35);
+//		Assert.assertFalse("We do wrong compression", arguments.needToRunQualitativeCompression());
+//		Assert.assertTrue("We do not compress rules", arguments.needToRunQuantitativeCompression());
 //	} catch(Exception e) {
 //		e.printStackTrace();
 //		Assert.fail(e.getMessage());
@@ -228,11 +230,8 @@ public class TestRuleStudioOptionsSets {
 	                "--no-compute-qualitative-compression",
 	                "--no-compute-quantitative-compression",
 	                "--no-dump-iteration-number",
-
-	                //TODO handle handle
 	                "--no-dump-rule-iteration",
 	                "--no-enumerate-complexes",
-
 	                "--contact-map",
 	                kappaFile,
 	                "--xml-session-name",
@@ -264,8 +263,6 @@ public class TestRuleStudioOptionsSets {
 			KappaSystem kappaSystem = this.processCommandLine(
 					"--no-compute-qualitative-compression",
 	                "--no-compute-quantitative-compression",
-	                
-	                //TODO handle handle
 	                "--no-dump-iteration-number",
 	                "--no-dump-rule-iteration",
 	                "--no-enumerate-complexes",
@@ -287,6 +284,51 @@ public class TestRuleStudioOptionsSets {
 			Assert.assertTrue("We do not build influence map", arguments.needToBuildInfluenceMap());
 			Assert.assertTrue("We do not build contact map", arguments.needToBuildContactMap());
 			Assert.assertTrue("Wrong simulation mode", arguments.needToBuildContactMap());
+		} catch(Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public final void testCaseReachables() {
+		try {
+			String kappaFile = "data" + File.separator + "example.ka";
+			KappaSystem kappaSystem = this.processCommandLine(
+	                "--contact-map",
+	                kappaFile,
+	                "--compute-local-views");
+			
+			Assert.assertFalse("simulation plot contains no data", 
+					XMLOutputOracle.simulationPlotDataIsNotEmpty(kappaSystem));
+				
+			SimulationArguments arguments = kappaSystem.getSimulationData().getSimulationArguments();
+			Assert.assertTrue("We do not compute local views", arguments.needToCreateLocalViews());
+			Assert.assertTrue("We do not build contact map", arguments.needToBuildContactMap());
+			Assert.assertFalse("We do enumerate species", arguments.needToEnumerationOfSpecies());
+		} catch(Exception e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+	
+	@Test
+	public final void testCaseEnumerating() {
+		try {
+			String kappaFile = "data" + File.separator + "example.ka";
+			KappaSystem kappaSystem = this.processCommandLine(
+	                "--contact-map",
+	                kappaFile,
+	                "--compute-local-views",
+	                "--enumerate-complexes");
+			
+			Assert.assertFalse("simulation plot contains no data", 
+					XMLOutputOracle.simulationPlotDataIsNotEmpty(kappaSystem));
+				
+			SimulationArguments arguments = kappaSystem.getSimulationData().getSimulationArguments();
+			Assert.assertTrue("We do not compute local views", arguments.needToCreateLocalViews());
+			Assert.assertTrue("We do not build contact map", arguments.needToBuildContactMap());
+			Assert.assertTrue("We do not enumerate species", arguments.needToEnumerationOfSpecies());
 		} catch(Exception e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());

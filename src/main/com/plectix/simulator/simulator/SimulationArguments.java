@@ -514,11 +514,11 @@ public class SimulationArguments {
 		return this.containsFlag(ENUMERATE_COMPLEXES);
 	}
 
-	public boolean createSubViews() {
+	public boolean needToCreateSubViews() {
 		return this.containsFlag(COMPUTE_SUB_VIEWS);
 	}
 
-	public boolean createLocalViews() {
+	public boolean needToCreateLocalViews() {
 		return this.containsFlag(COMPUTE_LOCAL_VIEWS);
 	}
 

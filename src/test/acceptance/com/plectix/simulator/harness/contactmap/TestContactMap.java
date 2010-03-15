@@ -240,7 +240,7 @@ public class TestContactMap {
 		SimulationArguments args = InitTestContactMap.getSimulationArguments();
 
 		if (args.getSimulationType() == SimulationArguments.SimulationType.CONTACT_MAP
-				|| args.createSubViews()) {
+				|| args.needToCreateSubViews()) {
 
 			Memory memory = new Memory();
 			Timer timer = new Timer();

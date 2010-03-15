@@ -50,10 +50,10 @@ public class CommandLineDefinedWorkflow extends AbstractOperation<File> {
 		if (arguments.needToDumpVersion()) {
 			operations.add(new DumpVersionOperation(simulationData));
 		}
-		if (arguments.createLocalViews()) {
+		if (arguments.needToCreateLocalViews()) {
 			operations.add(new LocalViewsComputationOperation(simulationData));
 		}
-		if (arguments.createSubViews()) {
+		if (arguments.needToCreateSubViews()) {
 			operations.add(new SubviewsComputationOperation(simulationData.getKappaSystem()));
 		}
 		if (arguments.needToOutputDebugInformation()) {

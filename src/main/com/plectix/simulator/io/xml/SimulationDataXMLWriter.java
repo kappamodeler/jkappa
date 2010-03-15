@@ -92,7 +92,7 @@ public class SimulationDataXMLWriter {
 		timer.startTimer();
 
 		// TODO check it
-		if (simulationArguments.createSubViews()) {
+		if (simulationArguments.needToCreateSubViews()) {
 			new SubviewsXMLWriter(kappaSystem.getSubViews()).write(writer);
 		}
 
@@ -100,7 +100,7 @@ public class SimulationDataXMLWriter {
 			new SpeciesXMLWriter(kappaSystem.getEnumerationOfSpecies()).write(writer);
 		}
 
-		if (simulationArguments.createLocalViews()) {
+		if (simulationArguments.needToCreateLocalViews()) {
 			new LocalViewsXMLWriter(kappaSystem.getLocalViews()).write(writer);
 		}
 

@@ -38,7 +38,7 @@ public class SolutionInitializationOperation extends AbstractOperation<KappaSyst
 			solution.getSuperStorage().setAgentsLimit(args.getAgentsLimit());
 		}
 
-		if (args.createSubViews()) {
+		if (args.needToCreateSubViews()) {
 			manager.perform(new SubviewsComputationOperation(kappaSystem));
 		}
 			
@@ -54,7 +54,7 @@ public class SolutionInitializationOperation extends AbstractOperation<KappaSyst
 			kappaSystem.setInfluenceMap(manager.perform(new InfluenceMapComputationOperation(simulationData)));
 		}
 
-		if (args.createLocalViews()) {
+		if (args.needToCreateLocalViews()) {
 			kappaSystem.setLocalViews(manager.perform(new LocalViewsComputationOperation(simulationData)));
 		}
 
