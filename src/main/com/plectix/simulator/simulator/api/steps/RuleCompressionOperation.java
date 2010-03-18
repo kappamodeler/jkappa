@@ -30,7 +30,6 @@ public class RuleCompressionOperation extends AbstractOperation<List<Rule>> {
 
 	@Override
 	protected List<Rule> retrievePreparedResult() {
-		//TODO we can optimize this
 		return kappaSystem.getRuleCompressionBuilder().getResults(type).getCompressedRules();
 	}
 }

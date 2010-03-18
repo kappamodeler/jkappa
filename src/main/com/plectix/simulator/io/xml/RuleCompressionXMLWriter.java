@@ -1,6 +1,5 @@
 package com.plectix.simulator.io.xml;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -21,16 +20,41 @@ import com.plectix.simulator.staticanalysis.subviews.MainSubViews;
 
 // it should stay public for a while, this is not good =(
 public class RuleCompressionXMLWriter {
+	private static final class RuleMapping {
+		private Map<Integer, Integer> association = new TreeMap<Integer, Integer>();
+		private final Map<Integer, List<Integer>> inverseAssociation
+			= new LinkedHashMap<Integer, List<Integer>>();
+
+		public final int getData(int key) {
+			return association.get(key);
+		}
+		
+		public final Map<Integer, Integer> getData() {
+			return association;
+		}
+		
+		public final List<Integer> getInverseData(int key) {
+			return inverseAssociation.get(key);
+		}
+		
+		public final void put(int key, int value) {
+			association.put(key, value);
+			List<Integer> list = inverseAssociation.get(value);
+			if (list == null) {
+				list = new LinkedList<Integer>();
+				inverseAssociation.put(value, list);
+			}
+			list.add(key);
+		}
+	}
+	
 	private final Map<Integer, Rule> initialRulesMap = new LinkedHashMap<Integer, Rule>();
-	private final Map<Integer, Integer> associationQualitativeMap 
-			= new TreeMap<Integer, Integer>();
+	private final Map<RuleCompressionType, RuleMapping> associations 
+			= new TreeMap<RuleCompressionType, RuleMapping>();
 	
 	private final Map<RuleCompressionType, Set<Rule>> compressedRules 
 		= new LinkedHashMap<RuleCompressionType, Set<Rule>>();
 	
-	private final Map<Integer, List<Integer>> associationQualitativeBackMap
-				= new LinkedHashMap<Integer, List<Integer>>();
-	private Set<RuleCompressionType> performedCompressions;
 	private final KappaSystem kappaSystem;
 	
 	//TODO do adequate data structure for those results
@@ -47,18 +71,14 @@ public class RuleCompressionXMLWriter {
 			this.initialRulesMap.put(rule.getRuleId(), rule);
 		}
 		Set<Rule> rulesAfterCompression = new LinkedHashSet<Rule>();
+		RuleMapping ruleMapping = new RuleMapping();
+		this.associations.put(results.getCompressionType(), ruleMapping);
 		for (Map.Entry<Rule, Rule> associationEntry : results.getAssociations()) {
 			int idRealRule = associationEntry.getKey().getRuleId();
 			int idCompressedRule = associationEntry.getValue().getRuleId();
-			associationQualitativeMap.put(idRealRule, idCompressedRule);
-			rulesAfterCompression.add(associationEntry.getValue());
 			
-			List<Integer> list = associationQualitativeBackMap.get(idCompressedRule);
-			if (list == null) {
-				list = new LinkedList<Integer>();
-				associationQualitativeBackMap.put(idCompressedRule, list);
-			}
-			list.add(idRealRule);
+			ruleMapping.put(idRealRule, idCompressedRule);
+			rulesAfterCompression.add(associationEntry.getValue());
 		}
 		compressedRules.put(results.getCompressionType(), rulesAfterCompression);
 	}
@@ -71,7 +91,7 @@ public class RuleCompressionXMLWriter {
 			xtw.writeStartElement("RuleSet");
 			xtw.writeAttribute("Name", currentCompressionType + " compression");
 			writeToXMLQualitativeRules(xtw, isOcamlStyleObsName, entry.getValue(), currentCompressionType);
-			writeToXMLAssociationQualitativeMap(xtw);
+			writeToXMLAssociationQualitativeMap(xtw, currentCompressionType);
 
 			xtw.writeEndElement();
 		}
@@ -97,10 +117,11 @@ public class RuleCompressionXMLWriter {
 		xtw.writeEndElement();
 	}
 	
-	private void writeToXMLAssociationQualitativeMap(OurXMLWriter xtw) throws XMLStreamException{
+	private void writeToXMLAssociationQualitativeMap(OurXMLWriter xtw, RuleCompressionType compressionType) 
+					throws XMLStreamException{
 		xtw.writeStartElement("Map");
 		xtw.writeAttribute("FromSet", "Original");
-		for(Map.Entry<Integer, Integer> entry : associationQualitativeMap.entrySet()){
+		for(Map.Entry<Integer, Integer> entry : associations.get(compressionType).getData().entrySet()){
 			xtw.writeStartElement("Association");
 			xtw.writeAttribute("FromRule", Integer.toString(entry.getKey()+1));
 			xtw.writeAttribute("ToRule", entry.getValue().toString());
@@ -126,7 +147,7 @@ public class RuleCompressionXMLWriter {
 			
 
 			StringBuffer sb = new StringBuffer();
-			List<Integer> list = associationQualitativeBackMap.get(id);
+			List<Integer> list = associations.get(currentCompressionType).getInverseData(id);
 			int size = list.size();
 			int counter = 1;
 			for (Integer key : list) {
